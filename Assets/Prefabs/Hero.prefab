@@ -119,13 +119,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6094697013023591912}
-  - component: {fileID: 9129891116591606058}
-  - component: {fileID: 8227011582357439406}
   - component: {fileID: 7171975882798749015}
   - component: {fileID: 4818263993768388328}
   - component: {fileID: 2082654268980086769}
   - component: {fileID: 7423737259511180041}
   - component: {fileID: 6207545130262382994}
+  - component: {fileID: 7895723649931841560}
   m_Layer: 7
   m_Name: Hero
   m_TagString: Hero
@@ -149,34 +148,6 @@ Transform:
   - {fileID: 1361220694402008848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9129891116591606058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941723749653959437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d1c206db3f17cc4093b13af7c760c38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 3
---- !u!114 &8227011582357439406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941723749653959437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3044857a23a8436488ebcf103d1eb8ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  preferredDist: 1.5
-  moveSpeed: 3.5
 --- !u!50 &7171975882798749015
 Rigidbody2D:
   serializedVersion: 5
@@ -292,3 +263,17 @@ MonoBehaviour:
   currentXP: 0
   baseXPNeeded: 30
   xpGrowthMult: 1.5
+--- !u!114 &7895723649931841560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 596305f35b6843a39d836ebdaa0c363c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 4
+  stopDist: 0.1

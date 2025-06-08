@@ -1,99 +1,97 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Cinemachine;
 
-/// <summary>
-/// • Holds up to 5 heroes in a list  
-/// • Hot-keys 1-5 swap active hero  
-/// • Non-active heroes follow the active one  
-/// • Updates UI health / XP bars & active border  
-/// • Cinemachine vCam follows the active hero
-/// </summary>
 public class PartyManager : MonoBehaviour
 {
-    [Header("Gameplay")]
-    [SerializeField] private List<GameObject> heroes = new(5);
+    [Header("Gameplay")] [SerializeField] private List<GameObject> heroes = new(5);
 
-    [Header("UI")]
-    [SerializeField] private List<CharacterCardReferences> cards = new(5);
+    [Header("UI")] [SerializeField] private List<CharacterCardReferences> cards = new(5);
 
-    [Header("Camera")]
-    [SerializeField] private CinemachineCamera cinemachineCamera;
-    // If using Cinemachine 3 Core, swap to: CinemachineCamera
+    [Header("Selection (auto-find if empty)")] [SerializeField]
+    private SelectionController selector;
 
-    private int activeIdx = 0;
+    private int activeIdx;
+
+    /* ─── Unity ─── */
 
     private void Start()
     {
-        if (heroes.Count == 0) { enabled = false; return; }
-
-        // Hook health + XP events
-        for (int i = 0; i < heroes.Count; i++)
+        if (heroes.Count == 0)
         {
-            int idx = i;
-
-            var hp  = heroes[i].GetComponent<Health>();
-            var lvl = heroes[i].GetComponent<LevelSystem>();
-
-            hp.OnHealthChanged  += (cur, max)        => UpdateCardHP(idx, cur, max);
-            lvl.OnXPChanged     += (cur, need)       => UpdateCardXP(idx, cur, need);
-
-            UpdateCardHP(idx,  hp.CurrentHP, hp.MaxHP);
-            UpdateCardXP(idx,  lvl.CurrentXP,  lvl.XPNeeded);
+            enabled = false;
+            return;
         }
 
-        SetActiveHero(0);
+        for (var i = 0; i < heroes.Count; i++)
+        {
+            if (!heroes[i]) continue;
+
+            var idx = i;
+            var hp = heroes[i].GetComponent<Health>();
+            var lv = heroes[i].GetComponent<LevelSystem>();
+
+            hp.OnHealthChanged += (c, m) => UpdateHP(idx, c, m);
+            lv.OnXPChanged += (c, n) => UpdateXP(idx, c, n);
+
+            UpdateHP(idx, hp.CurrentHP, hp.MaxHP);
+            UpdateXP(idx, lv.CurrentXP, lv.XPNeeded);
+        }
+
+        SetActive(0); // default hero 0 selected
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SetActiveHero(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SetActiveHero(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SetActiveHero(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SetActiveHero(3);
-        if (Input.GetKeyDown(KeyCode.Alpha5)) SetActiveHero(4);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SetActive(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetActive(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) SetActive(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) SetActive(3);
+        if (Input.GetKeyDown(KeyCode.Alpha5)) SetActive(4);
     }
 
-    /* ─────────────────────────────────────────────────────────────────────── */
-
-    private void SetActiveHero(int index)
+    /* ─── called by SelectionController when you LEFT-click a hero ─── */
+    public void NotifyHotSwap(GameObject heroGO)
     {
-        if (index < 0 || index >= heroes.Count) return;
+        var idx = heroes.IndexOf(heroGO);
+        if (idx >= 0) SetActive(idx);
+    }
+
+    /* ─── core hot-key logic ─── */
+    private void SetActive(int index)
+    {
+        if (index < 0 || index >= heroes.Count || !heroes[index]) return;
         activeIdx = index;
 
-        for (int i = 0; i < heroes.Count; i++)
+        // 🔑 tell SelectionController FIRST so right-click works instantly
+        if (selector) selector.Select(heroes[activeIdx]);
+
+        // then update flags & UI
+        for (var i = 0; i < heroes.Count; i++)
         {
-            bool isActive = (i == activeIdx);
+            var on = i == activeIdx;
+            if (!heroes[i]) continue;
 
-            heroes[i].GetComponent<PlayerMovement>().enabled = isActive;
+            heroes[i].GetComponent<BasicAttackTelegraphed>().IsPlayerControlled = on;
 
-            var follower = heroes[i].GetComponent<HeroFollower>();
-            follower.enabled = !isActive;
-            follower.target  = heroes[activeIdx].transform;
+            if (heroes[i].TryGetComponent(out HeroClickMover mover))
+                mover.SetSelected(on);
 
-            heroes[i].GetComponent<BasicAttackTelegraphed>().IsPlayerControlled = isActive;
-
-            // UI border on/off
-            if (i < cards.Count && cards[i] != null)
-                cards[i].ActiveHeroBoarder.SetActive(isActive);
+            if (i < cards.Count && cards[i])
+                cards[i].ActiveHeroBoarder.SetActive(on);
         }
-
-        if (cinemachineCamera != null)
-            cinemachineCamera.Follow = heroes[activeIdx].transform;
     }
 
-    private void UpdateCardHP(int idx, int cur, int max)
+    /* ─── UI helpers ─── */
+    private void UpdateHP(int idx, int cur, int max)
     {
-        if (idx >= cards.Count || cards[idx] == null) return;
-
+        if (idx >= cards.Count || !cards[idx]) return;
         cards[idx].HeroHealthFill.fillAmount = (float)cur / max;
-        cards[idx].HeroHealthText.text       = $"{cur}/{max}";
+        cards[idx].HeroHealthText.text = $"{cur}/{max}";
     }
 
-    private void UpdateCardXP(int idx, int cur, int need)
+    private void UpdateXP(int idx, int cur, int need)
     {
-        if (idx >= cards.Count || cards[idx] == null) return;
-
-        cards[idx].HeroXpFill.fillAmount = need == 0 ? 1f : (float)cur / need;
+        if (idx >= cards.Count || !cards[idx]) return;
+        cards[idx].HeroXpFill.fillAmount = need == 0 ? 1 : (float)cur / need;
     }
 }

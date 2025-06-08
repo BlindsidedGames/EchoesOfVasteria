@@ -5,72 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7faa27a-45b3-4d52-a5d9-6527c96e6dfd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AttackType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AttackType.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/BasicAttackTelegraphed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/BasicAttackTelegraphed.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterCardReferences.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyAI.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyAI.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyHealthBar.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyHealthBar.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Health.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Health.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HeroFollower.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HeroFollower.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/IDamageable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/LevelSystem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/LevelSystem.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PartyManager.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerMovement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TImeless Echoes/.idea/misc.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/CameraController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/CameraController.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HeroClickMover.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/HeroClickMover.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/SelectionController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/SelectionController.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TImeless Echoes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TImeless Echoes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Blue.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Blue.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Green.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Green.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Pink.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Pink.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Red.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Red.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Yellow.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Enemies/Slime/Slime_Small/Slime_Small_Yellow.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Clothes/Shirt_Green/Shirt_Green_Attack.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Clothes/Shirt_Green/Shirt_Green_Attack.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Attack.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Attack.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Axe.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Axe.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Bow.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Bow.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Climb.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Climb.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Death.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Death.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Fishing.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Fishing.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Hoe.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Hoe.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Horse.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Horse.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Idle.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Idle.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Jump.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Jump.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Pickaxe.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Pickaxe.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Push.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Push.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Roll.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Roll.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Running.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_Running.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_WateringCan.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Player_Base/Player_Base_WateringCan.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Tools/Iron_Tools/Iron_Sword.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Cute_Fantasy/Player/Player_Modular/Tools/Iron_Tools/Iron_Sword.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Horse_Riding_Anim.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Horse_Riding_Anim.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Attack.aseprite" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Attack.aseprite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Attack.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Attack.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Axe.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Axe.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Bow.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Bow.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Climb.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Climb.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Death.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Death.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Fishing.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Fishing.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Hoe.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Hoe.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Idle.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Idle.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Jump.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Jump.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Pickaxe.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Pickaxe.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Push.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Push.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Roll.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Roll.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Running.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_Running.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_WateringCan.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Packs/Player_Aseprite_Files/Player_Main_WateringCan.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Fonts/Reg-Lexend-Regular SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/Reg-Lexend-Regular SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/Avocado.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Avocado.aseprite.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Hero.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Hero.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PartyManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PartyManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,20 +34,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "rider.code.cleanup.on.save": "true",
+    "rider.code.cleanup.on.save.profile": "Built-in: Full Cleanup Custom",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.6f1\Editor\Unity.exe" />
@@ -156,7 +103,8 @@
       <option name="presentableId" value="Default" />
       <updated>1749359067974</updated>
       <workItem from="1749359069597" duration="5614000" />
-      <workItem from="1749382565735" duration="3634000" />
+      <workItem from="1749382565735" duration="3827000" />
+      <workItem from="1749423568183" duration="1390000" />
     </task>
     <servers />
   </component>
@@ -183,5 +131,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
