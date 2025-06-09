@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     Keeps the five heroes, hot-key selection, stance toggling (Move | Hold),
-///     and a single Character Card UI in sync.  Also snaps the camera anchor to
-///     the active hero when you press Space.
+///     • 1-5 or clicking a hero selects it **and** jumps the camera there.
+///     • T cycles the selected hero’s stance (Move | Hold).
+///     • Space toggles “camera follows active hero” on/off
+///     (disables the WASD CameraController while following).
 /// </summary>
 public class PartyManager : MonoBehaviour
 {
-    /* ───────── Inspector ───────── */
+    /* ─── Inspector ─── */
 
     [Header("Gameplay")] [SerializeField] private List<GameObject> heroes = new(5);
 
@@ -18,20 +19,22 @@ public class PartyManager : MonoBehaviour
     [Header("Selection (auto-find if empty)")] [SerializeField]
     private SelectionController selector;
 
-    [Header("Camera")]
-    [Tooltip("The GameObject the CinemachineCamera follows (has CameraController).")]
-    [SerializeField]
+    [Header("Camera Anchor (the GO Cinemachine follows)")] [SerializeField]
     private Transform cameraAnchor;
 
-    /* ───────── Private ───────── */
+    /* ─── Private ─── */
 
     private int activeIdx;
+    private CameraController camController; // WASD mover on the anchor
+    private bool followActiveHero;
 
-    /* ───────── Unity lifecycle ───────── */
+    /* ─── Awake ─── */
 
     private void Awake()
     {
-        /* pip buttons */
+        if (cameraAnchor) camController = cameraAnchor.GetComponent<CameraController>();
+
+        /* hook pip buttons */
         if (card && card.heroSelectionButtons != null)
             for (var i = 0; i < card.heroSelectionButtons.Length; i++)
             {
@@ -40,10 +43,12 @@ public class PartyManager : MonoBehaviour
                     card.heroSelectionButtons[i].onClick.AddListener(() => SetActive(idx));
             }
 
-        /* stance button */
+        /* hook stance button */
         if (card && card.heroStanceButton)
             card.heroStanceButton.onClick.AddListener(CycleActiveHeroStance);
     }
+
+    /* ─── Start ─── */
 
     private void Start()
     {
@@ -53,15 +58,14 @@ public class PartyManager : MonoBehaviour
             return;
         }
 
-        /* hook HP / XP events once */
+        /* wire HP / XP events once */
         for (var i = 0; i < heroes.Count; i++)
         {
             if (!heroes[i]) continue;
-
             var idx = i;
+
             var hp = heroes[i].GetComponent<Health>();
             var lv = heroes[i].GetComponent<LevelSystem>();
-
             hp.OnHealthChanged += (cur, max) => UpdateHP(idx, cur, max);
             lv.OnXPChanged += (cur, need) => UpdateXP(idx, cur, need);
         }
@@ -69,6 +73,8 @@ public class PartyManager : MonoBehaviour
         SetActive(0); // default hero
         ApplyStances(); // initial behaviour
     }
+
+    /* ─── Update ─── */
 
     private void Update()
     {
@@ -79,14 +85,25 @@ public class PartyManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetActive(3);
         if (Input.GetKeyDown(KeyCode.Alpha5)) SetActive(4);
 
-        /* stance toggle hot-key (T) */
+        /* stance toggle (T) */
         if (Input.GetKeyDown(KeyCode.T)) CycleActiveHeroStance();
 
-        /* camera snap hot-key (Space) */
-        if (Input.GetKeyDown(KeyCode.Space)) SnapCameraToActiveHero();
+        /* follow toggle (Space) */
+        if (Input.GetKeyDown(KeyCode.Space)) ToggleCameraFollow();
     }
 
-    /* ───────── Selection ───────── */
+    /* ─── LateUpdate – keep camera glued when following ─── */
+
+    private void LateUpdate()
+    {
+        if (followActiveHero && IsValidIndex(activeIdx) && cameraAnchor)
+        {
+            var p = heroes[activeIdx].transform.position;
+            cameraAnchor.position = new Vector3(p.x, p.y, cameraAnchor.position.z);
+        }
+    }
+
+    /* ─── Selection ─── */
 
     public void NotifyHotSwap(GameObject heroGO)
     {
@@ -99,7 +116,7 @@ public class PartyManager : MonoBehaviour
         if (!IsValidIndex(index)) return;
         activeIdx = index;
 
-        /* make SelectionController drive right-click movement */
+        /* tell SelectionController so right-click still works */
         if (selector) selector.Select(heroes[index]);
 
         /* visuals */
@@ -115,10 +132,12 @@ public class PartyManager : MonoBehaviour
                 mover.SetSelected(on);
         }
 
+        SnapCameraToActiveHero(); // ← NEW
+
         RefreshCardVisuals(index);
     }
 
-    /* ───────── Stance ───────── */
+    /* ─── Stance system ─── */
 
     private void CycleActiveHeroStance()
     {
@@ -134,40 +153,44 @@ public class PartyManager : MonoBehaviour
         foreach (var h in heroes)
         {
             if (!h) continue;
-
             var mover = h.GetComponent<HeroClickMover>();
             var hs = h.GetComponent<HeroStance>();
 
-            switch (hs.CurrentStance)
+            if (hs.CurrentStance == HeroStance.Stance.Move)
             {
-                case HeroStance.Stance.Move:
-                    mover.ResumePersonalTarget();
-                    mover.SetHold(false);
-                    break;
-
-                case HeroStance.Stance.Hold:
-                    mover.SetHold(true);
-                    break;
+                mover.ResumePersonalTarget();
+                mover.SetHold(false);
+            }
+            else // Hold
+            {
+                mover.SetHold(true);
             }
         }
     }
 
-    /* ───────── Camera snap ───────── */
+    /* ─── Camera helpers ─── */
 
     private void SnapCameraToActiveHero()
     {
         if (!IsValidIndex(activeIdx) || cameraAnchor == null) return;
 
-        var heroPos = heroes[activeIdx].transform.position;
-        cameraAnchor.position = new Vector3(heroPos.x, heroPos.y, cameraAnchor.position.z);
+        var p = heroes[activeIdx].transform.position;
+        cameraAnchor.position = new Vector3(p.x, p.y, cameraAnchor.position.z);
     }
 
-    /* ───────── UI helpers ───────── */
+    private void ToggleCameraFollow()
+    {
+        followActiveHero = !followActiveHero;
+
+        if (followActiveHero) SnapCameraToActiveHero(); // snap on engage
+        if (camController) camController.enabled = !followActiveHero; // WASD off/on
+    }
+
+    /* ─── UI refresh helpers ─── */
 
     private void RefreshCardVisuals(int idx)
     {
         if (!IsValidIndex(idx) || card == null) return;
-
         var hero = heroes[idx];
 
         /* name / icon */
@@ -175,7 +198,7 @@ public class PartyManager : MonoBehaviour
         if (card.heroIcon && hero.TryGetComponent(out SpriteRenderer sr))
             card.heroIcon.sprite = sr.sprite;
 
-        /* stance text */
+        /* stance label */
         if (card.heroStanceText && hero.TryGetComponent(out HeroStance hs))
             card.heroStanceText.text = hs.CurrentStance == HeroStance.Stance.Move
                 ? "<b>Move</b> | Hold"
@@ -187,7 +210,7 @@ public class PartyManager : MonoBehaviour
                 if (card.heroSelectionPips[i])
                     card.heroSelectionPips[i].SetActive(i == idx);
 
-        /* HP / XP immediate refresh */
+        /* HP / XP */
         var hp = hero.GetComponent<Health>();
         var lv = hero.GetComponent<LevelSystem>();
         UpdateHP(idx, hp.CurrentHP, hp.MaxHP);
@@ -208,7 +231,7 @@ public class PartyManager : MonoBehaviour
         if (card.xpBarText) card.xpBarText.text = $"{cur}/{need}";
     }
 
-    /* ───────── helpers ───────── */
+    /* ─── helpers ─── */
 
     private bool IsValidIndex(int i)
     {
