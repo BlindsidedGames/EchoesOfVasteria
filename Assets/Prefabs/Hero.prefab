@@ -119,6 +119,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6094697013023591912}
+  - component: {fileID: 2410353940682958862}
   - component: {fileID: 2082654268980086769}
   - component: {fileID: 7423737259511180041}
   - component: {fileID: 6207545130262382994}
@@ -127,8 +128,7 @@ GameObject:
   - component: {fileID: 8560947185031467494}
   - component: {fileID: 3963385185172838639}
   - component: {fileID: 8421911332518481540}
-  - component: {fileID: 5355424444996415029}
-  - component: {fileID: 1131459961604344989}
+  - component: {fileID: 8749329354619873494}
   m_Layer: 7
   m_Name: Hero
   m_TagString: Hero
@@ -153,6 +153,25 @@ Transform:
   - {fileID: 5943630245733802584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2410353940682958862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe300fb50ad41788b689ebc783977bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionRange: 6.51
+  safeDistance: 2.58
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  currentTarget: {fileID: 0}
+  isPlayerOverridden: 0
 --- !u!114 &2082654268980086769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,15 +197,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f5bfdeda85424fbcfa1a36246e31b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackType: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 64
   attackRate: 1
   baseDamage: 2
-  meleeRange: 0.75
-  telegraphTime: 0.25
-  circleTelegraphPrefab: {fileID: 2384902169417129966, guid: 2d3a16118f698134ebcbb78c81241327, type: 3}
+  attackRange: 3.78
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
   projectileSpeed: 6
 --- !u!114 &6207545130262382994
@@ -289,10 +305,10 @@ MonoBehaviour:
   rotationSpeed: 360
   slowdownDistance: 0.94
   pickNextWaypointDist: 0.84
-  alwaysDrawGizmos: 1
+  alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
-  constrainInsideGraph: 0
+  constrainInsideGraph: 1
 --- !u!114 &3963385185172838639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,16 +342,16 @@ MonoBehaviour:
   centerBackingField: 1
   locked: 0
   lockWhenNotMoving: 0
-  agentTimeHorizon: 2
-  obstacleTimeHorizon: 0.5
+  agentTimeHorizon: 0.2
+  obstacleTimeHorizon: 1
   maxNeighbours: 10
-  layer: 1
-  collidesWith: -1
+  layer: 128
+  collidesWith: 128
   wallAvoidForce: 1
   wallAvoidFalloff: 1
-  priority: 0.5
+  priority: 0.223
   debug: 0
---- !u!58 &5355424444996415029
+--- !u!58 &8749329354619873494
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -371,19 +387,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &1131459961604344989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941723749653959437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d106f600a4134d4e96dd277ba812f90a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <CurrentStance>k__BackingField: 0
 --- !u!1 &7367172317507442004
 GameObject:
   m_ObjectHideFlags: 0

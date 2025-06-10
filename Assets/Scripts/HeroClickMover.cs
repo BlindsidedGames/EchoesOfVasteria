@@ -1,12 +1,10 @@
 using Pathfinding;
-using Pathfinding.RVO;
 using UnityEngine;
 
 /// <summary>One A* agent + personal move-target + selection visuals.</summary>
 [RequireComponent(typeof(Seeker))]
 [RequireComponent(typeof(AIPath))]
 [RequireComponent(typeof(AIDestinationSetter))]
-[RequireComponent(typeof(RVOController))]
 public class HeroClickMover : MonoBehaviour
 {
     /* ─────────── Serialized ─────────── */
@@ -50,7 +48,6 @@ public class HeroClickMover : MonoBehaviour
         SetDestination((Vector2)worldPos);
     }
 
-    /// <summary>Called by PartyManager whenever this hero becomes (un)selected.</summary>
     public void SetSelected(bool isSel)
     {
         if (selectedIndicator) selectedIndicator.SetActive(isSel);
@@ -75,7 +72,7 @@ public class HeroClickMover : MonoBehaviour
     /// <summary>Hold = freeze in place to fight; release to resume normal movement.</summary>
     public void SetHold(bool hold)
     {
-        ai.canMove = !hold; // disables locomotion & rotation
-        ai.isStopped = hold; // makes sure the agent stops immediately
+        // As you pointed out, using isStopped is better than disabling canMove.
+        ai.isStopped = hold;
     }
 }

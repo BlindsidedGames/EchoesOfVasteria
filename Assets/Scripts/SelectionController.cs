@@ -1,4 +1,7 @@
+using Pathfinding;
 using UnityEngine;
+
+// Add this namespace
 
 public class SelectionController : MonoBehaviour
 {
@@ -48,6 +51,13 @@ public class SelectionController : MonoBehaviour
     private void IssueMove()
     {
         if (!selectedMover) return;
+
+        // When the player issues a direct move command, reset the stopping distance for precision.
+        if (selectedMover.TryGetComponent(out AIPath aiPath))
+            aiPath.endReachedDistance = 0.5f; // A small value for precise ground-targeting.
+
+        // Also, notify the HeroAI that the player has taken control.
+        if (selectedMover.TryGetComponent(out HeroAI heroAI)) heroAI.NotifyPlayerCommand();
 
         var mWorld = cam.ScreenToWorldPoint(Input.mousePosition);
         mWorld.z = 0;

@@ -118,6 +118,9 @@ GameObject:
   - component: {fileID: 1464587148212722837}
   - component: {fileID: 2092862414345548173}
   - component: {fileID: 2983596243158799379}
+  - component: {fileID: 1365065969073088839}
+  - component: {fileID: 8369330806658217446}
+  - component: {fileID: 1711541776261050643}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
@@ -271,8 +274,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c65321766704fcc9c50447f632da349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRange: 3
-  moveSpeed: 2
+  visionRange: 7.5
+  attackRange: 1
+  strafeDistance: 0.7
+  heroLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  leashDistance: 20
+  wanderInterval: 3
 --- !u!114 &1464587148212722837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,16 +307,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f5bfdeda85424fbcfa1a36246e31b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackType: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 128
   attackRate: 1
   baseDamage: 2
-  meleeRange: 0.75
-  telegraphTime: 0.25
-  circleTelegraphPrefab: {fileID: 2384902169417129966, guid: 2d3a16118f698134ebcbb78c81241327, type: 3}
-  projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
+  attackRange: 1
+  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
   projectileSpeed: 6
 --- !u!114 &2983596243158799379
 MonoBehaviour:
@@ -322,6 +328,108 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barFill: {fileID: 8278900812602239707}
+--- !u!114 &1365065969073088839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &8369330806658217446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  radius: 0.5
+  height: 2
+  canMove: 1
+  maxSpeed: 1
+  gravity: {x: 0, y: 0, z: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  endReachedDistance: 0.2
+  whenCloseToDestination: 0
+  rvoDensityBehavior:
+    enabled: 1
+    densityThreshold: 0.5
+    returnAfterBeingPushedAway: 0
+    progressAverage: 0
+    lastJobDensityResult: 0
+  repathRateCompatibility: NaN
+  canSearchCompability: 0
+  orientation: 1
+  enableRotation: 0
+  autoRepath:
+    mode: 2
+    period: 0.5
+    sensitivity: 10
+    maximumPeriod: 2
+    visualizeSensitivity: 0
+  maxAcceleration: -2.5
+  rotationSpeed: 360
+  slowdownDistance: 0.6
+  pickNextWaypointDist: 2
+  alwaysDrawGizmos: 0
+  slowWhenNotFacingTarget: 1
+  preventMovingBackwards: 0
+  constrainInsideGraph: 0
+--- !u!114 &1711541776261050643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  radiusBackingField: 0.5
+  heightBackingField: 2
+  centerBackingField: 1
+  locked: 0
+  lockWhenNotMoving: 0
+  agentTimeHorizon: 2
+  obstacleTimeHorizon: 0.5
+  maxNeighbours: 10
+  layer: 64
+  collidesWith: 64
+  wallAvoidForce: 1
+  wallAvoidFalloff: 1
+  priority: 0.5
+  debug: 0
 --- !u!1 &5994897068680810114
 GameObject:
   m_ObjectHideFlags: 0

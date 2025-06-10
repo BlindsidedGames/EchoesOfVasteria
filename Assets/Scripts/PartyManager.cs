@@ -1,12 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-///     • 1-5 or clicking a hero selects it **and** jumps the camera there.
-///     • T cycles the selected hero’s stance (Move | Hold).
-///     • Space toggles “camera follows active hero” on/off
-///     (disables the WASD CameraController while following).
-/// </summary>
 public class PartyManager : MonoBehaviour
 {
     /* ─── Inspector ─── */
@@ -42,10 +36,6 @@ public class PartyManager : MonoBehaviour
                 if (card.heroSelectionButtons[i])
                     card.heroSelectionButtons[i].onClick.AddListener(() => SetActive(idx));
             }
-
-        /* hook stance button */
-        if (card && card.heroStanceButton)
-            card.heroStanceButton.onClick.AddListener(CycleActiveHeroStance);
     }
 
     /* ─── Start ─── */
@@ -71,7 +61,6 @@ public class PartyManager : MonoBehaviour
         }
 
         SetActive(0); // default hero
-        ApplyStances(); // initial behaviour
     }
 
     /* ─── Update ─── */
@@ -84,9 +73,6 @@ public class PartyManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetActive(2);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetActive(3);
         if (Input.GetKeyDown(KeyCode.Alpha5)) SetActive(4);
-
-        /* stance toggle (T) */
-        if (Input.GetKeyDown(KeyCode.T)) CycleActiveHeroStance();
 
         /* follow toggle (Space) */
         if (Input.GetKeyDown(KeyCode.Space)) ToggleCameraFollow();
@@ -132,40 +118,9 @@ public class PartyManager : MonoBehaviour
                 mover.SetSelected(on);
         }
 
-        SnapCameraToActiveHero(); // ← NEW
+        SnapCameraToActiveHero();
 
         RefreshCardVisuals(index);
-    }
-
-    /* ─── Stance system ─── */
-
-    private void CycleActiveHeroStance()
-    {
-        if (!IsValidIndex(activeIdx)) return;
-
-        heroes[activeIdx].GetComponent<HeroStance>().Cycle();
-        ApplyStances();
-        RefreshCardVisuals(activeIdx);
-    }
-
-    private void ApplyStances()
-    {
-        foreach (var h in heroes)
-        {
-            if (!h) continue;
-            var mover = h.GetComponent<HeroClickMover>();
-            var hs = h.GetComponent<HeroStance>();
-
-            if (hs.CurrentStance == HeroStance.Stance.Move)
-            {
-                mover.ResumePersonalTarget();
-                mover.SetHold(false);
-            }
-            else // Hold
-            {
-                mover.SetHold(true);
-            }
-        }
     }
 
     /* ─── Camera helpers ─── */
@@ -197,12 +152,6 @@ public class PartyManager : MonoBehaviour
         if (card.heroNameText) card.heroNameText.text = hero.name;
         if (card.heroIcon && hero.TryGetComponent(out SpriteRenderer sr))
             card.heroIcon.sprite = sr.sprite;
-
-        /* stance label */
-        if (card.heroStanceText && hero.TryGetComponent(out HeroStance hs))
-            card.heroStanceText.text = hs.CurrentStance == HeroStance.Stance.Move
-                ? "<b>Move</b> | Hold"
-                : "Move | <b>Hold</b>";
 
         /* green pips */
         if (card.heroSelectionPips != null)

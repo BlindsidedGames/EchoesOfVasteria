@@ -1,33 +1,56 @@
 using UnityEngine;
 
-/// <summary>Moves forward, damages first valid collider, then destroys itself.</summary>
+/// <summary>Moves towards a target, damages it on arrival, then destroys itself.</summary>
 public class Projectile : MonoBehaviour
 {
-    private int       damage;
-    private LayerMask targetMask;
-    private Vector2   velocity;
+    private Transform target;
+    private int damage;
+    private float speed;
 
-    /// <param name="dir">Normalized direction.</param>
-    public void Init(Vector2 dir, float speed, int dmg, LayerMask mask)
+    // How close we need to be to "hit" the target.
+    public float TARGET_RADIUS = 0.1f;
+
+    /// <summary>
+    ///     Initializes the homing projectile.
+    /// </summary>
+    /// <param name="target">The transform to home in on.</param>
+    /// <param name="speed">How fast the projectile moves.</param>
+    /// <param name="damage">Damage to deal on impact.</param>
+    public void Init(Transform target, float speed, int damage)
     {
-        velocity   = dir * speed;
-        damage     = dmg;
-        targetMask = mask;
+        this.target = target;
+        this.speed = speed;
+        this.damage = damage;
 
-        // Rotate sprite to face travel direction (optional)
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-
-        Destroy(gameObject, 5f); // auto-cleanup
+        Destroy(gameObject, 5f); // Failsafe to clean up projectiles that never hit.
     }
 
-    private void Update() => transform.position += (Vector3)(velocity * Time.deltaTime);
-
-    private void OnTriggerEnter2D(Collider2D other)
+    private void Update()
     {
-        if ((targetMask & (1 << other.gameObject.layer)) == 0) return;
+        // If the target is gone before we reach it, just destroy the projectile.
+        if (target == null || !target.gameObject.activeInHierarchy)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-        if (other.TryGetComponent(out IDamageable d)) d.TakeDamage(damage);
-        Destroy(gameObject);
+        // --- Move towards target ---
+        var step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+
+        // --- Rotate towards target ---
+        Vector2 dir = (target.position - transform.position).normalized;
+        if (dir != Vector2.zero)
+        {
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+
+        // --- Check for impact ---
+        if (Vector2.Distance(transform.position, target.position) < TARGET_RADIUS)
+        {
+            if (target.TryGetComponent(out IDamageable d)) d.TakeDamage(damage);
+            Destroy(gameObject); // Destroy self on impact.
+        }
     }
 }
