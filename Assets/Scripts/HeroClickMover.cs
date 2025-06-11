@@ -28,6 +28,7 @@ public class HeroClickMover : MonoBehaviour
         // personal hidden target ------------------------------------
         var go = new GameObject($"{name}_MoveTarget");
         moveTarget = go.transform;
+        moveTarget.SetParent(transform);
         dst.target = moveTarget;
         go.hideFlags = HideFlags.HideInHierarchy;
 
@@ -74,5 +75,11 @@ public class HeroClickMover : MonoBehaviour
     {
         // As you pointed out, using isStopped is better than disabling canMove.
         ai.isStopped = hold;
+    }
+
+    private void OnDestroy()
+    {
+        if (moveTarget)
+            Destroy(moveTarget.gameObject);
     }
 }
