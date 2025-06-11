@@ -36,27 +36,17 @@ public class LevelSystem : MonoBehaviour
 
     private void Awake()
     {
-        if (oracle != null)
-        {
-            oracle.saveData.HeroStates ??= new Dictionary<string, SaveData.HeroState>();
-            if (oracle.saveData.HeroStates.TryGetValue(gameObject.name, out var state))
-            {
-                level = state.Level;
-                currentXP = state.CurrentXP;
-            }
-            else
-            {
-                oracle.saveData.HeroStates[gameObject.name] = new SaveData.HeroState { Level = level, CurrentXP = currentXP };
-            }
-        }
+        LoadState();
 
         EventHandler.OnSaveData += SaveState;
+        EventHandler.OnLoadData += LoadState;
         OnXPChanged?.Invoke(currentXP, XPNeeded); // initial push
     }
 
     private void OnDestroy()
     {
         EventHandler.OnSaveData -= SaveState;
+        EventHandler.OnLoadData -= LoadState;
     }
 
     private void SaveState()
@@ -71,5 +61,21 @@ public class LevelSystem : MonoBehaviour
 
         state.Level = level;
         state.CurrentXP = currentXP;
+    }
+
+    private void LoadState()
+    {
+        if (oracle == null) return;
+        oracle.saveData.HeroStates ??= new Dictionary<string, SaveData.HeroState>();
+
+        if (oracle.saveData.HeroStates.TryGetValue(gameObject.name, out var state))
+        {
+            level = state.Level;
+            currentXP = state.CurrentXP;
+        }
+        else
+        {
+            oracle.saveData.HeroStates[gameObject.name] = new SaveData.HeroState { Level = level, CurrentXP = currentXP };
+        }
     }
 }
