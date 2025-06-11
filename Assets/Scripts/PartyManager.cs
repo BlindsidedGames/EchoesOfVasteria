@@ -22,6 +22,10 @@ public class PartyManager : MonoBehaviour
     private CameraController camController; // WASD mover on the anchor
     private bool followActiveHero;
 
+    // stored delegates so we can unsubscribe on destroy
+    private readonly List<System.Action<int, int>> hpChangedDelegates = new();
+    private readonly List<System.Action<int, int>> xpChangedDelegates = new();
+
     /* ─── Awake ─── */
 
     private void Awake()
@@ -51,13 +55,22 @@ public class PartyManager : MonoBehaviour
         /* wire HP / XP events once */
         for (var i = 0; i < heroes.Count; i++)
         {
-            if (!heroes[i]) continue;
+            if (!heroes[i])
+            {
+                hpChangedDelegates.Add(null);
+                xpChangedDelegates.Add(null);
+                continue;
+            }
             var idx = i;
 
             var hp = heroes[i].GetComponent<Health>();
             var lv = heroes[i].GetComponent<LevelSystem>();
-            hp.OnHealthChanged += (cur, max) => UpdateHP(idx, cur, max);
-            lv.OnXPChanged += (cur, need) => UpdateXP(idx, cur, need);
+            System.Action<int, int> hpDel = (cur, max) => UpdateHP(idx, cur, max);
+            System.Action<int, int> xpDel = (cur, need) => UpdateXP(idx, cur, need);
+            hp.OnHealthChanged += hpDel;
+            lv.OnXPChanged += xpDel;
+            hpChangedDelegates.Add(hpDel);
+            xpChangedDelegates.Add(xpDel);
         }
 
         SetActive(0); // default hero
@@ -86,6 +99,26 @@ public class PartyManager : MonoBehaviour
         {
             var p = heroes[activeIdx].transform.position;
             cameraAnchor.position = new Vector3(p.x, p.y, cameraAnchor.position.z);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (card && card.heroSelectionButtons != null)
+            foreach (var btn in card.heroSelectionButtons)
+                if (btn) btn.onClick.RemoveAllListeners();
+
+        for (var i = 0; i < heroes.Count; i++)
+        {
+            if (!heroes[i]) continue;
+            var hp = heroes[i].GetComponent<Health>();
+            var lv = heroes[i].GetComponent<LevelSystem>();
+
+            if (i < hpChangedDelegates.Count && hpChangedDelegates[i] != null)
+                hp.OnHealthChanged -= hpChangedDelegates[i];
+
+            if (i < xpChangedDelegates.Count && xpChangedDelegates[i] != null)
+                lv.OnXPChanged -= xpChangedDelegates[i];
         }
     }
 
