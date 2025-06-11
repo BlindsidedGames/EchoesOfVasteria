@@ -10,6 +10,22 @@ public class HeroAnimator : MonoBehaviour
     private AIPath aiPath;
     private Vector2 lastMoveDir = Vector2.down;
     public bool logVelocity = false; // Toggle for logging velocity
+    private Vector2 lookOverrideDir;
+    private float lookOverrideEndTime;
+
+    /// <summary>
+    ///     Temporarily override the look direction of the hero for a set duration.
+    /// </summary>
+    /// <param name="dir">Direction to face.</param>
+    /// <param name="duration">How long to face that direction.</param>
+    public void OverrideLookDirection(Vector2 dir, float duration)
+    {
+        if (dir.sqrMagnitude > 0.0001f)
+        {
+            lookOverrideDir = dir.normalized;
+            lookOverrideEndTime = Time.time + duration;
+        }
+    }
 
     private void Awake()
     {
@@ -28,8 +44,9 @@ public class HeroAnimator : MonoBehaviour
             Debug.Log($"Velocity: {velocity}, Magnitude: {velocity.magnitude}");
         }
         float magnitude = velocity.magnitude / aiPath.maxSpeed;
+        bool overriding = Time.time < lookOverrideEndTime;
 
-        if (velocity.sqrMagnitude > 0.0001f)
+        if (!overriding && velocity.sqrMagnitude > 0.0001f)
         {
             Vector2 norm = velocity.normalized;
 
@@ -51,6 +68,10 @@ public class HeroAnimator : MonoBehaviour
                     0f,
                     Mathf.Abs(norm.y) > 0.01f ? Mathf.Sign(norm.y) : 0f);
             }
+        }
+        else if (overriding)
+        {
+            lastMoveDir = lookOverrideDir;
         }
 
         animator.SetFloat("MoveX", lastMoveDir.x);

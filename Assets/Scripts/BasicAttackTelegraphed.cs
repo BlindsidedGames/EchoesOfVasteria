@@ -13,6 +13,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
     [Header("Ranged")] [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float projectileSpeed = 6f;
+    [SerializeField] private float lookAtDuration = 0.2f;
 
     public bool IsPlayerControlled { get; set; }
     private float nextAttackTime;
@@ -59,6 +60,9 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
         var proj = Instantiate(projectilePrefab, firePos, Quaternion.identity);
         proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalDamage);
+
+        if (target != null && TryGetComponent(out HeroAnimator anim))
+            anim.OverrideLookDirection(target.position - transform.position, lookAtDuration);
 
         nextAttackTime = Time.time + attackRate;
 
