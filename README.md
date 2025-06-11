@@ -17,3 +17,7 @@ Timeless Echoes is a Unity project. The game was created using Unity **6000.1.6f
 ## Building
 
 To create a standalone build, go to **File > Build Settings...**, select your target platform and click **Build**.
+
+## Development Guidelines
+
+When modifying the project, consult [Unity's official documentation](https://docs.unity3d.com) and ensure changes are compatible with **Unity 6000.1.6f1**.
