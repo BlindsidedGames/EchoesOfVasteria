@@ -32,6 +32,9 @@ public class EnemyAI : MonoBehaviour
     private float timeToNextWander;
     private BasicAttackTelegraphed attacker; // Reference to the attack script
 
+    // Preallocated buffer for non-allocating physics queries
+    private readonly Collider2D[] heroBuffer = new Collider2D[16];
+
     // --- A* Components ---
     private AIPath ai;
     private Seeker seeker;
@@ -132,12 +135,13 @@ public class EnemyAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var potentialTargets = Physics2D.OverlapCircleAll(transform.position, visionRange, heroLayer);
+        var hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, visionRange, heroBuffer, heroLayer);
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
-        foreach (var hit in potentialTargets)
+        for (var i = 0; i < hitCount; i++)
         {
+            var hit = heroBuffer[i];
             var dist = Vector2.Distance(transform.position, hit.transform.position);
             if (dist < closestDist)
             {
