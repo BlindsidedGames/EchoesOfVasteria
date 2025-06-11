@@ -62,6 +62,7 @@ public class HeroAI : MonoBehaviour
             if (wasInCombat)
             {
                 wasInCombat = false;
+                mover.SetHold(false); // ensure movement resumes
                 if (hasReturnDestination)
                 {
                     mover.SetDestination(lastPlayerDestination);
