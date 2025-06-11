@@ -80,7 +80,7 @@ public class HeroAI : MonoBehaviour
     private Vector2 FindSafeKitePoint()
     {
         // Get all enemies in vision range using a non-allocating query
-        var hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, visionRange, enemyBuffer, enemyLayer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyBuffer, enemyLayer);
 
         var bestScore = -1f;
         // The ideal distance we want to be from our target
@@ -134,7 +134,7 @@ public class HeroAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, visionRange, enemyBuffer, enemyLayer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyBuffer, enemyLayer);
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
