@@ -8,6 +8,7 @@ public class HeroAnimator : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private AIPath aiPath;
+    private Vector2 lastMoveDir = Vector2.down;
 
     private void Awake()
     {
@@ -22,12 +23,19 @@ public class HeroAnimator : MonoBehaviour
 
         Vector2 velocity = aiPath.desiredVelocity;
         float magnitude = velocity.magnitude / aiPath.maxSpeed;
-        Vector2 dir = velocity.sqrMagnitude > 0.0001f ? velocity.normalized : Vector2.zero;
 
-        animator.SetFloat("MoveX", dir.x);
-        animator.SetFloat("MoveY", dir.y);
+        if (velocity.sqrMagnitude > 0.0001f)
+        {
+            Vector2 norm = velocity.normalized;
+            lastMoveDir = new Vector2(
+                Mathf.Abs(norm.x) > 0.01f ? Mathf.Sign(norm.x) : 0f,
+                Mathf.Abs(norm.y) > 0.01f ? Mathf.Sign(norm.y) : 0f);
+        }
+
+        animator.SetFloat("MoveX", lastMoveDir.x);
+        animator.SetFloat("MoveY", lastMoveDir.y);
         animator.SetFloat("MoveMagnitude", magnitude);
 
-        spriteRenderer.flipX = dir.x < 0f;
+        spriteRenderer.flipX = lastMoveDir.x < 0f;
     }
 }
