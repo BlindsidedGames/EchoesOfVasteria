@@ -4,9 +4,11 @@ using UnityEngine;
 public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private int maxHP = 10;
+    [SerializeField] private int defense = 1;
 
     public  int MaxHP      => maxHP;
     public  int CurrentHP  { get; private set; }
+    public  int Defense    => defense;
 
     public  System.Action            OnDeath;
     public  System.Action<int, int>  OnHealthChanged;   // (current, max)
@@ -21,7 +23,8 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (CurrentHP <= 0) return;
 
-        CurrentHP -= dmg;
+        int actualDamage = Mathf.Max(dmg - defense, 0);
+        CurrentHP -= actualDamage;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
 
         if (CurrentHP <= 0)
