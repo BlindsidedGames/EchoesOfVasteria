@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
+using EventHandler = Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
 /// <summary>Tracks XP / level and fires events when either changes.</summary>
