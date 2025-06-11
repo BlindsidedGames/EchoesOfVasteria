@@ -191,8 +191,8 @@ public class PartyManager : MonoBehaviour
 
         /* name / icon */
         if (card.heroNameText) card.heroNameText.text = hero.name;
-        if (card.heroIcon && hero.TryGetComponent(out SpriteRenderer sr))
-            card.heroIcon.sprite = sr.sprite;
+        var sr = hero.GetComponentInChildren<SpriteRenderer>();
+        if (sr) card.UpdateHeroIcon(sr.sprite);
 
         /* green pips */
         if (card.heroSelectionPips != null)
