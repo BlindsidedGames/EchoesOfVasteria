@@ -1,4 +1,3 @@
-using System.Linq;
 using Pathfinding;
 using UnityEngine;
 
@@ -19,11 +18,16 @@ public class HeroAI : MonoBehaviour
     private HeroClickMover mover;
     private BasicAttackTelegraphed attacker;
 
+    // Preallocated buffer for non-allocating physics queries
+    private readonly Collider2D[] enemyBuffer = new Collider2D[32];
+    private ContactFilter2D enemyFilter;
+
     private void Awake()
     {
         ai = GetComponent<AIPath>();
         mover = GetComponent<HeroClickMover>();
         attacker = GetComponent<BasicAttackTelegraphed>();
+        enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
     }
 
     private void Update()
@@ -77,9 +81,8 @@ public class HeroAI : MonoBehaviour
     /// <returns>A safe world position to move to.</returns>
     private Vector2 FindSafeKitePoint()
     {
-        // Get all enemies in vision range
-        var allEnemyColliders = Physics2D.OverlapCircleAll(transform.position, visionRange, enemyLayer);
-        var otherEnemies = allEnemyColliders.Where(c => c.transform != currentTarget).ToList();
+        // Get all enemies in vision range using a non-allocating query
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
 
         var bestScore = -1f;
         // The ideal distance we want to be from our target
@@ -95,12 +98,23 @@ public class HeroAI : MonoBehaviour
             var candidatePoint = (Vector2)currentTarget.position + directionFromTarget * idealKiteDistance;
 
             float score;
-            // If there are other enemies, the best point is the one furthest from them.
-            if (otherEnemies.Any())
+
+            // Determine score based on distance from other enemies (ignoring the current target)
+            bool hasOtherEnemy = false;
+            float minDistance = float.MaxValue;
+            for (var j = 0; j < hitCount; j++)
             {
-                var minDistanceToOtherEnemy =
-                    otherEnemies.Min(e => Vector2.Distance(candidatePoint, e.transform.position));
-                score = minDistanceToOtherEnemy;
+                var collider = enemyBuffer[j];
+                if (collider.transform == currentTarget) continue;
+
+                hasOtherEnemy = true;
+                var dist = Vector2.Distance(candidatePoint, collider.transform.position);
+                if (dist < minDistance) minDistance = dist;
+            }
+
+            if (hasOtherEnemy)
+            {
+                score = minDistance;
             }
             else
             {
@@ -122,12 +136,13 @@ public class HeroAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var potentialTargets = Physics2D.OverlapCircleAll(transform.position, visionRange, enemyLayer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
-        foreach (var hit in potentialTargets)
+        for (var i = 0; i < hitCount; i++)
         {
+            var hit = enemyBuffer[i];
             var dist = Vector2.Distance(transform.position, hit.transform.position);
             if (dist < closestDist)
             {
