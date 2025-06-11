@@ -22,6 +22,9 @@ public class PartyManager : MonoBehaviour
     private CameraController camController; // WASD mover on the anchor
     private bool followActiveHero;
 
+    /// <summary>The currently active hero or null if none.</summary>
+    public GameObject ActiveHero => IsValidIndex(activeIdx) ? heroes[activeIdx] : null;
+
     // stored delegates so we can unsubscribe on destroy
     private readonly List<System.Action<int, int>> hpChangedDelegates = new();
     private readonly List<System.Action<int, int>> xpChangedDelegates = new();

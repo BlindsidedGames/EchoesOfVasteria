@@ -17,14 +17,23 @@ public class Health : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(CurrentHP, maxHP);      // push initial value
     }
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(int dmg, GameObject attacker)
     {
         if (CurrentHP <= 0) return;
 
         CurrentHP -= dmg;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
 
-        if (CurrentHP <= 0) OnDeath?.Invoke();
+        if (CurrentHP <= 0)
+        {
+            OnDeath?.Invoke();
+
+            if (CompareTag("Enemy") && attacker && attacker.CompareTag("Hero"))
+            {
+                if (attacker.TryGetComponent(out LevelSystem lvl))
+                    lvl.GrantXP(5);
+            }
+        }
     }
 
     /* Optional heal helper */
