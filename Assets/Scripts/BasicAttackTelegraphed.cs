@@ -24,7 +24,26 @@ public class BasicAttackTelegraphed : MonoBehaviour
     [SerializeField] private float lookAtDuration = 0.2f;
 
     public bool IsPlayerControlled { get; set; }
+    private LevelSystem levelSystem;
     private float nextAttackTime;
+
+    private void Awake()
+    {
+        levelSystem = GetComponent<LevelSystem>();
+        if (levelSystem != null)
+            levelSystem.OnLevelUp += HandleLevelUp;
+    }
+
+    private void OnDestroy()
+    {
+        if (levelSystem != null)
+            levelSystem.OnLevelUp -= HandleLevelUp;
+    }
+
+    private void HandleLevelUp(int newLevel)
+    {
+        baseDamage += 1;
+    }
 
     private void Update()
     {
