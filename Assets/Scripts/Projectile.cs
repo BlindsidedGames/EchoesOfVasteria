@@ -6,7 +6,6 @@ public class Projectile : MonoBehaviour
     private Transform target;
     private int damage;
     private float speed;
-    private bool isHealing;
 
     // How close we need to be to "hit" the target.
     public float TARGET_RADIUS = 0.1f;
@@ -16,14 +15,12 @@ public class Projectile : MonoBehaviour
     /// </summary>
     /// <param name="target">The transform to home in on.</param>
     /// <param name="speed">How fast the projectile moves.</param>
-    /// <param name="damage">Amount to apply on impact.</param>
-    /// <param name="healing">If true the amount will heal instead of damage.</param>
-    public void Init(Transform target, float speed, int damage, bool healing = false)
+    /// <param name="damage">Damage to deal on impact.</param>
+    public void Init(Transform target, float speed, int damage)
     {
         this.target = target;
         this.speed = speed;
         this.damage = damage;
-        this.isHealing = healing;
 
         Destroy(gameObject, 5f); // Failsafe to clean up projectiles that never hit.
     }
@@ -52,14 +49,7 @@ public class Projectile : MonoBehaviour
         // --- Check for impact ---
         if (Vector2.Distance(transform.position, target.position) < TARGET_RADIUS)
         {
-            if (isHealing)
-            {
-                if (target.TryGetComponent(out Health h)) h.Heal(damage);
-            }
-            else
-            {
-                if (target.TryGetComponent(out IDamageable d)) d.TakeDamage(damage);
-            }
+            if (target.TryGetComponent(out IDamageable d)) d.TakeDamage(damage);
             Destroy(gameObject); // Destroy self on impact.
         }
     }
