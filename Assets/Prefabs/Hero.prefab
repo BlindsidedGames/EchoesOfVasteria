@@ -123,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b20864d2b5642dce7635ca09e8aa700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logVelocity: 0
 --- !u!1 &1941723749653959437
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,6 +184,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  blockingLayer:
+    serializedVersion: 2
+    m_Bits: 256
   currentTarget: {fileID: 0}
   isPlayerOverridden: 0
 --- !u!114 &2082654268980086769
@@ -218,6 +222,7 @@ MonoBehaviour:
   attackRange: 4
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
   projectileSpeed: 6
+  lookAtDuration: 0.2
 --- !u!114 &6207545130262382994
 MonoBehaviour:
   m_ObjectHideFlags: 0
