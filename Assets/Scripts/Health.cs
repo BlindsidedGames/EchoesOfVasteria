@@ -33,8 +33,12 @@ public class Health : MonoBehaviour, IDamageable
 
             if (CompareTag("Enemy") && attacker && attacker.CompareTag("Hero"))
             {
+                int reward = 5;
+                if (TryGetComponent(out EnemyAI enemy))
+                    reward = enemy.XPReward;
+
                 if (attacker.TryGetComponent(out LevelSystem lvl))
-                    lvl.GrantXP(5);
+                    lvl.GrantXP(reward);
             }
         }
     }

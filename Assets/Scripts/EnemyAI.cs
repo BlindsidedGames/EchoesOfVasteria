@@ -25,6 +25,10 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private float wanderInterval = 3f; // How often to pick a new wander point
 
+    [Header("Rewards")] [SerializeField]
+    private int xpReward = 5;
+    public int XPReward => xpReward;
+
     // --- State & References ---
     public AIState CurrentState { get; private set; } = AIState.Wandering;
     private Transform currentTarget;

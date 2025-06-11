@@ -108,9 +108,6 @@ public class BasicAttackTelegraphed : MonoBehaviour
             anim.OverrideLookDirection(target.position - transform.position, lookAtDuration);
 
         nextAttackTime = Time.time + attackRate;
-
-        if (CompareTag("Hero") && TryGetComponent(out LevelSystem lvl))
-            lvl.GrantXP(1);
     }
 
     private void FireHeal(Transform target, bool isPlayerAction)
