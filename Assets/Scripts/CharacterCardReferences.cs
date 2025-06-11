@@ -19,4 +19,13 @@ public class CharacterCardReferences : MonoBehaviour
 
     [Header("Party Selection")] public GameObject[] heroSelectionPips;
     public Button[] heroSelectionButtons;
+
+    /// <summary>
+    /// Updates the card's icon with the provided sprite.
+    /// </summary>
+    /// <param name="sprite">The sprite to display for the hero.</param>
+    public void UpdateHeroIcon(Sprite sprite)
+    {
+        if (heroIcon) heroIcon.sprite = sprite;
+    }
 }
