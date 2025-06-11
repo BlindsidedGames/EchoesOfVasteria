@@ -21,11 +21,15 @@ public class HeroAI : MonoBehaviour
     // Preallocated buffer for non-allocating physics queries
     private readonly Collider2D[] enemyBuffer = new Collider2D[32];
 
+    private ContactFilter2D enemyFilter;
+
+
     private void Awake()
     {
         ai = GetComponent<AIPath>();
         mover = GetComponent<HeroClickMover>();
         attacker = GetComponent<BasicAttackTelegraphed>();
+        enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
     }
 
     private void Update()
@@ -80,7 +84,8 @@ public class HeroAI : MonoBehaviour
     private Vector2 FindSafeKitePoint()
     {
         // Get all enemies in vision range using a non-allocating query
-        var hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, visionRange, enemyBuffer, enemyLayer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
+
 
         var bestScore = -1f;
         // The ideal distance we want to be from our target
@@ -134,7 +139,8 @@ public class HeroAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, visionRange, enemyBuffer, enemyLayer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
+
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
