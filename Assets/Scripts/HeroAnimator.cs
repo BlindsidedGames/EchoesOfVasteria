@@ -9,6 +9,7 @@ public class HeroAnimator : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private AIPath aiPath;
     private Vector2 lastMoveDir = Vector2.down;
+    public bool logVelocity = false; // Toggle for logging velocity
 
     private void Awake()
     {
@@ -22,6 +23,10 @@ public class HeroAnimator : MonoBehaviour
         if (aiPath == null) return;
 
         Vector2 velocity = aiPath.desiredVelocity;
+        if (logVelocity)
+        {
+            Debug.Log($"Velocity: {velocity}, Magnitude: {velocity.magnitude}");
+        }
         float magnitude = velocity.magnitude / aiPath.maxSpeed;
 
         if (velocity.sqrMagnitude > 0.0001f)

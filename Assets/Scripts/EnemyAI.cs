@@ -32,10 +32,6 @@ public class EnemyAI : MonoBehaviour
     private float timeToNextWander;
     private BasicAttackTelegraphed attacker; // Reference to the attack script
 
-    // Preallocated buffer for non-allocating physics queries
-    private readonly Collider2D[] heroBuffer = new Collider2D[16];
-    private ContactFilter2D heroFilter;
-
     // --- A* Components ---
     private AIPath ai;
     private Seeker seeker;
@@ -45,7 +41,6 @@ public class EnemyAI : MonoBehaviour
         ai = GetComponent<AIPath>();
         seeker = GetComponent<Seeker>();
         attacker = GetComponent<BasicAttackTelegraphed>(); // Get the attack component
-        heroFilter = new ContactFilter2D { layerMask = heroLayer, useLayerMask = true, useTriggers = false };
     }
 
     public void SetSpawnAnchor(Vector3 anchor)
@@ -137,14 +132,12 @@ public class EnemyAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, heroFilter, heroBuffer);
-
+        var potentialTargets = Physics2D.OverlapCircleAll(transform.position, visionRange, heroLayer);
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
-        for (var i = 0; i < hitCount; i++)
+        foreach (var hit in potentialTargets)
         {
-            var hit = heroBuffer[i];
             var dist = Vector2.Distance(transform.position, hit.transform.position);
             if (dist < closestDist)
             {
