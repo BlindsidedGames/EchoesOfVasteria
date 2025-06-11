@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     private int damage;
     private float speed;
     private bool isHealing;
+    private GameObject owner;
 
     // How close we need to be to "hit" the target.
     public float TARGET_RADIUS = 0.1f;
@@ -17,12 +18,14 @@ public class Projectile : MonoBehaviour
     /// <param name="target">The transform to home in on.</param>
     /// <param name="speed">How fast the projectile moves.</param>
     /// <param name="damage">Amount to apply on impact.</param>
+    /// <param name="owner">GameObject that fired the projectile.</param>
     /// <param name="healing">If true the amount will heal instead of damage.</param>
-    public void Init(Transform target, float speed, int damage, bool healing = false)
+    public void Init(Transform target, float speed, int damage, GameObject owner, bool healing = false)
     {
         this.target = target;
         this.speed = speed;
         this.damage = damage;
+        this.owner = owner;
         this.isHealing = healing;
 
         Destroy(gameObject, 5f); // Failsafe to clean up projectiles that never hit.
@@ -58,7 +61,7 @@ public class Projectile : MonoBehaviour
             }
             else
             {
-                if (target.TryGetComponent(out IDamageable d)) d.TakeDamage(damage);
+                if (target.TryGetComponent(out IDamageable d)) d.TakeDamage(damage, owner);
             }
             Destroy(gameObject); // Destroy self on impact.
         }

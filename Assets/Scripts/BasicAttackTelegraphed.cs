@@ -101,7 +101,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
         }
 
         var proj = Instantiate(projectilePrefab, firePos, Quaternion.identity);
-        proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalDamage);
+        proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalDamage, gameObject);
 
         var anim = GetComponentInChildren<HeroAnimator>();
         if (target != null && anim != null)
@@ -125,7 +125,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
         }
 
         var proj = Instantiate(projectilePrefab, firePos, Quaternion.identity);
-        proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalHeal, true);
+        proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalHeal, gameObject, true);
 
         var anim = GetComponentInChildren<HeroAnimator>();
         if (target != null && anim != null)
