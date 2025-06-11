@@ -51,6 +51,12 @@ public class BasicAttackTelegraphed : MonoBehaviour
         var firePos = transform.position;
         var finalDamage = isPlayerAttack ? baseDamage * 2 : baseDamage;
 
+        if (projectilePrefab == null)
+        {
+            Debug.LogError($"{nameof(BasicAttackTelegraphed)} on {name} has no projectile prefab set.");
+            return;
+        }
+
         var proj = Instantiate(projectilePrefab, firePos, Quaternion.identity);
         proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalDamage);
 
