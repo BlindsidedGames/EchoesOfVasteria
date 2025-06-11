@@ -8,8 +8,14 @@ namespace Blindsided
 
         void Start()
         {
+            if (cursorTexture2D == null)
+            {
+                Debug.LogWarning("Cursor texture not assigned in CursorSetter.");
+                return;
+            }
+
             Vector2 hotspot = new Vector2(cursorTexture2D.width / 2f, cursorTexture2D.height / 2f);
-            Cursor.SetCursor(cursorTexture2D, hotspot, CursorMode.Auto); 
+            Cursor.SetCursor(cursorTexture2D, hotspot, CursorMode.Auto);
         }
 
     }

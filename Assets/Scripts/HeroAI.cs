@@ -20,7 +20,9 @@ public class HeroAI : MonoBehaviour
 
     // Preallocated buffer for non-allocating physics queries
     private readonly Collider2D[] enemyBuffer = new Collider2D[32];
+
     private ContactFilter2D enemyFilter;
+
 
     private void Awake()
     {
@@ -84,6 +86,7 @@ public class HeroAI : MonoBehaviour
         // Get all enemies in vision range using a non-allocating query
         var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
 
+
         var bestScore = -1f;
         // The ideal distance we want to be from our target
         var idealKiteDistance = safeDistance + 2f;
@@ -137,6 +140,7 @@ public class HeroAI : MonoBehaviour
     private void FindTarget()
     {
         var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
+
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 

@@ -138,6 +138,7 @@ public class EnemyAI : MonoBehaviour
     private void FindTarget()
     {
         var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, heroFilter, heroBuffer);
+
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
