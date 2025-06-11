@@ -16,7 +16,7 @@ public class HeroAI : MonoBehaviour
     public bool isPlayerOverridden;
 
     // Player issued destination to return to after combat
-    private Vector3 lastPlayerDestination;
+    public Vector3 lastPlayerDestination;
     private bool hasReturnDestination;
     private bool wasInCombat;
 
