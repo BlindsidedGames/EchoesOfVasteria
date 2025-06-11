@@ -37,7 +37,7 @@ public class LevelSystem : MonoBehaviour
     {
         if (oracle != null)
         {
-            oracle.saveData.HeroStates ??= new Dictionary<string, HeroState>();
+            oracle.saveData.HeroStates ??= new Dictionary<string, SaveData.HeroState>();
             if (oracle.saveData.HeroStates.TryGetValue(gameObject.name, out var state))
             {
                 level = state.Level;
@@ -45,7 +45,7 @@ public class LevelSystem : MonoBehaviour
             }
             else
             {
-                oracle.saveData.HeroStates[gameObject.name] = new HeroState { Level = level, CurrentXP = currentXP };
+                oracle.saveData.HeroStates[gameObject.name] = new SaveData.HeroState { Level = level, CurrentXP = currentXP };
             }
         }
 
@@ -63,10 +63,10 @@ public class LevelSystem : MonoBehaviour
         if (oracle == null) return;
         var states = oracle.saveData.HeroStates;
         if (states == null)
-            oracle.saveData.HeroStates = states = new Dictionary<string, HeroState>();
+            oracle.saveData.HeroStates = states = new Dictionary<string, SaveData.HeroState>();
 
         if (!states.TryGetValue(gameObject.name, out var state))
-            states[gameObject.name] = state = new HeroState();
+            states[gameObject.name] = state = new SaveData.HeroState();
 
         state.Level = level;
         state.CurrentXP = currentXP;
