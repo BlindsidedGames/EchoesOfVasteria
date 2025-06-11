@@ -87,6 +87,10 @@ public class EnemyAI : MonoBehaviour
 
     private void HandleChasingState()
     {
+        // Re-evaluate the best hero target each frame so we always chase the
+        // closest opponent instead of tunneling the first one we spotted.
+        FindTarget();
+
         if (currentTarget == null)
         {
             CurrentState = AIState.Wandering;
