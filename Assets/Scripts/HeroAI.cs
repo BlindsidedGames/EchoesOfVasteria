@@ -10,6 +10,7 @@ public class HeroAI : MonoBehaviour
 
     [SerializeField] private float safeDistance = 8f;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask blockingLayer;
 
     public Transform currentTarget;
     public bool isPlayerOverridden;
@@ -22,6 +23,7 @@ public class HeroAI : MonoBehaviour
     private readonly Collider2D[] enemyBuffer = new Collider2D[32];
 
     private ContactFilter2D enemyFilter;
+    private ContactFilter2D blockingFilter;
 
 
     private void Awake()
@@ -30,6 +32,7 @@ public class HeroAI : MonoBehaviour
         mover = GetComponent<HeroClickMover>();
         attacker = GetComponent<BasicAttackTelegraphed>();
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
+        blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };
     }
 
     private void Update()
@@ -91,6 +94,7 @@ public class HeroAI : MonoBehaviour
         // The ideal distance we want to be from our target
         var idealKiteDistance = safeDistance + 2f;
         Vector2 bestPoint = transform.position; // Fallback to current position
+        bool foundValid = false;
 
         // Check a number of points in a circle around our target to find the safest one
         var numCandidatePoints = 16;
@@ -99,6 +103,12 @@ public class HeroAI : MonoBehaviour
             var angle = i * (360f / numCandidatePoints);
             var directionFromTarget = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
             var candidatePoint = (Vector2)currentTarget.position + directionFromTarget * idealKiteDistance;
+
+            if (Physics2D.OverlapPoint(candidatePoint, blockingLayer))
+                continue;
+
+            if (Physics2D.Linecast(transform.position, candidatePoint, blockingLayer))
+                continue;
 
             float score;
 
@@ -130,10 +140,11 @@ public class HeroAI : MonoBehaviour
             {
                 bestScore = score;
                 bestPoint = candidatePoint;
+                foundValid = true;
             }
         }
 
-        return bestPoint;
+        return foundValid ? bestPoint : (Vector2)transform.position;
     }
 
 
