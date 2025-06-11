@@ -56,11 +56,12 @@ public class SelectionController : MonoBehaviour
         if (selectedMover.TryGetComponent(out AIPath aiPath))
             aiPath.endReachedDistance = 0.5f; // A small value for precise ground-targeting.
 
-        // Also, notify the HeroAI that the player has taken control.
-        if (selectedMover.TryGetComponent(out HeroAI heroAI)) heroAI.NotifyPlayerCommand();
-
         var mWorld = cam.ScreenToWorldPoint(Input.mousePosition);
         mWorld.z = 0;
+
+        // Also, notify the HeroAI that the player has taken control and the desired destination.
+        if (selectedMover.TryGetComponent(out HeroAI heroAI)) heroAI.NotifyPlayerCommand((Vector2)mWorld);
+
         selectedMover.SetDestination((Vector2)mWorld);
     }
 }
