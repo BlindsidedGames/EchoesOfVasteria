@@ -15,6 +15,11 @@ public class HeroAI : MonoBehaviour
     public Transform currentTarget;
     public bool isPlayerOverridden;
 
+    // Player issued destination to return to after combat
+    private Vector3 lastPlayerDestination;
+    private bool hasReturnDestination;
+    private bool wasInCombat;
+
     private AIPath ai;
     private HeroClickMover mover;
     private BasicAttackTelegraphed attacker;
@@ -33,6 +38,10 @@ public class HeroAI : MonoBehaviour
         attacker = GetComponent<BasicAttackTelegraphed>();
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
         blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };
+
+        // Default destination is the starting position so heroes can return here
+        lastPlayerDestination = transform.position;
+        hasReturnDestination = true;
     }
 
     private void Update()
@@ -43,7 +52,22 @@ public class HeroAI : MonoBehaviour
 
         FindTarget();
 
-        if (currentTarget != null) HandleCombatMovement();
+        if (currentTarget != null)
+        {
+            wasInCombat = true;
+            HandleCombatMovement();
+        }
+        else
+        {
+            if (wasInCombat)
+            {
+                wasInCombat = false;
+                if (hasReturnDestination)
+                {
+                    mover.SetDestination(lastPlayerDestination);
+                }
+            }
+        }
     }
 
     private void HandleCombatMovement()
@@ -180,10 +204,12 @@ public class HeroAI : MonoBehaviour
         currentTarget = closestTarget;
     }
 
-    public void NotifyPlayerCommand()
+    public void NotifyPlayerCommand(Vector2 destination)
     {
         isPlayerOverridden = true;
         mover.SetHold(false);
+        lastPlayerDestination = destination;
+        hasReturnDestination = true;
     }
 
 #if UNITY_EDITOR
