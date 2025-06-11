@@ -192,6 +192,13 @@ public class PartyManager : MonoBehaviour
                 if (card.heroSelectionPips[i])
                     card.heroSelectionPips[i].SetActive(i == idx);
 
+        /* damage / defense */
+        if (card.heroDamageText && hero.TryGetComponent(out BasicAttackTelegraphed atk))
+            card.heroDamageText.text = $"Damage: {atk.BaseDamage}";
+
+        if (card.heroDefenseText && hero.TryGetComponent(out HeroStats stats))
+            card.heroDefenseText.text = $"Defense: {stats.Defense}";
+
         /* HP / XP */
         var hp = hero.GetComponent<Health>();
         var lv = hero.GetComponent<LevelSystem>();

@@ -7,6 +7,9 @@ public class BasicAttackTelegraphed : MonoBehaviour
     [SerializeField] private LayerMask allyMask;
     [SerializeField] private float attackRate = 1f;
     [SerializeField] private int baseDamage = 2;
+
+    /// <summary>Base damage dealt by this hero.</summary>
+    public int BaseDamage => baseDamage;
     [SerializeField] private float attackRange = 15f;
 
     [Header("Healing")] [SerializeField] private bool canHealAllies = false;
