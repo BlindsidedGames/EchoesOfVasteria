@@ -32,7 +32,11 @@ public class BasicAttackTelegraphed : MonoBehaviour
     private void TryPlayerAttack()
     {
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var combinedMask = canHealAllies ? targetMask | allyMask : targetMask;
+        // Build a mask of potential targets. Explicitly cast to LayerMask so the
+        // conditional expression does not confuse ints with masks.
+        LayerMask combinedMask = targetMask;
+        if (canHealAllies) combinedMask |= allyMask;
+
         var hit = Physics2D.OverlapPoint(mouseWorldPos, combinedMask);
         if (!hit) return;
 
