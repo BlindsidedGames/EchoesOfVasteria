@@ -96,6 +96,17 @@ public class HeroAI : MonoBehaviour
         Vector2 bestPoint = transform.position; // Fallback to current position
         bool foundValid = false;
 
+        // If the hero only sees the current target, simply move directly away from it
+        if (hitCount <= 1)
+        {
+            var awayDir = ((Vector2)transform.position - (Vector2)currentTarget.position).normalized;
+            var directPoint = (Vector2)currentTarget.position + awayDir * idealKiteDistance;
+
+            if (!Physics2D.OverlapPoint(directPoint, blockingLayer) &&
+                !Physics2D.Linecast(transform.position, directPoint, blockingLayer))
+                return directPoint;
+        }
+
         // Check a number of points in a circle around our target to find the safest one
         var numCandidatePoints = 16;
         for (var i = 0; i < numCandidatePoints; i++)
