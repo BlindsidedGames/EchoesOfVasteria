@@ -61,7 +61,8 @@ public class BasicAttackTelegraphed : MonoBehaviour
         var proj = Instantiate(projectilePrefab, firePos, Quaternion.identity);
         proj.GetComponent<Projectile>().Init(target, projectileSpeed, finalDamage);
 
-        if (target != null && TryGetComponent(out HeroAnimator anim))
+        var anim = GetComponentInChildren<HeroAnimator>();
+        if (target != null && anim != null)
             anim.OverrideLookDirection(target.position - transform.position, lookAtDuration);
 
         nextAttackTime = Time.time + attackRate;
