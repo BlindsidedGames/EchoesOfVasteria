@@ -282,6 +282,7 @@ MonoBehaviour:
     m_Bits: 128
   leashDistance: 20
   wanderInterval: 3
+  xpReward: 50
 --- !u!114 &1464587148212722837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,6 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
+  defense: 1
 --- !u!114 &2092862414345548173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,11 +312,18 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 128
+  allyMask:
+    serializedVersion: 2
+    m_Bits: 0
   attackRate: 1
   baseDamage: 2
   attackRange: 1
+  canHealAllies: 0
+  healRange: 10
+  healAmount: 2
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
   projectileSpeed: 6
+  lookAtDuration: 0.2
 --- !u!114 &2983596243158799379
 MonoBehaviour:
   m_ObjectHideFlags: 0
