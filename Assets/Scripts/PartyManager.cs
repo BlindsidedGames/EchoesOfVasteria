@@ -25,6 +25,7 @@ public class PartyManager : MonoBehaviour
     // stored delegates so we can unsubscribe on destroy
     private readonly List<System.Action<int, int>> hpChangedDelegates = new();
     private readonly List<System.Action<int, int>> xpChangedDelegates = new();
+    private readonly List<System.Action<int>> levelUpDelegates = new();
 
     /* ─── Awake ─── */
 
@@ -52,13 +53,14 @@ public class PartyManager : MonoBehaviour
             return;
         }
 
-        /* wire HP / XP events once */
+        /* wire HP / XP / Level events once */
         for (var i = 0; i < heroes.Count; i++)
         {
             if (!heroes[i])
             {
                 hpChangedDelegates.Add(null);
                 xpChangedDelegates.Add(null);
+                levelUpDelegates.Add(null);
                 continue;
             }
             var idx = i;
@@ -67,10 +69,13 @@ public class PartyManager : MonoBehaviour
             var lv = heroes[i].GetComponent<LevelSystem>();
             System.Action<int, int> hpDel = (cur, max) => UpdateHP(idx, cur, max);
             System.Action<int, int> xpDel = (cur, need) => UpdateXP(idx, cur, need);
+            System.Action<int> lvlDel = _ => { if (idx == activeIdx) RefreshCardVisuals(idx); };
             hp.OnHealthChanged += hpDel;
             lv.OnXPChanged += xpDel;
+            lv.OnLevelUp += lvlDel;
             hpChangedDelegates.Add(hpDel);
             xpChangedDelegates.Add(xpDel);
+            levelUpDelegates.Add(lvlDel);
         }
 
         SetActive(0); // default hero
@@ -119,6 +124,9 @@ public class PartyManager : MonoBehaviour
 
             if (i < xpChangedDelegates.Count && xpChangedDelegates[i] != null)
                 lv.OnXPChanged -= xpChangedDelegates[i];
+
+            if (i < levelUpDelegates.Count && levelUpDelegates[i] != null)
+                lv.OnLevelUp -= levelUpDelegates[i];
         }
     }
 
