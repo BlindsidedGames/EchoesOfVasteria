@@ -201,6 +201,7 @@ namespace Blindsided
 
         private void NullCheckers()
         {
+            saveData.HeroStates ??= new Dictionary<string, SaveData.SaveData.HeroState>();
         }
 
         public static void AwayForSeconds()

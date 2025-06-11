@@ -1,5 +1,8 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using Blindsided.SaveData;
+using static Blindsided.Oracle;
 
 /// <summary>Tracks XP / level and fires events when either changes.</summary>
 public class LevelSystem : MonoBehaviour
@@ -30,5 +33,42 @@ public class LevelSystem : MonoBehaviour
         OnXPChanged?.Invoke(currentXP, XPNeeded);
     }
 
-    private void Awake() => OnXPChanged?.Invoke(currentXP, XPNeeded);  // initial push
+    private void Awake()
+    {
+        if (oracle != null)
+        {
+            oracle.saveData.HeroStates ??= new Dictionary<string, HeroState>();
+            if (oracle.saveData.HeroStates.TryGetValue(gameObject.name, out var state))
+            {
+                level = state.Level;
+                currentXP = state.CurrentXP;
+            }
+            else
+            {
+                oracle.saveData.HeroStates[gameObject.name] = new HeroState { Level = level, CurrentXP = currentXP };
+            }
+        }
+
+        EventHandler.OnSaveData += SaveState;
+        OnXPChanged?.Invoke(currentXP, XPNeeded); // initial push
+    }
+
+    private void OnDestroy()
+    {
+        EventHandler.OnSaveData -= SaveState;
+    }
+
+    private void SaveState()
+    {
+        if (oracle == null) return;
+        var states = oracle.saveData.HeroStates;
+        if (states == null)
+            oracle.saveData.HeroStates = states = new Dictionary<string, HeroState>();
+
+        if (!states.TryGetValue(gameObject.name, out var state))
+            states[gameObject.name] = state = new HeroState();
+
+        state.Level = level;
+        state.CurrentXP = currentXP;
+    }
 }
