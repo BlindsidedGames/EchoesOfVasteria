@@ -23,6 +23,24 @@ public class BasicAttackTelegraphed : MonoBehaviour
     [SerializeField] private float projectileSpeed = 6f;
     [SerializeField] private float lookAtDuration = 0.2f;
 
+    /// <summary>
+    /// Called by <see cref="HeroBalance"/> to apply balance values.
+    /// </summary>
+    public void InitializeStats(int dmg, float rate, float range, float projSpeed,
+        float lookDuration, GameObject projPrefab, bool healAllies, float hRange,
+        int hAmount)
+    {
+        baseDamage = dmg;
+        attackRate = rate;
+        attackRange = range;
+        projectileSpeed = projSpeed;
+        lookAtDuration = lookDuration;
+        projectilePrefab = projPrefab;
+        canHealAllies = healAllies;
+        healRange = hRange;
+        healAmount = hAmount;
+    }
+
     public bool IsPlayerControlled { get; set; }
     private LevelSystem levelSystem;
     private float nextAttackTime;
@@ -160,16 +178,4 @@ public class BasicAttackTelegraphed : MonoBehaviour
         return false;
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-        if (canHealAllies)
-        {
-            Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(transform.position, healRange);
-        }
-    }
-#endif
 }

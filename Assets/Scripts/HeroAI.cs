@@ -5,15 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(HeroClickMover))]
 public class HeroAI : MonoBehaviour
 {
-    [Header("AI Behavior")] [SerializeField]
-    private float visionRange = 20f;
-
-    [SerializeField] private float safeDistance = 8f;
+    [Header("AI Behavior")] private float visionRange = 20f;
+    private float safeDistance = 8f;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
     public Transform currentTarget;
     public bool isPlayerOverridden;
+    public float VisionRange => visionRange;
+    public float SafeDistance => safeDistance;
 
     // Player issued destination to return to after combat
     public Vector3 lastPlayerDestination;
@@ -29,6 +29,15 @@ public class HeroAI : MonoBehaviour
 
     private ContactFilter2D enemyFilter;
     private ContactFilter2D blockingFilter;
+
+    /// <summary>
+    /// Called by <see cref="HeroBalance"/> to apply AI balance values.
+    /// </summary>
+    public void InitializeStats(float vision, float safeDist)
+    {
+        visionRange = vision;
+        safeDistance = safeDist;
+    }
 
 
     private void Awake()
@@ -213,20 +222,4 @@ public class HeroAI : MonoBehaviour
         hasReturnDestination = true;
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, visionRange);
-
-        if (attacker != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, attacker.AttackRange);
-        }
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, safeDistance);
-    }
-#endif
 }

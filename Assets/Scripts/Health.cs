@@ -49,4 +49,15 @@ public class Health : MonoBehaviour, IDamageable
         CurrentHP = Mathf.Min(CurrentHP + amount, maxHP);
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
     }
+
+    /// <summary>
+    /// Sets base health and defense at runtime.
+    /// </summary>
+    public void SetBaseStats(int hp, int def)
+    {
+        maxHP = hp;
+        defense = def;
+        CurrentHP = maxHP;
+        OnHealthChanged?.Invoke(CurrentHP, maxHP);
+    }
 }
