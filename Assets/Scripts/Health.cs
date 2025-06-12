@@ -1,4 +1,6 @@
 using UnityEngine;
+using TMPro;
+using System.Collections;
 
 /// <summary>Simple HP container with change / death events.</summary>
 public class Health : MonoBehaviour, IDamageable
@@ -44,6 +46,16 @@ public class Health : MonoBehaviour, IDamageable
         CurrentHP -= actualDamage;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
 
+        if (actualDamage > 0)
+        {
+            Color c = Color.white;
+            if (attacker && attacker.CompareTag("Hero") && CompareTag("Enemy"))
+                c = new Color(1f, 0.5f, 0f); // orange
+            else if (attacker && attacker.CompareTag("Enemy") && CompareTag("Hero"))
+                c = Color.red;
+            ShowFloatingText(actualDamage.ToString(), c);
+        }
+
         if (CurrentHP <= 0)
         {
             OnDeath?.Invoke();
@@ -68,6 +80,12 @@ public class Health : MonoBehaviour, IDamageable
     {
         CurrentHP = Mathf.Min(CurrentHP + amount, maxHP);
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
+
+        if (amount > 0)
+        {
+            Color c = CompareTag("Hero") ? Color.green : new Color(0.5f, 1f, 0f);
+            ShowFloatingText(amount.ToString(), c);
+        }
     }
 
     /// <summary>
@@ -94,4 +112,42 @@ public class Health : MonoBehaviour, IDamageable
     }
 
     private void OnLevelChanged(int newLevel) => ApplyBalance();
+
+    /* ─── Floating Text ─── */
+    private void ShowFloatingText(string message, Color color)
+    {
+        var go = new GameObject("FloatingText");
+        go.transform.position = transform.position + Vector3.up;
+        var tmp = go.AddComponent<TextMeshPro>();
+        tmp.text = message;
+        tmp.fontSize = 3;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.sortingOrder = 10;
+        var effect = go.AddComponent<FloatingTextEffect>();
+        effect.Init(color);
+    }
+
+    private class FloatingTextEffect : MonoBehaviour
+    {
+        private TMP_Text text;
+        private float time;
+        private const float Duration = 1f;
+        private const float Speed = 1f;
+
+        public void Init(Color color)
+        {
+            text = GetComponent<TMP_Text>();
+            text.color = color;
+        }
+
+        private void Update()
+        {
+            transform.position += Vector3.up * Speed * Time.deltaTime;
+            time += Time.deltaTime;
+            var c = text.color;
+            c.a = 1f - time / Duration;
+            text.color = c;
+            if (time >= Duration) Destroy(gameObject);
+        }
+    }
 }
