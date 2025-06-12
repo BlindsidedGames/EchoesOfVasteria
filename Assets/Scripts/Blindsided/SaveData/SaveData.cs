@@ -29,6 +29,9 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("Heroes")]
         public Dictionary<string, HeroState> HeroStates = new();
 
+        [HideReferenceObjectPicker] [TabGroup("Codex")]
+        public CodexData Codex = new();
+
         [HideReferenceObjectPicker]
         public class Preferences
         {
@@ -81,6 +84,13 @@ namespace Blindsided.SaveData
         {
             public int Level;
             public int CurrentXP;
+        }
+
+        [HideReferenceObjectPicker]
+        public class CodexData
+        {
+            public Dictionary<string, Dictionary<string, int>> HeroKillCounts = new();
+            public Dictionary<string, int> GlobalKillCounts = new();
         }
 
         [HideReferenceObjectPicker]

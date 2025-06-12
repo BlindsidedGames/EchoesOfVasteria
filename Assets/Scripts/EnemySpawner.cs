@@ -38,8 +38,12 @@ public class EnemySpawner : MonoBehaviour
         // Tell the new enemy where its home is for leashing.
         if (enemy.TryGetComponent(out EnemyAI enemyAI)) enemyAI.SetSpawnAnchor(transform.position);
 
-        // Subscribe to the enemy's death event so we can respawn it.
-        if (enemy.TryGetComponent(out Health enemyHealth)) enemyHealth.OnDeath += () => HandleEnemyDeath(enemy);
+        // Subscribe to the enemy's death event so we can respawn it and track kills.
+        if (enemy.TryGetComponent(out Health enemyHealth))
+        {
+            enemyHealth.OnDeath += () => HandleEnemyDeath(enemy);
+            KillCodexManager.RegisterEnemy(enemyHealth);
+        }
     }
 
     private void HandleEnemyDeath(GameObject enemy)

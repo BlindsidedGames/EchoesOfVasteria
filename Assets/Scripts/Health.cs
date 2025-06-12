@@ -7,6 +7,8 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
 
+    private GameObject lastHeroAttacker;
+
     private LevelSystem levelSystem;
 
     public  int MaxHP      => maxHP;
@@ -16,9 +18,12 @@ public class Health : MonoBehaviour, IDamageable
     public  System.Action            OnDeath;
     public  System.Action<int, int>  OnHealthChanged;   // (current, max)
 
+    public GameObject LastHeroAttacker => lastHeroAttacker;
+
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
+        KillCodexBuffs.OnBuffsChanged += ApplyBalance;
     }
 
     private void Start()
@@ -32,6 +37,8 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (levelSystem != null)
             levelSystem.OnLevelUp -= OnLevelChanged;
+
+        KillCodexBuffs.OnBuffsChanged -= ApplyBalance;
     }
 
     public void TakeDamage(int dmg, GameObject attacker)
@@ -39,6 +46,8 @@ public class Health : MonoBehaviour, IDamageable
         if (CurrentHP <= 0) return;
 
         int actualDamage = Mathf.Max(dmg - defense, 0);
+        if (attacker && attacker.CompareTag("Hero"))
+            lastHeroAttacker = attacker;
         CurrentHP -= actualDamage;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
 
@@ -76,6 +85,8 @@ public class Health : MonoBehaviour, IDamageable
             maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
             defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
         }
+
+        maxHP += KillCodexBuffs.HealthBonus;
 
         CurrentHP = maxHP;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);

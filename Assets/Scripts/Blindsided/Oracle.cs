@@ -203,6 +203,9 @@ namespace Blindsided
         private void NullCheckers()
         {
             saveData.HeroStates ??= new Dictionary<string, SaveData.SaveData.HeroState>();
+            saveData.Codex ??= new SaveData.SaveData.CodexData();
+            saveData.Codex.HeroKillCounts ??= new Dictionary<string, Dictionary<string, int>>();
+            saveData.Codex.GlobalKillCounts ??= new Dictionary<string, int>();
         }
 
         public static void AwayForSeconds()
