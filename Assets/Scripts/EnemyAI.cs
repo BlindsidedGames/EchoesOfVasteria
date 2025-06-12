@@ -1,5 +1,6 @@
 using Pathfinding;
 using UnityEngine;
+using TimelessEchoes.Attacks;
 
 // This is a state machine for our AI's behavior.
 public enum AIState
@@ -34,7 +35,7 @@ public class EnemyAI : MonoBehaviour
     private Transform currentTarget;
     private Vector3 spawnAnchor;
     private float timeToNextWander;
-    private BasicAttackTelegraphed attacker; // Reference to the attack script
+    private BasicAttack attacker; // Reference to the attack script
 
     // --- A* Components ---
     private AIPath ai;
@@ -44,7 +45,7 @@ public class EnemyAI : MonoBehaviour
     {
         ai = GetComponent<AIPath>();
         seeker = GetComponent<Seeker>();
-        attacker = GetComponent<BasicAttackTelegraphed>(); // Get the attack component
+        attacker = GetComponent<BasicAttack>(); // Get the attack component
     }
 
     public void SetSpawnAnchor(Vector3 anchor)
