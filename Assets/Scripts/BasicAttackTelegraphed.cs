@@ -6,7 +6,6 @@ public class BasicAttackTelegraphed : MonoBehaviour
     [Header("General")] [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask allyMask;
     [SerializeField] private HeroBalanceData balance;
-    [SerializeField] private string heroId = "";
 
     private LevelSystem levelSystem;
     private float nextAttackTime;
@@ -19,11 +18,6 @@ public class BasicAttackTelegraphed : MonoBehaviour
         {
             int dmg = balance ? balance.baseDamage + balance.damagePerLevel * (Level - 1) : 0;
             dmg += KillCodexBuffs.BonusDamage;
-            if (KillCodexManager.Instance != null && !string.IsNullOrEmpty(heroId))
-            {
-                var bonus = KillCodexManager.Instance.GetHeroBonuses(heroId);
-                if (bonus != null) dmg += bonus.bonusDamage;
-            }
             return dmg;
         }
     }
@@ -41,8 +35,6 @@ public class BasicAttackTelegraphed : MonoBehaviour
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
-        if (string.IsNullOrEmpty(heroId) && TryGetComponent(out HeroCodexInfo info))
-            heroId = info.HeroId;
     }
 
     private void Update()
@@ -95,11 +87,6 @@ public class BasicAttackTelegraphed : MonoBehaviour
         var finalDamage = isPlayerAttack ? BaseDamage * 2 : BaseDamage;
 
         float critChance = KillCodexBuffs.BonusCritChance;
-        if (KillCodexManager.Instance != null && !string.IsNullOrEmpty(heroId))
-        {
-            var bonus = KillCodexManager.Instance.GetHeroBonuses(heroId);
-            if (bonus != null) critChance += bonus.bonusCritChance;
-        }
         if (Random.value < critChance) finalDamage *= 2;
 
         if (ProjectilePrefab == null)
