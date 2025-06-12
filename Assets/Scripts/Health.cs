@@ -4,6 +4,7 @@ using UnityEngine;
 public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private HeroBalanceData balance;
+    [SerializeField] private string heroId = "";
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
 
@@ -19,6 +20,8 @@ public class Health : MonoBehaviour, IDamageable
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
+        if (string.IsNullOrEmpty(heroId) && TryGetComponent(out HeroCodexInfo info))
+            heroId = info.HeroId;
         KillCodexBuffs.BuffsChanged += ApplyBalance;
     }
 
@@ -56,6 +59,9 @@ public class Health : MonoBehaviour, IDamageable
 
                 if (attacker.TryGetComponent(out LevelSystem lvl))
                     lvl.GrantXP(reward);
+
+                if (TryGetComponent(out EnemyCodexInfo codex))
+                    KillCodexManager.Instance?.RegisterKill(codex.EnemyId);
             }
         }
     }
@@ -82,6 +88,16 @@ public class Health : MonoBehaviour, IDamageable
         {
             maxHP += KillCodexBuffs.BonusHealth;
             defense += KillCodexBuffs.BonusDefense;
+        }
+
+        if (KillCodexManager.Instance != null && !string.IsNullOrEmpty(heroId))
+        {
+            var bonus = KillCodexManager.Instance.GetHeroBonuses(heroId);
+            if (bonus != null)
+            {
+                maxHP += bonus.bonusHealth;
+                defense += bonus.bonusDefense;
+            }
         }
 
         CurrentHP = maxHP;
