@@ -191,9 +191,11 @@ public class PartyManager : MonoBehaviour
     {
         if (!IsValidIndex(idx) || card == null) return;
         var hero = heroes[idx];
+        var lv = hero.GetComponent<LevelSystem>();
 
         /* name / icon */
-        if (card.heroNameText) card.heroNameText.text = hero.name;
+        if (card.heroNameText)
+            card.heroNameText.text = lv ? $"{hero.name} | Lvl {lv.Level}" : hero.name;
         var sr = hero.GetComponentInChildren<SpriteRenderer>();
         if (sr) card.UpdateHeroIcon(sr.sprite);
 
@@ -212,9 +214,9 @@ public class PartyManager : MonoBehaviour
             card.heroDefenseText.text = $"Defense: {hp.Defense}";
 
         /* HP / XP */
-        var lv = hero.GetComponent<LevelSystem>();
         UpdateHP(idx, hp.CurrentHP, hp.MaxHP);
-        UpdateXP(idx, lv.CurrentXP, lv.XPNeeded);
+        if (lv)
+            UpdateXP(idx, lv.CurrentXP, lv.XPNeeded);
     }
 
     private void UpdateHP(int idx, int cur, int max)
