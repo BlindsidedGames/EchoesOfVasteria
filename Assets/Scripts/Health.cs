@@ -5,7 +5,7 @@ using System.Collections;
 /// <summary>Simple HP container with change / death events.</summary>
 public class Health : MonoBehaviour, IDamageable
 {
-    [SerializeField] private HeroBalanceData balance;
+    [SerializeField] private CharacterBalanceData balance;
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
 
@@ -21,7 +21,8 @@ public class Health : MonoBehaviour, IDamageable
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
-        KillCodexBuffs.BuffsChanged += ApplyBalance;
+        if (balance is HeroBalanceData)
+            KillCodexBuffs.BuffsChanged += ApplyBalance;
     }
 
     private void Start()
@@ -35,7 +36,8 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (levelSystem != null)
             levelSystem.OnLevelUp -= OnLevelChanged;
-        KillCodexBuffs.BuffsChanged -= ApplyBalance;
+        if (balance is HeroBalanceData)
+            KillCodexBuffs.BuffsChanged -= ApplyBalance;
     }
 
     public void TakeDamage(int dmg, GameObject attacker)
@@ -96,16 +98,16 @@ public class Health : MonoBehaviour, IDamageable
         int level = levelSystem ? levelSystem.Level : 1;
         if (balance != null)
         {
-            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1) + KillCodexBuffs.BonusHealth;
-            defense = balance.baseDefense + balance.defensePerLevel * (level - 1) + KillCodexBuffs.BonusDefense;
+            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
+            defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
         }
-        else
+
+        if (balance is HeroBalanceData)
         {
             maxHP += KillCodexBuffs.BonusHealth;
             defense += KillCodexBuffs.BonusDefense;
         }
 
-        // All heroes share the same codex bonuses
 
         CurrentHP = maxHP;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);

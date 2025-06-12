@@ -5,7 +5,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 {
     [Header("General")] [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask allyMask;
-    [SerializeField] private HeroBalanceData balance;
+    [SerializeField] private CharacterBalanceData balance;
 
     private LevelSystem levelSystem;
     private float nextAttackTime;
@@ -17,7 +17,8 @@ public class BasicAttackTelegraphed : MonoBehaviour
         get
         {
             int dmg = balance ? balance.baseDamage + balance.damagePerLevel * (Level - 1) : 0;
-            dmg += KillCodexBuffs.BonusDamage;
+            if (balance is HeroBalanceData)
+                dmg += KillCodexBuffs.BonusDamage;
             return dmg;
         }
     }
@@ -86,7 +87,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
         var firePos = transform.position;
         var finalDamage = isPlayerAttack ? BaseDamage * 2 : BaseDamage;
 
-        float critChance = KillCodexBuffs.BonusCritChance;
+        float critChance = balance is HeroBalanceData ? KillCodexBuffs.BonusCritChance : 0f;
         if (Random.value < critChance) finalDamage *= 2;
 
         if (ProjectilePrefab == null)
