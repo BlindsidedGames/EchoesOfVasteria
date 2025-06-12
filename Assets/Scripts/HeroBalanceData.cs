@@ -11,7 +11,8 @@ public class HeroBalanceData : ScriptableObject
 
     [BoxGroup("Combat"), SerializeField] public int baseDamage = 2;
     [BoxGroup("Combat"), SerializeField] public int damagePerLevel = 1;
-    [BoxGroup("Combat"), SerializeField] public float attackRate = 1f;
+    [BoxGroup("Combat"), SerializeField, Tooltip("Time between attacks in seconds. 0.5 means one attack every half second (2 attacks per second).")]
+    public float attackRate = 1f;
     [BoxGroup("Combat"), SerializeField] public float attackRatePerLevel = 0f;
     [BoxGroup("Combat"), SerializeField] public float attackRange = 4f;
     [BoxGroup("Combat"), SerializeField] public float attackRangePerLevel = 0f;
