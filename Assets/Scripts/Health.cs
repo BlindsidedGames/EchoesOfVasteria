@@ -19,6 +19,7 @@ public class Health : MonoBehaviour, IDamageable
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
+        KillCodexBuffs.BuffsChanged += ApplyBalance;
     }
 
     private void Start()
@@ -32,6 +33,7 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (levelSystem != null)
             levelSystem.OnLevelUp -= OnLevelChanged;
+        KillCodexBuffs.BuffsChanged -= ApplyBalance;
     }
 
     public void TakeDamage(int dmg, GameObject attacker)
@@ -73,8 +75,13 @@ public class Health : MonoBehaviour, IDamageable
         int level = levelSystem ? levelSystem.Level : 1;
         if (balance != null)
         {
-            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
-            defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
+            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1) + KillCodexBuffs.BonusHealth;
+            defense = balance.baseDefense + balance.defensePerLevel * (level - 1) + KillCodexBuffs.BonusDefense;
+        }
+        else
+        {
+            maxHP += KillCodexBuffs.BonusHealth;
+            defense += KillCodexBuffs.BonusDefense;
         }
 
         CurrentHP = maxHP;
