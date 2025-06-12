@@ -5,15 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(HeroClickMover))]
 public class HeroAI : MonoBehaviour
 {
-    [Header("AI Behavior")] private float visionRange = 20f;
-    private float safeDistance = 8f;
+    [Header("AI Behavior")] [SerializeField] private HeroBalanceData balance;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
+    private LevelSystem levelSystem;
+
     public Transform currentTarget;
     public bool isPlayerOverridden;
-    public float VisionRange => visionRange;
-    public float SafeDistance => safeDistance;
+    private int Level => levelSystem ? levelSystem.Level : 1;
+    public float VisionRange => balance ? balance.visionRange + balance.visionRangePerLevel * (Level - 1) : 20f;
+    public float SafeDistance => balance ? balance.safeDistance + balance.safeDistancePerLevel * (Level - 1) : 8f;
 
     // Player issued destination to return to after combat
     public Vector3 lastPlayerDestination;
@@ -30,21 +32,12 @@ public class HeroAI : MonoBehaviour
     private ContactFilter2D enemyFilter;
     private ContactFilter2D blockingFilter;
 
-    /// <summary>
-    /// Called by <see cref="HeroBalance"/> to apply AI balance values.
-    /// </summary>
-    public void InitializeStats(float vision, float safeDist)
-    {
-        visionRange = vision;
-        safeDistance = safeDist;
-    }
-
-
     private void Awake()
     {
         ai = GetComponent<AIPath>();
         mover = GetComponent<HeroClickMover>();
         attacker = GetComponent<BasicAttackTelegraphed>();
+        levelSystem = GetComponent<LevelSystem>();
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
         blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };
 
@@ -88,7 +81,7 @@ public class HeroAI : MonoBehaviour
         var currentAttackRange = attacker.AttackRange;
 
         // Kiting Logic
-        if (distanceToTarget < safeDistance)
+        if (distanceToTarget < SafeDistance)
         {
             // Find the best position to kite to that avoids other enemies.
             var kitePoint = FindSafeKitePoint();
@@ -121,12 +114,12 @@ public class HeroAI : MonoBehaviour
     private Vector2 FindSafeKitePoint()
     {
         // Get all enemies in vision range using a non-allocating query
-        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, VisionRange, enemyFilter, enemyBuffer);
 
 
         var bestScore = -1f;
         // The ideal distance we want to be from our target
-        var idealKiteDistance = safeDistance + 2f;
+        var idealKiteDistance = SafeDistance + 2f;
         Vector2 bestPoint = transform.position; // Fallback to current position
         bool foundValid = false;
 
@@ -195,7 +188,7 @@ public class HeroAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var hitCount = Physics2D.OverlapCircle(transform.position, visionRange, enemyFilter, enemyBuffer);
+        var hitCount = Physics2D.OverlapCircle(transform.position, VisionRange, enemyFilter, enemyBuffer);
 
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
