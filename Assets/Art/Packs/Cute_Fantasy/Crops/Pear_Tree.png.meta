@@ -103,17 +103,21 @@ TextureImporter:
       name: Pear_Tree_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 10
-        width: 29
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -2, y: -16}
+        - {x: 2, y: -16}
+        - {x: 2, y: -14}
+        - {x: -2, y: -14}
+      tessellationDetail: 0
       bones: []
       spriteID: af0bef781d7d8f200800000000000000
       internalID: 214158277229850874
@@ -125,7 +129,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: cfe6b1cd513a14e3782ef36b0b8ae764
     internalID: 0
     vertices: []
     indices: 

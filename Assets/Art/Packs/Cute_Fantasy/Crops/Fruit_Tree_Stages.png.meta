@@ -109,17 +109,21 @@ TextureImporter:
       name: Fruit_Tree_Stages_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 11
-        width: 15
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -3, y: -16}
+        - {x: 3, y: -16}
+        - {x: 3, y: -13}
+        - {x: -3, y: -13}
+      tessellationDetail: 0
       bones: []
       spriteID: ac34d478aa243e880800000000000000
       internalID: -8582943164656172086
@@ -131,17 +135,21 @@ TextureImporter:
       name: Fruit_Tree_Stages_1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 10
-        width: 27
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 32
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -2, y: -16}
+        - {x: 3, y: -16}
+        - {x: 3, y: -14}
+        - {x: -2, y: -14}
+      tessellationDetail: 0
       bones: []
       spriteID: b2a308269c3e97d50800000000000000
       internalID: 6735665171789789739
@@ -153,17 +161,21 @@ TextureImporter:
       name: Fruit_Tree_Stages_2
       rect:
         serializedVersion: 2
-        x: 65
-        y: 10
-        width: 29
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 64
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -2, y: -16}
+        - {x: 3, y: -16}
+        - {x: 3, y: -14}
+        - {x: -2, y: -14}
+      tessellationDetail: 0
       bones: []
       spriteID: 206d89045f88bdf90800000000000000
       internalID: -6927793014847252990
@@ -175,7 +187,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: fecf541900fd24001aab6694338e21cf
     internalID: 0
     vertices: []
     indices: 
@@ -183,7 +195,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.25},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Fruit_Tree_Stages_0: -8582943164656172086
       Fruit_Tree_Stages_1: 6735665171789789739

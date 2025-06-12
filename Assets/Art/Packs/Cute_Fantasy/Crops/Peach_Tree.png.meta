@@ -103,17 +103,21 @@ TextureImporter:
       name: Peach_Tree_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 10
-        width: 29
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -3, y: -16}
+        - {x: 3, y: -16}
+        - {x: 3, y: -14}
+        - {x: -3, y: -14}
+      tessellationDetail: 0
       bones: []
       spriteID: 35034ad54760165e0800000000000000
       internalID: -1918244869426106285
@@ -125,7 +129,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 0fab0b466c1c14e20b7354736d2721b9
     internalID: 0
     vertices: []
     indices: 

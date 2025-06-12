@@ -103,17 +103,21 @@ TextureImporter:
       name: Cherry_Tree_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 10
-        width: 29
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5078802, y: 0.27278695}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -3, y: -16}
+        - {x: 3, y: -16}
+        - {x: 3, y: -13}
+        - {x: -3, y: -13}
+      tessellationDetail: 0
       bones: []
       spriteID: f33c61c43579ae6d0800000000000000
       internalID: -2960387421028039873
@@ -125,7 +129,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e3b207263d5444437b37a4fb54525132
     internalID: 0
     vertices: []
     indices: 
