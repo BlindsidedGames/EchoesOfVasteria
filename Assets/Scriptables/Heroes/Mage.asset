@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4939e2c0c8c49189394b1910bc9ed40, type: 3}
   m_Name: Mage
   m_EditorClassIdentifier: 
-  baseHealth: 10
-  healthPerLevel: 0
+  baseHealth: 7
+  healthPerLevel: 2
   baseDefense: 1
-  defensePerLevel: 0
-  baseDamage: 2
-  damagePerLevel: 1
-  attackRate: 1
+  defensePerLevel: 1
+  baseDamage: 3
+  damagePerLevel: 2
+  attackRate: 0.8
   attackRatePerLevel: 0
-  attackRange: 4
+  attackRange: 5
   attackRangePerLevel: 0
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
   projectileSpeed: 6
   lookAtDuration: 0.2
   canHealAllies: 0
@@ -32,5 +32,5 @@ MonoBehaviour:
   healAmountPerLevel: 0
   visionRange: 20
   visionRangePerLevel: 0
-  safeDistance: 8
+  safeDistance: 4
   safeDistancePerLevel: 0
