@@ -1,5 +1,6 @@
 using Pathfinding;
 using UnityEngine;
+using TimelessEchoes.Attacks;
 
 [RequireComponent(typeof(AIPath))]
 [RequireComponent(typeof(HeroClickMover))]
@@ -24,7 +25,7 @@ public class HeroAI : MonoBehaviour
 
     private AIPath ai;
     private HeroClickMover mover;
-    private BasicAttackTelegraphed attacker;
+    private BasicAttack attacker;
 
     // Preallocated buffer for non-allocating physics queries
     private readonly Collider2D[] enemyBuffer = new Collider2D[32];
@@ -36,7 +37,7 @@ public class HeroAI : MonoBehaviour
     {
         ai = GetComponent<AIPath>();
         mover = GetComponent<HeroClickMover>();
-        attacker = GetComponent<BasicAttackTelegraphed>();
+        attacker = GetComponent<BasicAttack>();
         levelSystem = GetComponent<LevelSystem>();
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
         blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };

@@ -1,7 +1,10 @@
 using UnityEngine;
 
+namespace TimelessEchoes.Attacks
+{
+
 [RequireComponent(typeof(Health))]
-public class BasicAttackTelegraphed : MonoBehaviour
+public class BasicAttack : MonoBehaviour
 {
     [Header("General")] [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask allyMask;
@@ -92,7 +95,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
         if (ProjectilePrefab == null)
         {
-            Debug.LogError($"{nameof(BasicAttackTelegraphed)} on {name} has no projectile prefab set.");
+            Debug.LogError($"{nameof(BasicAttack)} on {name} has no projectile prefab set.");
             return;
         }
 
@@ -113,7 +116,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
         if (ProjectilePrefab == null)
         {
-            Debug.LogError($"{nameof(BasicAttackTelegraphed)} on {name} has no projectile prefab set.");
+            Debug.LogError($"{nameof(BasicAttack)} on {name} has no projectile prefab set.");
             return;
         }
 
@@ -155,5 +158,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
         return false;
     }
+
+}
 
 }

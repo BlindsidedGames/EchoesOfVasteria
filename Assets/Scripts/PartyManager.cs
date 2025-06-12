@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TimelessEchoes.Attacks;
 
 public class PartyManager : MonoBehaviour
 {
@@ -155,7 +156,7 @@ public class PartyManager : MonoBehaviour
             var on = i == activeIdx;
             if (!heroes[i]) continue;
 
-            if (heroes[i].TryGetComponent(out BasicAttackTelegraphed atk))
+            if (heroes[i].TryGetComponent(out BasicAttack atk))
                 atk.IsPlayerControlled = on;
 
             if (heroes[i].TryGetComponent(out HeroClickMover mover))
@@ -206,7 +207,7 @@ public class PartyManager : MonoBehaviour
                     card.heroSelectionPips[i].SetActive(i == idx);
 
         /* damage / defense */
-        if (card.heroDamageText && hero.TryGetComponent(out BasicAttackTelegraphed atk))
+        if (card.heroDamageText && hero.TryGetComponent(out BasicAttack atk))
             card.heroDamageText.text = $"Damage: {atk.BaseDamage}";
 
         var hp = hero.GetComponent<Health>();
