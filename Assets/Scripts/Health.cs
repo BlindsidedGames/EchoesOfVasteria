@@ -3,8 +3,11 @@ using UnityEngine;
 /// <summary>Simple HP container with change / death events.</summary>
 public class Health : MonoBehaviour, IDamageable
 {
+    [SerializeField] private HeroBalanceData balance;
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
+
+    private LevelSystem levelSystem;
 
     public  int MaxHP      => maxHP;
     public  int CurrentHP  { get; private set; }
@@ -15,8 +18,20 @@ public class Health : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        CurrentHP = maxHP;
-        OnHealthChanged?.Invoke(CurrentHP, maxHP);      // push initial value
+        levelSystem = GetComponent<LevelSystem>();
+    }
+
+    private void Start()
+    {
+        ApplyBalance();
+        if (levelSystem != null)
+            levelSystem.OnLevelUp += OnLevelChanged;
+    }
+
+    private void OnDestroy()
+    {
+        if (levelSystem != null)
+            levelSystem.OnLevelUp -= OnLevelChanged;
     }
 
     public void TakeDamage(int dmg, GameObject attacker)
@@ -51,13 +66,20 @@ public class Health : MonoBehaviour, IDamageable
     }
 
     /// <summary>
-    /// Sets base health and defense at runtime.
+    /// Applies balance values based on current level.
     /// </summary>
-    public void SetBaseStats(int hp, int def)
+    private void ApplyBalance()
     {
-        maxHP = hp;
-        defense = def;
+        int level = levelSystem ? levelSystem.Level : 1;
+        if (balance != null)
+        {
+            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
+            defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
+        }
+
         CurrentHP = maxHP;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
     }
+
+    private void OnLevelChanged(int newLevel) => ApplyBalance();
 }
