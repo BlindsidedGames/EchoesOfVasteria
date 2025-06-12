@@ -46,21 +46,52 @@ public static class KillCodexManager
             }
             if (!dict.ContainsKey(id)) dict[id] = 0;
             dict[id]++;
+
+            CheckHeroThreshold(hero);
         }
 
-        CheckThreshold(id);
+        CheckGlobalThreshold();
     }
 
-    private static void CheckThreshold(string enemyId)
+    private static int GetTotalGlobalKills()
+    {
+        int total = 0;
+        foreach (var v in globalKills.Values)
+            total += v;
+        return total;
+    }
+
+    private static int GetTotalKillsForHero(string hero)
+    {
+        if (!heroKills.TryGetValue(hero, out var dict)) return 0;
+        int total = 0;
+        foreach (var v in dict.Values)
+            total += v;
+        return total;
+    }
+
+    private static void CheckGlobalThreshold()
     {
         if (buffData == null) return;
-        int total = globalKills[enemyId];
-        foreach (var t in buffData.thresholds)
+        int total = GetTotalGlobalKills();
+        foreach (var t in buffData.globalThresholds)
         {
             if (t.killsRequired == total)
+                KillCodexBuffs.ApplyGlobalBuff(t.damageBonus, t.healthBonus, t.critChanceBonus);
+        }
+    }
+
+    private static void CheckHeroThreshold(string hero)
+    {
+        if (buffData == null) return;
+        int total = GetTotalKillsForHero(hero);
+        foreach (var h in buffData.heroThresholds)
+        {
+            if (h.heroName != hero) continue;
+            foreach (var t in h.thresholds)
             {
-                KillCodexBuffs.ApplyBuff(t.damageBonus, t.healthBonus);
-                break;
+                if (t.killsRequired == total)
+                    KillCodexBuffs.ApplyHeroBuff(hero, t.damageBonus, t.healthBonus, t.critChanceBonus);
             }
         }
     }

@@ -10,7 +10,16 @@ public class GlobalCodexBuffData : ScriptableObject
         public int killsRequired;
         public int damageBonus;
         public int healthBonus;
+        public float critChanceBonus;
     }
 
-    public List<Threshold> thresholds = new();
+    [System.Serializable]
+    public class HeroThresholds
+    {
+        public string heroName;
+        public List<Threshold> thresholds = new();
+    }
+
+    public List<Threshold> globalThresholds = new();
+    public List<HeroThresholds> heroThresholds = new();
 }

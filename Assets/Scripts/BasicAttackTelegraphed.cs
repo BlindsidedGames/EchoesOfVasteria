@@ -14,7 +14,7 @@ public class BasicAttackTelegraphed : MonoBehaviour
 
     public int BaseDamage =>
         (balance ? balance.baseDamage + balance.damagePerLevel * (Level - 1) : 0) +
-        KillCodexBuffs.DamageBonus;
+        KillCodexBuffs.GetDamageBonus(name);
     public float AttackRange => balance ? balance.attackRange + balance.attackRangePerLevel * (Level - 1) : 0f;
     private float AttackRate => balance ? balance.attackRate + balance.attackRatePerLevel * (Level - 1) : 1f;
     private bool CanHealAllies => balance && balance.canHealAllies;

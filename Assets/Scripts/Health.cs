@@ -86,7 +86,8 @@ public class Health : MonoBehaviour, IDamageable
             defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
         }
 
-        maxHP += KillCodexBuffs.HealthBonus;
+        if (CompareTag("Hero"))
+            maxHP += KillCodexBuffs.GetHealthBonus(name);
 
         CurrentHP = maxHP;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
