@@ -179,8 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe300fb50ad41788b689ebc783977bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRange: 6
-  safeDistance: 3
+  balance: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -189,6 +188,7 @@ MonoBehaviour:
     m_Bits: 256
   currentTarget: {fileID: 0}
   isPlayerOverridden: 0
+  lastPlayerDestination: {x: 0, y: 0, z: 0}
 --- !u!114 &2082654268980086769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +201,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a4cb0f150d42d2b5cf1bb60d72edaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  balance: {fileID: 0}
   maxHP: 10
+  defense: 1
 --- !u!114 &7423737259511180041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,12 +219,10 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 64
-  attackRate: 1
-  baseDamage: 2
-  attackRange: 4
-  projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
-  projectileSpeed: 6
-  lookAtDuration: 0.2
+  allyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  balance: {fileID: 0}
 --- !u!114 &6207545130262382994
 MonoBehaviour:
   m_ObjectHideFlags: 0

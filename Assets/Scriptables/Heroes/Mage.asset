@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4939e2c0c8c49189394b1910bc9ed40, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: 
+  baseHealth: 10
+  healthPerLevel: 0
+  baseDefense: 1
+  defensePerLevel: 0
+  baseDamage: 2
+  damagePerLevel: 1
+  attackRate: 1
+  attackRatePerLevel: 0
+  attackRange: 4
+  attackRangePerLevel: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 6
+  lookAtDuration: 0.2
+  canHealAllies: 0
+  healRange: 10
+  healRangePerLevel: 0
+  healAmount: 2
+  healAmountPerLevel: 0
+  visionRange: 20
+  visionRangePerLevel: 0
+  safeDistance: 8
+  safeDistancePerLevel: 0
