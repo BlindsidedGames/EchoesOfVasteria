@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(HeroClickMover))]
 public class HeroAI : MonoBehaviour
 {
-    [Header("AI Behavior")] [SerializeField] private HeroBalanceData balance;
+    [Header("AI Behavior")] [SerializeField] private CharacterBalanceData balance;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
