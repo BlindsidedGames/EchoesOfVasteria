@@ -9,11 +9,7 @@ public class KillCodexManager : MonoBehaviour
     [SerializeField] private KillCodexDatabase database;
 
     private readonly Dictionary<string, int> killCounts = new();
-    private readonly Dictionary<string, CodexBonusStats> heroBonuses = new();
-
     public static KillCodexManager Instance { get; private set; }
-
-    public static event System.Action HeroBuffsChanged;
 
     private void Awake()
     {
@@ -43,31 +39,8 @@ public class KillCodexManager : MonoBehaviour
         foreach (var threshold in entry.thresholds)
         {
             if (newCount == threshold.killCount)
-            {
                 KillCodexBuffs.AddBuffs(threshold.globalBonus);
-
-                foreach (var heroBonus in threshold.heroBonuses)
-                {
-                    if (!heroBonuses.TryGetValue(heroBonus.heroId, out var stats))
-                    {
-                        stats = new CodexBonusStats();
-                        heroBonuses[heroBonus.heroId] = stats;
-                    }
-
-                    stats.bonusHealth += heroBonus.bonusHealth;
-                    stats.bonusDefense += heroBonus.bonusDefense;
-                    stats.bonusDamage += heroBonus.bonusDamage;
-                    stats.bonusCritChance += heroBonus.bonusCritChance;
-                }
-
-                HeroBuffsChanged?.Invoke();
-            }
         }
     }
 
-    public CodexBonusStats GetHeroBonuses(string heroId)
-    {
-        heroBonuses.TryGetValue(heroId, out var stats);
-        return stats;
-    }
 }

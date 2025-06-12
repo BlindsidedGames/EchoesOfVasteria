@@ -23,11 +23,4 @@ public class CodexThreshold
 {
     [MinValue(1)] public int killCount = 1;
     [InlineProperty] public CodexBonusStats globalBonus = new();
-    [TableList] public List<HeroBonus> heroBonuses = new();
-}
-
-[Serializable]
-public class HeroBonus : CodexBonusStats
-{
-    public string heroId;
 }
