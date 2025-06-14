@@ -109,19 +109,19 @@ TextureImporter:
       name: Big_Fruit_Tree_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 13
-        width: 9
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7d180cb1aa8935ce0800000000000000
+      spriteID: b8f1e94bfe866564c8198e82b42e90ec
       internalID: -1417621601314111017
       vertices: []
       indices: 
@@ -131,19 +131,19 @@ TextureImporter:
       name: Big_Fruit_Tree_1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 10
-        width: 29
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 32
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 198ae182c5e2f9800800000000000000
+      spriteID: b6a2af925e766a04090a72a99998b9bb
       internalID: 621266246945384593
       vertices: []
       indices: 
@@ -153,19 +153,19 @@ TextureImporter:
       name: Big_Fruit_Tree_2
       rect:
         serializedVersion: 2
-        x: 65
-        y: 19
-        width: 29
-        height: 39
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 64
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b00a31c7930d699c0800000000000000
+      spriteID: 3bfb9587c646b014aa409fc090c88a06
       internalID: -3920717480266063861
       vertices: []
       indices: 
@@ -175,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 69ca82360cabf494c9ffd7598db84b6b
     internalID: 0
     vertices: []
     indices: 
@@ -183,7 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.25},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Big_Fruit_Tree_0: -1417621601314111017
       Big_Fruit_Tree_1: 621266246945384593

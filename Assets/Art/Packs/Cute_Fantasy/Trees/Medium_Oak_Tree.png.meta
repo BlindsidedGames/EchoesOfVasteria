@@ -109,19 +109,19 @@ TextureImporter:
       name: Medium_Oak_Tree_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 13
-        width: 9
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b19b49dfb44f9ec60800000000000000
+      spriteID: 5260eeb1d0ad8d542970f1a1af035c64
       internalID: 7848072432883906843
       vertices: []
       indices: 
@@ -131,19 +131,19 @@ TextureImporter:
       name: Medium_Oak_Tree_1
       rect:
         serializedVersion: 2
-        x: 36
-        y: 10
-        width: 25
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 32
+        y: 0
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5ee340fe570d37350800000000000000
+      spriteID: 8e98089c87dbeb540a2968928885c77b
       internalID: 6013379132409528037
       vertices: []
       indices: 
@@ -153,19 +153,19 @@ TextureImporter:
       name: Medium_Oak_Tree_2
       rect:
         serializedVersion: 2
-        x: 68
-        y: 18
-        width: 25
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 64
+        y: 0
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7b102cefd010433b0800000000000000
+      spriteID: c5d733c2ef417144596b832d25fc3fdb
       internalID: -5533796882511167049
       vertices: []
       indices: 
@@ -175,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 3b05abf669da9eb409d2fb7409e0c752
     internalID: 0
     vertices: []
     indices: 
@@ -183,7 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.3499999940395355},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Medium_Oak_Tree_0: 7848072432883906843
       Medium_Oak_Tree_1: 6013379132409528037

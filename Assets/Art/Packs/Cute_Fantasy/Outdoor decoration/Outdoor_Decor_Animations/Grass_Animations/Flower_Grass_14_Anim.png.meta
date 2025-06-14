@@ -137,9 +137,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 4
-        width: 8
-        height: 10
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,10 +158,10 @@ TextureImporter:
       name: Flower_Grass_14_Anim_1
       rect:
         serializedVersion: 2
-        x: 5
+        x: 16
         y: 0
-        width: 11
-        height: 15
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,10 +180,10 @@ TextureImporter:
       name: Flower_Grass_14_Anim_2
       rect:
         serializedVersion: 2
-        x: 15
-        y: 4
-        width: 9
-        height: 10
+        x: 32
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,9 +202,9 @@ TextureImporter:
       name: Flower_Grass_14_Anim_3
       rect:
         serializedVersion: 2
-        x: 20
+        x: 48
         y: 0
-        width: 12
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -224,9 +224,9 @@ TextureImporter:
       name: Flower_Grass_14_Anim_4
       rect:
         serializedVersion: 2
-        x: 31
+        x: 64
         y: 0
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -246,9 +246,9 @@ TextureImporter:
       name: Flower_Grass_14_Anim_5
       rect:
         serializedVersion: 2
-        x: 47
+        x: 80
         y: 0
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -268,9 +268,9 @@ TextureImporter:
       name: Flower_Grass_14_Anim_6
       rect:
         serializedVersion: 2
-        x: 63
+        x: 96
         y: 0
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -290,9 +290,9 @@ TextureImporter:
       name: Flower_Grass_14_Anim_7
       rect:
         serializedVersion: 2
-        x: 79
+        x: 112
         y: 0
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -308,99 +308,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Flower_Grass_14_Anim_8
-      rect:
-        serializedVersion: 2
-        x: 95
-        y: 4
-        width: 9
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 913e42c60c44275c0800000000000000
-      internalID: -4219234307653967079
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flower_Grass_14_Anim_9
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 0
-        width: 12
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d6347249df02346e0800000000000000
-      internalID: -1854602348062096531
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flower_Grass_14_Anim_10
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 4
-        width: 8
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5251c7658e6697760800000000000000
-      internalID: 7456103806157985061
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flower_Grass_14_Anim_11
-      rect:
-        serializedVersion: 2
-        x: 117
-        y: 0
-        width: 11
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5ed2b7019c6ac9400800000000000000
-      internalID: 332323855013719525
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5d6a72644ac53ee4da9b6063f283f075
     internalID: 0
     vertices: []
     indices: 
@@ -408,20 +320,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Flower_Grass_14_Anim_0: 6180199441896699509
       Flower_Grass_14_Anim_1: -5211626358922207590
-      Flower_Grass_14_Anim_10: 7456103806157985061
-      Flower_Grass_14_Anim_11: 332323855013719525
       Flower_Grass_14_Anim_2: 6401283791697583703
       Flower_Grass_14_Anim_3: 7894880791781000770
       Flower_Grass_14_Anim_4: -4453149602403572976
       Flower_Grass_14_Anim_5: 636328384129681120
       Flower_Grass_14_Anim_6: -8264662481720436235
       Flower_Grass_14_Anim_7: 5522081384385818284
-      Flower_Grass_14_Anim_8: -4219234307653967079
-      Flower_Grass_14_Anim_9: -1854602348062096531
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
