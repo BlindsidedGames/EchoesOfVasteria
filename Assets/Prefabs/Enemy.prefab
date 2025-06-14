@@ -188,7 +188,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -296,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a4cb0f150d42d2b5cf1bb60d72edaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  balance: {fileID: 0}
   maxHP: 100
   defense: 1
 --- !u!114 &2092862414345548173
@@ -316,15 +317,7 @@ MonoBehaviour:
   allyMask:
     serializedVersion: 2
     m_Bits: 0
-  attackRate: 1
-  baseDamage: 2
-  attackRange: 1
-  canHealAllies: 0
-  healRange: 10
-  healAmount: 2
-  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
-  projectileSpeed: 6
-  lookAtDuration: 0.2
+  balance: {fileID: 0}
 --- !u!114 &2983596243158799379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,8 +443,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f059ce5e01c64a299411e0bbd5572e90, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   enemyId: BasicEnemy
 --- !u!1 &5994897068680810114
 GameObject:

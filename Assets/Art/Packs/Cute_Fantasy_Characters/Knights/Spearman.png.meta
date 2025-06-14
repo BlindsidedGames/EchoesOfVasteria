@@ -229,7 +229,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -243,7 +243,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -267,7 +267,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -295,12 +295,12 @@ TextureImporter:
       name: Spearman_0
       rect:
         serializedVersion: 2
-        x: 14
-        y: 582
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -317,12 +317,12 @@ TextureImporter:
       name: Spearman_1
       rect:
         serializedVersion: 2
-        x: 62
-        y: 581
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -339,12 +339,12 @@ TextureImporter:
       name: Spearman_2
       rect:
         serializedVersion: 2
-        x: 109
-        y: 581
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -361,12 +361,12 @@ TextureImporter:
       name: Spearman_3
       rect:
         serializedVersion: 2
-        x: 157
-        y: 581
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -383,12 +383,12 @@ TextureImporter:
       name: Spearman_4
       rect:
         serializedVersion: 2
-        x: 206
-        y: 581
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -405,12 +405,12 @@ TextureImporter:
       name: Spearman_5
       rect:
         serializedVersion: 2
-        x: 254
-        y: 582
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 576
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -427,12 +427,12 @@ TextureImporter:
       name: Spearman_6
       rect:
         serializedVersion: 2
-        x: 15
-        y: 534
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -449,12 +449,12 @@ TextureImporter:
       name: Spearman_7
       rect:
         serializedVersion: 2
-        x: 63
-        y: 533
-        width: 16
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -471,12 +471,12 @@ TextureImporter:
       name: Spearman_8
       rect:
         serializedVersion: 2
-        x: 110
-        y: 533
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -493,12 +493,12 @@ TextureImporter:
       name: Spearman_9
       rect:
         serializedVersion: 2
-        x: 158
-        y: 533
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -515,12 +515,12 @@ TextureImporter:
       name: Spearman_10
       rect:
         serializedVersion: 2
-        x: 207
-        y: 533
-        width: 16
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -537,12 +537,12 @@ TextureImporter:
       name: Spearman_11
       rect:
         serializedVersion: 2
-        x: 255
-        y: 534
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 528
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -559,12 +559,12 @@ TextureImporter:
       name: Spearman_12
       rect:
         serializedVersion: 2
-        x: 16
-        y: 486
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -581,12 +581,12 @@ TextureImporter:
       name: Spearman_13
       rect:
         serializedVersion: 2
-        x: 64
-        y: 485
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -603,12 +603,12 @@ TextureImporter:
       name: Spearman_14
       rect:
         serializedVersion: 2
-        x: 112
-        y: 485
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -625,12 +625,12 @@ TextureImporter:
       name: Spearman_15
       rect:
         serializedVersion: 2
-        x: 160
-        y: 485
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -647,12 +647,12 @@ TextureImporter:
       name: Spearman_16
       rect:
         serializedVersion: 2
-        x: 208
-        y: 485
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -669,12 +669,12 @@ TextureImporter:
       name: Spearman_17
       rect:
         serializedVersion: 2
-        x: 256
-        y: 486
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 480
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -691,12 +691,12 @@ TextureImporter:
       name: Spearman_18
       rect:
         serializedVersion: 2
-        x: 14
-        y: 438
-        width: 17
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -713,12 +713,12 @@ TextureImporter:
       name: Spearman_19
       rect:
         serializedVersion: 2
-        x: 62
-        y: 438
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -735,12 +735,12 @@ TextureImporter:
       name: Spearman_20
       rect:
         serializedVersion: 2
-        x: 110
-        y: 438
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -757,12 +757,12 @@ TextureImporter:
       name: Spearman_21
       rect:
         serializedVersion: 2
-        x: 158
-        y: 438
-        width: 17
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -779,12 +779,12 @@ TextureImporter:
       name: Spearman_22
       rect:
         serializedVersion: 2
-        x: 206
-        y: 438
-        width: 17
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -801,12 +801,12 @@ TextureImporter:
       name: Spearman_23
       rect:
         serializedVersion: 2
-        x: 254
-        y: 438
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 432
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -823,12 +823,12 @@ TextureImporter:
       name: Spearman_24
       rect:
         serializedVersion: 2
-        x: 15
-        y: 390
-        width: 16
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -845,12 +845,12 @@ TextureImporter:
       name: Spearman_25
       rect:
         serializedVersion: 2
-        x: 63
-        y: 390
-        width: 16
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -867,12 +867,12 @@ TextureImporter:
       name: Spearman_26
       rect:
         serializedVersion: 2
-        x: 111
-        y: 390
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -889,12 +889,12 @@ TextureImporter:
       name: Spearman_27
       rect:
         serializedVersion: 2
-        x: 159
-        y: 390
-        width: 16
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -911,12 +911,12 @@ TextureImporter:
       name: Spearman_28
       rect:
         serializedVersion: 2
-        x: 207
-        y: 390
-        width: 16
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -933,12 +933,12 @@ TextureImporter:
       name: Spearman_29
       rect:
         serializedVersion: 2
-        x: 255
-        y: 390
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 384
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -955,12 +955,12 @@ TextureImporter:
       name: Spearman_30
       rect:
         serializedVersion: 2
-        x: 16
-        y: 342
-        width: 18
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -977,12 +977,12 @@ TextureImporter:
       name: Spearman_31
       rect:
         serializedVersion: 2
-        x: 64
-        y: 342
-        width: 18
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -999,12 +999,12 @@ TextureImporter:
       name: Spearman_32
       rect:
         serializedVersion: 2
-        x: 112
-        y: 342
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1021,12 +1021,12 @@ TextureImporter:
       name: Spearman_33
       rect:
         serializedVersion: 2
-        x: 160
-        y: 342
-        width: 18
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1043,12 +1043,12 @@ TextureImporter:
       name: Spearman_34
       rect:
         serializedVersion: 2
-        x: 208
-        y: 342
-        width: 18
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1065,12 +1065,12 @@ TextureImporter:
       name: Spearman_35
       rect:
         serializedVersion: 2
-        x: 256
-        y: 342
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 336
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1087,12 +1087,12 @@ TextureImporter:
       name: Spearman_36
       rect:
         serializedVersion: 2
-        x: 14
-        y: 294
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1109,12 +1109,12 @@ TextureImporter:
       name: Spearman_37
       rect:
         serializedVersion: 2
-        x: 60
-        y: 293
-        width: 19
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1131,12 +1131,12 @@ TextureImporter:
       name: Spearman_38
       rect:
         serializedVersion: 2
-        x: 108
-        y: 283
-        width: 19
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1153,12 +1153,12 @@ TextureImporter:
       name: Spearman_39
       rect:
         serializedVersion: 2
-        x: 156
-        y: 283
-        width: 19
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1175,12 +1175,12 @@ TextureImporter:
       name: Spearman_40
       rect:
         serializedVersion: 2
-        x: 204
-        y: 285
-        width: 19
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1197,12 +1197,12 @@ TextureImporter:
       name: Spearman_41
       rect:
         serializedVersion: 2
-        x: 254
-        y: 294
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 288
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1219,12 +1219,12 @@ TextureImporter:
       name: Spearman_42
       rect:
         serializedVersion: 2
-        x: 15
-        y: 246
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1241,12 +1241,12 @@ TextureImporter:
       name: Spearman_43
       rect:
         serializedVersion: 2
-        x: 61
-        y: 246
-        width: 18
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1263,12 +1263,12 @@ TextureImporter:
       name: Spearman_44
       rect:
         serializedVersion: 2
-        x: 113
-        y: 246
-        width: 31
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1285,12 +1285,12 @@ TextureImporter:
       name: Spearman_45
       rect:
         serializedVersion: 2
-        x: 161
-        y: 246
-        width: 32
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1307,12 +1307,12 @@ TextureImporter:
       name: Spearman_46
       rect:
         serializedVersion: 2
-        x: 205
-        y: 246
-        width: 20
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1329,12 +1329,12 @@ TextureImporter:
       name: Spearman_47
       rect:
         serializedVersion: 2
-        x: 223
-        y: 247
-        width: 16
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 240
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1351,12 +1351,12 @@ TextureImporter:
       name: Spearman_48
       rect:
         serializedVersion: 2
-        x: 255
-        y: 246
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1373,12 +1373,12 @@ TextureImporter:
       name: Spearman_49
       rect:
         serializedVersion: 2
-        x: 16
-        y: 198
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1395,12 +1395,12 @@ TextureImporter:
       name: Spearman_50
       rect:
         serializedVersion: 2
-        x: 64
-        y: 197
-        width: 18
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1417,12 +1417,12 @@ TextureImporter:
       name: Spearman_51
       rect:
         serializedVersion: 2
-        x: 112
-        y: 198
-        width: 18
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1439,12 +1439,12 @@ TextureImporter:
       name: Spearman_52
       rect:
         serializedVersion: 2
-        x: 160
-        y: 198
-        width: 18
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1461,12 +1461,12 @@ TextureImporter:
       name: Spearman_53
       rect:
         serializedVersion: 2
-        x: 208
-        y: 197
-        width: 18
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 240
+        y: 192
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1483,12 +1483,12 @@ TextureImporter:
       name: Spearman_54
       rect:
         serializedVersion: 2
-        x: 256
-        y: 198
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 144
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1505,12 +1505,12 @@ TextureImporter:
       name: Spearman_55
       rect:
         serializedVersion: 2
-        x: 17
-        y: 150
-        width: 14
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 144
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1527,12 +1527,12 @@ TextureImporter:
       name: Spearman_56
       rect:
         serializedVersion: 2
-        x: 65
-        y: 150
-        width: 16
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 144
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1549,12 +1549,12 @@ TextureImporter:
       name: Spearman_57
       rect:
         serializedVersion: 2
-        x: 113
-        y: 150
-        width: 18
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 144
+        y: 144
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1571,12 +1571,12 @@ TextureImporter:
       name: Spearman_58
       rect:
         serializedVersion: 2
-        x: 161
-        y: 150
-        width: 18
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 96
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1593,12 +1593,12 @@ TextureImporter:
       name: Spearman_59
       rect:
         serializedVersion: 2
-        x: 14
-        y: 102
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 96
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1615,12 +1615,12 @@ TextureImporter:
       name: Spearman_60
       rect:
         serializedVersion: 2
-        x: 62
-        y: 102
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 48
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1637,12 +1637,12 @@ TextureImporter:
       name: Spearman_61
       rect:
         serializedVersion: 2
-        x: 15
-        y: 54
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 48
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1659,12 +1659,12 @@ TextureImporter:
       name: Spearman_62
       rect:
         serializedVersion: 2
-        x: 63
-        y: 54
-        width: 16
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1681,12 +1681,12 @@ TextureImporter:
       name: Spearman_63
       rect:
         serializedVersion: 2
-        x: 16
-        y: 6
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 48
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1699,33 +1699,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Spearman_64
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 6
-        width: 17
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a65c423e0c4c7f3a0800000000000000
-      internalID: -6631615593556163222
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 175df194db14d6f44aea756f709965a1
     internalID: 0
     vertices: []
     indices: 
@@ -1733,7 +1711,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.25},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Spearman_0: 3973588016999555590
       Spearman_1: 797711674139509678
@@ -1796,7 +1776,6 @@ TextureImporter:
       Spearman_61: 2845762390004666067
       Spearman_62: 1131675443593368854
       Spearman_63: -3240096154015833371
-      Spearman_64: -6631615593556163222
       Spearman_7: -3717858886803213111
       Spearman_8: 4579385971759967064
       Spearman_9: -2384722493058704090
