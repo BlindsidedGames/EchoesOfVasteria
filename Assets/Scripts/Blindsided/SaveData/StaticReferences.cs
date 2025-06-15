@@ -8,7 +8,6 @@ namespace Blindsided.SaveData
     {
         
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
-        public static Dictionary<string, Dictionary<string, int>> HeroKillCounts => oracle.saveData.HeroKillCounts;
         public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
 
 
