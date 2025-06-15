@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59eac834b4ab14de4ba37216ab4f5bb1, type: 3}
   m_Name: KillCodexDatabase
   m_EditorClassIdentifier: 
-  entries: []
+  entries:
+  - enemyId: 
+    thresholds:
+    - killCount: 1
+      globalBonus:
+        bonusHealth: 0
+        bonusDefense: 0
+        bonusDamage: 0
+        bonusCritChance: 0
