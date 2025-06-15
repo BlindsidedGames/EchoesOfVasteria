@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Keeps an enemy’s world-space HP bar in sync with its Health component.
@@ -9,6 +10,8 @@ public class EnemyHealthBar : MonoBehaviour
 {
     [Tooltip("Filled Image whose Fill Amount represents HP.")]
     [SerializeField] private Image barFill;
+    [Tooltip("TMP element showing the enemy's defense value.")]
+    [SerializeField] private TMP_Text defenseText;
 
     private Health  hp;
     private Camera  cam;
@@ -31,8 +34,11 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void UpdateBar(int cur, int max)
     {
-        if (barFill == null) return;
-        barFill.fillAmount = (float)cur / max;
+        if (barFill != null)
+            barFill.fillAmount = (float)cur / max;
+
+        if (defenseText != null)
+            defenseText.text = hp ? hp.Defense.ToString() : string.Empty;
     }
 
     private void OnDestroy()
