@@ -133,6 +133,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6094697013023591912}
+  - component: {fileID: 2258535086864811084}
   - component: {fileID: 2410353940682958862}
   - component: {fileID: 2082654268980086769}
   - component: {fileID: 7423737259511180041}
@@ -143,6 +144,7 @@ GameObject:
   - component: {fileID: 3963385185172838639}
   - component: {fileID: 8421911332518481540}
   - component: {fileID: 8749329354619873494}
+  - component: {fileID: 5906459888828113204}
   m_Layer: 7
   m_Name: Warrior
   m_TagString: Hero
@@ -167,6 +169,19 @@ Transform:
   - {fileID: 5943630245733802584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2258535086864811084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7307d0c390a44508eb1716d9596735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  balance: {fileID: 0}
 --- !u!114 &2410353940682958862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe300fb50ad41788b689ebc783977bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  balance: {fileID: 11400000, guid: 9ea4df0c3efe82341bae675a201df6e3, type: 2}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -201,7 +215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a4cb0f150d42d2b5cf1bb60d72edaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  balance: {fileID: 11400000, guid: 9ea4df0c3efe82341bae675a201df6e3, type: 2}
   maxHP: 10
   defense: 1
 --- !u!114 &7423737259511180041
@@ -222,7 +235,6 @@ MonoBehaviour:
   allyMask:
     serializedVersion: 2
     m_Bits: 128
-  balance: {fileID: 11400000, guid: 9ea4df0c3efe82341bae675a201df6e3, type: 2}
 --- !u!114 &6207545130262382994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,6 +417,18 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &5906459888828113204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec846610826b04a34b66fe3e8f30b0b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7367172317507442004
 GameObject:
   m_ObjectHideFlags: 0
