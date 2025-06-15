@@ -20,17 +20,17 @@ MonoBehaviour:
   damagePerLevel: 1
   attackRate: 1
   attackRatePerLevel: 0.1
-  attackRange: 4
+  attackRange: 2
   attackRangePerLevel: 0
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
-  projectileSpeed: 6
+  projectileSpeed: 20
   lookAtDuration: 0.2
   canHealAllies: 0
   healRange: 10
   healRangePerLevel: 0
   healAmount: 2
   healAmountPerLevel: 0
-  visionRange: 20
+  visionRange: 10
   visionRangePerLevel: 0
   safeDistance: 0.5
   safeDistancePerLevel: 0
