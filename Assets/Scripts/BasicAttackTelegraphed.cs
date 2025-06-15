@@ -8,7 +8,8 @@ public class BasicAttack : MonoBehaviour
 {
     [Header("General")] [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask allyMask;
-    [SerializeField] private CharacterBalanceData balance;
+    private CharacterBalanceData balance;
+    private BalanceHolder balanceHolder;
 
     private LevelSystem levelSystem;
     private float nextAttackTime;
@@ -39,6 +40,8 @@ public class BasicAttack : MonoBehaviour
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
+        balanceHolder = GetComponent<BalanceHolder>();
+        balance = balanceHolder ? balanceHolder.Balance : null;
     }
 
     private void Update()

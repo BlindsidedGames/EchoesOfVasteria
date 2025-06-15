@@ -6,7 +6,8 @@ using TimelessEchoes.Attacks;
 [RequireComponent(typeof(HeroClickMover))]
 public class HeroAI : MonoBehaviour
 {
-    [Header("AI Behavior")] [SerializeField] private CharacterBalanceData balance;
+    [Header("AI Behavior")] private CharacterBalanceData balance;
+    private BalanceHolder balanceHolder;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
@@ -39,6 +40,8 @@ public class HeroAI : MonoBehaviour
         mover = GetComponent<HeroClickMover>();
         attacker = GetComponent<BasicAttack>();
         levelSystem = GetComponent<LevelSystem>();
+        balanceHolder = GetComponent<BalanceHolder>();
+        balance = balanceHolder ? balanceHolder.Balance : null;
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
         blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };
 

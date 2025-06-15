@@ -5,7 +5,8 @@ using System.Collections;
 /// <summary>Simple HP container with change / death events.</summary>
 public class Health : MonoBehaviour, IDamageable
 {
-    [SerializeField] private CharacterBalanceData balance;
+    private CharacterBalanceData balance;
+    private BalanceHolder balanceHolder;
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
 
@@ -21,6 +22,8 @@ public class Health : MonoBehaviour, IDamageable
     private void Awake()
     {
         levelSystem = GetComponent<LevelSystem>();
+        balanceHolder = GetComponent<BalanceHolder>();
+        balance = balanceHolder ? balanceHolder.Balance : null;
         if (balance is HeroBalanceData)
             KillCodexBuffs.BuffsChanged += ApplyBalance;
     }
