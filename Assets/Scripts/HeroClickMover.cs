@@ -28,6 +28,7 @@ public class HeroClickMover : MonoBehaviour
         // personal hidden target ------------------------------------
         var go = new GameObject($"{name}_MoveTarget");
         moveTarget = go.transform;
+        moveTarget.position = transform.position;
         //moveTarget.SetParent(transform);
         dst.target = moveTarget;
         go.hideFlags = HideFlags.HideInHierarchy;
