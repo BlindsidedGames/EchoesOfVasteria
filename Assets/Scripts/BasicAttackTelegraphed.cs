@@ -104,7 +104,10 @@ public class BasicAttack : MonoBehaviour
 
         var anim = GetComponentInChildren<HeroAnimator>();
         if (target != null && anim != null)
+        {
             anim.OverrideLookDirection(target.position - transform.position, LookAtDuration);
+            anim.GetComponent<Animator>()?.Play("Attack");
+        }
 
         nextAttackTime = Time.time + AttackRate;
     }
@@ -125,7 +128,10 @@ public class BasicAttack : MonoBehaviour
 
         var anim = GetComponentInChildren<HeroAnimator>();
         if (target != null && anim != null)
+        {
             anim.OverrideLookDirection(target.position - transform.position, LookAtDuration);
+            anim.GetComponent<Animator>()?.Play("Attack");
+        }
 
         nextAttackTime = Time.time + AttackRate;
     }
