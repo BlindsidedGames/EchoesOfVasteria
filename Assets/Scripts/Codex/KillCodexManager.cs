@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Blindsided.SaveData;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +9,9 @@ public class KillCodexManager : MonoBehaviour
 {
     [SerializeField] private KillCodexDatabase database;
 
-    private readonly Dictionary<string, int> killCounts = new();
+    private Dictionary<string, int> KillCounts => StaticReferences.GlobalKillCounts;
+
+    public event System.Action<string, int> KillCountChanged;
     public static KillCodexManager Instance { get; private set; }
 
     private void Awake()
@@ -24,10 +27,17 @@ public class KillCodexManager : MonoBehaviour
         if (string.IsNullOrEmpty(enemyId) || database == null)
             return;
 
-        killCounts.TryGetValue(enemyId, out int count);
+        KillCounts.TryGetValue(enemyId, out int count);
         count++;
-        killCounts[enemyId] = count;
+        KillCounts[enemyId] = count;
+        KillCountChanged?.Invoke(enemyId, count);
         EvaluateBonuses(enemyId, count);
+    }
+
+    public int GetKillCount(string enemyId)
+    {
+        KillCounts.TryGetValue(enemyId, out int count);
+        return count;
     }
 
     private void EvaluateBonuses(string enemyId, int newCount)

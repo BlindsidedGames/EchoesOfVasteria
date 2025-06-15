@@ -41,4 +41,12 @@ public static class KillCodexBuffs
                  BonusDamage + stats.bonusDamage,
                  BonusCritChance + stats.bonusCritChance);
     }
+
+    /// <summary>
+    /// Reset all codex buffs to zero.
+    /// </summary>
+    public static void Reset()
+    {
+        SetBuffs(0, 0, 0, 0f);
+    }
 }
