@@ -5,6 +5,7 @@ namespace Gear
     [RequireComponent(typeof(Health))]
     public class EnemyDropper : MonoBehaviour
     {
+        [SerializeField] private GearDrop dropPrefab;
         private EnemyBalanceData balance;
 
         private void Awake()
@@ -19,10 +20,18 @@ namespace Gear
             if (balance == null) return;
             if (Random.value > balance.gearDropRate) return;
             var gear = GearGenerator.Generate(balance.enemyLevel);
-            var go = new GameObject("GearDrop");
-            go.transform.position = transform.position;
-            var drop = go.AddComponent<GearDrop>();
-            drop.Init(gear);
+            if (dropPrefab)
+            {
+                var drop = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+                drop.Init(gear);
+            }
+            else
+            {
+                var go = new GameObject("GearDrop");
+                go.transform.position = transform.position;
+                var drop = go.AddComponent<GearDrop>();
+                drop.Init(gear);
+            }
         }
     }
 }

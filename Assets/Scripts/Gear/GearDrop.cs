@@ -1,7 +1,7 @@
 using System.Text;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using MPUIKIT;
 using static Blindsided.SaveData.StaticReferences;
 
 namespace Gear
@@ -12,6 +12,7 @@ namespace Gear
         private GearItem item;
         private float timer;
 
+        [SerializeField] private DropReferences references;
         private Image timerFill;
 
         private void Update()
@@ -28,72 +29,24 @@ namespace Gear
         {
             item = gear;
             duration = timer = GetDuration(gear.rarity);
-            BuildUI();
+            if (!references)
+                references = GetComponentInChildren<DropReferences>();
+
+            SetupUI();
         }
 
-        private void BuildUI()
+        private void SetupUI()
         {
-            var canvasGO = new GameObject("Canvas");
-            canvasGO.transform.SetParent(transform);
-            var canvas = canvasGO.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.WorldSpace;
-            canvasGO.AddComponent<CanvasScaler>();
-            canvasGO.AddComponent<GraphicRaycaster>();
-            var rt = canvas.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(2f, 3f);
+            if (references == null) return;
 
-            // Icon (placeholder)
-            var iconGO = new GameObject("Icon");
-            iconGO.transform.SetParent(canvasGO.transform);
-            var icon = iconGO.AddComponent<Image>();
-            icon.rectTransform.anchoredPosition = new Vector2(0, 1f);
+            if (references.nameText) references.nameText.text = item.name;
+            if (references.statsText) references.statsText.text = BuildStatList();
+            if (references.equipButton) references.equipButton.onClick.AddListener(Equip);
+            if (references.dismantleButton) references.dismantleButton.onClick.AddListener(Dismantle);
+            timerFill = null;
 
-            // Name
-            var nameGO = new GameObject("Name");
-            nameGO.transform.SetParent(canvasGO.transform);
-            var nameText = nameGO.AddComponent<TextMeshProUGUI>();
-            nameText.text = item.name;
-            nameText.alignment = TextAlignmentOptions.Center;
-            nameText.rectTransform.anchoredPosition = new Vector2(0, 0.5f);
-
-            // Stats
-            var statsGO = new GameObject("Stats");
-            statsGO.transform.SetParent(canvasGO.transform);
-            var statsText = statsGO.AddComponent<TextMeshProUGUI>();
-            statsText.text = BuildStatList();
-            statsText.alignment = TextAlignmentOptions.Center;
-            statsText.rectTransform.anchoredPosition = new Vector2(0, 0f);
-
-            // Equip button
-            var equipGO = new GameObject("EquipButton");
-            equipGO.transform.SetParent(canvasGO.transform);
-            var equipBtn = equipGO.AddComponent<Button>();
-            var equipTxt = equipGO.AddComponent<TextMeshProUGUI>();
-            equipTxt.text = "Equip";
-            equipTxt.alignment = TextAlignmentOptions.Center;
-            equipBtn.targetGraphic = equipTxt;
-            equipBtn.onClick.AddListener(Equip);
-            equipTxt.rectTransform.anchoredPosition = new Vector2(-0.5f, -0.8f);
-
-            // Dismantle button
-            var disGO = new GameObject("DismantleButton");
-            disGO.transform.SetParent(canvasGO.transform);
-            var disBtn = disGO.AddComponent<Button>();
-            var disTxt = disGO.AddComponent<TextMeshProUGUI>();
-            disTxt.text = "Break";
-            disTxt.alignment = TextAlignmentOptions.Center;
-            disBtn.targetGraphic = disTxt;
-            disBtn.onClick.AddListener(Dismantle);
-            disTxt.rectTransform.anchoredPosition = new Vector2(0.5f, -0.8f);
-
-            // Timer bar
-            var barGO = new GameObject("Timer");
-            barGO.transform.SetParent(canvasGO.transform);
-            timerFill = barGO.AddComponent<Image>();
-            timerFill.type = Image.Type.Filled;
-            timerFill.fillMethod = Image.FillMethod.Horizontal;
-            timerFill.rectTransform.sizeDelta = new Vector2(1.5f, 0.2f);
-            timerFill.rectTransform.anchoredPosition = new Vector2(0, -1.2f);
+            if (references.rarityImage)
+                references.rarityImage.OutlineColor = GetRarityColor(item.rarity);
         }
 
         private string BuildStatList()
@@ -124,6 +77,18 @@ namespace Gear
                 GearRarity.Rare => 15f,
                 GearRarity.Epic => 18f,
                 _ => 20f
+            };
+        }
+
+        private Color GetRarityColor(GearRarity r)
+        {
+            return r switch
+            {
+                GearRarity.Common => Color.white,
+                GearRarity.Uncommon => Color.green,
+                GearRarity.Rare => Color.blue,
+                GearRarity.Epic => new Color(0.6f, 0.2f, 0.8f),
+                _ => Color.yellow
             };
         }
 
