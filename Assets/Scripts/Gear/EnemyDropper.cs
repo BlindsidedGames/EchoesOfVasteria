@@ -23,7 +23,14 @@ namespace Gear
             if (dropPrefab)
             {
                 var drop = Instantiate(dropPrefab, transform.position, Quaternion.identity);
-                drop.Init(gear);
+                if (drop)
+                {
+                    drop.Init(gear);
+                }
+                else
+                {
+                    Debug.LogWarning("EnemyDropper: dropPrefab is missing GearDrop component", this);
+                }
             }
             else
             {
