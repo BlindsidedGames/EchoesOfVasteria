@@ -9,4 +9,11 @@ public class BalanceHolder : MonoBehaviour
     [SerializeField] private CharacterBalanceData balance;
 
     public CharacterBalanceData Balance => balance;
+
+    public HeroGear Gear { get; private set; }
+
+    private void Awake()
+    {
+        Gear = GetComponent<HeroGear>();
+    }
 }

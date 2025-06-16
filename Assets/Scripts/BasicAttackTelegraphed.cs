@@ -10,6 +10,7 @@ public class BasicAttack : MonoBehaviour
     [SerializeField] private LayerMask allyMask;
     private CharacterBalanceData balance;
     private BalanceHolder balanceHolder;
+    private HeroGear gear;
 
     private LevelSystem levelSystem;
     private float nextAttackTime;
@@ -23,11 +24,14 @@ public class BasicAttack : MonoBehaviour
             int dmg = balance ? balance.baseDamage + balance.damagePerLevel * (Level - 1) : 0;
             if (balance is HeroBalanceData)
                 dmg += KillCodexBuffs.BonusDamage;
+            if (gear)
+                dmg += gear.TotalDamage;
             return dmg;
         }
     }
     public float AttackRange => balance ? balance.attackRange + balance.attackRangePerLevel * (Level - 1) : 0f;
-    private float AttackRate => balance ? balance.attackRate + balance.attackRatePerLevel * (Level - 1) : 1f;
+    private float BaseAttackRate => balance ? balance.attackRate + balance.attackRatePerLevel * (Level - 1) : 1f;
+    private float AttackRate => BaseAttackRate / (1f + (gear ? gear.TotalAttackSpeed : 0f));
     private bool CanHealAllies => balance && balance.canHealAllies;
     private float HealRange => balance ? balance.healRange + balance.healRangePerLevel * (Level - 1) : 0f;
     private int HealAmount => balance ? balance.healAmount + balance.healAmountPerLevel * (Level - 1) : 0;
@@ -42,6 +46,7 @@ public class BasicAttack : MonoBehaviour
         levelSystem = GetComponent<LevelSystem>();
         balanceHolder = GetComponent<BalanceHolder>();
         balance = balanceHolder ? balanceHolder.Balance : null;
+        gear = balanceHolder ? balanceHolder.Gear : null;
     }
 
     private void Update()

@@ -7,6 +7,7 @@ public class Health : MonoBehaviour, IDamageable
 {
     private CharacterBalanceData balance;
     private BalanceHolder balanceHolder;
+    private HeroGear gear;
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int defense = 1;
 
@@ -24,6 +25,7 @@ public class Health : MonoBehaviour, IDamageable
         levelSystem = GetComponent<LevelSystem>();
         balanceHolder = GetComponent<BalanceHolder>();
         balance = balanceHolder ? balanceHolder.Balance : null;
+        gear = balanceHolder ? balanceHolder.Gear : null;
         if (balance is HeroBalanceData)
             KillCodexBuffs.BuffsChanged += ApplyBalance;
     }
@@ -103,6 +105,12 @@ public class Health : MonoBehaviour, IDamageable
         {
             maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
             defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
+        }
+
+        if (gear != null)
+        {
+            maxHP += gear.TotalHealth;
+            defense += gear.TotalDefense;
         }
 
         if (balance is HeroBalanceData)
