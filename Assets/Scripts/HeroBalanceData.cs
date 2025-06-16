@@ -6,4 +6,7 @@ public class HeroBalanceData : CharacterBalanceData
 {
     [BoxGroup("Movement"), SerializeField] public float moveSpeed = 4f;
     [BoxGroup("Movement"), SerializeField] public float moveSpeedPerLevel = 0f;
+
+    public float GetMoveSpeed(int level) =>
+        moveSpeed + moveSpeedPerLevel * (level - 1);
 }

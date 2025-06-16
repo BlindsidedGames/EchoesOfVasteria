@@ -21,7 +21,7 @@ namespace TimelessEchoes.Attacks
         {
             get
             {
-                var dmg = balance ? balance.baseDamage + balance.damagePerLevel * (Level - 1) : 0;
+                var dmg = balance ? balance.GetDamage(Level) : 0;
                 if (balance is HeroBalanceData)
                     dmg += KillCodexBuffs.BonusDamage;
                 if (gear)
@@ -30,12 +30,12 @@ namespace TimelessEchoes.Attacks
             }
         }
 
-        public float AttackRange => balance ? balance.attackRange + balance.attackRangePerLevel * (Level - 1) : 0f;
-        private float BaseAttackRate => balance ? balance.attackRate + balance.attackRatePerLevel * (Level - 1) : 1f;
+        public float AttackRange => balance ? balance.GetAttackRange(Level) : 0f;
+        private float BaseAttackRate => balance ? balance.GetAttackRate(Level) : 1f;
         private float AttackRate => BaseAttackRate / (1f + (gear ? gear.TotalAttackSpeed : 0f));
         private bool CanHealAllies => balance && balance.canHealAllies;
-        private float HealRange => balance ? balance.healRange + balance.healRangePerLevel * (Level - 1) : 0f;
-        private int HealAmount => balance ? balance.healAmount + balance.healAmountPerLevel * (Level - 1) : 0;
+        private float HealRange => balance ? balance.GetHealRange(Level) : 0f;
+        private int HealAmount => balance ? balance.GetHealAmount(Level) : 0;
         private GameObject ProjectilePrefab => balance ? balance.projectilePrefab : null;
         private float ProjectileSpeed => balance ? balance.projectileSpeed : 0f;
         private float LookAtDuration => balance ? balance.lookAtDuration : 0.2f;

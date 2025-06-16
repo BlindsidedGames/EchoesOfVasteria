@@ -9,8 +9,8 @@ namespace Gear
 
         private void Awake()
         {
-            var holder = GetComponent<EnemyBalanceHolder>();
-            balance = holder ? holder.Balance : null;
+            var holder = GetComponent<BalanceHolder>();
+            balance = holder ? holder.Balance as EnemyBalanceData : null;
             GetComponent<Health>().OnDeath += SpawnDrop;
         }
 

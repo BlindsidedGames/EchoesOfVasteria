@@ -104,8 +104,8 @@ public class Health : MonoBehaviour, IDamageable
         var level = levelSystem ? levelSystem.Level : 1;
         if (balance != null)
         {
-            maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
-            defense = balance.baseDefense + balance.defensePerLevel * (level - 1);
+            maxHP = balance.GetHealth(level);
+            defense = balance.GetDefense(level);
         }
 
         if (gear != null)

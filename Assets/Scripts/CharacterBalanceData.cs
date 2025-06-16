@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// Base class for stats that apply to both heroes and enemies.
 /// </summary>
-public class CharacterBalanceData : ScriptableObject
+public abstract class CharacterBalanceData : ScriptableObject
 {
     [BoxGroup("Stats"), SerializeField] public int baseHealth = 10;
     [BoxGroup("Stats"), SerializeField] public int healthPerLevel = 0;
@@ -32,4 +32,31 @@ public class CharacterBalanceData : ScriptableObject
     [BoxGroup("AI"), SerializeField] public float visionRangePerLevel = 0f;
     [BoxGroup("AI"), SerializeField] public float safeDistance = 8f;
     [BoxGroup("AI"), SerializeField] public float safeDistancePerLevel = 0f;
+
+    public virtual int GetHealth(int level) =>
+        baseHealth + healthPerLevel * (level - 1);
+
+    public virtual int GetDefense(int level) =>
+        baseDefense + defensePerLevel * (level - 1);
+
+    public virtual int GetDamage(int level) =>
+        baseDamage + damagePerLevel * (level - 1);
+
+    public virtual float GetAttackRate(int level) =>
+        attackRate + attackRatePerLevel * (level - 1);
+
+    public virtual float GetAttackRange(int level) =>
+        attackRange + attackRangePerLevel * (level - 1);
+
+    public virtual float GetHealRange(int level) =>
+        healRange + healRangePerLevel * (level - 1);
+
+    public virtual int GetHealAmount(int level) =>
+        healAmount + healAmountPerLevel * (level - 1);
+
+    public virtual float GetVisionRange(int level) =>
+        visionRange + visionRangePerLevel * (level - 1);
+
+    public virtual float GetSafeDistance(int level) =>
+        safeDistance + safeDistancePerLevel * (level - 1);
 }
