@@ -15,11 +15,11 @@ public enum AIState
 public class EnemyAI : MonoBehaviour
 {
     [Header("AI Behavior")] [SerializeField]
-    private float visionRange = 15f;
-
-    [SerializeField] private float attackRange = 10f;
-    [SerializeField] private float strafeDistance = 7f; // The ideal distance for circling
+    private float strafeDistance = 7f; // Fallback distance for circling
     [SerializeField] private LayerMask heroLayer; // Set this to your "Hero" layer in the inspector
+
+    private CharacterBalanceData balance;
+    private BalanceHolder balanceHolder;
 
     [Header("Leashing & Wandering")] [SerializeField]
     private float leashDistance = 25f; // How far it can chase from its anchor
@@ -36,6 +36,12 @@ public class EnemyAI : MonoBehaviour
     private Vector3 spawnAnchor;
     private float timeToNextWander;
     private BasicAttack attacker; // Reference to the attack script
+    private int Level =>
+        balance is EnemyBalanceData enemyBalance ? enemyBalance.enemyLevel : 1;
+
+    private float VisionRange => balance ? balance.GetVisionRange(Level) : 15f;
+    private float StrafeDistance => balance ? balance.GetSafeDistance(Level) : strafeDistance;
+    private float AttackRange => attacker != null ? attacker.AttackRange : (balance ? balance.GetAttackRange(Level) : 10f);
 
     // --- A* Components ---
     private AIPath ai;
@@ -46,6 +52,8 @@ public class EnemyAI : MonoBehaviour
         ai = GetComponent<AIPath>();
         seeker = GetComponent<Seeker>();
         attacker = GetComponent<BasicAttack>(); // Get the attack component
+        balanceHolder = GetComponent<BalanceHolder>();
+        balance = balanceHolder ? balanceHolder.Balance : null;
     }
 
     public void SetSpawnAnchor(Vector3 anchor)
@@ -117,7 +125,7 @@ public class EnemyAI : MonoBehaviour
 
         // --- Strafing/Kiting Logic (Movement Only) ---
         var distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
-        if (distanceToTarget <= strafeDistance)
+        if (distanceToTarget <= StrafeDistance)
         {
             ai.endReachedDistance = 0f;
             Vector2 directionToTarget = (currentTarget.position - transform.position).normalized;
@@ -127,7 +135,7 @@ public class EnemyAI : MonoBehaviour
         else
         {
             ai.destination = currentTarget.position;
-            ai.endReachedDistance = strafeDistance;
+            ai.endReachedDistance = StrafeDistance;
         }
     }
 
@@ -141,7 +149,7 @@ public class EnemyAI : MonoBehaviour
 
     private void FindTarget()
     {
-        var potentialTargets = Physics2D.OverlapCircleAll(transform.position, visionRange, heroLayer);
+        var potentialTargets = Physics2D.OverlapCircleAll(transform.position, VisionRange, heroLayer);
         var closestDist = float.MaxValue;
         Transform closestTarget = null;
 
@@ -162,11 +170,11 @@ public class EnemyAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, visionRange);
+        Gizmos.DrawWireSphere(transform.position, VisionRange);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, strafeDistance);
+        Gizmos.DrawWireSphere(transform.position, StrafeDistance);
 
         if (spawnAnchor != Vector3.zero)
         {
