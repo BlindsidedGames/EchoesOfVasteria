@@ -57,7 +57,7 @@ namespace Gear
 
         private string BuildStatList()
         {
-            var hero = FindObjectOfType<PartyManager>()?.ActiveHero;
+            var hero = FindFirstObjectByType<PartyManager>()?.ActiveHero;
             GearItem equipped = null;
             if (hero && hero.TryGetComponent(out BalanceHolder holder))
             {
@@ -123,7 +123,7 @@ namespace Gear
 
         private void Equip()
         {
-            var hero = FindObjectOfType<PartyManager>()?.ActiveHero;
+            var hero = FindFirstObjectByType<PartyManager>()?.ActiveHero;
             if (hero && hero.TryGetComponent(out BalanceHolder holder))
             {
                 var gear = holder.Gear;
