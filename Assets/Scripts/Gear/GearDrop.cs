@@ -20,8 +20,10 @@ namespace Gear
             if (timer > 0f)
             {
                 timer -= Time.deltaTime;
-                if (timerFill) timerFill.fillAmount = timer / duration;
-                if (timer <= 0f) Dismantle();
+                if (timerFill)
+                    timerFill.fillAmount = Mathf.Clamp01(timer / duration);
+                if (timer <= 0f)
+                    Dismantle();
             }
         }
 
@@ -43,7 +45,10 @@ namespace Gear
             if (references.statsText) references.statsText.text = BuildStatList();
             if (references.equipButton) references.equipButton.onClick.AddListener(Equip);
             if (references.dismantleButton) references.dismantleButton.onClick.AddListener(Dismantle);
-            timerFill = null;
+
+            timerFill = references.timerFillBar;
+            if (timerFill)
+                timerFill.fillAmount = 1f;
 
             if (references.rarityImage)
                 references.rarityImage.OutlineColor = GetRarityColor(item.rarity);
