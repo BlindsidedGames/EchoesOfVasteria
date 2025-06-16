@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TimelessEchoes.Attacks;
@@ -26,6 +27,9 @@ public class PartyManager : MonoBehaviour
 
     /// <summary>The currently active hero or null if none.</summary>
     public GameObject ActiveHero => IsValidIndex(activeIdx) ? heroes[activeIdx] : null;
+
+    /// <summary>Fires whenever the active hero changes. Parameter is the new hero GameObject.</summary>
+    public static Action<GameObject> ActiveHeroChanged;
 
     // stored delegates so we can unsubscribe on destroy
     private readonly List<System.Action<int, int>> hpChangedDelegates = new();
@@ -189,6 +193,8 @@ public class PartyManager : MonoBehaviour
         SnapCameraToActiveHero();
 
         RefreshCardVisuals(index);
+
+        ActiveHeroChanged?.Invoke(ActiveHero);
     }
 
     /* ─── Camera helpers ─── */

@@ -16,6 +16,16 @@ namespace Gear
         [SerializeField] private DropReferences references;
         private Image timerFill;
 
+        private void OnEnable()
+        {
+            PartyManager.ActiveHeroChanged += OnHeroChanged;
+        }
+
+        private void OnDisable()
+        {
+            PartyManager.ActiveHeroChanged -= OnHeroChanged;
+        }
+
         private void Update()
         {
             if (timer > 0f)
@@ -53,6 +63,12 @@ namespace Gear
 
             if (references.rarityImage)
                 references.rarityImage.OutlineColor = GetRarityColor(item.rarity);
+        }
+
+        private void OnHeroChanged(GameObject hero)
+        {
+            if (references && references.statsText)
+                references.statsText.text = BuildStatList();
         }
 
         private string BuildStatList()
