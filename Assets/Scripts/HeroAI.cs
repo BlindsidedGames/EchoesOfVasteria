@@ -1,39 +1,40 @@
+using Gear;
 using Pathfinding;
-using UnityEngine;
 using TimelessEchoes.Attacks;
+using UnityEngine;
 
 [RequireComponent(typeof(AIPath))]
 [RequireComponent(typeof(HeroClickMover))]
 public class HeroAI : MonoBehaviour
 {
-    [Header("AI Behavior")] private CharacterBalanceData balance;
-    private BalanceHolder balanceHolder;
-    private HeroGear gear;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
-    private LevelSystem levelSystem;
-
     public Transform currentTarget;
     public bool isPlayerOverridden;
-    private int Level => levelSystem ? levelSystem.Level : 1;
-    public float VisionRange => balance ? balance.visionRange + balance.visionRangePerLevel * (Level - 1) : 20f;
-    public float SafeDistance => balance ? balance.safeDistance + balance.safeDistancePerLevel * (Level - 1) : 8f;
 
     // Player issued destination to return to after combat
     public Vector3 lastPlayerDestination;
-    private bool hasReturnDestination;
-    private bool wasInCombat;
-
-    private AIPath ai;
-    private HeroClickMover mover;
-    private BasicAttack attacker;
 
     // Preallocated buffer for non-allocating physics queries
     private readonly Collider2D[] enemyBuffer = new Collider2D[32];
 
-    private ContactFilter2D enemyFilter;
+    private AIPath ai;
+    private BasicAttack attacker;
+    [Header("AI Behavior")] private CharacterBalanceData balance;
+    private BalanceHolder balanceHolder;
     private ContactFilter2D blockingFilter;
+
+    private ContactFilter2D enemyFilter;
+    private HeroGear gear;
+    private bool hasReturnDestination;
+
+    private LevelSystem levelSystem;
+    private HeroClickMover mover;
+    private bool wasInCombat;
+    private int Level => levelSystem ? levelSystem.Level : 1;
+    public float VisionRange => balance ? balance.visionRange + balance.visionRangePerLevel * (Level - 1) : 20f;
+    public float SafeDistance => balance ? balance.safeDistance + balance.safeDistancePerLevel * (Level - 1) : 8f;
 
     private void Awake()
     {
@@ -76,12 +77,17 @@ public class HeroAI : MonoBehaviour
             {
                 wasInCombat = false;
                 mover.SetHold(false); // ensure movement resumes
-                if (hasReturnDestination)
-                {
-                    mover.SetDestination(lastPlayerDestination);
-                }
+                if (hasReturnDestination) mover.SetDestination(lastPlayerDestination);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (levelSystem != null)
+            levelSystem.OnLevelUp -= OnLevelChanged;
+        if (gear != null)
+            gear.GearChanged -= ApplySpeed;
     }
 
     private void HandleCombatMovement()
@@ -132,7 +138,7 @@ public class HeroAI : MonoBehaviour
         // The ideal distance we want to be from our target
         var idealKiteDistance = SafeDistance + 2f;
         Vector2 bestPoint = transform.position; // Fallback to current position
-        bool foundValid = false;
+        var foundValid = false;
 
         // If the hero only sees the current target, simply move directly away from it
         if (hitCount <= 1)
@@ -162,8 +168,8 @@ public class HeroAI : MonoBehaviour
             float score;
 
             // Determine score based on distance from other enemies (ignoring the current target)
-            bool hasOtherEnemy = false;
-            float minDistance = float.MaxValue;
+            var hasOtherEnemy = false;
+            var minDistance = float.MaxValue;
             for (var j = 0; j < hitCount; j++)
             {
                 var collider = enemyBuffer[j];
@@ -175,15 +181,11 @@ public class HeroAI : MonoBehaviour
             }
 
             if (hasOtherEnemy)
-            {
                 score = minDistance;
-            }
             else
-            {
                 // If there are no other enemies, the best point is simply the one on the circle
                 // that is furthest from our current position (encouraging movement).
                 score = Vector2.Distance(candidatePoint, transform.position);
-            }
 
             if (score > bestScore)
             {
@@ -193,7 +195,7 @@ public class HeroAI : MonoBehaviour
             }
         }
 
-        return foundValid ? bestPoint : (Vector2)transform.position;
+        return foundValid ? bestPoint : transform.position;
     }
 
 
@@ -236,19 +238,10 @@ public class HeroAI : MonoBehaviour
         if (ai == null) return;
         if (balance is HeroBalanceData heroBalance)
         {
-            float speed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
+            var speed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
             if (gear != null)
                 speed += gear.TotalMoveSpeed;
             ai.maxSpeed = speed;
         }
     }
-
-    private void OnDestroy()
-    {
-        if (levelSystem != null)
-            levelSystem.OnLevelUp -= OnLevelChanged;
-        if (gear != null)
-            gear.GearChanged -= ApplySpeed;
-    }
-
 }

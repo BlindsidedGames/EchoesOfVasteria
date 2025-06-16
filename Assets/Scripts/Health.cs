@@ -1,24 +1,25 @@
-using UnityEngine;
+using System;
+using Gear;
 using TMPro;
-using System.Collections;
+using UnityEngine;
 
 /// <summary>Simple HP container with change / death events.</summary>
 public class Health : MonoBehaviour, IDamageable
 {
+    [SerializeField] private int maxHP = 10;
+    [SerializeField] private int defense = 1;
     private CharacterBalanceData balance;
     private BalanceHolder balanceHolder;
     private HeroGear gear;
-    [SerializeField] private int maxHP = 10;
-    [SerializeField] private int defense = 1;
 
     private LevelSystem levelSystem;
 
-    public  int MaxHP      => maxHP;
-    public  int CurrentHP  { get; private set; }
-    public  int Defense    => defense;
+    public Action OnDeath;
+    public Action<int, int> OnHealthChanged; // (current, max)
 
-    public  System.Action            OnDeath;
-    public  System.Action<int, int>  OnHealthChanged;   // (current, max)
+    public int MaxHP => maxHP;
+    public int CurrentHP { get; private set; }
+    public int Defense => defense;
 
     private void Awake()
     {
@@ -49,13 +50,13 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (CurrentHP <= 0) return;
 
-        int actualDamage = Mathf.Max(dmg - defense, 0);
+        var actualDamage = Mathf.Max(dmg - defense, 0);
         CurrentHP -= actualDamage;
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
 
         if (actualDamage > 0)
         {
-            Color c = Color.white;
+            var c = Color.white;
             if (attacker && attacker.CompareTag("Hero") && CompareTag("Enemy"))
                 c = new Color(1f, 0.5f, 0f); // orange
             else if (attacker && attacker.CompareTag("Enemy") && CompareTag("Hero"))
@@ -69,7 +70,7 @@ public class Health : MonoBehaviour, IDamageable
 
             if (CompareTag("Enemy") && attacker && attacker.CompareTag("Hero"))
             {
-                int reward = 5;
+                var reward = 5;
                 if (TryGetComponent(out EnemyAI enemy))
                     reward = enemy.XPReward;
 
@@ -90,17 +91,17 @@ public class Health : MonoBehaviour, IDamageable
 
         if (amount > 0)
         {
-            Color c = CompareTag("Hero") ? Color.green : new Color(0.5f, 1f, 0f);
+            var c = CompareTag("Hero") ? Color.green : new Color(0.5f, 1f, 0f);
             ShowFloatingText(amount.ToString(), c);
         }
     }
 
     /// <summary>
-    /// Applies balance values based on current level.
+    ///     Applies balance values based on current level.
     /// </summary>
     private void ApplyBalance()
     {
-        int level = levelSystem ? levelSystem.Level : 1;
+        var level = levelSystem ? levelSystem.Level : 1;
         if (balance != null)
         {
             maxHP = balance.baseHealth + balance.healthPerLevel * (level - 1);
@@ -124,7 +125,10 @@ public class Health : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(CurrentHP, maxHP);
     }
 
-    private void OnLevelChanged(int newLevel) => ApplyBalance();
+    private void OnLevelChanged(int newLevel)
+    {
+        ApplyBalance();
+    }
 
     /* ─── Floating Text ─── */
     private void ShowFloatingText(string message, Color color)
@@ -142,16 +146,10 @@ public class Health : MonoBehaviour, IDamageable
 
     private class FloatingTextEffect : MonoBehaviour
     {
-        private TMP_Text text;
-        private float time;
         private const float Duration = 1f;
         private const float Speed = 1f;
-
-        public void Init(Color color)
-        {
-            text = GetComponent<TMP_Text>();
-            text.color = color;
-        }
+        private TMP_Text text;
+        private float time;
 
         private void Update()
         {
@@ -161,6 +159,12 @@ public class Health : MonoBehaviour, IDamageable
             c.a = 1f - time / Duration;
             text.color = c;
             if (time >= Duration) Destroy(gameObject);
+        }
+
+        public void Init(Color color)
+        {
+            text = GetComponent<TMP_Text>();
+            text.color = color;
         }
     }
 }

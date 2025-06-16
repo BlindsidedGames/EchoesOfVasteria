@@ -1,33 +1,15 @@
 using System.Collections.Generic;
+using Gear;
 using Sirenix.OdinInspector;
-
 
 namespace Blindsided.SaveData
 {
     public class SaveData
     {
-        public double PlayTime;
-        public string DateStarted;
-        public string DateQuitString;
-        public double OfflineTime = 0;
-        public double OfflineTimeScaleMultiplier = 2f;
-        public double OfflineTimeCap = 3600f;
-
-        public float TimeScale = 0f;
         public float CurrentTime = 0;
-
-        [TabGroup("Preferences")] public Preferences SavedPreferences = new();
+        public string DateQuitString;
+        public string DateStarted;
         [TabGroup("Devoptions")] public Devoptions DevOptions = new();
-        
-
-        [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
-        public Dictionary<string, int> UpgradeLevels = new();
-
-        [HideReferenceObjectPicker] [TabGroup("Statistics")]
-        public Statistics Stats = new();
-
-        [HideReferenceObjectPicker] [TabGroup("Heroes")]
-        public Dictionary<string, HeroState> HeroStates = new();
 
         [HideReferenceObjectPicker] [TabGroup("Codex")]
         public Dictionary<string, int> GlobalKillCounts = new();
@@ -35,60 +17,79 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("Gear")]
         public Dictionary<string, HeroGearState> HeroGear = new();
 
-        [TabGroup("Gear")] public int ItemShards = 0;
+        [HideReferenceObjectPicker] [TabGroup("Heroes")]
+        public Dictionary<string, HeroState> HeroStates = new();
+
+        [TabGroup("Gear")] public int ItemShards;
+        public double OfflineTime = 0;
+        public double OfflineTimeCap = 3600f;
+        public double OfflineTimeScaleMultiplier = 2f;
+        public double PlayTime;
+
+        [TabGroup("Preferences")] public Preferences SavedPreferences = new();
+
+        [HideReferenceObjectPicker] [TabGroup("Statistics")]
+        public Statistics Stats = new();
+
+        public float TimeScale = 0f;
+
+
+        [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
+        public Dictionary<string, int> UpgradeLevels = new();
 
         [HideReferenceObjectPicker]
         public class Preferences
         {
-            public Tab LayerTab = Tab.Zero;
-            public bool ExtraBuyOptions = true;
-            public NumberTypes Notation;
             public BuyMode BuyMode = BuyMode.BuyMax;
-            public bool RoundedBulkBuy = true;
+            public bool ExtraBuyOptions = true;
+            public Dictionary<string, bool> Foldouts = new();
+            public bool InvertMenu;
+            public Tab LayerTab = Tab.Zero;
+            public bool Music = true;
+            public NumberTypes Notation;
             public bool OfflineTimeActive;
             public bool OfflineTimeAutoDisable;
-            public bool UseScaledTimeForValues;
-
-            public bool ShortLongCurrencyDisplay;
-            public bool TransparentUi;
-            public bool InvertMenu;
-            public bool Tutorial;
-            public bool Music = true;
-
-            public bool StatsFoldout;
+            public bool RoundedBulkBuy = true;
             public bool SettingsFoldout;
             public bool ShopFoldout = false;
-            public Dictionary<string, bool> Foldouts = new();
+
+            public bool ShortLongCurrencyDisplay;
+
+            public bool StatsFoldout;
+            public bool TransparentUi;
+            public bool Tutorial;
+            public bool UseScaledTimeForValues;
         }
 
         [HideReferenceObjectPicker]
         public class Statistics
         {
-            public TimeSpentInRealms TimeSpentInRealms = new();
             public TimeSpentInRealms ScaledTimeSpentInRealms = new();
+            public TimeSpentInRealms TimeSpentInRealms = new();
         }
 
         [HideReferenceObjectPicker]
         public class TimeSpentInRealms
         {
-            public float Total => EventHorizon + FoundationOfProduction + RealmOfResearch + EnginesOfExpansion +
-                                  CollapseOfTime + ChronicleArchives + TemporalRifts + VoidLull;
+            public float ChronicleArchives;
+            public float CollapseOfTime;
+            public float EnginesOfExpansion;
 
             public float EventHorizon;
             public float FoundationOfProduction;
             public float RealmOfResearch;
-            public float EnginesOfExpansion;
-            public float CollapseOfTime;
-            public float ChronicleArchives;
             public float TemporalRifts;
             public float VoidLull;
+
+            public float Total => EventHorizon + FoundationOfProduction + RealmOfResearch + EnginesOfExpansion +
+                                  CollapseOfTime + ChronicleArchives + TemporalRifts + VoidLull;
         }
 
         [HideReferenceObjectPicker]
         public class HeroState
         {
-            public int Level;
             public int CurrentXP;
+            public int Level;
         }
 
         [HideReferenceObjectPicker]
@@ -100,10 +101,10 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class HeroGearState
         {
-            public GearItem Ring;
-            public GearItem Necklace;
             public GearItem Brooch;
+            public GearItem Necklace;
             public GearItem Pocket;
+            public GearItem Ring;
         }
 
         #region Enums
