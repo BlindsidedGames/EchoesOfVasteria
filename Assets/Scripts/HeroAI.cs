@@ -42,6 +42,9 @@ public class HeroAI : MonoBehaviour
         levelSystem = GetComponent<LevelSystem>();
         balanceHolder = GetComponent<BalanceHolder>();
         balance = balanceHolder ? balanceHolder.Balance : null;
+        ApplySpeed();
+        if (levelSystem != null)
+            levelSystem.OnLevelUp += OnLevelChanged;
         enemyFilter = new ContactFilter2D { layerMask = enemyLayer, useLayerMask = true, useTriggers = false };
         blockingFilter = new ContactFilter2D { layerMask = blockingLayer, useLayerMask = true, useTriggers = false };
 
@@ -217,6 +220,24 @@ public class HeroAI : MonoBehaviour
         mover.SetHold(false);
         lastPlayerDestination = destination;
         hasReturnDestination = true;
+    }
+
+    private void OnLevelChanged(int _)
+    {
+        ApplySpeed();
+    }
+
+    private void ApplySpeed()
+    {
+        if (ai == null) return;
+        if (balance is HeroBalanceData heroBalance)
+            ai.maxSpeed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
+    }
+
+    private void OnDestroy()
+    {
+        if (levelSystem != null)
+            levelSystem.OnLevelUp -= OnLevelChanged;
     }
 
 }
