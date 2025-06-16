@@ -7,8 +7,8 @@ public class EnemyDropper : MonoBehaviour
 
     private void Awake()
     {
-        var holder = GetComponent<BalanceHolder>();
-        balance = holder ? holder.Balance as EnemyBalanceData : null;
+        var holder = GetComponent<EnemyBalanceHolder>();
+        balance = holder ? holder.Balance : null;
         GetComponent<Health>().OnDeath += SpawnDrop;
     }
 
