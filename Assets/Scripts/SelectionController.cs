@@ -1,7 +1,6 @@
 using Pathfinding;
 using UnityEngine;
-
-// Add this namespace
+using UnityEngine.EventSystems; // Add this namespace
 
 public class SelectionController : MonoBehaviour
 {
@@ -18,6 +17,8 @@ public class SelectionController : MonoBehaviour
 
     private void Update()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
         if (Input.GetMouseButtonDown(0)) TryMouseSelect();
         if (Input.GetMouseButtonDown(1)) IssueMove();
     }
