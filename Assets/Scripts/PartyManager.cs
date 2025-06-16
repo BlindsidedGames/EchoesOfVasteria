@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TimelessEchoes.Attacks;
+using Gear;
 
 public class PartyManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class PartyManager : MonoBehaviour
     private readonly List<System.Action<int, int>> hpChangedDelegates = new();
     private readonly List<System.Action<int, int>> xpChangedDelegates = new();
     private readonly List<System.Action<int>> levelUpDelegates = new();
+    private readonly List<HeroGear> gearComponents = new();
+    private readonly List<System.Action> gearChangedDelegates = new();
 
     /* ─── Awake ─── */
 
@@ -57,7 +60,7 @@ public class PartyManager : MonoBehaviour
             return;
         }
 
-        /* wire HP / XP / Level events once */
+        /* wire HP / XP / Level / Gear events once */
         for (var i = 0; i < heroes.Count; i++)
         {
             if (!heroes[i])
@@ -65,12 +68,15 @@ public class PartyManager : MonoBehaviour
                 hpChangedDelegates.Add(null);
                 xpChangedDelegates.Add(null);
                 levelUpDelegates.Add(null);
+                gearComponents.Add(null);
+                gearChangedDelegates.Add(null);
                 continue;
             }
             var idx = i;
 
             var hp = heroes[i].GetComponent<Health>();
             var lv = heroes[i].GetComponent<LevelSystem>();
+            var gear = heroes[i].GetComponent<BalanceHolder>()?.Gear;
             System.Action<int, int> hpDel = (cur, max) => UpdateHP(idx, cur, max);
             System.Action<int, int> xpDel = (cur, need) => UpdateXP(idx, cur, need);
             System.Action<int> lvlDel = _ => { if (idx == activeIdx) RefreshCardVisuals(idx); };
@@ -80,6 +86,19 @@ public class PartyManager : MonoBehaviour
             hpChangedDelegates.Add(hpDel);
             xpChangedDelegates.Add(xpDel);
             levelUpDelegates.Add(lvlDel);
+
+            if (gear != null)
+            {
+                System.Action gearDel = () => { if (idx == activeIdx) RefreshCardVisuals(idx); };
+                gear.GearChanged += gearDel;
+                gearComponents.Add(gear);
+                gearChangedDelegates.Add(gearDel);
+            }
+            else
+            {
+                gearComponents.Add(null);
+                gearChangedDelegates.Add(null);
+            }
         }
 
         SetActive(0); // default hero
@@ -122,6 +141,7 @@ public class PartyManager : MonoBehaviour
             if (!heroes[i]) continue;
             var hp = heroes[i].GetComponent<Health>();
             var lv = heroes[i].GetComponent<LevelSystem>();
+            var gear = i < gearComponents.Count ? gearComponents[i] : null;
 
             if (i < hpChangedDelegates.Count && hpChangedDelegates[i] != null)
                 hp.OnHealthChanged -= hpChangedDelegates[i];
@@ -131,6 +151,9 @@ public class PartyManager : MonoBehaviour
 
             if (i < levelUpDelegates.Count && levelUpDelegates[i] != null)
                 lv.OnLevelUp -= levelUpDelegates[i];
+
+            if (gear != null && i < gearChangedDelegates.Count && gearChangedDelegates[i] != null)
+                gear.GearChanged -= gearChangedDelegates[i];
         }
     }
 
@@ -206,13 +229,56 @@ public class PartyManager : MonoBehaviour
                 if (card.heroSelectionPips[i])
                     card.heroSelectionPips[i].SetActive(i == idx);
 
-        /* damage / defense */
-        if (card.heroDamageText && hero.TryGetComponent(out BasicAttack atk))
-            card.heroDamageText.text = $"Damage: {atk.BaseDamage}";
+        /* damage / defense (include gear bonuses) */
+        var balanceHolder = hero.GetComponent<BalanceHolder>();
+        var gear = balanceHolder ? balanceHolder.Gear : null;
+        var level = lv ? lv.Level : 1;
+
+        if (card.heroDamageText)
+        {
+            var dmg = 0;
+            if (balanceHolder && balanceHolder.Balance)
+            {
+                dmg = balanceHolder.Balance.GetDamage(level);
+                if (balanceHolder.Balance is HeroBalanceData)
+                    dmg += KillCodexBuffs.BonusDamage;
+            }
+            if (gear != null) dmg += gear.TotalDamage;
+            card.heroDamageText.text = $"Damage: {dmg}";
+        }
 
         var hp = hero.GetComponent<Health>();
         if (card.heroDefenseText && hp)
-            card.heroDefenseText.text = $"Defense: {hp.Defense}";
+        {
+            var def = 0;
+            if (balanceHolder && balanceHolder.Balance)
+            {
+                def = balanceHolder.Balance.GetDefense(level);
+                if (balanceHolder.Balance is HeroBalanceData)
+                    def += KillCodexBuffs.BonusDefense;
+            }
+            if (gear != null) def += gear.TotalDefense;
+            card.heroDefenseText.text = $"Defense: {def}";
+        }
+
+        /* attack speed / movement */
+        if (balanceHolder && balanceHolder.Balance)
+        {
+            if (card.heroAttackSpeedText)
+            {
+                var rate = balanceHolder.Balance.GetAttackRate(level);
+                if (gear != null) rate /= 1f + gear.TotalAttackSpeed;
+                var speed = Mathf.Approximately(rate, 0f) ? 0f : 1f / rate;
+                card.heroAttackSpeedText.text = $"Attack Speed: {speed:0.##}";
+            }
+
+            if (card.heroSpeedText && balanceHolder.Balance is HeroBalanceData heroBal)
+            {
+                var speed = heroBal.GetMoveSpeed(level);
+                if (gear != null) speed += gear.TotalMoveSpeed;
+                card.heroSpeedText.text = $"Movement: {speed:0.##}";
+            }
+        }
 
         /* HP / XP */
         UpdateHP(idx, hp.CurrentHP, hp.MaxHP);
