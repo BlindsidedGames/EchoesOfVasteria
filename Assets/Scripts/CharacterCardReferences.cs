@@ -9,7 +9,9 @@ public class CharacterCardReferences : MonoBehaviour
     [Header("Card Visuals")] public TMP_Text heroNameText;
     public MPImage heroIcon;
     public TMP_Text heroDamageText;
+    public TMP_Text heroAttackSpeedText;
     public TMP_Text heroDefenseText;
+    public TMP_Text heroSpeedText;
     public Button codexButton;
 
     [Header("Bars")] public MPImage healthBarFill;
@@ -21,7 +23,7 @@ public class CharacterCardReferences : MonoBehaviour
     public Button[] heroSelectionButtons;
 
     /// <summary>
-    /// Updates the card's icon with the provided sprite.
+    ///     Updates the card's icon with the provided sprite.
     /// </summary>
     /// <param name="sprite">The sprite to display for the hero.</param>
     public void UpdateHeroIcon(Sprite sprite)

@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 8421911332518481540}
   - component: {fileID: 8749329354619873494}
   - component: {fileID: 5906459888828113204}
+  - component: {fileID: 1560553752460127764}
   m_Layer: 7
   m_Name: Warrior
   m_TagString: Hero
@@ -429,6 +430,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec846610826b04a34b66fe3e8f30b0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1560553752460127764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 624b64f70360ca843b5a81ff40f3a437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ring:
+    name: 
+    slot: 0
+    rarity: 0
+    damage: 0
+    attackSpeed: 0
+    health: 0
+    defense: 0
+    moveSpeed: 0
+  necklace:
+    name: 
+    slot: 0
+    rarity: 0
+    damage: 0
+    attackSpeed: 0
+    health: 0
+    defense: 0
+    moveSpeed: 0
+  brooch:
+    name: 
+    slot: 0
+    rarity: 0
+    damage: 0
+    attackSpeed: 0
+    health: 0
+    defense: 0
+    moveSpeed: 0
+  pocket:
+    name: 
+    slot: 0
+    rarity: 0
+    damage: 0
+    attackSpeed: 0
+    health: 0
+    defense: 0
+    moveSpeed: 0
 --- !u!1 &7367172317507442004
 GameObject:
   m_ObjectHideFlags: 0
