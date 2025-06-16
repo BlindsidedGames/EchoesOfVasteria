@@ -43,7 +43,10 @@ namespace Gear
             if (references.statsText) references.statsText.text = BuildStatList();
             if (references.equipButton) references.equipButton.onClick.AddListener(Equip);
             if (references.dismantleButton) references.dismantleButton.onClick.AddListener(Dismantle);
-            timerFill = null;
+
+            timerFill = references.timerFillBar;
+            if (timerFill)
+                timerFill.fillAmount = 1f;
 
             if (references.rarityImage)
                 references.rarityImage.OutlineColor = GetRarityColor(item.rarity);
