@@ -190,7 +190,8 @@ public class PartyManager : MonoBehaviour
                 mover.SetSelected(on);
         }
 
-        SnapCameraToActiveHero();
+        if (followActiveHero)
+            SnapCameraToActiveHero();
 
         RefreshCardVisuals(index);
 
