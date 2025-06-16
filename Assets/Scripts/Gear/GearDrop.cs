@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
 using static Blindsided.SaveData.StaticReferences;
+using static Blindsided.SaveData.TextColourStrings;
 
 namespace Gear
 {
@@ -56,21 +57,44 @@ namespace Gear
 
         private string BuildStatList()
         {
+            var hero = FindObjectOfType<PartyManager>()?.ActiveHero;
+            GearItem equipped = null;
+            if (hero && hero.TryGetComponent(out BalanceHolder holder))
+            {
+                var gear = holder.Gear;
+                if (gear != null)
+                {
+                    equipped = item.slot switch
+                    {
+                        GearSlot.Ring => gear.ring,
+                        GearSlot.Necklace => gear.necklace,
+                        GearSlot.Brooch => gear.brooch,
+                        GearSlot.Pocket => gear.pocket,
+                        _ => null
+                    };
+                }
+            }
+
             StringBuilder sb = new();
-            AppendStat(sb, "Damage", item.damage);
-            AppendStat(sb, "AtkSpd", item.attackSpeed);
-            AppendStat(sb, "Health", item.health);
-            AppendStat(sb, "Defense", item.defense);
-            AppendStat(sb, "Move", item.moveSpeed);
+            AppendStat(sb, "Damage", item.damage, equipped?.damage ?? 0);
+            AppendStat(sb, "AtkSpd", item.attackSpeed, equipped?.attackSpeed ?? 0f);
+            AppendStat(sb, "Health", item.health, equipped?.health ?? 0);
+            AppendStat(sb, "Defense", item.defense, equipped?.defense ?? 0);
+            AppendStat(sb, "Move", item.moveSpeed, equipped?.moveSpeed ?? 0f);
             return sb.ToString();
         }
 
-        private void AppendStat(StringBuilder sb, string name, float val)
+        private void AppendStat(StringBuilder sb, string name, float newVal, float oldVal)
         {
-            if (Mathf.Approximately(val, 0f)) return;
+            var diff = newVal - oldVal;
+            if (Mathf.Approximately(diff, 0f)) return;
             if (sb.Length > 0) sb.Append("\n");
-            var sign = val > 0 ? "+" : "-";
-            sb.Append($"{sign}{val} {name}");
+
+            var sign = diff >= 0f ? "+" : "-";
+            var colour = diff >= 0f ? ColourGreen : ColourRed;
+            var abs = Mathf.Abs(diff);
+            var formatted = Mathf.Approximately(abs % 1f, 0f) ? abs.ToString("0") : abs.ToString("0.##");
+            sb.Append($"{colour}{sign}{formatted} {name}{EndColour}");
         }
 
         private float GetDuration(GearRarity r)
