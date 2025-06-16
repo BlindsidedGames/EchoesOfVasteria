@@ -33,8 +33,8 @@ public class HeroAI : MonoBehaviour
     private HeroClickMover mover;
     private bool wasInCombat;
     private int Level => levelSystem ? levelSystem.Level : 1;
-    public float VisionRange => balance ? balance.visionRange + balance.visionRangePerLevel * (Level - 1) : 20f;
-    public float SafeDistance => balance ? balance.safeDistance + balance.safeDistancePerLevel * (Level - 1) : 8f;
+    public float VisionRange => balance ? balance.GetVisionRange(Level) : 20f;
+    public float SafeDistance => balance ? balance.GetSafeDistance(Level) : 8f;
 
     private void Awake()
     {
@@ -238,7 +238,7 @@ public class HeroAI : MonoBehaviour
         if (ai == null) return;
         if (balance is HeroBalanceData heroBalance)
         {
-            var speed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
+            var speed = heroBalance.GetMoveSpeed(Level);
             if (gear != null)
                 speed += gear.TotalMoveSpeed;
             ai.maxSpeed = speed;
