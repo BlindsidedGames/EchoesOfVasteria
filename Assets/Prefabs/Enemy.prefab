@@ -278,8 +278,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c65321766704fcc9c50447f632da349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRange: 7.5
-  attackRange: 1
   strafeDistance: 0.7
   heroLayer:
     serializedVersion: 2
@@ -460,6 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ea1c8f130ea5d43a6d5c89d58c7d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropPrefab: {fileID: 9088494964589834359, guid: bee08ad383502664893c3b9e958f5af7, type: 3}
 --- !u!114 &-6458112892518579413
 MonoBehaviour:
   m_ObjectHideFlags: 0

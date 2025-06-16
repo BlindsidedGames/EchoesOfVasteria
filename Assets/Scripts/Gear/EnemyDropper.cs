@@ -5,7 +5,7 @@ namespace Gear
     [RequireComponent(typeof(Health))]
     public class EnemyDropper : MonoBehaviour
     {
-        [SerializeField] private GearDrop dropPrefab;
+        [SerializeField] private Transform dropPrefab;
         private EnemyBalanceData balance;
 
         private void Awake()
@@ -22,15 +22,11 @@ namespace Gear
             var gear = GearGenerator.Generate(balance.enemyLevel);
             if (dropPrefab)
             {
-                var drop = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+                var drop = Instantiate(dropPrefab, transform.position, Quaternion.identity).GetComponent<GearDrop>();
                 if (drop)
-                {
                     drop.Init(gear);
-                }
                 else
-                {
                     Debug.LogWarning("EnemyDropper: dropPrefab is missing GearDrop component", this);
-                }
             }
             else
             {

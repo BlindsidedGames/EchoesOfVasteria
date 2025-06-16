@@ -13,5 +13,6 @@ namespace Gear
         public TMP_Text statsText;
         public Button equipButton; //equips item to currently selected hero
         public Button dismantleButton; //dismantles item
+        public MPImageBasic timerFillBar;
     }
 }
