@@ -32,6 +32,11 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("Codex")]
         public Dictionary<string, int> GlobalKillCounts = new();
 
+        [HideReferenceObjectPicker] [TabGroup("Gear")]
+        public Dictionary<string, HeroGearState> HeroGear = new();
+
+        [TabGroup("Gear")] public int ItemShards = 0;
+
         [HideReferenceObjectPicker]
         public class Preferences
         {
@@ -90,6 +95,15 @@ namespace Blindsided.SaveData
         public class Devoptions
         {
             public bool DevSpeed;
+        }
+
+        [HideReferenceObjectPicker]
+        public class HeroGearState
+        {
+            public GearItem Ring;
+            public GearItem Necklace;
+            public GearItem Brooch;
+            public GearItem Pocket;
         }
 
         #region Enums

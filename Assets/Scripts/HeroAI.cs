@@ -8,6 +8,7 @@ public class HeroAI : MonoBehaviour
 {
     [Header("AI Behavior")] private CharacterBalanceData balance;
     private BalanceHolder balanceHolder;
+    private HeroGear gear;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask blockingLayer;
 
@@ -42,6 +43,9 @@ public class HeroAI : MonoBehaviour
         levelSystem = GetComponent<LevelSystem>();
         balanceHolder = GetComponent<BalanceHolder>();
         balance = balanceHolder ? balanceHolder.Balance : null;
+        gear = balanceHolder ? balanceHolder.Gear : null;
+        if (gear != null)
+            gear.GearChanged += ApplySpeed;
         ApplySpeed();
         if (levelSystem != null)
             levelSystem.OnLevelUp += OnLevelChanged;
@@ -231,13 +235,20 @@ public class HeroAI : MonoBehaviour
     {
         if (ai == null) return;
         if (balance is HeroBalanceData heroBalance)
-            ai.maxSpeed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
+        {
+            float speed = heroBalance.moveSpeed + heroBalance.moveSpeedPerLevel * (Level - 1);
+            if (gear != null)
+                speed += gear.TotalMoveSpeed;
+            ai.maxSpeed = speed;
+        }
     }
 
     private void OnDestroy()
     {
         if (levelSystem != null)
             levelSystem.OnLevelUp -= OnLevelChanged;
+        if (gear != null)
+            gear.GearChanged -= ApplySpeed;
     }
 
 }

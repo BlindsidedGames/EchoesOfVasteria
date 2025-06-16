@@ -9,6 +9,12 @@ namespace Blindsided.SaveData
         
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
+        public static Dictionary<string, SaveData.HeroGearState> HeroGear => oracle.saveData.HeroGear;
+        public static int ItemShards
+        {
+            get => oracle.saveData.ItemShards;
+            set => oracle.saveData.ItemShards = value;
+        }
 
 
         public static BuyMode PurchaseMode
