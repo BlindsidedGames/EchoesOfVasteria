@@ -20,8 +20,10 @@ namespace Gear
             if (timer > 0f)
             {
                 timer -= Time.deltaTime;
-                if (timerFill) timerFill.fillAmount = timer / duration;
-                if (timer <= 0f) Dismantle();
+                if (timerFill)
+                    timerFill.fillAmount = Mathf.Clamp01(timer / duration);
+                if (timer <= 0f)
+                    Dismantle();
             }
         }
 
