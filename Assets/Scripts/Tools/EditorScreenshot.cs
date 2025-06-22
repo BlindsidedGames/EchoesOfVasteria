@@ -5,6 +5,8 @@ using System.IO;
 
 #if UNITY_EDITOR
 [ExecuteInEditMode]
+namespace TimelessEchoes
+{
 public class EditorScreenshot : MonoBehaviour
 {
     [Title("Screenshot Settings")]
@@ -53,5 +55,7 @@ public class EditorScreenshot : MonoBehaviour
 
         AssetDatabase.Refresh();
     }
+}
+}
 }
 #endif

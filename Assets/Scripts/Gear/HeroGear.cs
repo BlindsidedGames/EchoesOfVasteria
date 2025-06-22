@@ -5,7 +5,7 @@ using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     public class HeroGear : MonoBehaviour
     {

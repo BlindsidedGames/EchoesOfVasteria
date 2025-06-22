@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.Utilities.Pooling;
-using TowerDefense;
 
-namespace AutoBattler
+namespace TimelessEchoes
 {
     /// <summary>
     /// Simple projectile that seeks a target and applies damage on contact.

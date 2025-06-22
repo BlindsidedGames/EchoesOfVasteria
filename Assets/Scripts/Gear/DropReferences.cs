@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     public class DropReferences : MonoBehaviour
     {

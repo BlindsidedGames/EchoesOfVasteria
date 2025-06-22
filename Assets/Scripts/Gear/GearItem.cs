@@ -1,6 +1,6 @@
 using System;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     public enum GearSlot
     {

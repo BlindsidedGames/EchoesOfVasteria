@@ -5,7 +5,7 @@ using MPUIKIT;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.SaveData.TextColourStrings;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     public class GearDrop : MonoBehaviour
     {

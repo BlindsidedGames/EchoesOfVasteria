@@ -1,6 +1,6 @@
 /*using UnityEngine;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     [RequireComponent(typeof(Health))]
     public class EnemyDropper : MonoBehaviour
