@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gear
+namespace TimelessEchoes.Gear
 {
     public static class GearGenerator
     {

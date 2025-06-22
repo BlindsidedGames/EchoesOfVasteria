@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace TowerDefense
+namespace TimelessEchoes
 {
     /// <summary>
     /// Displays a dice roll using a SpriteRenderer.

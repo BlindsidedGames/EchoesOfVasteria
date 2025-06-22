@@ -5,6 +5,8 @@ using UnityEngine;
 /// Keeps the target camera locked to 16:9. Adds black bars on the sides
 /// (pillar-box) or top/bottom (letter-box) when the window is any other ratio.
 /// </summary>
+namespace TimelessEchoes
+{
 public class AspectRatioBox : MonoBehaviour
 {
     [Tooltip("Camera that should be boxed. Leave null → main camera.")]
@@ -59,4 +61,5 @@ public class AspectRatioBox : MonoBehaviour
         }
         targetCamera.rect = rect;
     }
+}
 }

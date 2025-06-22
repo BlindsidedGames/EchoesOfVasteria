@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AutoBattler
+namespace TimelessEchoes
 {
     /// <summary>
     /// Simple interface for objects that can receive damage.

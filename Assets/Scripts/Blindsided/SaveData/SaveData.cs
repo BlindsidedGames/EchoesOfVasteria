@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Gear;
+using TimelessEchoes.Gear;
 using Sirenix.OdinInspector;
 
 namespace Blindsided.SaveData

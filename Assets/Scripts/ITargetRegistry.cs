@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AutoBattler
+namespace TimelessEchoes
 {
     /// <summary>
     /// Interface for tracking active units and querying by layer.
