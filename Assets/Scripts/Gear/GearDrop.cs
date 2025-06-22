@@ -1,4 +1,4 @@
-using System.Text;
+/*using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
@@ -16,15 +16,6 @@ namespace Gear
         [SerializeField] private DropReferences references;
         private Image timerFill;
 
-        private void OnEnable()
-        {
-            PartyManager.ActiveHeroChanged += OnHeroChanged;
-        }
-
-        private void OnDisable()
-        {
-            PartyManager.ActiveHeroChanged -= OnHeroChanged;
-        }
 
         private void Update()
         {
@@ -156,4 +147,5 @@ namespace Gear
             Destroy(gameObject);
         }
     }
-}
+}*/
+
