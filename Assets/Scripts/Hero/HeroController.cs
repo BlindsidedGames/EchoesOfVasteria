@@ -1,6 +1,8 @@
+using System.Collections;
 using Pathfinding;
 using Pathfinding.RVO;
 using UnityEngine;
+using TimelessEchoes;
 using TimelessEchoes.Tasks;
 
 namespace TimelessEchoes.Hero
@@ -16,6 +18,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
+        [SerializeField] private DiceRoller diceRoller;
 
         private TaskController taskController;
 
@@ -133,20 +136,26 @@ namespace TimelessEchoes.Hero
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     lastMoveDir = target.position - transform.position;
                     animator.Play("Attack");
-                    FireProjectile(target);
+                    StartCoroutine(RollAndFire(target));
                 }
             }
         }
 
 
-        private void FireProjectile(Transform target)
+        private IEnumerator RollAndFire(Transform target)
         {
-            if (stats.projectilePrefab == null || target == null) return;
+            if (stats.projectilePrefab == null || target == null)
+                yield break;
+
+            if (diceRoller != null)
+                yield return StartCoroutine(diceRoller.Roll());
+
+            float dmgMultiplier = diceRoller != null ? diceRoller.Result : 1f;
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(target, stats.damage);
+                proj.Init(target, stats.damage * dmgMultiplier);
         }
     }
 }
