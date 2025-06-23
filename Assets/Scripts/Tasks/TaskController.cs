@@ -52,6 +52,10 @@ namespace TimelessEchoes.Tasks
                 var enemy = obj.GetComponent<Enemies.Enemy>();
                 if (enemy != null)
                 {
+                    // Ensure the enemy's health is initialized before tasks start
+                    var hp = enemy.GetComponent<Enemies.Health>();
+                    if (hp != null)
+                        hp.Init((int)hp.MaxHealth);
                     var kill = enemy.GetComponent<KillEnemyTask>();
                     if (kill == null)
                         kill = enemy.gameObject.AddComponent<KillEnemyTask>();
