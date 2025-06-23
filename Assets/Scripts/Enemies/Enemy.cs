@@ -49,6 +49,14 @@ namespace TimelessEchoes.Enemies
         {
             registry = TargetRegistry.Instance;
             registry?.Register(transform);
+
+            // Offset the animator's starting time so enemies don't animate
+            // in perfect sync when spawned simultaneously.
+            if (animator != null)
+            {
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                animator.Play(state.fullPathHash, 0, Random.value);
+            }
         }
 
         private void OnDisable()
