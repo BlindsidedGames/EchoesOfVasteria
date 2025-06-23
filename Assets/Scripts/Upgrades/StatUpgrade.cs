@@ -25,6 +25,7 @@ namespace TimelessEchoes.Upgrades
         {
             public Resource resource;
             public int amount;
+            public int amountIncreasePerLevel = 0;
         }
     }
 }

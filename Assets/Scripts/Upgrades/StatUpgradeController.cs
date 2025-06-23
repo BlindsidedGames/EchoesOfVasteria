@@ -39,7 +39,9 @@ namespace TimelessEchoes.Upgrades
             if (threshold == null) return false;
             foreach (var req in threshold.requirements)
             {
-                if (resourceManager != null && resourceManager.GetAmount(req.resource) < req.amount)
+                int lvl = GetLevel(upgrade);
+                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+                if (resourceManager != null && resourceManager.GetAmount(req.resource) < cost)
                     return false;
             }
             return true;
@@ -53,7 +55,9 @@ namespace TimelessEchoes.Upgrades
 
             foreach (var req in threshold.requirements)
             {
-                resourceManager?.Spend(req.resource, req.amount);
+                int lvl = GetLevel(upgrade);
+                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+                resourceManager?.Spend(req.resource, cost);
             }
 
             levels[upgrade] = GetLevel(upgrade) + 1;
