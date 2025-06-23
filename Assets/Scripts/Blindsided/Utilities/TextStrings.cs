@@ -12,12 +12,12 @@ namespace Blindsided.Utilities
 
         public const string IconWithColour = "<sprite=0 color=#00000>";
         public const string EndColour = "</color>";
-        
+
         public const string HealthIcon = "<sprite=0>";
         public const string DamageIcon = "<sprite=24>";
         public const string AttackSpeedIcon = "<sprite=150>";
         public const string RangeIcon = "<sprite=5>";
-        public const string MoveSpeed = "<sprite=11>";
+        public const string MoveSpeedIcon = "<sprite=11>";
         public const string GoldIcon = "<sprite=4>";
     }
 }
