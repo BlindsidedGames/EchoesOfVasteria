@@ -1,0 +1,83 @@
+using System.Collections.Generic;
+using References.UI;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+namespace TimelessEchoes.Upgrades
+{
+    /// <summary>
+    /// Displays the player's resource amounts and allows selecting a resource slot.
+    /// </summary>
+    public class ResourceInventoryUI : MonoBehaviour
+    {
+        [SerializeField] private ResourceManager resourceManager;
+        [SerializeField] private List<Resource> resources = new();
+        [SerializeField] private List<ResourceUIReferences> slots = new();
+
+        private int selectedIndex = -1;
+
+        private void Awake()
+        {
+            if (resourceManager == null)
+                resourceManager = FindFirstObjectByType<ResourceManager>();
+
+            if (slots.Count == 0)
+                slots.AddRange(GetComponentsInChildren<ResourceUIReferences>(true));
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                var index = i;
+                if (slots[i] != null && slots[i].selectButton != null)
+                    slots[i].selectButton.onClick.AddListener(() => SelectSlot(index));
+            }
+
+            UpdateSlots();
+        }
+
+        private void OnEnable()
+        {
+            UpdateSlots();
+        }
+
+        /// <summary>
+        /// Updates all resource slots using the current ResourceManager values.
+        /// </summary>
+        public void UpdateSlots()
+        {
+            for (int i = 0; i < slots.Count && i < resources.Count; i++)
+                UpdateSlot(i);
+        }
+
+        private void UpdateSlot(int index)
+        {
+            var slot = slots[index];
+            var resource = resources[index];
+            if (slot == null) return;
+
+            int amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+
+            if (slot.iconImage)
+            {
+                slot.iconImage.sprite = resource ? resource.icon : null;
+                slot.iconImage.enabled = amount > 0;
+            }
+
+            if (slot.questionMarkImage)
+                slot.questionMarkImage.enabled = amount <= 0;
+
+            if (slot.countText)
+                slot.countText.text = amount.ToString();
+        }
+
+        private void SelectSlot(int index)
+        {
+            selectedIndex = index;
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (slots[i] != null && slots[i].selectionImage != null)
+                    slots[i].selectionImage.enabled = i == selectedIndex;
+            }
+        }
+    }
+}
