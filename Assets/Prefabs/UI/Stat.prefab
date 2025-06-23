@@ -221,9 +221,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4572956659316676359}
   - component: {fileID: 380748730466455077}
+  - component: {fileID: 8127243704371518222}
   - component: {fileID: 7749288937764691531}
   - component: {fileID: 7365164184268631713}
-  - component: {fileID: 8127243704371518222}
   m_Layer: 5
   m_Name: Stat
   m_TagString: Untagged
@@ -261,6 +261,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7670473725870694799}
   m_CullTransparentMesh: 1
+--- !u!114 &8127243704371518222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7670473725870694799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 128b3a4ed00089b4cab32db3f8cdc0e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconImage: {fileID: 8896596253383606400}
+  countText: {fileID: 5220565270888798410}
+  selectionImage: {fileID: 3585853194162354939}
+  selectButton: {fileID: 7365164184268631713}
 --- !u!114 &7749288937764691531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,22 +351,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8127243704371518222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7670473725870694799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 128b3a4ed00089b4cab32db3f8cdc0e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  iconImage: {fileID: 8896596253383606400}
-  countText: {fileID: 5220565270888798410}
-  selectionImage: {fileID: 3585853194162354939}
-  selectButton: {fileID: 7365164184268631713}
 --- !u!1 &8814406567238863497
 GameObject:
   m_ObjectHideFlags: 0
