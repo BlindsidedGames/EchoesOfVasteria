@@ -16,6 +16,9 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private Transform entryPoint;
         [SerializeField] private Transform exitPoint;
 
+        public Transform EntryPoint => entryPoint;
+        public Transform ExitPoint => exitPoint;
+
         [SerializeField] private LayerMask enemyMask = ~0;
 
         [SerializeField] private Hero.HeroController hero;
@@ -23,6 +26,12 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private string currentTaskName;
 
         private int currentIndex = -1;
+
+        private void Awake()
+        {
+            if (hero == null)
+                hero = GetComponent<Hero.HeroController>();
+        }
 
         private void OnEnable()
         {
