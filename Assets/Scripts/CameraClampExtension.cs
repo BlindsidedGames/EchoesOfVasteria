@@ -21,12 +21,12 @@ namespace TimelessEchoes
             ref CameraState state,
             float deltaTime)
         {
-            if (stage == CinemachineCore.Stage.Body)
+            if (stage == CinemachineCore.Stage.Finalize)
             {
-                var pos = state.RawPosition;
+                var pos = state.FinalPosition;
                 pos.y = yLevel;
                 pos.x = Mathf.Max(minX, pos.x);
-                state.RawPosition = pos;
+                state.PositionCorrection += pos - state.FinalPosition;
             }
         }
     }
