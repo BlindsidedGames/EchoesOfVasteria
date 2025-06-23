@@ -12,7 +12,17 @@ namespace TimelessEchoes.Upgrades
     {
         public Sprite icon;
 #if UNITY_EDITOR
+        private void OnEnable()
+        {
+            SetIcon();
+        }
+
         private void OnValidate()
+        {
+            SetIcon();
+        }
+
+        private void SetIcon()
         {
             if (icon != null)
             {
