@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  radius: 0.5
+  radius: 0.2
   height: 2
   canMove: 1
   maxSpeed: 1
@@ -300,7 +300,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 0.2
+  endReachedDistance: 0.63
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
