@@ -335,6 +335,8 @@ GameObject:
   - component: {fileID: 8560947185031467494}
   - component: {fileID: 3963385185172838639}
   - component: {fileID: 8421911332518481540}
+  - component: {fileID: 1408119024334129066}
+  - component: {fileID: 3675840428294226993}
   m_Layer: 7
   m_Name: Warrior
   m_TagString: Hero
@@ -477,6 +479,40 @@ MonoBehaviour:
   wallAvoidFalloff: 1
   priority: 0.223
   debug: 0
+--- !u!114 &1408119024334129066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  healthBar: {fileID: 8454051011791153815}
+--- !u!114 &3675840428294226993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941723749653959437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a25c4c5c3f3f494a889e69960928546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 0}
+  animator: {fileID: 7417124120224523868}
+  spriteRenderer: {fileID: 2365140991263910531}
+  fourDirectional: 1
+  projectileOrigin: {fileID: 6094697013023591912}
+  taskController: {fileID: 0}
+  entryPoint: {fileID: 0}
+  exitPoint: {fileID: 0}
 --- !u!1 &6916994466997053103
 GameObject:
   m_ObjectHideFlags: 0
