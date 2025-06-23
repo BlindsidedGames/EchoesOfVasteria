@@ -32,26 +32,11 @@ namespace Blindsided
                 return;
             }
 
-            EnsureEasySaveManager();
-
             _settings = new ES3Settings(_fileName, ES3.Location.Cache)
             {
                 bufferSize = 8192
             };
             ES3.CacheFile(_fileName); // pull existing save into RAM
-        }
-
-        /// <summary>
-        /// Ensures an Easy Save 3 Manager exists so references can be saved.
-        /// </summary>
-        private static void EnsureEasySaveManager()
-        {
-            if (Object.FindFirstObjectByType<ES3ReferenceMgr>() == null)
-            {
-                var mgr = new GameObject("Easy Save 3 Manager");
-                mgr.AddComponent<ES3ReferenceMgr>();
-                mgr.AddComponent<ES3AutoSaveMgr>();
-            }
         }
 
         #endregion
