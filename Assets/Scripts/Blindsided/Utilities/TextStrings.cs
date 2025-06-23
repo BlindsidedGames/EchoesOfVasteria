@@ -17,7 +17,7 @@ namespace Blindsided.Utilities
         public const string DamageIcon = "<sprite=24>";
         public const string AttackSpeedIcon = "<sprite=150>";
         public const string RangeIcon = "<sprite=5>";
-        public const string EnergyIcon = "<sprite=11>";
+        public const string MoveSpeed = "<sprite=11>";
         public const string GoldIcon = "<sprite=4>";
     }
 }
