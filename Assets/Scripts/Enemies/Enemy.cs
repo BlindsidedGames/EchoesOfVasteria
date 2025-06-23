@@ -13,6 +13,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private EnemyStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
 
         private AIPath ai;
@@ -58,7 +59,17 @@ namespace TimelessEchoes.Enemies
         {
             Vector2 vel = ai.desiredVelocity;
             Vector2 dir = vel;
-            if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y)) dir.y = 0f; else dir.x = 0f;
+            if (fourDirectional)
+            {
+                if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
+                    dir.y = 0f;
+                else
+                    dir.x = 0f;
+            }
+            else
+            {
+                dir.y = 0f;
+            }
             animator.SetFloat("MoveX", dir.x);
             animator.SetFloat("MoveY", dir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);

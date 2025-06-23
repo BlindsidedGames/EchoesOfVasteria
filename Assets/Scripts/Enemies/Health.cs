@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Blindsided.Utilities;
 
 namespace TimelessEchoes.Enemies
 {
     public class Health : MonoBehaviour, IDamageable, IHasHealth
     {
         [SerializeField] private int maxHealth = 10;
-        [SerializeField] private Image healthBar;
+        [SerializeField] private SlicedFilledImage healthBar;
 
         public float CurrentHealth { get; private set; }
         public float MaxHealth => maxHealth;
