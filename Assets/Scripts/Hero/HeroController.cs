@@ -85,7 +85,12 @@ namespace TimelessEchoes.Hero
         public void SetTask(ITask task)
         {
             currentTask = task;
-            setter.target = task != null ? task.Target : null;
+            // Ensure the destination setter is initialized even if Awake has not run yet
+            if (setter == null)
+                setter = GetComponent<AIDestinationSetter>();
+
+            if (setter != null)
+                setter.target = task != null ? task.Target : null;
         }
 
         public void SetDestination(Transform dest)
