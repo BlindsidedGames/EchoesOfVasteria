@@ -15,7 +15,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
 
-        private readonly List<ResourceUIReferences> costSlots = new();
+        private readonly List<CostResourceUIReferences> costSlots = new();
 
         private int selectedIndex = -1;
 
@@ -54,15 +54,29 @@ namespace TimelessEchoes.Upgrades
                 UpdateUI();
         }
 
+        private void Update()
+        {
+            if (references != null && references.gameObject.activeSelf && Input.GetMouseButtonDown(1))
+                references.gameObject.SetActive(false);
+        }
+
         private void SelectStat(int index)
         {
             selectedIndex = Mathf.Clamp(index, 0, statSelectors.Count - 1);
+
+            for (var i = 0; i < statSelectors.Count; i++)
+            {
+                var selector = statSelectors[i];
+                if (selector != null && selector.selectionImage != null)
+                    selector.selectionImage.enabled = i == selectedIndex;
+            }
 
             if (references != null && selectedIndex >= 0 && selectedIndex < statSelectors.Count)
             {
                 var pos = references.transform.position;
                 var target = statSelectors[selectedIndex].transform.position;
                 references.transform.position = new Vector3(pos.x, target.y, pos.z);
+                references.gameObject.SetActive(true);
             }
 
             BuildCostSlots();
@@ -71,7 +85,7 @@ namespace TimelessEchoes.Upgrades
 
         private void BuildCostSlots()
         {
-            if (references == null || references.resourceSlotPrefab == null || references.costGridLayoutParent == null)
+            if (references == null || references.costSlotPrefab == null || references.costGridLayoutParent == null)
                 return;
 
             foreach (Transform child in references.costGridLayoutParent.transform)
@@ -83,9 +97,8 @@ namespace TimelessEchoes.Upgrades
 
             foreach (var req in threshold.requirements)
             {
-                var obj = Instantiate(references.resourceSlotPrefab, references.costGridLayoutParent.transform);
-                if (obj.TryGetComponent(out ResourceUIReferences slot))
-                    costSlots.Add(slot);
+                var slot = Instantiate(references.costSlotPrefab, references.costGridLayoutParent.transform);
+                costSlots.Add(slot);
             }
         }
 
