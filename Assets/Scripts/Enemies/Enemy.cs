@@ -1,5 +1,6 @@
 using UnityEngine;
 using Pathfinding;
+using TimelessEchoes;
 
 namespace TimelessEchoes.Enemies
 {
@@ -17,9 +18,21 @@ namespace TimelessEchoes.Enemies
         private AIPath ai;
         private AIDestinationSetter setter;
         private Health health;
+        private TargetRegistry registry;
         private Transform startTarget;
         private Vector3 spawnPos;
         private float nextAttack;
+
+        private void OnEnable()
+        {
+            registry = TargetRegistry.Instance;
+            registry?.Register(transform);
+        }
+
+        private void OnDisable()
+        {
+            registry?.Unregister(transform);
+        }
 
         private void Awake()
         {

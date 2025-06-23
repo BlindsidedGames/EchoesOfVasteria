@@ -1,0 +1,109 @@
+using System.Collections.Generic;
+using UnityEngine;
+using TimelessEchoes;
+
+namespace TimelessEchoes.Tasks
+{
+    /// <summary>
+    /// Controls progression through a list of tasks.
+    /// </summary>
+    public class TaskController : MonoBehaviour
+    {
+        [SerializeField] private List<MonoBehaviour> taskObjects = new();
+        public List<ITask> tasks { get; private set; } = new();
+
+        [SerializeField] private Transform entryPoint;
+        [SerializeField] private Transform exitPoint;
+
+        [SerializeField] private LayerMask enemyMask = ~0;
+
+        private int currentIndex = -1;
+
+        private void OnEnable()
+        {
+            currentIndex = -1;
+            tasks.Clear();
+            GatherEnemyTasks();
+            foreach (var obj in taskObjects)
+            {
+                if (obj is ITask task && !tasks.Contains(task))
+                    tasks.Add(task);
+            }
+            SortTasksByDistance();
+            SelectNextTask();
+        }
+
+        private void Update()
+        {
+            if (currentIndex < 0 || currentIndex >= tasks.Count)
+                return;
+
+            var active = tasks[currentIndex];
+            if (active.IsComplete())
+                SelectNextTask();
+        }
+
+        /// <summary>
+        /// Advance to the next task and start it if available.
+        /// </summary>
+        public void SelectNextTask()
+        {
+            currentIndex++;
+            if (currentIndex < tasks.Count)
+            {
+                tasks[currentIndex].StartTask();
+            }
+            else
+            {
+                // All tasks complete; could trigger map exit here.
+            }
+        }
+
+        private void GatherEnemyTasks()
+        {
+            var enemies = GetComponentsInChildren<Enemies.Enemy>();
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null) continue;
+                if (((1 << enemy.gameObject.layer) & enemyMask) == 0) continue;
+                var tr = enemy.transform;
+                var task = enemy.GetComponent<KillEnemyTask>();
+                if (task == null)
+                    task = enemy.gameObject.AddComponent<KillEnemyTask>();
+                task.target = tr;
+                tasks.Add(task);
+            }
+        }
+
+        private void SortTasksByDistance()
+        {
+            var remaining = new List<ITask>(tasks);
+            tasks = new List<ITask>();
+            Vector3 current = entryPoint ? entryPoint.position : transform.position;
+            while (remaining.Count > 0)
+            {
+                int bestIndex = 0;
+                float bestDist = Distance(current, remaining[0]);
+                for (int i = 1; i < remaining.Count; i++)
+                {
+                    float d = Distance(current, remaining[i]);
+                    if (d < bestDist)
+                    {
+                        bestDist = d;
+                        bestIndex = i;
+                    }
+                }
+                var chosen = remaining[bestIndex];
+                remaining.RemoveAt(bestIndex);
+                tasks.Add(chosen);
+                if (chosen.Target != null)
+                    current = chosen.Target.position;
+            }
+        }
+
+        private static float Distance(Vector3 from, ITask task)
+        {
+            return task.Target != null ? Vector3.Distance(from, task.Target.position) : float.MaxValue;
+        }
+    }
+}
