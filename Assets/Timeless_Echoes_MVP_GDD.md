@@ -22,7 +22,7 @@ Clear escalating waves and bosses inside the **Echo Chamber** arena to earn XP 
 | **Enemies** | 3 mob types (Grunt, Fastling, Brute) + 1 boss (**Cyclops** with slam + laser telegraphs) |
 | **Progression** | Damage‑based XP ➜ level curve; each level **+2 Max HP**, **+1 Base Damage** (automatic) |
 | **UI** | Character cards showing HP bar, XP bar, active border • Wave counter & banner |
-| **Camera** | Cinemachine Virtual Camera with 2D Framing Transposer |
+| **Camera** | Cinemachine Camera with 2D Framing Transposer |
 | **Art & Audio** | 16×16 / 24×24 pixel sprites, simple slash & projectile VFX, single chiptune loop, SFX for actions |
 | **Persistence** | None (self‑contained arena demo) |
 

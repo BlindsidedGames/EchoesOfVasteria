@@ -6,7 +6,7 @@ namespace TimelessEchoes
     /// <summary>
     /// Cinemachine extension that clamps the camera to a fixed Y level and
     /// prevents the X position from going below a minimum value.
-    /// Attach this component to a CinemachineVirtualCamera.
+    /// Attach this component to a CinemachineCamera.
     /// </summary>
     [SaveDuringPlay]
     [AddComponentMenu("")]
