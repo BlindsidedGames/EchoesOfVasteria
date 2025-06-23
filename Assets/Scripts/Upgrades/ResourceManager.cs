@@ -19,13 +19,17 @@ namespace TimelessEchoes.Upgrades
         private void AddDebugResource()
         {
             Add(debugResource, debugAmount);
+            SaveState();
         }
 
         [Button]
         private void UnlockDebugResource()
         {
             if (debugResource != null)
+            {
                 unlocked.Add(debugResource);
+                SaveState();
+            }
         }
 
         private void Awake()
