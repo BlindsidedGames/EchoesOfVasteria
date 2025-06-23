@@ -18,6 +18,14 @@ The game continues to run maps while closed. When you return, the results of the
 ## Playing
 Open the `Main` scene in `Assets/Scenes` and press **Play**.
 
+## Tasks
+Task scripts can be found under `Assets/Scripts/Tasks`. Add any of the
+provided tasks to a `TaskController` component and assign entry and exit
+points for your hero. When the controller enables it searches its child
+objects for enemies and creates a `KillEnemyTask` for each one. Each task
+stores a direct reference to that enemy, and tasks are ordered by distance
+from the entry point to keep your hero on an efficient route.
+
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
