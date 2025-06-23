@@ -16,8 +16,9 @@ MonoBehaviour:
   - minLevel: 0
     maxLevel: 5
     requirements:
-    - resource: {fileID: 11400000, guid: 23e232ad99bc08442af32902da1222c5, type: 2}
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
       amount: 5
+      amountIncreasePerLevel: 1
   - minLevel: 0
     maxLevel: 0
     requirements: []

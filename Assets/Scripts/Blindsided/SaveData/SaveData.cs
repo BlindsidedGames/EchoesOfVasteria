@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using TimelessEchoes.Gear;
-using TimelessEchoes.Upgrades;
 using Sirenix.OdinInspector;
+using TimelessEchoes.Upgrades;
 
 namespace Blindsided.SaveData
 {
@@ -15,9 +14,6 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("Codex")]
         public Dictionary<string, int> GlobalKillCounts = new();
 
-        [HideReferenceObjectPicker] [TabGroup("Gear")]
-        public Dictionary<string, HeroGearState> HeroGear = new();
-
         [HideReferenceObjectPicker] [TabGroup("Heroes")]
         public Dictionary<string, HeroState> HeroStates = new();
 
@@ -26,6 +22,8 @@ namespace Blindsided.SaveData
         public double OfflineTimeCap = 3600f;
         public double OfflineTimeScaleMultiplier = 2f;
         public double PlayTime;
+
+        [HideReferenceObjectPicker] public Dictionary<Resource, int> ResourceAmounts = new();
 
         [TabGroup("Preferences")] public Preferences SavedPreferences = new();
 
@@ -37,9 +35,6 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
-
-        [HideReferenceObjectPicker]
-        public Dictionary<Resource, int> ResourceAmounts = new();
 
         [HideReferenceObjectPicker]
         public class Preferences
@@ -100,15 +95,6 @@ namespace Blindsided.SaveData
         public class Devoptions
         {
             public bool DevSpeed;
-        }
-
-        [HideReferenceObjectPicker]
-        public class HeroGearState
-        {
-            public GearItem Brooch;
-            public GearItem Necklace;
-            public GearItem Pocket;
-            public GearItem Ring;
         }
 
         #region Enums
