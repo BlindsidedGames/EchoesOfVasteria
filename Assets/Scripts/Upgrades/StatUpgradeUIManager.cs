@@ -11,6 +11,7 @@ namespace TimelessEchoes.Upgrades
     {
         [SerializeField] private StatUpgradeController controller;
         [SerializeField] private ResourceManager resourceManager;
+        [SerializeField] private ResourceInventoryUI resourceInventoryUI;
         [SerializeField] private List<StatUIReferences> statSelectors = new();
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
@@ -28,6 +29,8 @@ namespace TimelessEchoes.Upgrades
                 controller = FindFirstObjectByType<StatUpgradeController>();
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
+            if (resourceInventoryUI == null)
+                resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
             if (references == null)
                 references = GetComponent<StatUpgradeUIReferences>();
             if (statSelectors.Count == 0)
@@ -98,6 +101,12 @@ namespace TimelessEchoes.Upgrades
             foreach (var req in threshold.requirements)
             {
                 var slot = Instantiate(references.costSlotPrefab, references.costGridLayoutParent.transform);
+                slot.resource = req.resource;
+                if (slot.selectButton != null)
+                {
+                    var res = req.resource;
+                    slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
+                }
                 costSlots.Add(slot);
             }
         }
@@ -121,16 +130,17 @@ namespace TimelessEchoes.Upgrades
                 var req = threshold.requirements[i];
                 var lvl = controller ? controller.GetLevel(CurrentUpgrade) : 0;
                 var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
-                if (slot.questionMarkImage) slot.questionMarkImage.enabled = false;
+                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                if (slot.questionMarkImage) slot.questionMarkImage.enabled = !unlocked;
                 if (slot.iconImage)
                 {
                     slot.iconImage.sprite = req.resource ? req.resource.icon : null;
-                    slot.iconImage.enabled = true;
+                    slot.iconImage.enabled = unlocked;
                 }
 
                 if (slot.countText) slot.countText.text = cost.ToString();
                 if (slot.selectionImage) slot.selectionImage.enabled = false;
-                if (slot.selectButton) slot.selectButton.interactable = false;
+                if (slot.selectButton) slot.selectButton.interactable = true;
             }
         }
 

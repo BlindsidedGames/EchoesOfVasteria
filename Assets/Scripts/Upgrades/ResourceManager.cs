@@ -8,6 +8,7 @@ namespace TimelessEchoes.Upgrades
     public class ResourceManager : MonoBehaviour
     {
         private Dictionary<Resource, int> amounts = new();
+        private HashSet<Resource> unlocked = new();
 
         private void Awake()
         {
@@ -30,6 +31,7 @@ namespace TimelessEchoes.Upgrades
         public void Add(Resource resource, int amount)
         {
             if (resource == null || amount <= 0) return;
+            unlocked.Add(resource);
             if (amounts.ContainsKey(resource))
                 amounts[resource] += amount;
             else
@@ -45,17 +47,25 @@ namespace TimelessEchoes.Upgrades
             return true;
         }
 
+        public bool IsUnlocked(Resource resource)
+        {
+            return resource != null && unlocked.Contains(resource);
+        }
+
         private void SaveState()
         {
             if (oracle == null) return;
             oracle.saveData.ResourceAmounts = new Dictionary<Resource, int>(amounts);
+            oracle.saveData.UnlockedResources = new HashSet<Resource>(unlocked);
         }
 
         private void LoadState()
         {
             if (oracle == null) return;
             oracle.saveData.ResourceAmounts ??= new Dictionary<Resource, int>();
+            oracle.saveData.UnlockedResources ??= new HashSet<Resource>();
             amounts = new Dictionary<Resource, int>(oracle.saveData.ResourceAmounts);
+            unlocked = new HashSet<Resource>(oracle.saveData.UnlockedResources);
         }
     }
 }

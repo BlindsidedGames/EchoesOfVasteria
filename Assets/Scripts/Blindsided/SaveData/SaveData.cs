@@ -24,6 +24,7 @@ namespace Blindsided.SaveData
         public double PlayTime;
 
         [HideReferenceObjectPicker] public Dictionary<Resource, int> ResourceAmounts = new();
+        [HideReferenceObjectPicker] public HashSet<Resource> UnlockedResources = new();
 
         [TabGroup("Preferences")] public Preferences SavedPreferences = new();
 

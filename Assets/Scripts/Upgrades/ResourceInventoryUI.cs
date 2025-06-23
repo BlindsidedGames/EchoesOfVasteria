@@ -56,21 +56,22 @@ namespace TimelessEchoes.Upgrades
             if (slot == null) return;
 
             int amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+            bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
 
             if (slot.iconImage)
             {
                 slot.iconImage.sprite = resource ? resource.icon : null;
-                slot.iconImage.enabled = amount > 0;
+                slot.iconImage.enabled = unlocked;
             }
 
             if (slot.questionMarkImage)
-                slot.questionMarkImage.enabled = amount <= 0;
+                slot.questionMarkImage.enabled = !unlocked;
 
             if (slot.countText)
                 slot.countText.text = amount.ToString();
         }
 
-        private void SelectSlot(int index)
+        public void SelectSlot(int index)
         {
             selectedIndex = index;
             for (int i = 0; i < slots.Count; i++)
@@ -78,6 +79,13 @@ namespace TimelessEchoes.Upgrades
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
             }
+        }
+
+        public void HighlightResource(Resource resource)
+        {
+            int index = resources.IndexOf(resource);
+            if (index >= 0)
+                SelectSlot(index);
         }
     }
 }
