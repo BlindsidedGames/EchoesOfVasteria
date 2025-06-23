@@ -62,6 +62,7 @@ namespace TimelessEchoes.Hero
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
             currentTask = null;
+            lastAttack = Time.time - 1f / CurrentAttackRate;
         }
 
 
