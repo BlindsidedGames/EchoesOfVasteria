@@ -6,6 +6,7 @@ namespace References.UI
 {
     public class CostResourceUIReferences : MonoBehaviour
     {
+        public TimelessEchoes.Upgrades.Resource resource;
         public Image questionMarkImage;
         public Image iconImage;
         public TMP_Text countText;

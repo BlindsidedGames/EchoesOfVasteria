@@ -10,6 +10,7 @@ namespace Blindsided.SaveData
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
         public static Dictionary<Resource, int> ResourceAmounts => oracle.saveData.ResourceAmounts;
+        public static HashSet<Resource> UnlockedResources => oracle.saveData.UnlockedResources;
 
         public static int ItemShards
         {
