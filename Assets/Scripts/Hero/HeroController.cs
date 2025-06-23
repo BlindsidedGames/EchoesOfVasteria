@@ -17,9 +17,11 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
 
-        [SerializeField] private TaskController taskController;
-        [SerializeField] private Transform entryPoint;
-        [SerializeField] private Transform exitPoint;
+        private TaskController taskController;
+
+        // Remember the last movement direction so the attack blend tree can
+        // continue to use it even when the hero stops moving.
+        private Vector2 lastMoveDir = Vector2.down;
 
         private AIPath ai;
         private Enemies.Health health;
@@ -32,6 +34,8 @@ namespace TimelessEchoes.Hero
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Enemies.Health>();
+            if (taskController == null)
+                taskController = GetComponent<TaskController>();
             if (stats != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
@@ -41,15 +45,18 @@ namespace TimelessEchoes.Hero
 
         private void OnEnable()
         {
-            if (entryPoint != null)
-                transform.position = entryPoint.position;
+            if (taskController == null)
+                taskController = GetComponent<TaskController>();
+
+            var start = taskController != null ? taskController.EntryPoint : null;
+            if (start != null)
+                transform.position = start.position;
             if (animator != null)
             {
                 var state = animator.GetCurrentAnimatorStateInfo(0);
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
             currentTask = null;
-            taskController?.ResetTasks();
         }
 
 
@@ -75,11 +82,14 @@ namespace TimelessEchoes.Hero
                 dir.y = 0f;
             }
 
-            animator.SetFloat("MoveX", dir.x);
-            animator.SetFloat("MoveY", dir.y);
+            if (dir.sqrMagnitude > 0.0001f)
+                lastMoveDir = dir;
+
+            animator.SetFloat("MoveX", lastMoveDir.x);
+            animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
             if (spriteRenderer != null)
-                spriteRenderer.flipX = vel.x < 0f;
+                spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
 
         public void SetTask(ITask task)
