@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace References.UI
 {
-    public class ResourceReferences : MonoBehaviour
+    public class ResourceUIReferences : MonoBehaviour
     {
         public Image questionMarkImage;
         public Image iconImage;
