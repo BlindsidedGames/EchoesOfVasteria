@@ -1,6 +1,6 @@
-using UnityEngine;
 using Pathfinding;
-using TimelessEchoes;
+using Pathfinding.RVO;
+using UnityEngine;
 
 namespace TimelessEchoes.Enemies
 {
@@ -17,23 +17,12 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private Transform projectileOrigin;
 
         private AIPath ai;
-        private AIDestinationSetter setter;
         private Health health;
-        private TargetRegistry registry;
-        private Transform startTarget;
-        private Vector3 spawnPos;
         private float nextAttack;
-
-        private void OnEnable()
-        {
-            registry = TargetRegistry.Instance;
-            registry?.Register(transform);
-        }
-
-        private void OnDisable()
-        {
-            registry?.Unregister(transform);
-        }
+        private TargetRegistry registry;
+        private AIDestinationSetter setter;
+        private Vector3 spawnPos;
+        private Transform startTarget;
 
         private void Awake()
         {
@@ -46,6 +35,7 @@ namespace TimelessEchoes.Enemies
                 ai.maxSpeed = stats.moveSpeed;
                 health.Init(stats.maxHealth);
             }
+
             startTarget = setter.target;
         }
 
@@ -55,10 +45,21 @@ namespace TimelessEchoes.Enemies
             UpdateBehavior();
         }
 
+        private void OnEnable()
+        {
+            registry = TargetRegistry.Instance;
+            registry?.Register(transform);
+        }
+
+        private void OnDisable()
+        {
+            registry?.Unregister(transform);
+        }
+
         private void UpdateAnimation()
         {
             Vector2 vel = ai.desiredVelocity;
-            Vector2 dir = vel;
+            var dir = vel;
             if (fourDirectional)
             {
                 if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
@@ -70,6 +71,7 @@ namespace TimelessEchoes.Enemies
             {
                 dir.y = 0f;
             }
+
             animator.SetFloat("MoveX", dir.x);
             animator.SetFloat("MoveY", dir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
@@ -85,7 +87,7 @@ namespace TimelessEchoes.Enemies
                 return;
             }
 
-            float dist = Vector2.Distance(transform.position, setter.target.position);
+            var dist = Vector2.Distance(transform.position, setter.target.position);
             if (dist <= stats.visionRange)
             {
                 ai.destination = setter.target.position;
@@ -114,7 +116,7 @@ namespace TimelessEchoes.Enemies
         private void FireProjectile()
         {
             if (stats.projectilePrefab == null || setter.target == null) return;
-            Transform origin = projectileOrigin ? projectileOrigin : transform;
+            var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)

@@ -116,6 +116,9 @@ GameObject:
   - component: {fileID: 1365065969073088839}
   - component: {fileID: 8369330806658217446}
   - component: {fileID: 1711541776261050643}
+  - component: {fileID: 7044753637461727427}
+  - component: {fileID: 2113197715023221888}
+  - component: {fileID: 6263738220208231591}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
@@ -296,6 +299,51 @@ MonoBehaviour:
   wallAvoidFalloff: 1
   priority: 0.5
   debug: 0
+--- !u!114 &7044753637461727427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  target: {fileID: 0}
+  useRotation: 0
+--- !u!114 &2113197715023221888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  healthBar: {fileID: 0}
+--- !u!114 &6263738220208231591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5b89c777ea87a14a94f7b9df68ffc5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 0}
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 9165481713511291873}
+  projectileOrigin: {fileID: 0}
 --- !u!1 &4904839201687252255
 GameObject:
   m_ObjectHideFlags: 0
