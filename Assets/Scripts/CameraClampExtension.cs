@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace TimelessEchoes
@@ -23,10 +23,10 @@ namespace TimelessEchoes
         {
             if (stage == CinemachineCore.Stage.Finalize)
             {
-                var pos = state.FinalPosition;
+                var pos = state.GetFinalPosition();
                 pos.y = yLevel;
                 pos.x = Mathf.Max(minX, pos.x);
-                state.PositionCorrection += pos - state.FinalPosition;
+                state.PositionCorrection += pos - state.GetFinalPosition();
             }
         }
     }
