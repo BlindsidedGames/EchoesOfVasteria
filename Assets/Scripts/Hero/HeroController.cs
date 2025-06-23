@@ -135,7 +135,6 @@ namespace TimelessEchoes.Hero
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     lastMoveDir = target.position - transform.position;
-                    animator.Play("Attack");
                     StartCoroutine(RollAndFire(target));
                 }
             }
@@ -147,8 +146,34 @@ namespace TimelessEchoes.Hero
             if (stats.projectilePrefab == null || target == null)
                 yield break;
 
+            var enemy = target.GetComponent<Enemies.Health>();
+            if (enemy == null || enemy.CurrentHealth <= 0f)
+                yield break;
+
+            float attackInterval = 1f / Mathf.Max(stats.attackSpeed, 0.01f);
+
             if (diceRoller != null)
-                yield return StartCoroutine(diceRoller.Roll());
+            {
+                var roll = diceRoller.Roll(attackInterval);
+                while (true)
+                {
+                    if (enemy == null || enemy.CurrentHealth <= 0f || target == null)
+                    {
+                        diceRoller.ResetRoll();
+                        yield break;
+                    }
+
+                    if (!roll.MoveNext())
+                        break;
+
+                    yield return roll.Current;
+                }
+            }
+
+            if (enemy == null || enemy.CurrentHealth <= 0f || target == null)
+                yield break;
+
+            animator.Play("Attack");
 
             float dmgMultiplier = diceRoller != null ? diceRoller.Result : 1f;
             var origin = projectileOrigin ? projectileOrigin : transform;
