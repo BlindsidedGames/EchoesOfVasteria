@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +8,13 @@ namespace References.UI
 {
     public class CostResourceUIReferences : MonoBehaviour
     {
-        public TimelessEchoes.Upgrades.Resource resource;
+        private static readonly List<CostResourceUIReferences> instances = new();
+        public Resource resource;
         public Image questionMarkImage;
         public Image iconImage;
         public TMP_Text countText;
         public Image selectionImage;
         public Button selectButton;
-
-        private static readonly List<CostResourceUIReferences> instances = new();
 
         private void Awake()
         {

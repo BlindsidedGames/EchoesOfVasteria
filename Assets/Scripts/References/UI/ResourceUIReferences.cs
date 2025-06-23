@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,13 +7,12 @@ namespace References.UI
 {
     public class ResourceUIReferences : MonoBehaviour
     {
+        private static readonly List<ResourceUIReferences> instances = new();
         public Image questionMarkImage;
         public Image iconImage;
         public TMP_Text countText;
         public Image selectionImage;
         public Button selectButton;
-
-        private static readonly List<ResourceUIReferences> instances = new();
 
         private void Awake()
         {
