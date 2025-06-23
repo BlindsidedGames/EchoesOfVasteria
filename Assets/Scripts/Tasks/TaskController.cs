@@ -33,13 +33,35 @@ namespace TimelessEchoes.Tasks
         {
             currentIndex = -1;
             tasks.Clear();
-            GatherEnemyTasks();
+
+            // Build the task list in the order provided by the editor
             foreach (var obj in taskObjects)
             {
-                if (obj is ITask task && !tasks.Contains(task))
-                    tasks.Add(task);
+                if (obj == null) continue;
+
+                // If an enemy component is supplied, ensure it has a KillEnemyTask
+                var enemy = obj.GetComponent<Enemies.Enemy>();
+                if (enemy != null)
+                {
+                    var kill = enemy.GetComponent<KillEnemyTask>();
+                    if (kill == null)
+                        kill = enemy.gameObject.AddComponent<KillEnemyTask>();
+                    kill.target = enemy.transform;
+                    tasks.Add(kill);
+                    continue;
+                }
+
+                if (obj is ITask existing)
+                {
+                    tasks.Add(existing);
+                    continue;
+                }
+
+                var compTask = obj.GetComponent<ITask>();
+                if (compTask != null)
+                    tasks.Add(compTask);
             }
-            SortTasksByDistance();
+
             hero?.SetTask(null);
             hero?.SetDestination(entryPoint);
             SelectNextTask();
