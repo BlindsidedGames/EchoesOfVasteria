@@ -11,7 +11,7 @@ namespace TimelessEchoes.Hero
     [RequireComponent(typeof(Enemies.Health))]
     public class HeroController : MonoBehaviour
     {
-        [SerializeField] private Enemies.EnemyStats stats;
+        [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
