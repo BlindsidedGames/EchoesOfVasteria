@@ -29,7 +29,9 @@ namespace TimelessEchoes.Hero
         private AIPath ai;
         private Enemies.Health health;
         private AIDestinationSetter setter;
-        private float nextAttack;
+        private float lastAttack = float.NegativeInfinity;
+        private bool isRolling;
+        private bool allowAttacks = true;
         private ITask currentTask;
 
         private void Awake()
@@ -117,6 +119,8 @@ namespace TimelessEchoes.Hero
             setter.target = dest;
         }
 
+        private float CurrentAttackRate => stats != null ? stats.attackSpeed : 0f;
+
         private void UpdateBehavior()
         {
             if (stats == null) return;
@@ -130,18 +134,21 @@ namespace TimelessEchoes.Hero
             var dist = Vector2.Distance(transform.position, target.position);
             if (dist <= stats.visionRange)
             {
-                // Ensure the hero faces the target before initiating the attack.
-                if (Time.time >= nextAttack)
+                float rate = CurrentAttackRate;
+                float cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
+                if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
                 {
-                    nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     lastMoveDir = target.position - transform.position;
-                    StartCoroutine(RollAndFire(target));
+                    if (diceRoller != null)
+                        StartCoroutine(RollAndAttack(target, cooldown));
+                    else
+                        Attack(target, 1);
                 }
             }
         }
 
 
-        private IEnumerator RollAndFire(Transform target)
+        private IEnumerator RollAndAttack(Transform target, float cooldown)
         {
             if (stats.projectilePrefab == null || target == null)
                 yield break;
@@ -150,32 +157,39 @@ namespace TimelessEchoes.Hero
             if (enemy == null || enemy.CurrentHealth <= 0f)
                 yield break;
 
-            float attackInterval = 1f / Mathf.Max(stats.attackSpeed, 0.01f);
+            isRolling = true;
+            lastAttack = Time.time;
 
-            if (diceRoller != null)
+            Coroutine rollRoutine = StartCoroutine(diceRoller.Roll(cooldown));
+            float end = Time.time + cooldown;
+            while (Time.time < end)
             {
-                var roll = diceRoller.Roll(attackInterval);
-                while (true)
+                if (target == null)
                 {
-                    if (enemy == null || enemy.CurrentHealth <= 0f || target == null)
-                    {
-                        diceRoller.ResetRoll();
-                        yield break;
-                    }
-
-                    if (!roll.MoveNext())
-                        break;
-
-                    yield return roll.Current;
+                    diceRoller?.ResetRoll();
+                    if (rollRoutine != null)
+                        StopCoroutine(rollRoutine);
+                    isRolling = false;
+                    yield break;
                 }
+                yield return null;
             }
 
-            if (enemy == null || enemy.CurrentHealth <= 0f || target == null)
-                yield break;
+            yield return rollRoutine;
+            if (target != null)
+                Attack(target, diceRoller != null ? diceRoller.Result : 1);
+            isRolling = false;
+        }
+
+        private void Attack(Transform target, float dmgMultiplier)
+        {
+            if (stats.projectilePrefab == null || target == null) return;
+
+            var enemy = target.GetComponent<Enemies.Health>();
+            if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
             animator.Play("Attack");
 
-            float dmgMultiplier = diceRoller != null ? diceRoller.Result : 1f;
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
