@@ -19,7 +19,6 @@ namespace TimelessEchoes.Enemies
         private AIPath ai;
         private Health health;
         private float nextAttack;
-        private TargetRegistry registry;
         private AIDestinationSetter setter;
         private Vector3 spawnPos;
         private Transform startTarget;
@@ -47,8 +46,7 @@ namespace TimelessEchoes.Enemies
 
         private void OnEnable()
         {
-            registry = TargetRegistry.Instance;
-            registry?.Register(transform);
+            
 
             // Offset the animator's starting time so enemies don't animate
             // in perfect sync when spawned simultaneously.
@@ -59,10 +57,6 @@ namespace TimelessEchoes.Enemies
             }
         }
 
-        private void OnDisable()
-        {
-            registry?.Unregister(transform);
-        }
 
         private void UpdateAnimation()
         {
@@ -102,7 +96,7 @@ namespace TimelessEchoes.Enemies
                 if (Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
-                    animator.SetTrigger("Attack");
+                    animator.Play("Attack");
                     FireProjectile();
                 }
             }

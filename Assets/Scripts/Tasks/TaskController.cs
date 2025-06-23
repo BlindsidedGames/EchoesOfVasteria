@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 using TimelessEchoes;
 
 namespace TimelessEchoes.Tasks
@@ -17,9 +18,18 @@ namespace TimelessEchoes.Tasks
 
         [SerializeField] private LayerMask enemyMask = ~0;
 
+        [SerializeField] private Hero.HeroController hero;
+        [SerializeField] private float engageRange = 2f;
+        [SerializeField] private string currentTaskName;
+
         private int currentIndex = -1;
 
         private void OnEnable()
+        {
+            ResetTasks();
+        }
+
+        public void ResetTasks()
         {
             currentIndex = -1;
             tasks.Clear();
@@ -30,6 +40,8 @@ namespace TimelessEchoes.Tasks
                     tasks.Add(task);
             }
             SortTasksByDistance();
+            hero?.SetTask(null);
+            hero?.SetDestination(entryPoint);
             SelectNextTask();
         }
 
@@ -39,6 +51,22 @@ namespace TimelessEchoes.Tasks
                 return;
 
             var active = tasks[currentIndex];
+
+            if (active is KillEnemyTask kill && hero != null)
+            {
+                var target = kill.target;
+                if (target != null)
+                {
+                    float dist = Vector3.Distance(hero.transform.position, target.position);
+                    if (dist <= engageRange)
+                    {
+                        var set = target.GetComponent<AIDestinationSetter>();
+                        if (set != null)
+                            set.target = hero.transform;
+                    }
+                }
+            }
+
             if (active.IsComplete())
                 SelectNextTask();
         }
@@ -51,11 +79,15 @@ namespace TimelessEchoes.Tasks
             currentIndex++;
             if (currentIndex < tasks.Count)
             {
-                tasks[currentIndex].StartTask();
+                var task = tasks[currentIndex];
+                currentTaskName = task.GetType().Name;
+                hero?.SetTask(task);
+                task.StartTask();
             }
             else
             {
-                // All tasks complete; could trigger map exit here.
+                currentTaskName = "Complete";
+                hero?.SetDestination(exitPoint);
             }
         }
 
