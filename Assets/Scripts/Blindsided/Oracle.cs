@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TimelessEchoes.Upgrades;
 
 namespace Blindsided
 {
@@ -204,6 +205,7 @@ namespace Blindsided
         {
             saveData.HeroStates ??= new Dictionary<string, SaveData.SaveData.HeroState>();
             saveData.GlobalKillCounts ??= new Dictionary<string, int>();
+            saveData.ResourceAmounts ??= new Dictionary<Resource, int>();
         }
 
         public static void AwayForSeconds()
