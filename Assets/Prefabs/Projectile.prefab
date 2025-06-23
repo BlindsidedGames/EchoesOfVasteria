@@ -10,8 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4483371865807376152}
   - component: {fileID: 5007485650910153838}
-  - component: {fileID: 5696260894023433452}
-  - component: {fileID: 6066474250847566372}
+  - component: {fileID: 4376760131691440199}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -89,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5696260894023433452
+--- !u!114 &4376760131691440199
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,43 +97,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5086888241769898753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6847eb1e8e114a85924526fd819d6525, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f0a598da26ead5469c11906241d37d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TARGET_RADIUS: 0.1
---- !u!58 &6066474250847566372
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5086888241769898753}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  speed: 5
+  hitDistance: 0.1
+  hitEffectPrefab: {fileID: 0}
+  effectDuration: 0.5
