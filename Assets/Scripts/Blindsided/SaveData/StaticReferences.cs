@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.SaveData;
+using TimelessEchoes.Upgrades;
 
 namespace Blindsided.SaveData
 {
@@ -10,6 +11,7 @@ namespace Blindsided.SaveData
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
         public static Dictionary<string, SaveData.HeroGearState> HeroGear => oracle.saveData.HeroGear;
+        public static Dictionary<Resource, int> ResourceAmounts => oracle.saveData.ResourceAmounts;
         public static int ItemShards
         {
             get => oracle.saveData.ItemShards;

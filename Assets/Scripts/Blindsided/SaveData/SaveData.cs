@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TimelessEchoes.Gear;
+using TimelessEchoes.Upgrades;
 using Sirenix.OdinInspector;
 
 namespace Blindsided.SaveData
@@ -36,6 +37,9 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
+
+        [HideReferenceObjectPicker]
+        public Dictionary<Resource, int> ResourceAmounts = new();
 
         [HideReferenceObjectPicker]
         public class Preferences
