@@ -155,8 +155,8 @@ TextureImporter:
       name: Other_Icons_NO_Outline_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 16
+        x: 16
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -177,7 +177,7 @@ TextureImporter:
       name: Other_Icons_NO_Outline_2
       rect:
         serializedVersion: 2
-        x: 16
+        x: 32
         y: 32
         width: 16
         height: 16
@@ -199,8 +199,8 @@ TextureImporter:
       name: Other_Icons_NO_Outline_3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 16
+        x: 48
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -221,7 +221,7 @@ TextureImporter:
       name: Other_Icons_NO_Outline_4
       rect:
         serializedVersion: 2
-        x: 32
+        x: 64
         y: 32
         width: 16
         height: 16
@@ -243,7 +243,7 @@ TextureImporter:
       name: Other_Icons_NO_Outline_5
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 16
         width: 16
         height: 16
@@ -265,8 +265,8 @@ TextureImporter:
       name: Other_Icons_NO_Outline_6
       rect:
         serializedVersion: 2
-        x: 48
-        y: 32
+        x: 16
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -287,7 +287,7 @@ TextureImporter:
       name: Other_Icons_NO_Outline_7
       rect:
         serializedVersion: 2
-        x: 48
+        x: 32
         y: 16
         width: 16
         height: 16
@@ -309,8 +309,8 @@ TextureImporter:
       name: Other_Icons_NO_Outline_8
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
+        x: 48
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -355,8 +355,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 15
-        height: 15
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -375,7 +375,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 020d01ea6d8884b40ac481ee17f08de6
     internalID: 0
     vertices: []
     indices: 
@@ -383,7 +383,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Other_Icons_NO_Outline_0: -8446204396901758463
       Other_Icons_NO_Outline_1: 1255851622429385135
