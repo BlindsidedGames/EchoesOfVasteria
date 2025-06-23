@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -9,6 +10,23 @@ namespace TimelessEchoes.Upgrades
     {
         private Dictionary<Resource, int> amounts = new();
         private HashSet<Resource> unlocked = new();
+
+        [Title("Debug Controls")]
+        [SerializeField] private Resource debugResource;
+        [SerializeField] private int debugAmount = 1;
+
+        [Button]
+        private void AddDebugResource()
+        {
+            Add(debugResource, debugAmount);
+        }
+
+        [Button]
+        private void UnlockDebugResource()
+        {
+            if (debugResource != null)
+                unlocked.Add(debugResource);
+        }
 
         private void Awake()
         {
