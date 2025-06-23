@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.SaveData.StaticReferences;
-using static Blindsided.SaveData.TextColourStrings;
+using static Blindsided.Utilities.TextStrings;
 using static Blindsided.SaveData.SaveData;
 
 namespace Blindsided.Utilities

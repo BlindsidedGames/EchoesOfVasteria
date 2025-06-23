@@ -1,17 +1,17 @@
 using System.Collections.Generic;
+using TimelessEchoes.Upgrades;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.SaveData;
-using TimelessEchoes.Upgrades;
 
 namespace Blindsided.SaveData
 {
     public static class StaticReferences
     {
-        
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
-        public static Dictionary<string, SaveData.HeroGearState> HeroGear => oracle.saveData.HeroGear;
+        public static Dictionary<string, HeroGearState> HeroGear => oracle.saveData.HeroGear;
         public static Dictionary<Resource, int> ResourceAmounts => oracle.saveData.ResourceAmounts;
+
         public static int ItemShards
         {
             get => oracle.saveData.ItemShards;
@@ -104,19 +104,5 @@ namespace Blindsided.SaveData
 
         public static TimeSpentInRealms TimeSpentInRealms => Stats.TimeSpentInRealms;
         public static TimeSpentInRealms ScaledTimeSpentInRealms => Stats.ScaledTimeSpentInRealms;
-    }
-
-    public static class TextColourStrings
-    {
-        public const string ColourHighlight = "<color=#B6FFFF>";
-        public const string ColourGreen = "<color=#98C560>";
-        public const string ColourGreenAlt = "<color=#91CC95>";
-        public const string ColourWhite = "<color=#CCCCCC>";
-        public const string ColourGrey = "<color=#A5A5A5>";
-        public const string ColourOrange = "<color=#C69B60>";
-        public const string ColourRed = "<color=#C56260>";
-
-        public const string IconWithColour = "<sprite=0 color=#00000>";
-        public const string EndColour = "</color>";
     }
 }

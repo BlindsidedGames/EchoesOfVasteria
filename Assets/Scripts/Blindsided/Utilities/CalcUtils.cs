@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
-using static Blindsided.SaveData.TextColourStrings;
+using static Blindsided.Utilities.TextStrings;
 using static Blindsided.SaveData.SaveData;
 
 namespace Blindsided.Utilities
@@ -118,6 +118,17 @@ namespace Blindsided.Utilities
             " DCe" // 103: 1e309 (Duocentillion) - Next prefix if needed
         };
 
+
+//true = Joules
+//false = Watts
+        public static readonly string[] EnergyPrefixJ = { "J", "KJ", "MJ", "GJ", "TJ", "PJ", "EJ", "ZJ", "YJ" };
+        public static readonly string[] EnergyPrefixW = { "W", "KW", "MW", "GW", "TW", "PW", "EW", "ZW", "YW" };
+
+        public static Dictionary<string, string> replacements = new()
+        {
+            { "{colorHighlight}", ColourHighlight }
+        };
+
         public static string FormatNumber(
             double x,
             bool hideDecimal = false,
@@ -195,12 +206,6 @@ namespace Blindsided.Utilities
                 .Replace(".", $"{mspaceEnd}.{mspaceStart}");
             return $"{mspaceStart}{fallback}{mspaceEnd}";
         }
-
-
-//true = Joules
-//false = Watts
-        public static readonly string[] EnergyPrefixJ = { "J", "KJ", "MJ", "GJ", "TJ", "PJ", "EJ", "ZJ", "YJ" };
-        public static readonly string[] EnergyPrefixW = { "W", "KW", "MW", "GW", "TW", "PW", "EW", "ZW", "YW" };
 
         public static string FormatEnergy(double x, bool type)
         {
@@ -298,11 +303,6 @@ namespace Blindsided.Utilities
         {
             return new string(s.ToCharArray().OrderBy(x => Guid.NewGuid()).ToArray());
         }
-
-        public static Dictionary<string, string> replacements = new()
-        {
-            { "{colorHighlight}", ColourHighlight }
-        };
 
         public static string ReplacePlaceholders(string input)
         {
