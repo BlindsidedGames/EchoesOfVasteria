@@ -18,6 +18,11 @@ The game continues to run maps while closed. When you return, the results of the
 ## Playing
 Open the `Main` scene in `Assets/Scenes` and press **Play**.
 
+## Camera
+The scene uses a **Cinemachine Virtual Camera** to follow the hero. Add the
+`CameraClampExtension` component to the virtual camera to keep its Y position
+locked at zero and prevent the camera from moving left of `x = 0`.
+
 ## Tasks
 Task scripts can be found under `Assets/Scripts/Tasks`. Add any of the
 provided tasks to a `TaskController` component and assign entry and exit
