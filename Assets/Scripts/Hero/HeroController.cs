@@ -70,6 +70,12 @@ namespace TimelessEchoes.Hero
         {
             Vector2 vel = ai.desiredVelocity;
             var dir = vel;
+
+            // If we're nearly stationary but have a target, face the target so
+            // attack animations look correct when an enemy passes by.
+            if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
+                dir = setter.target.position - transform.position;
+
             if (fourDirectional)
             {
                 if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
@@ -121,9 +127,11 @@ namespace TimelessEchoes.Hero
             var dist = Vector2.Distance(transform.position, target.position);
             if (dist <= stats.visionRange)
             {
+                // Ensure the hero faces the target before initiating the attack.
                 if (Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
+                    lastMoveDir = target.position - transform.position;
                     animator.Play("Attack");
                     FireProjectile(target);
                 }
