@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Blindsided.Utilities;
+using UnityEngine;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -8,7 +9,10 @@ namespace TimelessEchoes.Upgrades
     [CreateAssetMenu(fileName = "StatUpgrade", menuName = "SO/Stat Upgrade")]
     public class StatUpgrade : ScriptableObject
     {
-        [System.Serializable]
+        public List<Threshold> thresholds;
+        public float statIncreasePerLevel = 1;
+
+        [Serializable]
         public class Threshold
         {
             public int minLevel;
@@ -16,14 +20,11 @@ namespace TimelessEchoes.Upgrades
             public List<ResourceRequirement> requirements;
         }
 
-        [System.Serializable]
+        [Serializable]
         public class ResourceRequirement
         {
             public Resource resource;
             public int amount;
         }
-
-        public List<Threshold> thresholds;
-        public int statIncreasePerLevel = 1;
     }
 }
