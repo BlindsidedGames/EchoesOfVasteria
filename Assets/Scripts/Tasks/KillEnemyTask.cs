@@ -16,14 +16,22 @@ namespace TimelessEchoes.Tasks
 
         public void StartTask()
         {
+            // Remove any previous death listener in case this component is reused
+            if (health != null)
+                health.OnDeath -= OnDeath;
+
+            complete = false;
+
             if (target == null)
             {
                 complete = true;
                 return;
             }
+
             health = target.GetComponent<Health>();
             if (health != null)
                 health.OnDeath += OnDeath;
+
             if (health == null || health.CurrentHealth <= 0f)
                 complete = true;
         }
