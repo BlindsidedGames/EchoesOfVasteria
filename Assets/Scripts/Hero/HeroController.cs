@@ -24,16 +24,14 @@ namespace TimelessEchoes.Hero
         private AIPath ai;
         private Enemies.Health health;
         private AIDestinationSetter setter;
-        private TargetRegistry registry;
         private float nextAttack;
-        private int taskIndex = -1;
+        private ITask currentTask;
 
         private void Awake()
         {
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Enemies.Health>();
-            registry = TargetRegistry.Instance;
             if (stats != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
@@ -45,27 +43,20 @@ namespace TimelessEchoes.Hero
         {
             if (entryPoint != null)
                 transform.position = entryPoint.position;
-            registry?.Register(transform);
             if (animator != null)
             {
                 var state = animator.GetCurrentAnimatorStateInfo(0);
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
-            taskIndex = -1;
-            taskController?.SelectNextTask();
-            taskIndex++;
+            currentTask = null;
+            taskController?.ResetTasks();
         }
 
-        private void OnDisable()
-        {
-            registry?.Unregister(transform);
-        }
 
         private void Update()
         {
             UpdateAnimation();
             UpdateBehavior();
-            UpdateTask();
         }
 
         private void UpdateAnimation()
@@ -91,41 +82,39 @@ namespace TimelessEchoes.Hero
                 spriteRenderer.flipX = vel.x < 0f;
         }
 
+        public void SetTask(ITask task)
+        {
+            currentTask = task;
+            setter.target = task != null ? task.Target : null;
+        }
+
+        public void SetDestination(Transform dest)
+        {
+            setter.target = dest;
+        }
+
         private void UpdateBehavior()
         {
             if (stats == null) return;
-            var closest = TargetRegistry.Instance?.FindClosest(transform.position, LayerMask.GetMask("Enemy"));
-            if (closest == null) return;
-            var dist = Vector2.Distance(transform.position, closest.position);
+            var target = setter.target;
+            if (target == null) return;
+
+            var enemy = target.GetComponent<Enemies.Health>();
+            if (enemy == null) return;
+            if (enemy.CurrentHealth <= 0f) return;
+
+            var dist = Vector2.Distance(transform.position, target.position);
             if (dist <= stats.visionRange)
             {
-                ai.destination = closest.position;
                 if (Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
-                    animator.SetTrigger("Attack");
-                    FireProjectile(closest);
+                    animator.Play("Attack");
+                    FireProjectile(target);
                 }
             }
         }
 
-        private void UpdateTask()
-        {
-            if (taskController == null) return;
-            if (taskIndex < 0 || taskIndex >= taskController.tasks.Count)
-            {
-                if (exitPoint != null)
-                    setter.target = exitPoint;
-                return;
-            }
-            var task = taskController.tasks[taskIndex];
-            setter.target = task.Target;
-            if (task.Target != null && ai.reachedDestination && task.IsComplete())
-            {
-                taskController.SelectNextTask();
-                taskIndex++;
-            }
-        }
 
         private void FireProjectile(Transform target)
         {
