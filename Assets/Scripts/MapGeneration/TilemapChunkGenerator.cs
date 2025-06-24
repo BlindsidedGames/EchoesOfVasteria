@@ -55,10 +55,14 @@ namespace TimelessEchoes.MapGeneration
             int currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
             int islandStart = Mathf.Max(0, size.x - islandWidth);
+            int finalSandDepth = currentSandDepth;
+            int finalGrassDepth = currentGrassDepth;
             for (int x = 0; x < islandStart; )
             {
                 for (int segX = 0; segX < minAreaWidth && x < islandStart; segX++, x++)
                 {
+                    finalSandDepth = currentSandDepth;
+                    finalGrassDepth = currentGrassDepth;
                     PlaceColumn(x, currentSandDepth, currentGrassDepth);
                 }
 
@@ -74,7 +78,7 @@ namespace TimelessEchoes.MapGeneration
                 }
             }
 
-            GenerateIsland(islandStart, size.x - islandStart);
+            GenerateIsland(islandStart, size.x - islandStart, finalSandDepth, finalGrassDepth);
         }
 
         private void PlaceColumn(int x, int sandDepth, int grassDepth)
@@ -97,7 +101,7 @@ namespace TimelessEchoes.MapGeneration
                 grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
         }
 
-        private void GenerateIsland(int startX, int width)
+        private void GenerateIsland(int startX, int width, int shoreSandDepth, int shoreGrassDepth)
         {
             int walkwayWidth = Mathf.Min(2, width);
             int islandStart = startX + walkwayWidth;
@@ -106,6 +110,10 @@ namespace TimelessEchoes.MapGeneration
             // Height of the bridge connecting the shore to the island.
             const int bridgeHeight = 2;
 
+            int waterDepth = size.y - shoreSandDepth - shoreGrassDepth;
+            if (waterDepth < 0)
+                waterDepth = 0;
+
             // Fill the bridge area with water so it sits over water like a pier.
             for (int x = startX; x < islandStart && x < size.x; x++)
                 for (int y = 0; y < size.y; y++)
@@ -113,7 +121,7 @@ namespace TimelessEchoes.MapGeneration
 
             // Create a strip of land connecting to the main shoreline.
             for (int x = startX; x < islandStart && x < size.x; x++)
-                for (int y = 0; y < bridgeHeight && y < size.y; y++)
+                for (int y = waterDepth; y < waterDepth + bridgeHeight && y < size.y; y++)
                     sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
 
             // Carve out the island slightly above the water line with some random variation.
@@ -135,6 +143,9 @@ namespace TimelessEchoes.MapGeneration
 
                 startY = Mathf.Clamp(startY, 0, size.y);
                 endY = Mathf.Clamp(endY, 0, size.y);
+
+                for (int y = 0; y < size.y; y++)
+                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
 
                 for (int y = startY; y < endY; y++)
                     sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
