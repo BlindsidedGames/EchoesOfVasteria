@@ -11,12 +11,22 @@ namespace TimelessEchoes.Upgrades
     {
         private static Dictionary<string, Resource> lookup;
 
+        /// <summary>
+        ///     Invoked whenever the stored resource amounts or unlocked state changes.
+        /// </summary>
+        public event System.Action OnInventoryChanged;
+
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
 
         [SerializeField] private double debugAmount = 1;
         private readonly Dictionary<Resource, double> amounts = new();
         private readonly HashSet<Resource> unlocked = new();
+
+        private void InvokeInventoryChanged()
+        {
+            OnInventoryChanged?.Invoke();
+        }
 
         private void Awake()
         {
@@ -61,6 +71,7 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += amount;
             else
                 amounts[resource] = amount;
+            InvokeInventoryChanged();
         }
 
         public bool Spend(Resource resource, double amount)
@@ -69,6 +80,7 @@ namespace TimelessEchoes.Upgrades
             var current = GetAmount(resource);
             if (current < amount) return false;
             amounts[resource] = current - amount;
+            InvokeInventoryChanged();
             return true;
         }
 
@@ -114,6 +126,7 @@ namespace TimelessEchoes.Upgrades
                     amounts[res] = pair.Value.Amount;
                     if (pair.Value.Earned) unlocked.Add(res);
                 }
+            InvokeInventoryChanged();
         }
 
         private static void EnsureLookup()
