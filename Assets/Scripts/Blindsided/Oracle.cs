@@ -205,8 +205,7 @@ namespace Blindsided
         {
             saveData.HeroStates ??= new Dictionary<string, SaveData.SaveData.HeroState>();
             saveData.GlobalKillCounts ??= new Dictionary<string, int>();
-            saveData.ResourceAmounts ??= new Dictionary<Resource, int>();
-            saveData.UnlockedResources ??= new HashSet<Resource>();
+            saveData.Resources ??= new Dictionary<string, SaveData.SaveData.ResourceEntry>();
         }
 
         public static void AwayForSeconds()

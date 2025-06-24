@@ -8,12 +8,12 @@ namespace TimelessEchoes.Upgrades
 {
     public class ResourceManager : MonoBehaviour
     {
-        private Dictionary<Resource, int> amounts = new();
+        private Dictionary<Resource, double> amounts = new();
         private HashSet<Resource> unlocked = new();
 
         [Title("Debug Controls")]
         [SerializeField] private Resource debugResource;
-        [SerializeField] private int debugAmount = 1;
+        [SerializeField] private double debugAmount = 1;
 
         [Button]
         private void AddDebugResource()
@@ -45,12 +45,12 @@ namespace TimelessEchoes.Upgrades
             OnLoadData -= LoadState;
         }
 
-        public int GetAmount(Resource resource)
+        public double GetAmount(Resource resource)
         {
             return amounts.TryGetValue(resource, out var value) ? value : 0;
         }
 
-        public void Add(Resource resource, int amount)
+        public void Add(Resource resource, double amount)
         {
             if (resource == null || amount <= 0) return;
             unlocked.Add(resource);
@@ -60,7 +60,7 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] = amount;
         }
 
-        public bool Spend(Resource resource, int amount)
+        public bool Spend(Resource resource, double amount)
         {
             if (resource == null || amount <= 0) return true;
             var current = GetAmount(resource);
@@ -74,20 +74,56 @@ namespace TimelessEchoes.Upgrades
             return resource != null && unlocked.Contains(resource);
         }
 
+        private static Dictionary<string, Resource> lookup;
+
         private void SaveState()
         {
             if (oracle == null) return;
-            oracle.saveData.ResourceAmounts = new Dictionary<Resource, int>(amounts);
-            oracle.saveData.UnlockedResources = new HashSet<Resource>(unlocked);
+            var dict = new Dictionary<string, SaveData.SaveData.ResourceEntry>();
+            foreach (var pair in amounts)
+            {
+                if (pair.Key == null) continue;
+                dict[pair.Key.name] = new SaveData.SaveData.ResourceEntry
+                {
+                    Earned = unlocked.Contains(pair.Key),
+                    Amount = pair.Value
+                };
+            }
+            foreach (var res in unlocked)
+            {
+                if (res == null) continue;
+                if (!dict.ContainsKey(res.name))
+                    dict[res.name] = new SaveData.SaveData.ResourceEntry { Earned = true, Amount = 0 };
+            }
+            oracle.saveData.Resources = dict;
         }
 
         private void LoadState()
         {
             if (oracle == null) return;
-            oracle.saveData.ResourceAmounts ??= new Dictionary<Resource, int>();
-            oracle.saveData.UnlockedResources ??= new HashSet<Resource>();
-            amounts = new Dictionary<Resource, int>(oracle.saveData.ResourceAmounts);
-            unlocked = new HashSet<Resource>(oracle.saveData.UnlockedResources);
+            oracle.saveData.Resources ??= new Dictionary<string, SaveData.SaveData.ResourceEntry>();
+            EnsureLookup();
+            amounts.Clear();
+            unlocked.Clear();
+            foreach (var pair in oracle.saveData.Resources)
+            {
+                if (lookup.TryGetValue(pair.Key, out var res) && res != null)
+                {
+                    amounts[res] = pair.Value.Amount;
+                    if (pair.Value.Earned) unlocked.Add(res);
+                }
+            }
+        }
+
+        private static void EnsureLookup()
+        {
+            if (lookup != null) return;
+            lookup = new Dictionary<string, Resource>();
+            foreach (var res in Resources.LoadAll<Resource>(""))
+            {
+                if (res != null && !lookup.ContainsKey(res.name))
+                    lookup[res.name] = res;
+            }
         }
     }
 }
