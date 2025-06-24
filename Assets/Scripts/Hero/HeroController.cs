@@ -20,6 +20,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
+        [SerializeField] private LayerMask enemyMask = ~0;
 
         private float baseDamage = 0f;
         private float baseAttackSpeed = 0f;
@@ -181,6 +182,28 @@ namespace TimelessEchoes.Hero
         {
             if (stats == null) return;
             var target = setter.target;
+
+            // Find closest enemy within vision range
+            var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
+            Transform nearest = null;
+            float best = float.MaxValue;
+            foreach (var h in hits)
+            {
+                var hp = h.GetComponent<Enemies.Health>();
+                if (hp == null || hp.CurrentHealth <= 0f) continue;
+                float d = Vector2.Distance(transform.position, h.transform.position);
+                if (d < best)
+                {
+                    best = d;
+                    nearest = h.transform;
+                }
+            }
+            if (nearest != null)
+            {
+                target = nearest;
+                setter.target = nearest;
+            }
+
             if (target == null) return;
 
             var enemy = target.GetComponent<Enemies.Health>();

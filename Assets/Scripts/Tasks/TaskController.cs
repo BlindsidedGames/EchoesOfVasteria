@@ -51,7 +51,6 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public Hero.HeroController hero;
         [SerializeField] private CinemachineCamera mapCamera;
         public CinemachineCamera MapCamera => mapCamera;
-        [SerializeField] private float engageRange = 2f;
         [SerializeField] private string currentTaskName;
 
         private int currentIndex = -1;
@@ -113,7 +112,7 @@ namespace TimelessEchoes.Tasks
 
         private void Update()
         {
-            EngageNearbyEnemies();
+            RemoveDeadEnemyTasks();
 
             if (currentIndex < 0 || currentIndex >= tasks.Count)
                 return;
@@ -124,28 +123,24 @@ namespace TimelessEchoes.Tasks
                 SelectNextTask();
         }
 
+
         /// <summary>
-        /// Check all enemy tasks and activate any enemies near the hero.
+        /// Remove enemy tasks whose targets are dead or destroyed.
         /// </summary>
-        private void EngageNearbyEnemies()
+        private void RemoveDeadEnemyTasks()
         {
-            if (hero == null)
-                return;
-
-            foreach (var task in tasks)
+            for (int i = tasks.Count - 1; i >= 0; i--)
             {
-                if (task is KillEnemyTask kill)
+                if (tasks[i] is KillEnemyTask kill)
                 {
-                    var target = kill.target;
-                    if (target == null)
-                        continue;
-
-                    float dist = Vector3.Distance(hero.transform.position, target.position);
-                    if (dist <= engageRange)
+                    var health = kill.target != null ? kill.target.GetComponent<Enemies.Health>() : null;
+                    if (kill.target == null || health == null || health.CurrentHealth <= 0f)
                     {
-                        var set = target.GetComponent<AIDestinationSetter>();
-                        if (set != null)
-                            set.target = hero.transform;
+                        if (i <= currentIndex)
+                            currentIndex--;
+                        tasks.RemoveAt(i);
+                        if (kill != null)
+                            Destroy(kill);
                     }
                 }
             }
