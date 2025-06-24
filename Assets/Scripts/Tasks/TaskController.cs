@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 using TimelessEchoes;
+using Unity.Cinemachine;
 
 namespace TimelessEchoes.Tasks
 {
@@ -45,6 +46,8 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private LayerMask enemyMask = ~0;
 
         [SerializeField] private Hero.HeroController hero;
+        [SerializeField] private CinemachineVirtualCamera mapCamera;
+        public CinemachineVirtualCamera MapCamera => mapCamera;
         [SerializeField] private float engageRange = 2f;
         [SerializeField] private string currentTaskName;
 
@@ -54,6 +57,8 @@ namespace TimelessEchoes.Tasks
         {
             if (hero == null)
                 hero = GetComponent<Hero.HeroController>();
+            if (mapCamera == null)
+                mapCamera = GetComponentInChildren<CinemachineVirtualCamera>(true);
         }
 
         private void OnEnable()
