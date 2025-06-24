@@ -14,6 +14,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private List<ResourceUIReferences> slots = new();
+        [SerializeField] private TooltipUIReferences tooltip;
 
         private int selectedIndex = -1;
 
@@ -21,6 +22,9 @@ namespace TimelessEchoes.Upgrades
         {
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
+
+            if (tooltip == null)
+                tooltip = FindFirstObjectByType<TooltipUIReferences>();
 
             if (slots.Count == 0)
                 slots.AddRange(GetComponentsInChildren<ResourceUIReferences>(true));
@@ -37,7 +41,15 @@ namespace TimelessEchoes.Upgrades
 
         private void OnEnable()
         {
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged += UpdateSlots;
             UpdateSlots();
+        }
+
+        private void OnDisable()
+        {
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged -= UpdateSlots;
         }
 
         /// <summary>
@@ -79,6 +91,8 @@ namespace TimelessEchoes.Upgrades
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
             }
+
+            ShowTooltip(selectedIndex);
         }
 
         public void HighlightResource(Resource resource)
@@ -86,6 +100,33 @@ namespace TimelessEchoes.Upgrades
             int index = resources.IndexOf(resource);
             if (index >= 0)
                 SelectSlot(index);
+        }
+
+        private void ShowTooltip(int index)
+        {
+            if (tooltip == null)
+                return;
+
+            if (index < 0 || index >= slots.Count || index >= resources.Count)
+            {
+                tooltip.gameObject.SetActive(false);
+                return;
+            }
+
+            var slot = slots[index];
+            var resource = resources[index];
+
+            tooltip.transform.position = slot.transform.position;
+
+            bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
+            if (tooltip.resourceNameText)
+                tooltip.resourceNameText.text = unlocked && resource ? resource.name : "Undiscovered";
+
+            double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+            if (tooltip.resourceCountText)
+                tooltip.resourceCountText.text = amount.ToString();
+
+            tooltip.gameObject.SetActive(true);
         }
     }
 }
