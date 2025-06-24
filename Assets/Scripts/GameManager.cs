@@ -50,7 +50,7 @@ namespace TimelessEchoes
             var taskGen = taskController.GetComponent<ProceduralTaskGenerator>();
             taskGen?.Generate();
 
-            hero = taskController.GetComponent<HeroController>();
+            hero = taskController.hero;
             if (hero != null)
             {
                 hero.gameObject.SetActive(true);

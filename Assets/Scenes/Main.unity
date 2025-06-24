@@ -2269,7 +2269,7 @@ MonoBehaviour:
     Enabled: 0
     DefaultMode: 2
   DefaultBlend:
-    Style: 1
+    Style: 0
     Time: 2
     CustomCurve:
       serializedVersion: 2
@@ -5572,7 +5572,6 @@ MonoBehaviour:
   tavernUI: {fileID: 859693782}
   mapUI: {fileID: 2116019362}
   tavernCamera: {fileID: 495953847}
-  cameraTransitionTime: 0
 --- !u!1 &898534097
 GameObject:
   m_ObjectHideFlags: 0

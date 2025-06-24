@@ -45,7 +45,7 @@ namespace TimelessEchoes.Tasks
 
         [SerializeField] private LayerMask enemyMask = ~0;
 
-        [SerializeField] private Hero.HeroController hero;
+        [SerializeField] public Hero.HeroController hero;
         [SerializeField] private CinemachineCamera mapCamera;
         public CinemachineCamera MapCamera => mapCamera;
         [SerializeField] private float engageRange = 2f;
