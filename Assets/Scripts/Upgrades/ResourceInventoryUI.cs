@@ -40,6 +40,9 @@ namespace TimelessEchoes.Upgrades
 
                 if (slots[i] != null)
                 {
+                    if (slots[i].countText != null)
+                        slots[i].countText.gameObject.SetActive(false);
+
                     slots[i].PointerClick += (_, button) =>
                     {
                         if (button == PointerEventData.InputButton.Right && tooltip != null)
@@ -76,6 +79,12 @@ namespace TimelessEchoes.Upgrades
                 resourceManager.OnInventoryChanged -= UpdateSlots;
         }
 
+        private void Update()
+        {
+            if (tooltip != null && tooltip.gameObject.activeSelf && Input.GetMouseButtonDown(1))
+                tooltip.gameObject.SetActive(false);
+        }
+
         /// <summary>
         /// Updates all resource slots using the current ResourceManager values.
         /// </summary>
@@ -102,9 +111,8 @@ namespace TimelessEchoes.Upgrades
 
             if (slot.questionMarkImage)
                 slot.questionMarkImage.enabled = !unlocked;
-
             if (slot.countText)
-                slot.countText.text = CalcUtils.FormatNumber(amount, true);
+                slot.countText.gameObject.SetActive(false);
         }
 
         public void SelectSlot(int index)
@@ -148,7 +156,7 @@ namespace TimelessEchoes.Upgrades
 
             double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
             if (tooltip.resourceCountText)
-                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true);
+                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true, 400f, false);
 
             tooltip.gameObject.SetActive(true);
         }
