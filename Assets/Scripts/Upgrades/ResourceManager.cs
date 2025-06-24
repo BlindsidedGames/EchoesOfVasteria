@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using UnityEngine;
+using Blindsided.SaveData;
 using Sirenix.OdinInspector;
+using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -8,12 +9,27 @@ namespace TimelessEchoes.Upgrades
 {
     public class ResourceManager : MonoBehaviour
     {
-        private Dictionary<Resource, double> amounts = new();
-        private HashSet<Resource> unlocked = new();
+        private static Dictionary<string, Resource> lookup;
 
-        [Title("Debug Controls")]
-        [SerializeField] private Resource debugResource;
+        [Title("Debug Controls")] [SerializeField]
+        private Resource debugResource;
+
         [SerializeField] private double debugAmount = 1;
+        private readonly Dictionary<Resource, double> amounts = new();
+        private readonly HashSet<Resource> unlocked = new();
+
+        private void Awake()
+        {
+            LoadState();
+            OnSaveData += SaveState;
+            OnLoadData += LoadState;
+        }
+
+        private void OnDestroy()
+        {
+            OnSaveData -= SaveState;
+            OnLoadData -= LoadState;
+        }
 
         [Button]
         private void AddDebugResource()
@@ -30,19 +46,6 @@ namespace TimelessEchoes.Upgrades
                 unlocked.Add(debugResource);
                 SaveState();
             }
-        }
-
-        private void Awake()
-        {
-            LoadState();
-            OnSaveData += SaveState;
-            OnLoadData += LoadState;
-        }
-
-        private void OnDestroy()
-        {
-            OnSaveData -= SaveState;
-            OnLoadData -= LoadState;
         }
 
         public double GetAmount(Resource resource)
@@ -74,45 +77,43 @@ namespace TimelessEchoes.Upgrades
             return resource != null && unlocked.Contains(resource);
         }
 
-        private static Dictionary<string, Resource> lookup;
-
         private void SaveState()
         {
             if (oracle == null) return;
-            var dict = new Dictionary<string, SaveData.GameData.ResourceEntry>();
+            var dict = new Dictionary<string, GameData.ResourceEntry>();
             foreach (var pair in amounts)
             {
                 if (pair.Key == null) continue;
-                dict[pair.Key.name] = new SaveData.GameData.ResourceEntry
+                dict[pair.Key.name] = new GameData.ResourceEntry
                 {
                     Earned = unlocked.Contains(pair.Key),
                     Amount = pair.Value
                 };
             }
+
             foreach (var res in unlocked)
             {
                 if (res == null) continue;
                 if (!dict.ContainsKey(res.name))
-                    dict[res.name] = new SaveData.GameData.ResourceEntry { Earned = true, Amount = 0 };
+                    dict[res.name] = new GameData.ResourceEntry { Earned = true, Amount = 0 };
             }
+
             oracle.saveData.Resources = dict;
         }
 
         private void LoadState()
         {
             if (oracle == null) return;
-            oracle.saveData.Resources ??= new Dictionary<string, SaveData.GameData.ResourceEntry>();
+            oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             EnsureLookup();
             amounts.Clear();
             unlocked.Clear();
             foreach (var pair in oracle.saveData.Resources)
-            {
                 if (lookup.TryGetValue(pair.Key, out var res) && res != null)
                 {
                     amounts[res] = pair.Value.Amount;
                     if (pair.Value.Earned) unlocked.Add(res);
                 }
-            }
         }
 
         private static void EnsureLookup()
@@ -120,10 +121,8 @@ namespace TimelessEchoes.Upgrades
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
             foreach (var res in Resources.LoadAll<Resource>(""))
-            {
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
-            }
         }
     }
 }
