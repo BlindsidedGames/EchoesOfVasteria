@@ -13,31 +13,46 @@ namespace TimelessEchoes.MapGeneration
     public class TilemapChunkGenerator : MonoBehaviour
     {
         [Header("Tilemaps")]
+        [TabGroup("References")]
         [SerializeField] private Tilemap waterMap;
+        [TabGroup("References")]
         [SerializeField] private Tilemap sandMap;
+        [TabGroup("References")]
         [SerializeField] private Tilemap grassMap;
 
         [Header("Tiles")]
+        [TabGroup("References")]
         [SerializeField] private TileBase waterTile;
+        [TabGroup("References")]
         [SerializeField] private TileBase sandRuleTile;
+        [TabGroup("References")]
         [SerializeField] private TileBase grassRuleTile;
 
         [Header("Dimensions")]
+        [TabGroup("Settings")]
         [SerializeField] private Vector2Int size = new Vector2Int(900, 18);
 
         [Header("Generation Settings")]
+        [TabGroup("Settings")]
         [SerializeField, Min(2)] private int minAreaWidth = 2;
+        [TabGroup("Settings")]
         [SerializeField, Min(0)] private int edgeWaviness = 1;
         [Header("Cutoff Settings")]
+        [TabGroup("Settings")]
         [SerializeField, Min(0)] private int grassCutoffWidth = 50;
+        [TabGroup("Settings")]
         [SerializeField] private Vector2Int sandCutoffRange = new Vector2Int(3, 6);
 
         [Header("Depth Ranges (Min, Max)")]
+        [TabGroup("Settings")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
+        [TabGroup("Settings")]
         [SerializeField] private Vector2Int grassDepthRange = new Vector2Int(2, 6);
 
         [Header("Random Seed")]
+        [TabGroup("Settings")]
         [SerializeField] private int seed = 0;
+        [TabGroup("Settings")]
         [SerializeField] private bool randomizeSeed = true;
 
         private System.Random rng;
