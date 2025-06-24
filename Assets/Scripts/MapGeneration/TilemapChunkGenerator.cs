@@ -27,6 +27,7 @@ namespace TimelessEchoes.MapGeneration
         [Header("Generation Settings")]
         [SerializeField, Min(2)] private int minAreaWidth = 2;
         [SerializeField, Min(0)] private int edgeWaviness = 1;
+        [SerializeField, Min(0)] private int islandWidth = 50;
 
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
@@ -52,9 +53,10 @@ namespace TimelessEchoes.MapGeneration
             int currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             int currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
-            for (int x = 0; x < size.x; )
+            int islandStart = Mathf.Max(0, size.x - islandWidth);
+            for (int x = 0; x < islandStart; )
             {
-                for (int segX = 0; segX < minAreaWidth && x < size.x; segX++, x++)
+                for (int segX = 0; segX < minAreaWidth && x < islandStart; segX++, x++)
                 {
                     PlaceColumn(x, currentSandDepth, currentGrassDepth);
                 }
@@ -70,6 +72,8 @@ namespace TimelessEchoes.MapGeneration
                     currentGrassDepth = Mathf.Clamp(size.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
                 }
             }
+
+            GenerateIsland(islandStart, size.x - islandStart);
         }
 
         private void PlaceColumn(int x, int sandDepth, int grassDepth)
@@ -90,6 +94,24 @@ namespace TimelessEchoes.MapGeneration
 
             for (int y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
                 grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
+        }
+
+        private void GenerateIsland(int startX, int width)
+        {
+            for (int x = startX; x < startX + width && x < size.x; x++)
+            {
+                float halfWidth = width / 2f;
+                float dx = (x - startX) - halfWidth;
+                float t = Mathf.Abs(dx) / (halfWidth > 0 ? halfWidth : 1f);
+                int sandHeight = Mathf.RoundToInt((1f - t * t) * (size.y - 1));
+                sandHeight = Mathf.Clamp(sandHeight, 0, size.y);
+
+                int waterDepth = size.y - sandHeight;
+                for (int y = 0; y < waterDepth; y++)
+                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+                for (int y = waterDepth; y < size.y; y++)
+                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
+            }
         }
 
         private int RandomRange(int minInclusive, int maxExclusive)
