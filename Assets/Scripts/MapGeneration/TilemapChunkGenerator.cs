@@ -94,8 +94,8 @@ namespace TimelessEchoes.MapGeneration
 
         private void PlaceColumn(int x, int sandDepth, int grassDepth)
         {
-            sandDepth = Mathf.Clamp(sandDepth, sandDepthRange.x, sandDepthRange.y);
-            grassDepth = Mathf.Clamp(grassDepth, grassDepthRange.x, grassDepthRange.y);
+            sandDepth = Mathf.Clamp(sandDepth, 0, sandDepthRange.y);
+            grassDepth = Mathf.Clamp(grassDepth, 0, grassDepthRange.y);
 
             int waterDepth = size.y - sandDepth - grassDepth;
             if (waterDepth < 0)
