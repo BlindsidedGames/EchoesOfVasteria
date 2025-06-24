@@ -16,6 +16,11 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public event System.Action OnInventoryChanged;
 
+        /// <summary>
+        ///     Invoked whenever resources are added via <see cref="Add"/>.
+        /// </summary>
+        public event System.Action<Resource, double> OnResourceAdded;
+
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
 
@@ -71,6 +76,7 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += amount;
             else
                 amounts[resource] = amount;
+            OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }
 
