@@ -105,16 +105,33 @@ namespace TimelessEchoes.Tasks
 
         private void Update()
         {
+            EngageNearbyEnemies();
+
             if (currentIndex < 0 || currentIndex >= tasks.Count)
                 return;
 
             var active = tasks[currentIndex];
 
-            if (active is KillEnemyTask kill && hero != null)
+            if (active.IsComplete())
+                SelectNextTask();
+        }
+
+        /// <summary>
+        /// Check all enemy tasks and activate any enemies near the hero.
+        /// </summary>
+        private void EngageNearbyEnemies()
+        {
+            if (hero == null)
+                return;
+
+            foreach (var task in tasks)
             {
-                var target = kill.target;
-                if (target != null)
+                if (task is KillEnemyTask kill)
                 {
+                    var target = kill.target;
+                    if (target == null)
+                        continue;
+
                     float dist = Vector3.Distance(hero.transform.position, target.position);
                     if (dist <= engageRange)
                     {
@@ -124,9 +141,6 @@ namespace TimelessEchoes.Tasks
                     }
                 }
             }
-
-            if (active.IsComplete())
-                SelectNextTask();
         }
 
         /// <summary>

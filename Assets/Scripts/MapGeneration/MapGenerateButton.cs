@@ -9,8 +9,14 @@ namespace TimelessEchoes.MapGeneration
     /// </summary>
     public class MapGenerateButton : MonoBehaviour
     {
-        [SerializeField] private TilemapChunkGenerator chunkGenerator;
-        [SerializeField] private ProceduralTaskGenerator taskGenerator;
+        private TilemapChunkGenerator chunkGenerator;
+        private ProceduralTaskGenerator taskGenerator;
+
+        private void Awake()
+        {
+            chunkGenerator = GetComponent<TilemapChunkGenerator>();
+            taskGenerator = GetComponent<ProceduralTaskGenerator>();
+        }
 
         /// <summary>
         /// Generate the tilemap and tasks using the referenced generators.
@@ -25,6 +31,21 @@ namespace TimelessEchoes.MapGeneration
 
             chunkGenerator?.Generate();
             taskGenerator?.Generate();
+        }
+
+        /// <summary>
+        /// Clear the currently generated map and tasks.
+        /// </summary>
+        [Button(ButtonSizes.Large)]
+        public void ClearMap()
+        {
+            if (chunkGenerator == null)
+                chunkGenerator = GetComponent<TilemapChunkGenerator>();
+            if (taskGenerator == null)
+                taskGenerator = GetComponent<ProceduralTaskGenerator>();
+
+            chunkGenerator?.Clear();
+            taskGenerator?.Clear();
         }
     }
 }

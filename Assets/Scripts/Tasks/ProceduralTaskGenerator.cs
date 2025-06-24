@@ -90,6 +90,18 @@ namespace TimelessEchoes.Tasks
         }
 
         /// <summary>
+        /// Clear all spawned task objects and remove them from the controller.
+        /// </summary>
+        public void Clear()
+        {
+            if (controller == null)
+                controller = GetComponent<TaskController>();
+
+            ClearSpawnedObjects();
+            controller?.ClearTaskObjects();
+        }
+
+        /// <summary>
         /// Generate and assign tasks based on the configured settings.
         /// </summary>
         [Button]
