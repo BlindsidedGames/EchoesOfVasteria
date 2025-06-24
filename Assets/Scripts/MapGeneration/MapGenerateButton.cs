@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using System.Collections;
 using TimelessEchoes.Tasks;
 
 namespace TimelessEchoes.MapGeneration
@@ -29,7 +30,22 @@ namespace TimelessEchoes.MapGeneration
             if (taskGenerator == null)
                 taskGenerator = GetComponent<ProceduralTaskGenerator>();
 
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                chunkGenerator?.Generate();
+                taskGenerator?.Generate();
+                return;
+            }
+#endif
+
+            StartCoroutine(GenerateMapRoutine());
+        }
+
+        private IEnumerator GenerateMapRoutine()
+        {
             chunkGenerator?.Generate();
+            yield return null;
             taskGenerator?.Generate();
         }
 
