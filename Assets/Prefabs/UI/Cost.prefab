@@ -239,7 +239,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7354326415034853887}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10799.999}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -273,9 +273,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f65f1f721d9b748abfe07a3cea32a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resource: {fileID: 0}
   questionMarkImage: {fileID: 4224056661857136572}
   iconImage: {fileID: 5737572253962331127}
   countText: {fileID: 4151695775224272184}
+  selectionImage: {fileID: 0}
   selectButton: {fileID: 5355347901007646286}
 --- !u!114 &5917423015976188577
 MonoBehaviour:
