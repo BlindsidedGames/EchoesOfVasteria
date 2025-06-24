@@ -3,6 +3,8 @@ using References.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+using Blindsided.Utilities;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -15,6 +17,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private List<ResourceUIReferences> slots = new();
         [SerializeField] private TooltipUIReferences tooltip;
+        [SerializeField] private bool showTooltipOnHover = false;
 
         private int selectedIndex = -1;
 
@@ -34,6 +37,27 @@ namespace TimelessEchoes.Upgrades
                 var index = i;
                 if (slots[i] != null && slots[i].selectButton != null)
                     slots[i].selectButton.onClick.AddListener(() => SelectSlot(index));
+
+                if (slots[i] != null)
+                {
+                    slots[i].PointerClick += (_, button) =>
+                    {
+                        if (button == PointerEventData.InputButton.Right && tooltip != null)
+                            tooltip.gameObject.SetActive(false);
+                    };
+
+                    slots[i].PointerEnter += _ =>
+                    {
+                        if (showTooltipOnHover)
+                            ShowTooltip(index);
+                    };
+
+                    slots[i].PointerExit += _ =>
+                    {
+                        if (showTooltipOnHover && tooltip != null)
+                            tooltip.gameObject.SetActive(false);
+                    };
+                }
             }
 
             UpdateSlots();
@@ -80,7 +104,7 @@ namespace TimelessEchoes.Upgrades
                 slot.questionMarkImage.enabled = !unlocked;
 
             if (slot.countText)
-                slot.countText.text = amount.ToString();
+                slot.countText.text = CalcUtils.FormatNumber(amount, true);
         }
 
         public void SelectSlot(int index)
@@ -124,7 +148,7 @@ namespace TimelessEchoes.Upgrades
 
             double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
             if (tooltip.resourceCountText)
-                tooltip.resourceCountText.text = amount.ToString();
+                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true);
 
             tooltip.gameObject.SetActive(true);
         }
