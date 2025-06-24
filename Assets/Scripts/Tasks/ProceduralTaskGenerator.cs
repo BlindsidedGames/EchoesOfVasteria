@@ -58,11 +58,11 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private LayerMask blockingMask;
 
         [TitleGroup("Generation")]
-        [ListDrawerSettings(Expanded = true)]
+        [ListDrawerSettings(ShowFoldout = true)]
         [SerializeField] private List<WeightedSpawn> enemies = new();
 
         [TitleGroup("Generation")]
-        [ListDrawerSettings(Expanded = true)]
+        [ListDrawerSettings(ShowFoldout = true)]
         [SerializeField] private List<WeightedSpawn> otherTasks = new();
 
         private TaskController controller;
@@ -95,6 +95,8 @@ namespace TimelessEchoes.Tasks
         [Button]
         public void Generate()
         {
+            if (controller == null)
+                controller = GetComponent<TaskController>();
             if (controller == null)
                 return;
 
