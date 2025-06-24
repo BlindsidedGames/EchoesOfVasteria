@@ -152,10 +152,10 @@ namespace TimelessEchoes.Enemies
             if (!ai.reachedEndOfPath) return;
 
             const int maxAttempts = 5;
-            Vector2 wander = transform.position;
+            Vector2 wander = (Vector2)transform.position;
             for (int i = 0; i < maxAttempts; i++)
             {
-                Vector2 candidate = spawnPos + Random.insideUnitCircle * stats.wanderDistance;
+                Vector2 candidate = (Vector2)spawnPos + Random.insideUnitCircle * stats.wanderDistance;
                 if (Physics2D.OverlapCircle(candidate, 0.2f, blockingMask) == null)
                 {
                     wander = candidate;
