@@ -4,6 +4,7 @@ using Pathfinding.RVO;
 using UnityEngine;
 using TimelessEchoes;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Hero
 {
@@ -20,6 +21,16 @@ namespace TimelessEchoes.Hero
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
 
+        private float baseDamage = 0f;
+        private float baseAttackSpeed = 0f;
+        private float baseMoveSpeed = 0f;
+        private float baseHealth = 0f;
+
+        private float damageBonus = 0f;
+        private float attackSpeedBonus = 0f;
+        private float moveSpeedBonus = 0f;
+        private float healthBonus = 0f;
+
         private TaskController taskController;
 
         // Remember the last movement direction so the attack blend tree can
@@ -34,6 +45,38 @@ namespace TimelessEchoes.Hero
         private bool allowAttacks = true;
         private ITask currentTask;
 
+        private void ApplyStatUpgrades()
+        {
+            var controller = FindFirstObjectByType<StatUpgradeController>();
+            if (controller == null) return;
+
+            foreach (var upgrade in controller.AllUpgrades)
+            {
+                if (upgrade == null) continue;
+                float increase = controller.GetIncrease(upgrade);
+                float baseVal = controller.GetBaseValue(upgrade);
+                switch (upgrade.name)
+                {
+                    case "Health":
+                        baseHealth = baseVal;
+                        healthBonus = increase;
+                        break;
+                    case "Damage":
+                        baseDamage = baseVal;
+                        damageBonus = increase;
+                        break;
+                    case "Attack Speed":
+                        baseAttackSpeed = baseVal;
+                        attackSpeedBonus = increase;
+                        break;
+                    case "Move Speed":
+                        baseMoveSpeed = baseVal;
+                        moveSpeedBonus = increase;
+                        break;
+                }
+            }
+        }
+
         private void Awake()
         {
             ai = GetComponent<AIPath>();
@@ -41,10 +84,14 @@ namespace TimelessEchoes.Hero
             health = GetComponent<Enemies.Health>();
             if (taskController == null)
                 taskController = GetComponent<TaskController>();
+
+            ApplyStatUpgrades();
+
             if (stats != null)
             {
-                ai.maxSpeed = stats.moveSpeed;
-                health.Init(stats.maxHealth);
+                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                int hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                health.Init(hp);
             }
         }
 
@@ -52,6 +99,14 @@ namespace TimelessEchoes.Hero
         {
             if (taskController == null)
                 taskController = GetComponent<TaskController>();
+
+            ApplyStatUpgrades();
+            if (stats != null)
+            {
+                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                int hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                health.Init(hp);
+            }
 
             var start = taskController != null ? taskController.EntryPoint : null;
             if (start != null)
@@ -120,7 +175,7 @@ namespace TimelessEchoes.Hero
             setter.target = dest;
         }
 
-        private float CurrentAttackRate => stats != null ? stats.attackSpeed : 0f;
+        private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
 
         private void UpdateBehavior()
         {
@@ -195,7 +250,7 @@ namespace TimelessEchoes.Hero
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(target, stats.damage * dmgMultiplier);
+                proj.Init(target, (baseDamage + damageBonus) * dmgMultiplier);
         }
     }
 }

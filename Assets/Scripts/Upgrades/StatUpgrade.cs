@@ -9,6 +9,10 @@ namespace TimelessEchoes.Upgrades
     [CreateAssetMenu(fileName = "StatUpgrade", menuName = "SO/Stat Upgrade")]
     public class StatUpgrade : ScriptableObject
     {
+        /// <summary>
+        ///     Base value of the stat before any upgrades are applied.
+        /// </summary>
+        public float baseValue = 0f;
         public List<Threshold> thresholds;
         public float statIncreasePerLevel = 1;
 
