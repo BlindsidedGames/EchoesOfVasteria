@@ -15,6 +15,11 @@ namespace TimelessEchoes.Upgrades
 
         private Dictionary<StatUpgrade, int> levels = new();
 
+        /// <summary>
+        ///     Exposes the list of upgrades managed by this controller.
+        /// </summary>
+        public IEnumerable<StatUpgrade> AllUpgrades => upgrades;
+
         private void Awake()
         {
             LoadState();
@@ -31,6 +36,32 @@ namespace TimelessEchoes.Upgrades
         public int GetLevel(StatUpgrade upgrade)
         {
             return upgrade != null && levels.TryGetValue(upgrade, out var lvl) ? lvl : 0;
+        }
+
+        /// <summary>
+        ///     Returns the total additive increase for the given upgrade.
+        /// </summary>
+        public float GetIncrease(StatUpgrade upgrade)
+        {
+            if (upgrade == null) return 0f;
+            int lvl = GetLevel(upgrade);
+            return lvl * upgrade.statIncreasePerLevel;
+        }
+
+        /// <summary>
+        ///     Returns the base value for the given upgrade.
+        /// </summary>
+        public float GetBaseValue(StatUpgrade upgrade)
+        {
+            return upgrade != null ? upgrade.baseValue : 0f;
+        }
+
+        /// <summary>
+        ///     Returns a multiplier for legacy usages of stat upgrades.
+        /// </summary>
+        public float GetMultiplier(StatUpgrade upgrade)
+        {
+            return 1f + GetIncrease(upgrade);
         }
 
         public bool CanUpgrade(StatUpgrade upgrade)
