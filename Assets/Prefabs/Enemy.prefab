@@ -160,6 +160,10 @@ MonoBehaviour:
   spriteRenderer: {fileID: 9165481713511291873}
   fourDirectional: 0
   projectileOrigin: {fileID: 1929803122595014453}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+    dropRange: {x: 1, y: 12}
+    dropChance: 1
 --- !u!114 &2113197715023221888
 MonoBehaviour:
   m_ObjectHideFlags: 0
