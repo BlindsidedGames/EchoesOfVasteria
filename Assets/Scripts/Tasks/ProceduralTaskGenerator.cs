@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -12,12 +13,28 @@ namespace TimelessEchoes.Tasks
     public class ProceduralTaskGenerator : MonoBehaviour
     {
         [System.Serializable]
+        [InlineProperty]
+        [HideLabel]
         public class WeightedSpawn
         {
+            [Required]
+            [HorizontalGroup("Split", 70)]
             public GameObject prefab;
+
+            [HorizontalGroup("Split")]
+            [LabelWidth(50)]
+            [MinValue(0)]
             public float weight = 1f;
-            [Range(0f, 1f)] public float minProgress;
-            [Range(0f, 1f)] public float maxProgress = 1f;
+
+            [HorizontalGroup("Split")]
+            [LabelWidth(50)]
+            [Range(0f, 1f)]
+            public float minProgress;
+
+            [HorizontalGroup("Split")]
+            [LabelWidth(50)]
+            [Range(0f, 1f)]
+            public float maxProgress = 1f;
 
             public float GetWeight(float progress)
             {
@@ -28,15 +45,28 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        [TitleGroup("Area Settings")]
         [SerializeField] private float minX;
+        [TitleGroup("Area Settings")]
         [SerializeField] private float maxX = 990f;
+        [TitleGroup("Area Settings")]
         [SerializeField] private float height = 18f;
+        [TitleGroup("Area Settings")]
         [SerializeField] private float density = 0.1f;
+
+        [TitleGroup("Generation")]
         [SerializeField] private LayerMask blockingMask;
+
+        [TitleGroup("Generation")]
+        [ListDrawerSettings(Expanded = true)]
         [SerializeField] private List<WeightedSpawn> enemies = new();
+
+        [TitleGroup("Generation")]
+        [ListDrawerSettings(Expanded = true)]
         [SerializeField] private List<WeightedSpawn> otherTasks = new();
 
         private TaskController controller;
+        private readonly List<GameObject> generatedObjects = new();
 
         private void Awake()
         {
@@ -44,14 +74,31 @@ namespace TimelessEchoes.Tasks
             Generate();
         }
 
+        private void ClearSpawnedObjects()
+        {
+            foreach (var obj in generatedObjects)
+            {
+                if (obj == null) continue;
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    DestroyImmediate(obj);
+                else
+#endif
+                    Destroy(obj);
+            }
+            generatedObjects.Clear();
+        }
+
         /// <summary>
         /// Generate and assign tasks based on the configured settings.
         /// </summary>
+        [Button]
         public void Generate()
         {
             if (controller == null)
                 return;
 
+            ClearSpawnedObjects();
             controller.ClearTaskObjects();
 
             int count = Mathf.RoundToInt((maxX - minX) * density);
@@ -77,6 +124,7 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
+                generatedObjects.Add(obj);
                 var mono = obj.GetComponent<MonoBehaviour>();
                 if (mono != null)
                     spawned.Add((pos.x, mono));
