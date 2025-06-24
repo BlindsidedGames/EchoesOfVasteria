@@ -28,6 +28,7 @@ namespace TimelessEchoes.MapGeneration
         [SerializeField, Min(2)] private int minAreaWidth = 2;
         [SerializeField, Min(0)] private int edgeWaviness = 1;
         [SerializeField, Min(0)] private int islandWidth = 50;
+        [SerializeField, Min(0)] private int islandShapeVariance = 2;
 
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
@@ -102,19 +103,20 @@ namespace TimelessEchoes.MapGeneration
             int islandStart = startX + walkwayWidth;
             int islandWidth = Mathf.Max(0, width - walkwayWidth);
 
-            // Fill the entire region with water first so the island has
-            // water above and below it.
-            for (int x = startX; x < startX + width && x < size.x; x++)
-            {
+            // Height of the bridge connecting the shore to the island.
+            const int bridgeHeight = 2;
+
+            // Fill the bridge area with water so it sits over water like a pier.
+            for (int x = startX; x < islandStart && x < size.x; x++)
                 for (int y = 0; y < size.y; y++)
                     waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-            }
 
-            // Create a thin strip of land connecting to the main shoreline.
+            // Create a strip of land connecting to the main shoreline.
             for (int x = startX; x < islandStart && x < size.x; x++)
-                sandMap.SetTile(new Vector3Int(x, 0, 0), sandRuleTile);
+                for (int y = 0; y < bridgeHeight && y < size.y; y++)
+                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
 
-            // Carve out the island slightly above the water line.
+            // Carve out the island slightly above the water line with some random variation.
             for (int x = islandStart; x < islandStart + islandWidth && x < size.x; x++)
             {
                 float halfWidth = islandWidth / 2f;
@@ -123,6 +125,11 @@ namespace TimelessEchoes.MapGeneration
 
                 // Island thickness tapers toward the edges.
                 int islandHeight = Mathf.RoundToInt((1f - t * t) * (size.y / 3f));
+
+                // Add a bit of random noise so the island isn't perfectly symmetrical.
+                islandHeight += RandomRange(-islandShapeVariance, islandShapeVariance + 1);
+                islandHeight = Mathf.Clamp(islandHeight, 1, size.y);
+
                 int startY = (size.y / 2) - islandHeight / 2;
                 int endY = startY + islandHeight;
 
