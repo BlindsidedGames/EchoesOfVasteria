@@ -79,11 +79,11 @@ namespace TimelessEchoes.Upgrades
         private void SaveState()
         {
             if (oracle == null) return;
-            var dict = new Dictionary<string, SaveData.SaveData.ResourceEntry>();
+            var dict = new Dictionary<string, SaveData.GameData.ResourceEntry>();
             foreach (var pair in amounts)
             {
                 if (pair.Key == null) continue;
-                dict[pair.Key.name] = new SaveData.SaveData.ResourceEntry
+                dict[pair.Key.name] = new SaveData.GameData.ResourceEntry
                 {
                     Earned = unlocked.Contains(pair.Key),
                     Amount = pair.Value
@@ -93,7 +93,7 @@ namespace TimelessEchoes.Upgrades
             {
                 if (res == null) continue;
                 if (!dict.ContainsKey(res.name))
-                    dict[res.name] = new SaveData.SaveData.ResourceEntry { Earned = true, Amount = 0 };
+                    dict[res.name] = new SaveData.GameData.ResourceEntry { Earned = true, Amount = 0 };
             }
             oracle.saveData.Resources = dict;
         }
@@ -101,7 +101,7 @@ namespace TimelessEchoes.Upgrades
         private void LoadState()
         {
             if (oracle == null) return;
-            oracle.saveData.Resources ??= new Dictionary<string, SaveData.SaveData.ResourceEntry>();
+            oracle.saveData.Resources ??= new Dictionary<string, SaveData.GameData.ResourceEntry>();
             EnsureLookup();
             amounts.Clear();
             unlocked.Clear();

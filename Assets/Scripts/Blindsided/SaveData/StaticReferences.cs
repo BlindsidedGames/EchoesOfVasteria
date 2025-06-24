@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using static Blindsided.Oracle;
-using static Blindsided.SaveData.SaveData;
+using static Blindsided.SaveData.GameData;
 
 namespace Blindsided.SaveData
 {

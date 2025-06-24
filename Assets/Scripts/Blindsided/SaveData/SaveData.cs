@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 
 namespace Blindsided.SaveData
 {
-    public class SaveData
+    public class GameData
     {
         public float CurrentTime = 0;
         public string DateQuitString;
