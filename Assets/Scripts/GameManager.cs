@@ -22,12 +22,12 @@ namespace TimelessEchoes
         [SerializeField] private GameObject mapUI;
 
         [Header("Cameras")]
-        [SerializeField] private CinemachineVirtualCamera tavernCamera;
+        [SerializeField] private CinemachineCamera tavernCamera;
 
         private GameObject currentMap;
         private TaskController taskController;
         private HeroController hero;
-        private CinemachineVirtualCamera mapCamera;
+        private CinemachineCamera mapCamera;
 
         private void Awake()
         {
