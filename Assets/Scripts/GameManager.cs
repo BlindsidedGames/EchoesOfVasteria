@@ -5,6 +5,7 @@ using System.Collections;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
+using References.UI;
 
 namespace TimelessEchoes
 {
@@ -30,6 +31,13 @@ namespace TimelessEchoes
         private HeroController hero;
         private CinemachineCamera mapCamera;
 
+        private void HideTooltip()
+        {
+            var tooltip = FindFirstObjectByType<TooltipUIReferences>();
+            if (tooltip != null)
+                tooltip.gameObject.SetActive(false);
+        }
+
         private void Awake()
         {
             if (startRunButton != null)
@@ -40,6 +48,7 @@ namespace TimelessEchoes
 
         private void StartRun()
         {
+            HideTooltip();
             StartCoroutine(StartRunRoutine());
         }
 
@@ -110,6 +119,7 @@ namespace TimelessEchoes
 
         private void ReturnToTavern()
         {
+            HideTooltip();
             CleanupMap();
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);

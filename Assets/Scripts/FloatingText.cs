@@ -26,6 +26,14 @@ namespace TimelessEchoes
             ft.tmp.fontSize = 4f;
             ft.tmp.text = text;
             ft.tmp.color = color;
+
+            // Ensure the floating text renders in front of other objects.
+            var renderer = ft.tmp.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sortingLayerName = "Canvas";
+                renderer.sortingOrder = 10;
+            }
         }
 
         private void Awake()
