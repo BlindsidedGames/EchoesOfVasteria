@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Cinemachine;
+using System.Collections;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
@@ -39,14 +40,21 @@ namespace TimelessEchoes
 
         private void StartRun()
         {
+            StartCoroutine(StartRunRoutine());
+        }
+
+        private IEnumerator StartRunRoutine()
+        {
             CleanupMap();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
-                return;
+                yield break;
 
             var chunk = taskController.GetComponent<TilemapChunkGenerator>();
             chunk?.Generate();
+            Physics2D.SyncTransforms();
+            yield return null;
             var taskGen = taskController.GetComponent<ProceduralTaskGenerator>();
             taskGen?.Generate();
 
