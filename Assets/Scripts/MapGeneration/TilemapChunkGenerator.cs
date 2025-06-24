@@ -29,6 +29,7 @@ namespace TimelessEchoes.MapGeneration
         [SerializeField, Min(0)] private int edgeWaviness = 1;
         [SerializeField, Min(0)] private int islandWidth = 50;
         [SerializeField, Min(0)] private int islandShapeVariance = 2;
+        [SerializeField, Min(1)] private int islandMaxDepth = 15;
 
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
@@ -108,11 +109,12 @@ namespace TimelessEchoes.MapGeneration
             int islandWidth = Mathf.Max(0, width - walkwayWidth);
 
             // Height of the bridge connecting the shore to the island.
-            const int bridgeHeight = 2;
-
             int waterDepth = size.y - shoreSandDepth - shoreGrassDepth;
             if (waterDepth < 0)
                 waterDepth = 0;
+            int maxBridgeHeight = Mathf.Max(1, size.y - waterDepth);
+            int bridgeHeight = Mathf.Clamp(RandomRange(2, 5), 1, maxBridgeHeight);
+
 
             // Fill the bridge area with water so it sits over water like a pier.
             for (int x = startX; x < islandStart && x < size.x; x++)
@@ -132,11 +134,11 @@ namespace TimelessEchoes.MapGeneration
                 float t = Mathf.Abs(dx) / (halfWidth > 0 ? halfWidth : 1f);
 
                 // Island thickness tapers toward the edges.
-                int islandHeight = Mathf.RoundToInt((1f - t * t) * (size.y / 3f));
+                int islandHeight = Mathf.RoundToInt((1f - t * t) * islandMaxDepth);
 
                 // Add a bit of random noise so the island isn't perfectly symmetrical.
                 islandHeight += RandomRange(-islandShapeVariance, islandShapeVariance + 1);
-                islandHeight = Mathf.Clamp(islandHeight, 1, size.y);
+                islandHeight = Mathf.Clamp(islandHeight, 2, islandMaxDepth);
 
                 int startY = (size.y / 2) - islandHeight / 2;
                 int endY = startY + islandHeight;
@@ -144,7 +146,9 @@ namespace TimelessEchoes.MapGeneration
                 startY = Mathf.Clamp(startY, 0, size.y);
                 endY = Mathf.Clamp(endY, 0, size.y);
 
-                for (int y = 0; y < size.y; y++)
+                for (int y = 0; y < startY; y++)
+                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+                for (int y = endY; y < size.y; y++)
                     waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
 
                 for (int y = startY; y < endY; y++)
