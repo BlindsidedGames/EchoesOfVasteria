@@ -13,6 +13,29 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
         public List<ITask> tasks { get; private set; } = new();
 
+        /// <summary>
+        /// Read-only access to the objects used when building the task list.
+        /// </summary>
+        public IReadOnlyList<MonoBehaviour> TaskObjects => taskObjects;
+
+        /// <summary>
+        /// Remove any previously assigned task objects.
+        /// </summary>
+        public void ClearTaskObjects()
+        {
+            taskObjects.Clear();
+        }
+
+        /// <summary>
+        /// Add a task source object if it is not already present.
+        /// </summary>
+        public void AddTaskObject(MonoBehaviour obj)
+        {
+            if (obj == null || taskObjects.Contains(obj))
+                return;
+            taskObjects.Add(obj);
+        }
+
         [SerializeField] private Transform entryPoint;
         [SerializeField] private Transform exitPoint;
 
