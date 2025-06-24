@@ -68,10 +68,20 @@ namespace TimelessEchoes
 
             mapCamera = taskController.MapCamera;
             if (mapCamera != null)
+            {
                 mapCamera.gameObject.SetActive(true);
+                // Snap the camera to the hero's position so there is no
+                // visible panning when the run begins.
+                if (hero != null)
+                {
+                    Vector3 camPos = hero.transform.position;
+                    camPos += mapCamera.transform.rotation * Vector3.forward * -10f;
+                    mapCamera.ForceCameraPosition(camPos, mapCamera.transform.rotation);
+                }
+            }
             if (cameraRoutine != null)
                 StopCoroutine(cameraRoutine);
-            cameraRoutine = StartCoroutine(SwitchCamera(tavernCamera, mapCamera));
+            SwitchCameraImmediate(tavernCamera, mapCamera);
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
@@ -124,6 +134,20 @@ namespace TimelessEchoes
 
             if (from != null)
                 from.gameObject.SetActive(false);
+        }
+
+        private void SwitchCameraImmediate(CinemachineCamera from, CinemachineCamera to)
+        {
+            if (to != null)
+            {
+                to.Priority = 10;
+                to.gameObject.SetActive(true);
+            }
+            if (from != null)
+            {
+                from.Priority = 0;
+                from.gameObject.SetActive(false);
+            }
         }
     }
 }

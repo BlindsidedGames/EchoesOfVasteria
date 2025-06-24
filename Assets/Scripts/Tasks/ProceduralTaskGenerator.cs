@@ -151,8 +151,15 @@ namespace TimelessEchoes.Tasks
         private Vector3 RandomPosition()
         {
             float x = Random.Range(minX, maxX);
-            float y = Random.Range(0f, height);
-            return new Vector3(x, y, 0f) + transform.position;
+            float worldX = transform.position.x + x;
+            float castStartY = transform.position.y + height + 1f;
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldX, castStartY), Vector2.down, height + 2f, blockingMask);
+
+            float worldY = hit.collider != null
+                ? hit.point.y + 0.1f
+                : transform.position.y + Random.Range(0f, height);
+
+            return new Vector3(worldX, worldY, 0f);
         }
 
         private WeightedSpawn PickEntry(float progress)
