@@ -134,7 +134,7 @@ namespace Blindsided.Utilities
             bool hideDecimal = false,
             float fontWeight = 400f,
             bool useMspace = true,
-            float mspaceSize = 0.6f)
+            float mspaceSize = 0.5f)
         {
             // Prepare mspace tags.
             var mspaceStart = useMspace ? $"<mspace={mspaceSize}em>" : "";
