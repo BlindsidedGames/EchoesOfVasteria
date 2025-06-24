@@ -152,7 +152,7 @@ namespace TimelessEchoes.Upgrades
             var lvl = controller ? controller.GetLevel(upgrade) : 0;
             var current = 1f + lvl * upgrade.statIncreasePerLevel;
             var next = current + upgrade.statIncreasePerLevel;
-            references.statUpgradeInfoText.text = $"{upgrade.name} {current:0.###} -> {next:0.###}";
+            references.statUpgradeInfoText.text = $"{current:0.###} -> {next:0.###}";
         }
 
         private void ApplyUpgrade()
