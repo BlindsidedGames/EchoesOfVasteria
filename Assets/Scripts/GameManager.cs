@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Cinemachine;
@@ -24,9 +23,6 @@ namespace TimelessEchoes
 
         [Header("Cameras")]
         [SerializeField] private CinemachineCamera tavernCamera;
-        [SerializeField] private float cameraTransitionTime = 1f;
-
-        private Coroutine cameraRoutine;
 
         private GameObject currentMap;
         private TaskController taskController;
@@ -79,9 +75,13 @@ namespace TimelessEchoes
                     mapCamera.ForceCameraPosition(camPos, mapCamera.transform.rotation);
                 }
             }
-            if (cameraRoutine != null)
-                StopCoroutine(cameraRoutine);
-            SwitchCameraImmediate(tavernCamera, mapCamera);
+            if (tavernCamera != null)
+                tavernCamera.gameObject.SetActive(false);
+            if (mapCamera != null)
+            {
+                mapCamera.Priority = 10;
+                mapCamera.gameObject.SetActive(true);
+            }
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
@@ -120,34 +120,6 @@ namespace TimelessEchoes
                 hero.gameObject.SetActive(false);
         }
 
-        private IEnumerator SwitchCamera(CinemachineCamera from, CinemachineCamera to)
-        {
-            if (to != null)
-            {
-                to.Priority = 10;
-                to.gameObject.SetActive(true);
-            }
-            if (from != null)
-                from.Priority = 0;
-
-            yield return new WaitForSeconds(cameraTransitionTime);
-
-            if (from != null)
-                from.gameObject.SetActive(false);
-        }
-
-        private void SwitchCameraImmediate(CinemachineCamera from, CinemachineCamera to)
-        {
-            if (to != null)
-            {
-                to.Priority = 10;
-                to.gameObject.SetActive(true);
-            }
-            if (from != null)
-            {
-                from.Priority = 0;
-                from.gameObject.SetActive(false);
-            }
-        }
+        
     }
 }
