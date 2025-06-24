@@ -121,12 +121,12 @@ namespace TimelessEchoes.Tasks
             {
                 Vector3 pos = RandomPosition();
                 int attempts = 0;
-                while (attempts < 5 && Physics2D.OverlapPoint(pos, blockingMask))
+                while (attempts < 5 && (Physics2D.OverlapPoint(pos, blockingMask) || IsBlockedAhead(pos)))
                 {
                     pos = RandomPosition();
                     attempts++;
                 }
-                if (Physics2D.OverlapPoint(pos, blockingMask))
+                if (Physics2D.OverlapPoint(pos, blockingMask) || IsBlockedAhead(pos))
                     continue;
 
                 float progress = Mathf.InverseLerp(minX, maxX, pos.x);
@@ -160,6 +160,21 @@ namespace TimelessEchoes.Tasks
                 : transform.position.y + Random.Range(0f, height);
 
             return new Vector3(worldX, worldY, 0f);
+        }
+
+        /// <summary>
+        /// Check if there is a blocking collider directly in front of the given position.
+        /// </summary>
+        private bool IsBlockedAhead(Vector3 pos)
+        {
+            const float checkRadius = 0.4f;
+            var hits = Physics2D.OverlapCircleAll(pos, checkRadius, blockingMask);
+            foreach (var h in hits)
+            {
+                if (h.bounds.min.y > pos.y - 0.1f)
+                    return true;
+            }
+            return false;
         }
 
         private WeightedSpawn PickEntry(float progress)
