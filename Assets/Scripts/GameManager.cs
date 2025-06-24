@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Cinemachine;
@@ -23,6 +24,9 @@ namespace TimelessEchoes
 
         [Header("Cameras")]
         [SerializeField] private CinemachineCamera tavernCamera;
+        [SerializeField] private float cameraTransitionTime = 1f;
+
+        private Coroutine cameraRoutine;
 
         private GameObject currentMap;
         private TaskController taskController;
@@ -63,10 +67,11 @@ namespace TimelessEchoes
             }
 
             mapCamera = taskController.MapCamera;
-            if (tavernCamera != null)
-                tavernCamera.gameObject.SetActive(false);
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(true);
+            if (cameraRoutine != null)
+                StopCoroutine(cameraRoutine);
+            cameraRoutine = StartCoroutine(SwitchCamera(tavernCamera, mapCamera));
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
@@ -103,6 +108,22 @@ namespace TimelessEchoes
             }
             if (hero != null)
                 hero.gameObject.SetActive(false);
+        }
+
+        private IEnumerator SwitchCamera(CinemachineCamera from, CinemachineCamera to)
+        {
+            if (to != null)
+            {
+                to.Priority = 10;
+                to.gameObject.SetActive(true);
+            }
+            if (from != null)
+                from.Priority = 0;
+
+            yield return new WaitForSeconds(cameraTransitionTime);
+
+            if (from != null)
+                from.gameObject.SetActive(false);
         }
     }
 }

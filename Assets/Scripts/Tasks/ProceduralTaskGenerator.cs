@@ -45,24 +45,22 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        [TitleGroup("Area Settings")]
+        [TabGroup("Settings", "Area")]
         [SerializeField] private float minX;
-        [TitleGroup("Area Settings")]
+        [TabGroup("Settings", "Area")]
         [SerializeField] private float maxX = 990f;
-        [TitleGroup("Area Settings")]
+        [TabGroup("Settings", "Area")]
         [SerializeField] private float height = 18f;
-        [TitleGroup("Area Settings")]
+        [TabGroup("Settings", "Area")]
         [SerializeField] private float density = 0.1f;
 
-        [TitleGroup("Generation")]
+        [TabGroup("Settings", "Generation")]
         [SerializeField] private LayerMask blockingMask;
 
-        [TitleGroup("Generation")]
-        [ListDrawerSettings(ShowFoldout = true)]
+        [TabGroup("Settings", "Generation")]
         [SerializeField] private List<WeightedSpawn> enemies = new();
 
-        [TitleGroup("Generation")]
-        [ListDrawerSettings(ShowFoldout = true)]
+        [TabGroup("Settings", "Generation")]
         [SerializeField] private List<WeightedSpawn> otherTasks = new();
 
         private TaskController controller;
@@ -71,7 +69,6 @@ namespace TimelessEchoes.Tasks
         private void Awake()
         {
             controller = GetComponent<TaskController>();
-            Generate();
         }
 
         private void ClearSpawnedObjects()
