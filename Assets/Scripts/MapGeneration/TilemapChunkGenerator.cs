@@ -28,8 +28,6 @@ namespace TimelessEchoes.MapGeneration
         [SerializeField, Min(2)] private int minAreaWidth = 2;
         [SerializeField, Min(0)] private int edgeWaviness = 1;
         [SerializeField, Min(0)] private int islandWidth = 50;
-        [SerializeField, Min(0)] private int islandShapeVariance = 2;
-        [SerializeField, Min(1)] private int islandMaxDepth = 15;
 
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
@@ -55,16 +53,23 @@ namespace TimelessEchoes.MapGeneration
             int currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             int currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
-            int islandStart = Mathf.Max(0, size.x - islandWidth);
-            int finalSandDepth = currentSandDepth;
-            int finalGrassDepth = currentGrassDepth;
-            for (int x = 0; x < islandStart; )
+            int grassCutoffStart = Mathf.Max(0, size.x - islandWidth);
+            int sandCutoffStart = Mathf.Max(0, size.x - RandomRange(3, 6));
+
+            for (int x = 0; x < size.x; )
             {
-                for (int segX = 0; segX < minAreaWidth && x < islandStart; segX++, x++)
+                for (int segX = 0; segX < minAreaWidth && x < size.x; segX++, x++)
                 {
-                    finalSandDepth = currentSandDepth;
-                    finalGrassDepth = currentGrassDepth;
-                    PlaceColumn(x, currentSandDepth, currentGrassDepth);
+                    int sandDepth = currentSandDepth;
+                    int grassDepth = currentGrassDepth;
+
+                    if (x >= grassCutoffStart)
+                        grassDepth = 0;
+
+                    if (x >= sandCutoffStart)
+                        sandDepth = 0;
+
+                    PlaceColumn(x, sandDepth, grassDepth);
                 }
 
                 int sandDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
@@ -78,8 +83,6 @@ namespace TimelessEchoes.MapGeneration
                     currentGrassDepth = Mathf.Clamp(size.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
                 }
             }
-
-            GenerateIsland(islandStart, size.x - islandStart, finalSandDepth, finalGrassDepth);
         }
 
         private void PlaceColumn(int x, int sandDepth, int grassDepth)
@@ -102,59 +105,6 @@ namespace TimelessEchoes.MapGeneration
                 grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
         }
 
-        private void GenerateIsland(int startX, int width, int shoreSandDepth, int shoreGrassDepth)
-        {
-            int walkwayWidth = Mathf.Min(2, width);
-            int islandStart = startX + walkwayWidth;
-            int islandWidth = Mathf.Max(0, width - walkwayWidth);
-
-            // Height of the bridge connecting the shore to the island.
-            int waterDepth = size.y - shoreSandDepth - shoreGrassDepth;
-            if (waterDepth < 0)
-                waterDepth = 0;
-            int maxBridgeHeight = Mathf.Max(1, size.y - waterDepth);
-            int bridgeHeight = Mathf.Clamp(RandomRange(2, 5), 1, maxBridgeHeight);
-
-
-            // Fill the bridge area with water so it sits over water like a pier.
-            for (int x = startX; x < islandStart && x < size.x; x++)
-                for (int y = 0; y < size.y; y++)
-                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-
-            // Create a strip of land connecting to the main shoreline.
-            for (int x = startX; x < islandStart && x < size.x; x++)
-                for (int y = waterDepth; y < waterDepth + bridgeHeight && y < size.y; y++)
-                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
-
-            // Carve out the island slightly above the water line with some random variation.
-            for (int x = islandStart; x < islandStart + islandWidth && x < size.x; x++)
-            {
-                float halfWidth = islandWidth / 2f;
-                float dx = (x - islandStart) - halfWidth;
-                float t = Mathf.Abs(dx) / (halfWidth > 0 ? halfWidth : 1f);
-
-                // Island thickness tapers toward the edges.
-                int islandHeight = Mathf.RoundToInt((1f - t * t) * islandMaxDepth);
-
-                // Add a bit of random noise so the island isn't perfectly symmetrical.
-                islandHeight += RandomRange(-islandShapeVariance, islandShapeVariance + 1);
-                islandHeight = Mathf.Clamp(islandHeight, 2, islandMaxDepth);
-
-                int startY = (size.y / 2) - islandHeight / 2;
-                int endY = startY + islandHeight;
-
-                startY = Mathf.Clamp(startY, 0, size.y);
-                endY = Mathf.Clamp(endY, 0, size.y);
-
-                for (int y = 0; y < startY; y++)
-                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-                for (int y = endY; y < size.y; y++)
-                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-
-                for (int y = startY; y < endY; y++)
-                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
-            }
-        }
 
         private int RandomRange(int minInclusive, int maxExclusive)
         {
