@@ -33,6 +33,13 @@ namespace TimelessEchoes.Enemies
             if (CurrentHealth <= 0f) return;
             CurrentHealth -= amount;
             UpdateBar();
+
+            // Show floating damage text
+            ColorUtility.TryParseHtmlString("#C56260", out var red);
+            ColorUtility.TryParseHtmlString("#C69B60", out var orange);
+            bool isHero = GetComponent<TimelessEchoes.Hero.HeroController>() != null;
+            var colour = isHero ? orange : red;
+            TimelessEchoes.FloatingText.Spawn(Mathf.RoundToInt(amount).ToString(), transform.position + Vector3.up, colour);
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();

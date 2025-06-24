@@ -158,7 +158,10 @@ namespace TimelessEchoes.Enemies
                 t *= t; // bias towards lower values
                 int count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
                 if (count > 0)
+                {
                     resourceManager.Add(drop.resource, count);
+                    TimelessEchoes.FloatingText.Spawn($"{drop.resource.name} x{count}", transform.position + Vector3.up, Color.yellow);
+                }
             }
         }
 
