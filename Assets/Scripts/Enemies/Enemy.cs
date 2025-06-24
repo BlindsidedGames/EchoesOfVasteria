@@ -1,6 +1,8 @@
 using Pathfinding;
 using Pathfinding.RVO;
 using UnityEngine;
+using TimelessEchoes.Upgrades;
+using System.Collections.Generic;
 
 namespace TimelessEchoes.Enemies
 {
@@ -10,11 +12,21 @@ namespace TimelessEchoes.Enemies
     [RequireComponent(typeof(Health))]
     public class Enemy : MonoBehaviour
     {
+        [System.Serializable]
+        public class ResourceDrop
+        {
+            public Resource resource;
+            public Vector2Int dropRange = new Vector2Int(1, 1);
+            [Range(0f, 1f)] public float dropChance = 1f;
+        }
         [SerializeField] private EnemyStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
+        [SerializeField] private List<ResourceDrop> resourceDrops = new();
+
+        private ResourceManager resourceManager;
 
         private AIPath ai;
         private Health health;
@@ -36,6 +48,9 @@ namespace TimelessEchoes.Enemies
             }
 
             startTarget = setter.target;
+            resourceManager = FindFirstObjectByType<ResourceManager>();
+            if (health != null)
+                health.OnDeath += OnDeath;
         }
 
         private void Update()
@@ -123,6 +138,34 @@ namespace TimelessEchoes.Enemies
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
                 proj.Init(setter.target, stats.damage);
+        }
+
+        private void OnDeath()
+        {
+            if (resourceManager == null)
+                resourceManager = FindFirstObjectByType<ResourceManager>();
+            if (resourceManager == null) return;
+
+            foreach (var drop in resourceDrops)
+            {
+                if (drop.resource == null) continue;
+                if (Random.value > drop.dropChance) continue;
+
+                int min = drop.dropRange.x;
+                int max = drop.dropRange.y;
+                if (max < min) max = min;
+                float t = Random.value;
+                t *= t; // bias towards lower values
+                int count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
+                if (count > 0)
+                    resourceManager.Add(drop.resource, count);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (health != null)
+                health.OnDeath -= OnDeath;
         }
     }
 }
