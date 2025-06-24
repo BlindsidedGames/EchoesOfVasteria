@@ -105,6 +105,9 @@ namespace TimelessEchoes.Upgrades
         {
             for (int i = 0; i < slots.Count && i < resources.Count; i++)
                 UpdateSlot(i);
+
+            if (selectedIndex >= 0 && tooltip != null && tooltip.gameObject.activeSelf)
+                ShowTooltip(selectedIndex);
         }
 
         private void UpdateSlot(int index)
