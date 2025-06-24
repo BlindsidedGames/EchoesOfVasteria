@@ -48,7 +48,10 @@ namespace TimelessEchoes.Enemies
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             spawnPos = transform.position;
-            hero = FindFirstObjectByType<TimelessEchoes.Hero.HeroController>()?.transform;
+
+            var controller = GetComponentInParent<TimelessEchoes.Tasks.TaskController>();
+            if (controller != null)
+                hero = controller.hero != null ? controller.hero.transform : null;
             wanderTarget = new GameObject("WanderTarget").transform;
             wanderTarget.hideFlags = HideFlags.HideInHierarchy;
             wanderTarget.position = transform.position;
