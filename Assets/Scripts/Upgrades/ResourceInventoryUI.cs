@@ -46,7 +46,13 @@ namespace TimelessEchoes.Upgrades
                     slots[i].PointerClick += (_, button) =>
                     {
                         if (button == PointerEventData.InputButton.Right && tooltip != null)
+                        {
                             tooltip.gameObject.SetActive(false);
+                            foreach (var s in slots)
+                                if (s != null && s.selectionImage != null)
+                                    s.selectionImage.enabled = false;
+                            selectedIndex = -1;
+                        }
                     };
 
                     slots[i].PointerEnter += _ =>
@@ -82,7 +88,13 @@ namespace TimelessEchoes.Upgrades
         private void Update()
         {
             if (tooltip != null && tooltip.gameObject.activeSelf && Input.GetMouseButtonDown(1))
+            {
                 tooltip.gameObject.SetActive(false);
+                foreach (var s in slots)
+                    if (s != null && s.selectionImage != null)
+                        s.selectionImage.enabled = false;
+                selectedIndex = -1;
+            }
         }
 
         /// <summary>

@@ -60,7 +60,16 @@ namespace TimelessEchoes.Upgrades
         private void Update()
         {
             if (references != null && references.gameObject.activeSelf && Input.GetMouseButtonDown(1))
+            {
                 references.gameObject.SetActive(false);
+                foreach (var selector in statSelectors)
+                    if (selector != null && selector.selectionImage != null)
+                        selector.selectionImage.enabled = false;
+                foreach (var slot in costSlots)
+                    if (slot != null && slot.selectionImage != null)
+                        slot.selectionImage.enabled = false;
+                selectedIndex = -1;
+            }
         }
 
         private void SelectStat(int index)
@@ -161,6 +170,7 @@ namespace TimelessEchoes.Upgrades
             {
                 BuildCostSlots();
                 UpdateUI();
+                resourceInventoryUI?.UpdateSlots();
             }
         }
 
