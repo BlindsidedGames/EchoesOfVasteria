@@ -59,8 +59,20 @@ namespace TimelessEchoes.Upgrades
 
         private void Update()
         {
-            if (references != null && references.gameObject.activeSelf && Input.GetMouseButtonDown(1))
-                references.gameObject.SetActive(false);
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (references != null && references.gameObject.activeSelf)
+                    references.gameObject.SetActive(false);
+                DeselectStat();
+            }
+        }
+
+        private void DeselectStat()
+        {
+            selectedIndex = -1;
+            foreach (var selector in statSelectors)
+                if (selector != null && selector.selectionImage != null)
+                    selector.selectionImage.enabled = false;
         }
 
         private void SelectStat(int index)

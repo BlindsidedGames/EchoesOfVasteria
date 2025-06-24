@@ -82,8 +82,20 @@ namespace TimelessEchoes.Upgrades
 
         private void Update()
         {
-            if (tooltip != null && tooltip.gameObject.activeSelf && Input.GetMouseButtonDown(1))
-                tooltip.gameObject.SetActive(false);
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (tooltip != null && tooltip.gameObject.activeSelf)
+                    tooltip.gameObject.SetActive(false);
+                DeselectSlot();
+            }
+        }
+
+        private void DeselectSlot()
+        {
+            selectedIndex = -1;
+            foreach (var slot in slots)
+                if (slot != null && slot.selectionImage != null)
+                    slot.selectionImage.enabled = false;
         }
 
         /// <summary>
