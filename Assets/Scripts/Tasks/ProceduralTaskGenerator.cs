@@ -121,12 +121,12 @@ namespace TimelessEchoes.Tasks
             {
                 Vector3 pos = RandomPosition();
                 int attempts = 0;
-                while (attempts < 5 && (Physics2D.OverlapPoint(pos, blockingMask) || IsBlockedAhead(pos)))
+                while (attempts < 5 && (HasBlockingCollider((Vector2)pos) || IsBlockedAhead(pos)))
                 {
                     pos = RandomPosition();
                     attempts++;
                 }
-                if (Physics2D.OverlapPoint(pos, blockingMask) || IsBlockedAhead(pos))
+                if (HasBlockingCollider((Vector2)pos) || IsBlockedAhead(pos))
                     continue;
 
                 float progress = Mathf.InverseLerp(minX, maxX, pos.x);
@@ -160,6 +160,14 @@ namespace TimelessEchoes.Tasks
                 : transform.position.y + Random.Range(0f, height);
 
             return new Vector3(worldX, worldY, 0f);
+        }
+
+        /// <summary>
+        /// Determine if the exact XY position contains a collider on the blocking mask.
+        /// </summary>
+        private bool HasBlockingCollider(Vector2 point)
+        {
+            return Physics2D.OverlapPoint(point, blockingMask) != null;
         }
 
         /// <summary>
