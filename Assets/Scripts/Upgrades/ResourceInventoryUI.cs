@@ -18,6 +18,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<ResourceUIReferences> slots = new();
         [SerializeField] private TooltipUIReferences tooltip;
         [SerializeField] private bool showTooltipOnHover = false;
+        [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
         private int selectedIndex = -1;
 
@@ -148,7 +149,7 @@ namespace TimelessEchoes.Upgrades
             var slot = slots[index];
             var resource = resources[index];
 
-            tooltip.transform.position = slot.transform.position;
+            tooltip.transform.position = slot.transform.position + (Vector3)tooltipOffset;
 
             bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
             if (tooltip.resourceNameText)
