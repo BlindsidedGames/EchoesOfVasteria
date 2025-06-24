@@ -151,13 +151,10 @@ namespace TimelessEchoes.Tasks
         private Vector3 RandomPosition()
         {
             float x = Random.Range(minX, maxX);
-            float worldX = transform.position.x + x;
-            float castStartY = transform.position.y + height + 1f;
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldX, castStartY), Vector2.down, height + 2f, blockingMask);
+            float y = Random.Range(0f, height);
 
-            float worldY = hit.collider != null
-                ? hit.point.y + 0.1f
-                : transform.position.y + Random.Range(0f, height);
+            float worldX = transform.position.x + x;
+            float worldY = transform.position.y + y;
 
             return new Vector3(worldX, worldY, 0f);
         }
