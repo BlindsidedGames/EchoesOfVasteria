@@ -66,11 +66,15 @@ namespace TimelessEchoes.MapGeneration
                     int sandDepth = currentSandDepth;
                     int grassDepth = currentGrassDepth;
 
-                    if (x >= grassCutoffStart)
-                        grassDepth = 0;
-
                     if (x >= sandCutoffStart)
+                    {
                         sandDepth = 0;
+                        grassDepth = 0; // ensure water fills the column
+                    }
+                    else if (x >= grassCutoffStart)
+                    {
+                        grassDepth = 0;
+                    }
 
                     PlaceColumn(x, sandDepth, grassDepth);
                 }
@@ -100,7 +104,7 @@ namespace TimelessEchoes.MapGeneration
             for (int y = 0; y < waterDepth; y++)
                 waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
 
-            // Fill the sand map all the way to the top of the chunk
+            // Fill the sand map all the way to the top unless the column is cut off
             for (int y = waterDepth; y < size.y; y++)
                 sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
 
