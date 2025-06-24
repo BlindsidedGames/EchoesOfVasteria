@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.Utilities.TextStrings;
-using static Blindsided.SaveData.SaveData;
+using static Blindsided.SaveData.GameData;
 
 namespace Blindsided.Utilities
 {
