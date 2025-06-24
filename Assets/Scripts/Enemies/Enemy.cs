@@ -3,7 +3,6 @@ using Pathfinding.RVO;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
 using System.Collections.Generic;
-using System;
 
 namespace TimelessEchoes.Enemies
 {
@@ -41,7 +40,7 @@ namespace TimelessEchoes.Enemies
 
         public bool IsEngaged => setter != null && setter.target == hero;
 
-        public static event Action<Enemy> OnEngage;
+        public static event System.Action<Enemy> OnEngage;
 
         private void Awake()
         {
