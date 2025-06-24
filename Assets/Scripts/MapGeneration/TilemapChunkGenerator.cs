@@ -8,6 +8,7 @@ namespace TimelessEchoes.MapGeneration
     /// <summary>
     ///     Procedurally generates a tilemap chunk with water, sand and grass sections.
     ///     Thickness of sand and grass varies along the width of the chunk.
+    ///     The cutoff points for both sand and grass can be configured.
     /// </summary>
     public class TilemapChunkGenerator : MonoBehaviour
     {
@@ -27,7 +28,9 @@ namespace TimelessEchoes.MapGeneration
         [Header("Generation Settings")]
         [SerializeField, Min(2)] private int minAreaWidth = 2;
         [SerializeField, Min(0)] private int edgeWaviness = 1;
-        [SerializeField, Min(0)] private int islandWidth = 50;
+        [Header("Cutoff Settings")]
+        [SerializeField, Min(0)] private int grassCutoffWidth = 50;
+        [SerializeField] private Vector2Int sandCutoffRange = new Vector2Int(3, 6);
 
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
@@ -53,8 +56,8 @@ namespace TimelessEchoes.MapGeneration
             int currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             int currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
-            int grassCutoffStart = Mathf.Max(0, size.x - islandWidth);
-            int sandCutoffStart = Mathf.Max(0, size.x - RandomRange(3, 6));
+            int grassCutoffStart = Mathf.Max(0, size.x - grassCutoffWidth);
+            int sandCutoffStart = Mathf.Max(0, size.x - RandomRange(sandCutoffRange.x, sandCutoffRange.y + 1));
 
             for (int x = 0; x < size.x; )
             {
