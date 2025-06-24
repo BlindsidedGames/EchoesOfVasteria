@@ -3,6 +3,7 @@ using Pathfinding.RVO;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
 using System.Collections.Generic;
+using System;
 
 namespace TimelessEchoes.Enemies
 {
@@ -34,6 +35,13 @@ namespace TimelessEchoes.Enemies
         private AIDestinationSetter setter;
         private Vector3 spawnPos;
         private Transform startTarget;
+        private Transform hero;
+        private Transform wanderTarget;
+        private LayerMask blockingMask;
+
+        public bool IsEngaged => setter != null && setter.target == hero;
+
+        public static event Action<Enemy> OnEngage;
 
         private void Awake()
         {
@@ -41,6 +49,11 @@ namespace TimelessEchoes.Enemies
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             spawnPos = transform.position;
+            hero = FindFirstObjectByType<TimelessEchoes.Hero.HeroController>()?.transform;
+            wanderTarget = new GameObject("WanderTarget").transform;
+            wanderTarget.hideFlags = HideFlags.HideInHierarchy;
+            wanderTarget.position = transform.position;
+            blockingMask = LayerMask.GetMask("Blocking");
             if (stats != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
@@ -61,7 +74,10 @@ namespace TimelessEchoes.Enemies
 
         private void OnEnable()
         {
-            
+            EnemyActivator.Instance?.Register(this);
+            OnEngage += HandleAllyEngaged;
+
+            Wander();
 
             // Offset the animator's starting time so enemies don't animate
             // in perfect sync when spawned simultaneously.
@@ -70,6 +86,12 @@ namespace TimelessEchoes.Enemies
                 var state = animator.GetCurrentAnimatorStateInfo(0);
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
+        }
+
+        private void OnDisable()
+        {
+            EnemyActivator.Instance?.Unregister(this);
+            OnEngage -= HandleAllyEngaged;
         }
 
 
@@ -98,16 +120,21 @@ namespace TimelessEchoes.Enemies
 
         private void UpdateBehavior()
         {
-            if (setter.target == null || stats == null)
-            {
-                Wander();
+            if (stats == null)
                 return;
+
+            if (hero != null)
+            {
+                float hDist = Vector2.Distance(transform.position, hero.position);
+                if (hDist <= stats.visionRange)
+                {
+                    setter.target = hero;
+                    OnEngage?.Invoke(this);
+                }
             }
 
-            var dist = Vector2.Distance(transform.position, setter.target.position);
-            if (dist <= stats.visionRange)
+            if (IsEngaged)
             {
-                ai.destination = setter.target.position;
                 if (Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
@@ -123,11 +150,22 @@ namespace TimelessEchoes.Enemies
 
         private void Wander()
         {
-            if (ai.reachedEndOfPath)
+            if (!ai.reachedEndOfPath) return;
+
+            const int maxAttempts = 5;
+            Vector2 wander = transform.position;
+            for (int i = 0; i < maxAttempts; i++)
             {
-                Vector2 wander = spawnPos + (Vector3)Random.insideUnitCircle * stats.wanderDistance;
-                ai.destination = wander;
+                Vector2 candidate = spawnPos + Random.insideUnitCircle * stats.wanderDistance;
+                if (Physics2D.OverlapCircle(candidate, 0.2f, blockingMask) == null)
+                {
+                    wander = candidate;
+                    break;
+                }
             }
+
+            wanderTarget.position = wander;
+            setter.target = wanderTarget;
         }
 
         private void FireProjectile()
@@ -169,6 +207,25 @@ namespace TimelessEchoes.Enemies
         {
             if (health != null)
                 health.OnDeath -= OnDeath;
+            OnEngage -= HandleAllyEngaged;
+            if (wanderTarget != null)
+                Destroy(wanderTarget.gameObject);
+        }
+
+        public void SetActiveState(bool active)
+        {
+            if (ai != null) ai.enabled = active;
+            if (setter != null) setter.enabled = active;
+            if (animator != null) animator.enabled = active;
+            if (spriteRenderer != null) spriteRenderer.enabled = active;
+        }
+
+        private void HandleAllyEngaged(Enemy other)
+        {
+            if (other != this && other != null && hero != null)
+            {
+                setter.target = hero;
+            }
         }
     }
 }
