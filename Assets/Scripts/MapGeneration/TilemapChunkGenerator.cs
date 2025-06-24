@@ -98,18 +98,38 @@ namespace TimelessEchoes.MapGeneration
 
         private void GenerateIsland(int startX, int width)
         {
+            int walkwayWidth = Mathf.Min(2, width);
+            int islandStart = startX + walkwayWidth;
+            int islandWidth = Mathf.Max(0, width - walkwayWidth);
+
+            // Fill the entire region with water first so the island has
+            // water above and below it.
             for (int x = startX; x < startX + width && x < size.x; x++)
             {
-                float halfWidth = width / 2f;
-                float dx = (x - startX) - halfWidth;
-                float t = Mathf.Abs(dx) / (halfWidth > 0 ? halfWidth : 1f);
-                int sandHeight = Mathf.RoundToInt((1f - t * t) * (size.y - 1));
-                sandHeight = Mathf.Clamp(sandHeight, 0, size.y);
-
-                int waterDepth = size.y - sandHeight;
-                for (int y = 0; y < waterDepth; y++)
+                for (int y = 0; y < size.y; y++)
                     waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-                for (int y = waterDepth; y < size.y; y++)
+            }
+
+            // Create a thin strip of land connecting to the main shoreline.
+            for (int x = startX; x < islandStart && x < size.x; x++)
+                sandMap.SetTile(new Vector3Int(x, 0, 0), sandRuleTile);
+
+            // Carve out the island slightly above the water line.
+            for (int x = islandStart; x < islandStart + islandWidth && x < size.x; x++)
+            {
+                float halfWidth = islandWidth / 2f;
+                float dx = (x - islandStart) - halfWidth;
+                float t = Mathf.Abs(dx) / (halfWidth > 0 ? halfWidth : 1f);
+
+                // Island thickness tapers toward the edges.
+                int islandHeight = Mathf.RoundToInt((1f - t * t) * (size.y / 3f));
+                int startY = (size.y / 2) - islandHeight / 2;
+                int endY = startY + islandHeight;
+
+                startY = Mathf.Clamp(startY, 0, size.y);
+                endY = Mathf.Clamp(endY, 0, size.y);
+
+                for (int y = startY; y < endY; y++)
                     sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
             }
         }
