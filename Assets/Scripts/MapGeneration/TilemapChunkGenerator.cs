@@ -24,6 +24,10 @@ namespace TimelessEchoes.MapGeneration
         [Header("Dimensions")]
         [SerializeField] private Vector2Int size = new Vector2Int(900, 18);
 
+        [Header("Generation Settings")]
+        [SerializeField, Min(2)] private int minAreaWidth = 2;
+        [SerializeField, Min(0)] private int edgeWaviness = 1;
+
         [Header("Depth Ranges (Min, Max)")]
         [SerializeField] private Vector2Int sandDepthRange = new Vector2Int(2, 6);
         [SerializeField] private Vector2Int grassDepthRange = new Vector2Int(2, 6);
@@ -45,32 +49,46 @@ namespace TimelessEchoes.MapGeneration
         {
             ClearMaps();
 
-            for (int x = 0; x < size.x; x++)
+            int currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
+            int currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
+
+            for (int x = 0; x < size.x; )
             {
-                int sandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
-                int grassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
+                for (int segX = 0; segX < minAreaWidth && x < size.x; segX++, x++)
+                {
+                    PlaceColumn(x, currentSandDepth, currentGrassDepth);
+                }
 
-                // Ensure total does not exceed height
-                int maxDepth = Math.Min(sandDepth + grassDepth, size.y);
-                sandDepth = Math.Min(sandDepth, size.y);
-                grassDepth = Math.Min(grassDepth, size.y - sandDepth);
+                int sandDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
+                int grassDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
 
-                int waterDepth = size.y - sandDepth - grassDepth;
-                if (waterDepth < 0)
-                    waterDepth = 0;
+                currentSandDepth = Mathf.Clamp(currentSandDepth + sandDelta, sandDepthRange.x, sandDepthRange.y);
+                currentGrassDepth = Mathf.Clamp(currentGrassDepth + grassDelta, grassDepthRange.x, grassDepthRange.y);
 
-                // Water tiles
-                for (int y = 0; y < waterDepth; y++)
-                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
-
-                // Sand tiles
-                for (int y = waterDepth; y < waterDepth + sandDepth && y < size.y; y++)
-                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
-
-                // Grass tiles
-                for (int y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
-                    grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
+                if (currentSandDepth + currentGrassDepth > size.y)
+                {
+                    currentGrassDepth = Mathf.Clamp(size.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
+                }
             }
+        }
+
+        private void PlaceColumn(int x, int sandDepth, int grassDepth)
+        {
+            sandDepth = Mathf.Clamp(sandDepth, sandDepthRange.x, sandDepthRange.y);
+            grassDepth = Mathf.Clamp(grassDepth, grassDepthRange.x, grassDepthRange.y);
+
+            int waterDepth = size.y - sandDepth - grassDepth;
+            if (waterDepth < 0)
+                waterDepth = 0;
+
+            for (int y = 0; y < waterDepth; y++)
+                waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+
+            for (int y = waterDepth; y < waterDepth + sandDepth && y < size.y; y++)
+                sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
+
+            for (int y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
+                grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
         }
 
         private int RandomRange(int minInclusive, int maxExclusive)
