@@ -125,7 +125,7 @@ namespace TimelessEchoes.Enemies
             if (stats == null)
                 return;
 
-            if (hero != null)
+            if (hero != null && hero.gameObject.activeInHierarchy)
             {
                 float hDist = Vector2.Distance(transform.position, hero.position);
                 if (hDist <= stats.visionRange)
@@ -226,7 +226,9 @@ namespace TimelessEchoes.Enemies
         {
             if (other != this && other != null && hero != null)
             {
-                setter.target = hero;
+                float dist = Vector2.Distance(transform.position, other.transform.position);
+                if (dist <= stats.assistRange)
+                    setter.target = hero;
             }
         }
     }
