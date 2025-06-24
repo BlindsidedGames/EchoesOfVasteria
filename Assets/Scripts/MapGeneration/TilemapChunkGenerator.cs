@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Sirenix.OdinInspector;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -39,6 +40,7 @@ namespace TimelessEchoes.MapGeneration
         }
 
         [ContextMenu("Generate Chunk")]
+        [Button]
         public void Generate()
         {
             ClearMaps();
@@ -73,6 +75,9 @@ namespace TimelessEchoes.MapGeneration
 
         private int RandomRange(int minInclusive, int maxExclusive)
         {
+            if (rng == null)
+                rng = randomizeSeed ? new System.Random() : new System.Random(seed);
+
             return rng.Next(minInclusive, maxExclusive);
         }
 
