@@ -46,15 +46,23 @@ namespace TimelessEchoes.Upgrades
             if (references.upgradeButton != null)
                 references.upgradeButton.onClick.AddListener(ApplyUpgrade);
 
-            SelectStat(0);
+            DeselectStat();
+            if (references != null)
+                references.gameObject.SetActive(false);
         }
 
         private void OnEnable()
         {
-            if (selectedIndex < 0 && statSelectors.Count > 0)
-                SelectStat(0);
+            if (selectedIndex < 0)
+            {
+                DeselectStat();
+                if (references != null)
+                    references.gameObject.SetActive(false);
+            }
             else
+            {
                 UpdateUI();
+            }
         }
 
         private void Update()
