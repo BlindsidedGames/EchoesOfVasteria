@@ -128,13 +128,12 @@ namespace TimelessEchoes.Upgrades
             if (slot.questionMarkImage)
                 slot.questionMarkImage.enabled = false;
             if (slot.countText)
-            {
-                double count = amounts.TryGetValue(resource, out var val) ? val : 0;
-                slot.countText.text = count.ToString();
-                slot.countText.gameObject.SetActive(true);
-            }
+                slot.countText.gameObject.SetActive(false);
             if (slot.selectionImage)
                 slot.selectionImage.enabled = index == selectedIndex;
+
+            if (selectedIndex == index && tooltip != null && tooltip.gameObject.activeSelf)
+                ShowTooltip(index);
         }
 
         private void SelectSlot(int index)
