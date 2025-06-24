@@ -142,5 +142,13 @@ namespace TimelessEchoes.MapGeneration
             sandMap.ClearAllTiles();
             grassMap.ClearAllTiles();
         }
+
+        /// <summary>
+        /// Remove all tiles from the chunk's tilemaps.
+        /// </summary>
+        public void Clear()
+        {
+            ClearMaps();
+        }
     }
 }
