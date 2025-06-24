@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using TimelessEchoes.Upgrades;
+
 
 namespace Blindsided.SaveData
 {
@@ -23,8 +23,8 @@ namespace Blindsided.SaveData
         public double OfflineTimeScaleMultiplier = 2f;
         public double PlayTime;
 
-        [HideReferenceObjectPicker] public Dictionary<Resource, int> ResourceAmounts = new();
-        [HideReferenceObjectPicker] public HashSet<Resource> UnlockedResources = new();
+        [HideReferenceObjectPicker]
+        public Dictionary<string, ResourceEntry> Resources = new();
 
         [TabGroup("Preferences")] public Preferences SavedPreferences = new();
 
@@ -36,6 +36,13 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
+
+        [HideReferenceObjectPicker]
+        public class ResourceEntry
+        {
+            public bool Earned;
+            public double Amount;
+        }
 
         [HideReferenceObjectPicker]
         public class Preferences

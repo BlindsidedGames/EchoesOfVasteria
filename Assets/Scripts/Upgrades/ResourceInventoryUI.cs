@@ -55,7 +55,7 @@ namespace TimelessEchoes.Upgrades
             var resource = resources[index];
             if (slot == null) return;
 
-            int amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+            double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
             bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
 
             if (slot.iconImage)
