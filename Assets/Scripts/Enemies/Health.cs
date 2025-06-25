@@ -19,6 +19,12 @@ namespace TimelessEchoes.Enemies
         public void TakeDamage(float amount)
         {
             if (CurrentHealth <= 0f) return;
+            var hero = GetComponent<HeroController>();
+            if (hero != null)
+            {
+                float min = amount * 0.1f;
+                amount = Mathf.Max(amount - hero.Defense, min);
+            }
             CurrentHealth -= amount;
             UpdateBar();
 
