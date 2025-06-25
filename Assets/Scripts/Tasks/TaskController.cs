@@ -268,49 +268,6 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        private void GatherEnemyTasks()
-        {
-            var enemies = GetComponentsInChildren<Enemy>();
-            foreach (var enemy in enemies)
-            {
-                if (enemy == null) continue;
-                if (((1 << enemy.gameObject.layer) & enemyMask) == 0) continue;
-                var tr = enemy.transform;
-                var task = enemy.GetComponent<KillEnemyTask>();
-                if (task == null)
-                    task = enemy.gameObject.AddComponent<KillEnemyTask>();
-                task.target = tr;
-                tasks.Add(task);
-            }
-        }
-
-        private void SortTasksByDistance()
-        {
-            var remaining = new List<ITask>(tasks);
-            tasks = new List<ITask>();
-            var current = entryPoint ? entryPoint.position : transform.position;
-            while (remaining.Count > 0)
-            {
-                var bestIndex = 0;
-                var bestDist = Distance(current, remaining[0]);
-                for (var i = 1; i < remaining.Count; i++)
-                {
-                    var d = Distance(current, remaining[i]);
-                    if (d < bestDist)
-                    {
-                        bestDist = d;
-                        bestIndex = i;
-                    }
-                }
-
-                var chosen = remaining[bestIndex];
-                remaining.RemoveAt(bestIndex);
-                tasks.Add(chosen);
-                if (chosen.Target != null)
-                    current = chosen.Target.position;
-            }
-        }
-
         private static float Distance(Vector3 from, ITask task)
         {
             return task.Target != null ? Vector3.Distance(from, task.Target.position) : float.MaxValue;
