@@ -19,6 +19,8 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private Transform downPoint;
         [SerializeField] private List<ResourceDrop> resourceDrops = new();
 
+        private Transform cachedTarget;
+
         private ResourceManager resourceManager;
         private bool complete;
 
@@ -30,10 +32,14 @@ namespace TimelessEchoes.Tasks
         {
             get
             {
+                if (cachedTarget != null)
+                    return cachedTarget;
+
                 var hero = FindFirstObjectByType<Hero.HeroController>();
-                if (hero == null)
-                    return leftPoint != null ? leftPoint : transform;
-                return GetNearestPoint(hero.transform);
+                cachedTarget = hero == null
+                    ? (leftPoint != null ? leftPoint : transform)
+                    : GetNearestPoint(hero.transform);
+                return cachedTarget;
             }
         }
 
@@ -58,6 +64,8 @@ namespace TimelessEchoes.Tasks
         public void StartTask()
         {
             complete = false;
+            if (cachedTarget == null)
+                _ = Target;
             if (progressBar != null)
             {
                 progressBar.fillAmount = 1f;
