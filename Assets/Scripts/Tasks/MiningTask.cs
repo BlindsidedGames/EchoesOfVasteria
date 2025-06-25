@@ -128,7 +128,7 @@ namespace TimelessEchoes.Tasks
                 progressBar.gameObject.SetActive(true);
                 progressBar.fillAmount = 1f;
             }
-            var anim = hero.GetComponent<Animator>();
+            var anim = hero != null ? hero.GetComponentInChildren<Animator>() : null;
             anim?.Play("Mining");
         }
 
@@ -142,7 +142,7 @@ namespace TimelessEchoes.Tasks
                 heroSetter.target = null;
             if (progressBar != null)
                 progressBar.gameObject.SetActive(false);
-            var anim = hero.GetComponent<Animator>();
+            var anim = hero != null ? hero.GetComponentInChildren<Animator>() : null;
             anim?.SetTrigger("StopMining");
 
             if (resourceManager == null)
