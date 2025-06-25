@@ -84,7 +84,6 @@ namespace TimelessEchoes
             mapCamera = taskController.MapCamera;
             if (mapCamera != null)
             {
-                mapCamera.gameObject.SetActive(true);
                 // Snap the camera to the hero's position so there is no
                 // visible panning when the run begins.
                 if (hero != null)
@@ -93,14 +92,12 @@ namespace TimelessEchoes
                     camPos += mapCamera.transform.rotation * Vector3.forward * -10f;
                     mapCamera.ForceCameraPosition(camPos, mapCamera.transform.rotation);
                 }
+                mapCamera.Priority = 10;
             }
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(false);
             if (mapCamera != null)
-            {
-                mapCamera.Priority = 10;
                 mapCamera.gameObject.SetActive(true);
-            }
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
