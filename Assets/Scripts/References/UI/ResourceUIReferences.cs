@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace References.UI
 {
-    public class ResourceUIReferences : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    public class ResourceUIReferences : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, ISelectableSlot
     {
         private static readonly List<ResourceUIReferences> instances = new();
         public Image questionMarkImage;
@@ -15,9 +16,13 @@ namespace References.UI
         public Image selectionImage;
         public Button selectButton;
 
-        public event System.Action<ResourceUIReferences> PointerEnter;
-        public event System.Action<ResourceUIReferences> PointerExit;
-        public event System.Action<ResourceUIReferences, PointerEventData.InputButton> PointerClick;
+        public event Action<ISelectableSlot> PointerEnter;
+        public event Action<ISelectableSlot> PointerExit;
+        public event Action<ISelectableSlot, PointerEventData.InputButton> PointerClick;
+
+        Button ISelectableSlot.SelectButton => selectButton;
+        Image ISelectableSlot.SelectionImage => selectionImage;
+        Transform ISelectableSlot.Transform => transform;
 
         private void Awake()
         {

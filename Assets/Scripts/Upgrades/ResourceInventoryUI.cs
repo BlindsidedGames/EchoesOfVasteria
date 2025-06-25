@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.EventSystems;
+
 using Blindsided.Utilities;
 
 namespace TimelessEchoes.Upgrades
@@ -15,55 +13,16 @@ namespace TimelessEchoes.Upgrades
     {
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<Resource> resources = new();
-        [SerializeField] private List<ResourceUIReferences> slots = new();
-        [SerializeField] private TooltipUIReferences tooltip;
-        [SerializeField] private bool showTooltipOnHover = false;
-        [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
-
-        private int selectedIndex = -1;
+        [SerializeField] private SelectableSlotManager slotManager;
 
         private void Awake()
         {
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
-
-            if (tooltip == null)
-                tooltip = FindFirstObjectByType<TooltipUIReferences>();
-
-            if (slots.Count == 0)
-                slots.AddRange(GetComponentsInChildren<ResourceUIReferences>(true));
-
-            for (int i = 0; i < slots.Count; i++)
-            {
-                var index = i;
-                if (slots[i] != null && slots[i].selectButton != null)
-                    slots[i].selectButton.onClick.AddListener(() => SelectSlot(index));
-
-                if (slots[i] != null)
-                {
-                    if (slots[i].countText != null)
-                        slots[i].countText.gameObject.SetActive(false);
-
-                    slots[i].PointerClick += (_, button) =>
-                    {
-                        if (button == PointerEventData.InputButton.Right && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                    };
-
-                    slots[i].PointerEnter += _ =>
-                    {
-                        if (showTooltipOnHover)
-                            ShowTooltip(index);
-                    };
-
-                    slots[i].PointerExit += _ =>
-                    {
-                        if (showTooltipOnHover && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                    };
-                }
-            }
-
+            if (slotManager == null)
+                slotManager = GetComponent<SelectableSlotManager>();
+            if (slotManager != null)
+                slotManager.TooltipRequested += ShowTooltip;
             UpdateSlots();
         }
 
@@ -80,39 +39,24 @@ namespace TimelessEchoes.Upgrades
                 resourceManager.OnInventoryChanged -= UpdateSlots;
         }
 
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (tooltip != null && tooltip.gameObject.activeSelf)
-                    tooltip.gameObject.SetActive(false);
-                DeselectSlot();
-            }
-        }
-
-        private void DeselectSlot()
-        {
-            selectedIndex = -1;
-            foreach (var slot in slots)
-                if (slot != null && slot.selectionImage != null)
-                    slot.selectionImage.enabled = false;
-        }
-
         /// <summary>
         /// Updates all resource slots using the current ResourceManager values.
         /// </summary>
         public void UpdateSlots()
         {
-            for (int i = 0; i < slots.Count && i < resources.Count; i++)
+            if (slotManager == null) return;
+
+            for (int i = 0; i < slotManager.Slots.Count && i < resources.Count; i++)
                 UpdateSlot(i);
 
-            if (selectedIndex >= 0 && tooltip != null && tooltip.gameObject.activeSelf)
-                ShowTooltip(selectedIndex);
+            if (slotManager.SelectedIndex >= 0 && slotManager.Tooltip != null && slotManager.Tooltip.gameObject.activeSelf)
+                ShowTooltip(slotManager.SelectedIndex);
         }
 
         private void UpdateSlot(int index)
         {
-            var slot = slots[index];
+            if (slotManager == null) return;
+            var slot = slotManager.Slots[index] as ResourceUIReferences;
             var resource = resources[index];
             if (slot == null) return;
 
@@ -131,50 +75,33 @@ namespace TimelessEchoes.Upgrades
                 slot.countText.gameObject.SetActive(false);
         }
 
-        public void SelectSlot(int index)
-        {
-            selectedIndex = index;
-            for (int i = 0; i < slots.Count; i++)
-            {
-                if (slots[i] != null && slots[i].selectionImage != null)
-                    slots[i].selectionImage.enabled = i == selectedIndex;
-            }
-
-            ShowTooltip(selectedIndex);
-        }
-
         public void HighlightResource(Resource resource)
         {
             int index = resources.IndexOf(resource);
-            if (index >= 0)
-                SelectSlot(index);
+            if (index >= 0 && slotManager != null)
+                slotManager.Select(index);
         }
 
         private void ShowTooltip(int index)
         {
-            if (tooltip == null)
+            if (slotManager == null || slotManager.Tooltip == null)
                 return;
 
-            if (index < 0 || index >= slots.Count || index >= resources.Count)
+            if (index < 0 || index >= slotManager.Slots.Count || index >= resources.Count)
             {
-                tooltip.gameObject.SetActive(false);
+                slotManager.HideTooltip();
                 return;
             }
 
-            var slot = slots[index];
             var resource = resources[index];
 
-            tooltip.transform.position = slot.transform.position + (Vector3)tooltipOffset;
-
             bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
-            if (tooltip.resourceNameText)
-                tooltip.resourceNameText.text = unlocked && resource ? resource.name : "Undiscovered";
+            if (slotManager.Tooltip.resourceNameText)
+                slotManager.Tooltip.resourceNameText.text = unlocked && resource ? resource.name : "Undiscovered";
 
             double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
-            if (tooltip.resourceCountText)
-                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true, 400f, false);
-
-            tooltip.gameObject.SetActive(true);
+            if (slotManager.Tooltip.resourceCountText)
+                slotManager.Tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true, 400f, false);
         }
     }
 }

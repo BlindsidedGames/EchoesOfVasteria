@@ -13,15 +13,15 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI resourceInventoryUI;
         [SerializeField] private List<StatUIReferences> statSelectors = new();
+        [SerializeField] private SelectableSlotManager slotManager;
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
 
         private readonly List<CostResourceUIReferences> costSlots = new();
 
-        private int selectedIndex = -1;
-
         private StatUpgrade CurrentUpgrade =>
-            selectedIndex >= 0 && selectedIndex < upgrades.Count ? upgrades[selectedIndex] : null;
+            slotManager != null && slotManager.SelectedIndex >= 0 && slotManager.SelectedIndex < upgrades.Count ?
+                upgrades[slotManager.SelectedIndex] : null;
 
         private void Awake()
         {
@@ -36,11 +36,19 @@ namespace TimelessEchoes.Upgrades
             if (statSelectors.Count == 0)
                 statSelectors.AddRange(GetComponentsInChildren<StatUIReferences>(true));
 
-            for (var i = 0; i < statSelectors.Count; i++)
+            if (slotManager == null)
+                slotManager = GetComponent<SelectableSlotManager>();
+            if (slotManager != null)
             {
-                var index = i;
-                if (statSelectors[i] != null && statSelectors[i].selectButton != null)
-                    statSelectors[i].selectButton.onClick.AddListener(() => SelectStat(index));
+                slotManager.ClearSlots();
+                foreach (var s in statSelectors)
+                    slotManager.AddSlot(s);
+                slotManager.Selected += SelectStat;
+                slotManager.Deselected += () =>
+                {
+                    if (references != null)
+                        references.gameObject.SetActive(false);
+                };
             }
 
             if (references.upgradeButton != null)
@@ -53,51 +61,29 @@ namespace TimelessEchoes.Upgrades
 
         private void OnEnable()
         {
-            if (selectedIndex < 0)
+            if (slotManager != null && slotManager.SelectedIndex >= 0)
+            {
+                UpdateUI();
+            }
+            else
             {
                 DeselectStat();
                 if (references != null)
                     references.gameObject.SetActive(false);
             }
-            else
-            {
-                UpdateUI();
-            }
-        }
-
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (references != null && references.gameObject.activeSelf)
-                    references.gameObject.SetActive(false);
-                DeselectStat();
-            }
         }
 
         private void DeselectStat()
         {
-            selectedIndex = -1;
-            foreach (var selector in statSelectors)
-                if (selector != null && selector.selectionImage != null)
-                    selector.selectionImage.enabled = false;
+            slotManager?.Deselect();
         }
 
         private void SelectStat(int index)
         {
-            selectedIndex = Mathf.Clamp(index, 0, statSelectors.Count - 1);
-
-            for (var i = 0; i < statSelectors.Count; i++)
-            {
-                var selector = statSelectors[i];
-                if (selector != null && selector.selectionImage != null)
-                    selector.selectionImage.enabled = i == selectedIndex;
-            }
-
-            if (references != null && selectedIndex >= 0 && selectedIndex < statSelectors.Count)
+            if (references != null && index >= 0 && index < statSelectors.Count)
             {
                 var pos = references.transform.position;
-                var target = statSelectors[selectedIndex].transform.position;
+                var target = statSelectors[index].transform.position;
                 references.transform.position = new Vector3(pos.x, target.y, pos.z);
                 references.gameObject.SetActive(true);
             }
