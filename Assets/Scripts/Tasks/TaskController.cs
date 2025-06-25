@@ -13,7 +13,6 @@ namespace TimelessEchoes.Tasks
     public class TaskController : MonoBehaviour
     {
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
-        private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
 
         [SerializeField] private Transform entryPoint;
         [SerializeField] private Transform exitPoint;
@@ -26,6 +25,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
+        private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
 
         private int currentIndex = -1;
         public List<ITask> tasks { get; private set; } = new();
@@ -40,16 +40,6 @@ namespace TimelessEchoes.Tasks
         public AstarPath Pathfinder => astarPath;
         public CinemachineCamera MapCamera => mapCamera;
         public MonoBehaviour CurrentTaskObject => currentTaskObject;
-
-        private void AcquireHero()
-        {
-            if (hero == null)
-            {
-                hero = GetComponentInChildren<HeroController>(true);
-                if (hero == null)
-                    TELogger.Log("TaskController hero reference is null", this);
-            }
-        }
 
         private void Awake()
         {
@@ -68,6 +58,16 @@ namespace TimelessEchoes.Tasks
         {
             AcquireHero();
             ResetTasks();
+        }
+
+        private void AcquireHero()
+        {
+            if (hero == null)
+            {
+                hero = GetComponentInChildren<HeroController>(true);
+                if (hero == null)
+                    Log("TaskController hero reference is null", this);
+            }
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace TimelessEchoes.Tasks
         {
             AcquireHero();
             if (hero == null)
-                TELogger.Log("ResetTasks called but hero is null", this);
+                Log("ResetTasks called but hero is null", this);
             currentIndex = -1;
             tasks.Clear();
             taskMap.Clear();
@@ -160,6 +160,7 @@ namespace TimelessEchoes.Tasks
                         taskObjects.Remove(obj);
                         taskMap.Remove(task);
                     }
+
                     removed = true;
                     continue;
                 }
@@ -177,6 +178,7 @@ namespace TimelessEchoes.Tasks
                             taskObjects.Remove(obj);
                             taskMap.Remove(task);
                         }
+
                         if (kill != null)
                             Destroy(kill);
                         removed = true;
@@ -197,7 +199,7 @@ namespace TimelessEchoes.Tasks
         public void SelectEarliestTask()
         {
             if (hero == null)
-                TELogger.Log("SelectEarliestTask called but hero is null", this);
+                Log("SelectEarliestTask called but hero is null", this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
@@ -211,7 +213,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                TELogger.Log($"Starting task: {currentTaskName}", this);
+                Log($"Starting task: {currentTaskName}", this);
                 hero?.SetTask(task);
                 task.StartTask();
                 return;
@@ -219,7 +221,7 @@ namespace TimelessEchoes.Tasks
 
             currentTaskName = "Complete";
             currentIndex = tasks.Count;
-            TELogger.Log("All tasks complete", this);
+            Log("All tasks complete", this);
             currentTaskObject = null;
             hero?.SetDestination(exitPoint);
         }
@@ -256,7 +258,7 @@ namespace TimelessEchoes.Tasks
                 currentIndex--;
         }
 
-        private void RemoveCompletedTasks()
+        public void RemoveCompletedTasks()
         {
             for (var i = tasks.Count - 1; i >= 0; i--)
             {

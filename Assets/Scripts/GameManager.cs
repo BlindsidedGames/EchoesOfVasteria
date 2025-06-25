@@ -1,42 +1,35 @@
-using UnityEngine;
-using UnityEngine.UI;
-using Unity.Cinemachine;
 using System.Collections;
-using TimelessEchoes.Tasks;
+using References.UI;
+using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
-using References.UI;
+using TimelessEchoes.Tasks;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Controls map generation, camera switching and UI visibility.
+    ///     Controls map generation, camera switching and UI visibility.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        [Header("Prefabs")]
-        [SerializeField] private GameObject mapPrefab;
+        [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
 
-        [Header("UI References")]
-        [SerializeField] private Button startRunButton;
+        [Header("UI References")] [SerializeField]
+        private Button startRunButton;
+
         [SerializeField] private Button returnToTavernButton;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
 
-        [Header("Cameras")]
-        [SerializeField] private CinemachineCamera tavernCamera;
+        [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
         private GameObject currentMap;
-        private TaskController taskController;
         private HeroController hero;
         private CinemachineCamera mapCamera;
-
-        private void HideTooltip()
-        {
-            var tooltip = FindFirstObjectByType<TooltipUIReferences>();
-            if (tooltip != null)
-                tooltip.gameObject.SetActive(false);
-        }
+        private TaskController taskController;
 
         private void Awake()
         {
@@ -44,6 +37,13 @@ namespace TimelessEchoes
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(ReturnToTavern);
+        }
+
+        private void HideTooltip()
+        {
+            var tooltip = FindFirstObjectByType<TooltipUIReferences>();
+            if (tooltip != null)
+                tooltip.gameObject.SetActive(false);
         }
 
         private void StartRun()
@@ -60,6 +60,18 @@ namespace TimelessEchoes
             if (taskController == null)
                 yield break;
 
+            hero = taskController.hero;
+            if (hero != null)
+            {
+                hero.gameObject.SetActive(true);
+                var hp = hero.GetComponent<Health>();
+                if (hp != null)
+                {
+                    hp.Init((int)hp.MaxHealth);
+                    hp.OnDeath += OnHeroDeath;
+                }
+            }
+
             var chunk = taskController.GetComponent<TilemapChunkGenerator>();
             chunk?.Generate();
             Physics2D.SyncTransforms();
@@ -69,17 +81,6 @@ namespace TimelessEchoes
             var taskGen = taskController.GetComponent<ProceduralTaskGenerator>();
             taskGen?.Generate();
 
-            hero = taskController.hero;
-            if (hero != null)
-            {
-                hero.gameObject.SetActive(true);
-                var hp = hero.GetComponent<Enemies.Health>();
-                if (hp != null)
-                {
-                    hp.Init((int)hp.MaxHealth);
-                    hp.OnDeath += OnHeroDeath;
-                }
-            }
 
             mapCamera = taskController.MapCamera;
             if (mapCamera != null)
@@ -88,12 +89,14 @@ namespace TimelessEchoes
                 // visible panning when the run begins.
                 if (hero != null)
                 {
-                    Vector3 camPos = hero.transform.position;
+                    var camPos = hero.transform.position;
                     camPos += mapCamera.transform.rotation * Vector3.forward * -10f;
                     mapCamera.ForceCameraPosition(camPos, mapCamera.transform.rotation);
                 }
+
                 mapCamera.Priority = 10;
             }
+
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(false);
             if (mapCamera != null)
@@ -107,10 +110,11 @@ namespace TimelessEchoes
         {
             if (hero != null)
             {
-                var hp = hero.GetComponent<Enemies.Health>();
+                var hp = hero.GetComponent<Health>();
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
             }
+
             StartRun();
         }
 
@@ -133,10 +137,9 @@ namespace TimelessEchoes
                 Destroy(currentMap);
                 currentMap = null;
             }
+
             if (hero != null)
                 hero.gameObject.SetActive(false);
         }
-
-        
     }
 }

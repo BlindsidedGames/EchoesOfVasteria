@@ -2,10 +2,10 @@ using System.Collections;
 using Pathfinding;
 using Pathfinding.RVO;
 using Sirenix.OdinInspector;
-using UnityEngine;
-using TimelessEchoes;
+using TimelessEchoes.Enemies;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using UnityEngine;
 using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Hero
@@ -13,7 +13,7 @@ namespace TimelessEchoes.Hero
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
     [RequireComponent(typeof(RVOController))]
-    [RequireComponent(typeof(Enemies.Health))]
+    [RequireComponent(typeof(Health))]
     public class HeroController : MonoBehaviour
     {
         [SerializeField] private HeroStats stats;
@@ -23,55 +23,107 @@ namespace TimelessEchoes.Hero
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
         [SerializeField] private LayerMask enemyMask = ~0;
-
-        private float baseDamage = 0f;
-        private float baseAttackSpeed = 0f;
-        private float baseMoveSpeed = 0f;
-        private float baseHealth = 0f;
-        private float baseDefense = 0f;
-
-        private float damageBonus = 0f;
-        private float attackSpeedBonus = 0f;
-        private float moveSpeedBonus = 0f;
-        private float healthBonus = 0f;
-        private float defenseBonus = 0f;
-
-        private TaskController taskController;
-
-        // Remember the last movement direction so the attack blend tree can
-        // continue to use it even when the hero stops moving.
-        private Vector2 lastMoveDir = Vector2.down;
+        [SerializeField] private string currentTaskName;
+        [SerializeField] private MonoBehaviour currentTaskObject;
+        private readonly bool allowAttacks = true;
 
         private AIPath ai;
-        private Enemies.Health health;
-        private AIDestinationSetter setter;
-        private float lastAttack = float.NegativeInfinity;
-        private bool isRolling;
-        private bool allowAttacks = true;
+        private float attackSpeedBonus;
+        private float baseAttackSpeed;
+
+        private float baseDamage;
+        private float baseDefense;
+        private float baseHealth;
+        private float baseMoveSpeed;
+        private float combatDamageMultiplier = 1f;
+
+        private float damageBonus;
+
+        private float defenseBonus;
+
         // Allows other systems to manually flag that the destination
         // has been reached even if the pathfinding system does not
         // report it. This can be useful for scripted events or when
         // the destination is obstructed.
         private bool destinationOverride;
-        private ITask currentTask;
-        public ITask CurrentTask => currentTask;
-        [SerializeField] private string currentTaskName;
-        [SerializeField] private MonoBehaviour currentTaskObject;
-
-        private enum State
-        {
-            Idle,
-            Moving,
-            Mining,
-            Combat
-        }
-
-        private State state;
-        private Tasks.MiningTask miningTask;
-        private float miningTimer;
+        private Health health;
+        private float healthBonus;
 
         private bool inCombat;
-        private float combatDamageMultiplier = 1f;
+        private bool isRolling;
+        private float lastAttack = float.NegativeInfinity;
+
+        // Remember the last movement direction so the attack blend tree can
+        // continue to use it even when the hero stops moving.
+        private Vector2 lastMoveDir = Vector2.down;
+        private MiningTask miningTask;
+        private float miningTimer;
+        private float moveSpeedBonus;
+        private AIDestinationSetter setter;
+
+        private State state;
+
+        private TaskController taskController;
+        public ITask CurrentTask { get; private set; }
+
+        private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
+        public float Defense => baseDefense + defenseBonus;
+
+        private void Awake()
+        {
+            ai = GetComponent<AIPath>();
+            setter = GetComponent<AIDestinationSetter>();
+            health = GetComponent<Health>();
+            if (taskController == null)
+                taskController = GetComponentInParent<TaskController>();
+
+            state = State.Idle;
+
+            ApplyStatUpgrades();
+
+            if (stats != null)
+            {
+                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                var hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                health.Init(hp);
+            }
+        }
+
+
+        private void Update()
+        {
+            UpdateAnimation();
+            UpdateBehavior();
+        }
+
+        private void OnEnable()
+        {
+            if (taskController == null)
+                taskController = GetComponent<TaskController>();
+
+            ApplyStatUpgrades();
+            if (stats != null)
+            {
+                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                var hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                health.Init(hp);
+            }
+
+            var start = taskController != null ? taskController.EntryPoint : null;
+            if (start != null)
+                transform.position = start.position;
+            if (animator != null)
+            {
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                animator.Play(state.fullPathHash, 0, Random.value);
+            }
+
+            CurrentTask = null;
+            miningTask = null;
+            state = State.Idle;
+            destinationOverride = false;
+            lastAttack = Time.time - 1f / CurrentAttackRate;
+        }
 
         private void ApplyStatUpgrades()
         {
@@ -81,8 +133,8 @@ namespace TimelessEchoes.Hero
             foreach (var upgrade in controller.AllUpgrades)
             {
                 if (upgrade == null) continue;
-                float increase = controller.GetIncrease(upgrade);
-                float baseVal = controller.GetBaseValue(upgrade);
+                var increase = controller.GetIncrease(upgrade);
+                var baseVal = controller.GetBaseValue(upgrade);
                 switch (upgrade.name)
                 {
                     case "Health":
@@ -107,61 +159,6 @@ namespace TimelessEchoes.Hero
                         break;
                 }
             }
-        }
-
-        private void Awake()
-        {
-            ai = GetComponent<AIPath>();
-            setter = GetComponent<AIDestinationSetter>();
-            health = GetComponent<Enemies.Health>();
-            if (taskController == null)
-                taskController = GetComponent<TaskController>();
-
-            state = State.Idle;
-
-            ApplyStatUpgrades();
-
-            if (stats != null)
-            {
-                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
-                int hp = Mathf.RoundToInt(baseHealth + healthBonus);
-                health.Init(hp);
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (taskController == null)
-                taskController = GetComponent<TaskController>();
-
-            ApplyStatUpgrades();
-            if (stats != null)
-            {
-                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
-                int hp = Mathf.RoundToInt(baseHealth + healthBonus);
-                health.Init(hp);
-            }
-
-            var start = taskController != null ? taskController.EntryPoint : null;
-            if (start != null)
-                transform.position = start.position;
-            if (animator != null)
-            {
-                var state = animator.GetCurrentAnimatorStateInfo(0);
-                animator.Play(state.fullPathHash, 0, Random.value);
-            }
-            currentTask = null;
-            miningTask = null;
-            state = State.Idle;
-            destinationOverride = false;
-            lastAttack = Time.time - 1f / CurrentAttackRate;
-        }
-
-
-        private void Update()
-        {
-            UpdateAnimation();
-            UpdateBehavior();
         }
 
         private void UpdateAnimation()
@@ -198,8 +195,8 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
-            TELogger.Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", this);
-            currentTask = task;
+            Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", this);
+            CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
             miningTask = null;
@@ -219,8 +216,8 @@ namespace TimelessEchoes.Hero
         }
 
         /// <summary>
-        /// Manually flag that the hero has reached its destination.
-        /// This bypasses the built-in pathfinding checks in <see cref="IsAtDestination"/>.
+        ///     Manually flag that the hero has reached its destination.
+        ///     This bypasses the built-in pathfinding checks in <see cref="IsAtDestination" />.
         /// </summary>
         [Button("Mark Destination Reached")]
         public void SetDestinationReached()
@@ -242,12 +239,9 @@ namespace TimelessEchoes.Hero
             if (ai.reachedDestination || ai.reachedEndOfPath)
                 return true;
 
-            float threshold = ai.endReachedDistance + 0.1f;
+            var threshold = ai.endReachedDistance + 0.1f;
             return Vector2.Distance(transform.position, dest.position) <= threshold;
         }
-
-        private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
-        public float Defense => baseDefense + defenseBonus;
 
         private void UpdateBehavior()
         {
@@ -259,9 +253,10 @@ namespace TimelessEchoes.Hero
                 HandleCombat(nearest);
                 return;
             }
-            else if (state == State.Combat)
+
+            if (state == State.Combat)
             {
-                TELogger.Log("Hero exiting combat", this);
+                Log("Hero exiting combat", this);
                 combatDamageMultiplier = 1f;
                 diceRoller?.ResetRoll();
                 inCombat = false;
@@ -275,12 +270,12 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
-            if (currentTask == null || currentTask.IsComplete())
+            if (CurrentTask == null || CurrentTask.IsComplete())
                 taskController?.SelectEarliestTask();
 
-            if (currentTask == null) return;
+            if (CurrentTask == null) return;
 
-            if (currentTask is MiningTask mt)
+            if (CurrentTask is MiningTask mt)
             {
                 var dest = mt.Target;
                 if (setter.target != dest)
@@ -291,7 +286,7 @@ namespace TimelessEchoes.Hero
                 else
                     state = State.Moving;
             }
-            else if (currentTask is KillEnemyTask ke)
+            else if (CurrentTask is KillEnemyTask ke)
             {
                 if (ke.target != null)
                     setter.target = ke.target;
@@ -299,7 +294,7 @@ namespace TimelessEchoes.Hero
             }
             else
             {
-                setter.target = currentTask.Target;
+                setter.target = CurrentTask.Target;
                 state = State.Moving;
             }
         }
@@ -307,43 +302,44 @@ namespace TimelessEchoes.Hero
         private Transform FindNearestEnemy()
         {
             Transform nearest = null;
-            float best = float.MaxValue;
+            var best = float.MaxValue;
             var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
             foreach (var h in hits)
             {
-                var hp = h.GetComponent<Enemies.Health>();
+                var hp = h.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                float d = Vector2.Distance(transform.position, h.transform.position);
+                var d = Vector2.Distance(transform.position, h.transform.position);
                 if (d < best)
                 {
                     best = d;
                     nearest = h.transform;
                 }
             }
+
             return nearest;
         }
 
         private void HandleCombat(Transform enemy)
         {
             if (state != State.Combat)
-                TELogger.Log($"Hero entering combat with {enemy.name}", this);
+                Log($"Hero entering combat with {enemy.name}", this);
             state = State.Combat;
             setter.target = enemy;
             if (!inCombat && diceRoller != null && !isRolling)
             {
-                float rate = CurrentAttackRate;
-                float cooldown = rate > 0f ? 1f / rate : 0.5f;
+                var rate = CurrentAttackRate;
+                var cooldown = rate > 0f ? 1f / rate : 0.5f;
                 StartCoroutine(RollForCombat(cooldown));
             }
 
-            var hp = enemy.GetComponent<Enemies.Health>();
+            var hp = enemy.GetComponent<Health>();
             if (hp == null || hp.CurrentHealth <= 0f) return;
 
             var dist = Vector2.Distance(transform.position, enemy.position);
             if (dist <= stats.visionRange)
             {
-                float rate = CurrentAttackRate;
-                float cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
+                var rate = CurrentAttackRate;
+                var cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
                 if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
                 {
                     lastMoveDir = enemy.position - transform.position;
@@ -357,7 +353,7 @@ namespace TimelessEchoes.Hero
 
         private void BeginMining(MiningTask task)
         {
-            TELogger.Log($"Begin mining {task.name}", this);
+            Log($"Begin mining {task.name}", this);
             miningTask = task;
             miningTimer = 0f;
             state = State.Mining;
@@ -368,6 +364,7 @@ namespace TimelessEchoes.Hero
                 task.ProgressBar.gameObject.SetActive(true);
                 task.ProgressBar.fillAmount = 1f;
             }
+
             animator?.Play("Mining");
         }
 
@@ -381,16 +378,17 @@ namespace TimelessEchoes.Hero
 
             miningTimer += Time.deltaTime;
             if (miningTask.ProgressBar != null)
-                miningTask.ProgressBar.fillAmount = Mathf.Clamp01((miningTask.MineTime - miningTimer) / miningTask.MineTime);
+                miningTask.ProgressBar.fillAmount =
+                    Mathf.Clamp01((miningTask.MineTime - miningTimer) / miningTask.MineTime);
 
             if (miningTimer >= miningTask.MineTime)
             {
-                TELogger.Log($"Finished mining {miningTask.name}", this);
+                Log($"Finished mining {miningTask.name}", this);
                 ai.canMove = true;
                 animator?.SetTrigger("StopMining");
                 miningTask.CompleteTask();
-                taskController?.SelectEarliestTask();
                 miningTask = null;
+                taskController?.SelectEarliestTask();
                 state = State.Idle;
             }
         }
@@ -413,7 +411,7 @@ namespace TimelessEchoes.Hero
         {
             if (stats.projectilePrefab == null || target == null) return;
 
-            var enemy = target.GetComponent<Enemies.Health>();
+            var enemy = target.GetComponent<Health>();
             if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
             animator.Play("Attack");
@@ -423,6 +421,14 @@ namespace TimelessEchoes.Hero
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
                 proj.Init(target, (baseDamage + damageBonus) * combatDamageMultiplier);
+        }
+
+        private enum State
+        {
+            Idle,
+            Moving,
+            Mining,
+            Combat
         }
     }
 }
