@@ -26,11 +26,13 @@ namespace TimelessEchoes.Hero
         private float baseAttackSpeed = 0f;
         private float baseMoveSpeed = 0f;
         private float baseHealth = 0f;
+        private float baseDefense = 0f;
 
         private float damageBonus = 0f;
         private float attackSpeedBonus = 0f;
         private float moveSpeedBonus = 0f;
         private float healthBonus = 0f;
+        private float defenseBonus = 0f;
 
         private TaskController taskController;
 
@@ -76,6 +78,10 @@ namespace TimelessEchoes.Hero
                     case "Move Speed":
                         baseMoveSpeed = baseVal;
                         moveSpeedBonus = increase;
+                        break;
+                    case "Defense":
+                        baseDefense = baseVal;
+                        defenseBonus = increase;
                         break;
                 }
             }
@@ -180,6 +186,7 @@ namespace TimelessEchoes.Hero
         }
 
         private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
+        public float Defense => baseDefense + defenseBonus;
 
         private void UpdateBehavior()
         {
