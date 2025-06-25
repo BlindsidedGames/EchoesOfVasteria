@@ -244,7 +244,14 @@ namespace TimelessEchoes.Tasks
             {
                 taskObjects.Remove(obj);
                 taskMap.Remove(task);
+                if (obj != null)
+                    Destroy(obj.gameObject);
             }
+            else if (task is MonoBehaviour mb)
+            {
+                Destroy(mb.gameObject);
+            }
+
             if (index <= currentIndex)
                 currentIndex--;
         }
