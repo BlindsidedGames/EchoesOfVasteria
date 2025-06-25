@@ -380,6 +380,9 @@ MonoBehaviour:
   fourDirectional: 1
   projectileOrigin: {fileID: 6094697013023591912}
   diceRoller: {fileID: 5704394544347900616}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &1408119024334129066
 MonoBehaviour:
   m_ObjectHideFlags: 0
