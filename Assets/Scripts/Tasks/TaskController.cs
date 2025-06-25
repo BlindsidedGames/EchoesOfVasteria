@@ -28,7 +28,7 @@ namespace TimelessEchoes.Tasks
         private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
 
         private int currentIndex = -1;
-        public List<ITask> tasks { get; private set; } = new();
+        public List<ITask> tasks { get; } = new();
 
         /// <summary>
         ///     Read-only access to the objects used when building the task list.
@@ -141,58 +141,6 @@ namespace TimelessEchoes.Tasks
 
 
         /// <summary>
-        ///     Remove enemy tasks whose targets are dead or destroyed.
-        /// </summary>
-        private void RemoveDeadEnemyTasks()
-        {
-            var removed = false;
-            for (var i = tasks.Count - 1; i >= 0; i--)
-            {
-                var task = tasks[i];
-                if (task == null)
-                {
-                    if (i <= currentIndex)
-                        currentIndex--;
-                    tasks.RemoveAt(i);
-                    if (taskMap.TryGetValue(task, out var obj))
-                    {
-                        taskObjects.Remove(obj);
-                        taskMap.Remove(task);
-                    }
-
-                    removed = true;
-                    continue;
-                }
-
-                if (task is KillEnemyTask kill)
-                {
-                    var health = kill.target != null ? kill.target.GetComponent<Health>() : null;
-                    if (kill.target == null || health == null || health.CurrentHealth <= 0f)
-                    {
-                        if (i <= currentIndex)
-                            currentIndex--;
-                        tasks.RemoveAt(i);
-                        if (taskMap.TryGetValue(task, out var obj))
-                        {
-                            taskObjects.Remove(obj);
-                            taskMap.Remove(task);
-                        }
-
-                        if (kill != null)
-                            Destroy(kill);
-                        removed = true;
-                    }
-                }
-            }
-
-            if (removed && hero != null)
-            {
-                hero.SetTask(null);
-                SelectEarliestTask();
-            }
-        }
-
-        /// <summary>
         ///     Remove null, completed or expired tasks.
         /// </summary>
         private void PruneTasks()
@@ -211,6 +159,7 @@ namespace TimelessEchoes.Tasks
                         taskObjects.Remove(obj);
                         taskMap.Remove(task);
                     }
+
                     removed = true;
                     continue;
                 }
@@ -228,10 +177,12 @@ namespace TimelessEchoes.Tasks
                             taskObjects.Remove(obj);
                             taskMap.Remove(task);
                         }
+
                         if (kill != null)
                             Destroy(kill);
                         removed = true;
                     }
+
                     continue;
                 }
 
@@ -322,11 +273,6 @@ namespace TimelessEchoes.Tasks
                 if (t == null || t.IsComplete())
                     RemoveTaskAt(i);
             }
-        }
-
-        private static float Distance(Vector3 from, ITask task)
-        {
-            return task.Target != null ? Vector3.Distance(from, task.Target.position) : float.MaxValue;
         }
     }
 }
