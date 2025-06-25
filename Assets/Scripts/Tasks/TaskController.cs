@@ -25,6 +25,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public HeroController hero;
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
+        [SerializeField] private MonoBehaviour currentTaskObject;
 
         private int currentIndex = -1;
         public List<ITask> tasks { get; private set; } = new();
@@ -38,6 +39,7 @@ namespace TimelessEchoes.Tasks
         public Transform ExitPoint => exitPoint;
         public AstarPath Pathfinder => astarPath;
         public CinemachineCamera MapCamera => mapCamera;
+        public MonoBehaviour CurrentTaskObject => currentTaskObject;
 
         private void AcquireHero()
         {
@@ -95,6 +97,7 @@ namespace TimelessEchoes.Tasks
             currentIndex = -1;
             tasks.Clear();
             taskMap.Clear();
+            currentTaskObject = null;
 
             // Build the task list in the order provided by the editor
             foreach (var obj in taskObjects)
@@ -203,6 +206,11 @@ namespace TimelessEchoes.Tasks
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
+                currentTaskObject = null;
+                if (taskMap.TryGetValue(task, out var obj))
+                    currentTaskObject = obj;
+                else if (task is MonoBehaviour mb)
+                    currentTaskObject = mb;
                 TELogger.Log($"Starting task: {currentTaskName}", this);
                 hero?.SetTask(task);
                 task.StartTask();
@@ -212,6 +220,7 @@ namespace TimelessEchoes.Tasks
             currentTaskName = "Complete";
             currentIndex = tasks.Count;
             TELogger.Log("All tasks complete", this);
+            currentTaskObject = null;
             hero?.SetDestination(exitPoint);
         }
 
