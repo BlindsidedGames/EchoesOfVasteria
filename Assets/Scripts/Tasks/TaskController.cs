@@ -1,26 +1,70 @@
 using System.Collections.Generic;
-using UnityEngine;
-using Pathfinding;
-using TimelessEchoes;
+using TimelessEchoes.Enemies;
+using TimelessEchoes.Hero;
 using Unity.Cinemachine;
+using UnityEngine;
 
 namespace TimelessEchoes.Tasks
 {
     /// <summary>
-    /// Controls progression through a list of tasks.
+    ///     Controls progression through a list of tasks.
     /// </summary>
     public class TaskController : MonoBehaviour
     {
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
+
+        [SerializeField] private Transform entryPoint;
+        [SerializeField] private Transform exitPoint;
+
+        [SerializeField] private LayerMask enemyMask = ~0;
+
+        [SerializeField] private AstarPath astarPath;
+
+        [SerializeField] public HeroController hero;
+        [SerializeField] private CinemachineCamera mapCamera;
+        [SerializeField] private string currentTaskName;
+
+        private int currentIndex = -1;
         public List<ITask> tasks { get; private set; } = new();
 
         /// <summary>
-        /// Read-only access to the objects used when building the task list.
+        ///     Read-only access to the objects used when building the task list.
         /// </summary>
         public IReadOnlyList<MonoBehaviour> TaskObjects => taskObjects;
 
+        public Transform EntryPoint => entryPoint;
+        public Transform ExitPoint => exitPoint;
+        public AstarPath Pathfinder => astarPath;
+        public CinemachineCamera MapCamera => mapCamera;
+
+        private void Awake()
+        {
+            if (hero == null)
+                hero = GetComponent<HeroController>();
+            if (mapCamera == null)
+                mapCamera = GetComponentInChildren<CinemachineCamera>(true);
+        }
+
+        private void Update()
+        {
+            RemoveDeadEnemyTasks();
+
+            if (currentIndex < 0 || currentIndex >= tasks.Count)
+                return;
+
+            var active = tasks[currentIndex];
+
+            if (active.IsComplete())
+                SelectNextTask();
+        }
+
+        private void OnEnable()
+        {
+            ResetTasks();
+        }
+
         /// <summary>
-        /// Remove any previously assigned task objects.
+        ///     Remove any previously assigned task objects.
         /// </summary>
         public void ClearTaskObjects()
         {
@@ -28,44 +72,13 @@ namespace TimelessEchoes.Tasks
         }
 
         /// <summary>
-        /// Add a task source object if it is not already present.
+        ///     Add a task source object if it is not already present.
         /// </summary>
         public void AddTaskObject(MonoBehaviour obj)
         {
             if (obj == null || taskObjects.Contains(obj))
                 return;
             taskObjects.Add(obj);
-        }
-
-        [SerializeField] private Transform entryPoint;
-        [SerializeField] private Transform exitPoint;
-
-        public Transform EntryPoint => entryPoint;
-        public Transform ExitPoint => exitPoint;
-
-        [SerializeField] private LayerMask enemyMask = ~0;
-
-        [SerializeField] private AstarPath astarPath;
-        public AstarPath Pathfinder => astarPath;
-
-        [SerializeField] public Hero.HeroController hero;
-        [SerializeField] private CinemachineCamera mapCamera;
-        public CinemachineCamera MapCamera => mapCamera;
-        [SerializeField] private string currentTaskName;
-
-        private int currentIndex = -1;
-
-        private void Awake()
-        {
-            if (hero == null)
-                hero = GetComponent<Hero.HeroController>();
-            if (mapCamera == null)
-                mapCamera = GetComponentInChildren<CinemachineCamera>(true);
-        }
-
-        private void OnEnable()
-        {
-            ResetTasks();
         }
 
         public void ResetTasks()
@@ -79,11 +92,11 @@ namespace TimelessEchoes.Tasks
                 if (obj == null) continue;
 
                 // If an enemy component is supplied, ensure it has a KillEnemyTask
-                var enemy = obj.GetComponent<Enemies.Enemy>();
+                var enemy = obj.GetComponent<Enemy>();
                 if (enemy != null)
                 {
                     // Ensure the enemy's health is initialized before tasks start
-                    var hp = enemy.GetComponent<Enemies.Health>();
+                    var hp = enemy.GetComponent<Health>();
                     if (hp != null)
                         hp.Init((int)hp.MaxHealth);
                     var kill = enemy.GetComponent<KillEnemyTask>();
@@ -110,27 +123,14 @@ namespace TimelessEchoes.Tasks
             SelectNextTask();
         }
 
-        private void Update()
-        {
-            RemoveDeadEnemyTasks();
-
-            if (currentIndex < 0 || currentIndex >= tasks.Count)
-                return;
-
-            var active = tasks[currentIndex];
-
-            if (active.IsComplete())
-                SelectNextTask();
-        }
-
 
         /// <summary>
-        /// Remove enemy tasks whose targets are dead or destroyed.
+        ///     Remove enemy tasks whose targets are dead or destroyed.
         /// </summary>
         private void RemoveDeadEnemyTasks()
         {
-            bool removed = false;
-            for (int i = tasks.Count - 1; i >= 0; i--)
+            var removed = false;
+            for (var i = tasks.Count - 1; i >= 0; i--)
             {
                 var task = tasks[i];
                 if (task == null)
@@ -141,9 +141,10 @@ namespace TimelessEchoes.Tasks
                     removed = true;
                     continue;
                 }
+
                 if (task is KillEnemyTask kill)
                 {
-                    var health = kill.target != null ? kill.target.GetComponent<Enemies.Health>() : null;
+                    var health = kill.target != null ? kill.target.GetComponent<Health>() : null;
                     if (kill.target == null || health == null || health.CurrentHealth <= 0f)
                     {
                         if (i <= currentIndex)
@@ -155,12 +156,16 @@ namespace TimelessEchoes.Tasks
                     }
                 }
             }
+
             if (removed && hero != null)
+            {
                 hero.SetTask(null);
+                SelectNextTask();
+            }
         }
 
         /// <summary>
-        /// Advance to the next task and start it if available.
+        ///     Advance to the next task and start it if available.
         /// </summary>
         public void SelectNextTask()
         {
@@ -181,7 +186,7 @@ namespace TimelessEchoes.Tasks
 
         private void GatherEnemyTasks()
         {
-            var enemies = GetComponentsInChildren<Enemies.Enemy>();
+            var enemies = GetComponentsInChildren<Enemy>();
             foreach (var enemy in enemies)
             {
                 if (enemy == null) continue;
@@ -199,20 +204,21 @@ namespace TimelessEchoes.Tasks
         {
             var remaining = new List<ITask>(tasks);
             tasks = new List<ITask>();
-            Vector3 current = entryPoint ? entryPoint.position : transform.position;
+            var current = entryPoint ? entryPoint.position : transform.position;
             while (remaining.Count > 0)
             {
-                int bestIndex = 0;
-                float bestDist = Distance(current, remaining[0]);
-                for (int i = 1; i < remaining.Count; i++)
+                var bestIndex = 0;
+                var bestDist = Distance(current, remaining[0]);
+                for (var i = 1; i < remaining.Count; i++)
                 {
-                    float d = Distance(current, remaining[i]);
+                    var d = Distance(current, remaining[i]);
                     if (d < bestDist)
                     {
                         bestDist = d;
                         bestIndex = i;
                     }
                 }
+
                 var chosen = remaining[bestIndex];
                 remaining.RemoveAt(bestIndex);
                 tasks.Add(chosen);
