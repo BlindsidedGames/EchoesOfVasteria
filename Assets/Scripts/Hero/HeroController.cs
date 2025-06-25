@@ -211,13 +211,9 @@ namespace TimelessEchoes.Hero
                 // Reset the AI path so reachedDestination isn't true
                 // before the new destination has been processed.
                 if (ai != null)
-                {
                     ai.Teleport(transform.position); // Clears path and searches again
-                }
                 else
-                {
                     ai?.SearchPath();
-                }
             }
         }
 
@@ -271,9 +267,6 @@ namespace TimelessEchoes.Hero
             {
                 Log("Hero exiting combat", this);
                 combatDamageMultiplier = 1f;
-                // Stop any ongoing dice roll so a fresh roll occurs when
-                // combat is re-entered. The coroutine may be interrupted
-                // before it resets this flag, so clear it here.
                 isRolling = false;
                 diceRoller?.ResetRoll();
                 inCombat = false;
@@ -348,16 +341,19 @@ namespace TimelessEchoes.Hero
             }
 
             if (state != State.Combat)
+            {
                 Log($"Hero entering combat with {enemy.name}", this);
+                if (diceRoller != null && !isRolling)
+                {
+                    var rate = CurrentAttackRate;
+                    var cooldown = rate > 0f ? 1f / rate : 0.5f;
+                    StartCoroutine(RollForCombat(cooldown));
+                }
+            }
+
             state = State.Combat;
             ai.canMove = true;
             setter.target = enemy;
-            if (!inCombat && diceRoller != null && !isRolling)
-            {
-                var rate = CurrentAttackRate;
-                var cooldown = rate > 0f ? 1f / rate : 0.5f;
-                StartCoroutine(RollForCombat(cooldown));
-            }
 
             var hp = enemy.GetComponent<Health>();
             if (hp == null || hp.CurrentHealth <= 0f) return;
