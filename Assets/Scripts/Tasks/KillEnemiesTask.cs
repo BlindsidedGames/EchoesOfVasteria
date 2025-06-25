@@ -7,15 +7,15 @@ namespace TimelessEchoes.Tasks
     /// <summary>
     /// Task requiring a number of enemies to be defeated.
     /// </summary>
-    public class KillEnemiesTask : MonoBehaviour, ITask
+    public class KillEnemiesTask : BaseTask
     {
         [SerializeField] private int requiredKills = 3;
         private int currentKills;
         private Health[] tracked;
 
-        public Transform Target => transform;
+        public override Transform Target => transform;
 
-        public void StartTask()
+        public override void StartTask()
         {
             currentKills = 0;
             tracked = Object.FindObjectsByType<Health>(FindObjectsSortMode.None);
@@ -37,7 +37,7 @@ namespace TimelessEchoes.Tasks
             currentKills++;
         }
 
-        public bool IsComplete()
+        public override bool IsComplete()
         {
             return currentKills >= requiredKills;
         }

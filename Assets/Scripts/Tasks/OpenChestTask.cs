@@ -5,14 +5,14 @@ namespace TimelessEchoes.Tasks
     /// <summary>
     /// Task for opening a chest in the scene.
     /// </summary>
-    public class OpenChestTask : MonoBehaviour, ITask
+    public class OpenChestTask : BaseTask
     {
         [SerializeField] private Transform chest;
         private bool opened;
 
-        public Transform Target => chest;
+        public override Transform Target => chest;
 
-        public void StartTask()
+        public override void StartTask()
         {
             opened = false;
         }
@@ -22,7 +22,7 @@ namespace TimelessEchoes.Tasks
             opened = true;
         }
 
-        public bool IsComplete()
+        public override bool IsComplete()
         {
             return opened;
         }
