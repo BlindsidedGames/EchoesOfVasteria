@@ -39,10 +39,19 @@ namespace TimelessEchoes.Tasks
         public AstarPath Pathfinder => astarPath;
         public CinemachineCamera MapCamera => mapCamera;
 
-        private void Awake()
+        private void AcquireHero()
         {
             if (hero == null)
-                hero = GetComponent<HeroController>();
+            {
+                hero = GetComponentInChildren<HeroController>(true);
+                if (hero == null)
+                    TELogger.Log("TaskController hero reference is null", this);
+            }
+        }
+
+        private void Awake()
+        {
+            AcquireHero();
             if (mapCamera == null)
                 mapCamera = GetComponentInChildren<CinemachineCamera>(true);
         }
@@ -55,6 +64,7 @@ namespace TimelessEchoes.Tasks
 
         private void OnEnable()
         {
+            AcquireHero();
             ResetTasks();
         }
 
@@ -79,6 +89,9 @@ namespace TimelessEchoes.Tasks
 
         public void ResetTasks()
         {
+            AcquireHero();
+            if (hero == null)
+                TELogger.Log("ResetTasks called but hero is null", this);
             currentIndex = -1;
             tasks.Clear();
             taskMap.Clear();
@@ -180,6 +193,8 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public void SelectEarliestTask()
         {
+            if (hero == null)
+                TELogger.Log("SelectEarliestTask called but hero is null", this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
