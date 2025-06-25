@@ -46,6 +46,9 @@ namespace TimelessEchoes.Hero
         private bool allowAttacks = true;
         private ITask currentTask;
 
+        private bool inCombat;
+        private float combatDamageMultiplier = 1f;
+
         private void ApplyStatUpgrades()
         {
             var controller = FindFirstObjectByType<StatUpgradeController>();
@@ -198,20 +201,33 @@ namespace TimelessEchoes.Hero
                     nearest = h.transform;
                 }
             }
-            bool inCombat = nearest != null;
-            if (inCombat)
+            bool nowInCombat = nearest != null;
+            if (nowInCombat)
             {
                 target = nearest;
                 setter.target = nearest;
+                if (!inCombat && diceRoller != null && !isRolling)
+                {
+                    float rate = CurrentAttackRate;
+                    float cooldown = rate > 0f ? 1f / rate : 0.5f;
+                    StartCoroutine(RollForCombat(cooldown));
+                }
             }
             else
             {
+                if (inCombat)
+                {
+                    combatDamageMultiplier = 1f;
+                    diceRoller?.ResetRoll();
+                }
                 if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
                 {
                     taskController.SelectNextTask();
                     target = setter.target;
                 }
             }
+
+            inCombat = nowInCombat;
 
             if (target == null) return;
 
@@ -227,49 +243,27 @@ namespace TimelessEchoes.Hero
                 if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
                 {
                     lastMoveDir = target.position - transform.position;
-                    if (diceRoller != null)
-                        StartCoroutine(RollAndAttack(target, cooldown));
-                    else
-                        Attack(target, 1);
+                    Attack(target);
+                    lastAttack = Time.time;
                 }
             }
         }
 
-
-        private IEnumerator RollAndAttack(Transform target, float cooldown)
+        private IEnumerator RollForCombat(float duration)
         {
-            if (stats.projectilePrefab == null || target == null)
-                yield break;
-
-            var enemy = target.GetComponent<Enemies.Health>();
-            if (enemy == null || enemy.CurrentHealth <= 0f)
+            if (diceRoller == null)
                 yield break;
 
             isRolling = true;
             lastAttack = Time.time;
 
-            Coroutine rollRoutine = StartCoroutine(diceRoller.Roll(cooldown));
-            float end = Time.time + cooldown;
-            while (Time.time < end)
-            {
-                if (target == null)
-                {
-                    diceRoller?.ResetRoll();
-                    if (rollRoutine != null)
-                        StopCoroutine(rollRoutine);
-                    isRolling = false;
-                    yield break;
-                }
-                yield return null;
-            }
+            yield return StartCoroutine(diceRoller.Roll(duration));
 
-            yield return rollRoutine;
-            if (target != null)
-                Attack(target, diceRoller != null ? diceRoller.Result : 1);
+            combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
             isRolling = false;
         }
 
-        private void Attack(Transform target, float dmgMultiplier)
+        private void Attack(Transform target)
         {
             if (stats.projectilePrefab == null || target == null) return;
 
@@ -282,7 +276,7 @@ namespace TimelessEchoes.Hero
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(target, (baseDamage + damageBonus) * dmgMultiplier);
+                proj.Init(target, (baseDamage + damageBonus) * combatDamageMultiplier);
         }
     }
 }
