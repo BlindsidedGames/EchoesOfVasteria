@@ -206,13 +206,17 @@ namespace TimelessEchoes.Hero
                 setter = GetComponent<AIDestinationSetter>();
 
             if (setter != null)
+            {
                 setter.target = task != null ? task.Target : null;
+                ai?.SearchPath();
+            }
         }
 
         public void SetDestination(Transform dest)
         {
             destinationOverride = false;
             setter.target = dest;
+            ai?.SearchPath();
         }
 
         /// <summary>
