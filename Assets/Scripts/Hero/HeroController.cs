@@ -145,7 +145,11 @@ namespace TimelessEchoes.Hero
             // If we're nearly stationary but have a target, face the target so
             // attack animations look correct when an enemy passes by.
             if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
+            {
                 dir = setter.target.position - transform.position;
+                if (currentTask is MiningTask mine && mine.InProgress && mine.Rock != null)
+                    dir = mine.Rock.position - transform.position;
+            }
 
             if (fourDirectional)
             {
