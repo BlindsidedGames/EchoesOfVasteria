@@ -210,6 +210,13 @@ namespace TimelessEchoes.Hero
         {
             if (dest == null || ai == null)
                 return false;
+
+            // Consider the destination reached if the pathfinding component
+            // reports it cannot move any closer. This handles cases where the
+            // target point is not directly reachable by the navmesh.
+            if (ai.reachedDestination || ai.reachedEndOfPath)
+                return true;
+
             float threshold = ai.endReachedDistance + 0.1f;
             return Vector2.Distance(transform.position, dest.position) <= threshold;
         }
