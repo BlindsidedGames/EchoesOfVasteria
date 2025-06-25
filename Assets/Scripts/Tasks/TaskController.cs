@@ -49,17 +49,14 @@ namespace TimelessEchoes.Tasks
         private void Update()
         {
             RemoveDeadEnemyTasks();
-            RemoveCompletedTasks();
+
             if (currentIndex < 0 || currentIndex >= tasks.Count)
-            {
-                SelectEarliestTask();
                 return;
-            }
 
             var active = tasks[currentIndex];
 
-            if (active == null || active.IsComplete())
-                SelectEarliestTask();
+            if (active.IsComplete())
+                SelectNextTask();
         }
 
         private void OnEnable()
@@ -130,7 +127,7 @@ namespace TimelessEchoes.Tasks
 
             hero?.SetTask(null);
             hero?.SetDestination(entryPoint);
-            SelectEarliestTask();
+            SelectNextTask();
         }
 
 
@@ -180,85 +177,8 @@ namespace TimelessEchoes.Tasks
             if (removed && hero != null)
             {
                 hero.SetTask(null);
+                SelectNextTask();
             }
-        }
-
-        /// <summary>
-        ///     Remove completed or null tasks from the list.
-        /// </summary>
-        private void RemoveCompletedTasks()
-        {
-            var removed = false;
-            for (var i = tasks.Count - 1; i >= 0; i--)
-            {
-                var task = tasks[i];
-                if (task == null || task.IsComplete())
-                {
-                    if (i <= currentIndex)
-                        currentIndex--;
-                    tasks.RemoveAt(i);
-                    if (taskMap.TryGetValue(task, out var obj))
-                    {
-                        taskObjects.Remove(obj);
-                        taskMap.Remove(task);
-                    }
-                    if (task is Component comp)
-                        Destroy(comp);
-                    removed = true;
-                }
-            }
-
-            if (removed && hero != null)
-            {
-                hero.SetTask(null);
-            }
-        }
-
-        /// <summary>
-        ///     Explicitly remove a task from the controller.
-        /// </summary>
-        public void RemoveTask(ITask task)
-        {
-            if (task == null)
-                return;
-            var index = tasks.IndexOf(task);
-            if (index >= 0)
-            {
-                if (index <= currentIndex)
-                    currentIndex--;
-                tasks.RemoveAt(index);
-            }
-            if (taskMap.TryGetValue(task, out var obj))
-            {
-                taskObjects.Remove(obj);
-                taskMap.Remove(task);
-            }
-            if (task is Component comp)
-                Destroy(comp);
-        }
-
-        /// <summary>
-        ///     Select the earliest available task and start it.
-        /// </summary>
-        public void SelectEarliestTask()
-        {
-            RemoveDeadEnemyTasks();
-            RemoveCompletedTasks();
-
-            for (var i = 0; i < tasks.Count; i++)
-            {
-                var task = tasks[i];
-                if (task == null || task.IsComplete())
-                    continue;
-                currentIndex = i;
-                currentTaskName = task.GetType().Name;
-                hero?.SetTask(task);
-                task.StartTask();
-                return;
-            }
-
-            currentTaskName = "Complete";
-            hero?.SetDestination(exitPoint);
         }
 
         /// <summary>
