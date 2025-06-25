@@ -48,6 +48,11 @@ namespace TimelessEchoes.Hero
         private bool allowAttacks = true;
         private ITask currentTask;
 
+        private enum HeroState { Idle, Moving, Mining, Combat }
+        private HeroState state = HeroState.Idle;
+        private float miningTimer;
+        private MiningTask activeMiningTask;
+
         private bool inCombat;
         private float combatDamageMultiplier = 1f;
 
@@ -127,6 +132,9 @@ namespace TimelessEchoes.Hero
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
             currentTask = null;
+            state = HeroState.Idle;
+            miningTimer = 0f;
+            activeMiningTask = null;
             lastAttack = Time.time - 1f / CurrentAttackRate;
         }
 
@@ -172,12 +180,34 @@ namespace TimelessEchoes.Hero
         public void SetTask(ITask task)
         {
             currentTask = task;
-            // Ensure the destination setter is initialized even if Awake has not run yet
             if (setter == null)
                 setter = GetComponent<AIDestinationSetter>();
 
-            if (setter != null)
-                setter.target = task != null ? task.Target : null;
+            miningTimer = 0f;
+            activeMiningTask = null;
+
+            if (task == null)
+            {
+                state = HeroState.Idle;
+                if (setter != null)
+                    setter.target = null;
+                ai.canMove = true;
+                return;
+            }
+
+            if (task is MiningTask mine)
+            {
+                activeMiningTask = mine;
+                if (setter != null)
+                    setter.target = mine.GetNearestPoint(transform);
+            }
+            else
+            {
+                if (setter != null)
+                    setter.target = task.Target;
+            }
+            ai.canMove = true;
+            state = HeroState.Moving;
         }
 
         public void SetDestination(Transform dest)
@@ -191,9 +221,7 @@ namespace TimelessEchoes.Hero
         private void UpdateBehavior()
         {
             if (stats == null) return;
-            var target = setter.target;
 
-            // Find closest enemy within vision range
             var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
             Transform nearest = null;
             float best = float.MaxValue;
@@ -208,17 +236,19 @@ namespace TimelessEchoes.Hero
                     nearest = h.transform;
                 }
             }
+
             bool nowInCombat = nearest != null;
             if (nowInCombat)
             {
-                target = nearest;
-                setter.target = nearest;
+                if (setter != null)
+                    setter.target = nearest;
                 if (!inCombat && diceRoller != null && !isRolling)
                 {
                     float rate = CurrentAttackRate;
                     float cooldown = rate > 0f ? 1f / rate : 0.5f;
                     StartCoroutine(RollForCombat(cooldown));
                 }
+                state = HeroState.Combat;
             }
             else
             {
@@ -226,33 +256,102 @@ namespace TimelessEchoes.Hero
                 {
                     combatDamageMultiplier = 1f;
                     diceRoller?.ResetRoll();
-                }
-                if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
-                {
-                    taskController.SelectNextTask();
-                    target = setter.target;
+                    state = HeroState.Idle;
+                    taskController?.SelectEarliestTask();
                 }
             }
 
             inCombat = nowInCombat;
 
-            if (target == null) return;
-
-            var enemy = target.GetComponent<Enemies.Health>();
-            if (enemy == null) return;
-            if (enemy.CurrentHealth <= 0f) return;
-
-            var dist = Vector2.Distance(transform.position, target.position);
-            if (dist <= stats.visionRange)
+            if (state == HeroState.Combat)
             {
-                float rate = CurrentAttackRate;
-                float cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
-                if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
+                if (nearest == null) return;
+                var enemy = nearest.GetComponent<Enemies.Health>();
+                if (enemy == null || enemy.CurrentHealth <= 0f) return;
+
+                var dist = Vector2.Distance(transform.position, nearest.position);
+                if (dist <= stats.visionRange)
                 {
-                    lastMoveDir = target.position - transform.position;
-                    Attack(target);
-                    lastAttack = Time.time;
+                    float rate = CurrentAttackRate;
+                    float cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
+                    if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
+                    {
+                        lastMoveDir = nearest.position - transform.position;
+                        Attack(nearest);
+                        lastAttack = Time.time;
+                    }
                 }
+                return;
+            }
+
+            switch (state)
+            {
+                case HeroState.Idle:
+                    if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
+                        taskController.SelectEarliestTask();
+                    break;
+                case HeroState.Moving:
+                    if (currentTask == null)
+                    {
+                        state = HeroState.Idle;
+                        break;
+                    }
+                    if (ai.reachedDestination)
+                    {
+                        if (currentTask is MiningTask mine)
+                        {
+                            activeMiningTask = mine;
+                            ai.canMove = false;
+                            if (setter != null)
+                                setter.target = transform;
+                            miningTimer = 0f;
+                            mine.BeginMining();
+                            animator?.Play("Mining");
+                            state = HeroState.Mining;
+                        }
+                        else if (currentTask is TalkToNpcTask talk)
+                        {
+                            talk.Interact();
+                            taskController?.RemoveTask(currentTask);
+                            currentTask = null;
+                            state = HeroState.Idle;
+                            taskController?.SelectEarliestTask();
+                        }
+                        else if (currentTask is OpenChestTask chest)
+                        {
+                            chest.Open();
+                            taskController?.RemoveTask(currentTask);
+                            currentTask = null;
+                            state = HeroState.Idle;
+                            taskController?.SelectEarliestTask();
+                        }
+                        else
+                        {
+                            state = HeroState.Idle;
+                        }
+                    }
+                    break;
+                case HeroState.Mining:
+                    if (activeMiningTask == null)
+                    {
+                        ai.canMove = true;
+                        state = HeroState.Idle;
+                        break;
+                    }
+                    miningTimer += Time.deltaTime;
+                    activeMiningTask.UpdateProgress((activeMiningTask.MineTime - miningTimer) / activeMiningTask.MineTime);
+                    if (miningTimer >= activeMiningTask.MineTime)
+                    {
+                        activeMiningTask.FinishMining();
+                        taskController?.RemoveTask(activeMiningTask);
+                        activeMiningTask = null;
+                        ai.canMove = true;
+                        currentTask = null;
+                        animator?.SetTrigger("StopMining");
+                        state = HeroState.Idle;
+                        taskController?.SelectEarliestTask();
+                    }
+                    break;
             }
         }
 
