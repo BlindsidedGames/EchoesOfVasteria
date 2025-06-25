@@ -106,7 +106,6 @@ namespace TimelessEchoes.Tasks
                     }
                 }
 
-            Destroy(gameObject);
         }
     }
 }

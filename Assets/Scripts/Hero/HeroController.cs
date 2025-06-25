@@ -388,9 +388,7 @@ namespace TimelessEchoes.Hero
                 TELogger.Log($"Finished mining {miningTask.name}", this);
                 ai.canMove = true;
                 animator?.SetTrigger("StopMining");
-                taskController?.RemoveTask(miningTask);
                 miningTask.CompleteTask();
-                SetTask(null);
                 taskController?.SelectEarliestTask();
                 miningTask = null;
                 state = State.Idle;
