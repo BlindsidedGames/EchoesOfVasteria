@@ -71,7 +71,7 @@ namespace Pathfinding {
 		void DirtyBounds(Bounds bounds);
 	}
 
-	class GraphUpdateProcessor {
+	public class GraphUpdateProcessor {
 		/// <summary>Holds graphs that can be updated</summary>
 		readonly AstarPath astar;
 

@@ -1445,16 +1445,15 @@ namespace Pathfinding.Drawing {
 			version++;
 		}
 
-		class MeshCompareByDrawingOrder : IComparer<RenderedMeshWithType> {
-			public int Compare (RenderedMeshWithType a, RenderedMeshWithType b) {
-				// Extract if the meshes are Solid/Lines/Text
-				var ta = (int)a.type & 0x7;
-				var tb = (int)b.type & 0x7;
-				return ta != tb ? ta - tb : a.drawingOrderIndex - b.drawingOrderIndex;
-			}
+		static int MeshCompareByDrawingOrder (RenderedMeshWithType a, RenderedMeshWithType b) {
+			// Extract if the meshes are Solid/Lines/Text
+			var ta = (int)a.type & 0x7;
+			var tb = (int)b.type & 0x7;
+			return ta != tb ? ta - tb : a.drawingOrderIndex - b.drawingOrderIndex;
 		}
 
-		static readonly MeshCompareByDrawingOrder meshSorter = new MeshCompareByDrawingOrder();
+		static readonly System.Comparison<RenderedMeshWithType> meshSorter = MeshCompareByDrawingOrder;
+
 		// Temporary array, cached to avoid allocations
 		Plane[] frustrumPlanes = new Plane[6];
 		// Temporary block, cached to avoid allocations

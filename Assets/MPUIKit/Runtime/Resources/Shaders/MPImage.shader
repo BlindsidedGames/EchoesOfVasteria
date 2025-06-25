@@ -18,6 +18,9 @@ Shader "MPUI/Procedural Image"
         
         _RectangleCornerRadius ("Rectangle Corner Radius", Vector) = (0, 0, 0, 0)
         _CircleRadius ("Circle Radius", float) = 0
+        _ChamferSize ("Chamfer Size", float) = 0
+        _ParallelogramSkew ("Parallelogram Skew", Float) = 0
+        _ParallelogramCornerRadius ("Parallelogram Corner Radius", Float) = 0
         _CircleFitRadius ("Fit Circle Radius", float) = 0
         _PentagonCornerRadius ("Pentagon Corner Radius", Vector) = (0, 0, 0, 0)
         _PentagonTipRadius ("Pentagon Triangle Radius", float) = 0
@@ -115,7 +118,7 @@ Shader "MPUI/Procedural Image"
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
             
-            #pragma multi_compile_local _ CIRCLE TRIANGLE RECTANGLE PENTAGON HEXAGON NSTAR_POLYGON
+            #pragma multi_compile_local _ CIRCLE TRIANGLE RECTANGLE PENTAGON HEXAGON NSTAR_POLYGON PARALLELOGRAM CHAMFER_BOX
             
             #pragma multi_compile_local _ STROKE OUTLINED OUTLINED_STROKE
             #pragma multi_compile_local _ GRADIENT_LINEAR GRADIENT_RADIAL GRADIENT_CORNER
@@ -181,6 +184,16 @@ Shader "MPUI/Procedural Image"
                 float _PentagonTipRadius;
                 float _PentagonTipSize;
             #endif
+
+            #if PARALLELOGRAM
+                float _ParallelogramSkew;
+                float _ParallelogramCornerRadius;
+            #endif
+
+            #if CHAMFER_BOX
+                float _ChamferSize;
+            #endif
+            
             
             #if TRIANGLE
                 float3 _TriangleCornerRadius;
@@ -517,6 +530,31 @@ Shader "MPUI/Procedural Image"
                 }
                 
             #endif
+
+            #if CHAMFER_BOX
+                float chamferBoxScene(float4 _additionalData)
+                {
+                    float2 _size = float2(_additionalData.z * 0.5, _additionalData.w * 0.5);
+                    float2 _texcoord = _additionalData.xy - _size;
+
+                    float sdf = sdChamferBox(_texcoord, _size, _ChamferSize);
+                    return sdf;
+                }
+            #endif
+
+            #if PARALLELOGRAM
+                float parallelogramScene(float4 _additionalData)
+                {
+                    float2 _size = float2(_additionalData.z, _additionalData.w) * 0.5;
+                    float2 _texcoord = _additionalData.xy - _size;
+                    
+                    _size -= float2(1.0, 1.0) * _ParallelogramCornerRadius;
+                    _size.x -= abs(_ParallelogramSkew);
+
+                    float sdf = sdParallelogram(_texcoord, _size, _ParallelogramSkew, _ParallelogramCornerRadius);
+                    return sdf;
+                }
+            #endif
             
             
             #if NSTAR_POLYGON
@@ -622,7 +660,7 @@ Shader "MPUI/Procedural Image"
                     color *= finalCol;
                 #endif
                 
-                #if RECTANGLE || CIRCLE || PENTAGON || TRIANGLE || HEXAGON || NSTAR_POLYGON
+                #if RECTANGLE || CIRCLE || PENTAGON || TRIANGLE || HEXAGON || NSTAR_POLYGON || PARALLELOGRAM || CHAMFER_BOX
                     float sdfData = 0;
                     float pixelScale = clamp(1.0/_FalloffDistance, 1.0/2048.0, 2048.0);
                     #if RECTANGLE
@@ -637,6 +675,14 @@ Shader "MPUI/Procedural Image"
                         sdfData = hexagonScene(IN.shapeData);
                     #elif NSTAR_POLYGON
                         sdfData = nStarPolygonScene(IN.shapeData);
+                    #endif
+
+                    #if PARALLELOGRAM
+                        sdfData = parallelogramScene(IN.shapeData);
+                    #endif
+
+                    #if CHAMFER_BOX
+                        sdfData = chamferBoxScene(IN.shapeData);
                     #endif
                 
                     #if !OUTLINED && !STROKE && !OUTLINED_STROKE

@@ -39,6 +39,7 @@ namespace Pathfinding {
 		public void Start () {
 			// Cache the Main Camera
 			cam = Camera.main;
+			useGUILayout = false;
 		}
 
 		public void OnGUI () {

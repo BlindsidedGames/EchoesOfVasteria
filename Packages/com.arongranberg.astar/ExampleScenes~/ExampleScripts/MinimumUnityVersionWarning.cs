@@ -28,7 +28,6 @@ namespace Pathfinding.Examples {
 			yield return null;
 			Awake();
 		}
-#endif
 
 		void OnGUI () {
 #if !UNITY_2022_3_OR_NEWER
@@ -68,5 +67,6 @@ namespace Pathfinding.Examples {
 			}
 #endif
 		}
+#endif
 	}
 }

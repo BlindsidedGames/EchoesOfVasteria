@@ -10,7 +10,7 @@ namespace MPUIKIT.Editor
         private static bool _setup;
         private static bool _alreadyShownOnStartup;
         private bool _initialized;
-        private string _version = "Version: 1.2.1";
+        private string _version = "Version: 1.2.3";
         private static MPUIKitSettings _settings;
         private static bool _setupIsRequired;
         private static UnityEditor.Editor _settingsEditor;

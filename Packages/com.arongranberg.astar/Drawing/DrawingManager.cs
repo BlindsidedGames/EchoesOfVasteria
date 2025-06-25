@@ -52,9 +52,14 @@ namespace Pathfinding.Drawing {
 				DrawingManager.MarkerRefreshSelectionCache.Begin();
 				activeTransform = Selection.activeTransform;
 				selectedTransforms.Clear();
-				var topLevel = Selection.transforms;
-				for (int i = 0; i < topLevel.Length; i++) selectedTransforms.Add(topLevel[i]);
-				selectionSize = topLevel.Length;
+				// Optimization to avoid allocating an empty array when calling Selection.transforms in many cases
+				if (Selection.count > 0) {
+					var topLevel = Selection.transforms;
+					for (int i = 0; i < topLevel.Length; i++) selectedTransforms.Add(topLevel[i]);
+					selectionSize = topLevel.Length;
+				} else {
+					selectionSize = 0;
+				}
 				DrawingManager.MarkerRefreshSelectionCache.End();
 			}
 #endif
@@ -136,11 +141,14 @@ namespace Pathfinding.Drawing {
 		public DrawingData gizmos;
 		static List<GizmoDrawerGroup> gizmoDrawers = new List<GizmoDrawerGroup>();
 		static Dictionary<System.Type, int> gizmoDrawerIndices = new Dictionary<System.Type, int>();
+#if UNITY_EDITOR
+		static float lastGizmoInfoRefresh = float.NegativeInfinity;
+#endif
 		static bool ignoreAllDrawing;
 		static DrawingManager _instance;
 		bool framePassed;
 		int lastFrameCount = int.MinValue;
-		float lastFrameTime = -float.NegativeInfinity;
+		float lastFrameTime = float.NegativeInfinity;
 		int lastFilterFrame;
 #if UNITY_EDITOR
 		bool builtGizmos;
@@ -605,35 +613,42 @@ namespace Pathfinding.Drawing {
 
 			MarkerGizmosAllowed.Begin();
 
-			// Figure out which component types should be rendered
-			for (int i = 0; i < gizmoDrawers.Count; i++) {
-				var group = gizmoDrawers[i];
+			// When playing, reduce how often we check for updates to the gizmo info, to avoid allocating garbage unnecessarily.
+			// It's not possible to check for gizmo info without generating garbage unfortunately.
+			bool refreshGizmoInfo = !Application.isPlaying || Time.realtimeSinceStartup - lastGizmoInfoRefresh > 0.1f;
+			if (refreshGizmoInfo) {
+				lastGizmoInfoRefresh = Time.realtimeSinceStartup;
+
+				// Figure out which component types should be rendered
+				for (int i = 0; i < gizmoDrawers.Count; i++) {
+					var group = gizmoDrawers[i];
 #if UNITY_2022_1_OR_NEWER
-				// In Unity 2022.1 we can use a new utility class which is more robust.
-				if (GizmoUtility.TryGetGizmoInfo(group.type, out var gizmoInfo)) {
-					group.enabled = gizmoInfo.gizmoEnabled;
-				} else {
-					group.enabled = true;
-				}
-#else
-				// We take advantage of the fact that IsGizmosAllowedForObject only depends on the type of the object and if it is active and enabled
-				// and not the specific object instance.
-				// When using a render pipeline the ShouldDrawGizmos method cannot be used because it seems to occasionally crash Unity :(
-				// So we need these two separate cases.
-				if (!usingRenderPipeline) {
-					group.enabled = false;
-					for (int j = group.drawers.Count - 1; j >= 0; j--) {
-						// Find the first active and enabled drawer
-						if ((group.drawers[j] as MonoBehaviour).isActiveAndEnabled) {
-							group.enabled = ShouldDrawGizmos((UnityEngine.Object)group.drawers[j]);
-							break;
-						}
+					// In Unity 2022.1 we can use a new utility class which is more robust.
+					if (GizmoUtility.TryGetGizmoInfo(group.type, out var gizmoInfo)) {
+						group.enabled = gizmoInfo.gizmoEnabled;
+					} else {
+						group.enabled = true;
 					}
-				} else {
-					group.enabled = true;
-				}
+#else
+					// We take advantage of the fact that IsGizmosAllowedForObject only depends on the type of the object and if it is active and enabled
+					// and not the specific object instance.
+					// When using a render pipeline the ShouldDrawGizmos method cannot be used because it seems to occasionally crash Unity :(
+					// So we need these two separate cases.
+					if (!usingRenderPipeline) {
+						group.enabled = false;
+						for (int j = group.drawers.Count - 1; j >= 0; j--) {
+							// Find the first active and enabled drawer
+							if ((group.drawers[j] as MonoBehaviour).isActiveAndEnabled) {
+								group.enabled = ShouldDrawGizmos((UnityEngine.Object)group.drawers[j]);
+								break;
+							}
+						}
+					} else {
+						group.enabled = true;
+					}
 #endif
-				gizmoDrawers[i] = group;
+					gizmoDrawers[i] = group;
+				}
 			}
 
 			MarkerGizmosAllowed.End();
@@ -735,8 +750,7 @@ namespace Pathfinding.Drawing {
 			var tp = item.GetType();
 
 			int index;
-			if (gizmoDrawerIndices.TryGetValue(tp, out index)) {
-			} else {
+			if (!gizmoDrawerIndices.TryGetValue(tp, out index)) {
 				// Use reflection to figure out if the DrawGizmos method has not been overriden from the MonoBehaviourGizmos class.
 				// If it hasn't, then we know that this type will never draw gizmos and we can skip it.
 				// This improves performance by not having to keep track of objects and check if they are active and enabled every frame.
@@ -756,6 +770,9 @@ namespace Pathfinding.Drawing {
 						drawers = new List<IDrawGizmos>(),
 						profilerMarker = new ProfilerMarker(ProfilerCategory.Render, "Gizmos for " + tp.Name),
 					});
+#if UNITY_EDITOR
+					lastGizmoInfoRefresh = float.NegativeInfinity;
+#endif
 				} else {
 					index = gizmoDrawerIndices[tp] = -1;
 				}

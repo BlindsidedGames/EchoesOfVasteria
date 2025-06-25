@@ -14,6 +14,8 @@ namespace MPUIKIT.Editor {
         private SerializedProperty spTriangleCornerRadius, spTriangleUniformCornerRadius;
         private SerializedProperty spRectangleCornerRadius, spRectangleUniformCornerRadius;
         private SerializedProperty spNStarPolygonSideCount, spNStarPolygonInset, spNStarPolygonCornerRadius;
+        private SerializedProperty spChamferSize;
+        private SerializedProperty spParallelogramSkew, spParallelogramCornerRadius;
 
         private SerializedProperty spPreserveAspect;
         private SerializedProperty spFillMethod, spFillOrigin, spFillAmount, spFillClockwise;
@@ -56,6 +58,9 @@ namespace MPUIKIT.Editor {
             spNStarPolygonSideCount = serializedObject.FindProperty("m_NStarPolygonSideCount");
             spNStarPolygonInset = serializedObject.FindProperty("m_NStarPolygonInset");
             spNStarPolygonCornerRadius = serializedObject.FindProperty("m_NStarPolygonCornerRadius");
+            spChamferSize = serializedObject.FindProperty("m_ChamferSize");
+            spParallelogramSkew = serializedObject.FindProperty("m_ParallelogramSkew");
+            spParallelogramCornerRadius = serializedObject.FindProperty("m_ParallelogramCornerRadius");
 
             spPreserveAspect = serializedObject.FindProperty("m_PreserveAspect");
         }
@@ -91,6 +96,12 @@ namespace MPUIKIT.Editor {
                     switch ((DrawShape) spShape.enumValueIndex) {
                         case DrawShape.Circle:
                             CircleGUI();
+                            break;
+                        case DrawShape.ChamferBox:
+                            ChamferBoxGUI();
+                            break;
+                        case DrawShape.Parallelogram:
+                            ParallelogramGUI();
                             break;
                         case DrawShape.Rectangle:
                             RectangleGUI();
@@ -151,6 +162,15 @@ namespace MPUIKIT.Editor {
             EditorGUI.EndDisabledGroup();
             Rect rect = EditorGUILayout.GetControlRect();
             MPEditorUtility.CornerRadiusModeGUI(rect, ref spCircleFitToRect, new[] {"Free", "Fit"}, String.Empty);
+        }
+        
+        private void ChamferBoxGUI() {
+            EditorGUILayout.PropertyField(spChamferSize, new GUIContent("Chamfer Size"));
+        }
+        
+        private void ParallelogramGUI() {
+            EditorGUILayout.PropertyField(spParallelogramSkew, new GUIContent("Skew"));
+            EditorGUILayout.PropertyField(spParallelogramCornerRadius, new GUIContent("Corner Radius"));
         }
 
         private void RectangleGUI() {
@@ -521,6 +541,8 @@ namespace MPUIKIT.Editor {
             Circle = 1,
             Triangle = 2,
             Rectangle = 3,
+            ChamferBox = 4,
+            Parallelogram = 5,
             NStarPolygon = 6
         }
     }

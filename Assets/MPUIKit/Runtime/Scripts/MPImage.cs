@@ -33,6 +33,8 @@ namespace MPUIKIT {
 
         [SerializeField] private Triangle m_Triangle = new Triangle();
         [SerializeField] private Rectangle m_Rectangle = new Rectangle();
+        [SerializeField] private ChamferBox m_ChamferBox = new ChamferBox();
+        [SerializeField] private Parallelogram m_Parallelogram = new Parallelogram();
         [SerializeField] private Circle m_Circle = new Circle();
         [SerializeField] private Pentagon m_Pentagon = new Pentagon();
         [SerializeField] private Hexagon m_Hexagon = new Hexagon();
@@ -288,6 +290,22 @@ namespace MPUIKIT {
                 SetMaterialDirty();
             }
         }
+        
+        public ChamferBox ChamferBox {
+            get => m_ChamferBox;
+            set {
+                m_ChamferBox = value;
+                SetMaterialDirty();
+            }
+        }
+        
+        public Parallelogram Parallelogram {
+            get => m_Parallelogram;
+            set {
+                m_Parallelogram = value;
+                SetMaterialDirty();
+            }
+        }
 
         public Circle Circle{
             get => m_Circle;
@@ -405,6 +423,8 @@ namespace MPUIKIT {
             m_Triangle.OnValidate();
             m_Circle.OnValidate();
             m_Rectangle.OnValidate();
+            m_ChamferBox.OnValidate();
+            m_Parallelogram.OnValidate();
             m_Pentagon.OnValidate();
             m_Hexagon.OnValidate();
             m_NStarPolygon.OnValidate();
@@ -421,6 +441,8 @@ namespace MPUIKIT {
             m_Circle.Init(m_Material, material, rectTransform);
             m_Triangle.Init(m_Material, material, rectTransform);
             m_Rectangle.Init(m_Material, material, rectTransform);
+            m_ChamferBox.Init(m_Material, material, rectTransform);
+            m_Parallelogram.Init(m_Material, material, rectTransform);
             m_Pentagon.Init(m_Material, material, rectTransform);
             m_Hexagon.Init(m_Material, material, rectTransform);
             m_NStarPolygon.Init(m_Material, material, rectTransform);
@@ -475,6 +497,8 @@ namespace MPUIKIT {
                 m_Circle.OnComponentSettingsChanged += OnComponentSettingsChanged;
                 m_Triangle.OnComponentSettingsChanged += OnComponentSettingsChanged;
                 m_Rectangle.OnComponentSettingsChanged += OnComponentSettingsChanged;
+                m_ChamferBox.OnComponentSettingsChanged += OnComponentSettingsChanged;
+                m_Parallelogram.OnComponentSettingsChanged += OnComponentSettingsChanged;
                 m_Pentagon.OnComponentSettingsChanged += OnComponentSettingsChanged;
                 m_Hexagon.OnComponentSettingsChanged += OnComponentSettingsChanged;
                 m_NStarPolygon.OnComponentSettingsChanged += OnComponentSettingsChanged;
@@ -484,6 +508,8 @@ namespace MPUIKIT {
                 m_Circle.OnComponentSettingsChanged -= OnComponentSettingsChanged;
                 m_Triangle.OnComponentSettingsChanged -= OnComponentSettingsChanged;
                 m_Rectangle.OnComponentSettingsChanged -= OnComponentSettingsChanged;
+                m_ChamferBox.OnComponentSettingsChanged -= OnComponentSettingsChanged;
+                m_Parallelogram.OnComponentSettingsChanged -= OnComponentSettingsChanged;
                 m_Pentagon.OnComponentSettingsChanged -= OnComponentSettingsChanged;
                 m_Hexagon.OnComponentSettingsChanged -= OnComponentSettingsChanged;
                 m_NStarPolygon.OnComponentSettingsChanged -= OnComponentSettingsChanged;
@@ -574,7 +600,8 @@ namespace MPUIKIT {
             m_Pentagon.ModifyMaterial(ref mat);
             m_Hexagon.ModifyMaterial(ref mat);
             m_NStarPolygon.ModifyMaterial(ref mat);
-
+            m_ChamferBox.ModifyMaterial(ref mat);
+            m_Parallelogram.ModifyMaterial(ref mat);
             m_GradientEffect.ModifyMaterial(ref mat);
 
 
@@ -586,6 +613,7 @@ namespace MPUIKIT {
                     mat.DisableKeyword("PENTAGON");
                     mat.DisableKeyword("HEXAGON");
                     mat.DisableKeyword("NSTAR_POLYGON");
+                    mat.DisableKeyword("PARALLELOGRAM");
                     break;
                 case DrawShape.Circle:
                     mat.EnableKeyword("CIRCLE");
@@ -604,6 +632,12 @@ namespace MPUIKIT {
                     break;
                 case DrawShape.Hexagon:
                     mat.EnableKeyword("HEXAGON");
+                    break;
+                case DrawShape.ChamferBox:
+                    mat.EnableKeyword("CHAMFER_BOX");
+                    break;
+                case DrawShape.Parallelogram:
+                    mat.EnableKeyword("PARALLELOGRAM");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -629,6 +663,8 @@ namespace MPUIKIT {
             mat.DisableKeyword("PENTAGON");
             mat.DisableKeyword("HEXAGON");
             mat.DisableKeyword("NSTAR_POLYGON");
+            mat.DisableKeyword("CHAMFER_BOX");
+            mat.DisableKeyword("PARALLELOGRAM");
 
             mat.DisableKeyword("STROKE");
             mat.DisableKeyword("OUTLINED");
@@ -663,6 +699,8 @@ namespace MPUIKIT {
             m_Triangle.InitValuesFromMaterial(ref mat);
             m_Circle.InitValuesFromMaterial(ref mat);
             m_Rectangle.InitValuesFromMaterial(ref mat);
+            m_ChamferBox.InitValuesFromMaterial(ref mat);
+            m_Parallelogram.InitValuesFromMaterial(ref mat);
             m_Pentagon.InitValuesFromMaterial(ref mat);
             m_Hexagon.InitValuesFromMaterial(ref mat);
             m_NStarPolygon.InitValuesFromMaterial(ref mat);

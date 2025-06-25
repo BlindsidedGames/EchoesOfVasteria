@@ -21,8 +21,14 @@ namespace MPUIKIT.Editor
 		private static readonly MethodInfo doFloatFieldMethod = editorGUIType.GetMethod("DoFloatField",
 			BindingFlags.NonPublic | BindingFlags.Static, null, argumentTypes, null);
 
+		
+#if UNITY_6000_0_OR_NEWER
 		private static readonly FieldInfo fieldInfo =
 			editorGUIType.GetField("s_RecycledEditorInternal", BindingFlags.NonPublic | BindingFlags.Static);
+#else 
+		private static readonly FieldInfo fieldInfo =
+			editorGUIType.GetField("s_RecycledEditor", BindingFlags.NonPublic | BindingFlags.Static);
+#endif
 
 		private static readonly object recycledEditor = fieldInfo.GetValue(null);
 		private static readonly GUIStyle style = EditorStyles.numberField;

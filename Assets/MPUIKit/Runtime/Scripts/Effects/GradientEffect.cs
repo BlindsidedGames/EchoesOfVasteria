@@ -72,21 +72,21 @@ namespace MPUIKIT {
                     for (int i = 0; i < 8; i++) {
                         if (i < m_Gradient.colorKeys.Length) {
                             Color col = m_Gradient.colorKeys[i].color;
-                            Vector4 data = new Vector4(col.r, col.g, col.b, 
+                            Color colorData = new Vector4(col.r, col.g, col.b, 
                                 m_Gradient.colorKeys[i].time);
-                            Colors.Add(data);
-                            SharedMat.SetColor("_GradientColor"+i, data);
+                            Colors.Add(colorData);
+                            SharedMat.SetColor("_GradientColor"+i, colorData);
                         }
                         else {
                             SharedMat.SetColor("_GradientColor"+i, Vector4.zero);
                         }
                         if (i < m_Gradient.alphaKeys.Length) {
-                            Vector4 data = new Vector4(m_Gradient.alphaKeys[i].alpha, m_Gradient.alphaKeys[i].time);
-                            Alphas.Add(data);
-                            SharedMat.SetColor("_GradientAlpha"+i, data);
+                            Color colorData = new Vector4(m_Gradient.alphaKeys[i].alpha, m_Gradient.alphaKeys[i].time);
+                            Alphas.Add(colorData);
+                            SharedMat.SetColor("_GradientAlpha"+i, colorData);
                         }
                         else {
-                            SharedMat.SetColor("_GradientAlpha"+i, Vector4.zero);
+                            SharedMat.SetColor("_GradientAlpha"+i, Color.black);
                         }
                     }
                     

@@ -3,7 +3,7 @@
 namespace MPUIKIT {
     public static class MPMaterials {
         private const string MpBasicProceduralShaderName = "MPUI/Basic Procedural Image";
-        private static string[] MpShapeKeywords = {"CIRCLE", "TRIANGLE", "RECTANGLE", "NSTAR_POLYGON"};
+        private static string[] MpShapeKeywords = {"CIRCLE", "TRIANGLE", "RECTANGLE", "CHAMFER_BOX", "PARALLELOGRAM", "NSTAR_POLYGON"};
         private const string MpStrokeKeyword = "STROKE";
         private const string MpOutlineKeyword = "OUTLINED";
         private const string MpOutlinedStrokeKeyword = "OUTLINED_STROKE";
@@ -17,7 +17,7 @@ namespace MPUIKIT {
             }    
         }
 
-        private static Material[] _materialDB = new Material[16];
+        private static Material[] _materialDB = new Material[24];
 
         internal static ref Material GetMaterial(int shapeIndex, bool stroked, bool outlined) {
             int index = shapeIndex * 4;

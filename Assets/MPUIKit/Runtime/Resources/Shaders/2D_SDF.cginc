@@ -21,6 +21,40 @@ float sdRhombus(float2 p, float2 b) {
 }
 //EndCredit
 
+// Credit: https://www.shadertoy.com/view/3fc3zs | MIT License
+float sdChamferBox(float2 p, float2 b, float chamfer)
+{
+    p = abs(p)-b;
+
+    p = (p.y>p.x) ? p.yx : p.xy;
+    p.y += chamfer;
+    
+    const float k = 1.0-sqrt(2.0);
+    if( p.y<0.0 && p.y+p.x*k<0.0 )
+        return p.x;
+    
+    if( p.x<p.y )
+        return (p.x+p.y)*sqrt(0.5);    
+    
+    return length(p);
+}
+
+//Credit: https://www.shadertoy.com/view/7dlGRf | MIT License
+float sdParallelogram( in float2 p, float2 size, float skew, float radius)
+{
+    float wi = size.x;
+    float he = size.y;
+    float2 e = float2(skew, he);
+    p = (p.y<0.0)?-p:p;
+    float2  w = p - e; w.x -= clamp(w.x,-wi,wi);
+    float2  d = float2(dot(w,w), -w.y);
+    float s = p.x*e.y - p.y*e.x;
+    p = (s<0.0)?-p:p;
+    float2  v = p - float2(wi,0); v -= e*clamp(dot(v,e)/dot(e,e),-1.0,1.0);
+    d = min( d, float2(dot(v,v), wi*he-abs(s)));
+    return sqrt(d.x)*sign(-d.y) - radius;
+}
+
 //Credit: https://www.shadertoy.com/view/MldcD7 | MIT License
 float sdTriangleIsosceles(float2 p, float2 q )
 {

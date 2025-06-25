@@ -33,6 +33,9 @@ namespace MPUIKIT {
         [SerializeField] private float m_CircleRadius;                              // MapTo -> Normal.y
         [SerializeField] private bool m_CircleFitToRect = true;                     // MapTo -> Normal.z
 
+        [SerializeField] private float m_ChamferSize;                               // MapTo -> Normal.y
+        [SerializeField] private float m_ParallelogramSkew;                         // MapTo -> Normal.y
+        [SerializeField] private float m_ParallelogramCornerRadius;                 // MapTo -> Normal.y
         [SerializeField] private int m_NStarPolygonSideCount = 3;                   // MapTo -> Normal.y compressed
         [SerializeField] private float m_NStarPolygonInset = 2f;                    // MapTo -> Normal.y compressed
         [SerializeField] private float m_NStarPolygonCornerRadius;                  // MapTo -> Normal.z
@@ -172,6 +175,31 @@ namespace MPUIKIT {
                 base.SetVerticesDirty();
             }
         }
+        
+        public float ChamferSize {
+            get => m_ChamferSize;
+            set {
+                m_ChamferSize = Mathf.Clamp(value, 0, GetMinSizeHalf());
+                base.SetVerticesDirty();
+            }
+        }
+        
+        public float ParallelogramSkew {
+            get => m_ParallelogramSkew;
+            set {
+                m_ParallelogramSkew = Mathf.Clamp(value, -GetMinWidthHalf(), GetMinWidthHalf());
+                base.SetVerticesDirty();
+            }
+        }
+        
+        public float ParallelogramCornerRadius {
+            get => m_ParallelogramCornerRadius;
+            set {
+                m_ParallelogramCornerRadius = Mathf.Clamp(value, 0, GetMinSizeHalf());
+                base.SetVerticesDirty();
+            }
+        }
+        
         public bool CircleFitToRect {
             get => m_CircleFitToRect;
             set {
@@ -214,6 +242,8 @@ namespace MPUIKIT {
                     case DrawShape.Circle:
                     case DrawShape.Triangle:
                     case DrawShape.Rectangle:
+                    case DrawShape.ChamferBox:
+                    case DrawShape.Parallelogram:
                         return MPMaterials.GetMaterial((int)m_DrawShape - 1, m_StrokeWidth > 0f, m_OutlineWidth > 0f);
                     case DrawShape.Pentagon:
                     case DrawShape.Hexagon:
@@ -261,6 +291,12 @@ namespace MPUIKIT {
         private float GetMinSize() {
             Vector2 size = GetPixelAdjustedRect().size;
             return Mathf.Min(size.x, size.y);
+        }
+
+        private float GetMinWidthHalf()
+        {
+            Vector2 size = GetPixelAdjustedRect().size;
+            return size.x * 0.5f;
         }
 
         private void ConstrainRotationValue() {
@@ -312,6 +348,12 @@ namespace MPUIKIT {
                     data = new Vector4(m_NStarPolygonSideCount, m_NStarPolygonCornerRadius, m_NStarPolygonInset);
                     data = data / Mathf.Min(r.width, r.height);
                     shapeProps = MPImageUtility.Encode_0_1_16(data);
+                    break;
+                case DrawShape.ChamferBox:
+                    shapeProps = new Vector2(m_ChamferSize, 0);
+                    break;
+                case DrawShape.Parallelogram:
+                    shapeProps = new Vector2(m_ParallelogramSkew, m_ParallelogramCornerRadius);
                     break;
                 default:
                     shapeProps = Vector2.zero;

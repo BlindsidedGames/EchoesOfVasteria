@@ -10,7 +10,7 @@ namespace MPUIKIT.Editor {
     [CanEditMultipleObjects]
     public class MPImageEditor : ImageEditor {
         private SerializedProperty spSprite;
-        private SerializedProperty spCircle, spTriangle, spRectangle, spPentagon, spHexagon, spNStarPolygon;
+        private SerializedProperty spCircle, spTriangle, spRectangle, spPentagon, spHexagon, spNStarPolygon, spChamferBox, spParallelogram;
         private SerializedProperty spPreserveAspect;
         private SerializedProperty spFillMethod, spFillOrigin, spFillAmount, spFillClockwise;
         private SerializedProperty spShape;
@@ -59,6 +59,8 @@ namespace MPUIKIT.Editor {
             spPentagon = serializedObject.FindProperty("m_Pentagon");
             spHexagon = serializedObject.FindProperty("m_Hexagon");
             spNStarPolygon = serializedObject.FindProperty("m_NStarPolygon");
+            spChamferBox = serializedObject.FindProperty("m_ChamferBox");
+            spParallelogram = serializedObject.FindProperty("m_Parallelogram");
 
             spPreserveAspect = serializedObject.FindProperty("m_PreserveAspect");
 
@@ -98,6 +100,12 @@ namespace MPUIKIT.Editor {
                             break;
                         case DrawShape.NStarPolygon:
                             EditorGUILayout.PropertyField(spNStarPolygon);
+                            break;
+                        case DrawShape.ChamferBox:
+                            EditorGUILayout.PropertyField(spChamferBox);
+                            break;
+                        case DrawShape.Parallelogram:
+                            EditorGUILayout.PropertyField(spParallelogram);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

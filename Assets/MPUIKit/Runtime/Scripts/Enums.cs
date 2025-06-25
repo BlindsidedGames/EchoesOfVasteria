@@ -5,6 +5,8 @@
         Circle,
         Triangle,
         Rectangle,
+        ChamferBox,
+        Parallelogram,
         Pentagon,
         Hexagon,
         NStarPolygon

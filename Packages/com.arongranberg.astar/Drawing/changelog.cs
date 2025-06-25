@@ -2,7 +2,10 @@
 /// \page changelog Changelog
 /// \order{-10}
 ///
-/// - 1.7.8
+/// - 1.7.9
+///     - Got rid of some small GC allocations.
+///
+/// - 1.7.8 (2025-05-06)
 ///     - Fixed a minor GC allocation happening every frame when using URP.
 ///     - Improved performance in standalone builds when nothing is being rendered.
 ///     - Fixed a significant memory leak when starting unity in batch mode.

@@ -1,3 +1,9 @@
+## 5.3.8 (2025-06-13)
+- Fixed an incompatibility with an older version of the unity collections package, which could cause an exception to be thrown when exiting the scene (introduced in 5.3.7).
+- Fixed scanning very large layered grid graphs could throw an exception.
+- Got rid of some small GC allocations in the example scenes relating to OnGUI calls.
+- Fixed the update checker throwing exceptions in some rare cases. This was a regression in 5.3.5.
+
 ## 5.3.7 (2025-05-06)
 - Significantly improved performance when scanning grid graphs when using Unity 6000.1+.
 		This optimization has been tried multiple times before, but due to Unity bugs it has had to be rolled back.

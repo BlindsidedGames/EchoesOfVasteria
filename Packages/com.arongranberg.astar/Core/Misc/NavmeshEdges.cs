@@ -28,7 +28,8 @@ namespace Pathfinding {
 			// Waits for any jobs to finish
 			rwLock.WriteSync().Unlock();
 			obstacleData.Dispose();
-			allocationLock.Dispose();
+			// Note: The IsCreated check is necessary to not throw an exception in old versions of the collections package.
+			if (allocationLock.IsCreated) allocationLock.Dispose();
 		}
 
 		void Init () {
