@@ -51,6 +51,10 @@ namespace TimelessEchoes.Hero
         private bool inCombat;
         private float combatDamageMultiplier = 1f;
 
+        private enum TaskState { Idle, Moving, Working }
+        private TaskState taskState = TaskState.Idle;
+        private Coroutine taskRoutine;
+
         private void ApplyStatUpgrades()
         {
             var controller = FindFirstObjectByType<StatUpgradeController>();
@@ -127,6 +131,8 @@ namespace TimelessEchoes.Hero
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
             currentTask = null;
+            taskState = TaskState.Idle;
+            taskRoutine = null;
             lastAttack = Time.time - 1f / CurrentAttackRate;
         }
 
@@ -178,6 +184,11 @@ namespace TimelessEchoes.Hero
 
             if (setter != null)
                 setter.target = task != null ? task.Target : null;
+
+            if (task != null)
+                taskState = TaskState.Moving;
+            else
+                taskState = TaskState.Idle;
         }
 
         public void SetDestination(Transform dest)
@@ -191,9 +202,7 @@ namespace TimelessEchoes.Hero
         private void UpdateBehavior()
         {
             if (stats == null) return;
-            var target = setter.target;
 
-            // Find closest enemy within vision range
             var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
             Transform nearest = null;
             float best = float.MaxValue;
@@ -208,10 +217,10 @@ namespace TimelessEchoes.Hero
                     nearest = h.transform;
                 }
             }
+
             bool nowInCombat = nearest != null;
             if (nowInCombat)
             {
-                target = nearest;
                 setter.target = nearest;
                 if (!inCombat && diceRoller != null && !isRolling)
                 {
@@ -227,20 +236,16 @@ namespace TimelessEchoes.Hero
                     combatDamageMultiplier = 1f;
                     diceRoller?.ResetRoll();
                 }
-                if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
-                {
-                    taskController.SelectNextTask();
-                    target = setter.target;
-                }
+                ProcessTaskLogic();
             }
 
             inCombat = nowInCombat;
 
+            var target = setter.target;
             if (target == null) return;
 
             var enemy = target.GetComponent<Enemies.Health>();
-            if (enemy == null) return;
-            if (enemy.CurrentHealth <= 0f) return;
+            if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
             var dist = Vector2.Distance(transform.position, target.position);
             if (dist <= stats.visionRange)
@@ -268,6 +273,64 @@ namespace TimelessEchoes.Hero
 
             combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
             isRolling = false;
+        }
+
+        private void ProcessTaskLogic()
+        {
+            if (taskController == null)
+                return;
+
+            if (currentTask == null)
+            {
+                taskController.SelectNextTask();
+                return;
+            }
+
+            if (taskState == TaskState.Moving)
+            {
+                if (ai != null && ai.reachedDestination)
+                {
+                    StartTaskRoutine();
+                }
+            }
+            else if (taskState == TaskState.Working)
+            {
+                if (currentTask.IsComplete())
+                    MarkTaskComplete();
+            }
+        }
+
+        private void StartTaskRoutine()
+        {
+            if (currentTask == null)
+                return;
+
+            switch (currentTask)
+            {
+                case MiningTask mining:
+                    taskRoutine = StartCoroutine(mining.MineCoroutine(this));
+                    break;
+                case OpenChestTask chest:
+                    chest.Open();
+                    break;
+                case TalkToNpcTask talk:
+                    talk.Interact();
+                    break;
+                case KillEnemyTask:
+                case KillEnemiesTask:
+                    break; // no special coroutine for combat tasks
+            }
+
+            taskState = TaskState.Working;
+        }
+
+        private void MarkTaskComplete()
+        {
+            if (taskController != null && currentTask != null)
+                taskController.CompleteTask(currentTask);
+            currentTask = null;
+            taskState = TaskState.Idle;
+            taskRoutine = null;
         }
 
         private void Attack(Transform target)
