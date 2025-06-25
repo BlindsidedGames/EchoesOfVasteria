@@ -49,6 +49,8 @@ namespace TimelessEchoes.Hero
         private bool allowAttacks = true;
         private ITask currentTask;
         public ITask CurrentTask => currentTask;
+        [SerializeField] private string currentTaskName;
+        [SerializeField] private MonoBehaviour currentTaskObject;
 
         private enum State
         {
@@ -191,6 +193,8 @@ namespace TimelessEchoes.Hero
         {
             TELogger.Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", this);
             currentTask = task;
+            currentTaskName = task != null ? task.GetType().Name : "None";
+            currentTaskObject = task as MonoBehaviour;
             miningTask = null;
             state = State.Idle;
             // Ensure the destination setter is initialized even if Awake has not run yet
