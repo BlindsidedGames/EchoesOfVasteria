@@ -13,6 +13,10 @@ namespace TimelessEchoes.Enemies
         public int damage = 1;
         public float moveSpeed = 3f;
         public float attackSpeed = 1f;
+        /// <summary>
+        /// Distance within which the enemy can perform attacks.
+        /// </summary>
+        public float attackRange = 1f;
         public float visionRange = 5f;
         /// <summary>
         /// Distance within which allies will join an engaged enemy.

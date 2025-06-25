@@ -23,7 +23,7 @@ namespace TimelessEchoes
             var ft = obj.AddComponent<FloatingText>();
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;
-            ft.tmp.fontSize = 4f;
+            ft.tmp.fontSize = 8f;
             ft.tmp.text = text;
             ft.tmp.color = color;
 

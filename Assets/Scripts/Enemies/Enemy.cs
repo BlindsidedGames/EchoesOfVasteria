@@ -130,21 +130,22 @@ namespace TimelessEchoes.Enemies
             if (stats == null)
                 return;
 
-            bool heroInRange = false;
+            bool heroInVision = false;
+            float heroDistance = float.PositiveInfinity;
             if (hero != null && hero.gameObject.activeInHierarchy)
             {
-                float hDist = Vector2.Distance(transform.position, hero.position);
-                if (hDist <= stats.visionRange)
+                heroDistance = Vector2.Distance(transform.position, hero.position);
+                if (heroDistance <= stats.visionRange)
                 {
-                    heroInRange = true;
+                    heroInVision = true;
                     setter.target = hero;
                     OnEngage?.Invoke(this);
                 }
             }
 
-            if (heroInRange)
+            if (heroInVision)
             {
-                if (Time.time >= nextAttack)
+                if (heroDistance <= stats.attackRange && Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     animator.Play("Attack");
