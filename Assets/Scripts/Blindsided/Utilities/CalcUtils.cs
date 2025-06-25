@@ -133,7 +133,7 @@ namespace Blindsided.Utilities
             double x,
             bool hideDecimal = false,
             float fontWeight = 400f,
-            bool useMspace = true,
+            bool useMspace = false,
             float mspaceSize = 0.5f)
         {
             // Prepare mspace tags.
