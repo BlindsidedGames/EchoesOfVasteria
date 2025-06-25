@@ -39,7 +39,8 @@ namespace TimelessEchoes.Enemies
             ColorUtility.TryParseHtmlString("#C69B60", out var orange);
             bool isHero = GetComponent<TimelessEchoes.Hero.HeroController>() != null;
             var colour = isHero ? orange : red;
-            TimelessEchoes.FloatingText.Spawn(Mathf.RoundToInt(amount).ToString(), transform.position + Vector3.up, colour);
+            float fontSize = isHero ? 8f : 6f;
+            TimelessEchoes.FloatingText.Spawn(Mathf.RoundToInt(amount).ToString(), transform.position + Vector3.up, colour, fontSize);
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();
