@@ -32,6 +32,7 @@ namespace TimelessEchoes.Enemies
         private Health health;
         private float nextAttack;
         private AIDestinationSetter setter;
+        private bool logicActive = true;
         private Vector3 spawnPos;
         private Transform startTarget;
         private Transform hero;
@@ -73,7 +74,8 @@ namespace TimelessEchoes.Enemies
         private void Update()
         {
             UpdateAnimation();
-            UpdateBehavior();
+            if (logicActive)
+                UpdateBehavior();
         }
 
         private void OnEnable()
@@ -229,8 +231,14 @@ namespace TimelessEchoes.Enemies
         {
             if (ai != null) ai.enabled = active;
             if (setter != null) setter.enabled = active;
-            if (animator != null) animator.enabled = active;
-            if (spriteRenderer != null) spriteRenderer.enabled = active;
+            logicActive = active;
+
+            if (!active && animator != null)
+            {
+                animator.SetFloat("MoveX", 0f);
+                animator.SetFloat("MoveY", 0f);
+                animator.SetFloat("MoveMagnitude", 0f);
+            }
         }
 
         private void HandleAllyEngaged(Enemy other)
