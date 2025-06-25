@@ -271,6 +271,10 @@ namespace TimelessEchoes.Hero
             {
                 Log("Hero exiting combat", this);
                 combatDamageMultiplier = 1f;
+                // Stop any ongoing dice roll so a fresh roll occurs when
+                // combat is re-entered. The coroutine may be interrupted
+                // before it resets this flag, so clear it here.
+                isRolling = false;
                 diceRoller?.ResetRoll();
                 inCombat = false;
                 state = State.Idle;
