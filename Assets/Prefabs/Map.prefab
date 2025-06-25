@@ -890,15 +890,7 @@ MonoBehaviour:
   blockingMask:
     serializedVersion: 2
     m_Bits: 256
-  enemies:
-  - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
-    weight: 2
-    minProgress: 0
-    maxProgress: 1
-  - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
-    weight: 1
-    minProgress: 0.078
-    maxProgress: 1
+  enemies: []
   otherTasks:
   - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
     weight: 1
