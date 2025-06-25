@@ -1,7 +1,7 @@
 using System;
-using UnityEngine;
-using UnityEngine.UI;
 using Blindsided.Utilities;
+using TimelessEchoes.Hero;
+using UnityEngine;
 
 namespace TimelessEchoes.Enemies
 {
@@ -10,21 +10,9 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private int maxHealth = 10;
         [SerializeField] private SlicedFilledImage healthBar;
 
-        public float CurrentHealth { get; private set; }
-        public float MaxHealth => maxHealth;
-
-        public event Action OnDeath;
-
         private void Awake()
         {
             CurrentHealth = maxHealth;
-            UpdateBar();
-        }
-
-        public void Init(int hp)
-        {
-            maxHealth = hp;
-            CurrentHealth = hp;
             UpdateBar();
         }
 
@@ -37,10 +25,10 @@ namespace TimelessEchoes.Enemies
             // Show floating damage text
             ColorUtility.TryParseHtmlString("#C56260", out var red);
             ColorUtility.TryParseHtmlString("#C69B60", out var orange);
-            bool isHero = GetComponent<TimelessEchoes.Hero.HeroController>() != null;
-            var colour = isHero ? orange : red;
-            float fontSize = isHero ? 8f : 6f;
-            TimelessEchoes.FloatingText.Spawn(Mathf.RoundToInt(amount).ToString(), transform.position + Vector3.up, colour, fontSize);
+            var isHero = GetComponent<HeroController>() != null;
+            var colour = isHero ? red : orange;
+            var fontSize = isHero ? 6f : 8f;
+            FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();
@@ -49,6 +37,18 @@ namespace TimelessEchoes.Enemies
                 if (GetComponent<Enemy>() != null)
                     Destroy(gameObject);
             }
+        }
+
+        public float CurrentHealth { get; private set; }
+        public float MaxHealth => maxHealth;
+
+        public event Action OnDeath;
+
+        public void Init(int hp)
+        {
+            maxHealth = hp;
+            CurrentHealth = hp;
+            UpdateBar();
         }
 
         private void UpdateBar()
