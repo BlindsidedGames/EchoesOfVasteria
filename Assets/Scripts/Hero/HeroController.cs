@@ -198,10 +198,15 @@ namespace TimelessEchoes.Hero
                     nearest = h.transform;
                 }
             }
-            if (nearest != null)
+            bool inCombat = nearest != null;
+            if (inCombat)
             {
                 target = nearest;
                 setter.target = nearest;
+            }
+            else if (currentTask == null && taskController != null)
+            {
+                taskController.SelectNextTask();
             }
 
             if (target == null) return;

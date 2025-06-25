@@ -14,6 +14,10 @@ namespace TimelessEchoes.Enemies
         public float moveSpeed = 3f;
         public float attackSpeed = 1f;
         public float visionRange = 5f;
+        /// <summary>
+        /// Distance within which allies will join an engaged enemy.
+        /// </summary>
+        public float assistRange = 8f;
         public float wanderDistance = 2f;
         public GameObject projectilePrefab;
     }
