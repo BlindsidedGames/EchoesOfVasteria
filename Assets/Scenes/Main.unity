@@ -213,7 +213,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -263,6 +263,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (14)
@@ -376,6 +380,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (12)
@@ -593,6 +601,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (13)
@@ -773,7 +785,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1134,6 +1146,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (7)
@@ -1384,6 +1400,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (3)
@@ -1577,6 +1597,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5220565270888798410, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7670473725870694799, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_Name
       value: Defense
@@ -1633,6 +1657,10 @@ PrefabInstance:
     - target: {fileID: 1941723749653959437, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
       propertyPath: m_Name
       value: Warrior
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377943322193924958, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6094697013023591912, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1935,6 +1963,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (5)
@@ -2588,6 +2620,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (9)
@@ -2919,6 +2955,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (6)
@@ -3119,6 +3159,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (19)
@@ -3441,6 +3485,10 @@ PrefabInstance:
     - target: {fileID: 4572956659316676359, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220565270888798410, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7670473725870694799, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_Name
@@ -5329,6 +5377,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (1)
@@ -5910,6 +5962,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (17)
@@ -6028,6 +6084,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (10)
@@ -6418,7 +6478,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6652,6 +6712,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (27)
@@ -6765,6 +6829,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (11)
@@ -6965,6 +7033,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (25)
@@ -7316,6 +7388,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (29)
@@ -7429,6 +7505,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (18)
@@ -7684,6 +7764,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (8)
@@ -7931,6 +8015,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (23)
@@ -8044,6 +8132,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (26)
@@ -8157,6 +8249,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (24)
@@ -8558,7 +8654,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8608,6 +8704,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (16)
@@ -8721,6 +8821,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (2)
@@ -8922,6 +9026,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5220565270888798410, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7670473725870694799, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_Name
       value: Attack Rate
@@ -9053,7 +9161,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9171,7 +9279,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32.75
+  m_fontSize: 31.3
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9181,7 +9289,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9231,6 +9339,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (28)
@@ -9423,6 +9535,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (15)
@@ -9536,6 +9652,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (4)
@@ -9777,6 +9897,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1190427731}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource
@@ -10062,6 +10186,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (21)
@@ -10263,6 +10391,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5220565270888798410, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7670473725870694799, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_Name
       value: Move Speed
@@ -10300,6 +10432,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource (22)
@@ -10812,6 +10948,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4151695775224272184, guid: c94f610c165e0f148b20a29dbe593f74, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7354326415034853887, guid: c94f610c165e0f148b20a29dbe593f74, type: 3}
       propertyPath: m_Name
       value: Cost
@@ -10829,6 +10969,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442668265}
     m_Modifications:
+    - target: {fileID: 1390199069210530402, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3551978854433385255, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
       propertyPath: m_Name
       value: Resource
@@ -11016,6 +11160,10 @@ PrefabInstance:
     - target: {fileID: 4572956659316676359, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220565270888798410, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
+      propertyPath: m_characterSpacing
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7670473725870694799, guid: 41f6c458e0b1f804ca62957318cb1897, type: 3}
       propertyPath: m_Name
