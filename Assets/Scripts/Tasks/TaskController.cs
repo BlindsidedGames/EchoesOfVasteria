@@ -49,14 +49,7 @@ namespace TimelessEchoes.Tasks
         private void Update()
         {
             RemoveDeadEnemyTasks();
-
-            if (currentIndex < 0 || currentIndex >= tasks.Count)
-                return;
-
-            var active = tasks[currentIndex];
-
-            if (active.IsComplete())
-                SelectNextTask();
+            RemoveCompletedTasks();
         }
 
         private void OnEnable()
@@ -127,7 +120,7 @@ namespace TimelessEchoes.Tasks
 
             hero?.SetTask(null);
             hero?.SetDestination(entryPoint);
-            SelectNextTask();
+            SelectEarliestTask();
         }
 
 
@@ -177,27 +170,65 @@ namespace TimelessEchoes.Tasks
             if (removed && hero != null)
             {
                 hero.SetTask(null);
-                SelectNextTask();
+                SelectEarliestTask();
             }
         }
 
         /// <summary>
-        ///     Advance to the next task and start it if available.
+        ///     Advance to the earliest available task and start it if one exists.
         /// </summary>
-        public void SelectNextTask()
+        public void SelectEarliestTask()
         {
-            currentIndex++;
-            if (currentIndex < tasks.Count)
+            RemoveCompletedTasks();
+            for (var i = 0; i < tasks.Count; i++)
             {
-                var task = tasks[currentIndex];
+                var task = tasks[i];
+                if (task == null || task.IsComplete())
+                    continue;
+                currentIndex = i;
                 currentTaskName = task.GetType().Name;
                 hero?.SetTask(task);
                 task.StartTask();
+                return;
             }
-            else
+
+            currentTaskName = "Complete";
+            currentIndex = tasks.Count;
+            hero?.SetDestination(exitPoint);
+        }
+
+        /// <summary>
+        ///     Remove a task from tracking.
+        /// </summary>
+        public void RemoveTask(ITask task)
+        {
+            if (task == null) return;
+            var index = tasks.IndexOf(task);
+            if (index < 0) return;
+            RemoveTaskAt(index);
+        }
+
+        private void RemoveTaskAt(int index)
+        {
+            if (index < 0 || index >= tasks.Count) return;
+            var task = tasks[index];
+            tasks.RemoveAt(index);
+            if (taskMap.TryGetValue(task, out var obj))
             {
-                currentTaskName = "Complete";
-                hero?.SetDestination(exitPoint);
+                taskObjects.Remove(obj);
+                taskMap.Remove(task);
+            }
+            if (index <= currentIndex)
+                currentIndex--;
+        }
+
+        private void RemoveCompletedTasks()
+        {
+            for (var i = tasks.Count - 1; i >= 0; i--)
+            {
+                var t = tasks[i];
+                if (t == null || t.IsComplete())
+                    RemoveTaskAt(i);
             }
         }
 
