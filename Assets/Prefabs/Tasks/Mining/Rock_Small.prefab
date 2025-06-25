@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 5457777148452022193}
   - component: {fileID: 8245116162548217892}
   - component: {fileID: 344104847789046031}
+  - component: {fileID: 33249571399304914}
   m_Layer: 0
   m_Name: Rock_Small
   m_TagString: Untagged
@@ -385,6 +386,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &33249571399304914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806500026266312091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f088ecfefd815e43b86f9bedb99e254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mineTime: 2
+  progressBar: {fileID: 2992031436270654903}
+  leftPoint: {fileID: 7850270755409974412}
+  rightPoint: {fileID: 5969166813684563573}
+  upPoint: {fileID: 1368943804057884850}
+  downPoint: {fileID: 3432401142847852912}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+    dropRange: {x: 4, y: 12}
+    dropChance: 1
+  - resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}
+    dropRange: {x: 2, y: 5}
+    dropChance: 0.5
+  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.2
+  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
+    dropRange: {x: 1, y: 1}
+    dropChance: 0.1
 --- !u!1 &2865883067036561459
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,8 +545,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 4.48}
-  m_SizeDelta: {x: 15, y: 4}
+  m_AnchoredPosition: {x: -0.017, y: 4.48}
+  m_SizeDelta: {x: 6.334, y: 4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6651780794808078879
 CanvasRenderer:
