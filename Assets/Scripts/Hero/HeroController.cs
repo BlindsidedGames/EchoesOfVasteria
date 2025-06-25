@@ -1,6 +1,7 @@
 using System.Collections;
 using Pathfinding;
 using Pathfinding.RVO;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using TimelessEchoes;
 using TimelessEchoes.Tasks;
@@ -221,6 +222,7 @@ namespace TimelessEchoes.Hero
         /// Manually flag that the hero has reached its destination.
         /// This bypasses the built-in pathfinding checks in <see cref="IsAtDestination"/>.
         /// </summary>
+        [Button("Mark Destination Reached")]
         public void SetDestinationReached()
         {
             destinationOverride = true;
