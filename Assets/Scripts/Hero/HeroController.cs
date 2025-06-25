@@ -343,6 +343,8 @@ namespace TimelessEchoes.Hero
                 animator?.SetTrigger("StopMining");
                 miningTask.CompleteTask();
                 taskController?.RemoveTask(miningTask);
+                SetTask(null);
+                taskController?.SelectEarliestTask();
                 miningTask = null;
                 state = State.Idle;
             }
