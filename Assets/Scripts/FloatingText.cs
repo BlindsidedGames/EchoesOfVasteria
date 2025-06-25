@@ -16,14 +16,14 @@ namespace TimelessEchoes
         /// <summary>
         /// Spawns a floating text object displaying the given string.
         /// </summary>
-        public static void Spawn(string text, Vector3 position, Color color)
+        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f)
         {
             var obj = new GameObject("FloatingText");
             obj.transform.position = position;
             var ft = obj.AddComponent<FloatingText>();
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;
-            ft.tmp.fontSize = 8f;
+            ft.tmp.fontSize = fontSize;
             ft.tmp.text = text;
             ft.tmp.color = color;
 
@@ -49,7 +49,7 @@ namespace TimelessEchoes
             if (tmp != null)
             {
                 Color c = tmp.color;
-                c.a = Mathf.Lerp(1f, 0f, timer / lifetime);
+                c.a = Mathf.Lerp(1f, 0.5f, timer / lifetime);
                 tmp.color = c;
             }
             if (timer >= lifetime)
