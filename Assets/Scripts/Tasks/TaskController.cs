@@ -50,8 +50,7 @@ namespace TimelessEchoes.Tasks
 
         private void Update()
         {
-            RemoveDeadEnemyTasks();
-            RemoveCompletedTasks();
+            PruneTasks();
         }
 
         private void OnEnable()
@@ -183,6 +182,63 @@ namespace TimelessEchoes.Tasks
                             Destroy(kill);
                         removed = true;
                     }
+                }
+            }
+
+            if (removed && hero != null)
+            {
+                hero.SetTask(null);
+                SelectEarliestTask();
+            }
+        }
+
+        /// <summary>
+        ///     Remove null, completed or expired tasks.
+        /// </summary>
+        private void PruneTasks()
+        {
+            var removed = false;
+            for (var i = tasks.Count - 1; i >= 0; i--)
+            {
+                var task = tasks[i];
+                if (task == null)
+                {
+                    if (i <= currentIndex)
+                        currentIndex--;
+                    tasks.RemoveAt(i);
+                    if (taskMap.TryGetValue(task, out var obj))
+                    {
+                        taskObjects.Remove(obj);
+                        taskMap.Remove(task);
+                    }
+                    removed = true;
+                    continue;
+                }
+
+                if (task is KillEnemyTask kill)
+                {
+                    var health = kill.target != null ? kill.target.GetComponent<Health>() : null;
+                    if (kill.target == null || health == null || health.CurrentHealth <= 0f || kill.IsComplete())
+                    {
+                        if (i <= currentIndex)
+                            currentIndex--;
+                        tasks.RemoveAt(i);
+                        if (taskMap.TryGetValue(task, out var obj))
+                        {
+                            taskObjects.Remove(obj);
+                            taskMap.Remove(task);
+                        }
+                        if (kill != null)
+                            Destroy(kill);
+                        removed = true;
+                    }
+                    continue;
+                }
+
+                if (task.IsComplete())
+                {
+                    RemoveTaskAt(i);
+                    removed = true;
                 }
             }
 
