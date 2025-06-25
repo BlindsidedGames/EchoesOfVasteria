@@ -125,17 +125,19 @@ namespace TimelessEchoes.Enemies
             if (stats == null)
                 return;
 
+            bool heroInRange = false;
             if (hero != null && hero.gameObject.activeInHierarchy)
             {
                 float hDist = Vector2.Distance(transform.position, hero.position);
                 if (hDist <= stats.visionRange)
                 {
+                    heroInRange = true;
                     setter.target = hero;
                     OnEngage?.Invoke(this);
                 }
             }
 
-            if (IsEngaged)
+            if (heroInRange)
             {
                 if (Time.time >= nextAttack)
                 {
@@ -146,12 +148,16 @@ namespace TimelessEchoes.Enemies
             }
             else
             {
+                if (setter.target == hero)
+                    setter.target = wanderTarget;
                 Wander();
             }
         }
 
         private void Wander()
         {
+            if (setter.target != wanderTarget)
+                setter.target = wanderTarget;
             if (!ai.reachedEndOfPath) return;
 
             const int maxAttempts = 5;
