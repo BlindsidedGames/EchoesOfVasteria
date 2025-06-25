@@ -10,7 +10,7 @@ namespace TimelessEchoes.Tasks
     ///     Data container for a mining objective. The hero now handles
     ///     movement and timing logic when assigned this task.
     /// </summary>
-    public class MiningTask : MonoBehaviour, ITask
+    public class MiningTask : BaseTask
     {
         [SerializeField] private float mineTime = 2f;
         [SerializeField] private SlicedFilledImage progressBar;
@@ -29,7 +29,7 @@ namespace TimelessEchoes.Tasks
         public IList<ResourceDrop> Drops => resourceDrops;
         public SlicedFilledImage ProgressBar => progressBar;
 
-        public Transform Target
+        public override Transform Target
         {
             get
             {
@@ -44,7 +44,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public void StartTask()
+        public override void StartTask()
         {
             complete = false;
             if (cachedTarget == null)
@@ -54,7 +54,7 @@ namespace TimelessEchoes.Tasks
                 resourceManager = FindFirstObjectByType<ResourceManager>();
         }
 
-        public bool IsComplete()
+        public override bool IsComplete()
         {
             return complete;
         }

@@ -6,15 +6,15 @@ namespace TimelessEchoes.Tasks
     /// <summary>
     /// Task for eliminating a specific enemy target.
     /// </summary>
-    public class KillEnemyTask : MonoBehaviour, ITask
+    public class KillEnemyTask : BaseTask
     {
         public Transform target;
         private Health health;
         private bool complete;
 
-        public Transform Target => target;
+        public override Transform Target => target;
 
-        public void StartTask()
+        public override void StartTask()
         {
             // Remove any previous death listener in case this component is reused
             if (health != null)
@@ -49,7 +49,7 @@ namespace TimelessEchoes.Tasks
                 health.OnDeath -= OnDeath;
         }
 
-        public bool IsComplete()
+        public override bool IsComplete()
         {
             if (complete) return true;
             if (health == null) return target == null;

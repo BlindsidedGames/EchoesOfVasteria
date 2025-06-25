@@ -5,14 +5,14 @@ namespace TimelessEchoes.Tasks
     /// <summary>
     /// Task for interacting with a specific NPC.
     /// </summary>
-    public class TalkToNpcTask : MonoBehaviour, ITask
+    public class TalkToNpcTask : BaseTask
     {
         [SerializeField] private Transform npc;
         private bool talked;
 
-        public Transform Target => npc;
+        public override Transform Target => npc;
 
-        public void StartTask()
+        public override void StartTask()
         {
             talked = false;
         }
@@ -22,7 +22,7 @@ namespace TimelessEchoes.Tasks
             talked = true;
         }
 
-        public bool IsComplete()
+        public override bool IsComplete()
         {
             return talked;
         }
