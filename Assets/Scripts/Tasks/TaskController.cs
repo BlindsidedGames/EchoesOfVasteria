@@ -49,7 +49,6 @@ namespace TimelessEchoes.Tasks
         private void Update()
         {
             RemoveDeadEnemyTasks();
-            RemoveCompletedTasks();
 
             if (currentIndex < 0 || currentIndex >= tasks.Count)
                 return;
@@ -183,56 +182,12 @@ namespace TimelessEchoes.Tasks
         }
 
         /// <summary>
-        ///     Remove tasks that report completion regardless of type.
-        /// </summary>
-        private void RemoveCompletedTasks()
-        {
-            for (var i = tasks.Count - 1; i >= 0; i--)
-            {
-                var task = tasks[i];
-                if (task == null || task.IsComplete())
-                {
-                    if (i <= currentIndex)
-                        currentIndex--;
-                    tasks.RemoveAt(i);
-                    if (taskMap.TryGetValue(task, out var obj))
-                    {
-                        taskObjects.Remove(obj);
-                        taskMap.Remove(task);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Explicitly remove a task that has finished.
-        /// </summary>
-        public void CompleteTask(ITask task)
-        {
-            if (task == null) return;
-            var index = tasks.IndexOf(task);
-            if (index >= 0)
-            {
-                if (index <= currentIndex)
-                    currentIndex--;
-                tasks.RemoveAt(index);
-            }
-            if (taskMap.TryGetValue(task, out var obj))
-            {
-                taskMap.Remove(task);
-                taskObjects.Remove(obj);
-            }
-        }
-
-        /// <summary>
         ///     Advance to the next task and start it if available.
         /// </summary>
         public void SelectNextTask()
         {
-            RemoveCompletedTasks();
-
-            currentIndex = tasks.FindIndex(t => t != null && !t.IsComplete());
-            if (currentIndex >= 0 && currentIndex < tasks.Count)
+            currentIndex++;
+            if (currentIndex < tasks.Count)
             {
                 var task = tasks[currentIndex];
                 currentTaskName = task.GetType().Name;
@@ -242,7 +197,6 @@ namespace TimelessEchoes.Tasks
             else
             {
                 currentTaskName = "Complete";
-                hero?.SetTask(null);
                 hero?.SetDestination(exitPoint);
             }
         }
