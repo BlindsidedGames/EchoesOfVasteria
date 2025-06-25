@@ -36,6 +36,7 @@ namespace TimelessEchoes.Enemies
         private Transform startTarget;
         private Transform hero;
         private Transform wanderTarget;
+        private float nextWanderTime;
         private LayerMask blockingMask;
 
         public bool IsEngaged => setter != null && setter.target == hero;
@@ -66,6 +67,7 @@ namespace TimelessEchoes.Enemies
             resourceManager = FindFirstObjectByType<ResourceManager>();
             if (health != null)
                 health.OnDeath += OnDeath;
+            nextWanderTime = Time.time;
         }
 
         private void Update()
@@ -79,6 +81,7 @@ namespace TimelessEchoes.Enemies
             EnemyActivator.Instance?.Register(this);
             OnEngage += HandleAllyEngaged;
 
+            nextWanderTime = Time.time;
             Wander();
 
             // Offset the animator's starting time so enemies don't animate
@@ -159,6 +162,7 @@ namespace TimelessEchoes.Enemies
             if (setter.target != wanderTarget)
                 setter.target = wanderTarget;
             if (!ai.reachedEndOfPath) return;
+            if (Time.time < nextWanderTime) return;
 
             const int maxAttempts = 5;
             Vector2 wander = (Vector2)transform.position;
@@ -174,6 +178,7 @@ namespace TimelessEchoes.Enemies
 
             wanderTarget.position = wander;
             setter.target = wanderTarget;
+            nextWanderTime = Time.time + Random.Range(1f, 3f);
         }
 
         private void FireProjectile()
