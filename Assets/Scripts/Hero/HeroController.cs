@@ -204,9 +204,13 @@ namespace TimelessEchoes.Hero
                 target = nearest;
                 setter.target = nearest;
             }
-            else if (currentTask == null && taskController != null)
+            else
             {
-                taskController.SelectNextTask();
+                if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
+                {
+                    taskController.SelectNextTask();
+                    target = setter.target;
+                }
             }
 
             if (target == null) return;

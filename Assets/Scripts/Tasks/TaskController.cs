@@ -129,9 +129,19 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         private void RemoveDeadEnemyTasks()
         {
+            bool removed = false;
             for (int i = tasks.Count - 1; i >= 0; i--)
             {
-                if (tasks[i] is KillEnemyTask kill)
+                var task = tasks[i];
+                if (task == null)
+                {
+                    if (i <= currentIndex)
+                        currentIndex--;
+                    tasks.RemoveAt(i);
+                    removed = true;
+                    continue;
+                }
+                if (task is KillEnemyTask kill)
                 {
                     var health = kill.target != null ? kill.target.GetComponent<Enemies.Health>() : null;
                     if (kill.target == null || health == null || health.CurrentHealth <= 0f)
@@ -141,9 +151,12 @@ namespace TimelessEchoes.Tasks
                         tasks.RemoveAt(i);
                         if (kill != null)
                             Destroy(kill);
+                        removed = true;
                     }
                 }
             }
+            if (removed && hero != null)
+                hero.SetTask(null);
         }
 
         /// <summary>
