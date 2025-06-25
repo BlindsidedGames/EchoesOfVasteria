@@ -843,7 +843,6 @@ MonoBehaviour:
   astarPath: {fileID: 3994575044794960044}
   hero: {fileID: 2410021182923110199}
   mapCamera: {fileID: 2571608917486039915}
-  engageRange: 3
   currentTaskName: KillEnemyTask
 --- !u!114 &620791786817035452
 MonoBehaviour:
@@ -893,8 +892,12 @@ MonoBehaviour:
     m_Bits: 256
   enemies:
   - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
-    weight: 1
+    weight: 2
     minProgress: 0
+    maxProgress: 1
+  - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
+    weight: 1
+    minProgress: 0.078
     maxProgress: 1
   otherTasks: []
 --- !u!1 &8116783165545535798
