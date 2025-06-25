@@ -101,8 +101,9 @@ namespace TimelessEchoes.Tasks
                     if (count > 0)
                     {
                         resourceManager.Add(drop.resource, count);
-                        FloatingText.Spawn($"{drop.resource.name} x{count}", transform.position + Vector3.up,
-                            Color.yellow);
+                        FloatingText.Spawn($"{drop.resource.name} x{count}",
+                            transform.position + Vector3.up,
+                            Color.blue);
                     }
                 }
 

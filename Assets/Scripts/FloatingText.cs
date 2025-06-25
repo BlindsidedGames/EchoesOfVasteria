@@ -19,7 +19,8 @@ namespace TimelessEchoes
         public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f)
         {
             var obj = new GameObject("FloatingText");
-            obj.transform.position = position;
+            var offset = Random.insideUnitCircle * 0.25f;
+            obj.transform.position = position + new Vector3(offset.x, offset.y, 0f);
             var ft = obj.AddComponent<FloatingText>();
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;
