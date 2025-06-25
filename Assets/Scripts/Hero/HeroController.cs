@@ -47,6 +47,19 @@ namespace TimelessEchoes.Hero
         private bool isRolling;
         private bool allowAttacks = true;
         private ITask currentTask;
+        public ITask CurrentTask => currentTask;
+
+        private enum State
+        {
+            Idle,
+            Moving,
+            Mining,
+            Combat
+        }
+
+        private State state;
+        private Tasks.MiningTask miningTask;
+        private float miningTimer;
 
         private bool inCombat;
         private float combatDamageMultiplier = 1f;
@@ -95,6 +108,8 @@ namespace TimelessEchoes.Hero
             if (taskController == null)
                 taskController = GetComponent<TaskController>();
 
+            state = State.Idle;
+
             ApplyStatUpgrades();
 
             if (stats != null)
@@ -127,6 +142,8 @@ namespace TimelessEchoes.Hero
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
             currentTask = null;
+            miningTask = null;
+            state = State.Idle;
             lastAttack = Time.time - 1f / CurrentAttackRate;
         }
 
@@ -172,6 +189,8 @@ namespace TimelessEchoes.Hero
         public void SetTask(ITask task)
         {
             currentTask = task;
+            miningTask = null;
+            state = State.Idle;
             // Ensure the destination setter is initialized even if Awake has not run yet
             if (setter == null)
                 setter = GetComponent<AIDestinationSetter>();
@@ -191,12 +210,62 @@ namespace TimelessEchoes.Hero
         private void UpdateBehavior()
         {
             if (stats == null) return;
-            var target = setter.target;
 
-            // Find closest enemy within vision range
-            var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
+            var nearest = FindNearestEnemy();
+            if (nearest != null)
+            {
+                HandleCombat(nearest);
+                return;
+            }
+            else if (state == State.Combat)
+            {
+                combatDamageMultiplier = 1f;
+                diceRoller?.ResetRoll();
+                inCombat = false;
+                state = State.Idle;
+                taskController?.SelectEarliestTask();
+            }
+
+            if (state == State.Mining)
+            {
+                HandleMining();
+                return;
+            }
+
+            if (currentTask == null || currentTask.IsComplete())
+                taskController?.SelectEarliestTask();
+
+            if (currentTask == null) return;
+
+            if (currentTask is MiningTask mt)
+            {
+                var dest = mt.Target;
+                if (setter.target != dest)
+                    setter.target = dest;
+
+                if (ai.reachedDestination && state != State.Mining)
+                    BeginMining(mt);
+                else
+                    state = State.Moving;
+            }
+            else if (currentTask is KillEnemyTask ke)
+            {
+                if (ke.target != null)
+                    setter.target = ke.target;
+                state = State.Moving;
+            }
+            else
+            {
+                setter.target = currentTask.Target;
+                state = State.Moving;
+            }
+        }
+
+        private Transform FindNearestEnemy()
+        {
             Transform nearest = null;
             float best = float.MaxValue;
+            var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
             foreach (var h in hits)
             {
                 var hp = h.GetComponent<Enemies.Health>();
@@ -208,51 +277,74 @@ namespace TimelessEchoes.Hero
                     nearest = h.transform;
                 }
             }
-            bool nowInCombat = nearest != null;
-            if (nowInCombat)
+            return nearest;
+        }
+
+        private void HandleCombat(Transform enemy)
+        {
+            state = State.Combat;
+            setter.target = enemy;
+            if (!inCombat && diceRoller != null && !isRolling)
             {
-                target = nearest;
-                setter.target = nearest;
-                if (!inCombat && diceRoller != null && !isRolling)
-                {
-                    float rate = CurrentAttackRate;
-                    float cooldown = rate > 0f ? 1f / rate : 0.5f;
-                    StartCoroutine(RollForCombat(cooldown));
-                }
-            }
-            else
-            {
-                if (inCombat)
-                {
-                    combatDamageMultiplier = 1f;
-                    diceRoller?.ResetRoll();
-                }
-                if ((currentTask == null || currentTask.IsComplete() || setter.target == null) && taskController != null)
-                {
-                    taskController.SelectNextTask();
-                    target = setter.target;
-                }
+                float rate = CurrentAttackRate;
+                float cooldown = rate > 0f ? 1f / rate : 0.5f;
+                StartCoroutine(RollForCombat(cooldown));
             }
 
-            inCombat = nowInCombat;
+            var hp = enemy.GetComponent<Enemies.Health>();
+            if (hp == null || hp.CurrentHealth <= 0f) return;
 
-            if (target == null) return;
-
-            var enemy = target.GetComponent<Enemies.Health>();
-            if (enemy == null) return;
-            if (enemy.CurrentHealth <= 0f) return;
-
-            var dist = Vector2.Distance(transform.position, target.position);
+            var dist = Vector2.Distance(transform.position, enemy.position);
             if (dist <= stats.visionRange)
             {
                 float rate = CurrentAttackRate;
                 float cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
                 if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
                 {
-                    lastMoveDir = target.position - transform.position;
-                    Attack(target);
+                    lastMoveDir = enemy.position - transform.position;
+                    Attack(enemy);
                     lastAttack = Time.time;
                 }
+            }
+
+            inCombat = true;
+        }
+
+        private void BeginMining(MiningTask task)
+        {
+            miningTask = task;
+            miningTimer = 0f;
+            state = State.Mining;
+            ai.canMove = false;
+            setter.target = task.transform;
+            if (task.ProgressBar != null)
+            {
+                task.ProgressBar.gameObject.SetActive(true);
+                task.ProgressBar.fillAmount = 1f;
+            }
+            animator?.Play("Mining");
+        }
+
+        private void HandleMining()
+        {
+            if (miningTask == null)
+            {
+                state = State.Idle;
+                return;
+            }
+
+            miningTimer += Time.deltaTime;
+            if (miningTask.ProgressBar != null)
+                miningTask.ProgressBar.fillAmount = Mathf.Clamp01((miningTask.MineTime - miningTimer) / miningTask.MineTime);
+
+            if (miningTimer >= miningTask.MineTime)
+            {
+                ai.canMove = true;
+                animator?.SetTrigger("StopMining");
+                miningTask.CompleteTask();
+                taskController?.RemoveTask(miningTask);
+                miningTask = null;
+                state = State.Idle;
             }
         }
 
