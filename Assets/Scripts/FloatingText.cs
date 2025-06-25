@@ -24,6 +24,7 @@ namespace TimelessEchoes
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;
             ft.tmp.fontSize = fontSize;
+            ft.tmp.fontStyle |= FontStyles.SmallCaps;
             ft.tmp.text = text;
             ft.tmp.color = color;
 
