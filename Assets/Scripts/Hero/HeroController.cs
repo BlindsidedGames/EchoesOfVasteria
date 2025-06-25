@@ -5,6 +5,7 @@ using UnityEngine;
 using TimelessEchoes;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Hero
 {
@@ -188,6 +189,7 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
+            TELogger.Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", this);
             currentTask = task;
             miningTask = null;
             state = State.Idle;
@@ -202,6 +204,14 @@ namespace TimelessEchoes.Hero
         public void SetDestination(Transform dest)
         {
             setter.target = dest;
+        }
+
+        private bool IsAtDestination(Transform dest)
+        {
+            if (dest == null || ai == null)
+                return false;
+            float threshold = ai.endReachedDistance + 0.1f;
+            return Vector2.Distance(transform.position, dest.position) <= threshold;
         }
 
         private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
@@ -219,6 +229,7 @@ namespace TimelessEchoes.Hero
             }
             else if (state == State.Combat)
             {
+                TELogger.Log("Hero exiting combat", this);
                 combatDamageMultiplier = 1f;
                 diceRoller?.ResetRoll();
                 inCombat = false;
@@ -243,7 +254,7 @@ namespace TimelessEchoes.Hero
                 if (setter.target != dest)
                     setter.target = dest;
 
-                if (ai.reachedDestination && state != State.Mining)
+                if (state != State.Mining && IsAtDestination(dest))
                     BeginMining(mt);
                 else
                     state = State.Moving;
@@ -282,6 +293,8 @@ namespace TimelessEchoes.Hero
 
         private void HandleCombat(Transform enemy)
         {
+            if (state != State.Combat)
+                TELogger.Log($"Hero entering combat with {enemy.name}", this);
             state = State.Combat;
             setter.target = enemy;
             if (!inCombat && diceRoller != null && !isRolling)
@@ -312,6 +325,7 @@ namespace TimelessEchoes.Hero
 
         private void BeginMining(MiningTask task)
         {
+            TELogger.Log($"Begin mining {task.name}", this);
             miningTask = task;
             miningTimer = 0f;
             state = State.Mining;
@@ -339,6 +353,7 @@ namespace TimelessEchoes.Hero
 
             if (miningTimer >= miningTask.MineTime)
             {
+                TELogger.Log($"Finished mining {miningTask.name}", this);
                 ai.canMove = true;
                 animator?.SetTrigger("StopMining");
                 miningTask.CompleteTask();

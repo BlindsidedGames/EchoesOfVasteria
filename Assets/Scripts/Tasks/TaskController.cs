@@ -3,6 +3,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using Unity.Cinemachine;
 using UnityEngine;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Tasks
 {
@@ -187,6 +188,7 @@ namespace TimelessEchoes.Tasks
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
+                TELogger.Log($"Starting task: {currentTaskName}", this);
                 hero?.SetTask(task);
                 task.StartTask();
                 return;
@@ -194,6 +196,7 @@ namespace TimelessEchoes.Tasks
 
             currentTaskName = "Complete";
             currentIndex = tasks.Count;
+            TELogger.Log("All tasks complete", this);
             hero?.SetDestination(exitPoint);
         }
 
