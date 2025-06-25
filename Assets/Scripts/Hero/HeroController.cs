@@ -208,7 +208,16 @@ namespace TimelessEchoes.Hero
             if (setter != null)
             {
                 setter.target = task != null ? task.Target : null;
-                ai?.SearchPath();
+                // Reset the AI path so reachedDestination isn't true
+                // before the new destination has been processed.
+                if (ai != null)
+                {
+                    ai.Teleport(transform.position); // Clears path and searches again
+                }
+                else
+                {
+                    ai?.SearchPath();
+                }
             }
         }
 
