@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
@@ -8,11 +7,11 @@ using Blindsided.Utilities;
 namespace TimelessEchoes.Tasks
 {
     /// <summary>
-    /// Task for mining a rock and collecting resources. All logic is driven by
-    /// the hero rather than this component.
+    /// Task for mining a rock and collecting resources.
     /// </summary>
     public class MiningTask : MonoBehaviour, ITask
     {
+
         [SerializeField] private float mineTime = 2f;
         [SerializeField] private SlicedFilledImage progressBar;
         [SerializeField] private Transform leftPoint;
@@ -22,16 +21,20 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private List<ResourceDrop> resourceDrops = new();
 
         private ResourceManager resourceManager;
+        private Hero.HeroController hero;
+        private AIPath heroAI;
+        private AIDestinationSetter heroSetter;
+        private float timer;
+        private bool mining;
         private bool complete;
-
-        public float MineTime => mineTime;
-        public SlicedFilledImage ProgressBar => progressBar;
+        private Transform currentPoint;
 
         public Transform Target
         {
             get
             {
-                var hero = FindFirstObjectByType<Hero.HeroController>();
+                if (hero == null)
+                    hero = FindFirstObjectByType<Hero.HeroController>();
                 if (hero == null)
                     return leftPoint != null ? leftPoint : transform;
                 return GetNearestPoint(hero.transform);
@@ -59,6 +62,8 @@ namespace TimelessEchoes.Tasks
         public void StartTask()
         {
             complete = false;
+            mining = false;
+            timer = 0f;
             if (progressBar != null)
             {
                 progressBar.fillAmount = 1f;
@@ -66,45 +71,70 @@ namespace TimelessEchoes.Tasks
             }
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
+            if (hero == null)
+                hero = FindFirstObjectByType<Hero.HeroController>();
+            if (hero != null)
+            {
+                heroAI = hero.GetComponent<AIPath>();
+                heroSetter = hero.GetComponent<AIDestinationSetter>();
+                currentPoint = GetNearestPoint(hero.transform);
+                hero.SetDestination(currentPoint);
+            }
         }
 
-        /// <summary>
-        /// Called by the hero to perform mining over time.
-        /// </summary>
-        public IEnumerator MineCoroutine(Hero.HeroController hero)
+        private void Update()
         {
-            if (hero == null) yield break;
+            if (complete || hero == null)
+                return;
 
-            var ai = hero.GetComponent<AIPath>();
-            var setter = hero.GetComponent<AIDestinationSetter>();
-            var anim = hero.GetComponentInChildren<Animator>();
+            if (!mining)
+            {
+                if (currentPoint == null)
+                    currentPoint = GetNearestPoint(hero.transform);
+                if (heroAI != null && heroAI.reachedDestination)
+                {
+                    BeginMining();
+                }
+            }
+            else
+            {
+                timer += Time.deltaTime;
+                if (progressBar != null)
+                    progressBar.fillAmount = Mathf.Clamp01((mineTime - timer) / mineTime);
+                if (timer >= mineTime)
+                {
+                    FinishMining();
+                }
+            }
+        }
 
-            if (ai != null)
-                ai.canMove = false;
-            if (setter != null)
-                setter.target = transform;
+        private void BeginMining()
+        {
+            mining = true;
+            if (heroAI != null)
+                heroAI.canMove = false;
+            if (heroSetter != null)
+                heroSetter.target = transform;
             if (progressBar != null)
             {
                 progressBar.gameObject.SetActive(true);
                 progressBar.fillAmount = 1f;
             }
+            var anim = hero != null ? hero.GetComponentInChildren<Animator>() : null;
             anim?.Play("Mining");
+        }
 
-            float timer = 0f;
-            while (timer < mineTime)
-            {
-                timer += Time.deltaTime;
-                if (progressBar != null)
-                    progressBar.fillAmount = Mathf.Clamp01((mineTime - timer) / mineTime);
-                yield return null;
-            }
-
-            if (ai != null)
-                ai.canMove = true;
-            if (setter != null)
-                setter.target = null;
+        private void FinishMining()
+        {
+            mining = false;
+            complete = true;
+            if (heroAI != null)
+                heroAI.canMove = true;
+            if (heroSetter != null)
+                heroSetter.target = null;
             if (progressBar != null)
                 progressBar.gameObject.SetActive(false);
+            var anim = hero != null ? hero.GetComponentInChildren<Animator>() : null;
             anim?.SetTrigger("StopMining");
 
             if (resourceManager == null)
@@ -130,7 +160,6 @@ namespace TimelessEchoes.Tasks
                 }
             }
 
-            complete = true;
             Destroy(gameObject);
         }
 
