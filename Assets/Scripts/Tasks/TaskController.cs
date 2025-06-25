@@ -12,6 +12,7 @@ namespace TimelessEchoes.Tasks
     public class TaskController : MonoBehaviour
     {
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
+        private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
 
         [SerializeField] private Transform entryPoint;
         [SerializeField] private Transform exitPoint;
@@ -69,6 +70,7 @@ namespace TimelessEchoes.Tasks
         public void ClearTaskObjects()
         {
             taskObjects.Clear();
+            taskMap.Clear();
         }
 
         /// <summary>
@@ -85,6 +87,7 @@ namespace TimelessEchoes.Tasks
         {
             currentIndex = -1;
             tasks.Clear();
+            taskMap.Clear();
 
             // Build the task list in the order provided by the editor
             foreach (var obj in taskObjects)
@@ -95,7 +98,6 @@ namespace TimelessEchoes.Tasks
                 var enemy = obj.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    // Ensure the enemy's health is initialized before tasks start
                     var hp = enemy.GetComponent<Health>();
                     if (hp != null)
                         hp.Init((int)hp.MaxHealth);
@@ -104,18 +106,23 @@ namespace TimelessEchoes.Tasks
                         kill = enemy.gameObject.AddComponent<KillEnemyTask>();
                     kill.target = enemy.transform;
                     tasks.Add(kill);
+                    taskMap[kill] = obj;
                     continue;
                 }
 
                 if (obj is ITask existing)
                 {
                     tasks.Add(existing);
+                    taskMap[existing] = obj;
                     continue;
                 }
 
                 var compTask = obj.GetComponent<ITask>();
                 if (compTask != null)
+                {
                     tasks.Add(compTask);
+                    taskMap[compTask] = obj;
+                }
             }
 
             hero?.SetTask(null);
@@ -138,6 +145,11 @@ namespace TimelessEchoes.Tasks
                     if (i <= currentIndex)
                         currentIndex--;
                     tasks.RemoveAt(i);
+                    if (taskMap.TryGetValue(task, out var obj))
+                    {
+                        taskObjects.Remove(obj);
+                        taskMap.Remove(task);
+                    }
                     removed = true;
                     continue;
                 }
@@ -150,6 +162,11 @@ namespace TimelessEchoes.Tasks
                         if (i <= currentIndex)
                             currentIndex--;
                         tasks.RemoveAt(i);
+                        if (taskMap.TryGetValue(task, out var obj))
+                        {
+                            taskObjects.Remove(obj);
+                            taskMap.Remove(task);
+                        }
                         if (kill != null)
                             Destroy(kill);
                         removed = true;
