@@ -91,8 +91,7 @@ namespace TimelessEchoes.Tasks
             {
                 if (currentPoint == null)
                     currentPoint = GetNearestPoint(hero.transform);
-                float dist = Vector2.Distance(hero.transform.position, currentPoint.position);
-                if (dist <= 0.1f)
+                if (heroAI != null && heroAI.reachedDestination)
                 {
                     BeginMining();
                 }
@@ -101,7 +100,7 @@ namespace TimelessEchoes.Tasks
             {
                 timer += Time.deltaTime;
                 if (progressBar != null)
-                    progressBar.fillAmount = Mathf.Clamp01(1f - timer / mineTime);
+                    progressBar.fillAmount = Mathf.Clamp01((mineTime - timer) / mineTime);
                 if (timer >= mineTime)
                 {
                     FinishMining();
@@ -160,6 +159,8 @@ namespace TimelessEchoes.Tasks
                     }
                 }
             }
+
+            Destroy(gameObject);
         }
 
         public bool IsComplete()
