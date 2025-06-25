@@ -47,6 +47,11 @@ namespace TimelessEchoes.Hero
         private float lastAttack = float.NegativeInfinity;
         private bool isRolling;
         private bool allowAttacks = true;
+        // Allows other systems to manually flag that the destination
+        // has been reached even if the pathfinding system does not
+        // report it. This can be useful for scripted events or when
+        // the destination is obstructed.
+        private bool destinationOverride;
         private ITask currentTask;
         public ITask CurrentTask => currentTask;
         [SerializeField] private string currentTaskName;
@@ -147,6 +152,7 @@ namespace TimelessEchoes.Hero
             currentTask = null;
             miningTask = null;
             state = State.Idle;
+            destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
         }
 
@@ -207,13 +213,26 @@ namespace TimelessEchoes.Hero
 
         public void SetDestination(Transform dest)
         {
+            destinationOverride = false;
             setter.target = dest;
+        }
+
+        /// <summary>
+        /// Manually flag that the hero has reached its destination.
+        /// This bypasses the built-in pathfinding checks in <see cref="IsAtDestination"/>.
+        /// </summary>
+        public void SetDestinationReached()
+        {
+            destinationOverride = true;
         }
 
         private bool IsAtDestination(Transform dest)
         {
             if (dest == null || ai == null)
                 return false;
+
+            if (destinationOverride)
+                return true;
 
             // Consider the destination reached if the pathfinding component
             // reports it cannot move any closer. This handles cases where the
