@@ -325,9 +325,19 @@ namespace TimelessEchoes.Hero
 
         private void HandleCombat(Transform enemy)
         {
+            if (state == State.Mining)
+            {
+                ai.canMove = true;
+                animator?.SetTrigger("StopMining");
+                if (miningTask?.ProgressBar != null)
+                    miningTask.ProgressBar.gameObject.SetActive(false);
+                miningTask = null;
+            }
+
             if (state != State.Combat)
                 Log($"Hero entering combat with {enemy.name}", this);
             state = State.Combat;
+            ai.canMove = true;
             setter.target = enemy;
             if (!inCombat && diceRoller != null && !isRolling)
             {
