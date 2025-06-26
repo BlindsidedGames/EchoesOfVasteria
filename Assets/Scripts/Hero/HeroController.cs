@@ -319,6 +319,17 @@ namespace TimelessEchoes.Hero
                     setter.target = ke.target;
                 state = State.Moving;
             }
+            else if (CurrentTask is OpenChestTask oct)
+            {
+                var dest = oct.Target;
+                if (setter.target != dest)
+                    setter.target = dest;
+
+                if (!oct.IsComplete() && IsAtDestination(dest))
+                    oct.Open();
+
+                state = State.Moving;
+            }
             else
             {
                 setter.target = CurrentTask.Target;
