@@ -128,7 +128,7 @@ namespace TimelessEchoes.Tilemaps
         [CustomEditor(typeof(WeightedRuleTile))]
         public class WeightedRuleTileEditor : RuleTileEditor
         {
-            public override void RuleInspectorOnGUI(Rect rect, RuleTile.TilingRuleOutput tilingRule)
+            public new void RuleInspectorOnGUI(Rect rect, RuleTile.TilingRuleOutput tilingRule)
             {
                 base.RuleInspectorOnGUI(rect, tilingRule);
 
