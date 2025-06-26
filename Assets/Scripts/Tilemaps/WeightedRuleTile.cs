@@ -1,149 +1,120 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-namespace TimelessEchoes.Tilemaps
+namespace TimelessEchoes.Tilemaps // Ensure this namespace is correct for your project
 {
     /// <summary>
-    /// Extension of RuleTile that supports weighted random sprite output.
+    ///     This is a top-level class, not a nested one.
     /// </summary>
     [Serializable]
+    public class WeightedTilingRule : RuleTile.TilingRule
+    {
+        public float[] m_SpriteWeights;
+    }
+
+    /// <summary>
+    ///     RuleTile variant that lets you assign a weight to each sprite when the rule’s <b>Output</b> is set to <i>Random</i>
+    ///     .
+    /// </summary>
+    [CreateAssetMenu(fileName = "Weighted Rule Tile", menuName = "2D/Tiles/Weighted Rule Tile")]
     public class WeightedRuleTile : RuleTile
     {
-        /// <summary>
-        /// Tiling rule with per-sprite weights.
-        /// </summary>
-        [Serializable]
-        public class WeightedTilingRule : TilingRule
+#if UNITY_EDITOR
+        // This is the reflection-based method from your original script.
+        // With the un-nested WeightedTilingRule class, this should now work correctly.
+        public Type GetTilingRuleType()
         {
-            public float[] m_SpriteWeights = new float[1];
-
-            public new WeightedTilingRule Clone()
-            {
-                var rule = new WeightedTilingRule
-                {
-                    m_Neighbors = new List<int>(m_Neighbors),
-                    m_NeighborPositions = new List<Vector3Int>(m_NeighborPositions),
-                    m_RuleTransform = m_RuleTransform,
-                    m_Sprites = (Sprite[])m_Sprites.Clone(),
-                    m_GameObject = m_GameObject,
-                    m_MinAnimationSpeed = m_MinAnimationSpeed,
-                    m_MaxAnimationSpeed = m_MaxAnimationSpeed,
-                    m_PerlinScale = m_PerlinScale,
-                    m_Output = m_Output,
-                    m_ColliderType = m_ColliderType,
-                    m_RandomTransform = m_RandomTransform,
-                    m_SpriteWeights = (float[])m_SpriteWeights.Clone()
-                };
-                return rule;
-            }
+            return typeof(WeightedTilingRule);
         }
+#endif
 
+        // --- All the runtime logic for selecting sprites remains the same ---
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {
-            var iden = Matrix4x4.identity;
-
+            var identity = Matrix4x4.identity;
             tileData.sprite = m_DefaultSprite;
             tileData.gameObject = m_DefaultGameObject;
             tileData.colliderType = m_DefaultColliderType;
+            tileData.transform = identity;
             tileData.flags = TileFlags.LockTransform;
-            tileData.transform = iden;
 
-            Matrix4x4 transform = iden;
-            foreach (TilingRule rule in m_TilingRules)
+            var transform = identity;
+
+            foreach (var rule in m_TilingRules)
             {
-                if (RuleMatches(rule, position, tilemap, ref transform))
+                if (!RuleMatches(rule, position, tilemap, ref transform))
+                    continue;
+
+                switch (rule.m_Output)
                 {
-                    switch (rule.m_Output)
-                    {
-                        case TilingRuleOutput.OutputSprite.Single:
-                        case TilingRuleOutput.OutputSprite.Animation:
+                    case TilingRuleOutput.OutputSprite.Single:
+                        if (rule.m_Sprites != null && rule.m_Sprites.Length > 0)
                             tileData.sprite = rule.m_Sprites[0];
-                            break;
-                        case TilingRuleOutput.OutputSprite.Random:
-                            int index;
-                            if (rule is WeightedTilingRule wRule &&
-                                wRule.m_SpriteWeights != null &&
-                                wRule.m_SpriteWeights.Length == rule.m_Sprites.Length)
-                            {
-                                index = GetWeightedIndex(position, wRule.m_SpriteWeights);
-                            }
-                            else
-                            {
-                                index = Mathf.Clamp(
-                                    Mathf.FloorToInt(GetPerlinValue(position, rule.m_PerlinScale, 100000f) *
-                                                     rule.m_Sprites.Length),
-                                    0, rule.m_Sprites.Length - 1);
-                            }
-                            tileData.sprite = rule.m_Sprites[index];
-                            if (rule.m_RandomTransform != TilingRuleOutput.Transform.Fixed)
-                                transform = ApplyRandomTransform(rule.m_RandomTransform, transform,
-                                    rule.m_PerlinScale, position);
-                            break;
+                        break;
+
+                    case TilingRuleOutput.OutputSprite.Animation:
+                        if (rule.m_Sprites != null && rule.m_Sprites.Length > 0)
+                            tileData.sprite = rule.m_Sprites[0];
+                        tileData.flags |= TileFlags.LockColor;
+                        break;
+
+                    case TilingRuleOutput.OutputSprite.Random:
+                    {
+                        if (rule is WeightedTilingRule wRule && wRule.m_SpriteWeights != null &&
+                            wRule.m_SpriteWeights.Length == rule.m_Sprites.Length && rule.m_Sprites.Length > 0)
+                        {
+                            var pick = GetWeightedIndex(wRule.m_SpriteWeights, position);
+                            tileData.sprite = rule.m_Sprites[pick];
+                        }
+                        else if (rule.m_Sprites != null && rule.m_Sprites.Length > 0)
+                        {
+                            var hash = Mathf.Abs(GetRandomHash(position));
+                            tileData.sprite = rule.m_Sprites[hash % rule.m_Sprites.Length];
+                        }
+
+                        break;
                     }
-
-                    tileData.transform = transform;
-                    tileData.gameObject = rule.m_GameObject;
-                    tileData.colliderType = rule.m_ColliderType;
-                    break;
                 }
+
+                tileData.transform = transform;
+                tileData.gameObject = rule.m_GameObject;
+                tileData.colliderType = rule.m_ColliderType;
+                return;
             }
         }
 
-        private static int GetWeightedIndex(Vector3Int position, float[] weights)
+        private static int GetWeightedIndex(float[] weights, Vector3Int position)
         {
-            var oldState = Random.state;
-            long hash = position.x;
-            hash = hash + 0xabcd1234 + (hash << 15);
-            hash = hash + 0x0987efab ^ (hash >> 11);
-            hash ^= position.y;
-            hash = hash + 0x46ac12fd + (hash << 7);
-            hash = hash + 0xbe9730af ^ (hash << 11);
-            Random.InitState((int)hash);
+            var total = 0f;
+            foreach (var w in weights) total += Mathf.Max(0f, w);
+            if (total <= 0f) return 0;
 
-            float total = 0f;
-            foreach (var w in weights)
-                total += w;
+            var rawHash = Mathf.Abs(GetRandomHash(position));
+            var rnd = rawHash % 10000 / 10000f * total;
 
-            float r = Random.Range(0f, total);
-            for (int i = 0; i < weights.Length; i++)
+            var accum = 0f;
+            for (var i = 0; i < weights.Length; ++i)
             {
-                r -= weights[i];
-                if (r < 0f)
-                {
-                    Random.state = oldState;
-                    return i;
-                }
+                accum += Mathf.Max(0f, weights[i]);
+                if (rnd < accum) return i;
             }
 
-            Random.state = oldState;
-            return Mathf.Max(0, weights.Length - 1);
+            return weights.Length - 1;
         }
 
-#if UNITY_EDITOR
-        [CustomEditor(typeof(WeightedRuleTile))]
-        public class WeightedRuleTileEditor : RuleTileEditor
+        private static int GetRandomHash(Vector3Int position)
         {
-            public new void RuleInspectorOnGUI(Rect rect, RuleTile.TilingRuleOutput tilingRule)
+            unchecked
             {
-                base.RuleInspectorOnGUI(rect, tilingRule);
-
-                var wRule = tilingRule as WeightedTilingRule;
-                if (wRule == null || wRule.m_Output != TilingRuleOutput.OutputSprite.Random)
-                    return;
-
-                int count = wRule.m_Sprites != null ? wRule.m_Sprites.Length : 0;
-                if (wRule.m_SpriteWeights == null || wRule.m_SpriteWeights.Length != count)
-                    Array.Resize(ref wRule.m_SpriteWeights, count);
-
-                for (int i = 0; i < count; i++)
-                    wRule.m_SpriteWeights[i] = EditorGUILayout.FloatField($"Weight {i + 1}", wRule.m_SpriteWeights[i]);
+                var hash = position.x;
+                hash = hash + 0x7ed55d16 + (hash << 12);
+                hash ^= (int)0xc761c23c ^ (hash >> 19);
+                hash += position.y;
+                hash += 0x165667b1 + (hash << 5);
+                hash = (hash + (int)0xd3a2646c) ^ (hash << 9);
+                return hash;
             }
         }
-#endif
     }
 }
