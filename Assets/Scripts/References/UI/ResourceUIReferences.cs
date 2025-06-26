@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace References.UI
 {
@@ -10,14 +11,11 @@ namespace References.UI
     {
         private static readonly List<ResourceUIReferences> instances = new();
         public Image questionMarkImage;
+        public Image highlightImage;
         public Image iconImage;
         public TMP_Text countText;
         public Image selectionImage;
         public Button selectButton;
-
-        public event System.Action<ResourceUIReferences> PointerEnter;
-        public event System.Action<ResourceUIReferences> PointerExit;
-        public event System.Action<ResourceUIReferences, PointerEventData.InputButton> PointerClick;
 
         private void Awake()
         {
@@ -33,11 +31,9 @@ namespace References.UI
                 selectButton.onClick.RemoveListener(OnSelect);
         }
 
-        private void OnSelect()
+        public void OnPointerClick(PointerEventData eventData)
         {
-            foreach (var inst in instances)
-                if (inst != null && inst.selectionImage != null)
-                    inst.selectionImage.enabled = ReferenceEquals(inst, this);
+            PointerClick?.Invoke(this, eventData.button);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -50,9 +46,15 @@ namespace References.UI
             PointerExit?.Invoke(this);
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public event Action<ResourceUIReferences> PointerEnter;
+        public event Action<ResourceUIReferences> PointerExit;
+        public event Action<ResourceUIReferences, PointerEventData.InputButton> PointerClick;
+
+        private void OnSelect()
         {
-            PointerClick?.Invoke(this, eventData.button);
+            foreach (var inst in instances)
+                if (inst != null && inst.selectionImage != null)
+                    inst.selectionImage.enabled = ReferenceEquals(inst, this);
         }
     }
 }
