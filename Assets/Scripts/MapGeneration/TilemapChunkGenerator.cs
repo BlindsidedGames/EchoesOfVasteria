@@ -15,8 +15,10 @@ namespace TimelessEchoes.MapGeneration
         [Header("Tilemaps")]
         [TabGroup("References")]
         [SerializeField] private Tilemap waterMap;
+        public Tilemap WaterMap => waterMap;
         [TabGroup("References")]
         [SerializeField] private Tilemap sandMap;
+        public Tilemap SandMap => sandMap;
         [TabGroup("References")]
         [SerializeField] private Tilemap grassMap;
 
