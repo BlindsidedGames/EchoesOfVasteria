@@ -207,7 +207,6 @@ namespace TimelessEchoes.Enemies
                 if (count > 0)
                 {
                     resourceManager.Add(drop.resource, count);
-                    TimelessEchoes.FloatingText.Spawn($"{drop.resource.name} x{count}", transform.position + Vector3.up, Color.yellow);
                 }
             }
         }
