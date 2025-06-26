@@ -542,9 +542,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishTime: 2
-  progressBar: {fileID: 567852907585319674}
   progressBarObject: {fileID: 7311250231813555340}
+  progressBar: {fileID: 567852907585319674}
   fishingPoint: {fileID: 1391531017378201527}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
+    dropRange: {x: 1, y: 5}
+    dropChance: 1
 --- !u!1 &7311250231813555340
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7563802737134935467
 RectTransform:
   m_ObjectHideFlags: 0
