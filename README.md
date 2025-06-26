@@ -34,6 +34,9 @@ from the entry point to keep your hero on an efficient route.
 Mining and fishing tasks award resources when completed. Use these resources to
 upgrade your hero.
 
+Water-based tasks ignore blocking colliders, allowing them to spawn even when a
+tile on the `Blocking` layer is present.
+
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
