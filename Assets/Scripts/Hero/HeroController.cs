@@ -38,13 +38,8 @@ namespace TimelessEchoes.Hero
         private float combatDamageMultiplier = 1f;
 
         private float damageBonus;
-
         private float defenseBonus;
 
-        // Allows other systems to manually flag that the destination
-        // has been reached even if the pathfinding system does not
-        // report it. This can be useful for scripted events or when
-        // the destination is obstructed.
         private bool destinationOverride;
         private Health health;
         private float healthBonus;
@@ -52,13 +47,7 @@ namespace TimelessEchoes.Hero
         private bool isRolling;
         private float lastAttack = float.NegativeInfinity;
 
-        // Remember the last movement direction so the attack blend tree can
-        // continue to use it even when the hero stops moving.
         private Vector2 lastMoveDir = Vector2.down;
-        private MiningTask miningTask;
-        private float miningTimer;
-        private FishingTask fishingTask;
-        private float fishingTimer;
         private float moveSpeedBonus;
         private AIDestinationSetter setter;
 
@@ -66,6 +55,7 @@ namespace TimelessEchoes.Hero
 
         private TaskController taskController;
         public ITask CurrentTask { get; private set; }
+        public Animator Animator => animator;
 
         private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
         public float Defense => baseDefense + defenseBonus;
@@ -115,12 +105,11 @@ namespace TimelessEchoes.Hero
                 transform.position = start.position;
             if (animator != null)
             {
-                var state = animator.GetCurrentAnimatorStateInfo(0);
-                animator.Play(state.fullPathHash, 0, Random.value);
+                var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                animator.Play(stateInfo.fullPathHash, 0, Random.value);
             }
 
             CurrentTask = null;
-            miningTask = null;
             state = State.Idle;
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
@@ -167,8 +156,6 @@ namespace TimelessEchoes.Hero
             Vector2 vel = ai.desiredVelocity;
             var dir = vel;
 
-            // If we're nearly stationary but have a target, face the target so
-            // attack animations look correct when an enemy passes by.
             if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
                 dir = setter.target.position - transform.position;
 
@@ -200,57 +187,19 @@ namespace TimelessEchoes.Hero
             CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
-            miningTask = null;
             state = State.Idle;
-            // Ensure the destination setter is initialized even if Awake has not run yet
+
             if (setter == null)
                 setter = GetComponent<AIDestinationSetter>();
 
             if (setter != null)
             {
-                setter.target = task != null ? task.Target : null;
-                // Reset the AI path so reachedDestination isn't true
-                // before the new destination has been processed.
+                setter.target = task?.Target;
                 if (ai != null)
-                    ai.Teleport(transform.position); // Clears path and searches again
+                    ai.Teleport(transform.position);
                 else
                     ai?.SearchPath();
             }
-        }
-
-        public void SetDestination(Transform dest)
-        {
-            destinationOverride = false;
-            setter.target = dest;
-            ai?.SearchPath();
-        }
-
-        /// <summary>
-        ///     Manually flag that the hero has reached its destination.
-        ///     This bypasses the built-in pathfinding checks in <see cref="IsAtDestination" />.
-        /// </summary>
-        [Button("Mark Destination Reached")]
-        public void SetDestinationReached()
-        {
-            destinationOverride = true;
-        }
-
-        private bool IsAtDestination(Transform dest)
-        {
-            if (dest == null || ai == null)
-                return false;
-
-            if (destinationOverride)
-                return true;
-
-            // Consider the destination reached if the pathfinding component
-            // reports it cannot move any closer. This handles cases where the
-            // target point is not directly reachable by the navmesh.
-            if (ai.reachedDestination || ai.reachedEndOfPath)
-                return true;
-
-            var threshold = ai.endReachedDistance + 0.1f;
-            return Vector2.Distance(transform.position, dest.position) <= threshold;
         }
 
         private void UpdateBehavior()
@@ -260,6 +209,7 @@ namespace TimelessEchoes.Hero
             var nearest = FindNearestEnemy();
             if (nearest != null)
             {
+                if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
                 HandleCombat(nearest);
                 return;
             }
@@ -274,68 +224,40 @@ namespace TimelessEchoes.Hero
                 taskController?.SelectEarliestTask();
             }
 
-            if (state == State.Mining)
-            {
-                HandleMining();
-                return;
-            }
-
-            if (state == State.Fishing)
-            {
-                HandleFishing();
-                return;
-            }
-
             if (CurrentTask == null || CurrentTask.IsComplete())
+            {
+                CurrentTask = null;
+                state = State.Idle;
                 taskController?.SelectEarliestTask();
-
-            if (CurrentTask == null) return;
-
-            if (CurrentTask is MiningTask mt)
-            {
-                var dest = mt.Target;
-                if (setter.target != dest)
-                    setter.target = dest;
-
-                if (state != State.Mining && IsAtDestination(dest))
-                    BeginMining(mt);
-                else
-                    state = State.Moving;
             }
-            else if (CurrentTask is FishingTask ft)
-            {
-                var dest = ft.Target;
-                if (setter.target != dest)
-                    setter.target = dest;
 
-                if (state != State.Fishing && IsAtDestination(dest))
-                    BeginFishing(ft);
-                else
-                    state = State.Moving;
+            if (CurrentTask == null)
+            {
+                setter.target = null;
+                return;
             }
-            else if (CurrentTask is KillEnemyTask ke)
-            {
-                if (ke.target != null)
-                    setter.target = ke.target;
-                state = State.Moving;
-            }
-            else if (CurrentTask is OpenChestTask oct)
-            {
-                var dest = oct.Target;
-                if (setter.target != dest)
-                    setter.target = dest;
 
-                if (!oct.IsComplete() && IsAtDestination(dest))
-                    oct.Open();
+            var dest = CurrentTask.Target;
+            if (setter.target != dest) setter.target = dest;
 
-                state = State.Moving;
+            if (IsAtDestination(dest))
+            {
+                if (state != State.PerformingTask)
+                {
+                    state = State.PerformingTask;
+                    ai.canMove = !CurrentTask.BlocksMovement;
+                    CurrentTask.OnArrival(this);
+                }
+
+                CurrentTask.Tick(this);
             }
             else
             {
-                setter.target = CurrentTask.Target;
-                state = State.Moving;
+                state = State.MovingToTask;
+                ai.canMove = true;
             }
         }
+
 
         private Transform FindNearestEnemy()
         {
@@ -359,26 +281,7 @@ namespace TimelessEchoes.Hero
 
         private void HandleCombat(Transform enemy)
         {
-            if (state == State.Mining)
-            {
-                ai.canMove = true;
-                animator?.SetTrigger("StopMining");
-                if (miningTask?.ProgressBarObject != null)
-                    miningTask.ProgressBarObject.SetActive(false);
-                else if (miningTask?.ProgressBar != null)
-                    miningTask.ProgressBar.gameObject.SetActive(false);
-                miningTask = null;
-            }
-            else if (state == State.Fishing)
-            {
-                ai.canMove = true;
-                animator?.SetTrigger("CatchFish");
-                if (fishingTask?.ProgressBarObject != null)
-                    fishingTask.ProgressBarObject.SetActive(false);
-                else if (fishingTask?.ProgressBar != null)
-                    fishingTask.ProgressBar.gameObject.SetActive(false);
-                fishingTask = null;
-            }
+            ai.canMove = true;
 
             if (state != State.Combat)
             {
@@ -392,7 +295,6 @@ namespace TimelessEchoes.Hero
             }
 
             state = State.Combat;
-            ai.canMove = true;
             setter.target = enemy;
 
             var hp = enemy.GetComponent<Health>();
@@ -409,96 +311,6 @@ namespace TimelessEchoes.Hero
                     Attack(enemy);
                     lastAttack = Time.time;
                 }
-            }
-        }
-
-        private void BeginMining(MiningTask task)
-        {
-            Log($"Begin mining {task.name}", this);
-            miningTask = task;
-            miningTimer = 0f;
-            state = State.Mining;
-            ai.canMove = false;
-            setter.target = task.transform;
-            if (task.ProgressBar != null)
-            {
-                if (task.ProgressBarObject != null)
-                    task.ProgressBarObject.SetActive(true);
-                else
-                    task.ProgressBar.gameObject.SetActive(true);
-                task.ProgressBar.fillAmount = 1f;
-            }
-
-            animator?.Play("Mining");
-        }
-
-        private void HandleMining()
-        {
-            if (miningTask == null)
-            {
-                state = State.Idle;
-                return;
-            }
-
-            miningTimer += Time.deltaTime;
-            if (miningTask.ProgressBar != null)
-                miningTask.ProgressBar.fillAmount =
-                    Mathf.Clamp01((miningTask.MineTime - miningTimer) / miningTask.MineTime);
-
-            if (miningTimer >= miningTask.MineTime)
-            {
-                Log($"Finished mining {miningTask.name}", this);
-                ai.canMove = true;
-                animator?.SetTrigger("StopMining");
-                miningTask.CompleteTask();
-                miningTask = null;
-                taskController?.SelectEarliestTask();
-                state = State.Idle;
-            }
-        }
-
-        private void BeginFishing(FishingTask task)
-        {
-            Log($"Begin fishing {task.name}", this);
-            fishingTask = task;
-            fishingTimer = 0f;
-            state = State.Fishing;
-            ai.canMove = false;
-            setter.target = task.transform;
-            if (task.ProgressBar != null)
-            {
-                if (task.ProgressBarObject != null)
-                    task.ProgressBarObject.SetActive(true);
-                else
-                    task.ProgressBar.gameObject.SetActive(true);
-                task.ProgressBar.fillAmount = 1f;
-            }
-
-            animator?.Play("Fishing");
-        }
-
-        private void HandleFishing()
-        {
-            if (fishingTask == null)
-            {
-                state = State.Idle;
-                return;
-            }
-
-            fishingTimer += Time.deltaTime;
-            if (fishingTask.ProgressBar != null)
-                fishingTask.ProgressBar.fillAmount =
-                    Mathf.Clamp01((fishingTask.FishTime - fishingTimer) / fishingTask.FishTime);
-
-            if (fishingTimer >= fishingTask.FishTime)
-            {
-                Log($"Finished fishing {fishingTask.name}", this);
-                ai.canMove = true;
-                animator?.SetTrigger("CatchFish");
-                fishingTask.CompleteTask();
-                fishingTask = null;
-                taskController?.SelectEarliestTask();
-                state = State.Idle;
             }
         }
 
@@ -535,10 +347,36 @@ namespace TimelessEchoes.Hero
         private enum State
         {
             Idle,
-            Moving,
-            Mining,
-            Fishing,
+            MovingToTask,
+            PerformingTask,
             Combat
         }
+
+        #region Pathfinding Helpers
+
+        public void SetDestination(Transform dest)
+        {
+            destinationOverride = false;
+            setter.target = dest;
+            ai?.SearchPath();
+        }
+
+        [Button("Mark Destination Reached")]
+        public void SetDestinationReached()
+        {
+            destinationOverride = true;
+        }
+
+        private bool IsAtDestination(Transform dest)
+        {
+            if (dest == null || ai == null) return false;
+            if (destinationOverride) return true;
+            if (ai.reachedDestination || ai.reachedEndOfPath) return true;
+
+            var threshold = ai.endReachedDistance + 0.1f;
+            return Vector2.Distance(transform.position, dest.position) <= threshold;
+        }
+
+        #endregion
     }
 }
