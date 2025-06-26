@@ -23,6 +23,7 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<Skill, SkillProgress> progress = new();
 
         public event Action<Skill, float, float> OnExperienceGained;
+        public event Action<Skill, int> OnLevelUp;
 
         private void Awake()
         {
@@ -61,6 +62,7 @@ namespace TimelessEchoes.Skills
             {
                 prog.CurrentXP -= xpNeeded;
                 prog.Level++;
+                OnLevelUp?.Invoke(skill, prog.Level);
                 currentLevel = prog.Level;
                 xpNeeded = skill.xpForFirstLevel * Mathf.Pow(currentLevel, skill.xpLevelMultiplier);
             }
