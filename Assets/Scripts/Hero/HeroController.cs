@@ -352,7 +352,9 @@ namespace TimelessEchoes.Hero
             {
                 ai.canMove = true;
                 animator?.SetTrigger("StopMining");
-                if (miningTask?.ProgressBar != null)
+                if (miningTask?.ProgressBarObject != null)
+                    miningTask.ProgressBarObject.SetActive(false);
+                else if (miningTask?.ProgressBar != null)
                     miningTask.ProgressBar.gameObject.SetActive(false);
                 miningTask = null;
             }
@@ -360,7 +362,9 @@ namespace TimelessEchoes.Hero
             {
                 ai.canMove = true;
                 animator?.SetTrigger("CatchFish");
-                if (fishingTask?.ProgressBar != null)
+                if (fishingTask?.ProgressBarObject != null)
+                    fishingTask.ProgressBarObject.SetActive(false);
+                else if (fishingTask?.ProgressBar != null)
                     fishingTask.ProgressBar.gameObject.SetActive(false);
                 fishingTask = null;
             }
@@ -407,7 +411,10 @@ namespace TimelessEchoes.Hero
             setter.target = task.transform;
             if (task.ProgressBar != null)
             {
-                task.ProgressBar.gameObject.SetActive(true);
+                if (task.ProgressBarObject != null)
+                    task.ProgressBarObject.SetActive(true);
+                else
+                    task.ProgressBar.gameObject.SetActive(true);
                 task.ProgressBar.fillAmount = 1f;
             }
 
@@ -449,7 +456,10 @@ namespace TimelessEchoes.Hero
             setter.target = task.transform;
             if (task.ProgressBar != null)
             {
-                task.ProgressBar.gameObject.SetActive(true);
+                if (task.ProgressBarObject != null)
+                    task.ProgressBarObject.SetActive(true);
+                else
+                    task.ProgressBar.gameObject.SetActive(true);
                 task.ProgressBar.fillAmount = 1f;
             }
 
