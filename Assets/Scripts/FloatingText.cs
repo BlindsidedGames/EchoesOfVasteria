@@ -16,11 +16,13 @@ namespace TimelessEchoes
         /// <summary>
         /// Spawns a floating text object displaying the given string.
         /// </summary>
-        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f)
+        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null)
         {
             var obj = new GameObject("FloatingText");
             var offset = Random.insideUnitCircle * 0.25f;
             obj.transform.position = position + new Vector3(offset.x, offset.y, 0f);
+            if (parent != null)
+                obj.transform.SetParent(parent, true);
             var ft = obj.AddComponent<FloatingText>();
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;

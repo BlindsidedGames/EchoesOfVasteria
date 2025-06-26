@@ -138,7 +138,7 @@ namespace TimelessEchoes.Upgrades
             UpdateSlot(resources.IndexOf(resource));
 
             if (slot != null)
-                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white);
+                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
         }
 
         private void UpdateSlot(int index)
