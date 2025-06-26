@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -5,11 +7,19 @@ using Random = System.Random;
 
 namespace TimelessEchoes.MapGeneration
 {
-    /// <summary>
-    ///     Procedurally generates a tilemap chunk with water, sand and grass sections.
-    ///     Thickness of sand and grass varies along the width of the chunk.
-    ///     The cutoff points for both sand and grass can be configured.
-    /// </summary>
+    [Serializable]
+    public class DecorativeTileEntry
+    {
+        [HorizontalGroup("Entry", 175, LabelWidth = 45)]
+        public TileBase Tile;
+
+        [HorizontalGroup("Entry")] [MinValue(1)]
+        public int Weight = 1;
+
+        [HorizontalGroup("Entry", Width = 160)] [LabelWidth(125)]
+        public bool AllowRotation;
+    }
+
     public class TilemapChunkGenerator : MonoBehaviour
     {
         [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
@@ -34,16 +44,22 @@ namespace TimelessEchoes.MapGeneration
         private TileBase grassRuleTile;
 
         [Header("Decorative Tiles")] [TabGroup("References")] [SerializeField]
-        private TileBase[] waterDecorativeTiles;
+        private DecorativeTileEntry[] waterDecorativeTiles;
 
         [TabGroup("References")] [SerializeField]
-        private TileBase[] sandDecorativeTiles;
+        private DecorativeTileEntry[] sandDecorativeTiles;
 
         [TabGroup("References")] [SerializeField]
-        private TileBase[] grassDecorativeTiles;
+        private DecorativeTileEntry[] grassDecorativeTiles;
+
+        [Header("Decoration Density")] [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
+        private float waterDecorationDensity = 0.05f;
 
         [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
-        private float decorativeSpawnChance = 0.05f;
+        private float sandDecorationDensity = 0.05f;
+
+        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
+        private float grassDecorationDensity = 0.05f;
 
         [Header("Dimensions")] [TabGroup("Settings")] [SerializeField]
         private Vector2Int size = new(900, 18);
@@ -147,9 +163,8 @@ namespace TimelessEchoes.MapGeneration
                 {
                     var isEdge = y == 0 || y == waterDepth - 1;
                     if (!isEdge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
-                        rng.NextDouble() < decorativeSpawnChance)
-                        decorationMap.SetTile(new Vector3Int(x, y, 0),
-                            waterDecorativeTiles[RandomRange(0, waterDecorativeTiles.Length)]);
+                        rng.NextDouble() < waterDecorationDensity)
+                        PlaceDecorativeTile(new Vector3Int(x, y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth; y < waterDepth + sandDepth; y++)
@@ -161,10 +176,13 @@ namespace TimelessEchoes.MapGeneration
 
                     var isSideEdge = y < leftWaterLvl || y < rightWaterLvl;
 
-                    if (!isGroundLevel && !isSideEdge && sandDecorativeTiles != null &&
-                        sandDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
-                        decorationMap.SetTile(new Vector3Int(x, y, 0),
-                            sandDecorativeTiles[RandomRange(0, sandDecorativeTiles.Length)]);
+                    var isTopmostSandLayer = y == waterDepth + sandDepth - 1;
+                    var isGrassAbove = grassDepth > 0;
+                    var canSpawn = !isTopmostSandLayer || !isGrassAbove;
+
+                    if (canSpawn && !isGroundLevel && !isSideEdge && sandDecorativeTiles != null &&
+                        sandDecorativeTiles.Length > 0 && rng.NextDouble() < sandDecorationDensity)
+                        PlaceDecorativeTile(new Vector3Int(x, y, 0), sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -173,13 +191,46 @@ namespace TimelessEchoes.MapGeneration
                     var isTopEdge = y == waterDepth + sandDepth + grassDepth - 1;
 
                     if (!isGrassGroundLevel && !isTopEdge && grassDecorativeTiles != null &&
-                        grassDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
-                        decorationMap.SetTile(new Vector3Int(x, y, 0),
-                            grassDecorativeTiles[RandomRange(0, grassDecorativeTiles.Length)]);
+                        grassDecorativeTiles.Length > 0 && rng.NextDouble() < grassDecorationDensity)
+                        PlaceDecorativeTile(new Vector3Int(x, y, 0), grassDecorativeTiles);
                 }
             }
         }
 
+        private void PlaceDecorativeTile(Vector3Int position, DecorativeTileEntry[] decorations)
+        {
+            var entry = GetWeightedRandomEntry(decorations);
+            if (entry == null || entry.Tile == null) return;
+
+            decorationMap.SetTile(position, entry.Tile);
+
+            if (entry.AllowRotation)
+            {
+                var rotationAngle = rng.Next(0, 4) * 90f;
+                var pivot = new Vector3(0.5f, 0.5f, 0);
+                var matrix = Matrix4x4.TRS(pivot, Quaternion.Euler(0, 0, rotationAngle), Vector3.one) *
+                             Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
+                decorationMap.SetTransformMatrix(position, matrix);
+            }
+        }
+
+        private DecorativeTileEntry GetWeightedRandomEntry(DecorativeTileEntry[] decorations)
+        {
+            if (decorations == null || decorations.Length == 0) return null;
+
+            var totalWeight = decorations.Sum(entry => entry.Weight);
+            if (totalWeight <= 0) return null;
+
+            var randomValue = rng.Next(0, totalWeight);
+
+            foreach (var entry in decorations)
+            {
+                if (randomValue < entry.Weight) return entry;
+                randomValue -= entry.Weight;
+            }
+
+            return null;
+        }
 
         private int RandomRange(int minInclusive, int maxExclusive)
         {
@@ -197,9 +248,6 @@ namespace TimelessEchoes.MapGeneration
             decorationMap.ClearAllTiles();
         }
 
-        /// <summary>
-        ///     Remove all tiles from the chunk's tilemaps.
-        /// </summary>
         public void Clear()
         {
             ClearMaps();
