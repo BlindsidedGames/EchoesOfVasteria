@@ -843,7 +843,7 @@ MonoBehaviour:
   astarPath: {fileID: 3994575044794960044}
   hero: {fileID: 2410021182923110199}
   mapCamera: {fileID: 2571608917486039915}
-  currentTaskName: KillEnemyTask
+  currentTaskName: MiningTask
   currentTaskObject: {fileID: 0}
 --- !u!114 &620791786817035452
 MonoBehaviour:
@@ -905,6 +905,13 @@ MonoBehaviour:
     weight: 1
     minProgress: 0
     maxProgress: 1
+  waterTasks:
+  - prefab: {fileID: 4589994145864551737, guid: f2c07aa52d3c1dd46ae29e9e671ed0a2, type: 3}
+    weight: 1
+    minProgress: 0
+    maxProgress: 1
+  waterMap: {fileID: 2972488014116059898}
+  sandMap: {fileID: 678892839076896793}
 --- !u!1 &8116783165545535798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,6 +1041,10 @@ PrefabInstance:
       propertyPath: taskController
       value: 
       objectReference: {fileID: 7826604082536721059}
+    - target: {fileID: 3675840428294226993, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
+      propertyPath: currentTaskName
+      value: MiningTask
+      objectReference: {fileID: 0}
     - target: {fileID: 6094697013023591912, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.42
