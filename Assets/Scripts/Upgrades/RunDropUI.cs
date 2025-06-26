@@ -84,33 +84,61 @@ namespace TimelessEchoes.Upgrades
         private void OnResourceAdded(Resource resource, double amount)
         {
             if (resource == null || amount <= 0) return;
+
+            ResourceUIReferences slot;
+            int index;
+
             if (!amounts.ContainsKey(resource))
             {
                 amounts[resource] = amount;
                 resources.Add(resource);
-                var slot = Instantiate(slotPrefab, slotParent);
-                int index = slots.Count;
+                slot = Instantiate(slotPrefab, slotParent);
+                index = slots.Count;
                 slots.Add(slot);
+
                 if (slot != null && slot.selectButton != null)
                     slot.selectButton.onClick.AddListener(() => SelectSlot(index));
+
                 if (slot != null)
                 {
                     slot.PointerClick += (_, button) =>
                     {
                         if (button == PointerEventData.InputButton.Right && tooltip != null)
                             tooltip.gameObject.SetActive(false);
+                        if (slot.highlightImage != null)
+                            slot.highlightImage.enabled = false;
                     };
-                    slot.PointerEnter += _ => { if (showTooltipOnHover) ShowTooltip(index); };
-                    slot.PointerExit += _ => { if (showTooltipOnHover && tooltip != null) tooltip.gameObject.SetActive(false); };
+                    slot.PointerEnter += _ =>
+                    {
+                        if (showTooltipOnHover)
+                            ShowTooltip(index);
+                        if (slot.highlightImage != null)
+                            slot.highlightImage.enabled = false;
+                    };
+                    slot.PointerExit += _ =>
+                    {
+                        if (showTooltipOnHover && tooltip != null)
+                            tooltip.gameObject.SetActive(false);
+                    };
                 }
             }
             else
             {
                 amounts[resource] += amount;
+                index = resources.IndexOf(resource);
+                slot = index >= 0 && index < slots.Count ? slots[index] : null;
             }
+
+            if (slot != null && slot.highlightImage != null)
+                slot.highlightImage.enabled = true;
+
             if (displayObject != null)
                 displayObject.SetActive(true);
+
             UpdateSlot(resources.IndexOf(resource));
+
+            if (slot != null)
+                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white);
         }
 
         private void UpdateSlot(int index)
