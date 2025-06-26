@@ -3,8 +3,10 @@
 Timeless Echoes is an incremental hero management game built with Unity **6000.1.6f1**.
 
 ## Overview
-In this game you choose a hero who automatically runs through maps. Each map is spawned from a prefab and comes with a set of objectives.
-Your hero spawns at the entry point, selects a random task from the task controller and uses A* pathfinding to complete it. After finishing all tasks the hero moves to the exit and the next map begins.
+In this game you choose a hero who automatically runs through maps. Each run spawns a `Map` prefab which procedurally generates terrain and tasks.
+Your hero spawns at the entry point and the `TaskController` assigns the earliest unfinished task. The hero uses A* pathfinding to reach each task in order and moves to the exit once all are complete.
+Map generation combines `TilemapChunkGenerator` and `ProceduralTaskGenerator`
+components so every run has a fresh layout and set of objectives.
 
 Enemies may drop gear while chests always contain gear. Gear and experience are the main ways to progress your character.
 
@@ -23,19 +25,30 @@ The scene uses a **Cinemachine Camera** to follow the hero. Add the
 `CameraClampExtension` component to the Cinemachine Camera to keep its Y
 position locked at zero and prevent the camera from moving left of `x = 0`.
 
+## Hero
+The `HeroController` uses the A* Pathfinding Project to navigate between tasks.
+If an enemy enters the hero's vision range the hero automatically engages in
+combat using projectile attacks. Combat strength and movement speed are
+modified by stat upgrades.
+
 ## Tasks
-Task scripts can be found under `Assets/Scripts/Tasks`. Add any of the
-provided tasks to a `TaskController` component and assign entry and exit
-points for your hero. When the controller enables it searches its child
-objects for enemies and creates a `KillEnemyTask` for each one. Each task
-stores a direct reference to that enemy, and tasks are ordered by distance
-from the entry point to keep your hero on an efficient route.
+Task scripts can be found under `Assets/Scripts/Tasks`. A `TaskController`
+builds the task list from assigned objects or from a `ProceduralTaskGenerator`.
+When enabled it searches child objects for enemies and adds a `KillEnemyTask`
+for each one.
 
-Mining and fishing tasks award resources when completed. Use these resources to
-upgrade your hero.
+Procedural tasks are ordered by their world X position so the hero progresses
+from left to right. Mining and fishing tasks award resources on completion,
+allowing you to upgrade your hero.
 
-Water-based tasks ignore blocking colliders, allowing them to spawn even when a
-tile on the `Blocking` layer is present.
+Water based tasks ignore blocking colliders and can spawn even when a tile on
+the `Blocking` layer is present.
+
+## Map Generation
+Maps are created by the `TilemapChunkGenerator` which lays out water, sand and
+grass tiles. Decorative tiles can be spawned with weighted probabilities and
+optional rotation. Use the `MapGenerateButton` to generate the tilemap and
+procedural tasks in the editor or at runtime.
 
 ## Building
 Use **File > Build Settings...** to create standalone builds.
