@@ -45,14 +45,23 @@ namespace TimelessEchoes.Skills
 
             if (popupPanel != null)
                 popupPanel.SetActive(false);
+            DeselectSkill();
         }
 
         private void OnEnable()
         {
             if (controller != null)
                 controller.OnExperienceGained += OnExperienceGained;
-            if (selectedIndex >= 0)
+            if (selectedIndex < 0)
+            {
+                DeselectSkill();
+                if (popupPanel != null)
+                    popupPanel.SetActive(false);
+            }
+            else
+            {
                 UpdateSelectedSkillUI();
+            }
         }
 
         private void OnDisable()
@@ -112,6 +121,24 @@ namespace TimelessEchoes.Skills
                 experienceText.text = $"{current:0.#} / {needed:0.#}";
             if (experienceBar != null)
                 experienceBar.fillAmount = needed > 0 ? Mathf.Clamp01(current / needed) : 0f;
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (popupPanel != null && popupPanel.activeSelf)
+                    popupPanel.SetActive(false);
+                DeselectSkill();
+            }
+        }
+
+        private void DeselectSkill()
+        {
+            selectedIndex = -1;
+            foreach (var selector in skillSelectors)
+                if (selector != null && selector.selectionImage != null)
+                    selector.selectionImage.enabled = false;
         }
     }
 }
