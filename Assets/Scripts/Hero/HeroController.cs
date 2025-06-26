@@ -49,7 +49,6 @@ namespace TimelessEchoes.Hero
         private Health health;
         private float healthBonus;
 
-        private bool inCombat;
         private bool isRolling;
         private float lastAttack = float.NegativeInfinity;
 
@@ -269,7 +268,6 @@ namespace TimelessEchoes.Hero
                 combatDamageMultiplier = 1f;
                 isRolling = false;
                 diceRoller?.ResetRoll();
-                inCombat = false;
                 state = State.Idle;
                 taskController?.SelectEarliestTask();
             }
@@ -370,8 +368,6 @@ namespace TimelessEchoes.Hero
                     lastAttack = Time.time;
                 }
             }
-
-            inCombat = true;
         }
 
         private void BeginMining(MiningTask task)
