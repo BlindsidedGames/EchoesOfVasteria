@@ -398,13 +398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f088ecfefd815e43b86f9bedb99e254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mineTime: 2
-  progressBarObject: {fileID: 6903395814371763851}
-  progressBar: {fileID: 2992031436270654903}
-  leftPoint: {fileID: 5457777148452022193}
-  rightPoint: {fileID: 5457777148452022193}
-  upPoint: {fileID: 5457777148452022193}
-  downPoint: {fileID: 5457777148452022193}
   resourceDrops:
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 4, y: 12}
@@ -418,6 +411,9 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
     dropRange: {x: 1, y: 1}
     dropChance: 0.1
+  taskDuration: 2
+  progressBarObject: {fileID: 6903395814371763851}
+  progressBar: {fileID: 2992031436270654903}
 --- !u!1 &2865883067036561459
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6398662446436637119
 RectTransform:
   m_ObjectHideFlags: 0
