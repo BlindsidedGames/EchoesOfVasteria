@@ -21,6 +21,9 @@ namespace TimelessEchoes.MapGeneration
         public Tilemap SandMap => sandMap;
         [TabGroup("References")]
         [SerializeField] private Tilemap grassMap;
+        [TabGroup("References")]
+        [SerializeField] private Tilemap decorationMap;
+        public Tilemap DecorationMap => decorationMap;
 
         [Header("Tiles")]
         [TabGroup("References")]
@@ -132,12 +135,11 @@ namespace TimelessEchoes.MapGeneration
             for (int y = 0; y < waterDepth; y++)
             {
                 bool edge = y == 0 || y == waterDepth - 1;
-                TileBase tile = waterTile;
+                waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
                 if (!edge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
                 {
-                    tile = waterDecorativeTiles[RandomRange(0, waterDecorativeTiles.Length)];
+                    decorationMap.SetTile(new Vector3Int(x, y, 0), waterDecorativeTiles[RandomRange(0, waterDecorativeTiles.Length)]);
                 }
-                waterMap.SetTile(new Vector3Int(x, y, 0), tile);
             }
 
             // Fill the sand map all the way to the top unless the column is cut off
@@ -149,19 +151,18 @@ namespace TimelessEchoes.MapGeneration
                 bool edge = y == waterDepth || y == waterDepth + sandDepth - 1;
                 if (!edge && sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
                 {
-                    sandMap.SetTile(new Vector3Int(x, y, 0), sandDecorativeTiles[RandomRange(0, sandDecorativeTiles.Length)]);
+                    decorationMap.SetTile(new Vector3Int(x, y, 0), sandDecorativeTiles[RandomRange(0, sandDecorativeTiles.Length)]);
                 }
             }
 
             for (int y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
             {
                 bool edge = y == waterDepth + sandDepth || y == waterDepth + sandDepth + grassDepth - 1;
-                TileBase tile = grassRuleTile;
+                grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
                 if (!edge && grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
                 {
-                    tile = grassDecorativeTiles[RandomRange(0, grassDecorativeTiles.Length)];
+                    decorationMap.SetTile(new Vector3Int(x, y, 0), grassDecorativeTiles[RandomRange(0, grassDecorativeTiles.Length)]);
                 }
-                grassMap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
 
@@ -179,6 +180,7 @@ namespace TimelessEchoes.MapGeneration
             waterMap.ClearAllTiles();
             sandMap.ClearAllTiles();
             grassMap.ClearAllTiles();
+            decorationMap.ClearAllTiles();
         }
 
         /// <summary>
