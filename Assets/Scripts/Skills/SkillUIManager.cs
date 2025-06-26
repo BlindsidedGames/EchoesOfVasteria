@@ -1,0 +1,117 @@
+using System.Collections.Generic;
+using References.UI;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using Blindsided.Utilities;
+
+namespace TimelessEchoes.Skills
+{
+    public class SkillUIManager : MonoBehaviour
+    {
+        [SerializeField] private SkillController controller;
+        [SerializeField] private List<SkillUIReferences> skillSelectors = new();
+        [SerializeField] private List<Skill> skills = new();
+        [SerializeField] private GameObject popupPanel;
+        [SerializeField] private TMP_Text skillTitle;
+        [SerializeField] private TMP_Text levelText;
+        [SerializeField] private TMP_Text experienceText;
+        [SerializeField] private SlicedFilledImage experienceBar;
+        [SerializeField] private Button bonusesButton;
+        [SerializeField] private MilestoneBonusUI bonusUI;
+
+        private int selectedIndex = -1;
+
+        private Skill CurrentSkill => selectedIndex >= 0 && selectedIndex < skills.Count ? skills[selectedIndex] : null;
+
+        private void Awake()
+        {
+            if (controller == null)
+                controller = FindFirstObjectByType<SkillController>();
+            if (popupPanel == null)
+                popupPanel = gameObject;
+            if (skillSelectors.Count == 0)
+                skillSelectors.AddRange(GetComponentsInChildren<SkillUIReferences>(true));
+
+            for (int i = 0; i < skillSelectors.Count; i++)
+            {
+                int index = i;
+                if (skillSelectors[i] != null && skillSelectors[i].selectButton != null)
+                    skillSelectors[i].selectButton.onClick.AddListener(() => SelectSkill(index));
+            }
+
+            if (bonusesButton != null)
+                bonusesButton.onClick.AddListener(OpenBonuses);
+
+            if (popupPanel != null)
+                popupPanel.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            if (controller != null)
+                controller.OnExperienceGained += OnExperienceGained;
+            if (selectedIndex >= 0)
+                UpdateSelectedSkillUI();
+        }
+
+        private void OnDisable()
+        {
+            if (controller != null)
+                controller.OnExperienceGained -= OnExperienceGained;
+        }
+
+        private void OnExperienceGained(Skill skill, float current, float required)
+        {
+            if (skill == CurrentSkill)
+                UpdateSelectedSkillUI();
+        }
+
+        private void SelectSkill(int index)
+        {
+            selectedIndex = Mathf.Clamp(index, 0, skillSelectors.Count - 1);
+            for (int i = 0; i < skillSelectors.Count; i++)
+                if (skillSelectors[i] != null && skillSelectors[i].selectionImage != null)
+                    skillSelectors[i].selectionImage.enabled = i == selectedIndex;
+
+            if (popupPanel != null && selectedIndex >= 0 && selectedIndex < skillSelectors.Count)
+            {
+                var pos = popupPanel.transform.position;
+                var target = skillSelectors[selectedIndex].transform.position;
+                popupPanel.transform.position = new Vector3(pos.x, target.y, pos.z);
+                popupPanel.SetActive(true);
+            }
+            UpdateSelectedSkillUI();
+        }
+
+        private void OpenBonuses()
+        {
+            if (bonusUI != null && CurrentSkill != null)
+            {
+                bonusUI.PopulateMilestones(CurrentSkill);
+                bonusUI.gameObject.SetActive(true);
+            }
+        }
+
+        private void UpdateSelectedSkillUI()
+        {
+            var skill = CurrentSkill;
+            if (skill == null || controller == null)
+                return;
+
+            var prog = controller.GetProgress(skill);
+            int lvl = prog != null ? prog.Level : 1;
+            float current = prog != null ? prog.CurrentXP : 0f;
+            float needed = skill.xpForFirstLevel * Mathf.Pow(lvl, skill.xpLevelMultiplier);
+
+            if (skillTitle != null)
+                skillTitle.text = skill.skillName;
+            if (levelText != null)
+                levelText.text = $"Lvl {lvl}";
+            if (experienceText != null)
+                experienceText.text = $"{current:0.#} / {needed:0.#}";
+            if (experienceBar != null)
+                experienceBar.fillAmount = needed > 0 ? Mathf.Clamp01(current / needed) : 0f;
+        }
+    }
+}

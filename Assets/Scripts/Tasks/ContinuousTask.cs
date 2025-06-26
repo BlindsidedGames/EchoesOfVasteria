@@ -51,6 +51,7 @@ namespace TimelessEchoes.Tasks
                 isComplete = true;
                 HideProgressBar();
                 GenerateDrops();
+                GrantCompletionXP();
                 // The hero will get a new task automatically now
             }
         }
