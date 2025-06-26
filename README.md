@@ -31,6 +31,9 @@ objects for enemies and creates a `KillEnemyTask` for each one. Each task
 stores a direct reference to that enemy, and tasks are ordered by distance
 from the entry point to keep your hero on an efficient route.
 
+Mining and fishing tasks award resources when completed. Use these resources to
+upgrade your hero.
+
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
