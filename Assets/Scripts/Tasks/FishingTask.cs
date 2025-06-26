@@ -13,6 +13,7 @@ namespace TimelessEchoes.Tasks
     public class FishingTask : BaseTask
     {
         [SerializeField] private float fishTime = 2f;
+        [SerializeField] private GameObject progressBarObject;
         [SerializeField] private SlicedFilledImage progressBar;
         [SerializeField] private Transform fishingPoint;
         [SerializeField] private List<ResourceDrop> resourceDrops = new();
@@ -22,6 +23,7 @@ namespace TimelessEchoes.Tasks
 
         public float FishTime => fishTime;
         public SlicedFilledImage ProgressBar => progressBar;
+        public GameObject ProgressBarObject => progressBarObject != null ? progressBarObject : progressBar?.gameObject;
         public IList<ResourceDrop> Drops => resourceDrops;
 
         public override Transform Target => fishingPoint != null ? fishingPoint : transform;
@@ -30,7 +32,13 @@ namespace TimelessEchoes.Tasks
         {
             complete = false;
             if (progressBar != null)
+            {
                 progressBar.fillAmount = 1f;
+                if (progressBarObject != null)
+                    progressBarObject.SetActive(false);
+                else
+                    progressBar.gameObject.SetActive(false);
+            }
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
         }
@@ -45,7 +53,12 @@ namespace TimelessEchoes.Tasks
             if (complete) return;
             complete = true;
             if (progressBar != null)
-                progressBar.gameObject.SetActive(false);
+            {
+                if (progressBarObject != null)
+                    progressBarObject.SetActive(false);
+                else
+                    progressBar.gameObject.SetActive(false);
+            }
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceManager != null)
