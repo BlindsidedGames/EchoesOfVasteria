@@ -30,6 +30,17 @@ namespace TimelessEchoes.MapGeneration
         [TabGroup("References")]
         [SerializeField] private TileBase grassRuleTile;
 
+        [Header("Decorative Tiles")]
+        [TabGroup("References")]
+        [SerializeField] private TileBase[] waterDecorativeTiles;
+        [TabGroup("References")]
+        [SerializeField] private TileBase[] sandDecorativeTiles;
+        [TabGroup("References")]
+        [SerializeField] private TileBase[] grassDecorativeTiles;
+
+        [TabGroup("Settings")]
+        [SerializeField, Range(0f, 1f)] private float decorativeSpawnChance = 0.05f;
+
         [Header("Dimensions")]
         [TabGroup("Settings")]
         [SerializeField] private Vector2Int size = new Vector2Int(900, 18);
@@ -119,14 +130,39 @@ namespace TimelessEchoes.MapGeneration
                 waterDepth = 0;
 
             for (int y = 0; y < waterDepth; y++)
-                waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+            {
+                bool edge = y == 0 || y == waterDepth - 1;
+                TileBase tile = waterTile;
+                if (!edge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
+                {
+                    tile = waterDecorativeTiles[RandomRange(0, waterDecorativeTiles.Length)];
+                }
+                waterMap.SetTile(new Vector3Int(x, y, 0), tile);
+            }
 
             // Fill the sand map all the way to the top unless the column is cut off
             for (int y = waterDepth; y < size.y; y++)
                 sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
 
+            for (int y = waterDepth; y < waterDepth + sandDepth && y < size.y; y++)
+            {
+                bool edge = y == waterDepth || y == waterDepth + sandDepth - 1;
+                if (!edge && sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
+                {
+                    sandMap.SetTile(new Vector3Int(x, y, 0), sandDecorativeTiles[RandomRange(0, sandDecorativeTiles.Length)]);
+                }
+            }
+
             for (int y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
-                grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
+            {
+                bool edge = y == waterDepth + sandDepth || y == waterDepth + sandDepth + grassDepth - 1;
+                TileBase tile = grassRuleTile;
+                if (!edge && grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 && rng.NextDouble() < decorativeSpawnChance)
+                {
+                    tile = grassDecorativeTiles[RandomRange(0, grassDecorativeTiles.Length)];
+                }
+                grassMap.SetTile(new Vector3Int(x, y, 0), tile);
+            }
         }
 
 
