@@ -39,6 +39,12 @@ namespace TimelessEchoes
                 returnToTavernButton.onClick.AddListener(ReturnToTavern);
         }
 
+        private void Start()
+        {
+            tavernUI?.SetActive(true);
+            mapUI?.SetActive(false);
+        }
+
         private void HideTooltip()
         {
             var tooltip = FindFirstObjectByType<TooltipUIReferences>();
