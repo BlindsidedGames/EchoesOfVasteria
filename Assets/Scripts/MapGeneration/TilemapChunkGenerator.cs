@@ -167,20 +167,29 @@ namespace TimelessEchoes.MapGeneration
                         PlaceDecorativeTile(new Vector3Int(x, y, 0), waterDecorativeTiles);
                 }
 
-                for (var y = waterDepth; y < waterDepth + sandDepth; y++)
+                for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
                 {
-                    var isGroundLevel = y == waterDepth;
-
                     var leftWaterLvl = x > 0 ? size.y - sandDepths[x - 1] - grassDepths[x - 1] : waterDepth;
                     var rightWaterLvl = x < size.x - 1 ? size.y - sandDepths[x + 1] - grassDepths[x + 1] : waterDepth;
 
-                    var isSideEdge = y < leftWaterLvl || y < rightWaterLvl;
+                    // Check if the current tile itself is a side edge
+                    var isCurrentTileSideEdge = y < leftWaterLvl || y < rightWaterLvl;
 
+                    // Check if the tile directly below the current one is an edge.
+                    // An edge tile is one that is either on the ground level or is a side edge.
+                    var isTileBelowGroundLevel = y - 1 == waterDepth;
+                    var isTileBelowSideEdge = y - 1 < leftWaterLvl || y - 1 < rightWaterLvl;
+                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+
+                    // If the current tile is a side edge, OR if it's sitting on top of an edge tile, skip it.
+                    if (isCurrentTileSideEdge || isTileBelowEdge) continue;
+
+                    // Standard check to prevent decor from being placed under grass
                     var isTopmostSandLayer = y == waterDepth + sandDepth - 1;
                     var isGrassAbove = grassDepth > 0;
                     var canSpawn = !isTopmostSandLayer || !isGrassAbove;
 
-                    if (canSpawn && !isGroundLevel && !isSideEdge && sandDecorativeTiles != null &&
+                    if (canSpawn && sandDecorativeTiles != null &&
                         sandDecorativeTiles.Length > 0 && rng.NextDouble() < sandDecorationDensity)
                         PlaceDecorativeTile(new Vector3Int(x, y, 0), sandDecorativeTiles);
                 }

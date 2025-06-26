@@ -1057,7 +1057,7 @@ MonoBehaviour:
     Weight: 1
     AllowRotation: 0
   waterDecorationDensity: 0.05
-  sandDecorationDensity: 0.05
+  sandDecorationDensity: 0.082
   grassDecorationDensity: 0.203
   size: {x: 991, y: 18}
   minAreaWidth: 5
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   grassCutoffWidth: 50
   sandCutoffRange: {x: 4, y: 10}
   sandDepthRange: {x: 6, y: 12}
-  grassDepthRange: {x: 2, y: 5}
+  grassDepthRange: {x: 3, y: 8}
   seed: 1
   randomizeSeed: 1
 --- !u!114 &5574965847745763036
@@ -1087,6 +1087,7 @@ MonoBehaviour:
   blockingMask:
     serializedVersion: 2
     m_Bits: 256
+  otherTaskEdgeOffset: 2
   enemies:
   - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
     weight: 2
@@ -1099,6 +1100,10 @@ MonoBehaviour:
   otherTasks:
   - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
     weight: 1
+    minProgress: 0
+    maxProgress: 1
+  - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
+    weight: 0.13
     minProgress: 0
     maxProgress: 1
   waterTasks:

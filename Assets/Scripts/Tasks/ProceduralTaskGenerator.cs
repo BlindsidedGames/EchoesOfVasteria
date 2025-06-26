@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TimelessEchoes.MapGeneration;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using TimelessEchoes.MapGeneration;
 using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Tasks
@@ -31,6 +31,9 @@ namespace TimelessEchoes.Tasks
         [TabGroup("Settings", "Generation")] [SerializeField]
         private LayerMask blockingMask;
 
+        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)]
+        private float otherTaskEdgeOffset = 1f;
+
         [TabGroup("Settings", "Generation")] [SerializeField]
         private List<WeightedSpawn> enemies = new();
 
@@ -42,6 +45,7 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap waterMap;
+
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap sandMap;
 
@@ -53,6 +57,14 @@ namespace TimelessEchoes.Tasks
         {
             controller = GetComponent<TaskController>();
             EnsureTilemaps();
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            var center = transform.position + new Vector3((minX + maxX) * 0.5f, height * 0.5f, 0f);
+            var size = new Vector3(maxX - minX, height, 0f);
+            Gizmos.DrawWireCube(center, size);
         }
 
         private void EnsureTilemaps()
@@ -73,21 +85,11 @@ namespace TimelessEchoes.Tasks
             {
                 var maps = GetComponentsInChildren<Tilemap>();
                 foreach (var m in maps)
-                {
                     if (waterMap == null && m.gameObject.name.Contains("Blocking"))
                         waterMap = m;
                     else if (sandMap == null && m.gameObject.name == "BG")
                         sandMap = m;
-                }
             }
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            var center = transform.position + new Vector3((minX + maxX) * 0.5f, height * 0.5f, 0f);
-            var size = new Vector3(maxX - minX, height, 0f);
-            Gizmos.DrawWireCube(center, size);
         }
 
         private void ClearSpawnedObjects()
@@ -136,7 +138,6 @@ namespace TimelessEchoes.Tasks
             if (count <= 0)
                 return;
 
-            // This list now only stores objects that will become tasks.
             var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
             for (var i = 0; i < count; i++)
             {
@@ -151,23 +152,30 @@ namespace TimelessEchoes.Tasks
                 var pos = isWaterTask ? waterPos : RandomPositionAtX(localX);
 
                 var attempts = 0;
-                while (!isWaterTask && attempts < 5 && (HasBlockingCollider(pos) || IsBlockedAhead(pos)))
+                var positionIsValid = false;
+                while (attempts < 5)
                 {
                     if (isWaterTask)
                     {
-                        localX = Random.Range(minX, maxX);
-                        if (!TryGetWaterEdge(localX, out waterPos))
-                            break;
-                        pos = waterPos;
+                        positionIsValid = true;
+                        break;
                     }
-                    else
+
+                    var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
+                    var onWaterEdge = !isEnemy && allowWater &&
+                                      Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
+
+                    if (!isObstructed && !onWaterEdge)
                     {
-                        pos = RandomPositionAtX(localX);
+                        positionIsValid = true;
+                        break;
                     }
+
+                    pos = RandomPositionAtX(localX);
                     attempts++;
                 }
 
-                if (!isWaterTask && (HasBlockingCollider(pos) || IsBlockedAhead(pos)))
+                if (!positionIsValid)
                     continue;
 
                 var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
@@ -181,7 +189,6 @@ namespace TimelessEchoes.Tasks
                 }
             }
 
-            // Sort and add the collected tasks to the controller.
             spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
             foreach (var pair in spawnedTasks)
                 controller.AddTaskObject(pair.obj);
@@ -218,10 +225,10 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var cell = waterMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            int maxY = Mathf.Max(waterMap.cellBounds.yMax, sandMap.cellBounds.yMax);
-            int minY = Mathf.Min(waterMap.cellBounds.yMin, sandMap.cellBounds.yMin) - 1;
+            var maxY = Mathf.Max(waterMap.cellBounds.yMax, sandMap.cellBounds.yMax);
+            var minY = Mathf.Min(waterMap.cellBounds.yMin, sandMap.cellBounds.yMin) - 1;
 
-            for (int y = maxY; y >= minY; y--)
+            for (var y = maxY; y >= minY; y--)
             {
                 var water = waterMap.HasTile(new Vector3Int(cell.x, y, 0));
                 var sand = sandMap.HasTile(new Vector3Int(cell.x, y + 1, 0));
@@ -263,7 +270,6 @@ namespace TimelessEchoes.Tasks
         /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
         private (WeightedSpawn entry, bool isEnemy, bool isWaterTask) PickEntry(float progress, bool allowWaterTasks)
         {
-            // Calculate total weight for each category
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
                 enemyTotalWeight += e.GetWeight(progress);
@@ -283,19 +289,17 @@ namespace TimelessEchoes.Tasks
 
             var r = Random.value * totalWeight;
 
-            // Check if we should spawn an enemy
             if (r < enemyTotalWeight)
             {
                 foreach (var e in enemies)
                 {
                     r -= e.GetWeight(progress);
                     if (r <= 0f)
-                        return (e, true, false); // Return the entry and mark it as an enemy.
+                        return (e, true, false);
                 }
             }
             else
             {
-                // Adjust random value for the next category
                 r -= enemyTotalWeight;
 
                 if (allowWaterTasks && r < waterTasksTotalWeight)
@@ -311,17 +315,16 @@ namespace TimelessEchoes.Tasks
                 {
                     r -= waterTasksTotalWeight;
 
-                    // Spawn another task
                     foreach (var t in otherTasks)
                     {
                         r -= t.GetWeight(progress);
                         if (r <= 0f)
-                            return (t, false, false); // Return the entry and mark it as NOT an enemy.
+                            return (t, false, false);
                     }
                 }
             }
 
-            return (null, false, false); // Should not be reached if weights are positive.
+            return (null, false, false);
         }
 
         [Serializable]
