@@ -398,6 +398,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f088ecfefd815e43b86f9bedb99e254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  associatedSkill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
+  xpGrantedOnCompletion: 3
   resourceDrops:
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 4, y: 12}
@@ -408,9 +410,6 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
     dropRange: {x: 1, y: 4}
     dropChance: 0.2
-  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
-    dropRange: {x: 1, y: 1}
-    dropChance: 0.1
   taskDuration: 2
   progressBarObject: {fileID: 6903395814371763851}
   progressBar: {fileID: 2992031436270654903}
