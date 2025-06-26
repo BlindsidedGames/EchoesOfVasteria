@@ -7,9 +7,9 @@ using Random = UnityEngine.Random;
 namespace TimelessEchoes.Tasks
 {
     /// <summary>
-    ///     Generates tasks procedurally within a rectangular area. The order of
+    ///     Generates tasks and enemies procedurally within a rectangular area. The order of
     ///     generated tasks is determined by their world X position from left to
-    ///     right.
+    ///     right. Enemies are spawned but not added to the task list.
     /// </summary>
     [RequireComponent(typeof(TaskController))]
     public class ProceduralTaskGenerator : MonoBehaviour
@@ -98,7 +98,8 @@ namespace TimelessEchoes.Tasks
             if (count <= 0)
                 return;
 
-            var spawned = new List<(float x, MonoBehaviour obj)>();
+            // This list now only stores objects that will become tasks.
+            var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
             for (var i = 0; i < count; i++)
             {
                 var pos = RandomPosition();
@@ -113,19 +114,26 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 var progress = Mathf.InverseLerp(minX, maxX, pos.x);
-                var entry = PickEntry(progress);
+                // We now get both the prefab to spawn and a flag indicating if it's an enemy.
+                var (entry, isEnemy) = PickEntry(progress);
                 if (entry == null || entry.prefab == null)
                     continue;
 
                 var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
-                generatedObjects.Add(obj);
-                var mono = obj.GetComponent<MonoBehaviour>();
-                if (mono != null)
-                    spawned.Add((pos.x, mono));
+                generatedObjects.Add(obj); // Track all generated objects for cleanup.
+
+                // Only if the spawned object is NOT an enemy, we add it as a task.
+                if (!isEnemy)
+                {
+                    var mono = obj.GetComponent<MonoBehaviour>();
+                    if (mono != null)
+                        spawnedTasks.Add((pos.x, mono));
+                }
             }
 
-            spawned.Sort((a, b) => a.x.CompareTo(b.x));
-            foreach (var pair in spawned)
+            // Sort and add the collected tasks to the controller.
+            spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
+            foreach (var pair in spawnedTasks)
                 controller.AddTaskObject(pair.obj);
 
             controller.ResetTasks();
@@ -163,31 +171,53 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
-        private WeightedSpawn PickEntry(float progress)
+        /// <summary>
+        ///     Picks an entry from the available lists and identifies if it's an enemy.
+        /// </summary>
+        /// <param name="progress">The normalized position in the generation area.</param>
+        /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
+        private (WeightedSpawn entry, bool isEnemy) PickEntry(float progress)
         {
-            var total = 0f;
+            // Calculate total weight for each category
+            var enemyTotalWeight = 0f;
             foreach (var e in enemies)
-                total += e.GetWeight(progress);
+                enemyTotalWeight += e.GetWeight(progress);
+
+            var otherTasksTotalWeight = 0f;
             foreach (var t in otherTasks)
-                total += t.GetWeight(progress);
-            if (total <= 0f)
-                return null;
-            var r = Random.value * total;
-            foreach (var e in enemies)
+                otherTasksTotalWeight += t.GetWeight(progress);
+
+            var totalWeight = enemyTotalWeight + otherTasksTotalWeight;
+            if (totalWeight <= 0f)
+                return (null, false);
+
+            var r = Random.value * totalWeight;
+
+            // Check if we should spawn an enemy
+            if (r < enemyTotalWeight)
             {
-                r -= e.GetWeight(progress);
-                if (r <= 0f)
-                    return e;
+                foreach (var e in enemies)
+                {
+                    r -= e.GetWeight(progress);
+                    if (r <= 0f)
+                        return (e, true); // Return the entry and mark it as an enemy.
+                }
+            }
+            else
+            {
+                // Adjust random value for the next category
+                r -= enemyTotalWeight;
+
+                // Spawn another task
+                foreach (var t in otherTasks)
+                {
+                    r -= t.GetWeight(progress);
+                    if (r <= 0f)
+                        return (t, false); // Return the entry and mark it as NOT an enemy.
+                }
             }
 
-            foreach (var t in otherTasks)
-            {
-                r -= t.GetWeight(progress);
-                if (r <= 0f)
-                    return t;
-            }
-
-            return null;
+            return (null, false); // Should not be reached if weights are positive.
         }
 
         [Serializable]
