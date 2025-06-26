@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Blindsided.Utilities;
+using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.Skills
 {
@@ -36,8 +37,20 @@ namespace TimelessEchoes.Skills
             for (int i = 0; i < skillSelectors.Count; i++)
             {
                 int index = i;
-                if (skillSelectors[i] != null && skillSelectors[i].selectButton != null)
-                    skillSelectors[i].selectButton.onClick.AddListener(() => SelectSkill(index));
+                var selector = skillSelectors[i];
+                if (selector == null) continue;
+                if (selector.selectButton != null)
+                    selector.selectButton.onClick.AddListener(() => SelectSkill(index));
+                selector.PointerEnter += _ =>
+                {
+                    if (selector.highlightImage != null)
+                        selector.highlightImage.enabled = false;
+                };
+                selector.PointerClick += (_, __) =>
+                {
+                    if (selector.highlightImage != null)
+                        selector.highlightImage.enabled = false;
+                };
             }
 
             if (bonusesButton != null)
@@ -51,7 +64,10 @@ namespace TimelessEchoes.Skills
         private void OnEnable()
         {
             if (controller != null)
+            {
                 controller.OnExperienceGained += OnExperienceGained;
+                controller.OnLevelUp += OnLevelUp;
+            }
             if (selectedIndex < 0)
             {
                 DeselectSkill();
@@ -67,7 +83,10 @@ namespace TimelessEchoes.Skills
         private void OnDisable()
         {
             if (controller != null)
+            {
                 controller.OnExperienceGained -= OnExperienceGained;
+                controller.OnLevelUp -= OnLevelUp;
+            }
         }
 
         private void OnExperienceGained(Skill skill, float current, float required)
@@ -76,12 +95,31 @@ namespace TimelessEchoes.Skills
                 UpdateSelectedSkillUI();
         }
 
+        private void OnLevelUp(Skill skill, int level)
+        {
+            int index = skills.IndexOf(skill);
+            if (index < 0 || index >= skillSelectors.Count)
+                return;
+            var selector = skillSelectors[index];
+            if (selector != null && selector.levelText != null)
+                selector.levelText.text = $"Lvl {level}";
+
+            bool popupShowing = popupPanel != null && popupPanel.activeSelf && selectedIndex == index;
+            if (!popupShowing && selector != null && selector.highlightImage != null)
+                selector.highlightImage.enabled = true;
+        }
+
         private void SelectSkill(int index)
         {
             selectedIndex = Mathf.Clamp(index, 0, skillSelectors.Count - 1);
             for (int i = 0; i < skillSelectors.Count; i++)
-                if (skillSelectors[i] != null && skillSelectors[i].selectionImage != null)
-                    skillSelectors[i].selectionImage.enabled = i == selectedIndex;
+                if (skillSelectors[i] != null)
+                {
+                    if (skillSelectors[i].selectionImage != null)
+                        skillSelectors[i].selectionImage.enabled = i == selectedIndex;
+                    if (skillSelectors[i].highlightImage != null && i == selectedIndex)
+                        skillSelectors[i].highlightImage.enabled = false;
+                }
 
             if (popupPanel != null && selectedIndex >= 0 && selectedIndex < skillSelectors.Count)
             {
