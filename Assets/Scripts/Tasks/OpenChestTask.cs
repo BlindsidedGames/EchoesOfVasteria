@@ -47,6 +47,7 @@ namespace TimelessEchoes.Tasks
             yield return new WaitForSeconds(openDuration);
 
             GenerateDrops();
+            GrantCompletionXP();
             opened = true;
             isWaiting = false;
         }

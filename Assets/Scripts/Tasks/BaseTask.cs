@@ -9,6 +9,9 @@ namespace TimelessEchoes.Tasks
     /// </summary>
     public abstract class BaseTask : MonoBehaviour, ITask
     {
+        [SerializeField] private TimelessEchoes.Skills.Skill associatedSkill;
+        [SerializeField] private float xpGrantedOnCompletion;
+
         /// <summary>
         ///     A property to indicate if this task should prevent the hero from moving.
         /// </summary>
@@ -50,6 +53,13 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public virtual void OnInterrupt(HeroController hero)
         {
+        }
+
+        protected void GrantCompletionXP()
+        {
+            if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return;
+            var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            controller?.AddExperience(associatedSkill, xpGrantedOnCompletion);
         }
     }
 }

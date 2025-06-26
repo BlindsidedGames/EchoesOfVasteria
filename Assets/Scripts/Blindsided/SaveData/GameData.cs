@@ -37,6 +37,9 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
+        [HideReferenceObjectPicker] [TabGroup("Skills")]
+        public Dictionary<string, SkillProgress> SkillData = new();
+
         [HideReferenceObjectPicker]
         public class ResourceEntry
         {
@@ -97,6 +100,13 @@ namespace Blindsided.SaveData
         {
             public int CurrentXP;
             public int Level;
+        }
+
+        [HideReferenceObjectPicker]
+        public class SkillProgress
+        {
+            public int Level;
+            public float CurrentXP;
         }
 
         [HideReferenceObjectPicker]
