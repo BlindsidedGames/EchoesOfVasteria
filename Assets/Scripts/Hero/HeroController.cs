@@ -57,6 +57,8 @@ namespace TimelessEchoes.Hero
         private Vector2 lastMoveDir = Vector2.down;
         private MiningTask miningTask;
         private float miningTimer;
+        private FishingTask fishingTask;
+        private float fishingTimer;
         private float moveSpeedBonus;
         private AIDestinationSetter setter;
 
@@ -278,6 +280,12 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
+            if (state == State.Fishing)
+            {
+                HandleFishing();
+                return;
+            }
+
             if (CurrentTask == null || CurrentTask.IsComplete())
                 taskController?.SelectEarliestTask();
 
@@ -291,6 +299,17 @@ namespace TimelessEchoes.Hero
 
                 if (state != State.Mining && IsAtDestination(dest))
                     BeginMining(mt);
+                else
+                    state = State.Moving;
+            }
+            else if (CurrentTask is FishingTask ft)
+            {
+                var dest = ft.Target;
+                if (setter.target != dest)
+                    setter.target = dest;
+
+                if (state != State.Fishing && IsAtDestination(dest))
+                    BeginFishing(ft);
                 else
                     state = State.Moving;
             }
@@ -336,6 +355,14 @@ namespace TimelessEchoes.Hero
                 if (miningTask?.ProgressBar != null)
                     miningTask.ProgressBar.gameObject.SetActive(false);
                 miningTask = null;
+            }
+            else if (state == State.Fishing)
+            {
+                ai.canMove = true;
+                animator?.SetTrigger("CatchFish");
+                if (fishingTask?.ProgressBar != null)
+                    fishingTask.ProgressBar.gameObject.SetActive(false);
+                fishingTask = null;
             }
 
             if (state != State.Combat)
@@ -412,6 +439,48 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        private void BeginFishing(FishingTask task)
+        {
+            Log($"Begin fishing {task.name}", this);
+            fishingTask = task;
+            fishingTimer = 0f;
+            state = State.Fishing;
+            ai.canMove = false;
+            setter.target = task.transform;
+            if (task.ProgressBar != null)
+            {
+                task.ProgressBar.gameObject.SetActive(true);
+                task.ProgressBar.fillAmount = 1f;
+            }
+
+            animator?.Play("Fishing");
+        }
+
+        private void HandleFishing()
+        {
+            if (fishingTask == null)
+            {
+                state = State.Idle;
+                return;
+            }
+
+            fishingTimer += Time.deltaTime;
+            if (fishingTask.ProgressBar != null)
+                fishingTask.ProgressBar.fillAmount =
+                    Mathf.Clamp01((fishingTask.FishTime - fishingTimer) / fishingTask.FishTime);
+
+            if (fishingTimer >= fishingTask.FishTime)
+            {
+                Log($"Finished fishing {fishingTask.name}", this);
+                ai.canMove = true;
+                animator?.SetTrigger("CatchFish");
+                fishingTask.CompleteTask();
+                fishingTask = null;
+                taskController?.SelectEarliestTask();
+                state = State.Idle;
+            }
+        }
+
         private IEnumerator RollForCombat(float duration)
         {
             if (diceRoller == null)
@@ -447,6 +516,7 @@ namespace TimelessEchoes.Hero
             Idle,
             Moving,
             Mining,
+            Fishing,
             Combat
         }
     }
