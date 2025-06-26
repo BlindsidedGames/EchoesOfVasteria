@@ -254,11 +254,19 @@ namespace TimelessEchoes.Tasks
                 taskObjects.Remove(obj);
                 taskMap.Remove(task);
                 if (obj != null)
-                    Destroy(obj.gameObject);
+                {
+                    if (task is OpenChestTask)
+                        Destroy(obj.GetComponent<OpenChestTask>());
+                    else
+                        Destroy(obj.gameObject);
+                }
             }
             else if (task is MonoBehaviour mb)
             {
-                Destroy(mb.gameObject);
+                if (task is OpenChestTask)
+                    Destroy(mb);
+                else
+                    Destroy(mb.gameObject);
             }
 
             if (index <= currentIndex)
