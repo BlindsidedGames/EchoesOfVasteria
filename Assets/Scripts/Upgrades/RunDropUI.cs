@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
@@ -87,6 +88,7 @@ namespace TimelessEchoes.Upgrades
 
             ResourceUIReferences slot;
             int index;
+            bool newSlot = false;
 
             if (!amounts.ContainsKey(resource))
             {
@@ -95,6 +97,7 @@ namespace TimelessEchoes.Upgrades
                 slot = Instantiate(slotPrefab, slotParent);
                 index = slots.Count;
                 slots.Add(slot);
+                newSlot = true;
 
                 if (slot != null && slot.selectButton != null)
                     slot.selectButton.onClick.AddListener(() => SelectSlot(index));
@@ -138,7 +141,12 @@ namespace TimelessEchoes.Upgrades
             UpdateSlot(resources.IndexOf(resource));
 
             if (slot != null)
-                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+            {
+                if (newSlot)
+                    StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
+                else
+                    FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+            }
         }
 
         private void UpdateSlot(int index)
@@ -193,6 +201,13 @@ namespace TimelessEchoes.Upgrades
                 tooltip.resourceCountText.text = count.ToString();
             }
             tooltip.gameObject.SetActive(true);
+        }
+
+        private IEnumerator SpawnFloatingTextNextFrame(ResourceUIReferences slot, double amount)
+        {
+            yield return null; // wait one frame for layout groups to update
+            if (slot != null)
+                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
         }
     }
 }
