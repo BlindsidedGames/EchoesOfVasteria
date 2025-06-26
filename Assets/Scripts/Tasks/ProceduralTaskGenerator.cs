@@ -151,7 +151,7 @@ namespace TimelessEchoes.Tasks
                 var pos = isWaterTask ? waterPos : RandomPositionAtX(localX);
 
                 var attempts = 0;
-                while (attempts < 5 && (HasBlockingCollider(pos) || IsBlockedAhead(pos)))
+                while (!isWaterTask && attempts < 5 && (HasBlockingCollider(pos) || IsBlockedAhead(pos)))
                 {
                     if (isWaterTask)
                     {
@@ -167,7 +167,7 @@ namespace TimelessEchoes.Tasks
                     attempts++;
                 }
 
-                if (HasBlockingCollider(pos) || IsBlockedAhead(pos))
+                if (!isWaterTask && (HasBlockingCollider(pos) || IsBlockedAhead(pos)))
                     continue;
 
                 var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
