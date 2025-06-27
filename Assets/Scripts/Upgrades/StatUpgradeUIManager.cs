@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -49,6 +50,7 @@ namespace TimelessEchoes.Upgrades
             DeselectStat();
             if (references != null)
                 references.gameObject.SetActive(false);
+            UpdateStatSelectorLevels();
         }
 
         private void OnEnable()
@@ -63,6 +65,7 @@ namespace TimelessEchoes.Upgrades
             {
                 UpdateUI();
             }
+            UpdateStatSelectorLevels();
         }
 
         private void Update()
@@ -137,6 +140,7 @@ namespace TimelessEchoes.Upgrades
             UpdateInfoText();
             if (references.upgradeButton)
                 references.upgradeButton.interactable = controller && controller.CanUpgrade(CurrentUpgrade);
+            UpdateStatSelectorLevels();
         }
 
         private void UpdateCostSlotValues()
@@ -181,6 +185,7 @@ namespace TimelessEchoes.Upgrades
             {
                 BuildCostSlots();
                 UpdateUI();
+                UpdateStatSelectorLevels();
             }
         }
 
@@ -193,6 +198,26 @@ namespace TimelessEchoes.Upgrades
                 if (lvl >= t.minLevel && lvl < t.maxLevel)
                     return t;
             return null;
+        }
+
+        private void UpdateStatSelectorLevels()
+        {
+            for (var i = 0; i < statSelectors.Count && i < upgrades.Count; i++)
+            {
+                var selector = statSelectors[i];
+                var upgrade = upgrades[i];
+                if (selector == null || selector.countText == null) continue;
+
+                if (ShowLevelText)
+                {
+                    int lvl = controller ? controller.GetLevel(upgrade) : 0;
+                    selector.countText.text = $"Lvl {lvl}";
+                }
+                else
+                {
+                    selector.countText.text = string.Empty;
+                }
+            }
         }
     }
 }

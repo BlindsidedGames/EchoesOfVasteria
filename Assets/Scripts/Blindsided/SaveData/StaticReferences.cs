@@ -89,6 +89,12 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.UseScaledTimeForValues = value;
         }
 
+        public static bool ShowLevelText
+        {
+            get => oracle.saveData.SavedPreferences.ShowLevelText;
+            set => oracle.saveData.SavedPreferences.ShowLevelText = value;
+        }
+
         public static bool DevSpeed
         {
             get => oracle.saveData.DevOptions.DevSpeed;

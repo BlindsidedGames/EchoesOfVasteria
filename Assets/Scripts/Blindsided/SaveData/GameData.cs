@@ -69,6 +69,7 @@ namespace Blindsided.SaveData
             public bool TransparentUi;
             public bool Tutorial;
             public bool UseScaledTimeForValues;
+            public bool ShowLevelText = true;
         }
 
         [HideReferenceObjectPicker]
