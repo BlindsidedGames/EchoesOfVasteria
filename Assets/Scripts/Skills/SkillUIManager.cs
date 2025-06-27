@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Blindsided.Utilities;
 using UnityEngine.EventSystems;
 using static Blindsided.SaveData.StaticReferences;
+using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Skills
 {
@@ -70,6 +71,8 @@ namespace TimelessEchoes.Skills
                 controller.OnExperienceGained += OnExperienceGained;
                 controller.OnLevelUp += OnLevelUp;
             }
+            ShowLevelTextChanged += OnShowLevelTextChanged;
+            OnLoadData += OnShowLevelTextChanged;
             if (selectedIndex < 0)
             {
                 DeselectSkill();
@@ -90,6 +93,8 @@ namespace TimelessEchoes.Skills
                 controller.OnExperienceGained -= OnExperienceGained;
                 controller.OnLevelUp -= OnLevelUp;
             }
+            ShowLevelTextChanged -= OnShowLevelTextChanged;
+            OnLoadData -= OnShowLevelTextChanged;
         }
 
         private void OnExperienceGained(Skill skill, float current, float required)
@@ -199,6 +204,13 @@ namespace TimelessEchoes.Skills
                     popupPanel.SetActive(false);
                 DeselectSkill();
             }
+        }
+
+        private void OnShowLevelTextChanged()
+        {
+            UpdateSkillSelectorLevels();
+            if (selectedIndex >= 0)
+                UpdateSelectedSkillUI();
         }
 
         private void DeselectSkill()

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
+using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -66,6 +67,15 @@ namespace TimelessEchoes.Upgrades
                 UpdateUI();
             }
             UpdateStatSelectorLevels();
+
+            ShowLevelTextChanged += OnShowLevelTextChanged;
+            OnLoadData += OnShowLevelTextChanged;
+        }
+
+        private void OnDisable()
+        {
+            ShowLevelTextChanged -= OnShowLevelTextChanged;
+            OnLoadData -= OnShowLevelTextChanged;
         }
 
         private void Update()
@@ -76,6 +86,13 @@ namespace TimelessEchoes.Upgrades
                     references.gameObject.SetActive(false);
                 DeselectStat();
             }
+        }
+
+        private void OnShowLevelTextChanged()
+        {
+            UpdateStatSelectorLevels();
+            if (selectedIndex >= 0)
+                UpdateUI();
         }
 
         private void DeselectStat()

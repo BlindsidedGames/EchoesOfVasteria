@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.GameData;
@@ -89,10 +90,19 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.UseScaledTimeForValues = value;
         }
 
+        public static event Action ShowLevelTextChanged;
+
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
-            set => oracle.saveData.SavedPreferences.ShowLevelText = value;
+            set
+            {
+                if (oracle.saveData.SavedPreferences.ShowLevelText != value)
+                {
+                    oracle.saveData.SavedPreferences.ShowLevelText = value;
+                    ShowLevelTextChanged?.Invoke();
+                }
+            }
         }
 
         public static bool DevSpeed
