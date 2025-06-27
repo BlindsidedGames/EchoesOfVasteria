@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using TMPro;
@@ -72,7 +73,7 @@ namespace TimelessEchoes.Skills
                 controller.OnLevelUp += OnLevelUp;
             }
             ShowLevelTextChanged += OnShowLevelTextChanged;
-            OnLoadData += OnShowLevelTextChanged;
+            OnLoadData += OnLoadDataHandler;
             OnShowLevelTextChanged();
             if (selectedIndex < 0)
             {
@@ -95,7 +96,7 @@ namespace TimelessEchoes.Skills
                 controller.OnLevelUp -= OnLevelUp;
             }
             ShowLevelTextChanged -= OnShowLevelTextChanged;
-            OnLoadData -= OnShowLevelTextChanged;
+            OnLoadData -= OnLoadDataHandler;
         }
 
         private void OnExperienceGained(Skill skill, float current, float required)
@@ -212,6 +213,17 @@ namespace TimelessEchoes.Skills
             UpdateSkillSelectorLevels();
             if (selectedIndex >= 0)
                 UpdateSelectedSkillUI();
+        }
+
+        private void OnLoadDataHandler()
+        {
+            StartCoroutine(DelayedUpdate());
+        }
+
+        private IEnumerator DelayedUpdate()
+        {
+            yield return null;
+            OnShowLevelTextChanged();
         }
 
         private void DeselectSkill()
