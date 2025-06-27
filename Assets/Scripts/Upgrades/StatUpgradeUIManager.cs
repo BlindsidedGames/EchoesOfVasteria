@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
@@ -69,14 +70,14 @@ namespace TimelessEchoes.Upgrades
             UpdateStatSelectorLevels();
 
             ShowLevelTextChanged += OnShowLevelTextChanged;
-            OnLoadData += OnShowLevelTextChanged;
+            OnLoadData += OnLoadDataHandler;
             OnShowLevelTextChanged();
         }
 
         private void OnDisable()
         {
             ShowLevelTextChanged -= OnShowLevelTextChanged;
-            OnLoadData -= OnShowLevelTextChanged;
+            OnLoadData -= OnLoadDataHandler;
         }
 
         private void Update()
@@ -94,6 +95,17 @@ namespace TimelessEchoes.Upgrades
             UpdateStatSelectorLevels();
             if (selectedIndex >= 0)
                 UpdateUI();
+        }
+
+        private void OnLoadDataHandler()
+        {
+            StartCoroutine(DelayedUpdate());
+        }
+
+        private IEnumerator DelayedUpdate()
+        {
+            yield return null;
+            OnShowLevelTextChanged();
         }
 
         private void DeselectStat()
