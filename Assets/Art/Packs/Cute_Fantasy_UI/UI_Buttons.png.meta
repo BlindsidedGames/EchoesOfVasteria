@@ -7651,13 +7651,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_57
+      name: 2x
       rect:
         serializedVersion: 2
-        x: 720
-        y: 368
-        width: 16
-        height: 16
+        x: 721
+        y: 369
+        width: 14
+        height: 14
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -9263,10 +9263,10 @@ TextureImporter:
         x: 65
         y: 369
         width: 30
-        height: 13
+        height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 3, y: 3, z: 3, w: 4}
       customData: 
       outline: []
       physicsShape: []
@@ -10159,16 +10159,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_171
+      name: 1Quit
       rect:
         serializedVersion: 2
-        x: 736
-        y: 368
-        width: 16
-        height: 15
+        x: 737
+        y: 369
+        width: 14
+        height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 4, z: 4, w: 3}
       customData: 
       outline: []
       physicsShape: []
@@ -41839,16 +41839,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_1611
+      name: 1Quit3
       rect:
         serializedVersion: 2
-        x: 736
-        y: 128
-        width: 16
-        height: 15
+        x: 737
+        y: 129
+        width: 14
+        height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 4, z: 4, w: 3}
       customData: 
       outline: []
       physicsShape: []
@@ -42103,13 +42103,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_1623
+      name: 1Quit2
       rect:
         serializedVersion: 2
         x: 928
         y: 128
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -52611,7 +52611,11 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       1: -8408107128876567684
+      1Quit: 7241675785630375950
+      1Quit2: -5158891349347886658
+      1Quit3: 4133628245501162020
       2: 7324967101786752704
+      2x: 3257955667730806343
       3: -2344432946971440850
       4: 1002314541381079101
       5: -2660333375279210
@@ -53295,7 +53299,6 @@ TextureImporter:
       UI_Buttons_1609: -4602888208806716601
       UI_Buttons_161: -6538810544495130896
       UI_Buttons_1610: -1715290807525879040
-      UI_Buttons_1611: 4133628245501162020
       UI_Buttons_1612: 8585093884880422168
       UI_Buttons_1613: 5959920356994254845
       UI_Buttons_1614: 654444644758498101
@@ -53308,7 +53311,6 @@ TextureImporter:
       UI_Buttons_1620: 408024354277959963
       UI_Buttons_1621: -2702530372976053204
       UI_Buttons_1622: -1375740677947343147
-      UI_Buttons_1623: -5158891349347886658
       UI_Buttons_1624: -7700790278686927325
       UI_Buttons_1625: 1414245473326080431
       UI_Buttons_1626: 3291702733190526206
@@ -53404,7 +53406,6 @@ TextureImporter:
       UI_Buttons_1707: 1706097423080479202
       UI_Buttons_1708: 2281247039374361969
       UI_Buttons_1709: 1390084549532049228
-      UI_Buttons_171: 7241675785630375950
       UI_Buttons_1710: 5711604129572341576
       UI_Buttons_1711: 5032410835971491004
       UI_Buttons_1712: 7956340126751305154
@@ -54233,7 +54234,6 @@ TextureImporter:
       UI_Buttons_567: 6965201534132653479
       UI_Buttons_568: 6531542428508353800
       UI_Buttons_569: -3141634131992342814
-      UI_Buttons_57: 3257955667730806343
       UI_Buttons_570: -8890714892445503108
       UI_Buttons_571: -416270915348634897
       UI_Buttons_572: 7830359556135470720
