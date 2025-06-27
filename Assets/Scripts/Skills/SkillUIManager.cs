@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Blindsided.Utilities;
 using UnityEngine.EventSystems;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Skills
 {
@@ -59,6 +60,7 @@ namespace TimelessEchoes.Skills
             if (popupPanel != null)
                 popupPanel.SetActive(false);
             DeselectSkill();
+            UpdateSkillSelectorLevels();
         }
 
         private void OnEnable()
@@ -78,6 +80,7 @@ namespace TimelessEchoes.Skills
             {
                 UpdateSelectedSkillUI();
             }
+            UpdateSkillSelectorLevels();
         }
 
         private void OnDisable()
@@ -102,11 +105,12 @@ namespace TimelessEchoes.Skills
                 return;
             var selector = skillSelectors[index];
             if (selector != null && selector.levelText != null)
-                selector.levelText.text = $"Lvl {level}";
+                selector.levelText.text = ShowLevelText ? $"Lvl {level}" : string.Empty;
 
             bool popupShowing = popupPanel != null && popupPanel.activeSelf && selectedIndex == index;
             if (!popupShowing && selector != null && selector.highlightImage != null)
                 selector.highlightImage.enabled = true;
+            UpdateSkillSelectorLevels();
         }
 
         private void SelectSkill(int index)
@@ -159,6 +163,32 @@ namespace TimelessEchoes.Skills
                 experienceText.text = $"{current:0.#} / {needed:0.#}";
             if (experienceBar != null)
                 experienceBar.fillAmount = needed > 0 ? Mathf.Clamp01(current / needed) : 0f;
+        }
+
+        private void UpdateSkillSelectorLevels()
+        {
+            for (int i = 0; i < skillSelectors.Count && i < skills.Count; i++)
+            {
+                var selector = skillSelectors[i];
+                var skill = skills[i];
+                if (selector == null || selector.levelText == null) continue;
+
+                if (ShowLevelText)
+                {
+                    int lvl = 1;
+                    if (controller != null)
+                    {
+                        var prog = controller.GetProgress(skill);
+                        if (prog != null)
+                            lvl = prog.Level;
+                    }
+                    selector.levelText.text = $"Lvl {lvl}";
+                }
+                else
+                {
+                    selector.levelText.text = string.Empty;
+                }
+            }
         }
 
         private void Update()
