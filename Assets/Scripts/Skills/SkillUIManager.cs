@@ -73,6 +73,7 @@ namespace TimelessEchoes.Skills
             }
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnShowLevelTextChanged;
+            OnShowLevelTextChanged();
             if (selectedIndex < 0)
             {
                 DeselectSkill();

@@ -70,6 +70,7 @@ namespace TimelessEchoes.Upgrades
 
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnShowLevelTextChanged;
+            OnShowLevelTextChanged();
         }
 
         private void OnDisable()
