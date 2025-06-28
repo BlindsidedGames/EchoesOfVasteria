@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using UnityEngine;
-using TimelessEchoes.Stats;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Stats;
+using UnityEngine;
 
 namespace TimelessEchoes.Tests
 {
@@ -37,7 +37,7 @@ namespace TimelessEchoes.Tests
         [Test]
         public void RevealLevelMatchesThreshold()
         {
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
                 tracker.RegisterKill(enemyStats);
             Assert.AreEqual(1, tracker.GetRevealLevel(enemyStats));
         }
@@ -45,7 +45,7 @@ namespace TimelessEchoes.Tests
         [Test]
         public void DamageMultiplierScalesWithRevealLevel()
         {
-            for (int i = 0; i < 110; i++)
+            for (var i = 0; i < 110; i++)
                 tracker.RegisterKill(enemyStats);
             // After 110 kills reveal level should be 2 (>=100)
             Assert.AreEqual(2, tracker.GetRevealLevel(enemyStats));

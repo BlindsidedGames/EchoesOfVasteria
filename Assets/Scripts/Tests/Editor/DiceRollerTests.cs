@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace TimelessEchoes.Tests
+namespace TimelessEchoes
 {
     public class DiceRollerTests
     {
@@ -19,13 +19,14 @@ namespace TimelessEchoes.Tests
             renderer = obj.AddComponent<SpriteRenderer>();
             dice = obj.AddComponent<DiceRoller>();
 
-            var rendererField = typeof(DiceRoller).GetField("diceRenderer", BindingFlags.NonPublic | BindingFlags.Instance);
+            var rendererField =
+                typeof(DiceRoller).GetField("diceRenderer", BindingFlags.NonPublic | BindingFlags.Instance);
             rendererField.SetValue(dice, renderer);
 
             var facesField = typeof(DiceRoller).GetField("faces", BindingFlags.NonPublic | BindingFlags.Instance);
             var faces = new Sprite[6];
-            for (int i = 0; i < faces.Length; i++)
-                faces[i] = Sprite.Create(Texture2D.blackTexture, new Rect(0,0,1,1), Vector2.zero);
+            for (var i = 0; i < faces.Length; i++)
+                faces[i] = Sprite.Create(Texture2D.blackTexture, new Rect(0, 0, 1, 1), Vector2.zero);
             facesField.SetValue(dice, faces);
         }
 
