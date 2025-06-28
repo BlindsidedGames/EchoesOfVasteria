@@ -189,6 +189,10 @@ namespace TimelessEchoes.Enemies
 
         private void OnDeath()
         {
+            SetActiveState(false);
+            if (animator != null)
+                animator.SetTrigger("Die");
+
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceManager == null) return;
@@ -209,6 +213,12 @@ namespace TimelessEchoes.Enemies
                     resourceManager.Add(drop.resource, count);
                 }
             }
+        }
+
+        // Called via animation event at the end of the Die animation
+        public void DestroySelf()
+        {
+            Destroy(gameObject);
         }
 
         private void OnDestroy()

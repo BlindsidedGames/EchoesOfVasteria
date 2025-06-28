@@ -38,10 +38,7 @@ namespace TimelessEchoes.Enemies
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();
-
-                // Automatically remove enemies when their health reaches zero
-                if (GetComponent<Enemy>() != null)
-                    Destroy(gameObject);
+                // Enemy objects now handle destruction after playing a death animation
             }
         }
 
