@@ -15,6 +15,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private List<ResourceUIReferences> slots = new();
+        [SerializeField] private GameObject inventoryWindow;
         [SerializeField] private TooltipUIReferences tooltip;
         [SerializeField] private bool showTooltipOnHover;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
@@ -158,7 +159,11 @@ namespace TimelessEchoes.Upgrades
         {
             var index = resources.IndexOf(resource);
             if (index >= 0)
+            {
+                if (inventoryWindow != null && !inventoryWindow.activeSelf)
+                    inventoryWindow.SetActive(true);
                 SelectSlot(index);
+            }
         }
 
         private void ShowTooltip(int index)
