@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3013536070814129528}
   - component: {fileID: 6611826833670238916}
   m_Layer: 5
-  m_Name: Kills/Reveal_Text
+  m_Name: KillsAndNextANdBonus_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,9 +65,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Kills: 4
+  m_text: 'Kills: 4 / 10
 
-    Next Reveal: 10
+    Bonus Damage: 25%
 
 '
   m_isRightToLeft: 0
@@ -493,7 +493,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1087490722311972525}
+  - {fileID: 6054346495659669476}
   - {fileID: 6539288274575520205}
   - {fileID: 1247267133554210662}
   m_Father: {fileID: 6509592772656136196}
@@ -832,6 +832,69 @@ MonoBehaviour:
   m_FillAmount: 0.4
   m_FillCenter: 1
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5390777336540817331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6054346495659669476}
+  - component: {fileID: 1449316307222535268}
+  m_Layer: 5
+  m_Name: Horizontal_Top
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6054346495659669476
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390777336540817331}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1087490722311972525}
+  m_Father: {fileID: 5632871407673626537}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1449316307222535268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390777336540817331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &5871527662475751080
 GameObject:
   m_ObjectHideFlags: 0
@@ -897,8 +960,9 @@ MonoBehaviour:
   enemyNameText: {fileID: 7056601218520285877}
   hitpointsAndDamageText: {fileID: 5620335432057288960}
   movementAndAttackRateText: {fileID: 3720138103246517037}
-  killCountAndNextRevealText: {fileID: 6611826833670238916}
+  killsAndNextAndBonusText: {fileID: 6611826833670238916}
   nextRevealProgressBar: {fileID: 5297152421467415358}
+  progressBar: {fileID: 2331006253901516609}
 --- !u!114 &4625715381178875882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1144,7 +1208,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5632871407673626537}
+  m_Father: {fileID: 6054346495659669476}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

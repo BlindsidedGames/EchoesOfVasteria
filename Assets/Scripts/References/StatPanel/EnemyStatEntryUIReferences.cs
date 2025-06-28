@@ -11,7 +11,8 @@ namespace TimelessEchoes.References.StatPanel
         public TMP_Text enemyNameText;
         public TMP_Text hitpointsAndDamageText;
         public TMP_Text movementAndAttackRateText;
-        public TMP_Text killCountAndNextRevealText;
+        public TMP_Text killsAndNextAndBonusText;
         public SlicedFilledImage nextRevealProgressBar;
+        public GameObject progressBar;
     }
 }
