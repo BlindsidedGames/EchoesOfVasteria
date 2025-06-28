@@ -91,6 +91,7 @@ namespace TimelessEchoes.MapGeneration
         private Random rng;
         public Tilemap WaterMap => waterMap;
         public Tilemap SandMap => sandMap;
+        public Tilemap GrassMap => grassMap;
         public Tilemap DecorationMap => decorationMap;
 
         private void Awake()

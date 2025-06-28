@@ -43,11 +43,20 @@ namespace TimelessEchoes.Tasks
         [TabGroup("Settings", "Generation")] [SerializeField]
         private List<WeightedSpawn> waterTasks = new();
 
+        [TabGroup("Settings", "Generation")] [SerializeField]
+        private List<WeightedSpawn> grassTasks = new();
+
+        [TabGroup("Settings", "Generation")] [SerializeField]
+        private bool allowGrassEdge = false;
+
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap waterMap;
 
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap sandMap;
+
+        [TabGroup("Settings", "References")] [SerializeField]
+        private Tilemap grassMap;
 
         private readonly List<GameObject> generatedObjects = new();
 
@@ -69,7 +78,7 @@ namespace TimelessEchoes.Tasks
 
         private void EnsureTilemaps()
         {
-            if (waterMap != null && sandMap != null)
+            if (waterMap != null && sandMap != null && grassMap != null)
                 return;
 
             var chunk = GetComponent<TilemapChunkGenerator>();
@@ -79,9 +88,11 @@ namespace TimelessEchoes.Tasks
                     waterMap = chunk.WaterMap;
                 if (sandMap == null)
                     sandMap = chunk.SandMap;
+                if (grassMap == null)
+                    grassMap = chunk.GrassMap;
             }
 
-            if (waterMap == null || sandMap == null)
+            if (waterMap == null || sandMap == null || grassMap == null)
             {
                 var maps = GetComponentsInChildren<Tilemap>();
                 foreach (var m in maps)
@@ -89,6 +100,8 @@ namespace TimelessEchoes.Tasks
                         waterMap = m;
                     else if (sandMap == null && m.gameObject.name == "BG")
                         sandMap = m;
+                    else if (grassMap == null && m.gameObject.name == "BG_Grass")
+                        grassMap = m;
             }
         }
 
@@ -145,11 +158,12 @@ namespace TimelessEchoes.Tasks
                 var progress = Mathf.InverseLerp(minX, maxX, localX);
 
                 var allowWater = TryGetWaterEdge(localX, out var waterPos);
-                var (entry, isEnemy, isWaterTask) = PickEntry(progress, allowWater);
+                var allowGrass = TryGetGrassPosition(localX, allowGrassEdge, out var grassPos);
+                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(progress, allowWater, allowGrass);
                 if (entry == null || entry.prefab == null)
                     continue;
 
-                var pos = isWaterTask ? waterPos : RandomPositionAtX(localX);
+                var pos = isWaterTask ? waterPos : isGrassTask ? grassPos : RandomPositionAtX(localX);
 
                 var attempts = 0;
                 var positionIsValid = false;
@@ -170,8 +184,15 @@ namespace TimelessEchoes.Tasks
                         positionIsValid = true;
                         break;
                     }
-
-                    pos = RandomPositionAtX(localX);
+                    if (isGrassTask)
+                    {
+                        if (!TryGetGrassPosition(localX, allowGrassEdge, out pos))
+                            break;
+                    }
+                    else
+                    {
+                        pos = RandomPositionAtX(localX);
+                    }
                     attempts++;
                 }
 
@@ -242,6 +263,40 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        private bool TryGetGrassPosition(float localX, bool includeEdge, out Vector3 position)
+        {
+            position = Vector3.zero;
+            EnsureTilemaps();
+            if (grassMap == null)
+                return false;
+
+            var worldX = transform.position.x + localX;
+            var cell = grassMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
+
+            var maxY = grassMap.cellBounds.yMax;
+            var minY = grassMap.cellBounds.yMin - 1;
+
+            var validYs = new List<int>();
+            for (var y = maxY; y >= minY; y--)
+            {
+                if (!grassMap.HasTile(new Vector3Int(cell.x, y, 0)))
+                    continue;
+
+                var sandBelow = sandMap != null && sandMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
+                if (!includeEdge && sandBelow)
+                    continue;
+
+                validYs.Add(y);
+            }
+
+            if (validYs.Count == 0)
+                return false;
+
+            var idx = Random.Range(0, validYs.Count);
+            position = grassMap.GetCellCenterWorld(new Vector3Int(cell.x, validYs[idx], 0));
+            return true;
+        }
+
         /// <summary>
         ///     Determine if the exact XY position contains a collider on the blocking mask.
         /// </summary>
@@ -268,7 +323,7 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         /// <param name="progress">The normalized position in the generation area.</param>
         /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask) PickEntry(float progress, bool allowWaterTasks)
+        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float progress, bool allowWaterTasks, bool allowGrassTasks)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
@@ -283,9 +338,14 @@ namespace TimelessEchoes.Tasks
                 foreach (var w in waterTasks)
                     waterTasksTotalWeight += w.GetWeight(progress);
 
-            var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight;
+            var grassTasksTotalWeight = 0f;
+            if (allowGrassTasks)
+                foreach (var g in grassTasks)
+                    grassTasksTotalWeight += g.GetWeight(progress);
+
+            var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight;
             if (totalWeight <= 0f)
-                return (null, false, false);
+                return (null, false, false, false);
 
             var r = Random.value * totalWeight;
 
@@ -295,7 +355,7 @@ namespace TimelessEchoes.Tasks
                 {
                     r -= e.GetWeight(progress);
                     if (r <= 0f)
-                        return (e, true, false);
+                        return (e, true, false, false);
                 }
             }
             else
@@ -308,23 +368,37 @@ namespace TimelessEchoes.Tasks
                     {
                         r -= w.GetWeight(progress);
                         if (r <= 0f)
-                            return (w, false, true);
+                            return (w, false, true, false);
                     }
                 }
                 else
                 {
                     r -= waterTasksTotalWeight;
 
-                    foreach (var t in otherTasks)
+                    if (allowGrassTasks && r < grassTasksTotalWeight)
                     {
-                        r -= t.GetWeight(progress);
-                        if (r <= 0f)
-                            return (t, false, false);
+                        foreach (var g in grassTasks)
+                        {
+                            r -= g.GetWeight(progress);
+                            if (r <= 0f)
+                                return (g, false, false, true);
+                        }
+                    }
+                    else
+                    {
+                        r -= grassTasksTotalWeight;
+
+                        foreach (var t in otherTasks)
+                        {
+                            r -= t.GetWeight(progress);
+                            if (r <= 0f)
+                                return (t, false, false, false);
+                        }
                     }
                 }
             }
 
-            return (null, false, false);
+            return (null, false, false, false);
         }
 
         [Serializable]
