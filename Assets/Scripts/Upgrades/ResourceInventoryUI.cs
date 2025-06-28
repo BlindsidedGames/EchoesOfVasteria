@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using Blindsided.Utilities;
+using Sirenix.OdinInspector;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -19,6 +20,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private TooltipUIReferences tooltip;
         [SerializeField] private bool showTooltipOnHover = false;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
+        [SerializeField, HideInInspector] private bool iconsVisible = true;
 
         private int selectedIndex = -1;
 
@@ -98,6 +100,13 @@ namespace TimelessEchoes.Upgrades
                     slot.selectionImage.enabled = false;
         }
 
+        [Button(ButtonSizes.Medium)]
+        private void ToggleIcons()
+        {
+            iconsVisible = !iconsVisible;
+            UpdateSlots();
+        }
+
         /// <summary>
         /// Updates all resource slots using the current ResourceManager values.
         /// </summary>
@@ -122,7 +131,7 @@ namespace TimelessEchoes.Upgrades
             if (slot.iconImage)
             {
                 slot.iconImage.sprite = resource ? resource.icon : null;
-                slot.iconImage.enabled = unlocked;
+                slot.iconImage.enabled = unlocked && iconsVisible;
             }
 
             if (slot.questionMarkImage)
