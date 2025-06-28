@@ -257,6 +257,8 @@ namespace TimelessEchoes.Tasks
                 {
                     if (task is OpenChestTask)
                         Destroy(obj.GetComponent<OpenChestTask>());
+                    else if (task is WoodcuttingTask)
+                        Destroy(obj.GetComponent<WoodcuttingTask>());
                     else
                         Destroy(obj.gameObject);
                 }
@@ -264,6 +266,8 @@ namespace TimelessEchoes.Tasks
             else if (task is MonoBehaviour mb)
             {
                 if (task is OpenChestTask)
+                    Destroy(mb);
+                else if (task is WoodcuttingTask)
                     Destroy(mb);
                 else
                     Destroy(mb.gameObject);
