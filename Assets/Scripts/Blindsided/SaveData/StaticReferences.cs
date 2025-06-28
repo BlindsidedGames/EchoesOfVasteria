@@ -11,12 +11,6 @@ namespace Blindsided.SaveData
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
 
-        public static int ItemShards
-        {
-            get => oracle.saveData.ItemShards;
-            set => oracle.saveData.ItemShards = value;
-        }
-
 
         public static BuyMode PurchaseMode
         {
@@ -103,20 +97,9 @@ namespace Blindsided.SaveData
             }
         }
 
-        public static bool DevSpeed
-        {
-            get => oracle.saveData.DevOptions.DevSpeed;
-            set => oracle.saveData.DevOptions.DevSpeed = value;
-        }
 
         public static Preferences SavedPreferences => oracle.saveData.SavedPreferences;
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
-
-        public static Statistics Stats => oracle.saveData.Stats;
-
-        public static TimeSpentInRealms TimeSpentInRealms => Stats.TimeSpentInRealms;
-        public static TimeSpentInRealms ScaledTimeSpentInRealms => Stats.ScaledTimeSpentInRealms;
-
         public static event Action ShowLevelTextChanged;
     }
 }

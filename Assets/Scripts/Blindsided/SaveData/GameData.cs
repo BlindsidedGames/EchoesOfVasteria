@@ -5,38 +5,25 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public float CurrentTime = 0;
-        public string DateQuitString;
-        public string DateStarted;
-        [TabGroup("Devoptions")] public Devoptions DevOptions = new();
-
-        [HideReferenceObjectPicker] [TabGroup("Heroes")]
-        public Dictionary<string, HeroState> HeroStates = new();
-
-        [TabGroup("Gear")] public int ItemShards;
-        public double OfflineTime = 0;
-        public double OfflineTimeCap = 3600f;
-        public double OfflineTimeScaleMultiplier = 2f;
-        public double PlayTime;
-
-        [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
-
         [TabGroup("Preferences")] public Preferences SavedPreferences = new();
 
         [HideReferenceObjectPicker] [TabGroup("Skills")]
         public Dictionary<string, SkillProgress> SkillData = new();
 
-        [HideReferenceObjectPicker] [TabGroup("Statistics")]
-        public Statistics Stats = new();
-
-        public float TimeScale = 0f;
-
-
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
-        [HideReferenceObjectPicker]
-        public Dictionary<string, double> EnemyKills = new();
+        public float CurrentTime = 0;
+        public string DateQuitString;
+        public string DateStarted;
+        public double OfflineTime = 0;
+        public double OfflineTimeCap = 3600f;
+        public double OfflineTimeScaleMultiplier = 2f;
+        public double PlayTime;
+        public float TimeScale = 0f;
+        [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
+        [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
+
 
         [HideReferenceObjectPicker]
         public class ResourceEntry
@@ -71,48 +58,12 @@ namespace Blindsided.SaveData
         }
 
         [HideReferenceObjectPicker]
-        public class Statistics
-        {
-            public TimeSpentInRealms ScaledTimeSpentInRealms = new();
-            public TimeSpentInRealms TimeSpentInRealms = new();
-        }
-
-        [HideReferenceObjectPicker]
-        public class TimeSpentInRealms
-        {
-            public float ChronicleArchives;
-            public float CollapseOfTime;
-            public float EnginesOfExpansion;
-
-            public float EventHorizon;
-            public float FoundationOfProduction;
-            public float RealmOfResearch;
-            public float TemporalRifts;
-            public float VoidLull;
-
-            public float Total => EventHorizon + FoundationOfProduction + RealmOfResearch + EnginesOfExpansion +
-                                  CollapseOfTime + ChronicleArchives + TemporalRifts + VoidLull;
-        }
-
-        [HideReferenceObjectPicker]
-        public class HeroState
-        {
-            public int CurrentXP;
-            public int Level;
-        }
-
-        [HideReferenceObjectPicker]
         public class SkillProgress
         {
             public float CurrentXP;
             public int Level;
         }
 
-        [HideReferenceObjectPicker]
-        public class Devoptions
-        {
-            public bool DevSpeed;
-        }
 
         #region Enums
 
