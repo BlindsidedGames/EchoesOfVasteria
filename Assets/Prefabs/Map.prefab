@@ -1111,8 +1111,15 @@ MonoBehaviour:
     weight: 1
     minProgress: 0
     maxProgress: 1
+  grassTasks:
+  - prefab: {fileID: 5839893854702782364, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
+    weight: 1
+    minProgress: 0
+    maxProgress: 1
+  allowGrassEdge: 1
   waterMap: {fileID: 2972488014116059898}
   sandMap: {fileID: 8282648404893352150}
+  grassMap: {fileID: 678892839076896793}
 --- !u!1 &8116783165545535798
 GameObject:
   m_ObjectHideFlags: 0

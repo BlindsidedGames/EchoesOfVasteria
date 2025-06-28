@@ -1,0 +1,10 @@
+using UnityEngine;
+
+namespace TimelessEchoes.References.StatPanel
+{
+    public class StatPanelReferences : MonoBehaviour
+    {
+        public Transform enemyEntryParent;
+        public Transform enemyEntryPrefab;
+    }
+}
