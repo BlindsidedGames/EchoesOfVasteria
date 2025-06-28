@@ -43,6 +43,8 @@ allowing you to upgrade your hero.
 
 Water based tasks ignore blocking colliders and can spawn even when a tile on
 the `Blocking` layer is present.
+Grass tasks use a dedicated list and only appear on grass tiles. A toggle on the
+generator controls whether they may spawn on the sand/grass edge.
 
 ## Map Generation
 Maps are created by the `TilemapChunkGenerator` which lays out water, sand and
