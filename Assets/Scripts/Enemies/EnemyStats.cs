@@ -7,6 +7,8 @@ namespace TimelessEchoes.Enemies
     [CreateAssetMenu(fileName = "EnemyStats", menuName = "SO/Enemy Stats")]
     public class EnemyStats : ScriptableObject
     {
+        public string enemyName;
+        public Sprite icon;
         public int maxHealth = 10;
         public int experience = 10;
         public int defense = 0;

@@ -2,6 +2,7 @@ using Pathfinding;
 using Pathfinding.RVO;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Stats;
 using System.Collections.Generic;
 
 namespace TimelessEchoes.Enemies
@@ -34,6 +35,7 @@ namespace TimelessEchoes.Enemies
         private LayerMask blockingMask;
 
         public bool IsEngaged => setter != null && setter.target == hero;
+        public EnemyStats Stats => stats;
 
         public static event System.Action<Enemy> OnEngage;
 
@@ -209,6 +211,9 @@ namespace TimelessEchoes.Enemies
                     resourceManager.Add(drop.resource, count);
                 }
             }
+
+            var tracker = FindFirstObjectByType<EnemyKillTracker>();
+            tracker?.RegisterKill(stats);
         }
 
         private void OnDestroy()

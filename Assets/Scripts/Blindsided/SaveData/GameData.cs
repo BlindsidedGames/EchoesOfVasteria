@@ -36,6 +36,9 @@ namespace Blindsided.SaveData
         public Dictionary<string, int> UpgradeLevels = new();
 
         [HideReferenceObjectPicker]
+        public Dictionary<string, double> EnemyKills = new();
+
+        [HideReferenceObjectPicker]
         public class ResourceEntry
         {
             public double Amount;
