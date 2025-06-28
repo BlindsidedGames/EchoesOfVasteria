@@ -49,6 +49,9 @@ namespace TimelessEchoes.Tasks
         [TabGroup("Settings", "Generation")] [SerializeField]
         private bool allowGrassEdge = false;
 
+        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)]
+        private int grassTopBuffer = 2;
+
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap waterMap;
 
@@ -273,7 +276,7 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var cell = grassMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = grassMap.cellBounds.yMax;
+            var maxY = Mathf.Clamp(grassMap.cellBounds.yMax - grassTopBuffer, grassMap.cellBounds.yMin, grassMap.cellBounds.yMax);
             var minY = grassMap.cellBounds.yMin - 1;
 
             var validYs = new List<int>();
@@ -283,7 +286,10 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 var sandBelow = sandMap != null && sandMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
-                if (!includeEdge && sandBelow)
+                var leftEmpty = !grassMap.HasTile(new Vector3Int(cell.x - 1, y, 0));
+                var rightEmpty = !grassMap.HasTile(new Vector3Int(cell.x + 1, y, 0));
+                var isEdge = sandBelow || leftEmpty || rightEmpty;
+                if (!includeEdge && isEdge)
                     continue;
 
                 validYs.Add(y);
