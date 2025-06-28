@@ -1,16 +1,14 @@
 using System.Collections.Generic;
-using References.UI;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.EventSystems;
 using Blindsided.Utilities;
+using References.UI;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
-    /// Displays the player's resource amounts and allows selecting a resource slot.
+    ///     Displays the player's resource amounts and allows selecting a resource slot.
     /// </summary>
     public class ResourceInventoryUI : MonoBehaviour
     {
@@ -18,9 +16,9 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private List<ResourceUIReferences> slots = new();
         [SerializeField] private TooltipUIReferences tooltip;
-        [SerializeField] private bool showTooltipOnHover = false;
+        [SerializeField] private bool showTooltipOnHover;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
-        [SerializeField, HideInInspector] private bool iconsVisible = true;
+        [SerializeField] [HideInInspector] private bool iconsVisible = true;
 
         private int selectedIndex = -1;
 
@@ -35,7 +33,7 @@ namespace TimelessEchoes.Upgrades
             if (slots.Count == 0)
                 slots.AddRange(GetComponentsInChildren<ResourceUIReferences>(true));
 
-            for (int i = 0; i < slots.Count; i++)
+            for (var i = 0; i < slots.Count; i++)
             {
                 var index = i;
                 if (slots[i] != null && slots[i].selectButton != null)
@@ -108,11 +106,11 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>
-        /// Updates all resource slots using the current ResourceManager values.
+        ///     Updates all resource slots using the current ResourceManager values.
         /// </summary>
         public void UpdateSlots()
         {
-            for (int i = 0; i < slots.Count && i < resources.Count; i++)
+            for (var i = 0; i < slots.Count && i < resources.Count; i++)
                 UpdateSlot(i);
 
             if (selectedIndex >= 0 && tooltip != null && tooltip.gameObject.activeSelf)
@@ -125,36 +123,40 @@ namespace TimelessEchoes.Upgrades
             var resource = resources[index];
             if (slot == null) return;
 
-            double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
-            bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
+            var amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+            var unlocked = resourceManager && resourceManager.IsUnlocked(resource);
 
             if (slot.iconImage)
             {
                 slot.iconImage.sprite = resource ? resource.icon : null;
-                slot.iconImage.enabled = unlocked && iconsVisible;
+                slot.iconImage.enabled = unlocked;
             }
 
             if (slot.questionMarkImage)
                 slot.questionMarkImage.enabled = !unlocked;
             if (slot.countText)
                 slot.countText.gameObject.SetActive(false);
+            if (iconsVisible)
+            {
+                slot.iconImage.enabled = true;
+                slot.questionMarkImage.enabled = false;
+                slot.gameObject.name = resource.name;
+            }
         }
 
         public void SelectSlot(int index)
         {
             selectedIndex = index;
-            for (int i = 0; i < slots.Count; i++)
-            {
+            for (var i = 0; i < slots.Count; i++)
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
-            }
 
             ShowTooltip(selectedIndex);
         }
 
         public void HighlightResource(Resource resource)
         {
-            int index = resources.IndexOf(resource);
+            var index = resources.IndexOf(resource);
             if (index >= 0)
                 SelectSlot(index);
         }
@@ -175,13 +177,13 @@ namespace TimelessEchoes.Upgrades
 
             tooltip.transform.position = slot.transform.position + (Vector3)tooltipOffset;
 
-            bool unlocked = resourceManager && resourceManager.IsUnlocked(resource);
+            var unlocked = resourceManager && resourceManager.IsUnlocked(resource);
             if (tooltip.resourceNameText)
                 tooltip.resourceNameText.text = unlocked && resource ? resource.name : "Undiscovered";
 
-            double amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
+            var amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
             if (tooltip.resourceCountText)
-                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true, 400f, false);
+                tooltip.resourceCountText.text = CalcUtils.FormatNumber(amount, true);
 
             tooltip.gameObject.SetActive(true);
         }
