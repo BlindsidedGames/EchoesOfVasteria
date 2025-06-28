@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 
@@ -341,7 +342,12 @@ namespace TimelessEchoes.Hero
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(target, (baseDamage + damageBonus) * combatDamageMultiplier);
+            {
+                var killTracker = FindFirstObjectByType<EnemyKillTracker>();
+                var enemyStats = target.GetComponent<Enemy>()?.Stats;
+                float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
+                proj.Init(target, (baseDamage + damageBonus) * combatDamageMultiplier * bonus);
+            }
         }
 
         private enum State
