@@ -9895,16 +9895,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_159
+      name: 1down
       rect:
         serializedVersion: 2
         x: 544
         y: 368
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 5, z: 4, w: 4}
       customData: 
       outline: []
       physicsShape: []
@@ -9961,16 +9961,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Buttons_162
+      name: 1up
       rect:
         serializedVersion: 2
         x: 592
         y: 368
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 5, z: 4, w: 4}
       customData: 
       outline: []
       physicsShape: []
@@ -52614,6 +52614,8 @@ TextureImporter:
       1Quit: 7241675785630375950
       1Quit2: -5158891349347886658
       1Quit3: 4133628245501162020
+      1down: -5706602719269736068
+      1up: 8117138956992678616
       2: 7324967101786752704
       2x: 3257955667730806343
       3: -2344432946971440850
@@ -53274,7 +53276,6 @@ TextureImporter:
       UI_Buttons_1587: -2838775242915492516
       UI_Buttons_1588: -88007677540637098
       UI_Buttons_1589: 2605968314060799085
-      UI_Buttons_159: -5706602719269736068
       UI_Buttons_1590: 877280836884312501
       UI_Buttons_1591: -7249766436460166343
       UI_Buttons_1592: 2248170975557522065
@@ -53307,7 +53308,6 @@ TextureImporter:
       UI_Buttons_1617: -2055297946472376736
       UI_Buttons_1618: -9192808384341234178
       UI_Buttons_1619: 4758914451019231633
-      UI_Buttons_162: 8117138956992678616
       UI_Buttons_1620: 408024354277959963
       UI_Buttons_1621: -2702530372976053204
       UI_Buttons_1622: -1375740677947343147
