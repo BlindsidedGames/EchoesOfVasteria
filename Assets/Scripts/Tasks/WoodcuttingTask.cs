@@ -1,3 +1,4 @@
+using TimelessEchoes.Hero;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -11,14 +12,15 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite stumpSprite;
 
+        [SerializeField] private Transform cuttingPoint;
+
         private Sprite originalSprite;
 
         private bool spawnedStump;
 
         protected override string AnimationName => "Chopping";
         protected override string InterruptTriggerName => "StopChopping";
-
-        public override Transform Target => transform;
+        public override Transform Target => cuttingPoint != null ? cuttingPoint : transform;
 
         public override void StartTask()
         {
@@ -34,7 +36,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public override void Tick(TimelessEchoes.Hero.HeroController hero)
+        public override void Tick(HeroController hero)
         {
             base.Tick(hero);
             if (!spawnedStump && IsComplete())
