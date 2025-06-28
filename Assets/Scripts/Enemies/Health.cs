@@ -34,7 +34,10 @@ namespace TimelessEchoes.Enemies
             var isHero = GetComponent<HeroController>() != null;
             var colour = isHero ? red : orange;
             var fontSize = isHero ? 6f : 8f;
-            FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
+            if (Application.isPlaying)
+            {
+                FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
+            }
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();
