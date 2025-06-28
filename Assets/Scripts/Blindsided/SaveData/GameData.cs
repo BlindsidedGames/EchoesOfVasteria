@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 
-
 namespace Blindsided.SaveData
 {
     public class GameData
@@ -10,9 +9,6 @@ namespace Blindsided.SaveData
         public string DateQuitString;
         public string DateStarted;
         [TabGroup("Devoptions")] public Devoptions DevOptions = new();
-
-        [HideReferenceObjectPicker] [TabGroup("Codex")]
-        public Dictionary<string, int> GlobalKillCounts = new();
 
         [HideReferenceObjectPicker] [TabGroup("Heroes")]
         public Dictionary<string, HeroState> HeroStates = new();
@@ -23,10 +19,12 @@ namespace Blindsided.SaveData
         public double OfflineTimeScaleMultiplier = 2f;
         public double PlayTime;
 
-        [HideReferenceObjectPicker]
-        public Dictionary<string, ResourceEntry> Resources = new();
+        [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
 
         [TabGroup("Preferences")] public Preferences SavedPreferences = new();
+
+        [HideReferenceObjectPicker] [TabGroup("Skills")]
+        public Dictionary<string, SkillProgress> SkillData = new();
 
         [HideReferenceObjectPicker] [TabGroup("Statistics")]
         public Statistics Stats = new();
@@ -37,14 +35,11 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
-        [HideReferenceObjectPicker] [TabGroup("Skills")]
-        public Dictionary<string, SkillProgress> SkillData = new();
-
         [HideReferenceObjectPicker]
         public class ResourceEntry
         {
-            public bool Earned;
             public double Amount;
+            public bool Earned;
         }
 
         [HideReferenceObjectPicker]
@@ -64,12 +59,12 @@ namespace Blindsided.SaveData
             public bool ShopFoldout = false;
 
             public bool ShortLongCurrencyDisplay;
+            public bool ShowLevelText = true;
 
             public bool StatsFoldout;
             public bool TransparentUi;
             public bool Tutorial;
             public bool UseScaledTimeForValues;
-            public bool ShowLevelText = true;
         }
 
         [HideReferenceObjectPicker]
@@ -106,8 +101,8 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class SkillProgress
         {
-            public int Level;
             public float CurrentXP;
+            public int Level;
         }
 
         [HideReferenceObjectPicker]

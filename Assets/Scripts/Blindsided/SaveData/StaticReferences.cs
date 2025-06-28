@@ -8,7 +8,6 @@ namespace Blindsided.SaveData
     public static class StaticReferences
     {
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
-        public static Dictionary<string, int> GlobalKillCounts => oracle.saveData.GlobalKillCounts;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
 
         public static int ItemShards
@@ -90,8 +89,6 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.UseScaledTimeForValues = value;
         }
 
-        public static event Action ShowLevelTextChanged;
-
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
@@ -118,5 +115,7 @@ namespace Blindsided.SaveData
 
         public static TimeSpentInRealms TimeSpentInRealms => Stats.TimeSpentInRealms;
         public static TimeSpentInRealms ScaledTimeSpentInRealms => Stats.ScaledTimeSpentInRealms;
+
+        public static event Action ShowLevelTextChanged;
     }
 }

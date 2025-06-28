@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Blindsided.SaveData;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TimelessEchoes.Upgrades;
 
 namespace Blindsided
 {
@@ -49,7 +49,7 @@ namespace Blindsided
         private string _dataName => (beta ? $"Beta{betaSaveIteration}" : "") + "Data";
         private string _fileName => (beta ? $"Beta{betaSaveIteration}" : "") + "Sd.es3";
 
-        [TabGroup("SaveData")] public SaveData.GameData saveData = new();
+        [TabGroup("SaveData")] public GameData saveData = new();
 
         #endregion
 
@@ -110,7 +110,7 @@ namespace Blindsided
         [Button]
         public void WipePreferences()
         {
-            saveData.SavedPreferences = new SaveData.GameData.Preferences();
+            saveData.SavedPreferences = new GameData.Preferences();
         }
 
         [TabGroup("SaveData", "Buttons")]
@@ -118,7 +118,7 @@ namespace Blindsided
         public void WipeAllData()
         {
             EventHandler.ResetData();
-            saveData = new SaveData.GameData();
+            saveData = new GameData();
             FlushToDisk();
             SceneManager.LoadScene(0);
         }
@@ -131,7 +131,7 @@ namespace Blindsided
                 ? Encoding.ASCII.GetBytes(GUIUtility.systemCopyBuffer)
                 : Convert.FromBase64String(GUIUtility.systemCopyBuffer);
 
-            saveData = SerializationUtility.DeserializeValue<SaveData.GameData>(bytes, DataFormat.JSON);
+            saveData = SerializationUtility.DeserializeValue<GameData>(bytes, DataFormat.JSON);
             SaveToCache();
         }
 
@@ -167,11 +167,11 @@ namespace Blindsided
         private void Load()
         {
             loaded = false;
-            saveData = new SaveData.GameData();
+            saveData = new GameData();
 
             try
             {
-                saveData = ES3.Load<SaveData.GameData>(_dataName, _settings);
+                saveData = ES3.Load<GameData>(_dataName, _settings);
             }
             catch
             {
@@ -179,7 +179,7 @@ namespace Blindsided
                 {
                     Debug.LogWarning("Backup restored; re-loading.");
                     ES3.CacheFile(_fileName);
-                    saveData = ES3.Load<SaveData.GameData>(_dataName, _settings);
+                    saveData = ES3.Load<GameData>(_dataName, _settings);
                 }
                 else
                 {
@@ -203,10 +203,9 @@ namespace Blindsided
 
         private void NullCheckers()
         {
-            saveData.HeroStates ??= new Dictionary<string, SaveData.GameData.HeroState>();
-            saveData.GlobalKillCounts ??= new Dictionary<string, int>();
-            saveData.Resources ??= new Dictionary<string, SaveData.GameData.ResourceEntry>();
-            saveData.SkillData ??= new Dictionary<string, SaveData.GameData.SkillProgress>();
+            saveData.HeroStates ??= new Dictionary<string, GameData.HeroState>();
+            saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
+            saveData.SkillData ??= new Dictionary<string, GameData.SkillProgress>();
         }
 
         public static void AwayForSeconds()
