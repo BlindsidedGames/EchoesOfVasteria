@@ -134,7 +134,6 @@ namespace TimelessEchoes.MapGeneration.Chunks
         private int grassTopBuffer = 2;
 
         private readonly List<GameObject> generatedObjects = new();
-        private readonly List<ITask> runtimeTasks = new();
         private TaskController controller;
         private System.Random rng;
 
@@ -147,38 +146,25 @@ namespace TimelessEchoes.MapGeneration.Chunks
             rng = randomizeSeed ? new System.Random() : new System.Random(seed);
         }
 
-        public void SetTaskController(TaskController taskController)
+        public void Generate(TaskController taskController, int startSandDepth, int startGrassDepth)
         {
             controller = taskController;
-        }
-
-        public void GenerateTiles(int startSandDepth, int startGrassDepth)
-        {
             rng = randomizeSeed ? new System.Random() : new System.Random(seed);
-            BuildTerrain(startSandDepth, startGrassDepth);
-        }
 
-        public void SpawnTasks()
-        {
+            ClearSpawnedObjects();
+            GenerateTerrain(startSandDepth, startGrassDepth);
+            // The call to GenerateTasks is now immediate. The manager will wait
+            // for the physics to update AFTER this whole method is complete.
             GenerateTasks();
-        }
-
-        public void RemoveTasksFromController(TaskController taskController)
-        {
-            if (taskController == null) return;
-            foreach (var task in runtimeTasks)
-                taskController.RemoveTask(task);
-            runtimeTasks.Clear();
         }
 
         public void Clear()
         {
             ClearMaps();
-            RemoveTasksFromController(controller);
             ClearSpawnedObjects();
         }
 
-        private void BuildTerrain(int startSandDepth, int startGrassDepth)
+        private void GenerateTerrain(int startSandDepth, int startGrassDepth)
         {
             var sandDepths = new int[size.x];
             var grassDepths = new int[size.x];
@@ -334,27 +320,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
             spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
             foreach (var pair in spawnedTasks)
-            {
                 controller.AddRuntimeTaskObject(pair.obj);
-                var enemy = pair.obj.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    var kill = pair.obj.GetComponent<KillEnemyTask>();
-                    if (kill != null)
-                        runtimeTasks.Add(kill);
-                    continue;
-                }
-
-                if (pair.obj is ITask direct)
-                {
-                    runtimeTasks.Add(direct);
-                    continue;
-                }
-
-                var compTask = pair.obj.GetComponent<ITask>();
-                if (compTask != null)
-                    runtimeTasks.Add(compTask);
-            }
         }
 
         private Vector3 RandomPositionAtX(float localX)
@@ -567,7 +533,6 @@ namespace TimelessEchoes.MapGeneration.Chunks
             }
 
             generatedObjects.Clear();
-            runtimeTasks.Clear();
         }
 
         [Serializable]
