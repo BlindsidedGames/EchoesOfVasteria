@@ -49,8 +49,7 @@ generator controls whether they may spawn on the sand/grass edge.
 ## Map Generation
 Maps are created by the `TilemapChunkGenerator` which lays out water, sand and
 grass tiles. Decorative tiles can be spawned with weighted probabilities and
-optional rotation. Use the `MapGenerateButton` to generate the tilemap and
-procedural tasks in the editor or at runtime.
+optional rotation.
 
 ## Building
 Use **File > Build Settings...** to create standalone builds.
