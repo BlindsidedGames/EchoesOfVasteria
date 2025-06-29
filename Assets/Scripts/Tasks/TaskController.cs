@@ -106,6 +106,7 @@ namespace TimelessEchoes.Tasks
                 kill.target = enemy.transform;
                 tasks.Add(kill);
                 taskMap[kill] = obj;
+                SortTaskListsByX();
                 return;
             }
 
@@ -113,6 +114,7 @@ namespace TimelessEchoes.Tasks
             {
                 tasks.Add(existing);
                 taskMap[existing] = obj;
+                SortTaskListsByX();
                 return;
             }
 
