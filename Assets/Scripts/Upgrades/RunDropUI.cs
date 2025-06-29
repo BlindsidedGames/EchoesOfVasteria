@@ -147,6 +147,9 @@ namespace TimelessEchoes.Upgrades
                 else
                     FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
             }
+
+            if (tooltip != null && tooltip.gameObject.activeSelf)
+                StartCoroutine(DelayedTooltipUpdate());
         }
 
         private void UpdateSlot(int index)
@@ -208,6 +211,13 @@ namespace TimelessEchoes.Upgrades
             yield return null; // wait one frame for layout groups to update
             if (slot != null)
                 FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+        }
+
+        private IEnumerator DelayedTooltipUpdate()
+        {
+            yield return null;
+            if (selectedIndex >= 0 && tooltip != null && tooltip.gameObject.activeSelf)
+                ShowTooltip(selectedIndex);
         }
     }
 }
