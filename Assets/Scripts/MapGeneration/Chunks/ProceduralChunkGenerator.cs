@@ -11,24 +11,36 @@ namespace TimelessEchoes.MapGeneration.Chunks
     [Serializable]
     public class DecorativeTileEntry
     {
-        [HorizontalGroup("Entry", 175, LabelWidth = 45)] public TileBase Tile;
-        [HorizontalGroup("Entry"), MinValue(1)] public int Weight = 1;
-        [HorizontalGroup("Entry", Width = 160), LabelWidth(125)] public bool AllowRotation;
+        [HorizontalGroup("Entry", 175, LabelWidth = 45)]
+        public TileBase Tile;
+
+        [HorizontalGroup("Entry")] [MinValue(1)]
+        public int Weight = 1;
+
+        [HorizontalGroup("Entry", Width = 160)] [LabelWidth(125)]
+        public bool AllowRotation;
     }
 
     /// <summary>
-    /// Generates a terrain chunk and procedural tasks.
+    ///     Generates a terrain chunk and procedural tasks.
     /// </summary>
     [RequireComponent(typeof(Tilemap))]
     public class ProceduralChunkGenerator : MonoBehaviour
     {
-        [Header("Tilemaps"), TabGroup("References")]
-        [SerializeField] private Tilemap waterMap;
-        [TabGroup("References"), SerializeField] private Tilemap sandMap;
-        [TabGroup("References"), SerializeField] private Tilemap grassMap;
-        [TabGroup("References"), SerializeField] private Tilemap decorationMap;
+        [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
+        private Tilemap waterMap;
 
-        [TabGroup("References"), SerializeField] private Transform spawnRoot;
+        [TabGroup("References")] [SerializeField]
+        private Tilemap sandMap;
+
+        [TabGroup("References")] [SerializeField]
+        private Tilemap grassMap;
+
+        [TabGroup("References")] [SerializeField]
+        private Tilemap decorationMap;
+
+        [TabGroup("References")] [SerializeField]
+        private Transform spawnRoot;
 
         public void SetSpawnRoot(Transform root)
         {
@@ -43,59 +55,91 @@ namespace TimelessEchoes.MapGeneration.Chunks
             decorationMap = decor;
         }
 
-        [Header("Tiles"), TabGroup("References")]
-        [SerializeField] private TileBase waterTile;
-        [TabGroup("References"), SerializeField] private TileBase sandRuleTile;
-        [TabGroup("References"), SerializeField] private TileBase grassRuleTile;
+        [Header("Tiles")] [TabGroup("References")] [SerializeField]
+        private TileBase waterTile;
 
-        [Header("Decorative Tiles"), TabGroup("References")]
-        [SerializeField] private DecorativeTileEntry[] waterDecorativeTiles;
-        [TabGroup("References"), SerializeField] private DecorativeTileEntry[] sandDecorativeTiles;
-        [TabGroup("References"), SerializeField] private DecorativeTileEntry[] grassDecorativeTiles;
+        [TabGroup("References")] [SerializeField]
+        private TileBase sandRuleTile;
 
-        [Header("Decoration Density"), TabGroup("Settings"), SerializeField, Range(0f,1f)]
+        [TabGroup("References")] [SerializeField]
+        private TileBase grassRuleTile;
+
+        [Header("Decorative Tiles")] [TabGroup("References")] [SerializeField]
+        private DecorativeTileEntry[] waterDecorativeTiles;
+
+        [TabGroup("References")] [SerializeField]
+        private DecorativeTileEntry[] sandDecorativeTiles;
+
+        [TabGroup("References")] [SerializeField]
+        private DecorativeTileEntry[] grassDecorativeTiles;
+
+        [Header("Decoration Density")] [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
         private float waterDecorationDensity = 0.05f;
-        [TabGroup("Settings"), SerializeField, Range(0f,1f)]
+
+        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
         private float sandDecorationDensity = 0.05f;
-        [TabGroup("Settings"), SerializeField, Range(0f,1f)]
+
+        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
         private float grassDecorationDensity = 0.05f;
 
-        [Header("Dimensions"), TabGroup("Settings"), SerializeField]
-        private Vector2Int size = new(64,18);
+        [Header("Dimensions")] [TabGroup("Settings")] [SerializeField]
+        private Vector2Int size = new(64, 18);
 
-        [Header("Generation"), TabGroup("Settings"), SerializeField, MinValue(1)]
+        [Header("Generation")] [TabGroup("Settings")] [SerializeField] [MinValue(1)]
         private int minAreaWidth = 2;
-        [TabGroup("Settings"), SerializeField, MinValue(0)]
+
+        [TabGroup("Settings")] [SerializeField] [MinValue(0)]
         private int edgeWaviness = 1;
-        [TabGroup("Settings"), SerializeField]
-        private Vector2Int sandDepthRange = new(2,6);
-        [TabGroup("Settings"), SerializeField]
-        private Vector2Int grassDepthRange = new(2,6);
 
-        [Header("Random Seed"), TabGroup("Settings"), SerializeField]
+        [TabGroup("Settings")] [SerializeField]
+        private Vector2Int sandDepthRange = new(2, 6);
+
+        [TabGroup("Settings")] [SerializeField]
+        private Vector2Int grassDepthRange = new(2, 6);
+
+        [Header("Random Seed")] [TabGroup("Settings")] [SerializeField]
         private int seed;
-        [TabGroup("Settings"), SerializeField] private bool randomizeSeed = true;
 
-        [Header("Task Area"), TabGroup("Task Settings"), SerializeField]
+        [TabGroup("Settings")] [SerializeField]
+        private bool randomizeSeed = true;
+
+        [Header("Task Area")] [TabGroup("Task Settings")] [SerializeField]
         private float taskMinX;
-        [TabGroup("Task Settings"), SerializeField] private float taskDensity = 0.1f;
-        [TabGroup("Task Settings"), SerializeField] private LayerMask blockingMask;
-        [TabGroup("Task Settings"), SerializeField, MinValue(0)] private float otherTaskEdgeOffset = 1f;
-        [TabGroup("Task Settings"), SerializeField] private List<WeightedSpawn> enemies = new();
-        [TabGroup("Task Settings"), SerializeField] private List<WeightedSpawn> otherTasks = new();
-        [TabGroup("Task Settings"), SerializeField] private List<WeightedSpawn> waterTasks = new();
-        [TabGroup("Task Settings"), SerializeField] private List<WeightedSpawn> grassTasks = new();
-        [TabGroup("Task Settings"), SerializeField] private bool allowGrassEdge = false;
-        [TabGroup("Task Settings"), SerializeField, MinValue(0)] private int grassTopBuffer = 2;
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private float taskDensity = 0.1f;
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private LayerMask blockingMask;
+
+        [TabGroup("Task Settings")] [SerializeField] [MinValue(0)]
+        private float otherTaskEdgeOffset = 1f;
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private List<WeightedSpawn> enemies = new();
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private List<WeightedSpawn> otherTasks = new();
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private List<WeightedSpawn> waterTasks = new();
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private List<WeightedSpawn> grassTasks = new();
+
+        [TabGroup("Task Settings")] [SerializeField]
+        private bool allowGrassEdge;
+
+        [TabGroup("Task Settings")] [SerializeField] [MinValue(0)]
+        private int grassTopBuffer = 2;
 
         private readonly List<GameObject> generatedObjects = new();
         private TaskController controller;
         private System.Random rng;
-        private int endSandDepth;
-        private int endGrassDepth;
 
-        public int EndSandDepth => endSandDepth;
-        public int EndGrassDepth => endGrassDepth;
+        public int EndSandDepth { get; private set; }
+
+        public int EndGrassDepth { get; private set; }
 
         private void Awake()
         {
@@ -109,6 +153,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
             ClearSpawnedObjects();
             GenerateTerrain(startSandDepth, startGrassDepth);
+            // The call to GenerateTasks is now immediate. The manager will wait
+            // for the physics to update AFTER this whole method is complete.
             GenerateTasks();
         }
 
@@ -126,7 +172,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
             var currentSand = Mathf.Clamp(startSandDepth, sandDepthRange.x, sandDepthRange.y);
             var currentGrass = Mathf.Clamp(startGrassDepth, grassDepthRange.x, grassDepthRange.y);
 
-            for (var x = 0; x < size.x; )
+            for (var x = 0; x < size.x;)
             {
                 for (var segX = 0; segX < minAreaWidth && x < size.x; segX++, x++)
                 {
@@ -142,8 +188,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     currentGrass = Mathf.Clamp(size.y - currentSand, grassDepthRange.x, grassDepthRange.y);
             }
 
-            endSandDepth = currentSand;
-            endGrassDepth = currentGrass;
+            EndSandDepth = currentSand;
+            EndGrassDepth = currentGrass;
 
             var worldOffsetX = Mathf.RoundToInt(transform.position.x);
             var worldOffsetY = Mathf.RoundToInt(transform.position.y);
@@ -166,7 +212,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     var isEdge = y == 0 || y == waterDepth - 1;
                     if (!isEdge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), waterDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0),
+                            waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
@@ -193,7 +240,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     var isTopEdge = y == waterDepth + sandDepth + grassDepth - 1;
                     if (!isGrassGroundLevel && !isTopEdge && grassDecorativeTiles != null &&
                         grassDecorativeTiles.Length > 0 && rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), grassDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0),
+                            grassDecorativeTiles);
                 }
             }
         }
@@ -233,6 +281,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                         positionIsValid = true;
                         break;
                     }
+
                     var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
                     var onWaterEdge = !isEnemy && allowWater && Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
                     if (!isObstructed && !onWaterEdge)
@@ -240,6 +289,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                         positionIsValid = true;
                         break;
                     }
+
                     if (isGrassTask)
                     {
                         if (!TryGetGrassPosition(localX, allowGrassEdge, out pos))
@@ -249,6 +299,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     {
                         pos = RandomPositionAtX(localX);
                     }
+
                     attempts++;
                 }
 
@@ -300,6 +351,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -311,7 +363,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
             var worldX = transform.position.x + localX;
             var cell = grassMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
-            var maxY = Mathf.Clamp(grassMap.cellBounds.yMax - grassTopBuffer, grassMap.cellBounds.yMin, grassMap.cellBounds.yMax);
+            var maxY = Mathf.Clamp(grassMap.cellBounds.yMax - grassTopBuffer, grassMap.cellBounds.yMin,
+                grassMap.cellBounds.yMax);
             var minY = grassMap.cellBounds.yMin - 1;
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
@@ -326,6 +379,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     continue;
                 validYs.Add(y);
             }
+
             if (validYs.Count == 0)
                 return false;
             var idx = Random.Range(0, validYs.Count);
@@ -348,7 +402,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
             return false;
         }
 
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks)
+        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float worldX,
+            bool allowWaterTasks, bool allowGrassTasks)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
@@ -418,6 +473,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     }
                 }
             }
+
             return (null, false, false, false);
         }
 
@@ -449,6 +505,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 if (randomValue < entry.Weight) return entry;
                 randomValue -= entry.Weight;
             }
+
             return null;
         }
 
@@ -474,6 +531,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 if (obj == null) continue;
                 Destroy(obj);
             }
+
             generatedObjects.Clear();
         }
 

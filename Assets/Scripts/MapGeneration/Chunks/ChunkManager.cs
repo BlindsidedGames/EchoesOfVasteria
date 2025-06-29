@@ -1,19 +1,18 @@
+// In: Scripts/MapGeneration/Chunks/ChunkManager.cs
+
+using System.Collections;
 using System.Collections.Generic;
 using TimelessEchoes.Tasks;
-using UnityEngine.Tilemaps;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace TimelessEchoes.MapGeneration.Chunks
 {
-    /// <summary>
-    /// Manages spawning and removal of procedural chunks in front of the camera.
-    /// </summary>
     public class ChunkManager : MonoBehaviour
     {
         [SerializeField] private ProceduralChunkGenerator chunkPrefab;
-        [Header("Tilemaps")]
-        [SerializeField] private Tilemap waterMap;
+        [Header("Tilemaps")] [SerializeField] private Tilemap waterMap;
         [SerializeField] private Tilemap sandMap;
         [SerializeField] private Tilemap grassMap;
         [SerializeField] private Tilemap decorationMap;
@@ -27,6 +26,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
         private int lastSandDepth = 3;
         private int lastGrassDepth = 3;
         private float nextX;
+        private bool isBusy;
 
         private void Start()
         {
@@ -35,49 +35,84 @@ namespace TimelessEchoes.MapGeneration.Chunks
             if (camera == null && taskController != null)
                 camera = taskController.MapCamera;
 
-            for (var i = 0; i < preloadChunks; i++)
-                SpawnChunk();
+            StartCoroutine(PreloadInitialChunks());
+        }
 
-            RelocateAndScan();
+        private IEnumerator PreloadInitialChunks()
+        {
+            isBusy = true;
+            for (var i = 0; i < preloadChunks; i++) yield return StartCoroutine(SpawnAndScanSequence());
+            isBusy = false;
         }
 
         private void Update()
         {
-            if (camera == null || chunkPrefab == null)
+            if (isBusy || camera == null || chunkPrefab == null)
                 return;
 
             var camX = camera.transform.position.x;
-            var last = chunks.Count > 0 ? chunks[chunks.Count - 1] : null;
-            var spawnThreshold = chunkWidth * 0.5f;
-            if (last == null || camX + spawnThreshold > last.transform.position.x + chunkWidth)
-                SpawnChunk();
 
-            var removed = false;
-            while (chunks.Count > 0 && chunks[0].transform.position.x + chunkWidth < camX - chunkWidth)
-            {
-                var old = chunks[0];
-                chunks.RemoveAt(0);
-                Destroy(old.gameObject);
-                removed = true;
-            }
-
-            if (removed)
-                RelocateAndScan();
+            if (chunks.Count > 0 && chunks[0] != null &&
+                chunks[0].transform.position.x + chunkWidth < camX - chunkWidth)
+                StartCoroutine(DestroyAndScanSequence());
+            else if (chunks.Count == 0 || camX + chunkWidth > nextX) StartCoroutine(SpawnAndScanSequence());
         }
 
-        private void SpawnChunk()
+        private IEnumerator SpawnAndScanSequence()
         {
-            var chunk = Instantiate(chunkPrefab, new Vector3(nextX, 0f, 0f), Quaternion.identity, transform);
-            chunk.SetTilemaps(waterMap, sandMap, grassMap, decorationMap);
-            if (spawnRoot != null)
-                chunk.SetSpawnRoot(spawnRoot);
-            RemoveLocalTilemaps(chunk);
-            chunk.Generate(taskController, lastSandDepth, lastGrassDepth);
-            lastSandDepth = chunk.EndSandDepth;
-            lastGrassDepth = chunk.EndGrassDepth;
-            nextX += chunkWidth;
-            chunks.Add(chunk);
-            RelocateAndScan();
+            isBusy = true;
+            try
+            {
+                var chunk = Instantiate(chunkPrefab, new Vector3(nextX, 0f, 0f), Quaternion.identity, transform);
+                chunk.SetTilemaps(waterMap, sandMap, grassMap, decorationMap);
+                if (spawnRoot != null)
+                    chunk.SetSpawnRoot(spawnRoot);
+                RemoveLocalTilemaps(chunk);
+
+                // --- Start of Changed Code ---
+
+                // This now calls the synchronous Generate method.
+                // It will generate both terrain AND tasks immediately.
+                chunk.Generate(taskController, lastSandDepth, lastGrassDepth);
+
+                // Now that tasks are placed, we wait for the physics colliders for the
+                // terrain to be fully generated before we scan for pathfinding.
+                yield return new WaitForEndOfFrame();
+
+                // --- End of Changed Code ---
+
+                lastSandDepth = chunk.EndSandDepth;
+                lastGrassDepth = chunk.EndGrassDepth;
+                nextX += chunkWidth;
+                chunks.Add(chunk);
+
+                RelocateAndScan();
+            }
+            finally
+            {
+                isBusy = false;
+            }
+        }
+
+        private IEnumerator DestroyAndScanSequence()
+        {
+            isBusy = true;
+            try
+            {
+                if (chunks.Count > 0 && chunks[0] != null)
+                {
+                    var old = chunks[0];
+                    chunks.RemoveAt(0);
+                    Destroy(old.gameObject);
+                }
+
+                yield return new WaitForEndOfFrame();
+                RelocateAndScan();
+            }
+            finally
+            {
+                isBusy = false;
+            }
         }
 
         private void RemoveLocalTilemaps(ProceduralChunkGenerator chunk)
@@ -90,7 +125,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
         private void RelocateAndScan()
         {
-            if (taskController?.Pathfinder == null)
+            if (taskController?.Pathfinder == null || chunks.Count == 0)
                 return;
 
             var pf = taskController.Pathfinder;
@@ -101,14 +136,13 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 return;
             }
 
-            if (camera != null)
-            {
-                var center = grid.center;
-                center.x = camera.transform.position.x;
-                grid.center = center;
-                grid.UpdateTransform();
-            }
+            var middleChunk = chunks[chunks.Count / 2];
+            if (middleChunk == null) return;
 
+            var newGraphCenter = middleChunk.transform.position + new Vector3(chunkWidth / 2f, 0, 0);
+            grid.center = new Vector3(newGraphCenter.x, 9f, newGraphCenter.z);
+
+            grid.UpdateTransform();
             pf.Scan();
         }
     }
