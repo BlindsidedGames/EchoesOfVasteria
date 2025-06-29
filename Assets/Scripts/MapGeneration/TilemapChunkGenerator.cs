@@ -152,6 +152,13 @@ namespace TimelessEchoes.MapGeneration
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                     if (y < segmentSize.y)
                         grassMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassRuleTile);
+            }
+
+            for (var x = 0; x < segmentSize.x; x++)
+            {
+                var sandDepth = sandDepths[x];
+                var grassDepth = grassDepths[x];
+                var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
@@ -205,6 +212,7 @@ namespace TimelessEchoes.MapGeneration
                         continue;
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                    if (!HasAllNeighbors(sandMap, pos)) continue;
                     if (grassMap.GetTile(pos) != null) continue;
 
                     if (sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
@@ -230,9 +238,12 @@ namespace TimelessEchoes.MapGeneration
 
                     if (isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge) continue;
 
+                    var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                    if (!HasAllNeighbors(grassMap, pos)) continue;
+
                     if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
+                        PlaceDecorativeTile(pos, grassDecorativeTiles);
                 }
             }
 
@@ -277,6 +288,19 @@ namespace TimelessEchoes.MapGeneration
             }
 
             return null;
+        }
+
+        private bool HasAllNeighbors(Tilemap map, Vector3Int pos)
+        {
+            for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                if (!map.HasTile(new Vector3Int(pos.x + dx, pos.y + dy, pos.z)))
+                    return false;
+            }
+
+            return true;
         }
 
         private int RandomRange(int minInclusive, int maxExclusive)
