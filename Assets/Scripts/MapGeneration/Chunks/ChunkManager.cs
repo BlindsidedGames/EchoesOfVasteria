@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TimelessEchoes.Tasks;
+using UnityEngine.Tilemaps;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -11,6 +12,11 @@ namespace TimelessEchoes.MapGeneration.Chunks
     public class ChunkManager : MonoBehaviour
     {
         [SerializeField] private ProceduralChunkGenerator chunkPrefab;
+        [Header("Tilemaps")]
+        [SerializeField] private Tilemap waterMap;
+        [SerializeField] private Tilemap sandMap;
+        [SerializeField] private Tilemap grassMap;
+        [SerializeField] private Tilemap decorationMap;
         [SerializeField] private TaskController taskController;
         [SerializeField] private CinemachineCamera camera;
         [SerializeField] private int chunkWidth = 64;
@@ -60,12 +66,22 @@ namespace TimelessEchoes.MapGeneration.Chunks
         private void SpawnChunk()
         {
             var chunk = Instantiate(chunkPrefab, new Vector3(nextX, 0f, 0f), Quaternion.identity, transform);
+            chunk.SetTilemaps(waterMap, sandMap, grassMap, decorationMap);
+            RemoveLocalTilemaps(chunk);
             chunk.Generate(taskController, lastSandDepth, lastGrassDepth);
             lastSandDepth = chunk.EndSandDepth;
             lastGrassDepth = chunk.EndGrassDepth;
             nextX += chunkWidth;
             chunks.Add(chunk);
             RelocateAndScan();
+        }
+
+        private void RemoveLocalTilemaps(ProceduralChunkGenerator chunk)
+        {
+            var maps = chunk.GetComponentsInChildren<Tilemap>();
+            foreach (var m in maps)
+                if (m != waterMap && m != sandMap && m != grassMap && m != decorationMap)
+                    Destroy(m.gameObject);
         }
 
         private void RelocateAndScan()

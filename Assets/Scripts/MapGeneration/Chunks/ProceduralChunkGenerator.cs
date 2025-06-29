@@ -28,6 +28,14 @@ namespace TimelessEchoes.MapGeneration.Chunks
         [TabGroup("References"), SerializeField] private Tilemap grassMap;
         [TabGroup("References"), SerializeField] private Tilemap decorationMap;
 
+        public void SetTilemaps(Tilemap water, Tilemap sand, Tilemap grass, Tilemap decor)
+        {
+            waterMap = water;
+            sandMap = sand;
+            grassMap = grass;
+            decorationMap = decor;
+        }
+
         [Header("Tiles"), TabGroup("References")]
         [SerializeField] private TileBase waterTile;
         [TabGroup("References"), SerializeField] private TileBase sandRuleTile;
@@ -93,7 +101,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
             controller = taskController;
             rng = randomizeSeed ? new System.Random() : new System.Random(seed);
 
-            Clear();
+            ClearSpawnedObjects();
             GenerateTerrain(startSandDepth, startGrassDepth);
             GenerateTasks();
         }
