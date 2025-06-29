@@ -81,6 +81,8 @@ namespace TimelessEchoes.MapGeneration
         private bool randomizeSeed = true;
 
         private Random rng;
+        private int prevSandDepth = -1;
+        private int prevGrassDepth = -1;
         public Tilemap WaterMap => waterMap;
         public Tilemap SandMap => sandMap;
         public Tilemap GrassMap => grassMap;
@@ -89,6 +91,8 @@ namespace TimelessEchoes.MapGeneration
         private void Awake()
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
+            prevSandDepth = -1;
+            prevGrassDepth = -1;
         }
 
         public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
@@ -103,8 +107,12 @@ namespace TimelessEchoes.MapGeneration
             var sandDepths = new int[segmentSize.x];
             var grassDepths = new int[segmentSize.x];
 
-            var currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
-            var currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
+            var currentSandDepth = prevSandDepth >= 0
+                ? prevSandDepth
+                : RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
+            var currentGrassDepth = prevGrassDepth >= 0
+                ? prevGrassDepth
+                : RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
             for (var x = 0; x < segmentSize.x;)
             {
@@ -190,6 +198,13 @@ namespace TimelessEchoes.MapGeneration
                         PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
                 }
             }
+
+            if (segmentSize.x > 0)
+            {
+                var lastIndex = segmentSize.x - 1;
+                prevSandDepth = sandDepths[lastIndex];
+                prevGrassDepth = grassDepths[lastIndex];
+            }
         }
 
         private void PlaceDecorativeTile(Vector3Int position, DecorativeTileEntry[] decorations)
@@ -259,6 +274,8 @@ namespace TimelessEchoes.MapGeneration
         public void Clear()
         {
             ClearMaps();
+            prevSandDepth = -1;
+            prevGrassDepth = -1;
         }
     }
 }
