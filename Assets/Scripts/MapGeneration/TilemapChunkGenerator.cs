@@ -205,6 +205,7 @@ namespace TimelessEchoes.MapGeneration
                         continue;
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                    if (!HasAllNeighbors(sandMap, pos)) continue;
                     if (grassMap.GetTile(pos) != null) continue;
 
                     if (sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
@@ -230,9 +231,12 @@ namespace TimelessEchoes.MapGeneration
 
                     if (isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge) continue;
 
+                    var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                    if (!HasAllNeighbors(grassMap, pos)) continue;
+
                     if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
+                        PlaceDecorativeTile(pos, grassDecorativeTiles);
                 }
             }
 
@@ -277,6 +281,19 @@ namespace TimelessEchoes.MapGeneration
             }
 
             return null;
+        }
+
+        private bool HasAllNeighbors(Tilemap map, Vector3Int pos)
+        {
+            for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                if (!map.HasTile(new Vector3Int(pos.x + dx, pos.y + dy, pos.z)))
+                    return false;
+            }
+
+            return true;
         }
 
         private int RandomRange(int minInclusive, int maxExclusive)
