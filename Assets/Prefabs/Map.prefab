@@ -828,8 +828,6 @@ GameObject:
   - component: {fileID: 7826604082536721059}
   - component: {fileID: 620791786817035452}
   - component: {fileID: 5574965847745763036}
-  - component: {fileID: 1360014834847236315}
-  - component: {fileID: 3734171086330236473}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -898,7 +896,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8013073540481582899}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0fa70eb35677b14cadbceb8bd0f31dd, type: 3}
   m_Name: 
@@ -998,7 +996,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8013073540481582899}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e807d7fd8a7b0044baf92113dce857a8, type: 3}
   m_Name: 
@@ -1076,66 +1074,6 @@ MonoBehaviour:
   waterMap: {fileID: 0}
   sandMap: {fileID: 0}
   grassMap: {fileID: 0}
---- !u!1839735485 &1360014834847236315
-Tilemap:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8013073540481582899}
-  m_Enabled: 1
-  m_Tiles: {}
-  m_AnimatedTiles: {}
-  m_TileAssetArray: []
-  m_TileSpriteArray: []
-  m_TileMatrixArray: []
-  m_TileColorArray: []
-  m_TileObjectToInstantiateArray: []
-  m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: 0, z: 0}
-  m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
-  m_TileOrientation: 0
-  m_TileOrientationMatrix:
-    e00: 1
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 1
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 1
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 1
---- !u!114 &3734171086330236473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8013073540481582899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dc659a59a320704e8e011fdfc314769, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chunkPrefab: {fileID: 3568292984433775095, guid: 22ddfa2426d93e84eb34defa514239ee, type: 3}
-  waterMap: {fileID: 5260808751377424494}
-  sandMap: {fileID: 1058545223062275963}
-  grassMap: {fileID: 7473623347547831956}
-  decorationMap: {fileID: 1970811859748993408}
-  spawnRoot: {fileID: 508231011876975185}
-  taskController: {fileID: 7826604082536721059}
-  camera: {fileID: 2571608917486039915}
-  chunkWidth: 64
-  preloadChunks: 2
 --- !u!1 &8350027529220178682
 GameObject:
   m_ObjectHideFlags: 0
