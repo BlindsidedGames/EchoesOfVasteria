@@ -28,6 +28,8 @@ namespace TimelessEchoes.Hero
         [SerializeField] private MonoBehaviour currentTaskObject;
         private readonly bool allowAttacks = true;
 
+        private Transform currentEnemy;
+
         private AIPath ai;
         private float attackSpeedBonus;
         private float baseAttackSpeed;
@@ -205,9 +207,18 @@ namespace TimelessEchoes.Hero
         {
             if (stats == null) return;
 
-            var nearest = FindNearestEnemy();
+            if (currentEnemy != null)
+            {
+                var hp = currentEnemy.GetComponent<Health>();
+                var dist = Vector2.Distance(transform.position, currentEnemy.position);
+                if (hp == null || hp.CurrentHealth <= 0f || dist > stats.visionRange)
+                    currentEnemy = null;
+            }
+
+            var nearest = currentEnemy != null ? currentEnemy : FindNearestEnemy();
             if (nearest != null)
             {
+                currentEnemy = nearest;
                 if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
                 HandleCombat(nearest);
                 return;
