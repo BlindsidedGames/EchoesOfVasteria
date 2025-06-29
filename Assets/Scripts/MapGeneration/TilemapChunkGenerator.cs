@@ -155,46 +155,70 @@ namespace TimelessEchoes.MapGeneration
 
                 for (var y = 0; y < waterDepth; y++)
                 {
-                    var isEdge = y == 0 || y == waterDepth - 1;
-                    if (!isEdge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
+                    var leftWaterBottom = x > 0
+                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]
+                        : waterDepth;
+                    var rightWaterBottom = x < segmentSize.x - 1
+                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]
+                        : waterDepth;
+
+                    var isCurrentTileSideEdge = y < leftWaterBottom || y < rightWaterBottom;
+                    var isWaterGroundLevel = y == 0;
+                    var isTopEdge = y == waterDepth - 1;
+                    var isTileBelowGroundLevel = y - 1 == 0;
+                    var isTileBelowSideEdge = y - 1 < leftWaterBottom || y - 1 < rightWaterBottom;
+                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+
+                    if (isCurrentTileSideEdge || isTileBelowEdge || isWaterGroundLevel || isTopEdge) continue;
+
+                    if (waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
                         PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
                 {
-                    var leftWaterLvl = x > 0 ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1] : waterDepth;
-                    var rightWaterLvl = x < segmentSize.x - 1 ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1] : waterDepth;
+                    var leftSandBottom = x > 0
+                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]
+                        : waterDepth;
+                    var rightSandBottom = x < segmentSize.x - 1
+                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]
+                        : waterDepth;
 
-                    // Check if the current tile itself is a side edge
-                    var isCurrentTileSideEdge = y < leftWaterLvl || y < rightWaterLvl;
-
-                    // Check if the tile directly below the current one is an edge.
-                    // An edge tile is one that is either on the ground level or is a side edge.
+                    var isCurrentTileSideEdge = y < leftSandBottom || y < rightSandBottom;
+                    var isSandGroundLevel = y == waterDepth;
+                    var isTopEdge = y == waterDepth + sandDepth - 1;
                     var isTileBelowGroundLevel = y - 1 == waterDepth;
-                    var isTileBelowSideEdge = y - 1 < leftWaterLvl || y - 1 < rightWaterLvl;
+                    var isTileBelowSideEdge = y - 1 < leftSandBottom || y - 1 < rightSandBottom;
                     var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
 
-                    // If the current tile is a side edge, OR if it's sitting on top of an edge tile, skip it.
-                    if (isCurrentTileSideEdge || isTileBelowEdge) continue;
+                    if (isCurrentTileSideEdge || isTileBelowEdge || isSandGroundLevel || isTopEdge) continue;
 
-                    // Standard check to prevent decor from being placed under grass
-                    var isTopmostSandLayer = y == waterDepth + sandDepth - 1;
-                    var isGrassAbove = grassDepth > 0;
-                    var canSpawn = !isTopmostSandLayer || !isGrassAbove;
-
-                    if (canSpawn && sandDecorativeTiles != null &&
-                        sandDecorativeTiles.Length > 0 && rng.NextDouble() < sandDecorationDensity)
+                    if (sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
+                        rng.NextDouble() < sandDecorationDensity)
                         PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                 {
+                    var leftGrassBottom = x > 0
+                        ? (segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]) + sandDepths[x - 1]
+                        : waterDepth + sandDepth;
+                    var rightGrassBottom = x < segmentSize.x - 1
+                        ? (segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]) + sandDepths[x + 1]
+                        : waterDepth + sandDepth;
+
+                    var isCurrentTileSideEdge = y < leftGrassBottom || y < rightGrassBottom;
                     var isGrassGroundLevel = y == waterDepth + sandDepth;
                     var isTopEdge = y == waterDepth + sandDepth + grassDepth - 1;
+                    var isTileBelowGroundLevel = y - 1 == waterDepth + sandDepth;
+                    var isTileBelowSideEdge = y - 1 < leftGrassBottom || y - 1 < rightGrassBottom;
+                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
 
-                    if (!isGrassGroundLevel && !isTopEdge && grassDecorativeTiles != null &&
-                        grassDecorativeTiles.Length > 0 && rng.NextDouble() < grassDecorationDensity)
+                    if (isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge) continue;
+
+                    if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
+                        rng.NextDouble() < grassDecorationDensity)
                         PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
                 }
             }
