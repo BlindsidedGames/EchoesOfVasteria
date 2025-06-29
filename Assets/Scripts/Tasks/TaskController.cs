@@ -124,6 +124,27 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        /// <summary>
+        /// Remove a task object and any tasks associated with it.
+        /// </summary>
+        public void RemoveTaskObject(MonoBehaviour obj)
+        {
+            if (obj == null)
+                return;
+
+            var toRemove = new List<ITask>();
+            foreach (var pair in taskMap)
+            {
+                if (pair.Value == obj)
+                    toRemove.Add(pair.Key);
+            }
+
+            foreach (var task in toRemove)
+                RemoveTask(task);
+
+            taskObjects.Remove(obj);
+        }
+
         public void ResetTasks()
         {
             AcquireHero();
