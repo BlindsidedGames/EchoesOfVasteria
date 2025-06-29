@@ -106,18 +106,30 @@ namespace TimelessEchoes.MapGeneration
             ClearMaps();
             rng = randomizeSeed ? new Random() : new Random(seed);
 
-            var sandDepths = new int[size.x];
-            var grassDepths = new int[size.x];
+            GenerateInternal(Vector2Int.zero, size);
+        }
+
+        public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
+        {
+            rng = randomizeSeed ? new Random() : new Random(seed);
+
+            GenerateInternal(offset, segmentSize);
+        }
+
+        private void GenerateInternal(Vector2Int offset, Vector2Int segmentSize)
+        {
+            var sandDepths = new int[segmentSize.x];
+            var grassDepths = new int[segmentSize.x];
 
             var currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             var currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
-            var grassCutoffStart = Mathf.Max(0, size.x - grassCutoffWidth);
-            var sandCutoffStart = Mathf.Max(0, size.x - RandomRange(sandCutoffRange.x, sandCutoffRange.y + 1));
+            var grassCutoffStart = Mathf.Max(0, segmentSize.x - grassCutoffWidth);
+            var sandCutoffStart = Mathf.Max(0, segmentSize.x - RandomRange(sandCutoffRange.x, sandCutoffRange.y + 1));
 
-            for (var x = 0; x < size.x;)
+            for (var x = 0; x < segmentSize.x;)
             {
-                for (var segX = 0; segX < minAreaWidth && x < size.x; segX++, x++)
+                for (var segX = 0; segX < minAreaWidth && x < segmentSize.x; segX++, x++)
                 {
                     var sandDepth = currentSandDepth;
                     var grassDepth = currentGrassDepth;
@@ -142,36 +154,38 @@ namespace TimelessEchoes.MapGeneration
                 currentSandDepth = Mathf.Clamp(currentSandDepth + sandDelta, sandDepthRange.x, sandDepthRange.y);
                 currentGrassDepth = Mathf.Clamp(currentGrassDepth + grassDelta, grassDepthRange.x, grassDepthRange.y);
 
-                if (currentSandDepth + currentGrassDepth > size.y)
-                    currentGrassDepth = Mathf.Clamp(size.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
+                if (currentSandDepth + currentGrassDepth > segmentSize.y)
+                    currentGrassDepth = Mathf.Clamp(segmentSize.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
             }
 
-            for (var x = 0; x < size.x; x++)
+            for (var x = 0; x < segmentSize.x; x++)
             {
                 var sandDepth = sandDepths[x];
                 var grassDepth = grassDepths[x];
-                var waterDepth = Mathf.Max(0, size.y - sandDepth - grassDepth);
+                var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
-                for (var y = 0; y < waterDepth; y++) waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+                for (var y = 0; y < waterDepth; y++)
+                    waterMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterTile);
 
-                for (var y = waterDepth; y < size.y; y++) sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
+                for (var y = waterDepth; y < segmentSize.y; y++)
+                    sandMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandRuleTile);
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
-                    if (y < size.y)
-                        grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
+                    if (y < segmentSize.y)
+                        grassMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassRuleTile);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
                     var isEdge = y == 0 || y == waterDepth - 1;
                     if (!isEdge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), waterDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
                 {
-                    var leftWaterLvl = x > 0 ? size.y - sandDepths[x - 1] - grassDepths[x - 1] : waterDepth;
-                    var rightWaterLvl = x < size.x - 1 ? size.y - sandDepths[x + 1] - grassDepths[x + 1] : waterDepth;
+                    var leftWaterLvl = x > 0 ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1] : waterDepth;
+                    var rightWaterLvl = x < segmentSize.x - 1 ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1] : waterDepth;
 
                     // Check if the current tile itself is a side edge
                     var isCurrentTileSideEdge = y < leftWaterLvl || y < rightWaterLvl;
@@ -192,7 +206,7 @@ namespace TimelessEchoes.MapGeneration
 
                     if (canSpawn && sandDecorativeTiles != null &&
                         sandDecorativeTiles.Length > 0 && rng.NextDouble() < sandDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), sandDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -202,7 +216,7 @@ namespace TimelessEchoes.MapGeneration
 
                     if (!isGrassGroundLevel && !isTopEdge && grassDecorativeTiles != null &&
                         grassDecorativeTiles.Length > 0 && rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), grassDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
                 }
             }
         }
@@ -256,6 +270,19 @@ namespace TimelessEchoes.MapGeneration
             sandMap.ClearAllTiles();
             grassMap.ClearAllTiles();
             decorationMap.ClearAllTiles();
+        }
+
+        public void ClearSegment(Vector2Int offset, Vector2Int segmentSize)
+        {
+            for (var x = 0; x < segmentSize.x; x++)
+            for (var y = 0; y < segmentSize.y; y++)
+            {
+                var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                waterMap.SetTile(pos, null);
+                sandMap.SetTile(pos, null);
+                grassMap.SetTile(pos, null);
+                decorationMap.SetTile(pos, null);
+            }
         }
 
         public void Clear()
