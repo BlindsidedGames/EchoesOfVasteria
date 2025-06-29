@@ -88,23 +88,6 @@ namespace TimelessEchoes.MapGeneration
         public Tilemap GrassMap => grassMap;
         public Tilemap DecorationMap => decorationMap;
 
-        private static readonly Vector3Int[] NeighbourOffsets =
-        {
-            new(1, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(0, -1, 0),
-            new(1, 1, 0), new(1, -1, 0), new(-1, 1, 0), new(-1, -1, 0)
-        };
-
-        private bool IsInnerTile(Tilemap map, Vector3Int position)
-        {
-            foreach (var offset in NeighbourOffsets)
-            {
-                if (!map.HasTile(position + offset))
-                    return false;
-            }
-
-            return true;
-        }
-
         private void Awake()
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
@@ -190,11 +173,7 @@ namespace TimelessEchoes.MapGeneration
 
                     if (waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
-                    {
-                        var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
-                        if (IsInnerTile(waterMap, pos))
-                            PlaceDecorativeTile(pos, waterDecorativeTiles);
-                    }
+                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
@@ -230,10 +209,7 @@ namespace TimelessEchoes.MapGeneration
 
                     if (sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < sandDecorationDensity)
-                    {
-                        if (IsInnerTile(sandMap, pos))
-                            PlaceDecorativeTile(pos, sandDecorativeTiles);
-                    }
+                        PlaceDecorativeTile(pos, sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -256,11 +232,7 @@ namespace TimelessEchoes.MapGeneration
 
                     if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < grassDecorationDensity)
-                    {
-                        var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
-                        if (IsInnerTile(grassMap, pos))
-                            PlaceDecorativeTile(pos, grassDecorativeTiles);
-                    }
+                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
                 }
             }
 
