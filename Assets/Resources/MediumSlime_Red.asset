@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: MediumSlime_Red
+  m_EditorClassIdentifier: 
+  enemyName: Red Slime
+  icon: {fileID: -4816725795396207319, guid: 4a0032986a96f1848b7dfd28332e79f7, type: 3}
+  maxHealth: 15
+  experience: 10
+  defense: 0
+  damage: 2
+  moveSpeed: 5
+  attackSpeed: 1.1
+  attackRange: 1
+  visionRange: 6
+  assistRange: 10
+  wanderDistance: 3
+  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
