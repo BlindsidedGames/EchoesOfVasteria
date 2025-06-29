@@ -65,9 +65,20 @@ namespace TimelessEchoes.Tasks
 
         private TaskController controller;
 
+        /// <summary>
+        /// Optional externally assigned TaskController. If null the component
+        /// will attempt to locate one on the same GameObject.
+        /// </summary>
+        public TaskController Controller
+        {
+            get => controller;
+            set => controller = value;
+        }
+
         private void Awake()
         {
-            controller = GetComponent<TaskController>();
+            if (controller == null)
+                controller = GetComponent<TaskController>();
             EnsureTilemaps();
         }
 

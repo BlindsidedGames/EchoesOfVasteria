@@ -88,6 +88,46 @@ namespace TimelessEchoes.Tasks
             taskObjects.Add(obj);
         }
 
+        /// <summary>
+        /// Add a task object during runtime and register its task.
+        /// </summary>
+        public void AddRuntimeTaskObject(MonoBehaviour obj)
+        {
+            if (obj == null || taskObjects.Contains(obj))
+                return;
+
+            taskObjects.Add(obj);
+
+            var enemy = obj.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                var hp = enemy.GetComponent<Health>();
+                if (hp != null)
+                    hp.Init((int)hp.MaxHealth);
+                var kill = enemy.GetComponent<KillEnemyTask>();
+                if (kill == null)
+                    kill = enemy.gameObject.AddComponent<KillEnemyTask>();
+                kill.target = enemy.transform;
+                tasks.Add(kill);
+                taskMap[kill] = obj;
+                return;
+            }
+
+            if (obj is ITask existing)
+            {
+                tasks.Add(existing);
+                taskMap[existing] = obj;
+                return;
+            }
+
+            var compTask = obj.GetComponent<ITask>();
+            if (compTask != null)
+            {
+                tasks.Add(compTask);
+                taskMap[compTask] = obj;
+            }
+        }
+
         public void ResetTasks()
         {
             AcquireHero();
