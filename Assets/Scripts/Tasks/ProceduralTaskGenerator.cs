@@ -207,7 +207,8 @@ namespace TimelessEchoes.Tasks
                         break;
                     }
 
-                    var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
+                    var isWaterTile = !isWaterTask && IsWaterTile(pos);
+                    var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
                     var onWaterEdge = !isEnemy && allowWater &&
                                       Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
 
@@ -339,6 +340,16 @@ namespace TimelessEchoes.Tasks
             var idx = Random.Range(0, validYs.Count);
             position = grassMap.GetCellCenterWorld(new Vector3Int(cell.x, validYs[idx], 0));
             return true;
+        }
+
+        private bool IsWaterTile(Vector3 worldPos)
+        {
+            EnsureTilemaps();
+            if (waterMap == null)
+                return false;
+
+            var cell = waterMap.WorldToCell(worldPos);
+            return waterMap.HasTile(cell);
         }
 
         /// <summary>
