@@ -122,6 +122,8 @@ namespace TimelessEchoes.Tasks
                 tasks.Add(compTask);
                 taskMap[compTask] = obj;
             }
+
+            SortTaskListsByX();
         }
 
         /// <summary>
@@ -190,6 +192,7 @@ namespace TimelessEchoes.Tasks
                     taskMap[compTask] = obj;
                 }
             }
+            SortTaskListsByX();
 
             hero?.SetTask(null);
             SelectEarliestTask();
@@ -330,6 +333,37 @@ namespace TimelessEchoes.Tasks
 
             if (index <= currentIndex)
                 currentIndex--;
+        }
+
+        private void SortTaskListsByX()
+        {
+            var pairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+            foreach (var task in tasks)
+            {
+                MonoBehaviour obj = null;
+                taskMap.TryGetValue(task, out obj);
+                float x = 0f;
+                if (obj != null)
+                    x = obj.transform.position.x;
+                else if (task != null && task.Target != null)
+                    x = task.Target.position.x;
+                pairs.Add((x, obj, task));
+            }
+
+            pairs.Sort((a, b) => a.x.CompareTo(b.x));
+
+            tasks.Clear();
+            taskObjects.Clear();
+            taskMap.Clear();
+            foreach (var p in pairs)
+            {
+                tasks.Add(p.task);
+                if (p.obj != null)
+                {
+                    taskObjects.Add(p.obj);
+                    taskMap[p.task] = p.obj;
+                }
+            }
         }
 
         public void RemoveCompletedTasks()
