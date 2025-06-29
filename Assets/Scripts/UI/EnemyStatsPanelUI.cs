@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Stats;
@@ -41,7 +42,12 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.enemyEntryParent)
                 Destroy(child.gameObject);
 
-            foreach (var stats in Resources.LoadAll<EnemyStats>(""))
+            var allStats = Resources.LoadAll<EnemyStats>("");
+            var sorted = allStats
+                .OrderBy(s => s.displayOrder)
+                .ThenBy(s => s.enemyName);
+
+            foreach (var stats in sorted)
             {
                 var obj = Instantiate(references.enemyEntryPrefab.gameObject, references.enemyEntryParent);
                 var ui = obj.GetComponent<EnemyStatEntryUIReferences>();

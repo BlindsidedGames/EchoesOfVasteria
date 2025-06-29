@@ -8,6 +8,7 @@ namespace TimelessEchoes.Enemies
     public class EnemyStats : ScriptableObject
     {
         public string enemyName;
+        [Tooltip("Lower numbers appear first in the stats panel")] public int displayOrder = 0;
         public Sprite icon;
         public int maxHealth = 10;
         public int experience = 10;
