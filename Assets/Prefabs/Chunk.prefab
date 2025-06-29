@@ -699,6 +699,7 @@ MonoBehaviour:
   sandMap: {fileID: 6787401999283278568}
   grassMap: {fileID: 2714469426759840295}
   decorationMap: {fileID: 8882660374058472638}
+  spawnRoot: {fileID: 7162320820011931269}
   waterTile: {fileID: 11400000, guid: 46004492d0952b347b22f72e7ed908b5, type: 2}
   sandRuleTile: {fileID: 11400000, guid: dcf8412ec1e473f4a9d31a234eaed66a, type: 2}
   grassRuleTile: {fileID: 11400000, guid: e886419ffe732034e98c736c35254997, type: 2}
@@ -775,13 +776,13 @@ MonoBehaviour:
   sandDecorationDensity: 0.082
   grassDecorationDensity: 0.203
   size: {x: 64, y: 18}
-  minAreaWidth: 2
+  minAreaWidth: 5
   edgeWaviness: 1
-  sandDepthRange: {x: 2, y: 6}
-  grassDepthRange: {x: 2, y: 6}
+  sandDepthRange: {x: 6, y: 12}
+  grassDepthRange: {x: 3, y: 8}
   seed: 0
   randomizeSeed: 1
-  taskMinX: 0
+  taskMinX: 40
   taskDensity: 0.3
   blockingMask:
     serializedVersion: 2
@@ -791,7 +792,7 @@ MonoBehaviour:
   - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
     weight: 2
     minX: 0
-    maxX: 1
+    maxX: 1e+15
   - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
     weight: 1
     minX: 0
@@ -832,20 +833,20 @@ MonoBehaviour:
   - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
     weight: 1
     minX: 0
-    maxX: 1
+    maxX: 1e+10
   - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
     weight: 0.13
     minX: 0
-    maxX: 1
+    maxX: 1e+10
   waterTasks:
   - prefab: {fileID: 4589994145864551737, guid: f2c07aa52d3c1dd46ae29e9e671ed0a2, type: 3}
     weight: 1
     minX: 0
-    maxX: 1
+    maxX: 1e+20
   grassTasks:
   - prefab: {fileID: 5839893854702782364, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
     weight: 1
     minX: 0
-    maxX: 1
+    maxX: 1e+19
   allowGrassEdge: 0
   grassTopBuffer: 3
