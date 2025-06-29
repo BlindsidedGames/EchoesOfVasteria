@@ -14,8 +14,6 @@ namespace TimelessEchoes.Tasks
     {
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
 
-        [SerializeField] private Transform entryPoint;
-        [SerializeField] private Transform exitPoint;
 
         [SerializeField] private LayerMask enemyMask = ~0;
 
@@ -35,8 +33,6 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public IReadOnlyList<MonoBehaviour> TaskObjects => taskObjects;
 
-        public Transform EntryPoint => entryPoint;
-        public Transform ExitPoint => exitPoint;
         public AstarPath Pathfinder => astarPath;
         public CinemachineCamera MapCamera => mapCamera;
         public MonoBehaviour CurrentTaskObject => currentTaskObject;
@@ -175,7 +171,6 @@ namespace TimelessEchoes.Tasks
             }
 
             hero?.SetTask(null);
-            hero?.SetDestination(entryPoint);
             SelectEarliestTask();
         }
 
@@ -270,7 +265,6 @@ namespace TimelessEchoes.Tasks
             currentIndex = tasks.Count;
             Log("All tasks complete", this);
             currentTaskObject = null;
-            hero?.SetDestination(exitPoint);
         }
 
         /// <summary>

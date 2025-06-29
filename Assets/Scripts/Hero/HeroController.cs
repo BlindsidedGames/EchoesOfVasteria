@@ -101,9 +101,7 @@ namespace TimelessEchoes.Hero
                 health.Init(hp);
             }
 
-            var start = taskController != null ? taskController.EntryPoint : null;
-            if (start != null)
-                transform.position = start.position;
+            // Hero no longer relocates to a task controller entry point
             if (animator != null)
             {
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
