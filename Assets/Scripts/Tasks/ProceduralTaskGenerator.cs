@@ -334,10 +334,21 @@ namespace TimelessEchoes.Tasks
                 if (!grassMap.HasTile(new Vector3Int(cell.x, y, 0)))
                     continue;
 
-                var bottomEmpty = !grassMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
-                var leftEmpty = !grassMap.HasTile(new Vector3Int(cell.x - 1, y, 0));
-                var rightEmpty = !grassMap.HasTile(new Vector3Int(cell.x + 1, y, 0));
-                var isEdge = bottomEmpty || leftEmpty || rightEmpty;
+                var below = grassMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
+                var left = grassMap.HasTile(new Vector3Int(cell.x - 1, y, 0));
+                var right = grassMap.HasTile(new Vector3Int(cell.x + 1, y, 0));
+                var belowLeft = grassMap.HasTile(new Vector3Int(cell.x - 1, y - 1, 0));
+                var belowRight = grassMap.HasTile(new Vector3Int(cell.x + 1, y - 1, 0));
+                var above = grassMap.HasTile(new Vector3Int(cell.x, y + 1, 0));
+
+                var isCurrentTileSideEdge = !left || !right;
+                var isGrassGroundLevel = !below;
+                var isTopEdge = !above;
+                var isTileBelowGroundLevel = !below;
+                var isTileBelowSideEdge = !belowLeft || !belowRight;
+                var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+
+                var isEdge = isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge;
                 if (!includeEdge && isEdge)
                     continue;
 
