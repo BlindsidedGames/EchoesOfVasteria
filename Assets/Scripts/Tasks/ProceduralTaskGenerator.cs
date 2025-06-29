@@ -305,6 +305,16 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        /// <summary>
+        ///     Attempt to find a grass tile at the given X coordinate.
+        ///     Edge detection uses the presence of neighboring grass tiles
+        ///     instead of checking the sand tilemap to avoid false positives
+        ///     when sand extends behind the grass.
+        /// </summary>
+        /// <param name="localX">Local X position to sample.</param>
+        /// <param name="includeEdge">If true, allow positions on the edge of the grass area.</param>
+        /// <param name="position">The world position of a valid grass tile.</param>
+        /// <returns>True if a valid tile was found.</returns>
         private bool TryGetGrassPosition(float localX, bool includeEdge, out Vector3 position)
         {
             position = Vector3.zero;
@@ -324,10 +334,10 @@ namespace TimelessEchoes.Tasks
                 if (!grassMap.HasTile(new Vector3Int(cell.x, y, 0)))
                     continue;
 
-                var sandBelow = sandMap != null && sandMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
+                var bottomEmpty = !grassMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
                 var leftEmpty = !grassMap.HasTile(new Vector3Int(cell.x - 1, y, 0));
                 var rightEmpty = !grassMap.HasTile(new Vector3Int(cell.x + 1, y, 0));
-                var isEdge = sandBelow || leftEmpty || rightEmpty;
+                var isEdge = bottomEmpty || leftEmpty || rightEmpty;
                 if (!includeEdge && isEdge)
                     continue;
 
