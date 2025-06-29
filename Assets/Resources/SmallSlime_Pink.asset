@@ -15,14 +15,14 @@ MonoBehaviour:
   enemyName: Pink Minislime
   displayOrder: 8
   icon: {fileID: -3554783601331016760, guid: cc23d3f964a1e5440aac3fe6a4ab92d1, type: 3}
-  maxHealth: 10
+  maxHealth: 250
   experience: 10
-  defense: 0
-  damage: 1
-  moveSpeed: 3
-  attackSpeed: 1
+  defense: 5
+  damage: 12
+  moveSpeed: 4
+  attackSpeed: 1.3
   attackRange: 1
-  visionRange: 5
-  assistRange: 8
-  wanderDistance: 2
+  visionRange: 10
+  assistRange: 15
+  wanderDistance: 3
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
