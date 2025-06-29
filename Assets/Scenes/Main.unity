@@ -1774,6 +1774,7 @@ MonoBehaviour:
   - {fileID: 1844721309}
   - {fileID: 871753410}
   - {fileID: 1595641732}
+  inventoryWindow: {fileID: 396454458}
   tooltip: {fileID: 608706316}
   showTooltipOnHover: 0
   tooltipOffset: {x: 0.295, y: 0.31}
@@ -5469,6 +5470,7 @@ GameObject:
   - component: {fileID: 554339035}
   - component: {fileID: 554339034}
   - component: {fileID: 554339033}
+  - component: {fileID: 554339036}
   m_Layer: 5
   m_Name: Inventory_Button
   m_TagString: Untagged
@@ -5538,19 +5540,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 554339034}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 396454458}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &554339034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5589,6 +5579,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554339031}
   m_CullTransparentMesh: 1
+--- !u!114 &554339036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554339031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c979176a2f80fc344a86c7b76dc30213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleButton: {fileID: 554339033}
+  window: {fileID: 396454458}
 --- !u!1 &557708078
 GameObject:
   m_ObjectHideFlags: 0
@@ -6353,6 +6357,7 @@ GameObject:
   - component: {fileID: 638320203}
   - component: {fileID: 638320202}
   - component: {fileID: 638320201}
+  - component: {fileID: 638320204}
   m_Layer: 5
   m_Name: Stats_Button
   m_TagString: Untagged
@@ -6422,19 +6427,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638320202}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 478177970}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &638320202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6473,6 +6466,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 638320199}
   m_CullTransparentMesh: 1
+--- !u!114 &638320204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638320199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c979176a2f80fc344a86c7b76dc30213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleButton: {fileID: 638320201}
+  window: {fileID: 478177970}
 --- !u!1001 &639459922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12653,8 +12660,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -20}
-  m_SizeDelta: {x: 32, y: 30}
+  m_AnchoredPosition: {x: -17, y: -16.5}
+  m_SizeDelta: {x: 22, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1098572476
 MonoBehaviour:
@@ -12677,7 +12684,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 3433853917147906231, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -12685,7 +12692,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 0.75
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1098572477
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16284,7 +16291,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -6, y: 6}
-  m_SizeDelta: {x: 8, y: 0}
+  m_SizeDelta: {x: 8, y: 28}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &1437642415
 GameObject:
