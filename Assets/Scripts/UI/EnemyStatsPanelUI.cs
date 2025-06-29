@@ -95,12 +95,24 @@ namespace TimelessEchoes.UI
 
             if (ui.enemyIconImage != null)
             {
-                ui.enemyIconImage.sprite = stats.icon;
-                ui.enemyIconImage.enabled = stats.icon != null;
+                bool encountered = kills > 0;
+                Sprite sprite = encountered ? stats.icon : null;
+                ui.enemyIconImage.sprite = sprite;
+                if (sprite != null)
+                    ui.enemyIconImage.SetNativeSize();
+                ui.enemyIconImage.enabled = encountered && sprite != null;
             }
 
             if (ui.enemyNameText != null)
-                ui.enemyNameText.text = stats.enemyName;
+            {
+                if (kills > 0)
+                    ui.enemyNameText.text = stats.enemyName;
+                else
+                    ui.enemyNameText.text = "???";
+            }
+
+            if (ui.enemyIDText != null)
+                ui.enemyIDText.text = $"#{stats.displayOrder}";
 
             string hp = reveal >= 2 ? CalcUtils.FormatNumber(stats.maxHealth, true, 400f, false) : "???";
             string dmg = reveal >= 1 ? CalcUtils.FormatNumber(stats.damage, true, 400f, false) : "???";
