@@ -11,13 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79fdaab072066594bad454607db52b83, type: 3}
   m_Name: Damage
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
+  baseValue: 1
   thresholds:
   - minLevel: 0
-    maxLevel: 50
+    maxLevel: 100
     requirements:
     - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
       amount: 1
       amountIncreasePerLevel: 1
   statIncreasePerLevel: 0.05
-  baseValue: 1

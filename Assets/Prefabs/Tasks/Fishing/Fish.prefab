@@ -428,6 +428,7 @@ GameObject:
   - component: {fileID: 8619591788506067487}
   - component: {fileID: 1104296286316585339}
   - component: {fileID: 3960746967130773130}
+  - component: {fileID: -4996542686978561393}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Untagged
@@ -551,6 +552,20 @@ MonoBehaviour:
   progressBarObject: {fileID: 7311250231813555340}
   progressBar: {fileID: 567852907585319674}
   fishingPoint: {fileID: 1391531017378201527}
+--- !u!114 &-4996542686978561393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589994145864551737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 973923a30bcc1bd4b95e6334dfbc1629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1104296286316585339}
+  normalizedTimeRange: {x: 0, y: 1}
 --- !u!1 &7311250231813555340
 GameObject:
   m_ObjectHideFlags: 0
