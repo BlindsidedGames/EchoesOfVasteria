@@ -48,7 +48,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
             var camX = camera.transform.position.x;
             var last = chunks.Count > 0 ? chunks[chunks.Count - 1] : null;
-            if (last == null || camX + 32f > last.transform.position.x + chunkWidth)
+            var spawnThreshold = chunkWidth * 0.5f;
+            if (last == null || camX + spawnThreshold > last.transform.position.x + chunkWidth)
                 SpawnChunk();
 
             var removed = false;

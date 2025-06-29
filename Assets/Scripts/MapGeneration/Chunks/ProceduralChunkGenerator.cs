@@ -78,7 +78,6 @@ namespace TimelessEchoes.MapGeneration.Chunks
 
         [Header("Task Area"), TabGroup("Task Settings"), SerializeField]
         private float taskMinX;
-        [TabGroup("Task Settings"), SerializeField] private float taskMaxX = 64f;
         [TabGroup("Task Settings"), SerializeField] private float taskDensity = 0.1f;
         [TabGroup("Task Settings"), SerializeField] private LayerMask blockingMask;
         [TabGroup("Task Settings"), SerializeField, MinValue(0)] private float otherTaskEdgeOffset = 1f;
@@ -205,18 +204,21 @@ namespace TimelessEchoes.MapGeneration.Chunks
             if (controller == null)
                 return;
 
-            var count = Mathf.RoundToInt((taskMaxX - taskMinX) * taskDensity);
+            var startOffset = Mathf.Max(0f, taskMinX - transform.position.x);
+            var count = Mathf.RoundToInt((size.x - startOffset) * taskDensity);
             if (count <= 0)
                 return;
 
             var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
             for (var i = 0; i < count; i++)
             {
-                var localX = Random.Range(taskMinX, taskMaxX);
-                var progress = Mathf.InverseLerp(taskMinX, taskMaxX, localX);
+                var localX = Random.Range(startOffset, size.x);
+                var worldX = transform.position.x + localX;
+                if (worldX < taskMinX)
+                    continue;
                 var allowWater = TryGetWaterEdge(localX, out var waterPos);
                 var allowGrass = TryGetGrassPosition(localX, allowGrassEdge, out var grassPos);
-                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(progress, allowWater, allowGrass);
+                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(worldX, allowWater, allowGrass);
                 if (entry == null || entry.prefab == null)
                     continue;
 
@@ -346,25 +348,25 @@ namespace TimelessEchoes.MapGeneration.Chunks
             return false;
         }
 
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float progress, bool allowWaterTasks, bool allowGrassTasks)
+        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
-                enemyTotalWeight += e.GetWeight(progress);
+                enemyTotalWeight += e.GetWeight(worldX);
 
             var otherTasksTotalWeight = 0f;
             foreach (var t in otherTasks)
-                otherTasksTotalWeight += t.GetWeight(progress);
+                otherTasksTotalWeight += t.GetWeight(worldX);
 
             var waterTasksTotalWeight = 0f;
             if (allowWaterTasks)
                 foreach (var w in waterTasks)
-                    waterTasksTotalWeight += w.GetWeight(progress);
+                    waterTasksTotalWeight += w.GetWeight(worldX);
 
             var grassTasksTotalWeight = 0f;
             if (allowGrassTasks)
                 foreach (var g in grassTasks)
-                    grassTasksTotalWeight += g.GetWeight(progress);
+                    grassTasksTotalWeight += g.GetWeight(worldX);
 
             var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight;
             if (totalWeight <= 0f)
@@ -375,7 +377,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
             {
                 foreach (var e in enemies)
                 {
-                    r -= e.GetWeight(progress);
+                    r -= e.GetWeight(worldX);
                     if (r <= 0f)
                         return (e, true, false, false);
                 }
@@ -387,7 +389,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 {
                     foreach (var w in waterTasks)
                     {
-                        r -= w.GetWeight(progress);
+                        r -= w.GetWeight(worldX);
                         if (r <= 0f)
                             return (w, false, true, false);
                     }
@@ -399,7 +401,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     {
                         foreach (var g in grassTasks)
                         {
-                            r -= g.GetWeight(progress);
+                            r -= g.GetWeight(worldX);
                             if (r <= 0f)
                                 return (g, false, false, true);
                         }
@@ -409,7 +411,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                         r -= grassTasksTotalWeight;
                         foreach (var t in otherTasks)
                         {
-                            r -= t.GetWeight(progress);
+                            r -= t.GetWeight(worldX);
                             if (r <= 0f)
                                 return (t, false, false, false);
                         }
@@ -482,13 +484,13 @@ namespace TimelessEchoes.MapGeneration.Chunks
         {
             [Required] public GameObject prefab;
             [MinValue(0)] public float weight = 1f;
-            [Range(0f, 1f)] public float minProgress;
-            [Range(0f, 1f)] public float maxProgress = 1f;
+            public float minX;
+            public float maxX = float.PositiveInfinity;
 
-            public float GetWeight(float progress)
+            public float GetWeight(float worldX)
             {
                 if (prefab == null) return 0f;
-                if (progress < minProgress || progress > maxProgress)
+                if (worldX < minX || worldX > maxX)
                     return 0f;
                 return Mathf.Max(0f, weight);
             }
