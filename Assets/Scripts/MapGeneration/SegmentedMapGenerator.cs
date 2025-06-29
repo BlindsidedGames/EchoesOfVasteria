@@ -45,6 +45,8 @@ namespace TimelessEchoes.MapGeneration
         {
             for (var i = 0; i < 3; i++)
                 yield return StartCoroutine(CreateSegment());
+
+            MoveGraph();
         }
 
         private void Update()
@@ -109,7 +111,7 @@ namespace TimelessEchoes.MapGeneration
 
             var arr = segments.ToArray();
             var start = arr[1].startX;
-            gg.SetDimensions(segmentSize.x * 2, segmentSize.y, gg.nodeSize);
+            gg.SetDimensions(segmentSize.x * 4, segmentSize.y, gg.nodeSize);
             gg.center = new Vector3(start + segmentSize.x, 9f, 0f);
             pathfinder.Scan();
         }
