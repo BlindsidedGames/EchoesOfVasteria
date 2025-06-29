@@ -6,6 +6,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
+using TimelessEchoes.UI;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 
@@ -53,6 +54,7 @@ namespace TimelessEchoes.Hero
         private Vector2 lastMoveDir = Vector2.down;
         private float moveSpeedBonus;
         private AIDestinationSetter setter;
+        private MapUI mapUI;
 
         private State state;
 
@@ -71,6 +73,9 @@ namespace TimelessEchoes.Hero
             if (taskController == null)
                 taskController = GetComponentInParent<TaskController>();
 
+            if (mapUI == null)
+                mapUI = FindFirstObjectByType<MapUI>();
+
             state = State.Idle;
 
             ApplyStatUpgrades();
@@ -88,12 +93,17 @@ namespace TimelessEchoes.Hero
         {
             UpdateAnimation();
             UpdateBehavior();
+            if (mapUI != null)
+                mapUI.UpdateDistance(transform.position.x);
         }
 
         private void OnEnable()
         {
             if (taskController == null)
                 taskController = GetComponent<TaskController>();
+
+            if (mapUI == null)
+                mapUI = FindFirstObjectByType<MapUI>();
 
             ApplyStatUpgrades();
             if (stats != null)
