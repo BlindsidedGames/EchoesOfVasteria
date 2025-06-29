@@ -78,14 +78,8 @@ namespace TimelessEchoes
                 }
             }
 
-            var chunk = taskController.GetComponent<TilemapChunkGenerator>();
-            chunk?.Generate();
             Physics2D.SyncTransforms();
             yield return null;
-            if (taskController.Pathfinder != null)
-                taskController.Pathfinder.Scan();
-            var taskGen = taskController.GetComponent<ProceduralTaskGenerator>();
-            taskGen?.Generate();
 
 
             mapCamera = taskController.MapCamera;

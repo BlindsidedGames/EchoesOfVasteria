@@ -28,6 +28,13 @@ namespace TimelessEchoes.MapGeneration.Chunks
         [TabGroup("References"), SerializeField] private Tilemap grassMap;
         [TabGroup("References"), SerializeField] private Tilemap decorationMap;
 
+        [TabGroup("References"), SerializeField] private Transform spawnRoot;
+
+        public void SetSpawnRoot(Transform root)
+        {
+            spawnRoot = root;
+        }
+
         public void SetTilemaps(Tilemap water, Tilemap sand, Tilemap grass, Tilemap decor)
         {
             waterMap = water;
@@ -139,6 +146,9 @@ namespace TimelessEchoes.MapGeneration.Chunks
             endSandDepth = currentSand;
             endGrassDepth = currentGrass;
 
+            var worldOffsetX = Mathf.RoundToInt(transform.position.x);
+            var worldOffsetY = Mathf.RoundToInt(transform.position.y);
+
             for (var x = 0; x < size.x; x++)
             {
                 var sandDepth = sandDepths[x];
@@ -146,18 +156,18 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 var waterDepth = Mathf.Max(0, size.y - sandDepth - grassDepth);
 
                 for (var y = 0; y < waterDepth; y++)
-                    waterMap.SetTile(new Vector3Int(x, y, 0), waterTile);
+                    waterMap.SetTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), waterTile);
                 for (var y = waterDepth; y < size.y; y++)
-                    sandMap.SetTile(new Vector3Int(x, y, 0), sandRuleTile);
+                    sandMap.SetTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), sandRuleTile);
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth && y < size.y; y++)
-                    grassMap.SetTile(new Vector3Int(x, y, 0), grassRuleTile);
+                    grassMap.SetTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), grassRuleTile);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
                     var isEdge = y == 0 || y == waterDepth - 1;
                     if (!isEdge && waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), waterDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
@@ -175,7 +185,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     var canSpawn = !isTopmostSandLayer || !isGrassAbove;
                     if (canSpawn && sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < sandDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), sandDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -184,7 +194,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     var isTopEdge = y == waterDepth + sandDepth + grassDepth - 1;
                     if (!isGrassGroundLevel && !isTopEdge && grassDecorativeTiles != null &&
                         grassDecorativeTiles.Length > 0 && rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(x, y, 0), grassDecorativeTiles);
+                        PlaceDecorativeTile(new Vector3Int(worldOffsetX + x, worldOffsetY + y, 0), grassDecorativeTiles);
                 }
             }
         }
@@ -243,7 +253,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 if (!positionIsValid)
                     continue;
 
-                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
+                var parent = spawnRoot != null ? spawnRoot : transform;
+                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parent);
                 generatedObjects.Add(obj);
 
                 if (!isEnemy)

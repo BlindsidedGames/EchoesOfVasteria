@@ -17,6 +17,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
         [SerializeField] private Tilemap sandMap;
         [SerializeField] private Tilemap grassMap;
         [SerializeField] private Tilemap decorationMap;
+        [SerializeField] private Transform spawnRoot;
         [SerializeField] private TaskController taskController;
         [SerializeField] private CinemachineCamera camera;
         [SerializeField] private int chunkWidth = 64;
@@ -67,6 +68,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
         {
             var chunk = Instantiate(chunkPrefab, new Vector3(nextX, 0f, 0f), Quaternion.identity, transform);
             chunk.SetTilemaps(waterMap, sandMap, grassMap, decorationMap);
+            if (spawnRoot != null)
+                chunk.SetSpawnRoot(spawnRoot);
             RemoveLocalTilemaps(chunk);
             chunk.Generate(taskController, lastSandDepth, lastGrassDepth);
             lastSandDepth = chunk.EndSandDepth;
