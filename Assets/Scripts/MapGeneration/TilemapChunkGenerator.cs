@@ -61,20 +61,12 @@ namespace TimelessEchoes.MapGeneration
         [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
         private float grassDecorationDensity = 0.05f;
 
-        [Header("Dimensions")] [TabGroup("Settings")] [SerializeField]
-        private Vector2Int size = new(900, 18);
-
         [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)]
         private int minAreaWidth = 2;
 
         [TabGroup("Settings")] [SerializeField] [Min(0)]
         private int edgeWaviness = 1;
 
-        [Header("Cutoff Settings")] [TabGroup("Settings")] [SerializeField] [Min(0)]
-        private int grassCutoffWidth = 50;
-
-        [TabGroup("Settings")] [SerializeField]
-        private Vector2Int sandCutoffRange = new(3, 6);
 
         [Header("Depth Ranges (Min, Max)")] [TabGroup("Settings")] [SerializeField]
         private Vector2Int sandDepthRange = new(2, 6);
@@ -99,16 +91,6 @@ namespace TimelessEchoes.MapGeneration
             rng = randomizeSeed ? new Random() : new Random(seed);
         }
 
-        [ContextMenu("Generate Chunk")]
-        [Button]
-        public void Generate()
-        {
-            ClearMaps();
-            rng = randomizeSeed ? new Random() : new Random(seed);
-
-            GenerateInternal(Vector2Int.zero, size);
-        }
-
         public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
@@ -124,9 +106,6 @@ namespace TimelessEchoes.MapGeneration
             var currentSandDepth = RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             var currentGrassDepth = RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
 
-            var grassCutoffStart = Mathf.Max(0, segmentSize.x - grassCutoffWidth);
-            var sandCutoffStart = Mathf.Max(0, segmentSize.x - RandomRange(sandCutoffRange.x, sandCutoffRange.y + 1));
-
             for (var x = 0; x < segmentSize.x;)
             {
                 for (var segX = 0; segX < minAreaWidth && x < segmentSize.x; segX++, x++)
@@ -134,15 +113,7 @@ namespace TimelessEchoes.MapGeneration
                     var sandDepth = currentSandDepth;
                     var grassDepth = currentGrassDepth;
 
-                    if (x >= sandCutoffStart)
-                    {
-                        sandDepth = 0;
-                        grassDepth = 0;
-                    }
-                    else if (x >= grassCutoffStart)
-                    {
-                        grassDepth = 0;
-                    }
+
 
                     sandDepths[x] = sandDepth;
                     grassDepths[x] = grassDepth;
