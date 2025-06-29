@@ -14,6 +14,18 @@ namespace TimelessEchoes.UI
         [SerializeField] private EnemyKillTracker killTracker;
 
         private readonly Dictionary<EnemyStats, EnemyStatEntryUIReferences> entries = new();
+        private List<EnemyStats> defaultOrder = new();
+
+        public enum SortMode
+        {
+            Default,
+            Damage,
+            Health,
+            AttackSpeed,
+            MoveSpeed
+        }
+
+        [SerializeField] private SortMode sortMode = SortMode.Default;
 
         private void Awake()
         {
@@ -32,6 +44,13 @@ namespace TimelessEchoes.UI
         private void Update()
         {
             UpdateEntries();
+            SortEntries();
+        }
+
+        public void SetSortMode(SortMode mode)
+        {
+            sortMode = mode;
+            SortEntries();
         }
 
         private void BuildEntries()
@@ -45,7 +64,10 @@ namespace TimelessEchoes.UI
             var allStats = Resources.LoadAll<EnemyStats>("");
             var sorted = allStats
                 .OrderBy(s => s.displayOrder)
-                .ThenBy(s => s.enemyName);
+                .ThenBy(s => s.enemyName)
+                .ToList();
+            defaultOrder = sorted;
+            entries.Clear();
 
             foreach (var stats in sorted)
             {
@@ -54,6 +76,8 @@ namespace TimelessEchoes.UI
                 if (ui == null) continue;
                 entries[stats] = ui;
             }
+
+            SortEntries();
         }
 
         private void UpdateEntries()
@@ -106,6 +130,62 @@ namespace TimelessEchoes.UI
 
             if (ui.killsAndNextAndBonusText != null)
                 ui.killsAndNextAndBonusText.text = $"Kills: {killsText}\nBonus Damage: {(bonus * 100f):0}%";
+        }
+
+        private void SortEntries()
+        {
+            if (entries.Count == 0 || defaultOrder.Count == 0)
+                return;
+
+            if (sortMode == SortMode.Default)
+            {
+                ApplyOrder(defaultOrder);
+                return;
+            }
+
+            int threshold = sortMode switch
+            {
+                SortMode.Damage => 1,
+                SortMode.Health => 2,
+                SortMode.MoveSpeed => 3,
+                SortMode.AttackSpeed => 4,
+                _ => 0
+            };
+
+            float GetValue(EnemyStats s) => sortMode switch
+            {
+                SortMode.Damage => s.damage,
+                SortMode.Health => s.maxHealth,
+                SortMode.MoveSpeed => s.moveSpeed,
+                SortMode.AttackSpeed => s.attackSpeed,
+                _ => 0
+            };
+
+            IEnumerable<EnemyStats> known = defaultOrder;
+            IEnumerable<EnemyStats> unknown = Enumerable.Empty<EnemyStats>();
+            if (killTracker != null)
+            {
+                known = defaultOrder.Where(s => killTracker.GetRevealLevel(s) >= threshold);
+                unknown = defaultOrder.Where(s => killTracker.GetRevealLevel(s) < threshold);
+            }
+
+            var sortedKnown = known
+                .OrderByDescending(GetValue)
+                .ThenBy(s => s.displayOrder)
+                .ToList();
+
+            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            ApplyOrder(finalOrder);
+        }
+
+        private void ApplyOrder(IList<EnemyStats> order)
+        {
+            int index = 0;
+            foreach (var stats in order)
+            {
+                if (entries.TryGetValue(stats, out var ui))
+                    ui.transform.SetSiblingIndex(index++);
+            }
         }
     }
 }
