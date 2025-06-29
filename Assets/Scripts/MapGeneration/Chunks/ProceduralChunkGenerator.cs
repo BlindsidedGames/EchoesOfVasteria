@@ -134,8 +134,14 @@ namespace TimelessEchoes.MapGeneration.Chunks
         private int grassTopBuffer = 2;
 
         private readonly List<GameObject> generatedObjects = new();
+        private readonly List<MonoBehaviour> runtimeTasks = new();
         private TaskController controller;
         private System.Random rng;
+
+        /// <summary>
+        ///     Tasks spawned when GenerateTasks is called.
+        /// </summary>
+        public IReadOnlyList<MonoBehaviour> RuntimeTasks => runtimeTasks;
 
         public int EndSandDepth { get; private set; }
 
@@ -152,10 +158,22 @@ namespace TimelessEchoes.MapGeneration.Chunks
             rng = randomizeSeed ? new System.Random() : new System.Random(seed);
 
             ClearSpawnedObjects();
+            runtimeTasks.Clear();
             GenerateTerrain(startSandDepth, startGrassDepth);
-            // The call to GenerateTasks is now immediate. The manager will wait
-            // for the physics to update AFTER this whole method is complete.
-            GenerateTasks();
+            GenerateTasksInternal();
+        }
+
+        public void GenerateTerrainOnly(int startSandDepth, int startGrassDepth)
+        {
+            ClearSpawnedObjects();
+            runtimeTasks.Clear();
+            GenerateTerrain(startSandDepth, startGrassDepth);
+        }
+
+        public void GenerateTasks(TaskController taskController)
+        {
+            controller = taskController;
+            GenerateTasksInternal();
         }
 
         public void Clear()
@@ -246,9 +264,10 @@ namespace TimelessEchoes.MapGeneration.Chunks
             }
         }
 
-        private void GenerateTasks()
+        private void GenerateTasksInternal()
         {
             ClearSpawnedObjects();
+            runtimeTasks.Clear();
             if (controller == null)
                 return;
 
@@ -314,7 +333,10 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 {
                     var mono = obj.GetComponent<MonoBehaviour>();
                     if (mono != null)
+                    {
                         spawnedTasks.Add((pos.x, mono));
+                        runtimeTasks.Add(mono);
+                    }
                 }
             }
 
@@ -533,6 +555,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
             }
 
             generatedObjects.Clear();
+            runtimeTasks.Clear();
         }
 
         [Serializable]

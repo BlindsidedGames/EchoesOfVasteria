@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Hero;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -19,6 +20,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
         [SerializeField] private Transform spawnRoot;
         [SerializeField] private TaskController taskController;
         [SerializeField] private CinemachineCamera camera;
+        private HeroController hero;
         [SerializeField] private int chunkWidth = 64;
         [SerializeField] private int preloadChunks = 2;
 
@@ -34,6 +36,8 @@ namespace TimelessEchoes.MapGeneration.Chunks
                 taskController = GetComponent<TaskController>();
             if (camera == null && taskController != null)
                 camera = taskController.MapCamera;
+            if (taskController != null)
+                hero = taskController.hero;
 
             StartCoroutine(PreloadInitialChunks());
         }
@@ -41,24 +45,31 @@ namespace TimelessEchoes.MapGeneration.Chunks
         private IEnumerator PreloadInitialChunks()
         {
             isBusy = true;
-            for (var i = 0; i < preloadChunks; i++) yield return StartCoroutine(SpawnAndScanSequence());
+            for (var i = 0; i < preloadChunks; i++)
+                yield return StartCoroutine(ChunkSequence());
             isBusy = false;
         }
 
         private void Update()
         {
-            if (isBusy || camera == null || chunkPrefab == null)
+            if (isBusy || hero == null || chunkPrefab == null)
                 return;
 
-            var camX = camera.transform.position.x;
+            if (chunks.Count == 0)
+            {
+                StartCoroutine(ChunkSequence());
+                return;
+            }
 
-            if (chunks.Count > 0 && chunks[0] != null &&
-                chunks[0].transform.position.x + chunkWidth < camX - chunkWidth)
-                StartCoroutine(DestroyAndScanSequence());
-            else if (chunks.Count == 0 || camX + chunkWidth > nextX) StartCoroutine(SpawnAndScanSequence());
+            var heroX = hero.transform.position.x;
+            var middleChunk = chunks[chunks.Count / 2];
+            var middleCenter = middleChunk.transform.position.x + chunkWidth * 0.5f;
+
+            if (heroX >= middleCenter)
+                StartCoroutine(ChunkSequence());
         }
 
-        private IEnumerator SpawnAndScanSequence()
+        private IEnumerator ChunkSequence()
         {
             isBusy = true;
             try
@@ -69,45 +80,22 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     chunk.SetSpawnRoot(spawnRoot);
                 RemoveLocalTilemaps(chunk);
 
-                // --- Start of Changed Code ---
-
-                // This now calls the synchronous Generate method.
-                // It will generate both terrain AND tasks immediately.
-                chunk.Generate(taskController, lastSandDepth, lastGrassDepth);
-
-                // Now that tasks are placed, we wait for the physics colliders for the
-                // terrain to be fully generated before we scan for pathfinding.
-                yield return new WaitForEndOfFrame();
-
-                // --- End of Changed Code ---
+                chunk.GenerateTerrainOnly(lastSandDepth, lastGrassDepth);
+                yield return null;
 
                 lastSandDepth = chunk.EndSandDepth;
                 lastGrassDepth = chunk.EndGrassDepth;
                 nextX += chunkWidth;
                 chunks.Add(chunk);
 
-                RelocateAndScan();
-            }
-            finally
-            {
-                isBusy = false;
-            }
-        }
+                RelocateGrid();
+                taskController?.Pathfinder?.Scan();
 
-        private IEnumerator DestroyAndScanSequence()
-        {
-            isBusy = true;
-            try
-            {
-                if (chunks.Count > 0 && chunks[0] != null)
-                {
-                    var old = chunks[0];
-                    chunks.RemoveAt(0);
-                    Destroy(old.gameObject);
-                }
+                chunk.GenerateTasks(taskController);
 
-                yield return new WaitForEndOfFrame();
-                RelocateAndScan();
+                yield return null;
+
+                RemoveOldChunk();
             }
             finally
             {
@@ -123,7 +111,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
                     Destroy(m.gameObject);
         }
 
-        private void RelocateAndScan()
+        private void RelocateGrid()
         {
             if (taskController?.Pathfinder == null || chunks.Count == 0)
                 return;
@@ -131,10 +119,7 @@ namespace TimelessEchoes.MapGeneration.Chunks
             var pf = taskController.Pathfinder;
             var grid = pf.data.gridGraph;
             if (grid == null)
-            {
-                pf.Scan();
                 return;
-            }
 
             var middleChunk = chunks[chunks.Count / 2];
             if (middleChunk == null) return;
@@ -143,7 +128,27 @@ namespace TimelessEchoes.MapGeneration.Chunks
             grid.center = new Vector3(newGraphCenter.x, 9f, newGraphCenter.z);
 
             grid.UpdateTransform();
-            pf.Scan();
+        }
+
+        private void RemoveOldChunk()
+        {
+            if (camera == null || chunks.Count == 0)
+                return;
+
+            var first = chunks[0];
+            if (first == null)
+                return;
+
+            if (first.transform.position.x + chunkWidth < camera.transform.position.x - chunkWidth)
+            {
+                chunks.RemoveAt(0);
+
+                if (taskController != null)
+                    foreach (var obj in first.RuntimeTasks)
+                        taskController.RemoveTaskObject(obj);
+
+                Destroy(first.gameObject);
+            }
         }
     }
 }
