@@ -63,6 +63,11 @@ namespace TimelessEchoes.Tasks
 
         private readonly List<GameObject> generatedObjects = new();
 
+        /// <summary>
+        /// Optional parent for spawned task objects.
+        /// </summary>
+        public Transform SpawnParent { get; set; }
+
         private TaskController controller;
 
         /// <summary>
@@ -153,22 +158,35 @@ namespace TimelessEchoes.Tasks
         [Button]
         public void Generate()
         {
+            GenerateInternal(minX, maxX, transform, true);
+        }
+
+        public void GenerateSegment(float localMinX, float localMaxX, Transform parent)
+        {
+            GenerateInternal(localMinX, localMaxX, parent, false);
+        }
+
+        private void GenerateInternal(float localMinX, float localMaxX, Transform parent, bool clearExisting)
+        {
             if (controller == null)
                 controller = GetComponent<TaskController>();
             if (controller == null)
                 return;
 
-            ClearSpawnedObjects();
-            controller.ClearTaskObjects();
+            if (clearExisting)
+            {
+                ClearSpawnedObjects();
+                controller.ClearTaskObjects();
+            }
 
-            var count = Mathf.RoundToInt((maxX - minX) * density);
+            var count = Mathf.RoundToInt((localMaxX - localMinX) * density);
             if (count <= 0)
                 return;
 
             var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
             for (var i = 0; i < count; i++)
             {
-                var localX = Random.Range(minX, maxX);
+                var localX = Random.Range(localMinX, localMaxX);
                 var worldX = transform.position.x + localX;
 
                 var allowWater = TryGetWaterEdge(localX, out var waterPos);
@@ -213,22 +231,31 @@ namespace TimelessEchoes.Tasks
                 if (!positionIsValid)
                     continue;
 
-                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, transform);
+                var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
+                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
                 generatedObjects.Add(obj);
 
                 if (!isEnemy)
                 {
                     var mono = obj.GetComponent<MonoBehaviour>();
                     if (mono != null)
-                        spawnedTasks.Add((pos.x, mono));
+                    {
+                        if (clearExisting)
+                            spawnedTasks.Add((pos.x, mono));
+                        else
+                            controller.AddRuntimeTaskObject(mono);
+                    }
                 }
             }
 
-            spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
-            foreach (var pair in spawnedTasks)
-                controller.AddTaskObject(pair.obj);
+            if (clearExisting)
+            {
+                spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
+                foreach (var pair in spawnedTasks)
+                    controller.AddTaskObject(pair.obj);
 
-            controller.ResetTasks();
+                controller.ResetTasks();
+            }
         }
 
         private Vector3 RandomPosition()
