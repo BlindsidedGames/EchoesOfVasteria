@@ -527,63 +527,63 @@ MonoBehaviour:
   enemies:
   - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
     weight: 2
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
     weight: 1
-    minProgress: 0.132
-    maxProgress: 1
+    minX: 0.132
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   otherTasks:
   - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
     weight: 0.13
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   waterTasks:
   - prefab: {fileID: 4589994145864551737, guid: f2c07aa52d3c1dd46ae29e9e671ed0a2, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   grassTasks:
   - prefab: {fileID: 5839893854702782364, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
     weight: 1
-    minProgress: 0
-    maxProgress: 1
+    minX: 0
+    maxX: 1
   allowGrassEdge: 1
   grassTopBuffer: 3
   waterMap: {fileID: 0}

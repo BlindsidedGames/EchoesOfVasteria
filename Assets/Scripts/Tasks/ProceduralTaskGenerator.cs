@@ -169,11 +169,11 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < count; i++)
             {
                 var localX = Random.Range(minX, maxX);
-                var progress = Mathf.InverseLerp(minX, maxX, localX);
+                var worldX = transform.position.x + localX;
 
                 var allowWater = TryGetWaterEdge(localX, out var waterPos);
                 var allowGrass = TryGetGrassPosition(localX, allowGrassEdge, out var grassPos);
-                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(progress, allowWater, allowGrass);
+                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(worldX, allowWater, allowGrass);
                 if (entry == null || entry.prefab == null)
                     continue;
 
@@ -338,27 +338,27 @@ namespace TimelessEchoes.Tasks
         /// <summary>
         ///     Picks an entry from the available lists and identifies if it's an enemy.
         /// </summary>
-        /// <param name="progress">The normalized position in the generation area.</param>
+        /// <param name="worldX">The world X position of the spawn attempt.</param>
         /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float progress, bool allowWaterTasks, bool allowGrassTasks)
+        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
-                enemyTotalWeight += e.GetWeight(progress);
+                enemyTotalWeight += e.GetWeight(worldX);
 
             var otherTasksTotalWeight = 0f;
             foreach (var t in otherTasks)
-                otherTasksTotalWeight += t.GetWeight(progress);
+                otherTasksTotalWeight += t.GetWeight(worldX);
 
             var waterTasksTotalWeight = 0f;
             if (allowWaterTasks)
                 foreach (var w in waterTasks)
-                    waterTasksTotalWeight += w.GetWeight(progress);
+                    waterTasksTotalWeight += w.GetWeight(worldX);
 
             var grassTasksTotalWeight = 0f;
             if (allowGrassTasks)
                 foreach (var g in grassTasks)
-                    grassTasksTotalWeight += g.GetWeight(progress);
+                    grassTasksTotalWeight += g.GetWeight(worldX);
 
             var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight;
             if (totalWeight <= 0f)
@@ -370,7 +370,7 @@ namespace TimelessEchoes.Tasks
             {
                 foreach (var e in enemies)
                 {
-                    r -= e.GetWeight(progress);
+                    r -= e.GetWeight(worldX);
                     if (r <= 0f)
                         return (e, true, false, false);
                 }
@@ -383,7 +383,7 @@ namespace TimelessEchoes.Tasks
                 {
                     foreach (var w in waterTasks)
                     {
-                        r -= w.GetWeight(progress);
+                        r -= w.GetWeight(worldX);
                         if (r <= 0f)
                             return (w, false, true, false);
                     }
@@ -396,7 +396,7 @@ namespace TimelessEchoes.Tasks
                     {
                         foreach (var g in grassTasks)
                         {
-                            r -= g.GetWeight(progress);
+                            r -= g.GetWeight(worldX);
                             if (r <= 0f)
                                 return (g, false, false, true);
                         }
@@ -407,7 +407,7 @@ namespace TimelessEchoes.Tasks
 
                         foreach (var t in otherTasks)
                         {
-                            r -= t.GetWeight(progress);
+                            r -= t.GetWeight(worldX);
                             if (r <= 0f)
                                 return (t, false, false, false);
                         }
@@ -427,14 +427,14 @@ namespace TimelessEchoes.Tasks
 
             [MinValue(0)] public float weight = 1f;
 
-            [Range(0f, 1f)] public float minProgress;
+            public float minX;
 
-            [Range(0f, 1f)] public float maxProgress = 1f;
+            public float maxX = float.PositiveInfinity;
 
-            public float GetWeight(float progress)
+            public float GetWeight(float worldX)
             {
                 if (prefab == null) return 0f;
-                if (progress < minProgress || progress > maxProgress)
+                if (worldX < minX || worldX > maxX)
                     return 0f;
                 return Mathf.Max(0f, weight);
             }
