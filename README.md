@@ -4,7 +4,7 @@ Timeless Echoes is an incremental hero management game built with Unity **6000.1
 
 ## Overview
 In this game you choose a hero who automatically runs through maps. Each run spawns a `Map` prefab which procedurally generates terrain and tasks.
-Your hero spawns at the entry point and the `TaskController` assigns the earliest unfinished task. The hero uses A* pathfinding to reach each task in order and moves to the exit once all are complete.
+Your hero spawns in the map and the `TaskController` assigns the earliest unfinished task. The hero uses A* pathfinding to reach each task in order.
 Map generation combines `TilemapChunkGenerator` and `ProceduralTaskGenerator`
 components so every run has a fresh layout and set of objectives.
 
