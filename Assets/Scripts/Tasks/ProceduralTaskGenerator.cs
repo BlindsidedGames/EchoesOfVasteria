@@ -49,19 +49,7 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "Generation")] [SerializeField]
         [HideInInspector]
-        private List<WeightedSpawn> otherTasks = new();
-
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
-        private List<WeightedSpawn> waterTasks = new();
-
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
-        private List<WeightedSpawn> sandTasks = new();
-
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
-        private List<WeightedSpawn> grassTasks = new();
+        private List<WeightedSpawn> tasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)]
         [HideInInspector]
@@ -115,21 +103,13 @@ namespace TimelessEchoes.Tasks
             if (config == null) return;
 
             minX = config.taskGeneratorSettings.minX;
-            maxX = config.taskGeneratorSettings.maxX;
             height = config.taskGeneratorSettings.height;
             density = config.taskGeneratorSettings.density;
             blockingMask = config.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
             enemies = config.taskGeneratorSettings.enemies;
-            otherTasks = config.taskGeneratorSettings.otherTasks;
-            waterTasks = config.taskGeneratorSettings.waterTasks;
-            sandTasks = config.taskGeneratorSettings.sandTasks;
-            grassTasks = config.taskGeneratorSettings.grassTasks;
+            tasks = config.taskGeneratorSettings.tasks;
             minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
-            terrainMap = config.taskGeneratorSettings.terrainMap;
-            waterTile = config.taskGeneratorSettings.waterTile;
-            sandTile = config.taskGeneratorSettings.sandTile;
-            grassTile = config.taskGeneratorSettings.grassTile;
         }
 
         private void OnDrawGizmos()
@@ -500,6 +480,15 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        private bool TaskAllowed(WeightedSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
+        {
+            var specific = spawn.spawnOnWater || spawn.spawnOnSand || spawn.spawnOnGrass;
+            var permitted = (!spawn.spawnOnWater || allowWater) && (!spawn.spawnOnSand || allowSand) && (!spawn.spawnOnGrass || allowGrass);
+            if (specific)
+                return (spawn.spawnOnWater && allowWater) || (spawn.spawnOnSand && allowSand) || (spawn.spawnOnGrass && allowGrass);
+            return permitted;
+        }
+
         /// <summary>
         ///     Picks an entry from the available lists and identifies if it's an enemy.
         /// </summary>
@@ -511,31 +500,16 @@ namespace TimelessEchoes.Tasks
             foreach (var e in enemies)
                 enemyTotalWeight += e.GetWeight(worldX);
 
-            var otherTasksTotalWeight = 0f;
-            foreach (var t in otherTasks)
-                otherTasksTotalWeight += t.GetWeight(worldX);
+            var taskTotalWeight = 0f;
+            foreach (var t in tasks)
+                if (TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
+                    taskTotalWeight += t.GetWeight(worldX);
 
-            var waterTasksTotalWeight = 0f;
-            if (allowWaterTasks)
-                foreach (var w in waterTasks)
-                    waterTasksTotalWeight += w.GetWeight(worldX);
-
-            var sandTasksTotalWeight = 0f;
-            if (allowSandTasks)
-                foreach (var s in sandTasks)
-                    sandTasksTotalWeight += s.GetWeight(worldX);
-
-            var grassTasksTotalWeight = 0f;
-            if (allowGrassTasks)
-                foreach (var g in grassTasks)
-                    grassTasksTotalWeight += g.GetWeight(worldX);
-
-            var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight + sandTasksTotalWeight;
+            var totalWeight = enemyTotalWeight + taskTotalWeight;
             if (totalWeight <= 0f)
                 return (null, false, false, false, false);
 
             var r = Random.value * totalWeight;
-
             if (r < enemyTotalWeight)
             {
                 foreach (var e in enemies)
@@ -548,54 +522,16 @@ namespace TimelessEchoes.Tasks
             else
             {
                 r -= enemyTotalWeight;
-
-                if (allowWaterTasks && r < waterTasksTotalWeight)
+                foreach (var t in tasks)
                 {
-                    foreach (var w in waterTasks)
-                    {
-                        r -= w.GetWeight(worldX);
-                        if (r <= 0f)
-                            return (w, false, true, false, false);
-                    }
-                }
-                else
-                {
-                    r -= waterTasksTotalWeight;
-
-                    if (allowSandTasks && r < sandTasksTotalWeight)
-                    {
-                        foreach (var s in sandTasks)
-                        {
-                            r -= s.GetWeight(worldX);
-                            if (r <= 0f)
-                                return (s, false, false, false, true);
-                        }
-                    }
-                    else
-                    {
-                        r -= sandTasksTotalWeight;
-
-                        if (allowGrassTasks && r < grassTasksTotalWeight)
-                    {
-                        foreach (var g in grassTasks)
-                        {
-                            r -= g.GetWeight(worldX);
-                            if (r <= 0f)
-                                return (g, false, false, true, false);
-                        }
-                    }
-                    else
-                    {
-                        r -= grassTasksTotalWeight;
-
-                        foreach (var t in otherTasks)
-                        {
-                            r -= t.GetWeight(worldX);
-                            if (r <= 0f)
-                                return (t, false, false, false, false);
-                        }
-                    }
-                    }
+                    if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
+                        continue;
+                    r -= t.GetWeight(worldX);
+                    if (r > 0f) continue;
+                    var isWater = t.spawnOnWater && allowWaterTasks;
+                    var isSand = !isWater && t.spawnOnSand && allowSandTasks;
+                    var isGrass = !isWater && !isSand && t.spawnOnGrass && allowGrassTasks;
+                    return (t, false, isWater, isGrass, isSand);
                 }
             }
 
@@ -617,6 +553,10 @@ namespace TimelessEchoes.Tasks
 
             [MinValue(0)]
             public int topBuffer = 0;
+
+            public bool spawnOnWater;
+            public bool spawnOnSand;
+            public bool spawnOnGrass;
 
             public float GetWeight(float worldX)
             {
