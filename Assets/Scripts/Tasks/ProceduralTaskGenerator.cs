@@ -45,13 +45,13 @@ namespace TimelessEchoes.Tasks
         private List<WeightedSpawn> waterTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
-        private List<WeightedSpawn> grassTasks = new();
+        private List<WeightedSpawn> sandTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
-        private bool allowGrassEdge = false;
+        private List<WeightedSpawn> grassTasks = new();
 
-        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)]
-        private int grassTopBuffer = 2;
+        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)]
+        private float minTaskDistance = 1.5f;
 
         [TabGroup("Settings", "References")] [SerializeField]
         private Tilemap terrainMap;
@@ -186,24 +186,37 @@ namespace TimelessEchoes.Tasks
                 return;
 
             var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
+            var taskPositions = new List<Vector3>();
             for (var i = 0; i < count; i++)
             {
                 var localX = Random.Range(localMinX, localMaxX);
                 var worldX = transform.position.x + localX;
 
-                var allowWater = TryGetWaterEdge(localX, out var waterPos);
-                var allowGrass = TryGetGrassPosition(localX, allowGrassEdge, out var grassPos);
-                var (entry, isEnemy, isWaterTask, isGrassTask) = PickEntry(worldX, allowWater, allowGrass);
+                var allowWater = TryGetWaterSpot(localX, out var waterPos);
+                var allowSand = TryGetSandSpot(localX, out var sandPos);
+                var allowGrass = TryGetGrassPosition(localX, 0, out var _);
+                var (entry, isEnemy, isWaterTask, isGrassTask, isSandTask) = PickEntry(worldX, allowWater, allowGrass, allowSand);
                 if (entry == null || entry.prefab == null)
                     continue;
 
-                var pos = isWaterTask ? waterPos : isGrassTask ? grassPos : RandomPositionAtX(localX);
+                Vector3 pos;
+                if (isWaterTask)
+                    pos = waterPos;
+                else if (isSandTask)
+                    pos = sandPos;
+                else if (isGrassTask)
+                {
+                    if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
+                        continue;
+                }
+                else
+                    pos = RandomPositionAtX(localX);
 
                 var attempts = 0;
                 var positionIsValid = false;
                 while (attempts < 5)
                 {
-                    if (isWaterTask)
+                    if (isWaterTask || isSandTask)
                     {
                         positionIsValid = true;
                         break;
@@ -221,7 +234,7 @@ namespace TimelessEchoes.Tasks
                     }
                     if (isGrassTask)
                     {
-                        if (!TryGetGrassPosition(localX, allowGrassEdge, out pos))
+                        if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
                             break;
                     }
                     else
@@ -232,6 +245,17 @@ namespace TimelessEchoes.Tasks
                 }
 
                 if (!positionIsValid)
+                    continue;
+
+                var tooClose = false;
+                foreach (var existing in taskPositions)
+                    if (Vector3.Distance(existing, pos) < minTaskDistance)
+                    {
+                        tooClose = true;
+                        break;
+                    }
+
+                if (tooClose)
                     continue;
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
@@ -247,6 +271,7 @@ namespace TimelessEchoes.Tasks
                             spawnedTasks.Add((pos.x, mono));
                         else
                             controller.AddRuntimeTaskObject(mono);
+                        taskPositions.Add(pos);
                     }
                 }
             }
@@ -280,11 +305,11 @@ namespace TimelessEchoes.Tasks
             return new Vector3(worldX, worldY, 0f);
         }
 
-        private bool TryGetWaterEdge(float localX, out Vector3 position)
+        private bool TryGetWaterSpot(float localX, out Vector3 position)
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (terrainMap == null || waterTile == null || sandTile == null)
+            if (terrainMap == null || waterTile == null)
                 return false;
 
             var worldX = transform.position.x + localX;
@@ -295,17 +320,60 @@ namespace TimelessEchoes.Tasks
 
             for (var y = maxY; y >= minY; y--)
             {
-                var water = terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) == waterTile;
-                var sand = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile;
-                if (water && sand)
-                {
-                    var below = new Vector3Int(cell.x, y - 1, 0);
-                    if (y - 1 >= minY && terrainMap.GetTile(below) == waterTile)
-                        position = terrainMap.GetCellCenterWorld(below);
-                    else
-                        position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, y, 0));
-                    return true;
-                }
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != waterTile)
+                    continue;
+
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == waterTile)
+                    continue;
+
+                var candidateY = y - 1;
+                if (candidateY < minY)
+                    return false;
+                if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != waterTile)
+                    return false;
+
+                if (IsEdge(new Vector3Int(cell.x, candidateY, 0), waterTile))
+                    return false;
+
+                position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, candidateY, 0));
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryGetSandSpot(float localX, out Vector3 position)
+        {
+            position = Vector3.zero;
+            EnsureTilemaps();
+            if (terrainMap == null || sandTile == null)
+                return false;
+
+            var worldX = transform.position.x + localX;
+            var cell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
+
+            var maxY = terrainMap.cellBounds.yMax;
+            var minY = terrainMap.cellBounds.yMin - 1;
+
+            for (var y = maxY; y >= minY; y--)
+            {
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != sandTile)
+                    continue;
+
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile)
+                    continue;
+
+                var candidateY = y - 1;
+                if (candidateY < minY)
+                    return false;
+                if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != sandTile)
+                    return false;
+
+                if (IsEdge(new Vector3Int(cell.x, candidateY, 0), sandTile))
+                    return false;
+
+                position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, candidateY, 0));
+                return true;
             }
 
             return false;
@@ -318,10 +386,10 @@ namespace TimelessEchoes.Tasks
         ///     when sand extends behind the grass.
         /// </summary>
         /// <param name="localX">Local X position to sample.</param>
-        /// <param name="includeEdge">If true, allow positions on the edge of the grass area.</param>
+        /// <param name="topBuffer">Number of tiles to keep clear from the top.</param>
         /// <param name="position">The world position of a valid grass tile.</param>
         /// <returns>True if a valid tile was found.</returns>
-        private bool TryGetGrassPosition(float localX, bool includeEdge, out Vector3 position)
+        private bool TryGetGrassPosition(float localX, int topBuffer, out Vector3 position)
         {
             position = Vector3.zero;
             EnsureTilemaps();
@@ -331,29 +399,13 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var cell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = Mathf.Clamp(terrainMap.cellBounds.yMax - grassTopBuffer, terrainMap.cellBounds.yMin, terrainMap.cellBounds.yMax);
+            var maxY = Mathf.Clamp(terrainMap.cellBounds.yMax - topBuffer, terrainMap.cellBounds.yMin, terrainMap.cellBounds.yMax);
             var minY = terrainMap.cellBounds.yMin - 1;
 
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
             {
                 if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != grassTile)
-                    continue;
-
-                var below = terrainMap.GetTile(new Vector3Int(cell.x, y - 1, 0)) == grassTile;
-                var left = terrainMap.GetTile(new Vector3Int(cell.x - 1, y, 0)) == grassTile;
-                var right = terrainMap.GetTile(new Vector3Int(cell.x + 1, y, 0)) == grassTile;
-                var belowLeft = terrainMap.GetTile(new Vector3Int(cell.x - 1, y - 1, 0)) == grassTile;
-                var belowRight = terrainMap.GetTile(new Vector3Int(cell.x + 1, y - 1, 0)) == grassTile;
-                var above = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == grassTile;
-
-                var isCurrentTileSideEdge = !left || !right;
-                var isTopEdge = !above;
-                var isTileBelowSideEdge = !belowLeft || !belowRight;
-                var isTileBelowEdge = isTileBelowSideEdge;
-
-                var isEdge = isCurrentTileSideEdge || isTileBelowEdge || isTopEdge;
-                if (!includeEdge && isEdge)
                     continue;
 
                 validYs.Add(y);
@@ -375,6 +427,15 @@ namespace TimelessEchoes.Tasks
 
             var cell = terrainMap.WorldToCell(worldPos);
             return terrainMap.GetTile(cell) == waterTile;
+        }
+
+        private bool IsEdge(Vector3Int cell, TileBase tile)
+        {
+            var left = terrainMap.GetTile(cell + Vector3Int.left) == tile;
+            var right = terrainMap.GetTile(cell + Vector3Int.right) == tile;
+            var up = terrainMap.GetTile(cell + Vector3Int.up) == tile;
+            var down = terrainMap.GetTile(cell + Vector3Int.down) == tile;
+            return !(left && right && up && down);
         }
 
         /// <summary>
@@ -403,7 +464,7 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         /// <param name="worldX">The world X position of the spawn attempt.</param>
         /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks)
+        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask, bool isSandTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
@@ -418,12 +479,17 @@ namespace TimelessEchoes.Tasks
                 foreach (var w in waterTasks)
                     waterTasksTotalWeight += w.GetWeight(worldX);
 
+            var sandTasksTotalWeight = 0f;
+            if (allowSandTasks)
+                foreach (var s in sandTasks)
+                    sandTasksTotalWeight += s.GetWeight(worldX);
+
             var grassTasksTotalWeight = 0f;
             if (allowGrassTasks)
                 foreach (var g in grassTasks)
                     grassTasksTotalWeight += g.GetWeight(worldX);
 
-            var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight;
+            var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight + sandTasksTotalWeight;
             if (totalWeight <= 0f)
                 return (null, false, false, false);
 
@@ -448,20 +514,33 @@ namespace TimelessEchoes.Tasks
                     {
                         r -= w.GetWeight(worldX);
                         if (r <= 0f)
-                            return (w, false, true, false);
+                            return (w, false, true, false, false);
                     }
                 }
                 else
                 {
                     r -= waterTasksTotalWeight;
 
-                    if (allowGrassTasks && r < grassTasksTotalWeight)
+                    if (allowSandTasks && r < sandTasksTotalWeight)
+                    {
+                        foreach (var s in sandTasks)
+                        {
+                            r -= s.GetWeight(worldX);
+                            if (r <= 0f)
+                                return (s, false, false, false, true);
+                        }
+                    }
+                    else
+                    {
+                        r -= sandTasksTotalWeight;
+
+                        if (allowGrassTasks && r < grassTasksTotalWeight)
                     {
                         foreach (var g in grassTasks)
                         {
                             r -= g.GetWeight(worldX);
                             if (r <= 0f)
-                                return (g, false, false, true);
+                                return (g, false, false, true, false);
                         }
                     }
                     else
@@ -472,13 +551,14 @@ namespace TimelessEchoes.Tasks
                         {
                             r -= t.GetWeight(worldX);
                             if (r <= 0f)
-                                return (t, false, false, false);
+                                return (t, false, false, false, false);
                         }
+                    }
                     }
                 }
             }
 
-            return (null, false, false, false);
+            return (null, false, false, false, false);
         }
 
         [Serializable]
@@ -493,6 +573,9 @@ namespace TimelessEchoes.Tasks
             public float minX;
 
             public float maxX = float.PositiveInfinity;
+
+            [MinValue(0)]
+            public int topBuffer = 0;
 
             public float GetWeight(float worldX)
             {

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,26 +7,11 @@ using Random = System.Random;
 
 namespace TimelessEchoes.MapGeneration
 {
-    [Serializable]
-    public class DecorativeTileEntry
-    {
-        [HorizontalGroup("Entry", 175, LabelWidth = 45)]
-        public TileBase Tile;
-
-        [HorizontalGroup("Entry")] [MinValue(1)]
-        public int Weight = 1;
-
-        [HorizontalGroup("Entry", Width = 160)] [LabelWidth(125)]
-        public bool AllowRotation;
-    }
-
     public class TilemapChunkGenerator : MonoBehaviour
     {
         [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
         private Tilemap terrainMap;
 
-        [TabGroup("References")] [SerializeField]
-        private Tilemap decorationMap;
 
         [Header("Tiles")] [TabGroup("References")] [SerializeField]
         private BetterRuleTile waterTile;
@@ -38,23 +22,6 @@ namespace TimelessEchoes.MapGeneration
         [TabGroup("References")] [SerializeField]
         private BetterRuleTile grassRuleTile;
 
-        [Header("Decorative Tiles")] [TabGroup("References")] [SerializeField]
-        private DecorativeTileEntry[] waterDecorativeTiles;
-
-        [TabGroup("References")] [SerializeField]
-        private DecorativeTileEntry[] sandDecorativeTiles;
-
-        [TabGroup("References")] [SerializeField]
-        private DecorativeTileEntry[] grassDecorativeTiles;
-
-        [Header("Decoration Density")] [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
-        private float waterDecorationDensity = 0.05f;
-
-        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
-        private float sandDecorationDensity = 0.05f;
-
-        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)]
-        private float grassDecorationDensity = 0.05f;
 
         [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)]
         private int minAreaWidth = 2;
@@ -79,8 +46,6 @@ namespace TimelessEchoes.MapGeneration
         private int prevSandDepth = -1;
         private int prevGrassDepth = -1;
         public Tilemap TerrainMap => terrainMap;
-        public Tilemap DecorationMap => decorationMap;
-
         public BetterRuleTile WaterTile => waterTile;
         public BetterRuleTile SandTile => sandRuleTile;
         public BetterRuleTile GrassTile => grassRuleTile;
@@ -165,10 +130,6 @@ namespace TimelessEchoes.MapGeneration
                     var isTileBelowEdge = isTileBelowSideEdge;
 
                     if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
-
-                    if (waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
-                        rng.NextDouble() < waterDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterDecorativeTiles);
                 }
 
                 for (var y = waterDepth; y < waterDepth + sandDepth; y++)
@@ -200,9 +161,6 @@ namespace TimelessEchoes.MapGeneration
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
                     if (terrainMap.GetTile(pos) == grassRuleTile) continue;
 
-                    if (sandDecorativeTiles != null && sandDecorativeTiles.Length > 0 &&
-                        rng.NextDouble() < sandDecorationDensity)
-                        PlaceDecorativeTile(pos, sandDecorativeTiles);
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -221,9 +179,6 @@ namespace TimelessEchoes.MapGeneration
 
                     if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
 
-                    if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
-                        rng.NextDouble() < grassDecorationDensity)
-                        PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassDecorativeTiles);
                 }
             }
 
@@ -233,41 +188,6 @@ namespace TimelessEchoes.MapGeneration
                 prevSandDepth = sandDepths[lastIndex];
                 prevGrassDepth = grassDepths[lastIndex];
             }
-        }
-
-        private void PlaceDecorativeTile(Vector3Int position, DecorativeTileEntry[] decorations)
-        {
-            var entry = GetWeightedRandomEntry(decorations);
-            if (entry == null || entry.Tile == null) return;
-
-            decorationMap.SetTile(position, entry.Tile);
-
-            if (entry.AllowRotation)
-            {
-                var rotationAngle = rng.Next(0, 4) * 90f;
-                var pivot = new Vector3(0.5f, 0.5f, 0);
-                var matrix = Matrix4x4.TRS(pivot, Quaternion.Euler(0, 0, rotationAngle), Vector3.one) *
-                             Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
-                decorationMap.SetTransformMatrix(position, matrix);
-            }
-        }
-
-        private DecorativeTileEntry GetWeightedRandomEntry(DecorativeTileEntry[] decorations)
-        {
-            if (decorations == null || decorations.Length == 0) return null;
-
-            var totalWeight = decorations.Sum(entry => entry.Weight);
-            if (totalWeight <= 0) return null;
-
-            var randomValue = rng.Next(0, totalWeight);
-
-            foreach (var entry in decorations)
-            {
-                if (randomValue < entry.Weight) return entry;
-                randomValue -= entry.Weight;
-            }
-
-            return null;
         }
 
         private int RandomRange(int minInclusive, int maxExclusive)
@@ -281,7 +201,6 @@ namespace TimelessEchoes.MapGeneration
         private void ClearMaps()
         {
             terrainMap.ClearAllTiles();
-            decorationMap.ClearAllTiles();
         }
 
         public void ClearSegment(Vector2Int offset, Vector2Int segmentSize)
@@ -291,7 +210,6 @@ namespace TimelessEchoes.MapGeneration
             {
                 var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
                 terrainMap.SetTile(pos, null);
-                decorationMap.SetTile(pos, null);
             }
         }
 
