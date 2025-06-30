@@ -1,0 +1,5 @@
+If you have different tiles which have a few rules which are the same between them, you can use the tile variation feature, so you don't have to specify every rule.
+
+If a tile is variation of another, any rules that's missing from this tile but it is in the other one will get filled in automatically. In this example the stone tile is a variation of the dirt tile, so any rule that's missing from the stone tile will be taken from the dirt tile.
+
+To set a tile variation select the tile in the tile drawer, and under the "tile variation" tab uncheck the "unique tile" option and select the variation tile.

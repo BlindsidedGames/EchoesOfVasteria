@@ -3,6 +3,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using VinTools.BetterRuleTiles;
 using Random = System.Random;
 
 namespace TimelessEchoes.MapGeneration
@@ -35,13 +36,13 @@ namespace TimelessEchoes.MapGeneration
         private Tilemap decorationMap;
 
         [Header("Tiles")] [TabGroup("References")] [SerializeField]
-        private TileBase waterTile;
+        private BetterRuleTile waterTile;
 
         [TabGroup("References")] [SerializeField]
-        private TileBase sandRuleTile;
+        private BetterRuleTile sandRuleTile;
 
         [TabGroup("References")] [SerializeField]
-        private TileBase grassRuleTile;
+        private BetterRuleTile grassRuleTile;
 
         [Header("Decorative Tiles")] [TabGroup("References")] [SerializeField]
         private DecorativeTileEntry[] waterDecorativeTiles;

@@ -1,0 +1,64 @@
+{
+  "name": "com.vinarkgames.betterruletiles",
+  "version": "1.4.4",
+  "displayName": "Better Rule Tiles",
+  "description": "Make rule tiles better and easier to use.",
+  "changelogUrl": "https://docs.vinark.dev/better-rule-tiles/Updates/Changelog",
+  "documentationUrl": "https://docs.vinark.dev/better-rule-tiles/",
+  "unity": "2019.4",
+  "dependencies": {
+    "com.unity.modules.tilemap": "1.0.0",
+    "com.unity.2d.tilemap": "1.0.0",
+    "com.unity.2d.tilemap.extras": "1.6.0"
+  },
+  "author": {
+    "name": "Vinark",
+    "email": "vinarkgamedev@gmail.com",
+    "url": "https://docs.vinark.dev/"
+  },
+  "keywords": [
+    "Editor",
+    "Tile",
+    "Rule Tile",
+    "Tilemap"
+  ],
+  "type": "tool",
+  
+  "samples": [
+  {
+    "displayName": "Simplify rules",
+    "description": "An example of creating a basic rule tile",
+    "path": "Samples/1 - Simplify Rules"
+  },
+  {
+    "displayName": "Advanced",
+    "description": "An example of using more advanced techniques to create rule tiles",
+    "path": "Samples/2 - Advanced"
+  },
+  {
+    "displayName": "Preset blocks",
+    "description": "An example on how to use the preset blocks feature",
+    "path": "Samples/3 - Preset Blocks"
+  },
+  {
+    "displayName": "Connections",
+    "description": "Example on how to create connections between tiles",
+    "path": "Samples/4 - Connection"
+  },
+  {
+    "displayName": "Universal sprite settings",
+    "description": "Example of the universal sprite settings feature",
+    "path": "Samples/5 - Universal Sprite Settings"
+  },
+  {
+    "displayName": "Variations",
+    "description": "Example on how to create variations of a tile",
+    "path": "Samples/6 - Variations"
+  },
+  {
+    "displayName": "Custom properties",
+    "description": "Example on how to use the custom properties",
+    "path": "Samples/7 - Custom Properties"
+  }
+]
+}

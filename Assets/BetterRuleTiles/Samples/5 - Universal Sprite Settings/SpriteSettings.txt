@@ -1,0 +1,9 @@
+You can change the tile outputs properties like the output sprite or the collider type by selecting the "tile inspector" tool for the top left of the toolbar and selecting a tile. But if you have multiple tiles with the same output sprite this method would not work well as you'd need to change it for all the tiles. Here the best option is to use the "universal sprite settings".
+
+This option will allow you to change the tile output universally across all the tiles which have the same output sprite. To enable it click on the "export options" button in the top right corner (this option is enabled by default on newly created assets) and than you can open the sprite settings window with a button in the toolbar.
+
+You can use the sprite settings window the same way you'd use the sprite drawer, you can drag the sprites into it and then select the sprites to draw with them. But additionally you can also change the output settings of all the tiles which use that sprite.
+
+
+
+Enter play mode to test the animation!
