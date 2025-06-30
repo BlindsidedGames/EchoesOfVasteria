@@ -299,7 +299,11 @@ namespace TimelessEchoes.Tasks
                 var sand = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile;
                 if (water && sand)
                 {
-                    position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, y, 0));
+                    var below = new Vector3Int(cell.x, y - 1, 0);
+                    if (y - 1 >= minY && terrainMap.GetTile(below) == waterTile)
+                        position = terrainMap.GetCellCenterWorld(below);
+                    else
+                        position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, y, 0));
                     return true;
                 }
             }
@@ -344,13 +348,11 @@ namespace TimelessEchoes.Tasks
                 var above = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == grassTile;
 
                 var isCurrentTileSideEdge = !left || !right;
-                var isGrassGroundLevel = !below;
                 var isTopEdge = !above;
-                var isTileBelowGroundLevel = !below;
                 var isTileBelowSideEdge = !belowLeft || !belowRight;
-                var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+                var isTileBelowEdge = isTileBelowSideEdge;
 
-                var isEdge = isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge;
+                var isEdge = isCurrentTileSideEdge || isTileBelowEdge || isTopEdge;
                 if (!includeEdge && isEdge)
                     continue;
 
