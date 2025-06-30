@@ -17,52 +17,70 @@ namespace TimelessEchoes.Tasks
     [RequireComponent(typeof(TaskController))]
     public class ProceduralTaskGenerator : MonoBehaviour
     {
+        [SerializeField]
+        private MapGenerationConfig config;
         [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
         private float minX;
 
         [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
         private float maxX = 990f;
 
         [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
         private float height = 18f;
 
         [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
         private float density = 0.1f;
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private LayerMask blockingMask;
 
         [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)]
+        [HideInInspector]
         private float otherTaskEdgeOffset = 1f;
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private List<WeightedSpawn> enemies = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private List<WeightedSpawn> otherTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private List<WeightedSpawn> waterTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private List<WeightedSpawn> sandTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
         private List<WeightedSpawn> grassTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)]
+        [HideInInspector]
         private float minTaskDistance = 1.5f;
 
         [TabGroup("Settings", "References")] [SerializeField]
+        [HideInInspector]
         private Tilemap terrainMap;
 
         [TabGroup("Settings", "References")] [SerializeField]
+        [HideInInspector]
         private BetterRuleTile waterTile;
 
         [TabGroup("Settings", "References")] [SerializeField]
+        [HideInInspector]
         private BetterRuleTile sandTile;
 
         [TabGroup("Settings", "References")] [SerializeField]
+        [HideInInspector]
         private BetterRuleTile grassTile;
 
         private readonly List<GameObject> generatedObjects = new();
@@ -88,7 +106,30 @@ namespace TimelessEchoes.Tasks
         {
             if (controller == null)
                 controller = GetComponent<TaskController>();
+            ApplyConfig();
             EnsureTilemaps();
+        }
+
+        private void ApplyConfig()
+        {
+            if (config == null) return;
+
+            minX = config.taskGeneratorSettings.minX;
+            maxX = config.taskGeneratorSettings.maxX;
+            height = config.taskGeneratorSettings.height;
+            density = config.taskGeneratorSettings.density;
+            blockingMask = config.taskGeneratorSettings.blockingMask;
+            otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
+            enemies = config.taskGeneratorSettings.enemies;
+            otherTasks = config.taskGeneratorSettings.otherTasks;
+            waterTasks = config.taskGeneratorSettings.waterTasks;
+            sandTasks = config.taskGeneratorSettings.sandTasks;
+            grassTasks = config.taskGeneratorSettings.grassTasks;
+            minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
+            terrainMap = config.taskGeneratorSettings.terrainMap;
+            waterTile = config.taskGeneratorSettings.waterTile;
+            sandTile = config.taskGeneratorSettings.sandTile;
+            grassTile = config.taskGeneratorSettings.grassTile;
         }
 
         private void OnDrawGizmos()

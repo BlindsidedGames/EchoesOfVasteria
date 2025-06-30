@@ -14,9 +14,12 @@ namespace TimelessEchoes.MapGeneration
     [RequireComponent(typeof(TaskController))]
     public class SegmentedMapGenerator : MonoBehaviour
     {
-        [SerializeField] private Vector2Int segmentSize = new(64, 18);
-        [SerializeField] private Transform segmentParent;
-        [SerializeField] private AstarPath pathfinder;
+        [SerializeField]
+        private MapGenerationConfig config;
+
+        [SerializeField] [HideInInspector] private Vector2Int segmentSize = new(64, 18);
+        [SerializeField] [HideInInspector] private Transform segmentParent;
+        [SerializeField] [HideInInspector] private AstarPath pathfinder;
 
         private TilemapChunkGenerator chunkGenerator;
         private ProceduralTaskGenerator taskGenerator;
@@ -37,8 +40,18 @@ namespace TimelessEchoes.MapGeneration
             chunkGenerator = GetComponent<TilemapChunkGenerator>();
             taskGenerator = GetComponent<ProceduralTaskGenerator>();
             controller = GetComponent<TaskController>();
+            ApplyConfig();
             if (segmentParent == null)
                 segmentParent = transform;
+        }
+
+        private void ApplyConfig()
+        {
+            if (config == null) return;
+
+            segmentSize = config.segmentedMapSettings.segmentSize;
+            segmentParent = config.segmentedMapSettings.segmentParent;
+            pathfinder = config.segmentedMapSettings.pathfinder;
         }
 
         private IEnumerator Start()
