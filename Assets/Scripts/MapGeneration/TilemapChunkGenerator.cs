@@ -160,20 +160,18 @@ namespace TimelessEchoes.MapGeneration
                         : waterDepth;
 
                     var isCurrentTileSideEdge = y < leftWaterBottom || y < rightWaterBottom;
-                    var isWaterGroundLevel = y == 0;
                     var isTopEdge = y == waterDepth - 1;
-                    var isTileBelowGroundLevel = y - 1 == 0;
                     var isTileBelowSideEdge = y - 1 < leftWaterBottom || y - 1 < rightWaterBottom;
-                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+                    var isTileBelowEdge = isTileBelowSideEdge;
 
-                    if (isCurrentTileSideEdge || isTileBelowEdge || isWaterGroundLevel || isTopEdge) continue;
+                    if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
 
                     if (waterDecorativeTiles != null && waterDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < waterDecorationDensity)
                         PlaceDecorativeTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterDecorativeTiles);
                 }
 
-                for (var y = waterDepth + 1; y < waterDepth + sandDepth; y++)
+                for (var y = waterDepth; y < waterDepth + sandDepth; y++)
                 {
                     var leftWaterBottom = x > 0
                         ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]
@@ -191,14 +189,12 @@ namespace TimelessEchoes.MapGeneration
 
                     var isCurrentTileWaterEdge = y < leftWaterBottom || y < rightWaterBottom;
                     var isCurrentTileGrassEdge = y >= leftGrassBottom || y >= rightGrassBottom;
-                    var isSandGroundLevel = y == waterDepth;
                     var isTopEdge = y == waterDepth + sandDepth - 1;
-                    var isTileBelowGroundLevel = y - 1 == waterDepth;
                     var isTileBelowWaterEdge = y - 1 < leftWaterBottom || y - 1 < rightWaterBottom;
                     var isTileBelowGrassEdge = y - 1 >= leftGrassBottom || y - 1 >= rightGrassBottom;
-                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowWaterEdge || isTileBelowGrassEdge;
+                    var isTileBelowEdge = isTileBelowWaterEdge || isTileBelowGrassEdge;
 
-                    if (isCurrentTileWaterEdge || isCurrentTileGrassEdge || isTileBelowEdge || isSandGroundLevel || isTopEdge)
+                    if (isCurrentTileWaterEdge || isCurrentTileGrassEdge || isTileBelowEdge || isTopEdge)
                         continue;
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
@@ -219,13 +215,11 @@ namespace TimelessEchoes.MapGeneration
                         : waterDepth + sandDepth;
 
                     var isCurrentTileSideEdge = y < leftGrassBottom || y < rightGrassBottom;
-                    var isGrassGroundLevel = y == waterDepth + sandDepth;
                     var isTopEdge = y == waterDepth + sandDepth + grassDepth - 1;
-                    var isTileBelowGroundLevel = y - 1 == waterDepth + sandDepth;
                     var isTileBelowSideEdge = y - 1 < leftGrassBottom || y - 1 < rightGrassBottom;
-                    var isTileBelowEdge = isTileBelowGroundLevel || isTileBelowSideEdge;
+                    var isTileBelowEdge = isTileBelowSideEdge;
 
-                    if (isCurrentTileSideEdge || isTileBelowEdge || isGrassGroundLevel || isTopEdge) continue;
+                    if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
 
                     if (grassDecorativeTiles != null && grassDecorativeTiles.Length > 0 &&
                         rng.NextDouble() < grassDecorationDensity)
