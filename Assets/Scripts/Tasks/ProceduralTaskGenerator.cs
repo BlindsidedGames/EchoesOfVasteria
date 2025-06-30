@@ -491,7 +491,7 @@ namespace TimelessEchoes.Tasks
 
             var totalWeight = enemyTotalWeight + otherTasksTotalWeight + waterTasksTotalWeight + grassTasksTotalWeight + sandTasksTotalWeight;
             if (totalWeight <= 0f)
-                return (null, false, false, false);
+                return (null, false, false, false, false);
 
             var r = Random.value * totalWeight;
 
@@ -501,7 +501,7 @@ namespace TimelessEchoes.Tasks
                 {
                     r -= e.GetWeight(worldX);
                     if (r <= 0f)
-                        return (e, true, false, false);
+                        return (e, true, false, false, false);
                 }
             }
             else
