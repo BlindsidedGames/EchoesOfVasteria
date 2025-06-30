@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using TimelessEchoes.MapGeneration;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using VinTools.BetterRuleTiles;
 using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Tasks
@@ -53,13 +54,16 @@ namespace TimelessEchoes.Tasks
         private int grassTopBuffer = 2;
 
         [TabGroup("Settings", "References")] [SerializeField]
-        private Tilemap waterMap;
+        private Tilemap terrainMap;
 
         [TabGroup("Settings", "References")] [SerializeField]
-        private Tilemap sandMap;
+        private BetterRuleTile waterTile;
 
         [TabGroup("Settings", "References")] [SerializeField]
-        private Tilemap grassMap;
+        private BetterRuleTile sandTile;
+
+        [TabGroup("Settings", "References")] [SerializeField]
+        private BetterRuleTile grassTile;
 
         private readonly List<GameObject> generatedObjects = new();
 
@@ -97,30 +101,28 @@ namespace TimelessEchoes.Tasks
 
         private void EnsureTilemaps()
         {
-            if (waterMap != null && sandMap != null && grassMap != null)
+            if (terrainMap != null && waterTile != null && sandTile != null && grassTile != null)
                 return;
 
             var chunk = GetComponent<TilemapChunkGenerator>();
             if (chunk != null)
             {
-                if (waterMap == null)
-                    waterMap = chunk.WaterMap;
-                if (sandMap == null)
-                    sandMap = chunk.SandMap;
-                if (grassMap == null)
-                    grassMap = chunk.GrassMap;
+                if (terrainMap == null)
+                    terrainMap = chunk.TerrainMap;
+                if (waterTile == null)
+                    waterTile = chunk.WaterTile;
+                if (sandTile == null)
+                    sandTile = chunk.SandTile;
+                if (grassTile == null)
+                    grassTile = chunk.GrassTile;
             }
 
-            if (waterMap == null || sandMap == null || grassMap == null)
+            if (terrainMap == null)
             {
                 var maps = GetComponentsInChildren<Tilemap>();
                 foreach (var m in maps)
-                    if (waterMap == null && m.gameObject.name.Contains("Blocking"))
-                        waterMap = m;
-                    else if (sandMap == null && m.gameObject.name == "BG")
-                        sandMap = m;
-                    else if (grassMap == null && m.gameObject.name == "BG_Grass")
-                        grassMap = m;
+                    if (terrainMap == null && (m.gameObject.name.Contains("Terrain") || m.gameObject.name.Contains("Water")))
+                        terrainMap = m;
             }
         }
 
@@ -282,22 +284,22 @@ namespace TimelessEchoes.Tasks
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (waterMap == null || sandMap == null)
+            if (terrainMap == null || waterTile == null || sandTile == null)
                 return false;
 
             var worldX = transform.position.x + localX;
-            var cell = waterMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
+            var cell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = Mathf.Max(waterMap.cellBounds.yMax, sandMap.cellBounds.yMax);
-            var minY = Mathf.Min(waterMap.cellBounds.yMin, sandMap.cellBounds.yMin) - 1;
+            var maxY = terrainMap.cellBounds.yMax;
+            var minY = terrainMap.cellBounds.yMin - 1;
 
             for (var y = maxY; y >= minY; y--)
             {
-                var water = waterMap.HasTile(new Vector3Int(cell.x, y, 0));
-                var sand = sandMap.HasTile(new Vector3Int(cell.x, y + 1, 0));
+                var water = terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) == waterTile;
+                var sand = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile;
                 if (water && sand)
                 {
-                    position = waterMap.GetCellCenterWorld(new Vector3Int(cell.x, y, 0));
+                    position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, y, 0));
                     return true;
                 }
             }
@@ -319,27 +321,27 @@ namespace TimelessEchoes.Tasks
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (grassMap == null)
+            if (terrainMap == null || grassTile == null)
                 return false;
 
             var worldX = transform.position.x + localX;
-            var cell = grassMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
+            var cell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = Mathf.Clamp(grassMap.cellBounds.yMax - grassTopBuffer, grassMap.cellBounds.yMin, grassMap.cellBounds.yMax);
-            var minY = grassMap.cellBounds.yMin - 1;
+            var maxY = Mathf.Clamp(terrainMap.cellBounds.yMax - grassTopBuffer, terrainMap.cellBounds.yMin, terrainMap.cellBounds.yMax);
+            var minY = terrainMap.cellBounds.yMin - 1;
 
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
             {
-                if (!grassMap.HasTile(new Vector3Int(cell.x, y, 0)))
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != grassTile)
                     continue;
 
-                var below = grassMap.HasTile(new Vector3Int(cell.x, y - 1, 0));
-                var left = grassMap.HasTile(new Vector3Int(cell.x - 1, y, 0));
-                var right = grassMap.HasTile(new Vector3Int(cell.x + 1, y, 0));
-                var belowLeft = grassMap.HasTile(new Vector3Int(cell.x - 1, y - 1, 0));
-                var belowRight = grassMap.HasTile(new Vector3Int(cell.x + 1, y - 1, 0));
-                var above = grassMap.HasTile(new Vector3Int(cell.x, y + 1, 0));
+                var below = terrainMap.GetTile(new Vector3Int(cell.x, y - 1, 0)) == grassTile;
+                var left = terrainMap.GetTile(new Vector3Int(cell.x - 1, y, 0)) == grassTile;
+                var right = terrainMap.GetTile(new Vector3Int(cell.x + 1, y, 0)) == grassTile;
+                var belowLeft = terrainMap.GetTile(new Vector3Int(cell.x - 1, y - 1, 0)) == grassTile;
+                var belowRight = terrainMap.GetTile(new Vector3Int(cell.x + 1, y - 1, 0)) == grassTile;
+                var above = terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == grassTile;
 
                 var isCurrentTileSideEdge = !left || !right;
                 var isGrassGroundLevel = !below;
@@ -359,18 +361,18 @@ namespace TimelessEchoes.Tasks
                 return false;
 
             var idx = Random.Range(0, validYs.Count);
-            position = grassMap.GetCellCenterWorld(new Vector3Int(cell.x, validYs[idx], 0));
+            position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, validYs[idx], 0));
             return true;
         }
 
         private bool IsWaterTile(Vector3 worldPos)
         {
             EnsureTilemaps();
-            if (waterMap == null)
+            if (terrainMap == null || waterTile == null)
                 return false;
 
-            var cell = waterMap.WorldToCell(worldPos);
-            return waterMap.HasTile(cell);
+            var cell = terrainMap.WorldToCell(worldPos);
+            return terrainMap.GetTile(cell) == waterTile;
         }
 
         /// <summary>
