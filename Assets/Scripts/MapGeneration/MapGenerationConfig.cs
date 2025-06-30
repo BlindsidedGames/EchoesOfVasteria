@@ -38,7 +38,6 @@ namespace TimelessEchoes.MapGeneration
         public class ProceduralTaskSettings
         {
             public float minX;
-            public float maxX = 990f;
             public float height = 18f;
             public float density = 0.1f;
 
@@ -46,17 +45,10 @@ namespace TimelessEchoes.MapGeneration
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
 
             public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
-            public List<ProceduralTaskGenerator.WeightedSpawn> otherTasks = new();
-            public List<ProceduralTaskGenerator.WeightedSpawn> waterTasks = new();
-            public List<ProceduralTaskGenerator.WeightedSpawn> sandTasks = new();
-            public List<ProceduralTaskGenerator.WeightedSpawn> grassTasks = new();
+            public List<ProceduralTaskGenerator.WeightedSpawn> tasks = new();
 
             [MinValue(0f)] public float minTaskDistance = 1.5f;
 
-            public Tilemap terrainMap;
-            public BetterRuleTile waterTile;
-            public BetterRuleTile sandTile;
-            public BetterRuleTile grassTile;
         }
 
         [Serializable]
