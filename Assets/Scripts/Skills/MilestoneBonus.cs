@@ -1,4 +1,6 @@
 using System;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace TimelessEchoes.Skills
 {
@@ -18,10 +20,16 @@ namespace TimelessEchoes.Skills
         public string bonusID;
 
         public MilestoneType type;
-        [UnityEngine.Range(0f, 1f)] public float chance = 1f;
 
+        [Range(0f, 1f)]
+        [HideIf("type", MilestoneType.StatIncrease)]
+        public float chance = 1f;
+
+        [ShowIf("type", MilestoneType.StatIncrease)]
         public TimelessEchoes.Upgrades.StatUpgrade statUpgrade;
+        [ShowIf("type", MilestoneType.StatIncrease)]
         public bool percentBonus;
+        [ShowIf("type", MilestoneType.StatIncrease)]
         public float statAmount;
     }
 }
