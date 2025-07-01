@@ -105,6 +105,15 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    npcTasks:
+    - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
+      id: Witch1
+      localX: 100
+      topBuffer: 2
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+      spawnOnlyOnce: 0
     minTaskDistance: 2
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}
