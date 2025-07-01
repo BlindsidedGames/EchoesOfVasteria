@@ -128,6 +128,10 @@ namespace TimelessEchoes.Skills
                 {
                     progress[skill] = new SkillProgress { Level = 1, CurrentXP = 0f };
                 }
+
+                // Ensure milestones are reevaluated on load so previously earned
+                // bonuses are applied even if they weren't saved.
+                CheckMilestones(skill, progress[skill]);
             }
         }
 
