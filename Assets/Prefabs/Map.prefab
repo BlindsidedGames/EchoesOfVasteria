@@ -325,7 +325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6512478734448352386
 Transform:
   m_ObjectHideFlags: 0
@@ -422,7 +422,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 934246347
   m_SortingLayer: -1
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -878,6 +878,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   terrainMap: {fileID: 5260808751377424494}
+  decorMap: {fileID: 1970811859748993408}
+  decor: []
   waterBetterRuleTile: {fileID: 8941440329306202149, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
   sandBetterRuleTile: {fileID: 7235811214747110391, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
   grassBetterRuleTile: {fileID: -6080419730213009515, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}

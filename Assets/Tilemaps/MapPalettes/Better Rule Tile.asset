@@ -35,9 +35,9 @@ MonoBehaviour:
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_Output: 1
+    m_Output: 0
     m_ColliderType: 0
-    m_RandomTransform: 1
+    m_RandomTransform: 0
     m_Neighbors: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
   customProperties: []
   m_ExtendedTilingRules: []
   m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 1
+  - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
   HasVariations: 0
   HasExtraTilingRules: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
     _zoomAmount: 0.35329095
     _gridCellSize: {x: 32, y: 32}
     _tileRenderOffset: {x: 0, y: 0}
-    _gridOffset: {x: 54.446716, y: 429.05667}
+    _gridOffset: {x: 275.44672, y: 173.05667}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -6803,7 +6803,7 @@ MonoBehaviour:
     - {fileID: -1632774990, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
     - {fileID: -906268079, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
     ColliderType: 0
-    OutputSprite: 1
+    OutputSprite: 0
     NoiseScale: 0.5
     RandomTransform: 1
     MinAnimationSpeed: 1
@@ -6844,7 +6844,7 @@ MonoBehaviour:
     - {fileID: 1415194209, guid: 9116f468de716e148b85a0b835617623, type: 3}
     - {fileID: -7699241574587555910, guid: 9116f468de716e148b85a0b835617623, type: 3}
     ColliderType: 0
-    OutputSprite: 1
+    OutputSprite: 0
     NoiseScale: 0.5
     RandomTransform: 1
     MinAnimationSpeed: 1
@@ -6893,9 +6893,9 @@ MonoBehaviour:
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_Output: 1
+    m_Output: 0
     m_ColliderType: 0
-    m_RandomTransform: 1
+    m_RandomTransform: 0
     m_Neighbors: fcfffffffcfffffffcffffff0000000000000000000000000000000000000000
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
@@ -7143,9 +7143,9 @@ MonoBehaviour:
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_Output: 1
+    m_Output: 0
     m_ColliderType: 0
-    m_RandomTransform: 1
+    m_RandomTransform: 0
     m_Neighbors: fefffffffffffffffeffffff0000000000000000ffffffffffffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
@@ -7293,8 +7293,6 @@ MonoBehaviour:
   customProperties: []
   m_ExtendedTilingRules: []
   m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 1
-    m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
@@ -7315,7 +7313,9 @@ MonoBehaviour:
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 1
+  - m_ExtendedOutputSprite: 0
+    m_Patternsize: {x: 1, y: 1}
+  - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}

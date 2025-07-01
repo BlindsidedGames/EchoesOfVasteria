@@ -108,3 +108,77 @@ MonoBehaviour:
     minTaskDistance: 2
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}
+  decorSettings:
+    decorMap: {fileID: 0}
+    density: 0.202
+    decor:
+    - tile: {fileID: 11400000, guid: ed83d0d8d367fa7429c342528ec7e9f7, type: 2}
+      weight: 1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 2
+      bottomBuffer: 0
+      sideBuffer: 1
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - tile: {fileID: 11400000, guid: 769503ef1be1b654b9fb6813c805d359, type: 2}
+      weight: 1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 2
+      bottomBuffer: 0
+      sideBuffer: 1
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - tile: {fileID: 11400000, guid: ea7d30b6e539a8a459c16f776805d84e, type: 2}
+      weight: 1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 2
+      bottomBuffer: 0
+      sideBuffer: 1
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - tile: {fileID: 11400000, guid: d151d737e1a86f04a855c431a8b8569f, type: 2}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      bottomBuffer: 0
+      sideBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      bottomBuffer: 0
+      sideBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      bottomBuffer: 0
+      sideBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      bottomBuffer: 0
+      sideBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
