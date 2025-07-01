@@ -22,6 +22,8 @@ namespace TimelessEchoes.MapGeneration
         private Tilemap decorMap;
 
         [Serializable]
+        [InlineProperty]
+        [HideLabel]
         public class DecorEntry
         {
             [Required] public TileBase tile;
@@ -34,6 +36,22 @@ namespace TimelessEchoes.MapGeneration
             public bool spawnOnWater;
             public bool spawnOnSand;
             public bool spawnOnGrass;
+
+            [ShowInInspector]
+            [ReadOnly]
+            [LabelText("Areas")]
+            private string AreasDisplay
+            {
+                get
+                {
+                    string areas = string.Empty;
+                    if (spawnOnWater) areas += "Water ";
+                    if (spawnOnSand) areas += "Sand ";
+                    if (spawnOnGrass) areas += "Grass ";
+                    if (string.IsNullOrWhiteSpace(areas)) areas = "None";
+                    return areas.TrimEnd();
+                }
+            }
 
             public float GetWeight(float worldX)
             {
