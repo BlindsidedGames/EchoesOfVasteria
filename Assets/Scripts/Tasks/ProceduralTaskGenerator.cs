@@ -455,7 +455,11 @@ namespace TimelessEchoes.Tasks
             var right = terrainMap.GetTile(cell + Vector3Int.right) == tile;
             var up = terrainMap.GetTile(cell + Vector3Int.up) == tile;
             var down = terrainMap.GetTile(cell + Vector3Int.down) == tile;
-            return !(left && right && up && down);
+            var upLeft = terrainMap.GetTile(cell + Vector3Int.up + Vector3Int.left) == tile;
+            var upRight = terrainMap.GetTile(cell + Vector3Int.up + Vector3Int.right) == tile;
+            var downLeft = terrainMap.GetTile(cell + Vector3Int.down + Vector3Int.left) == tile;
+            var downRight = terrainMap.GetTile(cell + Vector3Int.down + Vector3Int.right) == tile;
+            return !(left && right && up && down && upLeft && upRight && downLeft && downRight);
         }
 
         /// <summary>
