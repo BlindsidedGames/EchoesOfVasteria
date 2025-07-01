@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using TimelessEchoes.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Serialization;
 using VinTools.BetterRuleTiles;
 
 namespace TimelessEchoes.MapGeneration
@@ -19,10 +20,14 @@ namespace TimelessEchoes.MapGeneration
         [Serializable]
         public class TilemapChunkSettings
         {
+            [HideInInspector]
             public Tilemap terrainMap;
-            public BetterRuleTile waterTile;
-            public BetterRuleTile sandRuleTile;
-            public BetterRuleTile grassRuleTile;
+            [FormerlySerializedAs("waterTile")]
+            public BetterRuleTile waterBetterRuleTile;
+            [FormerlySerializedAs("sandRuleTile")]
+            public BetterRuleTile sandBetterRuleTile;
+            [FormerlySerializedAs("grassRuleTile")]
+            public BetterRuleTile grassBetterRuleTile;
 
             [Min(2)] public int minAreaWidth = 2;
             [Min(0)] public int edgeWaviness = 1;

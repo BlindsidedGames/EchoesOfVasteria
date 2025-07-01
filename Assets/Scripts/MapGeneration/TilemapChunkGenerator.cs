@@ -2,6 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Serialization;
 using VinTools.BetterRuleTiles;
 using TimelessEchoes.Tasks;
 using Random = System.Random;
@@ -18,13 +19,19 @@ namespace TimelessEchoes.MapGeneration
 
 
         [Header("Tiles")] [TabGroup("References")] [SerializeField]
-        private BetterRuleTile waterTile;
+        [FormerlySerializedAs("waterTile")]
+        [HideInInspector]
+        private BetterRuleTile waterBetterRuleTile;
 
         [TabGroup("References")] [SerializeField]
-        private BetterRuleTile sandRuleTile;
+        [FormerlySerializedAs("sandRuleTile")]
+        [HideInInspector]
+        private BetterRuleTile sandBetterRuleTile;
 
         [TabGroup("References")] [SerializeField]
-        private BetterRuleTile grassRuleTile;
+        [FormerlySerializedAs("grassRuleTile")]
+        [HideInInspector]
+        private BetterRuleTile grassBetterRuleTile;
 
 
         [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)]
@@ -56,9 +63,9 @@ namespace TimelessEchoes.MapGeneration
         private int prevSandDepth = -1;
         private int prevGrassDepth = -1;
         public Tilemap TerrainMap => terrainMap;
-        public BetterRuleTile WaterTile => waterTile;
-        public BetterRuleTile SandTile => sandRuleTile;
-        public BetterRuleTile GrassTile => grassRuleTile;
+        public BetterRuleTile WaterBetterRuleTile => waterBetterRuleTile;
+        public BetterRuleTile SandBetterRuleTile => sandBetterRuleTile;
+        public BetterRuleTile GrassBetterRuleTile => grassBetterRuleTile;
 
         private void Awake()
         {
@@ -76,12 +83,12 @@ namespace TimelessEchoes.MapGeneration
 
             if (terrainMap == null)
                 terrainMap = config.tilemapChunkSettings.terrainMap;
-            if (waterTile == null)
-                waterTile = config.tilemapChunkSettings.waterTile;
-            if (sandRuleTile == null)
-                sandRuleTile = config.tilemapChunkSettings.sandRuleTile;
-            if (grassRuleTile == null)
-                grassRuleTile = config.tilemapChunkSettings.grassRuleTile;
+            if (waterBetterRuleTile == null)
+                waterBetterRuleTile = config.tilemapChunkSettings.waterBetterRuleTile;
+            if (sandBetterRuleTile == null)
+                sandBetterRuleTile = config.tilemapChunkSettings.sandBetterRuleTile;
+            if (grassBetterRuleTile == null)
+                grassBetterRuleTile = config.tilemapChunkSettings.grassBetterRuleTile;
             minAreaWidth = config.tilemapChunkSettings.minAreaWidth;
             edgeWaviness = config.tilemapChunkSettings.edgeWaviness;
             sandDepthRange = config.tilemapChunkSettings.sandDepthRange;
@@ -95,7 +102,7 @@ namespace TimelessEchoes.MapGeneration
             if (generator == null)
                 return;
 
-            generator.SetTilemapReferences(terrainMap, waterTile, sandRuleTile, grassRuleTile);
+            generator.SetTilemapReferences(terrainMap, waterBetterRuleTile, sandBetterRuleTile, grassBetterRuleTile);
         }
 
         public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
@@ -147,14 +154,14 @@ namespace TimelessEchoes.MapGeneration
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
                 for (var y = 0; y < waterDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterTile);
+                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterBetterRuleTile);
 
                 for (var y = waterDepth; y < waterDepth + sandDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandRuleTile);
+                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandBetterRuleTile);
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                     if (y < segmentSize.y)
-                        terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassRuleTile);
+                        terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassBetterRuleTile);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
@@ -200,7 +207,7 @@ namespace TimelessEchoes.MapGeneration
                         continue;
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
-                    if (terrainMap.GetTile(pos) == grassRuleTile) continue;
+                    if (terrainMap.GetTile(pos) == grassBetterRuleTile) continue;
 
                 }
 
