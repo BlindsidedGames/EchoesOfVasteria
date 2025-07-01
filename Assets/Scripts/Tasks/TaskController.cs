@@ -343,50 +343,33 @@ namespace TimelessEchoes.Tasks
 
         private void SortTaskListsByX()
         {
-            var npcPairs = new List<(float x, MonoBehaviour obj, ITask task)>();
-            var regularPairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+            var pairs = new List<(float x, MonoBehaviour obj, ITask task)>();
 
             foreach (var task in tasks)
             {
-                MonoBehaviour obj = null;
-                taskMap.TryGetValue(task, out obj);
+                taskMap.TryGetValue(task, out var obj);
                 float x = 0f;
                 if (obj != null)
                     x = obj.transform.position.x;
                 else if (task != null && task.Target != null)
                     x = task.Target.position.x;
 
-                var pair = (x, obj, task);
-                if (task is TalkToNpcTask)
-                    npcPairs.Add(pair);
-                else
-                    regularPairs.Add(pair);
+                pairs.Add((x, obj, task));
             }
 
-            npcPairs.Sort((a, b) => a.x.CompareTo(b.x));
-            regularPairs.Sort((a, b) => a.x.CompareTo(b.x));
+            pairs.Sort((a, b) => a.x.CompareTo(b.x));
 
             tasks.Clear();
             taskObjects.Clear();
             taskMap.Clear();
 
-            foreach (var p in npcPairs)
+            foreach (var (x, obj, task) in pairs)
             {
-                tasks.Add(p.task);
-                if (p.obj != null)
+                tasks.Add(task);
+                if (obj != null)
                 {
-                    taskObjects.Add(p.obj);
-                    taskMap[p.task] = p.obj;
-                }
-            }
-
-            foreach (var p in regularPairs)
-            {
-                tasks.Add(p.task);
-                if (p.obj != null)
-                {
-                    taskObjects.Add(p.obj);
-                    taskMap[p.task] = p.obj;
+                    taskObjects.Add(obj);
+                    taskMap[task] = obj;
                 }
             }
         }
