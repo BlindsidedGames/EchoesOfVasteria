@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bed9e7c469d52d4ca3dc74d8b1834a8, type: 3}
   m_Name: Looting
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   skillName: Looting
   skillIcon: {fileID: -7070875390197807606, guid: 1ec0b90faf4188545ba0f1bd405b6df3, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
-  milestones: []
+  milestones:
+  - levelRequirement: 3
+    bonusDescription: 
+    bonusID: looting3
+    type: 2
+    chance: 0.406
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0

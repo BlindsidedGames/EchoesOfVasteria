@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bed9e7c469d52d4ca3dc74d8b1834a8, type: 3}
   m_Name: Farming
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   skillName: Farming
   skillIcon: {fileID: 4767668688145798528, guid: ab1409f021d41de43a3834916d159f7d, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
-  milestones:
-  - levelRequirement: 0
-    bonusDescription: 
-    bonusID: 
-    type: 0
-    chance: 1
-    statUpgrade: {fileID: 0}
-    percentBonus: 0
-    statAmount: 0
+  milestones: []
