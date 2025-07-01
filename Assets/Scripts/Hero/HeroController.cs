@@ -7,6 +7,7 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
 using TimelessEchoes.UI;
+using TimelessEchoes.Buffs;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 
@@ -24,6 +25,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
+        [SerializeField] private TimelessEchoes.Buffs.BuffController buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -62,14 +64,22 @@ namespace TimelessEchoes.Hero
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
 
-        private float CurrentAttackRate => baseAttackSpeed + attackSpeedBonus;
-        public float Defense => baseDefense + defenseBonus;
+        private float CurrentAttackRate =>
+            (baseAttackSpeed + attackSpeedBonus) *
+            (buffController != null ? buffController.AttackSpeedMultiplier : 1f);
+        public float Defense =>
+            (baseDefense + defenseBonus) *
+            (buffController != null ? buffController.DefenseMultiplier : 1f);
 
         private void Awake()
         {
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
+            if (buffController == null)
+                buffController = GetComponent<TimelessEchoes.Buffs.BuffController>();
+            if (buffController == null)
+                buffController = FindFirstObjectByType<TimelessEchoes.Buffs.BuffController>();
             if (taskController == null)
                 taskController = GetComponentInParent<TaskController>();
 
@@ -82,7 +92,8 @@ namespace TimelessEchoes.Hero
 
             if (stats != null)
             {
-                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
                 health.Init(hp);
             }
@@ -91,6 +102,9 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
+            if (stats != null)
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
             UpdateAnimation();
             UpdateBehavior();
             if (mapUI != null)
@@ -102,13 +116,19 @@ namespace TimelessEchoes.Hero
             if (taskController == null)
                 taskController = GetComponent<TaskController>();
 
+            if (buffController == null)
+                buffController = GetComponent<TimelessEchoes.Buffs.BuffController>();
+            if (buffController == null)
+                buffController = FindFirstObjectByType<TimelessEchoes.Buffs.BuffController>();
+
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
 
             ApplyStatUpgrades();
             if (stats != null)
             {
-                ai.maxSpeed = baseMoveSpeed + moveSpeedBonus;
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
                 health.Init(hp);
             }
@@ -372,7 +392,9 @@ namespace TimelessEchoes.Hero
                 var killTracker = FindFirstObjectByType<EnemyKillTracker>();
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                proj.Init(target, (baseDamage + damageBonus) * combatDamageMultiplier * bonus);
+                float dmg = (baseDamage + damageBonus) *
+                            (buffController != null ? buffController.DamageMultiplier : 1f);
+                proj.Init(target, dmg * combatDamageMultiplier * bonus);
             }
         }
 

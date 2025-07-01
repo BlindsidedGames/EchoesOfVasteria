@@ -1,0 +1,135 @@
+using System.Collections.Generic;
+using References.UI;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+namespace TimelessEchoes.Buffs
+{
+    public class BuffUIManager : MonoBehaviour
+    {
+        [SerializeField] private BuffController controller;
+        [SerializeField] private ResourceManager resourceManager;
+        [SerializeField] private ResourceInventoryUI resourceInventoryUI;
+        [SerializeField] private List<BuffRecipe> buffs = new();
+        [SerializeField] private BuffRecipeUIReferences recipePrefab;
+        [SerializeField] private Transform recipeParent;
+        [SerializeField] private BuffIconUIReferences activeBuffPrefab;
+        [SerializeField] private Transform activeBuffParent;
+
+        private readonly List<BuffRecipeUIReferences> entries = new();
+        private readonly List<ActiveIconEntry> iconEntries = new();
+
+        private class ActiveIconEntry
+        {
+            public BuffController.ActiveBuff buff;
+            public BuffIconUIReferences refs;
+        }
+
+        private void Awake()
+        {
+            if (controller == null)
+                controller = FindFirstObjectByType<BuffController>();
+            if (resourceManager == null)
+                resourceManager = FindFirstObjectByType<ResourceManager>();
+            if (resourceInventoryUI == null)
+                resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+
+            BuildRecipeEntries();
+            gameObject.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            UpdateActiveIcons();
+        }
+
+        private void Update()
+        {
+            for (int i = iconEntries.Count - 1; i >= 0; i--)
+            {
+                var entry = iconEntries[i];
+                if (entry.buff.remaining <= 0f)
+                {
+                    Destroy(entry.refs.gameObject);
+                    iconEntries.RemoveAt(i);
+                    continue;
+                }
+
+                if (entry.refs.durationText != null)
+                    entry.refs.durationText.text = Mathf.Ceil(entry.buff.remaining).ToString();
+            }
+        }
+
+        private void BuildRecipeEntries()
+        {
+            if (recipePrefab == null || recipeParent == null)
+                return;
+
+            foreach (var recipe in buffs)
+            {
+                var panel = Instantiate(recipePrefab, recipeParent);
+                if (panel.iconImage != null)
+                    panel.iconImage.sprite = recipe.buffIcon;
+                if (panel.purchaseButton != null)
+                {
+                    var r = recipe;
+                    panel.purchaseButton.onClick.AddListener(() => PurchaseBuff(r));
+                }
+
+                BuildCostSlots(panel, recipe);
+                entries.Add(panel);
+            }
+        }
+
+        private void BuildCostSlots(BuffRecipeUIReferences panel, BuffRecipe recipe)
+        {
+            if (panel.costGridLayoutParent == null || panel.costSlotPrefab == null)
+                return;
+
+            foreach (Transform child in panel.costGridLayoutParent.transform)
+                Destroy(child.gameObject);
+
+            foreach (var req in recipe.requirements)
+            {
+                var slot = Instantiate(panel.costSlotPrefab, panel.costGridLayoutParent.transform);
+                slot.resource = req.resource;
+                if (slot.selectButton != null)
+                {
+                    var res = req.resource;
+                    slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
+                }
+                if (slot.countText != null)
+                    slot.countText.text = req.amount.ToString();
+            }
+        }
+
+        private void PurchaseBuff(BuffRecipe recipe)
+        {
+            if (controller != null && controller.PurchaseBuff(recipe))
+                UpdateActiveIcons();
+        }
+
+        private void UpdateActiveIcons()
+        {
+            foreach (var entry in iconEntries)
+                if (entry.refs != null)
+                    Destroy(entry.refs.gameObject);
+            iconEntries.Clear();
+
+            if (activeBuffParent == null || activeBuffPrefab == null || controller == null)
+                return;
+
+            foreach (var buff in controller.ActiveBuffs)
+            {
+                var obj = Instantiate(activeBuffPrefab, activeBuffParent);
+                if (obj.iconImage != null)
+                    obj.iconImage.sprite = buff.recipe.buffIcon;
+                if (obj.durationText != null)
+                    obj.durationText.text = Mathf.Ceil(buff.remaining).ToString();
+                iconEntries.Add(new ActiveIconEntry { buff = buff, refs = obj });
+            }
+        }
+    }
+}
