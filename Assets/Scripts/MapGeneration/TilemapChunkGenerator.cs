@@ -56,6 +56,11 @@ namespace TimelessEchoes.MapGeneration
         [HideInInspector]
         private List<DecorEntry> decor = new();
 
+        [TabGroup("Settings")] [SerializeField]
+        [Range(0f, 1f)]
+        [HideInInspector]
+        private float decorDensity = 1f;
+
 
         [Header("Tiles")] [TabGroup("References")] [SerializeField]
         [FormerlySerializedAs("waterTile")]
@@ -139,6 +144,7 @@ namespace TimelessEchoes.MapGeneration
             if (decorMap == null)
                 decorMap = config.decorSettings.decorMap;
             decor = config.decorSettings.decor;
+            decorDensity = config.decorSettings.density;
         }
 
         public void AssignTilemaps(Tasks.ProceduralTaskGenerator generator)
@@ -272,7 +278,13 @@ namespace TimelessEchoes.MapGeneration
                     if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
 
                 }
+            }
 
+            for (var x = 0; x < segmentSize.x; x++)
+            {
+                var sandDepth = sandDepths[x];
+                var grassDepth = grassDepths[x];
+                var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
                 PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth);
             }
 
@@ -318,7 +330,7 @@ namespace TimelessEchoes.MapGeneration
                         !IsBufferedEdge(cell, baseTile, d.topBuffer, d.bottomBuffer, d.sideBuffer))
                         choices.Add(d);
 
-                if (choices.Count == 0)
+                if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > decorDensity)
                     continue;
 
                 var total = 0f;

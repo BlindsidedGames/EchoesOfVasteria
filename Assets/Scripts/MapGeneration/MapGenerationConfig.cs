@@ -67,6 +67,7 @@ namespace TimelessEchoes.MapGeneration
         public class DecorSettings
         {
             [HideInInspector] [TabGroup("Decor", "References")] public Tilemap decorMap;
+            [Range(0f, 1f)] public float density = 1f;
             [TabGroup("Decor", "Items")] public List<TilemapChunkGenerator.DecorEntry> decor = new();
         }
     }
