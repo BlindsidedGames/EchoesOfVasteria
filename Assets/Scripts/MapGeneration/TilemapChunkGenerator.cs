@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles;
+using TimelessEchoes.Tasks;
 using Random = System.Random;
 
 namespace TimelessEchoes.MapGeneration
@@ -13,20 +14,16 @@ namespace TimelessEchoes.MapGeneration
         private MapGenerationConfig config;
 
         [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
-        [HideInInspector]
         private Tilemap terrainMap;
 
 
         [Header("Tiles")] [TabGroup("References")] [SerializeField]
-        [HideInInspector]
         private BetterRuleTile waterTile;
 
         [TabGroup("References")] [SerializeField]
-        [HideInInspector]
         private BetterRuleTile sandRuleTile;
 
         [TabGroup("References")] [SerializeField]
-        [HideInInspector]
         private BetterRuleTile grassRuleTile;
 
 
@@ -66,6 +63,8 @@ namespace TimelessEchoes.MapGeneration
         private void Awake()
         {
             ApplyConfig();
+            var taskGen = GetComponent<Tasks.ProceduralTaskGenerator>();
+            AssignTilemaps(taskGen);
             rng = randomizeSeed ? new Random() : new Random(seed);
             prevSandDepth = -1;
             prevGrassDepth = -1;
@@ -75,16 +74,28 @@ namespace TimelessEchoes.MapGeneration
         {
             if (config == null) return;
 
-            terrainMap = config.tilemapChunkSettings.terrainMap;
-            waterTile = config.tilemapChunkSettings.waterTile;
-            sandRuleTile = config.tilemapChunkSettings.sandRuleTile;
-            grassRuleTile = config.tilemapChunkSettings.grassRuleTile;
+            if (terrainMap == null)
+                terrainMap = config.tilemapChunkSettings.terrainMap;
+            if (waterTile == null)
+                waterTile = config.tilemapChunkSettings.waterTile;
+            if (sandRuleTile == null)
+                sandRuleTile = config.tilemapChunkSettings.sandRuleTile;
+            if (grassRuleTile == null)
+                grassRuleTile = config.tilemapChunkSettings.grassRuleTile;
             minAreaWidth = config.tilemapChunkSettings.minAreaWidth;
             edgeWaviness = config.tilemapChunkSettings.edgeWaviness;
             sandDepthRange = config.tilemapChunkSettings.sandDepthRange;
             grassDepthRange = config.tilemapChunkSettings.grassDepthRange;
             seed = config.tilemapChunkSettings.seed;
             randomizeSeed = config.tilemapChunkSettings.randomizeSeed;
+        }
+
+        public void AssignTilemaps(Tasks.ProceduralTaskGenerator generator)
+        {
+            if (generator == null)
+                return;
+
+            generator.SetTilemapReferences(terrainMap, waterTile, sandRuleTile, grassRuleTile);
         }
 
         public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
