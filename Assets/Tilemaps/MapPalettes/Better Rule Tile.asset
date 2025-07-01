@@ -77,10 +77,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     _gridShape: 0
-    _zoomAmount: 0.4427934
+    _zoomAmount: 0.35329095
     _gridCellSize: {x: 32, y: 32}
     _tileRenderOffset: {x: 0, y: 0}
-    _gridOffset: {x: -83.41315, y: 277.4565}
+    _gridOffset: {x: 54.446716, y: 429.05667}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -6824,10 +6824,29 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     Sprites:
     - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: 387522836, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -1661318243, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -2049102075, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1657385707349544184, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1930959609, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: 1415194209, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: -7699241574587555910, guid: 9116f468de716e148b85a0b835617623, type: 3}
     ColliderType: 0
-    OutputSprite: 0
+    OutputSprite: 1
     NoiseScale: 0.5
-    RandomTransform: 0
+    RandomTransform: 1
     MinAnimationSpeed: 1
     MaxAnimationSpeed: 1
     PatternSize: {x: 1, y: 1}
@@ -6851,13 +6870,32 @@ MonoBehaviour:
   - m_Id: 0
     m_Sprites:
     - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: 387522836, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -1661318243, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -2049102075, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1657385707349544184, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1930959609, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: 1415194209, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: -7699241574587555910, guid: 9116f468de716e148b85a0b835617623, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_Output: 0
+    m_Output: 1
     m_ColliderType: 0
-    m_RandomTransform: 0
+    m_RandomTransform: 1
     m_Neighbors: fcfffffffcfffffffcffffff0000000000000000000000000000000000000000
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
@@ -7082,13 +7120,32 @@ MonoBehaviour:
   - m_Id: 0
     m_Sprites:
     - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: -752133865, guid: 9b556bcdbea551d44b632b6439a0a187, type: 3}
+    - {fileID: 387522836, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -1661318243, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: -2049102075, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1657385707349544184, guid: d749a389a66a55b41b92b24c0a1c1446, type: 3}
+    - {fileID: 1930959609, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: 1415194209, guid: 9116f468de716e148b85a0b835617623, type: 3}
+    - {fileID: -7699241574587555910, guid: 9116f468de716e148b85a0b835617623, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_Output: 0
+    m_Output: 1
     m_ColliderType: 0
-    m_RandomTransform: 0
+    m_RandomTransform: 1
     m_Neighbors: fefffffffffffffffeffffff0000000000000000ffffffffffffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
@@ -7236,7 +7293,7 @@ MonoBehaviour:
   customProperties: []
   m_ExtendedTilingRules: []
   m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
+  - m_ExtendedOutputSprite: 1
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
@@ -7258,7 +7315,7 @@ MonoBehaviour:
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
+  - m_ExtendedOutputSprite: 1
     m_Patternsize: {x: 1, y: 1}
   - m_ExtendedOutputSprite: 0
     m_Patternsize: {x: 1, y: 1}

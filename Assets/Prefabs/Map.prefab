@@ -779,7 +779,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6731639e1964ed45b384bbf8da8e4a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskObjects: []
+  taskObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
@@ -800,83 +876,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0fa70eb35677b14cadbceb8bd0f31dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   terrainMap: {fileID: 5260808751377424494}
-  decorationMap: {fileID: 1970811859748993408}
   waterTile: {fileID: 8941440329306202149, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
   sandRuleTile: {fileID: 7235811214747110391, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
   grassRuleTile: {fileID: -6080419730213009515, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
-  waterDecorativeTiles:
-  - Tile: {fileID: 11400000, guid: ea7d30b6e539a8a459c16f776805d84e, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: 769503ef1be1b654b9fb6813c805d359, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: ed83d0d8d367fa7429c342528ec7e9f7, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: 10d47dbd0af073d429263f3469c4743e, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: d5e2d087aad0f7342992ab013b9ab89b, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: c7e1f35c0f5e6854f96c50707a45a5a7, type: 2}
-    Weight: 5
-    AllowRotation: 0
-  sandDecorativeTiles:
-  - Tile: {fileID: 11400000, guid: a64f3964ea1534abd86301d93b79da78, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 2622f97b5574f4b7aab90f8f92befb28, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 8309e9390a71e47dd9ef52a80440e734, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: ea0253e35f3604e83b07670155a363e4, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 2a6ae0065686b44dfa9c33fe791e9802, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: 6abeff7dd9d414ee08bc45d20290fa45, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: de4199233e502468d898ea826ddf68b8, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  grassDecorativeTiles:
-  - Tile: {fileID: 11400000, guid: 179e32a2da7d74cf097e1e80d974ad1d, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: 161f46f23e4054de990374eec18c242d, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: ee3c97f506b7549f8a9d699eccc8a161, type: 2}
-    Weight: 1
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
-    Weight: 2
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
-    Weight: 2
-    AllowRotation: 1
-  - Tile: {fileID: 11400000, guid: d151d737e1a86f04a855c431a8b8569f, type: 2}
-    Weight: 1
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: db5631dae46cabc418fc720f9c893b7c, type: 2}
-    Weight: 1
-    AllowRotation: 0
-  - Tile: {fileID: 11400000, guid: 76d49f41d52e6a54f9fd9f82f2ea1fc3, type: 2}
-    Weight: 1
-    AllowRotation: 0
-  waterDecorationDensity: 0.042
-  sandDecorationDensity: 0.052
-  grassDecorationDensity: 0.069
   minAreaWidth: 5
   edgeWaviness: 2
   sandDepthRange: {x: 6, y: 12}
@@ -895,10 +899,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e807d7fd8a7b0044baf92113dce857a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   minX: 10
   maxX: 940
   height: 17
-  density: 0.3
+  density: 2
   blockingMask:
     serializedVersion: 2
     m_Bits: 256
@@ -908,67 +913,82 @@ MonoBehaviour:
     weight: 2
     minX: 0
     maxX: 200
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
     weight: 1
     minX: 50
     maxX: 500
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
     weight: 1
     minX: 200
     maxX: 700
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
     weight: 1
     minX: 400
     maxX: 1200
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
     weight: 1
     minX: 800
     maxX: 2400
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
     weight: 1
     minX: 300
     maxX: 3200
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
     weight: 1
     minX: 0
     maxX: 1
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
     weight: 1
     minX: 0
     maxX: 1
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
     weight: 1
     minX: 0
     maxX: 1
+    topBuffer: 0
   - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
     weight: 1
     minX: 0
     maxX: 1
+    topBuffer: 0
   otherTasks:
   - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
     weight: 1
     minX: 0
     maxX: 10000
+    topBuffer: 0
   - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
     weight: 0.13
     minX: 0
     maxX: 9999
+    topBuffer: 0
   waterTasks:
   - prefab: {fileID: 4589994145864551737, guid: f2c07aa52d3c1dd46ae29e9e671ed0a2, type: 3}
     weight: 1
     minX: 0
     maxX: 9999
+    topBuffer: 0
+  sandTasks: []
   grassTasks:
   - prefab: {fileID: 5839893854702782364, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
     weight: 1
     minX: 0
     maxX: 9999
+    topBuffer: 2
   - prefab: {fileID: 650070097376303702, guid: ce795a63272a38942b2009b1873bf44a, type: 3}
     weight: 1
     minX: 0
     maxX: Infinity
-  allowGrassEdge: 0
-  grassTopBuffer: 3
+    topBuffer: 2
+  minTaskDistance: 1.5
   terrainMap: {fileID: 0}
   waterTile: {fileID: 0}
   sandTile: {fileID: 0}
@@ -985,6 +1005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7adf18044fd82a45bdb6ef941db3141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   segmentSize: {x: 64, y: 18}
   segmentParent: {fileID: 508231011876975185}
   pathfinder: {fileID: 3994575044794960044}
