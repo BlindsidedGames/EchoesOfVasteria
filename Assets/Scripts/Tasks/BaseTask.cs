@@ -67,8 +67,11 @@ namespace TimelessEchoes.Tasks
             if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return;
             var controller = FindFirstObjectByType<SkillController>();
             var amount = xpGrantedOnCompletion;
-            if (controller && controller.RollForEffect(associatedSkill, MilestoneType.DoubleXP))
-                amount *= 2f;
+            if (controller)
+            {
+                int mult = controller.GetEffectMultiplier(associatedSkill, MilestoneType.DoubleXP);
+                amount *= mult;
+            }
             controller?.AddExperience(associatedSkill, amount);
         }
     }

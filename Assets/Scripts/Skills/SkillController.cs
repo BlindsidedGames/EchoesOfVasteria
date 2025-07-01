@@ -144,6 +144,9 @@ namespace TimelessEchoes.Skills
 
         public bool RollForEffect(Skill skill, MilestoneType type)
         {
+            if (type == MilestoneType.DoubleResources || type == MilestoneType.DoubleXP)
+                return GetEffectMultiplier(skill, type) > 1;
+
             if (skill == null) return false;
             if (!progress.TryGetValue(skill, out var prog)) return false;
             foreach (var id in prog.Milestones)
@@ -153,6 +156,43 @@ namespace TimelessEchoes.Skills
                     return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Calculates the multiplier for effects that stack beyond a single double.
+        /// </summary>
+        /// <remarks>
+        /// The total chance from unlocked milestones may exceed 100%. Each full
+        /// 100% guarantees an additional doubling, and any remaining fraction
+        /// is rolled for one more doubling.
+        /// </remarks>
+        /// <param name="skill">Skill associated with the effect.</param>
+        /// <param name="type">Milestone type to evaluate.</param>
+        /// <returns>The integer multiplier to apply to the reward.</returns>
+        public int GetEffectMultiplier(Skill skill, MilestoneType type)
+        {
+            if (skill == null) return 1;
+            if (!progress.TryGetValue(skill, out var prog)) return 1;
+
+            float totalChance = 0f;
+            foreach (var id in prog.Milestones)
+            {
+                var m = skill.milestones.Find(ms => ms.bonusID == id);
+                if (m != null && m.type == type)
+                    totalChance += m.chance;
+            }
+
+            int multiplier = 1;
+            while (totalChance >= 1f)
+            {
+                multiplier++;
+                totalChance -= 1f;
+            }
+
+            if (UnityEngine.Random.value <= totalChance)
+                multiplier++;
+
+            return multiplier;
         }
 
         public float GetFlatStatBonus(TimelessEchoes.Upgrades.StatUpgrade upgrade)

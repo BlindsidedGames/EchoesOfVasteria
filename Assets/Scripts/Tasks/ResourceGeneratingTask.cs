@@ -35,8 +35,11 @@ namespace TimelessEchoes.Tasks
 
                 if (count > 0)
                 {
-                    if (skillController && skillController.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources))
-                        count *= 2;
+                    if (skillController)
+                    {
+                        int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                        count *= mult;
+                    }
                     resourceManager.Add(drop.resource, count);
                 }
             }
