@@ -21,45 +21,7 @@ namespace TimelessEchoes.MapGeneration
         [TabGroup("References")] [SerializeField]
         private Tilemap decorMap;
 
-        [Serializable]
-        [InlineProperty]
-        [HideLabel]
-        public class DecorEntry
-        {
-            [Required] public TileBase tile;
-            [MinValue(0f)] public float weight = 1f;
-            public float minX;
-            public float maxX = float.PositiveInfinity;
-            [MinValue(0)] public int topBuffer;
-            [MinValue(0)] public int bottomBuffer;
-            [MinValue(0)] public int sideBuffer;
-            public bool spawnOnWater;
-            public bool spawnOnSand;
-            public bool spawnOnGrass;
-
-            [ShowInInspector]
-            [ReadOnly]
-            [LabelText("Areas")]
-            private string AreasDisplay
-            {
-                get
-                {
-                    string areas = string.Empty;
-                    if (spawnOnWater) areas += "Water ";
-                    if (spawnOnSand) areas += "Sand ";
-                    if (spawnOnGrass) areas += "Grass ";
-                    if (string.IsNullOrWhiteSpace(areas)) areas = "None";
-                    return areas.TrimEnd();
-                }
-            }
-
-            public float GetWeight(float worldX)
-            {
-                if (tile == null) return 0f;
-                if (worldX < minX || worldX > maxX) return 0f;
-                return Mathf.Max(0f, weight);
-            }
-        }
+        // Decor entry is now defined in DecorConfig.cs
 
         private enum TerrainArea
         {
@@ -343,18 +305,18 @@ namespace TimelessEchoes.MapGeneration
                 var choices = new List<DecorEntry>();
                 foreach (var d in decor)
                     if (AllowsArea(d, area) && d.GetWeight(worldPos) > 0f &&
-                        !IsBufferedEdge(cell, baseTile, d.topBuffer, d.bottomBuffer, d.sideBuffer))
+                        !IsBufferedEdge(cell, baseTile, d.config.topBuffer, d.config.bottomBuffer, d.config.sideBuffer))
                         choices.Add(d);
 
                 if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > decorDensity)
                     continue;
 
                 var total = 0f;
-                foreach (var d in choices) total += d.weight;
+                foreach (var d in choices) total += d.config.weight;
                 var r = RandomRangeFloat(0f, total);
                 foreach (var d in choices)
                 {
-                    r -= d.weight;
+                    r -= d.config.weight;
                     if (r <= 0f)
                     {
                         decorMap.SetTile(cell, d.tile);
@@ -366,9 +328,9 @@ namespace TimelessEchoes.MapGeneration
 
         private bool AllowsArea(DecorEntry entry, TerrainArea area)
         {
-            return (area == TerrainArea.Water && entry.spawnOnWater) ||
-                   (area == TerrainArea.Sand && entry.spawnOnSand) ||
-                   (area == TerrainArea.Grass && entry.spawnOnGrass);
+            return (area == TerrainArea.Water && entry.config.spawnOnWater) ||
+                   (area == TerrainArea.Sand && entry.config.spawnOnSand) ||
+                   (area == TerrainArea.Grass && entry.config.spawnOnGrass);
         }
 
         private bool IsBufferedEdge(Vector3Int cell, TileBase tile, int topBuffer, int bottomBuffer, int sideBuffer)
