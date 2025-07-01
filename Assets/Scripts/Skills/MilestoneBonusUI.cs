@@ -68,17 +68,10 @@ namespace TimelessEchoes.Skills
                     if (refs.levelText != null)
                         refs.levelText.text = $"Lv {milestone.levelRequirement}";
 
-                    string desc = milestone.bonusDescription;
-                    if (milestone.type == MilestoneType.StatIncrease && milestone.statAmount != 0f)
-                    {
-                        if (milestone.percentBonus)
-                            desc += $" (+{milestone.statAmount * 100:0.#}%)";
-                        else
-                            desc += $" (+{milestone.statAmount:0.#})";
-                    }
-
+                    string desc = milestone.GetDescription(skill.skillName);
                     if (refs.descriptionText != null)
                         refs.descriptionText.text = desc;
+
                 }
 
                 var img = entry.GetComponentInChildren<Image>();
