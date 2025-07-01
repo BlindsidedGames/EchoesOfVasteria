@@ -1,4 +1,5 @@
 using TimelessEchoes.Hero;
+using TimelessEchoes.Skills;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -9,7 +10,7 @@ namespace TimelessEchoes.Tasks
     /// </summary>
     public abstract class BaseTask : MonoBehaviour, ITask
     {
-        [SerializeField] private TimelessEchoes.Skills.Skill associatedSkill;
+        [SerializeField] public Skill associatedSkill;
         [SerializeField] private float xpGrantedOnCompletion;
 
         /// <summary>
@@ -57,16 +58,16 @@ namespace TimelessEchoes.Tasks
 
         protected bool ShouldInstantComplete()
         {
-            var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-            return controller && controller.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.InstantTask);
+            var controller = FindFirstObjectByType<SkillController>();
+            return controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
         }
 
         protected void GrantCompletionXP()
         {
             if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return;
-            var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-            float amount = xpGrantedOnCompletion;
-            if (controller && controller.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleXP))
+            var controller = FindFirstObjectByType<SkillController>();
+            var amount = xpGrantedOnCompletion;
+            if (controller && controller.RollForEffect(associatedSkill, MilestoneType.DoubleXP))
                 amount *= 2f;
             controller?.AddExperience(associatedSkill, amount);
         }

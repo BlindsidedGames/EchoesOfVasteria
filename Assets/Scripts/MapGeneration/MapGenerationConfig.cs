@@ -77,7 +77,7 @@ namespace TimelessEchoes.MapGeneration
                 Debug.Log("Decor entry names updated for search.");
             }
 
-            [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", Expanded = false)]
+            [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", ShowFoldout = false)]
             public List<DecorEntry> decor = new();
         }
     }

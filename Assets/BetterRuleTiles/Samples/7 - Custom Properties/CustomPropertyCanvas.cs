@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace VinTools.BetterRuleTiles.Sample
@@ -12,9 +10,9 @@ namespace VinTools.BetterRuleTiles.Sample
 
         private void OnEnable()
         {
-            if (valueText == null) valueText = FindObjectOfType<Text>();
+            if (valueText == null) valueText = FindFirstObjectByType<Text>();
 
-            if (propertyTest == null) propertyTest = FindObjectOfType<CustomPropertyTest>();
+            if (propertyTest == null) propertyTest = FindFirstObjectByType<CustomPropertyTest>();
             if (propertyTest != null) propertyTest.onReadValue += DisplayValue;
         }
 
@@ -23,7 +21,7 @@ namespace VinTools.BetterRuleTiles.Sample
             if (propertyTest != null) propertyTest.onReadValue -= DisplayValue;
         }
 
-        void DisplayValue(string msg)
+        private void DisplayValue(string msg)
         {
             valueText.text = "Move your cursor over the tile to see it's values.\n\n" + msg;
         }

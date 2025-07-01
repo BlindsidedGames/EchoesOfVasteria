@@ -16,4 +16,12 @@ MonoBehaviour:
   skillIcon: {fileID: 4767668688145798528, guid: ab1409f021d41de43a3834916d159f7d, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
-  milestones: []
+  milestones:
+  - levelRequirement: 0
+    bonusDescription: 
+    bonusID: 
+    type: 0
+    chance: 1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
