@@ -22,8 +22,6 @@ namespace TimelessEchoes.MapGeneration
         private Tilemap decorMap;
 
         [Serializable]
-        [InlineProperty]
-        [HideLabel]
         public class DecorEntry
         {
             [Required] public TileBase tile;
