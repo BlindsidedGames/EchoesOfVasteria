@@ -140,6 +140,9 @@ namespace TimelessEchoes.Skills
                 popupPanel.SetActive(true);
             }
             UpdateSelectedSkillUI();
+
+            if (bonusUI != null && bonusUI.gameObject.activeSelf)
+                bonusUI.PopulateMilestones(CurrentSkill);
         }
 
         private void OpenBonuses()
