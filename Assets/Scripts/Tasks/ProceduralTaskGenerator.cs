@@ -95,6 +95,10 @@ namespace TimelessEchoes.Tasks
             if (controller == null)
                 controller = GetComponent<TaskController>();
             ApplyConfig();
+
+            var chunk = GetComponent<TilemapChunkGenerator>();
+            chunk?.AssignTilemaps(this);
+
             EnsureTilemaps();
         }
 
@@ -120,23 +124,18 @@ namespace TimelessEchoes.Tasks
             Gizmos.DrawWireCube(center, size);
         }
 
+        internal void SetTilemapReferences(Tilemap map, BetterRuleTile water, BetterRuleTile sand, BetterRuleTile grass)
+        {
+            terrainMap = map;
+            waterTile = water;
+            sandTile = sand;
+            grassTile = grass;
+        }
+
         private void EnsureTilemaps()
         {
             if (terrainMap != null && waterTile != null && sandTile != null && grassTile != null)
                 return;
-
-            var chunk = GetComponent<TilemapChunkGenerator>();
-            if (chunk != null)
-            {
-                if (terrainMap == null)
-                    terrainMap = chunk.TerrainMap;
-                if (waterTile == null)
-                    waterTile = chunk.WaterTile;
-                if (sandTile == null)
-                    sandTile = chunk.SandTile;
-                if (grassTile == null)
-                    grassTile = chunk.GrassTile;
-            }
 
             if (terrainMap == null)
             {
