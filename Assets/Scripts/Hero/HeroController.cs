@@ -136,12 +136,13 @@ namespace TimelessEchoes.Hero
             {
                 if (upgrade == null) continue;
                 var baseVal = controller.GetBaseValue(upgrade);
-                var increase = controller.GetIncrease(upgrade);
-                if (skillController)
-                {
-                    increase += skillController.GetFlatStatBonus(upgrade);
-                    increase += baseVal * skillController.GetPercentStatBonus(upgrade);
-                }
+                var levelIncrease = controller.GetIncrease(upgrade);
+                var flatBonus = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+                var percentBonus = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+
+                var totalBeforePercent = baseVal + levelIncrease + flatBonus;
+                var finalValue = totalBeforePercent * (1f + percentBonus);
+                var increase = finalValue - baseVal;
                 switch (upgrade.name)
                 {
                     case "Health":
