@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,7 @@ namespace TimelessEchoes.Skills
 {
     public class MilestoneBonusUI : MonoBehaviour
     {
+        [SerializeField] private GameObject window;
         [SerializeField] private Transform entryParent;
         [SerializeField] private GameObject entryPrefab;
         [SerializeField] private SkillController controller;
@@ -17,10 +17,26 @@ namespace TimelessEchoes.Skills
             entryParent = parent;
         }
 
+        public void OpenWindow()
+        {
+            if (window == null)
+                window = gameObject;
+            window.SetActive(true);
+        }
+
+        public void CloseWindow()
+        {
+            if (window == null)
+                window = gameObject;
+            window.SetActive(false);
+        }
+
         private void Awake()
         {
             if (controller == null)
                 controller = FindFirstObjectByType<SkillController>();
+            if (window == null)
+                window = gameObject;
         }
 
         public void PopulateMilestones(Skill skill)
