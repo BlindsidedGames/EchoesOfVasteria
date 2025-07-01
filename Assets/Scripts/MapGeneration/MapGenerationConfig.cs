@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Pathfinding;
 using Sirenix.OdinInspector;
 using TimelessEchoes.Tasks;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles;
 
 namespace TimelessEchoes.MapGeneration
@@ -21,12 +20,10 @@ namespace TimelessEchoes.MapGeneration
         [Serializable]
         public class TilemapChunkSettings
         {
-            [HideInInspector]
-            public Tilemap terrainMap;
-            [FormerlySerializedAs("waterTile")]
-            public BetterRuleTile waterBetterRuleTile;
-            [FormerlySerializedAs("sandRuleTile")]
-            public BetterRuleTile sandBetterRuleTile;
+            [HideInInspector] public Tilemap terrainMap;
+            [FormerlySerializedAs("waterTile")] public BetterRuleTile waterBetterRuleTile;
+            [FormerlySerializedAs("sandRuleTile")] public BetterRuleTile sandBetterRuleTile;
+
             [FormerlySerializedAs("grassRuleTile")]
             public BetterRuleTile grassBetterRuleTile;
 
@@ -54,7 +51,6 @@ namespace TimelessEchoes.MapGeneration
             public List<ProceduralTaskGenerator.WeightedSpawn> tasks = new();
 
             [MinValue(0f)] public float minTaskDistance = 1.5f;
-
         }
 
         [Serializable]
@@ -66,11 +62,23 @@ namespace TimelessEchoes.MapGeneration
         [Serializable]
         public class DecorSettings
         {
-            [HideInInspector] [TabGroup("Decor", "References")] public Tilemap decorMap;
+            [HideInInspector] [TabGroup("Decor", "References")]
+            public Tilemap decorMap;
+
             [Range(0f, 1f)] public float density = 1f;
-            [Searchable]
-            [ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = false)]
-            [TabGroup("Decor", "Items")] public List<DecorEntry> decor = new();
+
+            [Title("Decor")]
+            [Button("Update All Names")]
+            [PropertyOrder(-1)]
+            private void UpdateAllNames()
+            {
+                if (decor == null) return;
+                foreach (var entry in decor) entry.UpdateName();
+                Debug.Log("Decor entry names updated for search.");
+            }
+
+            [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", Expanded = false)]
+            public List<DecorEntry> decor = new();
         }
     }
 }

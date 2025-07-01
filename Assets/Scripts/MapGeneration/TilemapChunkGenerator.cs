@@ -1,27 +1,24 @@
-using System;
-using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.Serialization;
-using VinTools.BetterRuleTiles;
+using Sirenix.OdinInspector;
 using TimelessEchoes.Tasks;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
+using VinTools.BetterRuleTiles;
+// Make sure this is included
 using Random = System.Random;
 
 namespace TimelessEchoes.MapGeneration
 {
     public class TilemapChunkGenerator : MonoBehaviour
     {
-        [SerializeField]
-        private MapGenerationConfig config;
+        [SerializeField] private MapGenerationConfig config;
 
         [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
         private Tilemap terrainMap;
 
         [TabGroup("References")] [SerializeField]
         private Tilemap decorMap;
-
-        // Decor entry is now defined in DecorConfig.cs
 
         private enum TerrainArea
         {
@@ -30,55 +27,44 @@ namespace TimelessEchoes.MapGeneration
             Grass
         }
 
-        [TabGroup("Settings")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings")] [SerializeField] [HideInInspector]
         private List<DecorEntry> decor = new();
 
-        [TabGroup("Settings")] [SerializeField]
-        [Range(0f, 1f)]
-        [HideInInspector]
+        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)] [HideInInspector]
         private float decorDensity = 1f;
 
 
-        [Header("Tiles")] [TabGroup("References")] [SerializeField]
+        [Header("Tiles")]
+        [TabGroup("References")]
+        [SerializeField]
         [FormerlySerializedAs("waterTile")]
         [HideInInspector]
         private BetterRuleTile waterBetterRuleTile;
 
-        [TabGroup("References")] [SerializeField]
-        [FormerlySerializedAs("sandRuleTile")]
-        [HideInInspector]
+        [TabGroup("References")] [SerializeField] [FormerlySerializedAs("sandRuleTile")] [HideInInspector]
         private BetterRuleTile sandBetterRuleTile;
 
-        [TabGroup("References")] [SerializeField]
-        [FormerlySerializedAs("grassRuleTile")]
-        [HideInInspector]
+        [TabGroup("References")] [SerializeField] [FormerlySerializedAs("grassRuleTile")] [HideInInspector]
         private BetterRuleTile grassBetterRuleTile;
 
 
-        [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)]
-        [HideInInspector]
+        [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)] [HideInInspector]
         private int minAreaWidth = 2;
 
-        [TabGroup("Settings")] [SerializeField] [Min(0)]
-        [HideInInspector]
+        [TabGroup("Settings")] [SerializeField] [Min(0)] [HideInInspector]
         private int edgeWaviness = 1;
 
 
-        [Header("Depth Ranges (Min, Max)")] [TabGroup("Settings")] [SerializeField]
-        [HideInInspector]
+        [Header("Depth Ranges (Min, Max)")] [TabGroup("Settings")] [SerializeField] [HideInInspector]
         private Vector2Int sandDepthRange = new(2, 6);
 
-        [TabGroup("Settings")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings")] [SerializeField] [HideInInspector]
         private Vector2Int grassDepthRange = new(2, 6);
 
-        [Header("Random Seed")] [TabGroup("Settings")] [SerializeField]
-        [HideInInspector]
+        [Header("Random Seed")] [TabGroup("Settings")] [SerializeField] [HideInInspector]
         private int seed;
 
-        [TabGroup("Settings")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings")] [SerializeField] [HideInInspector]
         private bool randomizeSeed = true;
 
         private Random rng;
@@ -93,7 +79,7 @@ namespace TimelessEchoes.MapGeneration
         private void Awake()
         {
             ApplyConfig();
-            var taskGen = GetComponent<Tasks.ProceduralTaskGenerator>();
+            var taskGen = GetComponent<ProceduralTaskGenerator>();
             AssignTilemaps(taskGen);
             rng = randomizeSeed ? new Random() : new Random(seed);
             prevSandDepth = -1;
@@ -125,7 +111,7 @@ namespace TimelessEchoes.MapGeneration
             decorDensity = config.decorSettings.density;
         }
 
-        public void AssignTilemaps(Tasks.ProceduralTaskGenerator generator)
+        public void AssignTilemaps(ProceduralTaskGenerator generator)
         {
             if (generator == null)
                 return;
@@ -160,7 +146,6 @@ namespace TimelessEchoes.MapGeneration
                     var grassDepth = currentGrassDepth;
 
 
-
                     sandDepths[x] = sandDepth;
                     grassDepths[x] = grassDepth;
                 }
@@ -172,7 +157,8 @@ namespace TimelessEchoes.MapGeneration
                 currentGrassDepth = Mathf.Clamp(currentGrassDepth + grassDelta, grassDepthRange.x, grassDepthRange.y);
 
                 if (currentSandDepth + currentGrassDepth > segmentSize.y)
-                    currentGrassDepth = Mathf.Clamp(segmentSize.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
+                    currentGrassDepth = Mathf.Clamp(segmentSize.y - currentSandDepth, grassDepthRange.x,
+                        grassDepthRange.y);
             }
 
             for (var x = 0; x < segmentSize.x; x++)
@@ -236,16 +222,15 @@ namespace TimelessEchoes.MapGeneration
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
                     if (terrainMap.GetTile(pos) == grassBetterRuleTile) continue;
-
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                 {
                     var leftGrassBottom = x > 0
-                        ? (segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]) + sandDepths[x - 1]
+                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1] + sandDepths[x - 1]
                         : waterDepth + sandDepth;
                     var rightGrassBottom = x < segmentSize.x - 1
-                        ? (segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]) + sandDepths[x + 1]
+                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1] + sandDepths[x + 1]
                         : waterDepth + sandDepth;
 
                     var isCurrentTileSideEdge = y < leftGrassBottom || y < rightGrassBottom;
@@ -254,7 +239,6 @@ namespace TimelessEchoes.MapGeneration
                     var isTileBelowEdge = isTileBelowSideEdge;
 
                     if (isCurrentTileSideEdge || isTileBelowEdge || isTopEdge) continue;
-
                 }
             }
 
@@ -326,11 +310,20 @@ namespace TimelessEchoes.MapGeneration
             }
         }
 
+        // Updated to use HasFlag for the [Flags] enum
         private bool AllowsArea(DecorEntry entry, TerrainArea area)
         {
-            return (area == TerrainArea.Water && entry.config.spawnOnWater) ||
-                   (area == TerrainArea.Sand && entry.config.spawnOnSand) ||
-                   (area == TerrainArea.Grass && entry.config.spawnOnGrass);
+            switch (area)
+            {
+                case TerrainArea.Water:
+                    return entry.config.SpawnOn.HasFlag(SpawnArea.Water);
+                case TerrainArea.Sand:
+                    return entry.config.SpawnOn.HasFlag(SpawnArea.Sand);
+                case TerrainArea.Grass:
+                    return entry.config.SpawnOn.HasFlag(SpawnArea.Grass);
+                default:
+                    return false;
+            }
         }
 
         private bool IsBufferedEdge(Vector3Int cell, TileBase tile, int topBuffer, int bottomBuffer, int sideBuffer)

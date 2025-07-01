@@ -110,75 +110,215 @@ MonoBehaviour:
     segmentSize: {x: 64, y: 18}
   decorSettings:
     decorMap: {fileID: 0}
-    density: 0.202
+    density: 0.079
     decor:
-    - tile: {fileID: 11400000, guid: ed83d0d8d367fa7429c342528ec7e9f7, type: 2}
-      weight: 1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 2
-      bottomBuffer: 0
-      sideBuffer: 1
-      spawnOnWater: 1
-      spawnOnSand: 0
-      spawnOnGrass: 0
-    - tile: {fileID: 11400000, guid: 769503ef1be1b654b9fb6813c805d359, type: 2}
-      weight: 1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 2
-      bottomBuffer: 0
-      sideBuffer: 1
-      spawnOnWater: 1
-      spawnOnSand: 0
-      spawnOnGrass: 0
-    - tile: {fileID: 11400000, guid: ea7d30b6e539a8a459c16f776805d84e, type: 2}
-      weight: 1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 2
-      bottomBuffer: 0
-      sideBuffer: 1
-      spawnOnWater: 1
-      spawnOnSand: 0
-      spawnOnGrass: 0
-    - tile: {fileID: 11400000, guid: d151d737e1a86f04a855c431a8b8569f, type: 2}
-      weight: 0.1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      bottomBuffer: 0
-      sideBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
-      weight: 0.1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      bottomBuffer: 0
-      sideBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
-      weight: 0.1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      bottomBuffer: 0
-      sideBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
-      weight: 0.1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      bottomBuffer: 0
-      sideBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
+    - Name: Water | Water_Decoration_0
+      tile: {fileID: 11400000, guid: ed83d0d8d367fa7429c342528ec7e9f7, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | Water_Decoration_1
+      tile: {fileID: 11400000, guid: 769503ef1be1b654b9fb6813c805d359, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | Water_Decoration_2
+      tile: {fileID: 11400000, guid: ea7d30b6e539a8a459c16f776805d84e, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Grass | Flower_Grass_1_Anim
+      tile: {fileID: 11400000, guid: d151d737e1a86f04a855c431a8b8569f, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 0
+        bottomBuffer: 0
+        sideBuffer: 0
+        SpawnOn: 4
+    - Name: Grass | Grass_1_Anim
+      tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 0
+        bottomBuffer: 0
+        sideBuffer: 0
+        SpawnOn: 4
+    - Name: Grass | Grass_2_Anim
+      tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 0
+        bottomBuffer: 0
+        sideBuffer: 0
+        SpawnOn: 4
+    - Name: Grass | Grass_3_Anim
+      tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 0
+        bottomBuffer: 0
+        sideBuffer: 0
+        SpawnOn: 4
+    - Name: Sand | Beach_Decor_Tiles_0
+      tile: {fileID: 11400000, guid: a64f3964ea1534abd86301d93b79da78, type: 2}
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 2
+    - Name: Sand | Beach_Decor_Tiles_1
+      tile: {fileID: 11400000, guid: 2622f97b5574f4b7aab90f8f92befb28, type: 2}
+      config:
+        weight: 1
+        minX: 0.5
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 2
+    - Name: Sand | Beach_Decor_Tiles_2
+      tile: {fileID: 11400000, guid: 8309e9390a71e47dd9ef52a80440e734, type: 2}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 2
+    - Name: Sand | Beach_Decor_Tiles_3
+      tile: {fileID: 11400000, guid: ea0253e35f3604e83b07670155a363e4, type: 2}
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 2
+    - Name: Water | WaterMiddleAnim1
+      tile: {fileID: 11400000, guid: c7e1f35c0f5e6854f96c50707a45a5a7, type: 2}
+      config:
+        weight: 0.6
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | WaterGrass1
+      tile: {fileID: 11400000, guid: 10d47dbd0af073d429263f3469c4743e, type: 2}
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | WaterGrass2
+      tile: {fileID: 11400000, guid: d5e2d087aad0f7342992ab013b9ab89b, type: 2}
+      config:
+        weight: 0.3
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | Lillypad
+      tile: {fileID: 11400000, guid: 1d85d0e980e47034fa22050a89ca8cf9, type: 2}
+      config:
+        weight: 0.05
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | Lillypad 1
+      tile: {fileID: 11400000, guid: 6cdd93be2d22bed48ac49689afc32b24, type: 2}
+      config:
+        weight: 0.04
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | CatTail
+      tile: {fileID: 11400000, guid: b911c0e71a990624e9eed03abb6ce2b9, type: 2}
+      config:
+        weight: 0.06
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | CatTail 1
+      tile: {fileID: 11400000, guid: 367fef2f27190914aab734544717b1df, type: 2}
+      config:
+        weight: 0.04
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | CatTail 2
+      tile: {fileID: 11400000, guid: fe088e028cc11af4b87183d287f1da19, type: 2}
+      config:
+        weight: 0.04
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | CatTail 3
+      tile: {fileID: 11400000, guid: 9f89f7a03a57b684cb12dfe96f73d521, type: 2}
+      config:
+        weight: 0.04
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
+    - Name: Water | CatTail 4
+      tile: {fileID: 11400000, guid: 40a42957d626ceb4ba639bf9e1abba49, type: 2}
+      config:
+        weight: 0.04
+        minX: 0
+        maxX: Infinity
+        topBuffer: 2
+        bottomBuffer: 0
+        sideBuffer: 1
+        SpawnOn: 1
