@@ -60,8 +60,6 @@ namespace TimelessEchoes.MapGeneration
         public class SegmentedMapSettings
         {
             public Vector2Int segmentSize = new(64, 18);
-            public Transform segmentParent;
-            public AstarPath pathfinder;
         }
     }
 }

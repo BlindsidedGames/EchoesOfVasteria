@@ -17,9 +17,9 @@ namespace TimelessEchoes.MapGeneration
         [SerializeField]
         private MapGenerationConfig config;
 
-        [SerializeField] [HideInInspector] private Vector2Int segmentSize = new(64, 18);
-        [SerializeField] [HideInInspector] private Transform segmentParent;
-        [SerializeField] [HideInInspector] private AstarPath pathfinder;
+        [SerializeField] private Vector2Int segmentSize = new(64, 18);
+        [SerializeField] private Transform segmentParent;
+        [SerializeField] private AstarPath pathfinder;
 
         private TilemapChunkGenerator chunkGenerator;
         private ProceduralTaskGenerator taskGenerator;
@@ -50,8 +50,6 @@ namespace TimelessEchoes.MapGeneration
             if (config == null) return;
 
             segmentSize = config.segmentedMapSettings.segmentSize;
-            segmentParent = config.segmentedMapSettings.segmentParent;
-            pathfinder = config.segmentedMapSettings.pathfinder;
         }
 
         private IEnumerator Start()
