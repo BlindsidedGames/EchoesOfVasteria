@@ -18,6 +18,8 @@ namespace TimelessEchoes.Tasks
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
 
+            var skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+
             if (resourceManager == null) return;
 
             foreach (var drop in resourceDrops)
@@ -33,6 +35,8 @@ namespace TimelessEchoes.Tasks
 
                 if (count > 0)
                 {
+                    if (skillController && skillController.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources))
+                        count *= 2;
                     resourceManager.Add(drop.resource, count);
                 }
             }

@@ -146,6 +146,7 @@ namespace TimelessEchoes.Skills
         {
             if (bonusUI != null && CurrentSkill != null)
             {
+                bonusUI.SetEntryParent(null);
                 bonusUI.PopulateMilestones(CurrentSkill);
                 bonusUI.gameObject.SetActive(true);
             }
