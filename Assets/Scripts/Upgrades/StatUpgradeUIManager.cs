@@ -18,6 +18,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<StatUIReferences> statSelectors = new();
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
+        private TimelessEchoes.Skills.SkillController skillController;
 
         private readonly List<CostResourceUIReferences> costSlots = new();
 
@@ -34,6 +35,8 @@ namespace TimelessEchoes.Upgrades
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceInventoryUI == null)
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+            if (skillController == null)
+                skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
             if (references == null)
                 references = GetComponent<StatUpgradeUIReferences>();
             if (statSelectors.Count == 0)
@@ -204,8 +207,10 @@ namespace TimelessEchoes.Upgrades
             var upgrade = CurrentUpgrade;
             if (upgrade == null) return;
             var lvl = controller ? controller.GetLevel(upgrade) : 0;
-            var current = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel;
-            var next = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel;
+            float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+            float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+            var current = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat + upgrade.baseValue * percent;
+            var next = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat + upgrade.baseValue * percent;
             references.statUpgradeInfoText.text = $"{current:0.###} -> {next:0.###}";
         }
 

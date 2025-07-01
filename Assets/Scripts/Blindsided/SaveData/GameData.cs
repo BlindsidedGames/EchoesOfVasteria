@@ -62,6 +62,7 @@ namespace Blindsided.SaveData
         {
             public float CurrentXP;
             public int Level;
+            public List<string> Milestones = new();
         }
 
 

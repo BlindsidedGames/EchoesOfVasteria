@@ -129,13 +129,19 @@ namespace TimelessEchoes.Hero
         private void ApplyStatUpgrades()
         {
             var controller = FindFirstObjectByType<StatUpgradeController>();
+            var skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
             if (controller == null) return;
 
             foreach (var upgrade in controller.AllUpgrades)
             {
                 if (upgrade == null) continue;
-                var increase = controller.GetIncrease(upgrade);
                 var baseVal = controller.GetBaseValue(upgrade);
+                var increase = controller.GetIncrease(upgrade);
+                if (skillController)
+                {
+                    increase += skillController.GetFlatStatBonus(upgrade);
+                    increase += baseVal * skillController.GetPercentStatBonus(upgrade);
+                }
                 switch (upgrade.name)
                 {
                     case "Health":

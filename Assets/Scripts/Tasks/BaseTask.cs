@@ -55,11 +55,20 @@ namespace TimelessEchoes.Tasks
         {
         }
 
+        protected bool ShouldInstantComplete()
+        {
+            var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            return controller && controller.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.InstantTask);
+        }
+
         protected void GrantCompletionXP()
         {
             if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return;
             var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-            controller?.AddExperience(associatedSkill, xpGrantedOnCompletion);
+            float amount = xpGrantedOnCompletion;
+            if (controller && controller.RollForEffect(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleXP))
+                amount *= 2f;
+            controller?.AddExperience(associatedSkill, amount);
         }
     }
 }
