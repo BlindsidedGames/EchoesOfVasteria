@@ -343,7 +343,9 @@ namespace TimelessEchoes.Tasks
 
         private void SortTaskListsByX()
         {
-            var pairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+            var npcPairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+            var regularPairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+
             foreach (var task in tasks)
             {
                 MonoBehaviour obj = null;
@@ -353,15 +355,32 @@ namespace TimelessEchoes.Tasks
                     x = obj.transform.position.x;
                 else if (task != null && task.Target != null)
                     x = task.Target.position.x;
-                pairs.Add((x, obj, task));
+
+                var pair = (x, obj, task);
+                if (task is TalkToNpcTask)
+                    npcPairs.Add(pair);
+                else
+                    regularPairs.Add(pair);
             }
 
-            pairs.Sort((a, b) => a.x.CompareTo(b.x));
+            npcPairs.Sort((a, b) => a.x.CompareTo(b.x));
+            regularPairs.Sort((a, b) => a.x.CompareTo(b.x));
 
             tasks.Clear();
             taskObjects.Clear();
             taskMap.Clear();
-            foreach (var p in pairs)
+
+            foreach (var p in npcPairs)
+            {
+                tasks.Add(p.task);
+                if (p.obj != null)
+                {
+                    taskObjects.Add(p.obj);
+                    taskMap[p.task] = p.obj;
+                }
+            }
+
+            foreach (var p in regularPairs)
             {
                 tasks.Add(p.task);
                 if (p.obj != null)

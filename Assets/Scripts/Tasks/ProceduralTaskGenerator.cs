@@ -548,8 +548,14 @@ namespace TimelessEchoes.Tasks
 
             var taskTotalWeight = 0f;
             foreach (var t in tasks)
-                if (TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
-                    taskTotalWeight += t.GetWeight(worldX);
+            {
+                if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
+                    continue;
+                if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
+                    !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
+                    continue;
+                taskTotalWeight += t.GetWeight(worldX);
+            }
 
             var totalWeight = enemyTotalWeight + taskTotalWeight;
             if (totalWeight <= 0f)
@@ -571,6 +577,9 @@ namespace TimelessEchoes.Tasks
                 foreach (var t in tasks)
                 {
                     if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
+                        continue;
+                    if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
+                        !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                         continue;
                     r -= t.GetWeight(worldX);
                     if (r > 0f) continue;
