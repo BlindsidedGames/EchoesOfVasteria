@@ -25,7 +25,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
-        [SerializeField] private TimelessEchoes.Buffs.BuffController buffController;
+        [SerializeField] private TimelessEchoes.Buffs.BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -77,9 +77,7 @@ namespace TimelessEchoes.Hero
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             if (buffController == null)
-                buffController = GetComponent<TimelessEchoes.Buffs.BuffController>();
-            if (buffController == null)
-                buffController = FindFirstObjectByType<TimelessEchoes.Buffs.BuffController>();
+                buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
             if (taskController == null)
                 taskController = GetComponentInParent<TaskController>();
 
@@ -117,9 +115,7 @@ namespace TimelessEchoes.Hero
                 taskController = GetComponent<TaskController>();
 
             if (buffController == null)
-                buffController = GetComponent<TimelessEchoes.Buffs.BuffController>();
-            if (buffController == null)
-                buffController = FindFirstObjectByType<TimelessEchoes.Buffs.BuffController>();
+                buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();

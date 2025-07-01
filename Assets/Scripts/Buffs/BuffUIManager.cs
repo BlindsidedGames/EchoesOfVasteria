@@ -9,7 +9,7 @@ namespace TimelessEchoes.Buffs
 {
     public class BuffUIManager : MonoBehaviour
     {
-        [SerializeField] private BuffController controller;
+        [SerializeField] private BuffManager controller;
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI resourceInventoryUI;
         [SerializeField] private List<BuffRecipe> buffs = new();
@@ -20,25 +20,28 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private Button openPurchaseButton;
         [SerializeField] private GameObject buffPurchaseWindow;
 
-        private readonly List<BuffRecipeUIReferences> entries = new();
+        private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
         private readonly List<ActiveIconEntry> iconEntries = new();
 
         private class ActiveIconEntry
         {
-            public BuffController.ActiveBuff buff;
+            public BuffManager.ActiveBuff buff;
             public BuffIconUIReferences refs;
         }
 
         private void Awake()
         {
             if (controller == null)
-                controller = FindFirstObjectByType<BuffController>();
+                controller = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceInventoryUI == null)
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
 
             BuildRecipeEntries();
+
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged += OnInventoryChanged;
 
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(false);
@@ -50,6 +53,13 @@ namespace TimelessEchoes.Buffs
         private void OnEnable()
         {
             UpdateActiveIcons();
+            OnInventoryChanged();
+        }
+
+        private void OnDestroy()
+        {
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged -= OnInventoryChanged;
         }
 
         private void Update()
@@ -67,6 +77,14 @@ namespace TimelessEchoes.Buffs
                 if (entry.refs.durationText != null)
                     entry.refs.durationText.text = Mathf.Ceil(entry.buff.remaining).ToString();
             }
+
+            foreach (var pair in recipeEntries)
+            {
+                var panel = pair.Value;
+                if (panel.durationText == null) continue;
+                float remaining = controller ? controller.GetRemaining(pair.Key) : 0f;
+                panel.durationText.text = Mathf.Ceil(remaining > 0f ? remaining : pair.Key.baseDuration).ToString();
+            }
         }
 
         private void BuildRecipeEntries()
@@ -79,6 +97,8 @@ namespace TimelessEchoes.Buffs
                 var panel = Instantiate(recipePrefab, recipeParent);
                 if (panel.iconImage != null)
                     panel.iconImage.sprite = recipe.buffIcon;
+                if (panel.durationText != null)
+                    panel.durationText.text = recipe.baseDuration.ToString();
                 if (panel.purchaseButton != null)
                 {
                     var r = recipe;
@@ -86,7 +106,7 @@ namespace TimelessEchoes.Buffs
                 }
 
                 BuildCostSlots(panel, recipe);
-                entries.Add(panel);
+                recipeEntries[recipe] = panel;
             }
         }
 
@@ -127,6 +147,12 @@ namespace TimelessEchoes.Buffs
                 if (slot.selectionImage != null)
                     slot.selectionImage.enabled = false;
             }
+        }
+
+        private void OnInventoryChanged()
+        {
+            foreach (var pair in recipeEntries)
+                BuildCostSlots(pair.Value, pair.Key);
         }
 
         private void PurchaseBuff(BuffRecipe recipe)
