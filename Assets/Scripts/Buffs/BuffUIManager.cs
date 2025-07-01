@@ -17,6 +17,8 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private Transform recipeParent;
         [SerializeField] private BuffIconUIReferences activeBuffPrefab;
         [SerializeField] private Transform activeBuffParent;
+        [SerializeField] private Button openPurchaseButton;
+        [SerializeField] private GameObject buffPurchaseWindow;
 
         private readonly List<BuffRecipeUIReferences> entries = new();
         private readonly List<ActiveIconEntry> iconEntries = new();
@@ -37,7 +39,12 @@ namespace TimelessEchoes.Buffs
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
 
             BuildRecipeEntries();
-            gameObject.SetActive(false);
+
+            if (buffPurchaseWindow != null)
+                buffPurchaseWindow.SetActive(false);
+
+            if (openPurchaseButton != null)
+                openPurchaseButton.onClick.AddListener(OpenPurchaseWindow);
         }
 
         private void OnEnable()
@@ -95,13 +102,30 @@ namespace TimelessEchoes.Buffs
             {
                 var slot = Instantiate(panel.costSlotPrefab, panel.costGridLayoutParent.transform);
                 slot.resource = req.resource;
+
                 if (slot.selectButton != null)
                 {
                     var res = req.resource;
                     slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
+                    slot.selectButton.interactable = true;
                 }
+
+                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+
+                if (slot.iconImage != null)
+                {
+                    slot.iconImage.sprite = req.resource ? req.resource.icon : null;
+                    slot.iconImage.enabled = unlocked;
+                }
+
+                if (slot.questionMarkImage != null)
+                    slot.questionMarkImage.enabled = !unlocked;
+
                 if (slot.countText != null)
                     slot.countText.text = req.amount.ToString();
+
+                if (slot.selectionImage != null)
+                    slot.selectionImage.enabled = false;
             }
         }
 
@@ -130,6 +154,12 @@ namespace TimelessEchoes.Buffs
                     obj.durationText.text = Mathf.Ceil(buff.remaining).ToString();
                 iconEntries.Add(new ActiveIconEntry { buff = buff, refs = obj });
             }
+        }
+
+        private void OpenPurchaseWindow()
+        {
+            if (buffPurchaseWindow != null)
+                buffPurchaseWindow.SetActive(true);
         }
     }
 }
