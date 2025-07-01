@@ -206,6 +206,7 @@ namespace Blindsided
             saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             saveData.SkillData ??= new Dictionary<string, GameData.SkillProgress>();
             saveData.EnemyKills ??= new Dictionary<string, double>();
+            saveData.CompletedNpcTasks ??= new HashSet<string>();
         }
 
         public static void AwayForSeconds()

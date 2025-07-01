@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Blindsided.SaveData;
 using TimelessEchoes.MapGeneration;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -50,6 +51,10 @@ namespace TimelessEchoes.Tasks
         [TabGroup("Settings", "Generation")] [SerializeField]
         [HideInInspector]
         private List<WeightedSpawn> tasks = new();
+
+        [TabGroup("Settings", "Generation")] [SerializeField]
+        [HideInInspector]
+        private List<MapGenerationConfig.ProceduralTaskSettings.NpcSpawnEntry> npcTasks = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)]
         [HideInInspector]
@@ -113,6 +118,7 @@ namespace TimelessEchoes.Tasks
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
             enemies = config.taskGeneratorSettings.enemies;
             tasks = config.taskGeneratorSettings.tasks;
+            npcTasks = config.taskGeneratorSettings.npcTasks;
             minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
         }
 
@@ -293,6 +299,43 @@ namespace TimelessEchoes.Tasks
                             controller.AddRuntimeTaskObject(mono);
                         taskPositions.Add(pos);
                     }
+                }
+            }
+
+            foreach (var npc in npcTasks)
+            {
+                if (npc == null || npc.prefab == null) continue;
+                if (npc.localX < localMinX || npc.localX >= localMaxX) continue;
+                if (npc.spawnOnlyOnce && Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(npc.id))
+                    continue;
+
+                Vector3 pos;
+                if (npc.spawnOnWater && TryGetWaterSpot(npc.localX, out pos)) { }
+                else if (npc.spawnOnSand && TryGetSandSpot(npc.localX, out pos)) { }
+                else if (npc.spawnOnGrass && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
+                else
+                    pos = RandomPositionAtX(npc.localX);
+
+                var tooClose = false;
+                foreach (var existing in taskPositions)
+                    if (Vector3.Distance(existing, pos) < minTaskDistance)
+                    {
+                        tooClose = true;
+                        break;
+                    }
+                if (tooClose) continue;
+
+                var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
+                var obj = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
+                generatedObjects.Add(obj);
+                var mono = obj.GetComponent<MonoBehaviour>();
+                if (mono != null)
+                {
+                    if (clearExisting)
+                        spawnedTasks.Add((pos.x, mono));
+                    else
+                        controller.AddRuntimeTaskObject(mono);
+                    taskPositions.Add(pos);
                 }
             }
 

@@ -49,8 +49,24 @@ namespace TimelessEchoes.MapGeneration
 
             public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
             public List<ProceduralTaskGenerator.WeightedSpawn> tasks = new();
+            public List<NpcSpawnEntry> npcTasks = new();
 
             [MinValue(0f)] public float minTaskDistance = 1.5f;
+
+            [Serializable]
+            [InlineProperty]
+            [HideLabel]
+            public class NpcSpawnEntry
+            {
+                [Required] public GameObject prefab;
+                public string id;
+                public float localX;
+                [MinValue(0)] public int topBuffer = 0;
+                public bool spawnOnWater;
+                public bool spawnOnSand;
+                public bool spawnOnGrass = true;
+                public bool spawnOnlyOnce = true;
+            }
         }
 
         [Serializable]
