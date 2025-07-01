@@ -11,7 +11,6 @@ namespace TimelessEchoes.Skills
         public Sprite skillIcon;
         public float xpForFirstLevel = 10f;
         public float xpLevelMultiplier = 1.5f;
-        [TableList]
         public List<MilestoneBonus> milestones = new();
     }
 }
