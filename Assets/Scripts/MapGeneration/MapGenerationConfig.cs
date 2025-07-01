@@ -16,6 +16,7 @@ namespace TimelessEchoes.MapGeneration
         public TilemapChunkSettings tilemapChunkSettings = new();
         public ProceduralTaskSettings taskGeneratorSettings = new();
         public SegmentedMapSettings segmentedMapSettings = new();
+        public DecorSettings decorSettings = new();
 
         [Serializable]
         public class TilemapChunkSettings
@@ -60,6 +61,13 @@ namespace TimelessEchoes.MapGeneration
         public class SegmentedMapSettings
         {
             public Vector2Int segmentSize = new(64, 18);
+        }
+
+        [Serializable]
+        public class DecorSettings
+        {
+            [HideInInspector] [TabGroup("Decor", "References")] public Tilemap decorMap;
+            [TabGroup("Decor", "Items")] public List<TilemapChunkGenerator.DecorEntry> decor = new();
         }
     }
 }
