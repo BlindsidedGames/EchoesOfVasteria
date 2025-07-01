@@ -33,6 +33,17 @@ namespace TimelessEchoes.Tasks
         {
             if (opened || isWaiting) return;
 
+            if (ShouldInstantComplete())
+            {
+                if (chestAnimator != null)
+                    chestAnimator.SetTrigger("Open");
+                GenerateDrops();
+                GrantCompletionXP();
+                opened = true;
+                isWaiting = false;
+                return;
+            }
+
             // Trigger the chest's own animation (e.g., lid opening)
             if (chestAnimator != null)
                 chestAnimator.SetTrigger("Open");

@@ -209,8 +209,12 @@ namespace TimelessEchoes.Upgrades
             var lvl = controller ? controller.GetLevel(upgrade) : 0;
             float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
             float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
-            var current = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat + upgrade.baseValue * percent;
-            var next = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat + upgrade.baseValue * percent;
+
+            var baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
+            var current = baseCurrent * (1f + percent);
+
+            var baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
+            var next = baseNext * (1f + percent);
             references.statUpgradeInfoText.text = $"{current:0.###} -> {next:0.###}";
         }
 

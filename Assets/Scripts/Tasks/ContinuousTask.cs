@@ -36,6 +36,16 @@ namespace TimelessEchoes.Tasks
 
         public override void OnArrival(HeroController hero)
         {
+            if (ShouldInstantComplete())
+            {
+                hero.Animator.SetTrigger(InterruptTriggerName);
+                isComplete = true;
+                HideProgressBar();
+                GenerateDrops();
+                GrantCompletionXP();
+                return;
+            }
+
             hero.Animator.Play(AnimationName);
             ShowProgressBar();
         }
