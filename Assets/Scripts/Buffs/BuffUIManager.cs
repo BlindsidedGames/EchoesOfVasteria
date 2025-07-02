@@ -11,6 +11,7 @@ namespace TimelessEchoes.Buffs
     {
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI resourceInventoryUI;
+        [SerializeField] private BuffManager buffManager;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
         [SerializeField] private BuffIconUIReferences activeBuffPrefab;
@@ -33,6 +34,8 @@ namespace TimelessEchoes.Buffs
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceInventoryUI == null)
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+            if (buffManager == null)
+                buffManager = FindFirstObjectByType<BuffManager>();
 
             BuildRecipeEntries();
 
@@ -82,10 +85,10 @@ namespace TimelessEchoes.Buffs
                 var panel = pair.Value;
                 if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                var remaining = BuffManager.Instance ? BuffManager.Instance.GetRemaining(recipe) : 0f;
+                var remaining = buffManager != null ? buffManager.GetRemaining(recipe) : 0f;
                 var extra = recipe.baseDuration;
-                if (BuffManager.Instance != null && BuffManager.Instance.DiminishingCurve != null)
-                    extra *= BuffManager.Instance.DiminishingCurve.Evaluate(remaining);
+                if (buffManager != null && buffManager.DiminishingCurve != null)
+                    extra *= buffManager.DiminishingCurve.Evaluate(remaining);
                 panel.durationText.text =
                     $"Time remaining: {Mathf.Ceil(remaining)} -> {Mathf.Ceil(remaining + extra)}";
             }
@@ -96,7 +99,7 @@ namespace TimelessEchoes.Buffs
             if (recipePrefab == null || recipeParent == null)
                 return;
 
-            var manager = BuffManager.Instance;
+            var manager = buffManager;
             if (manager == null) return;
 
             foreach (var recipe in manager.Recipes)
@@ -170,7 +173,7 @@ namespace TimelessEchoes.Buffs
 
         private void PurchaseBuff(BuffRecipe recipe)
         {
-            if (BuffManager.Instance != null && BuffManager.Instance.PurchaseBuff(recipe))
+            if (buffManager != null && buffManager.PurchaseBuff(recipe))
                 UpdateActiveIcons();
         }
 
@@ -181,7 +184,7 @@ namespace TimelessEchoes.Buffs
                     Destroy(entry.refs.gameObject);
             iconEntries.Clear();
 
-            var manager = BuffManager.Instance;
+            var manager = buffManager;
             if (activeBuffParent == null || activeBuffPrefab == null || manager == null)
                 return;
 
