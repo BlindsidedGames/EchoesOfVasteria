@@ -8,5 +8,7 @@ namespace TimelessEchoes.References.StatPanel
         public Transform enemyEntryPrefab;
         public Transform taskEntryParent;
         public Transform taskEntryPrefab;
+        public Transform itemEntryParent;
+        public Transform itemEntryPrefab;
     }
 }
