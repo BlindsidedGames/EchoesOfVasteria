@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Radish
   m_EditorClassIdentifier: 
-  taskName: Wheat
+  taskName: Radish
   taskID: 4
   taskIcon: {fileID: -1041579510, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   xpForCompletion: 5
   taskDuration: 2
   resourceDrops:
-  - resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}
+  - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
     dropRange: {x: 1, y: 5}
     dropChance: 1
   persistent:
