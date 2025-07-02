@@ -120,6 +120,11 @@ namespace TimelessEchoes.Stats
             tasksCompleted++;
         }
 
+        public GameData.TaskRecord GetTaskRecord(TaskData data)
+        {
+            return data != null && taskRecords.TryGetValue(data, out var record) ? record : null;
+        }
+
         public void AddDistance(float dist)
         {
             if (dist > 0f)
