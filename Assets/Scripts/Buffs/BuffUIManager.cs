@@ -4,6 +4,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Buffs
 {
@@ -40,6 +41,8 @@ namespace TimelessEchoes.Buffs
 
             BuildRecipeEntries();
 
+            OnLoadData += OnLoadDataHandler;
+
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += OnInventoryChanged;
 
@@ -60,6 +63,7 @@ namespace TimelessEchoes.Buffs
         {
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChanged;
+            OnLoadData -= OnLoadDataHandler;
         }
 
         private void Update()
@@ -158,6 +162,12 @@ namespace TimelessEchoes.Buffs
         {
             foreach (var pair in recipeEntries)
                 BuildCostSlots(pair.Value, pair.Key);
+        }
+
+        private void OnLoadDataHandler()
+        {
+            UpdateActiveIcons();
+            OnInventoryChanged();
         }
 
         private void PurchaseBuff(BuffRecipe recipe)
