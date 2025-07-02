@@ -219,7 +219,7 @@ namespace TimelessEchoes.Tasks
                 var worldX = transform.position.x + localX;
 
                 var allowWater = TryGetWaterSpot(localX, out var waterPos);
-                var allowSand = TryGetSandSpot(localX, out var sandPos);
+                var allowSand = TryGetSandSpot(localX, 0, out var sandPos);
                 var allowGrass = TryGetGrassPosition(localX, 0, out var _);
                 var (entry, isEnemy, isWaterTask, isGrassTask, isSandTask) = PickEntry(worldX, allowWater, allowGrass, allowSand);
                 if (entry == null || entry.prefab == null)
@@ -229,7 +229,10 @@ namespace TimelessEchoes.Tasks
                 if (isWaterTask)
                     pos = waterPos;
                 else if (isSandTask)
-                    pos = sandPos;
+                {
+                    if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
+                        continue;
+                }
                 else if (isGrassTask)
                 {
                     if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
@@ -311,7 +314,7 @@ namespace TimelessEchoes.Tasks
 
                 Vector3 pos;
                 if (npc.spawnOnWater && TryGetWaterSpot(npc.localX, out pos)) { }
-                else if (npc.spawnOnSand && TryGetSandSpot(npc.localX, out pos)) { }
+                else if (npc.spawnOnSand && TryGetSandSpot(npc.localX, npc.topBuffer, out pos)) { }
                 else if (npc.spawnOnGrass && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
                 else
                     pos = RandomPositionAtX(npc.localX);
@@ -405,7 +408,7 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
-        private bool TryGetSandSpot(float localX, out Vector3 position)
+        private bool TryGetSandSpot(float localX, int topBuffer, out Vector3 position)
         {
             position = Vector3.zero;
             EnsureTilemaps();
@@ -415,9 +418,12 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var cell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = terrainMap.cellBounds.yMax;
+            var maxY = Mathf.Clamp(terrainMap.cellBounds.yMax - topBuffer,
+                                   terrainMap.cellBounds.yMin,
+                                   terrainMap.cellBounds.yMax);
             var minY = terrainMap.cellBounds.yMin - 1;
 
+            var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
             {
                 if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != sandTile)
@@ -428,18 +434,22 @@ namespace TimelessEchoes.Tasks
 
                 var candidateY = y - 1;
                 if (candidateY < minY)
-                    return false;
+                    continue;
                 if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != sandTile)
-                    return false;
+                    continue;
 
                 if (IsEdge(new Vector3Int(cell.x, candidateY, 0), sandTile))
-                    return false;
+                    continue;
 
-                position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, candidateY, 0));
-                return true;
+                validYs.Add(candidateY);
             }
 
-            return false;
+            if (validYs.Count == 0)
+                return false;
+
+            var idx = Random.Range(0, validYs.Count);
+            position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, validYs[idx], 0));
+            return true;
         }
 
         /// <summary>
