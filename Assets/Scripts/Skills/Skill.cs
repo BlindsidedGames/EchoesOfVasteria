@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Blindsided.Utilities;
 using UnityEngine;
 
 namespace TimelessEchoes.Skills
 {
+    [ManageableData]
     [CreateAssetMenu(fileName = "Skill", menuName = "SO/Skill")]
     public class Skill : SerializedScriptableObject
     {
