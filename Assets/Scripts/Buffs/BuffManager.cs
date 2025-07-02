@@ -85,12 +85,21 @@ namespace TimelessEchoes.Buffs
         private void TickBuffs(float delta)
         {
             if (delta <= 0f) return;
+            oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
             for (var i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 var buff = activeBuffs[i];
                 buff.remaining -= delta;
                 if (buff.remaining <= 0f)
+                {
                     activeBuffs.RemoveAt(i);
+                    if (buff.recipe != null)
+                        oracle.saveData.ActiveBuffs.Remove(buff.recipe.name);
+                }
+                else if (buff.recipe != null)
+                {
+                    oracle.saveData.ActiveBuffs[buff.recipe.name] = buff.remaining;
+                }
             }
         }
 
@@ -124,6 +133,10 @@ namespace TimelessEchoes.Buffs
                     extra *= diminishingCurve.Evaluate(buff.remaining);
                 buff.remaining += extra;
             }
+
+            oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
+            if (recipe != null)
+                oracle.saveData.ActiveBuffs[recipe.name] = buff.remaining;
 
             return true;
         }
