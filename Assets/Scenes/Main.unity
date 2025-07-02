@@ -3744,6 +3744,18 @@ MonoBehaviour:
     - Name: TotalResourcesGathered
       Entry: 4
       Data: 0
+    - Name: RecentRunDistances
+      Entry: 6
+      Data: 
+    - Name: LongestRun
+      Entry: 4
+      Data: 0
+    - Name: ShortestRun
+      Entry: 4
+      Data: 0
+    - Name: AverageRun
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -21198,6 +21210,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonParent: {fileID: 1806907640}
   buttonPrefab: {fileID: 1162157135740711347, guid: 121a8bc5c9b47e9418934e39291fb702, type: 3}
+  generalButton: {fileID: 368608009}
+  enemiesButton: {fileID: 1374515328}
+  tasksButton: {fileID: 1940074085}
+  itemsButton: {fileID: 1596403711}
   enemyPanel: {fileID: 1583740289}
   taskPanel: {fileID: 1583740291}
   itemPanel: {fileID: 1583740293}
@@ -28969,11 +28985,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Kills: 4 / 10
+  m_text: 'Kills: 64
 
-    Bonus Damage: 25%
+    Damage Dealt: 972<font-weight=400></font-weight>
 
-'
+    Deaths:
+    3
+
+    Damage Taken: 446<font-weight=400></font-weight>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3c784e62cfa46be4781056917903af84, type: 2}
   m_sharedMaterial: {fileID: 513855373743114750, guid: 3c784e62cfa46be4781056917903af84, type: 2}
@@ -29104,14 +29123,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Distance Travelled: 1.24 K
+  m_text: 'Distance Travelled: 2.03<font-weight=400> K</font-weight>
 
-    Longest Run: 145
+    Longest
+    Run: 184<font-weight=400></font-weight>
 
-    Tasks Completed:
-    562
+    Tasks Completed: 184<font-weight=400></font-weight>
 
-'
+    Resources
+    Gathered: 53'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3c784e62cfa46be4781056917903af84, type: 2}
   m_sharedMaterial: {fileID: 513855373743114750, guid: 3c784e62cfa46be4781056917903af84, type: 2}
