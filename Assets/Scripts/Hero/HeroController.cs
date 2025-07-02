@@ -100,6 +100,7 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
+            BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);

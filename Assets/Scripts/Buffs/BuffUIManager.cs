@@ -82,8 +82,13 @@ namespace TimelessEchoes.Buffs
             {
                 var panel = pair.Value;
                 if (panel.durationText == null) continue;
-                float remaining = controller ? controller.GetRemaining(pair.Key) : 0f;
-                panel.durationText.text = Mathf.Ceil(remaining > 0f ? remaining : pair.Key.baseDuration).ToString();
+                var recipe = pair.Key;
+                float remaining = controller ? controller.GetRemaining(recipe) : 0f;
+                float extra = recipe.baseDuration;
+                if (controller != null && controller.DiminishingCurve != null)
+                    extra *= controller.DiminishingCurve.Evaluate(remaining);
+                panel.durationText.text =
+                    $"{Mathf.Ceil(remaining)} -> {Mathf.Ceil(remaining + extra)}";
             }
         }
 
