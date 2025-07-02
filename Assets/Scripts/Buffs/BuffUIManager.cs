@@ -163,7 +163,12 @@ namespace TimelessEchoes.Buffs
         private void OnInventoryChanged()
         {
             foreach (var pair in recipeEntries)
+            {
                 BuildCostSlots(pair.Value, pair.Key);
+                if (pair.Value.purchaseButton != null)
+                    pair.Value.purchaseButton.interactable =
+                        buffManager != null && buffManager.CanPurchase(pair.Key);
+            }
         }
 
         private void OnLoadDataHandler()
