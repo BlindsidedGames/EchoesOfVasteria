@@ -89,20 +89,21 @@ namespace TimelessEchoes.UI
             double amount = resourceManager ? resourceManager.GetAmount(res) : 0;
             int collected = res.totalReceived;
             int spent = res.totalSpent;
+            bool earned = collected > 0;
 
             if (ui.entryIconImage != null)
             {
-                ui.entryIconImage.sprite = res.icon;
-                if (res.icon != null)
+                ui.entryIconImage.sprite = earned ? res.icon : null;
+                if (earned && res.icon != null)
                     ui.entryIconImage.SetNativeSize();
-                ui.entryIconImage.enabled = res.icon != null;
+                ui.entryIconImage.enabled = earned && res.icon != null;
             }
 
             if (ui.entryIDText != null)
                 ui.entryIDText.text = $"#{res.resourceID}";
 
             if (ui.entryNameText != null)
-                ui.entryNameText.text = res.name;
+                ui.entryNameText.text = earned ? res.name : "???";
 
             if (ui.entryHeldCollectedSpentText != null)
             {
