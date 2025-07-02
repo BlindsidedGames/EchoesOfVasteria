@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace TimelessEchoes.UI
 {
@@ -12,6 +13,11 @@ namespace TimelessEchoes.UI
     {
         [SerializeField] private Transform buttonParent;
         [SerializeField] private StatSortButton buttonPrefab;
+
+        [SerializeField] private Button generalButton;
+        [SerializeField] private Button enemiesButton;
+        [SerializeField] private Button tasksButton;
+        [SerializeField] private Button itemsButton;
 
         [SerializeField] private EnemyStatsPanelUI enemyPanel;
         [SerializeField] private TaskStatsPanelUI taskPanel;
@@ -24,6 +30,47 @@ namespace TimelessEchoes.UI
         private EnemyStatsPanelUI.SortMode enemyMode = EnemyStatsPanelUI.SortMode.Default;
         private TaskStatsPanelUI.SortMode taskMode = TaskStatsPanelUI.SortMode.Default;
         private ItemStatsPanelUI.SortMode itemMode = ItemStatsPanelUI.SortMode.Default;
+
+        private void Awake()
+        {
+            if (generalButton != null)
+                generalButton.onClick.AddListener(ShowGeneral);
+            if (enemiesButton != null)
+                enemiesButton.onClick.AddListener(ShowEnemies);
+            if (tasksButton != null)
+                tasksButton.onClick.AddListener(ShowTasks);
+            if (itemsButton != null)
+                itemsButton.onClick.AddListener(ShowItems);
+        }
+
+        private void Start()
+        {
+            SetTab(GetActiveTab());
+        }
+
+        private void OnDestroy()
+        {
+            if (generalButton != null)
+                generalButton.onClick.RemoveListener(ShowGeneral);
+            if (enemiesButton != null)
+                enemiesButton.onClick.RemoveListener(ShowEnemies);
+            if (tasksButton != null)
+                tasksButton.onClick.RemoveListener(ShowTasks);
+            if (itemsButton != null)
+                itemsButton.onClick.RemoveListener(ShowItems);
+        }
+
+        private void ShowGeneral() => SetTab(0);
+        private void ShowEnemies() => SetTab(1);
+        private void ShowTasks() => SetTab(2);
+        private void ShowItems() => SetTab(3);
+
+        private void SetTab(int tab)
+        {
+            if (currentTab == tab) return;
+            currentTab = tab;
+            BuildButtons();
+        }
 
         private void Update()
         {
