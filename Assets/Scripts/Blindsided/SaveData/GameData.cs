@@ -104,6 +104,12 @@ namespace Blindsided.SaveData
             public float DamageDealt;
             public float DamageTaken;
             public double TotalResourcesGathered;
+
+            // Distances recorded for the most recent runs. Limited to the last 50.
+            public List<float> RecentRunDistances = new();
+            public float LongestRun;
+            public float ShortestRun;
+            public float AverageRun;
         }
 
 

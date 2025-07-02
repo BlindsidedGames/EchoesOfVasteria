@@ -20,6 +20,11 @@ namespace TimelessEchoes.Stats
         private float damageDealt;
         private float damageTaken;
         private double totalResourcesGathered;
+        private readonly List<float> recentRunDistances = new();
+        private float currentRunDistance;
+        private float longestRun;
+        private float shortestRun;
+        private float averageRun;
 
         public float DistanceTravelled => distanceTravelled;
         public float HighestDistance => highestDistance;
@@ -29,6 +34,10 @@ namespace TimelessEchoes.Stats
         public float DamageDealt => damageDealt;
         public float DamageTaken => damageTaken;
         public double TotalResourcesGathered => totalResourcesGathered;
+        public IReadOnlyList<float> RecentRunDistances => recentRunDistances;
+        public float LongestRun => longestRun;
+        public float ShortestRun => shortestRun;
+        public float AverageRun => averageRun;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -88,6 +97,10 @@ namespace TimelessEchoes.Stats
             g.DamageDealt = damageDealt;
             g.DamageTaken = damageTaken;
             g.TotalResourcesGathered = totalResourcesGathered;
+            g.RecentRunDistances = new List<float>(recentRunDistances);
+            g.LongestRun = longestRun;
+            g.ShortestRun = shortestRun;
+            g.AverageRun = averageRun;
             oracle.saveData.General = g;
         }
 
@@ -114,6 +127,12 @@ namespace TimelessEchoes.Stats
             damageDealt = g.DamageDealt;
             damageTaken = g.DamageTaken;
             totalResourcesGathered = g.TotalResourcesGathered;
+            recentRunDistances.Clear();
+            if (g.RecentRunDistances != null)
+                recentRunDistances.AddRange(g.RecentRunDistances);
+            longestRun = g.LongestRun;
+            shortestRun = g.ShortestRun;
+            averageRun = g.AverageRun;
         }
 
         public void RegisterTaskComplete(TaskData data, float duration, float xp)
@@ -154,6 +173,8 @@ namespace TimelessEchoes.Stats
             }
             if (position.x > highestDistance)
                 highestDistance = position.x;
+            if (position.x > currentRunDistance)
+                currentRunDistance = position.x;
         }
 
         public void AddKill()
@@ -179,6 +200,28 @@ namespace TimelessEchoes.Stats
         public void AddResources(double amount)
         {
             if (amount > 0) totalResourcesGathered += amount;
+        }
+
+        private void AddRunDistance(float distance)
+        {
+            if (distance <= 0f) return;
+            recentRunDistances.Add(distance);
+            if (recentRunDistances.Count > 50)
+                recentRunDistances.RemoveAt(0);
+
+            if (distance > longestRun) longestRun = distance;
+            if (shortestRun <= 0f || distance < shortestRun) shortestRun = distance;
+
+            float sum = 0f;
+            foreach (var d in recentRunDistances) sum += d;
+            averageRun = recentRunDistances.Count > 0 ? sum / recentRunDistances.Count : 0f;
+        }
+
+        public void EndRun()
+        {
+            AddRunDistance(currentRunDistance);
+            currentRunDistance = 0f;
+            lastHeroPos = Vector3.zero;
         }
     }
 }
