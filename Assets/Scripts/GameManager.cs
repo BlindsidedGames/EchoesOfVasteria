@@ -131,16 +131,18 @@ namespace TimelessEchoes
 
         private void CleanupMap()
         {
+            BuffManager.Instance?.Pause();
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
+
+            if (hero != null) // deactivate AIPath first
+                hero.gameObject.SetActive(false);
+
             if (currentMap != null)
             {
-                Destroy(currentMap);
+                Destroy(currentMap); // safe to destroy AstarPath now
                 currentMap = null;
             }
-
-            if (hero != null)
-                hero.gameObject.SetActive(false);
         }
     }
 }
