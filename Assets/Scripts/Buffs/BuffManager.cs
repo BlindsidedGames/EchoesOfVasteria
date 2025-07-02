@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
@@ -7,13 +8,14 @@ using static Blindsided.Oracle;
 namespace TimelessEchoes.Buffs
 {
     /// <summary>
-    /// Manages active buffs and persists them across scenes.
+    ///     Manages active buffs and persists them across scenes.
     /// </summary>
     public class BuffManager : MonoBehaviour
     {
         public static BuffManager Instance { get; private set; }
 
         [SerializeField] private ResourceManager resourceManager;
+
         [SerializeField] private AnimationCurve diminishingCurve =
             AnimationCurve.Linear(0f, 1f, 60f, 0f);
 
@@ -34,7 +36,6 @@ namespace TimelessEchoes.Buffs
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
@@ -58,7 +59,7 @@ namespace TimelessEchoes.Buffs
         }
 
         /// <summary>
-        /// Update all buff timers.
+        ///     Update all buff timers.
         /// </summary>
         /// <param name="delta">Time elapsed since last tick.</param>
         public void Tick(float delta)
@@ -68,15 +69,21 @@ namespace TimelessEchoes.Buffs
         }
 
         /// <summary>Pauses ticking of buff timers.</summary>
-        public void Pause() => ticking = false;
+        public void Pause()
+        {
+            ticking = false;
+        }
 
         /// <summary>Resumes ticking of buff timers.</summary>
-        public void Resume() => ticking = true;
+        public void Resume()
+        {
+            ticking = true;
+        }
 
         private void TickBuffs(float delta)
         {
             if (delta <= 0f) return;
-            for (int i = activeBuffs.Count - 1; i >= 0; i--)
+            for (var i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 var buff = activeBuffs[i];
                 buff.remaining -= delta;
@@ -89,11 +96,9 @@ namespace TimelessEchoes.Buffs
         {
             if (recipe == null) return false;
             foreach (var req in recipe.requirements)
-            {
                 if (resourceManager != null &&
                     resourceManager.GetAmount(req.resource) < req.amount)
                     return false;
-            }
             return true;
         }
 
@@ -112,7 +117,7 @@ namespace TimelessEchoes.Buffs
             }
             else
             {
-                float extra = recipe.baseDuration;
+                var extra = recipe.baseDuration;
                 if (diminishingCurve != null)
                     extra *= diminishingCurve.Evaluate(buff.remaining);
                 buff.remaining += extra;
@@ -131,7 +136,7 @@ namespace TimelessEchoes.Buffs
         {
             get
             {
-                float percent = 0f;
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     percent += b.recipe.moveSpeedPercent;
                 return 1f + percent / 100f;
@@ -142,7 +147,7 @@ namespace TimelessEchoes.Buffs
         {
             get
             {
-                float percent = 0f;
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     percent += b.recipe.damagePercent;
                 return 1f + percent / 100f;
@@ -153,7 +158,7 @@ namespace TimelessEchoes.Buffs
         {
             get
             {
-                float percent = 0f;
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     percent += b.recipe.defensePercent;
                 return 1f + percent / 100f;
@@ -164,7 +169,7 @@ namespace TimelessEchoes.Buffs
         {
             get
             {
-                float percent = 0f;
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     percent += b.recipe.attackSpeedPercent;
                 return 1f + percent / 100f;
@@ -176,10 +181,8 @@ namespace TimelessEchoes.Buffs
             if (oracle == null) return;
             var dict = new Dictionary<string, float>();
             foreach (var buff in activeBuffs)
-            {
                 if (buff.recipe != null && buff.remaining > 0f)
                     dict[buff.recipe.name] = buff.remaining;
-            }
             oracle.saveData.ActiveBuffs = dict;
         }
 
@@ -201,7 +204,7 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        [System.Serializable]
+        [Serializable]
         public class ActiveBuff
         {
             public BuffRecipe recipe;
@@ -209,4 +212,3 @@ namespace TimelessEchoes.Buffs
         }
     }
 }
-
