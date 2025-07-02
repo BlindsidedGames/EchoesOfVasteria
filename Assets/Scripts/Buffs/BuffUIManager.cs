@@ -3,7 +3,6 @@ using References.UI;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Buffs
@@ -64,7 +63,7 @@ namespace TimelessEchoes.Buffs
 
         private void Update()
         {
-            for (int i = iconEntries.Count - 1; i >= 0; i--)
+            for (var i = iconEntries.Count - 1; i >= 0; i--)
             {
                 var entry = iconEntries[i];
                 if (entry.buff.remaining <= 0f)
@@ -83,12 +82,12 @@ namespace TimelessEchoes.Buffs
                 var panel = pair.Value;
                 if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                float remaining = BuffManager.Instance ? BuffManager.Instance.GetRemaining(recipe) : 0f;
-                float extra = recipe.baseDuration;
+                var remaining = BuffManager.Instance ? BuffManager.Instance.GetRemaining(recipe) : 0f;
+                var extra = recipe.baseDuration;
                 if (BuffManager.Instance != null && BuffManager.Instance.DiminishingCurve != null)
                     extra *= BuffManager.Instance.DiminishingCurve.Evaluate(remaining);
                 panel.durationText.text =
-                    $"{Mathf.Ceil(remaining)} -> {Mathf.Ceil(remaining + extra)}";
+                    $"Time remaining: {Mathf.Ceil(remaining)} -> {Mathf.Ceil(remaining + extra)}";
             }
         }
 
@@ -138,7 +137,7 @@ namespace TimelessEchoes.Buffs
                     slot.selectButton.interactable = true;
                 }
 
-                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
 
                 if (slot.iconImage != null)
                 {
