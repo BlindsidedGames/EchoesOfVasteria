@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using References.UI;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
@@ -167,6 +168,13 @@ namespace TimelessEchoes.Buffs
 
         private void OnLoadDataHandler()
         {
+            StartCoroutine(DeferredRefresh());
+        }
+
+        private IEnumerator DeferredRefresh()
+        {
+            // Wait one frame so BuffManager.LoadState has time to repopulate ActiveBuffs
+            yield return null;
             UpdateActiveIcons();
             OnInventoryChanged();
         }
