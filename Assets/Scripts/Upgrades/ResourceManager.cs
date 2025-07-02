@@ -76,8 +76,7 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += amount;
             else
                 amounts[resource] = amount;
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.AddItemReceived(resource, Mathf.RoundToInt((float)amount));
+            resource.totalReceived += Mathf.RoundToInt((float)amount);
             OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }
@@ -88,8 +87,7 @@ namespace TimelessEchoes.Upgrades
             var current = GetAmount(resource);
             if (current < amount) return false;
             amounts[resource] = current - amount;
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.AddItemSpent(resource, Mathf.RoundToInt((float)amount));
+            resource.totalSpent += Mathf.RoundToInt((float)amount);
             InvokeInventoryChanged();
             return true;
         }
@@ -121,12 +119,25 @@ namespace TimelessEchoes.Upgrades
             }
 
             oracle.saveData.Resources = dict;
+
+            var stats = new Dictionary<string, GameData.ResourceRecord>();
+            foreach (var res in Resources.LoadAll<Resource>(""))
+            {
+                if (res == null) continue;
+                stats[res.name] = new GameData.ResourceRecord
+                {
+                    TotalReceived = res.totalReceived,
+                    TotalSpent = res.totalSpent
+                };
+            }
+            oracle.saveData.ResourceStats = stats;
         }
 
         private void LoadState()
         {
             if (oracle == null) return;
             oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
+            oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             EnsureLookup();
             amounts.Clear();
             unlocked.Clear();
@@ -136,6 +147,20 @@ namespace TimelessEchoes.Upgrades
                     amounts[res] = pair.Value.Amount;
                     if (pair.Value.Earned) unlocked.Add(res);
                 }
+
+            foreach (var res in lookup.Values)
+            {
+                if (oracle.saveData.ResourceStats.TryGetValue(res.name, out var s))
+                {
+                    res.totalReceived = s.TotalReceived;
+                    res.totalSpent = s.TotalSpent;
+                }
+                else
+                {
+                    res.totalReceived = 0;
+                    res.totalSpent = 0;
+                }
+            }
             InvokeInventoryChanged();
         }
 

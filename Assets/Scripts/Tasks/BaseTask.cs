@@ -12,6 +12,11 @@ namespace TimelessEchoes.Tasks
     {
         [SerializeField] public Skill associatedSkill;
         [SerializeField] private float xpGrantedOnCompletion;
+        [SerializeField] public TaskData taskData;
+
+        private float lastGrantedXp;
+
+        public float LastGrantedXp => lastGrantedXp;
 
         /// <summary>
         ///     A property to indicate if this task should prevent the hero from moving.
@@ -62,9 +67,10 @@ namespace TimelessEchoes.Tasks
             return controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
         }
 
-        protected void GrantCompletionXP()
+        protected float GrantCompletionXP()
         {
-            if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return;
+            lastGrantedXp = 0f;
+            if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return 0f;
             var controller = FindFirstObjectByType<SkillController>();
             var amount = xpGrantedOnCompletion;
             if (controller)
@@ -73,6 +79,8 @@ namespace TimelessEchoes.Tasks
                 amount *= mult;
             }
             controller?.AddExperience(associatedSkill, amount);
+            lastGrantedXp = amount;
+            return amount;
         }
     }
 }

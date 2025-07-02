@@ -10,5 +10,8 @@ namespace TimelessEchoes.Upgrades
     public class Resource : ScriptableObject
     {
         public Sprite icon;
+
+        [HideInInspector] public int totalReceived;
+        [HideInInspector] public int totalSpent;
     }
 }
