@@ -61,12 +61,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 84840229f7fda1b45a9143488951540d, type: 2}
     - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: resourceDrops.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: resourceDrops.Array.data[1].resource
+      value: 
+      objectReference: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: resourceDrops.Array.data[1].dropChance
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
       propertyPath: resourceDrops.Array.data[0].dropRange.x
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
       propertyPath: resourceDrops.Array.data[0].dropRange.y
       value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: resourceDrops.Array.data[1].dropRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263738220208231591, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: resourceDrops.Array.data[1].dropRange.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9165481713511291873, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
       propertyPath: m_Sprite
