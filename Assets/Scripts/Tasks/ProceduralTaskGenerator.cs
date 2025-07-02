@@ -432,16 +432,16 @@ namespace TimelessEchoes.Tasks
                 if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile)
                     continue;
 
-                var candidateY = y - 1;
-                if (candidateY < minY)
-                    continue;
-                if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != sandTile)
-                    continue;
+                for (var candidateY = y - 1; candidateY >= minY; candidateY--)
+                {
+                    if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != sandTile)
+                        break;
 
-                if (IsEdge(new Vector3Int(cell.x, candidateY, 0), sandTile))
-                    continue;
+                    if (IsEdge(new Vector3Int(cell.x, candidateY, 0), sandTile))
+                        continue;
 
-                validYs.Add(candidateY);
+                    validYs.Add(candidateY);
+                }
             }
 
             if (validYs.Count == 0)
