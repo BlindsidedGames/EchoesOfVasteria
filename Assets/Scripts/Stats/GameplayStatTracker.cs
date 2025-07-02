@@ -20,13 +20,8 @@ namespace TimelessEchoes.Stats
         private float damageDealt;
         private float damageTaken;
         private double totalResourcesGathered;
-        private readonly List<GameData.RunRecord> recentRuns = new();
+        private readonly List<float> recentRunDistances = new();
         private float currentRunDistance;
-        private int currentRunTasks;
-        private double currentRunResources;
-        private int currentRunKills;
-        private float currentRunDamageDealt;
-        private float currentRunDamageTaken;
         private float longestRun;
         private float shortestRun;
         private float averageRun;
@@ -39,7 +34,7 @@ namespace TimelessEchoes.Stats
         public float DamageDealt => damageDealt;
         public float DamageTaken => damageTaken;
         public double TotalResourcesGathered => totalResourcesGathered;
-        public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
+        public IReadOnlyList<float> RecentRunDistances => recentRunDistances;
         public float LongestRun => longestRun;
         public float ShortestRun => shortestRun;
         public float AverageRun => averageRun;
@@ -102,7 +97,7 @@ namespace TimelessEchoes.Stats
             g.DamageDealt = damageDealt;
             g.DamageTaken = damageTaken;
             g.TotalResourcesGathered = totalResourcesGathered;
-            g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
+            g.RecentRunDistances = new List<float>(recentRunDistances);
             g.LongestRun = longestRun;
             g.ShortestRun = shortestRun;
             g.AverageRun = averageRun;
@@ -132,9 +127,9 @@ namespace TimelessEchoes.Stats
             damageDealt = g.DamageDealt;
             damageTaken = g.DamageTaken;
             totalResourcesGathered = g.TotalResourcesGathered;
-            recentRuns.Clear();
-            if (g.RecentRuns != null)
-                recentRuns.AddRange(g.RecentRuns);
+            recentRunDistances.Clear();
+            if (g.RecentRunDistances != null)
+                recentRunDistances.AddRange(g.RecentRunDistances);
             longestRun = g.LongestRun;
             shortestRun = g.ShortestRun;
             averageRun = g.AverageRun;
@@ -154,7 +149,6 @@ namespace TimelessEchoes.Stats
             record.TimeSpent += duration;
             record.XpGained += xp;
             tasksCompleted++;
-            currentRunTasks++;
         }
 
         public GameData.TaskRecord GetTaskRecord(TaskData data)
@@ -186,7 +180,6 @@ namespace TimelessEchoes.Stats
         public void AddKill()
         {
             totalKills++;
-            currentRunKills++;
         }
 
         public void AddDeath()
@@ -196,66 +189,38 @@ namespace TimelessEchoes.Stats
 
         public void AddDamageDealt(float amount)
         {
-            if (amount > 0f)
-            {
-                damageDealt += amount;
-                currentRunDamageDealt += amount;
-            }
+            if (amount > 0f) damageDealt += amount;
         }
 
         public void AddDamageTaken(float amount)
         {
-            if (amount > 0f)
-            {
-                damageTaken += amount;
-                currentRunDamageTaken += amount;
-            }
+            if (amount > 0f) damageTaken += amount;
         }
 
         public void AddResources(double amount)
         {
-            if (amount > 0)
-            {
-                totalResourcesGathered += amount;
-                currentRunResources += amount;
-            }
+            if (amount > 0) totalResourcesGathered += amount;
         }
 
-        private void AddRunRecord(GameData.RunRecord record)
+        private void AddRunDistance(float distance)
         {
-            if (record == null || record.Distance <= 0f) return;
-            recentRuns.Add(record);
-            if (recentRuns.Count > 50)
-                recentRuns.RemoveAt(0);
+            if (distance <= 0f) return;
+            recentRunDistances.Add(distance);
+            if (recentRunDistances.Count > 50)
+                recentRunDistances.RemoveAt(0);
 
-            if (record.Distance > longestRun) longestRun = record.Distance;
-            if (shortestRun <= 0f || record.Distance < shortestRun) shortestRun = record.Distance;
+            if (distance > longestRun) longestRun = distance;
+            if (shortestRun <= 0f || distance < shortestRun) shortestRun = distance;
 
             float sum = 0f;
-            foreach (var r in recentRuns) sum += r.Distance;
-            averageRun = recentRuns.Count > 0 ? sum / recentRuns.Count : 0f;
+            foreach (var d in recentRunDistances) sum += d;
+            averageRun = recentRunDistances.Count > 0 ? sum / recentRunDistances.Count : 0f;
         }
 
-        public void EndRun(bool died)
+        public void EndRun()
         {
-            var record = new GameData.RunRecord
-            {
-                Distance = currentRunDistance,
-                TasksCompleted = currentRunTasks,
-                ResourcesCollected = currentRunResources,
-                EnemiesKilled = currentRunKills,
-                DamageDealt = currentRunDamageDealt,
-                DamageTaken = currentRunDamageTaken,
-                Died = died
-            };
-            AddRunRecord(record);
-
+            AddRunDistance(currentRunDistance);
             currentRunDistance = 0f;
-            currentRunTasks = 0;
-            currentRunResources = 0;
-            currentRunKills = 0;
-            currentRunDamageDealt = 0f;
-            currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
         }
     }
