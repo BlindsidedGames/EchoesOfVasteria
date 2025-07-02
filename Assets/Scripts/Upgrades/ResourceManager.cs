@@ -77,6 +77,8 @@ namespace TimelessEchoes.Upgrades
             else
                 amounts[resource] = amount;
             resource.totalReceived += Mathf.RoundToInt((float)amount);
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.AddResources(amount);
             OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }

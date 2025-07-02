@@ -103,6 +103,7 @@ namespace Blindsided.SaveData
             public int Deaths;
             public float DamageDealt;
             public float DamageTaken;
+            public double TotalResourcesGathered;
         }
 
 
