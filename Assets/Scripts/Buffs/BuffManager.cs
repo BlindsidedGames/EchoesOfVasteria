@@ -26,6 +26,8 @@ namespace TimelessEchoes.Buffs
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
         public AnimationCurve DiminishingCurve => diminishingCurve;
+        public IEnumerable<BuffRecipe> Recipes =>
+            allRecipes?.Count > 0 ? allRecipes : Resources.LoadAll<BuffRecipe>("");
 
         private void Awake()
         {
