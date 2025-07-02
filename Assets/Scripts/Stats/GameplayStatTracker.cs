@@ -20,6 +20,14 @@ namespace TimelessEchoes.Stats
         private float damageDealt;
         private float damageTaken;
 
+        public float DistanceTravelled => distanceTravelled;
+        public float HighestDistance => highestDistance;
+        public int TotalKills => totalKills;
+        public int TasksCompleted => tasksCompleted;
+        public int Deaths => deaths;
+        public float DamageDealt => damageDealt;
+        public float DamageTaken => damageTaken;
+
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
         private static Dictionary<string, TaskData> taskLookup;
