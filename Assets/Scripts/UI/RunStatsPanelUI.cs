@@ -48,7 +48,7 @@ namespace TimelessEchoes.UI
             if (averageRunSlider != null)
             {
                 float avgRatio = longest > 0f ? statTracker.AverageRun / longest : 0f;
-                averageRunSlider.value = avgRatio * 100f;
+                averageRunSlider.value = Mathf.Clamp01(avgRatio);
             }
 
             var runs = statTracker.RecentRuns;
