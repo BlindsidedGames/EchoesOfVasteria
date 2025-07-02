@@ -94,6 +94,18 @@ namespace Blindsided.SaveData
         }
 
         [HideReferenceObjectPicker]
+        public class RunRecord
+        {
+            public float Distance;
+            public int TasksCompleted;
+            public double ResourcesCollected;
+            public int EnemiesKilled;
+            public float DamageDealt;
+            public float DamageTaken;
+            public bool Died;
+        }
+
+        [HideReferenceObjectPicker]
         public class GeneralStats
         {
             public float DistanceTravelled;
@@ -105,8 +117,8 @@ namespace Blindsided.SaveData
             public float DamageTaken;
             public double TotalResourcesGathered;
 
-            // Distances recorded for the most recent runs. Limited to the last 50.
-            public List<float> RecentRunDistances = new();
+            // Records for the most recent runs. Limited to the last 50.
+            public List<RunRecord> RecentRuns = new();
             public float LongestRun;
             public float ShortestRun;
             public float AverageRun;
