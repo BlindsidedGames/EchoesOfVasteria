@@ -1,6 +1,7 @@
 using Blindsided.Utilities;
 using TimelessEchoes.Hero;
 using UnityEngine;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Tasks
 {
@@ -38,7 +39,7 @@ namespace TimelessEchoes.Tasks
         {
             if (ShouldInstantComplete())
             {
-                hero.Animator.SetTrigger(InterruptTriggerName);
+                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
                 isComplete = true;
                 HideProgressBar();
                 GenerateDrops();
@@ -57,7 +58,7 @@ namespace TimelessEchoes.Tasks
 
             if (timer >= taskDuration)
             {
-                hero.Animator.SetTrigger(InterruptTriggerName);
+                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
                 isComplete = true;
                 HideProgressBar();
                 GenerateDrops();
@@ -68,7 +69,7 @@ namespace TimelessEchoes.Tasks
 
         public override void OnInterrupt(HeroController hero)
         {
-            hero.Animator.SetTrigger(InterruptTriggerName);
+            AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
             HideProgressBar();
         }
 
