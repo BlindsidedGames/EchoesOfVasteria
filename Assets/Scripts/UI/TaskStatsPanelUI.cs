@@ -92,22 +92,22 @@ namespace TimelessEchoes.UI
 
             if (ui.entryIconImage != null)
             {
-                ui.entryIconImage.sprite = data.taskIcon;
-                if (data.taskIcon != null)
+                ui.entryIconImage.sprite = completed > 0 ? data.taskIcon : null;
+                if (completed > 0 && data.taskIcon != null)
                     ui.entryIconImage.SetNativeSize();
-                ui.entryIconImage.enabled = data.taskIcon != null;
+                ui.entryIconImage.enabled = completed > 0 && data.taskIcon != null;
             }
 
             if (ui.entryIDText != null)
                 ui.entryIDText.text = $"#{data.taskID}";
 
             if (ui.entryNameText != null)
-                ui.entryNameText.text = data.taskName;
+                ui.entryNameText.text = completed > 0 ? data.taskName : "???";
 
             if (ui.entryCompletionsTimeOnTaskExperienceText != null)
             {
                 string comp = CalcUtils.FormatNumber(completed, true, 400f, false);
-                string timeStr = CalcUtils.FormatNumber(time, true, 400f, false);
+                string timeStr = CalcUtils.FormatTime(time);
                 string xpStr = CalcUtils.FormatNumber(xp, true, 400f, false);
                 ui.entryCompletionsTimeOnTaskExperienceText.text = $"Completions: {comp}\nTime on Task: {timeStr}\nXP: {xpStr}";
             }
