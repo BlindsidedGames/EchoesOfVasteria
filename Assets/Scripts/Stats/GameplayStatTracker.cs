@@ -19,6 +19,7 @@ namespace TimelessEchoes.Stats
         private int deaths;
         private float damageDealt;
         private float damageTaken;
+        private double totalResourcesGathered;
 
         public float DistanceTravelled => distanceTravelled;
         public float HighestDistance => highestDistance;
@@ -27,6 +28,7 @@ namespace TimelessEchoes.Stats
         public int Deaths => deaths;
         public float DamageDealt => damageDealt;
         public float DamageTaken => damageTaken;
+        public double TotalResourcesGathered => totalResourcesGathered;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -85,6 +87,7 @@ namespace TimelessEchoes.Stats
             g.Deaths = deaths;
             g.DamageDealt = damageDealt;
             g.DamageTaken = damageTaken;
+            g.TotalResourcesGathered = totalResourcesGathered;
             oracle.saveData.General = g;
         }
 
@@ -110,6 +113,7 @@ namespace TimelessEchoes.Stats
             deaths = g.Deaths;
             damageDealt = g.DamageDealt;
             damageTaken = g.DamageTaken;
+            totalResourcesGathered = g.TotalResourcesGathered;
         }
 
         public void RegisterTaskComplete(TaskData data, float duration, float xp)
@@ -170,6 +174,11 @@ namespace TimelessEchoes.Stats
         public void AddDamageTaken(float amount)
         {
             if (amount > 0f) damageTaken += amount;
+        }
+
+        public void AddResources(double amount)
+        {
+            if (amount > 0) totalResourcesGathered += amount;
         }
     }
 }
