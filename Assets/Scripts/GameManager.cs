@@ -8,6 +8,7 @@ using TimelessEchoes.Buffs;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
+using TimelessEchoes.NPC;
 
 namespace TimelessEchoes
 {
@@ -31,6 +32,7 @@ namespace TimelessEchoes
         private HeroController hero;
         private CinemachineCamera mapCamera;
         private TaskController taskController;
+        [SerializeField] private NpcObjectStateController npcObjectStateController;
 
         private void Awake()
         {
@@ -38,12 +40,15 @@ namespace TimelessEchoes
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(ReturnToTavern);
+            if (npcObjectStateController == null)
+                npcObjectStateController = FindFirstObjectByType<NpcObjectStateController>();
         }
 
         private void Start()
         {
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            npcObjectStateController?.UpdateObjectStates();
         }
 
         private void HideTooltip()
@@ -105,6 +110,7 @@ namespace TimelessEchoes
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
+            npcObjectStateController?.UpdateObjectStates();
         }
 
         private void OnHeroDeath()
@@ -127,6 +133,7 @@ namespace TimelessEchoes
                 tavernCamera.gameObject.SetActive(true);
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            npcObjectStateController?.UpdateObjectStates();
         }
 
         private void CleanupMap()
