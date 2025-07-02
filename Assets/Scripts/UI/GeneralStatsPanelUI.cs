@@ -35,11 +35,13 @@ namespace TimelessEchoes.UI
             if (references.distanceLongestTasksText != null)
             {
                 string dist = CalcUtils.FormatNumber(statTracker.DistanceTravelled, true, 400f, false);
-                string longest = CalcUtils.FormatNumber(statTracker.HighestDistance, true, 400f, false);
+                string longest = CalcUtils.FormatNumber(statTracker.LongestRun, true, 400f, false);
+                string shortest = CalcUtils.FormatNumber(statTracker.ShortestRun, true, 400f, false);
+                string average = CalcUtils.FormatNumber(statTracker.AverageRun, true, 400f, false);
                 string tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true, 400f, false);
                 string resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true, 400f, false);
                 references.distanceLongestTasksText.text =
-                    $"Distance Travelled: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    $"Distance Travelled: {dist}\nLongest Run: {longest}\nShortest Run: {shortest}\nAverage Run: {average}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
             }
 
             if (references.killsDamageDeathsText != null)
