@@ -186,7 +186,7 @@ namespace TimelessEchoes.Enemies
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(setter.target, stats.damage);
+                proj.Init(setter.target, stats.damage, false);
         }
 
         private void OnDeath()
@@ -214,6 +214,8 @@ namespace TimelessEchoes.Enemies
 
             var tracker = FindFirstObjectByType<EnemyKillTracker>();
             tracker?.RegisterKill(stats);
+            var statsTracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            statsTracker?.AddKill();
         }
 
         private void OnDestroy()

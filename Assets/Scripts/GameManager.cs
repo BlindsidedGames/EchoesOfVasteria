@@ -122,6 +122,9 @@ namespace TimelessEchoes
                     hp.OnDeath -= OnHeroDeath;
             }
 
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.AddDeath();
+
             StartRun();
         }
 

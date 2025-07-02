@@ -38,6 +38,11 @@ namespace TimelessEchoes.Enemies
             {
                 FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
             }
+            if (isHero)
+            {
+                var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                tracker?.AddDamageTaken(amount);
+            }
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();

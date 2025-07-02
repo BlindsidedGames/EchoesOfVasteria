@@ -76,6 +76,8 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += amount;
             else
                 amounts[resource] = amount;
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.AddItemReceived(resource, Mathf.RoundToInt((float)amount));
             OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }
@@ -86,6 +88,8 @@ namespace TimelessEchoes.Upgrades
             var current = GetAmount(resource);
             if (current < amount) return false;
             amounts[resource] = current - amount;
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.AddItemSpent(resource, Mathf.RoundToInt((float)amount));
             InvokeInventoryChanged();
             return true;
         }
