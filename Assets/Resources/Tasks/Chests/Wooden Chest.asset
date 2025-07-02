@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Wooden Chest
   m_EditorClassIdentifier: 
-  taskName: 
-  taskID: 
-  taskIcon: {fileID: 0}
-  associatedSkill: {fileID: 0}
-  xpForCompletion: 0
-  taskDuration: 0
-  resourceDrops: []
+  taskName: Wooden Chest
+  taskID: 5
+  taskIcon: {fileID: -7070875390197807606, guid: 1ec0b90faf4188545ba0f1bd405b6df3, type: 3}
+  associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
+  xpForCompletion: 5
+  taskDuration: 0.5
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
+    dropRange: {x: 1, y: 5}
+    dropChance: 1
   persistent:
     totalTimesCompleted: 0
     timeSpent: 0
