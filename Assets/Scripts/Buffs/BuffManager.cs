@@ -21,6 +21,7 @@ namespace TimelessEchoes.Buffs
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
+        public AnimationCurve DiminishingCurve => diminishingCurve;
 
         private void Awake()
         {
@@ -41,6 +42,11 @@ namespace TimelessEchoes.Buffs
             OnLoadData += LoadState;
         }
 
+        private void Start()
+        {
+            LoadState();
+        }
+
         private void OnDestroy()
         {
             if (Instance == this)
@@ -49,10 +55,14 @@ namespace TimelessEchoes.Buffs
             OnLoadData -= LoadState;
         }
 
-        private void Update()
+        /// <summary>
+        /// Update all buff timers.
+        /// </summary>
+        /// <param name="delta">Time elapsed since last tick.</param>
+        public void Tick(float delta)
         {
             if (ticking)
-                TickBuffs(Time.deltaTime);
+                TickBuffs(delta);
         }
 
         /// <summary>Pauses ticking of buff timers.</summary>

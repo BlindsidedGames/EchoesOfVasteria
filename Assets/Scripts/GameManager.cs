@@ -62,7 +62,6 @@ namespace TimelessEchoes
         private IEnumerator StartRunRoutine()
         {
             CleanupMap();
-            BuffManager.Instance?.Resume();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
@@ -124,7 +123,6 @@ namespace TimelessEchoes
         {
             HideTooltip();
             CleanupMap();
-            BuffManager.Instance?.Pause();
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);
             tavernUI?.SetActive(true);
@@ -133,7 +131,6 @@ namespace TimelessEchoes
 
         private void CleanupMap()
         {
-            BuffManager.Instance?.Pause();
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
             if (currentMap != null)
