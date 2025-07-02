@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Eznorb Ore
+  m_EditorClassIdentifier: 
+  taskName: Eznorb Ore
+  taskID: 1
+  taskIcon: {fileID: 5050492222661095950, guid: 513dea0f987e3824db48aa939832f2f7, type: 3}
+  associatedSkill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
+  xpForCompletion: 3
+  taskDuration: 2
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+    dropRange: {x: 4, y: 12}
+    dropChance: 1
+  - resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}
+    dropRange: {x: 2, y: 5}
+    dropChance: 0.5
+  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.2
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0
