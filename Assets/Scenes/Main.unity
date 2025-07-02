@@ -3701,6 +3701,113 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: Tasks
+      Entry: 7
+      Data: 12|Blindsided.SaveData.GameData+TaskStats, Assembly-CSharp
+    - Name: Completed
+      Entry: 7
+      Data: 13|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 14|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: TimeSpent
+      Entry: 7
+      Data: 15|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 14
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Items
+      Entry: 7
+      Data: 16|Blindsided.SaveData.GameData+ItemStats, Assembly-CSharp
+    - Name: ItemsReceived
+      Entry: 7
+      Data: 17|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 14
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ItemsSpent
+      Entry: 7
+      Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 14
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: General
+      Entry: 7
+      Data: 19|Blindsided.SaveData.GameData+GeneralStats, Assembly-CSharp
+    - Name: DistanceTravelled
+      Entry: 4
+      Data: 0
+    - Name: HighestDistance
+      Entry: 4
+      Data: 0
+    - Name: TotalKills
+      Entry: 3
+      Data: 0
+    - Name: TasksCompleted
+      Entry: 3
+      Data: 0
+    - Name: Deaths
+      Entry: 3
+      Data: 0
+    - Name: DamageDealt
+      Entry: 4
+      Data: 0
+    - Name: DamageTaken
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -13321,6 +13428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 898534098}
   - component: {fileID: 898534099}
+  - component: {fileID: 898534100}
   m_Layer: 5
   m_Name: Scripts
   m_TagString: Untagged
@@ -13368,6 +13476,18 @@ MonoBehaviour:
     - {fileID: 1941723749814701320}
     - {fileID: 150212038}
     enableUntilMet: []
+--- !u!114 &898534100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898534097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1cac5986394d96499e7df58c66f74c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &908973419
 GameObject:
   m_ObjectHideFlags: 0

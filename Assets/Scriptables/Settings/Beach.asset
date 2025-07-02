@@ -99,12 +99,20 @@ MonoBehaviour:
       spawnOnGrass: 1
     - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
       weight: 1
-      minX: 0
+      minX: 100
       maxX: Infinity
       topBuffer: 0
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 4
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 0
     npcTasks:
     - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
       id: Witch1
