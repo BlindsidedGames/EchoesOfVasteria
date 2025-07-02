@@ -1,7 +1,7 @@
-using UnityEngine;
+using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Stats;
-using Blindsided.Utilities;
+using UnityEngine;
 
 namespace TimelessEchoes.UI
 {
@@ -34,23 +34,24 @@ namespace TimelessEchoes.UI
 
             if (references.distanceLongestTasksText != null)
             {
-                string dist = CalcUtils.FormatNumber(statTracker.DistanceTravelled, true, 400f, false);
-                string longest = CalcUtils.FormatNumber(statTracker.LongestRun, true, 400f, false);
-                string shortest = CalcUtils.FormatNumber(statTracker.ShortestRun, true, 400f, false);
-                string average = CalcUtils.FormatNumber(statTracker.AverageRun, true, 400f, false);
-                string tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true, 400f, false);
-                string resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true, 400f, false);
+                var dist = CalcUtils.FormatNumber(statTracker.DistanceTravelled, true);
+                var longest = CalcUtils.FormatNumber(statTracker.LongestRun, true);
+                var shortest = CalcUtils.FormatNumber(statTracker.ShortestRun, true);
+                var average = CalcUtils.FormatNumber(statTracker.AverageRun, true);
+                var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
+                var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
                 references.distanceLongestTasksText.text =
-                    $"Distance Travelled: {dist}\nLongest Run: {longest}\nShortest Run: {shortest}\nAverage Run: {average}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    $"Distance Travelled: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
             }
 
             if (references.killsDamageDeathsText != null)
             {
-                string kills = CalcUtils.FormatNumber(statTracker.TotalKills, true, 400f, false);
-                string dealt = CalcUtils.FormatNumber(statTracker.DamageDealt, true, 400f, false);
-                string deaths = CalcUtils.FormatNumber(statTracker.Deaths, true, 400f, false);
-                string taken = CalcUtils.FormatNumber(statTracker.DamageTaken, true, 400f, false);
-                references.killsDamageDeathsText.text = $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                var kills = CalcUtils.FormatNumber(statTracker.TotalKills, true);
+                var dealt = CalcUtils.FormatNumber(statTracker.DamageDealt, true);
+                var deaths = CalcUtils.FormatNumber(statTracker.Deaths, true);
+                var taken = CalcUtils.FormatNumber(statTracker.DamageTaken, true);
+                references.killsDamageDeathsText.text =
+                    $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
             }
         }
     }

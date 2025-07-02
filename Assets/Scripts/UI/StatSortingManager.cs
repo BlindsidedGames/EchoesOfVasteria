@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Instantiates and manages sorting buttons based on the active stats tab.
+    ///     Instantiates and manages sorting buttons based on the active stats tab.
     /// </summary>
     public class StatSortingManager : MonoBehaviour
     {
@@ -45,7 +45,7 @@ namespace TimelessEchoes.UI
 
         private void Start()
         {
-            SetTab(GetActiveTab());
+            SetTab(0);
         }
 
         private void OnDestroy()
@@ -60,34 +60,31 @@ namespace TimelessEchoes.UI
                 itemsButton.onClick.RemoveListener(ShowItems);
         }
 
-        private void ShowGeneral() => SetTab(0);
-        private void ShowEnemies() => SetTab(1);
-        private void ShowTasks() => SetTab(2);
-        private void ShowItems() => SetTab(3);
+        private void ShowGeneral()
+        {
+            SetTab(0);
+        }
+
+        private void ShowEnemies()
+        {
+            SetTab(1);
+        }
+
+        private void ShowTasks()
+        {
+            SetTab(2);
+        }
+
+        private void ShowItems()
+        {
+            SetTab(3);
+        }
 
         private void SetTab(int tab)
         {
             if (currentTab == tab) return;
             currentTab = tab;
             BuildButtons();
-        }
-
-        private void Update()
-        {
-            int tab = GetActiveTab();
-            if (tab != currentTab)
-            {
-                currentTab = tab;
-                BuildButtons();
-            }
-        }
-
-        private int GetActiveTab()
-        {
-            if (enemyPanel != null && enemyPanel.gameObject.activeInHierarchy) return 1;
-            if (taskPanel != null && taskPanel.gameObject.activeInHierarchy) return 2;
-            if (itemPanel != null && itemPanel.gameObject.activeInHierarchy) return 3;
-            return 0;
         }
 
         private void BuildButtons()
@@ -180,6 +177,7 @@ namespace TimelessEchoes.UI
                     selected = itemMode;
                     break;
             }
+
             if (selected == null) return;
 
             foreach (var pair in buttonModes)
