@@ -126,7 +126,7 @@ namespace TimelessEchoes
             if (tracker != null)
             {
                 tracker.AddDeath();
-                tracker.EndRun(true);
+                tracker.EndRun();
             }
 
             StartRun();
@@ -136,7 +136,7 @@ namespace TimelessEchoes
         {
             HideTooltip();
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.EndRun(false);
+            tracker?.EndRun();
             CleanupMap();
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);
