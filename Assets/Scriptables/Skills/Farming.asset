@@ -25,4 +25,12 @@ MonoBehaviour:
   skillIcon: {fileID: 4767668688145798528, guid: ab1409f021d41de43a3834916d159f7d, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
-  milestones: []
+  milestones:
+  - levelRequirement: 5
+    bonusDescription: 
+    bonusID: farming5
+    type: 1
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0

@@ -7,26 +7,29 @@ using Object = UnityEngine.Object;
 namespace TimelessEchoes.Upgrades
 {
     [CustomEditor(typeof(Resource))]
-    public class ResourceEditor : Editor
+    public class ResourceEditor : UnityEditor.Editor
     {
-        private Resource item { get { return target as Resource; } }
+        private Resource item => target as Resource;
 
         public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
         {
             if (item.icon != null)
             {
-                Type t = GetType("UnityEditor.SpriteUtility");
+                var t = GetType("UnityEditor.SpriteUtility");
                 if (t != null)
                 {
-                    MethodInfo method = t.GetMethod("RenderStaticPreview", new[] { typeof(Sprite), typeof(Color), typeof(int), typeof(int) });
+                    var method = t.GetMethod("RenderStaticPreview",
+                        new[] { typeof(Sprite), typeof(Color), typeof(int), typeof(int) });
                     if (method != null)
                     {
-                        object ret = method.Invoke("RenderStaticPreview", new object[] { item.icon, Color.white, width, height });
+                        var ret = method.Invoke("RenderStaticPreview",
+                            new object[] { item.icon, Color.white, width, height });
                         if (ret is Texture2D tex)
                             return tex;
                     }
                 }
             }
+
             return base.RenderStaticPreview(assetPath, subAssets, width, height);
         }
 
@@ -48,6 +51,7 @@ namespace TimelessEchoes.Upgrades
                         return type;
                 }
             }
+
             return null;
         }
     }

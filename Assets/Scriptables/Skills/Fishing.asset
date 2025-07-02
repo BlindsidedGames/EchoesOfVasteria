@@ -26,9 +26,17 @@ MonoBehaviour:
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
   milestones:
-  - levelRequirement: 55
+  - levelRequirement: 2
     bonusDescription: 
-    bonusID: fishing55
+    bonusID: fishing2
+    type: 3
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
+    percentBonus: 0
+    statAmount: 50
+  - levelRequirement: 15
+    bonusDescription: 
+    bonusID: fishing15
     type: 1
     chance: 0.12
     statUpgrade: {fileID: 0}
