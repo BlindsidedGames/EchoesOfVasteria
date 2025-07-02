@@ -1,6 +1,7 @@
 using System.Collections;
 using TimelessEchoes.Hero;
 using UnityEngine;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Tasks
 {
@@ -36,7 +37,7 @@ namespace TimelessEchoes.Tasks
             if (ShouldInstantComplete())
             {
                 if (chestAnimator != null)
-                    chestAnimator.SetTrigger("Open");
+                    AnimatorUtils.SetTriggerAndReset(this, chestAnimator, "Open");
                 GenerateDrops();
                 GrantCompletionXP();
                 opened = true;
@@ -46,7 +47,7 @@ namespace TimelessEchoes.Tasks
 
             // Trigger the chest's own animation (e.g., lid opening)
             if (chestAnimator != null)
-                chestAnimator.SetTrigger("Open");
+                AnimatorUtils.SetTriggerAndReset(this, chestAnimator, "Open");
 
             // Start the delay coroutine
             hero.StartCoroutine(DelayedLoot());
