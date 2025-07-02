@@ -17,6 +17,8 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private AnimationCurve diminishingCurve =
             AnimationCurve.Linear(0f, 1f, 60f, 0f);
 
+        [SerializeField] private List<BuffRecipe> allRecipes = new();
+
         private readonly List<ActiveBuff> activeBuffs = new();
         private bool ticking = true;
 
@@ -186,7 +188,12 @@ namespace TimelessEchoes.Buffs
             if (oracle == null) return;
             oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
             activeBuffs.Clear();
-            foreach (var recipe in Resources.LoadAll<BuffRecipe>(""))
+
+            IEnumerable<BuffRecipe> recipes = allRecipes?.Count > 0
+                ? allRecipes
+                : Resources.LoadAll<BuffRecipe>("");
+
+            foreach (var recipe in recipes)
             {
                 if (recipe == null) continue;
                 if (oracle.saveData.ActiveBuffs.TryGetValue(recipe.name, out var remain) && remain > 0f)
