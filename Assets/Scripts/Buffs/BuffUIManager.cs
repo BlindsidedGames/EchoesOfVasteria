@@ -198,8 +198,18 @@ namespace TimelessEchoes.Buffs
             iconEntries.Clear();
 
             var manager = buffManager;
-            if (activeBuffParent == null || activeBuffPrefab == null || manager == null)
+
+            if (activeBuffParent != null)
+            {
+                var hasBuffs = manager != null && manager.ActiveBuffs.Count > 0;
+                activeBuffParent.gameObject.SetActive(hasBuffs);
+                if (!hasBuffs || activeBuffPrefab == null || manager == null)
+                    return;
+            }
+            else if (activeBuffPrefab == null || manager == null)
+            {
                 return;
+            }
 
             foreach (var buff in manager.ActiveBuffs)
             {
