@@ -20616,11 +20616,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78407e844efef5c4c9d04d59c2d0fb54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
   resourceManager: {fileID: 213655107}
   resourceInventoryUI: {fileID: 213655108}
-  buffs:
-  - {fileID: 11400000, guid: 93c2ce8508bc0614590bbdb57f32cde3, type: 2}
+  buffManager: {fileID: 1625529691}
   recipePrefab: {fileID: 8065041613675525180, guid: e3acf1658fcaf2e439d08bc8452f7510, type: 3}
   recipeParent: {fileID: 76042879}
   activeBuffPrefab: {fileID: 5147877581072998704, guid: 53ca8b66187f4e941bb5c5d1fe287e90, type: 3}
