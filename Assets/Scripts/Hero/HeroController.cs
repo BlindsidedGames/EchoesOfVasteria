@@ -117,6 +117,7 @@ namespace TimelessEchoes.Hero
 
             if (buffController == null)
                 buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+            buffController?.Resume();
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
@@ -141,6 +142,11 @@ namespace TimelessEchoes.Hero
             state = State.Idle;
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
+        }
+
+        private void OnDisable()
+        {
+            buffController?.Pause();
         }
 
         private void ApplyStatUpgrades()
