@@ -245,7 +245,7 @@ namespace Blindsided.Utilities
 
         public static string FormatTime(double time, bool showDecimal = false,
             bool mspace = true, float mspaceSize = 0.6f, bool shortForm = true,
-            bool absolutevalue = true, string colourOverride = "<color=#A5A5A5>")
+            bool absolutevalue = true, string colourOverride = "")
         {
             if (double.IsNaN(time))
             {

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using TimelessEchoes.References.StatPanel;
-using TimelessEchoes.Tasks;
-using TimelessEchoes.Stats;
 using Blindsided.Utilities;
+using TimelessEchoes.References.StatPanel;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Tasks;
+using UnityEngine;
 
 namespace TimelessEchoes.UI
 {
@@ -86,9 +86,9 @@ namespace TimelessEchoes.UI
             if (data == null || ui == null) return;
 
             var record = statTracker ? statTracker.GetTaskRecord(data) : null;
-            int completed = record?.TotalCompleted ?? 0;
-            float time = record?.TimeSpent ?? 0f;
-            float xp = record?.XpGained ?? 0f;
+            var completed = record?.TotalCompleted ?? 0;
+            var time = record?.TimeSpent ?? 0f;
+            var xp = record?.XpGained ?? 0f;
 
             if (ui.entryIconImage != null)
             {
@@ -106,10 +106,11 @@ namespace TimelessEchoes.UI
 
             if (ui.entryCompletionsTimeOnTaskExperienceText != null)
             {
-                string comp = CalcUtils.FormatNumber(completed, true, 400f, false);
-                string timeStr = CalcUtils.FormatTime(time);
-                string xpStr = CalcUtils.FormatNumber(xp, true, 400f, false);
-                ui.entryCompletionsTimeOnTaskExperienceText.text = $"Completions: {comp}\nTime on Task: {timeStr}\nXP: {xpStr}";
+                var comp = CalcUtils.FormatNumber(completed, true);
+                var timeStr = CalcUtils.FormatTime(time);
+                var xpStr = CalcUtils.FormatNumber(xp, true);
+                ui.entryCompletionsTimeOnTaskExperienceText.text =
+                    $"Completions: {comp}\nTime on Task: {timeStr}\nXP Gained: {xpStr}";
             }
         }
 
@@ -135,12 +136,10 @@ namespace TimelessEchoes.UI
 
         private void ApplyOrder(IList<TaskData> order)
         {
-            int index = 0;
+            var index = 0;
             foreach (var data in order)
-            {
                 if (entries.TryGetValue(data, out var ui))
                     ui.transform.SetSiblingIndex(index++);
-            }
         }
     }
 }
