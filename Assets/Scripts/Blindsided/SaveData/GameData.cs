@@ -28,6 +28,15 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public HashSet<string> CompletedNpcTasks = new();
 
+        [HideReferenceObjectPicker]
+        public TaskStats Tasks = new();
+
+        [HideReferenceObjectPicker]
+        public ItemStats Items = new();
+
+        [HideReferenceObjectPicker]
+        public GeneralStats General = new();
+
 
         [HideReferenceObjectPicker]
         public class ResourceEntry
@@ -67,6 +76,32 @@ namespace Blindsided.SaveData
             public float CurrentXP;
             public int Level;
             public List<string> Milestones = new();
+        }
+
+        [HideReferenceObjectPicker]
+        public class TaskStats
+        {
+            public Dictionary<string, int> Completed = new();
+            public Dictionary<string, float> TimeSpent = new();
+        }
+
+        [HideReferenceObjectPicker]
+        public class ItemStats
+        {
+            public Dictionary<string, int> ItemsReceived = new();
+            public Dictionary<string, int> ItemsSpent = new();
+        }
+
+        [HideReferenceObjectPicker]
+        public class GeneralStats
+        {
+            public float DistanceTravelled;
+            public float HighestDistance;
+            public int TotalKills;
+            public int TasksCompleted;
+            public int Deaths;
+            public float DamageDealt;
+            public float DamageTaken;
         }
 
 

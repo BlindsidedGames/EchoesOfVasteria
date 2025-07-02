@@ -108,6 +108,9 @@ namespace TimelessEchoes.Hero
             UpdateBehavior();
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
+
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.RecordHeroPosition(transform.position);
         }
 
         private void OnEnable()
@@ -397,7 +400,7 @@ namespace TimelessEchoes.Hero
                 float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
                 float dmg = (baseDamage + damageBonus) *
                             (buffController != null ? buffController.DamageMultiplier : 1f);
-                proj.Init(target, dmg * combatDamageMultiplier * bonus);
+                proj.Init(target, dmg * combatDamageMultiplier * bonus, true);
             }
         }
 

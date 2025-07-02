@@ -22,6 +22,7 @@ namespace TimelessEchoes
 
         private Transform target;
         private float damage;
+        private bool fromHero;
 
         private void OnEnable()
         {
@@ -36,10 +37,12 @@ namespace TimelessEchoes
         private GameObject effectPrefab;
 
         public void Init(Transform target, float damage,
+            bool fromHero = false,
             GameObject hitEffect = null)
         {
             this.target = target;
             this.damage = damage;
+            this.fromHero = fromHero;
             effectPrefab = hitEffect ?? hitEffectPrefab;
         }
 
@@ -72,6 +75,11 @@ namespace TimelessEchoes
             {
                 var dmg = target.GetComponent<IDamageable>();
                 dmg?.TakeDamage(damage);
+                if (fromHero)
+                {
+                    var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                    tracker?.AddDamageDealt(damage);
+                }
                 SpawnEffect();
                 Destroy(gameObject);
                 return;

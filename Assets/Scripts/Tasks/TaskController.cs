@@ -24,6 +24,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
         private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
+        private readonly Dictionary<ITask, float> taskStartTimes = new();
 
         private int currentIndex = -1;
         public List<ITask> tasks { get; } = new();
@@ -284,6 +285,7 @@ namespace TimelessEchoes.Tasks
                 Log($"Starting task: {currentTaskName}", this);
                 hero?.SetTask(task);
                 task.StartTask();
+                taskStartTimes[task] = Time.time;
                 return;
             }
 
@@ -309,6 +311,13 @@ namespace TimelessEchoes.Tasks
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
             tasks.RemoveAt(index);
+
+            float duration = 0f;
+            if (taskStartTimes.TryGetValue(task, out var start))
+            {
+                duration = Time.time - start;
+                taskStartTimes.Remove(task);
+            }
             if (taskMap.TryGetValue(task, out var obj))
             {
                 taskObjects.Remove(obj);
@@ -335,6 +344,12 @@ namespace TimelessEchoes.Tasks
                     Destroy(mb);
                 else
                     Destroy(mb.gameObject);
+            }
+
+            if (task != null && task.IsComplete())
+            {
+                var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                tracker?.RegisterTaskComplete(task.GetType().Name, duration);
             }
 
             if (index <= currentIndex)
