@@ -29,10 +29,10 @@ namespace Blindsided.SaveData
         public HashSet<string> CompletedNpcTasks = new();
 
         [HideReferenceObjectPicker]
-        public TaskStats Tasks = new();
+        public Dictionary<string, TaskRecord> TaskRecords = new();
 
         [HideReferenceObjectPicker]
-        public ItemStats Items = new();
+        public Dictionary<string, ResourceRecord> ResourceStats = new();
 
         [HideReferenceObjectPicker]
         public GeneralStats General = new();
@@ -79,17 +79,18 @@ namespace Blindsided.SaveData
         }
 
         [HideReferenceObjectPicker]
-        public class TaskStats
+        public class TaskRecord
         {
-            public Dictionary<string, int> Completed = new();
-            public Dictionary<string, float> TimeSpent = new();
+            public int TotalCompleted;
+            public float TimeSpent;
+            public float XpGained;
         }
 
         [HideReferenceObjectPicker]
-        public class ItemStats
+        public class ResourceRecord
         {
-            public Dictionary<string, int> ItemsReceived = new();
-            public Dictionary<string, int> ItemsSpent = new();
+            public int TotalReceived;
+            public int TotalSpent;
         }
 
         [HideReferenceObjectPicker]

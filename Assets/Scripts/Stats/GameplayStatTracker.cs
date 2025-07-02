@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Tasks;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -9,10 +10,7 @@ namespace TimelessEchoes.Stats
 {
     public class GameplayStatTracker : MonoBehaviour
     {
-        private readonly Dictionary<string, int> taskCounts = new();
-        private readonly Dictionary<string, float> taskTimes = new();
-        private readonly Dictionary<Resource, int> itemsReceived = new();
-        private readonly Dictionary<Resource, int> itemsSpent = new();
+        private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private float distanceTravelled;
         private float highestDistance;
@@ -24,6 +22,7 @@ namespace TimelessEchoes.Stats
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
+        private static Dictionary<string, TaskData> taskLookup;
 
         private void Awake()
         {
@@ -49,25 +48,26 @@ namespace TimelessEchoes.Stats
             }
         }
 
+        private static void EnsureTaskLookup()
+        {
+            if (taskLookup != null) return;
+            taskLookup = new Dictionary<string, TaskData>();
+            foreach (var data in Resources.LoadAll<TaskData>(""))
+            {
+                if (data != null && !string.IsNullOrEmpty(data.taskID) && !taskLookup.ContainsKey(data.taskID))
+                    taskLookup[data.taskID] = data;
+            }
+        }
+
         private void SaveState()
         {
             if (oracle == null) return;
 
-            var t = new GameData.TaskStats();
-            foreach (var pair in taskCounts)
-                t.Completed[pair.Key] = pair.Value;
-            foreach (var pair in taskTimes)
-                t.TimeSpent[pair.Key] = pair.Value;
-            oracle.saveData.Tasks = t;
-
-            var i = new GameData.ItemStats();
-            foreach (var pair in itemsReceived)
+            var t = new Dictionary<string, GameData.TaskRecord>();
+            foreach (var pair in taskRecords)
                 if (pair.Key != null)
-                    i.ItemsReceived[pair.Key.name] = pair.Value;
-            foreach (var pair in itemsSpent)
-                if (pair.Key != null)
-                    i.ItemsSpent[pair.Key.name] = pair.Value;
-            oracle.saveData.Items = i;
+                    t[pair.Key.taskID] = pair.Value;
+            oracle.saveData.TaskRecords = t;
 
             var g = oracle.saveData.General ?? new GameData.GeneralStats();
             g.DistanceTravelled = distanceTravelled;
@@ -85,26 +85,14 @@ namespace TimelessEchoes.Stats
             if (oracle == null) return;
             EnsureLookup();
 
-            oracle.saveData.Tasks ??= new GameData.TaskStats();
-            oracle.saveData.Items ??= new GameData.ItemStats();
+            oracle.saveData.TaskRecords ??= new Dictionary<string, GameData.TaskRecord>();
             oracle.saveData.General ??= new GameData.GeneralStats();
 
-            taskCounts.Clear();
-            foreach (var pair in oracle.saveData.Tasks.Completed)
-                taskCounts[pair.Key] = pair.Value;
-            taskTimes.Clear();
-            foreach (var pair in oracle.saveData.Tasks.TimeSpent)
-                taskTimes[pair.Key] = pair.Value;
-
-            itemsReceived.Clear();
-            foreach (var pair in oracle.saveData.Items.ItemsReceived)
-                if (lookup.TryGetValue(pair.Key, out var res))
-                    itemsReceived[res] = pair.Value;
-
-            itemsSpent.Clear();
-            foreach (var pair in oracle.saveData.Items.ItemsSpent)
-                if (lookup.TryGetValue(pair.Key, out var res))
-                    itemsSpent[res] = pair.Value;
+            taskRecords.Clear();
+            EnsureTaskLookup();
+            foreach (var pair in oracle.saveData.TaskRecords)
+                if (taskLookup.TryGetValue(pair.Key, out var data))
+                    taskRecords[data] = pair.Value;
 
             var g = oracle.saveData.General;
             distanceTravelled = g.DistanceTravelled;
@@ -116,39 +104,20 @@ namespace TimelessEchoes.Stats
             damageTaken = g.DamageTaken;
         }
 
-        public void RegisterTaskComplete(string type, float duration)
+        public void RegisterTaskComplete(TaskData data, float duration, float xp)
         {
-            if (string.IsNullOrEmpty(type)) return;
+            if (data == null) return;
 
-            if (taskCounts.ContainsKey(type))
-                taskCounts[type] += 1;
-            else
-                taskCounts[type] = 1;
+            if (!taskRecords.TryGetValue(data, out var record))
+            {
+                record = new GameData.TaskRecord();
+                taskRecords[data] = record;
+            }
 
-            if (taskTimes.ContainsKey(type))
-                taskTimes[type] += duration;
-            else
-                taskTimes[type] = duration;
-
+            record.TotalCompleted += 1;
+            record.TimeSpent += duration;
+            record.XpGained += xp;
             tasksCompleted++;
-        }
-
-        public void AddItemReceived(Resource item, int count)
-        {
-            if (item == null || count <= 0) return;
-            if (itemsReceived.ContainsKey(item))
-                itemsReceived[item] += count;
-            else
-                itemsReceived[item] = count;
-        }
-
-        public void AddItemSpent(Resource item, int count)
-        {
-            if (item == null || count <= 0) return;
-            if (itemsSpent.ContainsKey(item))
-                itemsSpent[item] += count;
-            else
-                itemsSpent[item] = count;
         }
 
         public void AddDistance(float dist)
