@@ -13135,6 +13135,7 @@ MonoBehaviour:
   tavernUI: {fileID: 859693782}
   mapUI: {fileID: 2116019362}
   tavernCamera: {fileID: 495953847}
+  npcObjectStateController: {fileID: 0}
 --- !u!1 &894563158
 GameObject:
   m_ObjectHideFlags: 0
@@ -13280,6 +13281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 898534098}
+  - component: {fileID: 898534099}
   m_Layer: 5
   m_Name: Scripts
   m_TagString: Untagged
@@ -13304,6 +13306,29 @@ Transform:
   - {fileID: 1625529688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &898534099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898534097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 946d948a86efc5a4595a33cf53b9180a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - npcId: Witch1
+    disableUntilMet:
+    - {fileID: 1534444393}
+    - {fileID: 1641476520}
+    enableUntilMet: []
+  - npcId: Ivan1
+    disableUntilMet:
+    - {fileID: 1941723749814701320}
+    - {fileID: 150212038}
+    enableUntilMet: []
 --- !u!1 &908973419
 GameObject:
   m_ObjectHideFlags: 0
