@@ -80,7 +80,11 @@ namespace TimelessEchoes.UI
             }
 
             var record = runs[index];
-            runStatUI.transform.position = bar.transform.position + (Vector3)statOffset;
+
+            Vector3 pos = bar.transform.position;
+            pos.x += statOffset.x;
+            pos.y = Input.mousePosition.y + statOffset.y;
+            runStatUI.transform.position = pos;
 
             if (runStatUI.runIdText != null)
                 runStatUI.runIdText.text = $"Run {index + 1}";
