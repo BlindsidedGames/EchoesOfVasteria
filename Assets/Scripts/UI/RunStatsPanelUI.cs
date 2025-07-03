@@ -19,6 +19,8 @@ namespace TimelessEchoes.UI
         [SerializeField] private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
         [SerializeField] private Vector2 statOffset = Vector2.zero;
+        [SerializeField] private Color deathBarColor = Color.red;
+        [SerializeField] private Color retreatBarColor = Color.green;
 
         private void Awake()
         {
@@ -154,11 +156,14 @@ namespace TimelessEchoes.UI
                     var ratio = longest > 0f ? dist / longest : 0f;
                     runBars[i].SetFill(ratio);
                     runBars[i].BarIndex = index;
+                    var color = runs[index].Died ? deathBarColor : retreatBarColor;
+                    runBars[i].FillColor = color;
                 }
                 else
                 {
                     runBars[i].SetFill(0f);
                     runBars[i].BarIndex = -1;
+                    runBars[i].FillColor = new Color(1f, 1f, 1f, 0.3f);
                 }
             }
         }

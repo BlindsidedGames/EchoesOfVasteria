@@ -12,6 +12,19 @@ namespace TimelessEchoes.UI
     {
         [SerializeField] private Image fillImage;
 
+        /// <summary>
+        /// Gets or sets the fill color.
+        /// </summary>
+        public Color FillColor
+        {
+            get => fillImage != null ? fillImage.color : Color.white;
+            set
+            {
+                if (fillImage != null)
+                    fillImage.color = value;
+            }
+        }
+
         public int BarIndex { get; set; } = -1;
 
         public event Action<RunBarUI> PointerEnter;
