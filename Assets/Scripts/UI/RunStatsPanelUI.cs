@@ -1,14 +1,14 @@
+using Blindsided.Utilities;
+using TimelessEchoes.References.UI;
+using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Blindsided.Utilities;
-using TimelessEchoes.Stats;
-using TimelessEchoes.References.UI;
 
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Displays recent run statistics on a bar graph and text fields.
+    ///     Displays recent run statistics on a bar graph and text fields.
     /// </summary>
     public class RunStatsPanelUI : MonoBehaviour
     {
@@ -25,15 +25,14 @@ namespace TimelessEchoes.UI
             if (statTracker == null)
                 statTracker = FindFirstObjectByType<GameplayStatTracker>();
             if (runStatUI == null)
-                runStatUI = FindFirstObjectByType<RunStatUIReferences>(true);
+                runStatUI = FindFirstObjectByType<RunStatUIReferences>();
             foreach (var bar in runBars)
-            {
                 if (bar != null)
                 {
                     bar.PointerEnter += OnBarEnter;
                     bar.PointerExit += OnBarExit;
                 }
-            }
+
             if (runStatUI != null)
                 runStatUI.gameObject.SetActive(false);
         }
@@ -41,13 +40,11 @@ namespace TimelessEchoes.UI
         private void OnDestroy()
         {
             foreach (var bar in runBars)
-            {
                 if (bar != null)
                 {
                     bar.PointerEnter -= OnBarEnter;
                     bar.PointerExit -= OnBarExit;
                 }
-            }
         }
 
         private void OnEnable()
@@ -72,7 +69,7 @@ namespace TimelessEchoes.UI
                 return;
 
             var runs = statTracker.RecentRuns;
-            int index = bar.BarIndex;
+            var index = bar.BarIndex;
             if (index < 0 || index >= runs.Count)
             {
                 runStatUI.gameObject.SetActive(false);
@@ -81,7 +78,7 @@ namespace TimelessEchoes.UI
 
             var record = runs[index];
 
-            Vector3 pos = bar.transform.position;
+            var pos = bar.transform.position;
             pos.x += statOffset.x;
             pos.y = Input.mousePosition.y + statOffset.y;
             runStatUI.transform.position = pos;
@@ -91,18 +88,18 @@ namespace TimelessEchoes.UI
 
             if (runStatUI.distanceTasksResourcesText != null)
             {
-                string dist = CalcUtils.FormatNumber(record.Distance, true);
-                string tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
-                string resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
+                var dist = CalcUtils.FormatNumber(record.Distance, true);
+                var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
+                var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
                     $"Distance: {dist}\nTasks: {tasks}\nResources: {resources}";
             }
 
             if (runStatUI.killsDamageDoneDamageTakenText != null)
             {
-                string kills = CalcUtils.FormatNumber(record.EnemiesKilled, true);
-                string dealt = CalcUtils.FormatNumber(record.DamageDealt, true);
-                string taken = CalcUtils.FormatNumber(record.DamageTaken, true);
+                var kills = CalcUtils.FormatNumber(record.EnemiesKilled, true);
+                var dealt = CalcUtils.FormatNumber(record.DamageDealt, true);
+                var taken = CalcUtils.FormatNumber(record.DamageTaken, true);
                 runStatUI.killsDamageDoneDamageTakenText.text =
                     $"Kills: {kills}\nDamage Dealt: {dealt}\nDamage Taken: {taken}";
             }
@@ -121,7 +118,7 @@ namespace TimelessEchoes.UI
             if (statTracker == null || runBars == null)
                 return;
 
-            float longest = statTracker.LongestRun;
+            var longest = statTracker.LongestRun;
             if (longestRunText != null)
                 longestRunText.text = CalcUtils.FormatNumber(longest, true);
 
@@ -130,21 +127,21 @@ namespace TimelessEchoes.UI
 
             if (averageRunSlider != null)
             {
-                float avgRatio = longest > 0f ? statTracker.AverageRun / longest : 0f;
+                var avgRatio = longest > 0f ? statTracker.AverageRun / longest : 0f;
                 averageRunSlider.value = Mathf.Clamp01(avgRatio);
             }
 
             var runs = statTracker.RecentRuns;
-            int barCount = runBars.Length;
-            for (int i = 0; i < barCount; i++)
+            var barCount = runBars.Length;
+            for (var i = 0; i < barCount; i++)
             {
                 if (runBars[i] == null) continue;
 
-                int index = runs.Count - barCount + i;
+                var index = runs.Count - barCount + i;
                 if (index >= 0 && index < runs.Count)
                 {
-                    float dist = runs[index].Distance;
-                    float ratio = longest > 0f ? dist / longest : 0f;
+                    var dist = runs[index].Distance;
+                    var ratio = longest > 0f ? dist / longest : 0f;
                     runBars[i].SetFill(ratio);
                     runBars[i].BarIndex = index;
                 }
