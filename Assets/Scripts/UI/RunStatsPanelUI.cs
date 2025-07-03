@@ -80,7 +80,17 @@ namespace TimelessEchoes.UI
 
             var pos = bar.transform.position;
             pos.x += statOffset.x;
-            pos.y = Input.mousePosition.y + statOffset.y;
+
+            var canvas = runStatUI.GetComponentInParent<Canvas>();
+            var cam = canvas != null ? canvas.worldCamera : null;
+            var screenPoint = Input.mousePosition;
+            if (cam != null)
+                screenPoint.z = Mathf.Abs(cam.transform.position.z - runStatUI.transform.position.z);
+            var mouseWorld = cam != null
+                ? cam.ScreenToWorldPoint(screenPoint)
+                : runStatUI.transform.position;
+
+            pos.y = mouseWorld.y + statOffset.y;
             runStatUI.transform.position = pos;
 
             if (runStatUI.runIdText != null)
