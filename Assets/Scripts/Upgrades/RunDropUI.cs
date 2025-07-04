@@ -120,14 +120,15 @@ namespace TimelessEchoes.Upgrades
             }
             else
             {
-                amounts[resource] = amount;
+                double current = 0;
+                if (amounts.TryGetValue(resource, out var val))
+                    current = val;
+                amounts[resource] = current + amount;
 
                 if (resources.Count >= maxVisibleDrops)
                 {
                     int removeIndex = resources.Count - 1;
-                    var removedResource = resources[removeIndex];
                     resources.RemoveAt(removeIndex);
-                    amounts.Remove(removedResource);
                     var removedSlot = slots[removeIndex];
                     if (removedSlot != null)
                         Destroy(removedSlot.gameObject);
