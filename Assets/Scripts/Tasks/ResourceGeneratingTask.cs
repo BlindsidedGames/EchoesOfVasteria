@@ -25,9 +25,12 @@ namespace TimelessEchoes.Tasks
             if (taskData == null)
                 return;
 
+            var worldX = transform.position.x;
+
             foreach (var drop in taskData.resourceDrops)
             {
                 if (drop.resource == null || Random.value > drop.dropChance) continue;
+                if (worldX < drop.minX || worldX > drop.maxX) continue;
 
                 var min = drop.dropRange.x;
                 var max = drop.dropRange.y;
