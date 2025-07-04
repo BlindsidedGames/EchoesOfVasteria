@@ -67,6 +67,8 @@ namespace TimelessEchoes
         private IEnumerator StartRunRoutine()
         {
             CleanupMap();
+            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.BeginRun();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)

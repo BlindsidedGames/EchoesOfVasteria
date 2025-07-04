@@ -22,6 +22,7 @@ namespace TimelessEchoes.Stats
         private double totalResourcesGathered;
         private readonly List<GameData.RunRecord> recentRuns = new();
         private int nextRunNumber = 1;
+        private float runStartTime;
         private float currentRunDistance;
         private int currentRunTasks;
         private double currentRunResources;
@@ -229,6 +230,12 @@ namespace TimelessEchoes.Stats
             }
         }
 
+        public void BeginRun()
+        {
+            runStartTime = Time.time;
+            lastHeroPos = Vector3.zero;
+        }
+
         private void AddRunRecord(GameData.RunRecord record)
         {
             if (record == null || record.Distance <= 0f) return;
@@ -249,6 +256,7 @@ namespace TimelessEchoes.Stats
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
+                Duration = Time.time - runStartTime,
                 Distance = currentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
@@ -267,6 +275,7 @@ namespace TimelessEchoes.Stats
             currentRunDamageDealt = 0f;
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
+            runStartTime = Time.time;
         }
     }
 }
