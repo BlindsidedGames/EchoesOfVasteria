@@ -100,11 +100,12 @@ namespace TimelessEchoes.UI
 
             if (runStatUI.distanceTasksResourcesText != null)
             {
+                var time = CalcUtils.FormatTime(record.Duration);
                 var dist = CalcUtils.FormatNumber(record.Distance, true);
                 var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
-                    $"Distance: {dist}\nTasks: {tasks}\nResources: {resources}";
+                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
             }
 
             if (runStatUI.killsDamageDoneDamageTakenText != null)
