@@ -11,12 +11,14 @@ namespace TimelessEchoes.Tasks
     /// </summary>
     public abstract class ContinuousTask : ResourceGeneratingTask
     {
-        [SerializeField] private float taskDuration = 2f;
+        // Duration for the task is defined on the TaskData
         [SerializeField] private GameObject progressBarObject;
         [SerializeField] private SlicedFilledImage progressBar;
         private bool isComplete;
 
         private float timer;
+
+        protected float TaskDuration => taskData != null ? taskData.taskDuration : 0f;
 
         protected abstract string AnimationName { get; }
         protected abstract string InterruptTriggerName { get; }
@@ -56,7 +58,7 @@ namespace TimelessEchoes.Tasks
             timer += Time.deltaTime;
             UpdateProgressBar();
 
-            if (timer >= taskDuration)
+            if (timer >= TaskDuration)
             {
                 AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
                 isComplete = true;
@@ -94,7 +96,8 @@ namespace TimelessEchoes.Tasks
 
         private void UpdateProgressBar()
         {
-            if (progressBar != null) progressBar.fillAmount = Mathf.Clamp01((taskDuration - timer) / taskDuration);
+            if (progressBar != null && TaskDuration > 0f)
+                progressBar.fillAmount = Mathf.Clamp01((TaskDuration - timer) / TaskDuration);
         }
     }
 }
