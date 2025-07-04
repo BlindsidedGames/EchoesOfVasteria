@@ -81,6 +81,9 @@ namespace TimelessEchoes.Buffs
                     entry.refs.durationText.text = Mathf.Ceil(entry.buff.remaining).ToString();
             }
 
+            if (iconEntries.Count == 0 && activeBuffParent != null)
+                activeBuffParent.gameObject.SetActive(false);
+
             foreach (var pair in recipeEntries)
             {
                 var panel = pair.Value;
