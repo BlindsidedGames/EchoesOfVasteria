@@ -96,6 +96,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class RunRecord
         {
+            public int RunNumber;
             public float Distance;
             public int TasksCompleted;
             public double ResourcesCollected;
@@ -122,6 +123,7 @@ namespace Blindsided.SaveData
             public float LongestRun;
             public float ShortestRun;
             public float AverageRun;
+            public int NextRunNumber = 1;
         }
 
 

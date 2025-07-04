@@ -21,6 +21,7 @@ namespace TimelessEchoes.Stats
         private float damageTaken;
         private double totalResourcesGathered;
         private readonly List<GameData.RunRecord> recentRuns = new();
+        private int nextRunNumber = 1;
         private float currentRunDistance;
         private int currentRunTasks;
         private double currentRunResources;
@@ -106,6 +107,7 @@ namespace TimelessEchoes.Stats
             g.LongestRun = longestRun;
             g.ShortestRun = shortestRun;
             g.AverageRun = averageRun;
+            g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
         }
 
@@ -138,6 +140,12 @@ namespace TimelessEchoes.Stats
             longestRun = g.LongestRun;
             shortestRun = g.ShortestRun;
             averageRun = g.AverageRun;
+            if (g.NextRunNumber > 0)
+                nextRunNumber = g.NextRunNumber;
+            else if (recentRuns.Count > 0)
+                nextRunNumber = recentRuns[recentRuns.Count - 1].RunNumber + 1;
+            else
+                nextRunNumber = 1;
         }
 
         public void RegisterTaskComplete(TaskData data, float duration, float xp)
@@ -240,6 +248,7 @@ namespace TimelessEchoes.Stats
         {
             var record = new GameData.RunRecord
             {
+                RunNumber = nextRunNumber,
                 Distance = currentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
@@ -249,6 +258,7 @@ namespace TimelessEchoes.Stats
                 Died = died
             };
             AddRunRecord(record);
+            nextRunNumber++;
 
             currentRunDistance = 0f;
             currentRunTasks = 0;
