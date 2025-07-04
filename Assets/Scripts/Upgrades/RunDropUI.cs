@@ -19,6 +19,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private GameObject displayObject;
         [SerializeField] private bool showTooltipOnHover = false;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
+        [SerializeField] private int maxRecentDrops = 5;
 
         private readonly List<Resource> resources = new();
         private readonly List<ResourceUIReferences> slots = new();
@@ -86,50 +87,42 @@ namespace TimelessEchoes.Upgrades
         {
             if (resource == null || amount <= 0) return;
 
-            ResourceUIReferences slot;
-            int index;
-            bool newSlot = false;
-
-            if (!amounts.ContainsKey(resource))
-            {
-                amounts[resource] = amount;
-                resources.Add(resource);
-                slot = Instantiate(slotPrefab, slotParent);
-                index = slots.Count;
-                slots.Add(slot);
-                newSlot = true;
-
-                if (slot != null && slot.selectButton != null)
-                    slot.selectButton.onClick.AddListener(() => SelectSlot(index));
-
-                if (slot != null)
-                {
-                    slot.PointerClick += (_, button) =>
-                    {
-                        if (button == PointerEventData.InputButton.Right && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                        if (slot.highlightImage != null)
-                            slot.highlightImage.enabled = false;
-                    };
-                    slot.PointerEnter += _ =>
-                    {
-                        if (showTooltipOnHover)
-                            ShowTooltip(index);
-                        if (slot.highlightImage != null)
-                            slot.highlightImage.enabled = false;
-                    };
-                    slot.PointerExit += _ =>
-                    {
-                        if (showTooltipOnHover && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                    };
-                }
-            }
-            else
-            {
+            if (amounts.ContainsKey(resource))
                 amounts[resource] += amount;
-                index = resources.IndexOf(resource);
-                slot = index >= 0 && index < slots.Count ? slots[index] : null;
+            else
+                amounts[resource] = amount;
+
+            var slot = Instantiate(slotPrefab, slotParent);
+            slot.transform.SetAsLastSibling();
+
+            slots.Add(slot);
+            resources.Add(resource);
+            int index = slots.Count - 1;
+
+            if (slot != null && slot.selectButton != null)
+                slot.selectButton.onClick.AddListener(() => SelectSlot(slots.IndexOf(slot)));
+
+            if (slot != null)
+            {
+                slot.PointerClick += (_, button) =>
+                {
+                    if (button == PointerEventData.InputButton.Right && tooltip != null)
+                        tooltip.gameObject.SetActive(false);
+                    if (slot.highlightImage != null)
+                        slot.highlightImage.enabled = false;
+                };
+                slot.PointerEnter += _ =>
+                {
+                    if (showTooltipOnHover)
+                        ShowTooltip(slots.IndexOf(slot));
+                    if (slot.highlightImage != null)
+                        slot.highlightImage.enabled = false;
+                };
+                slot.PointerExit += _ =>
+                {
+                    if (showTooltipOnHover && tooltip != null)
+                        tooltip.gameObject.SetActive(false);
+                };
             }
 
             if (slot != null && slot.highlightImage != null)
@@ -138,14 +131,20 @@ namespace TimelessEchoes.Upgrades
             if (displayObject != null)
                 displayObject.SetActive(true);
 
-            UpdateSlot(resources.IndexOf(resource));
+            UpdateSlot(index);
 
             if (slot != null)
+                StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
+
+            while (slots.Count > maxRecentDrops)
             {
-                if (newSlot)
-                    StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
-                else
-                    FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+                Destroy(slots[0].gameObject);
+                slots.RemoveAt(0);
+                resources.RemoveAt(0);
+                if (selectedIndex == 0)
+                    DeselectSlot();
+                else if (selectedIndex > 0)
+                    selectedIndex--;
             }
 
             if (tooltip != null && tooltip.gameObject.activeSelf)
