@@ -19,8 +19,11 @@ MonoBehaviour:
   xpForCompletion: 5
   taskDuration: 0.5
   resourceDrops:
-  - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
+  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
     dropRange: {x: 1, y: 5}
+    dropChance: 0.5
+  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    dropRange: {x: 4, y: 7}
     dropChance: 1
   persistent:
     totalTimesCompleted: 0
