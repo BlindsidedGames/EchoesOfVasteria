@@ -91,6 +91,7 @@ namespace TimelessEchoes.Upgrades
             bool newSlot = false;
             bool removedSelected = false;
             int index = resources.IndexOf(resource);
+            bool moved = index > 0;
 
             if (index >= 0)
             {
@@ -199,10 +200,13 @@ namespace TimelessEchoes.Upgrades
 
             if (slot != null)
             {
-                if (newSlot)
+                if (newSlot || moved)
                     StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
                 else
-                    FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+                    FloatingText.Spawn(
+                        $"+{Mathf.FloorToInt((float)amount)}",
+                        slot.transform.position + Vector3.up,
+                        Color.white, 8f, transform);
             }
 
             if (tooltip != null && tooltip.gameObject.activeSelf)
