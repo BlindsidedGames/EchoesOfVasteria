@@ -5,6 +5,7 @@ using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Buffs;
+using Pathfinding;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,7 +67,7 @@ namespace TimelessEchoes
 
         private IEnumerator StartRunRoutine()
         {
-            CleanupMap();
+            yield return StartCoroutine(CleanupMapRoutine());
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             tracker?.BeginRun();
             currentMap = Instantiate(mapPrefab);
@@ -136,10 +137,15 @@ namespace TimelessEchoes
 
         private void ReturnToTavern()
         {
+            StartCoroutine(ReturnToTavernRoutine());
+        }
+
+        private IEnumerator ReturnToTavernRoutine()
+        {
             HideTooltip();
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             tracker?.EndRun(false);
-            CleanupMap();
+            yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);
             tavernUI?.SetActive(true);
@@ -149,12 +155,24 @@ namespace TimelessEchoes
 
         private void CleanupMap()
         {
+            StartCoroutine(CleanupMapRoutine());
+        }
+
+        private IEnumerator CleanupMapRoutine()
+        {
             BuffManager.Instance?.Pause();
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
 
-            if (hero != null) // deactivate AIPath first
+            if (hero != null)
+            {
+                var ai = hero.GetComponent<AIPath>();
+                if (ai != null)
+                    ai.enabled = false;
                 hero.gameObject.SetActive(false);
+            }
+
+            yield return null; // let AIBase.OnDisable remove the agent
 
             if (currentMap != null)
             {
