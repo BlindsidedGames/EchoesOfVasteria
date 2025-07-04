@@ -13,6 +13,10 @@ namespace TimelessEchoes.Upgrades
         ///     Base value of the stat before any upgrades are applied.
         /// </summary>
         public float baseValue = 0f;
+        /// <summary>
+        ///     Optional description displayed in the upgrade UI.
+        /// </summary>
+        public string description = string.Empty;
         public List<Threshold> thresholds;
         public float statIncreasePerLevel = 1;
 
