@@ -151,7 +151,7 @@ namespace TimelessEchoes.UI
 
             if (runs.Count > 0)
             {
-                var oldestNumber = runs[0].RunNumber - 1;
+                var oldestNumber = runs[0].RunNumber;
                 var newestNumber = runs[runs.Count - 1].RunNumber;
 
                 if (oldestRunNumberText != null)
@@ -159,7 +159,7 @@ namespace TimelessEchoes.UI
 
                 if (middleRunNumberText != null)
                 {
-                    var middleNumber = Mathf.FloorToInt((oldestNumber + newestNumber) * 0.5f);
+                    var middleNumber = Mathf.FloorToInt((oldestNumber + newestNumber) * 0.5f) + 1;
                     middleRunNumberText.text = middleNumber.ToString();
                 }
 
