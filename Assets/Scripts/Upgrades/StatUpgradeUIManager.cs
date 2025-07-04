@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using References.UI;
-using UnityEngine;
+using TimelessEchoes.Skills;
 using TMPro;
+using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
 
@@ -20,7 +21,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
         [SerializeField] private TMP_Text descriptionText;
-        private TimelessEchoes.Skills.SkillController skillController;
+        private SkillController skillController;
 
         private readonly List<CostResourceUIReferences> costSlots = new();
 
@@ -38,7 +39,7 @@ namespace TimelessEchoes.Upgrades
             if (resourceInventoryUI == null)
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
             if (skillController == null)
-                skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+                skillController = FindFirstObjectByType<SkillController>();
             if (references == null)
                 references = GetComponent<StatUpgradeUIReferences>();
             if (statSelectors.Count == 0)
@@ -76,6 +77,7 @@ namespace TimelessEchoes.Upgrades
             {
                 UpdateUI();
             }
+
             UpdateStatSelectorLevels();
 
             ShowLevelTextChanged += OnShowLevelTextChanged;
@@ -173,6 +175,7 @@ namespace TimelessEchoes.Upgrades
                     var res = req.resource;
                     slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
                 }
+
                 costSlots.Add(slot);
             }
         }
@@ -199,7 +202,7 @@ namespace TimelessEchoes.Upgrades
                 var lvl = controller ? controller.GetLevel(CurrentUpgrade) : 0;
                 var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
 
-                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
                 if (slot.questionMarkImage)
                     slot.questionMarkImage.enabled = !unlocked;
 
@@ -213,12 +216,10 @@ namespace TimelessEchoes.Upgrades
                     slot.countText.text = cost.ToString();
 
                 // Grey out the icon and text when the player lacks resources
-                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
-                var grey = new Color(1f, 1f, 1f, 0.3f);
+                var hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
+                var grey = new Color(1f, 1f, 1f, 0.4f);
                 if (slot.iconImage)
                     slot.iconImage.color = hasEnough ? Color.white : grey;
-                if (slot.countText)
-                    slot.countText.color = hasEnough ? Color.white : grey;
 
                 if (slot.selectionImage)
                     slot.selectionImage.enabled = false;
@@ -233,8 +234,8 @@ namespace TimelessEchoes.Upgrades
             var upgrade = CurrentUpgrade;
             if (upgrade == null) return;
             var lvl = controller ? controller.GetLevel(upgrade) : 0;
-            float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
-            float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+            var flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+            var percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
 
             var baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
             var current = baseCurrent * (1f + percent);
@@ -258,7 +259,7 @@ namespace TimelessEchoes.Upgrades
                 return;
             }
 
-            bool hasDescription = !string.IsNullOrWhiteSpace(upgrade.description);
+            var hasDescription = !string.IsNullOrWhiteSpace(upgrade.description);
             if (references.descriptionButton)
                 references.descriptionButton.gameObject.SetActive(hasDescription);
             if (!hasDescription)
@@ -285,7 +286,7 @@ namespace TimelessEchoes.Upgrades
         private void ToggleDescription()
         {
             if (references?.descriptionPanel == null) return;
-            bool active = references.descriptionPanel.activeSelf;
+            var active = references.descriptionPanel.activeSelf;
             references.descriptionPanel.SetActive(!active);
         }
 
@@ -310,7 +311,7 @@ namespace TimelessEchoes.Upgrades
 
                 if (ShowLevelText)
                 {
-                    int lvl = controller ? controller.GetLevel(upgrade) : 0;
+                    var lvl = controller ? controller.GetLevel(upgrade) : 0;
                     selector.countText.text = $"Lvl {lvl}";
                 }
                 else
