@@ -25,6 +25,11 @@ namespace TimelessEchoes.Tasks
 
         public override bool BlocksMovement => true;
 
+        private void OnEnable()
+        {
+            HideProgressBar();
+        }
+
         public override void StartTask()
         {
             isComplete = false;
