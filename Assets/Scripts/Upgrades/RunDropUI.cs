@@ -19,6 +19,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private GameObject displayObject;
         [SerializeField] private bool showTooltipOnHover = false;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
+        [SerializeField] [Min(1)] private int maxVisibleDrops = 5;
 
         private readonly List<Resource> resources = new();
         private readonly List<ResourceUIReferences> slots = new();
@@ -86,21 +87,64 @@ namespace TimelessEchoes.Upgrades
         {
             if (resource == null || amount <= 0) return;
 
-            ResourceUIReferences slot;
-            int index;
+            ResourceUIReferences slot = null;
             bool newSlot = false;
+            int index = resources.IndexOf(resource);
 
-            if (!amounts.ContainsKey(resource))
+            if (index >= 0)
+            {
+                amounts[resource] += amount;
+                slot = slots[index];
+                if (index > 0)
+                {
+                    resources.RemoveAt(index);
+                    slots.RemoveAt(index);
+                    resources.Insert(0, resource);
+                    slots.Insert(0, slot);
+                    slot.transform.SetSiblingIndex(0);
+
+                    if (selectedIndex >= 0)
+                    {
+                        if (selectedIndex < index)
+                            selectedIndex++;
+                        else if (selectedIndex == index)
+                            selectedIndex = 0;
+
+                        if (tooltip != null && tooltip.gameObject.activeSelf)
+                            ShowTooltip(selectedIndex);
+                        else
+                            SelectSlot(selectedIndex);
+                    }
+                }
+            }
+            else
             {
                 amounts[resource] = amount;
-                resources.Add(resource);
+
+                if (resources.Count >= maxVisibleDrops)
+                {
+                    int removeIndex = resources.Count - 1;
+                    var removedResource = resources[removeIndex];
+                    resources.RemoveAt(removeIndex);
+                    amounts.Remove(removedResource);
+                    var removedSlot = slots[removeIndex];
+                    if (removedSlot != null)
+                        Destroy(removedSlot.gameObject);
+                    slots.RemoveAt(removeIndex);
+                    if (selectedIndex == removeIndex)
+                        selectedIndex = -1;
+                    else if (selectedIndex > removeIndex)
+                        selectedIndex--;
+                }
+
                 slot = Instantiate(slotPrefab, slotParent);
-                index = slots.Count;
-                slots.Add(slot);
+                resources.Insert(0, resource);
+                slots.Insert(0, slot);
+                slot.transform.SetSiblingIndex(0);
                 newSlot = true;
 
                 if (slot != null && slot.selectButton != null)
-                    slot.selectButton.onClick.AddListener(() => SelectSlot(index));
+                    slot.selectButton.onClick.AddListener(() => SelectSlot(slots.IndexOf(slot)));
 
                 if (slot != null)
                 {
@@ -114,7 +158,7 @@ namespace TimelessEchoes.Upgrades
                     slot.PointerEnter += _ =>
                     {
                         if (showTooltipOnHover)
-                            ShowTooltip(index);
+                            ShowTooltip(slots.IndexOf(slot));
                         if (slot.highlightImage != null)
                             slot.highlightImage.enabled = false;
                     };
@@ -124,12 +168,9 @@ namespace TimelessEchoes.Upgrades
                             tooltip.gameObject.SetActive(false);
                     };
                 }
-            }
-            else
-            {
-                amounts[resource] += amount;
-                index = resources.IndexOf(resource);
-                slot = index >= 0 && index < slots.Count ? slots[index] : null;
+
+                if (selectedIndex >= 0)
+                    selectedIndex++;
             }
 
             if (slot != null && slot.highlightImage != null)
