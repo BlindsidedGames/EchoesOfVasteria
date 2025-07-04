@@ -25,7 +25,15 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
-        [SerializeField] private TimelessEchoes.Buffs.BuffManager buffController;
+        [SerializeField] private BuffManager buffController;
+        [SerializeField] private MapUI mapUI;
+        [SerializeField] private EnemyKillTracker killTracker;
+        [SerializeField] private StatUpgradeController statUpgradeController;
+        [SerializeField] private TimelessEchoes.Skills.SkillController skillController;
+        [SerializeField] private GameplayStatTracker statTracker;
+        [SerializeField] private CombatController combatController;
+        [SerializeField] private MovementController movementController;
+        [SerializeField] private HeroStateMachine stateMachine;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -33,7 +41,6 @@ namespace TimelessEchoes.Hero
 
         private Transform currentEnemy;
 
-        private AIPath ai;
         private float attackSpeedBonus;
         private float baseAttackSpeed;
 
@@ -41,24 +48,16 @@ namespace TimelessEchoes.Hero
         private float baseDefense;
         private float baseHealth;
         private float baseMoveSpeed;
-        private float combatDamageMultiplier = 1f;
 
         private float damageBonus;
         private float defenseBonus;
 
-        private bool destinationOverride;
         private Health health;
         private float healthBonus;
 
-        private bool isRolling;
-        private float lastAttack = float.NegativeInfinity;
-
         private Vector2 lastMoveDir = Vector2.down;
         private float moveSpeedBonus;
-        private AIDestinationSetter setter;
         private MapUI mapUI;
-
-        private State state;
 
         private TaskController taskController;
         public ITask CurrentTask { get; private set; }
@@ -73,8 +72,9 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            ai = GetComponent<AIPath>();
-            setter = GetComponent<AIDestinationSetter>();
+            movementController ??= GetComponent<MovementController>();
+            combatController ??= GetComponent<CombatController>();
+            stateMachine ??= GetComponent<HeroStateMachine>();
             health = GetComponent<Health>();
             if (buffController == null)
                 buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
@@ -84,13 +84,25 @@ namespace TimelessEchoes.Hero
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
 
-            state = State.Idle;
+            if (combatController != null)
+            {
+                combatController.Stats = stats;
+                combatController.AnimatorRef = animator;
+                combatController.ProjectileOrigin = projectileOrigin;
+                combatController.DiceRollerRef = diceRoller;
+                combatController.BuffController = buffController;
+                combatController.EnemyMask = enemyMask;
+                combatController.KillTracker = killTracker;
+            }
+
+
+            stateMachine.ChangeState(HeroState.Idle);
 
             ApplyStatUpgrades();
 
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                movementController.Path.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
                 health.Init(hp);
@@ -102,15 +114,16 @@ namespace TimelessEchoes.Hero
         {
             BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                movementController.Path.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
             UpdateAnimation();
             UpdateBehavior();
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
 
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.RecordHeroPosition(transform.position);
+            if (statTracker == null)
+                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            statTracker?.RecordHeroPosition(transform.position);
         }
 
         private void OnEnable()
@@ -124,11 +137,21 @@ namespace TimelessEchoes.Hero
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
+            if (combatController != null)
+            {
+                combatController.Stats = stats;
+                combatController.AnimatorRef = animator;
+                combatController.ProjectileOrigin = projectileOrigin;
+                combatController.DiceRollerRef = diceRoller;
+                combatController.BuffController = buffController;
+                combatController.EnemyMask = enemyMask;
+                combatController.KillTracker = killTracker;
+            }
 
             ApplyStatUpgrades();
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                movementController.Path.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
                 health.Init(hp);
@@ -142,9 +165,8 @@ namespace TimelessEchoes.Hero
             }
 
             CurrentTask = null;
-            state = State.Idle;
-            destinationOverride = false;
-            lastAttack = Time.time - 1f / CurrentAttackRate;
+            stateMachine.ChangeState(HeroState.Idle);
+            movementController.MarkDestinationReached();
         }
 
         private void OnDisable()
@@ -154,8 +176,11 @@ namespace TimelessEchoes.Hero
 
         private void ApplyStatUpgrades()
         {
-            var controller = FindFirstObjectByType<StatUpgradeController>();
-            var skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            if (statUpgradeController == null)
+                statUpgradeController = FindFirstObjectByType<StatUpgradeController>();
+            if (skillController == null)
+                skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            var controller = statUpgradeController;
             if (controller == null) return;
 
             foreach (var upgrade in controller.AllUpgrades)
@@ -197,11 +222,11 @@ namespace TimelessEchoes.Hero
 
         private void UpdateAnimation()
         {
-            Vector2 vel = ai.desiredVelocity;
+            Vector2 vel = movementController.Path != null ? movementController.Path.desiredVelocity : Vector2.zero;
             var dir = vel;
 
-            if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
-                dir = setter.target.position - transform.position;
+            if (dir.sqrMagnitude < 0.0001f && movementController.Destination != null)
+                dir = movementController.Destination.position - transform.position;
 
             if (fourDirectional)
             {
@@ -231,19 +256,11 @@ namespace TimelessEchoes.Hero
             CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
-            state = State.Idle;
+            stateMachine.ChangeState(HeroState.Idle);
 
-            if (setter == null)
-                setter = GetComponent<AIDestinationSetter>();
-
-            if (setter != null)
-            {
-                setter.target = task?.Target;
-                if (ai != null)
-                    ai.Teleport(transform.position);
-                else
-                    ai?.SearchPath();
-            }
+            movementController.SetDestination(task?.Target);
+            if (movementController.Path != null)
+                movementController.Path.Teleport(transform.position);
         }
 
         private void UpdateBehavior()
@@ -258,47 +275,46 @@ namespace TimelessEchoes.Hero
                     currentEnemy = null;
             }
 
-            var nearest = currentEnemy != null ? currentEnemy : FindNearestEnemy();
+            var nearest = currentEnemy != null ? currentEnemy : combatController.FindNearestEnemy();
             if (nearest != null)
             {
                 currentEnemy = nearest;
-                if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
-                HandleCombat(nearest);
+                if (stateMachine.CurrentState == HeroState.PerformingTask && CurrentTask != null)
+                    CurrentTask.OnInterrupt(this);
+                combatController.HandleCombat(nearest, CurrentAttackRate, baseDamage, damageBonus);
                 return;
             }
 
-            if (state == State.Combat)
+            if (stateMachine.CurrentState == HeroState.Combat)
             {
                 Log("Hero exiting combat", this);
-                combatDamageMultiplier = 1f;
-                isRolling = false;
                 diceRoller?.ResetRoll();
-                state = State.Idle;
+                stateMachine.ChangeState(HeroState.Idle);
                 taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
                 CurrentTask = null;
-                state = State.Idle;
+                stateMachine.ChangeState(HeroState.Idle);
                 taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null)
             {
-                setter.target = null;
+                movementController.Destination = null;
                 return;
             }
 
             var dest = CurrentTask.Target;
-            if (setter.target != dest) setter.target = dest;
+            if (movementController.Destination != dest) movementController.Destination = dest;
 
-            if (IsAtDestination(dest))
+            if (movementController.IsAtDestination(dest))
             {
-                if (state != State.PerformingTask)
+                if (stateMachine.CurrentState != HeroState.PerformingTask)
                 {
-                    state = State.PerformingTask;
-                    ai.canMove = !CurrentTask.BlocksMovement;
+                    stateMachine.ChangeState(HeroState.PerformingTask);
+                    movementController.EnableMovement(!CurrentTask.BlocksMovement);
                     CurrentTask.OnArrival(this);
                 }
 
@@ -306,135 +322,30 @@ namespace TimelessEchoes.Hero
             }
             else
             {
-                state = State.MovingToTask;
-                ai.canMove = true;
+                stateMachine.ChangeState(HeroState.Moving);
+                movementController.EnableMovement(true);
             }
         }
 
 
-        private Transform FindNearestEnemy()
-        {
-            Transform nearest = null;
-            var best = float.MaxValue;
-            var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
-            foreach (var h in hits)
-            {
-                var hp = h.GetComponent<Health>();
-                if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(transform.position, h.transform.position);
-                if (d < best)
-                {
-                    best = d;
-                    nearest = h.transform;
-                }
-            }
 
-            return nearest;
-        }
-
-        private void HandleCombat(Transform enemy)
-        {
-            ai.canMove = true;
-
-            if (state != State.Combat)
-            {
-                Log($"Hero entering combat with {enemy.name}", this);
-                if (diceRoller != null && !isRolling)
-                {
-                    var rate = CurrentAttackRate;
-                    var cooldown = rate > 0f ? 1f / rate : 0.5f;
-                    StartCoroutine(RollForCombat(cooldown));
-                }
-            }
-
-            state = State.Combat;
-            setter.target = enemy;
-
-            var hp = enemy.GetComponent<Health>();
-            if (hp == null || hp.CurrentHealth <= 0f) return;
-
-            var dist = Vector2.Distance(transform.position, enemy.position);
-            if (dist <= stats.visionRange)
-            {
-                var rate = CurrentAttackRate;
-                var cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
-                if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
-                {
-                    lastMoveDir = enemy.position - transform.position;
-                    Attack(enemy);
-                    lastAttack = Time.time;
-                }
-            }
-        }
-
-        private IEnumerator RollForCombat(float duration)
-        {
-            if (diceRoller == null)
-                yield break;
-
-            isRolling = true;
-            lastAttack = Time.time;
-
-            yield return StartCoroutine(diceRoller.Roll(duration));
-
-            combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
-            isRolling = false;
-        }
-
-        private void Attack(Transform target)
-        {
-            if (stats.projectilePrefab == null || target == null) return;
-
-            var enemy = target.GetComponent<Health>();
-            if (enemy == null || enemy.CurrentHealth <= 0f) return;
-
-            animator.Play("Attack");
-
-            var origin = projectileOrigin ? projectileOrigin : transform;
-            var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
-            var proj = projObj.GetComponent<Projectile>();
-            if (proj != null)
-            {
-                var killTracker = FindFirstObjectByType<EnemyKillTracker>();
-                var enemyStats = target.GetComponent<Enemy>()?.Stats;
-                float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                float dmg = (baseDamage + damageBonus) *
-                            (buffController != null ? buffController.DamageMultiplier : 1f);
-                proj.Init(target, dmg * combatDamageMultiplier * bonus, true);
-            }
-        }
-
-        private enum State
-        {
-            Idle,
-            MovingToTask,
-            PerformingTask,
-            Combat
-        }
 
         #region Pathfinding Helpers
 
         public void SetDestination(Transform dest)
         {
-            destinationOverride = false;
-            setter.target = dest;
-            ai?.SearchPath();
+            movementController.SetDestination(dest);
         }
 
         [Button("Mark Destination Reached")]
         public void SetDestinationReached()
         {
-            destinationOverride = true;
+            movementController.MarkDestinationReached();
         }
 
         private bool IsAtDestination(Transform dest)
         {
-            if (dest == null || ai == null) return false;
-            if (destinationOverride) return true;
-            if (ai.reachedDestination || ai.reachedEndOfPath) return true;
-
-            var threshold = ai.endReachedDistance + 0.1f;
-            return Vector2.Distance(transform.position, dest.position) <= threshold;
+            return movementController.IsAtDestination(dest);
         }
 
         #endregion
