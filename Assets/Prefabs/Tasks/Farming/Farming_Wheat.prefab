@@ -180,13 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
-  xpGrantedOnCompletion: 5
   taskData: {fileID: 11400000, guid: 42f81ca90b736cd4bb035112a8b22ad3, type: 2}
-  resourceDrops:
-  - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 1
-  taskDuration: 2
   progressBarObject: {fileID: 7625599681903135373}
   progressBar: {fileID: 6170718072525463737}
   spriteRenderer: {fileID: 2863051399734410759}

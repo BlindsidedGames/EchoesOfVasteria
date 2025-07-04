@@ -30,7 +30,7 @@ namespace TimelessEchoes.Tasks
                 spriteRenderer = GetComponent<SpriteRenderer>();
             localTimer = 0f;
             currentStage = 0;
-            duration = GetTaskDuration();
+            duration = TaskDuration;
             if (spriteRenderer != null && spriteRenderer.enabled == false)
                 spriteRenderer.enabled = true;
         }
@@ -69,10 +69,6 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        private float GetTaskDuration()
-        {
-            var field = typeof(ContinuousTask).GetField("taskDuration", BindingFlags.NonPublic | BindingFlags.Instance);
-            return field != null ? (float)field.GetValue(this) : 0f;
-        }
+        // TaskDuration property from ContinuousTask provides the duration
     }
 }

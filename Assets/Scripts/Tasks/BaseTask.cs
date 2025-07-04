@@ -11,7 +11,6 @@ namespace TimelessEchoes.Tasks
     public abstract class BaseTask : MonoBehaviour, ITask
     {
         [SerializeField] public Skill associatedSkill;
-        [SerializeField] private float xpGrantedOnCompletion;
         [SerializeField] public TaskData taskData;
 
         private float lastGrantedXp;
@@ -70,14 +69,17 @@ namespace TimelessEchoes.Tasks
         protected float GrantCompletionXP()
         {
             lastGrantedXp = 0f;
-            if (associatedSkill == null || xpGrantedOnCompletion <= 0f) return 0f;
+            if (associatedSkill == null || taskData == null || taskData.xpForCompletion <= 0f)
+                return 0f;
+
             var controller = FindFirstObjectByType<SkillController>();
-            var amount = xpGrantedOnCompletion;
+            var amount = taskData.xpForCompletion;
             if (controller)
             {
                 int mult = controller.GetEffectMultiplier(associatedSkill, MilestoneType.DoubleXP);
                 amount *= mult;
             }
+
             controller?.AddExperience(associatedSkill, amount);
             lastGrantedXp = amount;
             return amount;

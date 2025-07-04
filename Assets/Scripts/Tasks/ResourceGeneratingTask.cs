@@ -9,7 +9,7 @@ namespace TimelessEchoes.Tasks
     /// </summary>
     public abstract class ResourceGeneratingTask : BaseTask
     {
-        [SerializeField] private List<ResourceDrop> resourceDrops = new();
+        // Resource drops are now configured via TaskData
 
         private ResourceManager resourceManager;
 
@@ -22,7 +22,10 @@ namespace TimelessEchoes.Tasks
 
             if (resourceManager == null) return;
 
-            foreach (var drop in resourceDrops)
+            if (taskData == null)
+                return;
+
+            foreach (var drop in taskData.resourceDrops)
             {
                 if (drop.resource == null || Random.value > drop.dropChance) continue;
 
