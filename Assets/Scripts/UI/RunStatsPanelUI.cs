@@ -16,6 +16,8 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text longestRunText;
         [SerializeField] private TMP_Text averageRunText;
         [SerializeField] private Slider averageRunSlider;
+        [SerializeField] private TMP_Text oldestRunNumberText;
+        [SerializeField] private TMP_Text mostRecentRunNumberText;
         [SerializeField] private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
         [SerializeField] private Vector2 statOffset = Vector2.zero;
@@ -145,6 +147,16 @@ namespace TimelessEchoes.UI
             }
 
             var runs = statTracker.RecentRuns;
+
+            if (runs.Count > 0)
+            {
+                if (oldestRunNumberText != null)
+                    oldestRunNumberText.text = runs[0].RunNumber.ToString();
+
+                if (mostRecentRunNumberText != null)
+                    mostRecentRunNumberText.text = runs[runs.Count - 1].RunNumber.ToString();
+            }
+
             var barCount = runBars.Length;
             for (var i = 0; i < barCount; i++)
             {
