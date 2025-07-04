@@ -89,7 +89,6 @@ namespace TimelessEchoes.Upgrades
 
             ResourceUIReferences slot = null;
             bool newSlot = false;
-            bool removedSelected = false;
             int index = resources.IndexOf(resource);
 
             if (index >= 0)
@@ -132,16 +131,10 @@ namespace TimelessEchoes.Upgrades
                     if (removedSlot != null)
                         Destroy(removedSlot.gameObject);
                     slots.RemoveAt(removeIndex);
-
                     if (selectedIndex == removeIndex)
-                    {
-                        removedSelected = true;
-                        selectedIndex = removeIndex - 1;
-                    }
+                        selectedIndex = -1;
                     else if (selectedIndex > removeIndex)
-                    {
                         selectedIndex--;
-                    }
                 }
 
                 slot = Instantiate(slotPrefab, slotParent);
@@ -176,16 +169,8 @@ namespace TimelessEchoes.Upgrades
                     };
                 }
 
-                if (selectedIndex >= 0 || removedSelected)
+                if (selectedIndex >= 0)
                     selectedIndex++;
-
-                if (removedSelected)
-                {
-                    if (tooltip != null && tooltip.gameObject.activeSelf)
-                        ShowTooltip(selectedIndex);
-                    else
-                        SelectSlot(selectedIndex);
-                }
             }
 
             if (slot != null && slot.highlightImage != null)
