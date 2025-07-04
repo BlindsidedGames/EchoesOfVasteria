@@ -198,17 +198,32 @@ namespace TimelessEchoes.Upgrades
                 var req = threshold.requirements[i];
                 var lvl = controller ? controller.GetLevel(CurrentUpgrade) : 0;
                 var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+
                 bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                if (slot.questionMarkImage) slot.questionMarkImage.enabled = !unlocked;
+                if (slot.questionMarkImage)
+                    slot.questionMarkImage.enabled = !unlocked;
+
                 if (slot.iconImage)
                 {
                     slot.iconImage.sprite = req.resource ? req.resource.icon : null;
                     slot.iconImage.enabled = unlocked;
                 }
 
-                if (slot.countText) slot.countText.text = cost.ToString();
-                if (slot.selectionImage) slot.selectionImage.enabled = false;
-                if (slot.selectButton) slot.selectButton.interactable = true;
+                if (slot.countText)
+                    slot.countText.text = cost.ToString();
+
+                // Grey out the icon and text when the player lacks resources
+                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
+                var grey = new Color(1f, 1f, 1f, 0.3f);
+                if (slot.iconImage)
+                    slot.iconImage.color = hasEnough ? Color.white : grey;
+                if (slot.countText)
+                    slot.countText.color = hasEnough ? Color.white : grey;
+
+                if (slot.selectionImage)
+                    slot.selectionImage.enabled = false;
+                if (slot.selectButton)
+                    slot.selectButton.interactable = true;
             }
         }
 
