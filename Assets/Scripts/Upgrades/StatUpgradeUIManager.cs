@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
+using TMPro;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
 
@@ -18,6 +19,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private List<StatUIReferences> statSelectors = new();
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private StatUpgradeUIReferences references;
+        [SerializeField] private TMP_Text descriptionText;
         private TimelessEchoes.Skills.SkillController skillController;
 
         private readonly List<CostResourceUIReferences> costSlots = new();
@@ -51,6 +53,10 @@ namespace TimelessEchoes.Upgrades
 
             if (references.upgradeButton != null)
                 references.upgradeButton.onClick.AddListener(ApplyUpgrade);
+            if (references.descriptionButton != null)
+                references.descriptionButton.onClick.AddListener(ToggleDescription);
+            if (references.descriptionPanel != null)
+                references.descriptionPanel.SetActive(false);
 
             DeselectStat();
             if (references != null)
@@ -117,6 +123,8 @@ namespace TimelessEchoes.Upgrades
             foreach (var selector in statSelectors)
                 if (selector != null && selector.selectionImage != null)
                     selector.selectionImage.enabled = false;
+            if (references?.descriptionPanel != null)
+                references.descriptionPanel.SetActive(false);
         }
 
         private void SelectStat(int index)
@@ -136,6 +144,8 @@ namespace TimelessEchoes.Upgrades
                 var target = statSelectors[selectedIndex].transform.position;
                 references.transform.position = new Vector3(pos.x, target.y, pos.z);
                 references.gameObject.SetActive(true);
+                if (references.descriptionPanel)
+                    references.descriptionPanel.SetActive(false);
             }
 
             BuildCostSlots();
@@ -171,6 +181,7 @@ namespace TimelessEchoes.Upgrades
         {
             UpdateCostSlotValues();
             UpdateInfoText();
+            UpdateDescription();
             if (references.upgradeButton)
                 references.upgradeButton.interactable = controller && controller.CanUpgrade(CurrentUpgrade);
             UpdateStatSelectorLevels();
@@ -218,6 +229,34 @@ namespace TimelessEchoes.Upgrades
             references.statUpgradeInfoText.text = $"{current:0.###} -> {next:0.###}";
         }
 
+        private void UpdateDescription()
+        {
+            if (descriptionText == null || references == null) return;
+            var upgrade = CurrentUpgrade;
+            if (upgrade == null)
+            {
+                descriptionText.text = string.Empty;
+                if (references.descriptionButton)
+                    references.descriptionButton.gameObject.SetActive(false);
+                if (references.descriptionPanel)
+                    references.descriptionPanel.SetActive(false);
+                return;
+            }
+
+            bool hasDescription = !string.IsNullOrWhiteSpace(upgrade.description);
+            if (references.descriptionButton)
+                references.descriptionButton.gameObject.SetActive(hasDescription);
+            if (!hasDescription)
+            {
+                descriptionText.text = string.Empty;
+                if (references.descriptionPanel)
+                    references.descriptionPanel.SetActive(false);
+                return;
+            }
+
+            descriptionText.text = upgrade.description;
+        }
+
         private void ApplyUpgrade()
         {
             if (controller != null && controller.ApplyUpgrade(CurrentUpgrade))
@@ -226,6 +265,13 @@ namespace TimelessEchoes.Upgrades
                 UpdateUI();
                 UpdateStatSelectorLevels();
             }
+        }
+
+        private void ToggleDescription()
+        {
+            if (references?.descriptionPanel == null) return;
+            bool active = references.descriptionPanel.activeSelf;
+            references.descriptionPanel.SetActive(!active);
         }
 
         private StatUpgrade.Threshold GetThreshold()
