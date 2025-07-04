@@ -17,6 +17,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text averageRunText;
         [SerializeField] private Slider averageRunSlider;
         [SerializeField] private TMP_Text oldestRunNumberText;
+        [SerializeField] private TMP_Text middleRunNumberText;
         [SerializeField] private TMP_Text mostRecentRunNumberText;
         [SerializeField] private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
@@ -150,11 +151,20 @@ namespace TimelessEchoes.UI
 
             if (runs.Count > 0)
             {
+                var oldestNumber = runs[0].RunNumber - 1;
+                var newestNumber = runs[runs.Count - 1].RunNumber;
+
                 if (oldestRunNumberText != null)
-                    oldestRunNumberText.text = runs[0].RunNumber.ToString();
+                    oldestRunNumberText.text = oldestNumber.ToString();
+
+                if (middleRunNumberText != null)
+                {
+                    var middleNumber = Mathf.FloorToInt((oldestNumber + newestNumber) * 0.5f);
+                    middleRunNumberText.text = middleNumber.ToString();
+                }
 
                 if (mostRecentRunNumberText != null)
-                    mostRecentRunNumberText.text = runs[runs.Count - 1].RunNumber.ToString();
+                    mostRecentRunNumberText.text = newestNumber.ToString();
             }
 
             var barCount = runBars.Length;
