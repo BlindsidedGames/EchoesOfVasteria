@@ -42,7 +42,9 @@ namespace TimelessEchoes.MapGeneration
         {
             public float minX;
             public float height = 18f;
-            public float density = 0.1f;
+            [FormerlySerializedAs("density")] public float taskDensity = 0.1f;
+
+            public float enemyDensity = 0.1f;
 
             public LayerMask blockingMask;
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
