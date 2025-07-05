@@ -26,8 +26,11 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private float generationInterval = 5f;
         [SerializeField] private Slider progressSlider;
         [SerializeField] private Image progressImage;
+        [SerializeField] private Transform progressUIParent;
+        [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
 
         private readonly Dictionary<Resource, double> stored = new();
+        private readonly List<NpcGeneratorProgressUI> uiEntries = new();
         private float progress;
 
         private static Dictionary<string, Resource> lookup;
@@ -36,6 +39,10 @@ namespace TimelessEchoes.NpcGeneration
         public string NpcId => npcId;
         public float Interval => generationInterval;
         public float Progress => progress;
+        public double GetStoredAmount(Resource resource)
+        {
+            return stored.TryGetValue(resource, out var val) ? val : 0;
+        }
 
         private void Awake()
         {
@@ -46,6 +53,7 @@ namespace TimelessEchoes.NpcGeneration
         private void Start()
         {
             LoadState();
+            BuildProgressUI();
         }
 
         private void OnDestroy()
@@ -147,6 +155,25 @@ namespace TimelessEchoes.NpcGeneration
                 }
             }
             UpdateUI();
+            BuildProgressUI();
+        }
+
+        private void BuildProgressUI()
+        {
+            if (progressUIParent == null || progressUIPrefab == null)
+                return;
+
+            foreach (Transform child in progressUIParent)
+                Destroy(child.gameObject);
+            uiEntries.Clear();
+
+            foreach (var entry in resources)
+            {
+                if (entry.resource == null) continue;
+                var ui = Instantiate(progressUIPrefab, progressUIParent);
+                ui.SetData(this, entry.resource, entry.amount);
+                uiEntries.Add(ui);
+            }
         }
 
         private static void EnsureLookup()
