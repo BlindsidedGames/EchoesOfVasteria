@@ -7,15 +7,14 @@ using UnityEngine.UI;
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    /// Updates a slider or image to reflect the progress of an NPC generator.
+    ///     Updates a slider or image to reflect the progress of an NPC generator.
     /// </summary>
     public class NpcGeneratorProgressUI : MonoBehaviour
     {
         [SerializeField] private NPCResourceGenerator generator;
         [SerializeField] private Resource resource;
         [SerializeField] private double amountPerCycle;
-        [SerializeField] private Slider slider;
-        [SerializeField] private Image image;
+        [SerializeField] private SlicedFilledImage image;
         [SerializeField] private TMP_Text resourceNameText;
         [SerializeField] private TMP_Text totalCollectedText;
         [SerializeField] private TMP_Text awaitingCollectionText;
@@ -64,9 +63,7 @@ namespace TimelessEchoes.NpcGeneration
         private void Update()
         {
             if (generator == null || resource == null) return;
-            float pct = generator.Interval > 0f ? Mathf.Clamp01(generator.Progress / generator.Interval) : 0f;
-            if (slider != null)
-                slider.value = pct;
+            var pct = generator.Interval > 0f ? Mathf.Clamp01(generator.Progress / generator.Interval) : 0f;
             if (image != null)
                 image.fillAmount = pct;
 
