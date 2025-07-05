@@ -100,6 +100,8 @@ namespace Blindsided.SaveData
         public class NpcGenerationRecord
         {
             public Dictionary<string, double> StoredResources = new();
+            public Dictionary<string, double> TotalCollected = new();
+            public float Progress;
             public double LastGenerationTime;
         }
 

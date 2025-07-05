@@ -79,7 +79,7 @@ namespace TimelessEchoes.NpcGeneration
             if (resourceNameText != null)
                 resourceNameText.text = resource.name;
             if (resourceManager != null && totalCollectedText != null)
-                totalCollectedText.text = CalcUtils.FormatNumber(resource.totalReceived, true);
+                totalCollectedText.text = CalcUtils.FormatNumber(generator.GetTotalCollected(resource), true);
             if (awaitingCollectionText != null)
                 awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(resource), true);
             if (collectionRateText != null)
