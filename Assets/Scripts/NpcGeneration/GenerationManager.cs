@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -11,15 +10,6 @@ namespace TimelessEchoes.NpcGeneration
     {
         [SerializeField] private List<NPCResourceGenerator> generators = new();
 
-        private void OnEnable()
-        {
-            AwayFor += OnAwayForTime;
-        }
-
-        private void OnDisable()
-        {
-            AwayFor -= OnAwayForTime;
-        }
 
         private void Update()
         {
@@ -31,14 +21,6 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
-        private void OnAwayForTime(float seconds)
-        {
-            foreach (var gen in generators)
-            {
-                if (gen != null)
-                    gen.ApplyOfflineProgress(seconds);
-            }
-        }
 
         public NPCResourceGenerator GetGenerator(string npcId)
         {

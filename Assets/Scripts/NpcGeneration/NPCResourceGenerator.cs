@@ -53,12 +53,6 @@ namespace TimelessEchoes.NpcGeneration
             OnLoadData += LoadState;
         }
 
-        private void Start()
-        {
-            LoadState();
-            BuildProgressUI();
-        }
-
         private void OnDestroy()
         {
             OnSaveData -= SaveState;
@@ -97,6 +91,10 @@ namespace TimelessEchoes.NpcGeneration
             foreach (var pair in stored)
             {
                 resourceManager.Add(pair.Key, pair.Value);
+                if (collectedTotals.ContainsKey(pair.Key))
+                    collectedTotals[pair.Key] += pair.Value;
+                else
+                    collectedTotals[pair.Key] = pair.Value;
             }
             stored.Clear();
         }
@@ -110,11 +108,6 @@ namespace TimelessEchoes.NpcGeneration
                     stored[entry.resource] += entry.amount;
                 else
                     stored[entry.resource] = entry.amount;
-
-                if (collectedTotals.ContainsKey(entry.resource))
-                    collectedTotals[entry.resource] += entry.amount;
-                else
-                    collectedTotals[entry.resource] = entry.amount;
             }
         }
 
@@ -171,7 +164,13 @@ namespace TimelessEchoes.NpcGeneration
                         collectedTotals[res] = pair.Value;
                 }
                 progress = rec.Progress;
+
+                double now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+                double seconds = now - rec.LastGenerationTime;
+                if (seconds > 0)
+                    ApplyOfflineProgress(seconds);
             }
+
             UpdateUI();
             BuildProgressUI();
         }
