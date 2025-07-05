@@ -27,6 +27,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
 
         private readonly Dictionary<Resource, double> stored = new();
+        private readonly Dictionary<Resource, double> collectedTotals = new();
         private readonly List<NpcGeneratorProgressUI> uiEntries = new();
         private float progress;
 
@@ -39,6 +40,11 @@ namespace TimelessEchoes.NpcGeneration
         public double GetStoredAmount(Resource resource)
         {
             return stored.TryGetValue(resource, out var val) ? val : 0;
+        }
+
+        public double GetTotalCollected(Resource resource)
+        {
+            return collectedTotals.TryGetValue(resource, out var val) ? val : 0;
         }
 
         private void Awake()
@@ -104,6 +110,11 @@ namespace TimelessEchoes.NpcGeneration
                     stored[entry.resource] += entry.amount;
                 else
                     stored[entry.resource] = entry.amount;
+
+                if (collectedTotals.ContainsKey(entry.resource))
+                    collectedTotals[entry.resource] += entry.amount;
+                else
+                    collectedTotals[entry.resource] = entry.amount;
             }
         }
 
@@ -121,12 +132,19 @@ namespace TimelessEchoes.NpcGeneration
             var rec = new GameData.NpcGenerationRecord
             {
                 StoredResources = new Dictionary<string, double>(),
+                TotalCollected = new Dictionary<string, double>(),
+                Progress = progress,
                 LastGenerationTime = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
             };
             foreach (var pair in stored)
             {
                 if (pair.Key != null)
                     rec.StoredResources[pair.Key.name] = pair.Value;
+            }
+            foreach (var pair in collectedTotals)
+            {
+                if (pair.Key != null)
+                    rec.TotalCollected[pair.Key.name] = pair.Value;
             }
             oracle.saveData.NpcGeneration[npcId] = rec;
         }
@@ -138,6 +156,7 @@ namespace TimelessEchoes.NpcGeneration
             oracle.saveData.NpcGeneration ??= new Dictionary<string, GameData.NpcGenerationRecord>();
 
             stored.Clear();
+            collectedTotals.Clear();
             progress = 0f;
             if (oracle.saveData.NpcGeneration.TryGetValue(npcId, out var rec) && rec != null)
             {
@@ -146,6 +165,12 @@ namespace TimelessEchoes.NpcGeneration
                     if (lookup.TryGetValue(pair.Key, out var res) && res != null)
                         stored[res] = pair.Value;
                 }
+                foreach (var pair in rec.TotalCollected)
+                {
+                    if (lookup.TryGetValue(pair.Key, out var res) && res != null)
+                        collectedTotals[res] = pair.Value;
+                }
+                progress = rec.Progress;
             }
             UpdateUI();
             BuildProgressUI();
