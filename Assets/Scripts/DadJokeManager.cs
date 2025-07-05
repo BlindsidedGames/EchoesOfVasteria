@@ -1,46 +1,31 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Displays a random dad joke when a target object is clicked.
+    /// Displays a random dad joke when the button is clicked.
     /// </summary>
     public class DadJokeManager : MonoBehaviour
     {
-        [SerializeField] private GameObject clickTarget;
+        [SerializeField] private Button jokeButton;
         [SerializeField] private GameObject textBox;
         [SerializeField] private TMP_Text jokeText;
         [SerializeField] private List<string> dadJokes = new();
 
-        private Camera mainCamera;
-
-        private void Awake()
-        {
-            mainCamera = Camera.main;
-        }
 
         private void Start()
         {
             if (textBox != null)
                 textBox.SetActive(false);
+            if (jokeButton != null)
+                jokeButton.onClick.AddListener(OnJokeButtonClicked);
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                {
-                    if (textBox != null && textBox.activeSelf)
-                        textBox.SetActive(false);
-                    return;
-                }
-                TryHandleClick();
-            }
-
             if (Input.GetMouseButtonDown(1))
             {
                 if (textBox != null && textBox.activeSelf)
@@ -48,25 +33,21 @@ namespace TimelessEchoes
             }
         }
 
-        private void TryHandleClick()
+        private void OnDestroy()
         {
-            if (clickTarget == null || mainCamera == null)
+            if (jokeButton != null)
+                jokeButton.onClick.RemoveListener(OnJokeButtonClicked);
+        }
+
+        private void OnJokeButtonClicked()
+        {
+            if (textBox != null && textBox.activeSelf)
+            {
+                textBox.SetActive(false);
                 return;
-
-            var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            bool hit = false;
-            if (Physics.Raycast(ray, out var hitInfo))
-            {
-                hit = hitInfo.collider != null && hitInfo.collider.gameObject == clickTarget;
-            }
-            else
-            {
-                var hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-                hit = hit2D.collider != null && hit2D.collider.gameObject == clickTarget;
             }
 
-            if (hit)
-                ShowJoke();
+            ShowJoke();
         }
 
         private void ShowJoke()
