@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Medium Birch Tree
+  m_EditorClassIdentifier: 
+  taskName: Medium Birch Tree
+  taskID: 13
+  taskIcon: {fileID: -2044317885256534180, guid: ff597bf836f9fb24a9d6b5c4190007a7, type: 3}
+  associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
+  xpForCompletion: 8
+  taskDuration: 3
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+    dropRange: {x: 42, y: 86}
+    dropChance: 1
+    minX: 500
+    maxX: Infinity
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0

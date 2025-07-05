@@ -282,7 +282,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 621266246945384593, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
+  m_Sprite: {fileID: -2044317885256534180, guid: ff597bf836f9fb24a9d6b5c4190007a7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -456,7 +456,7 @@ GameObject:
   - component: {fileID: 6224035724133537699}
   - component: {fileID: 5366876333383290996}
   m_Layer: 0
-  m_Name: Tree
+  m_Name: Medium Birch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -492,11 +492,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
-  taskData: {fileID: 11400000, guid: be28fd76aeb073b499a5fe6d63225d6b, type: 2}
+  taskData: {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
   progressBarObject: {fileID: 2490411964500561272}
   progressBar: {fileID: 4821827099416284749}
   spriteRenderer: {fileID: 6777865665299753724}
-  stumpSprite: {fileID: -1417621601314111017, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
+  stumpSprite: {fileID: -128286398814380579, guid: ff597bf836f9fb24a9d6b5c4190007a7, type: 3}
   cuttingPoint: {fileID: 3659531261967260217}
 --- !u!1 &7827802749126930448
 GameObject:
