@@ -34,7 +34,11 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "Area")] [SerializeField]
         [HideInInspector]
-        private float density = 0.1f;
+        private float enemyDensity = 0.1f;
+
+        [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
+        private float taskDensity = 0.1f;
 
         [TabGroup("Settings", "Generation")] [SerializeField]
         [HideInInspector]
@@ -113,7 +117,8 @@ namespace TimelessEchoes.Tasks
 
             minX = config.taskGeneratorSettings.minX;
             height = config.taskGeneratorSettings.height;
-            density = config.taskGeneratorSettings.density;
+            enemyDensity = config.taskGeneratorSettings.enemyDensity;
+            taskDensity = config.taskGeneratorSettings.taskDensity;
             blockingMask = config.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
             enemies = config.taskGeneratorSettings.enemies;
@@ -207,21 +212,21 @@ namespace TimelessEchoes.Tasks
                 controller.ClearTaskObjects();
             }
 
-            var count = Mathf.RoundToInt((localMaxX - localMinX) * density);
-            if (count <= 0)
+            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
+            var taskCount = Mathf.RoundToInt((localMaxX - localMinX) * taskDensity);
+            if (enemyCount <= 0 && taskCount <= 0)
                 return;
 
             var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < taskCount; i++)
             {
                 var localX = Random.Range(localMinX, localMaxX);
                 var worldX = transform.position.x + localX;
 
                 var allowWater = TryGetWaterSpot(localX, out var waterPos);
-                var allowSand = TryGetSandSpot(localX, 0, out var sandPos);
-                var allowGrass = TryGetGrassPosition(localX, 0, out var _);
-                var (entry, isEnemy, isWaterTask, isGrassTask, isSandTask) = PickEntry(worldX, allowWater, allowGrass, allowSand);
+                var (entry, isWaterTask, isGrassTask, isSandTask) = PickTaskEntry(worldX, allowWater, allowGrass, allowSand);
+                var isEnemy = false;
                 if (entry == null || entry.prefab == null)
                     continue;
 
@@ -303,6 +308,77 @@ namespace TimelessEchoes.Tasks
                         taskPositions.Add(pos);
                     }
                 }
+            }
+
+            for (var i = 0; i < enemyCount; i++)
+            {
+                var localX = Random.Range(localMinX, localMaxX);
+                var worldX = transform.position.x + localX;
+
+                var allowWater = TryGetWaterSpot(localX, out var waterPos);
+                var entry = PickEnemyEntry(worldX);
+                var isEnemy = true;
+                if (entry == null || entry.prefab == null)
+                    continue;
+
+                var isWaterTask = false;
+                var isGrassTask = false;
+                var isSandTask = false;
+
+                Vector3 pos;
+                if (isWaterTask)
+                    pos = waterPos;
+                else if (isSandTask)
+                {
+                    if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
+                        continue;
+                }
+                else if (isGrassTask)
+                {
+                    if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
+                        continue;
+                }
+                else
+                    pos = RandomPositionAtX(localX);
+
+                var attempts = 0;
+                var positionIsValid = false;
+                while (attempts < 5)
+                {
+                    if (isWaterTask || isSandTask)
+                    {
+                        positionIsValid = true;
+                        break;
+                    }
+
+                    var isWaterTile = !isWaterTask && IsWaterTile(pos);
+                    var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
+                    var onWaterEdge = !isEnemy && allowWater &&
+                                      Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
+
+                    if (!isObstructed && !onWaterEdge)
+                    {
+                        positionIsValid = true;
+                        break;
+                    }
+                    if (isGrassTask)
+                    {
+                        if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
+                            break;
+                    }
+                    else
+                    {
+                        pos = RandomPositionAtX(localX);
+                    }
+                    attempts++;
+                }
+
+                if (!positionIsValid)
+                    continue;
+
+                var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
+                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
+                generatedObjects.Add(obj);
             }
 
             foreach (var npc in npcTasks)
@@ -545,18 +621,27 @@ namespace TimelessEchoes.Tasks
             return permitted;
         }
 
-        /// <summary>
-        ///     Picks an entry from the available lists and identifies if it's an enemy.
-        /// </summary>
-        /// <param name="worldX">The world X position of the spawn attempt.</param>
-        /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
-        private (WeightedSpawn entry, bool isEnemy, bool isWaterTask, bool isGrassTask, bool isSandTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
+        private WeightedSpawn PickEnemyEntry(float worldX)
         {
-            var enemyTotalWeight = 0f;
+            var totalWeight = 0f;
             foreach (var e in enemies)
-                enemyTotalWeight += e.GetWeight(worldX);
+                totalWeight += e.GetWeight(worldX);
+            if (totalWeight <= 0f) return null;
 
-            var taskTotalWeight = 0f;
+            var r = Random.value * totalWeight;
+            foreach (var e in enemies)
+            {
+                r -= e.GetWeight(worldX);
+                if (r <= 0f)
+                    return e;
+            }
+
+            return null;
+        }
+
+        private (WeightedSpawn entry, bool isWaterTask, bool isGrassTask, bool isSandTask) PickTaskEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
+        {
+            var totalWeight = 0f;
             foreach (var t in tasks)
             {
                 if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
@@ -564,43 +649,29 @@ namespace TimelessEchoes.Tasks
                 if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
                     !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
-                taskTotalWeight += t.GetWeight(worldX);
+                totalWeight += t.GetWeight(worldX);
             }
 
-            var totalWeight = enemyTotalWeight + taskTotalWeight;
             if (totalWeight <= 0f)
-                return (null, false, false, false, false);
+                return (null, false, false, false);
 
             var r = Random.value * totalWeight;
-            if (r < enemyTotalWeight)
+            foreach (var t in tasks)
             {
-                foreach (var e in enemies)
-                {
-                    r -= e.GetWeight(worldX);
-                    if (r <= 0f)
-                        return (e, true, false, false, false);
-                }
-            }
-            else
-            {
-                r -= enemyTotalWeight;
-                foreach (var t in tasks)
-                {
-                    if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
-                        continue;
-                    if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
-                        !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                        continue;
-                    r -= t.GetWeight(worldX);
-                    if (r > 0f) continue;
-                    var isWater = t.spawnOnWater && allowWaterTasks;
-                    var isSand = !isWater && t.spawnOnSand && allowSandTasks;
-                    var isGrass = !isWater && !isSand && t.spawnOnGrass && allowGrassTasks;
-                    return (t, false, isWater, isGrass, isSand);
-                }
+                if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
+                    continue;
+                if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
+                    !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
+                    continue;
+                r -= t.GetWeight(worldX);
+                if (r > 0f) continue;
+                var isWater = t.spawnOnWater && allowWaterTasks;
+                var isSand = !isWater && t.spawnOnSand && allowSandTasks;
+                var isGrass = !isWater && !isSand && t.spawnOnGrass && allowGrassTasks;
+                return (t, isWater, isGrass, isSand);
             }
 
-            return (null, false, false, false, false);
+            return (null, false, false, false);
         }
 
         [Serializable]
