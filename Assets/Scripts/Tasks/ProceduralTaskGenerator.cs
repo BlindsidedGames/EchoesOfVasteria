@@ -322,19 +322,35 @@ namespace TimelessEchoes.Tasks
 
                 Vector3 pos;
                 if (entry.spawnOnWater && allowWater)
+                {
                     pos = waterPos;
-                else if (entry.spawnOnSand && allowSand)
-                {
-                    if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
-                        continue;
-                }
-                else if (entry.spawnOnGrass && allowGrass)
-                {
-                    if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
-                        continue;
                 }
                 else
-                    pos = RandomPositionAtX(localX);
+                {
+                    Vector3 sandCandidate = Vector3.zero;
+                    Vector3 grassCandidate = Vector3.zero;
+                    var sandValid = entry.spawnOnSand && allowSand &&
+                                   TryGetSandSpot(localX, entry.topBuffer, out sandCandidate);
+                    var grassValid = entry.spawnOnGrass && allowGrass &&
+                                     TryGetGrassPosition(localX, entry.topBuffer, out grassCandidate);
+
+                    if (sandValid && grassValid)
+                    {
+                        pos = Random.value < 0.5f ? sandCandidate : grassCandidate;
+                    }
+                    else if (sandValid)
+                    {
+                        pos = sandCandidate;
+                    }
+                    else if (grassValid)
+                    {
+                        pos = grassCandidate;
+                    }
+                    else
+                    {
+                        pos = RandomPositionAtX(localX);
+                    }
+                }
 
                 var attempts = 0;
                 var positionIsValid = false;
