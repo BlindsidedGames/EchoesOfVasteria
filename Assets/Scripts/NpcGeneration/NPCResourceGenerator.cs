@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
-using UnityEngine.UI;
 using Blindsided.SaveData;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -24,8 +23,6 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private string npcId;
         [SerializeField] private List<ResourceEntry> resources = new();
         [SerializeField] private float generationInterval = 5f;
-        [SerializeField] private Slider progressSlider;
-        [SerializeField] private Image progressImage;
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
 
@@ -112,11 +109,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void UpdateUI()
         {
-            float pct = generationInterval > 0f ? Mathf.Clamp01(progress / generationInterval) : 0f;
-            if (progressSlider != null)
-                progressSlider.value = pct;
-            if (progressImage != null)
-                progressImage.fillAmount = pct;
+            // individual progress UI elements handle their own updates
         }
 
         private void SaveState()

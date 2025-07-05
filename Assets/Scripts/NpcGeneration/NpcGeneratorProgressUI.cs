@@ -11,8 +11,8 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class NpcGeneratorProgressUI : MonoBehaviour
     {
-        [SerializeField] private NPCResourceGenerator generator;
-        [SerializeField] private Resource resource;
+        [SerializeField, HideInInspector] private NPCResourceGenerator generator;
+        [SerializeField, HideInInspector] private Resource resource;
         [SerializeField] private double amountPerCycle;
         [SerializeField] private SlicedFilledImage image;
         [SerializeField] private TMP_Text resourceNameText;
@@ -21,6 +21,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private TMP_Text collectionRateText;
         [SerializeField] private Image iconImage;
         [SerializeField] private Button selectButton;
+        [SerializeField] private Button collectButton;
 
         private ResourceInventoryUI inventoryUI;
         private ResourceManager resourceManager;
@@ -44,6 +45,12 @@ namespace TimelessEchoes.NpcGeneration
                 selectButton.onClick.RemoveAllListeners();
                 selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
             }
+
+            if (collectButton != null)
+            {
+                collectButton.onClick.RemoveAllListeners();
+                collectButton.onClick.AddListener(() => generator?.CollectResources());
+            }
         }
 
         private void Awake()
@@ -58,6 +65,8 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (selectButton != null)
                 selectButton.onClick.RemoveAllListeners();
+            if (collectButton != null)
+                collectButton.onClick.RemoveAllListeners();
         }
 
         private void Update()
@@ -75,8 +84,15 @@ namespace TimelessEchoes.NpcGeneration
                 awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(resource), true);
             if (collectionRateText != null)
             {
-                var rate = generator.Interval > 0 ? amountPerCycle / generator.Interval : 0;
-                collectionRateText.text = CalcUtils.FormatNumber(rate, true) + "/s";
+                if (generator.Interval > 0)
+                {
+                    var time = generator.Interval.ToString("0.##");
+                    collectionRateText.text = CalcUtils.FormatNumber(amountPerCycle, true) + " / " + time + "s";
+                }
+                else
+                {
+                    collectionRateText.text = CalcUtils.FormatNumber(amountPerCycle, true);
+                }
             }
         }
     }
