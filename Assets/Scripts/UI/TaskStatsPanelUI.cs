@@ -60,7 +60,10 @@ namespace TimelessEchoes.UI
                 Destroy(child.gameObject);
 
             var allTasks = Resources.LoadAll<TaskData>("Tasks");
-            var sorted = allTasks.OrderBy(t => t.taskName).ToList();
+            var sorted = allTasks
+                .OrderBy(t => t.taskID)
+                .ThenBy(t => t.taskName)
+                .ToList();
             defaultOrder = sorted;
             entries.Clear();
 
