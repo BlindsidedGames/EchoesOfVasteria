@@ -46,12 +46,8 @@ namespace TimelessEchoes.Quests
             if (killTracker != null)
                 killTracker.OnKillRegistered += OnKill;
 
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-
-            foreach (var q in startingQuests)
-                TryStartQuest(q);
-
-            RefreshNoticeboard();
+            LoadState();
+            OnLoadData += LoadState;
         }
 
         private void OnDestroy()
@@ -60,6 +56,17 @@ namespace TimelessEchoes.Quests
                 resourceManager.OnInventoryChanged -= UpdateAllProgress;
             if (killTracker != null)
                 killTracker.OnKillRegistered -= OnKill;
+            OnLoadData -= LoadState;
+        }
+
+        private void LoadState()
+        {
+            if (oracle == null) return;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            active.Clear();
+            foreach (var q in startingQuests)
+                TryStartQuest(q);
+            RefreshNoticeboard();
         }
 
         private void OnKill(EnemyStats stats)
