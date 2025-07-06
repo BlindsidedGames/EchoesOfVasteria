@@ -9,6 +9,7 @@ namespace References.UI
         public Image iconImage;
         public TMP_Text countText;
         public Image selectionImage;
-        public Button selectButton;
+        public Button upgradeButton;
+        public GameObject costGridLayoutParent;
     }
 }

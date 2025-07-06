@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Skills;
-using TMPro;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
@@ -10,25 +9,19 @@ using static Blindsided.EventHandler;
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
-    ///     Manages the stat upgrade UI allowing selection between multiple stats.
+    ///     Displays stat upgrades with their costs and handles upgrading.
     /// </summary>
     public class StatUpgradeUIManager : MonoBehaviour
     {
         [SerializeField] private StatUpgradeController controller;
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI resourceInventoryUI;
-        [SerializeField] private List<StatUIReferences> statSelectors = new();
+        [SerializeField] private List<StatUIReferences> statReferences = new();
         [SerializeField] private List<StatUpgrade> upgrades = new();
-        [SerializeField] private StatUpgradeUIReferences references;
-        [SerializeField] private TMP_Text descriptionText;
+        [SerializeField] private CostResourceUIReferences costSlotPrefab;
+
         private SkillController skillController;
-
-        private readonly List<CostResourceUIReferences> costSlots = new();
-
-        private int selectedIndex = -1;
-
-        private StatUpgrade CurrentUpgrade =>
-            selectedIndex >= 0 && selectedIndex < upgrades.Count ? upgrades[selectedIndex] : null;
+        private readonly List<List<CostResourceUIReferences>> costSlots = new();
 
         private void Awake()
         {
@@ -40,46 +33,23 @@ namespace TimelessEchoes.Upgrades
                 resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
             if (skillController == null)
                 skillController = FindFirstObjectByType<SkillController>();
-            if (references == null)
-                references = GetComponent<StatUpgradeUIReferences>();
-            if (statSelectors.Count == 0)
-                statSelectors.AddRange(GetComponentsInChildren<StatUIReferences>(true));
+            if (statReferences.Count == 0)
+                statReferences.AddRange(GetComponentsInChildren<StatUIReferences>(true));
 
-            for (var i = 0; i < statSelectors.Count; i++)
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
-                var index = i;
-                if (statSelectors[i] != null && statSelectors[i].selectButton != null)
-                    statSelectors[i].selectButton.onClick.AddListener(() => SelectStat(index));
+                int index = i;
+                var refs = statReferences[i];
+                if (refs != null && refs.upgradeButton != null)
+                    refs.upgradeButton.onClick.AddListener(() => ApplyUpgrade(index));
             }
 
-            if (references.upgradeButton != null)
-                references.upgradeButton.onClick.AddListener(ApplyUpgrade);
-            if (references.descriptionButton != null)
-                references.descriptionButton.onClick.AddListener(ToggleDescription);
-            if (references.descriptionPanel != null)
-                references.descriptionPanel.SetActive(false);
-
-            DeselectStat();
-            if (references != null)
-                references.gameObject.SetActive(false);
-            UpdateStatSelectorLevels();
+            BuildAllCostSlots();
+            UpdateStatLevels();
         }
 
         private void OnEnable()
         {
-            if (selectedIndex < 0)
-            {
-                DeselectStat();
-                if (references != null)
-                    references.gameObject.SetActive(false);
-            }
-            else
-            {
-                UpdateUI();
-            }
-
-            UpdateStatSelectorLevels();
-
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnLoadDataHandler;
             OnShowLevelTextChanged();
@@ -91,21 +61,10 @@ namespace TimelessEchoes.Upgrades
             OnLoadData -= OnLoadDataHandler;
         }
 
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (references != null && references.gameObject.activeSelf)
-                    references.gameObject.SetActive(false);
-                DeselectStat();
-            }
-        }
-
         private void OnShowLevelTextChanged()
         {
-            UpdateStatSelectorLevels();
-            if (selectedIndex >= 0)
-                UpdateUI();
+            UpdateStatLevels();
+            UpdateAllCostSlotValues();
         }
 
         private void OnLoadDataHandler()
@@ -119,90 +78,62 @@ namespace TimelessEchoes.Upgrades
             OnShowLevelTextChanged();
         }
 
-        private void DeselectStat()
+        private void BuildAllCostSlots()
         {
-            selectedIndex = -1;
-            foreach (var selector in statSelectors)
-                if (selector != null && selector.selectionImage != null)
-                    selector.selectionImage.enabled = false;
-            if (references?.descriptionPanel != null)
-                references.descriptionPanel.SetActive(false);
+            costSlots.Clear();
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            {
+                var list = new List<CostResourceUIReferences>();
+                var parent = statReferences[i].costGridLayoutParent;
+                if (parent != null && costSlotPrefab != null)
+                {
+                    foreach (Transform child in parent.transform)
+                        Destroy(child.gameObject);
+
+                    var threshold = GetThreshold(upgrades[i]);
+                    if (threshold != null)
+                    {
+                        foreach (var req in threshold.requirements)
+                        {
+                            var slot = Instantiate(costSlotPrefab, parent.transform);
+                            slot.resource = req.resource;
+                            if (slot.selectButton != null)
+                            {
+                                var res = req.resource;
+                                slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
+                            }
+                            list.Add(slot);
+                        }
+                    }
+                }
+                costSlots.Add(list);
+            }
+            UpdateAllCostSlotValues();
         }
 
-        private void SelectStat(int index)
+        private void UpdateAllCostSlotValues()
         {
-            selectedIndex = Mathf.Clamp(index, 0, statSelectors.Count - 1);
-
-            for (var i = 0; i < statSelectors.Count; i++)
-            {
-                var selector = statSelectors[i];
-                if (selector != null && selector.selectionImage != null)
-                    selector.selectionImage.enabled = i == selectedIndex;
-            }
-
-            if (references != null && selectedIndex >= 0 && selectedIndex < statSelectors.Count)
-            {
-                var pos = references.transform.position;
-                var target = statSelectors[selectedIndex].transform.position;
-                references.transform.position = new Vector3(pos.x, target.y, pos.z);
-                references.gameObject.SetActive(true);
-                if (references.descriptionPanel)
-                    references.descriptionPanel.SetActive(false);
-            }
-
-            BuildCostSlots();
-            UpdateUI();
+            for (int i = 0; i < costSlots.Count && i < upgrades.Count; i++)
+                UpdateCostSlotValues(i);
         }
 
-        private void BuildCostSlots()
+        private void UpdateCostSlotValues(int index)
         {
-            if (references == null || references.costSlotPrefab == null || references.costGridLayoutParent == null)
+            if (index < 0 || index >= costSlots.Count || index >= upgrades.Count)
                 return;
 
-            foreach (Transform child in references.costGridLayoutParent.transform)
-                Destroy(child.gameObject);
-            costSlots.Clear();
-
-            var threshold = GetThreshold();
+            var threshold = GetThreshold(upgrades[index]);
+            var slots = costSlots[index];
             if (threshold == null) return;
 
-            foreach (var req in threshold.requirements)
+            for (int j = 0; j < slots.Count && j < threshold.requirements.Count; j++)
             {
-                var slot = Instantiate(references.costSlotPrefab, references.costGridLayoutParent.transform);
-                slot.resource = req.resource;
-                if (slot.selectButton != null)
-                {
-                    var res = req.resource;
-                    slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
-                }
+                var slot = slots[j];
+                var req = threshold.requirements[j];
+                int lvl = controller ? controller.GetLevel(upgrades[index]) : 0;
+                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
 
-                costSlots.Add(slot);
-            }
-        }
-
-        private void UpdateUI()
-        {
-            UpdateCostSlotValues();
-            UpdateInfoText();
-            UpdateDescription();
-            if (references.upgradeButton)
-                references.upgradeButton.interactable = controller && controller.CanUpgrade(CurrentUpgrade);
-            UpdateStatSelectorLevels();
-        }
-
-        private void UpdateCostSlotValues()
-        {
-            var threshold = GetThreshold();
-            if (threshold == null) return;
-
-            for (var i = 0; i < costSlots.Count && i < threshold.requirements.Count; i++)
-            {
-                var slot = costSlots[i];
-                var req = threshold.requirements[i];
-                var lvl = controller ? controller.GetLevel(CurrentUpgrade) : 0;
-                var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
-
-                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
                 if (slot.questionMarkImage)
                     slot.questionMarkImage.enabled = !unlocked;
 
@@ -215,8 +146,7 @@ namespace TimelessEchoes.Upgrades
                 if (slot.countText)
                     slot.countText.text = cost.ToString();
 
-                // Grey out the icon and text when the player lacks resources
-                var hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
+                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
                 var grey = new Color(1f, 1f, 1f, 0.4f);
                 if (slot.iconImage)
                     slot.iconImage.color = hasEnough ? Color.white : grey;
@@ -228,90 +158,37 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private void UpdateInfoText()
+        private void ApplyUpgrade(int index)
         {
-            if (references == null || references.statUpgradeInfoText == null) return;
-            var upgrade = CurrentUpgrade;
-            if (upgrade == null) return;
-            var lvl = controller ? controller.GetLevel(upgrade) : 0;
-            var flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
-            var percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
-
-            var baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
-            var current = baseCurrent * (1f + percent);
-
-            var baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
-            var next = baseNext * (1f + percent);
-            references.statUpgradeInfoText.text = $"{current:0.###} -> {next:0.###}";
-        }
-
-        private void UpdateDescription()
-        {
-            if (descriptionText == null || references == null) return;
-            var upgrade = CurrentUpgrade;
-            if (upgrade == null)
+            if (index < 0 || index >= upgrades.Count) return;
+            if (controller != null && controller.ApplyUpgrade(upgrades[index]))
             {
-                descriptionText.text = string.Empty;
-                if (references.descriptionButton)
-                    references.descriptionButton.gameObject.SetActive(false);
-                if (references.descriptionPanel)
-                    references.descriptionPanel.SetActive(false);
-                return;
-            }
-
-            var hasDescription = !string.IsNullOrWhiteSpace(upgrade.description);
-            if (references.descriptionButton)
-                references.descriptionButton.gameObject.SetActive(hasDescription);
-            if (!hasDescription)
-            {
-                descriptionText.text = string.Empty;
-                if (references.descriptionPanel)
-                    references.descriptionPanel.SetActive(false);
-                return;
-            }
-
-            descriptionText.text = upgrade.description;
-        }
-
-        private void ApplyUpgrade()
-        {
-            if (controller != null && controller.ApplyUpgrade(CurrentUpgrade))
-            {
-                BuildCostSlots();
-                UpdateUI();
-                UpdateStatSelectorLevels();
+                BuildAllCostSlots();
+                UpdateStatLevels();
             }
         }
 
-        private void ToggleDescription()
+        private StatUpgrade.Threshold GetThreshold(StatUpgrade upgrade)
         {
-            if (references?.descriptionPanel == null) return;
-            var active = references.descriptionPanel.activeSelf;
-            references.descriptionPanel.SetActive(!active);
-        }
-
-        private StatUpgrade.Threshold GetThreshold()
-        {
-            var upgrade = CurrentUpgrade;
             if (upgrade == null) return null;
-            var lvl = controller ? controller.GetLevel(upgrade) : 0;
+            int lvl = controller ? controller.GetLevel(upgrade) : 0;
             foreach (var t in upgrade.thresholds)
                 if (lvl >= t.minLevel && lvl < t.maxLevel)
                     return t;
             return null;
         }
 
-        private void UpdateStatSelectorLevels()
+        private void UpdateStatLevels()
         {
-            for (var i = 0; i < statSelectors.Count && i < upgrades.Count; i++)
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
-                var selector = statSelectors[i];
+                var selector = statReferences[i];
                 var upgrade = upgrades[i];
                 if (selector == null || selector.countText == null) continue;
 
                 if (ShowLevelText)
                 {
-                    var lvl = controller ? controller.GetLevel(upgrade) : 0;
+                    int lvl = controller ? controller.GetLevel(upgrade) : 0;
                     selector.countText.text = $"Lvl {lvl}";
                 }
                 else
