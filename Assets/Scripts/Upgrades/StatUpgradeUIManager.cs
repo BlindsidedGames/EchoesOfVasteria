@@ -95,9 +95,12 @@ namespace TimelessEchoes.Upgrades
             costSlots.Clear();
             for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
+                var refs = statReferences[i];
                 var list = new List<CostResourceUIReferences>();
-                var parent = statReferences[i].costGridLayoutParent;
-                if (parent != null && costSlotPrefab != null)
+                var parent = refs.costGridLayoutParent;
+                var prefab = refs.costSlotPrefab != null ? refs.costSlotPrefab : costSlotPrefab;
+
+                if (parent != null && prefab != null)
                 {
                     foreach (Transform child in parent.transform)
                         Destroy(child.gameObject);
@@ -107,11 +110,12 @@ namespace TimelessEchoes.Upgrades
                     {
                         foreach (var req in threshold.requirements)
                         {
-                            var slot = Instantiate(costSlotPrefab, parent.transform);
+                            var slot = Instantiate(prefab, parent.transform);
                             slot.resource = req.resource;
                             if (slot.selectButton != null)
                             {
                                 var res = req.resource;
+                                slot.selectButton.onClick.RemoveAllListeners();
                                 slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
                             }
                             list.Add(slot);

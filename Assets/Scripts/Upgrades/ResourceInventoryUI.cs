@@ -158,6 +158,8 @@ namespace TimelessEchoes.Upgrades
         public void HighlightResource(Resource resource)
         {
             var index = resources.IndexOf(resource);
+            if (index < 0)
+                index = resources.FindIndex(r => r != null && resource != null && r.name == resource.name);
             if (index >= 0)
             {
                 if (inventoryWindow != null && !inventoryWindow.activeSelf)
