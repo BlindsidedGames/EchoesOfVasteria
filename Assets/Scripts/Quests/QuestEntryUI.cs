@@ -1,9 +1,9 @@
 using System;
+using Blindsided.Utilities;
+using References.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using References.UI;
-using Blindsided.Utilities;
 
 namespace TimelessEchoes.Quests
 {
@@ -17,7 +17,7 @@ namespace TimelessEchoes.Quests
         public TMP_Text rewardText;
         public Button turnInButton;
         public SlicedFilledImage progressImage;
-        public References.UI.CostResourceUIReferences costSlotPrefab;
+        public CostResourceUIReferences costSlotPrefab;
         public Transform costParent;
 
         private Action onTurnIn;
@@ -44,7 +44,6 @@ namespace TimelessEchoes.Quests
                 foreach (Transform child in costParent)
                     Destroy(child.gameObject);
                 if (data != null && costSlotPrefab != null)
-                {
                     foreach (var req in data.requirements)
                     {
                         if (req.type != QuestData.RequirementType.Resource) continue;
@@ -55,7 +54,6 @@ namespace TimelessEchoes.Quests
                         if (slot.countText != null)
                             slot.countText.text = req.amount.ToString();
                     }
-                }
             }
         }
 

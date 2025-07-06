@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using UnityEngine;
-using TimelessEchoes.Upgrades;
+using Blindsided.SaveData;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
-using Blindsided.SaveData;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 
@@ -26,7 +27,7 @@ namespace TimelessEchoes.Quests
         {
             public QuestData data;
             public QuestEntryUI ui;
-            public Dictionary<EnemyStats, double> baselineKills = new();
+            public readonly Dictionary<EnemyStats, double> baselineKills = new();
         }
 
         private void Awake()
@@ -85,15 +86,15 @@ namespace TimelessEchoes.Quests
 
         private void UpdateProgress(QuestInstance inst)
         {
-            float progress = 0f;
-            int count = 0;
+            var progress = 0f;
+            var count = 0;
             foreach (var req in inst.data.requirements)
             {
                 count++;
-                float pct = 0f;
+                var pct = 0f;
                 if (req.type == QuestData.RequirementType.Resource)
                 {
-                    double have = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
+                    var have = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
                     if (req.amount > 0)
                         pct = (float)(have / req.amount);
                 }
@@ -105,14 +106,17 @@ namespace TimelessEchoes.Quests
                         double baseVal = 0;
                         if (inst.baselineKills.TryGetValue(enemy, out var b))
                             baseVal = b;
-                        double current = killTracker ? killTracker.GetKills(enemy) : 0;
+                        var current = killTracker ? killTracker.GetKills(enemy) : 0;
                         total += current - baseVal;
                     }
+
                     if (req.amount > 0)
                         pct = (float)(total / req.amount);
                 }
+
                 progress += Mathf.Clamp01(pct);
             }
+
             if (count > 0)
                 progress /= count;
 
@@ -128,6 +132,7 @@ namespace TimelessEchoes.Quests
                 record = new GameData.QuestRecord();
                 oracle.saveData.Quests[id] = record;
             }
+
             record.Completed = true;
             if (inst.data.unlockPrefab != null)
                 Instantiate(inst.data.unlockPrefab);
@@ -164,7 +169,7 @@ namespace TimelessEchoes.Quests
                 if (req.type != QuestData.RequirementType.Kill) continue;
                 foreach (var enemy in req.enemies)
                 {
-                    double kills = killTracker ? killTracker.GetKills(enemy) : 0;
+                    var kills = killTracker ? killTracker.GetKills(enemy) : 0;
                     if (!rec.KillBaseline.ContainsKey(enemy.name))
                         rec.KillBaseline[enemy.name] = kills;
                     inst.baselineKills[enemy] = rec.KillBaseline[enemy.name];
