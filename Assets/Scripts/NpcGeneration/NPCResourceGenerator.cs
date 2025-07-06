@@ -66,6 +66,12 @@ namespace TimelessEchoes.NpcGeneration
             OnQuestHandin += OnQuestHandinEvent;
         }
 
+        private void OnEnable()
+        {
+            if (!setup && QuestCompleted())
+                LoadState();
+        }
+
         private void OnDestroy()
         {
             OnSaveData -= SaveState;
