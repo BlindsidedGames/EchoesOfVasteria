@@ -38,6 +38,16 @@ namespace TimelessEchoes.Upgrades
 
             for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
+                var refs = statReferences[i];
+                var upgrade = upgrades[i];
+                if (refs.nameText != null)
+                    refs.nameText.text = upgrade ? upgrade.name : string.Empty;
+                if (refs.descriptionText != null)
+                    refs.descriptionText.text = upgrade ? upgrade.description : string.Empty;
+            }
+
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            {
                 int index = i;
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
@@ -46,6 +56,7 @@ namespace TimelessEchoes.Upgrades
 
             BuildAllCostSlots();
             UpdateStatLevels();
+            UpdateStatDisplayValues();
         }
 
         private void OnEnable()
@@ -65,6 +76,7 @@ namespace TimelessEchoes.Upgrades
         {
             UpdateStatLevels();
             UpdateAllCostSlotValues();
+            UpdateStatDisplayValues();
         }
 
         private void OnLoadDataHandler()
@@ -109,6 +121,7 @@ namespace TimelessEchoes.Upgrades
                 costSlots.Add(list);
             }
             UpdateAllCostSlotValues();
+            UpdateStatDisplayValues();
         }
 
         private void UpdateAllCostSlotValues()
@@ -165,6 +178,7 @@ namespace TimelessEchoes.Upgrades
             {
                 BuildAllCostSlots();
                 UpdateStatLevels();
+                UpdateStatDisplayValues();
             }
         }
 
@@ -195,6 +209,28 @@ namespace TimelessEchoes.Upgrades
                 {
                     selector.countText.text = string.Empty;
                 }
+            }
+        }
+
+        private void UpdateStatDisplayValues()
+        {
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            {
+                var refs = statReferences[i];
+                var upgrade = upgrades[i];
+                if (refs == null || refs.statDisplayText == null || upgrade == null) continue;
+
+                int lvl = controller ? controller.GetLevel(upgrade) : 0;
+                float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+                float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+
+                float baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
+                float current = baseCurrent * (1f + percent);
+
+                float baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
+                float next = baseNext * (1f + percent);
+
+                refs.statDisplayText.text = $"{current:0.###} -> {next:0.###}";
             }
         }
     }
