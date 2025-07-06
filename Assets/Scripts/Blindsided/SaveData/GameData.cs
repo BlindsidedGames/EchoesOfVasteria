@@ -32,6 +32,9 @@ namespace Blindsided.SaveData
         public Dictionary<string, NpcGenerationRecord> NpcGeneration = new();
 
         [HideReferenceObjectPicker]
+        public Dictionary<string, QuestRecord> Quests = new();
+
+        [HideReferenceObjectPicker]
         public Dictionary<string, TaskRecord> TaskRecords = new();
 
         [HideReferenceObjectPicker]
@@ -103,6 +106,13 @@ namespace Blindsided.SaveData
             public Dictionary<string, double> TotalCollected = new();
             public float Progress;
             public double LastGenerationTime;
+        }
+
+        [HideReferenceObjectPicker]
+        public class QuestRecord
+        {
+            public bool Completed;
+            public Dictionary<string, double> KillBaseline = new();
         }
 
         [HideReferenceObjectPicker]

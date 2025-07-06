@@ -208,6 +208,7 @@ namespace Blindsided
             saveData.EnemyKills ??= new Dictionary<string, double>();
             saveData.CompletedNpcTasks ??= new HashSet<string>();
             saveData.ActiveBuffs ??= new Dictionary<string, float>();
+            saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
         }
 
         public static void AwayForSeconds()
