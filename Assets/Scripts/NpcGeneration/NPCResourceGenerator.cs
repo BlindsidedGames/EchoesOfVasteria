@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
-using Blindsided.SaveData;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    /// Generates resources over time for a single NPC.
+    ///     Generates resources over time for a single NPC.
     /// </summary>
     public class NPCResourceGenerator : MonoBehaviour
     {
@@ -30,7 +30,6 @@ namespace TimelessEchoes.NpcGeneration
         private readonly Dictionary<Resource, double> stored = new();
         private readonly Dictionary<Resource, double> collectedTotals = new();
         private readonly List<NpcGeneratorProgressUI> uiEntries = new();
-        private float progress;
 
         private static Dictionary<string, Resource> lookup;
         private ResourceManager resourceManager;
@@ -38,7 +37,8 @@ namespace TimelessEchoes.NpcGeneration
 
         public string NpcId => npcId;
         public float Interval => generationInterval;
-        public float Progress => progress;
+        public float Progress { get; private set; }
+
         public double GetStoredAmount(Resource resource)
         {
             return stored.TryGetValue(resource, out var val) ? val : 0;
@@ -83,24 +83,26 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (!setup) return;
 
-            progress += deltaTime;
-            while (progress >= generationInterval && generationInterval > 0f)
+            Progress += deltaTime;
+            while (Progress >= generationInterval && generationInterval > 0f)
             {
-                progress -= generationInterval;
+                Progress -= generationInterval;
                 AddCycle();
             }
+
             UpdateUI();
         }
 
         public void ApplyOfflineProgress(double seconds)
         {
             if (!setup || seconds <= 0) return;
-            progress += (float)seconds;
-            while (progress >= generationInterval && generationInterval > 0f)
+            Progress += (float)seconds;
+            while (Progress >= generationInterval && generationInterval > 0f)
             {
-                progress -= generationInterval;
+                Progress -= generationInterval;
                 AddCycle();
             }
+
             UpdateUI();
         }
 
@@ -119,6 +121,7 @@ namespace TimelessEchoes.NpcGeneration
                 else
                     collectedTotals[pair.Key] = pair.Value;
             }
+
             stored.Clear();
         }
 
@@ -149,54 +152,46 @@ namespace TimelessEchoes.NpcGeneration
             {
                 StoredResources = new Dictionary<string, double>(),
                 TotalCollected = new Dictionary<string, double>(),
-                Progress = progress,
+                Progress = Progress,
                 LastGenerationTime = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
             };
             foreach (var pair in stored)
-            {
                 if (pair.Key != null)
                     rec.StoredResources[pair.Key.name] = pair.Value;
-            }
             foreach (var pair in collectedTotals)
-            {
                 if (pair.Key != null)
                     rec.TotalCollected[pair.Key.name] = pair.Value;
-            }
             oracle.saveData.NpcGeneration[npcId] = rec;
         }
 
         private void LoadState()
         {
             if (oracle == null || string.IsNullOrEmpty(npcId) || !QuestCompleted()) return;
+            setup = true;
             EnsureLookup();
             oracle.saveData.NpcGeneration ??= new Dictionary<string, GameData.NpcGenerationRecord>();
 
             stored.Clear();
             collectedTotals.Clear();
-            progress = 0f;
+            Progress = 0f;
             if (oracle.saveData.NpcGeneration.TryGetValue(npcId, out var rec) && rec != null)
             {
                 foreach (var pair in rec.StoredResources)
-                {
                     if (lookup.TryGetValue(pair.Key, out var res) && res != null)
                         stored[res] = pair.Value;
-                }
                 foreach (var pair in rec.TotalCollected)
-                {
                     if (lookup.TryGetValue(pair.Key, out var res) && res != null)
                         collectedTotals[res] = pair.Value;
-                }
-                progress = rec.Progress;
+                Progress = rec.Progress;
 
-                double now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
-                double seconds = now - rec.LastGenerationTime;
+                var now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+                var seconds = now - rec.LastGenerationTime;
                 if (seconds > 0)
                     ApplyOfflineProgress(seconds);
             }
 
             UpdateUI();
             BuildProgressUI();
-            setup = true;
         }
 
         private void BuildProgressUI()
@@ -228,10 +223,8 @@ namespace TimelessEchoes.NpcGeneration
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
             foreach (var res in Resources.LoadAll<Resource>(""))
-            {
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
-            }
         }
     }
 }
