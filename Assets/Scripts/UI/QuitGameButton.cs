@@ -3,6 +3,9 @@ using System.Globalization;
 using Blindsided;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace TimelessEchoes.UI
 {
@@ -47,6 +50,10 @@ namespace TimelessEchoes.UI
         {
             SaveGame();
             Application.Quit();
+#if UNITY_EDITOR
+            if (EditorApplication.isPlaying)
+                EditorApplication.ExitPlaymode();
+#endif
         }
 
         private static void SaveGame()
