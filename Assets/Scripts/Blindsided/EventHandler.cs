@@ -12,6 +12,7 @@ namespace Blindsided
         public static event Action OnSaveData;
         public static event Action OnLoadData;
         public static event Action OnResetData;
+        public static event Action<string> OnQuestHandin;
         
         public static void SaveData()
         {
@@ -26,6 +27,11 @@ namespace Blindsided
         public static void ResetData()
         {
             OnResetData?.Invoke();
+        }
+
+        public static void QuestHandin(string questId)
+        {
+            OnQuestHandin?.Invoke(questId);
         }
 
 

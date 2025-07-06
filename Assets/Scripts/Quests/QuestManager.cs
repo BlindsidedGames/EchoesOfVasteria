@@ -5,6 +5,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
 using Blindsided.SaveData;
 using static Blindsided.Oracle;
+using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Quests
 {
@@ -142,6 +143,7 @@ namespace TimelessEchoes.Quests
                 TryStartQuest(inst.data.nextQuest);
 
             RefreshNoticeboard();
+            QuestHandin(id);
         }
 
         private void TryStartQuest(QuestData quest)
