@@ -11,6 +11,8 @@ namespace TimelessEchoes.Stats
     {
         public static readonly int[] Thresholds = { 10, 100, 1000, 10000 };
 
+        public event System.Action<EnemyStats> OnKillRegistered;
+
         private readonly Dictionary<EnemyStats, double> kills = new();
 
         private void Awake()
@@ -33,6 +35,7 @@ namespace TimelessEchoes.Stats
                 kills[stats] += 1;
             else
                 kills[stats] = 1;
+            OnKillRegistered?.Invoke(stats);
         }
 
         public double GetKills(EnemyStats stats)
