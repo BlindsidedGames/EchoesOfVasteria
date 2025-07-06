@@ -22,6 +22,7 @@ namespace TimelessEchoes.NpcGeneration
 
         [SerializeField] private string npcId;
         [SerializeField] private List<ResourceEntry> resources = new();
+        [SerializeField] private string requiredQuestId;
         [SerializeField] private float generationInterval = 5f;
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
@@ -33,6 +34,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private static Dictionary<string, Resource> lookup;
         private ResourceManager resourceManager;
+        private bool setup;
 
         public string NpcId => npcId;
         public float Interval => generationInterval;
@@ -47,20 +49,34 @@ namespace TimelessEchoes.NpcGeneration
             return collectedTotals.TryGetValue(resource, out var val) ? val : 0;
         }
 
+        private bool QuestCompleted()
+        {
+            if (string.IsNullOrEmpty(requiredQuestId))
+                return true;
+            if (oracle == null)
+                return false;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            return oracle.saveData.Quests.TryGetValue(requiredQuestId, out var rec) && rec.Completed;
+        }
+
         private void Awake()
         {
             OnSaveData += SaveState;
             OnLoadData += LoadState;
+            OnQuestHandin += OnQuestHandinEvent;
         }
 
         private void OnDestroy()
         {
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
+            OnQuestHandin -= OnQuestHandinEvent;
         }
 
         public void Tick(float deltaTime)
         {
+            if (!setup) return;
+
             progress += deltaTime;
             while (progress >= generationInterval && generationInterval > 0f)
             {
@@ -72,7 +88,7 @@ namespace TimelessEchoes.NpcGeneration
 
         public void ApplyOfflineProgress(double seconds)
         {
-            if (seconds <= 0) return;
+            if (!setup || seconds <= 0) return;
             progress += (float)seconds;
             while (progress >= generationInterval && generationInterval > 0f)
             {
@@ -84,6 +100,7 @@ namespace TimelessEchoes.NpcGeneration
 
         public void CollectResources()
         {
+            if (!setup) return;
             if (resourceManager == null)
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceManager == null) return;
@@ -118,7 +135,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void SaveState()
         {
-            if (oracle == null || string.IsNullOrEmpty(npcId)) return;
+            if (!setup || oracle == null || string.IsNullOrEmpty(npcId)) return;
             if (oracle.saveData.NpcGeneration == null)
                 oracle.saveData.NpcGeneration = new Dictionary<string, GameData.NpcGenerationRecord>();
 
@@ -144,7 +161,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void LoadState()
         {
-            if (oracle == null || string.IsNullOrEmpty(npcId)) return;
+            if (oracle == null || string.IsNullOrEmpty(npcId) || !QuestCompleted()) return;
             EnsureLookup();
             oracle.saveData.NpcGeneration ??= new Dictionary<string, GameData.NpcGenerationRecord>();
 
@@ -173,6 +190,7 @@ namespace TimelessEchoes.NpcGeneration
 
             UpdateUI();
             BuildProgressUI();
+            setup = true;
         }
 
         private void BuildProgressUI()
@@ -191,6 +209,12 @@ namespace TimelessEchoes.NpcGeneration
                 ui.SetData(this, entry.resource, entry.amount);
                 uiEntries.Add(ui);
             }
+        }
+
+        private void OnQuestHandinEvent(string questId)
+        {
+            if (!setup && questId == requiredQuestId && QuestCompleted())
+                LoadState();
         }
 
         private static void EnsureLookup()
