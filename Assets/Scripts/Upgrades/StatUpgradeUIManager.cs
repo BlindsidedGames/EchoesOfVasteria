@@ -98,7 +98,7 @@ namespace TimelessEchoes.Upgrades
                 var refs = statReferences[i];
                 var list = new List<CostResourceUIReferences>();
                 var parent = refs.costGridLayoutParent;
-                var prefab = refs.costSlotPrefab != null ? refs.costSlotPrefab : costSlotPrefab;
+                var prefab = costSlotPrefab;
 
                 if (parent != null && prefab != null)
                 {
