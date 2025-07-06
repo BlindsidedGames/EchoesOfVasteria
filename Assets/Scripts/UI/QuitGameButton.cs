@@ -3,6 +3,7 @@ using System.Globalization;
 using Blindsided;
 using UnityEngine;
 using UnityEngine.UI;
+using EventHandler = Blindsided.EventHandler;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -64,10 +65,10 @@ namespace TimelessEchoes.UI
             EventHandler.SaveData();
             Oracle.oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            bool beta = Oracle.oracle.beta;
-            int iteration = Oracle.oracle.betaSaveIteration;
-            string dataName = (beta ? $"Beta{iteration}" : "") + "Data";
-            string fileName = (beta ? $"Beta{iteration}" : "") + "Sd.es3";
+            var beta = Oracle.oracle.beta;
+            var iteration = Oracle.oracle.betaSaveIteration;
+            var dataName = (beta ? $"Beta{iteration}" : "") + "Data";
+            var fileName = (beta ? $"Beta{iteration}" : "") + "Sd.es3";
             var settings = new ES3Settings(fileName, ES3.Location.Cache)
             {
                 bufferSize = 8192

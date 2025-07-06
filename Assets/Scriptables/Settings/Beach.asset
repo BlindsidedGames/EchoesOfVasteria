@@ -35,16 +35,16 @@ MonoBehaviour:
     enemies:
     - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
       weight: 1
-      minX: 0
-      maxX: 100
+      minX: 45
+      maxX: 150
       topBuffer: 0
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
     - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
       weight: 1
-      minX: 50
-      maxX: 200
+      minX: 80
+      maxX: 220
       topBuffer: 0
       spawnOnWater: 0
       spawnOnSand: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
       weight: 0.5
       minX: 0
       maxX: Infinity
-      topBuffer: 1
+      topBuffer: 2
       spawnOnWater: 0
       spawnOnSand: 0
       spawnOnGrass: 1

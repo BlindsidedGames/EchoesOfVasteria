@@ -407,6 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 0}
+  taskData: {fileID: 0}
   npcId: Ivan1
   chatPoint: {fileID: 7016541045683963271}
   dialogueObject: {fileID: 870632893699405823}
@@ -414,7 +415,7 @@ MonoBehaviour:
   continueButton: {fileID: 8603745004138155543}
   lines:
   - These slimes are a bit much for me. Not too keen to deal with them! While you
-    do that I'm going to head back to the tavern. I will see you there!
+    do that I'm going to head back to town. I will see you there!
 --- !u!212 &5774953209895666516
 SpriteRenderer:
   m_ObjectHideFlags: 0
