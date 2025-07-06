@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -92,7 +93,7 @@ namespace TimelessEchoes.MapGeneration
             {
                 if (decor == null) return;
                 foreach (var entry in decor) entry.UpdateName();
-                Debug.Log("Decor entry names updated for search.");
+                TELogger.Log("Decor entry names updated for search.", TELogCategory.Map);
             }
 
             [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", ShowFoldout = false)]
