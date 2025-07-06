@@ -62,7 +62,7 @@ namespace TimelessEchoes.Tasks
             {
                 hero = GetComponentInChildren<HeroController>(true);
                 if (hero == null)
-                    Log("TaskController hero reference is null", this);
+                    Log("TaskController hero reference is null", TELogCategory.Task, this);
             }
         }
 
@@ -154,7 +154,7 @@ namespace TimelessEchoes.Tasks
         {
             AcquireHero();
             if (hero == null)
-                Log("ResetTasks called but hero is null", this);
+                Log("ResetTasks called but hero is null", TELogCategory.Task, this);
             currentIndex = -1;
             tasks.Clear();
             taskMap.Clear();
@@ -268,7 +268,7 @@ namespace TimelessEchoes.Tasks
         public void SelectEarliestTask()
         {
             if (hero == null)
-                Log("SelectEarliestTask called but hero is null", this);
+                Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
@@ -282,7 +282,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                Log($"Starting task: {currentTaskName}", this);
+                Log($"Starting task: {currentTaskName}", TELogCategory.Task, this);
                 hero?.SetTask(task);
                 task.StartTask();
                 taskStartTimes[task] = Time.time;
@@ -291,7 +291,7 @@ namespace TimelessEchoes.Tasks
 
             currentTaskName = "Complete";
             currentIndex = tasks.Count;
-            Log("All tasks complete", this);
+            Log("All tasks complete", TELogCategory.Task, this);
             currentTaskObject = null;
         }
 

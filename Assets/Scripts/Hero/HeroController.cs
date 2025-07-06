@@ -227,7 +227,7 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
-            Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", this);
+            Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", TELogCategory.Task, this);
             CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
@@ -269,7 +269,7 @@ namespace TimelessEchoes.Hero
 
             if (state == State.Combat)
             {
-                Log("Hero exiting combat", this);
+                Log("Hero exiting combat", TELogCategory.Combat, this);
                 combatDamageMultiplier = 1f;
                 isRolling = false;
                 diceRoller?.ResetRoll();
@@ -338,7 +338,7 @@ namespace TimelessEchoes.Hero
 
             if (state != State.Combat)
             {
-                Log($"Hero entering combat with {enemy.name}", this);
+                Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
                 if (diceRoller != null && !isRolling)
                 {
                     var rate = CurrentAttackRate;
