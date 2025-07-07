@@ -4,6 +4,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Buffs
 {
@@ -95,6 +96,8 @@ namespace TimelessEchoes.Buffs
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         oracle.saveData.ActiveBuffs.Remove(buff.recipe.name);
+                    if (buff.recipe != null)
+                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
                 }
                 else if (buff.recipe != null)
                 {
@@ -125,6 +128,7 @@ namespace TimelessEchoes.Buffs
             {
                 buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration };
                 activeBuffs.Add(buff);
+                TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
             }
             else
             {
@@ -132,6 +136,7 @@ namespace TimelessEchoes.Buffs
                 if (diminishingCurve != null)
                     extra *= diminishingCurve.Evaluate(buff.remaining);
                 buff.remaining += extra;
+                TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
 
             oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();

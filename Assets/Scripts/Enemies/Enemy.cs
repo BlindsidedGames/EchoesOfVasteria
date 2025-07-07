@@ -4,6 +4,7 @@ using UnityEngine;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
 using System.Collections.Generic;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Enemies
 {
@@ -195,6 +196,8 @@ namespace TimelessEchoes.Enemies
                 resourceManager = FindFirstObjectByType<ResourceManager>();
             if (resourceManager == null) return;
 
+            TELogger.Log($"Enemy {name} died", TELogCategory.Combat, this);
+
             foreach (var drop in resourceDrops)
             {
                 if (drop.resource == null) continue;
@@ -209,6 +212,7 @@ namespace TimelessEchoes.Enemies
                 if (count > 0)
                 {
                     resourceManager.Add(drop.resource, count);
+                    TELogger.Log($"Dropped {count} {drop.resource.name}", TELogCategory.Resource, this);
                 }
             }
 

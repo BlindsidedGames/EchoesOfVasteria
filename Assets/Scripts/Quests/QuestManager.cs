@@ -7,6 +7,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Quests
 {
@@ -159,6 +160,7 @@ namespace TimelessEchoes.Quests
                 TryStartQuest(inst.data.nextQuest);
 
             RefreshNoticeboard();
+            TELogger.Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
         }
 
