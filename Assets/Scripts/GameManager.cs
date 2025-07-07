@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
@@ -246,7 +247,9 @@ namespace TimelessEchoes
                 var manager = FindFirstObjectByType<ResourceManager>();
                 if (manager != null)
                 {
-                    foreach (var pair in runDropUI.Amounts)
+                    // copy to list so enumeration isn't affected by OnResourceAdded modifying the dictionary
+                    var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
+                    foreach (var pair in drops)
                         manager.Add(pair.Key, pair.Value * 0.5f);
                 }
                 runDropUI.ResetDrops();
