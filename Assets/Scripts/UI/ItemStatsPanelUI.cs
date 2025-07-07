@@ -60,7 +60,7 @@ namespace TimelessEchoes.UI
 
             var allResources = Resources.LoadAll<Resource>("Resources");
             var sorted = allResources
-                .OrderBy(r => r.resourceID)
+                .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                 .ThenBy(r => r.name)
                 .ToList();
             defaultOrder = sorted;
