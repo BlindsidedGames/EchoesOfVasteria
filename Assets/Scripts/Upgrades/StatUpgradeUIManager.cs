@@ -63,6 +63,8 @@ namespace TimelessEchoes.Upgrades
         {
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnLoadDataHandler;
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged += OnInventoryChangedHandler;
             OnShowLevelTextChanged();
         }
 
@@ -70,6 +72,8 @@ namespace TimelessEchoes.Upgrades
         {
             ShowLevelTextChanged -= OnShowLevelTextChanged;
             OnLoadData -= OnLoadDataHandler;
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged -= OnInventoryChangedHandler;
         }
 
         private void OnShowLevelTextChanged()
@@ -77,6 +81,7 @@ namespace TimelessEchoes.Upgrades
             UpdateStatLevels();
             UpdateAllCostSlotValues();
             UpdateStatDisplayValues();
+            UpdateUpgradeButtons();
         }
 
         private void OnLoadDataHandler()
@@ -126,6 +131,7 @@ namespace TimelessEchoes.Upgrades
             }
             UpdateAllCostSlotValues();
             UpdateStatDisplayValues();
+            UpdateUpgradeButtons();
         }
 
         private void UpdateAllCostSlotValues()
@@ -173,6 +179,22 @@ namespace TimelessEchoes.Upgrades
                 if (slot.selectButton)
                     slot.selectButton.interactable = true;
             }
+        }
+
+        private void UpdateUpgradeButtons()
+        {
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            {
+                var refs = statReferences[i];
+                if (refs != null && refs.upgradeButton != null)
+                    refs.upgradeButton.interactable = controller != null && controller.CanUpgrade(upgrades[i]);
+            }
+        }
+
+        private void OnInventoryChangedHandler()
+        {
+            UpdateAllCostSlotValues();
+            UpdateUpgradeButtons();
         }
 
         private void ApplyUpgrade(int index)
