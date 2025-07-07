@@ -16,7 +16,15 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text disabledText;
 
         private Button button;
-        public Button Button => button;
+        public Button Button
+        {
+            get
+            {
+                if (button == null)
+                    button = GetComponent<Button>();
+                return button;
+            }
+        }
 
         private void Awake()
         {
@@ -31,9 +39,12 @@ namespace TimelessEchoes.UI
 
         public void SetInteractable(bool interactable)
         {
-            if (button != null) button.interactable = interactable;
-            if (enabledText != null) enabledText.gameObject.SetActive(interactable);
-            if (disabledText != null) disabledText.gameObject.SetActive(!interactable);
+            if (Button != null)
+                Button.interactable = interactable;
+            if (enabledText != null)
+                enabledText.gameObject.SetActive(interactable);
+            if (disabledText != null)
+                disabledText.gameObject.SetActive(!interactable);
         }
     }
 }
