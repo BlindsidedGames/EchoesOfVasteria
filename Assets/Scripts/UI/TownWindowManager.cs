@@ -1,3 +1,5 @@
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,60 +11,65 @@ namespace TimelessEchoes.UI
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
-        [SerializeField] private Button upgradesButton;
-        [SerializeField] private GameObject upgradesWindow;
+        [Serializable]
+        [InlineProperty]
+        public class WindowReference
+        {
+            [HorizontalGroup("Row")] public Button button;
+            [HorizontalGroup("Row")] public GameObject window;
+        }
 
-        [SerializeField] private Button buffsButton;
-        [SerializeField] private GameObject buffsWindow;
+        [Title("References")]
+        [SerializeField] private WindowReference upgrades = new();
+        [SerializeField] private WindowReference buffs = new();
+        [SerializeField] private WindowReference quests = new();
+        [SerializeField] private WindowReference credits = new();
+        [SerializeField] private WindowReference inventory = new();
 
-        [SerializeField] private Button questsButton;
-        [SerializeField] private GameObject questsWindow;
-
-        [SerializeField] private Button creditsButton;
-        [SerializeField] private GameObject creditsWindow;
-
-        [SerializeField] private Button inventoryButton;
-        [SerializeField] private GameObject inventoryWindow;
-
-        [SerializeField] private Button startRunButton;
+        [SerializeField]
+        private Button startRunButton;
 
         private void Awake()
         {
-            if (upgradesButton != null)
-                upgradesButton.onClick.AddListener(OpenUpgrades);
-            if (buffsButton != null)
-                buffsButton.onClick.AddListener(OpenBuffs);
-            if (questsButton != null)
-                questsButton.onClick.AddListener(OpenQuests);
-            if (creditsButton != null)
-                creditsButton.onClick.AddListener(OpenCredits);
-            if (inventoryButton != null)
-                inventoryButton.onClick.AddListener(OpenInventory);
+            if (upgrades.button != null)
+                upgrades.button.onClick.AddListener(OpenUpgrades);
+            if (buffs.button != null)
+                buffs.button.onClick.AddListener(OpenBuffs);
+            if (quests.button != null)
+                quests.button.onClick.AddListener(OpenQuests);
+            if (credits.button != null)
+                credits.button.onClick.AddListener(OpenCredits);
+            if (inventory.button != null)
+                inventory.button.onClick.AddListener(ToggleInventory);
             if (startRunButton != null)
                 startRunButton.onClick.AddListener(CloseAllWindows);
         }
 
         private void OnDestroy()
         {
-            if (upgradesButton != null)
-                upgradesButton.onClick.RemoveListener(OpenUpgrades);
-            if (buffsButton != null)
-                buffsButton.onClick.RemoveListener(OpenBuffs);
-            if (questsButton != null)
-                questsButton.onClick.RemoveListener(OpenQuests);
-            if (creditsButton != null)
-                creditsButton.onClick.RemoveListener(OpenCredits);
-            if (inventoryButton != null)
-                inventoryButton.onClick.RemoveListener(OpenInventory);
+            if (upgrades.button != null)
+                upgrades.button.onClick.RemoveListener(OpenUpgrades);
+            if (buffs.button != null)
+                buffs.button.onClick.RemoveListener(OpenBuffs);
+            if (quests.button != null)
+                quests.button.onClick.RemoveListener(OpenQuests);
+            if (credits.button != null)
+                credits.button.onClick.RemoveListener(OpenCredits);
+            if (inventory.button != null)
+                inventory.button.onClick.RemoveListener(ToggleInventory);
             if (startRunButton != null)
                 startRunButton.onClick.RemoveListener(CloseAllWindows);
         }
 
-        private void OpenUpgrades() => OpenWindow(upgradesWindow);
-        private void OpenBuffs() => OpenWindow(buffsWindow);
-        private void OpenQuests() => OpenWindow(questsWindow);
-        private void OpenCredits() => OpenWindow(creditsWindow);
-        private void OpenInventory() => OpenWindow(inventoryWindow);
+        private void OpenUpgrades() => OpenWindow(upgrades.window);
+        private void OpenBuffs() => OpenWindow(buffs.window);
+        private void OpenQuests() => OpenWindow(quests.window);
+        private void OpenCredits() => OpenWindow(credits.window);
+        private void ToggleInventory()
+        {
+            if (inventory.window != null)
+                inventory.window.SetActive(!inventory.window.activeSelf);
+        }
 
         private void OpenWindow(GameObject window)
         {
@@ -73,16 +80,16 @@ namespace TimelessEchoes.UI
 
         private void CloseAllWindows()
         {
-            if (upgradesWindow != null)
-                upgradesWindow.SetActive(false);
-            if (buffsWindow != null)
-                buffsWindow.SetActive(false);
-            if (questsWindow != null)
-                questsWindow.SetActive(false);
-            if (creditsWindow != null)
-                creditsWindow.SetActive(false);
-            if (inventoryWindow != null)
-                inventoryWindow.SetActive(false);
+            if (upgrades.window != null)
+                upgrades.window.SetActive(false);
+            if (buffs.window != null)
+                buffs.window.SetActive(false);
+            if (quests.window != null)
+                quests.window.SetActive(false);
+            if (credits.window != null)
+                credits.window.SetActive(false);
+            if (inventory.window != null)
+                inventory.window.SetActive(false);
         }
     }
 }
