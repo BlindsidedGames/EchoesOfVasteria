@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 3963385185172838639}
   - component: {fileID: 8421911332518481540}
   m_Layer: 7
-  m_Name: Warrior
+  m_Name: Caleb
   m_TagString: Hero
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -400,6 +400,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   healthBar: {fileID: 8454051011791153815}
+  minFillPercent: 0.05
+  barSprites:
+  - sprite: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+    minPercent: 0.25
+  - sprite: {fileID: -7347752700975796469, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+    minPercent: 0
 --- !u!114 &1810452886069672335
 MonoBehaviour:
   m_ObjectHideFlags: 0
