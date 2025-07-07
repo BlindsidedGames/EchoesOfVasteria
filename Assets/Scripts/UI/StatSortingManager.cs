@@ -170,6 +170,12 @@ namespace TimelessEchoes.UI
                 if (runStatsPanel != null) runStatsPanel.SetGraphMode(runMode);
                 UpdateButtonStates();
             });
+            CreateButton(RunStatsPanelUI.GraphMode.Kills, () =>
+            {
+                runMode = RunStatsPanelUI.GraphMode.Kills;
+                if (runStatsPanel != null) runStatsPanel.SetGraphMode(runMode);
+                UpdateButtonStates();
+            });
             UpdateButtonStates();
         }
 
