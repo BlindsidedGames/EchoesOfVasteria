@@ -24,6 +24,10 @@ namespace TimelessEchoes.Upgrades
         private readonly List<Resource> resources = new();
         private readonly List<ResourceUIReferences> slots = new();
         private readonly Dictionary<Resource, double> amounts = new();
+        /// <summary>
+        /// Current amounts collected during this run.
+        /// </summary>
+        public IReadOnlyDictionary<Resource, double> Amounts => amounts;
         private int selectedIndex = -1;
 
         private void Awake()
@@ -60,6 +64,14 @@ namespace TimelessEchoes.Upgrades
                     tooltip.gameObject.SetActive(false);
                 DeselectSlot();
             }
+        }
+
+        /// <summary>
+        ///     Clears all collected resource counts.
+        /// </summary>
+        public void ResetDrops()
+        {
+            ClearDrops();
         }
 
         private void ClearDrops()
