@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Blindsided.SaveData;
 using Pathfinding;
 using Pathfinding.RVO;
 using Sirenix.OdinInspector;
@@ -10,6 +12,7 @@ using TimelessEchoes.UI;
 using TimelessEchoes.Buffs;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Hero
 {
@@ -25,6 +28,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
+        private bool diceUnlocked;
         [SerializeField] private TimelessEchoes.Buffs.BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
@@ -83,6 +87,10 @@ namespace TimelessEchoes.Hero
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
+
+            diceUnlocked = QuestCompleted("Dice");
+            if (diceRoller != null)
+                diceRoller.gameObject.SetActive(diceUnlocked);
 
             state = State.Idle;
 
@@ -339,7 +347,7 @@ namespace TimelessEchoes.Hero
             if (state != State.Combat)
             {
                 Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
-                if (diceRoller != null && !isRolling)
+                if (diceUnlocked && diceRoller != null && !isRolling)
                 {
                     var rate = CurrentAttackRate;
                     var cooldown = rate > 0f ? 1f / rate : 0.5f;
@@ -369,7 +377,7 @@ namespace TimelessEchoes.Hero
 
         private IEnumerator RollForCombat(float duration)
         {
-            if (diceRoller == null)
+            if (!diceUnlocked || diceRoller == null)
                 yield break;
 
             isRolling = true;
@@ -379,6 +387,16 @@ namespace TimelessEchoes.Hero
 
             combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
             isRolling = false;
+        }
+
+        private static bool QuestCompleted(string questId)
+        {
+            if (string.IsNullOrEmpty(questId))
+                return true;
+            if (oracle == null)
+                return false;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
         }
 
         private void Attack(Transform target)
