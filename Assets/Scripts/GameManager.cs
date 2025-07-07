@@ -11,6 +11,7 @@ using Pathfinding;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using Blindsided.Utilities;
 using TimelessEchoes.NPC;
 using static TimelessEchoes.TELogger;
@@ -28,6 +29,7 @@ namespace TimelessEchoes
         private Button startRunButton;
 
         [SerializeField] private Button returnToTavernButton;
+        [SerializeField] private TMP_Text returnToTavernText;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
         [SerializeField] private RunDropUI runDropUI;
@@ -79,13 +81,20 @@ namespace TimelessEchoes
             mapUI?.SetActive(false);
             if (deathWindow != null)
                 deathWindow.SetActive(false);
+            if (returnToTavernText != null)
+                returnToTavernText.text = "Return To Town";
             npcObjectStateController?.UpdateObjectStates();
         }
 
         private void Update()
         {
             if (returnToTavernButton != null)
-                returnToTavernButton.interactable = hero != null && !hero.InCombat;
+            {
+                bool active = hero != null && !hero.InCombat;
+                returnToTavernButton.interactable = active;
+                if (returnToTavernText != null)
+                    returnToTavernText.text = active ? "Return To Town" : "In Combat...";
+            }
         }
 
         private void HideTooltip()
