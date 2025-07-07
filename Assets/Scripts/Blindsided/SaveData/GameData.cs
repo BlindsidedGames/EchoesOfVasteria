@@ -35,7 +35,7 @@ namespace Blindsided.SaveData
         public Dictionary<string, QuestRecord> Quests = new();
 
         [HideReferenceObjectPicker]
-        public Dictionary<string, TaskRecord> TaskRecords = new();
+        public Dictionary<int, TaskRecord> TaskRecords = new();
 
         [HideReferenceObjectPicker]
         public Dictionary<string, ResourceRecord> ResourceStats = new();
