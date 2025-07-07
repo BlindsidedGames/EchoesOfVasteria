@@ -16,11 +16,11 @@ MonoBehaviour:
   questName: Feeding the Masses
   description: Farm enough radishes to feed the town.
   rewardDescription: Gain the Disciple of Rah Dish
-  npcId: Witch
+  npcId: Witch1
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
-    amount: 499
+    amount: 500
     enemies: []
   nextQuest: {fileID: 0}
   unlockPrefab: {fileID: 0}
