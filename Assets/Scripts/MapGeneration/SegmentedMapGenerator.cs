@@ -102,7 +102,11 @@ namespace TimelessEchoes.MapGeneration
 
             var tasksRoot = new GameObject($"SegmentTasks_{offset.x}");
             tasksRoot.transform.SetParent(segmentParent, false);
-            taskGenerator.GenerateSegment(offset.x, offset.x + segmentSize.x, tasksRoot.transform);
+
+            var minX = Mathf.Max(taskGenerator.MinX, offset.x);
+            var maxX = offset.x + segmentSize.x;
+            if (maxX > minX)
+                taskGenerator.GenerateSegment(minX, maxX, tasksRoot.transform);
 
             segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot });
             nextSegmentX += segmentSize.x;
