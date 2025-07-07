@@ -160,7 +160,10 @@ namespace TimelessEchoes.UI
                 if (middleRunNumberText != null)
                 {
                     var middleNumber = Mathf.FloorToInt((oldestNumber + newestNumber) * 0.5f) + 1;
-                    middleRunNumberText.text = middleNumber.ToString();
+                    if (newestNumber >= 50)
+                        middleRunNumberText.text = middleNumber.ToString();
+                    else
+                        middleRunNumberText.text = string.Empty;
                 }
 
                 if (mostRecentRunNumberText != null)
