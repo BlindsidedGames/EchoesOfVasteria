@@ -203,6 +203,7 @@ namespace TimelessEchoes.Regen
                 oracle.saveData.FishDonations.TryGetValue(res.name, out var val);
                 donations[res] = val;
             }
+            UpdateAllEntries();
         }
     }
 }
