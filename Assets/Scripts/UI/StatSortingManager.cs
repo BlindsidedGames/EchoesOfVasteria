@@ -22,6 +22,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private EnemyStatsPanelUI enemyPanel;
         [SerializeField] private TaskStatsPanelUI taskPanel;
         [SerializeField] private ItemStatsPanelUI itemPanel;
+        [SerializeField] private RunStatsPanelUI runStatsPanel;
 
         private readonly List<StatSortButton> buttons = new();
         private readonly Dictionary<StatSortButton, Enum> buttonModes = new();
@@ -30,6 +31,7 @@ namespace TimelessEchoes.UI
         private EnemyStatsPanelUI.SortMode enemyMode = EnemyStatsPanelUI.SortMode.Default;
         private TaskStatsPanelUI.SortMode taskMode = TaskStatsPanelUI.SortMode.Default;
         private ItemStatsPanelUI.SortMode itemMode = ItemStatsPanelUI.SortMode.Default;
+        private RunStatsPanelUI.GraphMode runMode = RunStatsPanelUI.GraphMode.Distance;
 
         private void Awake()
         {
@@ -45,6 +47,8 @@ namespace TimelessEchoes.UI
 
         private void Start()
         {
+            if (runStatsPanel != null)
+                runStatsPanel.SetGraphMode(runMode);
             SetTab(0);
         }
 
@@ -92,6 +96,9 @@ namespace TimelessEchoes.UI
             ClearButtons();
             switch (currentTab)
             {
+                case 0:
+                    BuildGeneralButtons();
+                    break;
                 case 1:
                     BuildEnemyButtons();
                     break;
@@ -149,6 +156,23 @@ namespace TimelessEchoes.UI
             UpdateButtonStates();
         }
 
+        private void BuildGeneralButtons()
+        {
+            CreateButton(RunStatsPanelUI.GraphMode.Distance, () =>
+            {
+                runMode = RunStatsPanelUI.GraphMode.Distance;
+                if (runStatsPanel != null) runStatsPanel.SetGraphMode(runMode);
+                UpdateButtonStates();
+            });
+            CreateButton(RunStatsPanelUI.GraphMode.Resources, () =>
+            {
+                runMode = RunStatsPanelUI.GraphMode.Resources;
+                if (runStatsPanel != null) runStatsPanel.SetGraphMode(runMode);
+                UpdateButtonStates();
+            });
+            UpdateButtonStates();
+        }
+
         private void CreateButton(Enum mode, UnityAction action)
         {
             if (buttonParent == null || buttonPrefab == null) return;
@@ -167,6 +191,9 @@ namespace TimelessEchoes.UI
             Enum selected = null;
             switch (currentTab)
             {
+                case 0:
+                    selected = runMode;
+                    break;
                 case 1:
                     selected = enemyMode;
                     break;

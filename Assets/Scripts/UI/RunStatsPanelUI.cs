@@ -19,11 +19,35 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text oldestRunNumberText;
         [SerializeField] private TMP_Text middleRunNumberText;
         [SerializeField] private TMP_Text mostRecentRunNumberText;
+        [SerializeField] private TMP_Text graphLabelText;
         [SerializeField] private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
         [SerializeField] private Vector2 statOffset = Vector2.zero;
         [SerializeField] private Color deathBarColor = Color.red;
         [SerializeField] private Color retreatBarColor = Color.green;
+
+        public enum GraphMode
+        {
+            Distance,
+            Resources
+        }
+
+        [SerializeField] private GraphMode graphMode = GraphMode.Distance;
+
+        public void SetGraphMode(GraphMode mode)
+        {
+            graphMode = mode;
+            UpdateGraphLabel();
+            UpdateUI();
+        }
+
+        private void UpdateGraphLabel()
+        {
+            if (graphLabelText == null) return;
+            graphLabelText.text = graphMode == GraphMode.Distance
+                ? "Distance from Town"
+                : "Resources Gathered";
+        }
 
         private void Awake()
         {
@@ -40,6 +64,8 @@ namespace TimelessEchoes.UI
 
             if (runStatUI != null)
                 runStatUI.gameObject.SetActive(false);
+
+            UpdateGraphLabel();
         }
 
         private void OnDestroy()
@@ -54,6 +80,7 @@ namespace TimelessEchoes.UI
 
         private void OnEnable()
         {
+            UpdateGraphLabel();
             UpdateUI();
         }
 
@@ -134,20 +161,40 @@ namespace TimelessEchoes.UI
             if (statTracker == null || runBars == null)
                 return;
 
-            var longest = statTracker.LongestRun;
+            var runs = statTracker.RecentRuns;
+
+            double longest;
+            double average;
+
+            if (graphMode == GraphMode.Distance)
+            {
+                longest = statTracker.LongestRun;
+                average = statTracker.AverageRun;
+            }
+            else
+            {
+                longest = 0f;
+                double sum = 0f;
+                foreach (var r in runs)
+                {
+                    if (r.ResourcesCollected > longest)
+                        longest = r.ResourcesCollected;
+                    sum += r.ResourcesCollected;
+                }
+                average = runs.Count > 0 ? sum / runs.Count : 0f;
+            }
+
             if (longestRunText != null)
                 longestRunText.text = CalcUtils.FormatNumber(longest, true);
 
             if (averageRunText != null)
-                averageRunText.text = CalcUtils.FormatNumber(statTracker.AverageRun, true);
+                averageRunText.text = CalcUtils.FormatNumber(average, true);
 
             if (averageRunSlider != null)
             {
-                var avgRatio = longest > 0f ? statTracker.AverageRun / longest : 0f;
-                averageRunSlider.value = Mathf.Clamp01(avgRatio);
+                var avgRatio = longest > 0f ? average / longest : 0f;
+                averageRunSlider.value = Mathf.Clamp01((float)avgRatio);
             }
-
-            var runs = statTracker.RecentRuns;
 
             if (runs.Count > 0)
             {
@@ -178,9 +225,11 @@ namespace TimelessEchoes.UI
                 var index = runs.Count - barCount + i;
                 if (index >= 0 && index < runs.Count)
                 {
-                    var dist = runs[index].Distance;
-                    var ratio = longest > 0f ? dist / longest : 0f;
-                    runBars[i].SetFill(ratio);
+                    double value = graphMode == GraphMode.Distance
+                        ? runs[index].Distance
+                        : runs[index].ResourcesCollected;
+                    var ratio = longest > 0f ? value / longest : 0f;
+                    runBars[i].SetFill((float)ratio);
                     runBars[i].BarIndex = index;
                     var color = runs[index].Died ? deathBarColor : retreatBarColor;
                     runBars[i].FillColor = color;
