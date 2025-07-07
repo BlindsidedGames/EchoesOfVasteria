@@ -46,11 +46,15 @@ namespace TimelessEchoes.Quests
                 if (data != null && costSlotPrefab != null)
                     foreach (var req in data.requirements)
                     {
-                        if (req.type != QuestData.RequirementType.Resource) continue;
                         var slot = Instantiate(costSlotPrefab, costParent);
-                        slot.resource = req.resource;
+                        slot.resource = req.type == QuestData.RequirementType.Resource ? req.resource : null;
                         if (slot.iconImage != null)
-                            slot.iconImage.sprite = req.resource ? req.resource.icon : null;
+                        {
+                            if (req.type == QuestData.RequirementType.Resource)
+                                slot.iconImage.sprite = req.resource ? req.resource.icon : null;
+                            else if (req.type == QuestData.RequirementType.Kill)
+                                slot.iconImage.sprite = req.killIcon;
+                        }
                         if (slot.countText != null)
                             slot.countText.text = req.amount.ToString();
                     }

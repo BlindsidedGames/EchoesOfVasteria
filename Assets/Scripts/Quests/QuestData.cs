@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Enemies;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace TimelessEchoes.Quests
@@ -25,9 +26,13 @@ namespace TimelessEchoes.Quests
         public class Requirement
         {
             public RequirementType type;
+            [ShowIf("type", RequirementType.Resource)]
             public Resource resource;
             public int amount = 1;
+            [ShowIf("type", RequirementType.Kill)]
             public List<EnemyStats> enemies = new();
+            [ShowIf("type", RequirementType.Kill)]
+            public Sprite killIcon;
         }
 
         public enum RequirementType
