@@ -11,6 +11,7 @@ namespace Blindsided.SaveData
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
         public static HashSet<string> CompletedNpcTasks => oracle.saveData.CompletedNpcTasks;
+        public static Dictionary<string, double> FishDonations => oracle.saveData.FishDonations;
 
 
         public static BuyMode PurchaseMode

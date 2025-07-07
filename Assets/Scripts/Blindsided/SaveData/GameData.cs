@@ -24,6 +24,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
         [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
         [HideReferenceObjectPicker] public Dictionary<string, float> ActiveBuffs = new();
+        [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
         [HideReferenceObjectPicker]
         public HashSet<string> CompletedNpcTasks = new();
