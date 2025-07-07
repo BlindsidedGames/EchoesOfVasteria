@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Displays a random dad joke when the button is clicked.
+    ///     Displays a random dad joke when the button is clicked.
     /// </summary>
     public class DadJokeManager : MonoBehaviour
     {
@@ -27,10 +27,8 @@ namespace TimelessEchoes
         private void Update()
         {
             if (Input.GetMouseButtonDown(1))
-            {
                 if (textBox != null && textBox.activeSelf)
                     textBox.SetActive(false);
-            }
         }
 
         private void OnDestroy()
@@ -41,12 +39,6 @@ namespace TimelessEchoes
 
         private void OnJokeButtonClicked()
         {
-            if (textBox != null && textBox.activeSelf)
-            {
-                textBox.SetActive(false);
-                return;
-            }
-
             ShowJoke();
         }
 
@@ -54,9 +46,10 @@ namespace TimelessEchoes
         {
             if (dadJokes.Count > 0 && jokeText != null)
             {
-                int index = Random.Range(0, dadJokes.Count);
+                var index = Random.Range(0, dadJokes.Count);
                 jokeText.text = dadJokes[index];
             }
+
             if (textBox != null)
                 textBox.SetActive(true);
         }
