@@ -73,12 +73,20 @@ namespace TimelessEchoes.Upgrades
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += UpdateSlots;
             UpdateSlots();
+
+            if (selectedIndex >= 0)
+                ShowTooltip(selectedIndex);
         }
 
         private void OnDisable()
         {
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= UpdateSlots;
+
+            if (tooltip != null)
+                tooltip.gameObject.SetActive(false);
+
+            DeselectSlot();
         }
 
         private void Update()
