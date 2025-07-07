@@ -6,8 +6,9 @@ using UnityEngine.UI;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Manages the town UI windows. Clicking a button closes all windows and
-    /// opens the associated one. The Start Run button only closes the windows.
+    /// Manages the town UI windows. Clicking a button closes all windows except
+    /// the inventory and opens the associated one. The Start Run button only
+    /// closes the windows. Right-click closes all windows.
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
@@ -61,6 +62,12 @@ namespace TimelessEchoes.UI
                 startRunButton.onClick.RemoveListener(CloseAllWindows);
         }
 
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(1))
+                CloseAllWindows();
+        }
+
         private void OpenUpgrades() => OpenWindow(upgrades.window);
         private void OpenBuffs() => OpenWindow(buffs.window);
         private void OpenQuests() => OpenWindow(quests.window);
@@ -73,9 +80,21 @@ namespace TimelessEchoes.UI
 
         private void OpenWindow(GameObject window)
         {
-            CloseAllWindows();
+            CloseAllWindowsExceptInventory();
             if (window != null)
                 window.SetActive(true);
+        }
+
+        private void CloseAllWindowsExceptInventory()
+        {
+            if (upgrades.window != null)
+                upgrades.window.SetActive(false);
+            if (buffs.window != null)
+                buffs.window.SetActive(false);
+            if (quests.window != null)
+                quests.window.SetActive(false);
+            if (credits.window != null)
+                credits.window.SetActive(false);
         }
 
         private void CloseAllWindows()
