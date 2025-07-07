@@ -25,11 +25,16 @@ namespace TimelessEchoes.UI
         [SerializeField] private Vector2 statOffset = Vector2.zero;
         [SerializeField] private Color deathBarColor = Color.red;
         [SerializeField] private Color retreatBarColor = Color.green;
+        [SerializeField] private Color resourcesDeathBarColor = Color.red;
+        [SerializeField] private Color resourcesRetreatBarColor = Color.green;
+        [SerializeField] private Color killsDeathBarColor = Color.red;
+        [SerializeField] private Color killsRetreatBarColor = Color.green;
 
         public enum GraphMode
         {
             Distance,
-            Resources
+            Resources,
+            Kills
         }
 
         [SerializeField] private GraphMode graphMode = GraphMode.Distance;
@@ -44,9 +49,18 @@ namespace TimelessEchoes.UI
         private void UpdateGraphLabel()
         {
             if (graphLabelText == null) return;
-            graphLabelText.text = graphMode == GraphMode.Distance
-                ? "Distance from Town"
-                : "Resources Gathered";
+            switch (graphMode)
+            {
+                case GraphMode.Distance:
+                    graphLabelText.text = "Distance from Town";
+                    break;
+                case GraphMode.Resources:
+                    graphLabelText.text = "Resources Gathered";
+                    break;
+                case GraphMode.Kills:
+                    graphLabelText.text = "Enemies Killed";
+                    break;
+            }
         }
 
         private void Awake()
@@ -171,7 +185,7 @@ namespace TimelessEchoes.UI
                 longest = statTracker.LongestRun;
                 average = statTracker.AverageRun;
             }
-            else
+            else if (graphMode == GraphMode.Resources)
             {
                 longest = 0f;
                 double sum = 0f;
@@ -180,6 +194,18 @@ namespace TimelessEchoes.UI
                     if (r.ResourcesCollected > longest)
                         longest = r.ResourcesCollected;
                     sum += r.ResourcesCollected;
+                }
+                average = runs.Count > 0 ? sum / runs.Count : 0f;
+            }
+            else
+            {
+                longest = 0f;
+                double sum = 0f;
+                foreach (var r in runs)
+                {
+                    if (r.EnemiesKilled > longest)
+                        longest = r.EnemiesKilled;
+                    sum += r.EnemiesKilled;
                 }
                 average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
@@ -225,13 +251,23 @@ namespace TimelessEchoes.UI
                 var index = runs.Count - barCount + i;
                 if (index >= 0 && index < runs.Count)
                 {
-                    double value = graphMode == GraphMode.Distance
-                        ? runs[index].Distance
-                        : runs[index].ResourcesCollected;
+                    double value;
+                    if (graphMode == GraphMode.Distance)
+                        value = runs[index].Distance;
+                    else if (graphMode == GraphMode.Resources)
+                        value = runs[index].ResourcesCollected;
+                    else
+                        value = runs[index].EnemiesKilled;
                     var ratio = longest > 0f ? value / longest : 0f;
                     runBars[i].SetFill((float)ratio);
                     runBars[i].BarIndex = index;
-                    var color = runs[index].Died ? deathBarColor : retreatBarColor;
+                    Color color;
+                    if (graphMode == GraphMode.Distance)
+                        color = runs[index].Died ? deathBarColor : retreatBarColor;
+                    else if (graphMode == GraphMode.Resources)
+                        color = runs[index].Died ? resourcesDeathBarColor : resourcesRetreatBarColor;
+                    else
+                        color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
                     runBars[i].FillColor = color;
                 }
                 else
