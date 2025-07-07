@@ -87,6 +87,11 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public Transform SpawnParent { get; set; }
 
+        /// <summary>
+        /// Minimum world X value allowed for spawned tasks.
+        /// </summary>
+        public float MinX => minX;
+
         private TaskController controller;
 
         /// <summary>
