@@ -11,5 +11,6 @@ namespace TimelessEchoes.References.UI
         public TMP_Text runIdText;
         public TMP_Text distanceTasksResourcesText;
         public TMP_Text killsDamageDoneDamageTakenText;
+        public TMP_Text statusText;
     }
 }
