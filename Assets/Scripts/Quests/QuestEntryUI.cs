@@ -30,7 +30,7 @@ namespace TimelessEchoes.Quests
             if (descriptionText != null)
                 descriptionText.text = data != null ? data.description : string.Empty;
             if (rewardText != null)
-                rewardText.text = data != null ? data.rewardDescription : string.Empty;
+                rewardText.text = data != null ? $"Reward: {data.rewardDescription}" : string.Empty;
 
             if (turnInButton != null)
             {
