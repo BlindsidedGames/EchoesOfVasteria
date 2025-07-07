@@ -9,6 +9,8 @@ namespace TimelessEchoes.Enemies
     {
         [SerializeField] private int maxHealth = 10;
         [SerializeField] private SlicedFilledImage healthBar;
+        [SerializeField, Range(0f, 1f)] private float minFillPercent = 0.05f;
+        [SerializeField] private HealthBarSpriteOption[] barSprites;
 
         private void Awake()
         {
@@ -67,8 +69,35 @@ namespace TimelessEchoes.Enemies
 
         private void UpdateBar()
         {
-            if (healthBar != null)
-                healthBar.fillAmount = CurrentHealth / MaxHealth;
+            if (healthBar == null) return;
+
+            float percent = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
+            healthBar.fillAmount = Mathf.Max(percent, minFillPercent);
+
+            if (barSprites != null && barSprites.Length > 0)
+            {
+                Sprite chosen = healthBar.sprite;
+                float best = -1f;
+                foreach (var opt in barSprites)
+                {
+                    if (opt.sprite == null) continue;
+                    if (percent >= opt.minPercent && opt.minPercent > best)
+                    {
+                        chosen = opt.sprite;
+                        best = opt.minPercent;
+                    }
+                }
+
+                if (chosen != null)
+                    healthBar.sprite = chosen;
+            }
+        }
+
+        [Serializable]
+        public struct HealthBarSpriteOption
+        {
+            public Sprite sprite;
+            [Range(0f, 1f)] public float minPercent;
         }
     }
 }
