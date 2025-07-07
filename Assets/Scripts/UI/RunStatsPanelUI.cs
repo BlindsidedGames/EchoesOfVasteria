@@ -152,6 +152,7 @@ namespace TimelessEchoes.UI
                     $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
             }
 
+
             if (runStatUI.killsDamageDoneDamageTakenText != null)
             {
                 var kills = CalcUtils.FormatNumber(record.EnemiesKilled, true);
@@ -160,6 +161,9 @@ namespace TimelessEchoes.UI
                 runStatUI.killsDamageDoneDamageTakenText.text =
                     $"Kills: {kills}\nDamage Dealt: {dealt}\nDamage Taken: {taken}";
             }
+
+            if (runStatUI.statusText != null)
+                runStatUI.statusText.text = record.Died ? "Status: Died" : "Status: Retreated";
 
             runStatUI.gameObject.SetActive(true);
         }
