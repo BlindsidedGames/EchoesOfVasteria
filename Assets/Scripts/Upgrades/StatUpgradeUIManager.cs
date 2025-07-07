@@ -78,10 +78,8 @@ namespace TimelessEchoes.Upgrades
 
         private void OnShowLevelTextChanged()
         {
+            BuildAllCostSlots();
             UpdateStatLevels();
-            UpdateAllCostSlotValues();
-            UpdateStatDisplayValues();
-            UpdateUpgradeButtons();
         }
 
         private void OnLoadDataHandler()
