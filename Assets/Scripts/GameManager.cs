@@ -169,6 +169,12 @@ namespace TimelessEchoes
                 var hp = hero.GetComponent<Health>();
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
+
+                // Disable hero so it stops moving during the death window
+                var ai = hero.GetComponent<AIPath>();
+                if (ai != null)
+                    ai.enabled = false;
+                hero.gameObject.SetActive(false);
             }
 
             TELogger.Log("Hero death", TELogCategory.Hero, this);
