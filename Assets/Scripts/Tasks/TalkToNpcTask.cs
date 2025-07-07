@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TMPro;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UI;
 using TimelessEchoes.Hero;
@@ -78,7 +79,11 @@ namespace TimelessEchoes.Tasks
                 dialogueObject.SetActive(false);
             talked = true;
             if (!string.IsNullOrEmpty(npcId))
+            {
                 StaticReferences.CompletedNpcTasks.Add(npcId);
+                var qm = FindFirstObjectByType<QuestManager>();
+                qm?.OnNpcMet(npcId);
+            }
             GrantCompletionXP();
         }
 

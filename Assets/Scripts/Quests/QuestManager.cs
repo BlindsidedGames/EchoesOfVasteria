@@ -65,7 +65,11 @@ namespace TimelessEchoes.Quests
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
             active.Clear();
             foreach (var q in startingQuests)
-                TryStartQuest(q);
+            {
+                if (q == null) continue;
+                if (string.IsNullOrEmpty(q.npcId) || StaticReferences.CompletedNpcTasks.Contains(q.npcId))
+                    TryStartQuest(q);
+            }
             RefreshNoticeboard();
         }
 
@@ -158,9 +162,26 @@ namespace TimelessEchoes.Quests
             QuestHandin(id);
         }
 
+        /// <summary>
+        /// Called when an NPC with the given id is met. Starts any pending quests tied to that NPC.
+        /// </summary>
+        public void OnNpcMet(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return;
+            foreach (var q in startingQuests)
+            {
+                if (q == null) continue;
+                if (q.npcId == id)
+                    TryStartQuest(q);
+            }
+            RefreshNoticeboard();
+        }
+
         private void TryStartQuest(QuestData quest)
         {
             if (quest == null) return;
+            if (!string.IsNullOrEmpty(quest.npcId) && !StaticReferences.CompletedNpcTasks.Contains(quest.npcId))
+                return;
             if (oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed)
                 return;
 
