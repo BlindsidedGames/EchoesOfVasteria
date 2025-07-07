@@ -11,7 +11,7 @@ namespace TimelessEchoes.Tasks
     public class TaskData : ScriptableObject
     {
         public string taskName;
-        public string taskID;
+        public int taskID;
         public Sprite taskIcon;
         public Skill associatedSkill;
         public float xpForCompletion;

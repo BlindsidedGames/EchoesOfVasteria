@@ -48,7 +48,7 @@ namespace TimelessEchoes.Stats
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
-        private static Dictionary<string, TaskData> taskLookup;
+        private static Dictionary<int, TaskData> taskLookup;
 
         private void Awake()
         {
@@ -77,10 +77,10 @@ namespace TimelessEchoes.Stats
         private static void EnsureTaskLookup()
         {
             if (taskLookup != null) return;
-            taskLookup = new Dictionary<string, TaskData>();
+            taskLookup = new Dictionary<int, TaskData>();
             foreach (var data in Resources.LoadAll<TaskData>(""))
             {
-                if (data != null && !string.IsNullOrEmpty(data.taskID) && !taskLookup.ContainsKey(data.taskID))
+                if (data != null && !taskLookup.ContainsKey(data.taskID))
                     taskLookup[data.taskID] = data;
             }
         }
@@ -89,7 +89,7 @@ namespace TimelessEchoes.Stats
         {
             if (oracle == null) return;
 
-            var t = new Dictionary<string, GameData.TaskRecord>();
+            var t = new Dictionary<int, GameData.TaskRecord>();
             foreach (var pair in taskRecords)
                 if (pair.Key != null)
                     t[pair.Key.taskID] = pair.Value;
@@ -117,7 +117,7 @@ namespace TimelessEchoes.Stats
             if (oracle == null) return;
             EnsureLookup();
 
-            oracle.saveData.TaskRecords ??= new Dictionary<string, GameData.TaskRecord>();
+            oracle.saveData.TaskRecords ??= new Dictionary<int, GameData.TaskRecord>();
             oracle.saveData.General ??= new GameData.GeneralStats();
 
             taskRecords.Clear();
