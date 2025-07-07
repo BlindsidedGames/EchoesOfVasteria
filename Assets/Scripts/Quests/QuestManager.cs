@@ -28,7 +28,7 @@ namespace TimelessEchoes.Quests
         {
             public QuestData data;
             public QuestEntryUI ui;
-            public readonly Dictionary<EnemyStats, double> baselineKills = new();
+            public readonly Dictionary<EnemyStats, double> killCounts = new();
         }
 
         private void Awake()
@@ -78,8 +78,22 @@ namespace TimelessEchoes.Quests
         {
             if (stats == null) return;
             foreach (var inst in active.Values)
-                if (ContainsEnemy(inst.data, stats))
-                    UpdateProgress(inst);
+            {
+                if (!ContainsEnemy(inst.data, stats))
+                    continue;
+
+                if (!inst.killCounts.ContainsKey(stats))
+                    inst.killCounts[stats] = 0;
+                inst.killCounts[stats] += 1;
+
+                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                {
+                    rec.KillProgress ??= new Dictionary<string, double>();
+                    rec.KillProgress[stats.name] = inst.killCounts[stats];
+                }
+
+                UpdateProgress(inst);
+            }
         }
 
         private static bool ContainsEnemy(QuestData data, EnemyStats stats)
@@ -115,11 +129,8 @@ namespace TimelessEchoes.Quests
                     double total = 0;
                     foreach (var enemy in req.enemies)
                     {
-                        double baseVal = 0;
-                        if (inst.baselineKills.TryGetValue(enemy, out var b))
-                            baseVal = b;
-                        var current = killTracker ? killTracker.GetKills(enemy) : 0;
-                        total += current - baseVal;
+                        if (inst.killCounts.TryGetValue(enemy, out var c))
+                            total += c;
                     }
 
                     if (req.amount > 0)
@@ -199,10 +210,9 @@ namespace TimelessEchoes.Quests
                 if (req.type != QuestData.RequirementType.Kill) continue;
                 foreach (var enemy in req.enemies)
                 {
-                    var kills = killTracker ? killTracker.GetKills(enemy) : 0;
-                    if (!rec.KillBaseline.ContainsKey(enemy.name))
-                        rec.KillBaseline[enemy.name] = kills;
-                    inst.baselineKills[enemy] = rec.KillBaseline[enemy.name];
+                    if (!rec.KillProgress.TryGetValue(enemy.name, out var count))
+                        count = 0;
+                    inst.killCounts[enemy] = count;
                 }
             }
 

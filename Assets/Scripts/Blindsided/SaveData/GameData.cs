@@ -114,6 +114,7 @@ namespace Blindsided.SaveData
         {
             public bool Completed;
             public Dictionary<string, double> KillBaseline = new();
+            public Dictionary<string, double> KillProgress = new();
         }
 
         [HideReferenceObjectPicker]
