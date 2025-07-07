@@ -24,6 +24,7 @@ namespace TimelessEchoes
     public class GameManager : MonoBehaviour
     {
         [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
+        [SerializeField] private GameObject gravestonePrefab;
 
         [Header("UI References")] [SerializeField]
         private Button startRunButton;
@@ -184,6 +185,9 @@ namespace TimelessEchoes
                 if (ai != null)
                     ai.enabled = false;
                 hero.gameObject.SetActive(false);
+                if (gravestonePrefab != null && currentMap != null)
+                    Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
+                        currentMap.transform);
             }
 
             TELogger.Log("Hero death", TELogCategory.Hero, this);
