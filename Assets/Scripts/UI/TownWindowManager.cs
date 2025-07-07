@@ -25,6 +25,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private WindowReference buffs = new();
         [SerializeField] private WindowReference quests = new();
         [SerializeField] private WindowReference credits = new();
+        [SerializeField] private WindowReference regen = new();
         [SerializeField] private WindowReference inventory = new();
 
         [SerializeField]
@@ -40,6 +41,8 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.AddListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.AddListener(OpenCredits);
+            if (regen.button != null)
+                regen.button.onClick.AddListener(OpenRegen);
             if (inventory.button != null)
                 inventory.button.onClick.AddListener(ToggleInventory);
             if (startRunButton != null)
@@ -56,6 +59,8 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.RemoveListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.RemoveListener(OpenCredits);
+            if (regen.button != null)
+                regen.button.onClick.RemoveListener(OpenRegen);
             if (inventory.button != null)
                 inventory.button.onClick.RemoveListener(ToggleInventory);
             if (startRunButton != null)
@@ -72,6 +77,7 @@ namespace TimelessEchoes.UI
         private void OpenBuffs() => OpenWindow(buffs.window);
         private void OpenQuests() => OpenWindow(quests.window);
         private void OpenCredits() => OpenWindow(credits.window);
+        private void OpenRegen() => OpenWindow(regen.window);
         private void ToggleInventory()
         {
             if (inventory.window != null)
@@ -95,6 +101,8 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
+            if (regen.window != null)
+                regen.window.SetActive(false);
         }
 
         private void CloseAllWindows()
@@ -107,6 +115,8 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
+            if (regen.window != null)
+                regen.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
         }
