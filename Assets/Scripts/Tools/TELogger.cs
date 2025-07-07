@@ -13,7 +13,12 @@ namespace TimelessEchoes
         Hero,
         Task,
         Combat,
-        Map
+        Map,
+        Resource,
+        Quest,
+        Buff,
+        Upgrade,
+        Run
     }
 
     public static class TELogger
@@ -24,7 +29,12 @@ namespace TimelessEchoes
             TELogCategory.Hero,
             TELogCategory.Task,
             TELogCategory.Combat,
-            TELogCategory.Map
+            TELogCategory.Map,
+            TELogCategory.Resource,
+            TELogCategory.Quest,
+            TELogCategory.Buff,
+            TELogCategory.Upgrade,
+            TELogCategory.Run
         };
 
         [Conditional("UNITY_EDITOR")]

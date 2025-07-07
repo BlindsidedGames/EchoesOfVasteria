@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -92,6 +93,7 @@ namespace TimelessEchoes.Upgrades
             }
 
             levels[upgrade] = GetLevel(upgrade) + 1;
+            TELogger.Log($"Upgraded {upgrade.name} to level {levels[upgrade]}", TELogCategory.Upgrade, this);
             return true;
         }
 

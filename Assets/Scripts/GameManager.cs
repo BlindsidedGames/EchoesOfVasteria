@@ -10,6 +10,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 using TimelessEchoes.NPC;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes
 {
@@ -62,6 +63,7 @@ namespace TimelessEchoes
         private void StartRun()
         {
             HideTooltip();
+            TELogger.Log("Run starting", TELogCategory.Run, this);
             StartCoroutine(StartRunRoutine());
         }
 
@@ -125,6 +127,8 @@ namespace TimelessEchoes
                     hp.OnDeath -= OnHeroDeath;
             }
 
+            TELogger.Log("Hero death", TELogCategory.Hero, this);
+
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             if (tracker != null)
             {
@@ -151,6 +155,7 @@ namespace TimelessEchoes
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
+            TELogger.Log("Returned to tavern", TELogCategory.Run, this);
         }
 
         private void CleanupMap()
