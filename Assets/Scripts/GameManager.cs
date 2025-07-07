@@ -5,10 +5,12 @@ using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Upgrades;
 using Pathfinding;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
+using Blindsided.Utilities;
 using TimelessEchoes.NPC;
 using static TimelessEchoes.TELogger;
 
@@ -27,10 +29,18 @@ namespace TimelessEchoes
         [SerializeField] private Button returnToTavernButton;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
+        [SerializeField] private RunDropUI runDropUI;
+        [SerializeField] private GameObject deathWindow;
+        [SerializeField] private Button deathRunButton;
+        [SerializeField] private Button deathReturnButton;
+        [SerializeField] private SlicedFilledImage deathTimerImage;
+        [SerializeField] private float deathWindowDuration = 20f;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
         private GameObject currentMap;
+        private bool runEndedByDeath;
+        private Coroutine deathWindowCoroutine;
         private HeroController hero;
         private CinemachineCamera mapCamera;
         private TaskController taskController;
@@ -42,15 +52,39 @@ namespace TimelessEchoes
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(ReturnToTavern);
+            if (deathRunButton != null)
+                deathRunButton.onClick.AddListener(OnDeathRunButton);
+            if (deathReturnButton != null)
+                deathReturnButton.onClick.AddListener(OnDeathReturnButton);
             if (npcObjectStateController == null)
                 npcObjectStateController = FindFirstObjectByType<NpcObjectStateController>();
+        }
+
+        private void OnDestroy()
+        {
+            if (startRunButton != null)
+                startRunButton.onClick.RemoveListener(StartRun);
+            if (returnToTavernButton != null)
+                returnToTavernButton.onClick.RemoveListener(ReturnToTavern);
+            if (deathRunButton != null)
+                deathRunButton.onClick.RemoveListener(OnDeathRunButton);
+            if (deathReturnButton != null)
+                deathReturnButton.onClick.RemoveListener(OnDeathReturnButton);
         }
 
         private void Start()
         {
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
+        }
+
+        private void Update()
+        {
+            if (returnToTavernButton != null)
+                returnToTavernButton.interactable = hero != null && !hero.InCombat;
         }
 
         private void HideTooltip()
@@ -64,6 +98,14 @@ namespace TimelessEchoes
         {
             HideTooltip();
             TELogger.Log("Run starting", TELogCategory.Run, this);
+            runEndedByDeath = false;
+            if (deathWindowCoroutine != null)
+            {
+                StopCoroutine(deathWindowCoroutine);
+                deathWindowCoroutine = null;
+            }
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
             StartCoroutine(StartRunRoutine());
         }
 
@@ -72,6 +114,7 @@ namespace TimelessEchoes
             yield return StartCoroutine(CleanupMapRoutine());
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             tracker?.BeginRun();
+            runDropUI?.ResetDrops();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
@@ -136,6 +179,54 @@ namespace TimelessEchoes
                 tracker.EndRun(true);
             }
 
+            runEndedByDeath = true;
+            if (runDropUI != null)
+                runDropUI.ResetDrops();
+
+            deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
+        }
+
+        private void OnDeathRunButton()
+        {
+            if (deathWindowCoroutine != null)
+                StopCoroutine(deathWindowCoroutine);
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
+            StartRun();
+        }
+
+        private void OnDeathReturnButton()
+        {
+            if (deathWindowCoroutine != null)
+                StopCoroutine(deathWindowCoroutine);
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
+            StartCoroutine(ReturnToTavernRoutine());
+        }
+
+        private IEnumerator DeathWindowRoutine()
+        {
+            if (deathWindow == null)
+            {
+                StartRun();
+                yield break;
+            }
+
+            deathWindow.SetActive(true);
+            float t = 0f;
+            if (deathTimerImage != null)
+                deathTimerImage.fillAmount = 0f;
+
+            while (t < deathWindowDuration)
+            {
+                if (deathTimerImage != null)
+                    deathTimerImage.fillAmount = Mathf.Clamp01(t / deathWindowDuration);
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
             StartRun();
         }
 
@@ -149,6 +240,17 @@ namespace TimelessEchoes
             HideTooltip();
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             tracker?.EndRun(false);
+
+            if (!runEndedByDeath && runDropUI != null)
+            {
+                var manager = FindFirstObjectByType<ResourceManager>();
+                if (manager != null)
+                {
+                    foreach (var pair in runDropUI.Amounts)
+                        manager.Add(pair.Key, pair.Value * 0.5f);
+                }
+                runDropUI.ResetDrops();
+            }
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);

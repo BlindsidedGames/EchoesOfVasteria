@@ -67,6 +67,7 @@ namespace TimelessEchoes.Hero
         private TaskController taskController;
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
+        public bool InCombat => state == State.Combat;
 
         private float CurrentAttackRate =>
             (baseAttackSpeed + attackSpeedBonus) *
