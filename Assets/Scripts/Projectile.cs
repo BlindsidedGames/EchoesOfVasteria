@@ -23,6 +23,7 @@ namespace TimelessEchoes
         private Transform target;
         private float damage;
         private bool fromHero;
+        private TimelessEchoes.Skills.Skill combatSkill;
 
         private void OnEnable()
         {
@@ -38,11 +39,13 @@ namespace TimelessEchoes
 
         public void Init(Transform target, float damage,
             bool fromHero = false,
-            GameObject hitEffect = null)
+            GameObject hitEffect = null,
+            TimelessEchoes.Skills.Skill combatSkill = null)
         {
             this.target = target;
             this.damage = damage;
             this.fromHero = fromHero;
+            this.combatSkill = combatSkill;
             effectPrefab = hitEffect ?? hitEffectPrefab;
         }
 
@@ -73,12 +76,24 @@ namespace TimelessEchoes
 
             if (dir.magnitude <= hitDistance)
             {
+                float dmgAmount = damage;
+                if (fromHero && combatSkill != null)
+                {
+                    var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+                    if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
+                    {
+                        var hp = target.GetComponent<IHasHealth>();
+                        if (hp != null)
+                            dmgAmount = Mathf.Max(dmgAmount, hp.CurrentHealth);
+                    }
+                }
+
                 var dmg = target.GetComponent<IDamageable>();
-                dmg?.TakeDamage(damage);
+                dmg?.TakeDamage(dmgAmount);
                 if (fromHero)
                 {
                     var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-                    tracker?.AddDamageDealt(damage);
+                    tracker?.AddDamageDealt(dmgAmount);
                 }
                 SpawnEffect();
                 Destroy(gameObject);

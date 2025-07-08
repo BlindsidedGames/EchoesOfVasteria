@@ -35,6 +35,9 @@ namespace TimelessEchoes.Enemies
         private float nextWanderTime;
         private LayerMask blockingMask;
 
+        private static TimelessEchoes.Skills.Skill combatSkill;
+        private static TimelessEchoes.Skills.SkillController skillController;
+
         public bool IsEngaged => setter != null && setter.target == hero;
         public EnemyStats Stats => stats;
 
@@ -220,6 +223,19 @@ namespace TimelessEchoes.Enemies
             tracker?.RegisterKill(stats);
             var statsTracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
             statsTracker?.AddKill();
+
+            GrantCombatExperience();
+        }
+
+        private void GrantCombatExperience()
+        {
+            if (stats == null) return;
+            if (skillController == null)
+                skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            if (combatSkill == null)
+                combatSkill = Resources.Load<TimelessEchoes.Skills.Skill>("Combat");
+            if (skillController != null && combatSkill != null)
+                skillController.AddExperience(combatSkill, stats.experience);
         }
 
         private void OnDestroy()
