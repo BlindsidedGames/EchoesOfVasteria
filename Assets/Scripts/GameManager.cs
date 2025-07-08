@@ -7,6 +7,7 @@ using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Stats;
 using Pathfinding;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace TimelessEchoes
 
         [SerializeField] private Button returnToTavernButton;
         [SerializeField] private TMP_Text returnToTavernText;
+        [SerializeField] private TMP_Text retreatBonusText;
+        [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
         [SerializeField] private RunDropUI runDropUI;
@@ -49,6 +52,7 @@ namespace TimelessEchoes
         private CinemachineCamera mapCamera;
         private TaskController taskController;
         [SerializeField] private NpcObjectStateController npcObjectStateController;
+        private GameplayStatTracker statTracker;
 
         private void Awake()
         {
@@ -62,6 +66,8 @@ namespace TimelessEchoes
                 deathReturnButton.onClick.AddListener(OnDeathReturnButton);
             if (npcObjectStateController == null)
                 npcObjectStateController = FindFirstObjectByType<NpcObjectStateController>();
+            if (statTracker == null)
+                statTracker = FindFirstObjectByType<GameplayStatTracker>();
         }
 
         private void OnDestroy()
@@ -95,6 +101,19 @@ namespace TimelessEchoes
                 returnToTavernButton.interactable = active;
                 if (returnToTavernText != null)
                     returnToTavernText.text = active ? "Return To Town" : "In Combat...";
+                if (retreatBonusText != null)
+                {
+                    if (active)
+                    {
+                        int kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        float percent = kills * bonusPercentPerKill;
+                        retreatBonusText.text = $"+{percent:0}% Resources";
+                    }
+                    else
+                    {
+                        retreatBonusText.text = "+0% Resources";
+                    }
+                }
             }
         }
 
@@ -123,8 +142,9 @@ namespace TimelessEchoes
         private IEnumerator StartRunRoutine()
         {
             yield return StartCoroutine(CleanupMapRoutine());
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.BeginRun();
+            if (statTracker == null)
+                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            statTracker?.BeginRun();
             runDropUI?.ResetDrops();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
@@ -192,11 +212,12 @@ namespace TimelessEchoes
 
             TELogger.Log("Hero death", TELogCategory.Hero, this);
 
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            if (tracker != null)
+            if (statTracker == null)
+                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            if (statTracker != null)
             {
-                tracker.AddDeath();
-                tracker.EndRun(true);
+                statTracker.AddDeath();
+                statTracker.EndRun(true);
             }
 
             runEndedByDeath = true;
@@ -258,21 +279,23 @@ namespace TimelessEchoes
         private IEnumerator ReturnToTavernRoutine()
         {
             HideTooltip();
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.EndRun(false);
+            if (statTracker == null)
+                statTracker = FindFirstObjectByType<GameplayStatTracker>();
 
             if (!runEndedByDeath && runDropUI != null)
             {
                 var manager = FindFirstObjectByType<ResourceManager>();
                 if (manager != null)
                 {
-                    // copy to list so enumeration isn't affected by OnResourceAdded modifying the dictionary
                     var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
+                    int kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                    float bonusPercent = kills * bonusPercentPerKill * 0.01f;
                     foreach (var pair in drops)
-                        manager.Add(pair.Key, pair.Value * 0.5f);
+                        manager.Add(pair.Key, pair.Value * (1f + bonusPercent));
                 }
                 runDropUI.ResetDrops();
             }
+            statTracker?.EndRun(false);
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(true);
