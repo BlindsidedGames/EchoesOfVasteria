@@ -11,6 +11,7 @@ namespace TimelessEchoes.Upgrades
     /// </summary>
     public class StatUpgradeController : MonoBehaviour
     {
+        public static StatUpgradeController Instance { get; private set; }
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<StatUpgrade> upgrades = new();
 
@@ -23,6 +24,7 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            Instance = this;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
@@ -30,6 +32,8 @@ namespace TimelessEchoes.Upgrades
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }

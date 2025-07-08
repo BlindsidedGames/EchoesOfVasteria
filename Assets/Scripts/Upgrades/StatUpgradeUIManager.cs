@@ -5,6 +5,7 @@ using TimelessEchoes.Skills;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -13,9 +14,9 @@ namespace TimelessEchoes.Upgrades
     /// </summary>
     public class StatUpgradeUIManager : MonoBehaviour
     {
-        [SerializeField] private StatUpgradeController controller;
-        [SerializeField] private ResourceManager resourceManager;
-        [SerializeField] private ResourceInventoryUI resourceInventoryUI;
+        private StatUpgradeController controller;
+        private ResourceManager resourceManager;
+        private ResourceInventoryUI resourceInventoryUI;
         [SerializeField] private List<StatUIReferences> statReferences = new();
         [SerializeField] private List<StatUpgrade> upgrades = new();
         [SerializeField] private CostResourceUIReferences costSlotPrefab;
@@ -25,14 +26,18 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            controller = StatUpgradeController.Instance;
             if (controller == null)
-                controller = FindFirstObjectByType<StatUpgradeController>();
+                TELogger.Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            resourceInventoryUI = ResourceInventoryUI.Instance;
             if (resourceInventoryUI == null)
-                resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+                TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+            skillController = SkillController.Instance;
             if (skillController == null)
-                skillController = FindFirstObjectByType<SkillController>();
+                TELogger.Log("SkillController missing", TELogCategory.Upgrade, this);
             if (statReferences.Count == 0)
                 statReferences.AddRange(GetComponentsInChildren<StatUIReferences>(true));
 

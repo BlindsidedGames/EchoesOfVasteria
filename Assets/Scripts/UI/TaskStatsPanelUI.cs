@@ -5,13 +5,14 @@ using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using UnityEngine;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
     public class TaskStatsPanelUI : MonoBehaviour
     {
         [SerializeField] private StatPanelReferences references;
-        [SerializeField] private GameplayStatTracker statTracker;
+        private GameplayStatTracker statTracker;
 
         private readonly Dictionary<TaskData, TaskStatEntryUIReferences> entries = new();
         private List<TaskData> defaultOrder = new();
@@ -29,8 +30,9 @@ namespace TimelessEchoes.UI
         {
             if (references == null)
                 references = GetComponent<StatPanelReferences>();
+            statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
             BuildEntries();
         }
 

@@ -2,20 +2,22 @@ using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Stats;
 using UnityEngine;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
     public class GeneralStatsPanelUI : MonoBehaviour
     {
         [SerializeField] private GeneralStatsUIReferences references;
-        [SerializeField] private GameplayStatTracker statTracker;
+        private GameplayStatTracker statTracker;
 
         private void Awake()
         {
             if (references == null)
                 references = GetComponent<GeneralStatsUIReferences>();
+            statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
         }
 
         private void OnEnable()

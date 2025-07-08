@@ -10,6 +10,7 @@ namespace TimelessEchoes.Stats
 {
     public class GameplayStatTracker : MonoBehaviour
     {
+        public static GameplayStatTracker Instance { get; private set; }
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private float distanceTravelled;
@@ -55,6 +56,7 @@ namespace TimelessEchoes.Stats
 
         private void Awake()
         {
+            Instance = this;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
@@ -62,6 +64,8 @@ namespace TimelessEchoes.Stats
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }

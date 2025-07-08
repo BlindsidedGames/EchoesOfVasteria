@@ -15,7 +15,7 @@ namespace TimelessEchoes.Buffs
     {
         public static BuffManager Instance { get; private set; }
 
-        [SerializeField] private ResourceManager resourceManager;
+        private ResourceManager resourceManager;
 
         [SerializeField] private AnimationCurve diminishingCurve =
             AnimationCurve.Linear(0f, 1f, 60f, 0f);
@@ -40,8 +40,9 @@ namespace TimelessEchoes.Buffs
 
             Instance = this;
 
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
 
             LoadState();
             OnSaveData += SaveState;

@@ -4,6 +4,7 @@ using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
@@ -20,7 +21,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text middleRunNumberText;
         [SerializeField] private TMP_Text mostRecentRunNumberText;
         [SerializeField] private TMP_Text graphLabelText;
-        [SerializeField] private GameplayStatTracker statTracker;
+        private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
         [SerializeField] private Vector2 statOffset = Vector2.zero;
         [SerializeField] private Color deathBarColor = Color.red;
@@ -66,8 +67,9 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
             if (runStatUI == null)
                 runStatUI = FindFirstObjectByType<RunStatUIReferences>();
             foreach (var bar in runBars)

@@ -4,6 +4,7 @@ using References.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -12,7 +13,8 @@ namespace TimelessEchoes.Upgrades
     /// </summary>
     public class ResourceInventoryUI : MonoBehaviour
     {
-        [SerializeField] private ResourceManager resourceManager;
+        public static ResourceInventoryUI Instance { get; private set; }
+        private ResourceManager resourceManager;
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private List<ResourceUIReferences> slots = new();
         [SerializeField] private GameObject inventoryWindow;
@@ -25,8 +27,10 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            Instance = this;
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
 
             if (tooltip == null)
                 tooltip = FindFirstObjectByType<TooltipUIReferences>();
@@ -87,6 +91,12 @@ namespace TimelessEchoes.Upgrades
                 tooltip.gameObject.SetActive(false);
 
             DeselectSlot();
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
 
         private void Update()

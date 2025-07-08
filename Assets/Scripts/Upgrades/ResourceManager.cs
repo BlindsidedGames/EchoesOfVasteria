@@ -4,11 +4,13 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
     public class ResourceManager : MonoBehaviour
     {
+        public static ResourceManager Instance { get; private set; }
         private static Dictionary<string, Resource> lookup;
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            Instance = this;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
@@ -42,6 +45,8 @@ namespace TimelessEchoes.Upgrades
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }
@@ -77,8 +82,11 @@ namespace TimelessEchoes.Upgrades
             else
                 amounts[resource] = amount;
             resource.totalReceived += Mathf.RoundToInt((float)amount);
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.AddResources(amount, bonus);
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker == null)
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.Resource, this);
+            else
+                tracker.AddResources(amount, bonus);
             OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }

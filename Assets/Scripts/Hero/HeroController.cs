@@ -108,7 +108,11 @@ namespace TimelessEchoes.Hero
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             if (buffController == null)
-                buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+            {
+                buffController = BuffManager.Instance;
+                if (buffController == null)
+                    TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+            }
             if (taskController == null)
                 taskController = GetComponentInParent<TaskController>();
 
@@ -144,8 +148,11 @@ namespace TimelessEchoes.Hero
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
 
-            var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.RecordHeroPosition(transform.position);
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker == null)
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+            else
+                tracker.RecordHeroPosition(transform.position);
         }
 
         private void OnEnable()
@@ -154,7 +161,11 @@ namespace TimelessEchoes.Hero
                 taskController = GetComponent<TaskController>();
 
             if (buffController == null)
-                buffController = BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+            {
+                buffController = BuffManager.Instance;
+                if (buffController == null)
+                    TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+            }
             buffController?.Resume();
 
             if (mapUI == null)
@@ -189,8 +200,12 @@ namespace TimelessEchoes.Hero
 
         private void ApplyStatUpgrades()
         {
-            var controller = FindFirstObjectByType<StatUpgradeController>();
-            var skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            var controller = StatUpgradeController.Instance;
+            if (controller == null)
+                TELogger.Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
+            var skillController = TimelessEchoes.Skills.SkillController.Instance;
+            if (skillController == null)
+                TELogger.Log("SkillController missing", TELogCategory.Upgrade, this);
             if (controller == null) return;
 
             foreach (var upgrade in controller.AllUpgrades)
@@ -440,7 +455,9 @@ namespace TimelessEchoes.Hero
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
             {
-                var killTracker = FindFirstObjectByType<EnemyKillTracker>();
+                var killTracker = EnemyKillTracker.Instance;
+                if (killTracker == null)
+                    TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
                 float dmg = (baseDamage + damageBonus) *

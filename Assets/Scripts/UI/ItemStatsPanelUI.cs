@@ -4,13 +4,14 @@ using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
     public class ItemStatsPanelUI : MonoBehaviour
     {
         [SerializeField] private StatPanelReferences references;
-        [SerializeField] private ResourceManager resourceManager;
+        private ResourceManager resourceManager;
 
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
         private List<Resource> defaultOrder = new();
@@ -28,8 +29,9 @@ namespace TimelessEchoes.UI
         {
             if (references == null)
                 references = GetComponent<StatPanelReferences>();
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
             BuildEntries();
         }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Skills;
 using Blindsided.SaveData;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes
 {
@@ -16,8 +17,12 @@ namespace TimelessEchoes
         [Command("add-resource", "Add an amount of a resource by name")]
         public static void AddResource(string resourceName, double amount)
         {
-            var manager = Object.FindFirstObjectByType<ResourceManager>();
-            if (manager == null) return;
+            var manager = ResourceManager.Instance;
+            if (manager == null)
+            {
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource);
+                return;
+            }
 
             var res = Resources.LoadAll<Resource>(string.Empty).FirstOrDefault(r => r.name == resourceName);
             if (res != null)

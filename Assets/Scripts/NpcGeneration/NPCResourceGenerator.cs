@@ -5,6 +5,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -110,7 +111,11 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (!setup) return;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+            {
+                resourceManager = ResourceManager.Instance;
+                if (resourceManager == null)
+                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            }
             if (resourceManager == null) return;
 
             foreach (var pair in stored)

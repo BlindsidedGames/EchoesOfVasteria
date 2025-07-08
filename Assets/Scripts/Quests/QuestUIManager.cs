@@ -9,10 +9,22 @@ namespace TimelessEchoes.Quests
     /// </summary>
     public class QuestUIManager : MonoBehaviour
     {
+        public static QuestUIManager Instance { get; private set; }
         [SerializeField] private QuestEntryUI questEntryPrefab;
         [SerializeField] private Transform questParent;
 
         private readonly List<QuestEntryUI> entries = new();
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
 
         public QuestEntryUI CreateEntry(QuestData quest, Action onTurnIn)
         {

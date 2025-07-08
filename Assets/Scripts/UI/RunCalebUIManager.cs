@@ -31,7 +31,7 @@ namespace TimelessEchoes.UI
             if (uiReferences == null)
                 uiReferences = GetComponent<RunCalebUIReferences>();
             if (buffManager == null)
-                buffManager = FindFirstObjectByType<BuffManager>();
+                buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
             if (regenManager == null)
                 regenManager = FindFirstObjectByType<RegenManager>();
             if (uiReferences != null && uiReferences.skillsButton != null && skillsWindow != null)

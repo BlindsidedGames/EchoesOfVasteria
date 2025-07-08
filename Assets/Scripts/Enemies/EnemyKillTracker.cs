@@ -9,6 +9,7 @@ namespace TimelessEchoes.Stats
 {
     public class EnemyKillTracker : MonoBehaviour
     {
+        public static EnemyKillTracker Instance { get; private set; }
         public static readonly int[] Thresholds = { 10, 100, 1000, 10000 };
 
         public event System.Action<EnemyStats> OnKillRegistered;
@@ -17,6 +18,7 @@ namespace TimelessEchoes.Stats
 
         private void Awake()
         {
+            Instance = this;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
@@ -24,6 +26,8 @@ namespace TimelessEchoes.Stats
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }

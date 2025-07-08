@@ -79,7 +79,8 @@ namespace TimelessEchoes
                 float dmgAmount = damage;
                 if (fromHero && combatSkill != null)
                 {
-                    var controller = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+                    var controller = TimelessEchoes.Skills.SkillController.Instance ??
+                                     FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
                     if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
                     {
                         var hp = target.GetComponent<IHasHealth>();
@@ -92,7 +93,8 @@ namespace TimelessEchoes
                 dmg?.TakeDamage(dmgAmount);
                 if (fromHero)
                 {
-                    var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                    var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+                                   FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                     tracker?.AddDamageDealt(dmgAmount);
                 }
                 SpawnEffect();
