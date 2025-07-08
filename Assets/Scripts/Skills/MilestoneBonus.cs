@@ -7,6 +7,7 @@ namespace TimelessEchoes.Skills
     public enum MilestoneType
     {
         InstantTask,
+        InstantKill,
         DoubleResources,
         DoubleXP,
         StatIncrease
@@ -49,6 +50,8 @@ namespace TimelessEchoes.Skills
                         ? "tasks"
                         : $"{skillName.ToLowerInvariant()} tasks";
                     return $"Provides a {chance * 100f:0.#}% chance to instantly complete {taskLabel}.";
+                case MilestoneType.InstantKill:
+                    return $"Provides a {chance * 100f:0.#}% chance to instantly kill enemies.";
                 case MilestoneType.DoubleResources:
                     return $"Provides a {chance * 100f:0.#}% chance to double resources gained.";
                 case MilestoneType.DoubleXP:

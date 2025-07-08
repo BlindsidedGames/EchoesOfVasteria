@@ -28,6 +28,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
+        [SerializeField] private TimelessEchoes.Skills.Skill combatSkill;
         private bool diceUnlocked;
         [SerializeField] private TimelessEchoes.Buffs.BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
@@ -444,7 +445,7 @@ namespace TimelessEchoes.Hero
                 float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
                 float dmg = (baseDamage + damageBonus) *
                             (buffController != null ? buffController.DamageMultiplier : 1f);
-                proj.Init(target, dmg * combatDamageMultiplier * bonus, true);
+                proj.Init(target, dmg * combatDamageMultiplier * bonus, true, null, combatSkill);
             }
         }
 
