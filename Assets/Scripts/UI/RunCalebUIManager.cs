@@ -1,14 +1,14 @@
 using References.UI;
-using TimelessEchoes.Hero;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Enemies;
+using TimelessEchoes.Hero;
 using TimelessEchoes.Regen;
-using TMPro;
 using UnityEngine;
 
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Updates the run UI with the hero's current stats and handles the skills button.
+    ///     Updates the run UI with the hero's current stats and handles the skills button.
     /// </summary>
     public class RunCalebUIManager : MonoBehaviour
     {
@@ -57,6 +57,7 @@ namespace TimelessEchoes.UI
                 if (uiReferences != null)
                     heroHealth.HealthBar = uiReferences.healthBar;
             }
+
             UpdateStats(true);
         }
 
@@ -81,7 +82,7 @@ namespace TimelessEchoes.UI
         {
             if (uiReferences != null && uiReferences.rightText != null)
             {
-                string[] lines = uiReferences.rightText.text.Split('\n');
+                var lines = uiReferences.rightText.text.Split('\n');
                 if (lines.Length >= 3)
                 {
                     lines[2] = $"HP: {Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
@@ -95,11 +96,11 @@ namespace TimelessEchoes.UI
             if (uiReferences == null || hero == null)
                 return;
 
-            float damage = hero.Damage;
-            float attack = hero.AttackRate;
-            float move = hero.MoveSpeed;
-            float defense = hero.Defense;
-            float regen = regenManager ? (float)regenManager.GetTotalRegen() : 0f;
+            var damage = hero.Damage;
+            var attack = hero.AttackRate;
+            var move = hero.MoveSpeed;
+            var defense = hero.Defense;
+            var regen = regenManager ? (float)regenManager.GetTotalRegen() : 0f;
 
             if (!force && Mathf.Approximately(damage, lastDamage) && Mathf.Approximately(attack, lastAttack)
                 && Mathf.Approximately(move, lastMove) && Mathf.Approximately(defense, lastDefense)
@@ -113,16 +114,14 @@ namespace TimelessEchoes.UI
             lastRegen = regen;
 
             if (uiReferences.leftText != null)
-            {
                 uiReferences.leftText.text =
                     $"Damage: {damage:0.##}\n" +
                     $"Attack Speed: {attack:0.###} /s\n" +
                     $"Movement Speed {move:0.##}";
-            }
 
             if (uiReferences.rightText != null)
             {
-                string hpLine = heroHealth != null
+                var hpLine = heroHealth != null
                     ? $"HP: {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
                     : string.Empty;
                 uiReferences.rightText.text =
