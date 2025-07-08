@@ -187,6 +187,8 @@ namespace TimelessEchoes.Quests
                 if (q.npcId == id)
                     TryStartQuest(q);
             }
+            var achievementManager = AchievementManager.Instance;
+            achievementManager?.NotifyNpcMet(id);
             RefreshNoticeboard();
         }
 
