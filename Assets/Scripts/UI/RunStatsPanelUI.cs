@@ -148,7 +148,7 @@ namespace TimelessEchoes.UI
                 var time = CalcUtils.FormatTime(record.Duration);
                 var dist = CalcUtils.FormatNumber(record.Distance, true);
                 var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
-                var resources = CalcUtils.FormatNumber(record.ResourcesCollected + record.BonusResourcesCollected, true);
+                var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
                 var bonus = CalcUtils.FormatNumber(record.BonusResourcesCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
                     $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources} (+{bonus})";
@@ -197,7 +197,7 @@ namespace TimelessEchoes.UI
                 double sum = 0f;
                 foreach (var r in runs)
                 {
-                    var total = r.ResourcesCollected + r.BonusResourcesCollected;
+                    var total = r.ResourcesCollected;
                     if (total > longest)
                         longest = total;
                     sum += total;
@@ -264,7 +264,7 @@ namespace TimelessEchoes.UI
                         value = runs[index].Distance;
                     else if (graphMode == GraphMode.Resources)
                     {
-                        value = runs[index].ResourcesCollected + runs[index].BonusResourcesCollected;
+                        value = runs[index].ResourcesCollected;
                         overlay = runs[index].BonusResourcesCollected;
                     }
                     else
