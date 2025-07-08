@@ -204,7 +204,6 @@ namespace TimelessEchoes.Skills
 
             if (selectedIndex != 0)
             {
-                previousSelectedIndex = selectedIndex;
                 SelectSkill(0);
             }
             else if (previousSelectedIndex >= 0 && previousSelectedIndex < skills.Count)
