@@ -16,12 +16,10 @@ namespace TimelessEchoes.Skills
         [SerializeField] private SkillController controller;
         [SerializeField] private List<SkillUIReferences> skillSelectors = new();
         [SerializeField] private List<Skill> skills = new();
-        [SerializeField] private GameObject popupPanel;
         [SerializeField] private TMP_Text skillTitle;
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private TMP_Text experienceText;
         [SerializeField] private SlicedFilledImage experienceBar;
-        [SerializeField] private Button bonusesButton;
         [SerializeField] private MilestoneBonusUI bonusUI;
 
         private int selectedIndex = -1;
@@ -32,8 +30,6 @@ namespace TimelessEchoes.Skills
         {
             if (controller == null)
                 controller = FindFirstObjectByType<SkillController>();
-            if (popupPanel == null)
-                popupPanel = gameObject;
             if (skillSelectors.Count == 0)
                 skillSelectors.AddRange(GetComponentsInChildren<SkillUIReferences>(true));
 
@@ -56,11 +52,8 @@ namespace TimelessEchoes.Skills
                 };
             }
 
-            if (bonusesButton != null)
-                bonusesButton.onClick.AddListener(OpenBonuses);
-
-            if (popupPanel != null)
-                popupPanel.SetActive(false);
+            if (bonusUI != null && !bonusUI.gameObject.activeSelf)
+                bonusUI.gameObject.SetActive(true);
             DeselectSkill();
             UpdateSkillSelectorLevels();
         }
@@ -78,8 +71,6 @@ namespace TimelessEchoes.Skills
             if (selectedIndex < 0)
             {
                 DeselectSkill();
-                if (popupPanel != null)
-                    popupPanel.SetActive(false);
             }
             else
             {
@@ -114,8 +105,7 @@ namespace TimelessEchoes.Skills
             if (selector != null && selector.levelText != null)
                 selector.levelText.text = ShowLevelText ? $"Lvl {level}" : string.Empty;
 
-            bool popupShowing = popupPanel != null && popupPanel.activeSelf && selectedIndex == index;
-            if (!popupShowing && selector != null && selector.highlightImage != null)
+            if (selector != null && selector.highlightImage != null && selectedIndex != index)
                 selector.highlightImage.enabled = true;
             UpdateSkillSelectorLevels();
         }
@@ -132,27 +122,12 @@ namespace TimelessEchoes.Skills
                         skillSelectors[i].highlightImage.enabled = false;
                 }
 
-            if (popupPanel != null && selectedIndex >= 0 && selectedIndex < skillSelectors.Count)
-            {
-                var pos = popupPanel.transform.position;
-                var target = skillSelectors[selectedIndex].transform.position;
-                popupPanel.transform.position = new Vector3(pos.x, target.y, pos.z);
-                popupPanel.SetActive(true);
-            }
             UpdateSelectedSkillUI();
 
             if (bonusUI != null && bonusUI.gameObject.activeSelf)
                 bonusUI.PopulateMilestones(CurrentSkill);
         }
 
-        private void OpenBonuses()
-        {
-            if (bonusUI != null && CurrentSkill != null)
-            {
-                bonusUI.PopulateMilestones(CurrentSkill);
-                bonusUI.OpenWindow();
-            }
-        }
 
         private void UpdateSelectedSkillUI()
         {
@@ -205,8 +180,6 @@ namespace TimelessEchoes.Skills
         {
             if (Input.GetMouseButtonDown(1))
             {
-                if (popupPanel != null && popupPanel.activeSelf)
-                    popupPanel.SetActive(false);
                 DeselectSkill();
             }
         }
