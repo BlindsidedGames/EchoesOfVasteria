@@ -110,9 +110,9 @@ namespace TimelessEchoes.Skills
             UpdateSkillSelectorLevels();
         }
 
-        private void SelectSkill(int index)
+        private void SelectSkill(int index, bool recordPrevious = true)
         {
-            if (selectedIndex != index)
+            if (recordPrevious && selectedIndex != index)
                 previousSelectedIndex = selectedIndex;
             selectedIndex = Mathf.Clamp(index, 0, skillSelectors.Count - 1);
             for (int i = 0; i < skillSelectors.Count; i++)
@@ -202,14 +202,11 @@ namespace TimelessEchoes.Skills
             if (skills.Count == 0)
                 return;
 
-            if (selectedIndex != 0)
-            {
-                SelectSkill(0);
-            }
-            else if (previousSelectedIndex >= 0 && previousSelectedIndex < skills.Count)
-            {
-                SelectSkill(previousSelectedIndex);
-            }
+            int index = previousSelectedIndex >= 0 && previousSelectedIndex < skills.Count
+                ? previousSelectedIndex
+                : 0;
+
+            SelectSkill(index, false);
         }
 
         private void DeselectSkill()
