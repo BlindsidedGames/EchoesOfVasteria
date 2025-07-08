@@ -37,6 +37,7 @@ namespace TimelessEchoes
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
         [SerializeField] private RunDropUI runDropUI;
+        [SerializeField] private RunCalebUIReferences runCalebUI;
         [SerializeField] private GameObject deathWindow;
         [SerializeField] private Button deathRunButton;
         [SerializeField] private Button deathReturnButton;
@@ -160,6 +161,10 @@ namespace TimelessEchoes
                 {
                     hp.Init((int)hp.MaxHealth);
                     hp.OnDeath += OnHeroDeath;
+                    if (runCalebUI == null)
+                        runCalebUI = FindFirstObjectByType<RunCalebUIReferences>();
+                    if (runCalebUI != null)
+                        hp.HealthBar = runCalebUI.healthBar;
                 }
             }
 
@@ -189,6 +194,10 @@ namespace TimelessEchoes
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
+            if (runCalebUI == null)
+                runCalebUI = FindFirstObjectByType<RunCalebUIReferences>();
+            if (runCalebUI != null)
+                runCalebUI.gameObject.SetActive(true);
             npcObjectStateController?.UpdateObjectStates();
         }
 
@@ -301,6 +310,8 @@ namespace TimelessEchoes
                 tavernCamera.gameObject.SetActive(true);
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            if (runCalebUI != null)
+                runCalebUI.gameObject.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
             TELogger.Log("Returned to tavern", TELogCategory.Run, this);
         }
@@ -315,6 +326,9 @@ namespace TimelessEchoes
             BuffManager.Instance?.Pause();
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
+
+            if (runCalebUI != null)
+                runCalebUI.gameObject.SetActive(false);
 
             if (hero != null)
             {

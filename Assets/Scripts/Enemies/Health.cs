@@ -16,6 +16,7 @@ namespace TimelessEchoes.Enemies
         {
             CurrentHealth = maxHealth;
             UpdateBar();
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
         public void TakeDamage(float amount)
@@ -29,6 +30,7 @@ namespace TimelessEchoes.Enemies
             }
             CurrentHealth -= amount;
             UpdateBar();
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
             // Show floating damage text
             ColorUtility.TryParseHtmlString("#C56260", out var red);
@@ -60,18 +62,31 @@ namespace TimelessEchoes.Enemies
             if (amount <= 0f || CurrentHealth >= MaxHealth) return;
             CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
             UpdateBar();
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
         public float CurrentHealth { get; private set; }
         public float MaxHealth => maxHealth;
 
+        public event Action<float, float> OnHealthChanged;
         public event Action OnDeath;
+
+        public SlicedFilledImage HealthBar
+        {
+            get => healthBar;
+            set
+            {
+                healthBar = value;
+                UpdateBar();
+            }
+        }
 
         public void Init(int hp)
         {
             maxHealth = hp;
             CurrentHealth = hp;
             UpdateBar();
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
         private void UpdateBar()
