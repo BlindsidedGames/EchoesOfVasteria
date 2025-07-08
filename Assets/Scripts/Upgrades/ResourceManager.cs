@@ -68,7 +68,7 @@ namespace TimelessEchoes.Upgrades
             return amounts.TryGetValue(resource, out var value) ? value : 0;
         }
 
-        public void Add(Resource resource, double amount)
+        public void Add(Resource resource, double amount, bool bonus = false)
         {
             if (resource == null || amount <= 0) return;
             unlocked.Add(resource);
@@ -78,7 +78,7 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] = amount;
             resource.totalReceived += Mathf.RoundToInt((float)amount);
             var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            tracker?.AddResources(amount);
+            tracker?.AddResources(amount, bonus);
             OnResourceAdded?.Invoke(resource, amount);
             InvokeInventoryChanged();
         }
