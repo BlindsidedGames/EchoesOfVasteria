@@ -26,6 +26,7 @@ namespace TimelessEchoes.Stats
         private float currentRunDistance;
         private int currentRunTasks;
         private double currentRunResources;
+        private double currentRunBonusResources;
         private int currentRunKills;
         private float currentRunDamageDealt;
         private float currentRunDamageTaken;
@@ -46,6 +47,7 @@ namespace TimelessEchoes.Stats
         public float ShortestRun => shortestRun;
         public float AverageRun => averageRun;
         public int CurrentRunKills => currentRunKills;
+        public double CurrentRunBonusResources => currentRunBonusResources;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -222,12 +224,14 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public void AddResources(double amount)
+        public void AddResources(double amount, bool bonus = false)
         {
             if (amount > 0)
             {
                 totalResourcesGathered += amount;
                 currentRunResources += amount;
+                if (bonus)
+                    currentRunBonusResources += amount;
             }
         }
 
@@ -261,6 +265,7 @@ namespace TimelessEchoes.Stats
                 Distance = currentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
+                BonusResourcesCollected = currentRunBonusResources,
                 EnemiesKilled = currentRunKills,
                 DamageDealt = currentRunDamageDealt,
                 DamageTaken = currentRunDamageTaken,
@@ -272,6 +277,7 @@ namespace TimelessEchoes.Stats
             currentRunDistance = 0f;
             currentRunTasks = 0;
             currentRunResources = 0;
+            currentRunBonusResources = 0;
             currentRunKills = 0;
             currentRunDamageDealt = 0f;
             currentRunDamageTaken = 0f;

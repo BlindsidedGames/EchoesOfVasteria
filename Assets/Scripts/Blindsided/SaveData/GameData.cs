@@ -125,6 +125,7 @@ namespace Blindsided.SaveData
             public float Distance;
             public int TasksCompleted;
             public double ResourcesCollected;
+            public double BonusResourcesCollected;
             public int EnemiesKilled;
             public float DamageDealt;
             public float DamageTaken;

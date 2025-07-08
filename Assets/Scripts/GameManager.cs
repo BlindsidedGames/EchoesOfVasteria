@@ -291,7 +291,7 @@ namespace TimelessEchoes
                     int kills = statTracker != null ? statTracker.CurrentRunKills : 0;
                     float bonusPercent = kills * bonusPercentPerKill * 0.01f;
                     foreach (var pair in drops)
-                        manager.Add(pair.Key, pair.Value * (1f + bonusPercent));
+                        manager.Add(pair.Key, pair.Value * bonusPercent, true);
                 }
                 runDropUI.ResetDrops();
             }

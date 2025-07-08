@@ -11,6 +11,7 @@ namespace TimelessEchoes.UI
     public class RunBarUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image fillImage;
+        [SerializeField] private Image overlayImage;
 
         /// <summary>
         /// Gets or sets the fill color.
@@ -22,6 +23,16 @@ namespace TimelessEchoes.UI
             {
                 if (fillImage != null)
                     fillImage.color = value;
+            }
+        }
+
+        public Color OverlayColor
+        {
+            get => overlayImage != null ? overlayImage.color : Color.white;
+            set
+            {
+                if (overlayImage != null)
+                    overlayImage.color = value;
             }
         }
 
@@ -38,6 +49,12 @@ namespace TimelessEchoes.UI
         {
             if (fillImage != null)
                 fillImage.fillAmount = Mathf.Clamp01(ratio);
+        }
+
+        public void SetOverlayFill(float ratio)
+        {
+            if (overlayImage != null)
+                overlayImage.fillAmount = Mathf.Clamp01(ratio);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

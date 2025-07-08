@@ -27,6 +27,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private Color retreatBarColor = Color.green;
         [SerializeField] private Color resourcesDeathBarColor = Color.red;
         [SerializeField] private Color resourcesRetreatBarColor = Color.green;
+        [SerializeField] private Color resourcesBonusBarColor = Color.yellow;
         [SerializeField] private Color killsDeathBarColor = Color.red;
         [SerializeField] private Color killsRetreatBarColor = Color.green;
 
@@ -147,9 +148,10 @@ namespace TimelessEchoes.UI
                 var time = CalcUtils.FormatTime(record.Duration);
                 var dist = CalcUtils.FormatNumber(record.Distance, true);
                 var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
-                var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
+                var resources = CalcUtils.FormatNumber(record.ResourcesCollected + record.BonusResourcesCollected, true);
+                var bonus = CalcUtils.FormatNumber(record.BonusResourcesCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
-                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
+                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources} (+{bonus})";
             }
 
 
@@ -195,9 +197,10 @@ namespace TimelessEchoes.UI
                 double sum = 0f;
                 foreach (var r in runs)
                 {
-                    if (r.ResourcesCollected > longest)
-                        longest = r.ResourcesCollected;
-                    sum += r.ResourcesCollected;
+                    var total = r.ResourcesCollected + r.BonusResourcesCollected;
+                    if (total > longest)
+                        longest = total;
+                    sum += total;
                 }
                 average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
@@ -256,27 +259,39 @@ namespace TimelessEchoes.UI
                 if (index >= 0 && index < runs.Count)
                 {
                     double value;
+                    double overlay = 0f;
                     if (graphMode == GraphMode.Distance)
                         value = runs[index].Distance;
                     else if (graphMode == GraphMode.Resources)
-                        value = runs[index].ResourcesCollected;
+                    {
+                        value = runs[index].ResourcesCollected + runs[index].BonusResourcesCollected;
+                        overlay = runs[index].BonusResourcesCollected;
+                    }
                     else
                         value = runs[index].EnemiesKilled;
                     var ratio = longest > 0f ? value / longest : 0f;
                     runBars[i].SetFill((float)ratio);
+                    var overlayRatio = longest > 0f ? overlay / longest : 0f;
+                    runBars[i].SetOverlayFill((float)overlayRatio);
                     runBars[i].BarIndex = index;
                     Color color;
                     if (graphMode == GraphMode.Distance)
                         color = runs[index].Died ? deathBarColor : retreatBarColor;
                     else if (graphMode == GraphMode.Resources)
+                    {
                         color = runs[index].Died ? resourcesDeathBarColor : resourcesRetreatBarColor;
+                        runBars[i].OverlayColor = resourcesBonusBarColor;
+                    }
                     else
                         color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
                     runBars[i].FillColor = color;
+                    if (graphMode != GraphMode.Resources)
+                        runBars[i].SetOverlayFill(0f);
                 }
                 else
                 {
                     runBars[i].SetFill(0f);
+                    runBars[i].SetOverlayFill(0f);
                     runBars[i].BarIndex = -1;
                     runBars[i].FillColor = new Color(1f, 1f, 1f, 0.3f);
                 }
