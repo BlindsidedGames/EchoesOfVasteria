@@ -69,6 +69,31 @@ namespace TimelessEchoes.Hero
         public Animator Animator => animator;
         public bool InCombat => state == State.Combat;
 
+        /// <summary>
+        /// Current attack damage after upgrades, buffs and dice multipliers.
+        /// </summary>
+        public float Damage =>
+            (baseDamage + damageBonus) *
+            (buffController != null ? buffController.DamageMultiplier : 1f) *
+            combatDamageMultiplier;
+
+        /// <summary>
+        /// Current attacks per second after upgrades and buffs.
+        /// </summary>
+        public float AttackRate => CurrentAttackRate;
+
+        /// <summary>
+        /// Current movement speed after upgrades and buffs.
+        /// </summary>
+        public float MoveSpeed =>
+            (baseMoveSpeed + moveSpeedBonus) *
+            (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
+
+        /// <summary>
+        /// Maximum health after upgrades.
+        /// </summary>
+        public float MaxHealthValue => baseHealth + healthBonus;
+
         private float CurrentAttackRate =>
             (baseAttackSpeed + attackSpeedBonus) *
             (buffController != null ? buffController.AttackSpeedMultiplier : 1f);
