@@ -16,7 +16,6 @@ namespace TimelessEchoes.Skills
         [SerializeField] private SkillController controller;
         [SerializeField] private List<SkillUIReferences> skillSelectors = new();
         [SerializeField] private List<Skill> skills = new();
-        [SerializeField] private Button firstSkillButton;
         [SerializeField] private TMP_Text skillTitle;
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private TMP_Text experienceText;
@@ -24,7 +23,6 @@ namespace TimelessEchoes.Skills
         [SerializeField] private MilestoneBonusUI bonusUI;
 
         private int selectedIndex = -1;
-        private int previousSelectedIndex = -1;
 
         private Skill CurrentSkill => selectedIndex >= 0 && selectedIndex < skills.Count ? skills[selectedIndex] : null;
 
@@ -56,10 +54,10 @@ namespace TimelessEchoes.Skills
 
             if (bonusUI != null && !bonusUI.gameObject.activeSelf)
                 bonusUI.gameObject.SetActive(true);
-            if (firstSkillButton != null)
-                firstSkillButton.onClick.AddListener(ToggleFirstSkill);
             DeselectSkill();
             UpdateSkillSelectorLevels();
+            if (skills.Count > 0)
+                SelectSkill(0);
         }
 
         private void OnEnable()
@@ -72,10 +70,17 @@ namespace TimelessEchoes.Skills
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnLoadDataHandler;
             OnShowLevelTextChanged();
-            if (selectedIndex >= 0)
-                UpdateSelectedSkillUI();
+            if (selectedIndex < 0)
+            {
+                if (skills.Count > 0)
+                    SelectSkill(0);
+                else
+                    DeselectSkill();
+            }
             else
-                DeselectSkill();
+            {
+                UpdateSelectedSkillUI();
+            }
             UpdateSkillSelectorLevels();
         }
 
@@ -112,8 +117,6 @@ namespace TimelessEchoes.Skills
 
         private void SelectSkill(int index)
         {
-            if (selectedIndex != index)
-                previousSelectedIndex = selectedIndex;
             selectedIndex = Mathf.Clamp(index, 0, skillSelectors.Count - 1);
             for (int i = 0; i < skillSelectors.Count; i++)
                 if (skillSelectors[i] != null)
@@ -178,6 +181,13 @@ namespace TimelessEchoes.Skills
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                DeselectSkill();
+            }
+        }
 
         private void OnShowLevelTextChanged()
         {
@@ -195,22 +205,6 @@ namespace TimelessEchoes.Skills
         {
             yield return null;
             OnShowLevelTextChanged();
-        }
-
-        private void ToggleFirstSkill()
-        {
-            if (skills.Count == 0)
-                return;
-
-            if (selectedIndex != 0)
-            {
-                previousSelectedIndex = selectedIndex;
-                SelectSkill(0);
-            }
-            else if (previousSelectedIndex >= 0 && previousSelectedIndex < skills.Count)
-            {
-                SelectSkill(previousSelectedIndex);
-            }
         }
 
         private void DeselectSkill()
