@@ -5,14 +5,15 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Buffs
 {
     public class BuffUIManager : MonoBehaviour
     {
-        [SerializeField] private ResourceManager resourceManager;
-        [SerializeField] private ResourceInventoryUI resourceInventoryUI;
-        [SerializeField] private BuffManager buffManager;
+        private ResourceManager resourceManager;
+        private ResourceInventoryUI resourceInventoryUI;
+        private BuffManager buffManager;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
         [SerializeField] private BuffIconUIReferences activeBuffPrefab;
@@ -31,12 +32,15 @@ namespace TimelessEchoes.Buffs
 
         private void Awake()
         {
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            resourceInventoryUI = ResourceInventoryUI.Instance;
             if (resourceInventoryUI == null)
-                resourceInventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+                TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+            buffManager = BuffManager.Instance;
             if (buffManager == null)
-                buffManager = FindFirstObjectByType<BuffManager>();
+                TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
 
             BuildRecipeEntries();
 

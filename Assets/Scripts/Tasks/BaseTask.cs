@@ -62,7 +62,7 @@ namespace TimelessEchoes.Tasks
 
         protected bool ShouldInstantComplete()
         {
-            var controller = FindFirstObjectByType<SkillController>();
+            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
             return controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
         }
 
@@ -72,7 +72,7 @@ namespace TimelessEchoes.Tasks
             if (associatedSkill == null || taskData == null || taskData.xpForCompletion <= 0f)
                 return 0f;
 
-            var controller = FindFirstObjectByType<SkillController>();
+            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
             var amount = taskData.xpForCompletion;
             if (controller)
             {
@@ -84,5 +84,4 @@ namespace TimelessEchoes.Tasks
             lastGrantedXp = amount;
             return amount;
         }
-    }
-}
+    }}

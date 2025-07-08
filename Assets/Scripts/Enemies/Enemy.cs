@@ -35,8 +35,7 @@ namespace TimelessEchoes.Enemies
         private float nextWanderTime;
         private LayerMask blockingMask;
 
-        private static TimelessEchoes.Skills.Skill combatSkill;
-        private static TimelessEchoes.Skills.SkillController skillController;
+        [SerializeField] private TimelessEchoes.Skills.Skill combatSkill;
 
         public bool IsEngaged => setter != null && setter.target == hero;
         public EnemyStats Stats => stats;
@@ -64,7 +63,9 @@ namespace TimelessEchoes.Enemies
             }
 
             startTarget = setter.target;
-            resourceManager = FindFirstObjectByType<ResourceManager>();
+            resourceManager = ResourceManager.Instance;
+            if (resourceManager == null)
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
             if (health != null)
                 health.OnDeath += OnDeath;
             nextWanderTime = Time.time;
@@ -196,7 +197,11 @@ namespace TimelessEchoes.Enemies
         private void OnDeath()
         {
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+            {
+                resourceManager = ResourceManager.Instance;
+                if (resourceManager == null)
+                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            }
             if (resourceManager == null) return;
 
             TELogger.Log($"Enemy {name} died", TELogCategory.Combat, this);
@@ -219,10 +224,16 @@ namespace TimelessEchoes.Enemies
                 }
             }
 
-            var tracker = FindFirstObjectByType<EnemyKillTracker>();
-            tracker?.RegisterKill(stats);
-            var statsTracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-            statsTracker?.AddKill();
+            var tracker = EnemyKillTracker.Instance;
+            if (tracker == null)
+                TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
+            else
+                tracker.RegisterKill(stats);
+            var statsTracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (statsTracker == null)
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.Combat, this);
+            else
+                statsTracker.AddKill();
 
             GrantCombatExperience();
         }
@@ -230,12 +241,20 @@ namespace TimelessEchoes.Enemies
         private void GrantCombatExperience()
         {
             if (stats == null) return;
-            if (skillController == null)
-                skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-            if (combatSkill == null)
-                combatSkill = Resources.Load<TimelessEchoes.Skills.Skill>("Combat");
-            if (skillController != null && combatSkill != null)
-                skillController.AddExperience(combatSkill, stats.experience);
+            var controller = TimelessEchoes.Skills.SkillController.Instance;
+            var skill = controller != null ? controller.CombatSkill : combatSkill;
+            if (controller == null && skill == null)
+            {
+                TELogger.Log("Missing SkillController and combat skill", TELogCategory.Combat, this);
+                return;
+            }
+            if (controller != null && skill == null)
+            {
+                TELogger.Log("Combat skill not set on SkillController", TELogCategory.Combat, this);
+                return;
+            }
+            if (skill != null)
+                controller?.AddExperience(skill, stats.experience);
         }
 
         private void OnDestroy()

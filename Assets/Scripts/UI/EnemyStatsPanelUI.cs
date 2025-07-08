@@ -5,13 +5,14 @@ using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Stats;
 using Blindsided.Utilities;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
     public class EnemyStatsPanelUI : MonoBehaviour
     {
         [SerializeField] private StatPanelReferences references;
-        [SerializeField] private EnemyKillTracker killTracker;
+        private EnemyKillTracker killTracker;
 
         private readonly Dictionary<EnemyStats, EnemyStatEntryUIReferences> entries = new();
         private List<EnemyStats> defaultOrder = new();
@@ -31,8 +32,9 @@ namespace TimelessEchoes.UI
         {
             if (references == null)
                 references = GetComponent<StatPanelReferences>();
+            killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
-                killTracker = FindFirstObjectByType<EnemyKillTracker>();
+                TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
             BuildEntries();
         }
 

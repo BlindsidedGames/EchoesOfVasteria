@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Tasks
 {
@@ -16,9 +17,15 @@ namespace TimelessEchoes.Tasks
         protected void GenerateDrops()
         {
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+            {
+                resourceManager = ResourceManager.Instance;
+                if (resourceManager == null)
+                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            }
 
-            var skillController = FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            var skillController = TimelessEchoes.Skills.SkillController.Instance;
+            if (skillController == null)
+                TELogger.Log("SkillController missing", TELogCategory.Resource, this);
 
             if (resourceManager == null) return;
 

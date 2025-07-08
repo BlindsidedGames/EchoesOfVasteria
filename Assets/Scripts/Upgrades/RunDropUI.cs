@@ -4,6 +4,7 @@ using References.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TimelessEchoes.Upgrades;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -12,7 +13,7 @@ namespace TimelessEchoes.Upgrades
     /// </summary>
     public class RunDropUI : MonoBehaviour
     {
-        [SerializeField] private ResourceManager resourceManager;
+        private ResourceManager resourceManager;
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private Transform slotParent;
         [SerializeField] private TooltipUIReferences tooltip;
@@ -32,8 +33,9 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
             if (tooltip == null)
                 tooltip = FindFirstObjectByType<TooltipUIReferences>();
             if (slotParent == null)

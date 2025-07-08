@@ -348,7 +348,8 @@ namespace TimelessEchoes.Tasks
 
             if (task != null && task.IsComplete())
             {
-                var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+                              FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                 TaskData data = (task as BaseTask)?.taskData;
                 float xp = (task as BaseTask)?.LastGrantedXp ?? 0f;
                 tracker?.RegisterTaskComplete(data, duration, xp);

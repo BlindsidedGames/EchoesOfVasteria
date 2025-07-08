@@ -3,6 +3,7 @@ using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -40,7 +41,11 @@ namespace TimelessEchoes.NpcGeneration
             if (selectButton != null)
             {
                 if (inventoryUI == null)
-                    inventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+                {
+                    inventoryUI = ResourceInventoryUI.Instance;
+                    if (inventoryUI == null)
+                        TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+                }
                 var r = res;
                 selectButton.onClick.RemoveAllListeners();
                 selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
@@ -56,9 +61,17 @@ namespace TimelessEchoes.NpcGeneration
         private void Awake()
         {
             if (inventoryUI == null)
-                inventoryUI = FindFirstObjectByType<ResourceInventoryUI>();
+            {
+                inventoryUI = ResourceInventoryUI.Instance;
+                if (inventoryUI == null)
+                    TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+            }
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+            {
+                resourceManager = ResourceManager.Instance;
+                if (resourceManager == null)
+                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            }
         }
 
         private void OnDestroy()

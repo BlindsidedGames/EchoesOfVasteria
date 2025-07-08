@@ -8,7 +8,19 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class GenerationManager : MonoBehaviour
     {
+        public static GenerationManager Instance { get; private set; }
         [SerializeField] private List<NPCResourceGenerator> generators = new();
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
 
 
         private void Update()

@@ -24,6 +24,7 @@ namespace TimelessEchoes
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        public static GameManager Instance { get; private set; }
         [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
         [SerializeField] private GameObject gravestonePrefab;
 
@@ -52,11 +53,12 @@ namespace TimelessEchoes
         private HeroController hero;
         private CinemachineCamera mapCamera;
         private TaskController taskController;
-        [SerializeField] private NpcObjectStateController npcObjectStateController;
+        private NpcObjectStateController npcObjectStateController;
         private GameplayStatTracker statTracker;
 
         private void Awake()
         {
+            Instance = this;
             if (startRunButton != null)
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
@@ -65,14 +67,18 @@ namespace TimelessEchoes
                 deathRunButton.onClick.AddListener(OnDeathRunButton);
             if (deathReturnButton != null)
                 deathReturnButton.onClick.AddListener(OnDeathReturnButton);
+            npcObjectStateController = NpcObjectStateController.Instance;
             if (npcObjectStateController == null)
-                npcObjectStateController = FindFirstObjectByType<NpcObjectStateController>();
+                TELogger.Log("NpcObjectStateController missing", TELogCategory.General, this);
+            statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
         }
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             if (startRunButton != null)
                 startRunButton.onClick.RemoveListener(StartRun);
             if (returnToTavernButton != null)
@@ -144,7 +150,11 @@ namespace TimelessEchoes
         {
             yield return StartCoroutine(CleanupMapRoutine());
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            {
+                statTracker = GameplayStatTracker.Instance;
+                if (statTracker == null)
+                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+            }
             statTracker?.BeginRun();
             runDropUI?.ResetDrops();
             currentMap = Instantiate(mapPrefab);
@@ -222,7 +232,11 @@ namespace TimelessEchoes
             TELogger.Log("Hero death", TELogCategory.Hero, this);
 
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            {
+                statTracker = GameplayStatTracker.Instance;
+                if (statTracker == null)
+                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+            }
             if (statTracker != null)
             {
                 statTracker.AddDeath();
@@ -289,12 +303,20 @@ namespace TimelessEchoes
         {
             HideTooltip();
             if (statTracker == null)
-                statTracker = FindFirstObjectByType<GameplayStatTracker>();
+            {
+                statTracker = GameplayStatTracker.Instance;
+                if (statTracker == null)
+                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+            }
 
             if (!runEndedByDeath && runDropUI != null)
             {
-                var manager = FindFirstObjectByType<ResourceManager>();
-                if (manager != null)
+                var manager = ResourceManager.Instance;
+                if (manager == null)
+                {
+                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                }
+                else
                 {
                     var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
                     int kills = statTracker != null ? statTracker.CurrentRunKills : 0;

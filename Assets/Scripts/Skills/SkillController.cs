@@ -12,6 +12,12 @@ namespace TimelessEchoes.Skills
     /// </summary>
     public class SkillController : MonoBehaviour
     {
+        public static SkillController Instance { get; private set; }
+        [SerializeField]
+        private Skill combatSkill;
+
+        public Skill CombatSkill => combatSkill;
+
         [Serializable]
         public class SkillProgress
         {
@@ -30,6 +36,7 @@ namespace TimelessEchoes.Skills
 
         private void Awake()
         {
+            Instance = this;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
@@ -37,6 +44,8 @@ namespace TimelessEchoes.Skills
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }

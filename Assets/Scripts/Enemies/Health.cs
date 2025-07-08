@@ -44,7 +44,8 @@ namespace TimelessEchoes.Enemies
             }
             if (isHero)
             {
-                var tracker = FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+                              FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                 tracker?.AddDamageTaken(amount);
             }
             if (CurrentHealth <= 0f)

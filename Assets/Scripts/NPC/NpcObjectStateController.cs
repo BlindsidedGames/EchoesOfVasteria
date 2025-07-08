@@ -10,6 +10,7 @@ namespace TimelessEchoes.NPC
     /// </summary>
     public class NpcObjectStateController : MonoBehaviour
     {
+        public static NpcObjectStateController Instance { get; private set; }
         [System.Serializable]
         public class Entry
         {
@@ -20,6 +21,17 @@ namespace TimelessEchoes.NPC
 
         [SerializeField]
         private List<Entry> entries = new();
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
 
         private void OnEnable()
         {

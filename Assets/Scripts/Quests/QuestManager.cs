@@ -16,10 +16,10 @@ namespace TimelessEchoes.Quests
     /// </summary>
     public class QuestManager : MonoBehaviour
     {
-        [SerializeField] private ResourceManager resourceManager;
-        [SerializeField] private EnemyKillTracker killTracker;
-        [SerializeField] private GenerationManager generationManager;
-        [SerializeField] private QuestUIManager uiManager;
+        private ResourceManager resourceManager;
+        private EnemyKillTracker killTracker;
+        private GenerationManager generationManager;
+        private QuestUIManager uiManager;
         [SerializeField] private List<QuestData> startingQuests = new();
 
         private readonly Dictionary<string, QuestInstance> active = new();
@@ -33,14 +33,18 @@ namespace TimelessEchoes.Quests
 
         private void Awake()
         {
+            resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                resourceManager = FindFirstObjectByType<ResourceManager>();
+                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+            killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
-                killTracker = FindFirstObjectByType<EnemyKillTracker>();
+                TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
+            generationManager = GenerationManager.Instance;
             if (generationManager == null)
-                generationManager = FindFirstObjectByType<GenerationManager>();
+                TELogger.Log("GenerationManager missing", TELogCategory.General, this);
+            uiManager = QuestUIManager.Instance;
             if (uiManager == null)
-                uiManager = FindFirstObjectByType<QuestUIManager>();
+                TELogger.Log("QuestUIManager missing", TELogCategory.Quest, this);
 
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += UpdateAllProgress;
