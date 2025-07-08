@@ -56,6 +56,8 @@ namespace TimelessEchoes.Skills
                 bonusUI.gameObject.SetActive(true);
             DeselectSkill();
             UpdateSkillSelectorLevels();
+            if (skills.Count > 0)
+                SelectSkill(0);
         }
 
         private void OnEnable()
@@ -70,7 +72,10 @@ namespace TimelessEchoes.Skills
             OnShowLevelTextChanged();
             if (selectedIndex < 0)
             {
-                DeselectSkill();
+                if (skills.Count > 0)
+                    SelectSkill(0);
+                else
+                    DeselectSkill();
             }
             else
             {
