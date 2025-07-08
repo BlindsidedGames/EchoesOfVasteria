@@ -54,5 +54,10 @@ optional rotation.
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
+## Steam Achievements
+Achievements are managed through the `AchievementManager` component which uses
+Steamworks.NET. Meeting the NPC with id `Ivan1` awards the `MeetIvan` Steam
+achievement.
+
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
