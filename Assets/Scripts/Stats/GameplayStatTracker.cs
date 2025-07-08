@@ -45,6 +45,7 @@ namespace TimelessEchoes.Stats
         public float LongestRun => longestRun;
         public float ShortestRun => shortestRun;
         public float AverageRun => averageRun;
+        public int CurrentRunKills => currentRunKills;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
