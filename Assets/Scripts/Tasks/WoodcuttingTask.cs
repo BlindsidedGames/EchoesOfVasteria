@@ -1,5 +1,6 @@
 using TimelessEchoes.Hero;
 using UnityEngine;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.Tasks
 {
@@ -20,6 +21,7 @@ namespace TimelessEchoes.Tasks
 
         protected override string AnimationName => "Chopping";
         protected override string InterruptTriggerName => "StopChopping";
+        protected override AudioManager.TaskType TaskType => AudioManager.TaskType.Woodcutting;
         public override Transform Target => cuttingPoint != null ? cuttingPoint : transform;
 
         public override void StartTask()
