@@ -4,6 +4,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Regen;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
@@ -139,6 +140,13 @@ namespace TimelessEchoes.Quests
 
                     if (req.amount > 0)
                         pct = (float)(total / req.amount);
+                }
+                else if (req.type == QuestData.RequirementType.Donation)
+                {
+                    double donated = RegenManager.Instance ?
+                        RegenManager.Instance.GetDonationTotal(req.resource) : 0;
+                    if (req.amount > 0)
+                        pct = (float)(donated / req.amount);
                 }
 
                 progress += Mathf.Clamp01(pct);

@@ -26,7 +26,7 @@ namespace TimelessEchoes.Quests
         public class Requirement
         {
             public RequirementType type;
-            [ShowIf("type", RequirementType.Resource)]
+            [ShowIf("@type == RequirementType.Resource || type == RequirementType.Donation")]
             public Resource resource;
             public int amount = 1;
             [ShowIf("type", RequirementType.Kill)]
@@ -38,7 +38,8 @@ namespace TimelessEchoes.Quests
         public enum RequirementType
         {
             Resource,
-            Kill
+            Kill,
+            Donation
         }
     }
 }

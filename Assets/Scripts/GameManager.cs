@@ -44,6 +44,7 @@ namespace TimelessEchoes
         [SerializeField] private Button deathReturnButton;
         [SerializeField] private SlicedFilledImage deathTimerImage;
         [SerializeField] private float deathWindowDuration = 20f;
+        [SerializeField] private string mildredQuestId;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -177,6 +178,8 @@ namespace TimelessEchoes
                         hp.HealthBar = runCalebUI.healthBar;
                 }
             }
+
+            EnableMildred();
 
             Physics2D.SyncTransforms();
             yield return null;
@@ -366,6 +369,32 @@ namespace TimelessEchoes
             {
                 Destroy(currentMap); // safe to destroy AstarPath now
                 currentMap = null;
+            }
+
+        }
+
+        private static bool QuestCompleted(string questId)
+        {
+            if (string.IsNullOrEmpty(questId))
+                return true;
+            if (oracle == null)
+                return false;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
+        }
+
+        private void EnableMildred()
+        {
+            if (currentMap == null)
+                return;
+            bool unlocked = QuestCompleted(mildredQuestId);
+            foreach (var t in currentMap.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.gameObject.name == "Mildred")
+                {
+                    t.gameObject.SetActive(unlocked);
+                    break;
+                }
             }
         }
     }
