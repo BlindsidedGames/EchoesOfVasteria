@@ -10,6 +10,7 @@ using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
 using TimelessEchoes.UI;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Skills;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
@@ -191,11 +192,25 @@ namespace TimelessEchoes.Hero
             state = State.Idle;
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
+
+            var skillController = Skills.SkillController.Instance;
+            if (skillController != null)
+                skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
         }
 
         private void OnDisable()
         {
             buffController?.Pause();
+
+            var skillController = Skills.SkillController.Instance;
+            if (skillController != null)
+                skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
+        }
+
+        private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
+        {
+            if (milestone != null && milestone.type == MilestoneType.StatIncrease)
+                ApplyStatUpgrades();
         }
 
         private void ApplyStatUpgrades()
