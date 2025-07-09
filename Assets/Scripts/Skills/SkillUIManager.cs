@@ -68,6 +68,7 @@ namespace TimelessEchoes.Skills
             {
                 controller.OnExperienceGained += OnExperienceGained;
                 controller.OnLevelUp += OnLevelUp;
+                controller.OnMilestoneUnlocked += OnMilestoneUnlocked;
             }
             ShowLevelTextChanged += OnShowLevelTextChanged;
             OnLoadData += OnLoadDataHandler;
@@ -85,6 +86,7 @@ namespace TimelessEchoes.Skills
             {
                 controller.OnExperienceGained -= OnExperienceGained;
                 controller.OnLevelUp -= OnLevelUp;
+                controller.OnMilestoneUnlocked -= OnMilestoneUnlocked;
             }
             ShowLevelTextChanged -= OnShowLevelTextChanged;
             OnLoadData -= OnLoadDataHandler;
@@ -108,6 +110,16 @@ namespace TimelessEchoes.Skills
             if (selector != null && selector.highlightImage != null && selectedIndex != index)
                 selector.highlightImage.enabled = true;
             UpdateSkillSelectorLevels();
+
+            if (bonusUI != null && selectedIndex == index && bonusUI.gameObject.activeSelf)
+                bonusUI.PopulateMilestones(skill);
+        }
+
+        private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
+        {
+            int index = skills.IndexOf(skill);
+            if (bonusUI != null && selectedIndex == index && bonusUI.gameObject.activeSelf)
+                bonusUI.PopulateMilestones(skill);
         }
 
         private void SelectSkill(int index, bool recordPrevious = true)
