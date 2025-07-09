@@ -7,15 +7,16 @@ using static TimelessEchoes.TELogger;
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
-    /// Handles applying stat upgrades using resources.
+    ///     Handles applying stat upgrades using resources.
     /// </summary>
+    [DefaultExecutionOrder(-1)]
     public class StatUpgradeController : MonoBehaviour
     {
         public static StatUpgradeController Instance { get; private set; }
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<StatUpgrade> upgrades = new();
 
-        private Dictionary<StatUpgrade, int> levels = new();
+        private readonly Dictionary<StatUpgrade, int> levels = new();
 
         /// <summary>
         ///     Exposes the list of upgrades managed by this controller.
@@ -49,7 +50,7 @@ namespace TimelessEchoes.Upgrades
         public float GetIncrease(StatUpgrade upgrade)
         {
             if (upgrade == null) return 0f;
-            int lvl = GetLevel(upgrade);
+            var lvl = GetLevel(upgrade);
             return lvl * upgrade.statIncreasePerLevel;
         }
 
@@ -75,11 +76,12 @@ namespace TimelessEchoes.Upgrades
             if (threshold == null) return false;
             foreach (var req in threshold.requirements)
             {
-                int lvl = GetLevel(upgrade);
-                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+                var lvl = GetLevel(upgrade);
+                var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
                 if (resourceManager != null && resourceManager.GetAmount(req.resource) < cost)
                     return false;
             }
+
             return true;
         }
 
@@ -91,25 +93,23 @@ namespace TimelessEchoes.Upgrades
 
             foreach (var req in threshold.requirements)
             {
-                int lvl = GetLevel(upgrade);
-                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+                var lvl = GetLevel(upgrade);
+                var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
                 resourceManager?.Spend(req.resource, cost);
             }
 
             levels[upgrade] = GetLevel(upgrade) + 1;
-            TELogger.Log($"Upgraded {upgrade.name} to level {levels[upgrade]}", TELogCategory.Upgrade, this);
+            Log($"Upgraded {upgrade.name} to level {levels[upgrade]}", TELogCategory.Upgrade, this);
             return true;
         }
 
         private StatUpgrade.Threshold GetThreshold(StatUpgrade upgrade)
         {
             if (upgrade == null) return null;
-            int lvl = GetLevel(upgrade);
+            var lvl = GetLevel(upgrade);
             foreach (var t in upgrade.thresholds)
-            {
                 if (lvl >= t.minLevel && lvl < t.maxLevel)
                     return t;
-            }
             return null;
         }
 
@@ -118,10 +118,8 @@ namespace TimelessEchoes.Upgrades
             if (oracle == null) return;
             var dict = new Dictionary<string, int>();
             foreach (var pair in levels)
-            {
                 if (pair.Key != null)
                     dict[pair.Key.name] = pair.Value;
-            }
             oracle.saveData.UpgradeLevels = dict;
         }
 

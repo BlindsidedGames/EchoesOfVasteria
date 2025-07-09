@@ -4639,7 +4639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328a73692b1c3744895574871b01b09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 213655107}
   resources:
   - {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
   - {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
@@ -6903,10 +6902,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f6a57e71265e74990c17347bc37846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 213655107}
-  killTracker: {fileID: 1583740290}
-  generationManager: {fileID: 2056832852}
-  uiManager: {fileID: 274431525}
   startingQuests:
   - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
   - {fileID: 11400000, guid: 3e0eca7419a4bfd4ba09580e54b1f9b0, type: 2}
@@ -21680,9 +21675,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e3920697713014b97a1327c5320125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 813217905}
-  resourceManager: {fileID: 213655107}
-  resourceInventoryUI: {fileID: 213655108}
   statReferences:
   - {fileID: 8378734606556008618}
   - {fileID: 1544411113}
@@ -24474,7 +24466,6 @@ MonoBehaviour:
   deathTimerImage: {fileID: 8120180796546217947}
   deathWindowDuration: 20
   tavernCamera: {fileID: 495953847}
-  npcObjectStateController: {fileID: 898534099}
 --- !u!1 &899155870
 GameObject:
   m_ObjectHideFlags: 0
@@ -61229,7 +61220,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   references: {fileID: 1583740288}
-  killTracker: {fileID: 1583740290}
   sortMode: 0
 --- !u!114 &1583740290
 MonoBehaviour:
@@ -61256,7 +61246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   references: {fileID: 1583740288}
-  statTracker: {fileID: 898534100}
   sortMode: 0
 --- !u!114 &1583740292
 MonoBehaviour:
@@ -61271,7 +61260,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   references: {fileID: 7530611716338478492}
-  statTracker: {fileID: 898534100}
 --- !u!114 &1583740293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61285,7 +61273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   references: {fileID: 1583740288}
-  resourceManager: {fileID: 213655107}
   sortMode: 0
 --- !u!114 &1583740294
 MonoBehaviour:
@@ -61379,7 +61366,6 @@ MonoBehaviour:
   middleRunNumberText: {fileID: 1122814649}
   mostRecentRunNumberText: {fileID: 1696710509}
   graphLabelText: {fileID: 334325849}
-  statTracker: {fileID: 898534100}
   runStatUI: {fileID: 1450317449}
   statOffset: {x: 0, y: 0}
   deathBarColor: {r: 0.24705884, g: 0.15686275, b: 0.19607845, a: 1}
@@ -62480,9 +62466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78407e844efef5c4c9d04d59c2d0fb54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 213655107}
-  resourceInventoryUI: {fileID: 213655108}
-  buffManager: {fileID: 1625529691}
   recipePrefab: {fileID: 8065041613675525180, guid: e3acf1658fcaf2e439d08bc8452f7510, type: 3}
   recipeParent: {fileID: 794987754}
   activeBuffPrefab: {fileID: 5147877581072998704, guid: 53ca8b66187f4e941bb5c5d1fe287e90, type: 3}
@@ -62501,7 +62484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c76213d0174b147b75980e94270adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 213655107}
   diminishingCurve:
     serializedVersion: 2
     m_Curve:
@@ -66824,6 +66806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a18accdcd3ff446bdf42b62966294b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combatSkill: {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
   skills:
   - {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
   - {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
@@ -73595,7 +73578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca19d79c0afc7f49bcc3056d0556d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 213655107}
   slotPrefab: {fileID: 8888275526987601037, guid: b2c9b8d1b9774d74fb0ac4a931a83ad7, type: 3}
   slotParent: {fileID: 1434985213}
   tooltip: {fileID: 1921706856}
