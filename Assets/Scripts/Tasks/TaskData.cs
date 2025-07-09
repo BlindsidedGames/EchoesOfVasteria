@@ -16,6 +16,8 @@ namespace TimelessEchoes.Tasks
         public Skill associatedSkill;
         public float xpForCompletion;
         public float taskDuration;
+        [Tooltip("Interval between repeated SFX plays while the task is active. Zero disables repeats.")]
+        public float sfxInterval;
         public List<ResourceDrop> resourceDrops = new();
 
         [Tooltip("Restart task progress when returning after an interrupt.")]

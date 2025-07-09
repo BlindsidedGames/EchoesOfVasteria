@@ -19,8 +19,11 @@ namespace TimelessEchoes.Tasks
         private bool isComplete;
 
         private float timer;
+        private float sfxTimer;
 
         protected float TaskDuration => taskData != null ? taskData.taskDuration : 0f;
+
+        protected virtual float SfxInterval => taskData != null ? taskData.sfxInterval : 0f;
 
         protected abstract string AnimationName { get; }
         protected abstract string InterruptTriggerName { get; }
@@ -41,6 +44,7 @@ namespace TimelessEchoes.Tasks
         {
             isComplete = false;
             timer = 0f;
+            sfxTimer = 0f;
             HideProgressBar();
         }
 
@@ -62,6 +66,7 @@ namespace TimelessEchoes.Tasks
             }
             var audio = AudioManager.Instance ?? Object.FindFirstObjectByType<AudioManager>();
             audio?.PlayTaskClip(TaskType);
+            sfxTimer = 0f;
 
             hero.Animator.Play(AnimationName);
             ShowProgressBar();
@@ -76,6 +81,16 @@ namespace TimelessEchoes.Tasks
                 delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
             }
             timer += delta;
+            if (!isComplete && SfxInterval > 0f)
+            {
+                sfxTimer += delta;
+                while (sfxTimer >= SfxInterval)
+                {
+                    var audio = AudioManager.Instance ?? Object.FindFirstObjectByType<AudioManager>();
+                    audio?.PlayTaskClip(TaskType);
+                    sfxTimer -= SfxInterval;
+                }
+            }
             UpdateProgressBar();
 
             if (timer >= TaskDuration)
@@ -93,6 +108,7 @@ namespace TimelessEchoes.Tasks
         {
             AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
             HideProgressBar();
+            sfxTimer = 0f;
         }
 
         private void ShowProgressBar()
