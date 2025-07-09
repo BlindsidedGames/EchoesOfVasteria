@@ -41,12 +41,12 @@ namespace TimelessEchoes.Enemies
             var fontSize = isHero ? 6f : 8f;
             if (Application.isPlaying)
             {
-                FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
+                string text = CalcUtils.FormatNumber(amount);
                 if (bonusDamage != 0f)
                 {
-                    ColorUtility.TryParseHtmlString("#60C560", out var green);
-                    FloatingText.Spawn($"+{CalcUtils.FormatNumber(bonusDamage)}", transform.position + Vector3.up * 1.2f, green, fontSize * 0.8f);
+                    text += $" <size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
                 }
+                FloatingText.Spawn(text, transform.position + Vector3.up, colour, fontSize);
             }
             if (isHero)
             {

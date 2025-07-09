@@ -11,7 +11,7 @@ namespace TimelessEchoes
         /// Applies damage to the object.
         /// </summary>
         /// <param name="amount">Base damage dealt.</param>
-        /// <param name="bonusDamage">Additional bonus damage displayed separately.</param>
+        /// <param name="bonusDamage">Additional bonus damage displayed to the right at a smaller size.</param>
         void TakeDamage(float amount, float bonusDamage = 0f);
     }
 }
