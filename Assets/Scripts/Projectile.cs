@@ -22,6 +22,7 @@ namespace TimelessEchoes
 
         private Transform target;
         private float damage;
+        private float bonusDamage;
         private bool fromHero;
         private TimelessEchoes.Skills.Skill combatSkill;
 
@@ -40,10 +41,12 @@ namespace TimelessEchoes
         public void Init(Transform target, float damage,
             bool fromHero = false,
             GameObject hitEffect = null,
-            TimelessEchoes.Skills.Skill combatSkill = null)
+            TimelessEchoes.Skills.Skill combatSkill = null,
+            float bonusDamage = 0f)
         {
             this.target = target;
             this.damage = damage;
+            this.bonusDamage = bonusDamage;
             this.fromHero = fromHero;
             this.combatSkill = combatSkill;
             effectPrefab = hitEffect ?? hitEffectPrefab;
@@ -90,11 +93,12 @@ namespace TimelessEchoes
                 }
 
                 var dmg = target.GetComponent<IDamageable>();
-                dmg?.TakeDamage(dmgAmount);
+                float baseAmount = dmgAmount - bonusDamage;
+                dmg?.TakeDamage(baseAmount, bonusDamage);
                 if (fromHero)
                 {
                     var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-                                   FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                                     FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                     tracker?.AddDamageDealt(dmgAmount);
                 }
                 SpawnEffect();

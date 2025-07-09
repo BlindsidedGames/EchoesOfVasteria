@@ -475,9 +475,12 @@ namespace TimelessEchoes.Hero
                     TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                float dmg = (baseDamage + damageBonus) *
-                            (buffController != null ? buffController.DamageMultiplier : 1f);
-                proj.Init(target, dmg * combatDamageMultiplier * bonus, true, null, combatSkill);
+                float dmgBase = (baseDamage + damageBonus) *
+                                (buffController != null ? buffController.DamageMultiplier : 1f) *
+                                combatDamageMultiplier;
+                float total = dmgBase * bonus;
+                float bonusDamage = total - dmgBase;
+                proj.Init(target, total, true, null, combatSkill, bonusDamage);
             }
         }
 
