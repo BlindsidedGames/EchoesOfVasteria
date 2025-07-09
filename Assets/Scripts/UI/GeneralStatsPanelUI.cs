@@ -17,7 +17,7 @@ namespace TimelessEchoes.UI
                 references = GetComponent<GeneralStatsUIReferences>();
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                Log("GameplayStatTracker missing", TELogCategory.General, this);
         }
 
         private void OnEnable()
@@ -43,7 +43,7 @@ namespace TimelessEchoes.UI
                 var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
                 references.distanceLongestTasksText.text =
-                    $"Distance Travelled: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
             }
 
             if (references.killsDamageDeathsText != null)

@@ -1,6 +1,7 @@
 using System;
 using Blindsided.Utilities;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Stats;
 using UnityEngine;
 
 namespace TimelessEchoes.Enemies
@@ -9,7 +10,7 @@ namespace TimelessEchoes.Enemies
     {
         [SerializeField] private int maxHealth = 10;
         [SerializeField] private SlicedFilledImage healthBar;
-        [SerializeField, Range(0f, 1f)] private float minFillPercent = 0.05f;
+        [SerializeField] [Range(0f, 1f)] private float minFillPercent = 0.05f;
         [SerializeField] private HealthBarSpriteOption[] barSprites;
 
         private void Awake()
@@ -23,12 +24,13 @@ namespace TimelessEchoes.Enemies
         {
             if (CurrentHealth <= 0f) return;
             var hero = GetComponent<HeroController>();
-            float total = amount + bonusDamage;
+            var total = amount + bonusDamage;
             if (hero != null)
             {
-                float min = total * 0.1f;
+                var min = total * 0.1f;
                 total = Mathf.Max(total - hero.Defense, min);
             }
+
             CurrentHealth -= total;
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
@@ -41,19 +43,19 @@ namespace TimelessEchoes.Enemies
             var fontSize = isHero ? 6f : 8f;
             if (Application.isPlaying)
             {
-                string text = CalcUtils.FormatNumber(amount);
+                var text = CalcUtils.FormatNumber(amount);
                 if (bonusDamage != 0f)
-                {
-                    text += $" <size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
-                }
+                    text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
                 FloatingText.Spawn(text, transform.position + Vector3.up, colour, fontSize);
             }
+
             if (isHero)
             {
-                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-                              FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+                var tracker = GameplayStatTracker.Instance ??
+                              FindFirstObjectByType<GameplayStatTracker>();
                 tracker?.AddDamageTaken(total);
             }
+
             if (CurrentHealth <= 0f)
             {
                 OnDeath?.Invoke();
@@ -100,13 +102,13 @@ namespace TimelessEchoes.Enemies
         {
             if (healthBar == null) return;
 
-            float percent = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
+            var percent = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
             healthBar.fillAmount = Mathf.Max(percent, minFillPercent);
 
             if (barSprites != null && barSprites.Length > 0)
             {
-                Sprite chosen = healthBar.sprite;
-                float best = -1f;
+                var chosen = healthBar.sprite;
+                var best = -1f;
                 foreach (var opt in barSprites)
                 {
                     if (opt.sprite == null) continue;
