@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Enemies;
@@ -53,7 +54,8 @@ namespace TimelessEchoes.Quests
                 killTracker.OnKillRegistered += OnKill;
 
             LoadState();
-            OnLoadData += LoadState;
+            StartCoroutine(DelayedProgressUpdate());
+            OnLoadData += OnLoadDataHandler;
         }
 
         private void OnDestroy()
@@ -62,7 +64,7 @@ namespace TimelessEchoes.Quests
                 resourceManager.OnInventoryChanged -= UpdateAllProgress;
             if (killTracker != null)
                 killTracker.OnKillRegistered -= OnKill;
-            OnLoadData -= LoadState;
+            OnLoadData -= OnLoadDataHandler;
         }
 
         private void LoadState()
@@ -246,5 +248,16 @@ namespace TimelessEchoes.Quests
                 UpdateProgress(inst);
             }
         }
-    }
-}
+
+        private void OnLoadDataHandler()
+        {
+            LoadState();
+            StartCoroutine(DelayedProgressUpdate());
+        }
+
+        private IEnumerator DelayedProgressUpdate()
+        {
+            yield return null;
+            UpdateAllProgress();
+        }
+    }}
