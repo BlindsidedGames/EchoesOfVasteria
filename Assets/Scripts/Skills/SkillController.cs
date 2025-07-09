@@ -245,5 +245,19 @@ namespace TimelessEchoes.Skills
 
             return 1f + prog.Level * skill.taskSpeedPerLevel;
         }
+
+        /// <summary>
+        /// Calculates the multiplier applied to resources gained based on the
+        /// combat skill level.
+        /// </summary>
+        /// <returns>The multiplier for resource rewards.</returns>
+        public float GetResourceGainMultiplier()
+        {
+            if (combatSkill == null) return 1f;
+            if (!progress.TryGetValue(combatSkill, out var prog))
+                return 1f;
+
+            return 1f + prog.Level * combatSkill.taskSpeedPerLevel;
+        }
     }
 }

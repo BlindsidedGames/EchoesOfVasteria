@@ -51,11 +51,15 @@ namespace TimelessEchoes.Tasks
                     if (skillController)
                     {
                         int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
-                        count *= mult;
+                        float resourceMult = skillController.GetResourceGainMultiplier();
+                        double amount = count * mult * resourceMult;
+                        resourceManager.Add(drop.resource, amount);
                     }
-                    resourceManager.Add(drop.resource, count);
+                    else
+                    {
+                        resourceManager.Add(drop.resource, count);
+                    }
                 }
             }
         }
-    }
-}
+    }}
