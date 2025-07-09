@@ -2,6 +2,7 @@ using Blindsided.Utilities;
 using TimelessEchoes.Hero;
 using UnityEngine;
 using TimelessEchoes.Utilities;
+using TimelessEchoes.Skills;
 
 namespace TimelessEchoes.Tasks
 {
@@ -60,7 +61,13 @@ namespace TimelessEchoes.Tasks
 
         public override void Tick(HeroController hero)
         {
-            timer += Time.deltaTime;
+            float delta = Time.deltaTime;
+            var controller = SkillController.Instance ?? Object.FindFirstObjectByType<SkillController>();
+            if (controller != null && associatedSkill != null)
+            {
+                delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
+            }
+            timer += delta;
             UpdateProgressBar();
 
             if (timer >= TaskDuration)

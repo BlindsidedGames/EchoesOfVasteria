@@ -236,5 +236,14 @@ namespace TimelessEchoes.Skills
             }
             return total;
         }
+
+        public float GetTaskSpeedMultiplier(Skill skill)
+        {
+            if (skill == null) return 1f;
+            if (!progress.TryGetValue(skill, out var prog))
+                return 1f;
+
+            return 1f + prog.Level * skill.taskSpeedPerLevel;
+        }
     }
 }
