@@ -3,6 +3,7 @@ using TimelessEchoes.Hero;
 using UnityEngine;
 using TimelessEchoes.Utilities;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.Tasks
 {
@@ -23,6 +24,11 @@ namespace TimelessEchoes.Tasks
 
         protected abstract string AnimationName { get; }
         protected abstract string InterruptTriggerName { get; }
+
+        /// <summary>
+        ///     The audio task type associated with this task.
+        /// </summary>
+        protected abstract AudioManager.TaskType TaskType { get; }
 
         public override bool BlocksMovement => true;
 
@@ -54,6 +60,8 @@ namespace TimelessEchoes.Tasks
                 GrantCompletionXP();
                 return;
             }
+            var audio = AudioManager.Instance ?? Object.FindFirstObjectByType<AudioManager>();
+            audio?.PlayTaskClip(TaskType);
 
             hero.Animator.Play(AnimationName);
             ShowProgressBar();

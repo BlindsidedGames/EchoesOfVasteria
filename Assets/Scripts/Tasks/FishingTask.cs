@@ -1,4 +1,5 @@
 using UnityEngine;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.Tasks
 {
@@ -9,5 +10,5 @@ namespace TimelessEchoes.Tasks
 
         protected override string AnimationName => "Fishing";
         protected override string InterruptTriggerName => "CatchFish";
-    }
-}
+        protected override AudioManager.TaskType TaskType => AudioManager.TaskType.Fishing;
+    }}
