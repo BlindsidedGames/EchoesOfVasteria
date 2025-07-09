@@ -1,6 +1,6 @@
+using Blindsided.SaveData;
 using UnityEngine;
 using UnityEngine.Audio;
-using Blindsided.SaveData;
 
 namespace TimelessEchoes.Audio
 {
@@ -16,12 +16,15 @@ namespace TimelessEchoes.Audio
         [Header("Music")] [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioClip musicClip;
 
-        [Header("Task Clips")] [SerializeField] private AudioClip[] woodcuttingClips;
+        [Header("Task Clips")] [SerializeField]
+        private AudioClip[] woodcuttingClips;
+
         [SerializeField] private AudioClip[] farmingClips;
         [SerializeField] private AudioClip[] fishingClips;
         [SerializeField] private AudioClip[] miningClips;
 
-        [Header("Combat Clips")] [SerializeField] private AudioClip[] slimeClips;
+        [Header("Combat Clips")] [SerializeField]
+        private AudioClip[] slimeClips;
 
         public enum TaskType
         {
@@ -36,7 +39,6 @@ namespace TimelessEchoes.Audio
             if (Instance == null)
             {
                 Instance = this;
-                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -102,6 +104,7 @@ namespace TimelessEchoes.Audio
                     clip = GetRandom(miningClips);
                     break;
             }
+
             PlaySfx(clip);
         }
 
@@ -129,7 +132,7 @@ namespace TimelessEchoes.Audio
 
         private static float LinearToDecibel(float value)
         {
-            float v = Mathf.Clamp(value, 0.0001f, 1f);
+            var v = Mathf.Clamp(value, 0.0001f, 1f);
             return Mathf.Log10(v) * 20f;
         }
     }
