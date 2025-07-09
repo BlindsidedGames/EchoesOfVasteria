@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using References.UI;
+using Sirenix.OdinInspector;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Upgrades;
@@ -51,6 +52,7 @@ namespace TimelessEchoes.Regen
 
             OnSaveData += SaveState;
             OnLoadData += LoadState;
+            OnResetData += ResetDonations;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += UpdateAllEntries;
         }
@@ -59,6 +61,7 @@ namespace TimelessEchoes.Regen
         {
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
+            OnResetData -= ResetDonations;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= UpdateAllEntries;
             if (Instance == this)
@@ -213,6 +216,17 @@ namespace TimelessEchoes.Regen
             }
 
             return donations.TryGetValue(res, out var val) ? val : 0;
+        }
+
+        /// <summary>
+        ///     Clears all stored fish donations and updates the UI.
+        /// </summary>
+        [Button]
+        public void ResetDonations()
+        {
+            donations.Clear();
+            SaveState();
+            UpdateAllEntries();
         }
 
         private void SaveState()
