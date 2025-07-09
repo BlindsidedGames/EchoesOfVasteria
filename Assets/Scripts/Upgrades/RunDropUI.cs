@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TimelessEchoes.Upgrades;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Utilities.CalcUtils;
 
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
-    /// Displays resources dropped during the current run.
+    ///     Displays resources dropped during the current run.
     /// </summary>
     public class RunDropUI : MonoBehaviour
     {
@@ -18,24 +18,26 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private Transform slotParent;
         [SerializeField] private TooltipUIReferences tooltip;
         [SerializeField] private GameObject displayObject;
-        [SerializeField] private bool showTooltipOnHover = false;
+        [SerializeField] private bool showTooltipOnHover;
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
         [SerializeField] [Min(1)] private int maxVisibleDrops = 5;
 
         private readonly List<Resource> resources = new();
         private readonly List<ResourceUIReferences> slots = new();
         private readonly Dictionary<Resource, double> amounts = new();
+
         /// <summary>
-        /// Current amounts collected during this run.
+        ///     Current amounts collected during this run.
         /// </summary>
         public IReadOnlyDictionary<Resource, double> Amounts => amounts;
+
         private int selectedIndex = -1;
 
         private void Awake()
         {
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             if (tooltip == null)
                 tooltip = FindFirstObjectByType<TooltipUIReferences>();
             if (slotParent == null)
@@ -102,10 +104,10 @@ namespace TimelessEchoes.Upgrades
             if (resource == null || amount <= 0) return;
 
             ResourceUIReferences slot = null;
-            bool newSlot = false;
-            bool removedSelected = false;
-            int index = resources.IndexOf(resource);
-            bool moved = index > 0;
+            var newSlot = false;
+            var removedSelected = false;
+            var index = resources.IndexOf(resource);
+            var moved = index > 0;
 
             if (index >= 0)
             {
@@ -142,7 +144,7 @@ namespace TimelessEchoes.Upgrades
 
                 if (resources.Count >= maxVisibleDrops)
                 {
-                    int removeIndex = resources.Count - 1;
+                    var removeIndex = resources.Count - 1;
                     resources.RemoveAt(removeIndex);
                     var removedSlot = slots[removeIndex];
                     if (removedSlot != null)
@@ -239,6 +241,7 @@ namespace TimelessEchoes.Upgrades
                 slot.iconImage.sprite = resource ? resource.icon : null;
                 slot.iconImage.enabled = true;
             }
+
             if (slot.questionMarkImage)
                 slot.questionMarkImage.enabled = false;
             if (slot.countText)
@@ -253,7 +256,7 @@ namespace TimelessEchoes.Upgrades
         private void SelectSlot(int index)
         {
             selectedIndex = index;
-            for (int i = 0; i < slots.Count; i++)
+            for (var i = 0; i < slots.Count; i++)
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
             ShowTooltip(selectedIndex);
@@ -268,6 +271,7 @@ namespace TimelessEchoes.Upgrades
                 tooltip.gameObject.SetActive(false);
                 return;
             }
+
             var slot = slots[index];
             var resource = resources[index];
             tooltip.transform.position = slot.transform.position + (Vector3)tooltipOffset;
@@ -275,9 +279,10 @@ namespace TimelessEchoes.Upgrades
                 tooltip.resourceNameText.text = resource ? resource.name : string.Empty;
             if (tooltip.resourceCountText)
             {
-                double count = amounts.TryGetValue(resource, out var val) ? val : 0;
-                tooltip.resourceCountText.text = CalcUtils.FormatNumber(count, true);
+                var count = amounts.TryGetValue(resource, out var val) ? val : 0;
+                tooltip.resourceCountText.text = FormatNumber(count, true);
             }
+
             tooltip.gameObject.SetActive(true);
         }
 
@@ -285,7 +290,8 @@ namespace TimelessEchoes.Upgrades
         {
             yield return null; // wait one frame for layout groups to update
             if (slot != null)
-                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up, Color.white, 8f, transform);
+                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up,
+                    Color.white, 8f, transform);
         }
 
         private IEnumerator DelayedTooltipUpdate()
