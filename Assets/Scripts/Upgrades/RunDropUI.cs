@@ -276,7 +276,7 @@ namespace TimelessEchoes.Upgrades
             if (tooltip.resourceCountText)
             {
                 double count = amounts.TryGetValue(resource, out var val) ? val : 0;
-                tooltip.resourceCountText.text = count.ToString();
+                tooltip.resourceCountText.text = CalcUtils.FormatNumber(count, true);
             }
             tooltip.gameObject.SetActive(true);
         }
