@@ -7,6 +7,7 @@ using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Stats
 {
+    [DefaultExecutionOrder(-1)]
     public class EnemyKillTracker : MonoBehaviour
     {
         public static EnemyKillTracker Instance { get; private set; }

@@ -8,6 +8,7 @@ using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
+    [DefaultExecutionOrder(-1)]
     public class ResourceManager : MonoBehaviour
     {
         public static ResourceManager Instance { get; private set; }

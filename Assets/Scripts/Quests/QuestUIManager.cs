@@ -7,6 +7,7 @@ namespace TimelessEchoes.Quests
     /// <summary>
     ///     Manages quest UI entries.
     /// </summary>
+    [DefaultExecutionOrder(-1)]
     public class QuestUIManager : MonoBehaviour
     {
         public static QuestUIManager Instance { get; private set; }
