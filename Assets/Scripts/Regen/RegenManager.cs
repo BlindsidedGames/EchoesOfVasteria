@@ -167,8 +167,8 @@ namespace TimelessEchoes.Regen
             if (resourceManager == null || res == null) return;
             double amount = Mathf.Floor((float)(resourceManager.GetAmount(res) * pct));
             if (amount <= 0) return;
-            resourceManager.Spend(res, amount);
             AddDonation(res, amount);
+            resourceManager.Spend(res, amount);
             UpdateAllEntries();
         }
 
@@ -177,8 +177,8 @@ namespace TimelessEchoes.Regen
             if (resourceManager == null || res == null) return;
             var amount = resourceManager.GetAmount(res);
             if (amount <= 0) return;
-            resourceManager.Spend(res, amount);
             AddDonation(res, amount);
+            resourceManager.Spend(res, amount);
             UpdateAllEntries();
         }
 
