@@ -18,12 +18,14 @@ MonoBehaviour:
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   xpForCompletion: 5
   taskDuration: 3
+  sfxInterval: 0.7
   resourceDrops:
   - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
     dropRange: {x: 5, y: 20}
     dropChance: 1
     minX: 100
     maxX: Infinity
+  resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
     timeSpent: 0
