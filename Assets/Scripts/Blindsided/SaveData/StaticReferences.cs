@@ -86,6 +86,24 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.UseScaledTimeForValues = value;
         }
 
+        public static float MasterVolume
+        {
+            get => oracle.saveData.SavedPreferences.MasterVolume;
+            set => oracle.saveData.SavedPreferences.MasterVolume = value;
+        }
+
+        public static float MusicVolume
+        {
+            get => oracle.saveData.SavedPreferences.MusicVolume;
+            set => oracle.saveData.SavedPreferences.MusicVolume = value;
+        }
+
+        public static float SfxVolume
+        {
+            get => oracle.saveData.SavedPreferences.SfxVolume;
+            set => oracle.saveData.SavedPreferences.SfxVolume = value;
+        }
+
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
@@ -103,5 +121,4 @@ namespace Blindsided.SaveData
         public static Preferences SavedPreferences => oracle.saveData.SavedPreferences;
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
         public static event Action ShowLevelTextChanged;
-    }
-}
+    }}

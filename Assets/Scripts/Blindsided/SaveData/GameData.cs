@@ -75,6 +75,9 @@ namespace Blindsided.SaveData
             public bool TransparentUi;
             public bool Tutorial;
             public bool UseScaledTimeForValues;
+            public float MasterVolume = 1f;
+            public float MusicVolume = 1f;
+            public float SfxVolume = 1f;
         }
 
         [HideReferenceObjectPicker]
