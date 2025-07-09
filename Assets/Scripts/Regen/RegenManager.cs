@@ -15,6 +15,7 @@ namespace TimelessEchoes.Regen
     /// </summary>
     public class RegenManager : MonoBehaviour
     {
+        public static RegenManager Instance { get; private set; }
         [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI inventoryUI;
         [SerializeField] private List<Resource> fishResources = new();
@@ -27,6 +28,7 @@ namespace TimelessEchoes.Regen
 
         private void Awake()
         {
+            Instance = this;
             if (resourceManager == null)
             {
                 resourceManager = ResourceManager.Instance;
@@ -57,6 +59,8 @@ namespace TimelessEchoes.Regen
             OnLoadData -= LoadState;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= UpdateAllEntries;
+            if (Instance == this)
+                Instance = null;
         }
 
         private void Update()
@@ -189,6 +193,19 @@ namespace TimelessEchoes.Regen
             foreach (var pair in donations)
                 sum += GetRegenFor(pair.Key);
             return sum;
+        }
+
+        public double GetDonationTotal(Resource res = null)
+        {
+            if (res == null)
+            {
+                double sum = 0;
+                foreach (var val in donations.Values)
+                    sum += val;
+                return sum;
+            }
+
+            return donations.TryGetValue(res, out var val) ? val : 0;
         }
 
         private void SaveState()

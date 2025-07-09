@@ -47,10 +47,13 @@ namespace TimelessEchoes.Quests
                     foreach (var req in data.requirements)
                     {
                         var slot = Instantiate(costSlotPrefab, costParent);
-                        slot.resource = req.type == QuestData.RequirementType.Resource ? req.resource : null;
+                        slot.resource = (req.type == QuestData.RequirementType.Resource ||
+                                         req.type == QuestData.RequirementType.Donation)
+                                         ? req.resource : null;
                         if (slot.iconImage != null)
                         {
-                            if (req.type == QuestData.RequirementType.Resource)
+                            if (req.type == QuestData.RequirementType.Resource ||
+                                req.type == QuestData.RequirementType.Donation)
                                 slot.iconImage.sprite = req.resource ? req.resource.icon : null;
                             else if (req.type == QuestData.RequirementType.Kill)
                                 slot.iconImage.sprite = req.killIcon;
@@ -69,5 +72,4 @@ namespace TimelessEchoes.Quests
             if (turnInButton != null)
                 turnInButton.interactable = pct >= 1f;
         }
-    }
-}
+    }}
