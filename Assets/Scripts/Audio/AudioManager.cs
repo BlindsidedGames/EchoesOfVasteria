@@ -1,12 +1,16 @@
 using Blindsided.SaveData;
+using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.Audio;
+using Random = UnityEngine.Random;
+using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Audio
 {
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
+        [SerializeField] private AudioSettingsUI audioSettingsUI;
 
         [Header("Mixers")] [SerializeField] private AudioMixer mainMixer;
         [SerializeField] private AudioMixerGroup musicGroup;
@@ -55,6 +59,12 @@ namespace TimelessEchoes.Audio
             }
 
             ApplyVolumes();
+            OnLoadData += ApplyVolumes;
+        }
+
+        private void OnDestroy()
+        {
+            OnLoadData -= ApplyVolumes;
         }
 
         public void ApplyVolumes()
@@ -63,6 +73,7 @@ namespace TimelessEchoes.Audio
             mainMixer.SetFloat("MasterVolume", LinearToDecibel(StaticReferences.MasterVolume));
             mainMixer.SetFloat("MusicVolume", LinearToDecibel(StaticReferences.MusicVolume));
             mainMixer.SetFloat("SfxVolume", LinearToDecibel(StaticReferences.SfxVolume));
+            audioSettingsUI.SetSliders();
         }
 
         public void SetMasterVolume(float value)
@@ -134,4 +145,5 @@ namespace TimelessEchoes.Audio
             var v = Mathf.Clamp(value, 0.0001f, 1f);
             return Mathf.Log10(v) * 20f;
         }
-    }}
+    }
+}

@@ -1,7 +1,7 @@
-using UnityEngine;
-using UnityEngine.UI;
 using Blindsided.SaveData;
 using TimelessEchoes.Audio;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace TimelessEchoes.UI
 {
@@ -11,14 +11,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
 
-        private AudioManager audioManager;
+        private AudioManager audioManager => AudioManager.Instance;
 
-        private void Awake()
-        {
-            audioManager = Object.FindFirstObjectByType<AudioManager>();
-        }
-
-        private void OnEnable()
+        public void SetSliders()
         {
             if (masterSlider != null)
             {
