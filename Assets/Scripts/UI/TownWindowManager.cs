@@ -27,6 +27,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private WindowReference credits = new();
         [SerializeField] private WindowReference regen = new();
         [SerializeField] private WindowReference inventory = new();
+        [SerializeField] private WindowReference options = new();
 
         [SerializeField]
         private Button startRunButton;
@@ -43,6 +44,8 @@ namespace TimelessEchoes.UI
                 credits.button.onClick.AddListener(OpenCredits);
             if (regen.button != null)
                 regen.button.onClick.AddListener(OpenRegen);
+            if (options.button != null)
+                options.button.onClick.AddListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.AddListener(ToggleInventory);
             if (startRunButton != null)
@@ -61,6 +64,8 @@ namespace TimelessEchoes.UI
                 credits.button.onClick.RemoveListener(OpenCredits);
             if (regen.button != null)
                 regen.button.onClick.RemoveListener(OpenRegen);
+            if (options.button != null)
+                options.button.onClick.RemoveListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.RemoveListener(ToggleInventory);
             if (startRunButton != null)
@@ -78,6 +83,7 @@ namespace TimelessEchoes.UI
         private void OpenQuests() => OpenWindow(quests.window);
         private void OpenCredits() => OpenWindow(credits.window);
         private void OpenRegen() => OpenWindow(regen.window);
+        private void OpenOptions() => OpenWindow(options.window);
         private void ToggleInventory()
         {
             if (inventory.window != null)
@@ -103,6 +109,8 @@ namespace TimelessEchoes.UI
                 credits.window.SetActive(false);
             if (regen.window != null)
                 regen.window.SetActive(false);
+            if (options.window != null)
+                options.window.SetActive(false);
         }
 
         private void CloseAllWindows()
@@ -117,6 +125,8 @@ namespace TimelessEchoes.UI
                 credits.window.SetActive(false);
             if (regen.window != null)
                 regen.window.SetActive(false);
+            if (options.window != null)
+                options.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
         }
