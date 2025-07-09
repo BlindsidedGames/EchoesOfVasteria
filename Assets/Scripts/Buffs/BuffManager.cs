@@ -11,6 +11,7 @@ namespace TimelessEchoes.Buffs
     /// <summary>
     ///     Manages active buffs and persists them across scenes.
     /// </summary>
+    [DefaultExecutionOrder(-1)]
     public class BuffManager : MonoBehaviour
     {
         public static BuffManager Instance { get; private set; }

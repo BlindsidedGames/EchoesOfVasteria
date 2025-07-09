@@ -10,6 +10,7 @@ namespace TimelessEchoes.Skills
     /// <summary>
     /// Handles skill experience and levels.
     /// </summary>
+    [DefaultExecutionOrder(-1)]
     public class SkillController : MonoBehaviour
     {
         public static SkillController Instance { get; private set; }
