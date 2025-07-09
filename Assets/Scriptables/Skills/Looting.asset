@@ -25,11 +25,12 @@ MonoBehaviour:
   skillIcon: {fileID: -7070875390197807606, guid: 1ec0b90faf4188545ba0f1bd405b6df3, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
+  taskSpeedPerLevel: 0.01
   milestones:
   - levelRequirement: 3
     bonusDescription: 
     bonusID: looting3
-    type: 2
+    type: 3
     chance: 0.1
     statUpgrade: {fileID: 0}
     percentBonus: 0

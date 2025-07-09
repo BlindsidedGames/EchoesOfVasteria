@@ -25,11 +25,12 @@ MonoBehaviour:
   skillIcon: {fileID: 3790121961809316798, guid: 61614b6dea4e6254e853eb57bbf5ef3b, type: 3}
   xpForFirstLevel: 10
   xpLevelMultiplier: 1.5
+  taskSpeedPerLevel: 0.01
   milestones:
   - levelRequirement: 2
     bonusDescription: 
     bonusID: fishing2
-    type: 3
+    type: 4
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
     percentBonus: 0
@@ -37,7 +38,7 @@ MonoBehaviour:
   - levelRequirement: 15
     bonusDescription: 
     bonusID: fishing15
-    type: 1
+    type: 2
     chance: 0.12
     statUpgrade: {fileID: 0}
     percentBonus: 0
