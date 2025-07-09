@@ -1,5 +1,4 @@
 using UnityEngine;
-using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.Tasks
 {
@@ -7,7 +6,5 @@ namespace TimelessEchoes.Tasks
     {
         protected override string AnimationName => "Mining";
         protected override string InterruptTriggerName => "StopMining";
-        protected override AudioManager.TaskType TaskType => AudioManager.TaskType.Mining;
 
-        public override Transform Target => transform;
-    }}
+        public override Transform Target => transform;    }}
