@@ -19,16 +19,17 @@ namespace TimelessEchoes.Enemies
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(float amount, float bonusDamage = 0f)
         {
             if (CurrentHealth <= 0f) return;
             var hero = GetComponent<HeroController>();
+            float total = amount + bonusDamage;
             if (hero != null)
             {
-                float min = amount * 0.1f;
-                amount = Mathf.Max(amount - hero.Defense, min);
+                float min = total * 0.1f;
+                total = Mathf.Max(total - hero.Defense, min);
             }
-            CurrentHealth -= amount;
+            CurrentHealth -= total;
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
@@ -41,12 +42,17 @@ namespace TimelessEchoes.Enemies
             if (Application.isPlaying)
             {
                 FloatingText.Spawn(CalcUtils.FormatNumber(amount), transform.position + Vector3.up, colour, fontSize);
+                if (bonusDamage != 0f)
+                {
+                    ColorUtility.TryParseHtmlString("#60C560", out var green);
+                    FloatingText.Spawn($"+{CalcUtils.FormatNumber(bonusDamage)}", transform.position + Vector3.up * 1.2f, green, fontSize * 0.8f);
+                }
             }
             if (isHero)
             {
                 var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
                               FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-                tracker?.AddDamageTaken(amount);
+                tracker?.AddDamageTaken(total);
             }
             if (CurrentHealth <= 0f)
             {
