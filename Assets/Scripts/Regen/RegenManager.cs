@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using References.UI;
-using TimelessEchoes.Upgrades;
-using TimelessEchoes.Hero;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Hero;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -33,14 +33,16 @@ namespace TimelessEchoes.Regen
             {
                 resourceManager = ResourceManager.Instance;
                 if (resourceManager == null)
-                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                    Log("ResourceManager missing", TELogCategory.Resource, this);
             }
+
             if (inventoryUI == null)
             {
                 inventoryUI = ResourceInventoryUI.Instance;
                 if (inventoryUI == null)
-                    TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+                    Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
             }
+
             heroHealth = FindFirstObjectByType<HeroController>()?.GetComponent<Health>();
 
             LoadState();
@@ -67,7 +69,7 @@ namespace TimelessEchoes.Regen
         {
             if (heroHealth == null)
                 return;
-            float regen = (float)GetTotalRegen();
+            var regen = (float)GetTotalRegen();
             if (regen > 0f && heroHealth.CurrentHealth < heroHealth.MaxHealth)
                 heroHealth.Heal(regen * Time.deltaTime);
         }
@@ -90,25 +92,29 @@ namespace TimelessEchoes.Regen
                 {
                     var r = res;
                     entry.costResourceUIReferences.selectButton.onClick.RemoveAllListeners();
-                    entry.costResourceUIReferences.selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
+                    entry.costResourceUIReferences.selectButton.onClick.AddListener(() =>
+                        inventoryUI?.HighlightResource(r));
                 }
+
                 if (entry.donate10PercentButton != null)
                 {
                     var r = res;
                     entry.donate10PercentButton.onClick.AddListener(() => DonatePercentage(r, 0.1f));
                 }
+
                 if (entry.donateAllButton != null)
                 {
                     var r = res;
                     entry.donateAllButton.onClick.AddListener(() => DonateAll(r));
                 }
+
                 entries.Add(entry);
             }
         }
 
         private void UpdateAllEntries()
         {
-            for (int i = 0; i < entries.Count && i < fishResources.Count; i++)
+            for (var i = 0; i < entries.Count && i < fishResources.Count; i++)
                 UpdateEntry(i);
         }
 
@@ -121,9 +127,9 @@ namespace TimelessEchoes.Regen
             var res = fishResources[index];
             if (entry == null || res == null) return;
 
-            bool unlocked = resourceManager && resourceManager.IsUnlocked(res);
-            double playerAmt = resourceManager ? resourceManager.GetAmount(res) : 0;
-            double donated = donations.TryGetValue(res, out var val) ? val : 0;
+            var unlocked = resourceManager && resourceManager.IsUnlocked(res);
+            var playerAmt = resourceManager ? resourceManager.GetAmount(res) : 0;
+            var donated = donations.TryGetValue(res, out var val) ? val : 0;
 
             var costRefs = entry.costResourceUIReferences;
             if (costRefs.iconImage != null)
@@ -131,6 +137,7 @@ namespace TimelessEchoes.Regen
                 costRefs.iconImage.sprite = res.icon;
                 costRefs.iconImage.enabled = unlocked;
             }
+
             if (costRefs.questionMarkImage != null)
                 costRefs.questionMarkImage.enabled = !unlocked;
             if (costRefs.countText != null)
@@ -145,7 +152,7 @@ namespace TimelessEchoes.Regen
             if (entry.regenText != null)
                 entry.regenText.text = $"Granting {GetRegenFor(res):0.###} Regen";
 
-            bool canDonate = playerAmt > 0;
+            var canDonate = playerAmt > 0;
             if (entry.donateAllButton != null)
                 entry.donateAllButton.interactable = canDonate;
             if (entry.donate10PercentButton != null)
@@ -165,7 +172,7 @@ namespace TimelessEchoes.Regen
         private void DonateAll(Resource res)
         {
             if (resourceManager == null || res == null) return;
-            double amount = resourceManager.GetAmount(res);
+            var amount = resourceManager.GetAmount(res);
             if (amount <= 0) return;
             resourceManager.Spend(res, amount);
             AddDonation(res, amount);
@@ -200,8 +207,8 @@ namespace TimelessEchoes.Regen
             if (res == null)
             {
                 double sum = 0;
-                foreach (var val in donations.Values)
-                    sum += val;
+                foreach (var amt in donations.Values)
+                    sum += amt;
                 return sum;
             }
 
@@ -229,6 +236,7 @@ namespace TimelessEchoes.Regen
                 oracle.saveData.FishDonations.TryGetValue(res.name, out var val);
                 donations[res] = val;
             }
+
             UpdateAllEntries();
         }
     }

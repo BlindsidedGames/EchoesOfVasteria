@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using Blindsided.SaveData;
+using Blindsided.Utilities;
+using Pathfinding;
 using References.UI;
+using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
-using TimelessEchoes.MapGeneration;
-using TimelessEchoes.Tasks;
-using TimelessEchoes.Buffs;
-using TimelessEchoes.Upgrades;
+using TimelessEchoes.NPC;
 using TimelessEchoes.Stats;
-using Pathfinding;
+using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Blindsided.Utilities;
-using TimelessEchoes.NPC;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Oracle;
 
 namespace TimelessEchoes
 {
@@ -70,10 +71,10 @@ namespace TimelessEchoes
                 deathReturnButton.onClick.AddListener(OnDeathReturnButton);
             npcObjectStateController = NpcObjectStateController.Instance;
             if (npcObjectStateController == null)
-                TELogger.Log("NpcObjectStateController missing", TELogCategory.General, this);
+                Log("NpcObjectStateController missing", TELogCategory.General, this);
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                Log("GameplayStatTracker missing", TELogCategory.General, this);
         }
 
         private void OnDestroy()
@@ -105,7 +106,7 @@ namespace TimelessEchoes
         {
             if (returnToTavernButton != null)
             {
-                bool active = hero != null && !hero.InCombat;
+                var active = hero != null && !hero.InCombat;
                 returnToTavernButton.interactable = active;
                 if (returnToTavernText != null)
                     returnToTavernText.text = active ? "Return To Town" : "In Combat...";
@@ -113,8 +114,8 @@ namespace TimelessEchoes
                 {
                     if (active)
                     {
-                        int kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        float percent = kills * bonusPercentPerKill;
+                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        var percent = kills * bonusPercentPerKill;
                         retreatBonusText.text = $"+{percent:0}% Resources";
                     }
                     else
@@ -135,13 +136,14 @@ namespace TimelessEchoes
         private void StartRun()
         {
             HideTooltip();
-            TELogger.Log("Run starting", TELogCategory.Run, this);
+            Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
             if (deathWindowCoroutine != null)
             {
                 StopCoroutine(deathWindowCoroutine);
                 deathWindowCoroutine = null;
             }
+
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             StartCoroutine(StartRunRoutine());
@@ -154,8 +156,9 @@ namespace TimelessEchoes
             {
                 statTracker = GameplayStatTracker.Instance;
                 if (statTracker == null)
-                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                    Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
+
             statTracker?.BeginRun();
             runDropUI?.ResetDrops();
             currentMap = Instantiate(mapPrefab);
@@ -232,14 +235,15 @@ namespace TimelessEchoes
                         currentMap.transform);
             }
 
-            TELogger.Log("Hero death", TELogCategory.Hero, this);
+            Log("Hero death", TELogCategory.Hero, this);
 
             if (statTracker == null)
             {
                 statTracker = GameplayStatTracker.Instance;
                 if (statTracker == null)
-                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                    Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
+
             if (statTracker != null)
             {
                 statTracker.AddDeath();
@@ -280,7 +284,7 @@ namespace TimelessEchoes
             }
 
             deathWindow.SetActive(true);
-            float t = 0f;
+            var t = 0f;
             if (deathTimerImage != null)
                 deathTimerImage.fillAmount = 0f;
 
@@ -309,7 +313,7 @@ namespace TimelessEchoes
             {
                 statTracker = GameplayStatTracker.Instance;
                 if (statTracker == null)
-                    TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                    Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
             if (!runEndedByDeath && runDropUI != null)
@@ -317,18 +321,20 @@ namespace TimelessEchoes
                 var manager = ResourceManager.Instance;
                 if (manager == null)
                 {
-                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                    Log("ResourceManager missing", TELogCategory.Resource, this);
                 }
                 else
                 {
                     var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
-                    int kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                    float bonusPercent = kills * bonusPercentPerKill * 0.01f;
+                    var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                    var bonusPercent = kills * bonusPercentPerKill * 0.01f;
                     foreach (var pair in drops)
                         manager.Add(pair.Key, pair.Value * bonusPercent, true);
                 }
+
                 runDropUI.ResetDrops();
             }
+
             statTracker?.EndRun(false);
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
@@ -338,7 +344,7 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
-            TELogger.Log("Returned to tavern", TELogCategory.Run, this);
+            Log("Returned to tavern", TELogCategory.Run, this);
         }
 
         private void CleanupMap()
@@ -370,7 +376,6 @@ namespace TimelessEchoes
                 Destroy(currentMap); // safe to destroy AstarPath now
                 currentMap = null;
             }
-
         }
 
         private static bool QuestCompleted(string questId)
@@ -387,15 +392,13 @@ namespace TimelessEchoes
         {
             if (currentMap == null)
                 return;
-            bool unlocked = QuestCompleted(mildredQuestId);
+            var unlocked = QuestCompleted(mildredQuestId);
             foreach (var t in currentMap.GetComponentsInChildren<Transform>(true))
-            {
                 if (t.gameObject.name == "Mildred")
                 {
                     t.gameObject.SetActive(unlocked);
                     break;
                 }
-            }
         }
     }
 }

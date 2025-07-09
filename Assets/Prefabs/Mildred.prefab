@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5543290634905343579}
   - component: {fileID: 7664923071667762100}
   - component: {fileID: 8427596535389273134}
+  - component: {fileID: 4002481538927657160}
   m_Layer: 0
   m_Name: Mildred
   m_TagString: Untagged
@@ -85,7 +86,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 1.5
+  endReachedDistance: 2
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
@@ -105,7 +106,7 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 2
+  slowdownDistance: 3
   pickNextWaypointDist: 2
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
@@ -153,6 +154,20 @@ MonoBehaviour:
   wallAvoidFalloff: 1
   priority: 0.5
   debug: 0
+--- !u!114 &4002481538927657160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5229451111164685125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc5a3bf2e033a44c94b535aabdb2f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 8023515206360856726}
+  hero: {fileID: 0}
 --- !u!1 &6541737542204284188
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +195,7 @@ Transform:
   m_GameObject: {fileID: 6541737542204284188}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.855, z: 0}
+  m_LocalPosition: {x: 0, y: 0.141, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -230,12 +245,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -378702730655826642, guid: d3a6a2d279167054d9dd447c3e1a1310, type: 3}
+  m_Sprite: {fileID: 1193388014642147033, guid: 25ef1ac5460127245ba57c1cabe4e71b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.0625, y: 0.8125}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

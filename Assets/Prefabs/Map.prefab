@@ -759,13 +759,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 96535219610779326}
   - {fileID: 5444008163872702271}
   - {fileID: 5108663898531495662}
   - {fileID: 1262342937608273452}
   - {fileID: 852210360776393495}
   - {fileID: 2555989486585052269}
   - {fileID: 508231011876975185}
-  - {fileID: 96535219610779326}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7826604082536721059
@@ -1150,9 +1150,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4002481538927657160, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
+      propertyPath: hero
+      value: 
+      objectReference: {fileID: 2410021182923110199}
     - target: {fileID: 5229451111164685125, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
       propertyPath: m_Name
       value: Mildred
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229451111164685125, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7664923071667762100, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
       propertyPath: target
