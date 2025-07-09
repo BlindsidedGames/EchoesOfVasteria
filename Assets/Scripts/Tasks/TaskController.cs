@@ -282,10 +282,22 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                Log($"Starting task: {currentTaskName}", TELogCategory.Task, this);
                 hero?.SetTask(task);
-                task.StartTask();
-                taskStartTimes[task] = Time.time;
+                bool restart = false;
+                if (task is BaseTask baseTask && baseTask.taskData != null)
+                    restart = baseTask.taskData.resetProgressOnInterrupt;
+
+                if (!taskStartTimes.ContainsKey(task) || restart)
+                {
+                    var msg = taskStartTimes.ContainsKey(task) ? "Restarting" : "Starting";
+                    Log($"{msg} task: {currentTaskName}", TELogCategory.Task, this);
+                    task.StartTask();
+                    taskStartTimes[task] = Time.time;
+                }
+                else
+                {
+                    Log($"Resuming task: {currentTaskName}", TELogCategory.Task, this);
+                }
                 return;
             }
 

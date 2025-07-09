@@ -18,6 +18,9 @@ namespace TimelessEchoes.Tasks
         public float taskDuration;
         public List<ResourceDrop> resourceDrops = new();
 
+        [Tooltip("Restart task progress when returning after an interrupt.")]
+        public bool resetProgressOnInterrupt;
+
         [System.Serializable]
         public class Persistent
         {
