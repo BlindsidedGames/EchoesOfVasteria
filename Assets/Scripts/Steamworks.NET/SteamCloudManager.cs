@@ -53,6 +53,26 @@ namespace TimelessEchoes
             File.WriteAllBytes(path, buffer);
             return true;
         }
+
+        /// <summary>
+        /// Deletes a save file from both Steam Cloud and local storage.
+        /// </summary>
+        public static void DeleteFile(string fileName)
+        {
+            var path = Path.Combine(Application.persistentDataPath, fileName);
+            if (File.Exists(path))
+                File.Delete(path);
+
+            var backupPath = path + ".bac";
+            if (File.Exists(backupPath))
+                File.Delete(backupPath);
+
+            if (!SteamManager.Initialized)
+                return;
+
+            if (SteamRemoteStorage.FileExists(fileName))
+                SteamRemoteStorage.FileDelete(fileName);
+        }
 #endif
     }
 }

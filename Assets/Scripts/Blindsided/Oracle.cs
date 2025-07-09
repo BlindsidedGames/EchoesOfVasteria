@@ -127,6 +127,16 @@ namespace Blindsided
 
         [TabGroup("SaveData", "Buttons")]
         [Button]
+        public void WipeCloudData()
+        {
+            EventHandler.ResetData();
+            saveData = new GameData();
+            SteamCloudManager.DeleteFile(_fileName);
+            SceneManager.LoadScene(0);
+        }
+
+        [TabGroup("SaveData", "Buttons")]
+        [Button]
         public void LoadFromClipboard()
         {
             var bytes = beta
