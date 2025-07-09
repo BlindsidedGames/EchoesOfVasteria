@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Blindsided.SaveData;
+using TimelessEchoes;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace Blindsided
             {
                 bufferSize = 8192
             };
+            SteamCloudManager.DownloadFile(_fileName); // ensure local cache is up-to-date
             ES3.CacheFile(_fileName); // pull existing save into RAM
         }
 
@@ -161,6 +163,7 @@ namespace Blindsided
         private void FlushToDisk()
         {
             ES3.StoreCachedFile(_fileName); // RAM ➜ file
+            SteamCloudManager.UploadFile(_fileName); // push to Steam Cloud
             _lastFlush = Time.unscaledTime;
         }
 
