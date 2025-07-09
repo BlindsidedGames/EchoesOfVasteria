@@ -120,8 +120,7 @@ namespace TimelessEchoes.Audio
 
         private void PlaySfx(AudioClip clip)
         {
-            if (clip == null) return;
-            AudioSource.PlayClipAtPoint(clip, Vector3.zero, StaticReferences.SfxVolume);
+            SfxPlayer.PlaySfx(clip);
         }
 
         private static AudioClip GetRandom(AudioClip[] clips)
@@ -135,5 +134,4 @@ namespace TimelessEchoes.Audio
             var v = Mathf.Clamp(value, 0.0001f, 1f);
             return Mathf.Log10(v) * 20f;
         }
-    }
-}
+    }}
