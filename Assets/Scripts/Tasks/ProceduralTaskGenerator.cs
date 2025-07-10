@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Blindsided.SaveData;
 using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles;
@@ -654,7 +655,7 @@ namespace TimelessEchoes.Tasks
                     if (baseTask != null)
                     {
                         var data = baseTask.taskData;
-                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                        if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                             continue;
                     }
                 }
@@ -677,7 +678,7 @@ namespace TimelessEchoes.Tasks
                     if (baseTask != null)
                     {
                         var data = baseTask.taskData;
-                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                        if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                             continue;
                     }
                 }
@@ -743,7 +744,7 @@ namespace TimelessEchoes.Tasks
                     if (baseTask != null)
                     {
                         var data = baseTask.taskData;
-                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                        if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                             continue;
                     }
                 }
@@ -780,7 +781,7 @@ namespace TimelessEchoes.Tasks
                         if (baseTask != null)
                         {
                             var data = baseTask.taskData;
-                            if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                            if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                                 continue;
                         }
                     }
