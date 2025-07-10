@@ -79,5 +79,29 @@ namespace TimelessEchoes.Tests
             Assert.AreEqual(sprite2, bar.sprite);
             Object.DestroyImmediate(barObj);
         }
+
+        [Test]
+        public void DefenseReducesDamage()
+        {
+            var hero = obj.AddComponent<Hero.HeroController>();
+            var field = typeof(Hero.HeroController).GetField("baseDefense", BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(hero, 2f);
+
+            health.TakeDamage(5f);
+
+            Assert.AreEqual(7f, health.CurrentHealth);
+        }
+
+        [Test]
+        public void DamageHasMinimumValue()
+        {
+            var hero = obj.AddComponent<Hero.HeroController>();
+            var field = typeof(Hero.HeroController).GetField("baseDefense", BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(hero, 100f);
+
+            health.TakeDamage(10f);
+
+            Assert.AreEqual(9f, health.CurrentHealth);
+        }
     }
 }
