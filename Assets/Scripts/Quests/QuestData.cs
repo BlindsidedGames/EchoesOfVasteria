@@ -17,8 +17,8 @@ namespace TimelessEchoes.Quests
         [TextArea] public string description;
         [TextArea] public string rewardDescription;
         public string npcId;
+        public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
-        public QuestData nextQuest;
         public GameObject unlockPrefab;
         public List<GameObject> unlockObjects = new();
 

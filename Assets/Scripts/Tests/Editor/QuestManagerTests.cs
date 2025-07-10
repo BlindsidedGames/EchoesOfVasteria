@@ -63,14 +63,14 @@ namespace TimelessEchoes.Tests
         }
 
         [Test]
-        public void LoadState_StartsNextQuestWhenCompleted()
+        public void LoadState_StartsQuestWithCompletedPrerequisite()
         {
             var next = ScriptableObject.CreateInstance<QuestData>();
             next.questId = "Q2";
-            quest.nextQuest = next;
+            next.requiredQuests.Add(quest);
 
             typeof(QuestManager).GetField("startingQuests", BindingFlags.NonPublic | BindingFlags.Instance)
-                .SetValue(manager, new List<QuestData> { quest });
+                .SetValue(manager, new List<QuestData> { quest, next });
 
             oracle.saveData.Quests["Q1"] = new GameData.QuestRecord { Completed = true };
 

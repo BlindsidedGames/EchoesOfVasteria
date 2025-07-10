@@ -15,6 +15,7 @@ namespace TimelessEchoes.Tasks
         public Sprite taskIcon;
         public Skill associatedSkill;
         public float xpForCompletion;
+        public string requiredQuestId;
         public float taskDuration;
         [Tooltip("Interval between repeated SFX plays while the task is active. Zero disables repeats.")]
         public float sfxInterval;
