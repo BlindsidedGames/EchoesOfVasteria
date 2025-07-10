@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.Utilities.Pooling;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes
 {
@@ -101,6 +102,8 @@ namespace TimelessEchoes
                                      FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                     tracker?.AddDamageDealt(dmgAmount);
                 }
+                var sfx = GetComponent<ProjectileHitSfx>();
+                sfx?.PlayHit();
                 SpawnEffect();
                 Destroy(gameObject);
                 return;
