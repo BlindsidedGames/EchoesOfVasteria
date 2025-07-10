@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using References.UI;
+using TMPro;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,18 +17,42 @@ namespace TimelessEchoes.Buffs
         private BuffManager buffManager;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
-        [SerializeField] private BuffIconUIReferences activeBuffPrefab;
-        [SerializeField] private Transform activeBuffParent;
         [SerializeField] private Button openPurchaseButton;
         [SerializeField] private GameObject buffPurchaseWindow;
 
-        private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
-        private readonly List<ActiveIconEntry> iconEntries = new();
+        [Header("Slot UI References")]
+        [SerializeField] private GameObject slotAssignWindow;
+        [SerializeField] private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
+        [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
 
-        private class ActiveIconEntry
+        private BuffRecipe selectedRecipe;
+
+        private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
+        private void RefreshSlots()
         {
-            public BuffManager.ActiveBuff buff;
-            public BuffIconUIReferences refs;
+            if (buffManager == null) return;
+
+            for (var i = 0; i < assignSlotButtons.Length; i++)
+            {
+                var recipe = buffManager.GetAssigned(i);
+                var ui = assignSlotButtons[i];
+                if (ui != null && ui.iconImage != null)
+                    ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
+            }
+
+            for (var i = 0; i < runSlotButtons.Length; i++)
+            {
+                var recipe = buffManager.GetAssigned(i);
+                var ui = runSlotButtons[i];
+                if (ui == null) continue;
+                if (ui.iconImage != null)
+                    ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
+                if (ui.durationText != null)
+                {
+                    var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
+                    ui.durationText.text = remain > 0f ? Mathf.Ceil(remain).ToString() : string.Empty;
+                }
+            }
         }
 
         private void Awake()
@@ -51,14 +76,30 @@ namespace TimelessEchoes.Buffs
 
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(false);
+            if (slotAssignWindow != null)
+                slotAssignWindow.SetActive(false);
 
             if (openPurchaseButton != null)
                 openPurchaseButton.onClick.AddListener(OpenPurchaseWindow);
+
+            for (var i = 0; i < assignSlotButtons.Length; i++)
+            {
+                var index = i;
+                if (assignSlotButtons[i] != null && assignSlotButtons[i].activateButton != null)
+                    assignSlotButtons[i].activateButton.onClick.AddListener(() => OnAssignSlot(index));
+            }
+
+            for (var i = 0; i < runSlotButtons.Length; i++)
+            {
+                var index = i;
+                if (runSlotButtons[i] != null && runSlotButtons[i].activateButton != null)
+                    runSlotButtons[i].activateButton.onClick.AddListener(() => OnRunSlot(index));
+            }
         }
 
         private void OnEnable()
         {
-            UpdateActiveIcons();
+            RefreshSlots();
             OnInventoryChanged();
         }
 
@@ -67,26 +108,19 @@ namespace TimelessEchoes.Buffs
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChanged;
             OnLoadData -= OnLoadDataHandler;
+
+            for (var i = 0; i < assignSlotButtons.Length; i++)
+                if (assignSlotButtons[i] != null && assignSlotButtons[i].activateButton != null)
+                    assignSlotButtons[i].activateButton.onClick.RemoveAllListeners();
+
+            for (var i = 0; i < runSlotButtons.Length; i++)
+                if (runSlotButtons[i] != null && runSlotButtons[i].activateButton != null)
+                    runSlotButtons[i].activateButton.onClick.RemoveAllListeners();
         }
 
         private void Update()
         {
-            for (var i = iconEntries.Count - 1; i >= 0; i--)
-            {
-                var entry = iconEntries[i];
-                if (entry.buff.remaining <= 0f)
-                {
-                    Destroy(entry.refs.gameObject);
-                    iconEntries.RemoveAt(i);
-                    continue;
-                }
-
-                if (entry.refs.durationText != null)
-                    entry.refs.durationText.text = Mathf.Ceil(entry.buff.remaining).ToString();
-            }
-
-            if (iconEntries.Count == 0 && activeBuffParent != null)
-                activeBuffParent.gameObject.SetActive(false);
+            RefreshSlots();
 
             foreach (var pair in recipeEntries)
             {
@@ -185,54 +219,40 @@ namespace TimelessEchoes.Buffs
 
         private IEnumerator DeferredRefresh()
         {
-            // Wait one frame so BuffManager.LoadState has time to repopulate ActiveBuffs
             yield return null;
-            UpdateActiveIcons();
+            RefreshSlots();
             OnInventoryChanged();
         }
 
         private void PurchaseBuff(BuffRecipe recipe)
         {
-            if (buffManager != null && buffManager.PurchaseBuff(recipe))
-                UpdateActiveIcons();
+            selectedRecipe = recipe;
+            if (slotAssignWindow != null)
+                slotAssignWindow.SetActive(true);
         }
 
-        private void UpdateActiveIcons()
+        private void OnAssignSlot(int slot)
         {
-            foreach (var entry in iconEntries)
-                if (entry.refs != null)
-                    Destroy(entry.refs.gameObject);
-            iconEntries.Clear();
-
-            var manager = buffManager;
-
-            if (activeBuffParent != null)
-            {
-                var hasBuffs = manager != null && manager.ActiveBuffs.Count > 0;
-                activeBuffParent.gameObject.SetActive(hasBuffs);
-                if (!hasBuffs || activeBuffPrefab == null || manager == null)
-                    return;
-            }
-            else if (activeBuffPrefab == null || manager == null)
-            {
-                return;
-            }
-
-            foreach (var buff in manager.ActiveBuffs)
-            {
-                var obj = Instantiate(activeBuffPrefab, activeBuffParent);
-                if (obj.iconImage != null)
-                    obj.iconImage.sprite = buff.recipe.buffIcon;
-                if (obj.durationText != null)
-                    obj.durationText.text = Mathf.Ceil(buff.remaining).ToString();
-                iconEntries.Add(new ActiveIconEntry { buff = buff, refs = obj });
-            }
+            if (selectedRecipe != null)
+                buffManager?.AssignBuff(slot, selectedRecipe);
+            if (slotAssignWindow != null)
+                slotAssignWindow.SetActive(false);
+            RefreshSlots();
         }
+
+        private void OnRunSlot(int slot)
+        {
+            buffManager?.ActivateSlot(slot);
+            RefreshSlots();
+        }
+        
 
         private void OpenPurchaseWindow()
         {
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(true);
+            if (slotAssignWindow != null)
+                slotAssignWindow.SetActive(false);
         }
     }
 }
