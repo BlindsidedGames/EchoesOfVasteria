@@ -72,14 +72,7 @@ namespace TimelessEchoes.Quests
             if (oracle == null) return;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
             active.Clear();
-            foreach (var q in startingQuests)
-            {
-                if (q == null) continue;
-                if (string.IsNullOrEmpty(q.npcId) || StaticReferences.CompletedNpcTasks.Contains(q.npcId))
-                    TryStartQuest(q);
-            }
-            foreach (var q in startingQuests)
-                StartNextIfCompleted(q);
+            StartAvailableQuests();
             RefreshNoticeboard();
         }
 
@@ -117,6 +110,30 @@ namespace TimelessEchoes.Quests
         {
             foreach (var inst in active.Values)
                 UpdateProgress(inst);
+        }
+
+        private bool AreRequirementsMet(QuestData quest)
+        {
+            if (quest == null)
+                return false;
+            foreach (var req in quest.requiredQuests)
+            {
+                if (req == null) continue;
+                if (!oracle.saveData.Quests.TryGetValue(req.questId, out var rec) || !rec.Completed)
+                    return false;
+            }
+            return true;
+        }
+
+        private void StartAvailableQuests()
+        {
+            foreach (var q in startingQuests)
+            {
+                if (q == null) continue;
+                if (!string.IsNullOrEmpty(q.npcId) && !StaticReferences.CompletedNpcTasks.Contains(q.npcId))
+                    continue;
+                TryStartQuest(q);
+            }
         }
 
         private void UpdateProgress(QuestInstance inst)
@@ -190,8 +207,7 @@ namespace TimelessEchoes.Quests
             if (inst.ui != null)
                 uiManager?.RemoveEntry(inst.ui);
             active.Remove(id);
-            if (inst.data.nextQuest != null)
-                TryStartQuest(inst.data.nextQuest);
+            StartAvailableQuests();
 
             RefreshNoticeboard();
             TELogger.Log($"Quest {id} completed", TELogCategory.Quest, this);
@@ -204,12 +220,7 @@ namespace TimelessEchoes.Quests
         public void OnNpcMet(string id)
         {
             if (string.IsNullOrEmpty(id)) return;
-            foreach (var q in startingQuests)
-            {
-                if (q == null) continue;
-                if (q.npcId == id)
-                    TryStartQuest(q);
-            }
+            StartAvailableQuests();
             var achievementManager = AchievementManager.Instance;
             achievementManager?.NotifyNpcMet(id);
             RefreshNoticeboard();
@@ -219,6 +230,10 @@ namespace TimelessEchoes.Quests
         {
             if (quest == null) return;
             if (!string.IsNullOrEmpty(quest.npcId) && !StaticReferences.CompletedNpcTasks.Contains(quest.npcId))
+                return;
+            if (!AreRequirementsMet(quest))
+                return;
+            if (active.ContainsKey(quest.questId))
                 return;
             if (oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed)
                 return;
@@ -258,24 +273,6 @@ namespace TimelessEchoes.Quests
             }
         }
 
-        private void StartNextIfCompleted(QuestData quest)
-        {
-            if (quest == null || quest.nextQuest == null)
-                return;
-
-            if (oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed)
-            {
-                var next = quest.nextQuest;
-                if (!oracle.saveData.Quests.TryGetValue(next.questId, out var nextRec) || !nextRec.Completed)
-                {
-                    if (!active.ContainsKey(next.questId))
-                        TryStartQuest(next);
-                }
-
-                // recursively process the chain in case multiple quests were completed
-                StartNextIfCompleted(next);
-            }
-        }
 
         private void OnLoadDataHandler()
         {

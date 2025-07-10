@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles;
 using Random = UnityEngine.Random;
+using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Tasks
 {
@@ -619,6 +620,16 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        private static bool QuestCompleted(string questId)
+        {
+            if (string.IsNullOrEmpty(questId))
+                return true;
+            if (oracle == null)
+                return false;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
+        }
+
         private bool TaskAllowed(WeightedSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
         {
             var specific = spawn.spawnOnWater || spawn.spawnOnSand || spawn.spawnOnGrass;
@@ -637,6 +648,16 @@ namespace TimelessEchoes.Tasks
                     continue;
                 if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
+                if (t.prefab != null)
+                {
+                    var baseTask = t.prefab.GetComponent<BaseTask>();
+                    if (baseTask != null)
+                    {
+                        var data = baseTask.taskData;
+                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                            continue;
+                    }
+                }
                 taskTotalWeight += t.GetWeight(worldX);
             }
 
@@ -650,6 +671,16 @@ namespace TimelessEchoes.Tasks
                     continue;
                 if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
+                if (t.prefab != null)
+                {
+                    var baseTask = t.prefab.GetComponent<BaseTask>();
+                    if (baseTask != null)
+                    {
+                        var data = baseTask.taskData;
+                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                            continue;
+                    }
+                }
                 r -= t.GetWeight(worldX);
                 if (r > 0f) continue;
                 var isWater = t.spawnOnWater && allowWaterTasks;
@@ -706,6 +737,16 @@ namespace TimelessEchoes.Tasks
                 if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
                     !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
+                if (t.prefab != null)
+                {
+                    var baseTask = t.prefab.GetComponent<BaseTask>();
+                    if (baseTask != null)
+                    {
+                        var data = baseTask.taskData;
+                        if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                            continue;
+                    }
+                }
                 taskTotalWeight += t.GetWeight(worldX);
             }
 
@@ -733,6 +774,16 @@ namespace TimelessEchoes.Tasks
                     if (t.prefab != null && t.prefab.GetComponent<FarmingTask>() != null &&
                         !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                         continue;
+                    if (t.prefab != null)
+                    {
+                        var baseTask = t.prefab.GetComponent<BaseTask>();
+                        if (baseTask != null)
+                        {
+                            var data = baseTask.taskData;
+                            if (data != null && !string.IsNullOrEmpty(data.requiredQuestId) && !QuestCompleted(data.requiredQuestId))
+                                continue;
+                        }
+                    }
                     r -= t.GetWeight(worldX);
                     if (r > 0f) continue;
                     var isWater = t.spawnOnWater && allowWaterTasks;
