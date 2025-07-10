@@ -61,6 +61,28 @@ namespace TimelessEchoes.Tests
             var dict = (System.Collections.IDictionary)field.GetValue(manager);
             Assert.IsTrue(dict.Contains("Q1"));
         }
+
+        [Test]
+        public void LoadState_StartsNextQuestWhenCompleted()
+        {
+            var next = ScriptableObject.CreateInstance<QuestData>();
+            next.questId = "Q2";
+            quest.nextQuest = next;
+
+            typeof(QuestManager).GetField("startingQuests", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(manager, new List<QuestData> { quest });
+
+            oracle.saveData.Quests["Q1"] = new GameData.QuestRecord { Completed = true };
+
+            var method = typeof(QuestManager).GetMethod("LoadState", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(manager, null);
+
+            var field = typeof(QuestManager).GetField("active", BindingFlags.NonPublic | BindingFlags.Instance);
+            var dict = (System.Collections.IDictionary)field.GetValue(manager);
+            Assert.IsTrue(dict.Contains("Q2"));
+
+            Object.DestroyImmediate(next);
+        }
     }
 }
 
