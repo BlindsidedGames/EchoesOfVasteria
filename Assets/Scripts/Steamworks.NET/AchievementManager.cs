@@ -63,6 +63,10 @@ namespace TimelessEchoes
             {
                 UnlockAchievement("MeetIvan");
             }
+            else if (npcId == "Witch1")
+            {
+                UnlockAchievement("MeetEva");
+            }
         }
 
         /// <summary>

@@ -57,6 +57,7 @@ Use **File > Build Settings...** to create standalone builds.
 ## Steam Achievements
 Achievements are managed through the `AchievementManager` component which uses
 Steamworks.NET. Meeting the NPC with id `Ivan1` awards the `MeetIvan` Steam
+achievement, while meeting the NPC with id `Witch1` unlocks the `MeetEva`
 achievement.
 Engaging five slimes at once unlocks the `SlimeSwarm` achievement.
 
