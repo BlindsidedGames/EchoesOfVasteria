@@ -64,6 +64,14 @@ namespace TimelessEchoes
                 UnlockAchievement("MeetIvan");
             }
         }
+
+        /// <summary>
+        /// Awards the SlimeSwarm achievement.
+        /// </summary>
+        public void UnlockSlimeSwarm()
+        {
+            UnlockAchievement("SlimeSwarm");
+        }
 #else
         public static AchievementManager Instance => null;
 #endif
