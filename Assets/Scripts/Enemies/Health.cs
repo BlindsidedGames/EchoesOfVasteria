@@ -24,11 +24,12 @@ namespace TimelessEchoes.Enemies
         {
             if (CurrentHealth <= 0f) return;
             var hero = GetComponent<HeroController>();
-            var total = amount + bonusDamage;
+            var full = amount + bonusDamage;
+            var total = full;
             if (hero != null)
             {
-                var min = total * 0.1f;
-                total = Mathf.Max(total - hero.Defense, min);
+                var min = full * 0.1f;
+                total = Mathf.Max(full - hero.Defense, min);
             }
 
             CurrentHealth -= total;
@@ -43,7 +44,7 @@ namespace TimelessEchoes.Enemies
             var fontSize = isHero ? 6f : 8f;
             if (Application.isPlaying)
             {
-                var text = CalcUtils.FormatNumber(amount);
+                var text = CalcUtils.FormatNumber(total);
                 if (bonusDamage != 0f)
                     text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
                 FloatingText.Spawn(text, transform.position + Vector3.up, colour, fontSize);
