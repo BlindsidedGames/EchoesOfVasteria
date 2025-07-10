@@ -39,6 +39,7 @@ namespace Blindsided
             };
             SteamCloudManager.DownloadFile(_fileName); // ensure local cache is up-to-date
             ES3.CacheFile(_fileName); // pull existing save into RAM
+            wipeInProgress = false;
         }
 
         #endregion
@@ -59,6 +60,7 @@ namespace Blindsided
 
         private ES3Settings _settings;
         private bool loaded;
+        private bool wipeInProgress;
 
         private float _lastFlush;
         private const float FlushInterval = 120f; // disk write every 2 min
@@ -88,7 +90,7 @@ namespace Blindsided
         private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
-            if (Application.isPlaying)
+            if (Application.isPlaying && !wipeInProgress)
             {
                 SaveToCache(); // write the latest state into the cache
                 ES3.StoreCachedFile(_fileName); // copy RAM ➜ disk immediately
@@ -119,6 +121,7 @@ namespace Blindsided
         [Button]
         public void WipeAllData()
         {
+            wipeInProgress = true;
             EventHandler.ResetData();
             saveData = new GameData();
             FlushToDisk();
@@ -129,6 +132,7 @@ namespace Blindsided
         [Button]
         public void WipeCloudData()
         {
+            wipeInProgress = true;
             EventHandler.ResetData();
             saveData = new GameData();
             ES3.DeleteFile(_settings); // clear cached copy
