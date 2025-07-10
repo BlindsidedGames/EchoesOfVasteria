@@ -8,6 +8,8 @@ namespace TimelessEchoes.Audio
     {
         private static AudioSource _source;
         private static AudioMixerGroup _mixerGroup;
+        private static AudioClip _lastClip;
+        private static float _lastPlay;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
@@ -33,6 +35,11 @@ namespace TimelessEchoes.Audio
         public static void PlaySfx(AudioClip clip)
         {
             if (clip == null || _source == null) return;
+            float t = Time.unscaledTime;
+            if (clip == _lastClip && t - _lastPlay <= 0.05f)
+                return;
+            _lastClip = clip;
+            _lastPlay = t;
             _source.PlayOneShot(clip, StaticReferences.SfxVolume);
         }
     }
