@@ -23,7 +23,7 @@ namespace Blindsided.SaveData
         public float TimeScale = 0f;
         [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
         [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
-        [HideReferenceObjectPicker] public Dictionary<string, float> ActiveBuffs = new();
+        [HideReferenceObjectPicker] public List<string> BuffSlots = new(new string[5]);
         [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();

@@ -24,6 +24,7 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private List<BuffRecipe> allRecipes = new();
 
         private readonly List<ActiveBuff> activeBuffs = new();
+        private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
@@ -45,22 +46,17 @@ namespace TimelessEchoes.Buffs
             if (resourceManager == null)
                 TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
 
-            LoadState();
-            OnSaveData += SaveState;
-            OnLoadData += LoadState;
+            LoadSlots();
+            OnLoadData += LoadSlots;
         }
 
-        private void Start()
-        {
-            LoadState();
-        }
+        private void Start() {}
 
         private void OnDestroy()
         {
             if (Instance == this)
                 Instance = null;
-            OnSaveData -= SaveState;
-            OnLoadData -= LoadState;
+            OnLoadData -= LoadSlots;
         }
 
         /// <summary>
@@ -88,7 +84,6 @@ namespace TimelessEchoes.Buffs
         private void TickBuffs(float delta)
         {
             if (delta <= 0f) return;
-            oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
             for (var i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 var buff = activeBuffs[i];
@@ -97,13 +92,7 @@ namespace TimelessEchoes.Buffs
                 {
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
-                        oracle.saveData.ActiveBuffs.Remove(buff.recipe.name);
-                    if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
-                }
-                else if (buff.recipe != null)
-                {
-                    oracle.saveData.ActiveBuffs[buff.recipe.name] = buff.remaining;
                 }
             }
         }
@@ -140,10 +129,6 @@ namespace TimelessEchoes.Buffs
                 buff.remaining += extra;
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
-
-            oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
-            if (recipe != null)
-                oracle.saveData.ActiveBuffs[recipe.name] = buff.remaining;
 
             return true;
         }
@@ -198,33 +183,64 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        private void SaveState()
+        private void LoadSlots()
         {
             if (oracle == null) return;
-            var dict = new Dictionary<string, float>();
-            foreach (var buff in activeBuffs)
-                if (buff.recipe != null && buff.remaining > 0f)
-                    dict[buff.recipe.name] = buff.remaining;
-            oracle.saveData.ActiveBuffs = dict;
-        }
-
-        private void LoadState()
-        {
-            if (oracle == null) return;
-            oracle.saveData.ActiveBuffs ??= new Dictionary<string, float>();
-            activeBuffs.Clear();
-
-            IEnumerable<BuffRecipe> recipes = allRecipes?.Count > 0
-                ? allRecipes
-                : Resources.LoadAll<BuffRecipe>("");
-
-            foreach (var recipe in recipes)
+            oracle.saveData.BuffSlots ??= new List<string>(new string[5]);
+            for (var i = 0; i < slotAssignments.Count; i++)
             {
-                if (recipe == null) continue;
-                if (oracle.saveData.ActiveBuffs.TryGetValue(recipe.name, out var remain) && remain > 0f)
-                    activeBuffs.Add(new ActiveBuff { recipe = recipe, remaining = remain });
+                var name = oracle.saveData.BuffSlots[i];
+                slotAssignments[i] = null;
+                if (string.IsNullOrEmpty(name)) continue;
+                foreach (var rec in Recipes)
+                    if (rec != null && rec.name == name)
+                    {
+                        slotAssignments[i] = rec;
+                        break;
+                    }
             }
         }
+
+        public void AssignBuff(int slot, BuffRecipe recipe)
+        {
+            if (slot < 0 || slot >= slotAssignments.Count) return;
+
+            if (recipe != null)
+            {
+                for (var i = 0; i < slotAssignments.Count; i++)
+                {
+                    if (slotAssignments[i] == recipe)
+                    {
+                        slotAssignments[i] = null;
+                        if (oracle != null && oracle.saveData.BuffSlots != null)
+                            oracle.saveData.BuffSlots[i] = null;
+                    }
+                }
+            }
+
+            slotAssignments[slot] = recipe;
+
+            if (oracle != null && oracle.saveData.BuffSlots != null)
+                oracle.saveData.BuffSlots[slot] = recipe ? recipe.name : null;
+        }
+
+        public bool ActivateSlot(int slot)
+        {
+            if (slot < 0 || slot >= slotAssignments.Count) return false;
+            var recipe = slotAssignments[slot];
+            return recipe != null && PurchaseBuff(recipe);
+        }
+
+        public BuffRecipe GetAssigned(int slot)
+        {
+            return slot >= 0 && slot < slotAssignments.Count ? slotAssignments[slot] : null;
+        }
+
+        public void ClearActiveBuffs()
+        {
+            activeBuffs.Clear();
+        }
+
 
         [Serializable]
         public class ActiveBuff
