@@ -58,6 +58,7 @@ Use **File > Build Settings...** to create standalone builds.
 Achievements are managed through the `AchievementManager` component which uses
 Steamworks.NET. Meeting the NPC with id `Ivan1` awards the `MeetIvan` Steam
 achievement.
+Engaging five slimes at once unlocks the `SlimeSwarm` achievement.
 
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
