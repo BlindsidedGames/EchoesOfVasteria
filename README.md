@@ -60,6 +60,7 @@ Steamworks.NET. Meeting the NPC with id `Ivan1` awards the `MeetIvan` Steam
 achievement, while meeting the NPC with id `Witch1` unlocks the `MeetEva`
 achievement.
 Engaging five slimes at once unlocks the `SlimeSwarm` achievement.
+Completing Mildred's quest unlocks the `Mildred` achievement.
 
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
