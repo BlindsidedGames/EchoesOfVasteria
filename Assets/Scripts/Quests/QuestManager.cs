@@ -170,6 +170,13 @@ namespace TimelessEchoes.Quests
                 oracle.saveData.Quests[id] = record;
             }
 
+            if (resourceManager != null)
+            {
+                foreach (var req in inst.data.requirements)
+                    if (req.type == QuestData.RequirementType.Resource)
+                        resourceManager.Spend(req.resource, req.amount);
+            }
+
             record.Completed = true;
             if (inst.data.unlockPrefab != null)
                 Instantiate(inst.data.unlockPrefab);
