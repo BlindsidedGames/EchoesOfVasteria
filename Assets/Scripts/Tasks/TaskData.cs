@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Quests;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -15,7 +16,7 @@ namespace TimelessEchoes.Tasks
         public Sprite taskIcon;
         public Skill associatedSkill;
         public float xpForCompletion;
-        public string requiredQuestId;
+        public QuestData requiredQuest;
         public float taskDuration;
         [Tooltip("Interval between repeated SFX plays while the task is active. Zero disables repeats.")]
         public float sfxInterval;
