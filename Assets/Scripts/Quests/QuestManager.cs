@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
+using TimelessEchoes.Regen;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Regen;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
@@ -22,7 +23,9 @@ namespace TimelessEchoes.Quests
         private EnemyKillTracker killTracker;
         private GenerationManager generationManager;
         private QuestUIManager uiManager;
-        [SerializeField] private List<QuestData> startingQuests = new();
+
+        [FormerlySerializedAs("startingQuests")] [SerializeField]
+        private List<QuestData> quests = new();
 
         private readonly Dictionary<string, QuestInstance> active = new();
 
@@ -37,16 +40,16 @@ namespace TimelessEchoes.Quests
         {
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
-                TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
+                Log("EnemyKillTracker missing", TELogCategory.Combat, this);
             generationManager = GenerationManager.Instance;
             if (generationManager == null)
-                TELogger.Log("GenerationManager missing", TELogCategory.General, this);
+                Log("GenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
             if (uiManager == null)
-                TELogger.Log("QuestUIManager missing", TELogCategory.Quest, this);
+                Log("QuestUIManager missing", TELogCategory.Quest, this);
 
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += UpdateAllProgress;
@@ -122,12 +125,13 @@ namespace TimelessEchoes.Quests
                 if (!oracle.saveData.Quests.TryGetValue(req.questId, out var rec) || !rec.Completed)
                     return false;
             }
+
             return true;
         }
 
         private void StartAvailableQuests()
         {
-            foreach (var q in startingQuests)
+            foreach (var q in quests)
             {
                 if (q == null) continue;
                 if (!string.IsNullOrEmpty(q.npcId) && !StaticReferences.CompletedNpcTasks.Contains(q.npcId))
@@ -154,18 +158,15 @@ namespace TimelessEchoes.Quests
                 {
                     double total = 0;
                     foreach (var enemy in req.enemies)
-                    {
                         if (inst.killCounts.TryGetValue(enemy, out var c))
                             total += c;
-                    }
 
                     if (req.amount > 0)
                         pct = (float)(total / req.amount);
                 }
                 else if (req.type == QuestData.RequirementType.Donation)
                 {
-                    double donated = RegenManager.Instance ?
-                        RegenManager.Instance.GetDonationTotal(req.resource) : 0;
+                    var donated = RegenManager.Instance ? RegenManager.Instance.GetDonationTotal(req.resource) : 0;
                     if (req.amount > 0)
                         pct = (float)(donated / req.amount);
                 }
@@ -190,11 +191,9 @@ namespace TimelessEchoes.Quests
             }
 
             if (resourceManager != null)
-            {
                 foreach (var req in inst.data.requirements)
                     if (req.type == QuestData.RequirementType.Resource)
                         resourceManager.Spend(req.resource, req.amount);
-            }
 
             record.Completed = true;
             if (inst.data.unlockPrefab != null)
@@ -210,12 +209,12 @@ namespace TimelessEchoes.Quests
             StartAvailableQuests();
 
             RefreshNoticeboard();
-            TELogger.Log($"Quest {id} completed", TELogCategory.Quest, this);
+            Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
         }
 
         /// <summary>
-        /// Called when an NPC with the given id is met. Starts any pending quests tied to that NPC.
+        ///     Called when an NPC with the given id is met. Starts any pending quests tied to that NPC.
         /// </summary>
         public void OnNpcMet(string id)
         {
@@ -285,4 +284,5 @@ namespace TimelessEchoes.Quests
             yield return null;
             UpdateAllProgress();
         }
-    }}
+    }
+}

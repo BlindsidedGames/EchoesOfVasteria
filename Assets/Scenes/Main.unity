@@ -7687,10 +7687,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f6a57e71265e74990c17347bc37846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingQuests:
+  quests:
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   - {fileID: 11400000, guid: 3e0eca7419a4bfd4ba09580e54b1f9b0, type: 2}
   - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
 --- !u!1 &282096250
 GameObject:
   m_ObjectHideFlags: 0
@@ -62284,7 +62285,7 @@ MonoBehaviour:
   resources:
   - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
     amount: 5
-  requiredQuestId: FTM
+  requiredQuest: {fileID: 0}
   generationInterval: 300
   progressUIParent: {fileID: 1756765361}
   progressUIPrefab: {fileID: 7518413360732249067, guid: 3c8335cb747779c41a154df9eb4dad8e, type: 3}
