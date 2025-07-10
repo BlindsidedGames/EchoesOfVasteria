@@ -210,7 +210,23 @@ namespace TimelessEchoes.Hero
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
         {
             if (milestone != null && milestone.type == MilestoneType.StatIncrease)
+            {
+                float oldMax = health != null ? health.MaxHealth : 0f;
+                float oldCurrent = health != null ? health.CurrentHealth : 0f;
                 ApplyStatUpgrades();
+
+                if (health != null)
+                {
+                    int newMax = Mathf.RoundToInt(baseHealth + healthBonus);
+                    if (newMax > 0 && Mathf.Abs(newMax - oldMax) > 0.01f)
+                    {
+                        float newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
+                        health.Init(newMax);
+                        if (newCurrent < newMax)
+                            health.TakeDamage(newMax - newCurrent);
+                    }
+                }
+            }
         }
 
         private void ApplyStatUpgrades()
