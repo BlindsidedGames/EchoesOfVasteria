@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Feed the masses Witch Q1
+  m_Name: For the Jam
   m_EditorClassIdentifier: 
-  questId: FTM
-  questName: Feeding the Masses
-  description: Farm enough radishes to feed the town.
-  rewardDescription: Gain the Disciple of Rah Dish
-  npcId: 
+  questId: Jam
+  questName: For the Jam!
+  description: Collect radishes for Evas Jam
+  rewardDescription: Unlock the Corn Crop
+  npcId: Witch1
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
-    amount: 500
+    amount: 5
     enemies: []
     killIcon: {fileID: 0}
-  nextQuest: {fileID: 0}
+  nextQuest: {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
   unlockPrefab: {fileID: 0}
   unlockObjects: []

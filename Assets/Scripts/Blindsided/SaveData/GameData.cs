@@ -26,23 +26,17 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] public Dictionary<string, float> ActiveBuffs = new();
         [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
-        [HideReferenceObjectPicker]
-        public HashSet<string> CompletedNpcTasks = new();
+        [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
 
-        [HideReferenceObjectPicker]
-        public Dictionary<string, NpcGenerationRecord> NpcGeneration = new();
+        [HideReferenceObjectPicker] public Dictionary<string, NpcGenerationRecord> NpcGeneration = new();
 
-        [HideReferenceObjectPicker]
-        public Dictionary<string, QuestRecord> Quests = new();
+        [HideReferenceObjectPicker] public Dictionary<string, QuestRecord> Quests = new();
 
-        [HideReferenceObjectPicker]
-        public Dictionary<int, TaskRecord> TaskRecords = new();
+        [HideReferenceObjectPicker] public Dictionary<int, TaskRecord> TaskRecords = new();
 
-        [HideReferenceObjectPicker]
-        public Dictionary<string, ResourceRecord> ResourceStats = new();
+        [HideReferenceObjectPicker] public Dictionary<string, ResourceRecord> ResourceStats = new();
 
-        [HideReferenceObjectPicker]
-        public GeneralStats General = new();
+        [HideReferenceObjectPicker] public GeneralStats General = new();
 
 
         [HideReferenceObjectPicker]
@@ -76,8 +70,8 @@ namespace Blindsided.SaveData
             public bool Tutorial;
             public bool UseScaledTimeForValues;
             public float MasterVolume = 1f;
-            public float MusicVolume = 1f;
-            public float SfxVolume = 1f;
+            public float MusicVolume = 0.25f;
+            public float SfxVolume = 0.7f;
         }
 
         [HideReferenceObjectPicker]
