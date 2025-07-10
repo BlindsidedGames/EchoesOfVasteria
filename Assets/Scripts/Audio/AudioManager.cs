@@ -26,6 +26,7 @@ namespace TimelessEchoes.Audio
         [SerializeField] private AudioClip[] farmingClips;
         [SerializeField] private AudioClip[] fishingClips;
         [SerializeField] private AudioClip[] miningClips;
+        [SerializeField] private AudioClip fishCatchClip;
 
         [Header("Combat Clips")] [SerializeField]
         private AudioClip[] slimeClips;
@@ -135,6 +136,11 @@ namespace TimelessEchoes.Audio
         public void PlayWeaponSwingClip()
         {
             PlayCombatClip(weaponSwingClips);
+        }
+
+        public void PlayFishCatchClip()
+        {
+            PlaySfx(fishCatchClip);
         }
 
         private void PlaySfx(AudioClip clip)
