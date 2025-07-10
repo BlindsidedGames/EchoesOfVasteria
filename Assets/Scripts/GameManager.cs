@@ -45,7 +45,7 @@ namespace TimelessEchoes
         [SerializeField] private Button deathReturnButton;
         [SerializeField] private SlicedFilledImage deathTimerImage;
         [SerializeField] private float deathWindowDuration = 20f;
-        [SerializeField] private string mildredQuestId;
+        [SerializeField] public string mildredQuestId;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
