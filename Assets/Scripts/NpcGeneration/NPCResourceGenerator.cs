@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -23,7 +24,7 @@ namespace TimelessEchoes.NpcGeneration
 
         [SerializeField] private string npcId;
         [SerializeField] private List<ResourceEntry> resources = new();
-        [SerializeField] private string requiredQuestId;
+        [SerializeField] private QuestData requiredQuest;
         [SerializeField] private float generationInterval = 5f;
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
@@ -52,12 +53,12 @@ namespace TimelessEchoes.NpcGeneration
 
         private bool QuestCompleted()
         {
-            if (string.IsNullOrEmpty(requiredQuestId))
+            if (requiredQuest == null)
                 return true;
             if (oracle == null)
                 return false;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(requiredQuestId, out var rec) && rec.Completed;
+            return oracle.saveData.Quests.TryGetValue(requiredQuest.questId, out var rec) && rec.Completed;
         }
 
         private void Awake()
@@ -219,7 +220,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnQuestHandinEvent(string questId)
         {
-            if (!setup && questId == requiredQuestId && QuestCompleted())
+            if (!setup && requiredQuest != null && questId == requiredQuest.questId && QuestCompleted())
                 LoadState();
         }
 
