@@ -78,6 +78,8 @@ namespace TimelessEchoes.Quests
                 if (string.IsNullOrEmpty(q.npcId) || StaticReferences.CompletedNpcTasks.Contains(q.npcId))
                     TryStartQuest(q);
             }
+            foreach (var q in startingQuests)
+                StartNextIfCompleted(q);
             RefreshNoticeboard();
         }
 
@@ -253,6 +255,25 @@ namespace TimelessEchoes.Quests
             {
                 inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst));
                 UpdateProgress(inst);
+            }
+        }
+
+        private void StartNextIfCompleted(QuestData quest)
+        {
+            if (quest == null || quest.nextQuest == null)
+                return;
+
+            if (oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed)
+            {
+                var next = quest.nextQuest;
+                if (!oracle.saveData.Quests.TryGetValue(next.questId, out var nextRec) || !nextRec.Completed)
+                {
+                    if (!active.ContainsKey(next.questId))
+                        TryStartQuest(next);
+                }
+
+                // recursively process the chain in case multiple quests were completed
+                StartNextIfCompleted(next);
             }
         }
 
