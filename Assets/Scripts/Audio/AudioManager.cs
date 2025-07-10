@@ -43,6 +43,7 @@ namespace TimelessEchoes.Audio
             if (Instance == null)
             {
                 Instance = this;
+                SfxPlayer.SetMixerGroup(sfxGroup);
             }
             else
             {
