@@ -41,5 +41,10 @@ namespace TimelessEchoes.Hero
         {
             Audio?.PlayWeaponSwingClip();
         }
+
+        public void PlayFishCatch()
+        {
+            Audio?.PlayFishCatchClip();
+        }
     }
 }
