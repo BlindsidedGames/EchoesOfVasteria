@@ -131,6 +131,7 @@ namespace Blindsided
         {
             EventHandler.ResetData();
             saveData = new GameData();
+            ES3.DeleteFile(_settings); // clear cached copy
             SteamCloudManager.DeleteFile(_fileName);
             SceneManager.LoadScene(0);
         }
