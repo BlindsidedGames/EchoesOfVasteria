@@ -43,3 +43,27 @@ MonoBehaviour:
     statUpgrade: {fileID: 0}
     percentBonus: 0
     statAmount: 0
+  - levelRequirement: 17
+    bonusDescription: 
+    bonusID: woodcutting17
+    type: 4
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 0769912c1a6980346a1bbc479ddd8034, type: 2}
+    percentBonus: 0
+    statAmount: 0.1
+  - levelRequirement: 21
+    bonusDescription: 
+    bonusID: woodcutting21
+    type: 0
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 25
+    bonusDescription: 
+    bonusID: woodcutting25
+    type: 2
+    chance: 0.25
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0

@@ -35,11 +35,35 @@ MonoBehaviour:
     statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
     percentBonus: 0
     statAmount: 50
+  - levelRequirement: 10
+    bonusDescription: 
+    bonusID: fishing10
+    type: 3
+    chance: 1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
   - levelRequirement: 15
     bonusDescription: 
     bonusID: fishing15
     type: 2
     chance: 0.12
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 20
+    bonusDescription: 
+    bonusID: fishing20
+    type: 0
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 25
+    bonusDescription: 
+    bonusID: fishing25
+    type: 2
+    chance: 0.38
     statUpgrade: {fileID: 0}
     percentBonus: 0
     statAmount: 0
