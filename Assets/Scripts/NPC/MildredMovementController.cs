@@ -18,7 +18,7 @@ namespace TimelessEchoes.NPC
         {
             ai = GetComponent<AIPath>();
             if (hero == null)
-                hero = FindFirstObjectByType<HeroController>();
+                hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
         }
 
         private void Update()

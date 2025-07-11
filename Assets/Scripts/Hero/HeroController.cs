@@ -20,9 +20,10 @@ namespace TimelessEchoes.Hero
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
     [RequireComponent(typeof(RVOController))]
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(HeroHealth))]
     public class HeroController : MonoBehaviour
     {
+        public static HeroController Instance { get; private set; }
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -53,7 +54,7 @@ namespace TimelessEchoes.Hero
         private float defenseBonus;
 
         private bool destinationOverride;
-        private Health health;
+        private HeroHealth health;
         private float healthBonus;
 
         private bool isRolling;
@@ -105,9 +106,16 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
-            health = GetComponent<Health>();
+            health = GetComponent<HeroHealth>();
             if (buffController == null)
             {
                 buffController = BuffManager.Instance;
@@ -208,6 +216,12 @@ namespace TimelessEchoes.Hero
             var skillController = Skills.SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)

@@ -106,8 +106,9 @@ namespace TimelessEchoes
                     tracker?.AddDamageDealt(dmgAmount);
                     var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ??
                                       FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
-                    var hero = FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
-                    var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Enemies.Health>() : null;
+                    var hero = TimelessEchoes.Hero.HeroController.Instance ??
+                                FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
+                    var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Hero.HeroHealth>() : null;
                     if (buffManager != null && heroHealth != null)
                     {
                         float ls = buffManager.LifestealPercent;

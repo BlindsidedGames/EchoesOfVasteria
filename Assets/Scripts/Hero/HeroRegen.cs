@@ -7,15 +7,15 @@ namespace TimelessEchoes.Hero
     /// <summary>
     /// Applies health regeneration to the hero based on donations handled by <see cref="RegenManager"/>.
     /// </summary>
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(HeroHealth))]
     public class HeroRegen : MonoBehaviour
     {
-        private Health health;
+        private HeroHealth health;
         private RegenManager regenManager;
 
         private void Awake()
         {
-            health = GetComponent<Health>();
+            health = GetComponent<HeroHealth>();
             if (regenManager == null)
                 regenManager = FindFirstObjectByType<RegenManager>();
         }
