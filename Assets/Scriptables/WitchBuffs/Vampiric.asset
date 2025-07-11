@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
-  m_Name: Vamperic
+  m_Name: Vampiric
   m_EditorClassIdentifier: 
   title: Vamperic
-  description: Causes your attacks to steal enemy health.
+  description: Gain 15% Lifesteal
   buffIcon: {fileID: -2906203513720773286, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   baseDuration: 30
   moveSpeedPercent: 0
   damagePercent: 0
   defensePercent: 0
   attackSpeedPercent: 0
-  lifestealPercent: 10
+  lifestealPercent: 15
   instantTasks: 0
   distancePercent: 0
   requirements:

@@ -4,13 +4,13 @@ using Blindsided.SaveData;
 using Pathfinding;
 using Pathfinding.RVO;
 using Sirenix.OdinInspector;
-using TimelessEchoes.Enemies;
-using TimelessEchoes.Tasks;
-using TimelessEchoes.Upgrades;
-using TimelessEchoes.Stats;
-using TimelessEchoes.UI;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Enemies;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Tasks;
+using TimelessEchoes.UI;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
@@ -30,9 +30,9 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
-        [SerializeField] private TimelessEchoes.Skills.Skill combatSkill;
+        [SerializeField] private Skill combatSkill;
         private bool diceUnlocked;
-        [SerializeField] private TimelessEchoes.Buffs.BuffManager buffController;
+        [SerializeField] private BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -73,7 +73,7 @@ namespace TimelessEchoes.Hero
         public bool InCombat => state == State.Combat;
 
         /// <summary>
-        /// Current attack damage after upgrades, buffs and dice multipliers.
+        ///     Current attack damage after upgrades, buffs and dice multipliers.
         /// </summary>
         public float Damage =>
             (baseDamage + damageBonus) *
@@ -81,25 +81,26 @@ namespace TimelessEchoes.Hero
             combatDamageMultiplier;
 
         /// <summary>
-        /// Current attacks per second after upgrades and buffs.
+        ///     Current attacks per second after upgrades and buffs.
         /// </summary>
         public float AttackRate => CurrentAttackRate;
 
         /// <summary>
-        /// Current movement speed after upgrades and buffs.
+        ///     Current movement speed after upgrades and buffs.
         /// </summary>
         public float MoveSpeed =>
             (baseMoveSpeed + moveSpeedBonus) *
             (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
 
         /// <summary>
-        /// Maximum health after upgrades.
+        ///     Maximum health after upgrades.
         /// </summary>
         public float MaxHealthValue => baseHealth + healthBonus;
 
         private float CurrentAttackRate =>
             (baseAttackSpeed + attackSpeedBonus) *
             (buffController != null ? buffController.AttackSpeedMultiplier : 1f);
+
         public float Defense =>
             (baseDefense + defenseBonus) *
             (buffController != null ? buffController.DefenseMultiplier : 1f);
@@ -108,9 +109,10 @@ namespace TimelessEchoes.Hero
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(Instance);
                 return;
             }
+
             Instance = this;
 
             ai = GetComponent<AIPath>();
@@ -120,8 +122,9 @@ namespace TimelessEchoes.Hero
             {
                 buffController = BuffManager.Instance;
                 if (buffController == null)
-                    TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+                    Log("BuffManager missing", TELogCategory.Buff, this);
             }
+
             if (taskController == null)
                 taskController = GetComponentInParent<TaskController>();
 
@@ -157,9 +160,11 @@ namespace TimelessEchoes.Hero
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
 
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            var tracker = GameplayStatTracker.Instance;
             if (tracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+            {
+                Log("GameplayStatTracker missing", TELogCategory.General, this);
+            }
             else
             {
                 tracker.RecordHeroPosition(transform.position);
@@ -176,8 +181,9 @@ namespace TimelessEchoes.Hero
             {
                 buffController = BuffManager.Instance;
                 if (buffController == null)
-                    TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+                    Log("BuffManager missing", TELogCategory.Buff, this);
             }
+
             buffController?.Resume();
 
             if (mapUI == null)
@@ -204,7 +210,7 @@ namespace TimelessEchoes.Hero
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
 
-            var skillController = Skills.SkillController.Instance;
+            var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
         }
@@ -213,7 +219,7 @@ namespace TimelessEchoes.Hero
         {
             buffController?.Pause();
 
-            var skillController = Skills.SkillController.Instance;
+            var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
         }
@@ -228,16 +234,16 @@ namespace TimelessEchoes.Hero
         {
             if (milestone != null && milestone.type == MilestoneType.StatIncrease)
             {
-                float oldMax = health != null ? health.MaxHealth : 0f;
-                float oldCurrent = health != null ? health.CurrentHealth : 0f;
+                var oldMax = health != null ? health.MaxHealth : 0f;
+                var oldCurrent = health != null ? health.CurrentHealth : 0f;
                 ApplyStatUpgrades();
 
                 if (health != null)
                 {
-                    int newMax = Mathf.RoundToInt(baseHealth + healthBonus);
+                    var newMax = Mathf.RoundToInt(baseHealth + healthBonus);
                     if (newMax > 0 && Mathf.Abs(newMax - oldMax) > 0.01f)
                     {
-                        float newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
+                        var newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
                         health.Init(newMax);
                         if (newCurrent < newMax)
                             health.TakeDamage(newMax - newCurrent);
@@ -250,10 +256,10 @@ namespace TimelessEchoes.Hero
         {
             var controller = StatUpgradeController.Instance;
             if (controller == null)
-                TELogger.Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
-            var skillController = TimelessEchoes.Skills.SkillController.Instance;
+                Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
+            var skillController = SkillController.Instance;
             if (skillController == null)
-                TELogger.Log("SkillController missing", TELogCategory.Upgrade, this);
+                Log("SkillController missing", TELogCategory.Upgrade, this);
             if (controller == null) return;
 
             foreach (var upgrade in controller.AllUpgrades)
@@ -505,14 +511,14 @@ namespace TimelessEchoes.Hero
             {
                 var killTracker = EnemyKillTracker.Instance;
                 if (killTracker == null)
-                    TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
+                    Log("EnemyKillTracker missing", TELogCategory.Combat, this);
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
-                float bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                float dmgBase = (baseDamage + damageBonus) *
-                                (buffController != null ? buffController.DamageMultiplier : 1f) *
-                                combatDamageMultiplier;
-                float total = dmgBase * bonus;
-                float bonusDamage = total - dmgBase;
+                var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
+                var dmgBase = (baseDamage + damageBonus) *
+                              (buffController != null ? buffController.DamageMultiplier : 1f) *
+                              combatDamageMultiplier;
+                var total = dmgBase * bonus;
+                var bonusDamage = total - dmgBase;
                 proj.Init(target, total, true, null, combatSkill, bonusDamage);
             }
         }

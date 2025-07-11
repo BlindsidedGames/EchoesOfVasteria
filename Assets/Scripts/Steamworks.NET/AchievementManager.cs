@@ -15,12 +15,13 @@ using static Blindsided.Oracle;
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Handles unlocking Steam achievements.
+    ///     Handles unlocking Steam achievements.
     /// </summary>
     public class AchievementManager : MonoBehaviour
     {
 #if !DISABLESTEAMWORKS
         private static AchievementManager instance;
+
         public static AchievementManager Instance
         {
             get
@@ -29,10 +30,9 @@ namespace TimelessEchoes
                 {
                     instance = FindFirstObjectByType<AchievementManager>();
                     if (instance == null)
-                    {
                         instance = new GameObject("AchievementManager").AddComponent<AchievementManager>();
-                    }
                 }
+
                 return instance;
             }
         }
@@ -44,8 +44,8 @@ namespace TimelessEchoes
                 Destroy(gameObject);
                 return;
             }
+
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void UnlockAchievement(string apiName)
@@ -53,29 +53,21 @@ namespace TimelessEchoes
             if (!SteamManager.Initialized)
                 return;
 
-            if (SteamUserStats.SetAchievement(apiName))
-            {
-                SteamUserStats.StoreStats();
-            }
+            if (SteamUserStats.SetAchievement(apiName)) SteamUserStats.StoreStats();
         }
 
         /// <summary>
-        /// Called when an NPC is met.
+        ///     Called when an NPC is met.
         /// </summary>
         public void NotifyNpcMet(string npcId)
         {
             if (npcId == "Ivan1")
-            {
                 UnlockAchievement("MeetIvan");
-            }
-            else if (npcId == "Witch1")
-            {
-                UnlockAchievement("MeetEva");
-            }
+            else if (npcId == "Witch1") UnlockAchievement("MeetEva");
         }
 
         /// <summary>
-        /// Awards the SlimeSwarm achievement.
+        ///     Awards the SlimeSwarm achievement.
         /// </summary>
         public void UnlockSlimeSwarm()
         {
@@ -120,22 +112,16 @@ namespace TimelessEchoes
             bool achieved;
             if (StaticReferences.CompletedNpcTasks.Contains("Ivan1") &&
                 SteamUserStats.GetAchievement("MeetIvan", out achieved) && !achieved)
-            {
                 UnlockAchievement("MeetIvan");
-            }
 
             if (StaticReferences.CompletedNpcTasks.Contains("Witch1") &&
                 SteamUserStats.GetAchievement("MeetEva", out achieved) && !achieved)
-            {
                 UnlockAchievement("MeetEva");
-            }
 
             var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
             if (!string.IsNullOrEmpty(mildredId) && QuestCompleted(mildredId) &&
                 SteamUserStats.GetAchievement("Mildred", out achieved) && !achieved)
-            {
                 UnlockAchievement("Mildred");
-            }
         }
 
         private static bool QuestCompleted(string questId)
