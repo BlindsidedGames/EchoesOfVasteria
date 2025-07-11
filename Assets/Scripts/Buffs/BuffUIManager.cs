@@ -87,7 +87,9 @@ namespace TimelessEchoes.Buffs
                 if (ui.durationText != null)
                 {
                     var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
-                    ui.durationText.text = remain > 0f ? Mathf.Ceil(remain).ToString() : string.Empty;
+                    ui.durationText.text = remain > 0f
+                        ? FormatTime(remain, shortForm: true)
+                        : string.Empty;
                 }
             }
         }
