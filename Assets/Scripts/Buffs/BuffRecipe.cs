@@ -22,6 +22,10 @@ namespace TimelessEchoes.Buffs
         [Range(-100f, 100f)] public float damagePercent;
         [Range(-100f, 100f)] public float defensePercent;
         [Range(-100f, 100f)] public float attackSpeedPercent;
+        [Tooltip("Tasks complete instantly while active.")]
+        public bool instantTasks;
+        [Tooltip("Percent of longest run distance this buff remains active. 0 = no distance limit")]
+        [Range(0f,1f)] public float distancePercent;
         public List<ResourceRequirement> requirements = new();
 
         public string Title => string.IsNullOrEmpty(title) ? name : title;

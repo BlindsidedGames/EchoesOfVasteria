@@ -153,7 +153,10 @@ namespace TimelessEchoes.Hero
             if (tracker == null)
                 TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
             else
+            {
                 tracker.RecordHeroPosition(transform.position);
+                BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+            }
         }
 
         private void OnEnable()

@@ -49,6 +49,7 @@ namespace TimelessEchoes.Stats
         public float AverageRun => averageRun;
         public int CurrentRunKills => currentRunKills;
         public double CurrentRunBonusResources => currentRunBonusResources;
+        public float CurrentRunDistance => currentRunDistance;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;

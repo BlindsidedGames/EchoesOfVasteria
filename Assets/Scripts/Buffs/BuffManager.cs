@@ -25,6 +25,16 @@ namespace TimelessEchoes.Buffs
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
+        public bool InstantTaskBuffActive
+        {
+            get
+            {
+                foreach (var b in activeBuffs)
+                    if (b.recipe != null && b.recipe.instantTasks)
+                        return true;
+                return false;
+            }
+        }
         public IEnumerable<BuffRecipe> Recipes =>
             allRecipes?.Count > 0 ? allRecipes : Resources.LoadAll<BuffRecipe>("");
 
@@ -111,15 +121,22 @@ namespace TimelessEchoes.Buffs
                 resourceManager?.Spend(req.resource, req.amount);
 
             var buff = activeBuffs.Find(b => b.recipe == recipe);
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            float expireDist = float.PositiveInfinity;
+            if (recipe.distancePercent > 0f && tracker != null)
+                expireDist = tracker.LongestRun * recipe.distancePercent;
             if (buff == null)
             {
-                buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration };
+                buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
                 activeBuffs.Add(buff);
                 TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
             }
             else
             {
                 buff.remaining += recipe.baseDuration;
+                if (expireDist > buff.expireAtDistance)
+                    buff.expireAtDistance = expireDist;
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
 
@@ -234,12 +251,27 @@ namespace TimelessEchoes.Buffs
             activeBuffs.Clear();
         }
 
+        public void UpdateDistance(float heroX)
+        {
+            for (var i = activeBuffs.Count - 1; i >= 0; i--)
+            {
+                var buff = activeBuffs[i];
+                if (heroX >= buff.expireAtDistance)
+                {
+                    activeBuffs.RemoveAt(i);
+                    if (buff.recipe != null)
+                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+                }
+            }
+        }
+
 
         [Serializable]
         public class ActiveBuff
         {
             public BuffRecipe recipe;
             public float remaining;
+            public float expireAtDistance = float.PositiveInfinity;
         }
     }
 }
