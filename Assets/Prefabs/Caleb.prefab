@@ -345,7 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6094697013023591912}
   - component: {fileID: 3675840428294226993}
-  - component: {fileID: 1408119024334129066}
+  - component: {fileID: 559727629078150424}
   - component: {fileID: 5365100460582800124}
   - component: {fileID: 1810452886069672335}
   - component: {fileID: 8560947185031467494}
@@ -401,7 +401,7 @@ MonoBehaviour:
     m_Bits: 64
   currentTaskName: 
   currentTaskObject: {fileID: 0}
---- !u!114 &1408119024334129066
+--- !u!114 &559727629078150424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -410,12 +410,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1941723749653959437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
+  m_Script: {fileID: 11500000, guid: be773ceef6915034d96e5878f18bbbe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
   healthBar: {fileID: 8454051011791153815}
-  minFillPercent: 0.01
+  minFillPercent: 0.05
   barSprites:
   - sprite: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
     minPercent: 0.25
