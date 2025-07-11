@@ -109,8 +109,7 @@ namespace TimelessEchoes.Hero
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(Instance);
-                return;
+                Destroy(Instance.gameObject);
             }
 
             Instance = this;
