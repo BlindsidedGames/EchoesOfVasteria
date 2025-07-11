@@ -59,6 +59,15 @@ namespace TimelessEchoes.Buffs
                 var recipe = buffManager.GetAssigned(i);
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
+                bool canBuy = recipe != null && buffManager != null && buffManager.CanPurchase(recipe);
+                bool distanceOk = true;
+                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+                if (recipe != null && tracker != null && recipe.distancePercent > 0f)
+                {
+                    float expireDist = tracker.LongestRun * recipe.distancePercent;
+                    distanceOk = tracker.CurrentRunDistance < expireDist;
+                }
+
                 if (ui.iconImage != null)
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
@@ -68,10 +77,12 @@ namespace TimelessEchoes.Buffs
                     }
                     else
                     {
-                        var canBuy = buffManager != null && buffManager.CanPurchase(recipe);
-                        ui.iconImage.color = canBuy ? Color.white : grey;
+                        ui.iconImage.color = canBuy && distanceOk ? Color.white : grey;
                     }
                 }
+
+                if (ui.activateButton != null)
+                    ui.activateButton.interactable = recipe != null && canBuy && distanceOk;
 
                 if (ui.durationText != null)
                 {
