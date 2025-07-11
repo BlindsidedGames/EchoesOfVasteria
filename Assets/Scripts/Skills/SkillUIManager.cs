@@ -105,7 +105,7 @@ namespace TimelessEchoes.Skills
                 return;
             var selector = skillSelectors[index];
             if (selector != null && selector.levelText != null)
-                selector.levelText.text = ShowLevelText ? $"Lvl {level}" : string.Empty;
+                selector.levelText.text = ShowLevelText ? $"{skill.skillName} | Lvl {level}" : string.Empty;
 
             if (selector != null && selector.highlightImage != null && selectedIndex != index)
                 selector.highlightImage.enabled = true;
@@ -157,7 +157,7 @@ namespace TimelessEchoes.Skills
             if (skillTitle != null)
                 skillTitle.text = skill.skillName;
             if (levelText != null)
-                levelText.text = $"Lvl {lvl}";
+                levelText.text = $"{skill.skillName} | Lvl {lvl}";
             if (experienceText != null)
                 experienceText.text = $"{current:0.#} / {needed:0.#}";
             if (experienceBar != null)
@@ -181,7 +181,7 @@ namespace TimelessEchoes.Skills
                         if (prog != null)
                             lvl = prog.Level;
                     }
-                    selector.levelText.text = $"Lvl {lvl}";
+                    selector.levelText.text = $"{skill.skillName} | Lvl {lvl}";
                 }
                 else
                 {
