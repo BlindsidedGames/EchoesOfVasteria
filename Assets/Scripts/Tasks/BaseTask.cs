@@ -1,5 +1,6 @@
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Buffs;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -63,7 +64,9 @@ namespace TimelessEchoes.Tasks
         protected bool ShouldInstantComplete()
         {
             var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
-            return controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
+            bool milestone = controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
+            bool buff = TimelessEchoes.Buffs.BuffManager.Instance != null && TimelessEchoes.Buffs.BuffManager.Instance.InstantTaskBuffActive;
+            return milestone || buff;
         }
 
         protected float GrantCompletionXP()
