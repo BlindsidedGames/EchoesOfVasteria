@@ -22,7 +22,7 @@ namespace TimelessEchoes.UI
             Default,
             Damage,
             Health,
-            AttackSpeed,
+            AttackRate,
             MoveSpeed
         }
 
@@ -118,7 +118,7 @@ namespace TimelessEchoes.UI
 
             string hp = reveal >= 2 ? CalcUtils.FormatNumber(stats.maxHealth, true, 400f, false) : "???";
             string dmg = reveal >= 1 ? CalcUtils.FormatNumber(stats.damage, true, 400f, false) : "???";
-            ui.hitpointsAndDamageText.text = $"Hitpoints: {hp}\nDamage: {dmg}";
+            ui.hitpointsAndDamageText.text = $"Health: {hp}\nDamage: {dmg}";
 
             string move = reveal >= 3 ? CalcUtils.FormatNumber(stats.moveSpeed, true, 400f, false) : "???";
             string atk = reveal >= 4 ? CalcUtils.FormatNumber(stats.attackSpeed, true, 400f, false) : "???";
@@ -162,7 +162,7 @@ namespace TimelessEchoes.UI
                 SortMode.Damage => 1,
                 SortMode.Health => 2,
                 SortMode.MoveSpeed => 3,
-                SortMode.AttackSpeed => 4,
+                SortMode.AttackRate => 4,
                 _ => 0
             };
 
@@ -171,7 +171,7 @@ namespace TimelessEchoes.UI
                 SortMode.Damage => s.damage,
                 SortMode.Health => s.maxHealth,
                 SortMode.MoveSpeed => s.moveSpeed,
-                SortMode.AttackSpeed => s.attackSpeed,
+                SortMode.AttackRate => s.attackSpeed,
                 _ => 0
             };
 

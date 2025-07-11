@@ -636,7 +636,7 @@ GameObject:
   - component: {fileID: 1205721544206614959}
   - component: {fileID: 5620335432057288960}
   m_Layer: 5
-  m_Name: Hitpoints/Damage_Text
+  m_Name: Health/Damage_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -689,7 +689,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Hitpoints: ???
+  m_text: 'Health: ???
 
     Damage: ???'
   m_isRightToLeft: 0
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Damage: ???, Attack Rate: ???, Movement: ???, Hitpoints: ???
+  m_text: 'Damage: ???, Attack Rate: ???, Movement: ???, Health: ???
 
     Kills:
     4, Next Reveal: 10'

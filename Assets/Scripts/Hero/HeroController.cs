@@ -283,7 +283,7 @@ namespace TimelessEchoes.Hero
                         baseDamage = baseVal;
                         damageBonus = increase;
                         break;
-                    case "Attack Speed":
+                    case "Attack Rate":
                         baseAttackSpeed = baseVal;
                         attackSpeedBonus = increase;
                         break;
