@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.Utilities.Pooling;
 using TimelessEchoes.Audio;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.Enemies;
+using TimelessEchoes.Hero;
 
 namespace TimelessEchoes
 {
@@ -101,6 +104,16 @@ namespace TimelessEchoes
                     var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
                                      FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
                     tracker?.AddDamageDealt(dmgAmount);
+                    var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ??
+                                      FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+                    var hero = FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
+                    var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Enemies.Health>() : null;
+                    if (buffManager != null && heroHealth != null)
+                    {
+                        float ls = buffManager.LifestealPercent;
+                        if (ls > 0f)
+                            heroHealth.Heal(dmgAmount * ls / 100f);
+                    }
                 }
                 var sfx = GetComponent<ProjectileHitSfx>();
                 sfx?.PlayHit();
