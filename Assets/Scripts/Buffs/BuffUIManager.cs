@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using References.UI;
-using TMPro;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,19 +20,22 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private Button openPurchaseButton;
         [SerializeField] private GameObject buffPurchaseWindow;
 
-        [Header("Slot UI References")]
-        [SerializeField] private GameObject slotAssignWindow;
+        [Header("Slot UI References")] [SerializeField]
+        private GameObject slotAssignWindow;
+
         [SerializeField] private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
 
-        [Header("Tooltip References")]
-        [SerializeField] private RunBuffTooltipUIReferences runSlotTooltip;
+        [Header("Tooltip References")] [SerializeField]
+        private RunBuffTooltipUIReferences runSlotTooltip;
+
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
         private BuffRecipe selectedRecipe;
         private int hoveredRunSlot = -1;
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
+
         private void RefreshSlots()
         {
             if (buffManager == null) return;
@@ -61,13 +63,16 @@ namespace TimelessEchoes.Buffs
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
                     if (recipe == null)
+                    {
                         ui.iconImage.color = transparent;
+                    }
                     else
                     {
                         var canBuy = buffManager != null && buffManager.CanPurchase(recipe);
                         ui.iconImage.color = canBuy ? Color.white : grey;
                     }
                 }
+
                 if (ui.durationText != null)
                 {
                     var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
@@ -80,13 +85,13 @@ namespace TimelessEchoes.Buffs
         {
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             resourceInventoryUI = ResourceInventoryUI.Instance;
             if (resourceInventoryUI == null)
-                TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+                Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
             buffManager = BuffManager.Instance;
             if (buffManager == null)
-                TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+                Log("BuffManager missing", TELogCategory.Buff, this);
 
             if (runSlotTooltip == null)
                 runSlotTooltip = FindFirstObjectByType<RunBuffTooltipUIReferences>();
@@ -252,7 +257,8 @@ namespace TimelessEchoes.Buffs
 
             RefreshSlots();
 
-            if (hoveredRunSlot >= 0 && runSlotTooltip != null && runSlotTooltip.tooltipPanel != null && runSlotTooltip.tooltipPanel.activeSelf)
+            if (hoveredRunSlot >= 0 && runSlotTooltip != null && runSlotTooltip.tooltipPanel != null &&
+                runSlotTooltip.tooltipPanel.activeSelf)
                 ShowRunSlotTooltip(hoveredRunSlot);
         }
 
@@ -301,7 +307,8 @@ namespace TimelessEchoes.Buffs
 
         private void ShowRunSlotTooltip(int slot)
         {
-            if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 || slot >= runSlotButtons.Length)
+            if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 ||
+                slot >= runSlotButtons.Length)
                 return;
 
             var recipe = buffManager != null ? buffManager.GetAssigned(slot) : null;
@@ -322,13 +329,13 @@ namespace TimelessEchoes.Buffs
                 if (slotRef.resourceIcon != null)
                     slotRef.resourceIcon.sprite = req.resource ? req.resource.icon : null;
                 if (slotRef.resourceCostText != null)
-                    slotRef.resourceCostText.text = $"Cost: {CalcUtils.FormatNumber(req.amount, true)}";
+                    slotRef.resourceCostText.text = $"Cost: {FormatNumber(req.amount, true)}";
 
-                double held = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
+                var held = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
                 if (slotRef.resourceHeldText != null)
-                    slotRef.resourceHeldText.text = CalcUtils.FormatNumber(held, true);
+                    slotRef.resourceHeldText.text = FormatNumber(held, true);
 
-                bool enough = held >= req.amount;
+                var enough = held >= req.amount;
                 if (slotRef.resourceIcon != null)
                     slotRef.resourceIcon.color = enough ? Color.white : grey;
             }
