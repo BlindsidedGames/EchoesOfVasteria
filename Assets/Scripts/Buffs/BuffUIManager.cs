@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Utilities.CalcUtils;
 
 namespace TimelessEchoes.Buffs
 {
@@ -25,19 +26,30 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
 
+        [Header("Tooltip References")]
+        [SerializeField] private RunBuffTooltipUIReferences runSlotTooltip;
+        [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
+
         private BuffRecipe selectedRecipe;
+        private int hoveredRunSlot = -1;
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
         private void RefreshSlots()
         {
             if (buffManager == null) return;
 
+            var transparent = new Color(1f, 1f, 1f, 0f);
+            var grey = new Color(1f, 1f, 1f, 0.4f);
+
             for (var i = 0; i < assignSlotButtons.Length; i++)
             {
                 var recipe = buffManager.GetAssigned(i);
                 var ui = assignSlotButtons[i];
                 if (ui != null && ui.iconImage != null)
+                {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
+                    ui.iconImage.color = recipe ? Color.white : transparent;
+                }
             }
 
             for (var i = 0; i < runSlotButtons.Length; i++)
@@ -46,7 +58,16 @@ namespace TimelessEchoes.Buffs
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
                 if (ui.iconImage != null)
+                {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
+                    if (recipe == null)
+                        ui.iconImage.color = transparent;
+                    else
+                    {
+                        var canBuy = buffManager != null && buffManager.CanPurchase(recipe);
+                        ui.iconImage.color = canBuy ? Color.white : grey;
+                    }
+                }
                 if (ui.durationText != null)
                 {
                     var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
@@ -66,6 +87,9 @@ namespace TimelessEchoes.Buffs
             buffManager = BuffManager.Instance;
             if (buffManager == null)
                 TELogger.Log("BuffManager missing", TELogCategory.Buff, this);
+
+            if (runSlotTooltip == null)
+                runSlotTooltip = FindFirstObjectByType<RunBuffTooltipUIReferences>();
 
             BuildRecipeEntries();
 
@@ -94,6 +118,21 @@ namespace TimelessEchoes.Buffs
                 var index = i;
                 if (runSlotButtons[i] != null && runSlotButtons[i].activateButton != null)
                     runSlotButtons[i].activateButton.onClick.AddListener(() => OnRunSlot(index));
+
+                if (runSlotButtons[i] != null)
+                {
+                    runSlotButtons[i].PointerEnter += _ =>
+                    {
+                        hoveredRunSlot = index;
+                        ShowRunSlotTooltip(index);
+                    };
+                    runSlotButtons[i].PointerExit += _ =>
+                    {
+                        hoveredRunSlot = -1;
+                        if (runSlotTooltip != null && runSlotTooltip.tooltipPanel != null)
+                            runSlotTooltip.tooltipPanel.SetActive(false);
+                    };
+                }
             }
         }
 
@@ -210,6 +249,11 @@ namespace TimelessEchoes.Buffs
                     pair.Value.purchaseButton.interactable =
                         buffManager != null && buffManager.CanPurchase(pair.Key);
             }
+
+            RefreshSlots();
+
+            if (hoveredRunSlot >= 0 && runSlotTooltip != null && runSlotTooltip.tooltipPanel != null && runSlotTooltip.tooltipPanel.activeSelf)
+                ShowRunSlotTooltip(hoveredRunSlot);
         }
 
         private void OnLoadDataHandler()
@@ -245,7 +289,7 @@ namespace TimelessEchoes.Buffs
             buffManager?.ActivateSlot(slot);
             RefreshSlots();
         }
-        
+
 
         private void OpenPurchaseWindow()
         {
@@ -253,6 +297,47 @@ namespace TimelessEchoes.Buffs
                 buffPurchaseWindow.SetActive(true);
             if (slotAssignWindow != null)
                 slotAssignWindow.SetActive(false);
+        }
+
+        private void ShowRunSlotTooltip(int slot)
+        {
+            if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 || slot >= runSlotButtons.Length)
+                return;
+
+            var recipe = buffManager != null ? buffManager.GetAssigned(slot) : null;
+            if (recipe == null)
+            {
+                runSlotTooltip.tooltipPanel.SetActive(false);
+                return;
+            }
+
+            foreach (Transform child in runSlotTooltip.tooltipCostParent)
+                Destroy(child.gameObject);
+
+            var grey = new Color(1f, 1f, 1f, 0.4f);
+
+            foreach (var req in recipe.requirements)
+            {
+                var slotRef = Instantiate(runSlotTooltip.tooltipCostPrefab, runSlotTooltip.tooltipCostParent);
+                if (slotRef.resourceIcon != null)
+                    slotRef.resourceIcon.sprite = req.resource ? req.resource.icon : null;
+                if (slotRef.resourceCostText != null)
+                    slotRef.resourceCostText.text = $"Cost: {CalcUtils.FormatNumber(req.amount, true)}";
+
+                double held = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
+                if (slotRef.resourceHeldText != null)
+                    slotRef.resourceHeldText.text = CalcUtils.FormatNumber(held, true);
+
+                bool enough = held >= req.amount;
+                if (slotRef.resourceIcon != null)
+                    slotRef.resourceIcon.color = enough ? Color.white : grey;
+            }
+
+            var ui = runSlotButtons[slot];
+            if (ui != null)
+                runSlotTooltip.tooltipPanel.transform.position = ui.transform.position + (Vector3)tooltipOffset;
+
+            runSlotTooltip.tooltipPanel.SetActive(true);
         }
     }
 }
