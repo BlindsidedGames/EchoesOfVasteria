@@ -193,6 +193,10 @@ namespace TimelessEchoes.Buffs
                 var panel = Instantiate(recipePrefab, recipeParent);
                 if (panel.iconImage != null)
                     panel.iconImage.sprite = recipe.buffIcon;
+                if (panel.nameText != null)
+                    panel.nameText.text = string.IsNullOrEmpty(recipe.title) ? recipe.name : recipe.title;
+                if (panel.descriptionText != null)
+                    panel.descriptionText.text = recipe.description;
                 if (panel.durationText != null)
                     panel.durationText.text = recipe.baseDuration.ToString();
                 if (panel.purchaseButton != null)
