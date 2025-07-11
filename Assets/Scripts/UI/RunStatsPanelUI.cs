@@ -236,10 +236,18 @@ namespace TimelessEchoes.UI
             }
 
             if (longestRunText != null)
-                longestRunText.text = CalcUtils.FormatNumber(longest, true);
+            {
+                longestRunText.text = graphMode == GraphMode.Duration
+                    ? CalcUtils.FormatTime(longest)
+                    : CalcUtils.FormatNumber(longest, true);
+            }
 
             if (averageRunText != null)
-                averageRunText.text = CalcUtils.FormatNumber(average, true);
+            {
+                averageRunText.text = graphMode == GraphMode.Duration
+                    ? CalcUtils.FormatTime(average)
+                    : CalcUtils.FormatNumber(average, true);
+            }
 
             if (averageRunSlider != null)
             {
