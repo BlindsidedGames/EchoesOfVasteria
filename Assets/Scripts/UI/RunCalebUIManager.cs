@@ -116,7 +116,7 @@ namespace TimelessEchoes.UI
             if (uiReferences.leftText != null)
                 uiReferences.leftText.text =
                     $"Damage: {damage:0.##}\n" +
-                    $"Attack Speed: {attack:0.###} /s\n" +
+                    $"Attack Rate: {attack:0.###} /s\n" +
                     $"Movement Speed {move:0.##}";
 
             if (uiReferences.rightText != null)
