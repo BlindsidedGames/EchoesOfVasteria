@@ -170,7 +170,7 @@ namespace TimelessEchoes
             if (hero != null)
             {
                 hero.gameObject.SetActive(true);
-                var hp = hero.GetComponent<Health>();
+                var hp = hero.GetComponent<Hero.HeroHealth>();
                 if (hp != null)
                 {
                     hp.Init((int)hp.MaxHealth);
@@ -221,7 +221,7 @@ namespace TimelessEchoes
         {
             if (hero != null)
             {
-                var hp = hero.GetComponent<Health>();
+                var hp = hero.GetComponent<Hero.HeroHealth>();
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
 

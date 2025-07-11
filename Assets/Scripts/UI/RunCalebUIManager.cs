@@ -18,7 +18,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private RegenManager regenManager;
 
         private HeroController hero;
-        private Health heroHealth;
+        private HeroHealth heroHealth;
 
         private float lastDamage;
         private float lastAttack;
@@ -48,8 +48,8 @@ namespace TimelessEchoes.UI
 
         private void OnEnable()
         {
-            hero = FindFirstObjectByType<HeroController>();
-            heroHealth = hero ? hero.GetComponent<Health>() : null;
+            hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+            heroHealth = hero ? hero.GetComponent<HeroHealth>() : null;
             if (heroHealth != null)
             {
                 heroHealth.OnHealthChanged += OnHealthChanged;

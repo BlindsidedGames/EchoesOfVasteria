@@ -25,7 +25,7 @@ namespace TimelessEchoes.Regen
 
         private readonly Dictionary<Resource, double> donations = new();
         private readonly List<RegenEntryUIReferences> entries = new();
-        private Health heroHealth;
+        private Hero.HeroHealth heroHealth;
 
         private void Awake()
         {
@@ -44,7 +44,8 @@ namespace TimelessEchoes.Regen
                     Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
             }
 
-            heroHealth = FindFirstObjectByType<HeroController>()?.GetComponent<Health>();
+            heroHealth = Hero.HeroHealth.Instance ??
+                         FindFirstObjectByType<Hero.HeroHealth>();
 
             LoadState();
             BuildEntries();

@@ -1,135 +1,25 @@
-using System;
-using Blindsided.Utilities;
-using TimelessEchoes.Hero;
-using TimelessEchoes.Stats;
 using UnityEngine;
 
 namespace TimelessEchoes.Enemies
 {
-    public class Health : MonoBehaviour, IDamageable, IHasHealth
+    /// <summary>
+    /// Standard health component for enemies.
+    /// </summary>
+    public class Health : HealthBase
     {
-        [SerializeField] private int maxHealth = 10;
-        [SerializeField] private SlicedFilledImage healthBar;
-        [SerializeField] [Range(0f, 1f)] private float minFillPercent = 0.05f;
-        [SerializeField] private HealthBarSpriteOption[] barSprites;
-
-        private void Awake()
+        protected override Color GetFloatingTextColor()
         {
-            CurrentHealth = maxHealth;
-            UpdateBar();
-            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-        }
-
-        public void TakeDamage(float amount, float bonusDamage = 0f)
-        {
-            if (CurrentHealth <= 0f) return;
-            var hero = GetComponent<HeroController>();
-            var full = amount + bonusDamage;
-            var total = full;
-            if (hero != null)
-            {
-                var min = full * 0.1f;
-                total = Mathf.Max(full - hero.Defense, min);
-            }
-
-            CurrentHealth -= total;
-            UpdateBar();
-            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-
-            // Show floating damage text
-            ColorUtility.TryParseHtmlString("#C56260", out var red);
             ColorUtility.TryParseHtmlString("#C69B60", out var orange);
-            var isHero = GetComponent<HeroController>() != null;
-            var colour = isHero ? red : orange;
-            var fontSize = isHero ? 6f : 8f;
-            if (Application.isPlaying)
-            {
-                var text = CalcUtils.FormatNumber(total);
-                if (bonusDamage != 0f)
-                    text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
-                FloatingText.Spawn(text, transform.position + Vector3.up, colour, fontSize);
-            }
-
-            if (isHero)
-            {
-                var tracker = GameplayStatTracker.Instance ??
-                              FindFirstObjectByType<GameplayStatTracker>();
-                tracker?.AddDamageTaken(total);
-            }
-
-            if (CurrentHealth <= 0f)
-            {
-                OnDeath?.Invoke();
-
-                // Automatically remove enemies when their health reaches zero
-                if (GetComponent<Enemy>() != null)
-                    Destroy(gameObject);
-            }
+            return orange;
         }
 
-        public void Heal(float amount)
+        protected override float GetFloatingTextSize() => 8f;
+
+        protected override void OnZeroHealth()
         {
-            if (amount <= 0f || CurrentHealth >= MaxHealth) return;
-            CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
-            UpdateBar();
-            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-        }
-
-        public float CurrentHealth { get; private set; }
-        public float MaxHealth => maxHealth;
-
-        public event Action<float, float> OnHealthChanged;
-        public event Action OnDeath;
-
-        public SlicedFilledImage HealthBar
-        {
-            get => healthBar;
-            set
-            {
-                healthBar = value;
-                UpdateBar();
-            }
-        }
-
-        public void Init(int hp)
-        {
-            maxHealth = hp;
-            CurrentHealth = hp;
-            UpdateBar();
-            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-        }
-
-        private void UpdateBar()
-        {
-            if (healthBar == null) return;
-
-            var percent = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
-            healthBar.fillAmount = Mathf.Max(percent, minFillPercent);
-
-            if (barSprites != null && barSprites.Length > 0)
-            {
-                var chosen = healthBar.sprite;
-                var best = -1f;
-                foreach (var opt in barSprites)
-                {
-                    if (opt.sprite == null) continue;
-                    if (percent >= opt.minPercent && opt.minPercent > best)
-                    {
-                        chosen = opt.sprite;
-                        best = opt.minPercent;
-                    }
-                }
-
-                if (chosen != null)
-                    healthBar.sprite = chosen;
-            }
-        }
-
-        [Serializable]
-        public struct HealthBarSpriteOption
-        {
-            public Sprite sprite;
-            [Range(0f, 1f)] public float minPercent;
+            base.OnZeroHealth();
+            if (GetComponent<Enemy>() != null)
+                Destroy(gameObject);
         }
     }
 }
