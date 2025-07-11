@@ -171,12 +171,7 @@ namespace TimelessEchoes.Buffs
                 var panel = pair.Value;
                 if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                var remaining = buffManager != null ? buffManager.GetRemaining(recipe) : 0f;
-                var extra = recipe.baseDuration;
-                if (buffManager != null && buffManager.DiminishingCurve != null)
-                    extra *= buffManager.DiminishingCurve.Evaluate(remaining);
-                panel.durationText.text =
-                    $"Time remaining: {Mathf.Ceil(remaining)} -> {Mathf.Ceil(remaining + extra)}";
+                panel.durationText.text = $"Duration: {Mathf.Ceil(recipe.baseDuration)}";
             }
         }
 
@@ -198,7 +193,7 @@ namespace TimelessEchoes.Buffs
                 if (panel.descriptionText != null)
                     panel.descriptionText.text = recipe.description;
                 if (panel.durationText != null)
-                    panel.durationText.text = recipe.baseDuration.ToString();
+                    panel.durationText.text = $"Duration: {Mathf.Ceil(recipe.baseDuration)}";
                 if (panel.purchaseButton != null)
                 {
                     var r = recipe;
@@ -255,8 +250,7 @@ namespace TimelessEchoes.Buffs
             {
                 BuildCostSlots(pair.Value, pair.Key);
                 if (pair.Value.purchaseButton != null)
-                    pair.Value.purchaseButton.interactable =
-                        buffManager != null && buffManager.CanPurchase(pair.Key);
+                    pair.Value.purchaseButton.interactable = true;
             }
 
             RefreshSlots();

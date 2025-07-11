@@ -18,9 +18,6 @@ namespace TimelessEchoes.Buffs
 
         private ResourceManager resourceManager;
 
-        [SerializeField] private AnimationCurve diminishingCurve =
-            AnimationCurve.Linear(0f, 1f, 60f, 0f);
-
         [SerializeField] private List<BuffRecipe> allRecipes = new();
 
         private readonly List<ActiveBuff> activeBuffs = new();
@@ -28,7 +25,6 @@ namespace TimelessEchoes.Buffs
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
-        public AnimationCurve DiminishingCurve => diminishingCurve;
         public IEnumerable<BuffRecipe> Recipes =>
             allRecipes?.Count > 0 ? allRecipes : Resources.LoadAll<BuffRecipe>("");
 
@@ -123,10 +119,7 @@ namespace TimelessEchoes.Buffs
             }
             else
             {
-                var extra = recipe.baseDuration;
-                if (diminishingCurve != null)
-                    extra *= diminishingCurve.Evaluate(buff.remaining);
-                buff.remaining += extra;
+                buff.remaining += recipe.baseDuration;
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
 
