@@ -193,6 +193,17 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public float LifestealPercent
+        {
+            get
+            {
+                float percent = 0f;
+                foreach (var b in activeBuffs)
+                    percent += b.recipe.lifestealPercent;
+                return percent;
+            }
+        }
+
         private void LoadSlots()
         {
             if (oracle == null) return;
