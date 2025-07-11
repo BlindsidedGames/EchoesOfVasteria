@@ -35,6 +35,7 @@ namespace TimelessEchoes.UI
         public enum GraphMode
         {
             Distance,
+            Duration,
             Resources,
             Kills
         }
@@ -55,6 +56,9 @@ namespace TimelessEchoes.UI
             {
                 case GraphMode.Distance:
                     graphLabelText.text = "Distance from Town";
+                    break;
+                case GraphMode.Duration:
+                    graphLabelText.text = "Run Time";
                     break;
                 case GraphMode.Resources:
                     graphLabelText.text = "Resources Gathered";
@@ -193,6 +197,18 @@ namespace TimelessEchoes.UI
                 longest = statTracker.LongestRun;
                 average = statTracker.AverageRun;
             }
+            else if (graphMode == GraphMode.Duration)
+            {
+                longest = 0f;
+                double sum = 0f;
+                foreach (var r in runs)
+                {
+                    if (r.Duration > longest)
+                        longest = r.Duration;
+                    sum += r.Duration;
+                }
+                average = runs.Count > 0 ? sum / runs.Count : 0f;
+            }
             else if (graphMode == GraphMode.Resources)
             {
                 longest = 0f;
@@ -264,6 +280,8 @@ namespace TimelessEchoes.UI
                     double overlay = 0f;
                     if (graphMode == GraphMode.Distance)
                         value = runs[index].Distance;
+                    else if (graphMode == GraphMode.Duration)
+                        value = runs[index].Duration;
                     else if (graphMode == GraphMode.Resources)
                     {
                         value = runs[index].ResourcesCollected;
@@ -277,7 +295,7 @@ namespace TimelessEchoes.UI
                     runBars[i].SetOverlayFill((float)overlayRatio);
                     runBars[i].BarIndex = index;
                     Color color;
-                    if (graphMode == GraphMode.Distance)
+                    if (graphMode == GraphMode.Distance || graphMode == GraphMode.Duration)
                         color = runs[index].Died ? deathBarColor : retreatBarColor;
                     else if (graphMode == GraphMode.Resources)
                     {
