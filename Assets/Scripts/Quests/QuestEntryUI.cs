@@ -17,6 +17,7 @@ namespace TimelessEchoes.Quests
         public TMP_Text rewardText;
         public Button turnInButton;
         public SlicedFilledImage progressImage;
+        public Image questImage;
         public GameObject progressBar;
         public CostResourceUIReferences costSlotPrefab;
         public Transform costParent;
@@ -43,6 +44,13 @@ namespace TimelessEchoes.Quests
                     turnInButton.onClick.AddListener(() => onTurnIn());
                 }
                 turnInButton.gameObject.SetActive(onTurnIn != null && !completed);
+            }
+
+            if (questImage != null)
+            {
+                var color = questImage.color;
+                color.a = completed ? 0.7f : 1f;
+                questImage.color = color;
             }
 
             if (progressBar != null)
