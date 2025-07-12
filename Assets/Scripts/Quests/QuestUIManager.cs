@@ -27,12 +27,12 @@ namespace TimelessEchoes.Quests
                 Instance = null;
         }
 
-        public QuestEntryUI CreateEntry(QuestData quest, Action onTurnIn)
+        public QuestEntryUI CreateEntry(QuestData quest, Action onTurnIn, bool showRequirements = true, bool completed = false)
         {
             if (questEntryPrefab == null || questParent == null)
                 return null;
             var ui = Instantiate(questEntryPrefab, questParent);
-            ui.Setup(quest, onTurnIn);
+            ui.Setup(quest, onTurnIn, showRequirements, completed);
             entries.Add(ui);
             return ui;
         }
