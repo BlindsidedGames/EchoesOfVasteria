@@ -4,7 +4,10 @@ using QFSW.QC;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Skills;
+using TimelessEchoes.NPC;
+using TimelessEchoes.Quests;
 using Blindsided.SaveData;
+using Blindsided;
 using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes
@@ -57,6 +60,35 @@ namespace TimelessEchoes
             prog.CurrentXP = 0f;
             oracle.saveData.SkillData[skill.name] = prog;
             Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("unlock-witch", "Unlock the witch NPC")]
+        public static void UnlockWitch()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.CompletedNpcTasks ??= new HashSet<string>();
+            if (!oracle.saveData.CompletedNpcTasks.Contains("Witch1"))
+                oracle.saveData.CompletedNpcTasks.Add("Witch1");
+
+            var qm = Object.FindFirstObjectByType<QuestManager>();
+            qm?.OnNpcMet("Witch1");
+            NpcObjectStateController.Instance?.UpdateObjectStates();
+        }
+
+        [Command("complete-mildred", "Complete the Mildred quest")]
+        public static void CompleteMildredQuest()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            if (!oracle.saveData.Quests.TryGetValue("Mildred", out var rec))
+                rec = new GameData.QuestRecord();
+            rec.Completed = true;
+            oracle.saveData.Quests["Mildred"] = rec;
+
+            EventHandler.QuestHandin("Mildred");
+            NpcObjectStateController.Instance?.UpdateObjectStates();
         }
     }
 }
