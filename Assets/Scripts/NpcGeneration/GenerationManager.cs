@@ -10,7 +10,9 @@ namespace TimelessEchoes.NpcGeneration
     public class GenerationManager : MonoBehaviour
     {
         public static GenerationManager Instance { get; private set; }
-        [SerializeField] private List<NPCResourceGenerator> generators = new();
+        [SerializeField] private List<DiscipleGenerator> generators = new();
+
+        public IReadOnlyList<DiscipleGenerator> Generators => generators;
 
         private void Awake()
         {
@@ -32,12 +34,6 @@ namespace TimelessEchoes.NpcGeneration
                 if (gen != null)
                     gen.Tick(dt);
             }
-        }
-
-
-        public NPCResourceGenerator GetGenerator(string npcId)
-        {
-            return generators.Find(g => g != null && g.NpcId == npcId);
         }
     }
 }

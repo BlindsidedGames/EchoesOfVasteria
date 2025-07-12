@@ -12,7 +12,7 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class NpcGeneratorProgressUI : MonoBehaviour
     {
-        [SerializeField, HideInInspector] private NPCResourceGenerator generator;
+        [SerializeField, HideInInspector] private DiscipleGenerator generator;
         [SerializeField, HideInInspector] private Resource resource;
         [SerializeField] private double amountPerCycle;
         [SerializeField] private SlicedFilledImage image;
@@ -27,7 +27,7 @@ namespace TimelessEchoes.NpcGeneration
         private ResourceInventoryUI inventoryUI;
         private ResourceManager resourceManager;
 
-        public void SetData(NPCResourceGenerator gen, Resource res, double perCycle)
+        public void SetData(DiscipleGenerator gen, Resource res, double perCycle)
         {
             generator = gen;
             resource = res;

@@ -11,9 +11,9 @@ using static TimelessEchoes.TELogger;
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    ///     Generates resources over time for a single NPC.
+    ///     Generates resources over time for a single disciple.
     /// </summary>
-    public class NPCResourceGenerator : MonoBehaviour
+    public class DiscipleGenerator : MonoBehaviour
     {
         [Serializable]
         public class ResourceEntry
@@ -22,24 +22,21 @@ namespace TimelessEchoes.NpcGeneration
             public double amount = 1;
         }
 
-        [SerializeField] private string npcId;
         [SerializeField] private List<ResourceEntry> resources = new();
         [SerializeField] private QuestData requiredQuest;
         [SerializeField] private float generationInterval = 5f;
-        [SerializeField] private Transform progressUIParent;
-        [SerializeField] private NpcGeneratorProgressUI progressUIPrefab;
 
         private readonly Dictionary<Resource, double> stored = new();
         private readonly Dictionary<Resource, double> collectedTotals = new();
-        private readonly List<NpcGeneratorProgressUI> uiEntries = new();
 
         private static Dictionary<string, Resource> lookup;
         private ResourceManager resourceManager;
         private bool setup;
 
-        public string NpcId => npcId;
         public float Interval => generationInterval;
         public float Progress { get; private set; }
+        public IReadOnlyList<ResourceEntry> ResourceEntries => resources;
+        public bool RequirementsMet => QuestCompleted();
 
         public double GetStoredAmount(Resource resource)
         {
@@ -92,7 +89,7 @@ namespace TimelessEchoes.NpcGeneration
                 AddCycle();
             }
 
-            UpdateUI();
+            // UI elements update themselves via GeneratorUIManager
         }
 
         public void ApplyOfflineProgress(double seconds)
@@ -105,7 +102,7 @@ namespace TimelessEchoes.NpcGeneration
                 AddCycle();
             }
 
-            UpdateUI();
+            // UI elements update themselves via GeneratorUIManager
         }
 
         public void CollectResources()
@@ -143,16 +140,13 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
-        private void UpdateUI()
-        {
-            // individual progress UI elements handle their own updates
-        }
-
         private void SaveState()
         {
-            if (!setup || oracle == null || string.IsNullOrEmpty(npcId)) return;
+            if (!setup || oracle == null) return;
             if (oracle.saveData.NpcGeneration == null)
                 oracle.saveData.NpcGeneration = new Dictionary<string, GameData.NpcGenerationRecord>();
+
+            string id = gameObject.name;
 
             var rec = new GameData.NpcGenerationRecord
             {
@@ -167,12 +161,12 @@ namespace TimelessEchoes.NpcGeneration
             foreach (var pair in collectedTotals)
                 if (pair.Key != null)
                     rec.TotalCollected[pair.Key.name] = pair.Value;
-            oracle.saveData.NpcGeneration[npcId] = rec;
+            oracle.saveData.NpcGeneration[id] = rec;
         }
 
         private void LoadState()
         {
-            if (oracle == null || string.IsNullOrEmpty(npcId) || !QuestCompleted()) return;
+            if (oracle == null || !QuestCompleted()) return;
             setup = true;
             EnsureLookup();
             oracle.saveData.NpcGeneration ??= new Dictionary<string, GameData.NpcGenerationRecord>();
@@ -180,7 +174,8 @@ namespace TimelessEchoes.NpcGeneration
             stored.Clear();
             collectedTotals.Clear();
             Progress = 0f;
-            if (oracle.saveData.NpcGeneration.TryGetValue(npcId, out var rec) && rec != null)
+            string id = gameObject.name;
+            if (oracle.saveData.NpcGeneration.TryGetValue(id, out var rec) && rec != null)
             {
                 foreach (var pair in rec.StoredResources)
                     if (lookup.TryGetValue(pair.Key, out var res) && res != null)
@@ -196,26 +191,7 @@ namespace TimelessEchoes.NpcGeneration
                     ApplyOfflineProgress(seconds);
             }
 
-            UpdateUI();
-            BuildProgressUI();
-        }
-
-        private void BuildProgressUI()
-        {
-            if (progressUIParent == null || progressUIPrefab == null)
-                return;
-
-            foreach (Transform child in progressUIParent)
-                Destroy(child.gameObject);
-            uiEntries.Clear();
-
-            foreach (var entry in resources)
-            {
-                if (entry.resource == null) continue;
-                var ui = Instantiate(progressUIPrefab, progressUIParent);
-                ui.SetData(this, entry.resource, entry.amount);
-                uiEntries.Add(ui);
-            }
+            // UI will be created by GeneratorUIManager
         }
 
         private void OnQuestHandinEvent(string questId)
