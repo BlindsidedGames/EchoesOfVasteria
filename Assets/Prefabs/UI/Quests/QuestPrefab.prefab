@@ -346,10 +346,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3726968354403133004}
   - component: {fileID: 8417879857818526678}
+  - component: {fileID: 8515391918793822164}
   - component: {fileID: 2894457934127420967}
   - component: {fileID: 5640585788380060795}
   - component: {fileID: 4659473520453712038}
-  - component: {fileID: 8515391918793822164}
   m_Layer: 5
   m_Name: QuestPrefab
   m_TagString: Untagged
@@ -386,6 +386,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3243035983985247528}
   m_CullTransparentMesh: 1
+--- !u!114 &8515391918793822164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3243035983985247528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea276543fabba5499f4f58092feaea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: {fileID: 1393924150881400301}
+  descriptionText: {fileID: 7222369568943532855}
+  rewardText: {fileID: 6522647304009456842}
+  turnInButton: {fileID: 8950382192853892662}
+  progressImage: {fileID: 6972726677016055629}
+  questImage: {fileID: 2894457934127420967}
+  progressBar: {fileID: 4932138921774110340}
+  costSlotPrefab: {fileID: 7379128548144887482, guid: f4078cac67e544749bfe0a41bdd7efef, type: 3}
+  costParent: {fileID: 6274911227562582775}
 --- !u!114 &2894457934127420967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,25 +483,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &8515391918793822164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3243035983985247528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea276543fabba5499f4f58092feaea9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 1393924150881400301}
-  descriptionText: {fileID: 7222369568943532855}
-  rewardText: {fileID: 6522647304009456842}
-  turnInButton: {fileID: 8950382192853892662}
-  progressImage: {fileID: 6972726677016055629}
-  costSlotPrefab: {fileID: 7379128548144887482, guid: f4078cac67e544749bfe0a41bdd7efef, type: 3}
-  costParent: {fileID: 6274911227562582775}
 --- !u!1 &3320074034973694299
 GameObject:
   m_ObjectHideFlags: 0
