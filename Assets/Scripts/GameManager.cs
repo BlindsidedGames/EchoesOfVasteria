@@ -28,6 +28,7 @@ namespace TimelessEchoes
         public static GameManager Instance { get; private set; }
         [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
         [SerializeField] private GameObject gravestonePrefab;
+        [SerializeField] private GameObject reaperPrefab;
 
         [Header("UI References")] [SerializeField]
         private Button startRunButton;
@@ -46,6 +47,8 @@ namespace TimelessEchoes
         [SerializeField] private SlicedFilledImage deathTimerImage;
         [SerializeField] private float deathWindowDuration = 20f;
         [SerializeField] public string mildredQuestId;
+
+        public GameObject ReaperPrefab => reaperPrefab;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -225,14 +228,28 @@ namespace TimelessEchoes
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
 
-                // Disable hero so it stops moving during the death window
                 var ai = hero.GetComponent<AIPath>();
                 if (ai != null)
                     ai.enabled = false;
-                hero.gameObject.SetActive(false);
-                if (gravestonePrefab != null && currentMap != null)
-                    Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
-                        currentMap.transform);
+
+                if (reaperPrefab != null && currentMap != null)
+                {
+                    Enemies.ReaperManager.Spawn(reaperPrefab, hero.gameObject, currentMap.transform, false,
+                        () =>
+                        {
+                            hero.gameObject.SetActive(false);
+                            if (gravestonePrefab != null)
+                                Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
+                                    currentMap.transform);
+                        });
+                }
+                else
+                {
+                    hero.gameObject.SetActive(false);
+                    if (gravestonePrefab != null && currentMap != null)
+                        Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
+                            currentMap.transform);
+                }
             }
 
             Log("Hero death", TELogCategory.Hero, this);
