@@ -22,7 +22,7 @@ namespace TimelessEchoes.Quests
     {
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
-        private GenerationManager generationManager;
+        private DiscipleGenerationManager generationManager;
         private QuestUIManager uiManager;
 
         [FormerlySerializedAs("startingQuests")] [SerializeField]
@@ -45,9 +45,9 @@ namespace TimelessEchoes.Quests
             killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
                 Log("EnemyKillTracker missing", TELogCategory.Combat, this);
-            generationManager = GenerationManager.Instance;
+            generationManager = DiscipleGenerationManager.Instance;
             if (generationManager == null)
-                Log("GenerationManager missing", TELogCategory.General, this);
+                Log("DiscipleGenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
             if (uiManager == null)
                 Log("QuestUIManager missing", TELogCategory.Quest, this);

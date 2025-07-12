@@ -10,7 +10,7 @@ namespace TimelessEchoes.NpcGeneration
     /// <summary>
     ///     Updates a slider or image to reflect the progress of an NPC generator.
     /// </summary>
-    public class NpcGeneratorProgressUI : MonoBehaviour
+    public class DiscipleGeneratorProgressUI : MonoBehaviour
     {
         [SerializeField, HideInInspector] private DiscipleGenerator generator;
         [SerializeField, HideInInspector] private Resource resource;

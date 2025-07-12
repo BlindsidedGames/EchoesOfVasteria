@@ -89,7 +89,7 @@ namespace TimelessEchoes.NpcGeneration
                 AddCycle();
             }
 
-            // UI elements update themselves via GeneratorUIManager
+            // UI elements update themselves via DiscipleGeneratorUIManager
         }
 
         public void ApplyOfflineProgress(double seconds)
@@ -102,7 +102,7 @@ namespace TimelessEchoes.NpcGeneration
                 AddCycle();
             }
 
-            // UI elements update themselves via GeneratorUIManager
+            // UI elements update themselves via DiscipleGeneratorUIManager
         }
 
         public void CollectResources()
@@ -191,7 +191,7 @@ namespace TimelessEchoes.NpcGeneration
                     ApplyOfflineProgress(seconds);
             }
 
-            // UI will be created by GeneratorUIManager
+            // UI will be created by DiscipleGeneratorUIManager
         }
 
         private void OnQuestHandinEvent(string questId)
