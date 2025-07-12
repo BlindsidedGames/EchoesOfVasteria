@@ -7252,11 +7252,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quests:
-  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   - {fileID: 11400000, guid: 3e0eca7419a4bfd4ba09580e54b1f9b0, type: 2}
   - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
-  - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
   - {fileID: 11400000, guid: ca836618e8259ae4399380254002fa32, type: 2}
+  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
+  - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
+  - {fileID: 11400000, guid: e7b996d2be115c74aae9b52d0808a89f, type: 2}
+  - {fileID: 11400000, guid: ac7e31f0151eed24397bcddbdb709b85, type: 2}
 --- !u!1 &282096250
 GameObject:
   m_ObjectHideFlags: 0
@@ -88498,6 +88500,7 @@ MonoBehaviour:
   rewardText: {fileID: 5400288448338715740}
   turnInButton: {fileID: 7800957756775777952}
   progressImage: {fileID: 8120180796546217947}
+  questImage: {fileID: 0}
   progressBar: {fileID: 0}
   costSlotPrefab: {fileID: 7379128548144887482, guid: f4078cac67e544749bfe0a41bdd7efef, type: 3}
   costParent: {fileID: 5143183422528756321}
