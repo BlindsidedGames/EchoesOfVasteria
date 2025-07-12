@@ -16,7 +16,6 @@ namespace TimelessEchoes.Skills
         [SerializeField] private SkillController controller;
         [SerializeField] private List<SkillUIReferences> skillSelectors = new();
         [SerializeField] private List<Skill> skills = new();
-        [SerializeField] private Button firstSkillButton;
         [SerializeField] private TMP_Text skillTitle;
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private TMP_Text experienceText;
@@ -24,7 +23,6 @@ namespace TimelessEchoes.Skills
         [SerializeField] private MilestoneBonusUI bonusUI;
 
         private int selectedIndex = -1;
-        private int previousSelectedIndex = -1;
 
         private Skill CurrentSkill => selectedIndex >= 0 && selectedIndex < skills.Count ? skills[selectedIndex] : null;
 
@@ -56,9 +54,7 @@ namespace TimelessEchoes.Skills
 
             if (bonusUI != null && !bonusUI.gameObject.activeSelf)
                 bonusUI.gameObject.SetActive(true);
-            if (firstSkillButton != null)
-                firstSkillButton.onClick.AddListener(ToggleFirstSkill);
-            DeselectSkill();
+            SelectSkill(0);
             UpdateSkillSelectorLevels();
         }
 
@@ -122,10 +118,8 @@ namespace TimelessEchoes.Skills
                 bonusUI.PopulateMilestones(skill);
         }
 
-        private void SelectSkill(int index, bool recordPrevious = true)
+        private void SelectSkill(int index)
         {
-            if (recordPrevious && selectedIndex != index)
-                previousSelectedIndex = selectedIndex;
             selectedIndex = Mathf.Clamp(index, 0, skillSelectors.Count - 1);
             for (int i = 0; i < skillSelectors.Count; i++)
                 if (skillSelectors[i] != null)
@@ -207,18 +201,6 @@ namespace TimelessEchoes.Skills
         {
             yield return null;
             OnShowLevelTextChanged();
-        }
-
-        private void ToggleFirstSkill()
-        {
-            if (skills.Count == 0)
-                return;
-
-            int index = previousSelectedIndex >= 0 && previousSelectedIndex < skills.Count
-                ? previousSelectedIndex
-                : 0;
-
-            SelectSkill(index, false);
         }
 
         private void DeselectSkill()
