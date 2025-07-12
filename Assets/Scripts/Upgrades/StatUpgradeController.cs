@@ -13,7 +13,6 @@ namespace TimelessEchoes.Upgrades
     public class StatUpgradeController : MonoBehaviour
     {
         public static StatUpgradeController Instance { get; private set; }
-        [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private List<StatUpgrade> upgrades = new();
 
         private readonly Dictionary<StatUpgrade, int> levels = new();
@@ -78,7 +77,8 @@ namespace TimelessEchoes.Upgrades
             {
                 var lvl = GetLevel(upgrade);
                 var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
-                if (resourceManager != null && resourceManager.GetAmount(req.resource) < cost)
+                var manager = ResourceManager.Instance;
+                if (manager != null && manager.GetAmount(req.resource) < cost)
                     return false;
             }
 
@@ -95,7 +95,7 @@ namespace TimelessEchoes.Upgrades
             {
                 var lvl = GetLevel(upgrade);
                 var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
-                resourceManager?.Spend(req.resource, cost);
+                ResourceManager.Instance?.Spend(req.resource, cost);
             }
 
             levels[upgrade] = GetLevel(upgrade) + 1;

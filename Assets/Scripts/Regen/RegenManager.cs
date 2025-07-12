@@ -17,7 +17,6 @@ namespace TimelessEchoes.Regen
     public class RegenManager : MonoBehaviour
     {
         public static RegenManager Instance { get; private set; }
-        [SerializeField] private ResourceManager resourceManager;
         [SerializeField] private ResourceInventoryUI inventoryUI;
         [SerializeField] private List<Resource> fishResources = new();
         [SerializeField] private RegenEntryUIReferences entryPrefab;
@@ -30,12 +29,9 @@ namespace TimelessEchoes.Regen
         private void Awake()
         {
             Instance = this;
-            if (resourceManager == null)
-            {
-                resourceManager = ResourceManager.Instance;
-                if (resourceManager == null)
-                    Log("ResourceManager missing", TELogCategory.Resource, this);
-            }
+            var manager = ResourceManager.Instance;
+            if (manager == null)
+                Log("ResourceManager missing", TELogCategory.Resource, this);
 
             if (inventoryUI == null)
             {
@@ -54,8 +50,8 @@ namespace TimelessEchoes.Regen
             OnSaveData += SaveState;
             OnLoadData += LoadState;
             OnResetData += ResetDonations;
-            if (resourceManager != null)
-                resourceManager.OnInventoryChanged += UpdateAllEntries;
+            if (manager != null)
+                manager.OnInventoryChanged += UpdateAllEntries;
         }
 
         private void OnDestroy()
@@ -63,8 +59,9 @@ namespace TimelessEchoes.Regen
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
             OnResetData -= ResetDonations;
-            if (resourceManager != null)
-                resourceManager.OnInventoryChanged -= UpdateAllEntries;
+            var manager = ResourceManager.Instance;
+            if (manager != null)
+                manager.OnInventoryChanged -= UpdateAllEntries;
             if (Instance == this)
                 Instance = null;
         }
@@ -131,8 +128,9 @@ namespace TimelessEchoes.Regen
             var res = fishResources[index];
             if (entry == null || res == null) return;
 
-            var unlocked = resourceManager && resourceManager.IsUnlocked(res);
-            var playerAmt = resourceManager ? resourceManager.GetAmount(res) : 0;
+            var manager = ResourceManager.Instance;
+            var unlocked = manager != null && manager.IsUnlocked(res);
+            var playerAmt = manager != null ? manager.GetAmount(res) : 0;
             var donated = donations.TryGetValue(res, out var val) ? val : 0;
 
             var costRefs = entry.costResourceUIReferences;
@@ -165,21 +163,23 @@ namespace TimelessEchoes.Regen
 
         private void DonatePercentage(Resource res, float pct)
         {
-            if (resourceManager == null || res == null) return;
-            double amount = Mathf.Floor((float)(resourceManager.GetAmount(res) * pct));
+            var manager = ResourceManager.Instance;
+            if (manager == null || res == null) return;
+            double amount = Mathf.Floor((float)(manager.GetAmount(res) * pct));
             if (amount <= 0) return;
             AddDonation(res, amount);
-            resourceManager.Spend(res, amount);
+            manager.Spend(res, amount);
             UpdateAllEntries();
         }
 
         private void DonateAll(Resource res)
         {
-            if (resourceManager == null || res == null) return;
-            var amount = resourceManager.GetAmount(res);
+            var manager = ResourceManager.Instance;
+            if (manager == null || res == null) return;
+            var amount = manager.GetAmount(res);
             if (amount <= 0) return;
             AddDonation(res, amount);
-            resourceManager.Spend(res, amount);
+            manager.Spend(res, amount);
             UpdateAllEntries();
         }
 
