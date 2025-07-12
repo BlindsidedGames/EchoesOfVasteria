@@ -90,6 +90,16 @@ namespace TimelessEchoes
                                      FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
                     if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
                     {
+                        var prefab = TimelessEchoes.GameManager.Instance != null ?
+                                     TimelessEchoes.GameManager.Instance.ReaperPrefab : null;
+                        if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true) != null)
+                        {
+                            var sfx2 = GetComponent<ProjectileHitSfx>();
+                            sfx2?.PlayHit();
+                            SpawnEffect();
+                            Destroy(gameObject);
+                            return;
+                        }
                         var hp = target.GetComponent<IHasHealth>();
                         if (hp != null)
                             dmgAmount = Mathf.Max(dmgAmount, hp.CurrentHealth);

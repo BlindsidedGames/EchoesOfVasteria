@@ -1,0 +1,86 @@
+using System;
+using UnityEngine;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.Hero;
+using TimelessEchoes.Stats;
+
+namespace TimelessEchoes.Enemies
+{
+    /// <summary>
+    /// Handles spawning and timed kills for reaper animations.
+    /// </summary>
+    public class ReaperManager : MonoBehaviour
+    {
+        private GameObject target;
+        private Action onKill;
+        private bool fromHero;
+
+        /// <summary>
+        /// Initialize the reaper for a target.
+        /// </summary>
+        /// <param name="target">Target object to reap.</param>
+        /// <param name="fromHero">True if spawned from the hero.</param>
+        /// <param name="onKill">Callback invoked after the target is killed.</param>
+        public void Init(GameObject target, bool fromHero = false, Action onKill = null)
+        {
+            this.target = target;
+            this.onKill = onKill;
+            this.fromHero = fromHero;
+        }
+
+        /// <summary>
+        /// Animator event used to kill the assigned target.
+        /// </summary>
+        public void KillTarget()
+        {
+            if (target == null) return;
+            var hp = target.GetComponent<IHasHealth>();
+            var dmg = target.GetComponent<IDamageable>();
+            if (hp != null && dmg != null && hp.CurrentHealth > 0f)
+            {
+                float amount = hp.CurrentHealth;
+                dmg.TakeDamage(amount);
+                if (fromHero)
+                {
+                    var tracker = GameplayStatTracker.Instance ??
+                                   UnityEngine.Object.FindFirstObjectByType<GameplayStatTracker>();
+                    tracker?.AddDamageDealt(amount);
+                    var buff = BuffManager.Instance ??
+                               UnityEngine.Object.FindFirstObjectByType<BuffManager>();
+                    var hero = HeroController.Instance ??
+                                UnityEngine.Object.FindFirstObjectByType<HeroController>();
+                    var heroHp = hero != null ? hero.GetComponent<HeroHealth>() : null;
+                    if (buff != null && heroHp != null)
+                    {
+                        float ls = buff.LifestealPercent;
+                        if (ls > 0f)
+                            heroHp.Heal(amount * ls / 100f);
+                    }
+                }
+            }
+            onKill?.Invoke();
+            target = null;
+        }
+
+        /// <summary>
+        /// Animator event to destroy the reaper instance.
+        /// </summary>
+        public void DestroySelf()
+        {
+            Destroy(gameObject);
+        }
+
+        /// <summary>
+        /// Spawns a new reaper targeting the given object.
+        /// </summary>
+        public static ReaperManager Spawn(GameObject prefab, GameObject target, Transform parent = null, bool fromHero = false, Action onKill = null)
+        {
+            if (prefab == null || target == null) return null;
+            var obj = Instantiate(prefab, target.transform.position, Quaternion.identity, parent);
+            var mgr = obj.GetComponent<ReaperManager>();
+            if (mgr != null)
+                mgr.Init(target, fromHero, onKill);
+            return mgr;
+        }
+    }
+}
