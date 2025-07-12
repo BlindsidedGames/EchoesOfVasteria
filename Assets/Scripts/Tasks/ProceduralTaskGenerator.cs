@@ -224,8 +224,9 @@ namespace TimelessEchoes.Tasks
             if (taskCount <= 0 && enemyCount <= 0)
                 return;
 
-            var spawnedTasks = new List<(float x, MonoBehaviour obj)>();
+            var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
+            var taskMap = new Dictionary<Vector3, MonoBehaviour>();
             for (var i = 0; i < taskCount; i++)
             {
                 var localX = Random.Range(localMinX, localMaxX);
@@ -308,10 +309,11 @@ namespace TimelessEchoes.Tasks
                 if (mono != null)
                 {
                     if (clearExisting)
-                        spawnedTasks.Add((pos.x, mono));
+                        spawnedTasks.Add((pos, mono));
                     else
                         controller.AddRuntimeTaskObject(mono);
                     taskPositions.Add(pos);
+                    taskMap[pos] = mono;
                 }
             }
 
@@ -404,14 +406,29 @@ namespace TimelessEchoes.Tasks
                 else
                     pos = RandomPositionAtX(npc.localX);
 
-                var tooClose = false;
-                foreach (var existing in taskPositions)
+                for (int i = taskPositions.Count - 1; i >= 0; i--)
+                {
+                    var existing = taskPositions[i];
                     if (Vector3.Distance(existing, pos) < minTaskDistance)
                     {
-                        tooClose = true;
-                        break;
+                        if (taskMap.TryGetValue(existing, out var objToRemove))
+                        {
+                            if (clearExisting)
+                                spawnedTasks.RemoveAll(t => t.obj == objToRemove);
+                            else
+                                controller.RemoveTaskObject(objToRemove);
+                            generatedObjects.Remove(objToRemove.gameObject);
+#if UNITY_EDITOR
+                            if (!Application.isPlaying)
+                                DestroyImmediate(objToRemove.gameObject);
+                            else
+#endif
+                                Destroy(objToRemove.gameObject);
+                            taskMap.Remove(existing);
+                        }
+                        taskPositions.RemoveAt(i);
                     }
-                if (tooClose) continue;
+                }
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
                 var obj = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
@@ -420,16 +437,17 @@ namespace TimelessEchoes.Tasks
                 if (mono != null)
                 {
                     if (clearExisting)
-                        spawnedTasks.Add((pos.x, mono));
+                        spawnedTasks.Add((pos, mono));
                     else
                         controller.AddRuntimeTaskObject(mono);
                     taskPositions.Add(pos);
+                    taskMap[pos] = mono;
                 }
             }
 
             if (clearExisting)
             {
-                spawnedTasks.Sort((a, b) => a.x.CompareTo(b.x));
+                spawnedTasks.Sort((a, b) => a.pos.x.CompareTo(b.pos.x));
                 foreach (var pair in spawnedTasks)
                     controller.AddTaskObject(pair.obj);
 
