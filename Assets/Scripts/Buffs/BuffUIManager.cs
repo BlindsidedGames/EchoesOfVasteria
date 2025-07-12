@@ -267,7 +267,12 @@ namespace TimelessEchoes.Buffs
                 }
 
                 if (slot.questionMarkImage != null)
+                {
                     slot.questionMarkImage.enabled = !unlocked;
+                    slot.questionMarkImage.color = !unlocked
+                        ? new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f)
+                        : Color.white;
+                }
 
                 if (slot.countText != null)
                     slot.countText.text = req.amount.ToString();
@@ -369,11 +374,9 @@ namespace TimelessEchoes.Buffs
             foreach (var req in recipe.requirements)
             {
                 var slotRef = Instantiate(runSlotTooltip.tooltipCostPrefab, runSlotTooltip.tooltipCostParent);
+                bool unlockedRes = resourceManager && resourceManager.IsUnlocked(req.resource);
                 if (slotRef.resourceIcon != null)
-                {
-                    bool unlockedRes = resourceManager && resourceManager.IsUnlocked(req.resource);
                     slotRef.resourceIcon.sprite = unlockedRes && req.resource ? req.resource.icon : unknownResourceSprite;
-                }
                 if (slotRef.resourceCostText != null)
                     slotRef.resourceCostText.text = $"Cost: {FormatNumber(req.amount, true)}";
 
@@ -383,7 +386,12 @@ namespace TimelessEchoes.Buffs
 
                 var enough = held >= req.amount;
                 if (slotRef.resourceIcon != null)
-                    slotRef.resourceIcon.color = enough ? Color.white : grey;
+                {
+                    if (!unlockedRes)
+                        slotRef.resourceIcon.color = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    else
+                        slotRef.resourceIcon.color = enough ? Color.white : grey;
+                }
             }
 
             var ui = runSlotButtons[slot];
