@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Mildred
+  m_Name: Flip That Flop
   m_EditorClassIdentifier: 
-  questId: Mildred
-  questName: A fishy situation
-  description: Gather and donate Flippy Floppy to Utoes.
-  rewardDescription: Mildred follows and provides you with buffs in exchange for
-    resources!
+  questId: Flip that Flop
+  questName: Flip That Flop
+  description: Gather up some fish for Mildred.
+  rewardDescription: Gain a Floppy Disciple.
   npcId: 
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   requirements:
-  - type: 2
+  - type: 0
     resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
-    amount: 50
+    amount: 100
     enemies: []
     killIcon: {fileID: 0}
   unlockPrefab: {fileID: 0}
