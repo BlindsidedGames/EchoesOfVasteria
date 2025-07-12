@@ -7,9 +7,9 @@ namespace TimelessEchoes.NpcGeneration
     /// Central manager that updates all NPC resource generators and applies offline progress.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class GenerationManager : MonoBehaviour
+    public class DiscipleGenerationManager : MonoBehaviour
     {
-        public static GenerationManager Instance { get; private set; }
+        public static DiscipleGenerationManager Instance { get; private set; }
         [SerializeField] private List<DiscipleGenerator> generators = new();
 
         public IReadOnlyList<DiscipleGenerator> Generators => generators;
