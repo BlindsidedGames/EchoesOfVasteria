@@ -66,6 +66,11 @@ namespace TimelessEchoes
         public event Action<float, float> OnHealthChanged;
         public event Action OnDeath;
 
+        protected void RaiseHealthChanged()
+        {
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+        }
+
         public SlicedFilledImage HealthBar
         {
             get => healthBar;

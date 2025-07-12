@@ -28,7 +28,7 @@ namespace TimelessEchoes.Enemies
 
             CurrentHealth -= total;
             UpdateBar();
-            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+            RaiseHealthChanged();
 
             if (Application.isPlaying)
             {
