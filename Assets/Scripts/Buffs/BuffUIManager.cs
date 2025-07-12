@@ -28,6 +28,7 @@ namespace TimelessEchoes.Buffs
 
         [Header("Tooltip References")] [SerializeField]
         private RunBuffTooltipUIReferences runSlotTooltip;
+        [SerializeField] private Sprite unknownResourceSprite;
 
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
@@ -52,7 +53,7 @@ namespace TimelessEchoes.Buffs
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
                     if (i >= unlocked)
-                        ui.iconImage.color = grey;
+                        ui.iconImage.color = recipe ? grey : transparent;
                     else
                         ui.iconImage.color = recipe ? Color.white : transparent;
                 }
@@ -79,7 +80,7 @@ namespace TimelessEchoes.Buffs
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
                     if (i >= unlocked)
                     {
-                        ui.iconImage.color = grey;
+                        ui.iconImage.color = recipe ? grey : transparent;
                     }
                     else if (recipe == null)
                     {
@@ -369,7 +370,10 @@ namespace TimelessEchoes.Buffs
             {
                 var slotRef = Instantiate(runSlotTooltip.tooltipCostPrefab, runSlotTooltip.tooltipCostParent);
                 if (slotRef.resourceIcon != null)
-                    slotRef.resourceIcon.sprite = req.resource ? req.resource.icon : null;
+                {
+                    bool unlockedRes = resourceManager && resourceManager.IsUnlocked(req.resource);
+                    slotRef.resourceIcon.sprite = unlockedRes && req.resource ? req.resource.icon : unknownResourceSprite;
+                }
                 if (slotRef.resourceCostText != null)
                     slotRef.resourceCostText.text = $"Cost: {FormatNumber(req.amount, true)}";
 
