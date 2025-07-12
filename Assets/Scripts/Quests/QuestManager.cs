@@ -273,6 +273,16 @@ namespace TimelessEchoes.Quests
                 inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst));
                 UpdateProgress(inst);
             }
+
+            foreach (var quest in quests)
+            {
+                if (quest == null) continue;
+                if (active.ContainsKey(quest.questId))
+                    continue;
+                if (!oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) || !rec.Completed)
+                    continue;
+                uiManager.CreateEntry(quest, null, false, true);
+            }
         }
 
 
