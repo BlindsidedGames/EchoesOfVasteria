@@ -28,6 +28,11 @@ namespace TimelessEchoes.NpcGeneration
             BuildEntries();
         }
 
+        private void Start()
+        {
+            StartCoroutine(DeferredBuild());
+        }
+
         private void OnEnable()
         {
             OnQuestHandin += OnQuestHandinHandler;
@@ -70,6 +75,7 @@ namespace TimelessEchoes.NpcGeneration
                     ui.SetData(gen, entry.resource, entry.amount);
                     list.Add(ui);
                 }
+
                 entries[gen] = list;
             }
         }
