@@ -107,6 +107,8 @@ namespace TimelessEchoes.NpcGeneration
                     collectionRateText.text = CalcUtils.FormatNumber(amountPerCycle, true);
                 }
             }
+            if (collectButton != null)
+                collectButton.interactable = generator.GetStoredAmount(resource) > 0;
         }
     }
 }
