@@ -21,6 +21,7 @@ namespace TimelessEchoes.Quests
         public List<Requirement> requirements = new();
         public GameObject unlockPrefab;
         public List<GameObject> unlockObjects = new();
+        public int unlockBuffSlots;
 
         [Serializable]
         public class Requirement
