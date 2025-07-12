@@ -78,6 +78,8 @@ namespace TimelessEchoes.NpcGeneration
 
                 entries[gen] = list;
             }
+
+            UpdateCollectAllButton();
         }
 
         private void CollectAll()
@@ -96,6 +98,39 @@ namespace TimelessEchoes.NpcGeneration
         {
             yield return null;
             BuildEntries();
+        }
+
+        private void Update()
+        {
+            UpdateCollectAllButton();
+        }
+
+        private void UpdateCollectAllButton()
+        {
+            if (collectAllButton == null)
+                return;
+
+            bool canCollect = false;
+            if (generationManager != null)
+            {
+                foreach (var gen in generationManager.Generators)
+                {
+                    if (gen == null || !gen.RequirementsMet)
+                        continue;
+                    foreach (var entry in gen.ResourceEntries)
+                    {
+                        if (entry.resource == null) continue;
+                        if (gen.GetStoredAmount(entry.resource) > 0)
+                        {
+                            canCollect = true;
+                            break;
+                        }
+                    }
+                    if (canCollect) break;
+                }
+            }
+
+            collectAllButton.interactable = canCollect;
         }
     }
 }
