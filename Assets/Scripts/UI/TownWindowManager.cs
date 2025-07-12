@@ -58,6 +58,11 @@ namespace TimelessEchoes.UI
                 startRunButton.onClick.AddListener(CloseAllWindows);
         }
 
+        private void Start()
+        {
+            CloseAllWindows();
+        }
+
         private void OnDestroy()
         {
             if (upgrades.button != null)
