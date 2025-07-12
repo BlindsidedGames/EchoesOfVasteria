@@ -12,7 +12,7 @@ namespace TimelessEchoes.Enemies
         public Sprite icon;
         public int maxHealth = 10;
         public int experience = 10;
-        public int defense = 0;
+        public float defense = 0f;
         public int damage = 1;
         public float moveSpeed = 3f;
         public float attackSpeed = 1f;
