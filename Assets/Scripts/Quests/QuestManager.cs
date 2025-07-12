@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
+using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Regen;

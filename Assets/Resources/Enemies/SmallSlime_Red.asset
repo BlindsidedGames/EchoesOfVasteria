@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
-  m_Name: SmallSlime_Green
+  m_Name: SmallSlime_Red
   m_EditorClassIdentifier: 
-  enemyName: Green Minislime
-  icon: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
-  maxHealth: 10
-  experience: 10
-  defense: 0
-  damage: 1
-  moveSpeed: 3
-  attackSpeed: 1
+  enemyName: Red Minislime
+  displayOrder: 6
+  icon: {fileID: 3889767076933404985, guid: f67999f43e6e3304d8c33d27330fe20e, type: 3}
+  maxHealth: 100
+  experience: 5
+  defense: 3
+  damage: 5
+  moveSpeed: 4
+  attackSpeed: 1.2
   attackRange: 1
-  visionRange: 5
-  assistRange: 8
+  visionRange: 8
+  assistRange: 10
   wanderDistance: 2
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

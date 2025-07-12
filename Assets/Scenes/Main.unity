@@ -7873,6 +7873,9 @@ MonoBehaviour:
     - Name: BuffSlots
       Entry: 6
       Data: 
+    - Name: UnlockedBuffSlots
+      Entry: 3
+      Data: 0
     - Name: FishDonations
       Entry: 6
       Data: 
@@ -8193,7 +8196,7 @@ GameObject:
   - component: {fileID: 336127620}
   - component: {fileID: 336127622}
   m_Layer: 0
-  m_Name: Cat_Commission_0
+  m_Name: Mildred
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8262,12 +8265,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336127619}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -61.229603, y: -3.0336118, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -11.229603, y: -3.0336118, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 737307429}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &336127622
 Animator:
@@ -19711,6 +19714,7 @@ Transform:
   - {fileID: 1366278676}
   - {fileID: 6094697013164807149}
   - {fileID: 1211293601}
+  - {fileID: 336127621}
   - {fileID: 1534444395}
   - {fileID: 1814931133}
   - {fileID: 1266195801}
@@ -26320,6 +26324,7 @@ GameObject:
   - component: {fileID: 898534101}
   - component: {fileID: 898534099}
   - component: {fileID: 898534100}
+  - component: {fileID: 898534102}
   m_Layer: 5
   m_Name: Scripts
   m_TagString: Untagged
@@ -26412,6 +26417,24 @@ MonoBehaviour:
   deathWindowDuration: 20
   mildredQuestId: Mildred
   tavernCamera: {fileID: 495953847}
+--- !u!114 &898534102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898534097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c07b310e7c6ecbc54212f99931c4d7c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+    disableUntilComplete:
+    - {fileID: 336127619}
+    - {fileID: 1614495080}
+    enableUntilComplete: []
 --- !u!1 &899155870
 GameObject:
   m_ObjectHideFlags: 0
@@ -62269,7 +62292,7 @@ MonoBehaviour:
   resources:
   - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
     amount: 5
-  requiredQuest: {fileID: 0}
+  requiredQuest: {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
   generationInterval: 300
   progressUIParent: {fileID: 1756765361}
   progressUIPrefab: {fileID: 7518413360732249067, guid: 3c8335cb747779c41a154df9eb4dad8e, type: 3}
@@ -66484,7 +66507,7 @@ GameObject:
   - component: {fileID: 1625529691}
   - component: {fileID: 1625529692}
   m_Layer: 5
-  m_Name: WitchBuffs
+  m_Name: Buffs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90114,4 +90137,3 @@ SceneRoots:
   - {fileID: 898534098}
   - {fileID: 737307429}
   - {fileID: 149270449}
-  - {fileID: 336127621}
