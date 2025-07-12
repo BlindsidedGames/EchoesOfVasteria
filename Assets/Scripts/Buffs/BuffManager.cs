@@ -113,18 +113,25 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        private void EnsureResourceManager()
+        {
+            if (resourceManager == null)
+                resourceManager = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+        }
+
         public bool CanPurchase(BuffRecipe recipe)
         {
-            if (recipe == null) return false;
+            EnsureResourceManager();
+            if (recipe == null || resourceManager == null) return false;
             foreach (var req in recipe.requirements)
-                if (resourceManager != null &&
-                    resourceManager.GetAmount(req.resource) < req.amount)
+                if (resourceManager.GetAmount(req.resource) < req.amount)
                     return false;
             return true;
         }
 
         public bool PurchaseBuff(BuffRecipe recipe)
         {
+            EnsureResourceManager();
             if (!CanPurchase(recipe)) return false;
 
             foreach (var req in recipe.requirements)
