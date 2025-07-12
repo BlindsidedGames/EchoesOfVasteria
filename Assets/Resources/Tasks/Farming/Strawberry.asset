@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Strawberry
+  m_EditorClassIdentifier: 
+  taskName: Strawberry
+  taskID: 4
+  taskIcon: {fileID: -1041579510, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+  xpForCompletion: 5
+  taskDuration: 2
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
+    dropRange: {x: 1, y: 5}
+    dropChance: 1
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0
