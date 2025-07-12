@@ -8191,6 +8191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336127621}
   - component: {fileID: 336127620}
+  - component: {fileID: 336127622}
   m_Layer: 0
   m_Name: Cat_Commission_0
   m_TagString: Untagged
@@ -8268,6 +8269,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &336127622
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336127619}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: be75eddedf7d0e04c814f2cf2ba1fd17, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &339797903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18412,8 +18435,8 @@ MonoBehaviour:
     button: {fileID: 150212040}
     window: {fileID: 1255173856}
   buffs:
-    button: {fileID: 1641476522}
-    window: {fileID: 2107995032}
+    button: {fileID: 1614495081}
+    window: {fileID: 312211558}
   quests:
     button: {fileID: 2134122030}
     window: {fileID: 1566471096}
@@ -18423,6 +18446,9 @@ MonoBehaviour:
   regen:
     button: {fileID: 912511580}
     window: {fileID: 423058639}
+  disciples:
+    button: {fileID: 1641476522}
+    window: {fileID: 2107995032}
   inventory:
     button: {fileID: 554339033}
     window: {fileID: 396454458}
@@ -27781,7 +27807,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 13.000223, y: -18}
+  m_AnchoredPosition: {x: 13.000221, y: -18}
   m_SizeDelta: {x: 26.000446, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &982574864
@@ -65931,7 +65957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -348, y: 97.2}
+  m_AnchoredPosition: {x: -348, y: 97.20001}
   m_SizeDelta: {x: 49.435, y: 17}
   m_Pivot: {x: 0, y: 0}
 --- !u!1001 &1617814188
