@@ -229,6 +229,10 @@ namespace Blindsided
             if (saveData.BuffSlots.Count < 5)
                 while (saveData.BuffSlots.Count < 5)
                     saveData.BuffSlots.Add(null);
+            if (saveData.UnlockedBuffSlots <= 0)
+                saveData.UnlockedBuffSlots = 1;
+            else if (saveData.UnlockedBuffSlots > 5)
+                saveData.UnlockedBuffSlots = 5;
             saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
             saveData.FishDonations ??= new Dictionary<string, double>();
         }

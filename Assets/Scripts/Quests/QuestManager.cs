@@ -201,6 +201,8 @@ namespace TimelessEchoes.Quests
             foreach (var obj in inst.data.unlockObjects)
                 if (obj != null)
                     obj.SetActive(true);
+            if (inst.data.unlockBuffSlots > 0)
+                BuffManager.Instance?.UnlockSlots(inst.data.unlockBuffSlots);
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 StaticReferences.CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)

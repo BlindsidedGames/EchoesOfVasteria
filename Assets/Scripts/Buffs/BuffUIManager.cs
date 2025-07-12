@@ -42,6 +42,7 @@ namespace TimelessEchoes.Buffs
 
             var transparent = new Color(1f, 1f, 1f, 0f);
             var grey = new Color(1f, 1f, 1f, 0.4f);
+            var unlocked = buffManager.UnlockedSlots;
 
             for (var i = 0; i < assignSlotButtons.Length; i++)
             {
@@ -50,8 +51,13 @@ namespace TimelessEchoes.Buffs
                 if (ui != null && ui.iconImage != null)
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
-                    ui.iconImage.color = recipe ? Color.white : transparent;
+                    if (i >= unlocked)
+                        ui.iconImage.color = grey;
+                    else
+                        ui.iconImage.color = recipe ? Color.white : transparent;
                 }
+                if (ui != null && ui.activateButton != null)
+                    ui.activateButton.interactable = i < unlocked;
             }
 
             for (var i = 0; i < runSlotButtons.Length; i++)
@@ -71,7 +77,11 @@ namespace TimelessEchoes.Buffs
                 if (ui.iconImage != null)
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
-                    if (recipe == null)
+                    if (i >= unlocked)
+                    {
+                        ui.iconImage.color = grey;
+                    }
+                    else if (recipe == null)
                     {
                         ui.iconImage.color = transparent;
                     }
@@ -82,14 +92,21 @@ namespace TimelessEchoes.Buffs
                 }
 
                 if (ui.activateButton != null)
-                    ui.activateButton.interactable = recipe != null && canBuy && distanceOk;
+                    ui.activateButton.interactable = i < unlocked && recipe != null && canBuy && distanceOk;
 
                 if (ui.durationText != null)
                 {
-                    var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
-                    ui.durationText.text = remain > 0f
-                        ? FormatTime(remain, shortForm: true)
-                        : string.Empty;
+                    if (i >= unlocked)
+                    {
+                        ui.durationText.text = "Locked";
+                    }
+                    else
+                    {
+                        var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
+                        ui.durationText.text = remain > 0f
+                            ? FormatTime(remain, shortForm: true)
+                            : string.Empty;
+                    }
                 }
             }
         }
@@ -112,6 +129,7 @@ namespace TimelessEchoes.Buffs
             BuildRecipeEntries();
 
             OnLoadData += OnLoadDataHandler;
+            OnQuestHandin += OnQuestHandinHandler;
 
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += OnInventoryChanged;
@@ -165,6 +183,7 @@ namespace TimelessEchoes.Buffs
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChanged;
             OnLoadData -= OnLoadDataHandler;
+            OnQuestHandin -= OnQuestHandinHandler;
 
             for (var i = 0; i < assignSlotButtons.Length; i++)
                 if (assignSlotButtons[i] != null && assignSlotButtons[i].activateButton != null)
@@ -278,6 +297,11 @@ namespace TimelessEchoes.Buffs
             StartCoroutine(DeferredRefresh());
         }
 
+        private void OnQuestHandinHandler(string questId)
+        {
+            StartCoroutine(DeferredRefresh());
+        }
+
         private IEnumerator DeferredRefresh()
         {
             yield return null;
@@ -294,8 +318,8 @@ namespace TimelessEchoes.Buffs
 
         private void OnAssignSlot(int slot)
         {
-            if (selectedRecipe != null)
-                buffManager?.AssignBuff(slot, selectedRecipe);
+            if (selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
+                buffManager.AssignBuff(slot, selectedRecipe);
             if (slotAssignWindow != null)
                 slotAssignWindow.SetActive(false);
             RefreshSlots();
@@ -303,7 +327,8 @@ namespace TimelessEchoes.Buffs
 
         private void OnRunSlot(int slot)
         {
-            buffManager?.ActivateSlot(slot);
+            if (buffManager != null)
+                buffManager.ActivateSlot(slot);
             RefreshSlots();
         }
 
@@ -321,6 +346,12 @@ namespace TimelessEchoes.Buffs
             if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 ||
                 slot >= runSlotButtons.Length)
                 return;
+
+            if (buffManager != null && !buffManager.IsSlotUnlocked(slot))
+            {
+                runSlotTooltip.tooltipPanel.SetActive(false);
+                return;
+            }
 
             var recipe = buffManager != null ? buffManager.GetAssigned(slot) : null;
             if (recipe == null)

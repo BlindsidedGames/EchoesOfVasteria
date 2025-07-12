@@ -22,6 +22,16 @@ namespace TimelessEchoes.Buffs
 
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
+
+        public int UnlockedSlots
+        {
+            get
+            {
+                if (oracle != null)
+                    return Mathf.Clamp(oracle.saveData.UnlockedBuffSlots, 1, slotAssignments.Count);
+                return 1;
+            }
+        }
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
@@ -222,9 +232,14 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public bool IsSlotUnlocked(int slot)
+        {
+            return slot >= 0 && slot < UnlockedSlots;
+        }
+
         public void AssignBuff(int slot, BuffRecipe recipe)
         {
-            if (slot < 0 || slot >= slotAssignments.Count) return;
+            if (!IsSlotUnlocked(slot)) return;
 
             if (recipe != null)
             {
@@ -247,9 +262,16 @@ namespace TimelessEchoes.Buffs
 
         public bool ActivateSlot(int slot)
         {
-            if (slot < 0 || slot >= slotAssignments.Count) return false;
+            if (!IsSlotUnlocked(slot)) return false;
             var recipe = slotAssignments[slot];
             return recipe != null && PurchaseBuff(recipe);
+        }
+
+        public void UnlockSlots(int count)
+        {
+            if (oracle == null || count <= 0) return;
+            int newCount = Mathf.Clamp(oracle.saveData.UnlockedBuffSlots + count, 1, slotAssignments.Count);
+            oracle.saveData.UnlockedBuffSlots = newCount;
         }
 
         public BuffRecipe GetAssigned(int slot)
