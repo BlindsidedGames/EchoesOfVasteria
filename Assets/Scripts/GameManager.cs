@@ -29,6 +29,7 @@ namespace TimelessEchoes
         [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
         [SerializeField] private GameObject gravestonePrefab;
         [SerializeField] private GameObject reaperPrefab;
+        [SerializeField] private Vector3 reaperSpawnOffset = Vector3.zero;
 
         [Header("UI References")] [SerializeField]
         private Button startRunButton;
@@ -49,6 +50,7 @@ namespace TimelessEchoes
         [SerializeField] public string mildredQuestId;
 
         public GameObject ReaperPrefab => reaperPrefab;
+        public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -241,7 +243,7 @@ namespace TimelessEchoes
                             if (gravestonePrefab != null)
                                 Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
                                     currentMap.transform);
-                        });
+                        }, reaperSpawnOffset);
                 }
                 else
                 {

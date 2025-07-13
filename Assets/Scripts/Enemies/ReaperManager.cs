@@ -39,6 +39,9 @@ namespace TimelessEchoes.Enemies
             if (hp != null && dmg != null && hp.CurrentHealth > 0f)
             {
                 float amount = hp.CurrentHealth;
+                var enemy = target.GetComponent<Enemy>();
+                if (enemy != null && enemy.Stats != null)
+                    amount += enemy.Stats.defense + 1f;
                 dmg.TakeDamage(amount);
                 if (fromHero)
                 {
@@ -73,10 +76,12 @@ namespace TimelessEchoes.Enemies
         /// <summary>
         /// Spawns a new reaper targeting the given object.
         /// </summary>
-        public static ReaperManager Spawn(GameObject prefab, GameObject target, Transform parent = null, bool fromHero = false, Action onKill = null)
+        public static ReaperManager Spawn(GameObject prefab, GameObject target, Transform parent = null,
+            bool fromHero = false, Action onKill = null, Vector3? positionOffset = null)
         {
             if (prefab == null || target == null) return null;
-            var obj = Instantiate(prefab, target.transform.position, Quaternion.identity, parent);
+            var offset = positionOffset ?? Vector3.zero;
+            var obj = Instantiate(prefab, target.transform.position + offset, Quaternion.identity, parent);
             var mgr = obj.GetComponent<ReaperManager>();
             if (mgr != null)
                 mgr.Init(target, fromHero, onKill);
