@@ -15,6 +15,30 @@ namespace TimelessEchoes.Enemies
         private Action onKill;
         private bool fromHero;
 
+        [SerializeField] private float moveDistance = 0.5f;
+        [SerializeField] private float moveSpeed = 1f;
+
+        private Vector3 startPosition;
+        private float moved;
+
+        private void OnEnable()
+        {
+            startPosition = transform.position;
+            moved = 0f;
+        }
+
+        private void Update()
+        {
+            if (moved < moveDistance)
+            {
+                float step = moveSpeed * Time.deltaTime;
+                float remaining = moveDistance - moved;
+                if (step > remaining) step = remaining;
+                transform.position += transform.right * step;
+                moved += step;
+            }
+        }
+
         /// <summary>
         /// Initialize the reaper for a target.
         /// </summary>
