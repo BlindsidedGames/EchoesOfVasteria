@@ -92,7 +92,9 @@ namespace TimelessEchoes
                     {
                         var prefab = TimelessEchoes.GameManager.Instance != null ?
                                      TimelessEchoes.GameManager.Instance.ReaperPrefab : null;
-                        if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true) != null)
+                        var offset = TimelessEchoes.GameManager.Instance != null ?
+                                     (Vector3?)TimelessEchoes.GameManager.Instance.ReaperSpawnOffset : null;
+                        if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true, null, offset) != null)
                         {
                             var sfx2 = GetComponent<ProjectileHitSfx>();
                             sfx2?.PlayHit();
