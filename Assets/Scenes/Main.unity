@@ -7254,6 +7254,7 @@ MonoBehaviour:
   quests:
   - {fileID: 11400000, guid: 3e0eca7419a4bfd4ba09580e54b1f9b0, type: 2}
   - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  - {fileID: 11400000, guid: a04629c010952d741b32db280e62a8eb, type: 2}
   - {fileID: 11400000, guid: ca836618e8259ae4399380254002fa32, type: 2}
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
@@ -26653,6 +26654,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapPrefab: {fileID: 8013073540481582899, guid: 222d4f43e4f144c4b9dbe2c81cb4d977, type: 3}
   gravestonePrefab: {fileID: 3514669290151585745, guid: ae7313c990ef486cb02dfdc14dff05de, type: 3}
+  reaperPrefab: {fileID: 7928983251831187389, guid: 6f9810794732cf24e8751d3d9b288067, type: 3}
+  reaperSpawnOffset: {x: -1, y: 0, z: 0}
   startRunButton: {fileID: 2097104561}
   returnToTavernButton: {fileID: 399994766}
   returnToTavernText: {fileID: 1169949157}
@@ -71776,7 +71779,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
   - {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   - {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
-  firstSkillButton: {fileID: 1426994383}
   skillTitle: {fileID: 1850090148}
   levelText: {fileID: 839586850}
   experienceText: {fileID: 1666425691}
