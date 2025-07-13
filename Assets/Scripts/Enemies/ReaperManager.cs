@@ -16,26 +16,40 @@ namespace TimelessEchoes.Enemies
         private bool fromHero;
 
         [SerializeField] private float moveDistance = 0.5f;
+        [SerializeField] private float moveDownDistance = 0f;
         [SerializeField] private float moveSpeed = 1f;
 
         private Vector3 startPosition;
         private float moved;
+        private float movedDown;
 
         private void OnEnable()
         {
             startPosition = transform.position;
             moved = 0f;
+            movedDown = 0f;
         }
 
         private void Update()
         {
+            float step = moveSpeed * Time.deltaTime;
+
             if (moved < moveDistance)
             {
-                float step = moveSpeed * Time.deltaTime;
                 float remaining = moveDistance - moved;
-                if (step > remaining) step = remaining;
-                transform.position += transform.right * step;
-                moved += step;
+                float horizStep = step;
+                if (horizStep > remaining) horizStep = remaining;
+                transform.position += transform.right * horizStep;
+                moved += horizStep;
+            }
+
+            if (moveDownDistance > 0f && movedDown < moveDownDistance)
+            {
+                float remaining = moveDownDistance - movedDown;
+                float vertStep = step;
+                if (vertStep > remaining) vertStep = remaining;
+                transform.position += Vector3.down * vertStep;
+                movedDown += vertStep;
             }
         }
 
