@@ -1,13 +1,13 @@
 using System;
-using UnityEngine;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Stats;
+using UnityEngine;
 
 namespace TimelessEchoes.Enemies
 {
     /// <summary>
-    /// Handles spawning and timed kills for reaper animations.
+    ///     Handles spawning and timed kills for reaper animations.
     /// </summary>
     public class ReaperManager : MonoBehaviour
     {
@@ -16,8 +16,9 @@ namespace TimelessEchoes.Enemies
         private bool fromHero;
 
         [SerializeField] private float moveDistance = 0.5f;
-        [SerializeField] private float moveDownDistance = 0f;
-        [SerializeField] private float moveSpeed = 1f;
+        [SerializeField] private float moveDownDistance;
+        [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float moveDownSpeed = 8f;
 
         private Vector3 startPosition;
         private float moved;
@@ -32,12 +33,13 @@ namespace TimelessEchoes.Enemies
 
         private void Update()
         {
-            float step = moveSpeed * Time.deltaTime;
+            var step = moveSpeed * Time.deltaTime;
+            var downStep = moveDownSpeed * Time.deltaTime;
 
             if (moved < moveDistance)
             {
-                float remaining = moveDistance - moved;
-                float horizStep = step;
+                var remaining = moveDistance - moved;
+                var horizStep = step;
                 if (horizStep > remaining) horizStep = remaining;
                 transform.position += transform.right * horizStep;
                 moved += horizStep;
@@ -45,8 +47,8 @@ namespace TimelessEchoes.Enemies
 
             if (moveDownDistance > 0f && movedDown < moveDownDistance)
             {
-                float remaining = moveDownDistance - movedDown;
-                float vertStep = step;
+                var remaining = moveDownDistance - movedDown;
+                var vertStep = downStep;
                 if (vertStep > remaining) vertStep = remaining;
                 transform.position += Vector3.down * vertStep;
                 movedDown += vertStep;
@@ -54,7 +56,7 @@ namespace TimelessEchoes.Enemies
         }
 
         /// <summary>
-        /// Initialize the reaper for a target.
+        ///     Initialize the reaper for a target.
         /// </summary>
         /// <param name="target">Target object to reap.</param>
         /// <param name="fromHero">True if spawned from the hero.</param>
@@ -67,7 +69,7 @@ namespace TimelessEchoes.Enemies
         }
 
         /// <summary>
-        /// Animator event used to kill the assigned target.
+        ///     Animator event used to kill the assigned target.
         /// </summary>
         public void KillTarget()
         {
@@ -76,7 +78,7 @@ namespace TimelessEchoes.Enemies
             var dmg = target.GetComponent<IDamageable>();
             if (hp != null && dmg != null && hp.CurrentHealth > 0f)
             {
-                float amount = hp.CurrentHealth;
+                var amount = hp.CurrentHealth;
                 var enemy = target.GetComponent<Enemy>();
                 if (enemy != null && enemy.Stats != null)
                     amount += enemy.Stats.defense + 1f;
@@ -84,27 +86,28 @@ namespace TimelessEchoes.Enemies
                 if (fromHero)
                 {
                     var tracker = GameplayStatTracker.Instance ??
-                                   UnityEngine.Object.FindFirstObjectByType<GameplayStatTracker>();
+                                  FindFirstObjectByType<GameplayStatTracker>();
                     tracker?.AddDamageDealt(amount);
                     var buff = BuffManager.Instance ??
-                               UnityEngine.Object.FindFirstObjectByType<BuffManager>();
+                               FindFirstObjectByType<BuffManager>();
                     var hero = HeroController.Instance ??
-                                UnityEngine.Object.FindFirstObjectByType<HeroController>();
+                               FindFirstObjectByType<HeroController>();
                     var heroHp = hero != null ? hero.GetComponent<HeroHealth>() : null;
                     if (buff != null && heroHp != null)
                     {
-                        float ls = buff.LifestealPercent;
+                        var ls = buff.LifestealPercent;
                         if (ls > 0f)
                             heroHp.Heal(amount * ls / 100f);
                     }
                 }
             }
+
             onKill?.Invoke();
             target = null;
         }
 
         /// <summary>
-        /// Animator event to destroy the reaper instance.
+        ///     Animator event to destroy the reaper instance.
         /// </summary>
         public void DestroySelf()
         {
@@ -112,7 +115,7 @@ namespace TimelessEchoes.Enemies
         }
 
         /// <summary>
-        /// Spawns a new reaper targeting the given object.
+        ///     Spawns a new reaper targeting the given object.
         /// </summary>
         public static ReaperManager Spawn(GameObject prefab, GameObject target, Transform parent = null,
             bool fromHero = false, Action onKill = null, Vector3? positionOffset = null)
