@@ -20,7 +20,8 @@ namespace TimelessEchoes.UI
         private HeroController hero;
         private HeroHealth heroHealth;
 
-        private float lastDamage;
+        private float lastBaseDamage;
+        private float lastBonusDamage;
         private float lastAttack;
         private float lastMove;
         private float lastDefense;
@@ -96,28 +97,35 @@ namespace TimelessEchoes.UI
             if (uiReferences == null || hero == null)
                 return;
 
-            var damage = hero.Damage;
+            var baseDamage = hero.BaseDamage;
+            var totalDamage = hero.Damage;
+            var bonusDamage = totalDamage - baseDamage;
             var attack = hero.AttackRate;
             var move = hero.MoveSpeed;
             var defense = hero.Defense;
             var regen = regenManager ? (float)regenManager.GetTotalRegen() : 0f;
 
-            if (!force && Mathf.Approximately(damage, lastDamage) && Mathf.Approximately(attack, lastAttack)
+            if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
+                && Mathf.Approximately(attack, lastAttack)
                 && Mathf.Approximately(move, lastMove) && Mathf.Approximately(defense, lastDefense)
                 && Mathf.Approximately(regen, lastRegen))
                 return;
 
-            lastDamage = damage;
+            lastBaseDamage = baseDamage;
+            lastBonusDamage = bonusDamage;
             lastAttack = attack;
             lastMove = move;
             lastDefense = defense;
             lastRegen = regen;
 
             if (uiReferences.leftText != null)
+            {
+                string dmgLine = $"Damage: {baseDamage:0.##} (+{bonusDamage:0.##})";
                 uiReferences.leftText.text =
-                    $"Damage: {damage:0.##}\n" +
+                    dmgLine + "\n" +
                     $"Attack Rate: {attack:0.###} /s\n" +
                     $"Movement Speed {move:0.##}";
+            }
 
             if (uiReferences.rightText != null)
             {

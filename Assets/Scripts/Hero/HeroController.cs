@@ -82,6 +82,11 @@ namespace TimelessEchoes.Hero
             combatDamageMultiplier;
 
         /// <summary>
+        ///     Base attack damage after permanent upgrades.
+        /// </summary>
+        public float BaseDamage => baseDamage + damageBonus;
+
+        /// <summary>
         ///     Current attacks per second after upgrades and buffs.
         /// </summary>
         public float AttackRate => CurrentAttackRate;
