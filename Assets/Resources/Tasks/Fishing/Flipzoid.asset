@@ -11,13 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Flipzoid
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   taskName: Flipzoid
   taskID: 46
   taskIcon: {fileID: -7136742806779194532, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
   associatedSkill: {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
-  xpForCompletion: 2
+  xpForCompletion: 15
+  requiredQuest: {fileID: 0}
   taskDuration: 2
+  sfxInterval: 0
   resourceDrops:
   - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
     dropRange: {x: 1, y: 3}

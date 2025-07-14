@@ -116,31 +116,7 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    tasks:
-    - prefab: {fileID: 4589994145864551737, guid: f2c07aa52d3c1dd46ae29e9e671ed0a2, type: 3}
-      weight: 2
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 1
-      spawnOnSand: 0
-      spawnOnGrass: 0
-    - prefab: {fileID: 650070097376303702, guid: ce795a63272a38942b2009b1873bf44a, type: 3}
-      weight: 1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 2
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
-      weight: 0.1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 4
-      spawnOnWater: 0
-      spawnOnSand: 1
-      spawnOnGrass: 0
+    woodcuttingTasks:
     - prefab: {fileID: 5839893854702782364, guid: 4c6c572369ab0124b926f11b2ee7b277, type: 3}
       weight: 0.5
       minX: 0
@@ -237,30 +213,7 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 0
       spawnOnGrass: 1
-    - prefab: {fileID: 650070097376303702, guid: b9a28e8463a92ee448aa5b279b912543, type: 3}
-      weight: 1
-      minX: 50
-      maxX: Infinity
-      topBuffer: 2
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - prefab: {fileID: 650070097376303702, guid: 790d32c9d7e54169a0be829cf33cbac5, type: 3}
-      weight: 1
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
-    - prefab: {fileID: 650070097376303702, guid: 517c6a0dd42a48dabbfe39774d4f4a3f, type: 3}
-      weight: 1
-      minX: 100
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 0
-      spawnOnGrass: 1
+    miningTasks:
     - prefab: {fileID: 1806500026266312091, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
       weight: 2
       minX: 40
@@ -325,6 +278,113 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    farmingTasks:
+    - prefab: {fileID: 650070097376303702, guid: ce795a63272a38942b2009b1873bf44a, type: 3}
+      weight: 1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 2
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - prefab: {fileID: 650070097376303702, guid: 790d32c9d7e54169a0be829cf33cbac5, type: 3}
+      weight: 1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - prefab: {fileID: 650070097376303702, guid: b9a28e8463a92ee448aa5b279b912543, type: 3}
+      weight: 1
+      minX: 50
+      maxX: Infinity
+      topBuffer: 2
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    - prefab: {fileID: 650070097376303702, guid: 517c6a0dd42a48dabbfe39774d4f4a3f, type: 3}
+      weight: 1
+      minX: 100
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 0
+      spawnOnGrass: 1
+    fishingTasks:
+    - prefab: {fileID: 4589994145864551737, guid: 284d4cb124f640743b6f7735c200b2be, type: 3}
+      weight: 1
+      minX: 0
+      maxX: 250
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: bd3ac842010daeb4991194a5a44b714e, type: 3}
+      weight: 1
+      minX: 100
+      maxX: 500
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: e1e855e4d748a394786b664c58282b8a, type: 3}
+      weight: 1
+      minX: 250
+      maxX: 1000
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: 5f635b890af420449a206cbe6edc4270, type: 3}
+      weight: 1
+      minX: 500
+      maxX: 2500
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: 678489a49c4bf084c8932e136714e1ba, type: 3}
+      weight: 1
+      minX: 1000
+      maxX: 10000
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: 7ff1c08b462068d49b975ff17747458d, type: 3}
+      weight: 1
+      minX: 2500
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: 52e87615f4c3eae4cb189f5dfadcc282, type: 3}
+      weight: 1
+      minX: 5000
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    - prefab: {fileID: 4589994145864551737, guid: 7769dfc1bb67c734cbc2e120d7acf20d, type: 3}
+      weight: 1
+      minX: 10000
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 1
+      spawnOnSand: 0
+      spawnOnGrass: 0
+    lootingTasks:
+    - prefab: {fileID: 7878955661597018137, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
+      weight: 0.1
+      minX: 0
+      maxX: Infinity
+      topBuffer: 4
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 0
     npcTasks:
     - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
       id: Witch1
