@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Flipzoid
+  m_EditorClassIdentifier:
+  taskName: Flipzoid
+  taskID: 45
+  taskIcon: {fileID: -7136742806779194532, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
+  associatedSkill: {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
+  xpForCompletion: 2
+  taskDuration: 2
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
+    dropRange: {x: 1, 3}
+    dropChance: 1
+    minX: 2500
+    maxX: Infinity
+  resetProgressOnInterrupt: 1
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0
