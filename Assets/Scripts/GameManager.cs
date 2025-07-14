@@ -356,7 +356,8 @@ namespace TimelessEchoes
                 runDropUI.ResetDrops();
             }
 
-            statTracker?.EndRun(false);
+            if (!runEndedByDeath)
+                statTracker?.EndRun(false);
             BuffManager.Instance?.ClearActiveBuffs();
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
