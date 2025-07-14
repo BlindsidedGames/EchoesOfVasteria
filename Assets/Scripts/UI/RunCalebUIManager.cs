@@ -120,7 +120,9 @@ namespace TimelessEchoes.UI
 
             if (uiReferences.leftText != null)
             {
-                string dmgLine = $"Damage: {baseDamage:0.##} (+{bonusDamage:0.##})";
+                string dmgLine = $"Damage: {baseDamage:0.##}";
+                if (bonusDamage > 0f)
+                    dmgLine += $" (+{bonusDamage:0.##})";
                 uiReferences.leftText.text =
                     dmgLine + "\n" +
                     $"Attack Rate: {attack:0.###} /s\n" +
