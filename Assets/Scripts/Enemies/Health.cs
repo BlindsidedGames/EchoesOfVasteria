@@ -8,6 +8,13 @@ namespace TimelessEchoes.Enemies
     /// </summary>
     public class Health : HealthBase
     {
+        protected override void Awake()
+        {
+            base.Awake();
+            if (healthBar != null)
+                healthBar.gameObject.SetActive(false);
+        }
+
         protected override Color GetFloatingTextColor()
         {
             ColorUtility.TryParseHtmlString("#C69B60", out var orange);
@@ -27,6 +34,8 @@ namespace TimelessEchoes.Enemies
             float total = Mathf.Max(full - defense, full * 0.1f);
 
             CurrentHealth -= total;
+            if (healthBar != null && !healthBar.gameObject.activeSelf)
+                healthBar.gameObject.SetActive(true);
             UpdateBar();
             RaiseHealthChanged();
 
