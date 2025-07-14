@@ -56,6 +56,7 @@ namespace TimelessEchoes
             if (!SteamManager.Initialized)
                 return;
             SteamFriends.SetRichPresence("status", "In Town");
+            SteamFriends.SetRichPresence("steam_display", "#Status_InTown");
         }
 
         /// <summary>
@@ -66,6 +67,7 @@ namespace TimelessEchoes
             if (!SteamManager.Initialized)
                 return;
             SteamFriends.SetRichPresence("status", "Exploring");
+            SteamFriends.SetRichPresence("steam_display", "#Status_InRun");
         }
 
         /// <summary>
@@ -77,6 +79,8 @@ namespace TimelessEchoes
                 return;
             int d = Mathf.FloorToInt(distance);
             SteamFriends.SetRichPresence("status", $"Distance: {d}");
+            SteamFriends.SetRichPresence("distance", d.ToString());
+            SteamFriends.SetRichPresence("steam_display", "#Status_Distance");
         }
 
         private void OnDestroy()
