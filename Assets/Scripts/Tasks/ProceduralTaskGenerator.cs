@@ -40,6 +40,18 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "Area")] [SerializeField]
         [HideInInspector]
+        private float waterTaskDensity = 0.1f;
+
+        [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
+        private float sandTaskDensity = 0.1f;
+
+        [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
+        private float grassTaskDensity = 0.1f;
+
+        [TabGroup("Settings", "Area")] [SerializeField]
+        [HideInInspector]
         private float enemyDensity = 0.1f;
 
         [TabGroup("Settings", "Generation")] [SerializeField]
@@ -125,6 +137,9 @@ namespace TimelessEchoes.Tasks
             minX = config.taskGeneratorSettings.minX;
             height = config.taskGeneratorSettings.height;
             taskDensity = config.taskGeneratorSettings.taskDensity;
+            waterTaskDensity = config.taskGeneratorSettings.waterTaskDensity;
+            sandTaskDensity = config.taskGeneratorSettings.sandTaskDensity;
+            grassTaskDensity = config.taskGeneratorSettings.grassTaskDensity;
             enemyDensity = config.taskGeneratorSettings.enemyDensity;
             blockingMask = config.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
@@ -219,102 +234,47 @@ namespace TimelessEchoes.Tasks
                 controller.ClearTaskObjects();
             }
 
-            var taskCount = Mathf.RoundToInt((localMaxX - localMinX) * taskDensity);
+            var baseTaskCount = Mathf.RoundToInt((localMaxX - localMinX) * taskDensity);
+            var waterCount = Mathf.RoundToInt((localMaxX - localMinX) * waterTaskDensity);
+            var sandCount = Mathf.RoundToInt((localMaxX - localMinX) * sandTaskDensity);
+            var grassCount = Mathf.RoundToInt((localMaxX - localMinX) * grassTaskDensity);
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
-            if (taskCount <= 0 && enemyCount <= 0)
+            if (baseTaskCount + waterCount + sandCount + grassCount <= 0 && enemyCount <= 0)
                 return;
 
             var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
             var taskMap = new Dictionary<Vector3, MonoBehaviour>();
-            for (var i = 0; i < taskCount; i++)
+            for (var i = 0; i < waterCount; i++)
             {
-                var localX = Random.Range(localMinX, localMaxX);
-                var worldX = transform.position.x + localX;
-
-                var allowWater = TryGetWaterSpot(localX, out var waterPos);
-                var allowSand = TryGetSandSpot(localX, 0, out var sandPos);
-                var allowGrass = TryGetGrassPosition(localX, 0, out var _);
-                var (entry, isWaterTask, isGrassTask, isSandTask) = PickTaskEntry(worldX, allowWater, allowGrass, allowSand);
-                if (entry == null || entry.prefab == null)
-                    continue;
-
-                Vector3 pos;
-                if (isWaterTask)
-                    pos = waterPos;
-                else if (isSandTask)
-                {
-                    if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
-                        continue;
-                }
-                else if (isGrassTask)
-                {
-                    if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
-                        continue;
-                }
-                else
-                    pos = RandomPositionAtX(localX);
-
-                var attempts = 0;
-                var positionIsValid = false;
-                while (attempts < 5)
-                {
-                    if (isWaterTask || isSandTask)
-                    {
-                        positionIsValid = true;
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, true, false, false,
+                            spawnedTasks, taskPositions, taskMap))
                         break;
-                    }
+            }
 
-                    var isWaterTile = !isWaterTask && IsWaterTile(pos);
-                    var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
-                var onWaterEdge = allowWater &&
-                                      Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
-
-                    if (!isObstructed && !onWaterEdge)
-                    {
-                        positionIsValid = true;
+            for (var i = 0; i < sandCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, true, false,
+                            spawnedTasks, taskPositions, taskMap))
                         break;
-                    }
-                    if (isGrassTask)
-                    {
-                        if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
-                            break;
-                    }
-                    else
-                    {
-                        pos = RandomPositionAtX(localX);
-                    }
-                    attempts++;
-                }
+            }
 
-                if (!positionIsValid)
-                    continue;
-
-                var tooClose = false;
-                foreach (var existing in taskPositions)
-                    if (Vector3.Distance(existing, pos) < minTaskDistance)
-                    {
-                        tooClose = true;
+            for (var i = 0; i < grassCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, false, true,
+                            spawnedTasks, taskPositions, taskMap))
                         break;
-                    }
+            }
 
-                if (tooClose)
-                    continue;
-
-                var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
-                generatedObjects.Add(obj);
-
-                var mono = obj.GetComponent<MonoBehaviour>();
-                if (mono != null)
-                {
-                    if (clearExisting)
-                        spawnedTasks.Add((pos, mono));
-                    else
-                        controller.AddRuntimeTaskObject(mono);
-                    taskPositions.Add(pos);
-                    taskMap[pos] = mono;
-                }
+            for (var i = 0; i < baseTaskCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, false, false,
+                            spawnedTasks, taskPositions, taskMap))
+                        break;
             }
 
             for (var i = 0; i < enemyCount; i++)
@@ -453,6 +413,95 @@ namespace TimelessEchoes.Tasks
 
                 controller.ResetTasks();
             }
+        }
+
+        private bool TrySpawnTask(float localX, Transform parent, bool clearExisting,
+            bool requireWaterTask, bool requireSandTask, bool requireGrassTask,
+            List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
+            Dictionary<Vector3, MonoBehaviour> taskMap)
+        {
+            var worldX = transform.position.x + localX;
+
+            var allowWater = TryGetWaterSpot(localX, out var waterPos);
+            var allowSand = TryGetSandSpot(localX, 0, out var sandPos);
+            var allowGrass = TryGetGrassPosition(localX, 0, out var _);
+            var (entry, isWaterTask, isGrassTask, isSandTask) =
+                PickTaskEntry(worldX, allowWater, allowGrass, allowSand);
+            if (entry == null || entry.prefab == null)
+                return false;
+
+            if (requireWaterTask && !isWaterTask) return false;
+            if (requireSandTask && !isSandTask) return false;
+            if (requireGrassTask && !isGrassTask) return false;
+
+            Vector3 pos;
+            if (isWaterTask)
+                pos = waterPos;
+            else if (isSandTask)
+            {
+                if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
+                    return false;
+            }
+            else if (isGrassTask)
+            {
+                if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
+                    return false;
+            }
+            else
+                pos = RandomPositionAtX(localX);
+
+            var attempts = 0;
+            var positionIsValid = false;
+            while (attempts < 5)
+            {
+                if (isWaterTask || isSandTask)
+                {
+                    positionIsValid = true;
+                    break;
+                }
+
+                var isWaterTile = !isWaterTask && IsWaterTile(pos);
+                var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
+                var onWaterEdge = allowWater && Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
+
+                if (!isObstructed && !onWaterEdge)
+                {
+                    positionIsValid = true;
+                    break;
+                }
+                if (isGrassTask)
+                {
+                    if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
+                        break;
+                }
+                else
+                {
+                    pos = RandomPositionAtX(localX);
+                }
+                attempts++;
+            }
+
+            if (!positionIsValid)
+                return false;
+
+            foreach (var existing in taskPositions)
+                if (Vector3.Distance(existing, pos) < minTaskDistance)
+                    return false;
+
+            var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
+            var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
+            generatedObjects.Add(obj);
+
+            var mono = obj.GetComponent<MonoBehaviour>();
+            if (mono == null) return true;
+
+            if (clearExisting)
+                spawnedTasks.Add((pos, mono));
+            else
+                controller.AddRuntimeTaskObject(mono);
+            taskPositions.Add(pos);
+            taskMap[pos] = mono;
+            return true;
         }
 
         private Vector3 RandomPosition()
