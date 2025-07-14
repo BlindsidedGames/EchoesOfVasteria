@@ -174,6 +174,7 @@ namespace TimelessEchoes.Hero
             {
                 tracker.RecordHeroPosition(transform.position);
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+                RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
             }
         }
 

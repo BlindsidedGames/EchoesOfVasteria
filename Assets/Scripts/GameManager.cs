@@ -100,6 +100,7 @@ namespace TimelessEchoes
         {
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            RichPresenceManager.Instance?.SetInTown();
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
@@ -141,6 +142,7 @@ namespace TimelessEchoes
         private void StartRun()
         {
             HideTooltip();
+            RichPresenceManager.Instance?.SetInRun();
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
             if (deathWindowCoroutine != null)
@@ -367,6 +369,7 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
+            RichPresenceManager.Instance?.SetInTown();
             Log("Returned to tavern", TELogCategory.Run, this);
         }
 
