@@ -67,5 +67,10 @@ achievement.
 Engaging five slimes at once unlocks the `SlimeSwarm` achievement.
 Completing Mildred's quest unlocks the `Mildred` achievement.
 
+## Steam Rich Presence
+The `RichPresenceManager` component uses Steamworks.NET to update Steam Rich
+Presence. When in town, the status shows **In Town**. During a run it updates
+each frame with the hero's travelled distance.
+
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
