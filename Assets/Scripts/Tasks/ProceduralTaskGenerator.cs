@@ -144,7 +144,14 @@ namespace TimelessEchoes.Tasks
             blockingMask = config.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
             enemies = config.taskGeneratorSettings.enemies;
-            tasks = config.taskGeneratorSettings.tasks;
+
+            tasks = new List<WeightedSpawn>();
+            tasks.AddRange(config.taskGeneratorSettings.woodcuttingTasks);
+            tasks.AddRange(config.taskGeneratorSettings.miningTasks);
+            tasks.AddRange(config.taskGeneratorSettings.farmingTasks);
+            tasks.AddRange(config.taskGeneratorSettings.fishingTasks);
+            tasks.AddRange(config.taskGeneratorSettings.lootingTasks);
+
             npcTasks = config.taskGeneratorSettings.npcTasks;
             minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
         }
