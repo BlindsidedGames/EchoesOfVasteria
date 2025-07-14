@@ -54,7 +54,13 @@ namespace TimelessEchoes.MapGeneration
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
 
             public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
-            public List<ProceduralTaskGenerator.WeightedSpawn> tasks = new();
+
+            [FormerlySerializedAs("tasks")] public List<ProceduralTaskGenerator.WeightedSpawn> woodcuttingTasks = new();
+            public List<ProceduralTaskGenerator.WeightedSpawn> miningTasks = new();
+            public List<ProceduralTaskGenerator.WeightedSpawn> farmingTasks = new();
+            public List<ProceduralTaskGenerator.WeightedSpawn> fishingTasks = new();
+            public List<ProceduralTaskGenerator.WeightedSpawn> lootingTasks = new();
+
             public List<NpcSpawnEntry> npcTasks = new();
 
             [MinValue(0f)] public float minTaskDistance = 1.5f;
