@@ -20,6 +20,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private AstarPath astarPath;
 
         [SerializeField] public HeroController hero;
+        [SerializeField] public float maxBacktrackDistance = -1f;
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -107,7 +108,7 @@ namespace TimelessEchoes.Tasks
                 kill.target = enemy.transform;
                 tasks.Add(kill);
                 taskMap[kill] = obj;
-                SortTaskListsByX();
+                SortTaskListsByProximity();
                 return;
             }
 
@@ -115,7 +116,7 @@ namespace TimelessEchoes.Tasks
             {
                 tasks.Add(existing);
                 taskMap[existing] = obj;
-                SortTaskListsByX();
+                SortTaskListsByProximity();
                 return;
             }
 
@@ -126,7 +127,7 @@ namespace TimelessEchoes.Tasks
                 taskMap[compTask] = obj;
             }
 
-            SortTaskListsByX();
+            SortTaskListsByProximity();
         }
 
         /// <summary>
@@ -195,7 +196,7 @@ namespace TimelessEchoes.Tasks
                     taskMap[compTask] = obj;
                 }
             }
-            SortTaskListsByX();
+            SortTaskListsByProximity();
 
             hero?.SetTask(null);
             SelectEarliestTask();
@@ -371,36 +372,73 @@ namespace TimelessEchoes.Tasks
                 currentIndex--;
         }
 
-        private void SortTaskListsByX()
+
+        private void SortTaskListsByProximity()
         {
-            var pairs = new List<(float x, MonoBehaviour obj, ITask task)>();
+            var pairs = new List<(Vector3 pos, MonoBehaviour obj, ITask task)>();
 
             foreach (var task in tasks)
             {
                 taskMap.TryGetValue(task, out var obj);
-                float x = 0f;
+                Vector3 pos = Vector3.zero;
                 if (obj != null)
-                    x = obj.transform.position.x;
+                    pos = obj.transform.position;
                 else if (task != null && task.Target != null)
-                    x = task.Target.position.x;
+                    pos = task.Target.position;
 
-                pairs.Add((x, obj, task));
+                pairs.Add((pos, obj, task));
             }
-
-            pairs.Sort((a, b) => a.x.CompareTo(b.x));
 
             tasks.Clear();
             taskObjects.Clear();
             taskMap.Clear();
 
-            foreach (var (x, obj, task) in pairs)
+            Vector3 currentPos = hero != null ? hero.transform.position : Vector3.zero;
+
+            while (pairs.Count > 0)
             {
+                int bestIndex = -1;
+                float bestDist = float.PositiveInfinity;
+
+                for (int i = 0; i < pairs.Count; i++)
+                {
+                    var (p, _, _) = pairs[i];
+                    float deltaX = currentPos.x - p.x;
+                    if (maxBacktrackDistance >= 0f && deltaX > maxBacktrackDistance)
+                        continue;
+
+                    float d = Vector3.Distance(currentPos, p);
+                    if (d < bestDist)
+                    {
+                        bestDist = d;
+                        bestIndex = i;
+                    }
+                }
+
+                if (bestIndex == -1)
+                {
+                    for (int i = 0; i < pairs.Count; i++)
+                    {
+                        float d = Vector3.Distance(currentPos, pairs[i].pos);
+                        if (d < bestDist)
+                        {
+                            bestDist = d;
+                            bestIndex = i;
+                        }
+                    }
+                }
+
+                var (pos, obj, task) = pairs[bestIndex];
+                pairs.RemoveAt(bestIndex);
+
                 tasks.Add(task);
                 if (obj != null)
                 {
                     taskObjects.Add(obj);
                     taskMap[task] = obj;
                 }
+
+                currentPos = pos;
             }
         }
 
