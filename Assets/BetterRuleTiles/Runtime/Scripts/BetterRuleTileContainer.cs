@@ -277,6 +277,20 @@ namespace VinTools.BetterRuleTiles
                 BaseSprite = sprite;
                 Sprites = new Sprite[] { sprite };
             }
+
+            public UniversalSpriteData(UniversalSpriteData other)
+            {
+                this.BaseSprite = other.BaseSprite;
+                this.GameObject = other.GameObject;
+                this.Sprites = other.Sprites.ToArray();
+                this.ColliderType = other.ColliderType;
+                this.OutputSprite = other.OutputSprite;
+                this.NoiseScale = other.NoiseScale;
+                this.RandomTransform = other.RandomTransform;
+                this.MinAnimationSpeed = other.MinAnimationSpeed;
+                this.MaxAnimationSpeed = other.MaxAnimationSpeed;
+                this.PatternSize = other.PatternSize;
+            }
         }
 
         [System.Serializable]
@@ -980,56 +994,6 @@ namespace VinTools.BetterRuleTiles
             SaveAsset();
         }
 
-        public void RecolorSelection(Rect selection, int from, int to)
-        {
-            RecordObject($"Replaced tiles \"{_tiles[from].Name}\" to \"{_tiles[to].Name}\" in selection ({this.name})");
-
-            //replace
-            foreach (var item in _grid.Where(t => selection.Contains(t.Position) && t.TileID == _tiles[from].UniqueID)) item.TileID = _tiles[to].UniqueID;
-
-            //save
-            SaveAsset();
-        }
-        public void RecolorSelection(Rect selection, string from, string to)
-        {
-            RecordObject($"Replaced sprites \"{from}\" to \"{to}\" in selection ({this.name})");
-
-            //replace
-            foreach (var item in _grid.Where(t => selection.Contains(t.Position) && t.Sprite != null))
-            {
-                string path = AssetDatabase.GetAssetPath(item.Sprite);
-                var splitPath = path.Split('/');
-                splitPath[splitPath.Length - 1] = TextUtils.ReplaceFirstOccurrence(splitPath[splitPath.Length - 1], from, to);
-
-                //create altered path
-                string newPath = "";
-                for (int i = 0; i < splitPath.Length; i++)
-                {
-                    newPath += splitPath[i];
-                    if (i + 1 < splitPath.Length) newPath += "/";
-                }
-
-                //replace sprite name 
-                string spriteName = TextUtils.ReplaceFirstOccurrence(item.Sprite.name, from, to);
-
-                //find 
-                if (AssetDatabase.LoadMainAssetAtPath(newPath) != null)
-                {
-                    foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(newPath))
-                    {
-                        if (asset.name.Equals(spriteName) && asset is Sprite)
-                        {
-                            item.Sprite = asset as Sprite;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //save
-            SaveAsset();
-        }
-
         public bool ChangeGridShape(GridShape to)
         {
             if (settings._gridShape == to) return false;
@@ -1143,7 +1107,7 @@ namespace VinTools.BetterRuleTiles
         #endregion
 
         #region UnityEditor
-        void SaveAsset() => EditorUtility.SetDirty(this);
+        public void SaveAsset() => EditorUtility.SetDirty(this);
         public void RecordObject(string action)
         {
             //Debug.Log("Record");

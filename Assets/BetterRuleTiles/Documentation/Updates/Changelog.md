@@ -1,6 +1,26 @@
 ---
 title: Changelog
 ---
+## Version 1.4.5
+
+- Implemented [Feature #29](https://github.com/Vinark117/BetterRuleTiles-Support/issues/29): Improved the sprite & tile replace window
+	- The window is now separated into 3 tabs. The previous **replace sprites** and **replace tiles** options have been moved to their own tab, and a new **replace overrides** tab has been added.
+	- The replace sprites tab now has an option to replace all sprites that are used for animations, patterns, etc. This option is hidden when using **universal sprite settings**
+	- In the new **Replace overrides** tab you can replace sprites inside the **sprite override settings** window. Just select an override, and you can either modify that, or create a duplicate with the modified sprites.
+
+## Version 1.4.4
+
+- Fixed [Issue #15](https://github.com/Vinark117/BetterRuleTiles-Support/issues/15): Improved performance of better rule tiles
+- Fixed [Issue #16](https://github.com/Vinark117/BetterRuleTiles-Support/issues/16): Changed how modified tiles are highlighted:
+	- Yellow flashing indicates that the neighbor positions or the transform have been modified.
+	- Pink flashing indicates if either:
+	    - The collider type has been changed
+	    - The sprite output type has been changed
+	    - The sprites array has more than one sprite in it
+- Fixed bug: Tiles with ID 1 and 2 were displayed incorrectly when inspecting the tiling rules in a Better Rule Tiles asset
+- Fixed [Issue #25](https://github.com/Vinark117/BetterRuleTiles-Support/issues/25): Fixed issue with transition rules
+- Tiles that are set up to connect to each other now won't be treated as the same tile by the tiling rules. This behavior can be re-enabled inside the export menu under the new option: "Treat similar tiles as same"
+
 ## Version 1.4.3
 
 - Fixed [Issue #9](https://github.com/Vinark117/BetterRuleTiles-Support/issues/9): Can't build app

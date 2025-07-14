@@ -54,12 +54,12 @@ namespace VinToolsEditor.BetterRuleTiles
             //copy extended tiling rule to regular tiling rule
             foreach (var tile in tiles)
             {
+                //check if there are extra tiling rules
+                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
+
                 ExportTilingRules(ref tile.m_ExtendedTilingRules, out var tilingRules, out var extras);
                 tile.m_TilingRules = tilingRules;
                 tile.m_ExtraTilingRules = extras;
-
-                //check if there are extra tiling rules
-                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
 
                 //add settings
                 tile.TreatSimilarTilesAsSame = container.settings._treatSimilarTilesAsSame;
@@ -96,12 +96,12 @@ namespace VinToolsEditor.BetterRuleTiles
             //copy extended tiling rule to regular tiling rule
             foreach (var tile in tiles)
             {
+                //check if there are extra tiling rules
+                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
+
                 ExportTilingRules(ref tile.m_ExtendedTilingRules, out var tilingRules, out var extras);
                 tile.m_TilingRules = tilingRules;
                 tile.m_ExtraTilingRules = extras;
-
-                //check if there are extra tiling rules
-                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
 
                 //add settings
                 tile.TreatSimilarTilesAsSame = container.settings._treatSimilarTilesAsSame;

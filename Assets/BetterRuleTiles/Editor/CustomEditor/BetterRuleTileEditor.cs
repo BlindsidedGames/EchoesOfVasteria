@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
 using System;
+using UnityEngine.Serialization;
 using VinTools.BetterRuleTiles;
 using VinTools.BetterRuleTiles.Internal;
 using VinTools.Utilities;
@@ -767,9 +768,9 @@ namespace VinToolsEditor.BetterRuleTiles
             get => _windows[4];
             set => _windows[4] = value;
         }
-        private GUIWindow _window_RecolorWindow
+        private BRTSpriteReplaceWindow _window_RecolorWindow
         {
-            get => _windows[5];
+            get => (BRTSpriteReplaceWindow)_windows[5];
             set => _windows[5] = value;
         }
         private GUIWindow _window_GridCellInfo
@@ -802,7 +803,7 @@ namespace VinToolsEditor.BetterRuleTiles
             _window_TileInfo = new GUIWindow(GUIWindow.WindowLayout.BottomRightCorner, new RectOffset(4, 4, 30, 4), new Vector2(300, 400), TileInfoWindow, new GUIContent(""), false);
             _window_SettingsWindow = new GUIWindow(new Rect(0, 0, 300, 400), SettingsWindow, new GUIContent(""), false, true, true);
             _window_ExportWindow = new GUIWindow(new Rect(0, 0, 250, 50), ExportWindow, new GUIContent(""), false, true, true);
-            _window_RecolorWindow = new GUIWindow(new Rect(0, 0, 250, 50), RecolorWindow, new GUIContent(""), false, true, true);
+            _window_RecolorWindow = new BRTSpriteReplaceWindow(_file, this);
             _window_GridCellInfo = new GUIWindow(GUIWindow.WindowLayout.BottomRightCorner, new RectOffset(4, 4, 30, 4), new Vector2(300, 400), GridCellInfoWindow, new GUIContent(""), false);
             _window_SpriteDrawer = new GUIWindow(GUIWindow.WindowLayout.SpanLeft, new RectOffset(4, 4, 30, 125), new Vector2(180, 400), SpriteDrawerWindow, new GUIContent(""));
             _window_UnivesalSpriteSettings = new GUIWindow(GUIWindow.WindowLayout.SpanLeft, new RectOffset(4, 4, 30, 125), new Vector2(300, 400), UniversalSpriteSettingsWindow, new GUIContent(""));
@@ -813,7 +814,7 @@ namespace VinToolsEditor.BetterRuleTiles
 
             if (_window_TileInfo != null) _window_TileInfo.visible = _selectedDrawerTile > 0 && _inspectingCell == null;
             if (_window_GridCellInfo != null) _window_GridCellInfo.visible = _inspectingCell != null;
-            if (!_window_UnivesalSpriteSettings.visible) _currentlySepectedSpriteToModify = -1;
+            if (!_window_UnivesalSpriteSettings.visible) CurrentlySepectedOverrideSpriteToModify = -1;
             _window_SpriteDrawer.visible = _file.settings._displaySpriteDrawer;
             _window_UnivesalSpriteSettings.visible = _file.settings._displayUniversalSpriteSettings;
         }
@@ -1202,7 +1203,7 @@ namespace VinToolsEditor.BetterRuleTiles
         #region Universal Sprite Settings
 
         Vector2 _universalSpriteSettingsScrollPosition;
-        int _currentlySepectedSpriteToModify = -1;
+        public int CurrentlySepectedOverrideSpriteToModify = -1;
         float _universalSpriteSettingAddedHeight = 0;
         float _universalSpriteSettingDialogHeight = 0;
         bool _showUniversalSpritesArray = false;
@@ -1228,7 +1229,7 @@ namespace VinToolsEditor.BetterRuleTiles
             const float spacing = 5;
             const int columns = 4;
 
-            if (_currentlySepectedSpriteToModify < 0)
+            if (CurrentlySepectedOverrideSpriteToModify < 0)
             {
                 _universalSpriteSettingAddedHeight = 0;
                 _spriteSettingsNoDropZone = new Rect();
@@ -1252,16 +1253,16 @@ namespace VinToolsEditor.BetterRuleTiles
 
             float scrollViewHeight =
                 (Mathf.Ceil(_file._overrideSprites.Count / (float)columns) * (columnWidth + spacing) - spacing + (2 * margin)) +
-                (_currentlySepectedSpriteToModify >= 0 ? 
+                (CurrentlySepectedOverrideSpriteToModify >= 0 ? 
                 _universalSpriteSettingAddedHeight + spacing : spacing);
 
             Rect scrollView = new Rect(0, 0, scrollViewWidth, scrollViewHeight);
             _universalSpriteSettingsScrollPosition = GUI.BeginScrollView(scrollRect, _universalSpriteSettingsScrollPosition, scrollView, false, true);
 
             //scroll to selected sprite
-            if (_currentlySepectedSpriteToModify >= 0 && _autoScrollToSelectedOverrideSprite)
+            if (CurrentlySepectedOverrideSpriteToModify >= 0 && _autoScrollToSelectedOverrideSprite)
             {
-                _universalSpriteSettingsScrollPosition = new Vector2(0, (_currentlySepectedSpriteToModify / columns) * (columnWidth + spacing));
+                _universalSpriteSettingsScrollPosition = new Vector2(0, (CurrentlySepectedOverrideSpriteToModify / columns) * (columnWidth + spacing));
                 _autoScrollToSelectedOverrideSprite = false;
             }
 
@@ -1275,27 +1276,27 @@ namespace VinToolsEditor.BetterRuleTiles
                 Rect imgPos = new Rect(buttonPos.x + 8, buttonPos.y + 8, buttonPos.width - 16, buttonPos.height - 16);
 
                 var pressedButton = GUI.Button(buttonPos, new GUIContent());
-                if (_currentlySepectedSpriteToModify == i) GUI.DrawTexture(buttonPos, t_windowBorderTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 3);
+                if (CurrentlySepectedOverrideSpriteToModify == i) GUI.DrawTexture(buttonPos, t_windowBorderTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 3);
                 GUI.DrawTexture(imgPos, _grid._spriteTextureCache[_file._overrideSprites[i].BaseSprite]);
 
                 if (pressedButton)
                 {
                     //select
-                    if (_currentlySepectedSpriteToModify != i)
+                    if (CurrentlySepectedOverrideSpriteToModify != i)
                     {
-                        _currentlySepectedSpriteToModify = i;
+                        CurrentlySepectedOverrideSpriteToModify = i;
                         SelectSprite(_file._overrideSprites[i].BaseSprite, true, false);
                     }
                     //deselect
-                    else _currentlySepectedSpriteToModify = -1;
+                    else CurrentlySepectedOverrideSpriteToModify = -1;
                 }
 
                 //draw UI
-                if (_currentlySepectedSpriteToModify == i)
+                if (CurrentlySepectedOverrideSpriteToModify == i)
                 {
                     //draw UI
                     var optionsRect = new Rect(margin, currentY + columnWidth + spacing, scrollViewWidth - 2 * margin, 0);
-                    _universalSpriteSettingAddedHeight = DrawSpriteOptionsUI(optionsRect, _currentlySepectedSpriteToModify);
+                    _universalSpriteSettingAddedHeight = DrawSpriteOptionsUI(optionsRect, CurrentlySepectedOverrideSpriteToModify);
 
                     //calculate a no-drop zone for drag and dropping
                     _spriteSettingsNoDropZone = new Rect(
@@ -1310,7 +1311,7 @@ namespace VinToolsEditor.BetterRuleTiles
                     //skip to next row
                     currentY += columnWidth + spacing;
                     //if the selected one is in this row, also skip that amount
-                    if (_currentlySepectedSpriteToModify >= 0 && _currentlySepectedSpriteToModify / columns == i / columns) currentY += _universalSpriteSettingAddedHeight + 5;
+                    if (CurrentlySepectedOverrideSpriteToModify >= 0 && CurrentlySepectedOverrideSpriteToModify / columns == i / columns) currentY += _universalSpriteSettingAddedHeight + 5;
                 }
             }
 
@@ -1335,7 +1336,7 @@ namespace VinToolsEditor.BetterRuleTiles
             {
                 var toDelete = _file._overrideSprites[spriteIndex];
                 _file._overrideSprites.Remove(toDelete);
-                _currentlySepectedSpriteToModify = -1;
+                CurrentlySepectedOverrideSpriteToModify = -1;
                 return 0;
             }
 
@@ -1701,7 +1702,7 @@ namespace VinToolsEditor.BetterRuleTiles
                 {
                     if (GUILayout.Button("Open sprite override settings"))
                     {
-                        _currentlySepectedSpriteToModify = _file._overrideSprites.FindIndex(t => t.BaseSprite == _inspectingCell.Sprite);
+                        CurrentlySepectedOverrideSpriteToModify = _file._overrideSprites.FindIndex(t => t.BaseSprite == _inspectingCell.Sprite);
                         _autoScrollToSelectedOverrideSprite = true;
                         _file.settings.SetDisplayUniversalSpriteSettings(true);
                     }
@@ -2006,55 +2007,6 @@ namespace VinToolsEditor.BetterRuleTiles
         }
 #endregion
 
-        #region Recolor dropdown
-        int _recolorFrom;
-        int _recolorTo;
-        string _replaceFrom;
-        string _replaceTo;
-        void RecolorWindow(int windowID)
-        {
-            string tileTooltip = "Replaces all tiles in the selection, which are the same as the tile you specify in \"Replace from\", to the tile you specify in \"Replace to\"";
-            string spriteTooltip = "Find all sprites in the selection, whose filename includes \"Replace from\", and replaces them with sprites where the \"Replace from\" text is replaced to \"Replace to\"";
-
-            //create styles
-            GUIStyle titleStyle = new GUIStyle(EditorStyles.boldLabel);
-            titleStyle.alignment = TextAnchor.MiddleCenter;
-
-            //title bar
-            GUI.Label(new Rect(0, 0, _windows[windowID].width, 25), new GUIContent("Replace tiles in selection", tileTooltip), titleStyle);
-
-            //show from and to popups
-            EditorGUILayout.Space();
-            _recolorFrom = EditorGUILayout.Popup(new GUIContent("Replace from", tileTooltip), _recolorFrom, _file.GetTileNames());
-            _recolorTo = EditorGUILayout.Popup(new GUIContent("Replace to", tileTooltip), _recolorTo, _file.GetTileNames());
-
-            //show prompt if not selected, show button if has selection
-            EditorGUILayout.Space();
-            if (_hasSelection)
-            {
-                if (GUILayout.Button("Replace tiles")) _file.RecolorSelection(_selectionRect, _recolorFrom, _recolorTo);
-            }
-            else GUILayout.Label("Select an area to replace tiles in!", EditorStyles.helpBox);
-
-            //small space
-            EditorGUILayout.Space();
-
-            //second title
-            EditorGUILayout.Space();
-            GUILayout.Label(new GUIContent("Replace sprites in selection", spriteTooltip), titleStyle);
-
-            EditorGUILayout.Space();
-            _replaceFrom = EditorGUILayout.TextField(new GUIContent("Replace from", spriteTooltip), _replaceFrom);
-            _replaceTo = EditorGUILayout.TextField(new GUIContent("Replace to", spriteTooltip), _replaceTo);
-            EditorGUILayout.Space();
-            if (_hasSelection)
-            {
-                if (GUILayout.Button("Replace sprites")) _file.RecolorSelection(_selectionRect, _replaceFrom, _replaceTo);
-            }
-            else GUILayout.Label("Select an area to replace sprites in!", EditorStyles.helpBox);
-
-        }
-#endregion
     #endregion
     }
 }

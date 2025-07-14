@@ -120,7 +120,7 @@ namespace VinToolsEditor.BetterRuleTiles
         public Vector2 _gridOffset { get => window._gridOffset; set => window._gridOffset = value; }
         public BetterRuleTileContainer.EditorSettings settings => window._file.settings;
         #endregion
-
+        
         public void DrawAll()
         {
             //draw base grid, tiles and sprites
@@ -471,6 +471,11 @@ namespace VinToolsEditor.BetterRuleTiles
         }
         public virtual void DrawPreviewSprites(List<BetterRuleTileContainer.GridCell> item, Vector2Int moveBy) => DrawSprites(item);
 
+        /// <summary>
+        /// Add the specified sprite to the texture chache
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
         public virtual void CacheSprite(Sprite sprite)
         {
             if (sprite == null) return;
