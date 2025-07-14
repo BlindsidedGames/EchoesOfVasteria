@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Leek Leak
+  m_EditorClassIdentifier:
+  questId: Leek
+  questName: Leek Leak
+  description: Share 20 Onions so Eva can grow hearty leeks.
+  rewardDescription: 'Unlock the Leek crop'
+  npcId: Witch1
+  requiredQuests:
+  - {fileID: 11400000, guid: 2395628c18784e2bab0b7af0b4bbc721, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: b5b12e283249229419b1a300192d8601, type: 2}
+    amount: 20
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0

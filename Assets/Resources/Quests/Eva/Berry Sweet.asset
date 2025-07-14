@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Berry Sweet
+  m_EditorClassIdentifier:
+  questId: Strawberry
+  questName: Berry Sweet
+  description: Bring 30 Pumkings to satisfy Eva's cravings.
+  rewardDescription: 'Unlock the Strawberry crop'
+  npcId: Witch1
+  requiredQuests:
+  - {fileID: 11400000, guid: 78e6cf2e15964b41b5fcd5833f00d44a, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}
+    amount: 30
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
