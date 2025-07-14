@@ -10,64 +10,64 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
-  m_Name: Vastium Chest
+  m_Name: Crystal Chest
   m_EditorClassIdentifier: 
-  taskName: Vastium Chest
-  taskID: 10
-  taskIcon: {fileID: 1740307149, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
+  taskName: Crystal Chest
+  taskID: 47
+  taskIcon: {fileID: 752469611, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
-  xpForCompletion: 50
+  xpForCompletion: 10
   requiredQuest: {fileID: 0}
   taskDuration: 0.5
   sfxInterval: 0
   resourceDrops:
   - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
-    dropRange: {x: 33, y: 55}
+    dropRange: {x: 12, y: 22}
     dropChance: 1
     minX: 0
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-    dropRange: {x: 10, y: 33}
+    dropRange: {x: 4, y: 12}
     dropChance: 1
     minX: 0
     maxX: Infinity
   - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.8
     minX: 40
     maxX: Infinity
   - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.7
     minX: 100
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.6
     minX: 150
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.5
     minX: 200
     maxX: Infinity
   - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.4
     minX: 300
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.3
     minX: 500
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.2
     minX: 1000
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
-    dropRange: {x: 10, y: 22}
+    dropRange: {x: 5, y: 14}
     dropChance: 0.1
     minX: 2500
     maxX: Infinity
