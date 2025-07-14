@@ -44,6 +44,9 @@ namespace TimelessEchoes.MapGeneration
             public float minX;
             public float height = 18f;
             [FormerlySerializedAs("density")] public float taskDensity = 0.1f;
+            public float waterTaskDensity = 0.1f;
+            public float sandTaskDensity = 0.1f;
+            public float grassTaskDensity = 0.1f;
 
             public float enemyDensity = 0.1f;
 
