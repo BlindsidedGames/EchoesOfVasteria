@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2113197715023221888, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      propertyPath: healthBarParent
+      value: 
+      objectReference: {fileID: 6724702029569888453}
     - target: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
       propertyPath: m_Name
       value: Slime_Blue
@@ -77,3 +81,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+--- !u!1 &6724702029569888453 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 872065370303357239, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+  m_PrefabInstance: {fileID: 5857144657511018994}
+  m_PrefabAsset: {fileID: 0}

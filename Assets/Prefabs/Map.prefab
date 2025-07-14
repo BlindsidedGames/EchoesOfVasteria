@@ -862,6 +862,8 @@ MonoBehaviour:
     m_Bits: 64
   astarPath: {fileID: 3994575044794960044}
   hero: {fileID: 2410021182923110199}
+  maxBacktrackDistance: -15
+  backtrackingAdditionalWeight: 2
   mapCamera: {fileID: 2571608917486039915}
   currentTaskName: MiningTask
   currentTaskObject: {fileID: 0}
@@ -908,6 +910,9 @@ MonoBehaviour:
   maxX: 940
   height: 17
   taskDensity: 0.1
+  waterTaskDensity: 0.1
+  sandTaskDensity: 0.1
+  grassTaskDensity: 0.1
   enemyDensity: 0.1
   blockingMask:
     serializedVersion: 2
