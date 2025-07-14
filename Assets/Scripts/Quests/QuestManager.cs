@@ -274,6 +274,7 @@ namespace TimelessEchoes.Quests
                 UpdateProgress(inst);
             }
 
+            var hasCompleted = false;
             foreach (var quest in quests)
             {
                 if (quest == null) continue;
@@ -281,6 +282,11 @@ namespace TimelessEchoes.Quests
                     continue;
                 if (!oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) || !rec.Completed)
                     continue;
+                if (!hasCompleted)
+                {
+                    uiManager.CreateDivider();
+                    hasCompleted = true;
+                }
                 uiManager.CreateEntry(quest, null, false, true);
             }
         }

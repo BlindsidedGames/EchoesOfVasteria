@@ -12,9 +12,11 @@ namespace TimelessEchoes.Quests
     {
         public static QuestUIManager Instance { get; private set; }
         [SerializeField] private QuestEntryUI questEntryPrefab;
+        [SerializeField] private GameObject dividerPrefab;
         [SerializeField] private Transform questParent;
 
         private readonly List<QuestEntryUI> entries = new();
+        private readonly List<GameObject> extras = new();
 
         private void Awake()
         {
@@ -37,12 +39,25 @@ namespace TimelessEchoes.Quests
             return ui;
         }
 
+        public GameObject CreateDivider()
+        {
+            if (dividerPrefab == null || questParent == null)
+                return null;
+            var obj = Instantiate(dividerPrefab, questParent);
+            extras.Add(obj);
+            return obj;
+        }
+
         public void Clear()
         {
             foreach (var entry in entries)
                 if (entry != null)
                     Destroy(entry.gameObject);
+            foreach (var extra in extras)
+                if (extra != null)
+                    Destroy(extra);
             entries.Clear();
+            extras.Clear();
         }
 
         public void RemoveEntry(QuestEntryUI entry)
