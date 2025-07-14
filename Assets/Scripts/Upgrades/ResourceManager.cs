@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using Sirenix.OdinInspector;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -8,7 +10,7 @@ using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Upgrades
 {
-    [DefaultExecutionOrder(-1)]
+    [DefaultExecutionOrder(-2)]
     public class ResourceManager : MonoBehaviour
     {
         public static ResourceManager Instance { get; private set; }
@@ -17,12 +19,12 @@ namespace TimelessEchoes.Upgrades
         /// <summary>
         ///     Invoked whenever the stored resource amounts or unlocked state changes.
         /// </summary>
-        public event System.Action OnInventoryChanged;
+        public event Action OnInventoryChanged;
 
         /// <summary>
-        ///     Invoked whenever resources are added via <see cref="Add"/>.
+        ///     Invoked whenever resources are added via <see cref="Add" />.
         /// </summary>
-        public event System.Action<Resource, double> OnResourceAdded;
+        public event Action<Resource, double> OnResourceAdded;
 
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
@@ -83,9 +85,9 @@ namespace TimelessEchoes.Upgrades
             else
                 amounts[resource] = amount;
             resource.totalReceived += Mathf.RoundToInt((float)amount);
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            var tracker = GameplayStatTracker.Instance;
             if (tracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.Resource, this);
+                Log("GameplayStatTracker missing", TELogCategory.Resource, this);
             else
                 tracker.AddResources(amount, bonus);
             OnResourceAdded?.Invoke(resource, amount);
@@ -141,6 +143,7 @@ namespace TimelessEchoes.Upgrades
                     TotalSpent = res.totalSpent
                 };
             }
+
             oracle.saveData.ResourceStats = stats;
         }
 
@@ -160,7 +163,6 @@ namespace TimelessEchoes.Upgrades
                 }
 
             foreach (var res in lookup.Values)
-            {
                 if (oracle.saveData.ResourceStats.TryGetValue(res.name, out var s))
                 {
                     res.totalReceived = s.TotalReceived;
@@ -171,7 +173,7 @@ namespace TimelessEchoes.Upgrades
                     res.totalReceived = 0;
                     res.totalSpent = 0;
                 }
-            }
+
             InvokeInventoryChanged();
         }
 
