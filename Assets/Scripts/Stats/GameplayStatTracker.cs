@@ -3,6 +3,7 @@ using UnityEngine;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Tasks;
+using TimelessEchoes;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -172,6 +173,7 @@ namespace TimelessEchoes.Stats
             record.XpGained += xp;
             tasksCompleted++;
             currentRunTasks++;
+            SteamStatsUpdater.Instance?.UpdateStats();
         }
 
         public GameData.TaskRecord GetTaskRecord(TaskData data)
@@ -288,6 +290,7 @@ namespace TimelessEchoes.Stats
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
             runStartTime = Time.time;
+            SteamStatsUpdater.Instance?.UpdateStats();
         }
     }
 }
