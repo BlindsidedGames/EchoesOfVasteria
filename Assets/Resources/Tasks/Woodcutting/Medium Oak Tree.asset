@@ -17,6 +17,7 @@ MonoBehaviour:
   taskIcon: {fileID: 6013379132409528037, guid: 974fe87578622624abd01a4856b266ef, type: 3}
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   xpForCompletion: 5
+  requiredQuest: {fileID: 0}
   taskDuration: 3
   sfxInterval: 0.7
   resourceDrops:
@@ -24,6 +25,11 @@ MonoBehaviour:
     dropRange: {x: 5, y: 20}
     dropChance: 1
     minX: 100
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
+    dropRange: {x: 5, y: 15}
+    dropChance: 0.15
+    minX: 0
     maxX: Infinity
   resetProgressOnInterrupt: 0
   persistent:

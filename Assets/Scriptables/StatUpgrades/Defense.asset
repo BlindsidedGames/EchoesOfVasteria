@@ -19,18 +19,18 @@ MonoBehaviour:
   - minLevel: 0
     maxLevel: 5
     requirements:
-    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
       amount: 1
       amountIncreasePerLevel: 1
   - minLevel: 5
     maxLevel: 25
     requirements:
-    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
       amount: 5
-      amountIncreasePerLevel: 2
-    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
-      amount: 2
-      amountIncreasePerLevel: 2
+      amountIncreasePerLevel: 1
+    - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
   - minLevel: 25
     maxLevel: 50
     requirements:
