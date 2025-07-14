@@ -8,10 +8,14 @@ namespace TimelessEchoes.Enemies
     /// </summary>
     public class Health : HealthBase
     {
+        [SerializeField] private GameObject healthBarParent;
+
         protected override void Awake()
         {
             base.Awake();
-            if (healthBar != null)
+            if (healthBarParent != null)
+                healthBarParent.SetActive(false);
+            else if (healthBar != null)
                 healthBar.gameObject.SetActive(false);
         }
 
@@ -34,8 +38,6 @@ namespace TimelessEchoes.Enemies
             float total = Mathf.Max(full - defense, full * 0.1f);
 
             CurrentHealth -= total;
-            if (healthBar != null && !healthBar.gameObject.activeSelf)
-                healthBar.gameObject.SetActive(true);
             UpdateBar();
             RaiseHealthChanged();
 
@@ -53,6 +55,14 @@ namespace TimelessEchoes.Enemies
 
             if (CurrentHealth <= 0f)
                 OnZeroHealth();
+        }
+
+        public void SetHealthBarVisible(bool visible)
+        {
+            if (healthBarParent != null)
+                healthBarParent.SetActive(visible);
+            else if (healthBar != null)
+                healthBar.gameObject.SetActive(visible);
         }
 
         protected override void OnZeroHealth()

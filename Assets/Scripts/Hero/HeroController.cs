@@ -39,6 +39,7 @@ namespace TimelessEchoes.Hero
         private readonly bool allowAttacks = true;
 
         private Transform currentEnemy;
+        private Health currentEnemyHealth;
 
         private AIPath ai;
         private float attackSpeedBonus;
@@ -358,13 +359,28 @@ namespace TimelessEchoes.Hero
                 var hp = currentEnemy.GetComponent<Health>();
                 var dist = Vector2.Distance(transform.position, currentEnemy.position);
                 if (hp == null || hp.CurrentHealth <= 0f || dist > stats.visionRange)
+                {
+                    currentEnemyHealth?.SetHealthBarVisible(false);
                     currentEnemy = null;
+                    currentEnemyHealth = null;
+                }
             }
 
             var nearest = currentEnemy != null ? currentEnemy : FindNearestEnemy();
             if (nearest != null)
             {
-                currentEnemy = nearest;
+                if (currentEnemy != nearest)
+                {
+                    currentEnemyHealth?.SetHealthBarVisible(false);
+                    currentEnemy = nearest;
+                    currentEnemyHealth = nearest.GetComponent<Health>();
+                    currentEnemyHealth?.SetHealthBarVisible(true);
+                }
+                else if (currentEnemyHealth == null)
+                {
+                    currentEnemyHealth = nearest.GetComponent<Health>();
+                    currentEnemyHealth?.SetHealthBarVisible(true);
+                }
                 if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
                 HandleCombat(nearest);
                 return;
@@ -376,6 +392,8 @@ namespace TimelessEchoes.Hero
                 combatDamageMultiplier = 1f;
                 isRolling = false;
                 diceRoller?.ResetRoll();
+                currentEnemyHealth?.SetHealthBarVisible(false);
+                currentEnemyHealth = null;
                 state = State.Idle;
                 taskController?.SelectEarliestTask();
             }
