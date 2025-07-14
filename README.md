@@ -71,6 +71,9 @@ Completing Mildred's quest unlocks the `Mildred` achievement.
 The `RichPresenceManager` component uses Steamworks.NET to update Steam Rich
 Presence. When in town, the status shows **In Town**. During a run it updates
 each frame with the hero's travelled distance.
+For the one-line rich presence shown under a friend's name, the script also
+sets the **steam_display** key with a localization token. Example tokens are
+`#Status_InTown`, `#Status_InRun` and `#Status_Distance`.
 
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
