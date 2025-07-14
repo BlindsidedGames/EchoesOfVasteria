@@ -21,6 +21,8 @@ namespace TimelessEchoes.Tasks
 
         [SerializeField] public HeroController hero;
         [SerializeField] public float maxBacktrackDistance = -1f;
+        // Positive values give tasks located behind the hero a priority bonus
+        [SerializeField] public float backtrackingAdditionalWeight = 0f;
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -408,6 +410,8 @@ namespace TimelessEchoes.Tasks
                         continue;
 
                     float d = Vector3.Distance(currentPos, p);
+                    if (deltaX > 0f && backtrackingAdditionalWeight > 0f)
+                        d -= deltaX * backtrackingAdditionalWeight;
                     if (d < bestDist)
                     {
                         bestDist = d;
@@ -419,7 +423,11 @@ namespace TimelessEchoes.Tasks
                 {
                     for (int i = 0; i < pairs.Count; i++)
                     {
-                        float d = Vector3.Distance(currentPos, pairs[i].pos);
+                        var (p, _, _) = pairs[i];
+                        float deltaX = currentPos.x - p.x;
+                        float d = Vector3.Distance(currentPos, p);
+                        if (deltaX > 0f && backtrackingAdditionalWeight > 0f)
+                            d -= deltaX * backtrackingAdditionalWeight;
                         if (d < bestDist)
                         {
                             bestDist = d;

@@ -41,6 +41,11 @@ Procedural tasks are ordered by their world X position so the hero progresses
 from left to right. Mining and fishing tasks award resources on completion,
 allowing you to upgrade your hero.
 
+`TaskController` also exposes a **backtrackingAdditionalWeight** setting. When
+positive, tasks located behind the hero receive a priority bonus proportional
+to how far back they are. Increase this value to force backtracking when the
+player advances too far forward.
+
 Water based tasks ignore blocking colliders and can spawn even when a tile on
 the `Blocking` layer is present.
 Grass tasks use a dedicated list and only appear on grass tiles. A toggle on the
