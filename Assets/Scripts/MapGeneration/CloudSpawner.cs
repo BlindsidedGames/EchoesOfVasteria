@@ -26,6 +26,7 @@ public class CloudSpawner : MonoBehaviour
     private float screenHalfWidth;
     private float screenHalfHeight;
     private Cloud[] clouds;
+    private Coroutine resetRoutine;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -114,6 +115,11 @@ public class CloudSpawner : MonoBehaviour
 
     private void UpdateScreenDimensions()
     {
+        // Refresh the camera reference in case a different camera became active.
+        var currentMain = Camera.main;
+        if (currentMain != null)
+            cam = currentMain;
+
         if (cam == null)
             return;
 
@@ -123,9 +129,19 @@ public class CloudSpawner : MonoBehaviour
 
     public void ResetClouds(bool inTown)
     {
+        if (resetRoutine != null)
+            StopCoroutine(resetRoutine);
+        resetRoutine = StartCoroutine(ResetCloudsRoutine(inTown));
+    }
+
+    private IEnumerator ResetCloudsRoutine(bool inTown)
+    {
+        // Wait until Cinemachine has updated the camera position.
+        yield return new WaitForEndOfFrame();
+
         UpdateScreenDimensions();
         if (clouds == null)
-            return;
+            yield break;
 
         var activeCount = inTown ? TownCloudCount : runCloudCount;
 
@@ -137,6 +153,8 @@ public class CloudSpawner : MonoBehaviour
             if (active)
                 Recycle(clouds[i], true);
         }
+
+        resetRoutine = null;
     }
 
     private class Cloud
