@@ -12,14 +12,19 @@ public class CloudSpawner : MonoBehaviour
     [Header("Spawn Ahead/Behind")] [SerializeField]
     private float aheadDistance = 18f; // how far in front of cam to (re)spawn
 
+    [SerializeField]
+    private float aheadVariance = 4f; // random range around aheadDistance
+
     [SerializeField] private float behindDistance = 12f; // despawn once this far behind
 
     private Camera cam;
+    private float screenHalfWidth;
     private Cloud[] clouds;
 
     private void Awake()
     {
         cam = Camera.main;
+        screenHalfWidth = cam.orthographicSize * cam.aspect;
         clouds = new Cloud[cloudCount];
 
         for (var i = 0; i < cloudCount; i++)
@@ -39,7 +44,7 @@ public class CloudSpawner : MonoBehaviour
         }
     }
 
-    private Cloud Spawn(bool initial = false)
+    private Cloud Spawn(bool spawnInView = false)
     {
         var go = new GameObject("Cloud", typeof(SpriteRenderer));
         var sr = go.GetComponent<SpriteRenderer>();
@@ -48,16 +53,21 @@ public class CloudSpawner : MonoBehaviour
         sr.material.enableInstancing = true;
 
         var cloud = new Cloud { Tr = go.transform };
-        Recycle(cloud, initial);
+        Recycle(cloud, spawnInView);
         return cloud;
     }
 
-    private void Recycle(Cloud c, bool randomAhead = false)
+    private void Recycle(Cloud c, bool spawnInView = false)
     {
-        var x = cam.transform.position.x
-                + (randomAhead
-                    ? Random.Range(-behindDistance, aheadDistance)
-                    : aheadDistance);
+        float x;
+        if (spawnInView)
+        {
+            x = cam.transform.position.x + Random.Range(-screenHalfWidth, screenHalfWidth);
+        }
+        else
+        {
+            x = cam.transform.position.x + Random.Range(aheadDistance - aheadVariance, aheadDistance + aheadVariance);
+        }
 
         var y = Random.Range(heightRange.x, heightRange.y);
         c.Tr.position = new Vector3(x, y, 0f);
