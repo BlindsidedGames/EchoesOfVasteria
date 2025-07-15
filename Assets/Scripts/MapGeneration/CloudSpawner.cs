@@ -1,20 +1,22 @@
 using UnityEngine;
 
+// Cloud parallax manager
+// Execution order is set so this runs before most scripts
+[DefaultExecutionOrder(-1)]
 public class CloudSpawner : MonoBehaviour
 {
+    public static CloudSpawner Instance { get; private set; }
     [Header("Setup")] [SerializeField] private Sprite[] frames; // 4 cloud images
     [SerializeField] private int cloudCount = 3; // keep it small
 
     [Header("Parallax")] [SerializeField] private float baseSpeed = 0.2f; // world units / sec
     [SerializeField] private float speedVariance = 0.1f; // ± extra random
 
-    [Header("Spawn Ahead/Behind")] [SerializeField]
-    private float aheadDistance = 18f; // how far in front of cam to (re)spawn
+    [Header("Recycle Distances")] [SerializeField]
+    private float aheadDistance = 18f; // recycle if too far in front of camera
 
     [SerializeField]
-    private float aheadVariance = 4f; // random range around aheadDistance
-
-    [SerializeField] private float despawnBuffer = 2f; // how far past screen before despawn
+    private float behindDistance = 2f; // recycle if too far behind the camera
 
     private Camera cam;
     private float screenHalfWidth;
@@ -23,6 +25,7 @@ public class CloudSpawner : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         cam = Camera.main;
         UpdateScreenDimensions();
         clouds = new Cloud[cloudCount];
@@ -33,6 +36,8 @@ public class CloudSpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        if (Instance == null)
+            Instance = this;
         if (clouds != null)
             ResetClouds();
     }
@@ -43,10 +48,12 @@ public class CloudSpawner : MonoBehaviour
         {
             // move cloud
             c.Tr.position += Vector3.left * c.Speed * Time.deltaTime;
-            var offscreenX = cam.transform.position.x - (screenHalfWidth + despawnBuffer);
 
-            // if it’s left of the camera by > behindDistance, recycle in front
-            if (c.Tr.position.x < offscreenX)
+            var leftEdge = cam.transform.position.x - (screenHalfWidth + behindDistance);
+            var rightEdge = cam.transform.position.x + screenHalfWidth + aheadDistance;
+
+            // recycle if outside camera bounds
+            if (c.Tr.position.x < leftEdge || c.Tr.position.x > rightEdge)
                 Recycle(c);
         }
     }
@@ -68,11 +75,7 @@ public class CloudSpawner : MonoBehaviour
     {
         UpdateScreenDimensions();
 
-        float x;
-        if (spawnInView)
-            x = cam.transform.position.x + Random.Range(-screenHalfWidth, screenHalfWidth);
-        else
-            x = cam.transform.position.x + Random.Range(aheadDistance - aheadVariance, aheadDistance + aheadVariance);
+        var x = cam.transform.position.x + Random.Range(-screenHalfWidth, screenHalfWidth);
 
         var y = cam.transform.position.y + Random.Range(-screenHalfHeight, screenHalfHeight);
         c.Tr.position = new Vector3(x, y, 0f);
