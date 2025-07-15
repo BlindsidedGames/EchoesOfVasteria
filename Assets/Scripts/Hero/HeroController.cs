@@ -367,8 +367,7 @@ namespace TimelessEchoes.Hero
             if (currentEnemy != null)
             {
                 var hp = currentEnemy.GetComponent<Health>();
-                var dist = Vector2.Distance(transform.position, currentEnemy.position);
-                if (hp == null || hp.CurrentHealth <= 0f || dist > stats.visionRange)
+                if (hp == null || hp.CurrentHealth <= 0f)
                 {
                     currentEnemyHealth?.SetHealthBarVisible(false);
                     currentEnemy = null;
