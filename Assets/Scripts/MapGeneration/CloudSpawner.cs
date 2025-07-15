@@ -89,7 +89,7 @@ public class CloudSpawner : MonoBehaviour
         }
 
         sr.sprite = frames[Random.Range(0, frames.Length)];
-        sr.sortingLayerName = "Cloud";
+        sr.sortingLayerName = "Background";
 
         var cloud = new Cloud { Tr = go.transform };
         Recycle(cloud, spawnInView);
