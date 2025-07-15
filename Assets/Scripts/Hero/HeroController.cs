@@ -219,6 +219,8 @@ namespace TimelessEchoes.Hero
             var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
+
+            Enemy.OnEngage += OnEnemyEngage;
         }
 
         private void OnDisable()
@@ -228,6 +230,8 @@ namespace TimelessEchoes.Hero
             var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
+
+            Enemy.OnEngage -= OnEnemyEngage;
         }
 
         private void OnDestroy()
@@ -516,6 +520,27 @@ namespace TimelessEchoes.Hero
                 return false;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
             return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
+        }
+
+        private void OnEnemyEngage(Enemy enemy)
+        {
+            if (enemy == null)
+                return;
+
+            if (currentEnemy != null && currentEnemy != enemy.transform)
+                return;
+
+            var hp = enemy.GetComponent<Health>();
+            if (hp == null || hp.CurrentHealth <= 0f)
+                return;
+
+            if (currentEnemy == null)
+            {
+                currentEnemyHealth?.SetHealthBarVisible(false);
+                currentEnemy = enemy.transform;
+                currentEnemyHealth = hp;
+                currentEnemyHealth.SetHealthBarVisible(true);
+            }
         }
 
         private void Attack(Transform target)
