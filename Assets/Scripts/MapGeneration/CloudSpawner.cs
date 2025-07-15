@@ -11,6 +11,7 @@ public class CloudSpawner : MonoBehaviour
     [SerializeField] private int runCloudCount = 3; // number of clouds during runs
 
     [Header("Rendering")] [SerializeField] private Material cloudMaterial;
+    [SerializeField] private float zSpacing = 0.1f; // distance between clouds along Z
     private int TownCloudCount => runCloudCount * 2;
 
     [Header("Parallax")] [SerializeField] private float baseSpeed = 0.2f; // world units / sec
@@ -47,7 +48,7 @@ public class CloudSpawner : MonoBehaviour
         clouds = new Cloud[maxCount];
 
         for (var i = 0; i < maxCount; i++)
-            clouds[i] = Spawn(true);
+            clouds[i] = Spawn(true, i);
     }
 
     private void OnEnable()
@@ -77,7 +78,7 @@ public class CloudSpawner : MonoBehaviour
         }
     }
 
-    private Cloud Spawn(bool spawnInView = false)
+    private Cloud Spawn(bool spawnInView = false, int index = 0)
     {
         var go = new GameObject("Cloud", typeof(SpriteRenderer));
         var sr = go.GetComponent<SpriteRenderer>();
@@ -91,7 +92,7 @@ public class CloudSpawner : MonoBehaviour
         sr.sprite = frames[Random.Range(0, frames.Length)];
         sr.sortingLayerName = "Background";
 
-        var cloud = new Cloud { Tr = go.transform };
+        var cloud = new Cloud { Tr = go.transform, Index = index };
         Recycle(cloud, spawnInView);
         return cloud;
     }
@@ -113,7 +114,8 @@ public class CloudSpawner : MonoBehaviour
         }
 
         var y = cam.transform.position.y + Random.Range(-screenHalfHeight, screenHalfHeight);
-        c.Tr.position = new Vector3(x, y, 0f);
+        var z = -c.Index * zSpacing;
+        c.Tr.position = new Vector3(x, y, z);
         c.Speed = baseSpeed + Random.Range(-speedVariance, speedVariance);
         // pick a new frame / scale for variety
         c.Tr.GetComponent<SpriteRenderer>().sprite = frames[Random.Range(0, frames.Length)];
@@ -168,5 +170,6 @@ public class CloudSpawner : MonoBehaviour
     {
         public Transform Tr;
         public float Speed;
+        public int Index;
     }
 }
