@@ -18,9 +18,8 @@ Shader "Custom/SpriteMaxBlend"
         }
         Cull Off
         Lighting Off
-        ZWrite Off
+        ZWrite On
         Blend One OneMinusSrcAlpha
-        BlendOp Max
         Pass
         {
             CGPROGRAM
