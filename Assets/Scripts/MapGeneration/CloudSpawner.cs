@@ -7,7 +7,8 @@ public class CloudSpawner : MonoBehaviour
 {
     public static CloudSpawner Instance { get; private set; }
     [Header("Setup")] [SerializeField] private Sprite[] frames; // 4 cloud images
-    [SerializeField] private int cloudCount = 3; // keep it small
+    [SerializeField] private int runCloudCount = 3; // number of clouds during runs
+    private int TownCloudCount => runCloudCount * 2;
 
     [Header("Parallax")] [SerializeField] private float baseSpeed = 0.2f; // world units / sec
     [SerializeField] private float speedVariance = 0.1f; // ± extra random
@@ -40,9 +41,10 @@ public class CloudSpawner : MonoBehaviour
         Instance = this;
         cam = Camera.main;
         UpdateScreenDimensions();
-        clouds = new Cloud[cloudCount];
+        var maxCount = Mathf.Max(runCloudCount, TownCloudCount);
+        clouds = new Cloud[maxCount];
 
-        for (var i = 0; i < cloudCount; i++)
+        for (var i = 0; i < maxCount; i++)
             clouds[i] = Spawn(true);
     }
 
@@ -51,13 +53,16 @@ public class CloudSpawner : MonoBehaviour
         if (Instance == null)
             Instance = this;
         if (clouds != null)
-            ResetClouds();
+            ResetClouds(true); // game starts in town
     }
 
     private void Update()
     {
         foreach (var c in clouds)
         {
+            if (!c.Tr.gameObject.activeInHierarchy)
+                continue;
+
             // move cloud
             c.Tr.position += Vector3.left * c.Speed * Time.deltaTime;
 
@@ -116,14 +121,22 @@ public class CloudSpawner : MonoBehaviour
         screenHalfWidth = screenHalfHeight * cam.aspect;
     }
 
-    public void ResetClouds()
+    public void ResetClouds(bool inTown)
     {
         UpdateScreenDimensions();
         if (clouds == null)
             return;
 
-        foreach (var c in clouds)
-            Recycle(c, true);
+        var activeCount = inTown ? TownCloudCount : runCloudCount;
+
+        for (var i = 0; i < clouds.Length; i++)
+        {
+            var active = i < activeCount;
+            var go = clouds[i].Tr.gameObject;
+            go.SetActive(active);
+            if (active)
+                Recycle(clouds[i], true);
+        }
     }
 
     private class Cloud
