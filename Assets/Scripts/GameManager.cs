@@ -218,7 +218,7 @@ namespace TimelessEchoes
             if (mapCamera != null)
             {
                 mapCamera.gameObject.SetActive(true);
-                cloudSpawner?.ResetClouds();
+                cloudSpawner?.ResetClouds(false);
             }
 
             tavernUI?.SetActive(false);
@@ -371,7 +371,7 @@ namespace TimelessEchoes
             if (tavernCamera != null)
             {
                 tavernCamera.gameObject.SetActive(true);
-                cloudSpawner?.ResetClouds();
+                cloudSpawner?.ResetClouds(true);
             }
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
