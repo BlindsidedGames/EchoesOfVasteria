@@ -14,6 +14,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private Sprite closeSprite;
         [SerializeField] private Image stateImage;
         [SerializeField] private Button toggleButton;
+        [SerializeField] private bool startClosed = true;
 
         private void Awake()
         {
@@ -22,6 +23,9 @@ namespace TimelessEchoes.UI
 
             if (toggleButton != null)
                 toggleButton.onClick.AddListener(OnToggle);
+
+            if (startClosed && toggleObject != null)
+                toggleObject.SetActive(false);
 
             UpdateImage(toggleObject != null && toggleObject.activeSelf);
         }
