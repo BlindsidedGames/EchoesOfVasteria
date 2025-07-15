@@ -23,7 +23,9 @@ namespace Blindsided.SaveData
         public float TimeScale = 0f;
         [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
         [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
-        [HideReferenceObjectPicker] public List<string> BuffSlots = new(new string[5]);
+        // Start with the MoveSpeed buff assigned to the first slot by default
+        [HideReferenceObjectPicker]
+        public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
         public int UnlockedBuffSlots = 1;
         [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
