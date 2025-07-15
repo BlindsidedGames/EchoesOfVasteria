@@ -41,12 +41,30 @@ MonoBehaviour:
       amount: 1
       amountIncreasePerLevel: 1
   - minLevel: 50
-    maxLevel: 100
+    maxLevel: 75
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
       amount: 50
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
+  - minLevel: 75
+    maxLevel: 100
+    requirements:
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 0
+    - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
+  - minLevel: 100
+    maxLevel: 150
+    requirements:
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+      amount: 75
+      amountIncreasePerLevel: 0
+    - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
       amount: 1
       amountIncreasePerLevel: 1
   statIncreasePerLevel: 0.01

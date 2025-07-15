@@ -20,8 +20,11 @@ MonoBehaviour:
   damagePercent: 50
   defensePercent: 50
   attackSpeedPercent: 0
+  lifestealPercent: 0
+  instantTasks: 0
+  distancePercent: 0
   requirements:
-  - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
+  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
     amount: 25
-  - resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}
+  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
     amount: 10
