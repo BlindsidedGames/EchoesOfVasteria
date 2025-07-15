@@ -9,6 +9,8 @@ public class CloudSpawner : MonoBehaviour
     public static CloudSpawner Instance { get; private set; }
     [Header("Setup")] [SerializeField] private Sprite[] frames; // 4 cloud images
     [SerializeField] private int runCloudCount = 3; // number of clouds during runs
+
+    [Header("Rendering")] [SerializeField] private Material cloudMaterial;
     private int TownCloudCount => runCloudCount * 2;
 
     [Header("Parallax")] [SerializeField] private float baseSpeed = 0.2f; // world units / sec
@@ -79,9 +81,15 @@ public class CloudSpawner : MonoBehaviour
     {
         var go = new GameObject("Cloud", typeof(SpriteRenderer));
         var sr = go.GetComponent<SpriteRenderer>();
+
+        if (cloudMaterial != null)
+        {
+            sr.sharedMaterial = cloudMaterial;
+            sr.sharedMaterial.enableInstancing = true;
+        }
+
         sr.sprite = frames[Random.Range(0, frames.Length)];
         sr.sortingLayerName = "Background";
-        sr.material.enableInstancing = true;
 
         var cloud = new Cloud { Tr = go.transform };
         Recycle(cloud, spawnInView);
