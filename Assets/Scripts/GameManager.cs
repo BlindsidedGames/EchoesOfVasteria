@@ -54,6 +54,8 @@ namespace TimelessEchoes
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
+        private CloudSpawner cloudSpawner;
+
         private GameObject currentMap;
         private bool runEndedByDeath;
         private Coroutine deathWindowCoroutine;
@@ -66,6 +68,7 @@ namespace TimelessEchoes
         private void Awake()
         {
             Instance = this;
+            cloudSpawner = FindFirstObjectByType<CloudSpawner>();
             if (startRunButton != null)
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
@@ -213,7 +216,10 @@ namespace TimelessEchoes
             if (tavernCamera != null)
                 tavernCamera.gameObject.SetActive(false);
             if (mapCamera != null)
+            {
                 mapCamera.gameObject.SetActive(true);
+                cloudSpawner?.ResetClouds();
+            }
 
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
@@ -363,7 +369,10 @@ namespace TimelessEchoes
             BuffManager.Instance?.ClearActiveBuffs();
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
+            {
                 tavernCamera.gameObject.SetActive(true);
+                cloudSpawner?.ResetClouds();
+            }
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             if (runCalebUI != null)
