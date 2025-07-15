@@ -13,7 +13,7 @@ namespace Blindsided
 {
     /// <summary>
     ///     Single-instance save manager using Easy Save 3 with
-    ///     • RAM-cached writes   • 8 KB buffer   • periodic flush   • one backup / session
+    ///     • direct file writes   • 8 KB buffer   • periodic cloud uploads   • one backup / session
     /// </summary>
     public class Oracle : SerializedMonoBehaviour
     {
@@ -33,12 +33,12 @@ namespace Blindsided
                 return;
             }
 
-            _settings = new ES3Settings(_fileName, ES3.Location.Cache)
+            _settings = new ES3Settings(_fileName, ES3.Location.File)
             {
                 bufferSize = 8192
             };
-            SteamCloudManager.DownloadFile(_fileName); // ensure local cache is up-to-date
-            ES3.CacheFile(_fileName); // pull existing save into RAM
+            SteamCloudSync.Instance.SetFileName(_fileName);
+            SteamCloudSync.Instance.Download(); // ensure local copy is up-to-date
             wipeInProgress = false;
         }
 
@@ -73,7 +73,7 @@ namespace Blindsided
         {
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
             Load();
-            InvokeRepeating(nameof(SaveToCache), 10, 10);
+            InvokeRepeating(nameof(SaveToFile), 10, 10);
         }
 
         private void Update()
@@ -83,7 +83,8 @@ namespace Blindsided
 
         private void OnApplicationQuit()
         {
-            FlushToDisk();
+            SaveToFile(false);
+            SteamCloudSync.Instance.Upload();
             SafeCreateBackup();
         }
 
@@ -92,8 +93,7 @@ namespace Blindsided
             // This is called when you exit Play Mode in the Editor
             if (Application.isPlaying && !wipeInProgress)
             {
-                SaveToCache(); // write the latest state into the cache
-                ES3.StoreCachedFile(_fileName); // copy RAM ➜ disk immediately
+                SaveToFile(); // save the latest state immediately
             }
         }
 
@@ -102,7 +102,7 @@ namespace Blindsided
         private void OnApplicationFocus(bool focus)
         {
             if (!focus)
-                FlushToDisk();
+                SaveToFile();
         }
 #endif
 
@@ -122,12 +122,13 @@ namespace Blindsided
         public void WipeAllData()
         {
             wipeInProgress = true;
+            SteamCloudSync.Instance.SkipNextDownload();
+            SteamCloudSync.Instance.QueueUploadAfterSceneLoad();
             EventHandler.ResetData();
             var prefs = saveData.SavedPreferences;
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
-            SaveToCache();
-            FlushToDisk();
+            SaveToFile(false);
             SceneManager.LoadScene(0);
         }
 
@@ -136,14 +137,13 @@ namespace Blindsided
         public void WipeCloudData()
         {
             wipeInProgress = true;
+            SteamCloudSync.Instance.SkipNextDownload();
+            SteamCloudSync.Instance.QueueUploadAfterSceneLoad();
             EventHandler.ResetData();
             var prefs = saveData.SavedPreferences;
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
-            ES3.DeleteFile(_settings); // clear cached copy
-            SteamCloudManager.DeleteFile(_fileName);
-            SaveToCache();
-            FlushToDisk();
+            SaveToFile(false);
             SceneManager.LoadScene(0);
         }
 
@@ -156,7 +156,7 @@ namespace Blindsided
                 : Convert.FromBase64String(GUIUtility.systemCopyBuffer);
 
             saveData = SerializationUtility.DeserializeValue<GameData>(bytes, DataFormat.JSON);
-            SaveToCache();
+            SaveToFile();
         }
 
         [TabGroup("SaveData", "Buttons")]
@@ -171,22 +171,18 @@ namespace Blindsided
 
         #region Core save / load
 
-        private void SaveToCache()
+        private void SaveToFile(bool allowUpload = true)
         {
             EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            ES3.Save(_dataName, saveData, _settings); // RAM-only
+            ES3.Save(_dataName, saveData, _settings); // direct file write
 
-            if (Time.unscaledTime - _lastFlush > FlushInterval)
-                FlushToDisk();
-        }
-
-        private void FlushToDisk()
-        {
-            ES3.StoreCachedFile(_fileName); // RAM ➜ file
-            SteamCloudManager.UploadFile(_fileName); // push to Steam Cloud
-            _lastFlush = Time.unscaledTime;
+            if (allowUpload && Time.unscaledTime - _lastFlush > FlushInterval)
+            {
+                SteamCloudSync.Instance.Upload();
+                _lastFlush = Time.unscaledTime;
+            }
         }
 
         private void Load()
@@ -203,7 +199,6 @@ namespace Blindsided
                 if (ES3.RestoreBackup(_fileName))
                 {
                     Debug.LogWarning("Backup restored; re-loading.");
-                    ES3.CacheFile(_fileName);
                     saveData = ES3.Load<GameData>(_dataName, _settings);
                 }
                 else
