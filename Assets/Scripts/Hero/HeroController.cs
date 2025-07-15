@@ -541,6 +541,14 @@ namespace TimelessEchoes.Hero
                 currentEnemyHealth = hp;
                 currentEnemyHealth.SetHealthBarVisible(true);
             }
+
+            if (state == State.PerformingTask && CurrentTask != null)
+                CurrentTask.OnInterrupt(this);
+
+            state = State.Combat;
+            setter.target = enemy.transform;
+            ai?.SearchPath();
+            HandleCombat(enemy.transform);
         }
 
         private void Attack(Transform target)
