@@ -4,7 +4,6 @@ public class CloudSpawner : MonoBehaviour
 {
     [Header("Setup")] [SerializeField] private Sprite[] frames; // 4 cloud images
     [SerializeField] private int cloudCount = 3; // keep it small
-    [SerializeField] private Vector2 heightRange = new(2f, 6f);
 
     [Header("Parallax")] [SerializeField] private float baseSpeed = 0.2f; // world units / sec
     [SerializeField] private float speedVariance = 0.1f; // ± extra random
@@ -15,20 +14,27 @@ public class CloudSpawner : MonoBehaviour
     [SerializeField]
     private float aheadVariance = 4f; // random range around aheadDistance
 
-    [SerializeField] private float behindDistance = 12f; // despawn once this far behind
+    [SerializeField] private float despawnBuffer = 2f; // how far past screen before despawn
 
     private Camera cam;
     private float screenHalfWidth;
+    private float screenHalfHeight;
     private Cloud[] clouds;
 
     private void Awake()
     {
         cam = Camera.main;
-        screenHalfWidth = cam.orthographicSize * cam.aspect;
+        UpdateScreenDimensions();
         clouds = new Cloud[cloudCount];
 
         for (var i = 0; i < cloudCount; i++)
             clouds[i] = Spawn(true);
+    }
+
+    private void OnEnable()
+    {
+        if (clouds != null)
+            ResetClouds();
     }
 
     private void Update()
@@ -37,9 +43,10 @@ public class CloudSpawner : MonoBehaviour
         {
             // move cloud
             c.Tr.position += Vector3.left * c.Speed * Time.deltaTime;
+            var offscreenX = cam.transform.position.x - (screenHalfWidth + despawnBuffer);
 
             // if it’s left of the camera by > behindDistance, recycle in front
-            if (c.Tr.position.x < cam.transform.position.x - behindDistance)
+            if (c.Tr.position.x < offscreenX)
                 Recycle(c);
         }
     }
@@ -59,22 +66,39 @@ public class CloudSpawner : MonoBehaviour
 
     private void Recycle(Cloud c, bool spawnInView = false)
     {
+        UpdateScreenDimensions();
+
         float x;
         if (spawnInView)
-        {
             x = cam.transform.position.x + Random.Range(-screenHalfWidth, screenHalfWidth);
-        }
         else
-        {
             x = cam.transform.position.x + Random.Range(aheadDistance - aheadVariance, aheadDistance + aheadVariance);
-        }
 
-        var y = Random.Range(heightRange.x, heightRange.y);
+        var y = cam.transform.position.y + Random.Range(-screenHalfHeight, screenHalfHeight);
         c.Tr.position = new Vector3(x, y, 0f);
         c.Speed = baseSpeed + Random.Range(-speedVariance, speedVariance);
         // pick a new frame / scale for variety
         c.Tr.GetComponent<SpriteRenderer>().sprite = frames[Random.Range(0, frames.Length)];
         c.Tr.localScale = Vector3.one * Random.Range(0.8f, 1.4f);
+    }
+
+    private void UpdateScreenDimensions()
+    {
+        if (cam == null)
+            return;
+
+        screenHalfHeight = cam.orthographicSize;
+        screenHalfWidth = screenHalfHeight * cam.aspect;
+    }
+
+    public void ResetClouds()
+    {
+        UpdateScreenDimensions();
+        if (clouds == null)
+            return;
+
+        foreach (var c in clouds)
+            Recycle(c, true);
     }
 
     private class Cloud
