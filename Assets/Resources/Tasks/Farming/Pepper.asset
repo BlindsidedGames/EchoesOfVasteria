@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   taskName: Pepper
   taskID: 40
-  taskIcon: {fileID: -1041579510, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  taskIcon: {fileID: -7950665004155765343, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   xpForCompletion: 5
   requiredQuest: {fileID: 11400000, guid: 28ae2ed17b1546c8a3d5f43e52c3cdb7, type: 2}
   taskDuration: 2
+  sfxInterval: 0
   resourceDrops:
   - resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}
     dropRange: {x: 1, y: 5}
     dropChance: 1
+    minX: 0
+    maxX: Infinity
+  resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
     timeSpent: 0

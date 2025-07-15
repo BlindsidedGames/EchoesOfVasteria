@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   taskName: Chillie
   taskID: 41
-  taskIcon: {fileID: -1041579510, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  taskIcon: {fileID: -9046296309055213395, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   xpForCompletion: 5
   requiredQuest: {fileID: 11400000, guid: 4ca1d6c5bf8245df82a7a75168d51f02, type: 2}
   taskDuration: 2
+  sfxInterval: 0
   resourceDrops:
   - resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}
     dropRange: {x: 1, y: 5}
     dropChance: 1
+    minX: 0
+    maxX: Infinity
+  resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
     timeSpent: 0
