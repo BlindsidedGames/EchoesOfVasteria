@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using References.UI;
+using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
@@ -56,7 +57,11 @@ namespace TimelessEchoes.Upgrades
                 int index = i;
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
+                {
                     refs.upgradeButton.onClick.AddListener(() => ApplyUpgrade(index));
+                    var repeat = refs.upgradeButton.gameObject.AddComponent<RepeatButtonClick>();
+                    repeat.button = refs.upgradeButton;
+                }
             }
 
             BuildAllCostSlots();
