@@ -68,7 +68,7 @@ namespace TimelessEchoes
         private void Awake()
         {
             Instance = this;
-            cloudSpawner = FindFirstObjectByType<CloudSpawner>();
+            cloudSpawner = CloudSpawner.Instance;
             if (startRunButton != null)
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
