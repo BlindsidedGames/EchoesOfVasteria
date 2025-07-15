@@ -126,6 +126,7 @@ namespace Blindsided
             var prefs = saveData.SavedPreferences;
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
+            SaveToCache();
             FlushToDisk();
             SceneManager.LoadScene(0);
         }
@@ -141,6 +142,8 @@ namespace Blindsided
             saveData.SavedPreferences = prefs;
             ES3.DeleteFile(_settings); // clear cached copy
             SteamCloudManager.DeleteFile(_fileName);
+            SaveToCache();
+            FlushToDisk();
             SceneManager.LoadScene(0);
         }
 
