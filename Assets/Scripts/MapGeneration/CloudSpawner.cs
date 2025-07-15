@@ -83,13 +83,11 @@ public class CloudSpawner : MonoBehaviour
         var sr = go.GetComponent<SpriteRenderer>();
 
         if (cloudMaterial != null)
-        {
             sr.sharedMaterial = cloudMaterial;
-            sr.sharedMaterial.enableInstancing = true;
-        }
 
         sr.sprite = frames[Random.Range(0, frames.Length)];
         sr.sortingLayerName = "Background";
+        sr.enableInstancing = true;
 
         var cloud = new Cloud { Tr = go.transform };
         Recycle(cloud, spawnInView);
