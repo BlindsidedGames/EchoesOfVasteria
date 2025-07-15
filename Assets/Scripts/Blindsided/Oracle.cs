@@ -123,7 +123,9 @@ namespace Blindsided
         {
             wipeInProgress = true;
             EventHandler.ResetData();
+            var prefs = saveData.SavedPreferences;
             saveData = new GameData();
+            saveData.SavedPreferences = prefs;
             FlushToDisk();
             SceneManager.LoadScene(0);
         }
@@ -134,7 +136,9 @@ namespace Blindsided
         {
             wipeInProgress = true;
             EventHandler.ResetData();
+            var prefs = saveData.SavedPreferences;
             saveData = new GameData();
+            saveData.SavedPreferences = prefs;
             ES3.DeleteFile(_settings); // clear cached copy
             SteamCloudManager.DeleteFile(_fileName);
             SceneManager.LoadScene(0);
