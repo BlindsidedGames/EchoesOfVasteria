@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // Cloud parallax manager
@@ -16,11 +17,9 @@ public class CloudSpawner : MonoBehaviour
     [Header("Recycle Distances")] [SerializeField]
     private float aheadDistance = 18f; // recycle if too far in front of camera
 
-    [SerializeField] [Min(0f)]
-    private float recycleSpawnDistance = 6f; // how far ahead to place recycled clouds
+    [SerializeField] [Min(0f)] private float recycleSpawnDistance = 6f; // how far ahead to place recycled clouds
 
-    [SerializeField]
-    private float behindDistance = 2f; // recycle if too far behind the camera
+    [SerializeField] private float behindDistance = 2f; // recycle if too far behind the camera
 
     private Camera cam;
     private float screenHalfWidth;
