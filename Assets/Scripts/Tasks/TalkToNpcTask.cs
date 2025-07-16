@@ -5,6 +5,7 @@ using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UI;
 using TimelessEchoes.Hero;
+using TimelessEchoes.UI;
 
 namespace TimelessEchoes.Tasks
 {
@@ -16,72 +17,49 @@ namespace TimelessEchoes.Tasks
     {
         [SerializeField] private string npcId;
         [SerializeField] private Transform chatPoint;
-        [SerializeField] private GameObject dialogueObject;
-        [SerializeField] private TMP_Text dialogueText;
-        [SerializeField] private Button continueButton;
+        [SerializeField] private GameObject meetingPrefab;
+        [SerializeField] private Sprite npcSprite;
         [TextArea]
         [SerializeField] private List<string> lines = new();
 
         private int index;
         private bool talked;
+        private GameObject meetingInstance;
 
         public override Transform Target => chatPoint != null ? chatPoint : transform;
-        public override bool BlocksMovement => dialogueObject != null && dialogueObject.activeSelf;
+        public override bool BlocksMovement => false;
 
         private void Awake()
         {
-            if (continueButton != null)
-                continueButton.onClick.AddListener(Advance);
         }
 
         public override void StartTask()
         {
             talked = false;
             index = 0;
-            if (dialogueObject != null)
-                dialogueObject.SetActive(false);
         }
 
         public override void OnArrival(HeroController hero)
         {
-            StartConversation();
+            SpawnMeetingUI();
         }
 
-        private void StartConversation()
+        private void SpawnMeetingUI()
         {
-            if (dialogueObject != null)
-                dialogueObject.SetActive(true);
-            ShowLine();
+            if (meetingPrefab == null) return;
+            var parent = GameManager.Instance != null ? GameManager.Instance.MeetingParent : null;
+            meetingInstance = Object.Instantiate(meetingPrefab, parent, false);
+            var controller = meetingInstance.GetComponent<MeetingController>();
+            controller?.Init(npcSprite, lines, OnMeetingFinished);
         }
 
-        private void ShowLine()
+        private void OnMeetingFinished()
         {
-            if (dialogueText != null && index < lines.Count)
-                dialogueText.text = lines[index];
-        }
-
-        private void Advance()
-        {
-            index++;
-            if (index >= lines.Count)
-            {
-                EndConversation();
-            }
-            else
-            {
-                ShowLine();
-            }
-        }
-
-        private void EndConversation()
-        {
-            if (dialogueObject != null)
-                dialogueObject.SetActive(false);
             talked = true;
             if (!string.IsNullOrEmpty(npcId))
             {
                 StaticReferences.CompletedNpcTasks.Add(npcId);
-                var qm = FindFirstObjectByType<QuestManager>();
+                var qm = Object.FindFirstObjectByType<QuestManager>();
                 qm?.OnNpcMet(npcId);
             }
             GrantCompletionXP();
