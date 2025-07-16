@@ -41,7 +41,8 @@ namespace TimelessEchoes.Enemies
                 var remaining = moveDistance - moved;
                 var horizStep = step;
                 if (horizStep > remaining) horizStep = remaining;
-                transform.position += transform.right * horizStep;
+                var direction = Mathf.Sign(transform.localScale.x);
+                transform.position += transform.right * horizStep * direction;
                 moved += horizStep;
             }
 
