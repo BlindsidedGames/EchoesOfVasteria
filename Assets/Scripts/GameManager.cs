@@ -37,6 +37,8 @@ namespace TimelessEchoes
         [SerializeField] private Button returnToTavernButton;
         [SerializeField] private TMP_Text returnToTavernText;
         [SerializeField] private TMP_Text retreatBonusText;
+        [SerializeField] private Button returnOnDeathButton;
+        [SerializeField] private TMP_Text returnOnDeathText;
         [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
@@ -66,6 +68,8 @@ namespace TimelessEchoes
         private TaskController taskController;
         private NpcObjectStateController npcObjectStateController;
         private GameplayStatTracker statTracker;
+        private bool returnOnDeathQueued;
+        private bool retreatQueued;
 
         private void Awake()
         {
@@ -74,7 +78,9 @@ namespace TimelessEchoes
             if (startRunButton != null)
                 startRunButton.onClick.AddListener(StartRun);
             if (returnToTavernButton != null)
-                returnToTavernButton.onClick.AddListener(ReturnToTavern);
+                returnToTavernButton.onClick.AddListener(OnReturnToTavernButton);
+            if (returnOnDeathButton != null)
+                returnOnDeathButton.onClick.AddListener(QueueReturnOnDeath);
             if (deathRunButton != null)
                 deathRunButton.onClick.AddListener(OnDeathRunButton);
             if (deathReturnButton != null)
@@ -94,7 +100,9 @@ namespace TimelessEchoes
             if (startRunButton != null)
                 startRunButton.onClick.RemoveListener(StartRun);
             if (returnToTavernButton != null)
-                returnToTavernButton.onClick.RemoveListener(ReturnToTavern);
+                returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
+            if (returnOnDeathButton != null)
+                returnOnDeathButton.onClick.RemoveListener(QueueReturnOnDeath);
             if (deathRunButton != null)
                 deathRunButton.onClick.RemoveListener(OnDeathRunButton);
             if (deathReturnButton != null)
@@ -110,6 +118,8 @@ namespace TimelessEchoes
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
                 returnToTavernText.text = "Return To Town";
+            if (returnOnDeathText != null)
+                returnOnDeathText.text = "Return On Death";
             npcObjectStateController?.UpdateObjectStates();
         }
 
@@ -117,13 +127,20 @@ namespace TimelessEchoes
         {
             if (returnToTavernButton != null)
             {
-                var active = hero != null && !hero.InCombat;
+                var active = hero != null;
                 returnToTavernButton.interactable = active;
                 if (returnToTavernText != null)
-                    returnToTavernText.text = active ? "Return To Town" : "In Combat...";
+                {
+                    if (retreatQueued)
+                        returnToTavernText.text = "Retreating...";
+                    else if (hero != null && hero.InCombat)
+                        returnToTavernText.text = "In Combat...";
+                    else
+                        returnToTavernText.text = "Return To Town";
+                }
                 if (retreatBonusText != null)
                 {
-                    if (active)
+                    if (active && hero != null && !hero.InCombat)
                     {
                         var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
                         var percent = kills * bonusPercentPerKill;
@@ -135,6 +152,12 @@ namespace TimelessEchoes
                     }
                 }
             }
+
+            if (retreatQueued && hero != null && !hero.InCombat)
+            {
+                retreatQueued = false;
+                StartCoroutine(ReturnToTavernRoutine());
+            }
         }
 
         private void HideTooltip()
@@ -144,9 +167,36 @@ namespace TimelessEchoes
                 tooltip.gameObject.SetActive(false);
         }
 
+        private void OnReturnToTavernButton()
+        {
+            if (hero != null && hero.InCombat)
+            {
+                retreatQueued = true;
+                if (returnToTavernText != null)
+                    returnToTavernText.text = "Retreating...";
+            }
+            else
+            {
+                StartCoroutine(ReturnToTavernRoutine());
+            }
+        }
+
+        private void QueueReturnOnDeath()
+        {
+            returnOnDeathQueued = true;
+            if (returnOnDeathText != null)
+                returnOnDeathText.text = "Queued";
+        }
+
         private void StartRun()
         {
             HideTooltip();
+            returnOnDeathQueued = false;
+            retreatQueued = false;
+            if (returnOnDeathText != null)
+                returnOnDeathText.text = "Return On Death";
+            if (returnToTavernText != null)
+                returnToTavernText.text = "Return To Town";
             RichPresenceManager.Instance?.SetInRun();
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
@@ -285,7 +335,16 @@ namespace TimelessEchoes
             if (runDropUI != null)
                 runDropUI.ResetDrops();
 
-            deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
+            if (returnOnDeathQueued || retreatQueued)
+            {
+                returnOnDeathQueued = false;
+                retreatQueued = false;
+                StartCoroutine(ReturnToTavernRoutine());
+            }
+            else
+            {
+                deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
+            }
         }
 
         private void OnDeathRunButton()
@@ -340,6 +399,12 @@ namespace TimelessEchoes
         private IEnumerator ReturnToTavernRoutine()
         {
             HideTooltip();
+            returnOnDeathQueued = false;
+            retreatQueued = false;
+            if (returnOnDeathText != null)
+                returnOnDeathText.text = "Return On Death";
+            if (returnToTavernText != null)
+                returnToTavernText.text = "Return To Town";
             if (statTracker == null)
             {
                 statTracker = GameplayStatTracker.Instance;
