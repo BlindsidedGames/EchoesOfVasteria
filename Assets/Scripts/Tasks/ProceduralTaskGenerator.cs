@@ -365,6 +365,8 @@ namespace TimelessEchoes.Tasks
                 if (npc.localX < localMinX || npc.localX >= localMaxX) continue;
                 if (npc.spawnOnlyOnce && Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(npc.id))
                     continue;
+                if (!string.IsNullOrEmpty(npc.id) && Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Contains(npc.id))
+                    continue;
 
                 Vector3 pos;
                 if (npc.spawnOnWater && TryGetWaterSpot(npc.localX, out pos)) { }
