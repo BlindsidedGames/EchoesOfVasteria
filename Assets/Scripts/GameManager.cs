@@ -146,6 +146,12 @@ namespace TimelessEchoes
                         var percent = kills * bonusPercentPerKill;
                         retreatBonusText.text = $"+{percent:0}% Resources";
                     }
+                    else if (retreatQueued && hero != null && hero.InCombat)
+                    {
+                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        var percent = kills * bonusPercentPerKill;
+                        retreatBonusText.text = $"Retreat Queued +{percent:0}%";
+                    }
                     else if (hero != null && hero.InCombat)
                     {
                         retreatBonusText.text = "Queue Retreat";
@@ -178,6 +184,12 @@ namespace TimelessEchoes
                 retreatQueued = true;
                 if (returnToTavernText != null)
                     returnToTavernText.text = "Retreating...";
+                if (retreatBonusText != null)
+                {
+                    var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                    var percent = kills * bonusPercentPerKill;
+                    retreatBonusText.text = $"Retreat Queued +{percent:0}%";
+                }
             }
             else
             {
