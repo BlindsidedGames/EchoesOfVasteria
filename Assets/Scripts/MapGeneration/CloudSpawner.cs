@@ -80,7 +80,7 @@ public class CloudSpawner : MonoBehaviour
         var go = new GameObject("Cloud", typeof(SpriteRenderer));
         var sr = go.GetComponent<SpriteRenderer>();
         sr.sprite = frames[Random.Range(0, frames.Length)];
-        sr.sortingLayerName = "Background";
+        sr.sortingLayerName = "Foreground";
         sr.material.enableInstancing = true;
 
         var cloud = new Cloud { Tr = go.transform };
