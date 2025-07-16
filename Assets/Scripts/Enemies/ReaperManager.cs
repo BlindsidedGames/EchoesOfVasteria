@@ -3,6 +3,7 @@ using TimelessEchoes.Buffs;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Stats;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Enemies
 {
@@ -126,11 +127,8 @@ namespace TimelessEchoes.Enemies
 
             // Randomly flip the horizontal spawn position so the reaper may
             // appear from either side of the target.
-            bool fromRight = Random.value < 0.5f;
-            if (fromRight)
-            {
-                offset.x = -offset.x;
-            }
+            var fromRight = Random.value < 0.5f;
+            if (fromRight) offset.x = -offset.x;
 
             var obj = Instantiate(prefab, target.transform.position + offset, Quaternion.identity, parent);
             if (fromRight)
