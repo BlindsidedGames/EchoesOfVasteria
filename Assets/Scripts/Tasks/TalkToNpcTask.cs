@@ -37,16 +37,22 @@ namespace TimelessEchoes.Tasks
         {
             talked = false;
             index = 0;
+            meetingInstance = null;
+            if (!string.IsNullOrEmpty(npcId))
+                StaticReferences.ActiveNpcMeetings.Remove(npcId);
         }
 
         public override void OnArrival(HeroController hero)
         {
             SpawnMeetingUI();
+            talked = true;
+            if (!string.IsNullOrEmpty(npcId))
+                StaticReferences.ActiveNpcMeetings.Add(npcId);
         }
 
         private void SpawnMeetingUI()
         {
-            if (meetingPrefab == null) return;
+            if (meetingPrefab == null || meetingInstance != null) return;
             var parent = GameManager.Instance != null ? GameManager.Instance.MeetingParent : null;
             meetingInstance = Object.Instantiate(meetingPrefab, parent, false);
             var controller = meetingInstance.GetComponent<MeetingController>();
@@ -55,9 +61,9 @@ namespace TimelessEchoes.Tasks
 
         private void OnMeetingFinished()
         {
-            talked = true;
             if (!string.IsNullOrEmpty(npcId))
             {
+                StaticReferences.ActiveNpcMeetings.Remove(npcId);
                 StaticReferences.CompletedNpcTasks.Add(npcId);
                 var qm = Object.FindFirstObjectByType<QuestManager>();
                 qm?.OnNpcMet(npcId);
