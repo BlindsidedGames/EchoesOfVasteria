@@ -122,7 +122,25 @@ namespace TimelessEchoes.Enemies
         {
             if (prefab == null || target == null) return null;
             var offset = positionOffset ?? Vector3.zero;
+
+            // Randomly flip the horizontal spawn position so the reaper may
+            // appear from either side of the target.
+            bool fromRight = Random.value < 0.5f;
+            if (fromRight)
+            {
+                offset.x = -offset.x;
+            }
+
             var obj = Instantiate(prefab, target.transform.position + offset, Quaternion.identity, parent);
+            if (fromRight)
+            {
+                // Flip horizontally by inverting the x scale rather than rotating,
+                // as this is a 2D sprite.
+                var localScale = obj.transform.localScale;
+                localScale.x *= -1f;
+                obj.transform.localScale = localScale;
+            }
+
             var mgr = obj.GetComponent<ReaperManager>();
             if (mgr != null)
                 mgr.Init(target, fromHero, onKill);
