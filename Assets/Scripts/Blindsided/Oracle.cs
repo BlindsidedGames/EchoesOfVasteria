@@ -124,10 +124,11 @@ namespace Blindsided
             wipeInProgress = true;
             SteamCloudSync.Instance.SkipNextDownload();
             SteamCloudSync.Instance.QueueUploadAfterSceneLoad();
-            EventHandler.ResetData();
             var prefs = saveData.SavedPreferences;
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
+            EventHandler.ResetData();
+            EventHandler.LoadData();
             SaveToFile(false);
             SceneManager.LoadScene(0);
         }
@@ -139,10 +140,11 @@ namespace Blindsided
             wipeInProgress = true;
             SteamCloudSync.Instance.SkipNextDownload();
             SteamCloudSync.Instance.QueueUploadAfterSceneLoad();
-            EventHandler.ResetData();
             var prefs = saveData.SavedPreferences;
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
+            EventHandler.ResetData();
+            EventHandler.LoadData();
             SaveToFile(false);
             SceneManager.LoadScene(0);
         }
