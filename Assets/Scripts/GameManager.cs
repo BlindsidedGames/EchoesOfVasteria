@@ -17,6 +17,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
 
 namespace TimelessEchoes
 {
@@ -113,7 +116,9 @@ namespace TimelessEchoes
         {
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+#if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
+#endif
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
@@ -213,7 +218,9 @@ namespace TimelessEchoes
                 returnOnDeathText.text = "Return On Death";
             if (returnToTavernText != null)
                 returnToTavernText.text = "Return To Town";
+#if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
+#endif
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
             if (deathWindowCoroutine != null)
@@ -461,7 +468,9 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
             npcObjectStateController?.UpdateObjectStates();
+#if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
+#endif
             Log("Returned to tavern", TELogCategory.Run, this);
         }
 

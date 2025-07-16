@@ -14,6 +14,9 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
 
 namespace TimelessEchoes.Hero
 {
@@ -174,7 +177,9 @@ namespace TimelessEchoes.Hero
             {
                 tracker.RecordHeroPosition(transform.position);
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+#if !DISABLESTEAMWORKS
                 RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+#endif
             }
         }
 

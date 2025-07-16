@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
 
 namespace TimelessEchoes
 {
@@ -64,7 +67,9 @@ namespace TimelessEchoes
             }
 
             if (!string.IsNullOrEmpty(fileName))
+#if !DISABLESTEAMWORKS
                 SteamCloudManager.DownloadFile(fileName);
+#endif
         }
 
         /// <summary>
@@ -73,7 +78,9 @@ namespace TimelessEchoes
         public void Upload()
         {
             if (!string.IsNullOrEmpty(fileName))
+#if !DISABLESTEAMWORKS
                 SteamCloudManager.UploadFile(fileName);
+#endif
         }
 
         /// <summary>
