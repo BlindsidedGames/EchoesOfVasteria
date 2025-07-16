@@ -13,9 +13,9 @@ namespace TimelessEchoes.UI
     {
         [SerializeField] private Image npcImage;
         [SerializeField] private Button meetButton;
+        [SerializeField] private TMP_Text meetButtonText;
         [SerializeField] private GameObject dialogueObject;
         [SerializeField] private TMP_Text dialogueText;
-        [SerializeField] private Button continueButton;
 
         private List<string> lines;
         private int index;
@@ -25,8 +25,6 @@ namespace TimelessEchoes.UI
         {
             if (meetButton != null)
                 meetButton.onClick.AddListener(StartConversation);
-            if (continueButton != null)
-                continueButton.onClick.AddListener(Advance);
             if (dialogueObject != null)
                 dialogueObject.SetActive(false);
         }
@@ -34,9 +32,10 @@ namespace TimelessEchoes.UI
         private void OnDestroy()
         {
             if (meetButton != null)
+            {
                 meetButton.onClick.RemoveListener(StartConversation);
-            if (continueButton != null)
-                continueButton.onClick.RemoveListener(Advance);
+                meetButton.onClick.RemoveListener(Advance);
+            }
         }
 
         /// <summary>
@@ -47,15 +46,22 @@ namespace TimelessEchoes.UI
             npcImage.sprite = portrait;
             lines = dialogue;
             onFinished = finished;
+            if (meetButtonText != null)
+                meetButtonText.text = "Meet";
         }
 
         private void StartConversation()
         {
             if (meetButton != null)
-                meetButton.gameObject.SetActive(false);
+            {
+                meetButton.onClick.RemoveListener(StartConversation);
+                meetButton.onClick.AddListener(Advance);
+            }
+
             index = 0;
             if (dialogueObject != null)
                 dialogueObject.SetActive(true);
+
             ShowLine();
         }
 
@@ -63,6 +69,14 @@ namespace TimelessEchoes.UI
         {
             if (dialogueText != null && lines != null && index < lines.Count)
                 dialogueText.text = lines[index];
+
+            if (meetButtonText != null)
+            {
+                if (index >= lines.Count - 1)
+                    meetButtonText.text = "Close";
+                else
+                    meetButtonText.text = "Next";
+            }
         }
 
         private void Advance()
