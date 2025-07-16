@@ -173,7 +173,12 @@ namespace Blindsided
 
         #region Core save / load
 
-        private void SaveToFile(bool allowUpload = true)
+        private void SaveToFile()
+        {
+            SaveToFile(true);
+        }
+
+        private void SaveToFile(bool allowUpload)
         {
             EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
