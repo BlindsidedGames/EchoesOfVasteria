@@ -146,6 +146,10 @@ namespace TimelessEchoes
                         var percent = kills * bonusPercentPerKill;
                         retreatBonusText.text = $"+{percent:0}% Resources";
                     }
+                    else if (hero != null && hero.InCombat)
+                    {
+                        retreatBonusText.text = "Queue Retreat";
+                    }
                     else
                     {
                         retreatBonusText.text = "+0% Resources";
