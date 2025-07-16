@@ -6,6 +6,9 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
 
 namespace TimelessEchoes.Stats
 {
@@ -173,7 +176,9 @@ namespace TimelessEchoes.Stats
             record.XpGained += xp;
             tasksCompleted++;
             currentRunTasks++;
+#if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
+#endif
         }
 
         public GameData.TaskRecord GetTaskRecord(TaskData data)
@@ -290,7 +295,9 @@ namespace TimelessEchoes.Stats
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
             runStartTime = Time.time;
+#if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
+#endif
         }
     }
 }

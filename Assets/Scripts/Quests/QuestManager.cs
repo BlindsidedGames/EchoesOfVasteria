@@ -12,6 +12,9 @@ using UnityEngine.Serialization;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
 
 namespace TimelessEchoes.Quests
 {
@@ -223,8 +226,10 @@ namespace TimelessEchoes.Quests
         {
             if (string.IsNullOrEmpty(id)) return;
             StartAvailableQuests();
+#if !DISABLESTEAMWORKS
             var achievementManager = AchievementManager.Instance;
             achievementManager?.NotifyNpcMet(id);
+#endif
             RefreshNoticeboard();
         }
 
