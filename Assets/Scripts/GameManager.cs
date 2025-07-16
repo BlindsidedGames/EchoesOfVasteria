@@ -42,6 +42,7 @@ namespace TimelessEchoes
         [SerializeField] private GameObject mapUI;
         [SerializeField] private RunDropUI runDropUI;
         [SerializeField] private RunCalebUIReferences runCalebUI;
+        [SerializeField] private Transform meetingParent;
         [SerializeField] private GameObject deathWindow;
         [SerializeField] private Button deathRunButton;
         [SerializeField] private Button deathReturnButton;
@@ -51,6 +52,7 @@ namespace TimelessEchoes
 
         public GameObject ReaperPrefab => reaperPrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
+        public Transform MeetingParent => meetingParent;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
