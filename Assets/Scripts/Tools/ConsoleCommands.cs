@@ -90,5 +90,62 @@ namespace TimelessEchoes
             EventHandler.QuestHandin("Mildred");
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }
+
+        [Command("wipe-quests", "Clear all quest progress")]
+        public static void WipeQuests()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.Quests = new Dictionary<string, GameData.QuestRecord>();
+            Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("wipe-resources", "Remove all stored resources")]
+        public static void WipeResources()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.Resources = new Dictionary<string, GameData.ResourceEntry>();
+            oracle.saveData.ResourceStats = new Dictionary<string, GameData.ResourceRecord>();
+            Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("wipe-upgrades", "Reset all upgrade levels")]
+        public static void WipeUpgrades()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.UpgradeLevels = new Dictionary<string, int>();
+            Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("wipe-skills", "Reset all skill progress")]
+        public static void WipeSkills()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.SkillData = new Dictionary<string, GameData.SkillProgress>();
+            Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("wipe-npc", "Reset NPC tasks and generation data")]
+        public static void WipeNpc()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.CompletedNpcTasks = new HashSet<string>();
+            oracle.saveData.NpcGeneration = new Dictionary<string, GameData.NpcGenerationRecord>();
+            Blindsided.EventHandler.LoadData();
+            NpcObjectStateController.Instance?.UpdateObjectStates();
+        }
+
+        [Command("wipe-regen", "Clear all fish donations")]
+        public static void WipeRegen()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            TimelessEchoes.Regen.RegenManager.Instance?.ResetDonations();
+            oracle.saveData.FishDonations = new Dictionary<string, double>();
+        }
     }
 }
