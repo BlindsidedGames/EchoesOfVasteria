@@ -182,6 +182,7 @@ namespace TimelessEchoes.Quests
                 progress /= count;
 
             inst.ui?.SetProgress(progress);
+            inst.ui?.UpdateRequirementIcons();
         }
 
         private void CompleteQuest(QuestInstance inst)

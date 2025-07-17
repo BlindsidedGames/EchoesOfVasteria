@@ -25,6 +25,7 @@ namespace TimelessEchoes.Quests
         public Transform costParent;
 
         private Action onTurnIn;
+        private readonly List<(CostResourceUIReferences slot, QuestData.Requirement req)> costSlots = new();
 
         public void Setup(QuestData data, Action turnIn, bool showRequirements = true, bool completed = false)
         {
@@ -58,6 +59,7 @@ namespace TimelessEchoes.Quests
             if (progressBar != null)
                 progressBar.SetActive(!completed);
 
+            costSlots.Clear();
             if (costParent != null)
             {
                 foreach (Transform child in costParent)
@@ -72,6 +74,7 @@ namespace TimelessEchoes.Quests
                         slot.resource = (req.type == QuestData.RequirementType.Resource ||
                                          req.type == QuestData.RequirementType.Donation)
                                          ? req.resource : null;
+                        costSlots.Add((slot, req));
 
                         if (slot.iconImage != null)
                         {
@@ -114,6 +117,34 @@ namespace TimelessEchoes.Quests
                 progressImage.fillAmount = pct;
             if (turnInButton != null)
                 turnInButton.interactable = pct >= 1f;
+        }
+
+        /// <summary>
+        /// Refresh requirement icons based on current discovery state.
+        /// </summary>
+        public void UpdateRequirementIcons()
+        {
+            var inventoryUI = ResourceInventoryUI.Instance;
+            var resourceManager = ResourceManager.Instance;
+            foreach (var (slot, req) in costSlots)
+            {
+                if (slot == null || slot.iconImage == null || req == null)
+                    continue;
+
+                if (req.type == QuestData.RequirementType.Resource ||
+                    req.type == QuestData.RequirementType.Donation)
+                {
+                    var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                    var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
+                    slot.iconImage.sprite = unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
+                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                }
+                else if (req.type == QuestData.RequirementType.Kill)
+                {
+                    slot.iconImage.sprite = req.killIcon;
+                    slot.iconImage.color = Color.white;
+                }
+            }
         }
     }
 }
