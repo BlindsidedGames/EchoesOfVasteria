@@ -223,6 +223,10 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
 #endif
+            if (runEndedByDeath && statTracker != null)
+            {
+                statTracker.EndRun(true);
+            }
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
             if (deathWindowCoroutine != null)
@@ -355,7 +359,6 @@ namespace TimelessEchoes
             if (statTracker != null)
             {
                 statTracker.AddDeath();
-                statTracker.EndRun(true);
             }
 
             BuffManager.Instance?.ClearActiveBuffs();
@@ -460,8 +463,13 @@ namespace TimelessEchoes
                 runDropUI.ResetDrops();
             }
 
-            if (!runEndedByDeath)
-                statTracker?.EndRun(false);
+            if (statTracker != null)
+            {
+                if (runEndedByDeath)
+                    statTracker.EndRun(true);
+                else
+                    statTracker.EndRun(false);
+            }
             BuffManager.Instance?.ClearActiveBuffs();
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
