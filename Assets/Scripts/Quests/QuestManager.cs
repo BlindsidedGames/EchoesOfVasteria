@@ -38,6 +38,7 @@ namespace TimelessEchoes.Quests
             public QuestData data;
             public QuestEntryUI ui;
             public readonly Dictionary<EnemyStats, double> killCounts = new();
+            public bool ReadyForTurnIn;
         }
 
         private void Awake()
@@ -183,6 +184,7 @@ namespace TimelessEchoes.Quests
 
             inst.ui?.SetProgress(progress);
             inst.ui?.UpdateRequirementIcons();
+            inst.ReadyForTurnIn = progress >= 1f;
         }
 
         private void CompleteQuest(QuestInstance inst)
@@ -232,6 +234,19 @@ namespace TimelessEchoes.Quests
             achievementManager?.NotifyNpcMet(id);
 #endif
             RefreshNoticeboard();
+        }
+
+        /// <summary>
+        /// Returns true if any active quest can be turned in.
+        /// </summary>
+        public bool HasQuestsReadyForTurnIn()
+        {
+            foreach (var inst in active.Values)
+            {
+                if (inst != null && inst.ReadyForTurnIn)
+                    return true;
+            }
+            return false;
         }
 
         private void TryStartQuest(QuestData quest)
