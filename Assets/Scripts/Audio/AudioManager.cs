@@ -33,6 +33,9 @@ namespace TimelessEchoes.Audio
 
         [SerializeField] private AudioClip[] weaponSwingClips;
 
+        [Header("Chest Clips")] [SerializeField]
+        private AudioClip[] chestOpenClips;
+
         public enum TaskType
         {
             Woodcutting,
@@ -136,6 +139,11 @@ namespace TimelessEchoes.Audio
         public void PlayWeaponSwingClip()
         {
             PlayCombatClip(weaponSwingClips);
+        }
+
+        public void PlayChestOpenClip()
+        {
+            PlaySfx(GetRandom(chestOpenClips));
         }
 
         public void PlayFishCatchClip()
