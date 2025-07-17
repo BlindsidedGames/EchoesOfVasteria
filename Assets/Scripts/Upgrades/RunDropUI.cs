@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
 
@@ -16,10 +15,7 @@ namespace TimelessEchoes.Upgrades
         private ResourceManager resourceManager;
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private Transform slotParent;
-        [SerializeField] private TooltipUIReferences tooltip;
         [SerializeField] private GameObject displayObject;
-        [SerializeField] private bool showTooltipOnHover;
-        [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
         [SerializeField] [Min(1)] private int maxVisibleDrops = 5;
 
         private readonly List<Resource> resources = new();
@@ -31,15 +27,12 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public IReadOnlyDictionary<Resource, double> Amounts => amounts;
 
-        private int selectedIndex = -1;
 
         private void Awake()
         {
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);
-            if (tooltip == null)
-                tooltip = FindFirstObjectByType<TooltipUIReferences>();
             if (slotParent == null)
                 slotParent = transform;
             if (displayObject == null)
@@ -60,15 +53,7 @@ namespace TimelessEchoes.Upgrades
                 resourceManager.OnResourceAdded -= OnResourceAdded;
         }
 
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (tooltip != null && tooltip.gameObject.activeSelf)
-                    tooltip.gameObject.SetActive(false);
-                DeselectSlot();
-            }
-        }
+
 
         /// <summary>
         ///     Clears all collected resource counts.
@@ -86,18 +71,10 @@ namespace TimelessEchoes.Upgrades
             resources.Clear();
             slots.Clear();
             amounts.Clear();
-            selectedIndex = -1;
             if (displayObject != null)
                 displayObject.SetActive(false);
         }
 
-        private void DeselectSlot()
-        {
-            selectedIndex = -1;
-            foreach (var slot in slots)
-                if (slot != null && slot.selectionImage != null)
-                    slot.selectionImage.enabled = false;
-        }
 
         private void OnResourceAdded(Resource resource, double amount)
         {
@@ -105,7 +82,6 @@ namespace TimelessEchoes.Upgrades
 
             ResourceUIReferences slot = null;
             var newSlot = false;
-            var removedSelected = false;
             var index = resources.IndexOf(resource);
             var moved = index > 0;
 
@@ -121,18 +97,6 @@ namespace TimelessEchoes.Upgrades
                     slots.Insert(0, slot);
                     slot.transform.SetSiblingIndex(0);
 
-                    if (selectedIndex >= 0)
-                    {
-                        if (selectedIndex < index)
-                            selectedIndex++;
-                        else if (selectedIndex == index)
-                            selectedIndex = 0;
-
-                        if (tooltip != null && tooltip.gameObject.activeSelf)
-                            ShowTooltip(selectedIndex);
-                        else
-                            SelectSlot(selectedIndex);
-                    }
                 }
             }
             else
@@ -150,16 +114,6 @@ namespace TimelessEchoes.Upgrades
                     if (removedSlot != null)
                         Destroy(removedSlot.gameObject);
                     slots.RemoveAt(removeIndex);
-
-                    if (selectedIndex == removeIndex)
-                    {
-                        removedSelected = true;
-                        selectedIndex = removeIndex - 1;
-                    }
-                    else if (selectedIndex > removeIndex)
-                    {
-                        selectedIndex--;
-                    }
                 }
 
                 slot = Instantiate(slotPrefab, slotParent);
@@ -168,35 +122,8 @@ namespace TimelessEchoes.Upgrades
                 slot.transform.SetSiblingIndex(0);
                 newSlot = true;
 
-                if (slot != null)
-                {
-                    slot.PointerClick += (_, button) =>
-                    {
-                        if (button == PointerEventData.InputButton.Right && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                    };
-                    slot.PointerEnter += _ =>
-                    {
-                        if (showTooltipOnHover)
-                            ShowTooltip(slots.IndexOf(slot));
-                    };
-                    slot.PointerExit += _ =>
-                    {
-                        if (showTooltipOnHover && tooltip != null)
-                            tooltip.gameObject.SetActive(false);
-                    };
-                }
-
-                if (selectedIndex >= 0 || removedSelected)
-                    selectedIndex++;
-
-                if (removedSelected)
-                {
-                    if (tooltip != null && tooltip.gameObject.activeSelf)
-                        ShowTooltip(selectedIndex);
-                    else
-                        SelectSlot(selectedIndex);
-                }
+                if (slot != null && slot.countText != null)
+                    slot.countText.gameObject.SetActive(true);
             }
 
 
@@ -216,8 +143,6 @@ namespace TimelessEchoes.Upgrades
                         Color.white, 8f, transform);
             }
 
-            if (tooltip != null && tooltip.gameObject.activeSelf)
-                StartCoroutine(DelayedTooltipUpdate());
         }
 
         private void UpdateSlot(int index)
@@ -234,45 +159,11 @@ namespace TimelessEchoes.Upgrades
             }
 
             if (slot.countText)
-                slot.countText.gameObject.SetActive(false);
-            if (slot.selectionImage)
-                slot.selectionImage.enabled = index == selectedIndex;
-
-            if (selectedIndex == index && tooltip != null && tooltip.gameObject.activeSelf)
-                ShowTooltip(index);
-        }
-
-        private void SelectSlot(int index)
-        {
-            selectedIndex = index;
-            for (var i = 0; i < slots.Count; i++)
-                if (slots[i] != null && slots[i].selectionImage != null)
-                    slots[i].selectionImage.enabled = i == selectedIndex;
-            ShowTooltip(selectedIndex);
-        }
-
-        private void ShowTooltip(int index)
-        {
-            if (tooltip == null)
-                return;
-            if (index < 0 || index >= slots.Count || index >= resources.Count)
-            {
-                tooltip.gameObject.SetActive(false);
-                return;
-            }
-
-            var slot = slots[index];
-            var resource = resources[index];
-            tooltip.transform.position = slot.transform.position + (Vector3)tooltipOffset;
-            if (tooltip.resourceNameText)
-                tooltip.resourceNameText.text = resource ? resource.name : string.Empty;
-            if (tooltip.resourceCountText)
             {
                 var count = amounts.TryGetValue(resource, out var val) ? val : 0;
-                tooltip.resourceCountText.text = FormatNumber(count, true);
+                slot.countText.text = FormatNumber(count, true);
+                slot.countText.gameObject.SetActive(true);
             }
-
-            tooltip.gameObject.SetActive(true);
         }
 
         private IEnumerator SpawnFloatingTextNextFrame(ResourceUIReferences slot, double amount)
@@ -283,11 +174,5 @@ namespace TimelessEchoes.Upgrades
                     Color.white, 8f, transform);
         }
 
-        private IEnumerator DelayedTooltipUpdate()
-        {
-            yield return null;
-            if (selectedIndex >= 0 && tooltip != null && tooltip.gameObject.activeSelf)
-                ShowTooltip(selectedIndex);
-        }
     }
 }
