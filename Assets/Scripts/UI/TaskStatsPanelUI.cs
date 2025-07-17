@@ -124,18 +124,27 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0)
                 return;
 
-            if (sortMode == SortMode.Default)
-            {
-                ApplyOrder(defaultOrder);
-                return;
-            }
-
             IEnumerable<TaskData> known = defaultOrder;
             IEnumerable<TaskData> unknown = Enumerable.Empty<TaskData>();
             if (statTracker != null)
             {
                 known = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) > 0);
                 unknown = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) == 0);
+            }
+
+            if (sortMode == SortMode.Default)
+            {
+                var sortedKnown = known
+                    .OrderBy(t => t.taskID)
+                    .ThenBy(t => t.taskName)
+                    .ToList();
+                var sortedUnknown = unknown
+                    .OrderBy(t => t.taskID)
+                    .ThenBy(t => t.taskName)
+                    .ToList();
+                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
+                ApplyOrder(finalDefault);
+                return;
             }
 
             float GetValue(TaskData t) => sortMode == SortMode.Completions

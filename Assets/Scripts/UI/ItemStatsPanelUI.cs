@@ -121,14 +121,23 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0)
                 return;
 
-            if (sortMode == SortMode.Default)
-            {
-                ApplyOrder(defaultOrder);
-                return;
-            }
-
             IEnumerable<Resource> known = defaultOrder.Where(r => r.totalReceived > 0);
             IEnumerable<Resource> unknown = defaultOrder.Where(r => r.totalReceived <= 0);
+
+            if (sortMode == SortMode.Default)
+            {
+                var sortedKnown = known
+                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                    .ThenBy(r => r.name)
+                    .ToList();
+                var sortedUnknown = unknown
+                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                    .ThenBy(r => r.name)
+                    .ToList();
+                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
+                ApplyOrder(finalDefault);
+                return;
+            }
 
             int GetValue(Resource r) => sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
 
