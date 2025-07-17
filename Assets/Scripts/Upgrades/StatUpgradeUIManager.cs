@@ -163,23 +163,22 @@ namespace TimelessEchoes.Upgrades
                 int lvl = controller ? controller.GetLevel(upgrades[index]) : 0;
                 int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
 
+
                 bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
 
                 if (slot.iconImage)
                 {
                     var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
                     slot.iconImage.sprite = unlocked ? req.resource?.icon : unknownSprite;
-                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    var unknownColor = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    var grey = new Color(1f, 1f, 1f, 0.4f);
+                    slot.iconImage.color = unlocked ? (hasEnough ? Color.white : grey) : unknownColor;
                     slot.iconImage.enabled = true;
                 }
 
                 if (slot.countText)
                     slot.countText.text = cost.ToString();
-
-                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
-                var grey = new Color(1f, 1f, 1f, 0.4f);
-                if (slot.iconImage)
-                    slot.iconImage.color = hasEnough ? Color.white : grey;
 
                 if (slot.selectionImage)
                     slot.selectionImage.enabled = false;
