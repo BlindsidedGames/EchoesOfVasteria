@@ -1,4 +1,6 @@
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -13,8 +15,6 @@ using UnityEngine.Serialization;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
-#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#endif
 
 namespace TimelessEchoes.Quests
 {

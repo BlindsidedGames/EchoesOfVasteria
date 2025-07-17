@@ -1,7 +1,7 @@
-#define DISABLESTEAMWORKS
-using UnityEngine;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
 #endif
+using UnityEngine;
 #if !DISABLESTEAMWORKS
 using Steamworks;
 #endif
@@ -9,16 +9,17 @@ using Steamworks;
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Handles Steam rich presence status updates.
-    /// Shows whether the player is in town or in a run and
-    /// displays the current distance when in a run.
+    ///     Handles Steam rich presence status updates.
+    ///     Shows whether the player is in town or in a run and
+    ///     displays the current distance when in a run.
     /// </summary>
     public class RichPresenceManager : MonoBehaviour
     {
 #if !DISABLESTEAMWORKS
         private static RichPresenceManager instance;
+
         /// <summary>
-        /// Singleton instance accessor.
+        ///     Singleton instance accessor.
         /// </summary>
         public static RichPresenceManager Instance
         {
@@ -49,7 +50,7 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Sets rich presence to indicate the player is in town.
+        ///     Sets rich presence to indicate the player is in town.
         /// </summary>
         public void SetInTown()
         {
@@ -60,7 +61,7 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Sets rich presence to indicate the player has started a run.
+        ///     Sets rich presence to indicate the player has started a run.
         /// </summary>
         public void SetInRun()
         {
@@ -71,13 +72,13 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Updates the distance value while in a run.
+        ///     Updates the distance value while in a run.
         /// </summary>
         public void UpdateDistance(float distance)
         {
             if (!SteamManager.Initialized)
                 return;
-            int d = Mathf.FloorToInt(distance);
+            var d = Mathf.FloorToInt(distance);
             SteamFriends.SetRichPresence("status", $"Distance: {d}");
             SteamFriends.SetRichPresence("distance", d.ToString());
             SteamFriends.SetRichPresence("steam_display", "#Status_Distance");
