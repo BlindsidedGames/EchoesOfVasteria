@@ -350,12 +350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3524ef6e68a6142b4f4a051e3df4dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questionMarkImage: {fileID: 2264642189528835202}
-  highlightImage: {fileID: 4889473493391540342}
   iconImage: {fileID: 2328037666447051304}
   countText: {fileID: 1390199069210530402}
   selectionImage: {fileID: 7708566893324480595}
-  selectButton: {fileID: 4399883837825147913}
 --- !u!114 &3509104551638209763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,7 +479,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256537590926675450}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
