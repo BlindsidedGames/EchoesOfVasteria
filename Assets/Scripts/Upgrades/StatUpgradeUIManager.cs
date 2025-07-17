@@ -191,7 +191,21 @@ namespace TimelessEchoes.Upgrades
             {
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
-                    refs.upgradeButton.interactable = controller != null && controller.CanUpgrade(upgrades[i]);
+                {
+                    var threshold = GetThreshold(upgrades[i]);
+                    if (threshold == null)
+                    {
+                        refs.upgradeButton.interactable = false;
+                        if (refs.upgradeButtonText != null)
+                            refs.upgradeButtonText.text = "Maxed";
+                    }
+                    else
+                    {
+                        refs.upgradeButton.interactable = controller != null && controller.CanUpgrade(upgrades[i]);
+                        if (refs.upgradeButtonText != null)
+                            refs.upgradeButtonText.text = "Upgrade";
+                    }
+                }
             }
         }
 
