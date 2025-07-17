@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
 
@@ -19,6 +20,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private Transform slotParent;
         [SerializeField] private GameObject inventoryWindow;
+        [SerializeField] private ScrollRect scrollRect;
         public Sprite UnknownSprite;
         [SerializeField] private float highlightDuration = 3f;
 
@@ -124,6 +126,8 @@ namespace TimelessEchoes.Upgrades
             for (var i = 0; i < slots.Count; i++)
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
+
+            ScrollToSlot(selectedIndex);
         }
 
         public void HighlightResource(Resource resource)
@@ -147,6 +151,25 @@ namespace TimelessEchoes.Upgrades
             if (index >= 0 && index < slots.Count && slots[index] != null && slots[index].selectionImage != null)
                 slots[index].selectionImage.enabled = false;
             selectedIndex = -1;
+        }
+
+        private void ScrollToSlot(int index)
+        {
+            if (scrollRect == null || scrollRect.content == null) return;
+            if (index < 0 || index >= slots.Count) return;
+
+            var slotRT = slots[index].GetComponent<RectTransform>();
+            var content = scrollRect.content;
+            var viewport = scrollRect.viewport != null ? scrollRect.viewport : scrollRect.GetComponent<RectTransform>();
+            if (slotRT == null || content == null || viewport == null) return;
+
+            Canvas.ForceUpdateCanvases();
+            var contentHeight = content.rect.height - viewport.rect.height;
+            if (contentHeight <= 0f) return;
+
+            var itemPos = Mathf.Abs(slotRT.anchoredPosition.y);
+            var normalized = Mathf.Clamp01(itemPos / contentHeight);
+            scrollRect.verticalNormalizedPosition = 1f - normalized;
         }
     }
 }
