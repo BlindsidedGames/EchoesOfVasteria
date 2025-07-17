@@ -20,7 +20,8 @@ namespace TimelessEchoes.UI
         {
             Default,
             Collected,
-            Spent
+            Spent,
+            Unknown
         }
 
         [SerializeField] private SortMode sortMode = SortMode.Default;
@@ -136,6 +137,21 @@ namespace TimelessEchoes.UI
                     .ToList();
                 var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
                 ApplyOrder(finalDefault);
+                return;
+            }
+
+            if (sortMode == SortMode.Unknown)
+            {
+                var sortedUnknown = unknown
+                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                    .ThenBy(r => r.name)
+                    .ToList();
+                var sortedKnown = known
+                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                    .ThenBy(r => r.name)
+                    .ToList();
+                var finalUnknown = sortedUnknown.Concat(sortedKnown).ToList();
+                ApplyOrder(finalUnknown);
                 return;
             }
 

@@ -21,7 +21,8 @@ namespace TimelessEchoes.UI
         {
             Default,
             Completions,
-            TaskTime
+            TaskTime,
+            Unknown
         }
 
         [SerializeField] private SortMode sortMode = SortMode.Default;
@@ -144,6 +145,21 @@ namespace TimelessEchoes.UI
                     .ToList();
                 var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
                 ApplyOrder(finalDefault);
+                return;
+            }
+
+            if (sortMode == SortMode.Unknown)
+            {
+                var sortedUnknown = unknown
+                    .OrderBy(t => t.taskID)
+                    .ThenBy(t => t.taskName)
+                    .ToList();
+                var sortedKnown = known
+                    .OrderBy(t => t.taskID)
+                    .ThenBy(t => t.taskName)
+                    .ToList();
+                var finalUnknown = sortedUnknown.Concat(sortedKnown).ToList();
+                ApplyOrder(finalUnknown);
                 return;
             }
 
