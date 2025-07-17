@@ -10,30 +10,26 @@ namespace References.UI
     public class ResourceUIReferences : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         private static readonly List<ResourceUIReferences> instances = new();
-        public Image questionMarkImage;
-        public Image highlightImage;
         public Image iconImage;
         public TMP_Text countText;
         public Image selectionImage;
-        public Button selectButton;
 
         private void Awake()
         {
             instances.Add(this);
-            if (selectButton != null)
-                selectButton.onClick.AddListener(OnSelect);
+            // existing selection images are controlled globally
         }
 
         private void OnDestroy()
         {
             instances.Remove(this);
-            if (selectButton != null)
-                selectButton.onClick.RemoveListener(OnSelect);
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             PointerClick?.Invoke(this, eventData.button);
+            if (eventData.button == PointerEventData.InputButton.Left)
+                OnSelect();
         }
 
         public void OnPointerEnter(PointerEventData eventData)
