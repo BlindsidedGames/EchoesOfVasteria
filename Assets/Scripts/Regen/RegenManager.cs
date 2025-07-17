@@ -141,7 +141,7 @@ namespace TimelessEchoes.Regen
                 costRefs.iconImage.enabled = true;
             }
             if (costRefs.countText != null)
-                costRefs.countText.text = unlocked ? Mathf.FloorToInt((float)playerAmt).ToString() : string.Empty;
+                costRefs.countText.text = unlocked ? FormatNumber(playerAmt, true) : string.Empty;
 
             if (entry.fishNameText != null)
                 entry.fishNameText.text = unlocked ? res.name : "???";
