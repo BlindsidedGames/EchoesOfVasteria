@@ -274,7 +274,10 @@ namespace TimelessEchoes.Upgrades
                 float baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
                 float next = baseNext * (1f + percent);
 
-                refs.statDisplayText.text = $"{current:0.###} -> {next:0.###}";
+                if (GetThreshold(upgrade) == null)
+                    refs.statDisplayText.text = $"{current:0.###}";
+                else
+                    refs.statDisplayText.text = $"{current:0.###} -> {next:0.###}";
             }
         }
     }
