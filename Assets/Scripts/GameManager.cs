@@ -233,6 +233,8 @@ namespace TimelessEchoes
 
             if (deathWindow != null)
                 deathWindow.SetActive(false);
+            BuffManager.Instance?.ClearActiveBuffs();
+            BuffManager.Instance?.UpdateDistance(0f);
             StartCoroutine(StartRunRoutine());
         }
 
