@@ -4,6 +4,7 @@ using References.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Utilities.CalcUtils;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -48,7 +49,7 @@ namespace TimelessEchoes.Upgrades
                         SelectSlot(index);
                 };
                 if (slot.countText != null)
-                    slot.countText.gameObject.SetActive(false);
+                    slot.countText.gameObject.SetActive(true);
             }
 
             UpdateSlots();
@@ -111,7 +112,10 @@ namespace TimelessEchoes.Upgrades
             }
 
             if (slot.countText)
-                slot.countText.gameObject.SetActive(false);
+            {
+                slot.countText.text = FormatNumber(amount, true);
+                slot.countText.gameObject.SetActive(true);
+            }
         }
 
         public void SelectSlot(int index)
