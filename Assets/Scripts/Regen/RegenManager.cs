@@ -8,6 +8,7 @@ using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Utilities.CalcUtils;
 
 namespace TimelessEchoes.Regen
 {
@@ -146,7 +147,7 @@ namespace TimelessEchoes.Regen
                 entry.fishNameText.text = unlocked ? res.name : "???";
 
             if (entry.amountDonatedText != null)
-                entry.amountDonatedText.text = Mathf.FloorToInt((float)donated).ToString();
+                entry.amountDonatedText.text = FormatNumber(donated, true);
 
             if (entry.regenText != null)
                 entry.regenText.text = $"Granting {GetRegenFor(res):0.###} Regen";
