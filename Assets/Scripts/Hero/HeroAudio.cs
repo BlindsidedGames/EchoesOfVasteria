@@ -51,5 +51,10 @@ namespace TimelessEchoes.Hero
         {
             Audio?.PlayFishCatchClip();
         }
+
+        public void PlayDeath()
+        {
+            Audio?.PlayHeroDeathClip();
+        }
     }
 }

@@ -14,6 +14,7 @@ using TimelessEchoes.NPC;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Audio;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -337,6 +338,8 @@ namespace TimelessEchoes
                             currentMap.transform);
                 }
             }
+
+            AudioManager.Instance?.PlayHeroDeathClip();
 
             Log("Hero death", TELogCategory.Hero, this);
 
