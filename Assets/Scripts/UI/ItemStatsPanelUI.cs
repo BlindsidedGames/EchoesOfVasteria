@@ -127,43 +127,43 @@ namespace TimelessEchoes.UI
 
             if (sortMode == SortMode.Default)
             {
-                var sortedKnown = known
+                var sortedKnownDefault = known
                     .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                     .ThenBy(r => r.name)
                     .ToList();
-                var sortedUnknown = unknown
+                var sortedUnknownDefault = unknown
                     .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                     .ThenBy(r => r.name)
                     .ToList();
-                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
+                var finalDefault = sortedKnownDefault.Concat(sortedUnknownDefault).ToList();
                 ApplyOrder(finalDefault);
                 return;
             }
 
             if (sortMode == SortMode.Unknown)
             {
-                var sortedUnknown = unknown
+                var sortedUnknownUnknown = unknown
                     .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                     .ThenBy(r => r.name)
                     .ToList();
-                var sortedKnown = known
+                var sortedKnownUnknown = known
                     .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                     .ThenBy(r => r.name)
                     .ToList();
-                var finalUnknown = sortedUnknown.Concat(sortedKnown).ToList();
+                var finalUnknown = sortedUnknownUnknown.Concat(sortedKnownUnknown).ToList();
                 ApplyOrder(finalUnknown);
                 return;
             }
 
             int GetValue(Resource r) => sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
 
-            var sortedKnown = known
+            var sortedKnownByValue = known
                 .OrderByDescending(GetValue)
                 .ThenBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                 .ThenBy(r => r.name)
                 .ToList();
 
-            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            var finalOrder = sortedKnownByValue.Concat(unknown).ToList();
             ApplyOrder(finalOrder);
         }
 
