@@ -60,7 +60,13 @@ namespace TimelessEchoes
         /// </summary>
         public void Download()
         {
-            if (skipDownload) skipDownload = false;
+            if (skipDownload)
+            {
+                // The next download call was intentionally skipped, typically
+                // when wiping local data to avoid restoring from the cloud.
+                skipDownload = false;
+                return;
+            }
 
 #if !DISABLESTEAMWORKS
             if (!string.IsNullOrEmpty(fileName))
