@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Blindsided.Utilities;
 using References.UI;
+using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TimelessEchoes.Upgrades;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.Quests
@@ -42,10 +43,7 @@ namespace TimelessEchoes.Quests
             if (turnInButton != null)
             {
                 turnInButton.onClick.RemoveAllListeners();
-                if (onTurnIn != null && !completed)
-                {
-                    turnInButton.onClick.AddListener(() => onTurnIn());
-                }
+                if (onTurnIn != null && !completed) turnInButton.onClick.AddListener(() => onTurnIn());
                 turnInButton.gameObject.SetActive(onTurnIn != null && !completed);
             }
 
@@ -71,9 +69,10 @@ namespace TimelessEchoes.Quests
                     foreach (var req in data.requirements)
                     {
                         var slot = Instantiate(costSlotPrefab, costParent);
-                        slot.resource = (req.type == QuestData.RequirementType.Resource ||
-                                         req.type == QuestData.RequirementType.Donation)
-                                         ? req.resource : null;
+                        slot.resource = req.type == QuestData.RequirementType.Resource ||
+                                        req.type == QuestData.RequirementType.Donation
+                            ? req.resource
+                            : null;
                         costSlots.Add((slot, req));
 
                         if (slot.iconImage != null)
@@ -83,8 +82,10 @@ namespace TimelessEchoes.Quests
                             {
                                 var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
                                 var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
-                                slot.iconImage.sprite = unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
-                                slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                                slot.iconImage.sprite =
+                                    unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
+                                slot.iconImage.color =
+                                    unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
                             }
                             else if (req.type == QuestData.RequirementType.Kill)
                             {
@@ -97,14 +98,13 @@ namespace TimelessEchoes.Quests
                             slot.countText.text = req.amount.ToString();
 
                         if (inventoryUI != null &&
-                            (req.type == QuestData.RequirementType.Resource || req.type == QuestData.RequirementType.Donation))
-                        {
+                            (req.type == QuestData.RequirementType.Resource ||
+                             req.type == QuestData.RequirementType.Donation))
                             slot.PointerClick += (_, button) =>
                             {
                                 if (button == PointerEventData.InputButton.Left)
                                     inventoryUI.HighlightResource(req.resource);
                             };
-                        }
                     }
                 }
             }
@@ -120,7 +120,7 @@ namespace TimelessEchoes.Quests
         }
 
         /// <summary>
-        /// Refresh requirement icons based on current discovery state.
+        ///     Refresh requirement icons based on current discovery state.
         /// </summary>
         public void UpdateRequirementIcons()
         {
@@ -148,4 +148,3 @@ namespace TimelessEchoes.Quests
         }
     }
 }
-

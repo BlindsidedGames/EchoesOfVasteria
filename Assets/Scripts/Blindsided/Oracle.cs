@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Blindsided.SaveData;
-using TimelessEchoes;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using TimelessEchoes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,7 +38,7 @@ namespace Blindsided
                 bufferSize = 8192
             };
             SteamCloudSync.Instance.SetFileName(_fileName);
-            SteamCloudSync.Instance.Download(); // ensure local copy is up-to-date
+            //SteamCloudSync.Instance.Download(); // ensure local copy is up-to-date
             wipeInProgress = false;
         }
 
@@ -91,10 +91,7 @@ namespace Blindsided
         private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
-            if (Application.isPlaying && !wipeInProgress)
-            {
-                SaveToFile(); // save the latest state immediately
-            }
+            if (Application.isPlaying && !wipeInProgress) SaveToFile(); // save the latest state immediately
         }
 
 
