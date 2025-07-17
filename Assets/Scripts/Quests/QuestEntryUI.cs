@@ -18,6 +18,7 @@ namespace TimelessEchoes.Quests
         public TMP_Text nameText;
         public TMP_Text descriptionText;
         public TMP_Text rewardText;
+        public TMP_Text typeText;
         public Button turnInButton;
         public SlicedFilledImage progressImage;
         public Image questImage;
@@ -39,6 +40,8 @@ namespace TimelessEchoes.Quests
                 descriptionText.text = data != null ? data.description : string.Empty;
             if (rewardText != null)
                 rewardText.text = data != null ? $"Reward: {data.rewardDescription}" : string.Empty;
+            if (typeText != null)
+                typeText.text = data != null ? $"Type | {GetQuestType(data)}" : string.Empty;
 
             if (turnInButton != null)
             {
@@ -144,6 +147,24 @@ namespace TimelessEchoes.Quests
                     slot.iconImage.sprite = req.killIcon;
                     slot.iconImage.color = Color.white;
                 }
+            }
+        }
+
+        private static string GetQuestType(QuestData data)
+        {
+            if (data == null || data.requirements == null || data.requirements.Count == 0)
+                return string.Empty;
+            var type = data.requirements[0].type;
+            switch (type)
+            {
+                case QuestData.RequirementType.Resource:
+                    return "Gathering";
+                case QuestData.RequirementType.Donation:
+                    return "Donation";
+                case QuestData.RequirementType.Kill:
+                    return "Kill";
+                default:
+                    return type.ToString();
             }
         }
     }
