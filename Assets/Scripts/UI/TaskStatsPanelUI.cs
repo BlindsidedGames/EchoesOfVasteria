@@ -130,13 +130,26 @@ namespace TimelessEchoes.UI
                 return;
             }
 
-            IOrderedEnumerable<TaskData> ordered;
-            if (sortMode == SortMode.Completions)
-                ordered = entries.Keys.OrderByDescending(t => statTracker?.GetTaskRecord(t)?.TotalCompleted ?? 0);
-            else
-                ordered = entries.Keys.OrderByDescending(t => statTracker?.GetTaskRecord(t)?.TimeSpent ?? 0f);
+            IEnumerable<TaskData> known = defaultOrder;
+            IEnumerable<TaskData> unknown = Enumerable.Empty<TaskData>();
+            if (statTracker != null)
+            {
+                known = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) > 0);
+                unknown = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) == 0);
+            }
 
-            ApplyOrder(ordered.ToList());
+            float GetValue(TaskData t) => sortMode == SortMode.Completions
+                ? statTracker?.GetTaskRecord(t)?.TotalCompleted ?? 0
+                : statTracker?.GetTaskRecord(t)?.TimeSpent ?? 0f;
+
+            var sortedKnown = known
+                .OrderByDescending(GetValue)
+                .ThenBy(t => t.taskID)
+                .ThenBy(t => t.taskName)
+                .ToList();
+
+            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            ApplyOrder(finalOrder);
         }
 
         private void ApplyOrder(IList<TaskData> order)

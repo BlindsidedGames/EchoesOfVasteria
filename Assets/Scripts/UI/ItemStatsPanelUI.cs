@@ -127,13 +127,19 @@ namespace TimelessEchoes.UI
                 return;
             }
 
-            IOrderedEnumerable<Resource> ordered;
-            if (sortMode == SortMode.Collected)
-                ordered = entries.Keys.OrderByDescending(r => r.totalReceived);
-            else
-                ordered = entries.Keys.OrderByDescending(r => r.totalSpent);
+            IEnumerable<Resource> known = defaultOrder.Where(r => r.totalReceived > 0);
+            IEnumerable<Resource> unknown = defaultOrder.Where(r => r.totalReceived <= 0);
 
-            ApplyOrder(ordered.ToList());
+            int GetValue(Resource r) => sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
+
+            var sortedKnown = known
+                .OrderByDescending(GetValue)
+                .ThenBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                .ThenBy(r => r.name)
+                .ToList();
+
+            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            ApplyOrder(finalOrder);
         }
 
         private void ApplyOrder(IList<Resource> order)
