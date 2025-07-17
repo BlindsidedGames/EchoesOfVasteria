@@ -17,6 +17,8 @@ MonoBehaviour:
   taskIcon: {fileID: -5709444697936806870, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
   associatedSkill: {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
   xpForCompletion: 2
+  minX: 0
+  maxX: 250
   taskDuration: 2
   resourceDrops:
   - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}

@@ -17,6 +17,8 @@ MonoBehaviour:
   taskIcon: {fileID: -4797693821990039991, guid: 513dea0f987e3824db48aa939832f2f7, type: 3}
   associatedSkill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
   xpForCompletion: 3
+  minX: 500
+  maxX: Infinity
   requiredQuest: {fileID: 11400000, guid: 21c838e0a781dcb4c96d7cb663953ff5, type: 2}
   taskDuration: 10
   sfxInterval: 0.7
