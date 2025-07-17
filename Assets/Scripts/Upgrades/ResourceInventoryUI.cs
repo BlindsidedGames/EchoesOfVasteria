@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private Transform slotParent;
         [SerializeField] private GameObject inventoryWindow;
-        [SerializeField] private Sprite unknownSprite;
+        public Sprite UnknownSprite;
         [SerializeField] private float highlightDuration = 3f;
 
         private readonly List<ResourceUIReferences> slots = new();
@@ -29,7 +30,7 @@ namespace TimelessEchoes.Upgrades
             Instance = this;
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
 
             if (slotParent == null)
                 slotParent = transform;
@@ -103,7 +104,7 @@ namespace TimelessEchoes.Upgrades
             var unknownColor = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
             if (slot.iconImage)
             {
-                slot.iconImage.sprite = unlocked ? resource?.icon : unknownSprite;
+                slot.iconImage.sprite = unlocked ? resource?.icon : UnknownSprite;
                 slot.iconImage.color = unlocked ? Color.white : unknownColor;
                 slot.iconImage.enabled = true;
                 slot.gameObject.name = resource.name;
@@ -136,7 +137,7 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private System.Collections.IEnumerator DelayedDeselect(int index, float delay)
+        private IEnumerator DelayedDeselect(int index, float delay)
         {
             yield return new WaitForSeconds(delay);
             if (index >= 0 && index < slots.Count && slots[index] != null && slots[index].selectionImage != null)
