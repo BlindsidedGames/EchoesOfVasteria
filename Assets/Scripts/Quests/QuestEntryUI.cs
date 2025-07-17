@@ -65,22 +65,34 @@ namespace TimelessEchoes.Quests
                 if (data != null && costSlotPrefab != null && showRequirements)
                 {
                     var inventoryUI = ResourceInventoryUI.Instance;
+                    var resourceManager = ResourceManager.Instance;
                     foreach (var req in data.requirements)
                     {
                         var slot = Instantiate(costSlotPrefab, costParent);
                         slot.resource = (req.type == QuestData.RequirementType.Resource ||
                                          req.type == QuestData.RequirementType.Donation)
                                          ? req.resource : null;
+
                         if (slot.iconImage != null)
                         {
                             if (req.type == QuestData.RequirementType.Resource ||
                                 req.type == QuestData.RequirementType.Donation)
-                                slot.iconImage.sprite = req.resource ? req.resource.icon : null;
+                            {
+                                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                                var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
+                                slot.iconImage.sprite = unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
+                                slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                            }
                             else if (req.type == QuestData.RequirementType.Kill)
+                            {
                                 slot.iconImage.sprite = req.killIcon;
+                                slot.iconImage.color = Color.white;
+                            }
                         }
+
                         if (slot.countText != null)
                             slot.countText.text = req.amount.ToString();
+
                         if (inventoryUI != null &&
                             (req.type == QuestData.RequirementType.Resource || req.type == QuestData.RequirementType.Donation))
                         {
@@ -103,5 +115,6 @@ namespace TimelessEchoes.Quests
             if (turnInButton != null)
                 turnInButton.interactable = pct >= 1f;
         }
-    }}
+    }
+}
 
