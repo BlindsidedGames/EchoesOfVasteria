@@ -1,3 +1,4 @@
+#define DISABLESTEAMWORKS
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -18,7 +19,6 @@ using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
 #endif
 
 namespace TimelessEchoes
@@ -143,6 +143,7 @@ namespace TimelessEchoes
                     else
                         returnToTavernText.text = "Return To Town";
                 }
+
                 if (retreatBonusText != null)
                 {
                     if (active && hero != null && !hero.InCombat)
@@ -255,7 +256,7 @@ namespace TimelessEchoes
             if (hero != null)
             {
                 hero.gameObject.SetActive(true);
-                var hp = hero.GetComponent<Hero.HeroHealth>();
+                var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)
                 {
                     hp.Init((int)hp.MaxHealth);
@@ -309,7 +310,7 @@ namespace TimelessEchoes
         {
             if (hero != null)
             {
-                var hp = hero.GetComponent<Hero.HeroHealth>();
+                var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
 
@@ -319,7 +320,7 @@ namespace TimelessEchoes
 
                 if (reaperPrefab != null && currentMap != null)
                 {
-                    Enemies.ReaperManager.Spawn(reaperPrefab, hero.gameObject, currentMap.transform, false,
+                    ReaperManager.Spawn(reaperPrefab, hero.gameObject, currentMap.transform, false,
                         () =>
                         {
                             hero.gameObject.SetActive(false);
@@ -463,6 +464,7 @@ namespace TimelessEchoes
                 tavernCamera.gameObject.SetActive(true);
                 cloudSpawner?.ResetClouds(true);
             }
+
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             if (runCalebUI != null)

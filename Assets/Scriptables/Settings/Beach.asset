@@ -30,7 +30,7 @@ MonoBehaviour:
     waterTaskDensity: 0.05
     sandTaskDensity: 0.05
     grassTaskDensity: 0.1
-    enemyDensity: 0.2
+    enemyDensity: 0.18
     blockingMask:
       serializedVersion: 2
       m_Bits: 0
@@ -434,7 +434,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: bd3ac842010daeb4991194a5a44b714e, type: 3}
       weight: 1.5
-      minX: 100
+      minX: 75
       maxX: 500
       topBuffer: 0
       spawnOnWater: 1
@@ -442,7 +442,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: e1e855e4d748a394786b664c58282b8a, type: 3}
       weight: 1.5
-      minX: 250
+      minX: 200
       maxX: 1000
       topBuffer: 0
       spawnOnWater: 1
@@ -450,7 +450,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: 5f635b890af420449a206cbe6edc4270, type: 3}
       weight: 1.5
-      minX: 500
+      minX: 300
       maxX: 2500
       topBuffer: 0
       spawnOnWater: 1
@@ -458,7 +458,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: 678489a49c4bf084c8932e136714e1ba, type: 3}
       weight: 1.5
-      minX: 1000
+      minX: 400
       maxX: 10000
       topBuffer: 0
       spawnOnWater: 1
@@ -466,7 +466,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: 7ff1c08b462068d49b975ff17747458d, type: 3}
       weight: 1.5
-      minX: 2500
+      minX: 500
       maxX: Infinity
       topBuffer: 0
       spawnOnWater: 1
@@ -474,7 +474,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: 52e87615f4c3eae4cb189f5dfadcc282, type: 3}
       weight: 1.5
-      minX: 5000
+      minX: 1000
       maxX: Infinity
       topBuffer: 0
       spawnOnWater: 1
@@ -482,7 +482,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     - prefab: {fileID: 4589994145864551737, guid: 7769dfc1bb67c734cbc2e120d7acf20d, type: 3}
       weight: 1.5
-      minX: 10000
+      minX: 2500
       maxX: Infinity
       topBuffer: 0
       spawnOnWater: 1

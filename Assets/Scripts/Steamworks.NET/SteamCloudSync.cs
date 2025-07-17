@@ -1,14 +1,14 @@
+#define DISABLESTEAMWORKS
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
 #endif
 
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Persistent helper for synchronizing save files with Steam Cloud.
-    /// Prevents cloud data from overwriting local wipes.
+    ///     Persistent helper for synchronizing save files with Steam Cloud.
+    ///     Prevents cloud data from overwriting local wipes.
     /// </summary>
     public class SteamCloudSync : MonoBehaviour
     {
@@ -18,7 +18,7 @@ namespace TimelessEchoes
         private bool uploadAfterLoad;
 
         /// <summary>
-        /// Singleton instance accessor.
+        ///     Singleton instance accessor.
         /// </summary>
         public static SteamCloudSync Instance
         {
@@ -48,7 +48,7 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Sets the save file name used for cloud operations.
+        ///     Sets the save file name used for cloud operations.
         /// </summary>
         public void SetFileName(string name)
         {
@@ -56,35 +56,31 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Downloads the save file from Steam Cloud unless skipped.
+        ///     Downloads the save file from Steam Cloud unless skipped.
         /// </summary>
         public void Download()
         {
-            if (skipDownload)
-            {
-                skipDownload = false;
-                return;
-            }
+            if (skipDownload) skipDownload = false;
 
-            if (!string.IsNullOrEmpty(fileName))
 #if !DISABLESTEAMWORKS
+            if (!string.IsNullOrEmpty(fileName))
                 SteamCloudManager.DownloadFile(fileName);
 #endif
         }
 
         /// <summary>
-        /// Uploads the local save file to Steam Cloud.
+        ///     Uploads the local save file to Steam Cloud.
         /// </summary>
         public void Upload()
         {
-            if (!string.IsNullOrEmpty(fileName))
 #if !DISABLESTEAMWORKS
+            if (!string.IsNullOrEmpty(fileName))
                 SteamCloudManager.UploadFile(fileName);
 #endif
         }
 
         /// <summary>
-        /// Skips the next download attempt. Used when wiping saves.
+        ///     Skips the next download attempt. Used when wiping saves.
         /// </summary>
         public void SkipNextDownload()
         {
@@ -92,7 +88,7 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        /// Uploads to Steam Cloud when the next scene finishes loading.
+        ///     Uploads to Steam Cloud when the next scene finishes loading.
         /// </summary>
         public void QueueUploadAfterSceneLoad()
         {

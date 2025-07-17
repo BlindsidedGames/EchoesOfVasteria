@@ -1,13 +1,12 @@
+#define DISABLESTEAMWORKS
 using System.Collections.Generic;
-using UnityEngine;
 using Blindsided.SaveData;
-using TimelessEchoes.Upgrades;
 using TimelessEchoes.Tasks;
-using TimelessEchoes;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
 #endif
 
 namespace TimelessEchoes.Stats
@@ -17,43 +16,42 @@ namespace TimelessEchoes.Stats
         public static GameplayStatTracker Instance { get; private set; }
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
-        private float distanceTravelled;
-        private float highestDistance;
-        private int totalKills;
-        private int tasksCompleted;
-        private int deaths;
-        private float damageDealt;
-        private float damageTaken;
-        private double totalResourcesGathered;
         private readonly List<GameData.RunRecord> recentRuns = new();
         private int nextRunNumber = 1;
         private float runStartTime;
-        private float currentRunDistance;
         private int currentRunTasks;
         private double currentRunResources;
-        private double currentRunBonusResources;
-        private int currentRunKills;
         private float currentRunDamageDealt;
         private float currentRunDamageTaken;
-        private float longestRun;
-        private float shortestRun;
-        private float averageRun;
 
-        public float DistanceTravelled => distanceTravelled;
-        public float HighestDistance => highestDistance;
-        public int TotalKills => totalKills;
-        public int TasksCompleted => tasksCompleted;
-        public int Deaths => deaths;
-        public float DamageDealt => damageDealt;
-        public float DamageTaken => damageTaken;
-        public double TotalResourcesGathered => totalResourcesGathered;
+        public float DistanceTravelled { get; private set; }
+
+        public float HighestDistance { get; private set; }
+
+        public int TotalKills { get; private set; }
+
+        public int TasksCompleted { get; private set; }
+
+        public int Deaths { get; private set; }
+
+        public float DamageDealt { get; private set; }
+
+        public float DamageTaken { get; private set; }
+
+        public double TotalResourcesGathered { get; private set; }
+
         public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
-        public float LongestRun => longestRun;
-        public float ShortestRun => shortestRun;
-        public float AverageRun => averageRun;
-        public int CurrentRunKills => currentRunKills;
-        public double CurrentRunBonusResources => currentRunBonusResources;
-        public float CurrentRunDistance => currentRunDistance;
+        public float LongestRun { get; private set; }
+
+        public float ShortestRun { get; private set; }
+
+        public float AverageRun { get; private set; }
+
+        public int CurrentRunKills { get; private set; }
+
+        public double CurrentRunBonusResources { get; private set; }
+
+        public float CurrentRunDistance { get; private set; }
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -80,10 +78,8 @@ namespace TimelessEchoes.Stats
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
             foreach (var res in Resources.LoadAll<Resource>(""))
-            {
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
-            }
         }
 
         private static void EnsureTaskLookup()
@@ -91,10 +87,8 @@ namespace TimelessEchoes.Stats
             if (taskLookup != null) return;
             taskLookup = new Dictionary<int, TaskData>();
             foreach (var data in Resources.LoadAll<TaskData>(""))
-            {
                 if (data != null && !taskLookup.ContainsKey(data.taskID))
                     taskLookup[data.taskID] = data;
-            }
         }
 
         private void SaveState()
@@ -108,18 +102,18 @@ namespace TimelessEchoes.Stats
             oracle.saveData.TaskRecords = t;
 
             var g = oracle.saveData.General ?? new GameData.GeneralStats();
-            g.DistanceTravelled = distanceTravelled;
-            g.HighestDistance = highestDistance;
-            g.TotalKills = totalKills;
-            g.TasksCompleted = tasksCompleted;
-            g.Deaths = deaths;
-            g.DamageDealt = damageDealt;
-            g.DamageTaken = damageTaken;
-            g.TotalResourcesGathered = totalResourcesGathered;
+            g.DistanceTravelled = DistanceTravelled;
+            g.HighestDistance = HighestDistance;
+            g.TotalKills = TotalKills;
+            g.TasksCompleted = TasksCompleted;
+            g.Deaths = Deaths;
+            g.DamageDealt = DamageDealt;
+            g.DamageTaken = DamageTaken;
+            g.TotalResourcesGathered = TotalResourcesGathered;
             g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
-            g.LongestRun = longestRun;
-            g.ShortestRun = shortestRun;
-            g.AverageRun = averageRun;
+            g.LongestRun = LongestRun;
+            g.ShortestRun = ShortestRun;
+            g.AverageRun = AverageRun;
             g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
         }
@@ -139,20 +133,20 @@ namespace TimelessEchoes.Stats
                     taskRecords[data] = pair.Value;
 
             var g = oracle.saveData.General;
-            distanceTravelled = g.DistanceTravelled;
-            highestDistance = g.HighestDistance;
-            totalKills = g.TotalKills;
-            tasksCompleted = g.TasksCompleted;
-            deaths = g.Deaths;
-            damageDealt = g.DamageDealt;
-            damageTaken = g.DamageTaken;
-            totalResourcesGathered = g.TotalResourcesGathered;
+            DistanceTravelled = g.DistanceTravelled;
+            HighestDistance = g.HighestDistance;
+            TotalKills = g.TotalKills;
+            TasksCompleted = g.TasksCompleted;
+            Deaths = g.Deaths;
+            DamageDealt = g.DamageDealt;
+            DamageTaken = g.DamageTaken;
+            TotalResourcesGathered = g.TotalResourcesGathered;
             recentRuns.Clear();
             if (g.RecentRuns != null)
                 recentRuns.AddRange(g.RecentRuns);
-            longestRun = g.LongestRun;
-            shortestRun = g.ShortestRun;
-            averageRun = g.AverageRun;
+            LongestRun = g.LongestRun;
+            ShortestRun = g.ShortestRun;
+            AverageRun = g.AverageRun;
             if (g.NextRunNumber > 0)
                 nextRunNumber = g.NextRunNumber;
             else if (recentRuns.Count > 0)
@@ -174,7 +168,7 @@ namespace TimelessEchoes.Stats
             record.TotalCompleted += 1;
             record.TimeSpent += duration;
             record.XpGained += xp;
-            tasksCompleted++;
+            TasksCompleted++;
             currentRunTasks++;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
@@ -189,40 +183,43 @@ namespace TimelessEchoes.Stats
         public void AddDistance(float dist)
         {
             if (dist > 0f)
-                distanceTravelled += dist;
+                DistanceTravelled += dist;
         }
 
         public void RecordHeroPosition(Vector3 position)
         {
             if (lastHeroPos == Vector3.zero)
+            {
                 lastHeroPos = position;
+            }
             else
             {
                 AddDistance(Vector3.Distance(position, lastHeroPos));
                 lastHeroPos = position;
             }
-            if (position.x > highestDistance)
-                highestDistance = position.x;
-            if (position.x > currentRunDistance)
-                currentRunDistance = position.x;
+
+            if (position.x > HighestDistance)
+                HighestDistance = position.x;
+            if (position.x > CurrentRunDistance)
+                CurrentRunDistance = position.x;
         }
 
         public void AddKill()
         {
-            totalKills++;
-            currentRunKills++;
+            TotalKills++;
+            CurrentRunKills++;
         }
 
         public void AddDeath()
         {
-            deaths++;
+            Deaths++;
         }
 
         public void AddDamageDealt(float amount)
         {
             if (amount > 0f)
             {
-                damageDealt += amount;
+                DamageDealt += amount;
                 currentRunDamageDealt += amount;
             }
         }
@@ -231,7 +228,7 @@ namespace TimelessEchoes.Stats
         {
             if (amount > 0f)
             {
-                damageTaken += amount;
+                DamageTaken += amount;
                 currentRunDamageTaken += amount;
             }
         }
@@ -240,10 +237,10 @@ namespace TimelessEchoes.Stats
         {
             if (amount > 0)
             {
-                totalResourcesGathered += amount;
+                TotalResourcesGathered += amount;
                 currentRunResources += amount;
                 if (bonus)
-                    currentRunBonusResources += amount;
+                    CurrentRunBonusResources += amount;
             }
         }
 
@@ -260,12 +257,12 @@ namespace TimelessEchoes.Stats
             if (recentRuns.Count > 50)
                 recentRuns.RemoveAt(0);
 
-            if (record.Distance > longestRun) longestRun = record.Distance;
-            if (shortestRun <= 0f || record.Distance < shortestRun) shortestRun = record.Distance;
+            if (record.Distance > LongestRun) LongestRun = record.Distance;
+            if (ShortestRun <= 0f || record.Distance < ShortestRun) ShortestRun = record.Distance;
 
-            float sum = 0f;
+            var sum = 0f;
             foreach (var r in recentRuns) sum += r.Distance;
-            averageRun = recentRuns.Count > 0 ? sum / recentRuns.Count : 0f;
+            AverageRun = recentRuns.Count > 0 ? sum / recentRuns.Count : 0f;
         }
 
         public void EndRun(bool died)
@@ -274,11 +271,11 @@ namespace TimelessEchoes.Stats
             {
                 RunNumber = nextRunNumber,
                 Duration = Time.time - runStartTime,
-                Distance = currentRunDistance,
+                Distance = CurrentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
-                BonusResourcesCollected = currentRunBonusResources,
-                EnemiesKilled = currentRunKills,
+                BonusResourcesCollected = CurrentRunBonusResources,
+                EnemiesKilled = CurrentRunKills,
                 DamageDealt = currentRunDamageDealt,
                 DamageTaken = currentRunDamageTaken,
                 Died = died
@@ -286,11 +283,11 @@ namespace TimelessEchoes.Stats
             AddRunRecord(record);
             nextRunNumber++;
 
-            currentRunDistance = 0f;
+            CurrentRunDistance = 0f;
             currentRunTasks = 0;
             currentRunResources = 0;
-            currentRunBonusResources = 0;
-            currentRunKills = 0;
+            CurrentRunBonusResources = 0;
+            CurrentRunKills = 0;
             currentRunDamageDealt = 0f;
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;

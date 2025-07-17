@@ -1,3 +1,4 @@
+#define DISABLESTEAMWORKS
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -15,7 +16,6 @@ using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
 #endif
 
 namespace TimelessEchoes.Hero
@@ -116,10 +116,7 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(Instance.gameObject);
-            }
+            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
 
             Instance = this;
 
@@ -395,6 +392,7 @@ namespace TimelessEchoes.Hero
                     currentEnemyHealth = nearest.GetComponent<Health>();
                     currentEnemyHealth?.SetHealthBarVisible(true);
                 }
+
                 if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
                 HandleCombat(nearest);
                 return;

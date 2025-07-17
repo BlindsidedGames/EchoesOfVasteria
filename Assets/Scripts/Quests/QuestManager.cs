@@ -1,3 +1,4 @@
+#define DISABLESTEAMWORKS
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -13,7 +14,6 @@ using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
 #endif
 
 namespace TimelessEchoes.Quests
@@ -292,6 +292,7 @@ namespace TimelessEchoes.Quests
                     uiManager.CreateDivider();
                     hasCompleted = true;
                 }
+
                 uiManager.CreateEntry(quest, null, false, true);
             }
         }
