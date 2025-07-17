@@ -3,6 +3,8 @@ using Blindsided.Utilities;
 using References.UI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using TimelessEchoes.Upgrades;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.Quests
@@ -61,6 +63,8 @@ namespace TimelessEchoes.Quests
                 foreach (Transform child in costParent)
                     Destroy(child.gameObject);
                 if (data != null && costSlotPrefab != null && showRequirements)
+                {
+                    var inventoryUI = ResourceInventoryUI.Instance;
                     foreach (var req in data.requirements)
                     {
                         var slot = Instantiate(costSlotPrefab, costParent);
@@ -77,7 +81,17 @@ namespace TimelessEchoes.Quests
                         }
                         if (slot.countText != null)
                             slot.countText.text = req.amount.ToString();
+                        if (inventoryUI != null &&
+                            (req.type == QuestData.RequirementType.Resource || req.type == QuestData.RequirementType.Donation))
+                        {
+                            slot.PointerClick += (_, button) =>
+                            {
+                                if (button == PointerEventData.InputButton.Left)
+                                    inventoryUI.HighlightResource(req.resource);
+                            };
+                        }
                     }
+                }
             }
         }
 
@@ -90,3 +104,4 @@ namespace TimelessEchoes.Quests
                 turnInButton.interactable = pct >= 1f;
         }
     }}
+
