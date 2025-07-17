@@ -135,30 +135,30 @@ namespace TimelessEchoes.UI
 
             if (sortMode == SortMode.Default)
             {
-                var sortedKnown = known
+                var sortedKnownDefault = known
                     .OrderBy(t => t.taskID)
                     .ThenBy(t => t.taskName)
                     .ToList();
-                var sortedUnknown = unknown
+                var sortedUnknownDefault = unknown
                     .OrderBy(t => t.taskID)
                     .ThenBy(t => t.taskName)
                     .ToList();
-                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
+                var finalDefault = sortedKnownDefault.Concat(sortedUnknownDefault).ToList();
                 ApplyOrder(finalDefault);
                 return;
             }
 
             if (sortMode == SortMode.Unknown)
             {
-                var sortedUnknown = unknown
+                var sortedUnknownUnknown = unknown
                     .OrderBy(t => t.taskID)
                     .ThenBy(t => t.taskName)
                     .ToList();
-                var sortedKnown = known
+                var sortedKnownUnknown = known
                     .OrderBy(t => t.taskID)
                     .ThenBy(t => t.taskName)
                     .ToList();
-                var finalUnknown = sortedUnknown.Concat(sortedKnown).ToList();
+                var finalUnknown = sortedUnknownUnknown.Concat(sortedKnownUnknown).ToList();
                 ApplyOrder(finalUnknown);
                 return;
             }
@@ -167,13 +167,13 @@ namespace TimelessEchoes.UI
                 ? statTracker?.GetTaskRecord(t)?.TotalCompleted ?? 0
                 : statTracker?.GetTaskRecord(t)?.TimeSpent ?? 0f;
 
-            var sortedKnown = known
+            var sortedKnownByValue = known
                 .OrderByDescending(GetValue)
                 .ThenBy(t => t.taskID)
                 .ThenBy(t => t.taskName)
                 .ToList();
 
-            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            var finalOrder = sortedKnownByValue.Concat(unknown).ToList();
             ApplyOrder(finalOrder);
         }
 
