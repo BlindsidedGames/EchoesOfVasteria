@@ -28,7 +28,6 @@ namespace TimelessEchoes.Buffs
 
         [Header("Tooltip References")] [SerializeField]
         private RunBuffTooltipUIReferences runSlotTooltip;
-        [SerializeField] private Sprite unknownResourceSprite;
 
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
@@ -251,27 +250,20 @@ namespace TimelessEchoes.Buffs
                 var slot = Instantiate(panel.costSlotPrefab, panel.costGridLayoutParent.transform);
                 slot.resource = req.resource;
 
-                if (slot.selectButton != null)
+                slot.PointerClick += (_, button) =>
                 {
-                    var res = req.resource;
-                    slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
-                    slot.selectButton.interactable = true;
-                }
+                    if (button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
+                        resourceInventoryUI?.HighlightResource(req.resource);
+                };
 
                 var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
 
                 if (slot.iconImage != null)
                 {
-                    slot.iconImage.sprite = req.resource ? req.resource.icon : null;
-                    slot.iconImage.enabled = unlocked;
-                }
-
-                if (slot.questionMarkImage != null)
-                {
-                    slot.questionMarkImage.enabled = !unlocked;
-                    slot.questionMarkImage.color = !unlocked
-                        ? new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f)
-                        : Color.white;
+                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
+                    slot.iconImage.sprite = unlocked ? req.resource?.icon : unknownSprite;
+                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    slot.iconImage.enabled = true;
                 }
 
                 if (slot.countText != null)
@@ -376,7 +368,11 @@ namespace TimelessEchoes.Buffs
                 var slotRef = Instantiate(runSlotTooltip.tooltipCostPrefab, runSlotTooltip.tooltipCostParent);
                 bool unlockedRes = resourceManager && resourceManager.IsUnlocked(req.resource);
                 if (slotRef.resourceIcon != null)
-                    slotRef.resourceIcon.sprite = unlockedRes && req.resource ? req.resource.icon : unknownResourceSprite;
+                {
+                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
+                    slotRef.resourceIcon.sprite = unlockedRes && req.resource ? req.resource.icon : unknownSprite;
+                    slotRef.resourceIcon.color = unlockedRes ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                }
                 if (slotRef.resourceCostText != null)
                     slotRef.resourceCostText.text = $"Cost: {FormatNumber(req.amount, true)}";
 

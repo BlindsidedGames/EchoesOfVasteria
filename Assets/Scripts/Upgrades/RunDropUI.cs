@@ -168,24 +168,17 @@ namespace TimelessEchoes.Upgrades
                 slot.transform.SetSiblingIndex(0);
                 newSlot = true;
 
-                if (slot != null && slot.selectButton != null)
-                    slot.selectButton.onClick.AddListener(() => SelectSlot(slots.IndexOf(slot)));
-
                 if (slot != null)
                 {
                     slot.PointerClick += (_, button) =>
                     {
                         if (button == PointerEventData.InputButton.Right && tooltip != null)
                             tooltip.gameObject.SetActive(false);
-                        if (slot.highlightImage != null)
-                            slot.highlightImage.enabled = false;
                     };
                     slot.PointerEnter += _ =>
                     {
                         if (showTooltipOnHover)
                             ShowTooltip(slots.IndexOf(slot));
-                        if (slot.highlightImage != null)
-                            slot.highlightImage.enabled = false;
                     };
                     slot.PointerExit += _ =>
                     {
@@ -206,8 +199,6 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            if (slot != null && slot.highlightImage != null)
-                slot.highlightImage.enabled = true;
 
             if (displayObject != null)
                 displayObject.SetActive(true);
@@ -242,8 +233,6 @@ namespace TimelessEchoes.Upgrades
                 slot.iconImage.enabled = true;
             }
 
-            if (slot.questionMarkImage)
-                slot.questionMarkImage.enabled = false;
             if (slot.countText)
                 slot.countText.gameObject.SetActive(false);
             if (slot.selectionImage)

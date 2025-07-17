@@ -89,13 +89,11 @@ namespace TimelessEchoes.Regen
                 if (res == null) continue;
                 var entry = Instantiate(entryPrefab, entryParent);
                 entry.costResourceUIReferences.resource = res;
-                if (entry.costResourceUIReferences.selectButton != null)
+                entry.costResourceUIReferences.PointerClick += (_, button) =>
                 {
-                    var r = res;
-                    entry.costResourceUIReferences.selectButton.onClick.RemoveAllListeners();
-                    entry.costResourceUIReferences.selectButton.onClick.AddListener(() =>
-                        inventoryUI?.HighlightResource(r));
-                }
+                    if (button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
+                        inventoryUI?.HighlightResource(res);
+                };
 
                 if (entry.donate10PercentButton != null)
                 {
@@ -134,14 +132,13 @@ namespace TimelessEchoes.Regen
             var donated = donations.TryGetValue(res, out var val) ? val : 0;
 
             var costRefs = entry.costResourceUIReferences;
+            var unknownColor = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
             if (costRefs.iconImage != null)
             {
-                costRefs.iconImage.sprite = res.icon;
-                costRefs.iconImage.enabled = unlocked;
+                costRefs.iconImage.sprite = unlocked ? res.icon : inventoryUI?.UnknownSprite;
+                costRefs.iconImage.color = unlocked ? Color.white : unknownColor;
+                costRefs.iconImage.enabled = true;
             }
-
-            if (costRefs.questionMarkImage != null)
-                costRefs.questionMarkImage.enabled = !unlocked;
             if (costRefs.countText != null)
                 costRefs.countText.text = unlocked ? Mathf.FloorToInt((float)playerAmt).ToString() : string.Empty;
 

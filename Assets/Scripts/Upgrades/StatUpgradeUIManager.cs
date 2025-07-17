@@ -125,12 +125,11 @@ namespace TimelessEchoes.Upgrades
                         {
                             var slot = Instantiate(prefab, parent.transform);
                             slot.resource = req.resource;
-                            if (slot.selectButton != null)
+                            slot.PointerClick += (_, button) =>
                             {
-                                var res = req.resource;
-                                slot.selectButton.onClick.RemoveAllListeners();
-                                slot.selectButton.onClick.AddListener(() => resourceInventoryUI?.HighlightResource(res));
-                            }
+                                if (button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
+                                    resourceInventoryUI?.HighlightResource(req.resource);
+                            };
                             list.Add(slot);
                         }
                     }
@@ -165,13 +164,13 @@ namespace TimelessEchoes.Upgrades
                 int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
 
                 bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                if (slot.questionMarkImage)
-                    slot.questionMarkImage.enabled = !unlocked;
 
                 if (slot.iconImage)
                 {
-                    slot.iconImage.sprite = req.resource ? req.resource.icon : null;
-                    slot.iconImage.enabled = unlocked;
+                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
+                    slot.iconImage.sprite = unlocked ? req.resource?.icon : unknownSprite;
+                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    slot.iconImage.enabled = true;
                 }
 
                 if (slot.countText)
@@ -184,8 +183,6 @@ namespace TimelessEchoes.Upgrades
 
                 if (slot.selectionImage)
                     slot.selectionImage.enabled = false;
-                if (slot.selectButton)
-                    slot.selectButton.interactable = true;
             }
         }
 
