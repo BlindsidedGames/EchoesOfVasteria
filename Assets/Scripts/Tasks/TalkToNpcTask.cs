@@ -22,7 +22,6 @@ namespace TimelessEchoes.Tasks
         [TextArea]
         [SerializeField] private List<string> lines = new();
 
-        private int index;
         private bool talked;
         private GameObject meetingInstance;
 
@@ -36,7 +35,6 @@ namespace TimelessEchoes.Tasks
         public override void StartTask()
         {
             talked = false;
-            index = 0;
             meetingInstance = null;
             if (!string.IsNullOrEmpty(npcId))
                 StaticReferences.ActiveNpcMeetings.Remove(npcId);
