@@ -15,40 +15,6 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public TaskData taskData;
 
         private float lastGrantedXp;
-        private HeroController claimedBy;
-
-        /// <summary>
-        /// Hero that has claimed this task or null if unclaimed.
-        /// </summary>
-        public HeroController ClaimedBy => claimedBy;
-
-        /// <summary>
-        /// True if the task has been claimed by any hero.
-        /// </summary>
-        public bool IsClaimed => claimedBy != null;
-
-        /// <summary>
-        /// Attempt to claim the task for a hero.
-        /// </summary>
-        public bool Claim(HeroController hero)
-        {
-            if (hero == null) return false;
-            if (claimedBy == null || claimedBy == hero)
-            {
-                claimedBy = hero;
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Release the claim if held by the given hero.
-        /// </summary>
-        public void ReleaseClaim(HeroController hero)
-        {
-            if (hero != null && claimedBy == hero)
-                claimedBy = null;
-        }
 
         public float LastGrantedXp => lastGrantedXp;
 
