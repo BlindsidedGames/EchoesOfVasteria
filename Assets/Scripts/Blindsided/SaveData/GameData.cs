@@ -31,7 +31,7 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
 
-        [HideReferenceObjectPicker] public Dictionary<string, NpcGenerationRecord> NpcGeneration = new();
+        [HideReferenceObjectPicker] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
 
         [HideReferenceObjectPicker] public Dictionary<string, QuestRecord> Quests = new();
 
@@ -101,7 +101,7 @@ namespace Blindsided.SaveData
         }
 
         [HideReferenceObjectPicker]
-        public class NpcGenerationRecord
+        public class DiscipleGenerationRecord
         {
             public Dictionary<string, double> StoredResources = new();
             public Dictionary<string, double> TotalCollected = new();

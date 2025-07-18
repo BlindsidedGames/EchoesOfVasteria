@@ -15,37 +15,11 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class DiscipleGenerator : MonoBehaviour
     {
-        [Serializable]
-        public class ResourceEntry
-        {
-            public Resource resource;
-            public double amount = 1;
-        }
-
         [SerializeField] private Disciple data;
-        [SerializeField] private List<ResourceEntry> resources = new();
-        [SerializeField] private QuestData requiredQuest;
-        [SerializeField] private float generationInterval = 5f;
 
         public void SetData(Disciple d)
         {
             data = d;
-            ApplyData();
-        }
-
-        private void ApplyData()
-        {
-            if (data == null)
-                return;
-            generationInterval = data.generationInterval;
-            requiredQuest = data.requiredQuest;
-            resources = new List<ResourceEntry>();
-            foreach (var entry in data.resources)
-            {
-                if (entry == null) continue;
-                var copy = new ResourceEntry { resource = entry.resource, amount = entry.amount };
-                resources.Add(copy);
-            }
         }
 
         private readonly Dictionary<Resource, double> stored = new();
@@ -55,9 +29,9 @@ namespace TimelessEchoes.NpcGeneration
         private ResourceManager resourceManager;
         private bool setup;
 
-        public float Interval => generationInterval;
+        public float Interval => data != null ? data.generationInterval : 0f;
         public float Progress { get; private set; }
-        public IReadOnlyList<ResourceEntry> ResourceEntries => resources;
+        public IReadOnlyList<Disciple.ResourceEntry> ResourceEntries => data ? data.resources : null;
         public bool RequirementsMet => QuestCompleted();
 
         public double GetStoredAmount(Resource resource)
@@ -72,12 +46,12 @@ namespace TimelessEchoes.NpcGeneration
 
         private bool QuestCompleted()
         {
-            if (requiredQuest == null)
+            if (data == null || data.requiredQuest == null)
                 return true;
             if (oracle == null)
                 return false;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(requiredQuest.questId, out var rec) && rec.Completed;
+            return oracle.saveData.Quests.TryGetValue(data.requiredQuest.questId, out var rec) && rec.Completed;
         }
 
         private void Awake()
@@ -85,7 +59,6 @@ namespace TimelessEchoes.NpcGeneration
             OnSaveData += SaveState;
             OnLoadData += LoadState;
             OnQuestHandin += OnQuestHandinEvent;
-            ApplyData();
         }
 
         private void OnEnable()
@@ -111,9 +84,9 @@ namespace TimelessEchoes.NpcGeneration
             if (!setup) return;
 
             Progress += deltaTime;
-            while (Progress >= generationInterval && generationInterval > 0f)
+            while (Progress >= Interval && Interval > 0f)
             {
-                Progress -= generationInterval;
+                Progress -= Interval;
                 AddCycle();
             }
 
@@ -124,9 +97,9 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (!setup || seconds <= 0) return;
             Progress += (float)seconds;
-            while (Progress >= generationInterval && generationInterval > 0f)
+            while (Progress >= Interval && Interval > 0f)
             {
-                Progress -= generationInterval;
+                Progress -= Interval;
                 AddCycle();
             }
 
@@ -158,7 +131,8 @@ namespace TimelessEchoes.NpcGeneration
 
         private void AddCycle()
         {
-            foreach (var entry in resources)
+            if (data == null) return;
+            foreach (var entry in data.resources)
             {
                 if (entry.resource == null || entry.amount <= 0) continue;
                 if (stored.ContainsKey(entry.resource))
@@ -171,12 +145,12 @@ namespace TimelessEchoes.NpcGeneration
         private void SaveState()
         {
             if (!setup || oracle == null) return;
-            if (oracle.saveData.NpcGeneration == null)
-                oracle.saveData.NpcGeneration = new Dictionary<string, GameData.NpcGenerationRecord>();
+            if (oracle.saveData.Disciples == null)
+                oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
-            string id = gameObject.name;
+            string id = data != null ? data.name : gameObject.name;
 
-            var rec = new GameData.NpcGenerationRecord
+            var rec = new GameData.DiscipleGenerationRecord
             {
                 StoredResources = new Dictionary<string, double>(),
                 TotalCollected = new Dictionary<string, double>(),
@@ -189,7 +163,7 @@ namespace TimelessEchoes.NpcGeneration
             foreach (var pair in collectedTotals)
                 if (pair.Key != null)
                     rec.TotalCollected[pair.Key.name] = pair.Value;
-            oracle.saveData.NpcGeneration[id] = rec;
+            oracle.saveData.Disciples[id] = rec;
         }
 
         private void LoadState()
@@ -197,13 +171,13 @@ namespace TimelessEchoes.NpcGeneration
             if (oracle == null || !QuestCompleted()) return;
             setup = true;
             EnsureLookup();
-            oracle.saveData.NpcGeneration ??= new Dictionary<string, GameData.NpcGenerationRecord>();
+            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
             stored.Clear();
             collectedTotals.Clear();
             Progress = 0f;
-            string id = gameObject.name;
-            if (oracle.saveData.NpcGeneration.TryGetValue(id, out var rec) && rec != null)
+            string id = data != null ? data.name : gameObject.name;
+            if (oracle.saveData.Disciples.TryGetValue(id, out var rec) && rec != null)
             {
                 foreach (var pair in rec.StoredResources)
                     if (lookup.TryGetValue(pair.Key, out var res) && res != null)
@@ -224,7 +198,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnQuestHandinEvent(string questId)
         {
-            if (!setup && requiredQuest != null && questId == requiredQuest.questId && QuestCompleted())
+            if (!setup && data != null && data.requiredQuest != null && questId == data.requiredQuest.questId && QuestCompleted())
                 LoadState();
         }
 
