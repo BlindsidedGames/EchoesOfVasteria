@@ -233,7 +233,7 @@ namespace TimelessEchoes.Enemies
             if (statsTracker == null)
                 TELogger.Log("GameplayStatTracker missing", TELogCategory.Combat, this);
             else
-                statsTracker.AddKill();
+                statsTracker.AddKill(stats);
 
             GrantCombatExperience();
         }

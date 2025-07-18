@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Enemies;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -29,6 +30,11 @@ namespace TimelessEchoes.Stats
         public float HighestDistance { get; private set; }
 
         public int TotalKills { get; private set; }
+
+        /// <summary>
+        /// Number of slime enemies defeated.
+        /// </summary>
+        public int SlimesKilled { get; private set; }
 
         public int TasksCompleted { get; private set; }
 
@@ -107,6 +113,7 @@ namespace TimelessEchoes.Stats
             g.DistanceTravelled = DistanceTravelled;
             g.HighestDistance = HighestDistance;
             g.TotalKills = TotalKills;
+            g.SlimesKilled = SlimesKilled;
             g.TasksCompleted = TasksCompleted;
             g.Deaths = Deaths;
             g.DamageDealt = DamageDealt;
@@ -139,6 +146,7 @@ namespace TimelessEchoes.Stats
             DistanceTravelled = g.DistanceTravelled;
             HighestDistance = g.HighestDistance;
             TotalKills = g.TotalKills;
+            SlimesKilled = g.SlimesKilled;
             TasksCompleted = g.TasksCompleted;
             Deaths = g.Deaths;
             DamageDealt = g.DamageDealt;
@@ -208,9 +216,11 @@ namespace TimelessEchoes.Stats
                 CurrentRunDistance = position.x;
         }
 
-        public void AddKill()
+        public void AddKill(EnemyStats enemy)
         {
             TotalKills++;
+            if (enemy != null && !string.IsNullOrEmpty(enemy.enemyName) && enemy.enemyName.ToLowerInvariant().Contains("slime"))
+                SlimesKilled++;
             CurrentRunKills++;
         }
 
