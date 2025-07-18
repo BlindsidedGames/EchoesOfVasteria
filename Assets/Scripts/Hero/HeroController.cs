@@ -562,9 +562,6 @@ namespace TimelessEchoes.Hero
             if (state == State.PerformingTask && CurrentTask != null)
                 CurrentTask.OnInterrupt(this);
 
-            state = State.Combat;
-            setter.target = enemy.transform;
-            ai?.SearchPath();
             HandleCombat(enemy.transform);
         }
 
