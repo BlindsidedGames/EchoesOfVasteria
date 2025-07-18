@@ -28,7 +28,7 @@ namespace TimelessEchoes.Quests
         private DiscipleGenerationManager generationManager;
         private QuestUIManager uiManager;
 
-        [FormerlySerializedAs("startingQuests")] [SerializeField]
+        [SerializeField] private string questResourcePath = "Quests";
         private List<QuestData> quests = new();
 
         private readonly Dictionary<string, QuestInstance> active = new();
@@ -43,6 +43,7 @@ namespace TimelessEchoes.Quests
 
         private void Awake()
         {
+            quests = new List<QuestData>(Resources.LoadAll<QuestData>(questResourcePath));
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);
