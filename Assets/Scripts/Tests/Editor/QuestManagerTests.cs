@@ -51,7 +51,7 @@ namespace TimelessEchoes.Tests
         [Test]
         public void OnNpcMet_StartsQuest()
         {
-            typeof(QuestManager).GetField("startingQuests", BindingFlags.NonPublic | BindingFlags.Instance)
+            typeof(QuestManager).GetField("quests", BindingFlags.NonPublic | BindingFlags.Instance)
                 .SetValue(manager, new List<QuestData> { quest });
 
             StaticReferences.CompletedNpcTasks.Add("NPC1");
@@ -69,7 +69,7 @@ namespace TimelessEchoes.Tests
             next.questId = "Q2";
             next.requiredQuests.Add(quest);
 
-            typeof(QuestManager).GetField("startingQuests", BindingFlags.NonPublic | BindingFlags.Instance)
+            typeof(QuestManager).GetField("quests", BindingFlags.NonPublic | BindingFlags.Instance)
                 .SetValue(manager, new List<QuestData> { quest, next });
 
             oracle.saveData.Quests["Q1"] = new GameData.QuestRecord { Completed = true };
