@@ -195,7 +195,7 @@ namespace TimelessEchoes.Hero
         private void OnEnable()
         {
             if (taskController == null)
-                taskController = GetComponentInParent<TaskController>();
+                taskController = GetComponent<TaskController>();
 
             if (buffController == null)
             {
