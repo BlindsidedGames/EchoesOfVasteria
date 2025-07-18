@@ -27,7 +27,6 @@ namespace TimelessEchoes.Hero
     public class HeroController : MonoBehaviour
     {
         public static HeroController Instance { get; private set; }
-        public bool IsClone { get; set; }
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -117,12 +116,9 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (!IsClone)
-            {
-                if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
 
-                Instance = this;
-            }
+            Instance = this;
 
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
@@ -347,13 +343,7 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
-            if (CurrentTask != null)
-                CurrentTask.ReleaseClaim();
-
             Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", TELogCategory.Task, this);
-            if (task != null && !task.Claim(this))
-                task = null;
-
             CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
@@ -417,14 +407,14 @@ namespace TimelessEchoes.Hero
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemyHealth = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask(this);
+                taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
                 CurrentTask = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask(this);
+                taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null)
