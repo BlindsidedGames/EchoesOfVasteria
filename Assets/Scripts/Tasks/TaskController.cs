@@ -270,13 +270,21 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public void SelectEarliestTask()
         {
-            if (hero == null)
+            SelectEarliestTaskForHero(hero);
+        }
+
+        public void SelectEarliestTaskForHero(HeroController h)
+        {
+            if (h == null)
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
                 if (task == null || task.IsComplete())
+                    continue;
+                var baseTask = task as BaseTask;
+                if (baseTask != null && baseTask.IsClaimed && baseTask.ClaimedBy != h)
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
@@ -285,9 +293,10 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                hero?.SetTask(task);
+                h?.SetTask(task);
+                baseTask?.Claim(h);
                 bool restart = false;
-                if (task is BaseTask baseTask && baseTask.taskData != null)
+                if (baseTask != null && baseTask.taskData != null)
                     restart = baseTask.taskData.resetProgressOnInterrupt;
 
                 if (!taskStartTimes.ContainsKey(task) || restart)
@@ -326,6 +335,9 @@ namespace TimelessEchoes.Tasks
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
             tasks.RemoveAt(index);
+
+            if (task is BaseTask bt)
+                bt.ReleaseClaim(bt.ClaimedBy);
 
             float duration = 0f;
             if (taskStartTimes.TryGetValue(task, out var start))
