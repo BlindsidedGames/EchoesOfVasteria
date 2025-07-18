@@ -59,6 +59,7 @@ namespace TimelessEchoes.NpcGeneration
             OnSaveData += SaveState;
             OnLoadData += LoadState;
             OnQuestHandin += OnQuestHandinEvent;
+            OnResetData += ResetState;
         }
 
         private void OnEnable()
@@ -77,11 +78,12 @@ namespace TimelessEchoes.NpcGeneration
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
             OnQuestHandin -= OnQuestHandinEvent;
+            OnResetData -= ResetState;
         }
 
         public void Tick(float deltaTime)
         {
-            if (!setup) return;
+            if (!setup || !RequirementsMet) return;
 
             Progress += deltaTime;
             while (Progress >= Interval && Interval > 0f)
@@ -95,7 +97,7 @@ namespace TimelessEchoes.NpcGeneration
 
         public void ApplyOfflineProgress(double seconds)
         {
-            if (!setup || seconds <= 0) return;
+            if (!setup || seconds <= 0 || !RequirementsMet) return;
             Progress += (float)seconds;
             while (Progress >= Interval && Interval > 0f)
             {
@@ -127,6 +129,9 @@ namespace TimelessEchoes.NpcGeneration
             }
 
             stored.Clear();
+
+            // Persist the updated resource totals immediately
+            SaveState();
         }
 
         private void AddCycle()
@@ -164,6 +169,13 @@ namespace TimelessEchoes.NpcGeneration
                 if (pair.Key != null)
                     rec.TotalCollected[pair.Key.name] = pair.Value;
             oracle.saveData.Disciples[id] = rec;
+        }
+
+        private void ResetState()
+        {
+            stored.Clear();
+            collectedTotals.Clear();
+            Progress = 0f;
         }
 
         private void LoadState()
