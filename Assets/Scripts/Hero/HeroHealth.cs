@@ -11,7 +11,6 @@ namespace TimelessEchoes.Hero
     {
         public static HeroHealth Instance { get; private set; }
         private HeroController controller;
-        public bool Immortal { get; set; }
 
         protected override void Awake()
         {
@@ -37,13 +36,6 @@ namespace TimelessEchoes.Hero
             }
 
             return fullDamage;
-        }
-
-        public override void TakeDamage(float amount, float bonusDamage = 0f)
-        {
-            if (Immortal)
-                return;
-            base.TakeDamage(amount, bonusDamage);
         }
 
         protected override void AfterDamage(float total)

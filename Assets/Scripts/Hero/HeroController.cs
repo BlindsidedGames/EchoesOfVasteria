@@ -62,7 +62,6 @@ namespace TimelessEchoes.Hero
         private float healthBonus;
 
         private bool isRolling;
-        private bool isClone;
         private float lastAttack = float.NegativeInfinity;
 
         private Vector2 lastMoveDir = Vector2.down;
@@ -76,7 +75,6 @@ namespace TimelessEchoes.Hero
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
         public bool InCombat => state == State.Combat;
-        public bool IsClone => isClone;
 
         /// <summary>
         ///     Current attack damage after upgrades, buffs and dice multipliers.
@@ -118,11 +116,9 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (!isClone)
-            {
-                if (Instance != null && Instance != this) Destroy(Instance.gameObject);
-                Instance = this;
-            }
+            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+
+            Instance = this;
 
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
@@ -233,8 +229,6 @@ namespace TimelessEchoes.Hero
         {
             buffController?.Pause();
 
-            CurrentTask?.ReleaseClaim(this);
-
             var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
@@ -244,7 +238,6 @@ namespace TimelessEchoes.Hero
 
         private void OnDestroy()
         {
-            CurrentTask?.ReleaseClaim(this);
             if (Instance == this)
                 Instance = null;
         }
@@ -350,10 +343,8 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
-            CurrentTask?.ReleaseClaim(this);
             Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", TELogCategory.Task, this);
             CurrentTask = task;
-            task?.Claim(this);
             currentTaskName = task != null ? task.GetType().Name : "None";
             currentTaskObject = task as MonoBehaviour;
             state = State.Idle;
@@ -416,15 +407,14 @@ namespace TimelessEchoes.Hero
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemyHealth = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask(this);
+                taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
-                CurrentTask?.ReleaseClaim(this);
                 CurrentTask = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask(this);
+                taskController?.SelectEarliestTask();
             }
 
             if (CurrentTask == null)
@@ -586,22 +576,6 @@ namespace TimelessEchoes.Hero
                 var bonusDamage = total - dmgBase;
                 proj.Init(target, total, true, null, combatSkill, bonusDamage);
             }
-        }
-
-        public void InitializeClone()
-        {
-            isClone = true;
-            if (spriteRenderer != null)
-            {
-                var c = spriteRenderer.color;
-                c.a = 0.7f;
-                spriteRenderer.color = c;
-            }
-
-            if (health == null)
-                health = GetComponent<HeroHealth>();
-            if (health != null)
-                health.Immortal = true;
         }
 
         private enum State

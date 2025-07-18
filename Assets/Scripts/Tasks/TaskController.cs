@@ -268,18 +268,15 @@ namespace TimelessEchoes.Tasks
         /// <summary>
         ///     Advance to the earliest available task and start it if one exists.
         /// </summary>
-        public void SelectEarliestTask(HeroController actor = null)
+        public void SelectEarliestTask()
         {
-            var h = actor != null ? actor : hero;
-            if (h == null)
+            if (hero == null)
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
                 if (task == null || task.IsComplete())
-                    continue;
-                if (task is BaseTask bt && bt.ClaimedBy != null && bt.ClaimedBy != h)
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
@@ -288,7 +285,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                h?.SetTask(task);
+                hero?.SetTask(task);
                 bool restart = false;
                 if (task is BaseTask baseTask && baseTask.taskData != null)
                     restart = baseTask.taskData.resetProgressOnInterrupt;
