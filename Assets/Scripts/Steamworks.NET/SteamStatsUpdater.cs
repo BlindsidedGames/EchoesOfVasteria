@@ -87,6 +87,7 @@ namespace TimelessEchoes
             if (SteamUserStats.GetStat("TotalKilometers", out float storedKm))
             {
                 float newKm = tracker.DistanceTravelled / 1000f;
+                newKm = Mathf.Round(newKm * 10000f) / 10000f;
                 if (newKm > storedKm)
                 {
                     SteamUserStats.SetStat("TotalKilometers", newKm);
