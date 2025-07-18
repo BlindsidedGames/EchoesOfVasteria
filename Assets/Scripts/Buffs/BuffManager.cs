@@ -109,7 +109,6 @@ namespace TimelessEchoes.Buffs
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
-                    HandleBuffEnded(buff);
                 }
             }
         }
@@ -149,7 +148,6 @@ namespace TimelessEchoes.Buffs
                 buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
                 activeBuffs.Add(buff);
                 TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
-                HandleBuffStarted(buff);
             }
             else
             {
@@ -290,8 +288,6 @@ namespace TimelessEchoes.Buffs
 
         public void ClearActiveBuffs()
         {
-            foreach (var buff in activeBuffs)
-                HandleBuffEnded(buff);
             activeBuffs.Clear();
         }
 
@@ -305,59 +301,8 @@ namespace TimelessEchoes.Buffs
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
-                    HandleBuffEnded(buff);
                 }
             }
-        }
-
-        private void HandleBuffStarted(ActiveBuff buff)
-        {
-            if (buff?.recipe == null || buff.recipe.heroClones <= 0)
-                return;
-
-            var hero = TimelessEchoes.Hero.HeroController.Instance ??
-                       FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
-            if (hero == null)
-                return;
-
-            for (int i = 0; i < buff.recipe.heroClones; i++)
-            {
-                var cloneObj = Object.Instantiate(hero.gameObject, hero.transform.parent);
-                cloneObj.name = hero.gameObject.name + "_Clone";
-                var controller = cloneObj.GetComponent<TimelessEchoes.Hero.HeroController>();
-                if (controller != null)
-                {
-                    controller.isClone = true;
-                }
-
-                var health = cloneObj.GetComponent<TimelessEchoes.Hero.HeroHealth>();
-                if (health != null)
-                    Object.Destroy(health);
-                cloneObj.AddComponent<TimelessEchoes.Hero.CloneHeroHealth>();
-
-                foreach (var sr in cloneObj.GetComponentsInChildren<SpriteRenderer>())
-                {
-                    var c = sr.color;
-                    c.a *= 0.7f;
-                    sr.color = c;
-                }
-
-                var marker = cloneObj.AddComponent<TimelessEchoes.Hero.HeroCloneMarker>();
-                marker.ownerBuff = buff;
-
-                buff.clones.Add(controller);
-            }
-        }
-
-        private void HandleBuffEnded(ActiveBuff buff)
-        {
-            if (buff == null) return;
-            foreach (var clone in buff.clones)
-            {
-                if (clone != null)
-                    Object.Destroy(clone.gameObject);
-            }
-            buff.clones.Clear();
         }
 
 
@@ -367,7 +312,6 @@ namespace TimelessEchoes.Buffs
             public BuffRecipe recipe;
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
-            public List<TimelessEchoes.Hero.HeroController> clones = new();
         }
     }
 }
