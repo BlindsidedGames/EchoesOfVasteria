@@ -200,11 +200,7 @@ namespace TimelessEchoes.Tasks
             }
             SortTaskListsByProximity();
 
-            if (hero != null)
-            {
-                hero.CurrentTask?.Unclaim(hero);
-                hero.SetTask(null);
-            }
+            hero?.SetTask(null);
             SelectEarliestTask();
         }
 
@@ -264,7 +260,6 @@ namespace TimelessEchoes.Tasks
 
             if (removed && hero != null)
             {
-                hero.CurrentTask?.Unclaim(hero);
                 hero.SetTask(null);
                 SelectEarliestTask();
             }
@@ -283,8 +278,6 @@ namespace TimelessEchoes.Tasks
                 var task = tasks[i];
                 if (task == null || task.IsComplete())
                     continue;
-                if (task.IsClaimed && task.ClaimedBy != hero)
-                    continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
                 currentTaskObject = null;
@@ -292,9 +285,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                hero?.CurrentTask?.Unclaim(hero);
                 hero?.SetTask(task);
-                task.Claim(hero);
                 bool restart = false;
                 if (task is BaseTask baseTask && baseTask.taskData != null)
                     restart = baseTask.taskData.resetProgressOnInterrupt;
@@ -335,8 +326,6 @@ namespace TimelessEchoes.Tasks
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
             tasks.RemoveAt(index);
-
-            task?.Unclaim(task.ClaimedBy);
 
             float duration = 0f;
             if (taskStartTimes.TryGetValue(task, out var start))

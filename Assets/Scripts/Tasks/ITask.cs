@@ -14,26 +14,6 @@ namespace TimelessEchoes.Tasks
         Transform Target { get; }
 
         /// <summary>
-        ///     The hero currently assigned to this task. Null if unclaimed.
-        /// </summary>
-        HeroController ClaimedBy { get; }
-
-        /// <summary>
-        ///     True if the task has been claimed by a hero.
-        /// </summary>
-        bool IsClaimed { get; }
-
-        /// <summary>
-        ///     Mark the task as claimed by the provided hero.
-        /// </summary>
-        void Claim(HeroController hero);
-
-        /// <summary>
-        ///     Release the claim on this task if owned by the provided hero.
-        /// </summary>
-        void Unclaim(HeroController hero);
-
-        /// <summary>
         ///     A property to indicate if this task should prevent the hero from moving.
         /// </summary>
         bool BlocksMovement { get; }
