@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Hero;
-using TimelessEchoes.Tasks;
-using System.Reflection;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -109,10 +106,6 @@ namespace TimelessEchoes.Buffs
                 buff.remaining -= delta;
                 if (buff.remaining <= 0f)
                 {
-                    foreach (var m in buff.mirrors)
-                        if (m != null)
-                            Destroy(m.gameObject);
-                    buff.mirrors.Clear();
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
@@ -153,7 +146,6 @@ namespace TimelessEchoes.Buffs
             if (buff == null)
             {
                 buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
-                SpawnMirrors(buff);
                 activeBuffs.Add(buff);
                 TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
             }
@@ -163,7 +155,6 @@ namespace TimelessEchoes.Buffs
                 if (expireDist > buff.expireAtDistance)
                     buff.expireAtDistance = expireDist;
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
-                SpawnMirrors(buff);
             }
 
             return true;
@@ -227,47 +218,6 @@ namespace TimelessEchoes.Buffs
                 foreach (var b in activeBuffs)
                     percent += b.recipe.lifestealPercent;
                 return percent;
-            }
-        }
-
-        private void SpawnMirrors(ActiveBuff buff)
-        {
-            if (buff == null || buff.recipe == null || buff.recipe.mirrorHeroes <= 0)
-                return;
-
-            var mainHero = Hero.HeroController.Instance ?? FindFirstObjectByType<Hero.HeroController>();
-            if (mainHero == null)
-                return;
-
-            var mainController = mainHero.GetComponentInParent<Tasks.TaskController>();
-            if (mainController == null)
-                return;
-
-            while (buff.mirrors.Count < buff.recipe.mirrorHeroes)
-            {
-                var mirrorObj = new GameObject("MirrorHero");
-                mirrorObj.transform.SetParent(mainController.transform, false);
-                var heroClone = Instantiate(mainHero.gameObject, mainHero.transform.position, Quaternion.identity, mirrorObj.transform);
-                var heroComp = heroClone.GetComponent<Hero.HeroController>();
-                heroComp?.MarkAsMirror();
-
-                var tc = mirrorObj.AddComponent<Tasks.TaskController>();
-                tc.hero = heroComp;
-                tc.maxBacktrackDistance = mainController.maxBacktrackDistance;
-                tc.backtrackingAdditionalWeight = mainController.backtrackingAdditionalWeight;
-                var fEnemy = typeof(Tasks.TaskController).GetField("enemyMask", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fEnemy != null)
-                    fEnemy.SetValue(tc, fEnemy.GetValue(mainController));
-                var fPath = typeof(Tasks.TaskController).GetField("astarPath", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fPath != null)
-                    fPath.SetValue(tc, mainController.Pathfinder);
-                var fCam = typeof(Tasks.TaskController).GetField("mapCamera", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fCam != null)
-                    fCam.SetValue(tc, mainController.MapCamera);
-                foreach (var obj in mainController.TaskObjects)
-                    tc.AddTaskObject(obj);
-                tc.ResetTasks();
-                buff.mirrors.Add(heroComp);
             }
         }
 
@@ -338,16 +288,6 @@ namespace TimelessEchoes.Buffs
 
         public void ClearActiveBuffs()
         {
-            foreach (var b in activeBuffs)
-            {
-                if (b.mirrors != null)
-                {
-                    foreach (var m in b.mirrors)
-                        if (m != null)
-                            Destroy(m.gameObject);
-                    b.mirrors.Clear();
-                }
-            }
             activeBuffs.Clear();
         }
 
@@ -358,10 +298,6 @@ namespace TimelessEchoes.Buffs
                 var buff = activeBuffs[i];
                 if (heroX >= buff.expireAtDistance)
                 {
-                    foreach (var m in buff.mirrors)
-                        if (m != null)
-                            Destroy(m.gameObject);
-                    buff.mirrors.Clear();
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
@@ -376,7 +312,6 @@ namespace TimelessEchoes.Buffs
             public BuffRecipe recipe;
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
-            public List<Hero.HeroController> mirrors = new();
         }
     }
 }
