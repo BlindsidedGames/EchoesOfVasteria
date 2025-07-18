@@ -177,7 +177,8 @@ namespace Blindsided
 
         private void SaveToFile(bool allowUpload)
         {
-            EventHandler.SaveData();
+            if (!wipeInProgress)
+                EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             ES3.Save(_dataName, saveData, _settings); // direct file write
