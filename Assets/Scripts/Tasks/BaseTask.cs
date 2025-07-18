@@ -18,6 +18,32 @@ namespace TimelessEchoes.Tasks
 
         public float LastGrantedXp => lastGrantedXp;
 
+        private HeroController claimedBy;
+        public HeroController ClaimedBy => claimedBy;
+
+        public bool Claim(HeroController hero)
+        {
+            if (hero == null) return false;
+            if (claimedBy == null || claimedBy == hero)
+            {
+                claimedBy = hero;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ReleaseClaim(HeroController hero)
+        {
+            if (claimedBy == hero || hero == null)
+                claimedBy = null;
+        }
+
+        public void ClearClaim()
+        {
+            claimedBy = null;
+        }
+
         /// <summary>
         ///     A property to indicate if this task should prevent the hero from moving.
         /// </summary>
