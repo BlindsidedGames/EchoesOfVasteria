@@ -27,6 +27,12 @@ namespace TimelessEchoes.Hero
     public class HeroController : MonoBehaviour
     {
         public static HeroController Instance { get; private set; }
+        public bool IsMirror { get; private set; }
+
+        public void MarkAsMirror()
+        {
+            IsMirror = true;
+        }
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -116,9 +122,15 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
-
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+                IsMirror = false;
+            }
+            else if (Instance != this)
+            {
+                IsMirror = true;
+            }
 
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
@@ -234,12 +246,14 @@ namespace TimelessEchoes.Hero
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
 
             Enemy.OnEngage -= OnEnemyEngage;
+            CurrentTask?.Unclaim(this);
         }
 
         private void OnDestroy()
         {
             if (Instance == this)
                 Instance = null;
+            CurrentTask?.Unclaim(this);
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
@@ -412,6 +426,7 @@ namespace TimelessEchoes.Hero
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
+                CurrentTask?.Unclaim(this);
                 CurrentTask = null;
                 state = State.Idle;
                 taskController?.SelectEarliestTask();
