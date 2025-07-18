@@ -228,3 +228,328 @@
 - **Requires:** Fan the Erif Flames
   - **Requirements:**
     - Resource x1000
+
+## MININGNPC
+### Stone Salvation
+- **Quest ID:** StoneDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 200 Stone so MININGNPC can forge a pact with the mountain spirit.
+- **Reward:** Gain the Disciple of Stone
+  - **Requirements:**
+    - Resource x200
+### Eznorb Foundation
+- **Quest ID:** EznorbDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 100 Eznorb Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Eznorb
+  - **Requirements:**
+    - Resource x100
+### Nori Foundation
+- **Quest ID:** NoriDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 250 Nori Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Nori
+  - **Requirements:**
+    - Resource x250
+### Dlog Foundation
+- **Quest ID:** DlogDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 500 Dlog Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Dlog
+  - **Requirements:**
+    - Resource x500
+### Erif Foundation
+- **Quest ID:** ErifDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 750 Erif Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Erif
+  - **Requirements:**
+    - Resource x750
+### Lirium Foundation
+- **Quest ID:** LiriumDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 1,000 Lirium Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Lirium
+  - **Requirements:**
+    - Resource x1000
+### Copium Foundation
+- **Quest ID:** CopiumDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 1,500 Copium Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Copium
+  - **Requirements:**
+    - Resource x1500
+### Idle Foundation
+- **Quest ID:** IdleDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 2,000 Idle Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Idle
+  - **Requirements:**
+    - Resource x2000
+### Vastium Foundation
+- **Quest ID:** VastiumDisc
+- **NPC:** MININGNPC
+- **Description:** Deliver 3,000 Vastium Chunks so MININGNPC can forge a pact with its spirit.
+- **Reward:** Gain the Disciple of Vastium
+  - **Requirements:**
+    - Resource x3000
+### Eznorb Resonance
+- **Quest ID:** EznorbCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 25 Eznorb Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Eznorb Crystal
+  - **Requirements:**
+    - Resource x25
+### Nori Resonance
+- **Quest ID:** NoriCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 50 Nori Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Nori Crystal
+  - **Requirements:**
+    - Resource x50
+### Dlog Resonance
+- **Quest ID:** DlogCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 75 Dlog Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Dlog Crystal
+  - **Requirements:**
+    - Resource x75
+### Erif Resonance
+- **Quest ID:** ErifCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 100 Erif Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Erif Crystal
+  - **Requirements:**
+    - Resource x100
+### Lirium Resonance
+- **Quest ID:** LiriumCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 150 Lirium Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Lirium Crystal
+  - **Requirements:**
+    - Resource x150
+### Copium Resonance
+- **Quest ID:** CopiumCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 200 Copium Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Copium Crystal
+  - **Requirements:**
+    - Resource x200
+### Idle Resonance
+- **Quest ID:** IdleCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 250 Idle Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Idle Crystal
+  - **Requirements:**
+    - Resource x250
+### Vastium Resonance
+- **Quest ID:** VastiumCrystalDisc
+- **NPC:** MININGNPC
+- **Description:** Bring 300 Vastium Crystals to unlock the crystal’s latent disciple.
+- **Reward:** Gain the Disciple of Vastium Crystal
+  - **Requirements:**
+    - Resource x300
+
+## FISHINGNPC
+### Muddy Muck Muncher Rescue
+- **Quest ID:** MuddyMuckMuncher
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Muddy Muck Munchers to win their trust.
+- **Reward:** Gain the Disciple of Muddy Muck Muncher
+  - **Requirements:**
+    - Resource x50
+### Sir Splashford III Rescue
+- **Quest ID:** SirSplashfordIII
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Sir Splashford III to win their trust.
+- **Reward:** Gain the Disciple of Sir Splashford III
+  - **Requirements:**
+    - Resource x50
+### Wigglelittle Rescue
+- **Quest ID:** Wigglelittle
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Wigglelittle to win their trust.
+- **Reward:** Gain the Disciple of Wigglelittle
+  - **Requirements:**
+    - Resource x50
+### Snapjaw Jr. Rescue
+- **Quest ID:** SnapjawJr
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Snapjaw Jr. to win their trust.
+- **Reward:** Gain the Disciple of Snapjaw Jr.
+  - **Requirements:**
+    - Resource x50
+### Flipzoid Rescue
+- **Quest ID:** Flipzoid
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Flipzoids to win their trust.
+- **Reward:** Gain the Disciple of Flipzoid
+  - **Requirements:**
+    - Resource x50
+### Niblet the Bold Rescue
+- **Quest ID:** NibletTheBold
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Niblet the Bold to win their trust.
+- **Reward:** Gain the Disciple of Niblet the Bold
+  - **Requirements:**
+    - Resource x50
+### Bloopicus Maximus Rescue
+- **Quest ID:** BloopicusMaximus
+- **NPC:** FISHINGNPC
+- **Description:** Catch and donate 50 Bloopicus Maximus to win their trust.
+- **Reward:** Gain the Disciple of Bloopicus Maximus
+  - **Requirements:**
+    - Resource x50
+
+## WOODCUTTINGNPC
+### Stick Stockpile
+- **Quest ID:** Stick
+- **NPC:** WOODCUTTINGNPC
+- **Description:** Gather 200 Sticks so WOODCUTTINGNPC can commune with the forest spirit.
+- **Reward:** Gain the Disciple of Stick
+  - **Requirements:**
+    - Resource x200
+### Feather Stockpile
+- **Quest ID:** Feather
+- **NPC:** WOODCUTTINGNPC
+- **Description:** Gather 100 Feathers so WOODCUTTINGNPC can commune with the forest spirit.
+- **Reward:** Gain the Disciple of Feather
+  - **Requirements:**
+    - Resource x100
+
+## FARMINGNPC
+### Corn Harvest Hope
+- **Quest ID:** Corn
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Corn to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Corn
+  - **Requirements:**
+    - Resource x100
+### Wheat Harvest Hope
+- **Quest ID:** Wheat
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Wheat to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Wheat
+  - **Requirements:**
+    - Resource x100
+### Wartermelone Harvest Hope
+- **Quest ID:** Wartermelone
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Wartermelone to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Wartermelone
+  - **Requirements:**
+    - Resource x100
+### Carrot Harvest Hope
+- **Quest ID:** Carrot
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Carrots to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Carrot
+  - **Requirements:**
+    - Resource x100
+### Spud Harvest Hope
+- **Quest ID:** Spud
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Spuds to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Spud
+  - **Requirements:**
+    - Resource x100
+### Tomato Harvest Hope
+- **Quest ID:** Tomato
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Tomatoes to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Tomato
+  - **Requirements:**
+    - Resource x100
+### Lettuce Harvest Hope
+- **Quest ID:** Lettuce
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Lettuce to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Lettuce
+  - **Requirements:**
+    - Resource x100
+### Cucumber Harvest Hope
+- **Quest ID:** Cucumber
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Cucumbers to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Cucumber
+  - **Requirements:**
+    - Resource x100
+### Onion Harvest Hope
+- **Quest ID:** Onion
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Onions to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Onion
+  - **Requirements:**
+    - Resource x100
+### Leek Harvest Hope
+- **Quest ID:** Leek
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Leeks to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Leek
+  - **Requirements:**
+    - Resource x100
+### Parsnip Harvest Hope
+- **Quest ID:** Parsnip
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Parsnips to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Parsnip
+  - **Requirements:**
+    - Resource x100
+### Pepper Harvest Hope
+- **Quest ID:** Pepper
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Peppers to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Pepper
+  - **Requirements:**
+    - Resource x100
+### Chillie Harvest Hope
+- **Quest ID:** Chillie
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Chillies to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Chillie
+  - **Requirements:**
+    - Resource x100
+### Pumking Harvest Hope
+- **Quest ID:** Pumking
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Pumkings to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Pumking
+  - **Requirements:**
+    - Resource x100
+### Strawberry Harvest Hope
+- **Quest ID:** Strawberry
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Strawberries to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Strawberry
+  - **Requirements:**
+    - Resource x100
+### Funion Harvest Hope
+- **Quest ID:** Funion
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Funions to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Funion
+  - **Requirements:**
+    - Resource x100
+### Turnip Harvest Hope
+- **Quest ID:** Turnip
+- **NPC:** FARMINGNPC
+- **Description:** Harvest and present 100 Turnips to inspire the crop spirit.
+- **Reward:** Gain the Disciple of Turnip
+  - **Requirements:**
+    - Resource x100
+
+## LOOTINGNPC
+### Bone Recall
+- **Quest ID:** Bone
+- **NPC:** LOOTINGNPC
+- **Description:** Retrieve 500 Bones from the field and offer them to LOOTINGNPC.
+- **Reward:** Gain the Disciple of Bone
+  - **Requirements:**
+    - Resource x500
+### Leather Recall
+- **Quest ID:** Leather
+- **NPC:** LOOTINGNPC
+- **Description:** Retrieve 250 Leather from the field and offer them to LOOTINGNPC.
+- **Reward:** Gain the Disciple of Leather
+  - **Requirements:**
+    - Resource x250
