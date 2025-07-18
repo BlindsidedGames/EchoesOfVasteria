@@ -19,7 +19,7 @@ namespace TimelessEchoes.Buffs
 
         private ResourceManager resourceManager;
 
-        [SerializeField] private List<BuffRecipe> allRecipes = new();
+        private BuffRecipe[] cachedRecipes;
 
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
@@ -76,8 +76,15 @@ namespace TimelessEchoes.Buffs
                 return false;
             }
         }
-        public IEnumerable<BuffRecipe> Recipes =>
-            allRecipes?.Count > 0 ? allRecipes : Resources.LoadAll<BuffRecipe>("");
+        public IEnumerable<BuffRecipe> Recipes
+        {
+            get
+            {
+                if (cachedRecipes == null || cachedRecipes.Length == 0)
+                    cachedRecipes = Resources.LoadAll<BuffRecipe>("Buffs");
+                return cachedRecipes;
+            }
+        }
 
         private void Awake()
         {
