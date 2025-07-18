@@ -5,6 +5,7 @@ using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Hero;
 
 namespace TimelessEchoes.Buffs
 {
@@ -21,6 +22,7 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private List<BuffRecipe> allRecipes = new();
 
         private readonly List<ActiveBuff> activeBuffs = new();
+        private readonly Dictionary<ActiveBuff, List<HeroController>> buffClones = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
 
         public int UnlockedSlots
@@ -106,6 +108,7 @@ namespace TimelessEchoes.Buffs
                 buff.remaining -= delta;
                 if (buff.remaining <= 0f)
                 {
+                    DestroyClones(buff);
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
@@ -148,6 +151,7 @@ namespace TimelessEchoes.Buffs
                 buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
                 activeBuffs.Add(buff);
                 TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
+                SpawnClones(buff);
             }
             else
             {
@@ -288,6 +292,8 @@ namespace TimelessEchoes.Buffs
 
         public void ClearActiveBuffs()
         {
+            foreach (var pair in new List<ActiveBuff>(activeBuffs))
+                DestroyClones(pair);
             activeBuffs.Clear();
         }
 
@@ -298,10 +304,45 @@ namespace TimelessEchoes.Buffs
                 var buff = activeBuffs[i];
                 if (heroX >= buff.expireAtDistance)
                 {
+                    DestroyClones(buff);
                     activeBuffs.RemoveAt(i);
                     if (buff.recipe != null)
                         TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
                 }
+            }
+        }
+
+        private void SpawnClones(ActiveBuff buff)
+        {
+            if (buff?.recipe == null || buff.recipe.cloneCount <= 0)
+                return;
+
+            var hero = HeroController.Instance;
+            if (hero == null)
+                return;
+
+            var clones = new List<HeroController>();
+            for (int i = 0; i < buff.recipe.cloneCount; i++)
+            {
+                var obj = Instantiate(hero.gameObject, hero.transform.parent);
+                var ctrl = obj.GetComponent<HeroController>();
+                ctrl.InitializeClone();
+                clones.Add(ctrl);
+            }
+
+            if (clones.Count > 0)
+                buffClones[buff] = clones;
+        }
+
+        private void DestroyClones(ActiveBuff buff)
+        {
+            if (buff == null) return;
+            if (buffClones.TryGetValue(buff, out var clones))
+            {
+                foreach (var c in clones)
+                    if (c != null)
+                        Destroy(c.gameObject);
+                buffClones.Remove(buff);
             }
         }
 

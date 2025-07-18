@@ -24,6 +24,8 @@ namespace TimelessEchoes.Buffs
         [Range(-100f, 100f)] public float attackSpeedPercent;
         [Tooltip("Percent of damage returned as health while active.")]
         [Range(0f, 100f)] public float lifestealPercent;
+        [Tooltip("Number of clone heroes spawned while active.")]
+        [Min(0)] public int cloneCount;
         [Tooltip("Tasks complete instantly while active.")]
         public bool instantTasks;
         [Tooltip("Percent of longest run distance this buff remains active. 0 = no distance limit")]
