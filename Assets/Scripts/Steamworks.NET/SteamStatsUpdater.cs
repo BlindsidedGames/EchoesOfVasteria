@@ -105,6 +105,16 @@ namespace TimelessEchoes
                 }
             }
 
+            if (SteamUserStats.GetStat("TimesReaped", out int storedReaps))
+            {
+                int newReaps = tracker.TimesReaped;
+                if (newReaps > storedReaps)
+                {
+                    SteamUserStats.SetStat("TimesReaped", newReaps);
+                    changed = true;
+                }
+            }
+
             if (changed)
                 SteamUserStats.StoreStats();
         }
