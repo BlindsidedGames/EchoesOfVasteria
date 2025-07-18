@@ -134,7 +134,7 @@ namespace TimelessEchoes
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.CompletedNpcTasks = new HashSet<string>();
-            oracle.saveData.NpcGeneration = new Dictionary<string, GameData.NpcGenerationRecord>();
+            oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
             Blindsided.EventHandler.LoadData();
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }

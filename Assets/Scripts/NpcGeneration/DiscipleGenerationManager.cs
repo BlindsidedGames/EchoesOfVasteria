@@ -17,7 +17,6 @@ namespace TimelessEchoes.NpcGeneration
         public static DiscipleGenerationManager Instance { get; private set; }
         [SerializeField] private List<Disciple> disciples = new();
         [SerializeField] private DiscipleGenerator generatorPrefab;
-        [SerializeField] private Transform generatorParent;
 
         private readonly List<DiscipleGenerator> generators = new();
 
@@ -61,7 +60,7 @@ namespace TimelessEchoes.NpcGeneration
                     Destroy(gen.gameObject);
             generators.Clear();
 
-            if (generatorPrefab == null || generatorParent == null)
+            if (generatorPrefab == null)
                 return;
 
             foreach (var d in disciples)
@@ -70,7 +69,7 @@ namespace TimelessEchoes.NpcGeneration
                 if (!QuestCompleted(d.requiredQuest))
                     continue;
 
-                var gen = Instantiate(generatorPrefab, generatorParent);
+                var gen = Instantiate(generatorPrefab, transform);
                 gen.name = d.name;
                 gen.SetData(d);
                 generators.Add(gen);
