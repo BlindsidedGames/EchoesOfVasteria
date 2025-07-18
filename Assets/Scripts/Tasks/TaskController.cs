@@ -201,7 +201,7 @@ namespace TimelessEchoes.Tasks
             SortTaskListsByProximity();
 
             hero?.SetTask(null);
-            SelectEarliestTask();
+            SelectEarliestTask(hero);
         }
 
 
@@ -261,7 +261,7 @@ namespace TimelessEchoes.Tasks
             if (removed && hero != null)
             {
                 hero.SetTask(null);
-                SelectEarliestTask();
+                SelectEarliestTask(hero);
             }
         }
 
@@ -270,14 +270,29 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public void SelectEarliestTask()
         {
-            if (hero == null)
+            SelectEarliestTask(hero);
+        }
+
+        public void SelectEarliestTask(HeroController targetHero)
+        {
+            if (targetHero == null)
+            {
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
+                return;
+            }
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
                 if (task == null || task.IsComplete())
                     continue;
+
+                if (task is BaseTask baseTask)
+                {
+                    if (baseTask.ClaimedBy != null && baseTask.ClaimedBy != targetHero)
+                        continue;
+                }
+
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
                 currentTaskObject = null;
@@ -285,10 +300,12 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                hero?.SetTask(task);
+
+                targetHero.SetTask(task);
+
                 bool restart = false;
-                if (task is BaseTask baseTask && baseTask.taskData != null)
-                    restart = baseTask.taskData.resetProgressOnInterrupt;
+                if (task is BaseTask btask && btask.taskData != null)
+                    restart = btask.taskData.resetProgressOnInterrupt;
 
                 if (!taskStartTimes.ContainsKey(task) || restart)
                 {
@@ -326,6 +343,8 @@ namespace TimelessEchoes.Tasks
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
             tasks.RemoveAt(index);
+            if (task is BaseTask bt)
+                bt.ClearClaim();
 
             float duration = 0f;
             if (taskStartTimes.TryGetValue(task, out var start))

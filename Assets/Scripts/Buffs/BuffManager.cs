@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Hero;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -22,6 +23,36 @@ namespace TimelessEchoes.Buffs
 
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
+
+        private HeroController SpawnClone()
+        {
+            var hero = Hero.HeroController.Instance;
+            if (hero == null)
+                return null;
+
+            Hero.HeroController.PrepareForClone();
+            var obj = Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
+            var clone = obj.GetComponent<Hero.HeroController>();
+            if (clone != null)
+            {
+                var renderers = obj.GetComponentsInChildren<SpriteRenderer>();
+                foreach (var r in renderers)
+                {
+                    var c = r.color;
+                    c.a = 0.7f;
+                    r.color = c;
+                }
+
+                var hp = clone.GetComponent<Hero.HeroHealth>();
+                if (hp != null)
+                {
+                    hp.Immortal = true;
+                    hp.Init((int)hp.MaxHealth);
+                }
+            }
+
+            return clone;
+        }
 
         public int UnlockedSlots
         {
@@ -106,9 +137,7 @@ namespace TimelessEchoes.Buffs
                 buff.remaining -= delta;
                 if (buff.remaining <= 0f)
                 {
-                    activeBuffs.RemoveAt(i);
-                    if (buff.recipe != null)
-                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+                    RemoveBuffAt(i);
                 }
             }
         }
@@ -155,6 +184,17 @@ namespace TimelessEchoes.Buffs
                 if (expireDist > buff.expireAtDistance)
                     buff.expireAtDistance = expireDist;
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
+            }
+
+            if (recipe.cloneCount > 0)
+            {
+                int needed = recipe.cloneCount - buff.clones.Count;
+                for (int i = 0; i < needed; i++)
+                {
+                    var c = SpawnClone();
+                    if (c != null)
+                        buff.clones.Add(c);
+                }
             }
 
             return true;
@@ -288,6 +328,8 @@ namespace TimelessEchoes.Buffs
 
         public void ClearActiveBuffs()
         {
+            foreach (var buff in activeBuffs)
+                DestroyClones(buff);
             activeBuffs.Clear();
         }
 
@@ -298,11 +340,28 @@ namespace TimelessEchoes.Buffs
                 var buff = activeBuffs[i];
                 if (heroX >= buff.expireAtDistance)
                 {
-                    activeBuffs.RemoveAt(i);
-                    if (buff.recipe != null)
-                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+                    RemoveBuffAt(i);
                 }
             }
+        }
+
+        private void RemoveBuffAt(int index)
+        {
+            if (index < 0 || index >= activeBuffs.Count) return;
+            var buff = activeBuffs[index];
+            DestroyClones(buff);
+            activeBuffs.RemoveAt(index);
+            if (buff.recipe != null)
+                TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+        }
+
+        private void DestroyClones(ActiveBuff buff)
+        {
+            if (buff == null || buff.clones == null) return;
+            foreach (var c in buff.clones)
+                if (c != null)
+                    Destroy(c.gameObject);
+            buff.clones.Clear();
         }
 
 
@@ -312,6 +371,7 @@ namespace TimelessEchoes.Buffs
             public BuffRecipe recipe;
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
+            public List<HeroController> clones = new();
         }
     }
 }

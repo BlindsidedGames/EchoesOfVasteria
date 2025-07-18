@@ -11,19 +11,26 @@ namespace TimelessEchoes.Hero
     {
         public static HeroHealth Instance { get; private set; }
         private HeroController controller;
+        public bool Immortal { get; set; }
 
         protected override void Awake()
         {
-            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
-            Instance = this;
             controller = GetComponent<HeroController>();
+            if (!controller || !controller.IsClone)
+            {
+                if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+                Instance = this;
+            }
             base.Awake();
         }
 
         private void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            if (!controller || !controller.IsClone)
+            {
+                if (Instance == this)
+                    Instance = null;
+            }
         }
 
         protected override float CalculateDamage(float fullDamage)
@@ -54,6 +61,12 @@ namespace TimelessEchoes.Hero
         protected override float GetFloatingTextSize()
         {
             return 6f;
+        }
+
+        public override void TakeDamage(float amount, float bonusDamage = 0f)
+        {
+            if (Immortal) return;
+            base.TakeDamage(amount, bonusDamage);
         }
     }
 }
