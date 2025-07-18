@@ -15,8 +15,8 @@ namespace TimelessEchoes.NpcGeneration
     public class DiscipleGenerationManager : MonoBehaviour
     {
         public static DiscipleGenerationManager Instance { get; private set; }
-        [SerializeField] private List<Disciple> disciples = new();
         [SerializeField] private DiscipleGenerator generatorPrefab;
+        [SerializeField] private string disciplePath = "Disciples";
 
         private readonly List<DiscipleGenerator> generators = new();
 
@@ -63,7 +63,8 @@ namespace TimelessEchoes.NpcGeneration
             if (generatorPrefab == null)
                 return;
 
-            foreach (var d in disciples)
+            var loadedDisciples = Resources.LoadAll<Disciple>(disciplePath);
+            foreach (var d in loadedDisciples)
             {
                 if (d == null) continue;
                 if (!QuestCompleted(d.requiredQuest))
