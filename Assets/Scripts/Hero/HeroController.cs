@@ -369,7 +369,7 @@ namespace TimelessEchoes.Hero
             if (setter != null)
             {
                 setter.target = task?.Target;
-                if (ai != null)
+                if (ai != null && ai.isActiveAndEnabled)
                     ai.Teleport(transform.position);
                 else
                     ai?.SearchPath();
