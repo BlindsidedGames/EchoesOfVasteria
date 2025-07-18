@@ -93,11 +93,19 @@ namespace TimelessEchoes.Buffs
             if (resourceManager == null)
                 TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
 
-            LoadSlots();
             OnLoadData += LoadSlots;
         }
 
-        private void Start() {}
+        private void Start()
+        {
+            StartCoroutine(DelayedLoad());
+        }
+
+        private System.Collections.IEnumerator DelayedLoad()
+        {
+            yield return null;
+            LoadSlots();
+        }
 
         private void OnDestroy()
         {
@@ -264,7 +272,9 @@ namespace TimelessEchoes.Buffs
         private void LoadSlots()
         {
             if (oracle == null) return;
-            oracle.saveData.BuffSlots ??= new List<string>(new string[5]);
+            oracle.saveData.BuffSlots ??= new List<string>();
+            while (oracle.saveData.BuffSlots.Count < slotAssignments.Count)
+                oracle.saveData.BuffSlots.Add(null);
             for (var i = 0; i < slotAssignments.Count; i++)
             {
                 var name = oracle.saveData.BuffSlots[i];
