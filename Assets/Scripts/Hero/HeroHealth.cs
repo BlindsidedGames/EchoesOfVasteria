@@ -10,17 +10,12 @@ namespace TimelessEchoes.Hero
     public class HeroHealth : HealthBase
     {
         public static HeroHealth Instance { get; private set; }
-        public bool IsClone { get; set; }
-        public bool Immortal { get; set; }
         private HeroController controller;
 
         protected override void Awake()
         {
-            if (!IsClone)
-            {
-                if (Instance != null && Instance != this) Destroy(Instance.gameObject);
-                Instance = this;
-            }
+            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+            Instance = this;
             controller = GetComponent<HeroController>();
             base.Awake();
         }
@@ -29,12 +24,6 @@ namespace TimelessEchoes.Hero
         {
             if (Instance == this)
                 Instance = null;
-        }
-
-        public override void TakeDamage(float amount, float bonusDamage = 0f)
-        {
-            if (Immortal) return;
-            base.TakeDamage(amount, bonusDamage);
         }
 
         protected override float CalculateDamage(float fullDamage)
@@ -54,17 +43,6 @@ namespace TimelessEchoes.Hero
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
             tracker?.AddDamageTaken(total);
-        }
-
-        protected override void OnZeroHealth()
-        {
-            if (Immortal)
-            {
-                CurrentHealth = MaxHealth;
-                RaiseHealthChanged();
-                return;
-            }
-            base.OnZeroHealth();
         }
 
         protected override Color GetFloatingTextColor()

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Hero;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -107,56 +106,11 @@ namespace TimelessEchoes.Buffs
                 buff.remaining -= delta;
                 if (buff.remaining <= 0f)
                 {
-                    CleanupBuff(buff);
                     activeBuffs.RemoveAt(i);
+                    if (buff.recipe != null)
+                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
                 }
             }
-        }
-
-        private IEnumerable<GameObject> SpawnClones(int count)
-        {
-            var clones = new List<GameObject>();
-            if (count <= 0) return clones;
-            var hero = HeroController.Instance;
-            if (hero == null) return clones;
-
-            for (int i = 0; i < count; i++)
-            {
-                var cloneObj = Instantiate(hero.gameObject, hero.transform.parent);
-                cloneObj.name = $"HeroClone{i}";
-                var controller = cloneObj.GetComponent<HeroController>();
-                if (controller != null)
-                    controller.IsClone = true;
-                var health = cloneObj.GetComponent<HeroHealth>();
-                if (health != null)
-                {
-                    health.IsClone = true;
-                    health.Immortal = true;
-                }
-                var sr = cloneObj.GetComponentInChildren<SpriteRenderer>();
-                if (sr != null)
-                {
-                    var c = sr.color;
-                    c.a *= 0.7f;
-                    sr.color = c;
-                }
-                clones.Add(cloneObj);
-            }
-
-            return clones;
-        }
-
-        private static void CleanupBuff(ActiveBuff buff)
-        {
-            if (buff == null) return;
-            foreach (var c in buff.clones)
-            {
-                if (c != null)
-                    Destroy(c);
-            }
-            buff.clones.Clear();
-            if (buff.recipe != null)
-                TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff);
         }
 
         private void EnsureResourceManager()
@@ -192,7 +146,6 @@ namespace TimelessEchoes.Buffs
             if (buff == null)
             {
                 buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
-                buff.clones.AddRange(SpawnClones(recipe.heroClones));
                 activeBuffs.Add(buff);
                 TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
             }
@@ -345,8 +298,9 @@ namespace TimelessEchoes.Buffs
                 var buff = activeBuffs[i];
                 if (heroX >= buff.expireAtDistance)
                 {
-                    CleanupBuff(buff);
                     activeBuffs.RemoveAt(i);
+                    if (buff.recipe != null)
+                        TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
                 }
             }
         }
@@ -358,7 +312,6 @@ namespace TimelessEchoes.Buffs
             public BuffRecipe recipe;
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
-            public List<GameObject> clones = new();
         }
     }
 }

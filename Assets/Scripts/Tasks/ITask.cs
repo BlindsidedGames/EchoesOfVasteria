@@ -18,18 +18,6 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         bool BlocksMovement { get; }
 
-        /// <summary>Hero currently assigned to this task.</summary>
-        HeroController ClaimedBy { get; }
-
-        /// <summary>Attempt to claim this task for a hero.</summary>
-        bool Claim(HeroController hero);
-
-        /// <summary>Release the hero's claim on this task.</summary>
-        void ReleaseClaim();
-
-        /// <summary>True if another hero has claimed this task.</summary>
-        bool IsClaimed { get; }
-
         /// <summary>
         ///     Returns true if the task has been completed.
         /// </summary>
