@@ -557,6 +557,10 @@ namespace TimelessEchoes.Hero
             if (enemy == null)
                 return;
 
+            var setter = enemy.GetComponent<AIDestinationSetter>();
+            if (setter != null && setter.target != transform)
+                return;
+
             if (currentEnemy != null && currentEnemy != enemy.transform)
                 return;
 
