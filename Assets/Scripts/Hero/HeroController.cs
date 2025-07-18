@@ -27,6 +27,7 @@ namespace TimelessEchoes.Hero
     public class HeroController : MonoBehaviour
     {
         public static HeroController Instance { get; private set; }
+        [HideInInspector] public bool isClone = false;
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -116,9 +117,11 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (Instance != null && Instance != this) Destroy(Instance.gameObject);
-
-            Instance = this;
+            if (!isClone)
+            {
+                if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+                Instance = this;
+            }
 
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
@@ -229,6 +232,9 @@ namespace TimelessEchoes.Hero
         {
             buffController?.Pause();
 
+            if (CurrentTask is BaseTask bt)
+                bt.ReleaseClaim(this);
+
             var skillController = SkillController.Instance;
             if (skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
@@ -238,7 +244,9 @@ namespace TimelessEchoes.Hero
 
         private void OnDestroy()
         {
-            if (Instance == this)
+            if (CurrentTask is BaseTask bt)
+                bt.ReleaseClaim(this);
+            if (!isClone && Instance == this)
                 Instance = null;
         }
 
@@ -343,6 +351,9 @@ namespace TimelessEchoes.Hero
 
         public void SetTask(ITask task)
         {
+            if (CurrentTask is BaseTask prev)
+                prev.ReleaseClaim(this);
+
             Log($"Hero assigned task: {task?.GetType().Name ?? "None"}", TELogCategory.Task, this);
             CurrentTask = task;
             currentTaskName = task != null ? task.GetType().Name : "None";
@@ -360,6 +371,9 @@ namespace TimelessEchoes.Hero
                 else
                     ai?.SearchPath();
             }
+
+            if (task is BaseTask newTask)
+                newTask.Claim(this);
         }
 
         private void UpdateBehavior()
@@ -407,14 +421,14 @@ namespace TimelessEchoes.Hero
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemyHealth = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask();
+                taskController?.SelectEarliestTaskForHero(this);
             }
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
                 CurrentTask = null;
                 state = State.Idle;
-                taskController?.SelectEarliestTask();
+                taskController?.SelectEarliestTaskForHero(this);
             }
 
             if (CurrentTask == null)
