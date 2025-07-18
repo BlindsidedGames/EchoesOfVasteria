@@ -28,7 +28,6 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private MonoBehaviour currentTaskObject;
         private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
         private readonly Dictionary<ITask, float> taskStartTimes = new();
-        private readonly Dictionary<ITask, Hero.HeroController> taskClaims = new();
 
         private int currentIndex = -1;
         public List<ITask> tasks { get; } = new();
@@ -162,7 +161,6 @@ namespace TimelessEchoes.Tasks
             currentIndex = -1;
             tasks.Clear();
             taskMap.Clear();
-            taskClaims.Clear();
             currentTaskObject = null;
 
             // Build the task list in the order provided by the editor
@@ -203,7 +201,7 @@ namespace TimelessEchoes.Tasks
             SortTaskListsByProximity();
 
             hero?.SetTask(null);
-            SelectEarliestTask(hero);
+            SelectEarliestTask();
         }
 
 
@@ -226,7 +224,6 @@ namespace TimelessEchoes.Tasks
                         taskObjects.Remove(obj);
                         taskMap.Remove(task);
                     }
-                    ReleaseClaim(task);
 
                     removed = true;
                     continue;
@@ -246,8 +243,6 @@ namespace TimelessEchoes.Tasks
                             taskMap.Remove(task);
                         }
 
-                        ReleaseClaim(task);
-
                         if (kill != null)
                             Destroy(kill);
                         removed = true;
@@ -266,26 +261,22 @@ namespace TimelessEchoes.Tasks
             if (removed && hero != null)
             {
                 hero.SetTask(null);
-                SelectEarliestTask(hero);
+                SelectEarliestTask();
             }
         }
 
         /// <summary>
         ///     Advance to the earliest available task and start it if one exists.
         /// </summary>
-        public void SelectEarliestTask(Hero.HeroController forHero = null)
+        public void SelectEarliestTask()
         {
-            if (forHero == null)
-                forHero = hero;
-            if (forHero == null)
+            if (hero == null)
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
                 if (task == null || task.IsComplete())
-                    continue;
-                if (taskClaims.TryGetValue(task, out var claimed) && claimed != forHero)
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
@@ -294,8 +285,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                forHero?.SetTask(task);
-                taskClaims[task] = forHero;
+                hero?.SetTask(task);
                 bool restart = false;
                 if (task is BaseTask baseTask && baseTask.taskData != null)
                     restart = baseTask.taskData.resetProgressOnInterrupt;
@@ -335,7 +325,6 @@ namespace TimelessEchoes.Tasks
         {
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
-            ReleaseClaim(task);
             tasks.RemoveAt(index);
 
             float duration = 0f;
@@ -459,12 +448,6 @@ namespace TimelessEchoes.Tasks
 
                 currentPos = pos;
             }
-        }
-
-        public void ReleaseClaim(ITask task)
-        {
-            if (task != null)
-                taskClaims.Remove(task);
         }
 
         public void RemoveCompletedTasks()
