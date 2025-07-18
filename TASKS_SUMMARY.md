@@ -110,7 +110,7 @@
     - Range 1-4 chance 0.2 (resource Eznorb Crystal)
 ### Nori Ore
 - **Task ID:** 13
-- **XP:** 3
+- **XP:** 5
 - **Duration:** 3s
 - **Spawn Range X:** 100 to Infinity
   - **Drops:**
@@ -119,7 +119,7 @@
     - Range 1-4 chance 0.2 (resource Nori Crystal)
 ### Dlog Ore
 - **Task ID:** 14
-- **XP:** 3
+- **XP:** 7
 - **Duration:** 4s
 - **Spawn Range X:** 150 to Infinity
   - **Drops:**
@@ -128,7 +128,7 @@
     - Range 1-4 chance 0.2 (resource Dlog Crystal)
 ### Erif Ore
 - **Task ID:** 15
-- **XP:** 3
+- **XP:** 10
 - **Duration:** 5s
 - **Spawn Range X:** 200 to Infinity
   - **Drops:**
@@ -137,7 +137,7 @@
     - Range 1-4 chance 0.2 (resource Erif Crystal)
 ### Lirium Ore
 - **Task ID:** 16
-- **XP:** 3
+- **XP:** 15
 - **Duration:** 7s
 - **Spawn Range X:** 300 to Infinity
   - **Drops:**
@@ -146,7 +146,7 @@
     - Range 1-4 chance 0.2 (resource Lirium Crystal)
 ### Copium Ore
 - **Task ID:** 17
-- **XP:** 3
+- **XP:** 20
 - **Duration:** 10s
 - **Spawn Range X:** 500 to Infinity
   - **Drops:**
@@ -155,7 +155,7 @@
     - Range 1-4 chance 0.2 (resource Copium Crystal)
 ### Idle Ore
 - **Task ID:** 18
-- **XP:** 3
+- **XP:** 25
 - **Duration:** 15s
 - **Spawn Range X:** 1000 to Infinity
   - **Drops:**
@@ -164,7 +164,7 @@
     - Range 1-4 chance 0.2 (resource Idle Crystal)
 ### Vastium Ore
 - **Task ID:** 19
-- **XP:** 3
+- **XP:** 50
 - **Duration:** 25s
 - **Spawn Range X:** 2500 to Infinity
   - **Drops:**
