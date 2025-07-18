@@ -103,9 +103,16 @@ namespace TimelessEchoes.Buffs
                     else
                     {
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
-                        ui.durationText.text = remain > 0f
-                            ? FormatTime(remain, shortForm: true)
-                            : string.Empty;
+                        if (!distanceOk)
+                        {
+                            ui.durationText.text = "Too Far";
+                        }
+                        else
+                        {
+                            ui.durationText.text = remain > 0f
+                                ? FormatTime(remain, shortForm: true)
+                                : string.Empty;
+                        }
                     }
                 }
             }
