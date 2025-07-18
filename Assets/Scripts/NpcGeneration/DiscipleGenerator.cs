@@ -94,6 +94,11 @@ namespace TimelessEchoes.NpcGeneration
                 LoadState();
         }
 
+        private void OnDisable()
+        {
+            SaveState();
+        }
+
         private void OnDestroy()
         {
             OnSaveData -= SaveState;
