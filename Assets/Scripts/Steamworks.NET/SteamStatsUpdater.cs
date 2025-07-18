@@ -115,6 +115,26 @@ namespace TimelessEchoes
                 }
             }
 
+            if (SteamUserStats.GetStat("TotalKills", out int storedKills))
+            {
+                int newKills = tracker.TotalKills;
+                if (newKills > storedKills)
+                {
+                    SteamUserStats.SetStat("TotalKills", newKills);
+                    changed = true;
+                }
+            }
+
+            if (SteamUserStats.GetStat("SlimesKilled", out int storedSlimes))
+            {
+                int newSlimes = tracker.SlimesKilled;
+                if (newSlimes > storedSlimes)
+                {
+                    SteamUserStats.SetStat("SlimesKilled", newSlimes);
+                    changed = true;
+                }
+            }
+
             if (changed)
                 SteamUserStats.StoreStats();
         }

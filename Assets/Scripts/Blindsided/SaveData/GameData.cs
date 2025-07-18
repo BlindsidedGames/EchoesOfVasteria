@@ -138,6 +138,7 @@ namespace Blindsided.SaveData
             public float DistanceTravelled;
             public float HighestDistance;
             public int TotalKills;
+            public int SlimesKilled;
             public int TasksCompleted;
             public int Deaths;
             public float DamageDealt;
