@@ -14,8 +14,6 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public Skill associatedSkill;
         [SerializeField] public TaskData taskData;
 
-        private HeroController claimedBy;
-
         private float lastGrantedXp;
 
         public float LastGrantedXp => lastGrantedXp;
@@ -24,22 +22,6 @@ namespace TimelessEchoes.Tasks
         ///     A property to indicate if this task should prevent the hero from moving.
         /// </summary>
         public virtual bool BlocksMovement => false;
-
-        public virtual bool Claim(HeroController hero)
-        {
-            if (hero == null || (claimedBy != null && claimedBy != hero))
-                return false;
-            claimedBy = hero;
-            return true;
-        }
-
-        public virtual void ReleaseClaim(HeroController hero)
-        {
-            if (hero != null && claimedBy == hero)
-                claimedBy = null;
-        }
-
-        public HeroController ClaimedBy => claimedBy;
 
         /// <summary>
         ///     The world location relevant to this task.
