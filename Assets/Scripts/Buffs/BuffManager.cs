@@ -247,11 +247,11 @@ namespace TimelessEchoes.Buffs
             {
                 var mirrorObj = new GameObject("MirrorHero");
                 mirrorObj.transform.SetParent(mainController.transform, false);
-                var tc = mirrorObj.AddComponent<Tasks.TaskController>();
-                var heroClone = Instantiate(mainHero.gameObject, mainHero.transform.position,
-                    Quaternion.identity, mirrorObj.transform);
+                var heroClone = Instantiate(mainHero.gameObject, mainHero.transform.position, Quaternion.identity, mirrorObj.transform);
                 var heroComp = heroClone.GetComponent<Hero.HeroController>();
                 heroComp?.MarkAsMirror();
+
+                var tc = mirrorObj.AddComponent<Tasks.TaskController>();
                 tc.hero = heroComp;
                 tc.maxBacktrackDistance = mainController.maxBacktrackDistance;
                 tc.backtrackingAdditionalWeight = mainController.backtrackingAdditionalWeight;
