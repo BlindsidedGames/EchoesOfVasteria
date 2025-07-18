@@ -15,8 +15,12 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public TaskData taskData;
 
         private float lastGrantedXp;
+        private HeroController claimedBy;
 
         public float LastGrantedXp => lastGrantedXp;
+
+        public virtual HeroController ClaimedBy => claimedBy;
+        public virtual bool IsClaimed => claimedBy != null;
 
         /// <summary>
         ///     A property to indicate if this task should prevent the hero from moving.
@@ -59,6 +63,19 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public virtual void OnInterrupt(HeroController hero)
         {
+        }
+
+        public virtual bool Claim(HeroController hero)
+        {
+            if (claimedBy != null && claimedBy != hero)
+                return false;
+            claimedBy = hero;
+            return true;
+        }
+
+        public virtual void ReleaseClaim()
+        {
+            claimedBy = null;
         }
 
         protected bool ShouldInstantComplete()

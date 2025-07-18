@@ -201,7 +201,7 @@ namespace TimelessEchoes.Tasks
             SortTaskListsByProximity();
 
             hero?.SetTask(null);
-            SelectEarliestTask();
+            SelectEarliestTask(hero);
         }
 
 
@@ -261,22 +261,23 @@ namespace TimelessEchoes.Tasks
             if (removed && hero != null)
             {
                 hero.SetTask(null);
-                SelectEarliestTask();
+                SelectEarliestTask(hero);
             }
         }
 
         /// <summary>
         ///     Advance to the earliest available task and start it if one exists.
         /// </summary>
-        public void SelectEarliestTask()
+        public void SelectEarliestTask(HeroController actor = null)
         {
-            if (hero == null)
+            var h = actor != null ? actor : hero;
+            if (h == null)
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
-                if (task == null || task.IsComplete())
+                if (task == null || task.IsComplete() || (task.IsClaimed && task.ClaimedBy != h))
                     continue;
                 currentIndex = i;
                 currentTaskName = task.GetType().Name;
@@ -285,7 +286,7 @@ namespace TimelessEchoes.Tasks
                     currentTaskObject = obj;
                 else if (task is MonoBehaviour mb)
                     currentTaskObject = mb;
-                hero?.SetTask(task);
+                h?.SetTask(task);
                 bool restart = false;
                 if (task is BaseTask baseTask && baseTask.taskData != null)
                     restart = baseTask.taskData.resetProgressOnInterrupt;
@@ -325,6 +326,7 @@ namespace TimelessEchoes.Tasks
         {
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
+            task?.ReleaseClaim();
             tasks.RemoveAt(index);
 
             float duration = 0f;
