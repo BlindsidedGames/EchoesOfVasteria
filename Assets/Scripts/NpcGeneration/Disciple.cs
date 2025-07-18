@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Quests;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 
 namespace TimelessEchoes.NpcGeneration
