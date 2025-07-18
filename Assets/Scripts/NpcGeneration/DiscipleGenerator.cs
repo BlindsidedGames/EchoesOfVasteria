@@ -22,9 +22,31 @@ namespace TimelessEchoes.NpcGeneration
             public double amount = 1;
         }
 
+        [SerializeField] private Disciple data;
         [SerializeField] private List<ResourceEntry> resources = new();
         [SerializeField] private QuestData requiredQuest;
         [SerializeField] private float generationInterval = 5f;
+
+        public void SetData(Disciple d)
+        {
+            data = d;
+            ApplyData();
+        }
+
+        private void ApplyData()
+        {
+            if (data == null)
+                return;
+            generationInterval = data.generationInterval;
+            requiredQuest = data.requiredQuest;
+            resources = new List<ResourceEntry>();
+            foreach (var entry in data.resources)
+            {
+                if (entry == null) continue;
+                var copy = new ResourceEntry { resource = entry.resource, amount = entry.amount };
+                resources.Add(copy);
+            }
+        }
 
         private readonly Dictionary<Resource, double> stored = new();
         private readonly Dictionary<Resource, double> collectedTotals = new();
@@ -63,6 +85,7 @@ namespace TimelessEchoes.NpcGeneration
             OnSaveData += SaveState;
             OnLoadData += LoadState;
             OnQuestHandin += OnQuestHandinEvent;
+            ApplyData();
         }
 
         private void OnEnable()
