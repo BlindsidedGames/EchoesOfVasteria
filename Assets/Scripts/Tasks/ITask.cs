@@ -43,5 +43,21 @@ namespace TimelessEchoes.Tasks
         ///     Called by the HeroController when the task is interrupted (e.g., by combat).
         /// </summary>
         void OnInterrupt(HeroController hero);
+
+        /// <summary>
+        ///     Attempt to claim this task for the specified hero.
+        /// </summary>
+        /// <returns>True if the claim succeeded.</returns>
+        bool Claim(HeroController hero);
+
+        /// <summary>
+        ///     Release a claim held by the specified hero.
+        /// </summary>
+        void ReleaseClaim(HeroController hero);
+
+        /// <summary>
+        ///     The hero currently claiming this task, or null if unclaimed.
+        /// </summary>
+        HeroController ClaimedBy { get; }
     }
 }
