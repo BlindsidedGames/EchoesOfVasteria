@@ -78,6 +78,9 @@ namespace TimelessEchoes.Enemies
             if (target == null) return;
             var hp = target.GetComponent<IHasHealth>();
             var dmg = target.GetComponent<IDamageable>();
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
+
             if (hp != null && dmg != null && hp.CurrentHealth > 0f)
             {
                 var amount = hp.CurrentHealth;
@@ -87,8 +90,6 @@ namespace TimelessEchoes.Enemies
                 dmg.TakeDamage(amount);
                 if (fromHero)
                 {
-                    var tracker = GameplayStatTracker.Instance ??
-                                  FindFirstObjectByType<GameplayStatTracker>();
                     tracker?.AddDamageDealt(amount);
                     var buff = BuffManager.Instance ??
                                FindFirstObjectByType<BuffManager>();
@@ -103,6 +104,8 @@ namespace TimelessEchoes.Enemies
                     }
                 }
             }
+
+            tracker?.AddTimesReaped();
 
             onKill?.Invoke();
             target = null;

@@ -38,6 +38,8 @@ namespace TimelessEchoes.Stats
 
         public float DamageTaken { get; private set; }
 
+        public int TimesReaped { get; private set; }
+
         public double TotalResourcesGathered { get; private set; }
 
         public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
@@ -109,6 +111,7 @@ namespace TimelessEchoes.Stats
             g.Deaths = Deaths;
             g.DamageDealt = DamageDealt;
             g.DamageTaken = DamageTaken;
+            g.TimesReaped = TimesReaped;
             g.TotalResourcesGathered = TotalResourcesGathered;
             g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
             g.LongestRun = LongestRun;
@@ -140,6 +143,7 @@ namespace TimelessEchoes.Stats
             Deaths = g.Deaths;
             DamageDealt = g.DamageDealt;
             DamageTaken = g.DamageTaken;
+            TimesReaped = g.TimesReaped;
             TotalResourcesGathered = g.TotalResourcesGathered;
             recentRuns.Clear();
             if (g.RecentRuns != null)
@@ -231,6 +235,11 @@ namespace TimelessEchoes.Stats
                 DamageTaken += amount;
                 currentRunDamageTaken += amount;
             }
+        }
+
+        public void AddTimesReaped()
+        {
+            TimesReaped++;
         }
 
         public void AddResources(double amount, bool bonus = false)
