@@ -38,7 +38,7 @@ namespace TimelessEchoes.Hero
                 echoHero.AllowAttacks = combat;
 
                 var echo = obj.AddComponent<EchoController>();
-                echo.Init(skills, duration, disableSkills);
+                echo.Init(skills, duration, disableSkills, combat);
             }
 
             return echoHero;

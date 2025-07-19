@@ -17,10 +17,17 @@ namespace TimelessEchoes
         /// <summary>
         /// When true, spawned Echoes ignore all task related behaviour.
         /// </summary>
+        [OnValueChanged(nameof(OnDisableSkillsChanged))]
         public bool disableSkills;
         /// <summary>
         /// When true, spawned Echoes can perform combat actions.
         /// </summary>
         public bool combatEnabled = true;
+
+        private void OnDisableSkillsChanged()
+        {
+            if (disableSkills)
+                combatEnabled = true;
+        }
     }
 }

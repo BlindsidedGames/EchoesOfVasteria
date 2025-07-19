@@ -215,11 +215,7 @@ namespace TimelessEchoes.Buffs
                 int needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
                 for (int i = 0; i < needed; i++)
                 {
-                    var combatSkill = SkillController.Instance?.CombatSkill;
-                    bool combat = recipe.echoSpawnConfig.combatEnabled && combatSkill != null &&
-                                   (recipe.echoSpawnConfig.capableSkills == null ||
-                                    recipe.echoSpawnConfig.capableSkills.Count == 0 ||
-                                    recipe.echoSpawnConfig.capableSkills.Contains(combatSkill));
+                    bool combat = recipe.echoSpawnConfig.combatEnabled;
                     bool disable = recipe.echoSpawnConfig.disableSkills;
                     var c = SpawnEcho(combat, disable);
                     if (c != null)
