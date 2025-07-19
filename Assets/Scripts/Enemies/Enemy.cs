@@ -372,7 +372,7 @@ namespace TimelessEchoes.Enemies
 
         private void HandleAllyEngaged(Enemy other)
         {
-            if (other != this && other != null && hero != null)
+            if (other != this && other != null && hero != null && other.IsEngaged)
             {
                 var dist = Vector2.Distance(transform.position, other.transform.position);
                 if (dist <= stats.assistRange)
