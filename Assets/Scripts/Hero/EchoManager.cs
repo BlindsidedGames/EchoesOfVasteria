@@ -27,10 +27,12 @@ namespace TimelessEchoes.Hero
                     r.color = c;
                 }
 
+                // Echoes share the primary hero's health. Keep the existing
+                // HeroHealth component so required dependencies remain intact
+                // but flag it as an echo so damage is redirected.
                 var hp = echoHero.GetComponent<HeroHealth>();
                 if (hp != null)
-                    Object.Destroy(hp);
-                echoHero.gameObject.AddComponent<EchoHealthProxy>();
+                    hp.Immortal = false; // ensure damage can be forwarded
 
                 echoHero.AllowAttacks = combat;
 
