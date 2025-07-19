@@ -66,6 +66,12 @@ namespace TimelessEchoes.Hero
         public override void TakeDamage(float amount, float bonusDamage = 0f)
         {
             if (Immortal) return;
+            controller = controller != null ? controller : GetComponent<HeroController>();
+            if (controller != null && controller.IsEcho && Instance != null && Instance != this)
+            {
+                Instance.TakeDamage(amount, bonusDamage);
+                return;
+            }
             base.TakeDamage(amount, bonusDamage);
         }
     }

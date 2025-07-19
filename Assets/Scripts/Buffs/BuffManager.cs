@@ -24,7 +24,7 @@ namespace TimelessEchoes.Buffs
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
 
-        private HeroController SpawnEcho()
+        private HeroController SpawnEcho(bool combat)
         {
             var hero = Hero.HeroController.Instance;
             if (hero == null)
@@ -45,10 +45,9 @@ namespace TimelessEchoes.Buffs
 
                 var hp = echo.GetComponent<Hero.HeroHealth>();
                 if (hp != null)
-                {
-                    hp.Immortal = true;
-                    hp.Init((int)hp.MaxHealth);
-                }
+                    Object.Destroy(hp);
+                echo.gameObject.AddComponent<Hero.EchoHealthProxy>();
+                echo.AllowAttacks = combat;
             }
 
             return echo;
@@ -206,7 +205,7 @@ namespace TimelessEchoes.Buffs
                 int needed = recipe.echoCount - buff.echoes.Count;
                 for (int i = 0; i < needed; i++)
                 {
-                    var c = SpawnEcho();
+                    var c = SpawnEcho(recipe.combatEnabled);
                     if (c != null)
                         buff.echoes.Add(c);
                 }

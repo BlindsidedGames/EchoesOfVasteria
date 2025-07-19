@@ -171,7 +171,7 @@ namespace TimelessEchoes.Hero
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
-                health.Init(hp);
+                health?.Init(hp);
             }
         }
 
@@ -227,7 +227,7 @@ namespace TimelessEchoes.Hero
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
-                health.Init(hp);
+                health?.Init(hp);
             }
 
             // Hero no longer relocates to a task controller entry point
@@ -289,8 +289,8 @@ namespace TimelessEchoes.Hero
                     if (newMax > 0 && Mathf.Abs(newMax - oldMax) > 0.01f)
                     {
                         var newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
-                        health.Init(newMax);
-                        if (newCurrent < newMax)
+                        health?.Init(newMax);
+                        if (newCurrent < newMax && health != null)
                             health.TakeDamage(newMax - newCurrent);
                     }
                 }

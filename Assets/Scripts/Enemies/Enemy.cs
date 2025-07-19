@@ -3,6 +3,8 @@ using Pathfinding.RVO;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Hero;
 using System.Collections.Generic;
 using static TimelessEchoes.TELogger;
 
@@ -206,6 +208,16 @@ namespace TimelessEchoes.Enemies
 
             TELogger.Log($"Enemy {name} died", TELogCategory.Combat, this);
 
+            var skillController = TimelessEchoes.Skills.SkillController.Instance;
+            int mult = 1;
+            float gainMult = 1f;
+            var combatSkill = skillController != null ? skillController.CombatSkill : null;
+            if (skillController != null && combatSkill != null)
+            {
+                mult = skillController.GetEffectMultiplier(combatSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                gainMult = skillController.GetResourceGainMultiplier();
+            }
+
             foreach (var drop in resourceDrops)
             {
                 if (drop.resource == null) continue;
@@ -219,8 +231,9 @@ namespace TimelessEchoes.Enemies
                 int count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
                 if (count > 0)
                 {
-                    resourceManager.Add(drop.resource, count);
-                    TELogger.Log($"Dropped {count} {drop.resource.name}", TELogCategory.Resource, this);
+                    double final = count * mult * gainMult;
+                    resourceManager.Add(drop.resource, final);
+                    TELogger.Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
                 }
             }
 
@@ -254,7 +267,23 @@ namespace TimelessEchoes.Enemies
                 return;
             }
             if (skill != null)
+            {
                 controller?.AddExperience(skill, stats.experience);
+                var progress = controller?.GetProgress(skill);
+                if (progress != null)
+                {
+                    foreach (var id in progress.Milestones)
+                    {
+                        var ms = skill.milestones.Find(m => m.bonusID == id);
+                        if (ms != null && ms.type == TimelessEchoes.Skills.MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
+                        {
+                            var target = ms.targetSkill != null ? ms.targetSkill : skill;
+                            bool combat = controller.CombatSkill == target;
+                            TimelessEchoes.Hero.EchoManager.SpawnEcho(target, ms.echoDuration, combat);
+                        }
+                    }
+                }
+            }
         }
 
         private void OnDestroy()
