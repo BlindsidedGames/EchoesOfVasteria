@@ -133,22 +133,46 @@ namespace TimelessEchoes.Enemies
             if (stats == null)
                 return;
 
-            bool heroInVision = false;
-            float heroDistance = float.PositiveInfinity;
+            Transform chosen = null;
+            float bestDist = float.PositiveInfinity;
+
+            // check hero
             if (hero != null && hero.gameObject.activeInHierarchy)
             {
-                heroDistance = Vector2.Distance(transform.position, hero.position);
-                if (heroDistance <= stats.visionRange)
+                var heroCtrl = hero.GetComponent<HeroController>();
+                if (heroCtrl == null || heroCtrl.AllowAttacks)
                 {
-                    heroInVision = true;
-                    setter.target = hero;
-                    OnEngage?.Invoke(this);
+                    float dist = Vector2.Distance(transform.position, hero.position);
+                    if (dist <= stats.visionRange && dist < bestDist)
+                    {
+                        chosen = hero;
+                        bestDist = dist;
+                    }
                 }
             }
 
-            if (heroInVision)
+            // check combat-enabled echoes
+            foreach (var echo in EchoController.CombatEchoes)
             {
-                if (heroDistance <= stats.attackRange && Time.time >= nextAttack)
+                if (echo == null || !echo.isActiveAndEnabled)
+                    continue;
+                var ecHero = echo.GetComponent<HeroController>();
+                if (ecHero == null || !ecHero.AllowAttacks)
+                    continue;
+                float dist = Vector2.Distance(transform.position, echo.transform.position);
+                if (dist <= stats.visionRange && dist < bestDist)
+                {
+                    chosen = echo.transform;
+                    bestDist = dist;
+                }
+            }
+
+            if (chosen != null)
+            {
+                setter.target = chosen;
+                OnEngage?.Invoke(this);
+
+                if (bestDist <= stats.attackRange && Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     animator.Play("Attack");
@@ -157,7 +181,7 @@ namespace TimelessEchoes.Enemies
             }
             else
             {
-                if (setter.target == hero)
+                if (setter.target != wanderTarget)
                     setter.target = wanderTarget;
                 Wander();
             }

@@ -69,7 +69,7 @@ namespace TimelessEchoes.Hero
             controller = controller != null ? controller : GetComponent<HeroController>();
             if (controller != null && controller.IsEcho && Instance != null && Instance != this)
             {
-                Instance.TakeDamage(amount, bonusDamage);
+                Instance.TakeDamage(amount * 0.5f, bonusDamage);
                 return;
             }
             base.TakeDamage(amount, bonusDamage);
