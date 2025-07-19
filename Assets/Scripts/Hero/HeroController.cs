@@ -416,8 +416,11 @@ namespace TimelessEchoes.Hero
                 }
             }
 
-            var nearest = currentEnemy != null ? currentEnemy : FindNearestEnemy();
-            if (nearest != null)
+            var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
+            if (allowAttacks && nearest == null)
+                nearest = FindNearestEnemy();
+
+            if (allowAttacks && nearest != null)
             {
                 if (currentEnemy != nearest)
                 {
@@ -566,6 +569,9 @@ namespace TimelessEchoes.Hero
         private void OnEnemyEngage(Enemy enemy)
         {
             if (enemy == null)
+                return;
+
+            if (!allowAttacks)
                 return;
 
             if (currentEnemy != null && currentEnemy != enemy.transform)

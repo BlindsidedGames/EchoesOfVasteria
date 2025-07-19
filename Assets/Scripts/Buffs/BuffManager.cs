@@ -43,10 +43,12 @@ namespace TimelessEchoes.Buffs
                     r.color = c;
                 }
 
+                // Keep the HeroHealth component so other scripts requiring it
+                // remain functional. Damage will automatically be forwarded to
+                // the main hero when this component belongs to an echo.
                 var hp = echo.GetComponent<Hero.HeroHealth>();
                 if (hp != null)
-                    Object.Destroy(hp);
-                echo.gameObject.AddComponent<Hero.EchoHealthProxy>();
+                    hp.Immortal = false;
                 echo.AllowAttacks = combat;
             }
 
