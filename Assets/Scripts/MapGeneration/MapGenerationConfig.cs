@@ -55,11 +55,11 @@ namespace TimelessEchoes.MapGeneration
 
             public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
 
-            public ProceduralTaskGenerator.WeightedTaskCategory woodcutting = new();
-            public ProceduralTaskGenerator.WeightedTaskCategory mining = new();
-            public ProceduralTaskGenerator.WeightedTaskCategory farming = new();
-            public ProceduralTaskGenerator.WeightedTaskCategory fishing = new();
-            public ProceduralTaskGenerator.WeightedTaskCategory looting = new();
+            [Header("Woodcutting")] public ProceduralTaskGenerator.WeightedTaskCategory woodcutting = new();
+            [Header("Mining")] public ProceduralTaskGenerator.WeightedTaskCategory mining = new();
+            [Header("Farming")] public ProceduralTaskGenerator.WeightedTaskCategory farming = new();
+            [Header("Fishing")] public ProceduralTaskGenerator.WeightedTaskCategory fishing = new();
+            [Header("Looting")] public ProceduralTaskGenerator.WeightedTaskCategory looting = new();
 
             public List<NpcSpawnEntry> npcTasks = new();
 
@@ -73,7 +73,7 @@ namespace TimelessEchoes.MapGeneration
                 [Required] public GameObject prefab;
                 public string id;
                 public float localX;
-                [MinValue(0)] public int topBuffer = 0;
+                [MinValue(0)] public int topBuffer;
                 public bool spawnOnWater;
                 public bool spawnOnSand;
                 public bool spawnOnGrass = true;
@@ -102,7 +102,7 @@ namespace TimelessEchoes.MapGeneration
             {
                 if (decor == null) return;
                 foreach (var entry in decor) entry.UpdateName();
-                TELogger.Log("Decor entry names updated for search.", TELogCategory.Map);
+                Log("Decor entry names updated for search.", TELogCategory.Map);
             }
 
             [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", ShowFoldout = false)]
