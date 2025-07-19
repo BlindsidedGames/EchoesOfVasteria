@@ -1,5 +1,6 @@
 using UnityEngine;
 using TimelessEchoes.Skills;
+using System.Collections.Generic;
 
 namespace TimelessEchoes.Hero
 {
@@ -8,7 +9,7 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(Skill skill, float duration, bool combat)
+        public static HeroController SpawnEcho(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool combat)
         {
             var hero = HeroController.Instance;
             if (hero == null)
@@ -37,10 +38,15 @@ namespace TimelessEchoes.Hero
                 echoHero.AllowAttacks = combat;
 
                 var echo = obj.AddComponent<EchoController>();
-                echo.Init(skill, duration);
+                echo.Init(skills, duration);
             }
 
             return echoHero;
+        }
+
+        public static HeroController SpawnEcho(Skill skill, float duration, bool combat)
+        {
+            return SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, duration, combat);
         }
     }
 }

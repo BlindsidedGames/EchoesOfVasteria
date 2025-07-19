@@ -4,6 +4,7 @@ using UnityEngine;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Skills;
+using System.Collections.Generic;
 using TimelessEchoes.Hero;
 using System.Collections.Generic;
 using static TimelessEchoes.TELogger;
@@ -277,9 +278,17 @@ namespace TimelessEchoes.Enemies
                         var ms = skill.milestones.Find(m => m.bonusID == id);
                         if (ms != null && ms.type == TimelessEchoes.Skills.MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
                         {
-                            var target = ms.targetSkill != null ? ms.targetSkill : skill;
-                            bool combat = controller.CombatSkill == target;
-                            TimelessEchoes.Hero.EchoManager.SpawnEcho(target, ms.echoDuration, combat);
+                            var config = ms.echoSpawnConfig;
+                            int count = config != null ? Mathf.Max(1, config.echoCount) : 1;
+                            var skills = config != null && config.capableSkills != null && config.capableSkills.Count > 0
+                                ? config.capableSkills
+                                : new System.Collections.Generic.List<Skill> { skill };
+                            for (int c = 0; c < count; c++)
+                            {
+                                var target = skills[Mathf.Min(c, skills.Count - 1)];
+                                bool combat = controller.CombatSkill == target;
+                                TimelessEchoes.Hero.EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { target }, ms.echoDuration, combat);
+                            }
                         }
                     }
                 }
