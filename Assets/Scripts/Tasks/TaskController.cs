@@ -275,6 +275,12 @@ namespace TimelessEchoes.Tasks
 
         public void SelectEarliestTask(HeroController targetHero)
         {
+            Skill filter = targetHero != null ? targetHero.GetComponent<TimelessEchoes.Hero.EchoController>()?.targetSkill : null;
+            SelectEarliestTask(targetHero, filter);
+        }
+
+        public void SelectEarliestTask(HeroController targetHero, Skill requiredSkill)
+        {
             if (targetHero == null)
             {
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
@@ -290,6 +296,8 @@ namespace TimelessEchoes.Tasks
                 if (task is BaseTask baseTask)
                 {
                     if (baseTask.ClaimedBy != null && baseTask.ClaimedBy != targetHero)
+                        continue;
+                    if (requiredSkill != null && baseTask.associatedSkill != requiredSkill)
                         continue;
                 }
 

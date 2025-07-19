@@ -111,6 +111,24 @@ namespace TimelessEchoes.Tasks
 
             controller?.AddExperience(associatedSkill, amount);
             lastGrantedXp = amount;
+
+            if (controller != null && associatedSkill != null)
+            {
+                var progress = controller.GetProgress(associatedSkill);
+                if (progress != null)
+                {
+                    foreach (var id in progress.Milestones)
+                    {
+                        var ms = associatedSkill.milestones.Find(m => m.bonusID == id);
+                        if (ms != null && ms.type == MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
+                        {
+                            var skill = ms.targetSkill != null ? ms.targetSkill : associatedSkill;
+                            EchoManager.SpawnEcho(ms.echoPrefab, skill, ms.echoDuration);
+                        }
+                    }
+                }
+            }
+
             return amount;
         }
     }}

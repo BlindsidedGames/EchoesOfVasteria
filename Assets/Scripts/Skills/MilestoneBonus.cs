@@ -10,7 +10,8 @@ namespace TimelessEchoes.Skills
         InstantKill,
         DoubleResources,
         DoubleXP,
-        StatIncrease
+        StatIncrease,
+        SpawnEcho
     }
 
     [Serializable]
@@ -21,6 +22,14 @@ namespace TimelessEchoes.Skills
         public string bonusID;
 
         public MilestoneType type;
+
+        [ShowIf("type", MilestoneType.SpawnEcho)]
+        public GameObject echoPrefab;
+        [ShowIf("type", MilestoneType.SpawnEcho)]
+        public Skill targetSkill;
+        [ShowIf("type", MilestoneType.SpawnEcho)]
+        [Min(0f)]
+        public float echoDuration = 10f;
 
         [Range(0f, 1f)]
         [HideIf("type", MilestoneType.StatIncrease)]
@@ -62,6 +71,8 @@ namespace TimelessEchoes.Skills
                     if (statAmount != 0f)
                         amountText = percentBonus ? $" by {statAmount * 100f:0.#}%" : $" by {statAmount:0.#}";
                     return $"Increases {statName}{amountText}.";
+                case MilestoneType.SpawnEcho:
+                    return $"Provides a {chance * 100f:0.#}% chance to summon an Echo that performs {targetSkill?.skillName ?? skillName} tasks for {echoDuration:0.#} seconds.";
                 default:
                     return string.Empty;
             }

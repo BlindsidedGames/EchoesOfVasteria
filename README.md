@@ -31,6 +31,10 @@ If an enemy enters the hero's vision range the hero automatically engages in
 combat using projectile attacks. Combat strength and movement speed are
 modified by stat upgrades.
 
+## Echoes
+Clones spawned by milestones are referred to as **Echoes**. An Echo performs
+tasks of a specified skill for a limited time when summoned.
+
 ## Tasks
 Task scripts can be found under `Assets/Scripts/Tasks`. A `TaskController`
 builds the task list from assigned objects or from a `ProceduralTaskGenerator`.
