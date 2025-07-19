@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Stats;
 using Unity.Cinemachine;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
@@ -20,9 +22,11 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private AstarPath astarPath;
 
         [SerializeField] public HeroController hero;
+
         [SerializeField] public float maxBacktrackDistance = -1f;
+
         // Positive values give tasks located behind the hero a priority bonus
-        [SerializeField] public float backtrackingAdditionalWeight = 0f;
+        [SerializeField] public float backtrackingAdditionalWeight;
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -89,7 +93,7 @@ namespace TimelessEchoes.Tasks
         }
 
         /// <summary>
-        /// Add a task object during runtime and register its task.
+        ///     Add a task object during runtime and register its task.
         /// </summary>
         public void AddRuntimeTaskObject(MonoBehaviour obj)
         {
@@ -133,7 +137,7 @@ namespace TimelessEchoes.Tasks
         }
 
         /// <summary>
-        /// Remove a task object and any tasks associated with it.
+        ///     Remove a task object and any tasks associated with it.
         /// </summary>
         public void RemoveTaskObject(MonoBehaviour obj)
         {
@@ -142,10 +146,8 @@ namespace TimelessEchoes.Tasks
 
             var toRemove = new List<ITask>();
             foreach (var pair in taskMap)
-            {
                 if (pair.Value == obj)
                     toRemove.Add(pair.Key);
-            }
 
             foreach (var task in toRemove)
                 RemoveTask(task);
@@ -198,6 +200,7 @@ namespace TimelessEchoes.Tasks
                     taskMap[compTask] = obj;
                 }
             }
+
             SortTaskListsByProximity();
 
             hero?.SetTask(null);
@@ -275,7 +278,7 @@ namespace TimelessEchoes.Tasks
 
         public void SelectEarliestTask(HeroController targetHero)
         {
-            Skill filter = targetHero != null ? targetHero.GetComponent<TimelessEchoes.Hero.EchoController>()?.targetSkill : null;
+            var filter = targetHero != null ? targetHero.GetComponent<EchoController>()?.targetSkill : null;
             SelectEarliestTask(targetHero, filter);
         }
 
@@ -286,6 +289,7 @@ namespace TimelessEchoes.Tasks
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
                 return;
             }
+
             RemoveCompletedTasks();
             for (var i = 0; i < tasks.Count; i++)
             {
@@ -311,7 +315,7 @@ namespace TimelessEchoes.Tasks
 
                 targetHero.SetTask(task);
 
-                bool restart = false;
+                var restart = false;
                 if (task is BaseTask btask && btask.taskData != null)
                     restart = btask.taskData.resetProgressOnInterrupt;
 
@@ -326,6 +330,7 @@ namespace TimelessEchoes.Tasks
                 {
                     Log($"Resuming task: {currentTaskName}", TELogCategory.Task, this);
                 }
+
                 return;
             }
 
@@ -354,12 +359,13 @@ namespace TimelessEchoes.Tasks
             if (task is BaseTask bt)
                 bt.ClearClaim();
 
-            float duration = 0f;
+            var duration = 0f;
             if (taskStartTimes.TryGetValue(task, out var start))
             {
                 duration = Time.time - start;
                 taskStartTimes.Remove(task);
             }
+
             if (taskMap.TryGetValue(task, out var obj))
             {
                 taskObjects.Remove(obj);
@@ -390,10 +396,10 @@ namespace TimelessEchoes.Tasks
 
             if (task != null && task.IsComplete())
             {
-                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-                              FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-                TaskData data = (task as BaseTask)?.taskData;
-                float xp = (task as BaseTask)?.LastGrantedXp ?? 0f;
+                var tracker = GameplayStatTracker.Instance ??
+                              FindFirstObjectByType<GameplayStatTracker>();
+                var data = (task as BaseTask)?.taskData;
+                var xp = (task as BaseTask)?.LastGrantedXp ?? 0f;
                 tracker?.RegisterTaskComplete(data, duration, xp);
             }
 
@@ -409,7 +415,7 @@ namespace TimelessEchoes.Tasks
             foreach (var task in tasks)
             {
                 taskMap.TryGetValue(task, out var obj);
-                Vector3 pos = Vector3.zero;
+                var pos = Vector3.zero;
                 if (obj != null)
                     pos = obj.transform.position;
                 else if (task != null && task.Target != null)
@@ -422,21 +428,21 @@ namespace TimelessEchoes.Tasks
             taskObjects.Clear();
             taskMap.Clear();
 
-            Vector3 currentPos = hero != null ? hero.transform.position : Vector3.zero;
+            var currentPos = hero != null ? hero.transform.position : Vector3.zero;
 
             while (pairs.Count > 0)
             {
-                int bestIndex = -1;
-                float bestDist = float.PositiveInfinity;
+                var bestIndex = -1;
+                var bestDist = float.PositiveInfinity;
 
-                for (int i = 0; i < pairs.Count; i++)
+                for (var i = 0; i < pairs.Count; i++)
                 {
                     var (p, _, _) = pairs[i];
-                    float deltaX = currentPos.x - p.x;
+                    var deltaX = currentPos.x - p.x;
                     if (maxBacktrackDistance >= 0f && deltaX > maxBacktrackDistance)
                         continue;
 
-                    float d = Vector3.Distance(currentPos, p);
+                    var d = Vector3.Distance(currentPos, p);
                     if (deltaX > 0f && backtrackingAdditionalWeight > 0f)
                         d -= deltaX * backtrackingAdditionalWeight;
                     if (d < bestDist)
@@ -447,12 +453,11 @@ namespace TimelessEchoes.Tasks
                 }
 
                 if (bestIndex == -1)
-                {
-                    for (int i = 0; i < pairs.Count; i++)
+                    for (var i = 0; i < pairs.Count; i++)
                     {
                         var (p, _, _) = pairs[i];
-                        float deltaX = currentPos.x - p.x;
-                        float d = Vector3.Distance(currentPos, p);
+                        var deltaX = currentPos.x - p.x;
+                        var d = Vector3.Distance(currentPos, p);
                         if (deltaX > 0f && backtrackingAdditionalWeight > 0f)
                             d -= deltaX * backtrackingAdditionalWeight;
                         if (d < bestDist)
@@ -461,7 +466,6 @@ namespace TimelessEchoes.Tasks
                             bestIndex = i;
                         }
                     }
-                }
 
                 var (pos, obj, task) = pairs[bestIndex];
                 pairs.RemoveAt(bestIndex);
