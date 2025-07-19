@@ -68,7 +68,7 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "Generation")] [SerializeField]
         [HideInInspector]
-        private List<WeightedTaskSpawn> tasks = new();
+        private List<WeightedTaskCategory> taskCategories = new();
 
         [TabGroup("Settings", "Generation")] [SerializeField]
         [HideInInspector]
@@ -145,12 +145,14 @@ namespace TimelessEchoes.Tasks
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
             enemies = config.taskGeneratorSettings.enemies;
 
-            tasks = new List<WeightedTaskSpawn>();
-            tasks.AddRange(config.taskGeneratorSettings.woodcuttingTasks);
-            tasks.AddRange(config.taskGeneratorSettings.miningTasks);
-            tasks.AddRange(config.taskGeneratorSettings.farmingTasks);
-            tasks.AddRange(config.taskGeneratorSettings.fishingTasks);
-            tasks.AddRange(config.taskGeneratorSettings.lootingTasks);
+            taskCategories = new List<WeightedTaskCategory>
+            {
+                config.taskGeneratorSettings.woodcutting,
+                config.taskGeneratorSettings.mining,
+                config.taskGeneratorSettings.farming,
+                config.taskGeneratorSettings.fishing,
+                config.taskGeneratorSettings.looting
+            };
 
             npcTasks = config.taskGeneratorSettings.npcTasks;
             minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
@@ -725,10 +727,11 @@ namespace TimelessEchoes.Tasks
             return permitted;
         }
 
-        private (WeightedTaskSpawn entry, bool isWaterTask, bool isGrassTask, bool isSandTask) PickTaskEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
+        private (WeightedTaskSpawn entry, bool isWaterTask, bool isGrassTask, bool isSandTask) PickTaskFromCategory(
+            WeightedTaskCategory category, float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
         {
             var taskTotalWeight = 0f;
-            foreach (var t in tasks)
+            foreach (var t in category.tasks)
             {
                 if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
                     continue;
@@ -747,7 +750,7 @@ namespace TimelessEchoes.Tasks
                 return (null, false, false, false);
 
             var r = Random.value * taskTotalWeight;
-            foreach (var t in tasks)
+            foreach (var t in category.tasks)
             {
                 if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
                     continue;
@@ -768,6 +771,33 @@ namespace TimelessEchoes.Tasks
             }
 
             return (null, false, false, false);
+        }
+
+        private (WeightedTaskSpawn entry, bool isWaterTask, bool isGrassTask, bool isSandTask) PickTaskEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
+        {
+            var categoryTotalWeight = 0f;
+            foreach (var c in taskCategories)
+                categoryTotalWeight += Mathf.Max(0f, c.weight);
+
+            if (categoryTotalWeight <= 0f)
+                return (null, false, false, false);
+
+            var rCat = Random.value * categoryTotalWeight;
+            WeightedTaskCategory chosen = null;
+            foreach (var c in taskCategories)
+            {
+                rCat -= Mathf.Max(0f, c.weight);
+                if (rCat <= 0f)
+                {
+                    chosen = c;
+                    break;
+                }
+            }
+
+            if (chosen == null)
+                return (null, false, false, false);
+
+            return PickTaskFromCategory(chosen, worldX, allowWaterTasks, allowGrassTasks, allowSandTasks);
         }
 
         private WeightedSpawn PickEnemyEntry(float worldX, bool allowWater, bool allowGrass, bool allowSand)
@@ -807,24 +837,11 @@ namespace TimelessEchoes.Tasks
             foreach (var e in enemies)
                 enemyTotalWeight += e.GetWeight(worldX);
 
-            var taskTotalWeight = 0f;
-            foreach (var t in tasks)
-            {
-                if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
-                    continue;
-                if (t.prefab != null && t.prefab is FarmingTask &&
-                    !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                    continue;
-                if (t.prefab != null)
-                {
-                    var data = t.prefab.taskData;
-                    if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
-                        continue;
-                }
-                taskTotalWeight += t.GetWeight(worldX);
-            }
+            var categoryWeight = 0f;
+            foreach (var c in taskCategories)
+                categoryWeight += Mathf.Max(0f, c.weight);
 
-            var totalWeight = enemyTotalWeight + taskTotalWeight;
+            var totalWeight = enemyTotalWeight + categoryWeight;
             if (totalWeight <= 0f)
                 return (null, false, false, false, false);
 
@@ -841,25 +858,24 @@ namespace TimelessEchoes.Tasks
             else
             {
                 r -= enemyTotalWeight;
-                foreach (var t in tasks)
+                var rCat = r;
+                WeightedTaskCategory chosen = null;
+                foreach (var c in taskCategories)
                 {
-                    if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
-                        continue;
-                    if (t.prefab != null && t.prefab is FarmingTask &&
-                        !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                        continue;
-                    if (t.prefab != null)
+                    rCat -= Mathf.Max(0f, c.weight);
+                    if (rCat <= 0f)
                     {
-                        var data = t.prefab.taskData;
-                        if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
-                            continue;
+                        chosen = c;
+                        break;
                     }
-                    r -= t.GetWeight(worldX);
-                    if (r > 0f) continue;
-                    var isWater = t.spawnOnWater && allowWaterTasks;
-                    var isSand = !isWater && t.spawnOnSand && allowSandTasks;
-                    var isGrass = !isWater && !isSand && t.spawnOnGrass && allowGrassTasks;
-                    return (t, false, isWater, isGrass, isSand);
+                }
+
+                if (chosen != null)
+                {
+                    var (entry, isWater, isGrass, isSand) =
+                        PickTaskFromCategory(chosen, worldX, allowWaterTasks, allowGrassTasks, allowSandTasks);
+                    if (entry != null)
+                        return (entry, false, isWater, isGrass, isSand);
                 }
             }
 
@@ -929,6 +945,15 @@ namespace TimelessEchoes.Tasks
                     return 0f;
                 return Mathf.Max(0f, weight);
             }
+        }
+
+        [Serializable]
+        [InlineProperty]
+        [HideLabel]
+        public class WeightedTaskCategory
+        {
+            public float weight = 1f;
+            public List<WeightedTaskSpawn> tasks = new();
         }
     }
 }
