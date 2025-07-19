@@ -133,9 +133,8 @@ namespace TimelessEchoes.Tasks
                             bool disable = config != null && config.disableSkills;
                             for (int c = 0; c < count; c++)
                             {
-                                var skill = skills[Mathf.Min(c, skills.Count - 1)];
                                 bool combat = config != null && config.combatEnabled;
-                                EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, ms.echoDuration, combat, disable);
+                                EchoManager.SpawnEcho(skills, ms.echoDuration, combat, disable);
                             }
                         }
                     }
