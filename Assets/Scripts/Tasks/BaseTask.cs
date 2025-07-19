@@ -98,7 +98,7 @@ namespace TimelessEchoes.Tasks
         protected float GrantCompletionXP()
         {
             lastGrantedXp = 0f;
-            if (claimedBy != null && claimedBy.IsClone)
+            if (claimedBy != null && claimedBy.IsEcho)
                 return 0f;
             if (associatedSkill == null || taskData == null || taskData.xpForCompletion <= 0f)
                 return 0f;

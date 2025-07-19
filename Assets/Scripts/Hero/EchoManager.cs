@@ -14,11 +14,11 @@ namespace TimelessEchoes.Hero
             if (hero == null)
                 return null;
 
-            HeroController.PrepareForClone();
+            HeroController.PrepareForEcho();
             GameObject obj = Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
 
-            var clone = obj.GetComponent<HeroController>();
-            if (clone != null)
+            var echoHero = obj.GetComponent<HeroController>();
+            if (echoHero != null)
             {
                 foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())
                 {
@@ -27,20 +27,20 @@ namespace TimelessEchoes.Hero
                     r.color = c;
                 }
 
-                var hp = clone.GetComponent<HeroHealth>();
+                var hp = echoHero.GetComponent<HeroHealth>();
                 if (hp != null)
                 {
                     hp.Immortal = true;
                     hp.Init((int)hp.MaxHealth);
                 }
 
-                clone.AllowAttacks = false;
+                echoHero.AllowAttacks = false;
 
                 var echo = obj.AddComponent<EchoController>();
                 echo.Init(skill, duration);
             }
 
-            return clone;
+            return echoHero;
         }
     }
 }

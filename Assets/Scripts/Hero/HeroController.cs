@@ -27,14 +27,14 @@ namespace TimelessEchoes.Hero
     public class HeroController : MonoBehaviour
     {
         public static HeroController Instance { get; private set; }
-        private static bool nextIsClone;
+        private static bool nextIsEcho;
 
-        public static void PrepareForClone()
+        public static void PrepareForEcho()
         {
-            nextIsClone = true;
+            nextIsEcho = true;
         }
 
-        [HideInInspector] public bool IsClone;
+        [HideInInspector] public bool IsEcho;
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -130,13 +130,13 @@ namespace TimelessEchoes.Hero
 
         private void Awake()
         {
-            if (nextIsClone)
+            if (nextIsEcho)
             {
-                IsClone = true;
-                nextIsClone = false;
+                IsEcho = true;
+                nextIsEcho = false;
             }
 
-            if (!IsClone)
+            if (!IsEcho)
             {
                 if (Instance != null && Instance != this) Destroy(Instance.gameObject);
                 Instance = this;
@@ -178,7 +178,7 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
-            if (!IsClone)
+            if (!IsEcho)
                 BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
@@ -215,7 +215,7 @@ namespace TimelessEchoes.Hero
                     Log("BuffManager missing", TELogCategory.Buff, this);
             }
 
-            if (!IsClone)
+            if (!IsEcho)
                 buffController?.Resume();
 
             if (mapUI == null)
@@ -243,26 +243,26 @@ namespace TimelessEchoes.Hero
             lastAttack = Time.time - 1f / CurrentAttackRate;
 
             var skillController = SkillController.Instance;
-            if (!IsClone && skillController != null)
+            if (!IsEcho && skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
 
-            if (!IsClone)
+            if (!IsEcho)
                 Enemy.OnEngage += OnEnemyEngage;
         }
 
         private void OnDisable()
         {
-            if (!IsClone)
+            if (!IsEcho)
                 buffController?.Pause();
 
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
             var skillController = SkillController.Instance;
-            if (!IsClone && skillController != null)
+            if (!IsEcho && skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
 
-            if (!IsClone)
+            if (!IsEcho)
                 Enemy.OnEngage -= OnEnemyEngage;
         }
 
@@ -271,7 +271,7 @@ namespace TimelessEchoes.Hero
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
-            if (!IsClone && Instance == this)
+            if (!IsEcho && Instance == this)
                 Instance = null;
         }
 
