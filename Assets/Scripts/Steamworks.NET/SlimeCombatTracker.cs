@@ -58,7 +58,7 @@ namespace TimelessEchoes
 
         private void OnEnemyEngage(Enemy enemy)
         {
-            if (enemy == null || enemy.Stats == null)
+            if (enemy == null || enemy.Stats == null || !enemy.IsEngaged)
                 return;
 
             var name = enemy.Stats.enemyName;

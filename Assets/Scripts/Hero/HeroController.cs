@@ -590,6 +590,9 @@ namespace TimelessEchoes.Hero
             if (!allowAttacks)
                 return;
 
+            if (!enemy.IsEngaged)
+                return;
+
             if (currentEnemy != null && currentEnemy != enemy.transform)
                 return;
 
