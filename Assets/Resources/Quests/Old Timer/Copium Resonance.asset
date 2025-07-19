@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Copium Crystal Whisper
+  m_EditorClassIdentifier:
+  questId: CopiumCrystalDisc
+  questName: Copium Crystal Whisper
+  description: “Listen close—Copium Crystals tell tall tales.” Deliver 200 and we’ll see whether they’re prophecy or plain old puff.”
+  rewardDescription: Gain the Disciple of Copium Crystal
+  npcId: Old Timer
+  requiredQuests:
+    - {fileID: 11400000, guid: f4577769316843a08fa0ce3d14f0f2c9, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
+    amount: 200
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0

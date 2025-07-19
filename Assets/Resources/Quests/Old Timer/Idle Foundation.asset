@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Idle Core Calling
+  m_EditorClassIdentifier:
+  questId: IdleDisc
+  questName: Idle Core Calling
+  description: “Idle ore lies still, but its power never sleeps.” He taps a ticking pocket-watch. “Deliver 2,000 Idle Chunks so I can forge gears that grind even while we dream.”
+  rewardDescription: Gain the Disciple of Idle
+  npcId: Old Timer
+  requiredQuests:
+    - {fileID: 11400000, guid: dd04b53062214f99ab499ed61526f6a4, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}
+    amount: 2000
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
