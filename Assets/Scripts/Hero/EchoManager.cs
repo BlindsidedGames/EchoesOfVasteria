@@ -8,7 +8,7 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(Skill skill, float duration)
+        public static HeroController SpawnEcho(Skill skill, float duration, bool combat)
         {
             var hero = HeroController.Instance;
             if (hero == null)
@@ -29,12 +29,10 @@ namespace TimelessEchoes.Hero
 
                 var hp = echoHero.GetComponent<HeroHealth>();
                 if (hp != null)
-                {
-                    hp.Immortal = true;
-                    hp.Init((int)hp.MaxHealth);
-                }
+                    Object.Destroy(hp);
+                echoHero.gameObject.AddComponent<EchoHealthProxy>();
 
-                echoHero.AllowAttacks = false;
+                echoHero.AllowAttacks = combat;
 
                 var echo = obj.AddComponent<EchoController>();
                 echo.Init(skill, duration);
