@@ -1,22 +1,25 @@
-using UnityEngine;
-using TimelessEchoes.Skills;
 using System.Collections.Generic;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Tasks;
+using UnityEngine;
 
 namespace TimelessEchoes.Hero
 {
     /// <summary>
-    /// Utility for spawning Echo helpers.
+    ///     Utility for spawning Echo helpers.
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool combat, bool disableSkills = false)
+        public static HeroController SpawnEcho(IEnumerable<Skill> skills, float duration, bool combat,
+            bool disableSkills = false)
         {
             var hero = HeroController.Instance;
             if (hero == null)
                 return null;
 
             HeroController.PrepareForEcho();
-            GameObject obj = Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
+            var obj = Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation,
+                hero.transform.parent);
 
             var echoHero = obj.GetComponent<HeroController>();
             if (echoHero != null)
@@ -53,7 +56,7 @@ namespace TimelessEchoes.Hero
 
         public static HeroController SpawnEcho(Skill skill, float duration, bool combat, bool disableSkills = false)
         {
-            return SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, duration, combat, disableSkills);
+            return SpawnEcho(new List<Skill> { skill }, duration, combat, disableSkills);
         }
     }
 }
