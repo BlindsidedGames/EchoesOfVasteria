@@ -9,7 +9,7 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool combat)
+        public static HeroController SpawnEcho(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool combat, bool disableSkills = false)
         {
             var hero = HeroController.Instance;
             if (hero == null)
@@ -38,15 +38,15 @@ namespace TimelessEchoes.Hero
                 echoHero.AllowAttacks = combat;
 
                 var echo = obj.AddComponent<EchoController>();
-                echo.Init(skills, duration);
+                echo.Init(skills, duration, disableSkills);
             }
 
             return echoHero;
         }
 
-        public static HeroController SpawnEcho(Skill skill, float duration, bool combat)
+        public static HeroController SpawnEcho(Skill skill, float duration, bool combat, bool disableSkills = false)
         {
-            return SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, duration, combat);
+            return SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, duration, combat, disableSkills);
         }
     }
 }

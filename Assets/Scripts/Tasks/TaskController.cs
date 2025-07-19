@@ -278,11 +278,22 @@ namespace TimelessEchoes.Tasks
 
         public void SelectEarliestTask(HeroController targetHero)
         {
-            Skill filter = null;
             var echo = targetHero != null ? targetHero.GetComponent<EchoController>() : null;
             if (echo != null && echo.capableSkills != null && echo.capableSkills.Count > 0)
-                filter = echo.capableSkills[0];
-            SelectEarliestTask(targetHero, filter);
+            {
+                if (echo.capableSkills.Count == 1)
+                {
+                    SelectEarliestTask(targetHero, echo.capableSkills[0]);
+                }
+                else
+                {
+                    SelectEarliestTask(targetHero, echo.capableSkills);
+                }
+            }
+            else
+            {
+                SelectEarliestTask(targetHero, (Skill)null);
+            }
         }
 
         public void SelectEarliestTask(HeroController targetHero, Skill requiredSkill)
@@ -305,6 +316,64 @@ namespace TimelessEchoes.Tasks
                     if (baseTask.ClaimedBy != null && baseTask.ClaimedBy != targetHero)
                         continue;
                     if (requiredSkill != null && baseTask.associatedSkill != requiredSkill)
+                        continue;
+                }
+
+                currentIndex = i;
+                currentTaskName = task.GetType().Name;
+                currentTaskObject = null;
+                if (taskMap.TryGetValue(task, out var obj))
+                    currentTaskObject = obj;
+                else if (task is MonoBehaviour mb)
+                    currentTaskObject = mb;
+
+                targetHero.SetTask(task);
+
+                var restart = false;
+                if (task is BaseTask btask && btask.taskData != null)
+                    restart = btask.taskData.resetProgressOnInterrupt;
+
+                if (!taskStartTimes.ContainsKey(task) || restart)
+                {
+                    var msg = taskStartTimes.ContainsKey(task) ? "Restarting" : "Starting";
+                    Log($"{msg} task: {currentTaskName}", TELogCategory.Task, this);
+                    task.StartTask();
+                    taskStartTimes[task] = Time.time;
+                }
+                else
+                {
+                    Log($"Resuming task: {currentTaskName}", TELogCategory.Task, this);
+                }
+
+                return;
+            }
+
+            currentTaskName = "Complete";
+            currentIndex = tasks.Count;
+            Log("All tasks complete", TELogCategory.Task, this);
+            currentTaskObject = null;
+        }
+
+        public void SelectEarliestTask(HeroController targetHero, IList<Skill> allowedSkills)
+        {
+            if (targetHero == null)
+            {
+                Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
+                return;
+            }
+
+            RemoveCompletedTasks();
+            for (var i = 0; i < tasks.Count; i++)
+            {
+                var task = tasks[i];
+                if (task == null || task.IsComplete())
+                    continue;
+
+                if (task is BaseTask baseTask)
+                {
+                    if (baseTask.ClaimedBy != null && baseTask.ClaimedBy != targetHero)
+                        continue;
+                    if (allowedSkills != null && allowedSkills.Count > 0 && !allowedSkills.Contains(baseTask.associatedSkill))
                         continue;
                 }
 
