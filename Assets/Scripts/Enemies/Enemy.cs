@@ -1,13 +1,15 @@
+using System;
+using System.Collections.Generic;
 using Pathfinding;
 using Pathfinding.RVO;
-using UnityEngine;
-using TimelessEchoes.Upgrades;
-using TimelessEchoes.Stats;
-using TimelessEchoes.Skills;
-using System.Collections.Generic;
 using TimelessEchoes.Hero;
-using System.Collections.Generic;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
 using static TimelessEchoes.TELogger;
+using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Enemies
 {
@@ -40,12 +42,12 @@ namespace TimelessEchoes.Enemies
         private float nextWanderTime;
         private LayerMask blockingMask;
 
-        [SerializeField] private TimelessEchoes.Skills.Skill combatSkill;
+        [SerializeField] private Skill combatSkill;
 
         public bool IsEngaged => setter != null && setter.target == hero;
         public EnemyStats Stats => stats;
 
-        public static event System.Action<Enemy> OnEngage;
+        public static event Action<Enemy> OnEngage;
 
         private void Awake()
         {
@@ -54,7 +56,7 @@ namespace TimelessEchoes.Enemies
             health = GetComponent<Health>();
             spawnPos = transform.position;
 
-            var controller = GetComponentInParent<TimelessEchoes.Tasks.TaskController>();
+            var controller = GetComponentInParent<TaskController>();
             if (controller != null)
                 hero = controller.hero != null ? controller.hero.transform : null;
             wanderTarget = new GameObject("WanderTarget").transform;
@@ -70,7 +72,7 @@ namespace TimelessEchoes.Enemies
             startTarget = setter.target;
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             if (health != null)
                 health.OnDeath += OnDeath;
             nextWanderTime = Time.time;
@@ -157,7 +159,7 @@ namespace TimelessEchoes.Enemies
 
             if (setter.target != null && setter.target != wanderTarget)
             {
-                float dist = Vector2.Distance(transform.position, setter.target.position);
+                var dist = Vector2.Distance(transform.position, setter.target.position);
                 if (dist <= stats.attackRange && Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
@@ -174,7 +176,7 @@ namespace TimelessEchoes.Enemies
         private Transform ChooseTarget()
         {
             Transform chosen = null;
-            float bestDist = float.PositiveInfinity;
+            var bestDist = float.PositiveInfinity;
 
             // check hero
             if (hero != null && hero.gameObject.activeInHierarchy)
@@ -182,7 +184,7 @@ namespace TimelessEchoes.Enemies
                 var heroCtrl = hero.GetComponent<HeroController>();
                 if (heroCtrl == null || heroCtrl.AllowAttacks)
                 {
-                    float dist = Vector2.Distance(transform.position, hero.position);
+                    var dist = Vector2.Distance(transform.position, hero.position);
                     if (dist <= stats.visionRange && dist < bestDist)
                     {
                         chosen = hero;
@@ -199,7 +201,7 @@ namespace TimelessEchoes.Enemies
                 var ecHero = echo.GetComponent<HeroController>();
                 if (ecHero == null || !ecHero.AllowAttacks)
                     continue;
-                float dist = Vector2.Distance(transform.position, echo.transform.position);
+                var dist = Vector2.Distance(transform.position, echo.transform.position);
                 if (dist <= stats.visionRange && dist < bestDist)
                 {
                     chosen = echo.transform;
@@ -218,10 +220,10 @@ namespace TimelessEchoes.Enemies
             if (Time.time < nextWanderTime) return;
 
             const int maxAttempts = 5;
-            Vector2 wander = (Vector2)transform.position;
-            for (int i = 0; i < maxAttempts; i++)
+            var wander = (Vector2)transform.position;
+            for (var i = 0; i < maxAttempts; i++)
             {
-                Vector2 candidate = (Vector2)spawnPos + Random.insideUnitCircle * stats.wanderDistance;
+                var candidate = (Vector2)spawnPos + Random.insideUnitCircle * stats.wanderDistance;
                 if (Physics2D.OverlapCircle(candidate, 0.2f, blockingMask) == null)
                 {
                     wander = candidate;
@@ -241,7 +243,7 @@ namespace TimelessEchoes.Enemies
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(setter.target, stats.damage, false);
+                proj.Init(setter.target, stats.damage);
         }
 
         private void OnDeath()
@@ -250,19 +252,20 @@ namespace TimelessEchoes.Enemies
             {
                 resourceManager = ResourceManager.Instance;
                 if (resourceManager == null)
-                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                    Log("ResourceManager missing", TELogCategory.Resource, this);
             }
+
             if (resourceManager == null) return;
 
-            TELogger.Log($"Enemy {name} died", TELogCategory.Combat, this);
+            Log($"Enemy {name} died", TELogCategory.Combat, this);
 
-            var skillController = TimelessEchoes.Skills.SkillController.Instance;
-            int mult = 1;
-            float gainMult = 1f;
+            var skillController = SkillController.Instance;
+            var mult = 1;
+            var gainMult = 1f;
             var combatSkill = skillController != null ? skillController.CombatSkill : null;
             if (skillController != null && combatSkill != null)
             {
-                mult = skillController.GetEffectMultiplier(combatSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                mult = skillController.GetEffectMultiplier(combatSkill, MilestoneType.DoubleResources);
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
@@ -271,28 +274,28 @@ namespace TimelessEchoes.Enemies
                 if (drop.resource == null) continue;
                 if (Random.value > drop.dropChance) continue;
 
-                int min = drop.dropRange.x;
-                int max = drop.dropRange.y;
+                var min = drop.dropRange.x;
+                var max = drop.dropRange.y;
                 if (max < min) max = min;
-                float t = Random.value;
+                var t = Random.value;
                 t *= t; // bias towards lower values
-                int count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
+                var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
                 if (count > 0)
                 {
                     double final = count * mult * gainMult;
                     resourceManager.Add(drop.resource, final);
-                    TELogger.Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
+                    Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
                 }
             }
 
             var tracker = EnemyKillTracker.Instance;
             if (tracker == null)
-                TELogger.Log("EnemyKillTracker missing", TELogCategory.Combat, this);
+                Log("EnemyKillTracker missing", TELogCategory.Combat, this);
             else
                 tracker.RegisterKill(stats);
-            var statsTracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            var statsTracker = GameplayStatTracker.Instance;
             if (statsTracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.Combat, this);
+                Log("GameplayStatTracker missing", TELogCategory.Combat, this);
             else
                 statsTracker.AddKill(stats);
 
@@ -302,44 +305,45 @@ namespace TimelessEchoes.Enemies
         private void GrantCombatExperience()
         {
             if (stats == null) return;
-            var controller = TimelessEchoes.Skills.SkillController.Instance;
+            var controller = SkillController.Instance;
             var skill = controller != null ? controller.CombatSkill : combatSkill;
             if (controller == null && skill == null)
             {
-                TELogger.Log("Missing SkillController and combat skill", TELogCategory.Combat, this);
+                Log("Missing SkillController and combat skill", TELogCategory.Combat, this);
                 return;
             }
+
             if (controller != null && skill == null)
             {
-                TELogger.Log("Combat skill not set on SkillController", TELogCategory.Combat, this);
+                Log("Combat skill not set on SkillController", TELogCategory.Combat, this);
                 return;
             }
+
             if (skill != null)
             {
                 controller?.AddExperience(skill, stats.experience);
                 var progress = controller?.GetProgress(skill);
                 if (progress != null)
-                {
                     foreach (var id in progress.Milestones)
                     {
                         var ms = skill.milestones.Find(m => m.bonusID == id);
-                        if (ms != null && ms.type == TimelessEchoes.Skills.MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
+                        if (ms != null && ms.type == MilestoneType.SpawnEcho && Random.value <= ms.chance)
                         {
                             var config = ms.echoSpawnConfig;
-                            int count = config != null ? Mathf.Max(1, config.echoCount) : 1;
-                            var skills = config != null && config.capableSkills != null && config.capableSkills.Count > 0
+                            var count = config != null ? Mathf.Max(1, config.echoCount) : 1;
+                            var skills = config != null && config.capableSkills != null &&
+                                         config.capableSkills.Count > 0
                                 ? config.capableSkills
-                                : new System.Collections.Generic.List<Skill> { skill };
-                            bool disable = config != null && config.disableSkills;
-                            for (int c = 0; c < count; c++)
+                                : new List<Skill> { skill };
+                            var disable = config != null && config.disableSkills;
+                            for (var c = 0; c < count; c++)
                             {
                                 var target = skills[Mathf.Min(c, skills.Count - 1)];
-                                bool combat = config != null && config.combatEnabled;
-                                TimelessEchoes.Hero.EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { target }, ms.echoDuration, combat, disable);
+                                var combat = config != null && config.combatEnabled;
+                                EchoManager.SpawnEcho(new List<Skill> { target }, ms.echoDuration, combat, disable);
                             }
                         }
                     }
-                }
             }
         }
 
@@ -370,7 +374,7 @@ namespace TimelessEchoes.Enemies
         {
             if (other != this && other != null && hero != null)
             {
-                float dist = Vector2.Distance(transform.position, other.transform.position);
+                var dist = Vector2.Distance(transform.position, other.transform.position);
                 if (dist <= stats.assistRange)
                     setter.target = hero;
             }
