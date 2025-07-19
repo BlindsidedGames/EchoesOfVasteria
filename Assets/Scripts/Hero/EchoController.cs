@@ -56,7 +56,10 @@ namespace TimelessEchoes.Hero
 
             if (hero != null)
             {
-                bool combatOnly = combatEnabled && (disableSkills || capableSkills == null || capableSkills.Count == 0);
+                // When skills are not restricted, echoes should still focus on tasks
+                // rather than roaming across the map for combat. Treat an empty
+                // skill list as "all skills" instead of "combat only".
+                bool combatOnly = combatEnabled && disableSkills;
                 hero.UnlimitedAggroRange = combatOnly;
             }
 
