@@ -60,6 +60,9 @@ namespace TimelessEchoes.Hero
                 hero.UnlimitedAggroRange = combatOnly;
             }
 
+            if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
+                CombatEchoes.Add(this);
+
             if (!disableSkills && isActiveAndEnabled && hero != null && taskController != null)
                 AssignTask();
         }
