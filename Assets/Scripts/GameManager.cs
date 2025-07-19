@@ -315,6 +315,7 @@ namespace TimelessEchoes
 
         private void OnHeroDeath()
         {
+            DestroyAllEchoes();
             if (hero != null)
             {
                 var hp = hero.GetComponent<HeroHealth>();
@@ -518,6 +519,18 @@ namespace TimelessEchoes
                 Destroy(currentMap); // safe to destroy AstarPath now
                 currentMap = null;
             }
+        }
+
+        private static void DestroyAllEchoes()
+        {
+#if UNITY_6000_0_OR_NEWER
+            var echoes = FindObjectsByType<EchoController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+#else
+            var echoes = Object.FindObjectsOfType<EchoController>(true);
+#endif
+            foreach (var echo in echoes)
+                if (echo != null)
+                    Object.Destroy(echo.gameObject);
         }
 
         private static bool QuestCompleted(string questId)
