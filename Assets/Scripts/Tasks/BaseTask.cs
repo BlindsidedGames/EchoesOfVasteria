@@ -123,7 +123,7 @@ namespace TimelessEchoes.Tasks
                         if (ms != null && ms.type == MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
                         {
                             var skill = ms.targetSkill != null ? ms.targetSkill : associatedSkill;
-                            EchoManager.SpawnEcho(ms.echoPrefab, skill, ms.echoDuration);
+                            EchoManager.SpawnEcho(skill, ms.echoDuration);
                         }
                     }
                 }

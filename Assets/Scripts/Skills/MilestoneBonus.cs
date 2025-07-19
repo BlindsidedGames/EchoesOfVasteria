@@ -24,8 +24,6 @@ namespace TimelessEchoes.Skills
         public MilestoneType type;
 
         [ShowIf("type", MilestoneType.SpawnEcho)]
-        public GameObject echoPrefab;
-        [ShowIf("type", MilestoneType.SpawnEcho)]
         public Skill targetSkill;
         [ShowIf("type", MilestoneType.SpawnEcho)]
         [Min(0f)]
