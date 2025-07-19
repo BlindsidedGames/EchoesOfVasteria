@@ -463,7 +463,7 @@ MonoBehaviour:
       spawnOnGrass: 1
     fishingTasks:
     - prefab: {fileID: 3960746967130773130, guid: 284d4cb124f640743b6f7735c200b2be, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 0
       maxX: 250
@@ -472,7 +472,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: bd3ac842010daeb4991194a5a44b714e, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 75
       maxX: 500
@@ -481,7 +481,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: e1e855e4d748a394786b664c58282b8a, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 200
       maxX: 1000
@@ -490,7 +490,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: 5f635b890af420449a206cbe6edc4270, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 300
       maxX: 2500
@@ -499,7 +499,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: 678489a49c4bf084c8932e136714e1ba, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 400
       maxX: 10000
@@ -508,7 +508,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: 7ff1c08b462068d49b975ff17747458d, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 500
       maxX: Infinity
@@ -517,7 +517,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: 52e87615f4c3eae4cb189f5dfadcc282, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 1000
       maxX: Infinity
@@ -526,7 +526,7 @@ MonoBehaviour:
       spawnOnSand: 0
       spawnOnGrass: 0
     - prefab: {fileID: 3960746967130773130, guid: 7769dfc1bb67c734cbc2e120d7acf20d, type: 3}
-      weight: 1.5
+      weight: 2
       overrideRange: 0
       minX: 2500
       maxX: Infinity
@@ -536,7 +536,7 @@ MonoBehaviour:
       spawnOnGrass: 0
     lootingTasks:
     - prefab: {fileID: 2897011531704098943, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
-      weight: 0.2
+      weight: 0.15
       overrideRange: 0
       minX: 0
       maxX: Infinity
@@ -545,24 +545,6 @@ MonoBehaviour:
       spawnOnSand: 1
       spawnOnGrass: 1
     - prefab: {fileID: 2897011531704098943, guid: 969d2dbcc138ea349ae9047e64b89152, type: 3}
-      weight: 0.1
-      overrideRange: 0
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 1
-      spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: 589ff2ff6c171fa4f887283021d778ad, type: 3}
-      weight: 0.08
-      overrideRange: 0
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 1
-      spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: ef2ad616a04727647adf3cb7a1786f44, type: 3}
       weight: 0.07
       overrideRange: 0
       minX: 0
@@ -571,16 +553,7 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: dd69f86be50ea0f418c512ff54de5060, type: 3}
-      weight: 0.06
-      overrideRange: 0
-      minX: 0
-      maxX: Infinity
-      topBuffer: 0
-      spawnOnWater: 0
-      spawnOnSand: 1
-      spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: 3042c9aafcba37847aa6e3e9aedcd991, type: 3}
+    - prefab: {fileID: 2897011531704098943, guid: 589ff2ff6c171fa4f887283021d778ad, type: 3}
       weight: 0.05
       overrideRange: 0
       minX: 0
@@ -589,7 +562,7 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: ff37e04411f342f49a2424ec66beb922, type: 3}
+    - prefab: {fileID: 2897011531704098943, guid: ef2ad616a04727647adf3cb7a1786f44, type: 3}
       weight: 0.03
       overrideRange: 0
       minX: 0
@@ -598,8 +571,35 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    - prefab: {fileID: 2897011531704098943, guid: 3f4f308ebf45d8548843ccd941f18695, type: 3}
+    - prefab: {fileID: 2897011531704098943, guid: dd69f86be50ea0f418c512ff54de5060, type: 3}
       weight: 0.01
+      overrideRange: 0
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
+    - prefab: {fileID: 2897011531704098943, guid: 3042c9aafcba37847aa6e3e9aedcd991, type: 3}
+      weight: 0.005
+      overrideRange: 0
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
+    - prefab: {fileID: 2897011531704098943, guid: ff37e04411f342f49a2424ec66beb922, type: 3}
+      weight: 0.003
+      overrideRange: 0
+      minX: 0
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
+    - prefab: {fileID: 2897011531704098943, guid: 3f4f308ebf45d8548843ccd941f18695, type: 3}
+      weight: 0.001
       overrideRange: 0
       minX: 0
       maxX: Infinity
