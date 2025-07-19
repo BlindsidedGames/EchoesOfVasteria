@@ -16,7 +16,7 @@ namespace TimelessEchoes.Hero
         protected override void Awake()
         {
             controller = GetComponent<HeroController>();
-            if (!controller || !controller.IsClone)
+            if (!controller || !controller.IsEcho)
             {
                 if (Instance != null && Instance != this) Destroy(Instance.gameObject);
                 Instance = this;
@@ -26,7 +26,7 @@ namespace TimelessEchoes.Hero
 
         private void OnDestroy()
         {
-            if (!controller || !controller.IsClone)
+            if (!controller || !controller.IsEcho)
             {
                 if (Instance == this)
                     Instance = null;

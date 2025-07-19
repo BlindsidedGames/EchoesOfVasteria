@@ -18,7 +18,7 @@ namespace TimelessEchoes.Buffs
 
         public Sprite buffIcon;
         [Min(0f)] public float baseDuration = 30f;
-        [Min(0)] public int cloneCount;
+        [Min(0)] public int echoCount;
         [Range(-100f, 100f)] public float moveSpeedPercent;
         [Range(-100f, 100f)] public float damagePercent;
         [Range(-100f, 100f)] public float defensePercent;
