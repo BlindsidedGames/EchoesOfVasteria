@@ -338,9 +338,8 @@ namespace TimelessEchoes.Enemies
                             var disable = config != null && config.disableSkills;
                             for (var c = 0; c < count; c++)
                             {
-                                var target = skills[Mathf.Min(c, skills.Count - 1)];
                                 var combat = config != null && config.combatEnabled;
-                                EchoManager.SpawnEcho(new List<Skill> { target }, ms.echoDuration, combat, disable);
+                                EchoManager.SpawnEcho(skills, ms.echoDuration, combat, disable);
                             }
                         }
                     }
