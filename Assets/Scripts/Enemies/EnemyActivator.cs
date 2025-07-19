@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TimelessEchoes.Hero;
 
 namespace TimelessEchoes.Enemies
 {
@@ -41,6 +42,10 @@ namespace TimelessEchoes.Enemies
             min -= Vector3.one * activationPadding;
             max += Vector3.one * activationPadding;
 
+            var hero = HeroController.Instance != null && HeroController.Instance.isActiveAndEnabled
+                ? HeroController.Instance
+                : null;
+
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
                 var e = enemies[i];
@@ -52,7 +57,28 @@ namespace TimelessEchoes.Enemies
 
                 Vector3 p = e.transform.position;
                 bool inside = p.x >= min.x && p.x <= max.x && p.y >= min.y && p.y <= max.y;
-                e.SetActiveState(inside || e.IsEngaged);
+                bool nearCombatant = false;
+
+                if (!inside && e.Stats != null)
+                {
+                    if (hero != null)
+                        nearCombatant = Vector2.Distance(hero.transform.position, p) <= e.Stats.visionRange;
+
+                    if (!nearCombatant)
+                    {
+                        foreach (var echo in EchoController.CombatEchoes)
+                        {
+                            if (echo == null || !echo.isActiveAndEnabled) continue;
+                            if (Vector2.Distance(echo.transform.position, p) <= e.Stats.visionRange)
+                            {
+                                nearCombatant = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                e.SetActiveState(inside || e.IsEngaged || nearCombatant);
             }
         }
     }
