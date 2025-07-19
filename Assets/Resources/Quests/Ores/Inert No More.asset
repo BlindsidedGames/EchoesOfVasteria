@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Inert No More
+  m_EditorClassIdentifier: 
+  questId: Idle
+  questName: Inert No More
+  description: "\u201CIdle ore looks dull, but it resonates with strange energy.
+    Bring me 5,000 Idle Chunks and we\u2019ll finally reach the pinnacle\u2014Vastium.\u201D"
+  rewardDescription: Unlocks Vastium nodes for mining
+  npcId: 
+  requiredQuests:
+  - {fileID: 11400000, guid: 63ff8ec529640974ab5843c76a2009bf, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}
+    amount: 5000
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
