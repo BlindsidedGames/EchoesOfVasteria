@@ -421,7 +421,7 @@ namespace TimelessEchoes.Hero
             var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
             if (allowAttacks && nearest == null)
             {
-                float range = UnlimitedAggroRange ? float.PositiveInfinity : stats.visionRange;
+                var range = UnlimitedAggroRange ? float.PositiveInfinity : stats.visionRange;
                 nearest = FindNearestEnemy(range);
             }
 
@@ -495,19 +495,19 @@ namespace TimelessEchoes.Hero
         private Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;
-            float best = float.MaxValue;
+            var best = float.MaxValue;
 #if UNITY_6000_0_OR_NEWER
-            var enemies = Object.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+            var enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 #else
             var enemies = Object.FindObjectsOfType<Enemy>();
 #endif
-
+            Debug.Log(enemies);
             Vector2 pos = transform.position;
             foreach (var enemy in enemies)
             {
                 var hp = enemy.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                float d = Vector2.Distance(pos, enemy.transform.position);
+                var d = Vector2.Distance(pos, enemy.transform.position);
                 if (d <= range && d < best)
                 {
                     best = d;
