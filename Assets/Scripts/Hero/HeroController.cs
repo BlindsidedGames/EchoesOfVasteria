@@ -178,7 +178,8 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
-            BuffManager.Instance?.Tick(Time.deltaTime);
+            if (!IsClone)
+                BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
@@ -214,7 +215,8 @@ namespace TimelessEchoes.Hero
                     Log("BuffManager missing", TELogCategory.Buff, this);
             }
 
-            buffController?.Resume();
+            if (!IsClone)
+                buffController?.Resume();
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
@@ -241,24 +243,27 @@ namespace TimelessEchoes.Hero
             lastAttack = Time.time - 1f / CurrentAttackRate;
 
             var skillController = SkillController.Instance;
-            if (skillController != null)
+            if (!IsClone && skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
 
-            Enemy.OnEngage += OnEnemyEngage;
+            if (!IsClone)
+                Enemy.OnEngage += OnEnemyEngage;
         }
 
         private void OnDisable()
         {
-            buffController?.Pause();
+            if (!IsClone)
+                buffController?.Pause();
 
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
             var skillController = SkillController.Instance;
-            if (skillController != null)
+            if (!IsClone && skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
 
-            Enemy.OnEngage -= OnEnemyEngage;
+            if (!IsClone)
+                Enemy.OnEngage -= OnEnemyEngage;
         }
 
         private void OnDestroy()

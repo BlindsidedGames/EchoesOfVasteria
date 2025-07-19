@@ -26,7 +26,20 @@ namespace TimelessEchoes.Hero
 
         private void OnEnable()
         {
-            if (hero != null && taskController != null)
+            if (hero != null && taskController != null && targetSkill != null)
+                taskController.SelectEarliestTask(hero, targetSkill);
+        }
+
+        /// <summary>
+        /// Configure the echo after it is spawned.
+        /// </summary>
+        public void Init(Skill skill, float duration)
+        {
+            targetSkill = skill;
+            lifetime = duration;
+            remaining = duration;
+
+            if (isActiveAndEnabled && hero != null && taskController != null)
                 taskController.SelectEarliestTask(hero, targetSkill);
         }
 
