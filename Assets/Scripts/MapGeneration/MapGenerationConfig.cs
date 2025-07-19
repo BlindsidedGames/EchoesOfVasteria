@@ -55,11 +55,11 @@ namespace TimelessEchoes.MapGeneration
 
             public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
 
-            [FormerlySerializedAs("tasks")] public List<ProceduralTaskGenerator.WeightedTaskSpawn> woodcuttingTasks = new();
-            public List<ProceduralTaskGenerator.WeightedTaskSpawn> miningTasks = new();
-            public List<ProceduralTaskGenerator.WeightedTaskSpawn> farmingTasks = new();
-            public List<ProceduralTaskGenerator.WeightedTaskSpawn> fishingTasks = new();
-            public List<ProceduralTaskGenerator.WeightedTaskSpawn> lootingTasks = new();
+            public ProceduralTaskGenerator.WeightedTaskCategory woodcutting = new();
+            public ProceduralTaskGenerator.WeightedTaskCategory mining = new();
+            public ProceduralTaskGenerator.WeightedTaskCategory farming = new();
+            public ProceduralTaskGenerator.WeightedTaskCategory fishing = new();
+            public ProceduralTaskGenerator.WeightedTaskCategory looting = new();
 
             public List<NpcSpawnEntry> npcTasks = new();
 
