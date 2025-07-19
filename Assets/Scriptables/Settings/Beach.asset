@@ -116,7 +116,9 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    woodcuttingTasks:
+    woodcutting:
+      weight: 1
+      tasks:
     - prefab: {fileID: 5366876333383290996, guid: 4c6c572369ab0124b926f11b2ee7b277, type: 3}
       weight: 0.5
       overrideRange: 0
@@ -225,7 +227,9 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 0
       spawnOnGrass: 1
-    miningTasks:
+    mining:
+      weight: 1
+      tasks:
     - prefab: {fileID: 33249571399304914, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
       weight: 2
       overrideRange: 0
@@ -298,7 +302,9 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
-    farmingTasks:
+    farming:
+      weight: 1
+      tasks:
     - prefab: {fileID: 313524833436730888, guid: ce795a63272a38942b2009b1873bf44a, type: 3}
       weight: 1
       overrideRange: 0
@@ -461,7 +467,9 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 0
       spawnOnGrass: 1
-    fishingTasks:
+    fishing:
+      weight: 1
+      tasks:
     - prefab: {fileID: 3960746967130773130, guid: 284d4cb124f640743b6f7735c200b2be, type: 3}
       weight: 2
       overrideRange: 0
@@ -534,7 +542,9 @@ MonoBehaviour:
       spawnOnWater: 1
       spawnOnSand: 0
       spawnOnGrass: 0
-    lootingTasks:
+    looting:
+      weight: 1
+      tasks:
     - prefab: {fileID: 2897011531704098943, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
       weight: 0.15
       overrideRange: 0
