@@ -23,12 +23,14 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private List<ResourceDrop> resourceDrops = new();
+        [SerializeField] private float targetUpdateInterval = 1f;
 
         private ResourceManager resourceManager;
 
         private AIPath ai;
         private Health health;
         private float nextAttack;
+        private float nextTargetUpdate;
         private AIDestinationSetter setter;
         private bool logicActive = true;
         private Vector3 spawnPos;
@@ -72,6 +74,7 @@ namespace TimelessEchoes.Enemies
             if (health != null)
                 health.OnDeath += OnDeath;
             nextWanderTime = Time.time;
+            nextTargetUpdate = Time.time;
         }
 
         private void Update()
@@ -87,6 +90,7 @@ namespace TimelessEchoes.Enemies
             OnEngage += HandleAllyEngaged;
 
             nextWanderTime = Time.time;
+            nextTargetUpdate = Time.time;
             Wander();
 
             // Offset the animator's starting time so enemies don't animate
@@ -133,6 +137,42 @@ namespace TimelessEchoes.Enemies
             if (stats == null)
                 return;
 
+            if (Time.time >= nextTargetUpdate)
+            {
+                var chosen = ChooseTarget();
+                if (chosen != null)
+                {
+                    setter.target = chosen;
+                    OnEngage?.Invoke(this);
+                }
+                else
+                {
+                    if (setter.target != wanderTarget)
+                        setter.target = wanderTarget;
+                    Wander();
+                }
+
+                nextTargetUpdate = Time.time + Mathf.Max(0.1f, targetUpdateInterval);
+            }
+
+            if (setter.target != null && setter.target != wanderTarget)
+            {
+                float dist = Vector2.Distance(transform.position, setter.target.position);
+                if (dist <= stats.attackRange && Time.time >= nextAttack)
+                {
+                    nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
+                    animator.Play("Attack");
+                    FireProjectile();
+                }
+            }
+            else if (setter.target == wanderTarget)
+            {
+                Wander();
+            }
+        }
+
+        private Transform ChooseTarget()
+        {
             Transform chosen = null;
             float bestDist = float.PositiveInfinity;
 
@@ -167,24 +207,7 @@ namespace TimelessEchoes.Enemies
                 }
             }
 
-            if (chosen != null)
-            {
-                setter.target = chosen;
-                OnEngage?.Invoke(this);
-
-                if (bestDist <= stats.attackRange && Time.time >= nextAttack)
-                {
-                    nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
-                    animator.Play("Attack");
-                    FireProjectile();
-                }
-            }
-            else
-            {
-                if (setter.target != wanderTarget)
-                    setter.target = wanderTarget;
-                Wander();
-            }
+            return chosen;
         }
 
         private void Wander()
