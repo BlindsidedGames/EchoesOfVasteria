@@ -26,41 +26,11 @@ namespace TimelessEchoes.Buffs
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
 
-        private HeroController SpawnEcho(bool combat, bool disableSkills)
+        private HeroController SpawnEcho(IEnumerable<Skill> skills, bool combat, bool disableSkills)
         {
-            var hero = Hero.HeroController.Instance;
-            if (hero == null)
-                return null;
-
-            Hero.HeroController.PrepareForEcho();
-            var obj = Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
-            var echo = obj.GetComponent<Hero.HeroController>();
-            if (echo != null)
-            {
-                var renderers = obj.GetComponentsInChildren<SpriteRenderer>();
-                foreach (var r in renderers)
-                {
-                    var c = r.color;
-                    c.a = 0.7f;
-                    r.color = c;
-                }
-
-                // Keep the HeroHealth component so other scripts requiring it
-                // remain functional. Damage will automatically be forwarded to
-                // the main hero when this component belongs to an echo.
-                var hp = echo.GetComponent<Hero.HeroHealth>();
-                if (hp != null)
-                    hp.Immortal = false;
-                echo.AllowAttacks = combat;
-                if (disableSkills)
-                {
-                    var tc = echo.GetComponent<TaskController>();
-                    if (tc != null)
-                        Destroy(tc);
-                }
-            }
-
-            return echo;
+            // Use EchoManager to ensure spawned echoes are registered correctly
+            // with an EchoController so enemies can target them.
+            return Hero.EchoManager.SpawnEcho(skills, float.PositiveInfinity, combat, disableSkills);
         }
 
         public int UnlockedSlots
@@ -213,11 +183,12 @@ namespace TimelessEchoes.Buffs
             if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
             {
                 int needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
+                var skills = recipe.echoSpawnConfig.capableSkills;
                 for (int i = 0; i < needed; i++)
                 {
                     bool combat = recipe.echoSpawnConfig.combatEnabled;
                     bool disable = recipe.echoSpawnConfig.disableSkills;
-                    var c = SpawnEcho(combat, disable);
+                    var c = SpawnEcho(skills, combat, disable);
                     if (c != null)
                         buff.echoes.Add(c);
                 }
