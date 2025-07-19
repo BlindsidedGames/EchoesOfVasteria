@@ -14,6 +14,7 @@ namespace TimelessEchoes.Hero
         public System.Collections.Generic.List<Skill> capableSkills = new();
         public float lifetime = 10f;
         public bool disableSkills;
+        public bool combatEnabled;
 
         private HeroController hero;
         private TaskController taskController;
@@ -35,17 +36,17 @@ namespace TimelessEchoes.Hero
         /// <summary>
         /// Configure the echo after it is spawned.
         /// </summary>
-        public void Init(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool disable)
+        public void Init(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool disable, bool combat)
         {
             capableSkills = skills != null ? new System.Collections.Generic.List<Skill>(skills) : new System.Collections.Generic.List<Skill>();
             lifetime = duration;
             remaining = duration;
             disableSkills = disable;
+            combatEnabled = combat;
 
             if (hero != null)
             {
-                var combatSkill = SkillController.Instance?.CombatSkill;
-                bool combatOnly = disableSkills || (capableSkills != null && capableSkills.Count == 1 && combatSkill != null && capableSkills.Contains(combatSkill));
+                bool combatOnly = combatEnabled && (disableSkills || capableSkills == null || capableSkills.Count == 0);
                 hero.UnlimitedAggroRange = combatOnly;
             }
 
@@ -84,16 +85,14 @@ namespace TimelessEchoes.Hero
 
                 if (!hasTask)
                 {
-                    var combatSkill = SkillController.Instance?.CombatSkill;
-                    if (capableSkills != null && combatSkill != null && capableSkills.Contains(combatSkill) && hero != null && hero.AllowAttacks)
+                    if (combatEnabled && hero != null && hero.AllowAttacks)
                         return; // stay alive for combat
                     Destroy(gameObject);
                 }
             }
             else if (disableSkills)
             {
-                var combatSkill = SkillController.Instance?.CombatSkill;
-                if (capableSkills != null && combatSkill != null && capableSkills.Contains(combatSkill) && hero != null && hero.AllowAttacks)
+                if (combatEnabled && hero != null && hero.AllowAttacks)
                     return; // stay alive for combat
                 Destroy(gameObject);
             }

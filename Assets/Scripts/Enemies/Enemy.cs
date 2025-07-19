@@ -287,7 +287,7 @@ namespace TimelessEchoes.Enemies
                             for (int c = 0; c < count; c++)
                             {
                                 var target = skills[Mathf.Min(c, skills.Count - 1)];
-                                bool combat = config != null && config.combatEnabled && controller.CombatSkill == target;
+                                bool combat = config != null && config.combatEnabled;
                                 TimelessEchoes.Hero.EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { target }, ms.echoDuration, combat, disable);
                             }
                         }
