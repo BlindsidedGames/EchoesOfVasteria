@@ -18,7 +18,8 @@ namespace TimelessEchoes.Buffs
 
         public Sprite buffIcon;
         [Min(0f)] public float baseDuration = 30f;
-        [Min(0)] public int echoCount;
+        [SerializeField]
+        public TimelessEchoes.EchoSpawnConfig echoSpawnConfig;
         [Range(-100f, 100f)] public float moveSpeedPercent;
         [Range(-100f, 100f)] public float damagePercent;
         [Range(-100f, 100f)] public float defensePercent;
@@ -27,8 +28,6 @@ namespace TimelessEchoes.Buffs
         [Range(0f, 100f)] public float lifestealPercent;
         [Tooltip("Tasks complete instantly while active.")]
         public bool instantTasks;
-        [Tooltip("If true, echoes spawned by this buff can fight enemies.")]
-        public bool combatEnabled;
         [Tooltip("Percent of longest run distance this buff remains active. 0 = no distance limit")]
         [Range(0f,1f)] public float distancePercent;
         public List<ResourceRequirement> requirements = new();

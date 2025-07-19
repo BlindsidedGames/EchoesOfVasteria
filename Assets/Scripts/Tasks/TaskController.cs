@@ -278,7 +278,10 @@ namespace TimelessEchoes.Tasks
 
         public void SelectEarliestTask(HeroController targetHero)
         {
-            var filter = targetHero != null ? targetHero.GetComponent<EchoController>()?.targetSkill : null;
+            Skill filter = null;
+            var echo = targetHero != null ? targetHero.GetComponent<EchoController>() : null;
+            if (echo != null && echo.capableSkills != null && echo.capableSkills.Count > 0)
+                filter = echo.capableSkills[0];
             SelectEarliestTask(targetHero, filter);
         }
 

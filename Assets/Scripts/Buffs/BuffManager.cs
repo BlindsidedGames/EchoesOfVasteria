@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Skills;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -202,12 +203,14 @@ namespace TimelessEchoes.Buffs
                 TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
 
-            if (recipe.echoCount > 0)
+            if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
             {
-                int needed = recipe.echoCount - buff.echoes.Count;
+                int needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
                 for (int i = 0; i < needed; i++)
                 {
-                    var c = SpawnEcho(recipe.combatEnabled);
+                    var combatSkill = SkillController.Instance?.CombatSkill;
+                    bool combat = combatSkill != null && (recipe.echoSpawnConfig.capableSkills == null || recipe.echoSpawnConfig.capableSkills.Count == 0 || recipe.echoSpawnConfig.capableSkills.Contains(combatSkill));
+                    var c = SpawnEcho(combat);
                     if (c != null)
                         buff.echoes.Add(c);
                 }

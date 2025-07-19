@@ -24,7 +24,7 @@ namespace TimelessEchoes.Skills
         public MilestoneType type;
 
         [ShowIf("type", MilestoneType.SpawnEcho)]
-        public Skill targetSkill;
+        public TimelessEchoes.EchoSpawnConfig echoSpawnConfig;
         [ShowIf("type", MilestoneType.SpawnEcho)]
         [Min(0f)]
         public float echoDuration = 10f;
@@ -70,7 +70,15 @@ namespace TimelessEchoes.Skills
                         amountText = percentBonus ? $" by {statAmount * 100f:0.#}%" : $" by {statAmount:0.#}";
                     return $"Increases {statName}{amountText}.";
                 case MilestoneType.SpawnEcho:
-                    return $"Provides a {chance * 100f:0.#}% chance to summon an Echo that performs {targetSkill?.skillName ?? skillName} tasks for {echoDuration:0.#} seconds.";
+                    string skillText = skillName;
+                    if (echoSpawnConfig != null && echoSpawnConfig.capableSkills != null && echoSpawnConfig.capableSkills.Count > 0)
+                    {
+                        if (echoSpawnConfig.capableSkills.Count == 1)
+                            skillText = echoSpawnConfig.capableSkills[0]?.skillName ?? skillName;
+                        else
+                            skillText = "various";
+                    }
+                    return $"Provides a {chance * 100f:0.#}% chance to summon an Echo that performs {skillText} tasks for {echoDuration:0.#} seconds.";
                 default:
                     return string.Empty;
             }
