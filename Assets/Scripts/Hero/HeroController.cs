@@ -495,17 +495,23 @@ namespace TimelessEchoes.Hero
         private Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;
-            var best = float.MaxValue;
-            var hits = Physics2D.OverlapCircleAll(transform.position, range, enemyMask);
-            foreach (var h in hits)
+            float best = float.MaxValue;
+#if UNITY_6000_0_OR_NEWER
+            var enemies = Object.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+#else
+            var enemies = Object.FindObjectsOfType<Enemy>();
+#endif
+
+            Vector2 pos = transform.position;
+            foreach (var enemy in enemies)
             {
-                var hp = h.GetComponent<Health>();
+                var hp = enemy.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(transform.position, h.transform.position);
-                if (d < best)
+                float d = Vector2.Distance(pos, enemy.transform.position);
+                if (d <= range && d < best)
                 {
                     best = d;
-                    nearest = h.transform;
+                    nearest = enemy.transform;
                 }
             }
 
