@@ -55,6 +55,8 @@ namespace TimelessEchoes.Hero
             set => allowAttacks = value;
         }
 
+        public bool UnlimitedAggroRange { get; set; }
+
         private Transform currentEnemy;
         private Health currentEnemyHealth;
 
@@ -418,7 +420,10 @@ namespace TimelessEchoes.Hero
 
             var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
             if (allowAttacks && nearest == null)
-                nearest = FindNearestEnemy();
+            {
+                float range = UnlimitedAggroRange ? float.PositiveInfinity : stats.visionRange;
+                nearest = FindNearestEnemy(range);
+            }
 
             if (allowAttacks && nearest != null)
             {
@@ -487,11 +492,11 @@ namespace TimelessEchoes.Hero
         }
 
 
-        private Transform FindNearestEnemy()
+        private Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;
             var best = float.MaxValue;
-            var hits = Physics2D.OverlapCircleAll(transform.position, stats.visionRange, enemyMask);
+            var hits = Physics2D.OverlapCircleAll(transform.position, range, enemyMask);
             foreach (var h in hits)
             {
                 var hp = h.GetComponent<Health>();
@@ -505,6 +510,11 @@ namespace TimelessEchoes.Hero
             }
 
             return nearest;
+        }
+
+        private Transform FindNearestEnemy()
+        {
+            return FindNearestEnemy(stats.visionRange);
         }
 
         private void HandleCombat(Transform enemy)

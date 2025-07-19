@@ -130,11 +130,14 @@ namespace TimelessEchoes.Tasks
                             var skills = config != null && config.capableSkills != null && config.capableSkills.Count > 0
                                 ? config.capableSkills
                                 : new System.Collections.Generic.List<Skill> { associatedSkill };
+                            bool disable = config != null && config.disableSkills;
                             for (int c = 0; c < count; c++)
                             {
                                 var skill = skills[Mathf.Min(c, skills.Count - 1)];
-                                bool combat = SkillController.Instance != null && SkillController.Instance.CombatSkill == skill;
-                                EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, ms.echoDuration, combat);
+                                bool combat = config != null && config.combatEnabled &&
+                                              SkillController.Instance != null &&
+                                              SkillController.Instance.CombatSkill == skill;
+                                EchoManager.SpawnEcho(new System.Collections.Generic.List<Skill> { skill }, ms.echoDuration, combat, disable);
                             }
                         }
                     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Tasks;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -25,7 +26,7 @@ namespace TimelessEchoes.Buffs
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
 
-        private HeroController SpawnEcho(bool combat)
+        private HeroController SpawnEcho(bool combat, bool disableSkills)
         {
             var hero = Hero.HeroController.Instance;
             if (hero == null)
@@ -51,6 +52,12 @@ namespace TimelessEchoes.Buffs
                 if (hp != null)
                     hp.Immortal = false;
                 echo.AllowAttacks = combat;
+                if (disableSkills)
+                {
+                    var tc = echo.GetComponent<TaskController>();
+                    if (tc != null)
+                        Destroy(tc);
+                }
             }
 
             return echo;
@@ -209,8 +216,12 @@ namespace TimelessEchoes.Buffs
                 for (int i = 0; i < needed; i++)
                 {
                     var combatSkill = SkillController.Instance?.CombatSkill;
-                    bool combat = combatSkill != null && (recipe.echoSpawnConfig.capableSkills == null || recipe.echoSpawnConfig.capableSkills.Count == 0 || recipe.echoSpawnConfig.capableSkills.Contains(combatSkill));
-                    var c = SpawnEcho(combat);
+                    bool combat = recipe.echoSpawnConfig.combatEnabled && combatSkill != null &&
+                                   (recipe.echoSpawnConfig.capableSkills == null ||
+                                    recipe.echoSpawnConfig.capableSkills.Count == 0 ||
+                                    recipe.echoSpawnConfig.capableSkills.Contains(combatSkill));
+                    bool disable = recipe.echoSpawnConfig.disableSkills;
+                    var c = SpawnEcho(combat, disable);
                     if (c != null)
                         buff.echoes.Add(c);
                 }
