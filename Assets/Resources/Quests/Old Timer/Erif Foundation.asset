@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Erif Ember-Hunt
+  m_EditorClassIdentifier:
+  questId: ErifDisc
+  questName: Erif Ember-Hunt
+  description: Sparks dance in the Old Timer’s beard as he fans a forge. “Erif glows like captured lightning. Fetch 750 Erif Chunks so I can bottle that fire and teach the stone to sing.”
+  rewardDescription: Gain the Disciple of Erif
+  npcId: Old Timer
+  requiredQuests:
+    - {fileID: 11400000, guid: f36100e6a0b6498cacc8700a2141020d, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}
+    amount: 750
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0

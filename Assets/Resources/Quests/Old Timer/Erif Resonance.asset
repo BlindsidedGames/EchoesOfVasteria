@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Erif Crystal Blaze
+  m_EditorClassIdentifier:
+  questId: ErifCrystalDisc
+  questName: Erif Crystal Blaze
+  description: Flames flicker inside a translucent gem. “Fetch 100 Erif Crystals so we can trap wildfire inside glass—and keep our fingers intact.”
+  rewardDescription: Gain the Disciple of Erif Crystal
+  npcId: Old Timer
+  requiredQuests:
+    - {fileID: 11400000, guid: 9daec8cdc30544cc8f05c2d1f40de027, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}
+    amount: 100
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0

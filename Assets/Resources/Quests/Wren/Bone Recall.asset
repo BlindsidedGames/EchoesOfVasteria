@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Bone Rattle Rally
+  m_EditorClassIdentifier:
+  questId: Bone
+  questName: Bone Rattle Rally
+  description: Wren twirls a coyote skull on her finger. “Bones keep stories, you know—rattling maps of every battle fought.” She nods toward Mildred, who’s already pawing at a femur. “Fetch me 500 stout bones so I can carve talismans that point to hidden troves—and give the cat a chew toy or two.”
+  rewardDescription: Gain the Disciple of Bone
+  npcId: Wren
+  requiredQuests: []
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    amount: 500
+    enemies: []
+    killIcon: {fileID: 0}
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0

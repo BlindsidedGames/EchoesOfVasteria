@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Feeding the Masses
+  m_Name: Flip That Flop
   m_EditorClassIdentifier: 
-  questId: FTM
-  questName: Feeding the Masses
-  description: Eva twirls a ruby-red Rah Dish like a wand. “These roots turn empty bellies into happy hearts,” she winks as Mildred circles the cauldron. “Harvest 50 crisp Rah Dishes so we can fill every pot—and give Utoes something fresh to gnaw.”
-  rewardDescription: Gain the Disciple of Rah Dish
-  npcId: Eva
+  questId: Flip that Flop
+  questName: Flip That Flop
+  description: Gill whistles a watery tune while Mildred bats at minnows on the dock. “The lady loves her fishy snacks,” he grins. “Net me 100 Floppy Fish and I’ll teach ’em to flop right into her paws—she’ll purr you a tidy buff for the trouble.”
+  rewardDescription: Gain a Floppy Disciple.
+  npcId: Gill
   requiredQuests:
     - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
+  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
-    amount: 50
+    resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
+    amount: 100
     enemies: []
     killIcon: {fileID: 0}
   unlockPrefab: {fileID: 0}
