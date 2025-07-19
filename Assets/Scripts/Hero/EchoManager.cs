@@ -37,8 +37,7 @@ namespace TimelessEchoes.Hero
                 clone.AllowAttacks = false;
 
                 var echo = obj.AddComponent<EchoController>();
-                echo.targetSkill = skill;
-                echo.lifetime = duration;
+                echo.Init(skill, duration);
             }
 
             return clone;
