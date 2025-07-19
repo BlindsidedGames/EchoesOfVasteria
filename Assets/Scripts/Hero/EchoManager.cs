@@ -8,16 +8,14 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(GameObject prefab, Skill skill, float duration)
+        public static HeroController SpawnEcho(Skill skill, float duration)
         {
             var hero = HeroController.Instance;
             if (hero == null)
                 return null;
 
             HeroController.PrepareForClone();
-            GameObject obj = prefab != null ?
-                Object.Instantiate(prefab, hero.transform.position, hero.transform.rotation, hero.transform.parent) :
-                Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
+            GameObject obj = Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation, hero.transform.parent);
 
             var clone = obj.GetComponent<HeroController>();
             if (clone != null)
@@ -35,6 +33,8 @@ namespace TimelessEchoes.Hero
                     hp.Immortal = true;
                     hp.Init((int)hp.MaxHealth);
                 }
+
+                clone.AllowAttacks = false;
 
                 var echo = obj.AddComponent<EchoController>();
                 echo.targetSkill = skill;

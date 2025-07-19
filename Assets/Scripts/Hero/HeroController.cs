@@ -47,7 +47,13 @@ namespace TimelessEchoes.Hero
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
-        private readonly bool allowAttacks = true;
+        [SerializeField] private bool allowAttacks = true;
+
+        public bool AllowAttacks
+        {
+            get => allowAttacks;
+            set => allowAttacks = value;
+        }
 
         private Transform currentEnemy;
         private Health currentEnemyHealth;
