@@ -11,14 +11,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Carrot Conjuring
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: Carrot
   questName: Carrot Conjuring
-  description: Eva polishes a bright carrot. “Carrots sharpen vision—no offense, love.” She grins. “Gather 100 so Mildred sees in starlight and Utoes can brew sight-seer soup.”
+  description: "Eva polishes a bright carrot. \u201CCarrots sharpen vision\u2014no
+    offense, love.\u201D She grins. \u201CGather 100 so Mildred sees in starlight
+    and Utoes can brew sight-seer soup.\u201D"
   rewardDescription: Gain the Disciple of Carrot
   npcId: Eva
   requiredQuests:
-    - {fileID: 11400000, guid: 66c8f62ac1804f39a5680b0e8aeed6c9, type: 2}
+  - {fileID: 11400000, guid: 66c8f62ac1804f39a5680b0e8aeed6c9, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}
