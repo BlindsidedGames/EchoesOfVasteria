@@ -139,6 +139,15 @@ namespace TimelessEchoes
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }
 
+        [Command("wipe-disciples", "Clear all disciple generation data")]
+        public static void WipeDisciples()
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+            oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            Blindsided.EventHandler.LoadData();
+        }
+
         [Command("wipe-regen", "Clear all fish donations")]
         public static void WipeRegen()
         {
