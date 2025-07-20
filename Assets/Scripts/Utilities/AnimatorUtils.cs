@@ -15,10 +15,12 @@ namespace TimelessEchoes.Utilities
         {
             if (runner == null || animator == null || string.IsNullOrEmpty(triggerName))
                 return;
+
             animator.SetTrigger(triggerName);
             runner.StartCoroutine(ResetNextFrame(animator, triggerName));
 
-            if (runner is TimelessEchoes.Hero.HeroController hero && hero.AutoBuffAnimator != null)
+            if (runner is TimelessEchoes.Hero.HeroController hero &&
+                hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
             {
                 var autoAnim = hero.AutoBuffAnimator;
                 autoAnim.SetTrigger(triggerName);
