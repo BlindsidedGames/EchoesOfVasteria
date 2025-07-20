@@ -263,8 +263,12 @@ namespace TimelessEchoes.Tasks
 
             if (removed && hero != null)
             {
-                hero.SetTask(null);
-                SelectEarliestTask(hero);
+                var current = hero.CurrentTask;
+                if (current == null || current.IsComplete() || !tasks.Contains(current))
+                {
+                    hero.SetTask(null);
+                    SelectEarliestTask(hero);
+                }
             }
         }
 
