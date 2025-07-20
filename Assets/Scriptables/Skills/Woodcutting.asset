@@ -44,12 +44,13 @@ MonoBehaviour:
   - levelRequirement: 13
     bonusDescription: 
     bonusID: woodcutting13
-    type: 0
+    type: 5
     echoSpawnConfig:
       echoCount: 1
-      capableSkills: []
+      capableSkills:
+      - {fileID: 11400000}
       disableSkills: 0
-      combatEnabled: 1
+      combatEnabled: 0
     echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
@@ -72,12 +73,13 @@ MonoBehaviour:
   - levelRequirement: 21
     bonusDescription: 
     bonusID: woodcutting21
-    type: 0
+    type: 5
     echoSpawnConfig:
       echoCount: 1
-      capableSkills: []
+      capableSkills:
+      - {fileID: 11400000}
       disableSkills: 0
-      combatEnabled: 1
+      combatEnabled: 0
     echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}

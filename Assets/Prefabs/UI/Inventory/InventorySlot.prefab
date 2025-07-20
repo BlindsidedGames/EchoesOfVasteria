@@ -214,6 +214,7 @@ MonoBehaviour:
   iconImage: {fileID: 2391248113486137545}
   countText: {fileID: 6218322219775775296}
   selectionImage: {fileID: 9003877405325738286}
+  highlightButton: {fileID: 2278093216645303668}
 --- !u!114 &8999158799507173458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,6 +489,7 @@ MonoBehaviour:
   iconImage: {fileID: 0}
   countText: {fileID: 0}
   selectionImage: {fileID: 0}
+  highlightButton: {fileID: 0}
 --- !u!114 &3520921374865700523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,7 +527,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5704063629479557169}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 

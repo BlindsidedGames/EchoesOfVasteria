@@ -31,6 +31,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: farming5
     type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -38,7 +44,14 @@ MonoBehaviour:
   - levelRequirement: 7
     bonusDescription: 
     bonusID: farming7
-    type: 0
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills:
+      - {fileID: 11400000}
+      disableSkills: 0
+      combatEnabled: 0
+    echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -47,6 +60,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: farming10
     type: 3
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -55,6 +74,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: farming15
     type: 4
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
     percentBonus: 0

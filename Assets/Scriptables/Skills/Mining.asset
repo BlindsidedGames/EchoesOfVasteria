@@ -30,7 +30,14 @@ MonoBehaviour:
   - levelRequirement: 5
     bonusDescription: 
     bonusID: mining5
-    type: 0
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills:
+      - {fileID: 11400000}
+      disableSkills: 0
+      combatEnabled: 0
+    echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -39,6 +46,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: mining10
     type: 3
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 0.25
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -47,7 +60,28 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: mining15
     type: 4
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 57a723c0f93b2224f915740d8fba4467, type: 2}
     percentBonus: 0
     statAmount: 1
+  - levelRequirement: 20
+    bonusDescription: 
+    bonusID: mining20
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills:
+      - {fileID: 11400000}
+      disableSkills: 0
+      combatEnabled: 0
+    echoDuration: 10
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0

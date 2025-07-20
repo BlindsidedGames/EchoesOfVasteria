@@ -31,7 +31,83 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: looting3
     type: 3
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 0.1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 5
+    bonusDescription: 
+    bonusID: looting5
+    type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 10
+    bonusDescription: 
+    bonusID: looting10
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 1
+      combatEnabled: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 15
+    bonusDescription: 
+    bonusID: looting15
+    type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
+    chance: 0.15
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 20
+    bonusDescription: 
+    bonusID: looting20
+    type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
+    chance: 0.3
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 25
+    bonusDescription: 
+    bonusID: looting25
+    type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
+    chance: 0.5
     statUpgrade: {fileID: 0}
     percentBonus: 0
     statAmount: 0

@@ -31,7 +31,11 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat2
     type: 4
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 57a723c0f93b2224f915740d8fba4467, type: 2}
@@ -41,7 +45,11 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat5
     type: 1
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 0.01
     statUpgrade: {fileID: 0}
@@ -51,7 +59,11 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat10
     type: 1
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 0.01
     statUpgrade: {fileID: 0}
@@ -61,17 +73,39 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat15
     type: 4
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
     percentBonus: 0
     statAmount: 1
+  - levelRequirement: 20
+    bonusDescription: 
+    bonusID: combat20
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 1
+      combatEnabled: 1
+    echoDuration: 30
+    chance: 0.01
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
   - levelRequirement: 25
     bonusDescription: 
     bonusID: combat25
     type: 1
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 0.01
     statUpgrade: {fileID: 0}
@@ -81,7 +115,11 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat50
     type: 1
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 0.01
     statUpgrade: {fileID: 0}
@@ -91,7 +129,11 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: combat100
     type: 1
-    targetSkill: {fileID: 0}
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
     echoDuration: 10
     chance: 0.01
     statUpgrade: {fileID: 0}

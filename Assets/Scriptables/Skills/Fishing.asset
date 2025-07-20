@@ -31,6 +31,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: fishing2
     type: 4
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
     percentBonus: 0
@@ -39,6 +45,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: fishing10
     type: 3
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -47,6 +59,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: fishing15
     type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 0.12
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -54,7 +72,14 @@ MonoBehaviour:
   - levelRequirement: 20
     bonusDescription: 
     bonusID: fishing20
-    type: 0
+    type: 5
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills:
+      - {fileID: 11400000}
+      disableSkills: 0
+      combatEnabled: 0
+    echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
@@ -63,6 +88,12 @@ MonoBehaviour:
     bonusDescription: 
     bonusID: fishing25
     type: 2
+    echoSpawnConfig:
+      echoCount: 1
+      capableSkills: []
+      disableSkills: 0
+      combatEnabled: 1
+    echoDuration: 10
     chance: 0.38
     statUpgrade: {fileID: 0}
     percentBonus: 0
