@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using References.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ScrollRect scrollRect;
         public Sprite UnknownSprite;
         [SerializeField] private float highlightDuration = 3f;
+        [SerializeField] private TMP_Text selectedResourceNameText;
 
         private readonly List<ResourceUIReferences> slots = new();
 
@@ -50,9 +52,18 @@ namespace TimelessEchoes.Upgrades
                     if (button == PointerEventData.InputButton.Left)
                         SelectSlot(index);
                 };
+                if (slot.highlightButton != null)
+                {
+                    var r = res;
+                    slot.highlightButton.onClick.RemoveAllListeners();
+                    slot.highlightButton.onClick.AddListener(() => HighlightResource(r));
+                }
                 if (slot.countText != null)
                     slot.countText.gameObject.SetActive(true);
             }
+
+            if (selectedResourceNameText != null)
+                selectedResourceNameText.text = string.Empty;
 
             UpdateSlots();
         }
@@ -83,6 +94,8 @@ namespace TimelessEchoes.Upgrades
             foreach (var slot in slots)
                 if (slot != null && slot.selectionImage != null)
                     slot.selectionImage.enabled = false;
+            if (selectedResourceNameText != null)
+                selectedResourceNameText.text = string.Empty;
         }
 
 
@@ -127,6 +140,12 @@ namespace TimelessEchoes.Upgrades
                 if (slots[i] != null && slots[i].selectionImage != null)
                     slots[i].selectionImage.enabled = i == selectedIndex;
 
+            if (selectedResourceNameText != null && index >= 0 && index < resources.Count)
+            {
+                var res = resources[index];
+                selectedResourceNameText.text = res ? res.name : string.Empty;
+            }
+
             ScrollToSlot(selectedIndex);
         }
 
@@ -151,6 +170,8 @@ namespace TimelessEchoes.Upgrades
             if (index >= 0 && index < slots.Count && slots[index] != null && slots[index].selectionImage != null)
                 slots[index].selectionImage.enabled = false;
             selectedIndex = -1;
+            if (selectedResourceNameText != null)
+                selectedResourceNameText.text = string.Empty;
         }
 
         private void ScrollToSlot(int index)
