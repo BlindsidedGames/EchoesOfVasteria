@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Idle Crystal
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}
     amount: 1
   requiredQuest: {fileID: 11400000, guid: 8759034400ef4bc7b3d53b575e8807bf, type: 2}
-  generationInterval: 900
+  generationInterval: 60

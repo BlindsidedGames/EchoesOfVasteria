@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Dlog Crystal
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}
     amount: 1
   requiredQuest: {fileID: 11400000, guid: 9daec8cdc30544cc8f05c2d1f40de027, type: 2}
-  generationInterval: 900
+  generationInterval: 40

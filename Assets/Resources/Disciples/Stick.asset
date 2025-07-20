@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Stick
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
-    amount: 10
+    amount: 1
   requiredQuest: {fileID: 11400000, guid: 5fef0b4c45a547368d145ae335051a5f, type: 2}
-  generationInterval: 60
+  generationInterval: 1

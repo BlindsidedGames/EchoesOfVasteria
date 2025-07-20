@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Flip that Flop
   questName: Flip That Flop
-  description: Gill whistles a watery tune while Mildred bats at minnows on the dock. “The lady loves her fishy snacks,” he grins. “Net me 100 Floppy Fish and I’ll teach ’em to flop right into her paws—she’ll purr you a tidy buff for the trouble.”
+  description: "Gill whistles a watery tune while Mildred bats at minnows on the
+    dock. \u201CThe lady loves her fishy snacks,\u201D he grins. \u201CNet me 100
+    Floppy Fish and I\u2019ll teach \u2019em to flop right into her paws\u2014she\u2019ll
+    purr you a tidy buff for the trouble.\u201D"
   rewardDescription: Gain a Floppy Disciple.
-  npcId: Gill
+  npcId: 
   requiredQuests:
-    - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   requirements:
   - type: 0

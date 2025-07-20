@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Vastium Crystal
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}
     amount: 1
   requiredQuest: {fileID: 11400000, guid: a6f045aa8e994f2dbfd744f013d3614e, type: 2}
-  generationInterval: 900
+  generationInterval: 65

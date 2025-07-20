@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Spud
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: 9a289dbcc84c4cf9a655456d6f0ec3a9, type: 2}
-  generationInterval: 300
+  generationInterval: 40

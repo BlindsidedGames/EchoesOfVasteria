@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Turnip
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: 6780ea978db14e2382604414b9809001, type: 2}
-  generationInterval: 300
+  generationInterval: 64

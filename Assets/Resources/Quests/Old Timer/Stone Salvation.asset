@@ -11,12 +11,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Stone Salvation
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: StoneDisc
   questName: Stone Salvation
-  description: The Old Timer thumps the cliff with a cracked knuckle. “Stone’s the earth’s first secret, kid. Stack me 200 sturdy blocks so I can carve a greeting that the mountain’ll remember.”
+  description: "The Old Timer thumps the cliff with a cracked knuckle. \u201CStone\u2019s
+    the earth\u2019s first secret, kid. Stack me 200 sturdy blocks so I can carve
+    a greeting that the mountain\u2019ll remember.\u201D"
   rewardDescription: Gain the Disciple of Stone
-  npcId: Old Timer
+  npcId: 
   requiredQuests: []
   requirements:
   - type: 0

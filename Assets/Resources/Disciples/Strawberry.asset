@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Strawberry
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: f9201696220a43f3894f210eb3b4e416, type: 2}
-  generationInterval: 300
+  generationInterval: 60

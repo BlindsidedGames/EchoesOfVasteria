@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: IdleCrystalDisc
   questName: Idle Crystal Pulse
-  description: The Old Timer taps a crystal; it ticks back. “Give me 250 Idle Crystals
-    and I’ll wind the world’s smallest clockwork colossus.”
+  description: "The Old Timer taps a crystal; it ticks back. \u201CGive me 250 Idle
+    Crystals and I\u2019ll wind the world\u2019s smallest clockwork colossus.\u201D"
   rewardDescription: Gain the Disciple of Idle Crystal
-  npcId: Old Timer
+  npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: ed6f2114af7849899e821eeab0b9cc11, type: 2}
   requirements:

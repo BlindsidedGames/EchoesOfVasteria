@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: NoriDisc
   questName: Nori Night-Vein
-  description: The Old Timer lights a lantern, revealing veins that shimmer midnight
-    blue. “Nori hides where light won’t follow. Haul me 250 Nori Chunks so I
-    can craft chisels that bite through the dark.”
+  description: "The Old Timer lights a lantern, revealing veins that shimmer midnight
+    blue. \u201CNori hides where light won\u2019t follow. Haul me 250 Nori Chunks
+    so I can craft chisels that bite through the dark.\u201D"
   rewardDescription: Gain the Disciple of Nori
-  npcId: Old Timer
+  npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 5265b1c5507642509053388be9525c1b, type: 2}
   requirements:

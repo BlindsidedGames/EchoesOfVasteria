@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Bone
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: d01f4a93a6144c329b3d8b6fe53588c8, type: 2}
-  generationInterval: 180
+  generationInterval: 55

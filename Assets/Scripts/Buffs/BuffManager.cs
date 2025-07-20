@@ -1,15 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using TimelessEchoes.Upgrades;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
-using TimelessEchoes.Tasks;
-using UnityEngine;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
 using static Blindsided.SaveData.StaticReferences;
+using Resources = UnityEngine.Resources;
 
 namespace TimelessEchoes.Buffs
 {
@@ -32,7 +33,7 @@ namespace TimelessEchoes.Buffs
         {
             // Use EchoManager to ensure spawned echoes are registered correctly
             // with an EchoController so enemies can target them.
-            return Hero.EchoManager.SpawnEcho(skills, float.PositiveInfinity, combat, disableSkills);
+            return EchoManager.SpawnEcho(skills, float.PositiveInfinity, combat, disableSkills);
         }
 
         public int UnlockedSlots
@@ -44,9 +45,11 @@ namespace TimelessEchoes.Buffs
                 return 1;
             }
         }
+
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
+
         public bool InstantTaskBuffActive
         {
             get
@@ -57,6 +60,7 @@ namespace TimelessEchoes.Buffs
                 return false;
             }
         }
+
         public IEnumerable<BuffRecipe> Recipes
         {
             get
@@ -79,7 +83,7 @@ namespace TimelessEchoes.Buffs
 
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
 
             OnLoadData += LoadSlots;
         }
@@ -89,7 +93,7 @@ namespace TimelessEchoes.Buffs
             StartCoroutine(DelayedLoad());
         }
 
-        private System.Collections.IEnumerator DelayedLoad()
+        private IEnumerator DelayedLoad()
         {
             yield return null;
             LoadSlots();
@@ -133,10 +137,7 @@ namespace TimelessEchoes.Buffs
             {
                 var buff = activeBuffs[i];
                 buff.remaining -= delta;
-                if (buff.remaining <= 0f)
-                {
-                    RemoveBuffAt(i);
-                }
+                if (buff.remaining <= 0f) RemoveBuffAt(i);
             }
         }
 
@@ -164,36 +165,37 @@ namespace TimelessEchoes.Buffs
             foreach (var req in recipe.requirements)
                 resourceManager?.Spend(req.resource, req.amount);
 
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
             tracker?.AddBuffCast();
 
             var buff = activeBuffs.Find(b => b.recipe == recipe);
-            float expireDist = float.PositiveInfinity;
+            var expireDist = float.PositiveInfinity;
             if (recipe.distancePercent > 0f && tracker != null)
                 expireDist = tracker.LongestRun * recipe.distancePercent;
             if (buff == null)
             {
-                buff = new ActiveBuff { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
+                buff = new ActiveBuff
+                    { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
                 activeBuffs.Add(buff);
-                TELogger.Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
+                Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
             }
             else
             {
                 buff.remaining += recipe.baseDuration;
                 if (expireDist > buff.expireAtDistance)
                     buff.expireAtDistance = expireDist;
-                TELogger.Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
+                Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
             }
 
             if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
             {
-                int needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
+                var needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
                 var skills = recipe.echoSpawnConfig.capableSkills;
-                for (int i = 0; i < needed; i++)
+                for (var i = 0; i < needed; i++)
                 {
-                    bool combat = recipe.echoSpawnConfig.combatEnabled;
-                    bool disable = recipe.echoSpawnConfig.disableSkills;
+                    var combat = recipe.echoSpawnConfig.combatEnabled;
+                    var disable = recipe.echoSpawnConfig.disableSkills;
                     var c = SpawnEcho(skills, combat, disable);
                     if (c != null)
                         buff.echoes.Add(c);
@@ -257,7 +259,7 @@ namespace TimelessEchoes.Buffs
         {
             get
             {
-                float percent = 0f;
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     percent += b.recipe.lifestealPercent;
                 return percent;
@@ -294,17 +296,13 @@ namespace TimelessEchoes.Buffs
             if (!IsSlotUnlocked(slot)) return;
 
             if (recipe != null)
-            {
                 for (var i = 0; i < slotAssignments.Count; i++)
-                {
                     if (slotAssignments[i] == recipe)
                     {
                         slotAssignments[i] = null;
                         if (oracle != null && oracle.saveData.BuffSlots != null)
                             oracle.saveData.BuffSlots[i] = null;
                     }
-                }
-            }
 
             slotAssignments[slot] = recipe;
 
@@ -322,7 +320,7 @@ namespace TimelessEchoes.Buffs
         public void UnlockSlots(int count)
         {
             if (oracle == null || count <= 0) return;
-            int newCount = Mathf.Clamp(oracle.saveData.UnlockedBuffSlots + count, 1, slotAssignments.Count);
+            var newCount = Mathf.Clamp(oracle.saveData.UnlockedBuffSlots + count, 1, slotAssignments.Count);
             oracle.saveData.UnlockedBuffSlots = newCount;
         }
 
@@ -343,10 +341,7 @@ namespace TimelessEchoes.Buffs
             for (var i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 var buff = activeBuffs[i];
-                if (heroX >= buff.expireAtDistance)
-                {
-                    RemoveBuffAt(i);
-                }
+                if (heroX >= buff.expireAtDistance) RemoveBuffAt(i);
             }
         }
 
@@ -357,7 +352,7 @@ namespace TimelessEchoes.Buffs
             DestroyEchoes(buff);
             activeBuffs.RemoveAt(index);
             if (buff.recipe != null)
-                TELogger.Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+                Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
         }
 
         private void DestroyEchoes(ActiveBuff buff)
@@ -374,16 +369,16 @@ namespace TimelessEchoes.Buffs
             if (!AutoBuff) return;
             EnsureResourceManager();
             var tracker = GameplayStatTracker.Instance;
-            for (int i = 0; i < slotAssignments.Count && i < UnlockedSlots; i++)
+            for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots; i++)
             {
                 var recipe = slotAssignments[i];
                 if (recipe == null) continue;
                 if (GetRemaining(recipe) > 0f) continue;
 
-                bool distanceOk = true;
+                var distanceOk = true;
                 if (recipe.distancePercent > 0f && tracker != null)
                 {
-                    float expireDist = tracker.LongestRun * recipe.distancePercent;
+                    var expireDist = tracker.LongestRun * recipe.distancePercent;
                     distanceOk = tracker.CurrentRunDistance < expireDist;
                 }
 

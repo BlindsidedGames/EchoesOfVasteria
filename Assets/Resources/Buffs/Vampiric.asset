@@ -16,6 +16,11 @@ MonoBehaviour:
   description: Gain 15% Lifesteal
   buffIcon: {fileID: -2906203513720773286, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   baseDuration: 30
+  echoSpawnConfig:
+    echoCount: 0
+    capableSkills: []
+    disableSkills: 0
+    combatEnabled: 1
   moveSpeedPercent: 0
   damagePercent: 0
   defensePercent: 0

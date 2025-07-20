@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Lirium
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}
     amount: 2
   requiredQuest: {fileID: 11400000, guid: 484a25581e3544c6961cbf0f1ce20245, type: 2}
-  generationInterval: 600
+  generationInterval: 45

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: CopiumDisc
   questName: Copium Cavern-Wager
-  description: The Old Timer sniffs the air. “Copium’s fumes’ll make a miner
-    see visions—or excuses. Fetch 1,500 Copium Chunks and we’ll find out which.”
+  description: "The Old Timer sniffs the air. \u201CCopium\u2019s fumes\u2019ll make
+    a miner see visions\u2014or excuses. Fetch 1,500 Copium Chunks and we\u2019ll
+    find out which.\u201D"
   rewardDescription: Gain the Disciple of Copium
-  npcId: Old Timer
+  npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 484a25581e3544c6961cbf0f1ce20245, type: 2}
   requirements:

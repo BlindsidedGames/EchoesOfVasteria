@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Leek
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: eeb83a9d24684f268c13f0f594b4f6b6, type: 2}
-  generationInterval: 300
+  generationInterval: 50

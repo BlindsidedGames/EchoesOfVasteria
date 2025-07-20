@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Onion
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: b5b12e283249229419b1a300192d8601, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: 87abd56902144b1dadb888cbe0725f6e, type: 2}
-  generationInterval: 300
+  generationInterval: 48

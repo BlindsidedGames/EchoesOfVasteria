@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Idle
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}
     amount: 2
   requiredQuest: {fileID: 11400000, guid: 20baaf688b8e4fb997ed21fb66e9a449, type: 2}
-  generationInterval: 600
+  generationInterval: 55

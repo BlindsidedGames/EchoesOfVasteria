@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Copium Crystal
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
     amount: 1
   requiredQuest: {fileID: 11400000, guid: ed6f2114af7849899e821eeab0b9cc11, type: 2}
-  generationInterval: 900
+  generationInterval: 55

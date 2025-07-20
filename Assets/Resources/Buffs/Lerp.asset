@@ -16,6 +16,11 @@ MonoBehaviour:
   description: Instantly complete all tasks up to 70% of your distance record.
   buffIcon: {fileID: 6903983040440877652, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   baseDuration: 300
+  echoSpawnConfig:
+    echoCount: 0
+    capableSkills: []
+    disableSkills: 0
+    combatEnabled: 1
   moveSpeedPercent: 0
   damagePercent: 0
   defensePercent: 0

@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Erif
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}
     amount: 2
   requiredQuest: {fileID: 11400000, guid: 2935248e3b8945549be5de2d7f258d0a, type: 2}
-  generationInterval: 600
+  generationInterval: 40
