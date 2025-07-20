@@ -160,9 +160,11 @@ namespace TimelessEchoes.Buffs
             foreach (var req in recipe.requirements)
                 resourceManager?.Spend(req.resource, req.amount);
 
-            var buff = activeBuffs.Find(b => b.recipe == recipe);
             var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
                           FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+            tracker?.AddBuffCast();
+
+            var buff = activeBuffs.Find(b => b.recipe == recipe);
             float expireDist = float.PositiveInfinity;
             if (recipe.distancePercent > 0f && tracker != null)
                 expireDist = tracker.LongestRun * recipe.distancePercent;
