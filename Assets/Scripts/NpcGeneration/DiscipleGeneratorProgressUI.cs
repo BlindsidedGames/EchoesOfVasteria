@@ -59,9 +59,7 @@ namespace TimelessEchoes.NpcGeneration
 
             if (resourceNameText != null)
             {
-                var first = generator.ResourceEntries != null && generator.ResourceEntries.Count > 0 ?
-                    generator.ResourceEntries[0].resource : null;
-                resourceNameText.text = first ? first.name : string.Empty;
+                resourceNameText.text = generator != null ? generator.DiscipleName : string.Empty;
             }
 
             if (collectButton != null)
@@ -109,11 +107,14 @@ namespace TimelessEchoes.NpcGeneration
 
             if (resourceManager != null && totalCollectedText != null)
             {
-                double total = 0;
+                var parts = new List<string>();
                 foreach (var entry in generator.ResourceEntries)
-                    if (entry.resource != null)
-                        total += generator.GetTotalCollected(entry.resource);
-                totalCollectedText.text = CalcUtils.FormatNumber(total, true);
+                {
+                    if (entry.resource == null) continue;
+                    var val = generator.GetTotalCollected(entry.resource);
+                    parts.Add(CalcUtils.FormatNumber(val, true));
+                }
+                totalCollectedText.text = string.Join(", ", parts);
             }
 
             foreach (var pair in resourceUIs)

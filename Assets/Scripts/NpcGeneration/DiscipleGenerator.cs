@@ -34,6 +34,7 @@ namespace TimelessEchoes.NpcGeneration
         private bool setup;
 
         public float Interval => data != null ? data.generationInterval : 0f;
+        public string DiscipleName => data != null ? data.name : string.Empty;
         public float Progress { get; private set; }
         public IReadOnlyList<Disciple.ResourceEntry> ResourceEntries => data ? data.resources : null;
         public bool RequirementsMet => QuestCompleted();
