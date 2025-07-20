@@ -16,10 +16,14 @@ namespace TimelessEchoes.NpcGeneration
     public class DiscipleGenerator : MonoBehaviour
     {
         [SerializeField] private Disciple data;
+        private bool dataAssigned;
 
         public void SetData(Disciple d)
         {
             data = d;
+            dataAssigned = true;
+            if (isActiveAndEnabled && !setup && RequirementsMet)
+                LoadState();
         }
 
         private readonly Dictionary<Resource, double> stored = new();
@@ -64,7 +68,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnEnable()
         {
-            if (!setup && QuestCompleted())
+            if (!setup && dataAssigned && QuestCompleted())
                 LoadState();
         }
 
@@ -210,7 +214,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnQuestHandinEvent(string questId)
         {
-            if (!setup && data != null && data.requiredQuest != null && questId == data.requiredQuest.questId && QuestCompleted())
+            if (!setup && dataAssigned && data != null && data.requiredQuest != null && questId == data.requiredQuest.questId && QuestCompleted())
                 LoadState();
         }
 
