@@ -75,6 +75,11 @@ namespace Blindsided.SaveData
             public float MasterVolume = 1f;
             public float MusicVolume = 0.25f;
             public float SfxVolume = 0.7f;
+
+            /// <summary>
+            ///     Automatically cast available buffs when enabled.
+            /// </summary>
+            public bool AutoBuff;
         }
 
         [HideReferenceObjectPicker]

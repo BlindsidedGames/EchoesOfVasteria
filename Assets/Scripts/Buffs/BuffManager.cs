@@ -5,9 +5,11 @@ using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using UnityEngine;
+using TimelessEchoes.Stats;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Buffs
 {
@@ -108,6 +110,8 @@ namespace TimelessEchoes.Buffs
         {
             if (ticking)
                 TickBuffs(delta);
+
+            AutoCastBuffs();
         }
 
         /// <summary>Pauses ticking of buff timers.</summary>
@@ -363,6 +367,29 @@ namespace TimelessEchoes.Buffs
                 if (c != null)
                     Destroy(c.gameObject);
             buff.echoes.Clear();
+        }
+
+        private void AutoCastBuffs()
+        {
+            if (!AutoBuff) return;
+            EnsureResourceManager();
+            var tracker = GameplayStatTracker.Instance;
+            for (int i = 0; i < slotAssignments.Count && i < UnlockedSlots; i++)
+            {
+                var recipe = slotAssignments[i];
+                if (recipe == null) continue;
+                if (GetRemaining(recipe) > 0f) continue;
+
+                bool distanceOk = true;
+                if (recipe.distancePercent > 0f && tracker != null)
+                {
+                    float expireDist = tracker.LongestRun * recipe.distancePercent;
+                    distanceOk = tracker.CurrentRunDistance < expireDist;
+                }
+
+                if (distanceOk && CanPurchase(recipe))
+                    PurchaseBuff(recipe);
+            }
         }
 
 

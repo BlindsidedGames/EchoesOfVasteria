@@ -122,8 +122,22 @@ namespace Blindsided.SaveData
             }
         }
 
+        public static bool AutoBuff
+        {
+            get => oracle.saveData.SavedPreferences.AutoBuff;
+            set
+            {
+                if (oracle.saveData.SavedPreferences.AutoBuff != value)
+                {
+                    oracle.saveData.SavedPreferences.AutoBuff = value;
+                    AutoBuffChanged?.Invoke();
+                }
+            }
+        }
+
 
         public static Preferences SavedPreferences => oracle.saveData.SavedPreferences;
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
         public static event Action ShowLevelTextChanged;
+        public static event Action AutoBuffChanged;
     }}

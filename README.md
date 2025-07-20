@@ -31,6 +31,11 @@ If an enemy enters the hero's vision range the hero automatically engages in
 combat using projectile attacks. Combat strength and movement speed are
 modified by stat upgrades.
 
+### Auto Buff
+After you cast 100 buffs the **Autobuff** toggle becomes available in the
+game's UI. When enabled, any assigned buff that is not currently active will be
+automatically cast as soon as you have enough resources.
+
 ## Echoes
 Clones spawned by milestones are referred to as **Echoes**. An Echo performs
 tasks of a specified skill for a limited time when summoned.
