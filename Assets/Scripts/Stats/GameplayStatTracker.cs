@@ -46,6 +46,11 @@ namespace TimelessEchoes.Stats
 
         public int TimesReaped { get; private set; }
 
+        /// <summary>
+        /// Number of times a buff has been cast.
+        /// </summary>
+        public int BuffsCast { get; private set; }
+
         public double TotalResourcesGathered { get; private set; }
 
         public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
@@ -119,6 +124,7 @@ namespace TimelessEchoes.Stats
             g.DamageDealt = DamageDealt;
             g.DamageTaken = DamageTaken;
             g.TimesReaped = TimesReaped;
+            g.BuffsCast = BuffsCast;
             g.TotalResourcesGathered = TotalResourcesGathered;
             g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
             g.LongestRun = LongestRun;
@@ -152,6 +158,7 @@ namespace TimelessEchoes.Stats
             DamageDealt = g.DamageDealt;
             DamageTaken = g.DamageTaken;
             TimesReaped = g.TimesReaped;
+            BuffsCast = g.BuffsCast;
             TotalResourcesGathered = g.TotalResourcesGathered;
             recentRuns.Clear();
             if (g.RecentRuns != null)
@@ -250,6 +257,11 @@ namespace TimelessEchoes.Stats
         public void AddTimesReaped()
         {
             TimesReaped++;
+        }
+
+        public void AddBuffCast()
+        {
+            BuffsCast++;
         }
 
         public void AddResources(double amount, bool bonus = false)

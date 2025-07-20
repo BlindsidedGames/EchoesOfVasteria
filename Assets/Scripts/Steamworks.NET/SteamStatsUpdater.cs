@@ -135,6 +135,16 @@ namespace TimelessEchoes
                 }
             }
 
+            if (SteamUserStats.GetStat("BuffsCast", out int storedBuffs))
+            {
+                int newBuffs = tracker.BuffsCast;
+                if (newBuffs > storedBuffs)
+                {
+                    SteamUserStats.SetStat("BuffsCast", newBuffs);
+                    changed = true;
+                }
+            }
+
             if (changed)
                 SteamUserStats.StoreStats();
         }

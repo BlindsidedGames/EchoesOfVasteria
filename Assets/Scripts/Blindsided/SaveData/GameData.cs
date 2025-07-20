@@ -144,6 +144,7 @@ namespace Blindsided.SaveData
             public float DamageDealt;
             public float DamageTaken;
             public int TimesReaped;
+            public int BuffsCast;
             public double TotalResourcesGathered;
 
             // Records for the most recent runs. Limited to the last 50.
