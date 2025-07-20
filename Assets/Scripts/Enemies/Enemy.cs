@@ -8,6 +8,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using System.Linq;
 using static TimelessEchoes.TELogger;
 using Random = UnityEngine.Random;
 
@@ -336,10 +337,13 @@ namespace TimelessEchoes.Enemies
                                 ? config.capableSkills
                                 : new List<Skill> { skill };
                             var disable = config != null && config.disableSkills;
+                            var controller = StatUpgradeController.Instance;
+                            var echoUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                            float bonus = echoUpgrade != null ? controller.GetTotalValue(echoUpgrade) : 0f;
                             for (var c = 0; c < count; c++)
                             {
                                 var combat = config != null && config.combatEnabled;
-                                EchoManager.SpawnEcho(skills, ms.echoDuration, combat, disable);
+                                EchoManager.SpawnEcho(skills, ms.echoDuration + bonus, combat, disable);
                             }
                         }
                     }

@@ -3,6 +3,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Buffs;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TimelessEchoes.Tasks
 {
@@ -131,10 +132,13 @@ namespace TimelessEchoes.Tasks
                                 ? config.capableSkills
                                 : new System.Collections.Generic.List<Skill> { associatedSkill };
                             bool disable = config != null && config.disableSkills;
+                            var controller = StatUpgradeController.Instance;
+                            var echoUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                            float bonus = echoUpgrade != null ? controller.GetTotalValue(echoUpgrade) : 0f;
                             for (int c = 0; c < count; c++)
                             {
                                 bool combat = config != null && config.combatEnabled;
-                                EchoManager.SpawnEcho(skills, ms.echoDuration, combat, disable);
+                                EchoManager.SpawnEcho(skills, ms.echoDuration + bonus, combat, disable);
                             }
                         }
                     }
