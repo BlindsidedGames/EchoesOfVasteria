@@ -337,9 +337,9 @@ namespace TimelessEchoes.Enemies
                                 ? config.capableSkills
                                 : new List<Skill> { skill };
                             var disable = config != null && config.disableSkills;
-                            var controller = StatUpgradeController.Instance;
-                            var echoUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
-                            float bonus = echoUpgrade != null ? controller.GetTotalValue(echoUpgrade) : 0f;
+                            var upgradeController = StatUpgradeController.Instance;
+                            var echoUpgrade = upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                            float bonus = echoUpgrade != null ? upgradeController.GetTotalValue(echoUpgrade) : 0f;
                             for (var c = 0; c < count; c++)
                             {
                                 var combat = config != null && config.combatEnabled;
