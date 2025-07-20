@@ -21,6 +21,7 @@ namespace TimelessEchoes.Hero
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
+        private bool initialized;
 
         private void Awake()
         {
@@ -31,6 +32,9 @@ namespace TimelessEchoes.Hero
 
         private void OnEnable()
         {
+            if (!initialized)
+                return;
+
             if (combatEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
 
@@ -62,6 +66,8 @@ namespace TimelessEchoes.Hero
                 bool combatOnly = combatEnabled && disableSkills;
                 hero.UnlimitedAggroRange = combatOnly;
             }
+
+            initialized = true;
 
             if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
