@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Wartermelone
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: 66c8f62ac1804f39a5680b0e8aeed6c9, type: 2}
-  generationInterval: 300
+  generationInterval: 30

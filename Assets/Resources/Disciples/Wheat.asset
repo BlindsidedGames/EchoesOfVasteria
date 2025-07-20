@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf4798b78fe46a04a8303222d6541b8f, type: 3}
   m_Name: Wheat
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}
     amount: 5
   requiredQuest: {fileID: 11400000, guid: 7c401b02ff71468ea5e6625028fd3482, type: 2}
-  generationInterval: 300
+  generationInterval: 30
