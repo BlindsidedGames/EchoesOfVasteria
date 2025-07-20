@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resources:
   - resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}
+    amount: 3
+  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}
     amount: 2
+  - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
+    amount: 1
   requiredQuest: {fileID: 11400000, guid: f36100e6a0b6498cacc8700a2141020d, type: 2}
   generationInterval: 35

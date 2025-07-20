@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Flippy Floppy
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   taskName: Flippy Floppy
   taskID: 20
   taskIcon: {fileID: -5709444697936806870, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
@@ -19,14 +19,16 @@ MonoBehaviour:
   xpForCompletion: 2
   minX: 0
   maxX: 250
+  requiredQuest: {fileID: 0}
   taskDuration: 2
+  sfxInterval: 0
   resourceDrops:
   - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
     dropRange: {x: 1, y: 2}
     dropChance: 1
     minX: 0
     maxX: 250
-  resetProgressOnInterrupt: 1
+  resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
     timeSpent: 0
