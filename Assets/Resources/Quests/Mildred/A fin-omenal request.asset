@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Another fishy situation 2
+  m_Name: A fin-omenal request
   m_EditorClassIdentifier: 
-  questId: Mildred3
-  questName: Another fishy situation
-  description: Mildred's power seems to be changing and Utoes thinks that if he can
-    get his hands on some  Muddy Muck Munchers Mildred might be able to help you
-    out even more!
+  questId: Mildred2
+  questName: A fin-omenal request
+  description: "Rumour has it that the aristocratic Sir Splashford III swims these
+    waters\u2014complete with monocle and top-hat! Reel him in (humanely, of course)
+    so Mildred can study his refined scales and unlock deeper piscatory power."
   rewardDescription: Another buff slot!
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  - {fileID: 11400000, guid: a04629c010952d741b32db280e62a8eb, type: 2}
   requirements:
   - type: 2
-    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+    resource: {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}
     amount: 50
     enemies: []
     killIcon: {fileID: 0}

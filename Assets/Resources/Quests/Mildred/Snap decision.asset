@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Another fishy situation 3
+  m_Name: Snap decision
   m_EditorClassIdentifier: 
-  questId: Mildred4
-  questName: Another fishy situation
-  description: Mildred's power seems to be changing and Utoes thinks that if he can
-    get his hands on some  Muddy Muck Munchers Mildred might be able to help you
-    out even more!
+  questId: Mildred3
+  questName: Snap decision
+  description: "Utoes swears the feisty Snapjaw Jr. can bite straight through anchor
+    chain\u2014and maybe stubborn gameplay loops. Hook a haul of them so Mildred
+    can crunch the numbers (and the shells) for a sharper edge."
   rewardDescription: Another buff slot!
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  - {fileID: 11400000, guid: 426c7caff520fda45822765ddb29f677, type: 2}
   requirements:
   - type: 2
-    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+    resource: {fileID: 11400000, guid: bf23b8a0a0d501543b9e7310db929300, type: 2}
     amount: 50
     enemies: []
     killIcon: {fileID: 0}

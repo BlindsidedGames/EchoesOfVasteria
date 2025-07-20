@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Another fishy situation 1
+  m_Name: The bloop before the boom
   m_EditorClassIdentifier: 
-  questId: Mildred2
-  questName: Another fishy situation
-  description: Mildred's power seems to be changing and Utoes thinks that if he can
-    get his hands on some  Muddy Muck Munchers Mildred might be able to help you
-    out even more!
+  questId: Mildred4
+  questName: The bloop before the boom
+  description: 'Legends speak of Bloopicus Maximus, a bubbly behemoth whose echoing
+    bloops warp time itself. Capture a chorus of these colossal critters so Mildred
+    can brew a buff that truly makes a splash in every timeline.
+
+'
   rewardDescription: Another buff slot!
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  - {fileID: 11400000, guid: c216de0e271f04d4f94dc6f2bb27ac32, type: 2}
   requirements:
   - type: 2
-    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+    resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
     amount: 50
     enemies: []
     killIcon: {fileID: 0}
