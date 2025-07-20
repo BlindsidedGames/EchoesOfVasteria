@@ -142,7 +142,10 @@ namespace TimelessEchoes.Hero
             }
 
             if (IsEcho && autoBuffAnimator != null)
+            {
                 autoBuffAnimator.gameObject.SetActive(false);
+                autoBuffAnimator = null;
+            }
 
             if (!IsEcho)
             {
@@ -384,7 +387,7 @@ namespace TimelessEchoes.Hero
             animator.SetFloat("MoveX", lastMoveDir.x);
             animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
-            if (autoBuffAnimator != null)
+            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
             {
                 autoBuffAnimator.SetFloat("MoveX", lastMoveDir.x);
                 autoBuffAnimator.SetFloat("MoveY", lastMoveDir.y);
@@ -636,7 +639,7 @@ namespace TimelessEchoes.Hero
         {
             if (animator != null)
                 animator.Play(animationName);
-            if (autoBuffAnimator != null)
+            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
                 autoBuffAnimator.Play(animationName);
         }
 
@@ -644,7 +647,7 @@ namespace TimelessEchoes.Hero
         {
             if (animator != null)
                 animator.Play(stateHash, 0, normalizedTime);
-            if (autoBuffAnimator != null)
+            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
                 autoBuffAnimator.Play(stateHash, 0, normalizedTime);
         }
 
@@ -720,15 +723,15 @@ namespace TimelessEchoes.Hero
             }
 
             autoBuffAnimator.gameObject.SetActive(AutoBuff);
-            if (animator != null)
-            {
-                autoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
-                autoBuffAnimator.avatar = animator.avatar;
-                autoBuffAnimator.updateMode = animator.updateMode;
-                autoBuffAnimator.speed = animator.speed;
-                var info = animator.GetCurrentAnimatorStateInfo(0);
-                autoBuffAnimator.Play(info.fullPathHash, 0, info.normalizedTime);
-            }
+            if (!AutoBuff || animator == null || !autoBuffAnimator.isActiveAndEnabled)
+                return;
+
+            autoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
+            autoBuffAnimator.avatar = animator.avatar;
+            autoBuffAnimator.updateMode = animator.updateMode;
+            autoBuffAnimator.speed = animator.speed;
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            autoBuffAnimator.Play(info.fullPathHash, 0, info.normalizedTime);
         }
 
         #endregion
