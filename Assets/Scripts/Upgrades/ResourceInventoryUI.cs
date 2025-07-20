@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using References.UI;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
@@ -48,17 +47,13 @@ namespace TimelessEchoes.Upgrades
                 var slot = Instantiate(slotPrefab, slotParent);
                 slots.Add(slot);
                 var index = slots.Count - 1;
-                slot.PointerClick += (_, button) =>
-                {
-                    if (button == PointerEventData.InputButton.Left)
-                        SelectSlot(index);
-                };
                 if (slot.highlightButton != null)
                 {
                     var r = res;
                     slot.highlightButton.onClick.RemoveAllListeners();
                     slot.highlightButton.onClick.AddListener(() => HighlightResource(r, false));
                 }
+
                 if (slot.countText != null)
                     slot.countText.gameObject.SetActive(true);
             }
@@ -85,6 +80,7 @@ namespace TimelessEchoes.Upgrades
                 StopCoroutine(highlightRoutine);
                 highlightRoutine = null;
             }
+
             DeselectSlot();
         }
 
@@ -151,7 +147,7 @@ namespace TimelessEchoes.Upgrades
                 var res = resources[index];
                 if (res)
                 {
-                    bool unlocked = resourceManager && resourceManager.IsUnlocked(res);
+                    var unlocked = resourceManager && resourceManager.IsUnlocked(res);
                     selectedResourceNameText.text = unlocked ? res.name : "???";
                 }
                 else
