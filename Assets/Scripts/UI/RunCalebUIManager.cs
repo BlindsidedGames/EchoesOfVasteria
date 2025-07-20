@@ -12,10 +12,13 @@ namespace TimelessEchoes.UI
     /// </summary>
     public class RunCalebUIManager : MonoBehaviour
     {
+        public static RunCalebUIManager Instance { get; private set; }
         [SerializeField] private RunCalebUIReferences uiReferences;
         [SerializeField] private GameObject skillsWindow;
         [SerializeField] private BuffManager buffManager;
         [SerializeField] private RegenManager regenManager;
+
+        public bool IsSkillsWindowOpen => skillsWindow != null && skillsWindow.activeSelf;
 
         private HeroController hero;
         private HeroHealth heroHealth;
@@ -29,6 +32,14 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+
             if (uiReferences == null)
                 uiReferences = GetComponent<RunCalebUIReferences>();
             if (buffManager == null)
@@ -41,6 +52,8 @@ namespace TimelessEchoes.UI
 
         private void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             if (uiReferences != null && uiReferences.skillsButton != null)
                 uiReferences.skillsButton.onClick.RemoveListener(ToggleSkills);
             if (heroHealth != null)
@@ -76,7 +89,16 @@ namespace TimelessEchoes.UI
         private void ToggleSkills()
         {
             if (skillsWindow != null)
-                skillsWindow.SetActive(!skillsWindow.activeSelf);
+            {
+                bool newState = !skillsWindow.activeSelf;
+                skillsWindow.SetActive(newState);
+                if (newState)
+                {
+                    var tooltip = FindFirstObjectByType<RunBuffTooltipUIReferences>();
+                    if (tooltip != null && tooltip.tooltipPanel != null)
+                        tooltip.tooltipPanel.SetActive(false);
+                }
+            }
         }
 
         private void OnHealthChanged(float current, float max)
