@@ -149,7 +149,15 @@ namespace TimelessEchoes.Upgrades
             if (selectedResourceNameText != null && index >= 0 && index < resources.Count)
             {
                 var res = resources[index];
-                selectedResourceNameText.text = res ? res.name : string.Empty;
+                if (res)
+                {
+                    bool unlocked = resourceManager && resourceManager.IsUnlocked(res);
+                    selectedResourceNameText.text = unlocked ? res.name : "???";
+                }
+                else
+                {
+                    selectedResourceNameText.text = string.Empty;
+                }
             }
 
             if (scrollToSlot)
