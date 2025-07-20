@@ -28,7 +28,13 @@ namespace TimelessEchoes.Hero
                 {
                     var c = r.color;
                     c.a = 0.7f;
-                    r.color = c;
+
+                    // Combat only echoes should appear slightly red to
+                    // differentiate them from regular echoes.
+                    if (combat && disableSkills)
+                        r.color = new Color(1f, 0.5f, 0.5f, c.a);
+                    else
+                        r.color = c;
                 }
 
                 // Echoes share the primary hero's health. Keep the existing
