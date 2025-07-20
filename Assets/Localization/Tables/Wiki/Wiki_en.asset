@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Wiki_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "Disciples are your main source of income while away. \nResources
+      will be gathered and brought to eva for storage. When you return she will happily
+      give them to you, all you have to do is ask!\n\nIf you earn a disciple before
+      meeting Eva resources will still be collected."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: Buffs are short-term, timed powers that expire when they run out
+      or if you return to town.  They cost resources to activate and give you powerful
+      bonuses for your run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: 'Caleb will enter combat automatically, and only engage enemies
+      who get in the way! Tasks first fun later.
+
+
+      You may notice floating
+      damage numbers EG. <color=#C69B60>4.27<font-weight=400></font-weight><size=80%><color=#60C560>
+      +1.45<font-weight=400></font-weight></color></size><size=70%> -0.10<font-weight=400></font-weight></color></size>
+
+      The
+      first is your base damage, the second is your bonus damage and the last one
+      is the reduction from enemy defense.
+
+
+      Reaching your 10th, 100th, 1,000th,
+      and 10,000th kill against a specific enemy will grant you 25% bonus damage
+      against that specific enemy. This is where the majority of the green damage
+      you see comes from.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Echoes are alternate versions of Caleb who will shift slightly
+      into his reality to help out under various circumstances.\n\nEach echo can
+      have a combination of Calebs skillset. But most Echoes won't have them all.\n\nThe
+      main difference in Echo behaviour comes from whether or not they are combat
+      enabled.\nCombat enabled Echoes have two different styles depending on whether
+      or not they can also complete tasks. \n\nA combat enabled Echo that does NOT
+      have the ability to do tasks will seek out enemies specifically.\nA combat
+      enabled Echo that DOES have the ability to do tasks will prioritize tasks over
+      combat and only engage enemies that see them.\n\nEchoes that do not have combat
+      will not be targetted by or target enemies.\n\nDev Note | Right now there are
+      no echoes in the game that can do both combat and tasks. Echoes from Milestones
+      specifically seek out tasks for that skills milestone EG an echo spawned with
+      woodcutting will only seek out woodcutting tasks."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: 'For each kill you get on a run your resource bonus goes up by 2%
+      During combat this is temporarily set back to 0%
+
+
+      Aim to retreat just
+      before combat gets too tough for you to handle so that you get as many bonus
+      resources as possible!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: 'Tasks are the primary purpose of Caleb''s journey. Gathering resources
+      for the town is essential to growth.
+
+
+      These are completed automatically,
+      and you will complete them faster as your skills level.'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

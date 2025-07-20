@@ -1,8 +1,8 @@
 using Blindsided.Utilities;
 using TimelessEchoes.Hero;
-using UnityEngine;
-using TimelessEchoes.Utilities;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Utilities;
+using UnityEngine;
 
 namespace TimelessEchoes.Tasks
 {
@@ -56,23 +56,22 @@ namespace TimelessEchoes.Tasks
             }
 
 
-            hero.PlayAnimation(AnimationName);
+            hero.Animator.Play(AnimationName);
             ShowProgressBar();
         }
 
         public override void Tick(HeroController hero)
         {
-            float delta = Time.deltaTime;
-            var controller = SkillController.Instance ?? Object.FindFirstObjectByType<SkillController>();
+            var delta = Time.deltaTime;
+            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
             if (controller != null && associatedSkill != null)
-            {
                 delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
-            }
             timer += delta;
             if (!isComplete)
             {
                 // No audio playback here; sounds are triggered via animation events.
             }
+
             UpdateProgressBar();
 
             if (timer >= TaskDuration)

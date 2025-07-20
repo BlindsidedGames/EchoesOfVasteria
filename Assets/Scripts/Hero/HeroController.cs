@@ -15,6 +15,7 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
@@ -38,7 +39,10 @@ namespace TimelessEchoes.Hero
         [HideInInspector] public bool IsEcho;
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
-        [SerializeField] private Animator autoBuffAnimator;
+
+        [FormerlySerializedAs("autoBuffAnimator")] [SerializeField]
+        public Animator AutoBuffAnimator;
+
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
@@ -92,7 +96,6 @@ namespace TimelessEchoes.Hero
         private TaskController taskController;
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
-        public Animator AutoBuffAnimator => autoBuffAnimator;
         public bool InCombat => state == State.Combat;
 
         /// <summary>
@@ -139,12 +142,6 @@ namespace TimelessEchoes.Hero
             {
                 IsEcho = true;
                 nextIsEcho = false;
-            }
-
-            if (IsEcho && autoBuffAnimator != null)
-            {
-                autoBuffAnimator.gameObject.SetActive(false);
-                autoBuffAnimator = null;
             }
 
             if (!IsEcho)
@@ -196,7 +193,7 @@ namespace TimelessEchoes.Hero
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
             UpdateAnimation();
             UpdateBehavior();
-            if (!IsEcho && mapUI != null)
+            if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
 
             var tracker = GameplayStatTracker.Instance;
@@ -204,7 +201,7 @@ namespace TimelessEchoes.Hero
             {
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
-            else if (!IsEcho)
+            else
             {
                 tracker.RecordHeroPosition(transform.position);
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
@@ -245,8 +242,7 @@ namespace TimelessEchoes.Hero
             if (animator != null)
             {
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                var offset = Random.value;
-                PlayAnimation(stateInfo.fullPathHash, offset);
+                animator.Play(stateInfo.fullPathHash, 0, Random.value);
             }
 
             CurrentTask = null;
@@ -387,12 +383,6 @@ namespace TimelessEchoes.Hero
             animator.SetFloat("MoveX", lastMoveDir.x);
             animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
-            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
-            {
-                autoBuffAnimator.SetFloat("MoveX", lastMoveDir.x);
-                autoBuffAnimator.SetFloat("MoveY", lastMoveDir.y);
-                autoBuffAnimator.SetFloat("MoveMagnitude", vel.magnitude);
-            }
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
@@ -635,22 +625,6 @@ namespace TimelessEchoes.Hero
             HandleCombat(enemy.transform);
         }
 
-        public void PlayAnimation(string animationName)
-        {
-            if (animator != null)
-                animator.Play(animationName);
-            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
-                autoBuffAnimator.Play(animationName);
-        }
-
-        private void PlayAnimation(int stateHash, float normalizedTime)
-        {
-            if (animator != null)
-                animator.Play(stateHash, 0, normalizedTime);
-            if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
-                autoBuffAnimator.Play(stateHash, 0, normalizedTime);
-        }
-
         private void Attack(Transform target)
         {
             if (stats.projectilePrefab == null || target == null) return;
@@ -658,7 +632,7 @@ namespace TimelessEchoes.Hero
             var enemy = target.GetComponent<Health>();
             if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
-            PlayAnimation("Attack");
+            animator.Play("Attack");
 
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
@@ -714,24 +688,15 @@ namespace TimelessEchoes.Hero
 
         private void OnAutoBuffChanged()
         {
-            if (autoBuffAnimator == null) return;
-            // Echoes should never display the autobuff overlay
-            if (IsEcho)
+            if (AutoBuffAnimator == null) return;
+            AutoBuffAnimator.gameObject.SetActive(AutoBuff);
+            if (animator != null)
             {
-                autoBuffAnimator.gameObject.SetActive(false);
-                return;
+                AutoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
+                AutoBuffAnimator.avatar = animator.avatar;
+                AutoBuffAnimator.updateMode = animator.updateMode;
+                AutoBuffAnimator.speed = animator.speed;
             }
-
-            autoBuffAnimator.gameObject.SetActive(AutoBuff);
-            if (!AutoBuff || animator == null || !autoBuffAnimator.isActiveAndEnabled)
-                return;
-
-            autoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
-            autoBuffAnimator.avatar = animator.avatar;
-            autoBuffAnimator.updateMode = animator.updateMode;
-            autoBuffAnimator.speed = animator.speed;
-            var info = animator.GetCurrentAnimatorStateInfo(0);
-            autoBuffAnimator.Play(info.fullPathHash, 0, info.normalizedTime);
         }
 
         #endregion

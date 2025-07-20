@@ -24,11 +24,11 @@ MonoBehaviour:
   m_InternalBundleIdMode: 1
   m_AssetLoadMode: 0
   m_BundledAssetProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider
   m_AssetBundleProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider
   m_IgnoreUnsupportedFilesInBuild: 0
   m_UniqueBundleIds: 0
   m_EnableJsonCatalog: 0
@@ -59,11 +59,37 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 3e75fdc5906ff3645b579c07990a4f28, type: 2}
+  - {fileID: 11400000, guid: 872488edaf1b4ab42ae6192efa172a99, type: 2}
   - {fileID: 11400000, guid: 6f9e2a4e18c159943bf6f89f58b66ddf, type: 2}
+  - {fileID: 11400000, guid: 15da015f6053fbf4ebc23426318e013d, type: 2}
+  - {fileID: 11400000, guid: 7b497d5fef4a69a4cbca145978851e86, type: 2}
+  - {fileID: 11400000, guid: 494385ab0f005de45b2cedd9bc9e8ec0, type: 2}
   - {fileID: 11400000, guid: 14154da6b0ce6114a80204ecd9ec8189, type: 2}
+  - {fileID: 11400000, guid: dda594ce5b7ba4d4eb95b8e3e94427d2, type: 2}
   - {fileID: 11400000, guid: 6839bda92dd9fb948a0bff643bdba012, type: 2}
+  - {fileID: 11400000, guid: 513a61cc24873d943a008868c4a1a106, type: 2}
+  - {fileID: 11400000, guid: 8c46965c5c312974ebfeb738dbb7f14a, type: 2}
   - {fileID: 11400000, guid: 4d53e2dae38ae5c4a8515c9cf3702003, type: 2}
+  - {fileID: 11400000, guid: 338a93a3e57c79f4d8163f52db40ab15, type: 2}
+  - {fileID: 11400000, guid: a6f25de4c43da25448d3078b28d3e572, type: 2}
+  - {fileID: 11400000, guid: ace865fe189e78f42a75430653f2d747, type: 2}
+  - {fileID: 11400000, guid: 3d4af9c35b169664a88f33ae02166244, type: 2}
+  - {fileID: 11400000, guid: 1303af26bfe0c1f4e9773c8d3e2dd64b, type: 2}
+  - {fileID: 11400000, guid: 23c6a520788612a46a79fad24f532840, type: 2}
+  - {fileID: 11400000, guid: 7e933f3f763e1884a94579a4348137aa, type: 2}
+  - {fileID: 11400000, guid: 4793d8b0800e0ac42b08e5378c8078f8, type: 2}
+  - {fileID: 11400000, guid: 20cee7d9d6de9584b94de2d4b82cea60, type: 2}
+  - {fileID: 11400000, guid: d7ba9086359a60d41879f702f41432b4, type: 2}
+  - {fileID: 11400000, guid: 5e688bab1c1198f4389aa24d837121c6, type: 2}
+  - {fileID: 11400000, guid: a60efaf3ed63090449458b9b2eadccd1, type: 2}
+  - {fileID: 11400000, guid: ba88a5ff09d86474caaf73344b9f80bd, type: 2}
+  - {fileID: 11400000, guid: 791fb319873792d4484f51a72b010d1d, type: 2}
+  - {fileID: 11400000, guid: f27be632f4842214cb7f94d6e2d651b7, type: 2}
+  - {fileID: 11400000, guid: 690fcae95e517a44eb51cd18227a3beb, type: 2}
   - {fileID: 11400000, guid: d3fc6e4e5581368488f5e881f62f2ad1, type: 2}
+  - {fileID: 11400000, guid: d6bc66f00fd70f543845b7b5201d43d9, type: 2}
+  - {fileID: 11400000, guid: 6220d3e6b31d4e54ab468d7566178224, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -106,6 +132,32 @@ MonoBehaviour:
     - Locale
     - Locale-zh-CN
     - Locale-en
+    - Locale-ar
+    - Locale-bg
+    - Locale-zh-TW
+    - Locale-cs
+    - Locale-da
+    - Locale-nl
+    - Locale-fi
+    - Locale-fr
+    - Locale-de
+    - Locale-el
+    - Locale-hu
+    - Locale-id
+    - Locale-it
+    - Locale-ja
+    - Locale-ko
+    - Locale-no
+    - Locale-pl
+    - Locale-pt-BR
+    - Locale-pt
+    - Locale-ro
+    - Locale-ru
+    - Locale-es
+    - Locale-sv
+    - Locale-th
+    - Locale-tr
+    - Locale-uk
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 7ab6299d5d4d9354ea41efcccebeb6f8, type: 2}
