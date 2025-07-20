@@ -17,6 +17,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Hero
 {
@@ -37,6 +38,7 @@ namespace TimelessEchoes.Hero
         [HideInInspector] public bool IsEcho;
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
+        [SerializeField] private Animator autoBuffAnimator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
@@ -248,6 +250,9 @@ namespace TimelessEchoes.Hero
             if (!IsEcho && skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
 
+            AutoBuffChanged += OnAutoBuffChanged;
+            OnAutoBuffChanged();
+
             if (!IsEcho)
                 Enemy.OnEngage += OnEnemyEngage;
         }
@@ -263,6 +268,8 @@ namespace TimelessEchoes.Hero
             var skillController = SkillController.Instance;
             if (!IsEcho && skillController != null)
                 skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
+
+            AutoBuffChanged -= OnAutoBuffChanged;
 
             if (!IsEcho)
                 Enemy.OnEngage -= OnEnemyEngage;
@@ -673,6 +680,19 @@ namespace TimelessEchoes.Hero
 
             var threshold = ai.endReachedDistance + 0.1f;
             return Vector2.Distance(transform.position, dest.position) <= threshold;
+        }
+
+        private void OnAutoBuffChanged()
+        {
+            if (autoBuffAnimator == null) return;
+            autoBuffAnimator.gameObject.SetActive(AutoBuff);
+            if (animator != null)
+            {
+                autoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
+                autoBuffAnimator.avatar = animator.avatar;
+                autoBuffAnimator.updateMode = animator.updateMode;
+                autoBuffAnimator.speed = animator.speed;
+            }
         }
 
         #endregion

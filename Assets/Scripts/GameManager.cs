@@ -21,6 +21,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes
 {
@@ -43,6 +44,9 @@ namespace TimelessEchoes
         [SerializeField] private TMP_Text retreatBonusText;
         [SerializeField] private Button returnOnDeathButton;
         [SerializeField] private TMP_Text returnOnDeathText;
+        [SerializeField] private GameObject autoBuffRoot;
+        [SerializeField] private Button autoBuffButton;
+        [SerializeField] private TMP_Text autoBuffText;
         [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
         [SerializeField] private GameObject tavernUI;
         [SerializeField] private GameObject mapUI;
@@ -89,6 +93,8 @@ namespace TimelessEchoes
                 deathRunButton.onClick.AddListener(OnDeathRunButton);
             if (deathReturnButton != null)
                 deathReturnButton.onClick.AddListener(OnDeathReturnButton);
+            if (autoBuffButton != null)
+                autoBuffButton.onClick.AddListener(ToggleAutoBuff);
             npcObjectStateController = NpcObjectStateController.Instance;
             if (npcObjectStateController == null)
                 Log("NpcObjectStateController missing", TELogCategory.General, this);
@@ -111,6 +117,8 @@ namespace TimelessEchoes
                 deathRunButton.onClick.RemoveListener(OnDeathRunButton);
             if (deathReturnButton != null)
                 deathReturnButton.onClick.RemoveListener(OnDeathReturnButton);
+            if (autoBuffButton != null)
+                autoBuffButton.onClick.RemoveListener(ToggleAutoBuff);
         }
 
         private void Start()
@@ -127,10 +135,14 @@ namespace TimelessEchoes
             if (returnOnDeathText != null)
                 returnOnDeathText.text = "Return On Death";
             npcObjectStateController?.UpdateObjectStates();
+            UpdateAutoBuffUI();
+            if (autoBuffRoot != null)
+                autoBuffRoot.SetActive(false);
         }
 
         private void Update()
         {
+            UpdateAutoBuffUI();
             if (returnToTavernButton != null)
             {
                 var active = hero != null;
@@ -175,6 +187,9 @@ namespace TimelessEchoes
                 retreatQueued = false;
                 StartCoroutine(ReturnToTavernRoutine());
             }
+
+            if (autoBuffRoot != null && statTracker != null)
+                autoBuffRoot.SetActive(statTracker.BuffsCast >= 100);
         }
 
         private void HideTooltip()
@@ -182,6 +197,18 @@ namespace TimelessEchoes
             var tooltip = FindFirstObjectByType<TooltipUIReferences>();
             if (tooltip != null)
                 tooltip.gameObject.SetActive(false);
+        }
+
+        private void ToggleAutoBuff()
+        {
+            AutoBuff = !AutoBuff;
+            UpdateAutoBuffUI();
+        }
+
+        private void UpdateAutoBuffUI()
+        {
+            if (autoBuffText != null)
+                autoBuffText.text = AutoBuff ? "Autobuff | On" : "Autobuff | Off";
         }
 
         private void OnReturnToTavernButton()
