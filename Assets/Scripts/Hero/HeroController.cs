@@ -141,6 +141,9 @@ namespace TimelessEchoes.Hero
                 nextIsEcho = false;
             }
 
+            if (IsEcho && autoBuffAnimator != null)
+                autoBuffAnimator.gameObject.SetActive(false);
+
             if (!IsEcho)
             {
                 if (Instance != null && Instance != this) Destroy(Instance.gameObject);
@@ -709,6 +712,13 @@ namespace TimelessEchoes.Hero
         private void OnAutoBuffChanged()
         {
             if (autoBuffAnimator == null) return;
+            // Echoes should never display the autobuff overlay
+            if (IsEcho)
+            {
+                autoBuffAnimator.gameObject.SetActive(false);
+                return;
+            }
+
             autoBuffAnimator.gameObject.SetActive(AutoBuff);
             if (animator != null)
             {
