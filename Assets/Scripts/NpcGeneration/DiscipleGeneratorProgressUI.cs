@@ -1,9 +1,11 @@
 using Blindsided.Utilities;
+using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
+using References.UI;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -13,42 +15,53 @@ namespace TimelessEchoes.NpcGeneration
     public class DiscipleGeneratorProgressUI : MonoBehaviour
     {
         [SerializeField, HideInInspector] private DiscipleGenerator generator;
-        [SerializeField, HideInInspector] private Resource resource;
-        [SerializeField] private double amountPerCycle;
+        [SerializeField] private Transform generatedParent;
+        [SerializeField] private DiscipleGeneratedResourceUIReferences generatedPrefab;
         [SerializeField] private SlicedFilledImage image;
         [SerializeField] private TMP_Text resourceNameText;
         [SerializeField] private TMP_Text totalCollectedText;
-        [SerializeField] private TMP_Text awaitingCollectionText;
         [SerializeField] private TMP_Text collectionRateText;
-        [SerializeField] private Image iconImage;
-        [SerializeField] private Button selectButton;
         [SerializeField] private Button collectButton;
 
+        private readonly Dictionary<Resource, DiscipleGeneratedResourceUIReferences> resourceUIs = new();
+        private readonly Dictionary<Resource, double> amountsPerCycle = new();
         private ResourceInventoryUI inventoryUI;
         private ResourceManager resourceManager;
 
-        public void SetData(DiscipleGenerator gen, Resource res, double perCycle)
+        public void SetData(DiscipleGenerator gen)
         {
             generator = gen;
-            resource = res;
-            amountPerCycle = perCycle;
 
-            if (iconImage != null)
-                iconImage.sprite = res ? res.icon : null;
-            if (resourceNameText != null && res != null)
-                resourceNameText.text = res.name;
+            if (generatedParent == null || generatedPrefab == null || generator == null)
+                return;
 
-            if (selectButton != null)
+            foreach (Transform child in generatedParent)
+                Destroy(child.gameObject);
+            resourceUIs.Clear();
+            amountsPerCycle.Clear();
+
+            foreach (var entry in generator.ResourceEntries)
             {
-                if (inventoryUI == null)
+                if (entry.resource == null) continue;
+                var ui = Instantiate(generatedPrefab, generatedParent);
+                if (ui.iconImage != null)
+                    ui.iconImage.sprite = entry.resource.icon;
+                if (ui.selectButton != null)
                 {
-                    inventoryUI = ResourceInventoryUI.Instance;
-                    if (inventoryUI == null)
-                        TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+                    EnsureInventoryUI();
+                    var r = entry.resource;
+                    ui.selectButton.onClick.RemoveAllListeners();
+                    ui.selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
                 }
-                var r = res;
-                selectButton.onClick.RemoveAllListeners();
-                selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
+                resourceUIs[entry.resource] = ui;
+                amountsPerCycle[entry.resource] = entry.amount;
+            }
+
+            if (resourceNameText != null)
+            {
+                var first = generator.ResourceEntries != null && generator.ResourceEntries.Count > 0 ?
+                    generator.ResourceEntries[0].resource : null;
+                resourceNameText.text = first ? first.name : string.Empty;
             }
 
             if (collectButton != null)
@@ -60,12 +73,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void Awake()
         {
-            if (inventoryUI == null)
-            {
-                inventoryUI = ResourceInventoryUI.Instance;
-                if (inventoryUI == null)
-                    TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
-            }
+            EnsureInventoryUI();
             if (resourceManager == null)
             {
                 resourceManager = ResourceManager.Instance;
@@ -74,41 +82,77 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
+        private void EnsureInventoryUI()
+        {
+            if (inventoryUI != null) return;
+            inventoryUI = ResourceInventoryUI.Instance;
+            if (inventoryUI == null)
+                TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+        }
+
         private void OnDestroy()
         {
-            if (selectButton != null)
-                selectButton.onClick.RemoveAllListeners();
+            foreach (var ui in resourceUIs.Values)
+                if (ui != null && ui.selectButton != null)
+                    ui.selectButton.onClick.RemoveAllListeners();
             if (collectButton != null)
                 collectButton.onClick.RemoveAllListeners();
         }
 
         private void Update()
         {
-            if (generator == null || resource == null) return;
+            if (generator == null) return;
+
             var pct = generator.Interval > 0f ? Mathf.Clamp01(generator.Progress / generator.Interval) : 0f;
             if (image != null)
                 image.fillAmount = pct;
 
-            if (resourceNameText != null)
-                resourceNameText.text = resource.name;
             if (resourceManager != null && totalCollectedText != null)
-                totalCollectedText.text = CalcUtils.FormatNumber(generator.GetTotalCollected(resource), true);
-            if (awaitingCollectionText != null)
-                awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(resource), true);
+            {
+                double total = 0;
+                foreach (var entry in generator.ResourceEntries)
+                    if (entry.resource != null)
+                        total += generator.GetTotalCollected(entry.resource);
+                totalCollectedText.text = CalcUtils.FormatNumber(total, true);
+            }
+
+            foreach (var pair in resourceUIs)
+            {
+                var res = pair.Key;
+                var ui = pair.Value;
+                if (ui != null && ui.awaitingCollectionText != null)
+                    ui.awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(res), true);
+            }
+
             if (collectionRateText != null)
             {
+                double totalPerCycle = 0;
+                foreach (var amt in amountsPerCycle.Values)
+                    totalPerCycle += amt;
                 if (generator.Interval > 0)
                 {
                     var time = generator.Interval.ToString("0.##");
-                    collectionRateText.text = CalcUtils.FormatNumber(amountPerCycle, true) + " / " + time + "s";
+                    collectionRateText.text = CalcUtils.FormatNumber(totalPerCycle, true) + " / " + time + "s";
                 }
                 else
                 {
-                    collectionRateText.text = CalcUtils.FormatNumber(amountPerCycle, true);
+                    collectionRateText.text = CalcUtils.FormatNumber(totalPerCycle, true);
                 }
             }
+
             if (collectButton != null)
-                collectButton.interactable = generator.GetStoredAmount(resource) > 0;
+            {
+                bool interact = false;
+                foreach (var entry in generator.ResourceEntries)
+                {
+                    if (entry.resource != null && generator.GetStoredAmount(entry.resource) > 0)
+                    {
+                        interact = true;
+                        break;
+                    }
+                }
+                collectButton.interactable = interact;
+            }
         }
     }
 }

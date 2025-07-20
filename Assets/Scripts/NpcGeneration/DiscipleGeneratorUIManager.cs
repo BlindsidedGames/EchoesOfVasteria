@@ -17,7 +17,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private Button collectAllButton;
 
         private DiscipleGenerationManager generationManager;
-        private readonly Dictionary<DiscipleGenerator, List<DiscipleGeneratorProgressUI>> entries = new();
+        private readonly Dictionary<DiscipleGenerator, DiscipleGeneratorProgressUI> entries = new();
 
         private void Awake()
         {
@@ -67,16 +67,9 @@ namespace TimelessEchoes.NpcGeneration
                 if (gen == null || !gen.RequirementsMet)
                     continue;
 
-                var list = new List<DiscipleGeneratorProgressUI>();
-                foreach (var entry in gen.ResourceEntries)
-                {
-                    if (entry.resource == null) continue;
-                    var ui = Instantiate(progressUIPrefab, progressUIParent);
-                    ui.SetData(gen, entry.resource, entry.amount);
-                    list.Add(ui);
-                }
-
-                entries[gen] = list;
+                var ui = Instantiate(progressUIPrefab, progressUIParent);
+                ui.SetData(gen);
+                entries[gen] = ui;
             }
 
             UpdateCollectAllButton();
