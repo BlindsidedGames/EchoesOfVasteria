@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Lettuce Feast
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: LettuceFeast
   questName: Lettuce Feast
   description: Supply 20 Tomatoes so Eva can craft a healthy salad.
-  rewardDescription: 'Unlock the Lettuce crop'
+  rewardDescription: Unlock the Lettuce crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: a01bc0adc87a48bab23d3700a16800e6, type: 2}

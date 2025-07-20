@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Corn
   questName: Cornfield Chorus
-  description: The witch closes her eyes to the rustling stalks. “Corn sings in
-    four-part harmony. Bring me 100 golden ears so I can weave a lullaby that lulls
-    pests—and leaves Mildred a maze to prowl.”
+  description: "The witch closes her eyes to the rustling stalks. \u201CCorn sings
+    in four-part harmony. Bring me 100 golden ears so I can weave a lullaby that
+    lulls pests\u2014and leaves Mildred a maze to prowl.\u201D"
   rewardDescription: Gain the Disciple of Corn
-  npcId: Eva
+  npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
   requirements:

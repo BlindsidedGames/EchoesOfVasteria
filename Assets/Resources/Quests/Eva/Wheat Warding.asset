@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Wheat
   questName: Wheat Warding
-  description: Eva sprinkles flour like fairy dust. “A circle of wheat keeps blight
-    and boredom at bay. Reap 100 bundles so we can bake ward-bread for the town (and
-    a crusty treat for the cats).”
+  description: "Eva sprinkles flour like fairy dust. \u201CA circle of wheat keeps
+    blight and boredom at bay. Reap 100 bundles so we can bake ward-bread for the
+    town (and a crusty treat for the cats).\u201D"
   rewardDescription: Gain the Disciple of Wheat
-  npcId: Eva
+  npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 2e4539a46ec54a6d90649879059b2af0, type: 2}
   requirements:

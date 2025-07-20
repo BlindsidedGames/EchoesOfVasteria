@@ -18,7 +18,11 @@ MonoBehaviour:
   baseDuration: 120
   echoSpawnConfig:
     echoCount: 1
-    capableSkills: []
+    capableSkills:
+    - {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
+    - {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
+    disableSkills: 0
+    combatEnabled: 1
   moveSpeedPercent: 40
   damagePercent: 0
   defensePercent: 0

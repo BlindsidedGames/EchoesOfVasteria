@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Pepper Pursuit
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: PepperPursuit
   questName: Pepper Pursuit
   description: Gather 20 Parsnips to spice up the fields.
-  rewardDescription: 'Unlock the Pepper crop'
+  rewardDescription: Unlock the Pepper crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 00568cbce0574f7680580a71be54f90a, type: 2}

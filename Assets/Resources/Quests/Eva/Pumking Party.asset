@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Pumking Party
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: PumkingParty
   questName: Pumking Party
   description: Trade 25 Chillies for seeds fit for a king.
-  rewardDescription: 'Unlock the Pumking crop'
+  rewardDescription: Unlock the Pumking crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 4ca1d6c5bf8245df82a7a75168d51f02, type: 2}

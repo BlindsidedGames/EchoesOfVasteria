@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: ParsnipPact
   questName: Parsnip Pact
-  description: Eva carves runes into a parsnip. “Parsnips remember winter’s patience.
-    Bring 100 so we can seal a pact of endurance—Utoes could use the stamina for
-    night patrol.”
+  description: "Eva carves runes into a parsnip. \u201CParsnips remember winter\u2019s
+    patience. Bring 100 so we can seal a pact of endurance\u2014Utoes could use the
+    stamina for night patrol.\u201D"
   rewardDescription: Gain the Disciple of Parsnip
-  npcId: Eva
+  npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: eeb83a9d24684f268c13f0f594b4f6b6, type: 2}
   requirements:

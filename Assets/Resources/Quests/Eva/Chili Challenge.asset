@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Chili Challenge
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: ChiliChallenge
   questName: Chili Challenge
   description: Offer 15 Peppers to test some fiery magic.
-  rewardDescription: 'Unlock the Chillie crop'
+  rewardDescription: Unlock the Chillie crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 28ae2ed17b1546c8a3d5f43e52c3cdb7, type: 2}

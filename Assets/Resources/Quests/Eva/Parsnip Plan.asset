@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Parsnip Plan
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: ParsnipPlan
   questName: Parsnip Plan
   description: Provide 20 Leeks to expand the root cellar.
-  rewardDescription: 'Unlock the Parsnip crop'
+  rewardDescription: Unlock the Parsnip crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 959a94840c214b3dae27c81ab2473463, type: 2}

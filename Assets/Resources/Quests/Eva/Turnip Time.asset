@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Turnip Time
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: TurnipTime
   questName: Turnip Time
   description: Deliver 30 Funions to master the final crop.
-  rewardDescription: 'Unlock the Turnip crop'
+  rewardDescription: Unlock the Turnip crop
   npcId: Witch1
   requiredQuests:
   - {fileID: 11400000, guid: 72c197707d4c4c529d67db6a7e711132, type: 2}
