@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
+using TimelessEchoes.UI;
 
 namespace TimelessEchoes.Buffs
 {
@@ -351,6 +352,12 @@ namespace TimelessEchoes.Buffs
             if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 ||
                 slot >= runSlotButtons.Length)
                 return;
+
+            if (RunCalebUIManager.Instance != null && RunCalebUIManager.Instance.IsSkillsWindowOpen)
+            {
+                runSlotTooltip.tooltipPanel.SetActive(false);
+                return;
+            }
 
             if (buffManager != null && !buffManager.IsSlotUnlocked(slot))
             {
