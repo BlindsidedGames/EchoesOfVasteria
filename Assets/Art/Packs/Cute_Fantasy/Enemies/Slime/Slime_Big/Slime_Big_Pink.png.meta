@@ -195,6 +195,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -202,10 +215,10 @@ TextureImporter:
       name: Slime_Big_Pink_0
       rect:
         serializedVersion: 2
-        x: 22
-        y: 213
-        width: 21
-        height: 20
+        x: 0
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -224,10 +237,10 @@ TextureImporter:
       name: Slime_Big_Pink_1
       rect:
         serializedVersion: 2
-        x: 85
-        y: 213
-        width: 23
-        height: 19
+        x: 64
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -246,10 +259,10 @@ TextureImporter:
       name: Slime_Big_Pink_2
       rect:
         serializedVersion: 2
-        x: 148
-        y: 213
-        width: 25
-        height: 18
+        x: 128
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -268,10 +281,10 @@ TextureImporter:
       name: Slime_Big_Pink_3
       rect:
         serializedVersion: 2
-        x: 213
-        y: 213
-        width: 23
-        height: 19
+        x: 192
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -290,10 +303,10 @@ TextureImporter:
       name: Slime_Big_Pink_4
       rect:
         serializedVersion: 2
-        x: 22
-        y: 149
-        width: 21
-        height: 20
+        x: 0
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -312,10 +325,10 @@ TextureImporter:
       name: Slime_Big_Pink_5
       rect:
         serializedVersion: 2
-        x: 85
-        y: 149
-        width: 23
-        height: 19
+        x: 64
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -334,10 +347,10 @@ TextureImporter:
       name: Slime_Big_Pink_6
       rect:
         serializedVersion: 2
-        x: 148
-        y: 149
-        width: 25
-        height: 18
+        x: 128
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -356,10 +369,10 @@ TextureImporter:
       name: Slime_Big_Pink_7
       rect:
         serializedVersion: 2
-        x: 214
-        y: 149
-        width: 21
-        height: 25
+        x: 192
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -378,10 +391,10 @@ TextureImporter:
       name: Slime_Big_Pink_8
       rect:
         serializedVersion: 2
-        x: 278
-        y: 149
-        width: 21
-        height: 30
+        x: 256
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -400,10 +413,10 @@ TextureImporter:
       name: Slime_Big_Pink_9
       rect:
         serializedVersion: 2
-        x: 342
-        y: 149
-        width: 21
-        height: 26
+        x: 320
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -422,10 +435,10 @@ TextureImporter:
       name: Slime_Big_Pink_10
       rect:
         serializedVersion: 2
-        x: 405
-        y: 149
-        width: 23
-        height: 19
+        x: 384
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -444,10 +457,10 @@ TextureImporter:
       name: Slime_Big_Pink_11
       rect:
         serializedVersion: 2
-        x: 468
-        y: 149
-        width: 25
-        height: 18
+        x: 448
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,10 +479,10 @@ TextureImporter:
       name: Slime_Big_Pink_12
       rect:
         serializedVersion: 2
-        x: 22
-        y: 85
-        width: 21
-        height: 20
+        x: 0
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -488,10 +501,10 @@ TextureImporter:
       name: Slime_Big_Pink_13
       rect:
         serializedVersion: 2
-        x: 86
-        y: 85
-        width: 21
-        height: 21
+        x: 64
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -510,10 +523,10 @@ TextureImporter:
       name: Slime_Big_Pink_14
       rect:
         serializedVersion: 2
-        x: 147
-        y: 85
-        width: 25
-        height: 22
+        x: 128
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -532,10 +545,10 @@ TextureImporter:
       name: Slime_Big_Pink_15
       rect:
         serializedVersion: 2
-        x: 207
-        y: 97
-        width: 11
-        height: 8
+        x: 192
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -554,10 +567,10 @@ TextureImporter:
       name: Slime_Big_Pink_16
       rect:
         serializedVersion: 2
-        x: 215
-        y: 85
-        width: 18
-        height: 19
+        x: 256
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -576,10 +589,10 @@ TextureImporter:
       name: Slime_Big_Pink_17
       rect:
         serializedVersion: 2
-        x: 232
-        y: 98
-        width: 10
-        height: 9
+        x: 320
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -598,10 +611,10 @@ TextureImporter:
       name: Slime_Big_Pink_18
       rect:
         serializedVersion: 2
-        x: 270
-        y: 90
-        width: 7
-        height: 11
+        x: 384
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -620,10 +633,10 @@ TextureImporter:
       name: Slime_Big_Pink_19
       rect:
         serializedVersion: 2
-        x: 279
-        y: 81
-        width: 19
-        height: 20
+        x: 448
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -642,10 +655,10 @@ TextureImporter:
       name: Slime_Big_Pink_20
       rect:
         serializedVersion: 2
-        x: 300
-        y: 93
-        width: 7
-        height: 10
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -664,10 +677,10 @@ TextureImporter:
       name: Slime_Big_Pink_21
       rect:
         serializedVersion: 2
-        x: 332
-        y: 88
-        width: 8
-        height: 11
+        x: 64
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -686,10 +699,10 @@ TextureImporter:
       name: Slime_Big_Pink_22
       rect:
         serializedVersion: 2
-        x: 342
-        y: 79
-        width: 21
-        height: 20
+        x: 128
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -708,10 +721,10 @@ TextureImporter:
       name: Slime_Big_Pink_23
       rect:
         serializedVersion: 2
-        x: 365
-        y: 91
-        width: 7
-        height: 9
+        x: 192
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -726,231 +739,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_24
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 90
-        width: 7
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 79bfc75b4a635ead0800000000000000
-      internalID: -2673670722727117929
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_25
-      rect:
-        serializedVersion: 2
-        x: 396
-        y: 87
-        width: 8
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 429b2a5707026f1b0800000000000000
-      internalID: -5623271417343461084
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_26
-      rect:
-        serializedVersion: 2
-        x: 406
-        y: 78
-        width: 21
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d82942d2aff0595a0800000000000000
-      internalID: -6515283718747942259
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_27
-      rect:
-        serializedVersion: 2
-        x: 459
-        y: 86
-        width: 10
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e224476a7e8ff4600800000000000000
-      internalID: 454855761201480238
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_28
-      rect:
-        serializedVersion: 2
-        x: 469
-        y: 77
-        width: 22
-        height: 19
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 415197402c22b3340800000000000000
-      internalID: 4844504040861144340
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_29
-      rect:
-        serializedVersion: 2
-        x: 492
-        y: 89
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d10251bfa65594510800000000000000
-      internalID: 1533851066063724573
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_30
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e04621cbcf07a5f60800000000000000
-      internalID: 8023849916903351310
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_31
-      rect:
-        serializedVersion: 2
-        x: 86
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8a6a12f2cca7df2b0800000000000000
-      internalID: -5549144148467931480
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_32
-      rect:
-        serializedVersion: 2
-        x: 150
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: beb648098689bc730800000000000000
-      internalID: 4020474667226917867
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Pink_33
-      rect:
-        serializedVersion: 2
-        x: 214
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2e0eaddd4b34b98b0800000000000000
-      internalID: -5144443705245376286
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8cecf76f847644640996775eef84d1b4
     internalID: 0
     vertices: []
     indices: 
@@ -958,7 +751,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Slime_Big_Pink_0: -7044750099822357517
       Slime_Big_Pink_1: -5631782266160428062
@@ -977,17 +772,7 @@ TextureImporter:
       Slime_Big_Pink_21: 2731831686513569025
       Slime_Big_Pink_22: -2144145336982342710
       Slime_Big_Pink_23: -7209950705379921369
-      Slime_Big_Pink_24: -2673670722727117929
-      Slime_Big_Pink_25: -5623271417343461084
-      Slime_Big_Pink_26: -6515283718747942259
-      Slime_Big_Pink_27: 454855761201480238
-      Slime_Big_Pink_28: 4844504040861144340
-      Slime_Big_Pink_29: 1533851066063724573
       Slime_Big_Pink_3: 751968792297306638
-      Slime_Big_Pink_30: 8023849916903351310
-      Slime_Big_Pink_31: -5549144148467931480
-      Slime_Big_Pink_32: 4020474667226917867
-      Slime_Big_Pink_33: -5144443705245376286
       Slime_Big_Pink_4: 7672911769851293599
       Slime_Big_Pink_5: 5154524520316361794
       Slime_Big_Pink_6: -9144655331295430516

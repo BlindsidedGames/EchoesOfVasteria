@@ -195,6 +195,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -202,10 +215,10 @@ TextureImporter:
       name: Slime_Big_Green_0
       rect:
         serializedVersion: 2
-        x: 22
-        y: 213
-        width: 21
-        height: 20
+        x: 0
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -224,10 +237,10 @@ TextureImporter:
       name: Slime_Big_Green_1
       rect:
         serializedVersion: 2
-        x: 85
-        y: 213
-        width: 23
-        height: 19
+        x: 64
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -246,10 +259,10 @@ TextureImporter:
       name: Slime_Big_Green_2
       rect:
         serializedVersion: 2
-        x: 148
-        y: 213
-        width: 25
-        height: 18
+        x: 128
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -268,10 +281,10 @@ TextureImporter:
       name: Slime_Big_Green_3
       rect:
         serializedVersion: 2
-        x: 213
-        y: 213
-        width: 23
-        height: 19
+        x: 192
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -290,10 +303,10 @@ TextureImporter:
       name: Slime_Big_Green_4
       rect:
         serializedVersion: 2
-        x: 22
-        y: 149
-        width: 21
-        height: 20
+        x: 0
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -312,10 +325,10 @@ TextureImporter:
       name: Slime_Big_Green_5
       rect:
         serializedVersion: 2
-        x: 85
-        y: 149
-        width: 23
-        height: 19
+        x: 64
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -334,10 +347,10 @@ TextureImporter:
       name: Slime_Big_Green_6
       rect:
         serializedVersion: 2
-        x: 148
-        y: 149
-        width: 25
-        height: 18
+        x: 128
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -356,10 +369,10 @@ TextureImporter:
       name: Slime_Big_Green_7
       rect:
         serializedVersion: 2
-        x: 214
-        y: 149
-        width: 21
-        height: 25
+        x: 192
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -378,10 +391,10 @@ TextureImporter:
       name: Slime_Big_Green_8
       rect:
         serializedVersion: 2
-        x: 278
-        y: 149
-        width: 21
-        height: 30
+        x: 256
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -400,10 +413,10 @@ TextureImporter:
       name: Slime_Big_Green_9
       rect:
         serializedVersion: 2
-        x: 342
-        y: 149
-        width: 21
-        height: 26
+        x: 320
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -422,10 +435,10 @@ TextureImporter:
       name: Slime_Big_Green_10
       rect:
         serializedVersion: 2
-        x: 405
-        y: 149
-        width: 23
-        height: 19
+        x: 384
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -444,10 +457,10 @@ TextureImporter:
       name: Slime_Big_Green_11
       rect:
         serializedVersion: 2
-        x: 468
-        y: 149
-        width: 25
-        height: 18
+        x: 448
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,10 +479,10 @@ TextureImporter:
       name: Slime_Big_Green_12
       rect:
         serializedVersion: 2
-        x: 22
-        y: 85
-        width: 21
-        height: 20
+        x: 0
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -488,10 +501,10 @@ TextureImporter:
       name: Slime_Big_Green_13
       rect:
         serializedVersion: 2
-        x: 86
-        y: 85
-        width: 21
-        height: 21
+        x: 64
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -510,10 +523,10 @@ TextureImporter:
       name: Slime_Big_Green_14
       rect:
         serializedVersion: 2
-        x: 147
-        y: 85
-        width: 25
-        height: 22
+        x: 128
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -532,10 +545,10 @@ TextureImporter:
       name: Slime_Big_Green_15
       rect:
         serializedVersion: 2
-        x: 207
-        y: 97
-        width: 11
-        height: 8
+        x: 192
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -554,10 +567,10 @@ TextureImporter:
       name: Slime_Big_Green_16
       rect:
         serializedVersion: 2
-        x: 215
-        y: 85
-        width: 18
-        height: 19
+        x: 256
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -576,10 +589,10 @@ TextureImporter:
       name: Slime_Big_Green_17
       rect:
         serializedVersion: 2
-        x: 232
-        y: 98
-        width: 10
-        height: 9
+        x: 320
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -598,10 +611,10 @@ TextureImporter:
       name: Slime_Big_Green_18
       rect:
         serializedVersion: 2
-        x: 270
-        y: 90
-        width: 7
-        height: 11
+        x: 384
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -620,10 +633,10 @@ TextureImporter:
       name: Slime_Big_Green_19
       rect:
         serializedVersion: 2
-        x: 279
-        y: 81
-        width: 19
-        height: 20
+        x: 448
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -642,10 +655,10 @@ TextureImporter:
       name: Slime_Big_Green_20
       rect:
         serializedVersion: 2
-        x: 300
-        y: 93
-        width: 7
-        height: 10
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -664,10 +677,10 @@ TextureImporter:
       name: Slime_Big_Green_21
       rect:
         serializedVersion: 2
-        x: 332
-        y: 88
-        width: 8
-        height: 11
+        x: 64
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -686,10 +699,10 @@ TextureImporter:
       name: Slime_Big_Green_22
       rect:
         serializedVersion: 2
-        x: 342
-        y: 79
-        width: 21
-        height: 20
+        x: 128
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -708,10 +721,10 @@ TextureImporter:
       name: Slime_Big_Green_23
       rect:
         serializedVersion: 2
-        x: 365
-        y: 91
-        width: 7
-        height: 9
+        x: 192
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -726,231 +739,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_24
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 90
-        width: 7
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d67db910ad5f19ad0800000000000000
-      internalID: -2697104385139550355
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_25
-      rect:
-        serializedVersion: 2
-        x: 396
-        y: 87
-        width: 8
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 980d4ddf0be816af0800000000000000
-      internalID: -404885600662663031
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_26
-      rect:
-        serializedVersion: 2
-        x: 406
-        y: 78
-        width: 21
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b5d75cfbdd2016370800000000000000
-      internalID: 8313929538531065179
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_27
-      rect:
-        serializedVersion: 2
-        x: 459
-        y: 86
-        width: 10
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7a0ca4a6341900e20800000000000000
-      internalID: 3314809044476805287
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_28
-      rect:
-        serializedVersion: 2
-        x: 469
-        y: 77
-        width: 22
-        height: 19
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b9c350cb19548de70800000000000000
-      internalID: 9140131935975455899
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_29
-      rect:
-        serializedVersion: 2
-        x: 492
-        y: 89
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 127085af630dc79f0800000000000000
-      internalID: -469271326606489823
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_30
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 646779c5e952aec60800000000000000
-      internalID: 7848126662735001158
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_31
-      rect:
-        serializedVersion: 2
-        x: 86
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2b3bdfef697711aa0800000000000000
-      internalID: -6192036522250882126
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_32
-      rect:
-        serializedVersion: 2
-        x: 150
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a7adee24a138149e0800000000000000
-      internalID: -1638884640570811782
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Slime_Big_Green_33
-      rect:
-        serializedVersion: 2
-        x: 214
-        y: 21
-        width: 21
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9a3dd4a5dd2d5f8e0800000000000000
-      internalID: -1660189039471504471
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7343659299abd6c45bdac3fc2d8bccc4
     internalID: 0
     vertices: []
     indices: 
@@ -958,7 +751,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Slime_Big_Green_0: 2496285397439844292
       Slime_Big_Green_1: -6435816335296544035
@@ -977,17 +772,7 @@ TextureImporter:
       Slime_Big_Green_21: -7428328091626917438
       Slime_Big_Green_22: 3675864708345047402
       Slime_Big_Green_23: -4081313197314706584
-      Slime_Big_Green_24: -2697104385139550355
-      Slime_Big_Green_25: -404885600662663031
-      Slime_Big_Green_26: 8313929538531065179
-      Slime_Big_Green_27: 3314809044476805287
-      Slime_Big_Green_28: 9140131935975455899
-      Slime_Big_Green_29: -469271326606489823
       Slime_Big_Green_3: 7540701801163832216
-      Slime_Big_Green_30: 7848126662735001158
-      Slime_Big_Green_31: -6192036522250882126
-      Slime_Big_Green_32: -1638884640570811782
-      Slime_Big_Green_33: -1660189039471504471
       Slime_Big_Green_4: 2041243663345535763
       Slime_Big_Green_5: -7020641025358975181
       Slime_Big_Green_6: -2175717374670896810
