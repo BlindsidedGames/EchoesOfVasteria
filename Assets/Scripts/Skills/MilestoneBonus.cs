@@ -1,6 +1,8 @@
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using TimelessEchoes.Upgrades;
+using System.Linq;
 
 namespace TimelessEchoes.Skills
 {
@@ -78,7 +80,12 @@ namespace TimelessEchoes.Skills
                         else
                             skillText = "various";
                     }
-                    return $"Provides a {chance * 100f:0.#}% chance to summon an Echo that performs {skillText} tasks for {echoDuration:0.#} seconds.";
+
+                    var controller = StatUpgradeController.Instance;
+                    var echoUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                    float bonus = echoUpgrade != null ? controller.GetTotalValue(echoUpgrade) : 0f;
+                    float totalDuration = echoDuration + bonus;
+                    return $"Provides a {chance * 100f:0.#}% chance to summon an Echo that performs {skillText} tasks for {totalDuration:0.#} seconds.";
                 default:
                     return string.Empty;
             }

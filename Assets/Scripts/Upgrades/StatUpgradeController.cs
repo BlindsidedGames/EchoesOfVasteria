@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TimelessEchoes.Skills;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
@@ -67,6 +68,25 @@ namespace TimelessEchoes.Upgrades
         public float GetMultiplier(StatUpgrade upgrade)
         {
             return 1f + GetIncrease(upgrade);
+        }
+
+        /// <summary>
+        ///     Calculates the total value for a stat including flat and percent bonuses.
+        /// </summary>
+        public float GetTotalValue(StatUpgrade upgrade)
+        {
+            if (upgrade == null) return 0f;
+
+            int lvl = GetLevel(upgrade);
+            float baseVal = GetBaseValue(upgrade);
+            float levelIncrease = lvl * upgrade.statIncreasePerLevel;
+
+            var skillCtrl = SkillController.Instance;
+            float flat = skillCtrl ? skillCtrl.GetFlatStatBonus(upgrade) : 0f;
+            float percent = skillCtrl ? skillCtrl.GetPercentStatBonus(upgrade) : 0f;
+
+            float totalBeforePercent = baseVal + levelIncrease + flat;
+            return totalBeforePercent * (1f + percent);
         }
 
         public bool CanUpgrade(StatUpgrade upgrade)
