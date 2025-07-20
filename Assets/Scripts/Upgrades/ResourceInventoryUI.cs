@@ -57,7 +57,7 @@ namespace TimelessEchoes.Upgrades
                 {
                     var r = res;
                     slot.highlightButton.onClick.RemoveAllListeners();
-                    slot.highlightButton.onClick.AddListener(() => HighlightResource(r));
+                    slot.highlightButton.onClick.AddListener(() => HighlightResource(r, false));
                 }
                 if (slot.countText != null)
                     slot.countText.gameObject.SetActive(true);
@@ -156,7 +156,7 @@ namespace TimelessEchoes.Upgrades
                 ScrollToSlot(selectedIndex);
         }
 
-        public void HighlightResource(Resource resource)
+        public void HighlightResource(Resource resource, bool scrollToSlot = true)
         {
             var index = resources.IndexOf(resource);
             if (index < 0)
@@ -165,7 +165,7 @@ namespace TimelessEchoes.Upgrades
             {
                 if (inventoryWindow != null && !inventoryWindow.activeSelf)
                     inventoryWindow.SetActive(true);
-                SelectSlot(index, false);
+                SelectSlot(index, scrollToSlot);
                 if (highlightDuration > 0f)
                 {
                     if (highlightRoutine != null)
