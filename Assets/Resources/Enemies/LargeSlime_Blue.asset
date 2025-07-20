@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: LargeSlime_Blue
+  m_EditorClassIdentifier: 
+  enemyName: Blue Slime
+  displayOrder: 5
+  icon: {fileID: 7086287932117018057, guid: 40797916ff6958444a0f54dc5f1c5d2c, type: 3}
+  maxHealth: 100
+  experience: 7
+  defense: 2
+  damage: 7
+  moveSpeed: 6
+  attackSpeed: 1.5
+  attackRange: 1
+  visionRange: 10
+  assistRange: 5
+  wanderDistance: 3
+  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
