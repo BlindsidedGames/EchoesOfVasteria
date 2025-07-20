@@ -29,6 +29,7 @@ namespace TimelessEchoes.Upgrades
         private readonly List<ResourceUIReferences> slots = new();
 
         private int selectedIndex = -1;
+        private Coroutine highlightRoutine;
 
         private void Awake()
         {
@@ -79,6 +80,11 @@ namespace TimelessEchoes.Upgrades
         {
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= UpdateSlots;
+            if (highlightRoutine != null)
+            {
+                StopCoroutine(highlightRoutine);
+                highlightRoutine = null;
+            }
             DeselectSlot();
         }
 
@@ -133,7 +139,7 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        public void SelectSlot(int index)
+        public void SelectSlot(int index, bool scrollToSlot = true)
         {
             selectedIndex = index;
             for (var i = 0; i < slots.Count; i++)
@@ -146,7 +152,8 @@ namespace TimelessEchoes.Upgrades
                 selectedResourceNameText.text = res ? res.name : string.Empty;
             }
 
-            ScrollToSlot(selectedIndex);
+            if (scrollToSlot)
+                ScrollToSlot(selectedIndex);
         }
 
         public void HighlightResource(Resource resource)
@@ -158,9 +165,13 @@ namespace TimelessEchoes.Upgrades
             {
                 if (inventoryWindow != null && !inventoryWindow.activeSelf)
                     inventoryWindow.SetActive(true);
-                SelectSlot(index);
+                SelectSlot(index, false);
                 if (highlightDuration > 0f)
-                    StartCoroutine(DelayedDeselect(index, highlightDuration));
+                {
+                    if (highlightRoutine != null)
+                        StopCoroutine(highlightRoutine);
+                    highlightRoutine = StartCoroutine(DelayedDeselect(index, highlightDuration));
+                }
             }
         }
 
@@ -170,8 +181,7 @@ namespace TimelessEchoes.Upgrades
             if (index >= 0 && index < slots.Count && slots[index] != null && slots[index].selectionImage != null)
                 slots[index].selectionImage.enabled = false;
             selectedIndex = -1;
-            if (selectedResourceNameText != null)
-                selectedResourceNameText.text = string.Empty;
+            highlightRoutine = null;
         }
 
         private void ScrollToSlot(int index)
