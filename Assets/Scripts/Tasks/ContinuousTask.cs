@@ -56,7 +56,7 @@ namespace TimelessEchoes.Tasks
             }
 
 
-            hero.Animator.Play(AnimationName);
+            hero.PlayAnimation(AnimationName);
             ShowProgressBar();
         }
 

@@ -17,6 +17,13 @@ namespace TimelessEchoes.Utilities
                 return;
             animator.SetTrigger(triggerName);
             runner.StartCoroutine(ResetNextFrame(animator, triggerName));
+
+            if (runner is TimelessEchoes.Hero.HeroController hero && hero.AutoBuffAnimator != null)
+            {
+                var autoAnim = hero.AutoBuffAnimator;
+                autoAnim.SetTrigger(triggerName);
+                runner.StartCoroutine(ResetNextFrame(autoAnim, triggerName));
+            }
         }
 
         private static IEnumerator ResetNextFrame(Animator animator, string triggerName)

@@ -92,6 +92,7 @@ namespace TimelessEchoes.Hero
         private TaskController taskController;
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
+        public Animator AutoBuffAnimator => autoBuffAnimator;
         public bool InCombat => state == State.Combat;
 
         /// <summary>
@@ -238,7 +239,8 @@ namespace TimelessEchoes.Hero
             if (animator != null)
             {
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                animator.Play(stateInfo.fullPathHash, 0, Random.value);
+                var offset = Random.value;
+                PlayAnimation(stateInfo.fullPathHash, offset);
             }
 
             CurrentTask = null;
@@ -379,6 +381,12 @@ namespace TimelessEchoes.Hero
             animator.SetFloat("MoveX", lastMoveDir.x);
             animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
+            if (autoBuffAnimator != null)
+            {
+                autoBuffAnimator.SetFloat("MoveX", lastMoveDir.x);
+                autoBuffAnimator.SetFloat("MoveY", lastMoveDir.y);
+                autoBuffAnimator.SetFloat("MoveMagnitude", vel.magnitude);
+            }
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
@@ -621,6 +629,22 @@ namespace TimelessEchoes.Hero
             HandleCombat(enemy.transform);
         }
 
+        public void PlayAnimation(string animationName)
+        {
+            if (animator != null)
+                animator.Play(animationName);
+            if (autoBuffAnimator != null)
+                autoBuffAnimator.Play(animationName);
+        }
+
+        private void PlayAnimation(int stateHash, float normalizedTime)
+        {
+            if (animator != null)
+                animator.Play(stateHash, 0, normalizedTime);
+            if (autoBuffAnimator != null)
+                autoBuffAnimator.Play(stateHash, 0, normalizedTime);
+        }
+
         private void Attack(Transform target)
         {
             if (stats.projectilePrefab == null || target == null) return;
@@ -628,7 +652,7 @@ namespace TimelessEchoes.Hero
             var enemy = target.GetComponent<Health>();
             if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
-            animator.Play("Attack");
+            PlayAnimation("Attack");
 
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
@@ -692,6 +716,8 @@ namespace TimelessEchoes.Hero
                 autoBuffAnimator.avatar = animator.avatar;
                 autoBuffAnimator.updateMode = animator.updateMode;
                 autoBuffAnimator.speed = animator.speed;
+                var info = animator.GetCurrentAnimatorStateInfo(0);
+                autoBuffAnimator.Play(info.fullPathHash, 0, info.normalizedTime);
             }
         }
 
