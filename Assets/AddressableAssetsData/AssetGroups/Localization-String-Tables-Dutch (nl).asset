@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Dutch (nl)
   m_GUID: 90898ef35e23efd4e9eeb853faecd287
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 34e1d654ad9a41c4c9bd718c1b4e410a
+    m_Address: TownUI_nl
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e23512ebfb314949b7f14affebda90d
+    m_Address: Wiki_nl
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: c636d12a8e1776e4ea4fea7bc616dd3f, type: 2}
+    - {fileID: 11400000, guid: 08016502c6cbd534dbef482aa397fd71, type: 2}

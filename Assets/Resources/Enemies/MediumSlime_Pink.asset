@@ -15,14 +15,14 @@ MonoBehaviour:
   enemyName: Pink Slime
   displayOrder: 9
   icon: {fileID: -4439855420470161935, guid: 160408a71ac3a6d42a642c19996e590f, type: 3}
-  maxHealth: 15
-  experience: 10
-  defense: 0
-  damage: 2
-  moveSpeed: 5
-  attackSpeed: 1.1
-  attackRange: 1
-  visionRange: 7
+  maxHealth: 500
+  experience: 25
+  defense: 10
+  damage: 15
+  moveSpeed: 8
+  attackSpeed: 3
+  attackRange: 2
+  visionRange: 10
   assistRange: 5
   wanderDistance: 3
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

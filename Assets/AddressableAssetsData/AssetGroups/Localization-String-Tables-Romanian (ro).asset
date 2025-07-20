@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Romanian (ro)
   m_GUID: a431f4c350a11394db8c3ed948fc0d8b
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0412e419a3476fa4d9419e140637b4f3
+    m_Address: TownUI_ro
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ro
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de40774f990fc8c4c9441a5ce628956a
+    m_Address: Wiki_ro
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ro
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: fe4e6ec4234f62342b15e3bc86eff74e, type: 2}
+    - {fileID: 11400000, guid: e4290dd2ca77b8742bf04d9d84a83605, type: 2}

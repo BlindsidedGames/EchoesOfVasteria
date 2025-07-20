@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Norwegian (no)
   m_GUID: 5ee95c6ba937cec4aaf469654d292d29
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 3f7e96294ec558943af49357ddb307a5
+    m_Address: TownUI_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0b25bfc9e85baf488bb0ec8e2c4548c
+    m_Address: Wiki_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 25a2718f71c584b45986c3c10475390a, type: 2}
+    - {fileID: 11400000, guid: c6db21188982ed54a9a9afcd04bd59c3, type: 2}

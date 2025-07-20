@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Portuguese (Brazil) (pt-BR)
   m_GUID: 5adf7db90752ac4498e74ccacb646cc5
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 1cabcf267881f7f43bb304283439710f
+    m_Address: TownUI_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54243fdfb6d1e25408a77732bdccab68
+    m_Address: Wiki_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: a2254329ba631da4f9383621f4ffd2f9, type: 2}
+    - {fileID: 11400000, guid: c7b49f1be1909e44eb79ed76bbed1b11, type: 2}

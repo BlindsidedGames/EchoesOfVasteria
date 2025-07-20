@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Indonesian (id)
   m_GUID: 0f3a2715bc3930748b19ff2c0dba73e9
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 1605fa461d45b9f4c82478b42a25cecb
+    m_Address: Wiki_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb313e27f10ff634ca854f6ac18bde62
+    m_Address: TownUI_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: e1b290f362ea1e24689adb26cb1a4e1f, type: 2}
+    - {fileID: 11400000, guid: fb7cf35f602a4a942911a780b4d821ab, type: 2}

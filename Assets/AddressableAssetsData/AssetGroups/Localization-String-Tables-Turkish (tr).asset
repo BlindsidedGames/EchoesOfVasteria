@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Turkish (tr)
   m_GUID: 7ae5d5c7e9939e04fa5ad2b615f72b3c
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 096af723e8576c0448fb672e03649f2b
+    m_Address: TownUI_tr
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-tr
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 156f6d0fef54449499a6ab1c93859ee8
+    m_Address: Wiki_tr
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-tr
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 6193737f46039354ba60c14cdc41c420, type: 2}
+    - {fileID: 11400000, guid: ff026325fa9509d42b85c4c6486732ac, type: 2}

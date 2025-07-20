@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Swedish (sv)
   m_GUID: e62a457bb04a64d419d9d4c25033dddc
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 26580c44de9ccb94d8b63fdd88b9c975
+    m_Address: Wiki_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96a04233bca6c8241a4903be1929398e
+    m_Address: TownUI_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 3c36e6eb8aa65af45a8625a50906ff66, type: 2}
+    - {fileID: 11400000, guid: 57b15d9483023c64baf6a60541894f07, type: 2}

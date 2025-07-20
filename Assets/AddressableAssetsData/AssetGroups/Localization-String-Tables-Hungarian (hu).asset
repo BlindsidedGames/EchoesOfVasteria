@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Hungarian (hu)
   m_GUID: 50ed0d1c32bb7dd45b23b2bf3701ca84
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: f9af1fe7ec56be84488b5c4dcea300fe
+    m_Address: TownUI_hu
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-hu
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe9081291f83f8342a3a9cdffdcd74fd
+    m_Address: Wiki_hu
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-hu
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: b92166ed5de80ec4497f329bf1bfcb0d, type: 2}
+    - {fileID: 11400000, guid: 333db38729a2e144fb13a3c938b2f04b, type: 2}

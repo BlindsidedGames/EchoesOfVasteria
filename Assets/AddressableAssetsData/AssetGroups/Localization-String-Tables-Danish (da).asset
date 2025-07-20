@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Danish (da)
   m_GUID: 81e3addd7c3652340af2daaad0430f2d
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 7a285e75dcf4e1940b51c1a237d5b111
+    m_Address: TownUI_da
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-da
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2ce2408c6fbc114fa03ad5a6ccb06b9
+    m_Address: Wiki_da
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-da
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 8a7367df61c68d443a21ee76ac55c282, type: 2}
+    - {fileID: 11400000, guid: ae95f07898462664c809a8f8ab907ba0, type: 2}

@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Greek (el)
   m_GUID: 3faf274bcf16e61418861bb965254785
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 2d615899ba2ca75409bd786466271e0f
+    m_Address: Wiki_el
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-el
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a73e1a9061519348ac099289c507f4e
+    m_Address: TownUI_el
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-el
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: b98ae1a3de5c0fa439ba2a14fe9828d2, type: 2}
+    - {fileID: 11400000, guid: 554b74876b2a9d445bd1364cd6b1decf, type: 2}

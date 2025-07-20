@@ -15,14 +15,14 @@ MonoBehaviour:
   enemyName: Red Slime
   displayOrder: 7
   icon: {fileID: -4816725795396207319, guid: 4a0032986a96f1848b7dfd28332e79f7, type: 3}
-  maxHealth: 15
+  maxHealth: 175
   experience: 10
-  defense: 0
-  damage: 2
-  moveSpeed: 5
-  attackSpeed: 1.1
-  attackRange: 1
-  visionRange: 7
+  defense: 5
+  damage: 10
+  moveSpeed: 7
+  attackSpeed: 2
+  attackRange: 1.5
+  visionRange: 10
   assistRange: 5
   wanderDistance: 3
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

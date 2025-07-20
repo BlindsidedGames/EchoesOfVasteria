@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Czech (cs)
   m_GUID: 1a115eee5f8ed44469923ca6c399f93a
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 1399b7b92e92ca445af9cc01c3d624bb
+    m_Address: Wiki_cs
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-cs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a50023a56e84afb43a58e7b4a8c9ead6
+    m_Address: TownUI_cs
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-cs
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 63571945e9e76c1479b8e6df9063e5e5, type: 2}
+    - {fileID: 11400000, guid: 6af0922830c2ad54b9deb9f04e6eff4c, type: 2}

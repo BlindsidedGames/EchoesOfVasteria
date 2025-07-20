@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Russian (ru)
   m_GUID: 30821c462d35faf49b351168d19a5f04
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: b24023e44629f404795cc34690830770
+    m_Address: TownUI_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cd5cf3285af25ac46bd96dc6947eef4f
+    m_Address: Wiki_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: e0e16d384e62f6f40b75c7b863c969a0, type: 2}
+    - {fileID: 11400000, guid: 11220876780245d4b8175f4962ca6b96, type: 2}
