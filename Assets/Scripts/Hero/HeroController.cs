@@ -76,6 +76,8 @@ namespace TimelessEchoes.Hero
         private float baseMoveSpeed;
         private float combatDamageMultiplier = 1f;
 
+        private bool logicActive = true;
+
         private float damageBonus;
         private float defenseBonus;
 
@@ -189,6 +191,8 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
+            if (!logicActive)
+                return;
             if (!IsEcho)
                 BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
@@ -691,6 +695,20 @@ namespace TimelessEchoes.Hero
             MovingToTask,
             PerformingTask,
             Combat
+        }
+
+        public void SetActiveState(bool active)
+        {
+            if (ai != null) ai.enabled = active;
+            if (setter != null) setter.enabled = active;
+            logicActive = active;
+
+            if (!active && animator != null)
+            {
+                animator.SetFloat("MoveX", 0f);
+                animator.SetFloat("MoveY", 0f);
+                animator.SetFloat("MoveMagnitude", 0f);
+            }
         }
 
         #region Pathfinding Helpers

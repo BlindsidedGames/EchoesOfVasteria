@@ -12,6 +12,7 @@ namespace TimelessEchoes.Hero
     public class EchoController : MonoBehaviour
     {
         public static readonly List<EchoController> CombatEchoes = new();
+        public static readonly List<EchoController> AllEchoes = new();
 
         public System.Collections.Generic.List<Skill> capableSkills = new();
         public float lifetime = 10f;
@@ -28,12 +29,17 @@ namespace TimelessEchoes.Hero
             hero = GetComponent<HeroController>();
             taskController = GetComponentInParent<TaskController>();
             remaining = lifetime;
+            if (!AllEchoes.Contains(this))
+                AllEchoes.Add(this);
         }
 
         private void OnEnable()
         {
             if (!initialized)
                 return;
+
+            if (!AllEchoes.Contains(this))
+                AllEchoes.Add(this);
 
             if (combatEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
@@ -45,6 +51,7 @@ namespace TimelessEchoes.Hero
         private void OnDisable()
         {
             CombatEchoes.Remove(this);
+            AllEchoes.Remove(this);
         }
 
         /// <summary>
@@ -123,6 +130,7 @@ namespace TimelessEchoes.Hero
         private void OnDestroy()
         {
             CombatEchoes.Remove(this);
+            AllEchoes.Remove(this);
             if (hero != null)
                 hero.UnlimitedAggroRange = false;
         }
