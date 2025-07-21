@@ -40,7 +40,9 @@ namespace TimelessEchoes.Quests
         {
             Resource,
             Kill,
-            Donation
+            Donation,
+            DistanceRun,
+            DistanceTravel
         }
     }
 }

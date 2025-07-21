@@ -95,6 +95,12 @@ namespace TimelessEchoes.Quests
                                 slot.iconImage.sprite = req.killIcon;
                                 slot.iconImage.color = Color.white;
                             }
+                            else if (req.type == QuestData.RequirementType.DistanceRun ||
+                                     req.type == QuestData.RequirementType.DistanceTravel)
+                            {
+                                slot.iconImage.sprite = null;
+                                slot.iconImage.color = Color.white;
+                            }
                         }
 
                         if (slot.countText != null)
@@ -147,6 +153,12 @@ namespace TimelessEchoes.Quests
                     slot.iconImage.sprite = req.killIcon;
                     slot.iconImage.color = Color.white;
                 }
+                else if (req.type == QuestData.RequirementType.DistanceRun ||
+                         req.type == QuestData.RequirementType.DistanceTravel)
+                {
+                    slot.iconImage.sprite = null;
+                    slot.iconImage.color = Color.white;
+                }
             }
         }
 
@@ -163,6 +175,10 @@ namespace TimelessEchoes.Quests
                     return "Donation";
                 case QuestData.RequirementType.Kill:
                     return "Kill";
+                case QuestData.RequirementType.DistanceRun:
+                    return "Run Distance";
+                case QuestData.RequirementType.DistanceTravel:
+                    return "Travel";
                 default:
                     return type.ToString();
             }

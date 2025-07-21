@@ -15,6 +15,8 @@ namespace TimelessEchoes.Stats
     public class GameplayStatTracker : MonoBehaviour
     {
         public static GameplayStatTracker Instance { get; private set; }
+        public event System.Action<float> OnDistanceAdded;
+        public event System.Action<bool> OnRunEnded;
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private readonly List<GameData.RunRecord> recentRuns = new();
@@ -202,7 +204,10 @@ namespace TimelessEchoes.Stats
         public void AddDistance(float dist)
         {
             if (dist > 0f)
+            {
                 DistanceTravelled += dist;
+                OnDistanceAdded?.Invoke(dist);
+            }
         }
 
         public void RecordHeroPosition(Vector3 position)
@@ -313,6 +318,8 @@ namespace TimelessEchoes.Stats
             };
             AddRunRecord(record);
             nextRunNumber++;
+
+            OnRunEnded?.Invoke(died);
 
             CurrentRunDistance = 0f;
             currentRunTasks = 0;
