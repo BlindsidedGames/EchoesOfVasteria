@@ -124,12 +124,12 @@ namespace Blindsided.SaveData
 
         public static bool AutoBuff
         {
-            get => oracle.saveData.SavedPreferences.AutoBuff;
+            get => oracle.saveData.AutoBuff;
             set
             {
-                if (oracle.saveData.SavedPreferences.AutoBuff != value)
+                if (oracle.saveData.AutoBuff != value)
                 {
-                    oracle.saveData.SavedPreferences.AutoBuff = value;
+                    oracle.saveData.AutoBuff = value;
                     AutoBuffChanged?.Invoke();
                 }
             }

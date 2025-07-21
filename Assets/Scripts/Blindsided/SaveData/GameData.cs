@@ -27,6 +27,10 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
         public int UnlockedBuffSlots = 1;
+        /// <summary>
+        ///     Automatically cast available buffs when enabled.
+        /// </summary>
+        public bool AutoBuff;
         [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
@@ -76,10 +80,6 @@ namespace Blindsided.SaveData
             public float MusicVolume = 0.25f;
             public float SfxVolume = 0.7f;
 
-            /// <summary>
-            ///     Automatically cast available buffs when enabled.
-            /// </summary>
-            public bool AutoBuff;
         }
 
         [HideReferenceObjectPicker]
