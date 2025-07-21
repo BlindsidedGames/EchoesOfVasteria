@@ -24,6 +24,11 @@ namespace TimelessEchoes.Hero
         private float remaining;
         private bool initialized;
 
+        /// <summary>
+        /// Returns true once <see cref="Init"/> has completed.
+        /// </summary>
+        public bool Initialized => initialized;
+
         private void Awake()
         {
             hero = GetComponent<HeroController>();
