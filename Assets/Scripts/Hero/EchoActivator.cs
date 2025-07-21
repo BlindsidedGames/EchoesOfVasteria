@@ -11,7 +11,7 @@ namespace TimelessEchoes.Hero
     [RequireComponent(typeof(HeroController))]
     public class EchoActivator : MonoBehaviour
     {
-        [SerializeField] private float activationDistance = 10f;
+        [SerializeField] private float activationDistance = 20f;
 
         private HeroController hero;
 
