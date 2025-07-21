@@ -19,13 +19,15 @@ MonoBehaviour:
     a greeting that the mountain\u2019ll remember.\u201D"
   rewardDescription: Gain the Disciple of Stone
   npcId: 
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     amount: 200
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0

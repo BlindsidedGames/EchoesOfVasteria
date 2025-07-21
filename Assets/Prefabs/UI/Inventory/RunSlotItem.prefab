@@ -149,6 +149,7 @@ MonoBehaviour:
   iconImage: {fileID: 6277185228625907845}
   countText: {fileID: 2340054127135869452}
   selectionImage: {fileID: 776399261643495778}
+  highlightButton: {fileID: 0}
 --- !u!1001 &8516977359008143436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -248,6 +249,10 @@ PrefabInstance:
     - target: {fileID: 6218322219775775296, guid: bb1579382e92a92498f0607960660526, type: 3}
       propertyPath: m_fontSize
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218322219775775296, guid: bb1579382e92a92498f0607960660526, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9003877405325738286, guid: bb1579382e92a92498f0607960660526, type: 3}
       propertyPath: m_Color.a

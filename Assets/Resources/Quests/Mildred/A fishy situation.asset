@@ -13,19 +13,21 @@ MonoBehaviour:
   m_Name: A fishy situation
   m_EditorClassIdentifier: 
   questId: Mildred
-  questName: A fishy situation
-  description: Mildred is hungry and Utoes is out of options. Fish up some Flippy
-    Floppy and donate them to Utoes who will grant you more regen as a bonus!
-  rewardDescription: Mildred follows and provides you with buffs in exchange for
-    resources!
+  questName: A Fishy Situation
+  description: 'Mildred is hungry and Utoes is out of options. Fish up some Flippy
+    Floppy and donate them to Utoes who will grant you more regen as a bonus! [Donation
+    is in Upgrades]'
+  rewardDescription: Mildred follows and provides you with buffs!
   npcId: 
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
   requirements:
   - type: 2
     resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
     amount: 50
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0

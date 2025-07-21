@@ -21,13 +21,15 @@ MonoBehaviour:
     or two.\u201D"
   rewardDescription: Gain the Disciple of Bone
   npcId: 
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
     amount: 500
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0

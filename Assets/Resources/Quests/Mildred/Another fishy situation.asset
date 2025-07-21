@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Another fishy situation
   m_EditorClassIdentifier: 
   questId: Mildred1
-  questName: Another fishy situation
+  questName: Another Fishy Situation
   description: Mildred's power seems to be changing and Utoes thinks that if he can
     get his hands on some  Muddy Muck Munchers Mildred might be able to help you
     out even more!
@@ -27,6 +27,7 @@ MonoBehaviour:
     amount: 50
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 1

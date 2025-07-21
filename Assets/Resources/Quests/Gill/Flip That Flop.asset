@@ -21,13 +21,14 @@ MonoBehaviour:
   rewardDescription: Gain a Floppy Disciple.
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
+  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
     amount: 100
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0

@@ -18,7 +18,7 @@ MonoBehaviour:
   rewardDescription: Magic dice, provides combat advantages.
   npcId: Ivan1
   requiredQuests:
-  - {fileID: 11400000, guid: 001ffd797971b8b4d84531fd428157a8, type: 2}
+  - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
   requirements:
   - type: 1
     resource: {fileID: 0}
@@ -35,6 +35,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: a7d9f5713f684e9088bab870f52f27c2, type: 2}
     - {fileID: 11400000, guid: 84840229f7fda1b45a9143488951540d, type: 2}
     killIcon: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
