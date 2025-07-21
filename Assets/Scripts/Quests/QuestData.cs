@@ -30,6 +30,7 @@ namespace TimelessEchoes.Quests
             [ShowIf("@type == RequirementType.Resource || type == RequirementType.Donation")]
             public Resource resource;
             [HideIf("type", RequirementType.Instant)]
+            [HideIf("type", RequirementType.Meet)]
             public int amount = 1;
             [ShowIf("type", RequirementType.Kill)]
             public List<EnemyStats> enemies = new();
