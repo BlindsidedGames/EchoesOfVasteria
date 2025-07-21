@@ -83,6 +83,9 @@ namespace TimelessEchoes.Hero
         private HeroHealth health;
         private float healthBonus;
 
+        [SerializeField] private float idleWalkStep = 5f;
+        private Transform idleWalkTarget;
+
         private bool isRolling;
         private float lastAttack = float.NegativeInfinity;
 
@@ -250,6 +253,13 @@ namespace TimelessEchoes.Hero
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
 
+            if (idleWalkTarget == null)
+            {
+                idleWalkTarget = new GameObject("IdleWalkTarget").transform;
+                idleWalkTarget.hideFlags = HideFlags.HideInHierarchy;
+            }
+            idleWalkTarget.position = transform.position;
+
             var skillController = SkillController.Instance;
             if (!IsEcho && skillController != null)
                 skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
@@ -277,6 +287,10 @@ namespace TimelessEchoes.Hero
 
             if (!IsEcho)
                 Enemy.OnEngage -= OnEnemyEngage;
+
+            if (idleWalkTarget != null)
+                Destroy(idleWalkTarget.gameObject);
+            idleWalkTarget = null;
         }
 
         private void OnDestroy()
@@ -286,6 +300,9 @@ namespace TimelessEchoes.Hero
 
             if (!IsEcho && Instance == this)
                 Instance = null;
+
+            if (idleWalkTarget != null)
+                Destroy(idleWalkTarget.gameObject);
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
@@ -485,7 +502,14 @@ namespace TimelessEchoes.Hero
 
             if (CurrentTask == null)
             {
-                setter.target = null;
+                if (taskController == null || taskController.tasks.Count == 0)
+                {
+                    AutoAdvance();
+                }
+                else
+                {
+                    setter.target = null;
+                }
                 return;
             }
 
@@ -692,6 +716,24 @@ namespace TimelessEchoes.Hero
 
             var threshold = ai.endReachedDistance + 0.1f;
             return Vector2.Distance(transform.position, dest.position) <= threshold;
+        }
+
+        private void AutoAdvance()
+        {
+            if (idleWalkTarget == null)
+            {
+                idleWalkTarget = new GameObject("IdleWalkTarget").transform;
+                idleWalkTarget.hideFlags = HideFlags.HideInHierarchy;
+            }
+
+            var pos = transform.position;
+            if (idleWalkTarget.position.x - pos.x < 1f)
+                idleWalkTarget.position = new Vector3(pos.x + idleWalkStep, pos.y, pos.z);
+
+            if (setter.target != idleWalkTarget)
+                setter.target = idleWalkTarget;
+
+            ai.canMove = true;
         }
 
         private void OnAutoBuffChanged()
