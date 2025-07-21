@@ -122,9 +122,14 @@ namespace Blindsided.SaveData
             }
         }
 
+        /// <summary>
+        ///     Indicates whether autobuff is enabled. The saved preference can
+        ///     temporarily be disabled for the remainder of a run without
+        ///     affecting the persisted value.
+        /// </summary>
         public static bool AutoBuff
         {
-            get => oracle.saveData.AutoBuff;
+            get => oracle.saveData.AutoBuff && !autoBuffDisabledThisRun;
             set
             {
                 if (oracle.saveData.AutoBuff != value)
@@ -132,6 +137,21 @@ namespace Blindsided.SaveData
                     oracle.saveData.AutoBuff = value;
                     AutoBuffChanged?.Invoke();
                 }
+            }
+        }
+
+        private static bool autoBuffDisabledThisRun;
+
+        /// <summary>
+        ///     Temporarily enable or disable autobuff until the next run starts.
+        /// </summary>
+        /// <param name="disabled">True to disable autobuff for the current run.</param>
+        public static void SetAutoBuffRunDisabled(bool disabled)
+        {
+            if (autoBuffDisabledThisRun != disabled)
+            {
+                autoBuffDisabledThisRun = disabled;
+                AutoBuffChanged?.Invoke();
             }
         }
 

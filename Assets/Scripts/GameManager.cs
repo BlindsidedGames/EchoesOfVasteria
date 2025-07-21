@@ -241,6 +241,8 @@ namespace TimelessEchoes
         private void StartRun()
         {
             HideTooltip();
+            // Re-enable autobuff for the new run based on the saved preference.
+            SetAutoBuffRunDisabled(false);
             returnOnDeathQueued = false;
             retreatQueued = false;
             if (returnOnDeathText != null)
@@ -390,8 +392,8 @@ namespace TimelessEchoes
             }
 
             BuffManager.Instance?.ClearActiveBuffs();
-            // Disable autobuff when the hero dies to prevent automatic casting
-            AutoBuff = false;
+            // Temporarily disable autobuff for the remainder of this run.
+            SetAutoBuffRunDisabled(true);
             UpdateAutoBuffUI();
 
             runEndedByDeath = true;
