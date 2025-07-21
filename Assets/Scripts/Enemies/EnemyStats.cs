@@ -19,39 +19,40 @@ namespace TimelessEchoes.Enemies
         public Sprite icon;
 
         [TitleGroup("Balance Data")]
-        public int maxHealth = 10;
-
-        [TitleGroup("Balance Data")]
         public int experience = 10;
 
-        [TitleGroup("Balance Data")]
-        public float defense = 0f;
+        [PropertySpace(SpaceBefore = 5, SpaceAfter = 0)]
+        [TitleGroup("Balance Data/Combat Stats")]
+        public int maxHealth = 10;
 
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Combat Stats")]
         public int damage = 1;
 
-        [TitleGroup("Balance Data")]
-        public float moveSpeed = 3f;
+        [TitleGroup("Balance Data/Combat Stats")]
+        public float defense = 0f;
 
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Combat Stats")]
         public float attackSpeed = 1f;
 
         /// <summary>
         /// Distance within which the enemy can perform attacks.
         /// </summary>
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Combat Stats")]
         public float attackRange = 1f;
 
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Movement Stats")]
+        public float moveSpeed = 3f;
+
+        [TitleGroup("Balance Data/Movement Stats")]
         public float visionRange = 5f;
 
         /// <summary>
         /// Distance within which allies will join an engaged enemy.
         /// </summary>
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Movement Stats")]
         public float assistRange = 8f;
 
-        [TitleGroup("Balance Data")]
+        [TitleGroup("Balance Data/Movement Stats")]
         public float wanderDistance = 2f;
 
         [TitleGroup("References")]
