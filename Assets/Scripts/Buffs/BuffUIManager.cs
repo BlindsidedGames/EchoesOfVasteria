@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Hero;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
@@ -16,6 +17,7 @@ namespace TimelessEchoes.Buffs
         private ResourceManager resourceManager;
         private ResourceInventoryUI resourceInventoryUI;
         private BuffManager buffManager;
+        private Hero.HeroHealth heroHealth;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
         [SerializeField] private Button openPurchaseButton;
@@ -60,12 +62,14 @@ namespace TimelessEchoes.Buffs
                     ui.activateButton.interactable = isAssigning && i < unlocked;
             }
 
+            bool heroAlive = heroHealth != null && heroHealth.gameObject.activeInHierarchy && heroHealth.CurrentHealth > 0f;
+
             for (var i = 0; i < runSlotButtons.Length; i++)
             {
                 var recipe = buffManager.GetAssigned(i);
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
-                bool canBuy = recipe != null && buffManager != null && buffManager.CanPurchase(recipe);
+                bool canBuy = recipe != null && buffManager != null && buffManager.CanPurchase(recipe) && heroAlive;
                 bool distanceOk = true;
                 var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
                 if (recipe != null && tracker != null && recipe.distancePercent > 0f)
@@ -92,7 +96,7 @@ namespace TimelessEchoes.Buffs
                 }
 
                 if (ui.activateButton != null)
-                    ui.activateButton.interactable = i < unlocked && recipe != null && canBuy && distanceOk;
+                    ui.activateButton.interactable = i < unlocked && recipe != null && canBuy && distanceOk && heroAlive;
 
                 if (ui.durationText != null)
                 {
@@ -103,7 +107,11 @@ namespace TimelessEchoes.Buffs
                     else
                     {
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
-                        if (!distanceOk)
+                        if (!heroAlive)
+                        {
+                            ui.durationText.text = "Dead";
+                        }
+                        else if (!distanceOk)
                         {
                             ui.durationText.text = "Too Far";
                         }
@@ -179,6 +187,7 @@ namespace TimelessEchoes.Buffs
 
         private void OnEnable()
         {
+            heroHealth = Hero.HeroHealth.Instance ?? FindFirstObjectByType<Hero.HeroHealth>();
             RefreshSlots();
             OnInventoryChanged();
         }
