@@ -44,6 +44,7 @@ namespace TimelessEchoes.Hero
         public Animator AutoBuffAnimator;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer autoBuffSpriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
@@ -185,6 +186,15 @@ namespace TimelessEchoes.Hero
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus);
                 health?.Init(hp);
+            }
+
+            if (AutoBuffAnimator != null)
+            {
+                if (autoBuffSpriteRenderer == null)
+                    autoBuffSpriteRenderer = AutoBuffAnimator.GetComponent<SpriteRenderer>();
+
+                if (AutoBuffAnimator.gameObject.GetComponent<HeroAudio>() == null)
+                    AutoBuffAnimator.gameObject.AddComponent<HeroAudio>();
             }
         }
 
@@ -418,6 +428,9 @@ namespace TimelessEchoes.Hero
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;
+
+            if (autoBuffSpriteRenderer != null)
+                autoBuffSpriteRenderer.flipX = lastMoveDir.x < 0f;
         }
 
         public void SetTask(ITask task)
