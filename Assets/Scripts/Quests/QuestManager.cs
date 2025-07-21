@@ -27,6 +27,7 @@ namespace TimelessEchoes.Quests
         private EnemyKillTracker killTracker;
         private DiscipleGenerationManager generationManager;
         private QuestUIManager uiManager;
+        private GameplayStatTracker statTracker;
 
         [SerializeField] private string questResourcePath = "Quests";
         private List<QuestData> quests = new();
@@ -56,11 +57,19 @@ namespace TimelessEchoes.Quests
             uiManager = QuestUIManager.Instance;
             if (uiManager == null)
                 Log("QuestUIManager missing", TELogCategory.Quest, this);
+            statTracker = GameplayStatTracker.Instance;
+            if (statTracker == null)
+                Log("GameplayStatTracker missing", TELogCategory.General, this);
 
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += UpdateAllProgress;
             if (killTracker != null)
                 killTracker.OnKillRegistered += OnKill;
+            if (statTracker != null)
+            {
+                statTracker.OnDistanceAdded += OnDistanceAdded;
+                statTracker.OnRunEnded += OnRunEnded;
+            }
 
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
@@ -73,6 +82,11 @@ namespace TimelessEchoes.Quests
                 resourceManager.OnInventoryChanged -= UpdateAllProgress;
             if (killTracker != null)
                 killTracker.OnKillRegistered -= OnKill;
+            if (statTracker != null)
+            {
+                statTracker.OnDistanceAdded -= OnDistanceAdded;
+                statTracker.OnRunEnded -= OnRunEnded;
+            }
             OnLoadData -= OnLoadDataHandler;
         }
 
@@ -105,6 +119,19 @@ namespace TimelessEchoes.Quests
 
                 UpdateProgress(inst);
             }
+        }
+
+        private void OnDistanceAdded(float dist)
+        {
+            if (dist <= 0f) return;
+            foreach (var inst in active.Values)
+                UpdateProgress(inst);
+        }
+
+        private void OnRunEnded(bool died)
+        {
+            foreach (var inst in active.Values)
+                UpdateProgress(inst);
         }
 
         private static bool ContainsEnemy(QuestData data, EnemyStats stats)
@@ -175,6 +202,22 @@ namespace TimelessEchoes.Quests
                     var donated = RegenManager.Instance ? RegenManager.Instance.GetDonationTotal(req.resource) : 0;
                     if (req.amount > 0)
                         pct = (float)(donated / req.amount);
+                }
+                else if (req.type == QuestData.RequirementType.DistanceRun)
+                {
+                    var tracker = GameplayStatTracker.Instance;
+                    var best = tracker ? tracker.LongestRun : 0f;
+                    if (req.amount > 0)
+                        pct = best / req.amount;
+                }
+                else if (req.type == QuestData.RequirementType.DistanceTravel)
+                {
+                    var tracker = GameplayStatTracker.Instance;
+                    var travelled = tracker ? tracker.DistanceTravelled : 0f;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                        travelled -= rec.DistanceBaseline;
+                    if (req.amount > 0)
+                        pct = travelled / req.amount;
                 }
 
                 progress += Mathf.Clamp01(pct);
@@ -267,6 +310,17 @@ namespace TimelessEchoes.Quests
             {
                 rec = new GameData.QuestRecord();
                 oracle.saveData.Quests[quest.questId] = rec;
+            }
+
+            if (!rec.DistanceBaselineSet)
+            {
+                foreach (var req in quest.requirements)
+                    if (req.type == QuestData.RequirementType.DistanceTravel)
+                    {
+                        rec.DistanceBaseline = statTracker ? statTracker.DistanceTravelled : 0f;
+                        rec.DistanceBaselineSet = true;
+                        break;
+                    }
             }
 
             foreach (var req in quest.requirements)
