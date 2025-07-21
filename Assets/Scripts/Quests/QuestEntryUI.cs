@@ -71,6 +71,13 @@ namespace TimelessEchoes.Quests
                     var resourceManager = ResourceManager.Instance;
                     foreach (var req in data.requirements)
                     {
+                        if (req.type == QuestData.RequirementType.Instant ||
+                            req.type == QuestData.RequirementType.DistanceRun ||
+                            req.type == QuestData.RequirementType.DistanceTravel)
+                        {
+                            continue;
+                        }
+
                         var slot = Instantiate(costSlotPrefab, costParent);
                         slot.resource = req.type == QuestData.RequirementType.Resource ||
                                         req.type == QuestData.RequirementType.Donation
