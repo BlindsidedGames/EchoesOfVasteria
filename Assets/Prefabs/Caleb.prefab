@@ -502,8 +502,9 @@ MonoBehaviour:
   IsEcho: 0
   stats: {fileID: 11400000, guid: 3eaaee50c6ec0a8499a2cf493080d866, type: 2}
   animator: {fileID: 7417124120224523868}
-  autoBuffAnimator: {fileID: 8666374849889485386}
+  AutoBuffAnimator: {fileID: 8666374849889485386}
   spriteRenderer: {fileID: 2365140991263910531}
+  autoBuffSpriteRenderer: {fileID: 3516590666455192206}
   fourDirectional: 1
   projectileOrigin: {fileID: 6094697013023591912}
   diceRoller: {fileID: 5704394544347900616}
@@ -515,6 +516,7 @@ MonoBehaviour:
   currentTaskName: 
   currentTaskObject: {fileID: 0}
   allowAttacks: 1
+  idleWalkStep: 5
 --- !u!114 &559727629078150424
 MonoBehaviour:
   m_ObjectHideFlags: 0
