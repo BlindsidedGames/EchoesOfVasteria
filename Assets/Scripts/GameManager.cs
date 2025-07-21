@@ -390,6 +390,9 @@ namespace TimelessEchoes
             }
 
             BuffManager.Instance?.ClearActiveBuffs();
+            // Disable autobuff when the hero dies to prevent automatic casting
+            AutoBuff = false;
+            UpdateAutoBuffUI();
 
             runEndedByDeath = true;
             if (runDropUI != null)
