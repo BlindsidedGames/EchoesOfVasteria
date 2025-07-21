@@ -262,6 +262,7 @@ namespace TimelessEchoes.Hero
                 idleWalkTarget = new GameObject("IdleWalkTarget").transform;
                 idleWalkTarget.hideFlags = HideFlags.HideInHierarchy;
             }
+
             idleWalkTarget.position = transform.position;
 
             var skillController = SkillController.Instance;
@@ -507,13 +508,9 @@ namespace TimelessEchoes.Hero
             if (CurrentTask == null)
             {
                 if (taskController == null || taskController.tasks.Count == 0)
-                {
                     AutoAdvance();
-                }
                 else
-                {
                     setter.target = null;
-                }
                 return;
             }
 
@@ -548,7 +545,6 @@ namespace TimelessEchoes.Hero
 #else
             var enemies = Object.FindObjectsOfType<Enemy>();
 #endif
-            Debug.Log(enemies);
             Vector2 pos = transform.position;
             foreach (var enemy in enemies)
             {
