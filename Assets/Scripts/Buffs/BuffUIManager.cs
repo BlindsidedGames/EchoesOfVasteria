@@ -22,9 +22,7 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private GameObject buffPurchaseWindow;
 
         [Header("Slot UI References")] [SerializeField]
-        private GameObject slotAssignWindow;
-
-        [SerializeField] private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
+        private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
 
         [Header("Tooltip References")] [SerializeField]
@@ -33,6 +31,7 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
         private BuffRecipe selectedRecipe;
+        private bool isAssigning = false;
         private int hoveredRunSlot = -1;
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
@@ -58,7 +57,7 @@ namespace TimelessEchoes.Buffs
                         ui.iconImage.color = recipe ? Color.white : transparent;
                 }
                 if (ui != null && ui.activateButton != null)
-                    ui.activateButton.interactable = i < unlocked;
+                    ui.activateButton.interactable = isAssigning && i < unlocked;
             }
 
             for (var i = 0; i < runSlotButtons.Length; i++)
@@ -144,8 +143,6 @@ namespace TimelessEchoes.Buffs
 
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(false);
-            if (slotAssignWindow != null)
-                slotAssignWindow.SetActive(false);
 
             if (openPurchaseButton != null)
                 openPurchaseButton.onClick.AddListener(OpenPurchaseWindow);
@@ -318,16 +315,16 @@ namespace TimelessEchoes.Buffs
         private void PurchaseBuff(BuffRecipe recipe)
         {
             selectedRecipe = recipe;
-            if (slotAssignWindow != null)
-                slotAssignWindow.SetActive(true);
+            isAssigning = true;
+            RefreshSlots();
         }
 
         private void OnAssignSlot(int slot)
         {
             if (selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
                 buffManager.AssignBuff(slot, selectedRecipe);
-            if (slotAssignWindow != null)
-                slotAssignWindow.SetActive(false);
+            selectedRecipe = null;
+            isAssigning = false;
             RefreshSlots();
         }
 
@@ -343,8 +340,6 @@ namespace TimelessEchoes.Buffs
         {
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(true);
-            if (slotAssignWindow != null)
-                slotAssignWindow.SetActive(false);
         }
 
         private void ShowRunSlotTooltip(int slot)
