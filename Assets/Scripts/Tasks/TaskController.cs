@@ -204,6 +204,11 @@ namespace TimelessEchoes.Tasks
             SortTaskListsByProximity();
 
             hero?.SetTask(null);
+
+            var echo = hero != null ? hero.GetComponent<EchoController>() : null;
+            if (hero != null && hero.IsEcho && (echo == null || !echo.Initialized))
+                return;
+
             SelectEarliestTask(hero);
         }
 
