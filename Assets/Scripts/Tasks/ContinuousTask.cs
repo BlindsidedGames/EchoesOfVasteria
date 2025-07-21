@@ -57,6 +57,8 @@ namespace TimelessEchoes.Tasks
 
 
             hero.Animator.Play(AnimationName);
+            if (hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
+                hero.AutoBuffAnimator.Play(AnimationName);
             ShowProgressBar();
         }
 

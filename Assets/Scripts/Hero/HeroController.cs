@@ -249,7 +249,10 @@ namespace TimelessEchoes.Hero
             if (animator != null)
             {
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                animator.Play(stateInfo.fullPathHash, 0, Random.value);
+                var offset = Random.value;
+                animator.Play(stateInfo.fullPathHash, 0, offset);
+                if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled)
+                    AutoBuffAnimator.Play(stateInfo.fullPathHash, 0, offset);
             }
 
             CurrentTask = null;
@@ -665,6 +668,8 @@ namespace TimelessEchoes.Hero
             if (enemy == null || enemy.CurrentHealth <= 0f) return;
 
             animator.Play("Attack");
+            if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled)
+                AutoBuffAnimator.Play("Attack");
 
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
@@ -754,12 +759,15 @@ namespace TimelessEchoes.Hero
         {
             if (AutoBuffAnimator == null) return;
             AutoBuffAnimator.gameObject.SetActive(AutoBuff && !IsEcho);
-            if (animator != null)
+            if (animator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
                 AutoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
                 AutoBuffAnimator.avatar = animator.avatar;
                 AutoBuffAnimator.updateMode = animator.updateMode;
                 AutoBuffAnimator.speed = animator.speed;
+
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                AutoBuffAnimator.Play(state.fullPathHash, 0, state.normalizedTime);
             }
         }
 
