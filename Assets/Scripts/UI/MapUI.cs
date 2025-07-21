@@ -18,7 +18,7 @@ namespace TimelessEchoes.UI
         {
             if (distanceText == null) return;
             int x = Mathf.FloorToInt(distance);
-            distanceText.text = $"Distance travelled: {x}";
+            distanceText.text = $"Distance Travelled: {x}";
         }
     }
 }
