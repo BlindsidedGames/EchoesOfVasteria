@@ -17,7 +17,31 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "Murid adalah sumber penghasilan utama Anda saat jauh. \nSumber daya akan dikumpulkan dan dibawa ke EVA untuk penyimpanan. Ketika Anda kembali, dia dengan senang hati akan memberikannya kepada Anda, yang harus Anda lakukan hanyalah bertanya!\n\nJika Anda mendapatkan murid sebelum bertemu Sumber Daya EVA masih akan dikumpulkan."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Penggemar adalah kekuatan jangka pendek, waktu yang kedaluwarsa ketika mereka kehabisan atau jika Anda kembali ke kota.  Mereka membutuhkan sumber daya untuk mengaktifkan dan memberi Anda bonus yang kuat untuk menjalankan Anda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb akan memasuki pertempuran secara otomatis, dan hanya melibatkan musuh yang menghalangi! Tugas pertama menyenangkan nanti. Anda mungkin melihat angka kerusakan mengambang misalnya. <color =#c69b60> 4.27 <font-weight = 400> </font-weight> <size = 80%> <color =#60c560> +1.45 <font-weight = 400> </font-weight> </noor> </size> <size = 70%> -0.10 <font-weight> </noor> </size> <size = 70%> -0.10 adalah kerusakan pangkalan Anda, yang kedua adalah kerusakan bonus Anda dan yang terakhir adalah pengurangan dari pertahanan musuh. Mencapai pembunuhan 10, 100, 1.000, dan 10.000 Anda terhadap musuh tertentu akan memberi Anda 25% kerusakan bonus terhadap musuh tertentu. Di sinilah sebagian besar kerusakan hijau yang Anda lihat berasal."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Gema adalah versi alternatif Caleb yang akan bergeser sedikit ke dalam kenyataannya untuk membantu dalam berbagai keadaan.\n\nSetiap gema dapat memiliki kombinasi keterampilan Calebs. Tapi sebagian besar gema tidak akan memiliki semuanya.\n\nPerbedaan utama dalam perilaku gema berasal dari apakah mereka diaktifkan pertempuran atau tidak.\nGema yang diaktifkan pertempuran memiliki dua gaya berbeda tergantung pada apakah mereka juga dapat menyelesaikan tugas. \n\nGema yang diaktifkan pertempuran yang tidak memiliki kemampuan untuk melakukan tugas akan mencari musuh secara khusus.\nGema yang diaktifkan pertempuran yang memang memiliki kemampuan untuk melakukan tugas akan memprioritaskan tugas daripada pertempuran dan hanya melibatkan musuh yang melihat mereka.\n\nGema yang tidak memiliki pertempuran tidak akan ditargetkan oleh atau target musuh.\n\nCatatan dev | Saat ini tidak ada gema dalam permainan yang dapat melakukan pertempuran dan tugas. Gema dari tonggak sejarah secara khusus mencari tugas untuk tonggak keterampilan itu misalnya gema yang dikeluarkan dengan potongan kayu hanya akan mencari tugas kayu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Untuk setiap pembunuhan, Anda menjalankan bonus sumber daya Anda naik 2% selama pertempuran ini untuk sementara ditetapkan kembali ke 0% bertujuan untuk mundur tepat sebelum pertempuran menjadi terlalu sulit untuk Anda tangani sehingga Anda mendapatkan sumber daya bonus sebanyak mungkin!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Tugas adalah tujuan utama dari perjalanan Caleb. Mengumpulkan sumber daya untuk kota sangat penting untuk pertumbuhan. Ini diselesaikan secara otomatis, dan Anda akan menyelesaikannya lebih cepat sebagai tingkat keterampilan Anda."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
