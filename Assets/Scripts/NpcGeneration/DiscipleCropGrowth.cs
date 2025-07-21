@@ -7,7 +7,7 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class DiscipleCropGrowth : MonoBehaviour
     {
-        [SerializeField] private string discipleName;
+        [SerializeField] private Disciple disciple;
         [SerializeField] private DiscipleGenerator generator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite[] growthStages = new Sprite[4];
@@ -51,7 +51,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void FindGenerator()
         {
-            if (string.IsNullOrEmpty(discipleName))
+            if (disciple == null)
                 return;
 
             var manager = DiscipleGenerationManager.Instance;
@@ -60,7 +60,7 @@ namespace TimelessEchoes.NpcGeneration
 
             foreach (var gen in manager.Generators)
             {
-                if (gen != null && gen.DiscipleName == discipleName)
+                if (gen != null && gen.DiscipleName == disciple.name)
                 {
                     generator = gen;
                     break;
