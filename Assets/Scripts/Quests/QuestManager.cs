@@ -219,6 +219,10 @@ namespace TimelessEchoes.Quests
                     if (req.amount > 0)
                         pct = travelled / req.amount;
                 }
+                else if (req.type == QuestData.RequirementType.Instant)
+                {
+                    pct = 1f;
+                }
 
                 progress += Mathf.Clamp01(pct);
             }
@@ -335,6 +339,23 @@ namespace TimelessEchoes.Quests
             }
 
             inst.ui = null;
+
+            var instant = false;
+            foreach (var req in quest.requirements)
+            {
+                if (req.type == QuestData.RequirementType.Instant)
+                {
+                    instant = true;
+                    break;
+                }
+            }
+
+            if (instant)
+            {
+                CompleteQuest(inst);
+                return;
+            }
+
             active[quest.questId] = inst;
             UpdateProgress(inst);
         }
