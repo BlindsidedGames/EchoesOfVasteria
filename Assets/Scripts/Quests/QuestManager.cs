@@ -223,6 +223,12 @@ namespace TimelessEchoes.Quests
                 {
                     pct = 1f;
                 }
+                else if (req.type == QuestData.RequirementType.Meet)
+                {
+                    if (!string.IsNullOrEmpty(req.meetNpcId) &&
+                        StaticReferences.CompletedNpcTasks.Contains(req.meetNpcId))
+                        pct = 1f;
+                }
 
                 progress += Mathf.Clamp01(pct);
             }
@@ -282,6 +288,7 @@ namespace TimelessEchoes.Quests
             achievementManager?.NotifyNpcMet(id);
 #endif
             RefreshNoticeboard();
+            UpdateAllProgress();
         }
 
         /// <summary>

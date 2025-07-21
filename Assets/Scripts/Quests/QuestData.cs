@@ -35,6 +35,8 @@ namespace TimelessEchoes.Quests
             public List<EnemyStats> enemies = new();
             [ShowIf("type", RequirementType.Kill)]
             public Sprite killIcon;
+            [ShowIf("type", RequirementType.Meet)]
+            public string meetNpcId;
         }
 
         public enum RequirementType
@@ -44,7 +46,8 @@ namespace TimelessEchoes.Quests
             Donation,
             DistanceRun,
             DistanceTravel,
-            Instant
+            Instant,
+            Meet
         }
     }
 }

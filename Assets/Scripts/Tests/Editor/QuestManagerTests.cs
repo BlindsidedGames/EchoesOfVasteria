@@ -83,6 +83,35 @@ namespace TimelessEchoes.Tests
 
             Object.DestroyImmediate(next);
         }
+
+        [Test]
+        public void MeetRequirement_CompletesOnNpcMet()
+        {
+            var req = new QuestData.Requirement
+            {
+                type = QuestData.RequirementType.Meet,
+                meetNpcId = "NPC2"
+            };
+            quest.requirements.Add(req);
+
+            typeof(QuestManager).GetField("quests", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(manager, new List<QuestData> { quest });
+
+            StaticReferences.CompletedNpcTasks.Add("NPC1");
+            manager.OnNpcMet("NPC1");
+
+            var field = typeof(QuestManager).GetField("active", BindingFlags.NonPublic | BindingFlags.Instance);
+            var dict = (System.Collections.IDictionary)field.GetValue(manager);
+            Assert.IsTrue(dict.Contains("Q1"));
+            var inst = dict["Q1"];
+            var readyField = inst.GetType().GetField("ReadyForTurnIn");
+            Assert.IsFalse((bool)readyField.GetValue(inst));
+
+            StaticReferences.CompletedNpcTasks.Add("NPC2");
+            manager.OnNpcMet("NPC2");
+
+            Assert.IsTrue((bool)readyField.GetValue(inst));
+        }
     }
 }
 
