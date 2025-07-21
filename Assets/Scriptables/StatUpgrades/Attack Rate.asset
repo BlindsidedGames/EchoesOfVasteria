@@ -16,9 +16,15 @@ MonoBehaviour:
   description: Swift strikes need no flourish; speed is the sharpest edge.
   thresholds:
   - minLevel: 0
-    maxLevel: 10000
+    maxLevel: 200
     requirements:
     - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
-      amount: 1
-      amountIncreasePerLevel: 1
+      amount: 2
+      amountIncreasePerLevel: 2
+  - minLevel: 200
+    maxLevel: 1000
+    requirements:
+    - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
+      amount: 5000
+      amountIncreasePerLevel: 5
   statIncreasePerLevel: 0.01
