@@ -383,6 +383,14 @@ namespace TimelessEchoes.Hero
             animator.SetFloat("MoveX", lastMoveDir.x);
             animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
+
+            if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled)
+            {
+                AutoBuffAnimator.SetFloat("MoveX", lastMoveDir.x);
+                AutoBuffAnimator.SetFloat("MoveY", lastMoveDir.y);
+                AutoBuffAnimator.SetFloat("MoveMagnitude", vel.magnitude);
+            }
+
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
@@ -689,7 +697,7 @@ namespace TimelessEchoes.Hero
         private void OnAutoBuffChanged()
         {
             if (AutoBuffAnimator == null) return;
-            AutoBuffAnimator.gameObject.SetActive(AutoBuff);
+            AutoBuffAnimator.gameObject.SetActive(AutoBuff && !IsEcho);
             if (animator != null)
             {
                 AutoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;
