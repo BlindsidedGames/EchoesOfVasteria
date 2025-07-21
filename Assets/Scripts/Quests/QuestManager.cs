@@ -340,22 +340,6 @@ namespace TimelessEchoes.Quests
 
             inst.ui = null;
 
-            var instant = false;
-            foreach (var req in quest.requirements)
-            {
-                if (req.type == QuestData.RequirementType.Instant)
-                {
-                    instant = true;
-                    break;
-                }
-            }
-
-            if (instant)
-            {
-                CompleteQuest(inst);
-                return;
-            }
-
             active[quest.questId] = inst;
             UpdateProgress(inst);
         }
