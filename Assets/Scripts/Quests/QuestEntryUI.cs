@@ -73,7 +73,8 @@ namespace TimelessEchoes.Quests
                     {
                         if (req.type == QuestData.RequirementType.Instant ||
                             req.type == QuestData.RequirementType.DistanceRun ||
-                            req.type == QuestData.RequirementType.DistanceTravel)
+                            req.type == QuestData.RequirementType.DistanceTravel ||
+                            req.type == QuestData.RequirementType.Meet)
                         {
                             continue;
                         }
@@ -103,7 +104,8 @@ namespace TimelessEchoes.Quests
                                 slot.iconImage.color = Color.white;
                             }
                             else if (req.type == QuestData.RequirementType.DistanceRun ||
-                                     req.type == QuestData.RequirementType.DistanceTravel)
+                                     req.type == QuestData.RequirementType.DistanceTravel ||
+                                     req.type == QuestData.RequirementType.Meet)
                             {
                                 slot.iconImage.sprite = null;
                                 slot.iconImage.color = Color.white;
@@ -166,7 +168,8 @@ namespace TimelessEchoes.Quests
                     slot.iconImage.color = Color.white;
                 }
                 else if (req.type == QuestData.RequirementType.DistanceRun ||
-                         req.type == QuestData.RequirementType.DistanceTravel)
+                         req.type == QuestData.RequirementType.DistanceTravel ||
+                         req.type == QuestData.RequirementType.Meet)
                 {
                     slot.iconImage.sprite = null;
                     slot.iconImage.color = Color.white;
@@ -198,6 +201,8 @@ namespace TimelessEchoes.Quests
                     return "Travel";
                 case QuestData.RequirementType.Instant:
                     return "Instant";
+                case QuestData.RequirementType.Meet:
+                    return "Meet";
                 default:
                     return type.ToString();
             }
