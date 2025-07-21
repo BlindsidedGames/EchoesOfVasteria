@@ -17,7 +17,31 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "Lärjungar är din huvudsakliga inkomstkälla när du är borta. \nResurser kommer att samlas in och föras till EVA för lagring. När du återvänder kommer hon gärna att ge dem till dig, allt du behöver göra är att fråga!\n\nOm du tjänar en lärjunge innan du möter EVA -resurser kommer fortfarande att samlas in."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Buffs är kortsiktiga, tidsinställda makter som löper ut när de tar slut eller om du återvänder till stan.  De kostar resurser för att aktivera och ge dig kraftfulla bonusar för din körning."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb kommer att komma in i strid automatiskt och bara engagera fiender som kommer i vägen! Uppgifter först kul senare. Du kanske märker flytande skadorum, t.ex. <color=#C69B60>4.27<font-weight=400></font-weight><size=80%><color=#60C560> +1.45<font-weight=400></font-weight></color></size><size=70%> -0.10<font-weight=400></font-weight></color></size> The first Är din basskada, den andra är din bonusskada och den sista är minskningen från fiendens försvar. Att nå din 10: e, 100: e, 1 000: e och 10 000: e död mot en specifik fiende ger dig 25% bonusskador mot den specifika fienden. Det är här majoriteten av den gröna skadan du ser kommer från."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Ekon är alternativa versioner av Caleb som kommer att växla något till sin verklighet för att hjälpa till under olika omständigheter.\n\nVarje eko kan ha en kombination av Calebs skicklighet. Men de flesta ekon kommer inte att ha dem alla.\n\nDen huvudsakliga skillnaden i ekobeteende kommer från huruvida de är bekämpade.\nCombat Enabled Echoes har två olika stilar beroende på om de också kan slutföra uppgifter eller inte. \n\nEn stridsaktiverad eko som inte har förmågan att utföra uppgifter kommer att söka fiender specifikt.\nEn stridsaktiverad eko som har förmågan att utföra uppgifter kommer att prioritera uppgifter framför strid och bara engagera fiender som ser dem.\n\nEkon som inte har strid kommer inte att riktas av eller målfiender.\n\nDev Obs | Just nu finns det inga ekon i spelet som kan göra både strid och uppgifter. Ekon från milstolpar som specifikt söker uppgifter för den färdigheterna Milestone, t.ex. ett eko som skapas med träsnitt kommer bara att söka träsnittuppgifter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "För varje död du får på en körning ökar din resursbonus med 2% under striden är detta tillfälligt tillbaka till 0% mål att dra sig tillbaka strax innan striden blir för tufft för dig att hantera så att du får så många bonusresurser som möjligt!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Uppgifter är det primära syftet med Calebs resa. Att samla resurser för staden är avgörande för tillväxten. Dessa är slutförda automatiskt, och du kommer att slutföra dem snabbare som din färdighetsnivå."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

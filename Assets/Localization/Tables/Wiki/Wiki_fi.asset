@@ -17,7 +17,31 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "Opetuslapset ovat tärkein tulolähde poissa ollessasi. \nResurssit kerätään ja tuodaan EVA: hon varastointia varten. Kun palaat, hän antaa heille mielellään sinulle, sinun tarvitsee vain kysyä!\n\nJos ansaitset opetuslapsen ennen EVA -resurssien tapaamista."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Buffit ovat lyhytaikaisia, ajoitettuja voimia, jotka vanhenevat, kun ne loppuu tai jos palaat kaupunkiin.  Ne maksavat resursseja aktivoida ja antaa sinulle voimakkaita bonuksia juoksustasi."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb tulee taisteluun automaattisesti ja kiinnostaa vain vihollisia, jotka pääsevät tielle! Tehtävät ensin hauskaa myöhemmin. Saatat huomata kelluvat vauriot, esim. <color =#c69b60> 4,27 <font-weight = 400> </font-weight> <size = 80%> <color =#60c560> +1,45 <font-weight = 400> </font-weight> </color> </size> <size = 70%-0,10 <font-weight = 400> Perusvauriosi, toinen on bonusvahinko ja viimeinen on vihollisen puolustuksen vähentäminen. 10., 100., 1 000: n ja 10 000: n tappamisen saavuttaminen tiettyä vihollista vastaan antaa sinulle 25%: n bonusvahinkoja kyseistä vihollista vastaan. Täältä suurin osa näkemistäsi vihreistä vaurioista tulee."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Kaikut ovat vaihtoehtoisia Caleb -versioita, jotka siirtyvät hiukan hänen todellisuuteensa auttaakseen erilaisissa olosuhteissa.\n\nJokaisella kaikulla voi olla yhdistelmä Calebs Skillset. Mutta useimmissa kaikuissa ei ole niitä kaikkia.\n\nTärkein ero kaikukäyttäytymisessä johtuu siitä, ovatko ne taisteluita vai eivät.\nCombat Enabled -kaikoilla on kaksi erilaista tyyliä riippuen siitä, voivatko ne suorittaa myös tehtäviä vai eivät. \n\nTaisteluun sallittu kaiku, jolla ei ole kykyä tehdä tehtäviä, etsii erityisesti vihollisia.\nTaistelu, joka on mahdollista, jolla on kyky suorittaa tehtäviä, asettaa etusijalle tehtävät taisteluun nähden ja kiinnostavat vain vihollisia, jotka näkevät heidät.\n\nKaikot, joilla ei ole taistelua, eivät ole vihollisia tai kohdista.\n\nDEV HUOMAUTUS | Tällä hetkellä pelissä ei ole kaikuja, jotka voivat tehdä sekä taistelua että tehtäviä. Virstanpylväiden kaikuja etsii erityisesti tehtäviä kyseisten taitojen virstanpylväs, eli puunkeräyksellä kutetulla kaiku etsii vain puunleikkaustehtäviä."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Jokaisesta tappamisesta, jonka saat juoksun, resurssibonus nousee 2%: lla taistelun aikana, tämä on väliaikaisesti takaisin 0%: iin, tavoitteena on vetäytyä juuri ennen kuin taistelu on liian kova, jotta voit käsitellä niin, että saat mahdollisimman monta bonusresurssia!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Tehtävät ovat Calebin matkan ensisijainen tarkoitus. Resurssien kerääminen kaupungille on välttämätöntä kasvulle. Nämä valmistuvat automaattisesti, ja suoritat ne nopeammin taitotasoasi."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

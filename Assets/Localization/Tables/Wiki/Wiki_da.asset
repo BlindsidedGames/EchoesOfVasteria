@@ -17,7 +17,31 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "Disciple er din vigtigste indkomstskilde, mens de er væk. \nRessourcer vil blive samlet og bragt til EVA til opbevaring. Når du vender tilbage, vil hun med glæde give dem til dig, alt hvad du skal gøre er at spørge!\n\nHvis du tjener en discipel, før du møder EVA -ressourcer, vil der stadig blive samlet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Buffs er kortsigtede, tidsbestemte kræfter, der udløber, når de løber tør, eller hvis du vender tilbage til byen.  De koster ressourcer for at aktivere og give dig kraftfulde bonusser til dit løb."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb kommer automatisk i kamp og engagerer kun fjender, der kommer i vejen! Opgaver først sjov senere. Du kan bemærke, at flydeskadesnumre f.eks. <color =#c69b60> 4,27 <font-weight = 400> </font-weight> <size = 80%> <color =#60C560> +1.45 <font-weight = 400> </font-weight> </farve> </størrelse> <størrelse = 70 %> -0,10 <font-weight = 400> </font- vægt Først er din baseskade, den anden er din bonusskade, og den sidste er reduktionen fra fjendens forsvar. At nå din 10., 100., 1.000. Og 10.000. Dræb mod en bestemt fjende vil give dig 25% bonusskade mod den specifikke fjende. Det er her størstedelen af de grønne skader, du ser, kommer fra."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Echoes er alternative versioner af Caleb, der vil skifte lidt ind i sin virkelighed for at hjælpe under forskellige omstændigheder.\n\nHvert Echo kan have en kombination af Calebs Skillset. Men de fleste ekkoer har ikke dem alle.\n\nDen største forskel i ekko -adfærd kommer fra, hvorvidt de er kampaktiveret eller ej.\nKampaktiverede ekkoer har to forskellige stilarter afhængigt af om de også kan udføre opgaver eller ej. \n\nEn kamp aktiveret ECHO, der ikke har evnen til at udføre opgaver, vil søge fjender specifikt.\nEn kamp aktiveret ekko, der har evnen til at udføre opgaver, vil prioritere opgaver frem for kamp og kun engagere fjender, der ser dem.\n\nEkkoer, der ikke har kamp, vil ikke blive målrettet af eller målrette fjender.\n\nDev note | Lige nu er der ingen ekko i spillet, der kan udføre både kamp og opgaver. Ekkoer fra milepæle søger specifikt opgaver for denne færdigheder milepæl, f.eks. En ekko, der er spawned med træsnit, vil kun søge træsnitopgaver."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "For hvert dræb, du får på en løb, stiger din ressourcebonus med 2% under kamp, dette er midlertidigt sat tilbage til 0% sigter mod at trække sig tilbage lige før kampen bliver for hård til at du kan håndtere, så du får så mange bonusressourcer som muligt!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Opgaver er det primære formål med Calebs rejse. At samle ressourcer til byen er vigtig for vækst. Disse afsluttes automatisk, og du vil afslutte dem hurtigere som dit færdighedsniveau."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
