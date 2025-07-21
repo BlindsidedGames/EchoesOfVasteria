@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: SmallSlime_Yellow
   m_EditorClassIdentifier: 
   enemyName: Yellow Minislime
-  displayOrder: 2
+  displayOrder: 3
   icon: {fileID: -6443132477491542402, guid: 224524d617939c14cbe9cf2fa92f5721, type: 3}
-  maxHealth: 15
   experience: 2
-  defense: 0.1
+  maxHealth: 15
   damage: 2
-  moveSpeed: 5
+  defense: 0.1
   attackSpeed: 1.1
   attackRange: 1
+  moveSpeed: 5
   visionRange: 7
   assistRange: 5
   wanderDistance: 3

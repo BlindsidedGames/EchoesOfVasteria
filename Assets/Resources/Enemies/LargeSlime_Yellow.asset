@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
   m_Name: LargeSlime_Yellow
   m_EditorClassIdentifier: 
-  enemyName: Yellow Slime
-  displayOrder: 3
+  enemyName: Large Yellow Slime
+  displayOrder: 5
   icon: {fileID: 8771735074934591030, guid: 378509acf7c2f1f4185edd533b7b3d47, type: 3}
-  maxHealth: 50
-  experience: 5
-  defense: 1
-  damage: 3
-  moveSpeed: 5
+  experience: 20
+  maxHealth: 500
+  damage: 15
+  defense: 12
   attackSpeed: 1.1
   attackRange: 1
+  moveSpeed: 5
   visionRange: 7
   assistRange: 5
   wanderDistance: 3

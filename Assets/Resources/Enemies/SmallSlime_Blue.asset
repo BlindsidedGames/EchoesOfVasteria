@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: SmallSlime_Blue
   m_EditorClassIdentifier: 
   enemyName: Blue Minislime
-  displayOrder: 4
+  displayOrder: 6
   icon: {fileID: 43810669774899895, guid: f3a27f43c7070b1458586ed35bab3dfb, type: 3}
-  maxHealth: 50
   experience: 3
-  defense: 1
+  maxHealth: 50
   damage: 4
-  moveSpeed: 4
+  defense: 1
   attackSpeed: 1.2
   attackRange: 1
+  moveSpeed: 4
   visionRange: 10
   assistRange: 5
   wanderDistance: 3

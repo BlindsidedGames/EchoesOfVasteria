@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
   m_Name: LargeSlime_Green
   m_EditorClassIdentifier: 
-  enemyName: Green Slime
-  displayOrder: 1
+  enemyName: Large Green Slime
+  displayOrder: 2
   icon: {fileID: 5974850342220603758, guid: ed517c4b34720b145ae9a8a233b9963e, type: 3}
-  maxHealth: 25
-  experience: 4
-  defense: 0.5
-  damage: 2
-  moveSpeed: 5
+  experience: 15
+  maxHealth: 250
+  damage: 10
+  defense: 10
   attackSpeed: 1.3
   attackRange: 1
+  moveSpeed: 5
   visionRange: 7
   assistRange: 5
   wanderDistance: 3

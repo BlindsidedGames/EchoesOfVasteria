@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
   m_Name: LargeSlime_Red
   m_EditorClassIdentifier: 
-  enemyName: Red Slime
-  displayOrder: 7
+  enemyName: Large Red Slime
+  displayOrder: 11
   icon: {fileID: -4816725795396207319, guid: 4a0032986a96f1848b7dfd28332e79f7, type: 3}
-  maxHealth: 175
-  experience: 10
-  defense: 5
-  damage: 10
-  moveSpeed: 7
+  experience: 30
+  maxHealth: 1500
+  damage: 25
+  defense: 20
   attackSpeed: 2
   attackRange: 1.5
+  moveSpeed: 7
   visionRange: 10
   assistRange: 5
   wanderDistance: 3

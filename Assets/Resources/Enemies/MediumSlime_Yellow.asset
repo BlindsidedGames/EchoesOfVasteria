@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: MediumSlime_Yellow
   m_EditorClassIdentifier: 
   enemyName: Yellow Slime
-  displayOrder: 3
+  displayOrder: 4
   icon: {fileID: 8771735074934591030, guid: 378509acf7c2f1f4185edd533b7b3d47, type: 3}
-  maxHealth: 50
   experience: 5
-  defense: 1
+  maxHealth: 50
   damage: 3
-  moveSpeed: 5
+  defense: 1
   attackSpeed: 1.1
   attackRange: 1
+  moveSpeed: 5
   visionRange: 7
   assistRange: 5
   wanderDistance: 3
