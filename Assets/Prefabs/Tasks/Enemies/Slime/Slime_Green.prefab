@@ -167,7 +167,8 @@ MonoBehaviour:
     dropChance: 1
     minX: 0
     maxX: Infinity
-  combatSkill: {fileID: 0}
+  targetUpdateInterval: 1
+  combatSkill: {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
 --- !u!114 &2113197715023221888
 MonoBehaviour:
   m_ObjectHideFlags: 0

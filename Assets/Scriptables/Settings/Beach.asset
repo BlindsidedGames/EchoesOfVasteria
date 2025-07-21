@@ -52,6 +52,14 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    - prefab: {fileID: 0}
+      weight: 1
+      minX: 500
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
     - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
       weight: 1
       minX: 80
@@ -64,6 +72,14 @@ MonoBehaviour:
       weight: 1
       minX: 220
       maxX: 1000
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
+    - prefab: {fileID: 0}
+      weight: 2
+      minX: 1000
+      maxX: Infinity
       topBuffer: 0
       spawnOnWater: 0
       spawnOnSand: 1
@@ -84,6 +100,14 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    - prefab: {fileID: 0}
+      weight: 3
+      minX: 1500
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
     - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
       weight: 1
       minX: 250
@@ -100,6 +124,14 @@ MonoBehaviour:
       spawnOnWater: 0
       spawnOnSand: 1
       spawnOnGrass: 1
+    - prefab: {fileID: 0}
+      weight: 4
+      minX: 2500
+      maxX: Infinity
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
     - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
       weight: 1
       minX: 900
@@ -111,6 +143,14 @@ MonoBehaviour:
     - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
       weight: 1
       minX: 2500
+      maxX: 10000
+      topBuffer: 0
+      spawnOnWater: 0
+      spawnOnSand: 1
+      spawnOnGrass: 1
+    - prefab: {fileID: 0}
+      weight: 5
+      minX: 10000
       maxX: Infinity
       topBuffer: 0
       spawnOnWater: 0
