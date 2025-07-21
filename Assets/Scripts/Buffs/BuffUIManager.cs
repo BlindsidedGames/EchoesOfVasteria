@@ -42,6 +42,10 @@ namespace TimelessEchoes.Buffs
         {
             if (buffManager == null) return;
 
+            if (heroHealth == null || !heroHealth.gameObject.activeInHierarchy)
+                heroHealth = Hero.HeroHealth.Instance ??
+                             FindFirstObjectByType<Hero.HeroHealth>();
+
             var transparent = new Color(1f, 1f, 1f, 0f);
             var grey = new Color(1f, 1f, 1f, 0.4f);
             var unlocked = buffManager.UnlockedSlots;
