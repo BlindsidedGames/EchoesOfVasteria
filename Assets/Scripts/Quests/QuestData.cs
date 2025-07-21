@@ -42,7 +42,8 @@ namespace TimelessEchoes.Quests
             Kill,
             Donation,
             DistanceRun,
-            DistanceTravel
+            DistanceTravel,
+            Instant
         }
     }
 }

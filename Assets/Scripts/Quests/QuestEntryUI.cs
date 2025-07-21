@@ -101,6 +101,11 @@ namespace TimelessEchoes.Quests
                                 slot.iconImage.sprite = null;
                                 slot.iconImage.color = Color.white;
                             }
+                            else if (req.type == QuestData.RequirementType.Instant)
+                            {
+                                slot.iconImage.sprite = null;
+                                slot.iconImage.color = Color.white;
+                            }
                         }
 
                         if (slot.countText != null)
@@ -159,6 +164,11 @@ namespace TimelessEchoes.Quests
                     slot.iconImage.sprite = null;
                     slot.iconImage.color = Color.white;
                 }
+                else if (req.type == QuestData.RequirementType.Instant)
+                {
+                    slot.iconImage.sprite = null;
+                    slot.iconImage.color = Color.white;
+                }
             }
         }
 
@@ -179,6 +189,8 @@ namespace TimelessEchoes.Quests
                     return "Run Distance";
                 case QuestData.RequirementType.DistanceTravel:
                     return "Travel";
+                case QuestData.RequirementType.Instant:
+                    return "Instant";
                 default:
                     return type.ToString();
             }
