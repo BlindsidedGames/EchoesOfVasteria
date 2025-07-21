@@ -40,8 +40,21 @@ namespace TimelessEchoes.Hero
                 if (echoHero == null || echoHero == hero)
                     continue;
 
+                if (!echo.combatEnabled)
+                    continue;
+
                 var dist = Vector2.Distance(pos, echo.transform.position);
-                echoHero.SetActiveState(dist <= activationDistance);
+                bool active = dist <= activationDistance || echo.transform.position.x < pos.x;
+                echoHero.SetActiveState(active);
+                if (!active)
+                {
+                    var anim = echoHero.Animator;
+                    if (anim != null)
+                    {
+                        anim.SetFloat("MoveX", 0f);
+                        anim.SetFloat("MoveY", -1f);
+                    }
+                }
             }
         }
     }
