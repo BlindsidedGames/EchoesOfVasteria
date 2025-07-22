@@ -477,7 +477,7 @@ namespace TimelessEchoes.Hero
             }
 
             var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
-            if (IsEcho && allowAttacks && nearest == null)
+            if (allowAttacks && nearest == null)
             {
                 var range = UnlimitedAggroRange ? float.PositiveInfinity : stats.visionRange;
                 nearest = FindNearestEnemy(range);
