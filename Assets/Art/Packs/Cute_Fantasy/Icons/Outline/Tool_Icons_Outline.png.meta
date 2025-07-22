@@ -120,6 +120,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -149,9 +162,9 @@ TextureImporter:
       name: Tool_Icons_Outline_1
       rect:
         serializedVersion: 2
-        x: 15
+        x: 16
         y: 0
-        width: 18
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -171,9 +184,9 @@ TextureImporter:
       name: Tool_Icons_Outline_2
       rect:
         serializedVersion: 2
-        x: 31
+        x: 32
         y: 0
-        width: 18
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -193,9 +206,9 @@ TextureImporter:
       name: Tool_Icons_Outline_3
       rect:
         serializedVersion: 2
-        x: 47
+        x: 48
         y: 0
-        width: 18
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -215,9 +228,9 @@ TextureImporter:
       name: Tool_Icons_Outline_4
       rect:
         serializedVersion: 2
-        x: 63
+        x: 64
         y: 0
-        width: 18
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -237,9 +250,9 @@ TextureImporter:
       name: Tool_Icons_Outline_5
       rect:
         serializedVersion: 2
-        x: 79
+        x: 80
         y: 0
-        width: 18
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -262,7 +275,7 @@ TextureImporter:
         x: 96
         y: 0
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,9 +294,9 @@ TextureImporter:
       name: Tool_Icons_Outline_7
       rect:
         serializedVersion: 2
-        x: 111
+        x: 112
         y: 0
-        width: 34
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -303,9 +316,9 @@ TextureImporter:
       name: Tool_Icons_Outline_8
       rect:
         serializedVersion: 2
-        x: 143
+        x: 128
         y: 0
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -321,11 +334,55 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Tool_Icons_Outline_9
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb73621e44139674f81e64edc241eb86
+      internalID: -339162856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tool_Icons_Outline_10
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a5327ebda0ead42ac8621ca749101d
+      internalID: 1643912821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e3fa75ebef6ff5243bd3ddb79d12b02c
     internalID: 0
     vertices: []
     indices: 
@@ -333,10 +390,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Tool_Icons_Outline_0: 36562571591381106
       Tool_Icons_Outline_1: 1513664772646348761
+      Tool_Icons_Outline_10: 1643912821
       Tool_Icons_Outline_2: 6693341613514303522
       Tool_Icons_Outline_3: 3586555820819971319
       Tool_Icons_Outline_4: -6576284397025442639
@@ -344,6 +404,7 @@ TextureImporter:
       Tool_Icons_Outline_6: -316856746276887859
       Tool_Icons_Outline_7: 3643827116389314855
       Tool_Icons_Outline_8: 2641508823780970378
+      Tool_Icons_Outline_9: -339162856
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

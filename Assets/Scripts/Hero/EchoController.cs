@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using UnityEngine;
@@ -7,14 +7,14 @@ using UnityEngine;
 namespace TimelessEchoes.Hero
 {
     /// <summary>
-    /// Controls Echo behaviour and lifetime.
+    ///     Controls Echo behaviour and lifetime.
     /// </summary>
     public class EchoController : MonoBehaviour
     {
         public static readonly List<EchoController> CombatEchoes = new();
         public static readonly List<EchoController> AllEchoes = new();
 
-        public System.Collections.Generic.List<Skill> capableSkills = new();
+        public List<Skill> capableSkills = new();
         public float lifetime = 10f;
         public bool disableSkills;
         public bool combatEnabled;
@@ -25,12 +25,11 @@ namespace TimelessEchoes.Hero
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
-        private bool initialized;
 
         /// <summary>
-        /// Returns true once <see cref="Init"/> has completed.
+        ///     Returns true once <see cref="Init" /> has completed.
         /// </summary>
-        public bool Initialized => initialized;
+        public bool Initialized { get; private set; }
 
         private void Awake()
         {
@@ -43,7 +42,7 @@ namespace TimelessEchoes.Hero
 
         private void OnEnable()
         {
-            if (!initialized)
+            if (!Initialized)
                 return;
 
             if (!AllEchoes.Contains(this))
@@ -65,11 +64,11 @@ namespace TimelessEchoes.Hero
         }
 
         /// <summary>
-        /// Configure the echo after it is spawned.
+        ///     Configure the echo after it is spawned.
         /// </summary>
-        public void Init(System.Collections.Generic.IEnumerable<Skill> skills, float duration, bool disable, bool combat)
+        public void Init(IEnumerable<Skill> skills, float duration, bool disable, bool combat)
         {
-            capableSkills = skills != null ? new System.Collections.Generic.List<Skill>(skills) : new System.Collections.Generic.List<Skill>();
+            capableSkills = skills != null ? new List<Skill>(skills) : new List<Skill>();
             lifetime = duration;
             remaining = duration;
             disableSkills = disable;
@@ -80,11 +79,11 @@ namespace TimelessEchoes.Hero
                 // When skills are not restricted, echoes should still focus on tasks
                 // rather than roaming across the map for combat. Treat an empty
                 // skill list as "all skills" instead of "combat only".
-                bool combatOnly = combatEnabled && disableSkills;
+                var combatOnly = combatEnabled && disableSkills;
                 hero.UnlimitedAggroRange = combatOnly;
             }
 
-            initialized = true;
+            Initialized = true;
 
             UpdateIndicators();
 
@@ -95,7 +94,7 @@ namespace TimelessEchoes.Hero
                 AssignTask();
         }
 
-    private void Update()
+        private void Update()
         {
             remaining -= Time.deltaTime;
             if (remaining <= 0f)
@@ -106,13 +105,10 @@ namespace TimelessEchoes.Hero
 
             if (!disableSkills && taskController != null)
             {
-                bool hasTask = false;
+                var hasTask = false;
                 if (capableSkills == null || capableSkills.Count == 0)
-                {
                     hasTask = taskController.tasks.Any(t => t is BaseTask b && !t.IsComplete());
-                }
                 else
-                {
                     foreach (var s in capableSkills)
                     {
                         if (s == null) continue;
@@ -122,7 +118,6 @@ namespace TimelessEchoes.Hero
                             break;
                         }
                     }
-                }
 
                 if (!hasTask)
                 {
@@ -165,18 +160,15 @@ namespace TimelessEchoes.Hero
             SetActive(hero.FarmingIndicator, false);
             SetActive(hero.LootingIndicator, false);
 
-            bool hasSkills = capableSkills != null && capableSkills.Count > 0;
+            var hasSkills = capableSkills != null && capableSkills.Count > 0;
 
-            if (!hasSkills)
+            if (!hasSkills && !disableSkills)
             {
-                // No skills assigned. Display all non-combat icons by default and
-                // include the combat icon if combat is enabled.
                 SetActive(hero.MiningIndicator, true);
                 SetActive(hero.WoodcuttingIndicator, true);
                 SetActive(hero.FishingIndicator, true);
                 SetActive(hero.FarmingIndicator, true);
                 SetActive(hero.LootingIndicator, true);
-                // Combat indicator has already been set based on combatEnabled
                 return;
             }
 
@@ -220,6 +212,7 @@ namespace TimelessEchoes.Hero
                 taskController.SelectEarliestTask(hero);
                 return;
             }
+
             if (capableSkills.Count == 1)
             {
                 var s = capableSkills[0];
