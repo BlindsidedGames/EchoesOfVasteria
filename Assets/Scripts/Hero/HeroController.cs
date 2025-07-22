@@ -220,7 +220,8 @@ namespace TimelessEchoes.Hero
             }
             else
             {
-                tracker.RecordHeroPosition(transform.position);
+                if (!IsEcho)
+                    tracker.RecordHeroPosition(transform.position);
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #if !DISABLESTEAMWORKS
                 RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
