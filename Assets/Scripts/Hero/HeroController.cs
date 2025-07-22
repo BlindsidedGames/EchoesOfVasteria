@@ -210,7 +210,7 @@ namespace TimelessEchoes.Hero
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
             UpdateAnimation();
             UpdateBehavior();
-            if (mapUI != null)
+            if (!IsEcho && mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
 
             var tracker = GameplayStatTracker.Instance;
