@@ -22,6 +22,7 @@ namespace TimelessEchoes.Stats
         private readonly List<GameData.RunRecord> recentRuns = new();
         private int nextRunNumber = 1;
         private float runStartTime;
+        private bool runInProgress;
         private int currentRunTasks;
         private double currentRunResources;
         private float currentRunDamageDealt;
@@ -67,6 +68,8 @@ namespace TimelessEchoes.Stats
         public double CurrentRunBonusResources { get; private set; }
 
         public float CurrentRunDistance { get; private set; }
+
+        public bool RunInProgress => runInProgress;
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -284,6 +287,7 @@ namespace TimelessEchoes.Stats
         {
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
+            runInProgress = true;
         }
 
         private void AddRunRecord(GameData.RunRecord record)
@@ -314,13 +318,40 @@ namespace TimelessEchoes.Stats
                 EnemiesKilled = CurrentRunKills,
                 DamageDealt = currentRunDamageDealt,
                 DamageTaken = currentRunDamageTaken,
-                Died = died
+                Died = died,
+                Abandoned = false
             };
             AddRunRecord(record);
             nextRunNumber++;
 
             OnRunEnded?.Invoke(died);
+            ResetCurrentRun();
+        }
 
+        public void AbandonRun()
+        {
+            var record = new GameData.RunRecord
+            {
+                RunNumber = nextRunNumber,
+                Duration = Time.time - runStartTime,
+                Distance = CurrentRunDistance,
+                TasksCompleted = currentRunTasks,
+                ResourcesCollected = currentRunResources,
+                BonusResourcesCollected = CurrentRunBonusResources,
+                EnemiesKilled = CurrentRunKills,
+                DamageDealt = currentRunDamageDealt,
+                DamageTaken = currentRunDamageTaken,
+                Died = false,
+                Abandoned = true
+            };
+            AddRunRecord(record);
+            nextRunNumber++;
+            OnRunEnded?.Invoke(false);
+            ResetCurrentRun();
+        }
+
+        private void ResetCurrentRun()
+        {
             CurrentRunDistance = 0f;
             currentRunTasks = 0;
             currentRunResources = 0;
@@ -330,6 +361,7 @@ namespace TimelessEchoes.Stats
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
             runStartTime = Time.time;
+            runInProgress = false;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif

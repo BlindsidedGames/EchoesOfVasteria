@@ -137,6 +137,7 @@ namespace Blindsided.SaveData
             public float DamageDealt;
             public float DamageTaken;
             public bool Died;
+            public bool Abandoned;
         }
 
         [HideReferenceObjectPicker]

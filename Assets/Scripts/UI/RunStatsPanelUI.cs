@@ -26,11 +26,14 @@ namespace TimelessEchoes.UI
         [SerializeField] private Vector2 statOffset = Vector2.zero;
         [SerializeField] private Color deathBarColor = Color.red;
         [SerializeField] private Color retreatBarColor = Color.green;
+        [SerializeField] private Color abandonedBarColor = Color.gray;
         [SerializeField] private Color resourcesDeathBarColor = Color.red;
         [SerializeField] private Color resourcesRetreatBarColor = Color.green;
+        [SerializeField] private Color resourcesAbandonedBarColor = Color.gray;
         [SerializeField] private Color resourcesBonusBarColor = Color.yellow;
         [SerializeField] private Color killsDeathBarColor = Color.red;
         [SerializeField] private Color killsRetreatBarColor = Color.green;
+        [SerializeField] private Color killsAbandonedBarColor = Color.gray;
 
         public enum GraphMode
         {
@@ -171,7 +174,12 @@ namespace TimelessEchoes.UI
             }
 
             if (runStatUI.statusText != null)
-                runStatUI.statusText.text = record.Died ? "Status: Died" : "Status: Retreated";
+            {
+                if (record.Abandoned)
+                    runStatUI.statusText.text = "Status: Abandoned";
+                else
+                    runStatUI.statusText.text = record.Died ? "Status: Died" : "Status: Retreated";
+            }
 
             runStatUI.gameObject.SetActive(true);
         }
@@ -304,14 +312,27 @@ namespace TimelessEchoes.UI
                     runBars[i].BarIndex = index;
                     Color color;
                     if (graphMode == GraphMode.Distance || graphMode == GraphMode.Duration)
-                        color = runs[index].Died ? deathBarColor : retreatBarColor;
+                    {
+                        if (runs[index].Abandoned)
+                            color = abandonedBarColor;
+                        else
+                            color = runs[index].Died ? deathBarColor : retreatBarColor;
+                    }
                     else if (graphMode == GraphMode.Resources)
                     {
-                        color = runs[index].Died ? resourcesDeathBarColor : resourcesRetreatBarColor;
+                        if (runs[index].Abandoned)
+                            color = resourcesAbandonedBarColor;
+                        else
+                            color = runs[index].Died ? resourcesDeathBarColor : resourcesRetreatBarColor;
                         runBars[i].OverlayColor = resourcesBonusBarColor;
                     }
                     else
-                        color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
+                    {
+                        if (runs[index].Abandoned)
+                            color = killsAbandonedBarColor;
+                        else
+                            color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
+                    }
                     runBars[i].FillColor = color;
                     if (graphMode != GraphMode.Resources)
                         runBars[i].SetOverlayFill(0f);
