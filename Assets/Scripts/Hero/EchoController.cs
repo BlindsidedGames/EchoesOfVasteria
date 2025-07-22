@@ -165,6 +165,21 @@ namespace TimelessEchoes.Hero
             SetActive(hero.FarmingIndicator, false);
             SetActive(hero.LootingIndicator, false);
 
+            bool hasSkills = capableSkills != null && capableSkills.Count > 0;
+
+            if (!hasSkills)
+            {
+                // No skills assigned. Display all non-combat icons by default and
+                // include the combat icon if combat is enabled.
+                SetActive(hero.MiningIndicator, true);
+                SetActive(hero.WoodcuttingIndicator, true);
+                SetActive(hero.FishingIndicator, true);
+                SetActive(hero.FarmingIndicator, true);
+                SetActive(hero.LootingIndicator, true);
+                // Combat indicator has already been set based on combatEnabled
+                return;
+            }
+
             if (capableSkills == null)
                 return;
 
