@@ -255,6 +255,17 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public float TaskSpeedMultiplier
+        {
+            get
+            {
+                var percent = 0f;
+                foreach (var b in activeBuffs)
+                    percent += b.recipe.taskSpeedPercent;
+                return 1f + percent / 100f;
+            }
+        }
+
         public float LifestealPercent
         {
             get
