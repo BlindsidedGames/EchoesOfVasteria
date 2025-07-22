@@ -941,9 +941,12 @@ namespace TimelessEchoes.Tasks
                 if (prefab == null || prefab.taskData == null) return 0f;
                 var min = overrideRange ? minX : prefab.taskData.minX;
                 var max = overrideRange ? maxX : prefab.taskData.maxX;
-                if (worldX < min || worldX > max)
+                var baseWeight = Mathf.Max(0f, weight);
+                if (worldX < min)
                     return 0f;
-                return Mathf.Max(0f, weight);
+                if (worldX > max)
+                    return baseWeight * 0.1f;
+                return baseWeight;
             }
         }
 
