@@ -19,27 +19,63 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "A tanítványok a fő jövedelemforrása, amíg távol van. \nAz erőforrásokat összegyűjtik és eljuttatják az EVA -hoz tárolás céljából. Amikor visszatér, boldogan megadja nekik, csak annyit kell tennie, hogy kérdezze meg!\n\nHa tanítványt keres, mielőtt találkozik, az EVA erőforrásait továbbra is összegyűjtik."
+    m_Localized: "A tan\xEDtv\xE1nyok a f\u0151 j\xF6vedelemforr\xE1sa, am\xEDg t\xE1vol
+      van. \nAz er\u0151forr\xE1sokat \xF6sszegy\u0171jtik \xE9s eljuttatj\xE1k az
+      EVA -hoz t\xE1rol\xE1s c\xE9lj\xE1b\xF3l. Amikor visszat\xE9r, boldogan megadja
+      nekik, csak annyit kell tennie, hogy k\xE9rdezze meg!\n\nHa tan\xEDtv\xE1nyt
+      keres, miel\u0151tt tal\xE1lkozik, az EVA er\u0151forr\xE1sait tov\xE1bbra
+      is \xF6sszegy\u0171jtik."
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: "A buffok rövid távú, időzített hatalmak, amelyek kifogyásakor lejárnak, vagy ha visszatérnek a városba.  Forrásokba kerülnek az aktiválás, és erőteljes bónuszokat adnak a futáshoz."
+    m_Localized: "A buffok r\xF6vid t\xE1v\xFA, id\u0151z\xEDtett hatalmak, amelyek
+      kifogy\xE1sakor lej\xE1rnak, vagy ha visszat\xE9rnek a v\xE1rosba.  Forr\xE1sokba
+      ker\xFClnek az aktiv\xE1l\xE1s, \xE9s er\u0151teljes b\xF3nuszokat adnak a
+      fut\xE1shoz."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
-    m_Localized: "Caleb automatikusan belép a harcba, és csak olyan ellenségeket vonz be, akik útba kerülnek! A feladatok először később szórakoznak. Észreveheti, hogy úszó kárszámok számolnak, pl. <color =#c69b60> 4,27 <font-weight = 400> </ font-weight> <size = 80%> <color =#60c560> +1.45 <font-weight = 400> </font-weight> </color> </size> </size> </size> Az alapkárosodása, a második a bónuszkárosodása, az utolsó pedig az ellenség védelmének csökkentése. A 10., a 100., 1000. és 10 000. gyilkosság elérése egy adott ellenség ellen 25% -os bónuszkárosodást fog jelenteni az adott ellenség ellen. Innen származik a látott zöld károk nagy része."
+    m_Localized: "Caleb automatikusan bel\xE9p a harcba, \xE9s csak olyan ellens\xE9geket
+      vonz be, akik \xFAtba ker\xFClnek! A feladatok el\u0151sz\xF6r k\xE9s\u0151bb
+      sz\xF3rakoznak. \xC9szreveheti, hogy \xFAsz\xF3 k\xE1rsz\xE1mok sz\xE1molnak,
+      pl. <color =#c69b60> 4,27 <font-weight = 400> </ font-weight> <size = 80%>
+      <color =#60c560> +1.45 <font-weight = 400> </font-weight> </color> </size>
+      </size> </size> Az alapk\xE1rosod\xE1sa, a m\xE1sodik a b\xF3nuszk\xE1rosod\xE1sa,
+      az utols\xF3 pedig az ellens\xE9g v\xE9delm\xE9nek cs\xF6kkent\xE9se. A 10.,
+      a 100., 1000. \xE9s 10 000. gyilkoss\xE1g el\xE9r\xE9se egy adott ellens\xE9g
+      ellen 25% -os b\xF3nuszk\xE1rosod\xE1st fog jelenteni az adott ellens\xE9g
+      ellen. Innen sz\xE1rmazik a l\xE1tott z\xF6ld k\xE1rok nagy r\xE9sze."
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
-    m_Localized: "A visszhangok Caleb alternatív verziói, akik kissé elmozdulnak a valóságába, hogy különféle körülmények között segítsenek.\n\nMinden ECHO -nak a Calebs Skillset kombinációja lehet. De a legtöbb visszhangnak nem lesz mindegyike.\n\nA visszhang viselkedés fő különbsége az, hogy harcolnak -e vagy sem.\nA harci engedélyezett visszhangok két különböző stílusúak, attól függően, hogy képesek -e elvégezni a feladatokat is. \n\nA harci engedélyezett Echo, amely nem képes feladatok elvégzésére, kifejezetten ellenségeket fog keresni.\nA harcok lehetővé tétele, amely képes feladatok elvégzésére, prioritást élvez a feladatokat a harchoz képest, és csak az őket látó ellenségeket vonzza be.\n\nAzokat a visszhangokat, amelyek nem harcolnak, az ellenségek nem célozzák meg, vagy célozzák meg.\n\nDev Note | Jelenleg nincs olyan visszhang a játékban, amely mind harcot, mind feladatokat végezhet. A mérföldkövek visszhangjai kifejezetten az erre a készségek feladataira törekszenek a mérföldkőnek, pl. A fametszetű visszhang csak fametszet -feladatokat fog keresni."
+    m_Localized: "A visszhangok Caleb alternat\xEDv verzi\xF3i, akik kiss\xE9 elmozdulnak
+      a val\xF3s\xE1g\xE1ba, hogy k\xFCl\xF6nf\xE9le k\xF6r\xFClm\xE9nyek k\xF6z\xF6tt
+      seg\xEDtsenek.\n\nMinden ECHO -nak a Calebs Skillset kombin\xE1ci\xF3ja lehet.
+      De a legt\xF6bb visszhangnak nem lesz mindegyike.\n\nA visszhang viselked\xE9s
+      f\u0151 k\xFCl\xF6nbs\xE9ge az, hogy harcolnak -e vagy sem.\nA harci enged\xE9lyezett
+      visszhangok k\xE9t k\xFCl\xF6nb\xF6z\u0151 st\xEDlus\xFAak, att\xF3l f\xFCgg\u0151en,
+      hogy k\xE9pesek -e elv\xE9gezni a feladatokat is. \n\nA harci enged\xE9lyezett
+      Echo, amely nem k\xE9pes feladatok elv\xE9gz\xE9s\xE9re, kifejezetten ellens\xE9geket
+      fog keresni.\nA harcok lehet\u0151v\xE9 t\xE9tele, amely k\xE9pes feladatok
+      elv\xE9gz\xE9s\xE9re, priorit\xE1st \xE9lvez a feladatokat a harchoz k\xE9pest,
+      \xE9s csak az \u0151ket l\xE1t\xF3 ellens\xE9geket vonzza be.\n\nAzokat a visszhangokat,
+      amelyek nem harcolnak, az ellens\xE9gek nem c\xE9lozz\xE1k meg, vagy c\xE9lozz\xE1k
+      meg.\n\nDev Note | Jelenleg nincs olyan visszhang a j\xE1t\xE9kban, amely mind
+      harcot, mind feladatokat v\xE9gezhet. A m\xE9rf\xF6ldk\xF6vek visszhangjai
+      kifejezetten az erre a k\xE9szs\xE9gek feladataira t\xF6rekszenek a m\xE9rf\xF6ldk\u0151nek,
+      pl. A fametszet\u0171 visszhang csak fametszet -feladatokat fog keresni."
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: "Minden egyes gyilkossághoz, amelyet futtat, az erőforrás -bónusz 2% -kal növekszik a harc során."
+    m_Localized: "Minden egyes gyilkoss\xE1ghoz, amelyet futtat, az er\u0151forr\xE1s
+      -b\xF3nusz 2% -kal n\xF6vekszik a harc sor\xE1n."
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
-    m_Localized: "Caleb utazásának elsődleges célja a feladatok. A növekedéshez elengedhetetlen a város forrásainak összegyűjtése. Ezek automatikusan befejeződnek, és gyorsabban fogod teljesíteni őket, mint a készségszint."
+    m_Localized: "Caleb utaz\xE1s\xE1nak els\u0151dleges c\xE9lja a feladatok. A
+      n\xF6veked\xE9shez elengedhetetlen a v\xE1ros forr\xE1sainak \xF6sszegy\u0171jt\xE9se.
+      Ezek automatikusan befejez\u0151dnek, \xE9s gyorsabban fogod teljes\xEDteni
+      \u0151ket, mint a k\xE9szs\xE9gszint."
     m_Metadata:
       m_Items: []
   references:
