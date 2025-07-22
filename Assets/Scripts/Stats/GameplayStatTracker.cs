@@ -209,7 +209,10 @@ namespace TimelessEchoes.Stats
             if (dist > 0f)
             {
                 DistanceTravelled += dist;
-                OnDistanceAdded?.Invoke(dist);
+                if (runInProgress)
+                {
+                    OnDistanceAdded?.Invoke(dist);
+                }
             }
         }
 
@@ -227,7 +230,7 @@ namespace TimelessEchoes.Stats
 
             if (position.x > HighestDistance)
                 HighestDistance = position.x;
-            if (position.x > CurrentRunDistance)
+            if (runInProgress && position.x > CurrentRunDistance)
                 CurrentRunDistance = position.x;
         }
 
@@ -236,7 +239,8 @@ namespace TimelessEchoes.Stats
             TotalKills++;
             if (enemy != null && !string.IsNullOrEmpty(enemy.enemyName) && enemy.enemyName.ToLowerInvariant().Contains("slime"))
                 SlimesKilled++;
-            CurrentRunKills++;
+            if (runInProgress)
+                CurrentRunKills++;
         }
 
         public void AddDeath()
@@ -249,7 +253,8 @@ namespace TimelessEchoes.Stats
             if (amount > 0f)
             {
                 DamageDealt += amount;
-                currentRunDamageDealt += amount;
+                if (runInProgress)
+                    currentRunDamageDealt += amount;
             }
         }
 
@@ -258,7 +263,8 @@ namespace TimelessEchoes.Stats
             if (amount > 0f)
             {
                 DamageTaken += amount;
-                currentRunDamageTaken += amount;
+                if (runInProgress)
+                    currentRunDamageTaken += amount;
             }
         }
 
@@ -277,9 +283,12 @@ namespace TimelessEchoes.Stats
             if (amount > 0)
             {
                 TotalResourcesGathered += amount;
-                currentRunResources += amount;
-                if (bonus)
-                    CurrentRunBonusResources += amount;
+                if (runInProgress)
+                {
+                    currentRunResources += amount;
+                    if (bonus)
+                        CurrentRunBonusResources += amount;
+                }
             }
         }
 
@@ -307,6 +316,8 @@ namespace TimelessEchoes.Stats
 
         public void EndRun(bool died)
         {
+            if (!runInProgress)
+                return;
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
@@ -330,6 +341,8 @@ namespace TimelessEchoes.Stats
 
         public void AbandonRun()
         {
+            if (!runInProgress)
+                return;
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
