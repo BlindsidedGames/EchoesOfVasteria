@@ -466,6 +466,9 @@ namespace TimelessEchoes
         private IEnumerator ReturnToTavernRoutine()
         {
             HideTooltip();
+            // Reactivate autobuff if it was temporarily disabled by death.
+            SetAutoBuffRunDisabled(false);
+            UpdateAutoBuffUI();
             returnOnDeathQueued = false;
             retreatQueued = false;
             if (returnOnDeathText != null)
