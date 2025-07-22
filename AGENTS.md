@@ -8,3 +8,4 @@ When making changes to this **2D** Unity project:
 - Avoid using obsolete Unity API calls. For example, replace `Object.FindObjectOfType` with `Object.FindFirstObjectByType` or `Object.FindAnyObjectByType`.
 - Note the warning `CS0618: 'CinemachineVirtualCamera' is obsolete`. Use `CinemachineCamera` instead of the deprecated `CinemachineVirtualCamera`.
 - Do not modify `Assets/Scenes/Main.unity` unless explicitly instructed to do so.
+- Unity tests cannot be run in this environment. Skip them, but run any tests you can on your changes.
