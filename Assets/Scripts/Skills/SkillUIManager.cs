@@ -201,6 +201,8 @@ namespace TimelessEchoes.Skills
         {
             yield return null;
             OnShowLevelTextChanged();
+            if (bonusUI != null && bonusUI.gameObject.activeSelf && selectedIndex >= 0)
+                bonusUI.PopulateMilestones(CurrentSkill);
         }
 
         private void DeselectSkill()
