@@ -49,6 +49,21 @@ namespace TimelessEchoes.Hero
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
         [SerializeField] private Skill combatSkill;
+
+        [Header("Skill Indicators")]
+        [SerializeField] private GameObject combatIndicator;
+        [SerializeField] private GameObject miningIndicator;
+        [SerializeField] private GameObject woodcuttingIndicator;
+        [SerializeField] private GameObject fishingIndicator;
+        [SerializeField] private GameObject farmingIndicator;
+        [SerializeField] private GameObject lootingIndicator;
+
+        public GameObject CombatIndicator => combatIndicator;
+        public GameObject MiningIndicator => miningIndicator;
+        public GameObject WoodcuttingIndicator => woodcuttingIndicator;
+        public GameObject FishingIndicator => fishingIndicator;
+        public GameObject FarmingIndicator => farmingIndicator;
+        public GameObject LootingIndicator => lootingIndicator;
         private bool diceUnlocked;
         [SerializeField] private BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;

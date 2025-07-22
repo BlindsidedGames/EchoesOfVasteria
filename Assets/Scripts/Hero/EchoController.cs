@@ -19,13 +19,8 @@ namespace TimelessEchoes.Hero
         public bool disableSkills;
         public bool combatEnabled;
 
-        [Header("Skill Indicators")]
-        [SerializeField] private GameObject combatIndicator;
-        [SerializeField] private GameObject miningIndicator;
-        [SerializeField] private GameObject woodcuttingIndicator;
-        [SerializeField] private GameObject fishingIndicator;
-        [SerializeField] private GameObject farmingIndicator;
-        [SerializeField] private GameObject lootingIndicator;
+        // Skill indicator references are stored on the hero controller
+        // so they can be configured on the main hero prefab.
 
         private HeroController hero;
         private TaskController taskController;
@@ -154,18 +149,21 @@ namespace TimelessEchoes.Hero
 
         private void UpdateIndicators()
         {
+            if (hero == null)
+                return;
+
             void SetActive(GameObject obj, bool state)
             {
                 if (obj != null)
                     obj.SetActive(state);
             }
 
-            SetActive(combatIndicator, combatEnabled);
-            SetActive(miningIndicator, false);
-            SetActive(woodcuttingIndicator, false);
-            SetActive(fishingIndicator, false);
-            SetActive(farmingIndicator, false);
-            SetActive(lootingIndicator, false);
+            SetActive(hero.CombatIndicator, combatEnabled);
+            SetActive(hero.MiningIndicator, false);
+            SetActive(hero.WoodcuttingIndicator, false);
+            SetActive(hero.FishingIndicator, false);
+            SetActive(hero.FarmingIndicator, false);
+            SetActive(hero.LootingIndicator, false);
 
             if (capableSkills == null)
                 return;
@@ -176,19 +174,19 @@ namespace TimelessEchoes.Hero
                 switch (s.skillName)
                 {
                     case "Mining":
-                        SetActive(miningIndicator, true);
+                        SetActive(hero.MiningIndicator, true);
                         break;
                     case "Woodcutting":
-                        SetActive(woodcuttingIndicator, true);
+                        SetActive(hero.WoodcuttingIndicator, true);
                         break;
                     case "Fishing":
-                        SetActive(fishingIndicator, true);
+                        SetActive(hero.FishingIndicator, true);
                         break;
                     case "Farming":
-                        SetActive(farmingIndicator, true);
+                        SetActive(hero.FarmingIndicator, true);
                         break;
                     case "Looting":
-                        SetActive(lootingIndicator, true);
+                        SetActive(hero.LootingIndicator, true);
                         break;
                 }
             }
