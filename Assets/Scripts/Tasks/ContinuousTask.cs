@@ -68,6 +68,10 @@ namespace TimelessEchoes.Tasks
             var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
             if (controller != null && associatedSkill != null)
                 delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
+
+            var buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            if (buffManager != null)
+                delta *= buffManager.TaskSpeedMultiplier;
             timer += delta;
             if (!isComplete)
             {
