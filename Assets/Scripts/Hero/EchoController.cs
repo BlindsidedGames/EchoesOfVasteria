@@ -19,6 +19,14 @@ namespace TimelessEchoes.Hero
         public bool disableSkills;
         public bool combatEnabled;
 
+        [Header("Skill Indicators")]
+        [SerializeField] private GameObject combatIndicator;
+        [SerializeField] private GameObject miningIndicator;
+        [SerializeField] private GameObject woodcuttingIndicator;
+        [SerializeField] private GameObject fishingIndicator;
+        [SerializeField] private GameObject farmingIndicator;
+        [SerializeField] private GameObject lootingIndicator;
+
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
@@ -48,6 +56,8 @@ namespace TimelessEchoes.Hero
 
             if (combatEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
+
+            UpdateIndicators();
 
             if (hero != null && taskController != null && !disableSkills)
                 AssignTask();
@@ -80,6 +90,8 @@ namespace TimelessEchoes.Hero
             }
 
             initialized = true;
+
+            UpdateIndicators();
 
             if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
@@ -138,6 +150,48 @@ namespace TimelessEchoes.Hero
             AllEchoes.Remove(this);
             if (hero != null)
                 hero.UnlimitedAggroRange = false;
+        }
+
+        private void UpdateIndicators()
+        {
+            void SetActive(GameObject obj, bool state)
+            {
+                if (obj != null)
+                    obj.SetActive(state);
+            }
+
+            SetActive(combatIndicator, combatEnabled);
+            SetActive(miningIndicator, false);
+            SetActive(woodcuttingIndicator, false);
+            SetActive(fishingIndicator, false);
+            SetActive(farmingIndicator, false);
+            SetActive(lootingIndicator, false);
+
+            if (capableSkills == null)
+                return;
+
+            foreach (var s in capableSkills)
+            {
+                if (s == null) continue;
+                switch (s.skillName)
+                {
+                    case "Mining":
+                        SetActive(miningIndicator, true);
+                        break;
+                    case "Woodcutting":
+                        SetActive(woodcuttingIndicator, true);
+                        break;
+                    case "Fishing":
+                        SetActive(fishingIndicator, true);
+                        break;
+                    case "Farming":
+                        SetActive(farmingIndicator, true);
+                        break;
+                    case "Looting":
+                        SetActive(lootingIndicator, true);
+                        break;
+                }
+            }
         }
 
         private void AssignTask()
