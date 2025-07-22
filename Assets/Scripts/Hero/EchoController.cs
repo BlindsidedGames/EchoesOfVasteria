@@ -19,6 +19,9 @@ namespace TimelessEchoes.Hero
         public bool disableSkills;
         public bool combatEnabled;
 
+        // Skill indicator references are stored on the hero controller
+        // so they can be configured on the main hero prefab.
+
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
@@ -48,6 +51,8 @@ namespace TimelessEchoes.Hero
 
             if (combatEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
+
+            UpdateIndicators();
 
             if (hero != null && taskController != null && !disableSkills)
                 AssignTask();
@@ -80,6 +85,8 @@ namespace TimelessEchoes.Hero
             }
 
             initialized = true;
+
+            UpdateIndicators();
 
             if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
@@ -138,6 +145,51 @@ namespace TimelessEchoes.Hero
             AllEchoes.Remove(this);
             if (hero != null)
                 hero.UnlimitedAggroRange = false;
+        }
+
+        private void UpdateIndicators()
+        {
+            if (hero == null)
+                return;
+
+            void SetActive(GameObject obj, bool state)
+            {
+                if (obj != null)
+                    obj.SetActive(state);
+            }
+
+            SetActive(hero.CombatIndicator, combatEnabled);
+            SetActive(hero.MiningIndicator, false);
+            SetActive(hero.WoodcuttingIndicator, false);
+            SetActive(hero.FishingIndicator, false);
+            SetActive(hero.FarmingIndicator, false);
+            SetActive(hero.LootingIndicator, false);
+
+            if (capableSkills == null)
+                return;
+
+            foreach (var s in capableSkills)
+            {
+                if (s == null) continue;
+                switch (s.skillName)
+                {
+                    case "Mining":
+                        SetActive(hero.MiningIndicator, true);
+                        break;
+                    case "Woodcutting":
+                        SetActive(hero.WoodcuttingIndicator, true);
+                        break;
+                    case "Fishing":
+                        SetActive(hero.FishingIndicator, true);
+                        break;
+                    case "Farming":
+                        SetActive(hero.FarmingIndicator, true);
+                        break;
+                    case "Looting":
+                        SetActive(hero.LootingIndicator, true);
+                        break;
+                }
+            }
         }
 
         private void AssignTask()
