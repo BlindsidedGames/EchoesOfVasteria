@@ -1,4 +1,5 @@
 using Blindsided.Utilities;
+using TimelessEchoes.Buffs;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Utilities;
@@ -73,10 +74,7 @@ namespace TimelessEchoes.Tasks
             if (buffManager != null)
                 delta *= buffManager.TaskSpeedMultiplier;
             timer += delta;
-            if (!isComplete)
-            {
-                // No audio playback here; sounds are triggered via animation events.
-            }
+
 
             UpdateProgressBar();
 
