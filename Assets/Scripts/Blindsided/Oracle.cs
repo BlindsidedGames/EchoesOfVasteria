@@ -6,6 +6,7 @@ using Blindsided.SaveData;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TimelessEchoes;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -83,6 +84,10 @@ namespace Blindsided
 
         private void OnApplicationQuit()
         {
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
+            if (tracker != null && tracker.RunInProgress)
+                tracker.AbandonRun();
             SaveToFile(false);
             SteamCloudSync.Instance.Upload();
             SafeCreateBackup();
