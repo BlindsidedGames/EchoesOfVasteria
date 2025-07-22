@@ -150,7 +150,7 @@ namespace TimelessEchoes.UI
             runStatUI.transform.position = pos;
 
             if (runStatUI.runIdText != null)
-                runStatUI.runIdText.text = $"Run {record.RunNumber}";
+                runStatUI.runIdText.text = $"Trek {record.RunNumber}";
 
             if (runStatUI.distanceTasksResourcesText != null)
             {
