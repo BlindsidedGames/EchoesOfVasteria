@@ -66,5 +66,15 @@ namespace TimelessEchoes.Tasks
 
         [HideInInspector]
         public Persistent persistent = new();
+
+        public float GetWeight(float worldX)
+        {
+            var baseWeight = Mathf.Max(0f, weight);
+            if (worldX < minX)
+                return 0f;
+            if (worldX > maxX)
+                return baseWeight * 0.1f;
+            return baseWeight;
+        }
     }
 }
