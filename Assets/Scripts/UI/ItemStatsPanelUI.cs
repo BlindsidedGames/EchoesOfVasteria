@@ -32,7 +32,7 @@ namespace TimelessEchoes.UI
                 references = GetComponent<StatPanelReferences>();
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             BuildEntries();
         }
 
@@ -61,7 +61,7 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.itemEntryParent)
                 Destroy(child.gameObject);
 
-            var allResources = Resources.LoadAll<Resource>("Resources");
+            var allResources = Resources.LoadAll<Resource>("Resource Items");
             var sorted = allResources
                 .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                 .ThenBy(r => r.name)
@@ -89,10 +89,10 @@ namespace TimelessEchoes.UI
         private void UpdateEntry(Resource res, ItemEntryUIReferences ui)
         {
             if (res == null || ui == null) return;
-            double amount = resourceManager ? resourceManager.GetAmount(res) : 0;
-            int collected = res.totalReceived;
-            int spent = res.totalSpent;
-            bool earned = collected > 0;
+            var amount = resourceManager ? resourceManager.GetAmount(res) : 0;
+            var collected = res.totalReceived;
+            var spent = res.totalSpent;
+            var earned = collected > 0;
 
             if (ui.entryIconImage != null)
             {
@@ -110,9 +110,9 @@ namespace TimelessEchoes.UI
 
             if (ui.entryHeldCollectedSpentText != null)
             {
-                string count = CalcUtils.FormatNumber(amount, true);
-                string col = CalcUtils.FormatNumber(collected, true);
-                string sp = CalcUtils.FormatNumber(spent, true);
+                var count = CalcUtils.FormatNumber(amount, true);
+                var col = CalcUtils.FormatNumber(collected, true);
+                var sp = CalcUtils.FormatNumber(spent, true);
                 ui.entryHeldCollectedSpentText.text = $"Count: {count}\nCollected: {col}\nSpent: {sp}";
             }
         }
@@ -122,8 +122,8 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0)
                 return;
 
-            IEnumerable<Resource> known = defaultOrder.Where(r => r.totalReceived > 0);
-            IEnumerable<Resource> unknown = defaultOrder.Where(r => r.totalReceived <= 0);
+            var known = defaultOrder.Where(r => r.totalReceived > 0);
+            var unknown = defaultOrder.Where(r => r.totalReceived <= 0);
 
             if (sortMode == SortMode.Default)
             {
@@ -155,7 +155,10 @@ namespace TimelessEchoes.UI
                 return;
             }
 
-            int GetValue(Resource r) => sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
+            int GetValue(Resource r)
+            {
+                return sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
+            }
 
             var sortedKnownByValue = known
                 .OrderByDescending(GetValue)
@@ -169,7 +172,7 @@ namespace TimelessEchoes.UI
 
         private void ApplyOrder(IList<Resource> order)
         {
-            int index = 0;
+            var index = 0;
             foreach (var res in order)
                 if (entries.TryGetValue(res, out var ui))
                     ui.transform.SetSiblingIndex(index++);
