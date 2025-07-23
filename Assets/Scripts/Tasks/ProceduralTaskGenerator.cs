@@ -299,7 +299,7 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 Vector3 pos;
-                if (entry.spawnOnWater && allowWater)
+                if (entry.spawnAreas.HasFlag(SpawnArea.Water) && allowWater)
                 {
                     pos = waterPos;
                 }
@@ -307,9 +307,9 @@ namespace TimelessEchoes.Tasks
                 {
                     Vector3 sandCandidate = Vector3.zero;
                     Vector3 grassCandidate = Vector3.zero;
-                    var sandValid = entry.spawnOnSand && allowSand &&
+                    var sandValid = entry.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand &&
                                    TryGetSandSpot(localX, entry.topBuffer, out sandCandidate);
-                    var grassValid = entry.spawnOnGrass && allowGrass &&
+                    var grassValid = entry.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass &&
                                      TryGetGrassPosition(localX, entry.topBuffer, out grassCandidate);
 
                     if (sandValid && grassValid)
@@ -334,13 +334,13 @@ namespace TimelessEchoes.Tasks
                 var positionIsValid = false;
                 while (attempts < 5)
                 {
-                    if (entry.spawnOnWater || entry.spawnOnSand)
+                    if (entry.spawnAreas.HasFlag(SpawnArea.Water) || entry.spawnAreas.HasFlag(SpawnArea.Sand))
                     {
                         positionIsValid = true;
                         break;
                     }
 
-                    var isWaterTile = !entry.spawnOnWater && IsWaterTile(pos);
+                    var isWaterTile = !entry.spawnAreas.HasFlag(SpawnArea.Water) && IsWaterTile(pos);
                     var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
                     var onWaterEdge = allowWater && Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
 
@@ -371,9 +371,9 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 Vector3 pos;
-                if (npc.spawnOnWater && TryGetWaterSpot(npc.localX, out pos)) { }
-                else if (npc.spawnOnSand && TryGetSandSpot(npc.localX, npc.topBuffer, out pos)) { }
-                else if (npc.spawnOnGrass && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
+                if (npc.spawnAreas.HasFlag(SpawnArea.Water) && TryGetWaterSpot(npc.localX, out pos)) { }
+                else if (npc.spawnAreas.HasFlag(SpawnArea.Sand) && TryGetSandSpot(npc.localX, npc.topBuffer, out pos)) { }
+                else if (npc.spawnAreas.HasFlag(SpawnArea.Grass) && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
                 else
                     pos = RandomPositionAtX(npc.localX);
 
@@ -711,19 +711,27 @@ namespace TimelessEchoes.Tasks
 
         private bool TaskAllowed(WeightedSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
         {
-            var specific = spawn.spawnOnWater || spawn.spawnOnSand || spawn.spawnOnGrass;
-            var permitted = (!spawn.spawnOnWater || allowWater) && (!spawn.spawnOnSand || allowSand) && (!spawn.spawnOnGrass || allowGrass);
+            var specific = spawn.spawnAreas != 0;
+            var permitted = (!spawn.spawnAreas.HasFlag(SpawnArea.Water) || allowWater) &&
+                            (!spawn.spawnAreas.HasFlag(SpawnArea.Sand) || allowSand) &&
+                            (!spawn.spawnAreas.HasFlag(SpawnArea.Grass) || allowGrass);
             if (specific)
-                return (spawn.spawnOnWater && allowWater) || (spawn.spawnOnSand && allowSand) || (spawn.spawnOnGrass && allowGrass);
+                return (spawn.spawnAreas.HasFlag(SpawnArea.Water) && allowWater) ||
+                       (spawn.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand) ||
+                       (spawn.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass);
             return permitted;
         }
 
         private bool TaskAllowed(WeightedTaskSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
         {
-            var specific = spawn.spawnOnWater || spawn.spawnOnSand || spawn.spawnOnGrass;
-            var permitted = (!spawn.spawnOnWater || allowWater) && (!spawn.spawnOnSand || allowSand) && (!spawn.spawnOnGrass || allowGrass);
+            var specific = spawn.spawnAreas != 0;
+            var permitted = (!spawn.spawnAreas.HasFlag(SpawnArea.Water) || allowWater) &&
+                            (!spawn.spawnAreas.HasFlag(SpawnArea.Sand) || allowSand) &&
+                            (!spawn.spawnAreas.HasFlag(SpawnArea.Grass) || allowGrass);
             if (specific)
-                return (spawn.spawnOnWater && allowWater) || (spawn.spawnOnSand && allowSand) || (spawn.spawnOnGrass && allowGrass);
+                return (spawn.spawnAreas.HasFlag(SpawnArea.Water) && allowWater) ||
+                       (spawn.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand) ||
+                       (spawn.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass);
             return permitted;
         }
 
@@ -764,9 +772,9 @@ namespace TimelessEchoes.Tasks
                 }
                 r -= t.GetWeight(worldX);
                 if (r > 0f) continue;
-                var isWater = t.spawnOnWater && allowWaterTasks;
-                var isSand = !isWater && t.spawnOnSand && allowSandTasks;
-                var isGrass = !isWater && !isSand && t.spawnOnGrass && allowGrassTasks;
+                var isWater = t.spawnAreas.HasFlag(SpawnArea.Water) && allowWaterTasks;
+                var isSand = !isWater && t.spawnAreas.HasFlag(SpawnArea.Sand) && allowSandTasks;
+                var isGrass = !isWater && !isSand && t.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrassTasks;
                 return (t, isWater, isGrass, isSand);
             }
 
@@ -898,9 +906,8 @@ namespace TimelessEchoes.Tasks
             [MinValue(0)]
             public int topBuffer = 0;
 
-            public bool spawnOnWater;
-            public bool spawnOnSand;
-            public bool spawnOnGrass;
+            // Combined flag specifying which terrain types this entry can spawn on.
+            public SpawnArea spawnAreas;
 
             public float GetWeight(float worldX)
             {
@@ -932,9 +939,8 @@ namespace TimelessEchoes.Tasks
             [MinValue(0)]
             public int topBuffer = 0;
 
-            public bool spawnOnWater;
-            public bool spawnOnSand;
-            public bool spawnOnGrass;
+            // Combined flag specifying which terrain types this task may spawn on.
+            public SpawnArea spawnAreas;
 
             public float GetWeight(float worldX)
             {

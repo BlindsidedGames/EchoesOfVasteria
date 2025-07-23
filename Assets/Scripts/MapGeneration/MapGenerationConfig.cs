@@ -74,9 +74,8 @@ namespace TimelessEchoes.MapGeneration
                 public string id;
                 public float localX;
                 [MinValue(0)] public int topBuffer;
-                public bool spawnOnWater;
-                public bool spawnOnSand;
-                public bool spawnOnGrass = true;
+                // Areas where this NPC is allowed to spawn.
+                public SpawnArea spawnAreas = SpawnArea.Grass;
                 public bool spawnOnlyOnce = true;
             }
         }
