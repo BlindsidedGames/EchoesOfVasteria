@@ -437,7 +437,7 @@ namespace TimelessEchoes.Tasks
             var allowGrass = TryGetGrassPosition(localX, out var _);
             var (entry, isBottomTask, isTopTask, isMiddleTask) =
                 PickTaskEntry(worldX, allowWater, allowGrass, allowSand);
-            if (entry == null || entry.prefab == null)
+            if (entry == null || entry.data == null || entry.data.taskPrefab == null)
                 return false;
 
             if (requireBottomTask && !isBottomTask) return false;
@@ -465,9 +465,10 @@ namespace TimelessEchoes.Tasks
             while (attempts < 5)
             {
                 var terrain = GetTerrainAt(pos);
+                var terrains = entry.data != null ? entry.data.spawnTerrains : null;
                 var allowedTerrain = terrain != null &&
-                                     (entry.spawnTerrains == null || entry.spawnTerrains.Count == 0 ||
-                                      entry.spawnTerrains.Contains(terrain));
+                                     (terrains == null || terrains.Count == 0 ||
+                                      terrains.Contains(terrain));
                 var cell = terrainMap.WorldToCell(pos);
                 var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
 
@@ -507,7 +508,7 @@ namespace TimelessEchoes.Tasks
                     return false;
 
             var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-            var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
+            var obj = Instantiate(entry.data.taskPrefab, pos, Quaternion.identity, parentTf);
             generatedObjects.Add(obj.gameObject);
 
             MonoBehaviour mono = obj;
@@ -763,11 +764,12 @@ namespace TimelessEchoes.Tasks
 
         private bool TaskAllowed(WeightedTaskSpawn spawn, bool allowBottom, bool allowTop, bool allowMiddle)
         {
-            var specific = spawn.spawnTerrains != null && spawn.spawnTerrains.Count > 0;
+            var terrains = spawn.data != null ? spawn.data.spawnTerrains : null;
+            var specific = terrains != null && terrains.Count > 0;
             var permitted = (!specific) ||
-                            (allowBottom && spawn.spawnTerrains.Contains(bottomTerrain)) ||
-                            (allowMiddle && spawn.spawnTerrains.Contains(middleTerrain)) ||
-                            (allowTop && spawn.spawnTerrains.Contains(topTerrain));
+                            (allowBottom && terrains.Contains(bottomTerrain)) ||
+                            (allowMiddle && terrains.Contains(middleTerrain)) ||
+                            (allowTop && terrains.Contains(topTerrain));
             return permitted;
         }
 
@@ -779,12 +781,12 @@ namespace TimelessEchoes.Tasks
             {
                 if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
                     continue;
-                if (t.prefab != null && t.prefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
+                if (t.data != null && t.data.taskPrefab != null && t.data.taskPrefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
-                if (t.prefab != null)
+                if (t.data != null)
                 {
-                    var data = t.prefab.taskData;
-                    if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
+                    var data = t.data;
+                    if (data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                         continue;
                 }
                 taskTotalWeight += t.GetWeight(worldX);
@@ -798,19 +800,20 @@ namespace TimelessEchoes.Tasks
             {
                 if (!TaskAllowed(t, allowWaterTasks, allowGrassTasks, allowSandTasks))
                     continue;
-                if (t.prefab != null && t.prefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
+                if (t.data != null && t.data.taskPrefab != null && t.data.taskPrefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
                     continue;
-                if (t.prefab != null)
+                if (t.data != null)
                 {
-                    var data = t.prefab.taskData;
-                    if (data != null && data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
+                    var data = t.data;
+                    if (data.requiredQuest != null && !QuestCompleted(data.requiredQuest.questId))
                         continue;
                 }
                 r -= t.GetWeight(worldX);
                 if (r > 0f) continue;
-                var isBottom = t.spawnTerrains.Contains(bottomTerrain) && allowWaterTasks;
-                var isMiddle = !isBottom && t.spawnTerrains.Contains(middleTerrain) && allowSandTasks;
-                var isTop = !isBottom && !isMiddle && t.spawnTerrains.Contains(topTerrain) && allowGrassTasks;
+                var terrains = t.data != null ? t.data.spawnTerrains : null;
+                var isBottom = terrains != null && terrains.Contains(bottomTerrain) && allowWaterTasks;
+                var isMiddle = !isBottom && terrains != null && terrains.Contains(middleTerrain) && allowSandTasks;
+                var isTop = !isBottom && !isMiddle && terrains != null && terrains.Contains(topTerrain) && allowGrassTasks;
                 return (t, isBottom, isTop, isMiddle);
             }
 
@@ -957,29 +960,14 @@ namespace TimelessEchoes.Tasks
         [HideLabel]
         public class WeightedTaskSpawn
         {
-            [Required] public BaseTask prefab;
-
-            [MinValue(0)] public float weight = 1f;
-
-            [LabelText("Override Range")]
-            public bool overrideRange;
-
-            [ShowIf(nameof(overrideRange))]
-            public float minX;
-
-            [ShowIf(nameof(overrideRange))]
-            public float maxX = float.PositiveInfinity;
-
-
-            // Terrains this task may spawn on.
-            public List<TerrainSettings> spawnTerrains = new();
+            [Required] public TaskData data;
 
             public float GetWeight(float worldX)
             {
-                if (prefab == null || prefab.taskData == null) return 0f;
-                var min = overrideRange ? minX : prefab.taskData.minX;
-                var max = overrideRange ? maxX : prefab.taskData.maxX;
-                var baseWeight = Mathf.Max(0f, weight);
+                if (data == null) return 0f;
+                var min = data.minX;
+                var max = data.maxX;
+                var baseWeight = Mathf.Max(0f, data.weight);
                 if (worldX < min)
                     return 0f;
                 if (worldX > max)

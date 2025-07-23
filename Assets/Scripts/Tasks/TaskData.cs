@@ -3,6 +3,7 @@ using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Quests;
+using TimelessEchoes.MapGeneration;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -36,6 +37,18 @@ namespace TimelessEchoes.Tasks
         [TitleGroup("General")]
         [Tooltip("Interval between repeated SFX plays while the task is active. Zero disables repeats.")]
         public float sfxInterval;
+
+        [TitleGroup("General")]
+        [Required]
+        public BaseTask taskPrefab;
+
+        [TitleGroup("General")]
+        [MinValue(0)]
+        public float weight = 1f;
+
+        // Terrains this task may spawn on.
+        [TitleGroup("General")]
+        public List<TerrainSettings> spawnTerrains = new();
         [TitleGroup("General")]
         public List<ResourceDrop> resourceDrops = new();
 
