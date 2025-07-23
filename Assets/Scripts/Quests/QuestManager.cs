@@ -7,11 +7,9 @@ using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
-using TimelessEchoes.Regen;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
-using UnityEngine.Serialization;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
@@ -87,6 +85,7 @@ namespace TimelessEchoes.Quests
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
             }
+
             OnLoadData -= OnLoadDataHandler;
         }
 
@@ -286,15 +285,13 @@ namespace TimelessEchoes.Quests
         }
 
         /// <summary>
-        /// Returns true if any active quest can be turned in.
+        ///     Returns true if any active quest can be turned in.
         /// </summary>
         public bool HasQuestsReadyForTurnIn()
         {
             foreach (var inst in active.Values)
-            {
                 if (inst != null && inst.ReadyForTurnIn)
                     return true;
-            }
             return false;
         }
 
@@ -318,7 +315,6 @@ namespace TimelessEchoes.Quests
             }
 
             if (!rec.DistanceBaselineSet)
-            {
                 foreach (var req in quest.requirements)
                     if (req.type == QuestData.RequirementType.DistanceTravel)
                     {
@@ -326,7 +322,6 @@ namespace TimelessEchoes.Quests
                         rec.DistanceBaselineSet = true;
                         break;
                     }
-            }
 
             foreach (var req in quest.requirements)
             {
