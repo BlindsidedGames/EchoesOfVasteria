@@ -246,7 +246,6 @@ namespace Blindsided
             else if (saveData.UnlockedBuffSlots > 5)
                 saveData.UnlockedBuffSlots = 5;
             saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            saveData.FishDonations ??= new Dictionary<string, double>();
         }
 
         public static void AwayForSeconds()

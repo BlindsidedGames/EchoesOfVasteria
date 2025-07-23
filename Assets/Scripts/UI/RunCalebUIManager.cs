@@ -2,7 +2,7 @@ using References.UI;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
-using TimelessEchoes.Regen;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 
 namespace TimelessEchoes.UI
@@ -16,7 +16,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private RunCalebUIReferences uiReferences;
         [SerializeField] private GameObject skillsWindow;
         [SerializeField] private BuffManager buffManager;
-        [SerializeField] private RegenManager regenManager;
+        [SerializeField] private StatUpgrade regenerationUpgrade;
 
         public bool IsSkillsWindowOpen => skillsWindow != null && skillsWindow.activeSelf;
 
@@ -44,8 +44,6 @@ namespace TimelessEchoes.UI
                 uiReferences = GetComponent<RunCalebUIReferences>();
             if (buffManager == null)
                 buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-            if (regenManager == null)
-                regenManager = FindFirstObjectByType<RegenManager>();
             if (uiReferences != null && uiReferences.skillsButton != null && skillsWindow != null)
                 uiReferences.skillsButton.onClick.AddListener(ToggleSkills);
         }
@@ -125,7 +123,10 @@ namespace TimelessEchoes.UI
             var attack = hero.AttackRate;
             var move = hero.MoveSpeed;
             var defense = hero.Defense;
-            var regen = regenManager ? (float)regenManager.GetTotalRegen() : 0f;
+            var controller = StatUpgradeController.Instance;
+            var regen = controller && regenerationUpgrade
+                ? controller.GetTotalValue(regenerationUpgrade)
+                : 0f;
 
             if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
                 && Mathf.Approximately(attack, lastAttack)

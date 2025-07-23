@@ -31,7 +31,6 @@ namespace Blindsided.SaveData
         ///     Automatically cast available buffs when enabled.
         /// </summary>
         public bool AutoBuff;
-        [HideReferenceObjectPicker] public Dictionary<string, double> FishDonations = new();
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
 

@@ -338,23 +338,6 @@
     - Kill 500 enemies
 
 
-## Mildred
-
-### A fishy situation
-- **Quest ID:** Mildred
-- **Description:** Mildred is hungry and Utoes is out of options. Fish up some Flippy Floppy and donate them to Utoes who will grant you more regen as a bonus!
-- **Reward:** Mildred follows and provides you with buffs in exchange for resources!
-  - **Requirements:**
-    - Donate 50 691350e69adc08a4082225a8015d2955
-
-### Another fishy situation
-- **Quest ID:** Mildred1
-- **Description:** Mildred's power seems to be changing and Utoes thinks that if he can get his hands on some Muddy Muck Munchers Mildred might be able to help you out even more!
-- **Reward:** Another buff slot!
-  - **Required Quest:** A fishy situation
-  - **Requirements:**
-    - Donate 50 457dbb132eac48d429163353adb4b532
-- **Unlock Buff Slots:** 1
 
 
 ## Ores

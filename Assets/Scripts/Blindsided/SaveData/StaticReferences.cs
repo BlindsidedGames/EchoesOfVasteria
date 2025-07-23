@@ -16,7 +16,6 @@ namespace Blindsided.SaveData
         ///     These are not persisted and are cleared when the game restarts.
         /// </summary>
         public static HashSet<string> ActiveNpcMeetings { get; } = new();
-        public static Dictionary<string, double> FishDonations => oracle.saveData.FishDonations;
 
 
         public static BuyMode PurchaseMode

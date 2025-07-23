@@ -1,31 +1,33 @@
 using UnityEngine;
-using TimelessEchoes.Regen;
-using TimelessEchoes.Enemies;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Hero
 {
     /// <summary>
-    /// Applies health regeneration to the hero based on donations handled by <see cref="RegenManager"/>.
+    /// Applies health regeneration to the hero based on the Regeneration stat upgrade.
     /// </summary>
     [RequireComponent(typeof(HeroHealth))]
     public class HeroRegen : MonoBehaviour
     {
         private HeroHealth health;
-        private RegenManager regenManager;
+        [SerializeField] private StatUpgrade regenerationUpgrade;
 
         private void Awake()
         {
             health = GetComponent<HeroHealth>();
-            if (regenManager == null)
-                regenManager = FindFirstObjectByType<RegenManager>();
         }
 
         private void Update()
         {
-            if (health == null || regenManager == null)
+            if (health == null)
                 return;
 
-            float regen = (float)regenManager.GetTotalRegen();
+            var controller = StatUpgradeController.Instance ??
+                              FindFirstObjectByType<StatUpgradeController>();
+            if (controller == null || regenerationUpgrade == null)
+                return;
+
+            float regen = controller.GetTotalValue(regenerationUpgrade);
             if (regen > 0f && health.CurrentHealth < health.MaxHealth)
                 health.Heal(regen * Time.deltaTime);
         }

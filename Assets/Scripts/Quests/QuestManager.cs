@@ -197,12 +197,6 @@ namespace TimelessEchoes.Quests
                     if (req.amount > 0)
                         pct = (float)(total / req.amount);
                 }
-                else if (req.type == QuestData.RequirementType.Donation)
-                {
-                    var donated = RegenManager.Instance ? RegenManager.Instance.GetDonationTotal(req.resource) : 0;
-                    if (req.amount > 0)
-                        pct = (float)(donated / req.amount);
-                }
                 else if (req.type == QuestData.RequirementType.DistanceRun)
                 {
                     var tracker = GameplayStatTracker.Instance;

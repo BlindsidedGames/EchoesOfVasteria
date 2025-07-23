@@ -25,7 +25,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private WindowReference buffs = new();
         [SerializeField] private WindowReference quests = new();
         [SerializeField] private WindowReference credits = new();
-        [SerializeField] private WindowReference regen = new();
         [SerializeField] private WindowReference disciples = new();
         [SerializeField] private WindowReference stats = new();
         [SerializeField] private WindowReference wiki = new();
@@ -45,8 +44,6 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.AddListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.AddListener(OpenCredits);
-            if (regen.button != null)
-                regen.button.onClick.AddListener(OpenRegen);
             if (disciples.button != null)
                 disciples.button.onClick.AddListener(OpenDisciples);
             if (stats.button != null)
@@ -76,8 +73,6 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.RemoveListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.RemoveListener(OpenCredits);
-            if (regen.button != null)
-                regen.button.onClick.RemoveListener(OpenRegen);
             if (disciples.button != null)
                 disciples.button.onClick.RemoveListener(OpenDisciples);
             if (stats.button != null)
@@ -102,7 +97,6 @@ namespace TimelessEchoes.UI
         private void OpenBuffs() => OpenWindow(buffs.window);
         private void OpenQuests() => OpenWindow(quests.window);
         private void OpenCredits() => OpenWindow(credits.window);
-        private void OpenRegen() => OpenWindow(regen.window);
         private void OpenDisciples() => OpenWindow(disciples.window);
         private void OpenStats() => OpenWindow(stats.window);
         private void OpenWiki() => OpenWindow(wiki.window);
@@ -130,8 +124,6 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
-            if (regen.window != null)
-                regen.window.SetActive(false);
             if (disciples.window != null)
                 disciples.window.SetActive(false);
             if (stats.window != null)
@@ -152,8 +144,6 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
-            if (regen.window != null)
-                regen.window.SetActive(false);
             if (disciples.window != null)
                 disciples.window.SetActive(false);
             if (stats.window != null)
