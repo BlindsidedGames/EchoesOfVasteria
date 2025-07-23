@@ -46,6 +46,9 @@ namespace TimelessEchoes.MapGeneration
 
             public float enemyDensity = 0.1f;
 
+            [MinValue(0)] public int topBuffer;
+            [MinValue(0)] public int bottomBuffer;
+
             public LayerMask blockingMask;
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
 
@@ -69,7 +72,6 @@ namespace TimelessEchoes.MapGeneration
                 [Required] public GameObject prefab;
                 public string id;
                 public float localX;
-                [MinValue(0)] public int topBuffer;
                 // Terrains where this NPC is allowed to spawn.
                 public List<TerrainSettings> spawnTerrains = new();
                 public bool spawnOnlyOnce = true;
