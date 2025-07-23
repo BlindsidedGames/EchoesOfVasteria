@@ -6,7 +6,7 @@ rules and map profiles live in assets, allowing designers to update content
 without touching code.
 
 A two-step weighting model ensures balance:
-1. **Category Selection** – decide the overall type to spawn (e.g. `Tree`, `Ore`, `Chest`).
+1. **Category Selection** – decide the overall type to spawn (e.g. `Woodcutting`, `Mining`, `Looting`, `Farming`, `Fishing`).
 2. **Specific Selection** – once a category is chosen, select an individual object
    from that category (e.g. `Pine Tree`, `Iron Ore`, `Wooden Chest`).
 
