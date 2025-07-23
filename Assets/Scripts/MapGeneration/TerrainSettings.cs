@@ -17,6 +17,9 @@ namespace TimelessEchoes.MapGeneration
         {
             [Range(0f,1f)] public float taskDensity = 0.1f;
             public bool edgeOnly;
+            [ShowIf(nameof(edgeOnly))]
+            [MinValue(0)]
+            public int edgeOffset;
             [HideIf(nameof(edgeOnly))]
             public int taskEdgeAvoidance;
         }

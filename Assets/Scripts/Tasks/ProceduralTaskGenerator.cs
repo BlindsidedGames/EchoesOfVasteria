@@ -537,17 +537,18 @@ namespace TimelessEchoes.Tasks
             return terrainMap.GetTile(cell) == bottomTerrain.tile;
         }
 
-        private bool IsEdge(Vector3Int cell, TileBase tile)
+        private bool IsEdge(Vector3Int cell, TileBase tile, int offset = 0)
         {
-            var left = terrainMap.GetTile(cell + Vector3Int.left) == tile;
-            var right = terrainMap.GetTile(cell + Vector3Int.right) == tile;
-            var up = terrainMap.GetTile(cell + Vector3Int.up) == tile;
-            var down = terrainMap.GetTile(cell + Vector3Int.down) == tile;
-            var upLeft = terrainMap.GetTile(cell + Vector3Int.up + Vector3Int.left) == tile;
-            var upRight = terrainMap.GetTile(cell + Vector3Int.up + Vector3Int.right) == tile;
-            var downLeft = terrainMap.GetTile(cell + Vector3Int.down + Vector3Int.left) == tile;
-            var downRight = terrainMap.GetTile(cell + Vector3Int.down + Vector3Int.right) == tile;
-            return !(left && right && up && down && upLeft && upRight && downLeft && downRight);
+            var range = offset + 1;
+            for (var dx = -range; dx <= range; dx++)
+            for (var dy = -range; dy <= range; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                if (terrainMap.GetTile(cell + new Vector3Int(dx, dy, 0)) != tile)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -589,9 +590,14 @@ namespace TimelessEchoes.Tasks
             if (settings == null) return false;
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
-            var isEdge = IsEdge(cell, settings.tile);
+            var isEdge = IsEdge(cell, settings.tile, settings.taskSettings.edgeOffset);
             if (settings.taskSettings.edgeOnly)
+            {
+                var bottomLimit = terrainMap.cellBounds.yMin + bottomBuffer;
+                if (cell.y < bottomLimit)
+                    return false;
                 return isEdge;
+            }
 
             if (settings.taskSettings.taskEdgeAvoidance > 0)
             {
