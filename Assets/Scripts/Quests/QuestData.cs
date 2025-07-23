@@ -27,7 +27,7 @@ namespace TimelessEchoes.Quests
         public class Requirement
         {
             public RequirementType type;
-            [ShowIf("@type == RequirementType.Resource || type == RequirementType.Donation")]
+            [ShowIf("@type == RequirementType.Resource")]
             public Resource resource;
             [HideIf("type", RequirementType.Instant)]
             [HideIf("type", RequirementType.Meet)]
@@ -44,7 +44,6 @@ namespace TimelessEchoes.Quests
         {
             Resource,
             Kill,
-            Donation,
             DistanceRun,
             DistanceTravel,
             Instant,

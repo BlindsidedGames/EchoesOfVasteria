@@ -80,16 +80,14 @@ namespace TimelessEchoes.Quests
                         }
 
                         var slot = Instantiate(costSlotPrefab, costParent);
-                        slot.resource = req.type == QuestData.RequirementType.Resource ||
-                                        req.type == QuestData.RequirementType.Donation
+                        slot.resource = req.type == QuestData.RequirementType.Resource
                             ? req.resource
                             : null;
                         costSlots.Add((slot, req));
 
                         if (slot.iconImage != null)
                         {
-                            if (req.type == QuestData.RequirementType.Resource ||
-                                req.type == QuestData.RequirementType.Donation)
+                            if (req.type == QuestData.RequirementType.Resource)
                             {
                                 var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
                                 var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
@@ -121,8 +119,7 @@ namespace TimelessEchoes.Quests
                             slot.countText.text = req.amount.ToString();
 
                         if (inventoryUI != null &&
-                            (req.type == QuestData.RequirementType.Resource ||
-                             req.type == QuestData.RequirementType.Donation))
+                            req.type == QuestData.RequirementType.Resource)
                             slot.PointerClick += (_, button) =>
                             {
                                 if (button == PointerEventData.InputButton.Left)
@@ -154,8 +151,7 @@ namespace TimelessEchoes.Quests
                 if (slot == null || slot.iconImage == null || req == null)
                     continue;
 
-                if (req.type == QuestData.RequirementType.Resource ||
-                    req.type == QuestData.RequirementType.Donation)
+                if (req.type == QuestData.RequirementType.Resource)
                 {
                     var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
                     var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
@@ -191,8 +187,6 @@ namespace TimelessEchoes.Quests
             {
                 case QuestData.RequirementType.Resource:
                     return "Gathering";
-                case QuestData.RequirementType.Donation:
-                    return "Donation";
                 case QuestData.RequirementType.Kill:
                     return "Kill";
                 case QuestData.RequirementType.DistanceRun:

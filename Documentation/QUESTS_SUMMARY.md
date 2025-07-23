@@ -335,8 +335,8 @@
 - **Reward:** Magic dice, provides combat advantages.
   - **Required Quest:** A slime in time
   - **Requirements:**
+## Ores
     - Kill 500 enemies
-
 
 ## Mildred
 
@@ -355,7 +355,6 @@
   - **Requirements:**
     - Donate 50 457dbb132eac48d429163353adb4b532
 - **Unlock Buff Slots:** 1
-
 
 ## Ores
 

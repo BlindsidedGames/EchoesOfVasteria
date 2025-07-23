@@ -148,13 +148,5 @@ namespace TimelessEchoes
             Blindsided.EventHandler.LoadData();
         }
 
-        [Command("wipe-regen", "Clear all fish donations")]
-        public static void WipeRegen()
-        {
-            var oracle = Blindsided.Oracle.oracle;
-            if (oracle == null) return;
-            TimelessEchoes.Regen.RegenManager.Instance?.ResetDonations();
-            oracle.saveData.FishDonations = new Dictionary<string, double>();
-        }
     }
 }
