@@ -117,6 +117,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -124,10 +137,10 @@ TextureImporter:
       name: House_3_Wood_Stages_0
       rect:
         serializedVersion: 2
-        x: 16
-        y: 24
-        width: 9
-        height: 57
+        x: 0
+        y: 0
+        width: 128
+        height: 112
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,10 +159,10 @@ TextureImporter:
       name: House_3_Wood_Stages_1
       rect:
         serializedVersion: 2
-        x: 58
-        y: 43
-        width: 9
-        height: 38
+        x: 128
+        y: 0
+        width: 128
+        height: 112
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,10 +181,10 @@ TextureImporter:
       name: House_3_Wood_Stages_2
       rect:
         serializedVersion: 2
-        x: 84
-        y: 3
-        width: 9
-        height: 99
+        x: 256
+        y: 0
+        width: 128
+        height: 112
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -186,121 +199,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: House_3_Wood_Stages_3
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 43
-        width: 9
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: baf511433b5140a90800000000000000
-      internalID: -7348724832544923733
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: House_3_Wood_Stages_4
-      rect:
-        serializedVersion: 2
-        x: 137
-        y: 3
-        width: 111
-        height: 105
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1c6aa88366f320710800000000000000
-      internalID: 1657957321093588673
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: House_3_Wood_Stages_5
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 3
-        width: 111
-        height: 105
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 24cb150e74b0eb870800000000000000
-      internalID: 8700403933460413506
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: House_3_Wood_Stages_6
-      rect:
-        serializedVersion: 2
-        x: 58
-        y: 3
-        width: 9
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a4291e421da1921b0800000000000000
-      internalID: -5680979969381920182
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: House_3_Wood_Stages_7
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 3
-        width: 9
-        height: 38
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b2475679d2bff1880800000000000000
-      internalID: -8637909387041213397
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d9765da70a81a494596cf520cd7878c3
     internalID: 0
     vertices: []
     indices: 
@@ -308,16 +211,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":112.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       House_3_Wood_Stages_0: 84039841438791555
       House_3_Wood_Stages_1: -4599863697271595386
       House_3_Wood_Stages_2: -1350649404321223823
-      House_3_Wood_Stages_3: -7348724832544923733
-      House_3_Wood_Stages_4: 1657957321093588673
-      House_3_Wood_Stages_5: 8700403933460413506
-      House_3_Wood_Stages_6: -5680979969381920182
-      House_3_Wood_Stages_7: -8637909387041213397
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

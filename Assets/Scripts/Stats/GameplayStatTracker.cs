@@ -1,28 +1,29 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
+using TimelessEchoes.Enemies;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Enemies;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Stats
 {
+    [DefaultExecutionOrder(-1)]
     public class GameplayStatTracker : MonoBehaviour
     {
         public static GameplayStatTracker Instance { get; private set; }
-        public event System.Action<float> OnDistanceAdded;
-        public event System.Action<bool> OnRunEnded;
+        public event Action<float> OnDistanceAdded;
+        public event Action<bool> OnRunEnded;
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private readonly List<GameData.RunRecord> recentRuns = new();
         private int nextRunNumber = 1;
         private float runStartTime;
-        private bool runInProgress;
         private int currentRunTasks;
         private double currentRunResources;
         private float currentRunDamageDealt;
@@ -35,7 +36,7 @@ namespace TimelessEchoes.Stats
         public int TotalKills { get; private set; }
 
         /// <summary>
-        /// Number of slime enemies defeated.
+        ///     Number of slime enemies defeated.
         /// </summary>
         public int SlimesKilled { get; private set; }
 
@@ -50,7 +51,7 @@ namespace TimelessEchoes.Stats
         public int TimesReaped { get; private set; }
 
         /// <summary>
-        /// Number of times a buff has been cast.
+        ///     Number of times a buff has been cast.
         /// </summary>
         public int BuffsCast { get; private set; }
 
@@ -69,7 +70,7 @@ namespace TimelessEchoes.Stats
 
         public float CurrentRunDistance { get; private set; }
 
-        public bool RunInProgress => runInProgress;
+        public bool RunInProgress { get; private set; }
 
         private Vector3 lastHeroPos;
         private static Dictionary<string, Resource> lookup;
@@ -209,10 +210,7 @@ namespace TimelessEchoes.Stats
             if (dist > 0f)
             {
                 DistanceTravelled += dist;
-                if (runInProgress)
-                {
-                    OnDistanceAdded?.Invoke(dist);
-                }
+                if (RunInProgress) OnDistanceAdded?.Invoke(dist);
             }
         }
 
@@ -230,16 +228,17 @@ namespace TimelessEchoes.Stats
 
             if (position.x > HighestDistance)
                 HighestDistance = position.x;
-            if (runInProgress && position.x > CurrentRunDistance)
+            if (RunInProgress && position.x > CurrentRunDistance)
                 CurrentRunDistance = position.x;
         }
 
         public void AddKill(EnemyStats enemy)
         {
             TotalKills++;
-            if (enemy != null && !string.IsNullOrEmpty(enemy.enemyName) && enemy.enemyName.ToLowerInvariant().Contains("slime"))
+            if (enemy != null && !string.IsNullOrEmpty(enemy.enemyName) &&
+                enemy.enemyName.ToLowerInvariant().Contains("slime"))
                 SlimesKilled++;
-            if (runInProgress)
+            if (RunInProgress)
                 CurrentRunKills++;
         }
 
@@ -253,7 +252,7 @@ namespace TimelessEchoes.Stats
             if (amount > 0f)
             {
                 DamageDealt += amount;
-                if (runInProgress)
+                if (RunInProgress)
                     currentRunDamageDealt += amount;
             }
         }
@@ -263,7 +262,7 @@ namespace TimelessEchoes.Stats
             if (amount > 0f)
             {
                 DamageTaken += amount;
-                if (runInProgress)
+                if (RunInProgress)
                     currentRunDamageTaken += amount;
             }
         }
@@ -283,7 +282,7 @@ namespace TimelessEchoes.Stats
             if (amount > 0)
             {
                 TotalResourcesGathered += amount;
-                if (runInProgress)
+                if (RunInProgress)
                 {
                     currentRunResources += amount;
                     if (bonus)
@@ -296,7 +295,7 @@ namespace TimelessEchoes.Stats
         {
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
-            runInProgress = true;
+            RunInProgress = true;
         }
 
         private void AddRunRecord(GameData.RunRecord record)
@@ -316,7 +315,7 @@ namespace TimelessEchoes.Stats
 
         public void EndRun(bool died)
         {
-            if (!runInProgress)
+            if (!RunInProgress)
                 return;
             var record = new GameData.RunRecord
             {
@@ -341,7 +340,7 @@ namespace TimelessEchoes.Stats
 
         public void AbandonRun()
         {
-            if (!runInProgress)
+            if (!RunInProgress)
                 return;
             var record = new GameData.RunRecord
             {
@@ -374,7 +373,7 @@ namespace TimelessEchoes.Stats
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
             runStartTime = Time.time;
-            runInProgress = false;
+            RunInProgress = false;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif
