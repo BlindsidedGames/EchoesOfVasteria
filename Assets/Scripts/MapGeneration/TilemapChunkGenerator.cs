@@ -205,7 +205,7 @@ namespace TimelessEchoes.MapGeneration
                         continue;
 
                     var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
-                    if (terrainMap.GetTile(pos) == grassBetterRuleTile) continue;
+                    if (terrainMap.GetTile(pos) == TopTile) continue;
                 }
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
@@ -249,24 +249,20 @@ namespace TimelessEchoes.MapGeneration
 
             for (var y = 0; y < waterDepth + sandDepth + grassDepth; y++)
             {
-                TerrainArea area;
                 TileBase baseTile;
                 TerrainSettings settings;
                 if (y < waterDepth)
                 {
-                    area = TerrainArea.Bottom;
                     baseTile = BottomTile;
                     settings = bottomTerrain;
                 }
                 else if (y < waterDepth + sandDepth)
                 {
-                    area = TerrainArea.Middle;
                     baseTile = MiddleTile;
                     settings = middleTerrain;
                 }
                 else
                 {
-                    area = TerrainArea.Top;
                     baseTile = TopTile;
                     settings = topTerrain;
                 }
