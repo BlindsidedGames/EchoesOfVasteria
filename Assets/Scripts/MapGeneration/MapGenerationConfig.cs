@@ -16,23 +16,22 @@ namespace TimelessEchoes.MapGeneration
         public TilemapChunkSettings tilemapChunkSettings = new();
         public ProceduralTaskSettings taskGeneratorSettings = new();
         public SegmentedMapSettings segmentedMapSettings = new();
-        public DecorSettings decorSettings = new();
 
         [Serializable]
         public class TilemapChunkSettings
         {
             [HideInInspector] public Tilemap terrainMap;
-            [FormerlySerializedAs("waterTile")] public BetterRuleTile waterBetterRuleTile;
-            [FormerlySerializedAs("sandRuleTile")] public BetterRuleTile sandBetterRuleTile;
+            [HideInInspector] public Tilemap decorMap;
 
-            [FormerlySerializedAs("grassRuleTile")]
-            public BetterRuleTile grassBetterRuleTile;
+            public TerrainSettings bottomTerrain;
+            public TerrainSettings middleTerrain;
+            public TerrainSettings topTerrain;
 
             [Min(2)] public int minAreaWidth = 2;
             [Min(0)] public int edgeWaviness = 1;
 
-            public Vector2Int sandDepthRange = new(2, 6);
-            public Vector2Int grassDepthRange = new(2, 6);
+            public Vector2Int middleDepthRange = new(2, 6);
+            public Vector2Int topDepthRange = new(2, 6);
 
             public int seed;
             public bool randomizeSeed = true;
@@ -44,9 +43,6 @@ namespace TimelessEchoes.MapGeneration
             public float minX;
             public float height = 18f;
             [FormerlySerializedAs("density")] public float taskDensity = 0.1f;
-            public float waterTaskDensity = 0.1f;
-            public float sandTaskDensity = 0.1f;
-            public float grassTaskDensity = 0.1f;
 
             public float enemyDensity = 0.1f;
 
@@ -74,8 +70,8 @@ namespace TimelessEchoes.MapGeneration
                 public string id;
                 public float localX;
                 [MinValue(0)] public int topBuffer;
-                // Areas where this NPC is allowed to spawn.
-                public SpawnArea spawnAreas = SpawnArea.Grass;
+                // Terrains where this NPC is allowed to spawn.
+                public List<TerrainSettings> spawnTerrains = new();
                 public bool spawnOnlyOnce = true;
             }
         }
@@ -86,26 +82,5 @@ namespace TimelessEchoes.MapGeneration
             public Vector2Int segmentSize = new(64, 18);
         }
 
-        [Serializable]
-        public class DecorSettings
-        {
-            [HideInInspector] [TabGroup("Decor", "References")]
-            public Tilemap decorMap;
-
-            [Range(0f, 1f)] public float density = 1f;
-
-            [Title("Decor")]
-            [Button("Update All Names")]
-            [PropertyOrder(-1)]
-            private void UpdateAllNames()
-            {
-                if (decor == null) return;
-                foreach (var entry in decor) entry.UpdateName();
-                Log("Decor entry names updated for search.", TELogCategory.Map);
-            }
-
-            [Searchable] [ListDrawerSettings(ListElementLabelName = "Name", ShowFoldout = false)]
-            public List<DecorEntry> decor = new();
-        }
     }
 }

@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
+using TimelessEchoes.MapGeneration;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -21,6 +22,15 @@ namespace TimelessEchoes.MapGeneration
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<MapGenerationConfig>(path);
+                if (asset != null)
+                    tree.Add(System.IO.Path.GetFileNameWithoutExtension(path), asset);
+            }
+
+            guids = AssetDatabase.FindAssets("t:TerrainSettings");
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var asset = AssetDatabase.LoadAssetAtPath<TerrainSettings>(path);
                 if (asset != null)
                     tree.Add(System.IO.Path.GetFileNameWithoutExtension(path), asset);
             }
