@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
 
@@ -10,7 +11,6 @@ namespace TimelessEchoes.Hero
     public class HeroRegen : MonoBehaviour
     {
         private HeroHealth health;
-        [SerializeField] private StatUpgrade regenerationUpgrade;
 
         private void Awake()
         {
@@ -24,10 +24,14 @@ namespace TimelessEchoes.Hero
 
             var controller = StatUpgradeController.Instance ??
                               FindFirstObjectByType<StatUpgradeController>();
-            if (controller == null || regenerationUpgrade == null)
+            if (controller == null)
                 return;
 
-            float regen = controller.GetTotalValue(regenerationUpgrade);
+            var regenUpgrade = controller.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
+            if (regenUpgrade == null)
+                return;
+
+            float regen = controller.GetTotalValue(regenUpgrade);
             if (regen > 0f && health.CurrentHealth < health.MaxHealth)
                 health.Heal(regen * Time.deltaTime);
         }

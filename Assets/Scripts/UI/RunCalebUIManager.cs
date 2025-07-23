@@ -2,6 +2,7 @@ using References.UI;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
+using System.Linq;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 
@@ -16,7 +17,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private RunCalebUIReferences uiReferences;
         [SerializeField] private GameObject skillsWindow;
         [SerializeField] private BuffManager buffManager;
-        [SerializeField] private StatUpgrade regenerationUpgrade;
 
         public bool IsSkillsWindowOpen => skillsWindow != null && skillsWindow.activeSelf;
 
@@ -124,9 +124,8 @@ namespace TimelessEchoes.UI
             var move = hero.MoveSpeed;
             var defense = hero.Defense;
             var controller = StatUpgradeController.Instance;
-            var regen = controller && regenerationUpgrade
-                ? controller.GetTotalValue(regenerationUpgrade)
-                : 0f;
+            var regenUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
+            var regen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;
 
             if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
                 && Mathf.Approximately(attack, lastAttack)
