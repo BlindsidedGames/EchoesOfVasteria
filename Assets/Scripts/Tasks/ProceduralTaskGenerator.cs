@@ -38,17 +38,6 @@ namespace TimelessEchoes.Tasks
         [HideInInspector]
         private float taskDensity = 0.1f;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
-        private float waterTaskDensity = 0.1f;
-
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
-        private float sandTaskDensity = 0.1f;
-
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
-        private float grassTaskDensity = 0.1f;
 
         [TabGroup("Settings", "Area")] [SerializeField]
         [HideInInspector]
@@ -84,15 +73,15 @@ namespace TimelessEchoes.Tasks
 
         [TabGroup("Settings", "References")] [SerializeField]
         [HideInInspector]
-        private BetterRuleTile waterTile;
+        private TerrainSettings bottomTerrain;
 
         [TabGroup("Settings", "References")] [SerializeField]
         [HideInInspector]
-        private BetterRuleTile sandTile;
+        private TerrainSettings middleTerrain;
 
         [TabGroup("Settings", "References")] [SerializeField]
         [HideInInspector]
-        private BetterRuleTile grassTile;
+        private TerrainSettings topTerrain;
 
         private readonly List<GameObject> generatedObjects = new();
 
@@ -137,9 +126,6 @@ namespace TimelessEchoes.Tasks
             minX = config.taskGeneratorSettings.minX;
             height = config.taskGeneratorSettings.height;
             taskDensity = config.taskGeneratorSettings.taskDensity;
-            waterTaskDensity = config.taskGeneratorSettings.waterTaskDensity;
-            sandTaskDensity = config.taskGeneratorSettings.sandTaskDensity;
-            grassTaskDensity = config.taskGeneratorSettings.grassTaskDensity;
             enemyDensity = config.taskGeneratorSettings.enemyDensity;
             blockingMask = config.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
@@ -166,17 +152,17 @@ namespace TimelessEchoes.Tasks
             Gizmos.DrawWireCube(center, size);
         }
 
-        internal void SetTilemapReferences(Tilemap map, BetterRuleTile water, BetterRuleTile sand, BetterRuleTile grass)
+        internal void SetTilemapReferences(Tilemap map, TerrainSettings bottom, TerrainSettings middle, TerrainSettings top)
         {
             terrainMap = map;
-            waterTile = water;
-            sandTile = sand;
-            grassTile = grass;
+            bottomTerrain = bottom;
+            middleTerrain = middle;
+            topTerrain = top;
         }
 
         private void EnsureTilemaps()
         {
-            if (terrainMap != null && waterTile != null && sandTile != null && grassTile != null)
+            if (terrainMap != null && bottomTerrain != null && middleTerrain != null && topTerrain != null)
                 return;
 
             if (terrainMap == null)
@@ -244,17 +230,17 @@ namespace TimelessEchoes.Tasks
             }
 
             var baseTaskCount = Mathf.RoundToInt((localMaxX - localMinX) * taskDensity);
-            var waterCount = Mathf.RoundToInt((localMaxX - localMinX) * waterTaskDensity);
-            var sandCount = Mathf.RoundToInt((localMaxX - localMinX) * sandTaskDensity);
-            var grassCount = Mathf.RoundToInt((localMaxX - localMinX) * grassTaskDensity);
+            var bottomCount = Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
+            var middleCount = Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
+            var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
-            if (baseTaskCount + waterCount + sandCount + grassCount <= 0 && enemyCount <= 0)
+            if (baseTaskCount + bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
                 return;
 
             var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
             var taskMap = new Dictionary<Vector3, MonoBehaviour>();
-            for (var i = 0; i < waterCount; i++)
+            for (var i = 0; i < bottomCount; i++)
             {
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, true, false, false,
@@ -262,7 +248,7 @@ namespace TimelessEchoes.Tasks
                         break;
             }
 
-            for (var i = 0; i < sandCount; i++)
+            for (var i = 0; i < middleCount; i++)
             {
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, true, false,
@@ -270,7 +256,7 @@ namespace TimelessEchoes.Tasks
                         break;
             }
 
-            for (var i = 0; i < grassCount; i++)
+            for (var i = 0; i < topCount; i++)
             {
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, false, true,
@@ -299,7 +285,7 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 Vector3 pos;
-                if (entry.spawnAreas.HasFlag(SpawnArea.Water) && allowWater)
+                if (entry.spawnTerrains.Contains(bottomTerrain) && allowWater)
                 {
                     pos = waterPos;
                 }
@@ -307,9 +293,9 @@ namespace TimelessEchoes.Tasks
                 {
                     Vector3 sandCandidate = Vector3.zero;
                     Vector3 grassCandidate = Vector3.zero;
-                    var sandValid = entry.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand &&
+                    var sandValid = entry.spawnTerrains.Contains(middleTerrain) && allowSand &&
                                    TryGetSandSpot(localX, entry.topBuffer, out sandCandidate);
-                    var grassValid = entry.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass &&
+                    var grassValid = entry.spawnTerrains.Contains(topTerrain) && allowGrass &&
                                      TryGetGrassPosition(localX, entry.topBuffer, out grassCandidate);
 
                     if (sandValid && grassValid)
@@ -334,13 +320,13 @@ namespace TimelessEchoes.Tasks
                 var positionIsValid = false;
                 while (attempts < 5)
                 {
-                    if (entry.spawnAreas.HasFlag(SpawnArea.Water) || entry.spawnAreas.HasFlag(SpawnArea.Sand))
+                    if (entry.spawnTerrains.Contains(bottomTerrain) || entry.spawnTerrains.Contains(middleTerrain))
                     {
                         positionIsValid = true;
                         break;
                     }
 
-                    var isWaterTile = !entry.spawnAreas.HasFlag(SpawnArea.Water) && IsWaterTile(pos);
+                    var isWaterTile = !entry.spawnTerrains.Contains(bottomTerrain) && IsWaterTile(pos);
                     var isObstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos) || isWaterTile;
                     var onWaterEdge = allowWater && Mathf.Abs(pos.y - waterPos.y) < otherTaskEdgeOffset;
 
@@ -371,9 +357,9 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 Vector3 pos;
-                if (npc.spawnAreas.HasFlag(SpawnArea.Water) && TryGetWaterSpot(npc.localX, out pos)) { }
-                else if (npc.spawnAreas.HasFlag(SpawnArea.Sand) && TryGetSandSpot(npc.localX, npc.topBuffer, out pos)) { }
-                else if (npc.spawnAreas.HasFlag(SpawnArea.Grass) && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
+                if (npc.spawnTerrains.Contains(bottomTerrain) && TryGetWaterSpot(npc.localX, out pos)) { }
+                else if (npc.spawnTerrains.Contains(middleTerrain) && TryGetSandSpot(npc.localX, npc.topBuffer, out pos)) { }
+                else if (npc.spawnTerrains.Contains(topTerrain) && TryGetGrassPosition(npc.localX, npc.topBuffer, out pos)) { }
                 else
                     pos = RandomPositionAtX(npc.localX);
 
@@ -427,7 +413,7 @@ namespace TimelessEchoes.Tasks
         }
 
         private bool TrySpawnTask(float localX, Transform parent, bool clearExisting,
-            bool requireWaterTask, bool requireSandTask, bool requireGrassTask,
+            bool requireBottomTask, bool requireMiddleTask, bool requireTopTask,
             List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
             Dictionary<Vector3, MonoBehaviour> taskMap)
         {
@@ -436,24 +422,24 @@ namespace TimelessEchoes.Tasks
             var allowWater = TryGetWaterSpot(localX, out var waterPos);
             var allowSand = TryGetSandSpot(localX, 0, out var sandPos);
             var allowGrass = TryGetGrassPosition(localX, 0, out var _);
-            var (entry, isWaterTask, isGrassTask, isSandTask) =
+            var (entry, isBottomTask, isTopTask, isMiddleTask) =
                 PickTaskEntry(worldX, allowWater, allowGrass, allowSand);
             if (entry == null || entry.prefab == null)
                 return false;
 
-            if (requireWaterTask && !isWaterTask) return false;
-            if (requireSandTask && !isSandTask) return false;
-            if (requireGrassTask && !isGrassTask) return false;
+            if (requireBottomTask && !isBottomTask) return false;
+            if (requireMiddleTask && !isMiddleTask) return false;
+            if (requireTopTask && !isTopTask) return false;
 
             Vector3 pos;
-            if (isWaterTask)
+            if (isBottomTask)
                 pos = waterPos;
-            else if (isSandTask)
+            else if (isMiddleTask)
             {
                 if (!TryGetSandSpot(localX, entry.topBuffer, out pos))
                     return false;
             }
-            else if (isGrassTask)
+            else if (isTopTask)
             {
                 if (!TryGetGrassPosition(localX, entry.topBuffer, out pos))
                     return false;
@@ -538,7 +524,7 @@ namespace TimelessEchoes.Tasks
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (terrainMap == null || waterTile == null)
+            if (terrainMap == null || bottomTerrain == null)
                 return false;
 
             var worldX = transform.position.x + localX;
@@ -549,19 +535,19 @@ namespace TimelessEchoes.Tasks
 
             for (var y = maxY; y >= minY; y--)
             {
-                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != waterTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != bottomTerrain.tile)
                     continue;
 
-                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == waterTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == bottomTerrain.tile)
                     continue;
 
                 var candidateY = y - 1;
                 if (candidateY < minY)
                     return false;
-                if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != waterTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != bottomTerrain.tile)
                     return false;
 
-                if (IsEdge(new Vector3Int(cell.x, candidateY, 0), waterTile))
+                if (IsEdge(new Vector3Int(cell.x, candidateY, 0), bottomTerrain.tile))
                     return false;
 
                 position = terrainMap.GetCellCenterWorld(new Vector3Int(cell.x, candidateY, 0));
@@ -575,7 +561,7 @@ namespace TimelessEchoes.Tasks
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (terrainMap == null || sandTile == null)
+            if (terrainMap == null || middleTerrain == null)
                 return false;
 
             var worldX = transform.position.x + localX;
@@ -589,18 +575,18 @@ namespace TimelessEchoes.Tasks
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
             {
-                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != sandTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != middleTerrain.tile)
                     continue;
 
-                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == sandTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y + 1, 0)) == middleTerrain.tile)
                     continue;
 
                 for (var candidateY = y - 1; candidateY >= minY; candidateY--)
                 {
-                    if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != sandTile)
+                    if (terrainMap.GetTile(new Vector3Int(cell.x, candidateY, 0)) != middleTerrain.tile)
                         break;
 
-                    if (IsEdge(new Vector3Int(cell.x, candidateY, 0), sandTile))
+                    if (IsEdge(new Vector3Int(cell.x, candidateY, 0), middleTerrain.tile))
                         continue;
 
                     validYs.Add(candidateY);
@@ -629,7 +615,7 @@ namespace TimelessEchoes.Tasks
         {
             position = Vector3.zero;
             EnsureTilemaps();
-            if (terrainMap == null || grassTile == null)
+            if (terrainMap == null || topTerrain == null)
                 return false;
 
             var worldX = transform.position.x + localX;
@@ -641,7 +627,7 @@ namespace TimelessEchoes.Tasks
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
             {
-                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != grassTile)
+                if (terrainMap.GetTile(new Vector3Int(cell.x, y, 0)) != topTerrain.tile)
                     continue;
 
                 validYs.Add(y);
@@ -658,11 +644,11 @@ namespace TimelessEchoes.Tasks
         private bool IsWaterTile(Vector3 worldPos)
         {
             EnsureTilemaps();
-            if (terrainMap == null || waterTile == null)
+            if (terrainMap == null || bottomTerrain == null)
                 return false;
 
             var cell = terrainMap.WorldToCell(worldPos);
-            return terrainMap.GetTile(cell) == waterTile;
+            return terrainMap.GetTile(cell) == bottomTerrain.tile;
         }
 
         private bool IsEdge(Vector3Int cell, TileBase tile)
@@ -709,29 +695,23 @@ namespace TimelessEchoes.Tasks
             return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
         }
 
-        private bool TaskAllowed(WeightedSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
+        private bool TaskAllowed(WeightedSpawn spawn, bool allowBottom, bool allowTop, bool allowMiddle)
         {
-            var specific = spawn.spawnAreas != 0;
-            var permitted = (!spawn.spawnAreas.HasFlag(SpawnArea.Water) || allowWater) &&
-                            (!spawn.spawnAreas.HasFlag(SpawnArea.Sand) || allowSand) &&
-                            (!spawn.spawnAreas.HasFlag(SpawnArea.Grass) || allowGrass);
-            if (specific)
-                return (spawn.spawnAreas.HasFlag(SpawnArea.Water) && allowWater) ||
-                       (spawn.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand) ||
-                       (spawn.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass);
+            var specific = spawn.spawnTerrains != null && spawn.spawnTerrains.Count > 0;
+            var permitted = (!specific) ||
+                            (allowBottom && spawn.spawnTerrains.Contains(bottomTerrain)) ||
+                            (allowMiddle && spawn.spawnTerrains.Contains(middleTerrain)) ||
+                            (allowTop && spawn.spawnTerrains.Contains(topTerrain));
             return permitted;
         }
 
-        private bool TaskAllowed(WeightedTaskSpawn spawn, bool allowWater, bool allowGrass, bool allowSand)
+        private bool TaskAllowed(WeightedTaskSpawn spawn, bool allowBottom, bool allowTop, bool allowMiddle)
         {
-            var specific = spawn.spawnAreas != 0;
-            var permitted = (!spawn.spawnAreas.HasFlag(SpawnArea.Water) || allowWater) &&
-                            (!spawn.spawnAreas.HasFlag(SpawnArea.Sand) || allowSand) &&
-                            (!spawn.spawnAreas.HasFlag(SpawnArea.Grass) || allowGrass);
-            if (specific)
-                return (spawn.spawnAreas.HasFlag(SpawnArea.Water) && allowWater) ||
-                       (spawn.spawnAreas.HasFlag(SpawnArea.Sand) && allowSand) ||
-                       (spawn.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrass);
+            var specific = spawn.spawnTerrains != null && spawn.spawnTerrains.Count > 0;
+            var permitted = (!specific) ||
+                            (allowBottom && spawn.spawnTerrains.Contains(bottomTerrain)) ||
+                            (allowMiddle && spawn.spawnTerrains.Contains(middleTerrain)) ||
+                            (allowTop && spawn.spawnTerrains.Contains(topTerrain));
             return permitted;
         }
 
@@ -772,10 +752,10 @@ namespace TimelessEchoes.Tasks
                 }
                 r -= t.GetWeight(worldX);
                 if (r > 0f) continue;
-                var isWater = t.spawnAreas.HasFlag(SpawnArea.Water) && allowWaterTasks;
-                var isSand = !isWater && t.spawnAreas.HasFlag(SpawnArea.Sand) && allowSandTasks;
-                var isGrass = !isWater && !isSand && t.spawnAreas.HasFlag(SpawnArea.Grass) && allowGrassTasks;
-                return (t, isWater, isGrass, isSand);
+                var isBottom = t.spawnTerrains.Contains(bottomTerrain) && allowWaterTasks;
+                var isMiddle = !isBottom && t.spawnTerrains.Contains(middleTerrain) && allowSandTasks;
+                var isTop = !isBottom && !isMiddle && t.spawnTerrains.Contains(topTerrain) && allowGrassTasks;
+                return (t, isBottom, isTop, isMiddle);
             }
 
             return (null, false, false, false);
@@ -906,8 +886,8 @@ namespace TimelessEchoes.Tasks
             [MinValue(0)]
             public int topBuffer = 0;
 
-            // Combined flag specifying which terrain types this entry can spawn on.
-            public SpawnArea spawnAreas;
+            // Terrains this entry can spawn on.
+            public List<TerrainSettings> spawnTerrains = new();
 
             public float GetWeight(float worldX)
             {
@@ -939,8 +919,8 @@ namespace TimelessEchoes.Tasks
             [MinValue(0)]
             public int topBuffer = 0;
 
-            // Combined flag specifying which terrain types this task may spawn on.
-            public SpawnArea spawnAreas;
+            // Terrains this task may spawn on.
+            public List<TerrainSettings> spawnTerrains = new();
 
             public float GetWeight(float worldX)
             {

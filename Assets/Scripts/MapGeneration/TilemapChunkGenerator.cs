@@ -22,30 +22,20 @@ namespace TimelessEchoes.MapGeneration
 
         private enum TerrainArea
         {
-            Water,
-            Sand,
-            Grass
+            Bottom,
+            Middle,
+            Top
         }
 
         [TabGroup("Settings")] [SerializeField] [HideInInspector]
-        private List<DecorEntry> decor = new();
-
-        [TabGroup("Settings")] [SerializeField] [Range(0f, 1f)] [HideInInspector]
-        private float decorDensity = 1f;
+        private TerrainSettings bottomTerrain;
+        [TabGroup("Settings")] [SerializeField] [HideInInspector]
+        private TerrainSettings middleTerrain;
+        [TabGroup("Settings")] [SerializeField] [HideInInspector]
+        private TerrainSettings topTerrain;
 
 
         [Header("Tiles")]
-        [TabGroup("References")]
-        [SerializeField]
-        [FormerlySerializedAs("waterTile")]
-        [HideInInspector]
-        private BetterRuleTile waterBetterRuleTile;
-
-        [TabGroup("References")] [SerializeField] [FormerlySerializedAs("sandRuleTile")] [HideInInspector]
-        private BetterRuleTile sandBetterRuleTile;
-
-        [TabGroup("References")] [SerializeField] [FormerlySerializedAs("grassRuleTile")] [HideInInspector]
-        private BetterRuleTile grassBetterRuleTile;
 
 
         [Header("Generation Settings")] [TabGroup("Settings")] [SerializeField] [Min(2)] [HideInInspector]
@@ -71,9 +61,9 @@ namespace TimelessEchoes.MapGeneration
         private int prevSandDepth = -1;
         private int prevGrassDepth = -1;
         public Tilemap TerrainMap => terrainMap;
-        public BetterRuleTile WaterBetterRuleTile => waterBetterRuleTile;
-        public BetterRuleTile SandBetterRuleTile => sandBetterRuleTile;
-        public BetterRuleTile GrassBetterRuleTile => grassBetterRuleTile;
+        private BetterRuleTile BottomTile => bottomTerrain != null ? bottomTerrain.tile : null;
+        private BetterRuleTile MiddleTile => middleTerrain != null ? middleTerrain.tile : null;
+        private BetterRuleTile TopTile => topTerrain != null ? topTerrain.tile : null;
         public Tilemap DecorMap => decorMap;
 
         private void Awake()
@@ -92,23 +82,17 @@ namespace TimelessEchoes.MapGeneration
 
             if (terrainMap == null)
                 terrainMap = config.tilemapChunkSettings.terrainMap;
-            if (waterBetterRuleTile == null)
-                waterBetterRuleTile = config.tilemapChunkSettings.waterBetterRuleTile;
-            if (sandBetterRuleTile == null)
-                sandBetterRuleTile = config.tilemapChunkSettings.sandBetterRuleTile;
-            if (grassBetterRuleTile == null)
-                grassBetterRuleTile = config.tilemapChunkSettings.grassBetterRuleTile;
+            if (decorMap == null)
+                decorMap = config.tilemapChunkSettings.decorMap;
+            bottomTerrain = config.tilemapChunkSettings.bottomTerrain;
+            middleTerrain = config.tilemapChunkSettings.middleTerrain;
+            topTerrain = config.tilemapChunkSettings.topTerrain;
             minAreaWidth = config.tilemapChunkSettings.minAreaWidth;
             edgeWaviness = config.tilemapChunkSettings.edgeWaviness;
-            sandDepthRange = config.tilemapChunkSettings.sandDepthRange;
-            grassDepthRange = config.tilemapChunkSettings.grassDepthRange;
+            sandDepthRange = config.tilemapChunkSettings.middleDepthRange;
+            grassDepthRange = config.tilemapChunkSettings.topDepthRange;
             seed = config.tilemapChunkSettings.seed;
             randomizeSeed = config.tilemapChunkSettings.randomizeSeed;
-
-            if (decorMap == null)
-                decorMap = config.decorSettings.decorMap;
-            decor = config.decorSettings.decor;
-            decorDensity = config.decorSettings.density;
         }
 
         public void AssignTilemaps(ProceduralTaskGenerator generator)
@@ -116,7 +100,7 @@ namespace TimelessEchoes.MapGeneration
             if (generator == null)
                 return;
 
-            generator.SetTilemapReferences(terrainMap, waterBetterRuleTile, sandBetterRuleTile, grassBetterRuleTile);
+            generator.SetTilemapReferences(terrainMap, bottomTerrain, middleTerrain, topTerrain);
         }
 
         public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
@@ -168,14 +152,14 @@ namespace TimelessEchoes.MapGeneration
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
                 for (var y = 0; y < waterDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), waterBetterRuleTile);
+                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), BottomTile);
 
                 for (var y = waterDepth; y < waterDepth + sandDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), sandBetterRuleTile);
+                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), MiddleTile);
 
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                     if (y < segmentSize.y)
-                        terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), grassBetterRuleTile);
+                        terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), TopTile);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
@@ -260,39 +244,46 @@ namespace TimelessEchoes.MapGeneration
 
         private void PlaceDecorForColumn(int worldX, int offsetY, int waterDepth, int sandDepth, int grassDepth)
         {
-            if (decorMap == null || decor.Count == 0)
+            if (decorMap == null)
                 return;
 
             for (var y = 0; y < waterDepth + sandDepth + grassDepth; y++)
             {
                 TerrainArea area;
                 TileBase baseTile;
+                TerrainSettings settings;
                 if (y < waterDepth)
                 {
-                    area = TerrainArea.Water;
-                    baseTile = waterBetterRuleTile;
+                    area = TerrainArea.Bottom;
+                    baseTile = BottomTile;
+                    settings = bottomTerrain;
                 }
                 else if (y < waterDepth + sandDepth)
                 {
-                    area = TerrainArea.Sand;
-                    baseTile = sandBetterRuleTile;
+                    area = TerrainArea.Middle;
+                    baseTile = MiddleTile;
+                    settings = middleTerrain;
                 }
                 else
                 {
-                    area = TerrainArea.Grass;
-                    baseTile = grassBetterRuleTile;
+                    area = TerrainArea.Top;
+                    baseTile = TopTile;
+                    settings = topTerrain;
                 }
 
                 var cell = new Vector3Int(worldX, offsetY + y, 0);
                 var worldPos = terrainMap.CellToWorld(cell).x;
 
                 var choices = new List<DecorEntry>();
-                foreach (var d in decor)
-                    if (AllowsArea(d, area) && d.GetWeight(worldPos) > 0f &&
-                        !IsBufferedEdge(cell, baseTile, d.config.topBuffer, d.config.bottomBuffer, d.config.sideBuffer))
-                        choices.Add(d);
-
-                if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > decorDensity)
+                if (settings != null)
+                {
+                    foreach (var d in settings.decor.decor)
+                        if (d.GetWeight(worldPos) > 0f &&
+                            !IsBufferedEdge(cell, baseTile, d.config.topBuffer, d.config.bottomBuffer, d.config.sideBuffer))
+                            choices.Add(d);
+                }
+                var density = settings != null ? settings.decor.density : 0f;
+                if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > density)
                     continue;
 
                 var total = 0f;
@@ -311,20 +302,6 @@ namespace TimelessEchoes.MapGeneration
         }
 
         // Updated to use HasFlag for the [Flags] enum
-        private bool AllowsArea(DecorEntry entry, TerrainArea area)
-        {
-            switch (area)
-            {
-                case TerrainArea.Water:
-                    return entry.config.SpawnOn.HasFlag(SpawnArea.Water);
-                case TerrainArea.Sand:
-                    return entry.config.SpawnOn.HasFlag(SpawnArea.Sand);
-                case TerrainArea.Grass:
-                    return entry.config.SpawnOn.HasFlag(SpawnArea.Grass);
-                default:
-                    return false;
-            }
-        }
 
         private bool IsBufferedEdge(Vector3Int cell, TileBase tile, int topBuffer, int bottomBuffer, int sideBuffer)
         {
