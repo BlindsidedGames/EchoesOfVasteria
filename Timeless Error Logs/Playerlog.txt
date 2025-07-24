@@ -1,0 +1,42 @@
+Mono path[0] = 'G:/High Speed Steam Games/steamapps/common/Timeless Echoes Playtest/Timeless Echoes_Data/Managed'
+Mono config path = 'G:/High Speed Steam Games/steamapps/common/Timeless Echoes Playtest/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.1.6f1 (d64b1a599cad)
+[Subsystems] Discovering subsystems at path G:/High Speed Steam Games/steamapps/common/Timeless Echoes Playtest/Timeless Echoes_Data/UnitySubsystems
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+Direct3D:
+    Version:         Direct3D 12 [level 12.1]
+    Renderer:        NVIDIA GeForce RTX 3060 (ID=0x2504)
+    Vendor:          NVIDIA
+    VRAM:            12115 MB
+    App VRAM Budget: 11347 MB
+    Driver:          32.0.15.7688
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  7.091 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+<RI> Input initialized.
+<RI> Initialized touch support.
+The referenced script (TimelessEchoes.EditorScreenshot) on this Behaviour is missing!
+Odin Serializer ArchitectureInfo initialization with defaults (all unaligned read/writes disabled).
+The referenced script on this Behaviour (Game Object 'Screenshot') is missing!
+A scripted object (probably TimelessEchoes.EditorScreenshot?) has a different serialization layout when loading. (Read 32 bytes but expected 52 bytes)
+Did you #if UNITY_EDITOR a section of your serialized properties in any of your scripts?
+UnloadTime: 0.531100 ms
+Odin Serializer detected whitelisted runtime platform WindowsPlayer and memory read test succeeded; enabling all unaligned memory read/writes.
+RenderGraph is now enabled.
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+GarbageCollector disposing of ComputeBuffer. Please use ComputeBuffer.Release() or .Dispose() to manually release the buffer.
