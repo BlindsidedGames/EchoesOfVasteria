@@ -66,10 +66,11 @@ grass tiles. Decorative tiles can be spawned with weighted probabilities and
 optional rotation.
 
 Each terrain type exposes task settings controlling where procedural tasks may
-appear. The `innerEdgeOffset` pulls the allowed spawn zone inward from the tile
-edge, while `outerEdgeOffset` extends the valid edge region outward. When
-`edgeOnly` is enabled on a terrain, tasks spawn only within this band between the
-two offsets.
+appear. When `borderOnly` is enabled, tasks spawn only along the terrain's
+computed borders. The directional offsets (`topBorderOffset`, `bottomBorderOffset`,
+`leftBorderOffset` and `rightBorderOffset`) shift this border check in each
+direction. If `borderOnly` is disabled these offsets specify how many tiles away
+from the edges tasks must spawn.
 
 ## Building
 Use **File > Build Settings...** to create standalone builds.
