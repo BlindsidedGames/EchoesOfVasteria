@@ -520,7 +520,7 @@ namespace TimelessEchoes.Tasks
 
         private bool IsEdge(Vector3Int cell, TileBase tile, int offset = 0)
         {
-            var range = offset;
+            var range = offset + 1; // ensures offset=0 checks neighbours
             for (var dx = -range; dx <= range; dx++)
             for (var dy = -range; dy <= range; dy++)
             {
