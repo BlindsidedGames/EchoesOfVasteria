@@ -22,6 +22,10 @@ MonoBehaviour:
   requiredQuest: {fileID: 11400000, guid: 8881bebf2bb94df4a91353c851ca2b6f, type: 2}
   taskDuration: 5
   sfxInterval: 0.7
+  taskPrefab: {fileID: 33249571399304914, guid: b86be403f6a8fcb43becf06c654d4aa7, type: 3}
+  weight: 1
+  spawnTerrains:
+  - {fileID: 11400000, guid: 1a20e4b5c68ff4e4f9347e6a9f252914, type: 2}
   resourceDrops:
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 4, y: 12}

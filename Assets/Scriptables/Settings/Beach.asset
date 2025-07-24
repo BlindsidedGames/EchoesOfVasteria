@@ -14,23 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemapChunkSettings:
     terrainMap: {fileID: 0}
-    waterBetterRuleTile: {fileID: 8941440329306202149, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
-    sandBetterRuleTile: {fileID: 7235811214747110391, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
-    grassBetterRuleTile: {fileID: -6080419730213009515, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
+    decorMap: {fileID: 0}
+    bottomTerrain: {fileID: 11400000, guid: b7b19e18e3940684a9272aa363ba1503, type: 2}
+    middleTerrain: {fileID: 11400000, guid: 1a20e4b5c68ff4e4f9347e6a9f252914, type: 2}
+    topTerrain: {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
     minAreaWidth: 4
     edgeWaviness: 2
-    sandDepthRange: {x: 4, y: 12}
-    grassDepthRange: {x: 2, y: 8}
+    middleDepthRange: {x: 4, y: 9}
+    topDepthRange: {x: 4, y: 8}
     seed: 0
     randomizeSeed: 1
   taskGeneratorSettings:
     minX: 15
     height: 18
-    taskDensity: 0.3
-    waterTaskDensity: 0.05
-    sandTaskDensity: 0.05
-    grassTaskDensity: 0.1
     enemyDensity: 0.18
+    topBuffer: 2
+    bottomBuffer: 2
     blockingMask:
       serializedVersion: 2
       m_Bits: 0
@@ -40,712 +39,157 @@ MonoBehaviour:
       weight: 1
       minX: 45
       maxX: 150
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
       weight: 1
       minX: 150
       maxX: 500
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 1185683219414597a297279e896931a0, type: 3}
       weight: 1
       minX: 500
       maxX: Infinity
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
       weight: 1
       minX: 80
       maxX: 220
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
       weight: 1
       minX: 220
       maxX: 1000
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 01e6f73205764380921681e11b211f6e, type: 3}
       weight: 2
       minX: 1000
       maxX: Infinity
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
       weight: 0.4
       minX: 150
       maxX: 300
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
       weight: 1
       minX: 300
       maxX: 1500
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: ccaecf98d6324c84908457395f522ecc, type: 3}
       weight: 3
       minX: 1500
       maxX: Infinity
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
       weight: 1
       minX: 250
       maxX: 1200
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
       weight: 1
       minX: 1200
       maxX: 2500
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 3deffd76865849dd9d0a7ca5462821f8, type: 3}
       weight: 4
       minX: 2500
       maxX: Infinity
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
       weight: 1
       minX: 900
       maxX: 2500
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
       weight: 1
       minX: 2500
       maxX: 10000
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     - prefab: {fileID: 8193780003442596315, guid: cd2a5751f36a480683da922475c0c9a3, type: 3}
       weight: 5
       minX: 10000
       maxX: Infinity
-      topBuffer: 0
-      spawnAreas: 6
+      spawnTerrains: []
     woodcutting:
       weight: 1
       tasks:
-      - prefab: {fileID: 5366876333383290996, guid: 4c6c572369ab0124b926f11b2ee7b277, type: 3}
-        weight: 0.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 387944b50565dcf45bb989d7688df07e, type: 3}
-        weight: 1.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: def24b8dc6017a941bf5e4c3db475cb3, type: 3}
-        weight: 0.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 59f9cd6a2535b134ea8a37959ddf07a6, type: 3}
-        weight: 1.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 5e3f2a6261612014fb003c6fe90050e5, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 9fe32c2a97391044c9d752277ea90030, type: 3}
-        weight: 0.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: f4bc22868ec277e4fbaf1dfca0870f66, type: 3}
-        weight: 1.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: dba5ff011728773449ac4bebb0e57a1c, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: f952de7c7ddb13b45acb2511a6a099b0, type: 3}
-        weight: 0.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 58c711987d8b39c449a73651ea6c1943, type: 3}
-        weight: 1.5
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
-      - prefab: {fileID: 5366876333383290996, guid: 68612a53a1433b347b6fba149d2d7641, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 3
-        spawnAreas: 4
+      - {fileID: 11400000, guid: 936d408e4a462034db61d9e94a22a424, type: 2}
+      - {fileID: 11400000, guid: be28fd76aeb073b499a5fe6d63225d6b, type: 2}
+      - {fileID: 11400000, guid: 5b79a1d3e3b8c6049ac8306d32db9416, type: 2}
+      - {fileID: 11400000, guid: 311095139adb56e4baedb88f0634fdc4, type: 2}
+      - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+      - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+      - {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+      - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
+      - {fileID: 11400000, guid: c3af67c9663141c42a4edfc53141e29a, type: 2}
+      - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
+      - {fileID: 11400000, guid: bad32546724fba141a4e46b2a217d438, type: 2}
+      - {fileID: 11400000, guid: b2078539e1a537b4ea4da8b90654f82d, type: 2}
     mining:
       weight: 1
       tasks:
-      - prefab: {fileID: 33249571399304914, guid: 46daabf835e20a042ab9e4ebeb8cc6cb, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: 51e75dc08a554be4287e26b5ee13d2c4, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: 844812a85cc63bb43b8c525de8065014, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: b86be403f6a8fcb43becf06c654d4aa7, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: 2f5a8e9fd053b8c4bb1898fbd76548a9, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: e8dd94dfa5e6dd84099c7a5a0c30b95b, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: 1d1cf9dbdcb98e4408c93517cb4040c0, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
-      - prefab: {fileID: 33249571399304914, guid: 6e0f66ee0c7f60f499c369ee5c387721, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 2
+      - {fileID: 11400000, guid: fa24818abe1da184aafa062af624ec6c, type: 2}
+      - {fileID: 11400000, guid: 668dad8fbc2902843a7e173e243dee9a, type: 2}
+      - {fileID: 11400000, guid: dd52987e13599b240a10458584bc43ca, type: 2}
+      - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+      - {fileID: 11400000, guid: 18eeb6f8f3be4634b964782c3a21e3fb, type: 2}
+      - {fileID: 11400000, guid: 02f191935684d0349a6146c4106198b9, type: 2}
+      - {fileID: 11400000, guid: abfab7093dc8ecb4599d05b5213bfcb4, type: 2}
+      - {fileID: 11400000, guid: 192a1d7580d317a4e9fafc41a46df8df, type: 2}
     farming:
       weight: 1
       tasks:
-      - prefab: {fileID: 313524833436730888, guid: ce795a63272a38942b2009b1873bf44a, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: b9a28e8463a92ee448aa5b279b912543, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 790d32c9d7e54169a0be829cf33cbac5, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 517c6a0dd42a48dabbfe39774d4f4a3f, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 0a448afceafe47d89e584c7d3389791e, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 411e47e548724af586805834b38f028a, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: faaf12e4e5924a95aa4c10a1a938e91f, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: c83104c11b4c43fab4e3eed9126ed138, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 003b12351e554f37901af26ca8e322ef, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 50d237572b054840872ded492497b6f5, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 381817e3c7734166a7a4d079d83270ea, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 859da109c00d4f29a183289130c35f2c, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 7585237fe6ae49c2af82b6a209cfa006, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 7c3ae5f435ec49a5a116eee8a42c35c9, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 6
-      - prefab: {fileID: 313524833436730888, guid: 9f777aaabb564b93945683af777e96f2, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 3887e14a1c404421a1e0012c31d9742c, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 31880907d9d34948bfaafdce3d5a11a4, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
-      - prefab: {fileID: 313524833436730888, guid: 870e8eb13b074807b9b2cb4c7dc55826, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        spawnAreas: 4
+      - {fileID: 11400000, guid: 70617213aa5b4282810c56d8c6fef1dc, type: 2}
+      - {fileID: 11400000, guid: 057a73ef4be1461a8f37f4a18cc9ccd7, type: 2}
+      - {fileID: 11400000, guid: 4706c98248fceba4d999590b3af7c998, type: 2}
+      - {fileID: 11400000, guid: e14a18a28eab47f3b4a1ba4fc35feecc, type: 2}
+      - {fileID: 11400000, guid: 32c67278a4d449d1a3b9537021e12b94, type: 2}
+      - {fileID: 11400000, guid: 9f12af72c3d64cb7992be2c5a55e724d, type: 2}
+      - {fileID: 11400000, guid: e0a30f5655974fccaf00c303a1ec8ab8, type: 2}
+      - {fileID: 11400000, guid: 168d8afa5df84514b6f9e8c3f2de25af, type: 2}
+      - {fileID: 11400000, guid: b7927331582c41ad858f05059f361a0a, type: 2}
+      - {fileID: 11400000, guid: 62658544c0614a5490f65bb405af7397, type: 2}
+      - {fileID: 11400000, guid: 9bf4f670cbb2443baabc2867f46fe800, type: 2}
+      - {fileID: 11400000, guid: 42f81ca90b736cd4bb035112a8b22ad3, type: 2}
+      - {fileID: 11400000, guid: 7ce5ada54f204022860133895160fdb0, type: 2}
+      - {fileID: 11400000, guid: d32ac8f14ec6412b970968c95d6630b5, type: 2}
+      - {fileID: 11400000, guid: 86a9b7060b024768a521ceb023a7830d, type: 2}
+      - {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+      - {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+      - {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
     fishing:
       weight: 1
       tasks:
-      - prefab: {fileID: 3960746967130773130, guid: 284d4cb124f640743b6f7735c200b2be, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: bd3ac842010daeb4991194a5a44b714e, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: e1e855e4d748a394786b664c58282b8a, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: 5f635b890af420449a206cbe6edc4270, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: 678489a49c4bf084c8932e136714e1ba, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: 7ff1c08b462068d49b975ff17747458d, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: 52e87615f4c3eae4cb189f5dfadcc282, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
-      - prefab: {fileID: 3960746967130773130, guid: 7769dfc1bb67c734cbc2e120d7acf20d, type: 3}
-        weight: 1
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 1
+      - {fileID: 11400000, guid: c549fee4e4f15594698a6f046c39af11, type: 2}
+      - {fileID: 11400000, guid: 05fdfa111cb7016449fc9bdbd752ec6e, type: 2}
+      - {fileID: 11400000, guid: b61d39fcc4e93ff4babb6e6b865dc283, type: 2}
+      - {fileID: 11400000, guid: 27c96eca47585d04dab34a87f062e139, type: 2}
+      - {fileID: 11400000, guid: 4438560ed934d734885b5bc75d4f0956, type: 2}
+      - {fileID: 11400000, guid: 016b841486240b049bbfaf2ed4d4a0d7, type: 2}
+      - {fileID: 11400000, guid: 196b555261e65f844b40c5b3b91fcc7c, type: 2}
+      - {fileID: 11400000, guid: 5d5fce42b69a10243ac8ce6796cd25d7, type: 2}
     looting:
       weight: 0.1
       tasks:
-      - prefab: {fileID: 2897011531704098943, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
-        weight: 0.9
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: 969d2dbcc138ea349ae9047e64b89152, type: 3}
-        weight: 0.09
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: 589ff2ff6c171fa4f887283021d778ad, type: 3}
-        weight: 0.009
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: ef2ad616a04727647adf3cb7a1786f44, type: 3}
-        weight: 0.005
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: dd69f86be50ea0f418c512ff54de5060, type: 3}
-        weight: 0.004
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: 3042c9aafcba37847aa6e3e9aedcd991, type: 3}
-        weight: 0.003
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: ff37e04411f342f49a2424ec66beb922, type: 3}
-        weight: 0.002
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
-      - prefab: {fileID: 2897011531704098943, guid: 3f4f308ebf45d8548843ccd941f18695, type: 3}
-        weight: 0.001
-        overrideRange: 0
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        spawnAreas: 6
+      - {fileID: 11400000, guid: b1555f4354b02664ab812f41368de535, type: 2}
+      - {fileID: 11400000, guid: 79af76c4f8e5991408e4c1cdeb5a27df, type: 2}
+      - {fileID: 11400000, guid: f5b4b465fd95d1841ae73975a8d3ef1c, type: 2}
+      - {fileID: 11400000, guid: e2768c90f8101cc4fa37685fc26efcc3, type: 2}
+      - {fileID: 11400000, guid: 373703f3a8d5957488dc23e526ff5233, type: 2}
+      - {fileID: 11400000, guid: 37b5bdf51b258d6468f34c9fe61b9355, type: 2}
+      - {fileID: 11400000, guid: 377ea7d0df8bdb34dbd047f58e376e7c, type: 2}
+      - {fileID: 11400000, guid: 70c2ebf6cde62bb4ebd4275e6ff6373a, type: 2}
     npcTasks:
     - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
       id: Witch1
       localX: 140
-      topBuffer: 2
-      spawnAreas: 4
+      spawnTerrains: []
       spawnOnlyOnce: 1
     - prefab: {fileID: 4000714617541257269, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
       id: Ivan1
       localX: 40
-      topBuffer: 2
-      spawnAreas: 6
+      spawnTerrains: []
       spawnOnlyOnce: 1
     minTaskDistance: 2
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}
-  decorSettings:
-    decorMap: {fileID: 0}
-    density: 0.079
-    decor:
-    - Name: Water | WaterMiddleAnim1
-      tile: {fileID: 11400000, guid: c7e1f35c0f5e6854f96c50707a45a5a7, type: 2}
-      config:
-        weight: 0.6
-        minX: 0
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | Water_Decoration_0
-      tile: {fileID: 11400000, guid: ed83d0d8d367fa7429c342528ec7e9f7, type: 2}
-      config:
-        weight: 0.04
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | Water_Decoration_1
-      tile: {fileID: 11400000, guid: 769503ef1be1b654b9fb6813c805d359, type: 2}
-      config:
-        weight: 0.02
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | Water_Decoration_2
-      tile: {fileID: 11400000, guid: ea7d30b6e539a8a459c16f776805d84e, type: 2}
-      config:
-        weight: 0.02
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | WaterGrass1
-      tile: {fileID: 11400000, guid: 10d47dbd0af073d429263f3469c4743e, type: 2}
-      config:
-        weight: 0.2
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | WaterGrass2
-      tile: {fileID: 11400000, guid: d5e2d087aad0f7342992ab013b9ab89b, type: 2}
-      config:
-        weight: 0.3
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | Lillypad
-      tile: {fileID: 11400000, guid: 1d85d0e980e47034fa22050a89ca8cf9, type: 2}
-      config:
-        weight: 0.07
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Grass | Flower_Grass_1_Anim
-      tile: {fileID: 11400000, guid: d151d737e1a86f04a855c431a8b8569f, type: 2}
-      config:
-        weight: 0.5
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        bottomBuffer: 0
-        sideBuffer: 0
-        SpawnOn: 4
-    - Name: Grass | Grass_1_Anim
-      tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
-      config:
-        weight: 1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        bottomBuffer: 0
-        sideBuffer: 0
-        SpawnOn: 4
-    - Name: Grass | Grass_2_Anim
-      tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
-      config:
-        weight: 1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        bottomBuffer: 0
-        sideBuffer: 0
-        SpawnOn: 4
-    - Name: Grass | Grass_3_Anim
-      tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
-      config:
-        weight: 1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 0
-        bottomBuffer: 0
-        sideBuffer: 0
-        SpawnOn: 4
-    - Name: Sand | Beach_Decor_Tiles_0
-      tile: {fileID: 11400000, guid: a64f3964ea1534abd86301d93b79da78, type: 2}
-      config:
-        weight: 0.1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 2
-    - Name: Sand | Beach_Decor_Tiles_1
-      tile: {fileID: 11400000, guid: 2622f97b5574f4b7aab90f8f92befb28, type: 2}
-      config:
-        weight: 1
-        minX: 0.5
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 2
-    - Name: Sand | Beach_Decor_Tiles_2
-      tile: {fileID: 11400000, guid: 8309e9390a71e47dd9ef52a80440e734, type: 2}
-      config:
-        weight: 1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 2
-    - Name: Sand | Beach_Decor_Tiles_3
-      tile: {fileID: 11400000, guid: ea0253e35f3604e83b07670155a363e4, type: 2}
-      config:
-        weight: 0.1
-        minX: 0
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 2
-    - Name: Water | Lillypad 1
-      tile: {fileID: 11400000, guid: 6cdd93be2d22bed48ac49689afc32b24, type: 2}
-      config:
-        weight: 0.07
-        minX: 0
-        maxX: Infinity
-        topBuffer: 1
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | CatTail
-      tile: {fileID: 11400000, guid: b911c0e71a990624e9eed03abb6ce2b9, type: 2}
-      config:
-        weight: 0.06
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | CatTail 1
-      tile: {fileID: 11400000, guid: 367fef2f27190914aab734544717b1df, type: 2}
-      config:
-        weight: 0.04
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | CatTail 2
-      tile: {fileID: 11400000, guid: fe088e028cc11af4b87183d287f1da19, type: 2}
-      config:
-        weight: 0.04
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | CatTail 3
-      tile: {fileID: 11400000, guid: 9f89f7a03a57b684cb12dfe96f73d521, type: 2}
-      config:
-        weight: 0.04
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
-    - Name: Water | CatTail 4
-      tile: {fileID: 11400000, guid: 40a42957d626ceb4ba639bf9e1abba49, type: 2}
-      config:
-        weight: 0.04
-        minX: 0
-        maxX: Infinity
-        topBuffer: 2
-        bottomBuffer: 0
-        sideBuffer: 1
-        SpawnOn: 1
