@@ -725,62 +725,6 @@ namespace TimelessEchoes.Tasks
             return null;
         }
 
-        /// <summary>
-        ///     Picks an entry from the available lists and identifies if it's an enemy.
-        /// </summary>
-        /// <param name="worldX">The world X position of the spawn attempt.</param>
-        /// <returns>A tuple containing the chosen WeightedSpawn and a boolean that is true if it's an enemy.</returns>
-        private (object entry, bool isEnemy, bool isWaterTask, bool isGrassTask, bool isSandTask) PickEntry(float worldX, bool allowWaterTasks, bool allowGrassTasks, bool allowSandTasks)
-        {
-            var enemyTotalWeight = 0f;
-            foreach (var e in enemies)
-                enemyTotalWeight += e.GetWeight(worldX);
-
-            var categoryWeight = 0f;
-            foreach (var c in taskCategories)
-                categoryWeight += Mathf.Max(0f, c.weight);
-
-            var totalWeight = enemyTotalWeight + categoryWeight;
-            if (totalWeight <= 0f)
-                return (null, false, false, false, false);
-
-            var r = Random.value * totalWeight;
-            if (r < enemyTotalWeight)
-            {
-                foreach (var e in enemies)
-                {
-                    r -= e.GetWeight(worldX);
-                    if (r <= 0f)
-                        return (e, true, false, false, false);
-                }
-            }
-            else
-            {
-                r -= enemyTotalWeight;
-                var rCat = r;
-                WeightedTaskCategory chosen = null;
-                foreach (var c in taskCategories)
-                {
-                    rCat -= Mathf.Max(0f, c.weight);
-                    if (rCat <= 0f)
-                    {
-                        chosen = c;
-                        break;
-                    }
-                }
-
-                if (chosen != null)
-                {
-                    var (entry, isWater, isGrass, isSand) =
-                        PickTaskFromCategory(chosen, worldX, allowWaterTasks, allowGrassTasks, allowSandTasks);
-                    if (entry != null)
-                        return (entry, false, isWater, isGrass, isSand);
-                }
-            }
-
-            return (null, false, false, false, false);
-        }
-
         [Serializable]
         [InlineProperty]
         [HideLabel]
