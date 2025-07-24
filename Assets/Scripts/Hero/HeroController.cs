@@ -489,6 +489,15 @@ namespace TimelessEchoes.Hero
                 newBase.Claim(this);
         }
 
+        /// <summary>
+        ///     Clear the reference to the active <see cref="TaskController" /> so
+        ///     this hero no longer receives task assignments.
+        /// </summary>
+        public void ClearTaskController()
+        {
+            taskController = null;
+        }
+
         private void UpdateBehavior()
         {
             if (stats == null) return;
