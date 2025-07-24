@@ -518,27 +518,17 @@ namespace TimelessEchoes.Tasks
             return true;
         }
 
-        private bool IsEdge(Vector3Int cell, TileBase tile, int offset = 0)
+        private int CountSame(Vector3Int start, Vector3Int dir, TileBase tile)
         {
-            var range = offset + 1; // ensures offset=0 checks neighbours
-            for (var dx = -range; dx <= range; dx++)
-            for (var dy = -range; dy <= range; dy++)
+            var count = 0;
+            var pos = start;
+            while (terrainMap.GetTile(pos) == tile)
             {
-                if (dx == 0 && dy == 0) continue;
-                if (terrainMap.GetTile(cell + new Vector3Int(dx, dy, 0)) != tile)
-                    return true;
+                count++;
+                pos += dir;
             }
 
-            return false;
-        }
-
-        private bool IsBorder(Vector3Int cell, TileBase tile, int topOffset, int bottomOffset, int leftOffset, int rightOffset)
-        {
-            if (IsEdge(cell + new Vector3Int(0, topOffset, 0), tile)) return true;
-            if (IsEdge(cell - new Vector3Int(0, bottomOffset, 0), tile)) return true;
-            if (IsEdge(cell - new Vector3Int(leftOffset, 0, 0), tile)) return true;
-            if (IsEdge(cell + new Vector3Int(rightOffset, 0, 0), tile)) return true;
-            return false;
+            return count;
         }
 
         /// <summary>
@@ -581,6 +571,16 @@ namespace TimelessEchoes.Tasks
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
 
+            var upDist = CountSame(cell + Vector3Int.up, Vector3Int.up, tile);
+            var downDist = CountSame(cell + Vector3Int.down, Vector3Int.down, tile);
+            var leftDist = CountSame(cell + Vector3Int.left, Vector3Int.left, tile);
+            var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
+
+            var topOffset = settings.taskSettings.topBorderOffset;
+            var bottomOffset = settings.taskSettings.bottomBorderOffset;
+            var leftOffset = settings.taskSettings.leftBorderOffset;
+            var rightOffset = settings.taskSettings.rightBorderOffset;
+
             if (settings.taskSettings.borderOnly)
             {
                 var areaBottom = terrainMap.WorldToCell(transform.position).y;
@@ -588,20 +588,17 @@ namespace TimelessEchoes.Tasks
                 if (cell.y < bottomLimit)
                     return false;
 
-                return IsBorder(cell, settings.tile,
-                    settings.taskSettings.topBorderOffset,
-                    settings.taskSettings.bottomBorderOffset,
-                    settings.taskSettings.leftBorderOffset,
-                    settings.taskSettings.rightBorderOffset);
+                if (upDist == topOffset) return true;
+                if (downDist == bottomOffset) return true;
+                if (leftDist == leftOffset) return true;
+                if (rightDist == rightOffset) return true;
+                return false;
             }
 
-            if (IsBorder(cell, settings.tile,
-                settings.taskSettings.topBorderOffset,
-                settings.taskSettings.bottomBorderOffset,
-                settings.taskSettings.leftBorderOffset,
-                settings.taskSettings.rightBorderOffset))
-                return false;
-
+            if (upDist < topOffset) return false;
+            if (downDist < bottomOffset) return false;
+            if (leftDist < leftOffset) return false;
+            if (rightDist < rightOffset) return false;
             return true;
         }
 
