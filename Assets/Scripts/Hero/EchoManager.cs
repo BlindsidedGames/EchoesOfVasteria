@@ -63,5 +63,54 @@ namespace TimelessEchoes.Hero
         {
             return SpawnEcho(new List<Skill> { skill }, duration, combat, disableSkills);
         }
+
+        /// <summary>
+        /// Spawn one or more Echoes using the provided configuration.
+        /// </summary>
+        /// <param name="config">Settings describing the Echoes to spawn. Can be null.</param>
+        /// <param name="baseDuration">Base lifetime for the spawned Echoes.</param>
+        /// <param name="fallbackSkills">Used when the config does not specify any skills.</param>
+        /// <param name="applyLifetimeUpgrade">When true, applies the Echo Lifetime upgrade value.</param>
+        /// <param name="countOverride">Optional spawn count override.</param>
+        public static List<HeroController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
+            IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int countOverride = 0)
+        {
+            float duration = baseDuration;
+            if (applyLifetimeUpgrade)
+            {
+                var upgradeController = StatUpgradeController.Instance;
+                var echoUpgrade = upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                if (echoUpgrade != null)
+                    duration += upgradeController.GetTotalValue(echoUpgrade);
+            }
+
+            int count = 1;
+            IEnumerable<Skill> skills = fallbackSkills;
+            bool disable = false;
+            bool combat = false;
+
+            if (config != null)
+            {
+                count = countOverride > 0 ? countOverride : Mathf.Max(1, config.echoCount);
+                if (config.capableSkills != null && config.capableSkills.Count > 0)
+                    skills = config.capableSkills;
+                combat = config.combatEnabled;
+                disable = config.disableSkills;
+            }
+            else if (countOverride > 0)
+            {
+                count = countOverride;
+            }
+
+            var spawned = new List<HeroController>();
+            for (int i = 0; i < count; i++)
+            {
+                var h = SpawnEcho(skills, duration, combat, disable);
+                if (h != null)
+                    spawned.Add(h);
+            }
+
+            return spawned;
+        }
     }
 }

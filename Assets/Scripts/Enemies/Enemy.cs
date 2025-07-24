@@ -330,21 +330,8 @@ namespace TimelessEchoes.Enemies
                         var ms = skill.milestones.Find(m => m.bonusID == id);
                         if (ms != null && ms.type == MilestoneType.SpawnEcho && Random.value <= ms.chance)
                         {
-                            var config = ms.echoSpawnConfig;
-                            var count = config != null ? Mathf.Max(1, config.echoCount) : 1;
-                            var skills = config != null && config.capableSkills != null &&
-                                         config.capableSkills.Count > 0
-                                ? config.capableSkills
-                                : new List<Skill> { skill };
-                            var disable = config != null && config.disableSkills;
-                            var upgradeController = StatUpgradeController.Instance;
-                            var echoUpgrade = upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
-                            float bonus = echoUpgrade != null ? upgradeController.GetTotalValue(echoUpgrade) : 0f;
-                            for (var c = 0; c < count; c++)
-                            {
-                                var combat = config != null && config.combatEnabled;
-                                EchoManager.SpawnEcho(skills, ms.echoDuration + bonus, combat, disable);
-                            }
+                            EchoManager.SpawnEchoes(ms.echoSpawnConfig, ms.echoDuration,
+                                new List<Skill> { skill }, true);
                         }
                     }
             }
