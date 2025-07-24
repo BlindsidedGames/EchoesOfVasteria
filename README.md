@@ -39,6 +39,10 @@ automatically cast as soon as you have enough resources.
 ## Echoes
 Clones spawned by milestones are referred to as **Echoes**. An Echo performs
 tasks of a specified skill for a limited time when summoned.
+Combat oriented echoes ignore tasks and only engage in combat. When no enemy is
+within their combat aggro range they automatically follow the main hero instead
+of wandering off. The aggro range defaults to 20 units and can be configured on
+the hero prefab.
 
 ## Tasks
 Task scripts can be found under `Assets/Scripts/Tasks`. A `TaskController`
