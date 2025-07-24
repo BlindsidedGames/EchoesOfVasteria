@@ -70,7 +70,9 @@ appear. When `borderOnly` is enabled, tasks spawn only along the terrain's
 computed borders. The directional offsets (`topBorderOffset`, `bottomBorderOffset`,
 `leftBorderOffset` and `rightBorderOffset`) shift this border check in each
 direction. If `borderOnly` is disabled these offsets specify how many tiles away
-from the edges tasks must spawn.
+from the edges tasks must spawn. Task spawn counts now rely solely on each
+terrain's `taskSettings.taskDensity` value; the generator's overall density
+setting has been removed.
 
 ## Building
 Use **File > Build Settings...** to create standalone builds.

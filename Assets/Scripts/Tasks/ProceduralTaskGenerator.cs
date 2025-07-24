@@ -42,9 +42,6 @@ namespace TimelessEchoes.Tasks
         [HideInInspector]
         private int bottomBuffer;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
-        private float taskDensity = 0.1f;
 
 
         [TabGroup("Settings", "Area")] [SerializeField]
@@ -133,7 +130,6 @@ namespace TimelessEchoes.Tasks
 
             minX = config.taskGeneratorSettings.minX;
             height = config.taskGeneratorSettings.height;
-            taskDensity = config.taskGeneratorSettings.taskDensity;
             enemyDensity = config.taskGeneratorSettings.enemyDensity;
             topBuffer = config.taskGeneratorSettings.topBuffer;
             bottomBuffer = config.taskGeneratorSettings.bottomBuffer;
@@ -271,12 +267,11 @@ namespace TimelessEchoes.Tasks
                 controller.ClearTaskObjects();
             }
 
-            var baseTaskCount = Mathf.RoundToInt((localMaxX - localMinX) * taskDensity);
             var bottomCount = Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
             var middleCount = Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
             var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
-            if (baseTaskCount + bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
+            if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
                 return;
 
             var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
@@ -306,13 +301,6 @@ namespace TimelessEchoes.Tasks
                         break;
             }
 
-            for (var i = 0; i < baseTaskCount; i++)
-            {
-                for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, false, false,
-                            spawnedTasks, taskPositions, taskMap))
-                        break;
-            }
 
             for (var i = 0; i < enemyCount; i++)
             {
