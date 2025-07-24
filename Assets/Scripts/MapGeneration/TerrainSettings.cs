@@ -17,16 +17,12 @@ namespace TimelessEchoes.MapGeneration
         public class TaskSettings
         {
             [Range(0f,1f)] public float taskDensity = 0.1f;
-            public bool edgeOnly;
-            [ShowIf(nameof(edgeOnly))]
-            [MinValue(0)]
-            [FormerlySerializedAs("edgeOffset")]
-            public int innerEdgeOffset;
-            [ShowIf(nameof(edgeOnly))]
-            [MinValue(0)]
-            public int outerEdgeOffset;
-            [HideIf(nameof(edgeOnly))]
-            public int taskEdgeAvoidance;
+
+            public bool borderOnly;
+            [MinValue(0)] public int topBorderOffset;
+            [MinValue(0)] public int bottomBorderOffset;
+            [MinValue(0)] public int leftBorderOffset;
+            [MinValue(0)] public int rightBorderOffset;
         }
 
         [Serializable]

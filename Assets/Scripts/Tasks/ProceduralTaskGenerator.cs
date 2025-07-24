@@ -532,6 +532,15 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        private bool IsBorder(Vector3Int cell, TileBase tile, int topOffset, int bottomOffset, int leftOffset, int rightOffset)
+        {
+            if (IsEdge(cell + new Vector3Int(0, topOffset, 0), tile)) return true;
+            if (IsEdge(cell - new Vector3Int(0, bottomOffset, 0), tile)) return true;
+            if (IsEdge(cell - new Vector3Int(leftOffset, 0, 0), tile)) return true;
+            if (IsEdge(cell + new Vector3Int(rightOffset, 0, 0), tile)) return true;
+            return false;
+        }
+
         /// <summary>
         ///     Determine if the exact XY position contains a collider on the blocking mask.
         /// </summary>
@@ -571,31 +580,28 @@ namespace TimelessEchoes.Tasks
             if (settings == null) return false;
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
-            var isEdge = IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset);
-            if (settings.taskSettings.edgeOnly)
+
+            if (settings.taskSettings.borderOnly)
             {
                 var areaBottom = terrainMap.WorldToCell(transform.position).y;
                 var bottomLimit = Mathf.Max(areaBottom + bottomBuffer, terrainMap.cellBounds.yMin);
                 if (cell.y < bottomLimit)
                     return false;
 
-                var nearOuter = IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset +
-                                               settings.taskSettings.outerEdgeOffset);
-                var beyondInner = !IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset - 1);
-                return nearOuter && beyondInner;
+                return IsBorder(cell, settings.tile,
+                    settings.taskSettings.topBorderOffset,
+                    settings.taskSettings.bottomBorderOffset,
+                    settings.taskSettings.leftBorderOffset,
+                    settings.taskSettings.rightBorderOffset);
             }
 
-            if (settings.taskSettings.taskEdgeAvoidance > 0)
-            {
-                var dist = settings.taskSettings.taskEdgeAvoidance;
-                for (var dx = -dist; dx <= dist; dx++)
-                for (var dy = -dist; dy <= dist; dy++)
-                {
-                    if (dx == 0 && dy == 0) continue;
-                    if (IsEdge(cell + new Vector3Int(dx, dy, 0), settings.tile))
-                        return false;
-                }
-            }
+            if (IsBorder(cell, settings.tile,
+                settings.taskSettings.topBorderOffset,
+                settings.taskSettings.bottomBorderOffset,
+                settings.taskSettings.leftBorderOffset,
+                settings.taskSettings.rightBorderOffset))
+                return false;
+
             return true;
         }
 

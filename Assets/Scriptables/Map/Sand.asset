@@ -15,8 +15,11 @@ MonoBehaviour:
   tile: {fileID: 0}
   taskSettings:
     taskDensity: 0.1
-    edgeOnly: 0
-    taskEdgeAvoidance: 0
+    borderOnly: 0
+    topBorderOffset: 0
+    bottomBorderOffset: 0
+    leftBorderOffset: 0
+    rightBorderOffset: 0
   decor:
     density: 1
     decor: []
