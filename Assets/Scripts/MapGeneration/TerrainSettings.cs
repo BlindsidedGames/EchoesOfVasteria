@@ -36,5 +36,8 @@ namespace TimelessEchoes.MapGeneration
 
         public TaskSettings taskSettings = new();
         public DecorSection decor = new();
+
+        [ToggleLeft]
+        public bool showValidationGizmos;
     }
 }

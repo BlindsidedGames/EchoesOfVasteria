@@ -160,7 +160,39 @@ namespace TimelessEchoes.Tasks
             var center = transform.position + new Vector3((minX + maxX) * 0.5f, height * 0.5f, 0f);
             var size = new Vector3(maxX - minX, height, 0f);
             Gizmos.DrawWireCube(center, size);
+#if UNITY_EDITOR
+            DrawValidationGizmos();
+#endif
         }
+
+#if UNITY_EDITOR
+        private void DrawValidationGizmos()
+        {
+            EnsureTilemaps();
+            if (terrainMap == null)
+                return;
+
+            foreach (var cell in terrainMap.cellBounds.allPositionsWithin)
+            {
+                var tile = terrainMap.GetTile(cell);
+                TerrainSettings settings = null;
+                if (bottomTerrain != null && bottomTerrain.showValidationGizmos && tile == bottomTerrain.tile)
+                    settings = bottomTerrain;
+                else if (middleTerrain != null && middleTerrain.showValidationGizmos && tile == middleTerrain.tile)
+                    settings = middleTerrain;
+                else if (topTerrain != null && topTerrain.showValidationGizmos && tile == topTerrain.tile)
+                    settings = topTerrain;
+
+                if (settings == null)
+                    continue;
+
+                var valid = ValidateTerrainRules(settings, cell);
+                Gizmos.color = valid ? Color.green : Color.red;
+                var world = terrainMap.GetCellCenterWorld(cell);
+                Gizmos.DrawCube(world, Vector3.one * 0.2f);
+            }
+        }
+#endif
 
         internal void SetTilemapReferences(Tilemap map, TerrainSettings bottom, TerrainSettings middle, TerrainSettings top)
         {
@@ -588,11 +620,18 @@ namespace TimelessEchoes.Tasks
                 if (cell.y < bottomLimit)
                     return false;
 
-                if (upDist == topOffset) return true;
-                if (downDist == bottomOffset) return true;
-                if (leftDist == leftOffset) return true;
-                if (rightDist == rightOffset) return true;
-                return false;
+                var matchTop = upDist == topOffset;
+                var matchBottom = downDist == bottomOffset;
+                var matchLeft = leftDist == leftOffset;
+                var matchRight = rightDist == rightOffset;
+
+                var matches = 0;
+                if (matchTop) matches++;
+                if (matchBottom) matches++;
+                if (matchLeft) matches++;
+                if (matchRight) matches++;
+
+                return matches == 1;
             }
 
             if (upDist < topOffset) return false;
