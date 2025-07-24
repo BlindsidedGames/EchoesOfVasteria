@@ -693,12 +693,12 @@ namespace TimelessEchoes.Tasks
             return PickTaskFromCategory(chosen, worldX);
         }
 
-        private WeightedSpawn PickEnemyEntry(float worldX, bool allowWater, bool allowGrass, bool allowSand)
+        private WeightedSpawn PickEnemyEntry(float worldX, bool allowBottom, bool allowTop, bool allowMiddle)
         {
             var enemyTotalWeight = 0f;
             foreach (var e in enemies)
             {
-                if (!TaskAllowed(e, allowWater, allowGrass, allowSand))
+                if (!TaskAllowed(e, allowBottom, allowTop, allowMiddle))
                     continue;
                 enemyTotalWeight += e.GetWeight(worldX);
             }
@@ -709,7 +709,7 @@ namespace TimelessEchoes.Tasks
             var r = Random.value * enemyTotalWeight;
             foreach (var e in enemies)
             {
-                if (!TaskAllowed(e, allowWater, allowGrass, allowSand))
+                if (!TaskAllowed(e, allowBottom, allowTop, allowMiddle))
                     continue;
                 r -= e.GetWeight(worldX);
                 if (r <= 0f)
