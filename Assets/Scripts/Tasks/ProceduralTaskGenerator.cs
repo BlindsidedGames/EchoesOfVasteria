@@ -456,17 +456,6 @@ namespace TimelessEchoes.Tasks
             return true;
         }
 
-        private Vector3 RandomPosition()
-        {
-            var x = Random.Range(minX, maxX);
-            var y = Random.Range(bottomBuffer, height - topBuffer);
-
-            var worldX = transform.position.x + x;
-            var worldY = transform.position.y + y;
-
-            return new Vector3(worldX, worldY, 0f);
-        }
-
         private Vector3 RandomPositionAtX(float localX)
         {
             var y = Random.Range(bottomBuffer, height - topBuffer);
@@ -528,16 +517,6 @@ namespace TimelessEchoes.Tasks
 
             position = candidates[Random.Range(0, candidates.Count)];
             return true;
-        }
-
-        private bool IsWaterTile(Vector3 worldPos)
-        {
-            EnsureTilemaps();
-            if (terrainMap == null || bottomTerrain == null)
-                return false;
-
-            var cell = terrainMap.WorldToCell(worldPos);
-            return terrainMap.GetTile(cell) == bottomTerrain.tile;
         }
 
         private bool IsEdge(Vector3Int cell, TileBase tile, int offset = 0)
