@@ -65,6 +65,12 @@ Maps are created by the `TilemapChunkGenerator` which lays out water, sand and
 grass tiles. Decorative tiles can be spawned with weighted probabilities and
 optional rotation.
 
+Each terrain type exposes task settings controlling where procedural tasks may
+appear. The `innerEdgeOffset` pulls the allowed spawn zone inward from the tile
+edge, while `outerEdgeOffset` extends the valid edge region outward. When
+`edgeOnly` is enabled on a terrain, tasks spawn only within this band between the
+two offsets.
+
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
