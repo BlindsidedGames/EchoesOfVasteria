@@ -473,6 +473,19 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var baseCell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
+            if (settings.taskSettings.edgeOnly)
+            {
+                var areaLeft = terrainMap.WorldToCell(new Vector3(transform.position.x + minX, transform.position.y, 0f)).x;
+                var areaRight = terrainMap.WorldToCell(new Vector3(transform.position.x + maxX, transform.position.y, 0f)).x;
+                var leftLimit = Mathf.Max(areaLeft, terrainMap.cellBounds.xMin);
+                var rightLimit = Mathf.Min(areaRight, terrainMap.cellBounds.xMax);
+                var offset = settings.taskSettings.edgeOffset;
+                var leftEdge = leftLimit + offset;
+                var rightEdge = rightLimit - offset;
+                if (baseCell.x > leftEdge && baseCell.x < rightEdge)
+                    baseCell.x = Random.value < 0.5f ? leftEdge : rightEdge;
+            }
+
             var areaBottom = terrainMap.WorldToCell(transform.position).y;
             var minY = Mathf.Clamp(areaBottom + bottomBuffer,
                                    terrainMap.cellBounds.yMin,
