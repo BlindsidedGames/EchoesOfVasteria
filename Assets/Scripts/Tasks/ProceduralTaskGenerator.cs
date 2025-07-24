@@ -571,7 +571,7 @@ namespace TimelessEchoes.Tasks
             if (settings == null) return false;
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
-            var isEdge = IsEdge(cell, settings.tile, settings.taskSettings.edgeOffset);
+            var isEdge = IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset);
             if (settings.taskSettings.edgeOnly)
             {
                 var areaBottom = terrainMap.WorldToCell(transform.position).y;
@@ -579,7 +579,10 @@ namespace TimelessEchoes.Tasks
                 if (cell.y < bottomLimit)
                     return false;
 
-                return isEdge;
+                var nearOuter = IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset +
+                                               settings.taskSettings.outerEdgeOffset);
+                var beyondInner = !IsEdge(cell, settings.tile, settings.taskSettings.innerEdgeOffset - 1);
+                return nearOuter && beyondInner;
             }
 
             if (settings.taskSettings.taskEdgeAvoidance > 0)

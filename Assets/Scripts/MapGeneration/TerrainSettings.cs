@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using VinTools.BetterRuleTiles;
+using UnityEngine.Serialization;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -19,7 +20,11 @@ namespace TimelessEchoes.MapGeneration
             public bool edgeOnly;
             [ShowIf(nameof(edgeOnly))]
             [MinValue(0)]
-            public int edgeOffset;
+            [FormerlySerializedAs("edgeOffset")]
+            public int innerEdgeOffset;
+            [ShowIf(nameof(edgeOnly))]
+            [MinValue(0)]
+            public int outerEdgeOffset;
             [HideIf(nameof(edgeOnly))]
             public int taskEdgeAvoidance;
         }
