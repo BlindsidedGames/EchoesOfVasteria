@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 
 namespace TimelessEchoes.Hero
@@ -39,8 +40,8 @@ namespace TimelessEchoes.Hero
                 if (hp != null)
                     hp.Immortal = false; // ensure damage can be forwarded
 
-                bool combat = type == EchoType.Combat || type == EchoType.All;
-                bool disableSkills = type == EchoType.Combat;
+                var combat = type == EchoType.Combat || type == EchoType.All;
+                var disableSkills = type == EchoType.Combat;
 
                 echoHero.AllowAttacks = combat;
 
@@ -68,7 +69,7 @@ namespace TimelessEchoes.Hero
         }
 
         /// <summary>
-        /// Spawn one or more Echoes using the provided configuration.
+        ///     Spawn one or more Echoes using the provided configuration.
         /// </summary>
         /// <param name="config">Settings describing the Echoes to spawn. Can be null.</param>
         /// <param name="baseDuration">Base lifetime for the spawned Echoes.</param>
@@ -78,18 +79,19 @@ namespace TimelessEchoes.Hero
         public static List<HeroController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
             IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int countOverride = 0)
         {
-            float duration = baseDuration;
+            var duration = baseDuration;
             if (applyLifetimeUpgrade)
             {
                 var upgradeController = StatUpgradeController.Instance;
-                var echoUpgrade = upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
+                var echoUpgrade =
+                    upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
                 if (echoUpgrade != null)
                     duration += upgradeController.GetTotalValue(echoUpgrade);
             }
 
-            int count = 1;
-            IEnumerable<Skill> skills = fallbackSkills;
-            EchoType type = EchoType.All;
+            var count = 1;
+            var skills = fallbackSkills;
+            var type = EchoType.All;
 
             if (config != null)
             {
@@ -104,7 +106,7 @@ namespace TimelessEchoes.Hero
             }
 
             var spawned = new List<HeroController>();
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var h = SpawnEcho(skills, duration, type);
                 if (h != null)
