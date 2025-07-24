@@ -1,16 +1,19 @@
 using System;
 using System.IO;
+using UnityEngine;
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
 using UnityEditor;
-using UnityEngine;
-
-#if UNITY_EDITOR
+#endif
 
 namespace TimelessEchoes
 {
+#if UNITY_EDITOR
     [ExecuteInEditMode]
+#endif
     public class EditorScreenshot : MonoBehaviour
     {
+#if UNITY_EDITOR
         [Title("Screenshot Settings")] public Camera targetCamera;
 
         public int width = 1920;
@@ -57,7 +60,6 @@ namespace TimelessEchoes
 
             AssetDatabase.Refresh();
         }
+#endif
     }
 }
-
-#endif

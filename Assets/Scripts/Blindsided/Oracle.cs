@@ -200,13 +200,18 @@ namespace Blindsided
             loaded = false;
             saveData = new GameData();
 
+            var backupPath = _fileName + ".bac";
+
+            if (!ES3.FileExists(_fileName) && ES3.FileExists(backupPath))
+                ES3.RestoreBackup(_fileName);
+
             try
             {
                 saveData = ES3.Load<GameData>(_dataName, _settings);
             }
             catch
             {
-                if (ES3.RestoreBackup(_fileName))
+                if (ES3.FileExists(backupPath) && ES3.RestoreBackup(_fileName))
                 {
                     Debug.LogWarning("Backup restored; re-loading.");
                     saveData = ES3.Load<GameData>(_dataName, _settings);
