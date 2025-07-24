@@ -79,19 +79,6 @@ namespace TimelessEchoes.Hero
 
         public bool UnlimitedAggroRange { get; set; }
 
-        /// <summary>
-        /// Maximum distance echoes will search for combat targets when
-        /// <see cref="UnlimitedAggroRange"/> is enabled.
-        /// </summary>
-        [SerializeField]
-        private float combatAggroRange = 20f;
-
-        public float CombatAggroRange
-        {
-            get => combatAggroRange;
-            set => combatAggroRange = value;
-        }
-
         private Transform currentEnemy;
         private Health currentEnemyHealth;
 
@@ -507,7 +494,7 @@ namespace TimelessEchoes.Hero
             var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
             if (allowAttacks && nearest == null)
             {
-                var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
+                var range = UnlimitedAggroRange ? float.PositiveInfinity : stats.visionRange;
                 nearest = FindNearestEnemy(range);
             }
 
@@ -591,30 +578,8 @@ namespace TimelessEchoes.Hero
             var enemies = Object.FindObjectsOfType<Enemy>();
 #endif
             Vector2 pos = transform.position;
-
-            Camera cam = EnemyActivator.Instance != null
-                ? EnemyActivator.Instance.GetComponent<Camera>()
-                : null;
-            Vector3 min = Vector3.zero, max = Vector3.zero;
-            bool checkBounds = false;
-            if (cam != null)
-            {
-                const float padding = 2f;
-                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
-                checkBounds = true;
-            }
-
             foreach (var enemy in enemies)
             {
-                if (enemy == null) continue;
-                if (checkBounds)
-                {
-                    Vector3 p = enemy.transform.position;
-                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
-                        continue;
-                }
-
                 var hp = enemy.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
                 var d = Vector2.Distance(pos, enemy.transform.position);
@@ -803,20 +768,6 @@ namespace TimelessEchoes.Hero
 
         private void AutoAdvance()
         {
-            if (IsEcho && HeroController.Instance != null && HeroController.Instance != this)
-            {
-                var mainHero = HeroController.Instance.transform;
-                var dist = Vector2.Distance(transform.position, mainHero.position);
-                var enemy = FindNearestEnemy(combatAggroRange);
-                if (enemy == null && dist > combatAggroRange)
-                {
-                    if (setter.target != mainHero)
-                        setter.target = mainHero;
-                    ai.canMove = true;
-                    return;
-                }
-            }
-
             if (idleWalkTarget == null)
             {
                 idleWalkTarget = new GameObject("IdleWalkTarget").transform;

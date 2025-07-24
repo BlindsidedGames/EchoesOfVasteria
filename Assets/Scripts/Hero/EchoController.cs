@@ -25,7 +25,6 @@ namespace TimelessEchoes.Hero
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
-        private float defaultAggroRange;
 
         /// <summary>
         ///     Returns true once <see cref="Init" /> has completed.
@@ -39,8 +38,6 @@ namespace TimelessEchoes.Hero
             remaining = lifetime;
             if (!AllEchoes.Contains(this))
                 AllEchoes.Add(this);
-            if (hero != null)
-                defaultAggroRange = hero.CombatAggroRange;
         }
 
         private void OnEnable()
@@ -64,11 +61,6 @@ namespace TimelessEchoes.Hero
         {
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
-            if (hero != null)
-            {
-                hero.UnlimitedAggroRange = false;
-                hero.CombatAggroRange = defaultAggroRange;
-            }
         }
 
         /// <summary>
@@ -89,8 +81,6 @@ namespace TimelessEchoes.Hero
                 // skill list as "all skills" instead of "combat only".
                 var combatOnly = combatEnabled && disableSkills;
                 hero.UnlimitedAggroRange = combatOnly;
-                if (combatOnly)
-                    hero.CombatAggroRange = defaultAggroRange;
             }
 
             Initialized = true;
@@ -149,10 +139,7 @@ namespace TimelessEchoes.Hero
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
             if (hero != null)
-            {
                 hero.UnlimitedAggroRange = false;
-                hero.CombatAggroRange = defaultAggroRange;
-            }
         }
 
         private void UpdateIndicators()
