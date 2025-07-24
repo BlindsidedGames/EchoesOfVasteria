@@ -11,7 +11,7 @@ namespace TimelessEchoes.Tasks
 {
     [ManageableData]
     [CreateAssetMenu(fileName = "TaskData", menuName = "SO/Task Data")]
-    public class TaskData : ScriptableObject
+    public class TaskData : ScriptableObject, IWeighted
     {
         [TitleGroup("General")]
         public string taskName;

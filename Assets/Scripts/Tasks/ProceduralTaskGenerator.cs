@@ -277,29 +277,9 @@ namespace TimelessEchoes.Tasks
             var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
             var taskMap = new Dictionary<Vector3, MonoBehaviour>();
-            for (var i = 0; i < bottomCount; i++)
-            {
-                for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, true, false, false,
-                            spawnedTasks, taskPositions, taskMap))
-                        break;
-            }
-
-            for (var i = 0; i < middleCount; i++)
-            {
-                for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, true, false,
-                            spawnedTasks, taskPositions, taskMap))
-                        break;
-            }
-
-            for (var i = 0; i < topCount; i++)
-            {
-                for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, false, false, true,
-                            spawnedTasks, taskPositions, taskMap))
-                        break;
-            }
+            SpawnTasks(bottomCount, localMinX, localMaxX, parent, clearExisting, true, false, false, spawnedTasks, taskPositions, taskMap);
+            SpawnTasks(middleCount, localMinX, localMaxX, parent, clearExisting, false, true, false, spawnedTasks, taskPositions, taskMap);
+            SpawnTasks(topCount, localMinX, localMaxX, parent, clearExisting, false, false, true, spawnedTasks, taskPositions, taskMap);
 
 
             for (var i = 0; i < enemyCount; i++)
@@ -307,7 +287,7 @@ namespace TimelessEchoes.Tasks
                 var localX = Random.Range(localMinX, localMaxX);
                 var worldX = transform.position.x + localX;
 
-                var entry = PickEnemyEntry(worldX, true, true, true);
+                var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
                 if (entry == null || entry.prefab == null)
                     continue;
 
@@ -407,6 +387,24 @@ namespace TimelessEchoes.Tasks
                     controller.AddTaskObject(pair.obj);
 
                 controller.ResetTasks();
+            }
+        }
+
+        private void SpawnTasks(int count, float localMinX, float localMaxX, Transform parent, bool clearExisting,
+            bool requireBottomTask, bool requireMiddleTask, bool requireTopTask,
+            List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
+            Dictionary<Vector3, MonoBehaviour> taskMap)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                {
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, requireBottomTask, requireMiddleTask, requireTopTask,
+                            spawnedTasks, taskPositions, taskMap))
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -667,101 +665,60 @@ namespace TimelessEchoes.Tasks
 
         private TaskData PickTaskFromCategory(WeightedTaskCategory category, float worldX)
         {
-            var taskTotalWeight = 0f;
-            foreach (var t in category.tasks)
+            return PickEntry(category.tasks, worldX, t =>
             {
                 if (!TaskAllowed(t, true, true, true))
-                    continue;
+                    return false;
                 if (t != null && t.taskPrefab != null && t.taskPrefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                    continue;
+                    return false;
                 if (t != null)
                 {
                     if (t.requiredQuest != null && !QuestCompleted(t.requiredQuest.questId))
-                        continue;
+                        return false;
                 }
-                taskTotalWeight += t.GetWeight(worldX);
-            }
-
-            if (taskTotalWeight <= 0f)
-                return null;
-
-            var r = Random.value * taskTotalWeight;
-            foreach (var t in category.tasks)
-            {
-                if (!TaskAllowed(t, true, true, true))
-                    continue;
-                if (t != null && t.taskPrefab != null && t.taskPrefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                    continue;
-                if (t != null)
-                {
-                    if (t.requiredQuest != null && !QuestCompleted(t.requiredQuest.questId))
-                        continue;
-                }
-                r -= t.GetWeight(worldX);
-                if (r > 0f) continue;
-                return t;
-            }
-
-            return null;
+                return true;
+            });
         }
 
         private TaskData PickTaskEntry(float worldX)
         {
-            var categoryTotalWeight = 0f;
-            foreach (var c in taskCategories)
-                categoryTotalWeight += Mathf.Max(0f, c.weight);
-
-            if (categoryTotalWeight <= 0f)
-                return null;
-
-            var rCat = Random.value * categoryTotalWeight;
-            WeightedTaskCategory chosen = null;
-            foreach (var c in taskCategories)
-            {
-                rCat -= Mathf.Max(0f, c.weight);
-                if (rCat <= 0f)
-                {
-                    chosen = c;
-                    break;
-                }
-            }
-
+            var chosen = PickEntry(taskCategories, worldX, _ => true);
             if (chosen == null)
                 return null;
-
             return PickTaskFromCategory(chosen, worldX);
         }
 
-        private WeightedSpawn PickEnemyEntry(float worldX, bool allowBottom, bool allowTop, bool allowMiddle)
+        private T PickEntry<T>(List<T> entries, float worldX, Predicate<T> filter) where T : IWeighted
         {
-            var enemyTotalWeight = 0f;
-            foreach (var e in enemies)
+            var totalWeight = 0f;
+            foreach (var e in entries)
             {
-                if (!TaskAllowed(e, allowBottom, allowTop, allowMiddle))
-                    continue;
-                enemyTotalWeight += e.GetWeight(worldX);
+                if (filter(e))
+                {
+                    totalWeight += e.GetWeight(worldX);
+                }
             }
 
-            if (enemyTotalWeight <= 0f)
-                return null;
+            if (totalWeight <= 0f)
+                return default;
 
-            var r = Random.value * enemyTotalWeight;
-            foreach (var e in enemies)
+            var r = Random.value * totalWeight;
+            foreach (var e in entries)
             {
-                if (!TaskAllowed(e, allowBottom, allowTop, allowMiddle))
+                if (!filter(e))
                     continue;
                 r -= e.GetWeight(worldX);
                 if (r <= 0f)
                     return e;
             }
 
-            return null;
+            return default;
         }
 
         [Serializable]
         [InlineProperty]
         [HideLabel]
-        public class WeightedSpawn
+        public class WeightedSpawn : IWeighted
         {
             [Required] public GameObject prefab;
 
@@ -787,10 +744,15 @@ namespace TimelessEchoes.Tasks
         [Serializable]
         [InlineProperty]
         [HideLabel]
-        public class WeightedTaskCategory
+        public class WeightedTaskCategory : IWeighted
         {
             public float weight = 1f;
             public List<TaskData> tasks = new();
+
+            public float GetWeight(float worldX)
+            {
+                return Mathf.Max(0f, weight);
+            }
         }
     }
 }
