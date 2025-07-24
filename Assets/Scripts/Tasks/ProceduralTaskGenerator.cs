@@ -620,18 +620,20 @@ namespace TimelessEchoes.Tasks
                 if (cell.y < bottomLimit)
                     return false;
 
-                var matchTop = upDist == topOffset;
-                var matchBottom = downDist == bottomOffset;
-                var matchLeft = leftDist == leftOffset;
-                var matchRight = rightDist == rightOffset;
+                if (upDist == topOffset || downDist == bottomOffset || leftDist == leftOffset || rightDist == rightOffset)
+                    return true;
 
-                var matches = 0;
-                if (matchTop) matches++;
-                if (matchBottom) matches++;
-                if (matchLeft) matches++;
-                if (matchRight) matches++;
+                // Allow diagonal corners when cardinal directions are inside the offset
+                if (terrainMap.GetTile(cell + new Vector3Int(1, 1, 0)) != tile && upDist >= topOffset && rightDist >= rightOffset)
+                    return true;
+                if (terrainMap.GetTile(cell + new Vector3Int(-1, 1, 0)) != tile && upDist >= topOffset && leftDist >= leftOffset)
+                    return true;
+                if (terrainMap.GetTile(cell + new Vector3Int(1, -1, 0)) != tile && downDist >= bottomOffset && rightDist >= rightOffset)
+                    return true;
+                if (terrainMap.GetTile(cell + new Vector3Int(-1, -1, 0)) != tile && downDist >= bottomOffset && leftDist >= leftOffset)
+                    return true;
 
-                return matches == 1;
+                return false;
             }
 
             if (upDist < topOffset) return false;
