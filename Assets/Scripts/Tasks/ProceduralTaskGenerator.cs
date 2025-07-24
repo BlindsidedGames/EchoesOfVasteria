@@ -638,6 +638,19 @@ namespace TimelessEchoes.Tasks
             if (downDist < bottomOffset) return false;
             if (leftDist < leftOffset) return false;
             if (rightDist < rightOffset) return false;
+
+            // Validate diagonals when both vertical and horizontal offsets are specified
+            for (var dx = -leftOffset; dx <= rightOffset; dx++)
+            {
+                for (var dy = -bottomOffset; dy <= topOffset; dy++)
+                {
+                    if (dx == 0 || dy == 0) continue; // skip purely horizontal/vertical checks
+                    var checkPos = cell + new Vector3Int(dx, dy, 0);
+                    if (terrainMap.GetTile(checkPos) != tile)
+                        return false;
+                }
+            }
+
             return true;
         }
 
