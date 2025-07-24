@@ -11,8 +11,8 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(IEnumerable<Skill> skills, float duration, bool combat,
-            bool disableSkills = false)
+        public static HeroController SpawnEcho(IEnumerable<Skill> skills, float duration,
+            EchoType type = EchoType.All)
         {
             var hero = HeroController.Instance;
             if (hero == null)
@@ -39,6 +39,9 @@ namespace TimelessEchoes.Hero
                 if (hp != null)
                     hp.Immortal = false; // ensure damage can be forwarded
 
+                bool combat = type == EchoType.Combat || type == EchoType.All;
+                bool disableSkills = type == EchoType.Combat;
+
                 echoHero.AllowAttacks = combat;
 
                 if (disableSkills)
@@ -53,15 +56,15 @@ namespace TimelessEchoes.Hero
                 }
 
                 var echo = obj.AddComponent<EchoController>();
-                echo.Init(skills, duration, disableSkills, combat);
+                echo.Init(skills, duration, type);
             }
 
             return echoHero;
         }
 
-        public static HeroController SpawnEcho(Skill skill, float duration, bool combat, bool disableSkills = false)
+        public static HeroController SpawnEcho(Skill skill, float duration, EchoType type = EchoType.All)
         {
-            return SpawnEcho(new List<Skill> { skill }, duration, combat, disableSkills);
+            return SpawnEcho(new List<Skill> { skill }, duration, type);
         }
 
         /// <summary>
@@ -86,16 +89,14 @@ namespace TimelessEchoes.Hero
 
             int count = 1;
             IEnumerable<Skill> skills = fallbackSkills;
-            bool disable = false;
-            bool combat = false;
+            EchoType type = EchoType.All;
 
             if (config != null)
             {
                 count = countOverride > 0 ? countOverride : Mathf.Max(1, config.echoCount);
                 if (config.capableSkills != null && config.capableSkills.Count > 0)
                     skills = config.capableSkills;
-                combat = config.combatEnabled;
-                disable = config.disableSkills;
+                type = config.echoType;
             }
             else if (countOverride > 0)
             {
@@ -105,7 +106,7 @@ namespace TimelessEchoes.Hero
             var spawned = new List<HeroController>();
             for (int i = 0; i < count; i++)
             {
-                var h = SpawnEcho(skills, duration, combat, disable);
+                var h = SpawnEcho(skills, duration, type);
                 if (h != null)
                     spawned.Add(h);
             }

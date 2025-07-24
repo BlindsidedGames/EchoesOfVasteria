@@ -40,7 +40,7 @@ namespace TimelessEchoes.Hero
                 if (echoHero == null || echoHero == hero)
                     continue;
 
-                if (!echo.combatEnabled)
+                if (echo.Type != EchoType.Combat && echo.Type != EchoType.All)
                     continue;
 
                 var dist = Vector2.Distance(pos, echo.transform.position);

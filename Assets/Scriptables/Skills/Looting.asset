@@ -34,8 +34,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 0
-      combatEnabled: 1
+      echoType: 1
     echoDuration: 10
     chance: 0.1
     statUpgrade: {fileID: 0}
@@ -48,8 +47,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 0
-      combatEnabled: 1
+      echoType: 1
     echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
@@ -62,8 +60,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 1
-      combatEnabled: 1
+      echoType: 0
     echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 0}
@@ -76,8 +73,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 0
-      combatEnabled: 1
+      echoType: 1
     echoDuration: 10
     chance: 0.15
     statUpgrade: {fileID: 0}
@@ -90,8 +86,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 0
-      combatEnabled: 1
+      echoType: 1
     echoDuration: 10
     chance: 0.3
     statUpgrade: {fileID: 0}
@@ -104,8 +99,7 @@ MonoBehaviour:
     echoSpawnConfig:
       echoCount: 1
       capableSkills: []
-      disableSkills: 0
-      combatEnabled: 1
+      echoType: 1
     echoDuration: 10
     chance: 0.5
     statUpgrade: {fileID: 0}

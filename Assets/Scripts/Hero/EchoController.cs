@@ -18,6 +18,7 @@ namespace TimelessEchoes.Hero
         public float lifetime = 10f;
         public bool disableSkills;
         public bool combatEnabled;
+        public EchoType Type { get; private set; } = EchoType.All;
 
         // Skill indicator references are stored on the hero controller
         // so they can be configured on the main hero prefab.
@@ -51,12 +52,12 @@ namespace TimelessEchoes.Hero
             if (!AllEchoes.Contains(this))
                 AllEchoes.Add(this);
 
-            if (combatEnabled && !CombatEchoes.Contains(this))
+            if ((Type == EchoType.Combat || Type == EchoType.All) && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
 
             UpdateIndicators();
 
-            if (hero != null && taskController != null && !disableSkills)
+            if (hero != null && taskController != null && Type != EchoType.Combat)
                 AssignTask();
         }
 
@@ -74,13 +75,14 @@ namespace TimelessEchoes.Hero
         /// <summary>
         ///     Configure the echo after it is spawned.
         /// </summary>
-        public void Init(IEnumerable<Skill> skills, float duration, bool disable, bool combat)
+        public void Init(IEnumerable<Skill> skills, float duration, EchoType type)
         {
             capableSkills = skills != null ? new List<Skill>(skills) : new List<Skill>();
             lifetime = duration;
             remaining = duration;
-            disableSkills = disable;
-            combatEnabled = combat;
+            Type = type;
+            disableSkills = type == EchoType.Combat;
+            combatEnabled = type == EchoType.Combat || type == EchoType.All;
 
             if (hero != null)
             {
@@ -166,7 +168,7 @@ namespace TimelessEchoes.Hero
                     obj.SetActive(state);
             }
 
-            SetActive(hero.CombatIndicator, combatEnabled);
+            SetActive(hero.CombatIndicator, Type == EchoType.Combat || Type == EchoType.All);
             SetActive(hero.MiningIndicator, false);
             SetActive(hero.WoodcuttingIndicator, false);
             SetActive(hero.FishingIndicator, false);
@@ -175,7 +177,7 @@ namespace TimelessEchoes.Hero
 
             var hasSkills = capableSkills != null && capableSkills.Count > 0;
 
-            if (!hasSkills && !disableSkills)
+            if (!hasSkills && Type != EchoType.Combat && Type != EchoType.Selective)
             {
                 SetActive(hero.MiningIndicator, true);
                 SetActive(hero.WoodcuttingIndicator, true);
@@ -217,7 +219,7 @@ namespace TimelessEchoes.Hero
             if (hero == null || taskController == null)
                 return;
 
-            if (disableSkills)
+            if (Type == EchoType.Combat)
                 return;
 
             if (capableSkills == null || capableSkills.Count == 0)
