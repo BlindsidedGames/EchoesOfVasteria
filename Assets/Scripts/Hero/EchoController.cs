@@ -18,6 +18,7 @@ namespace TimelessEchoes.Hero
         public float lifetime = 10f;
         public bool disableSkills;
         public bool combatEnabled;
+        public float maxRange = 20f;
 
         // Skill indicator references are stored on the hero controller
         // so they can be configured on the main hero prefab.
@@ -101,6 +102,11 @@ namespace TimelessEchoes.Hero
             {
                 Destroy(gameObject);
                 return;
+            }
+
+            if (Vector3.Distance(transform.position, HeroController.Instance.transform.position) > maxRange)
+            {
+                transform.position = HeroController.Instance.transform.position;
             }
 
             if (!disableSkills && taskController != null)

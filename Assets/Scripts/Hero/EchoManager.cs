@@ -12,7 +12,7 @@ namespace TimelessEchoes.Hero
     public static class EchoManager
     {
         public static HeroController SpawnEcho(IEnumerable<Skill> skills, float duration, bool combat,
-            bool disableSkills = false)
+            bool disableSkills = false, float maxRange = 20f)
         {
             var hero = HeroController.Instance;
             if (hero == null)
@@ -50,14 +50,15 @@ namespace TimelessEchoes.Hero
 
                 var echo = obj.AddComponent<EchoController>();
                 echo.Init(skills, duration, disableSkills, combat);
+                echo.maxRange = maxRange;
             }
 
             return echoHero;
         }
 
-        public static HeroController SpawnEcho(Skill skill, float duration, bool combat, bool disableSkills = false)
+        public static HeroController SpawnEcho(Skill skill, float duration, bool combat, bool disableSkills = false, float maxRange = 20f)
         {
-            return SpawnEcho(new List<Skill> { skill }, duration, combat, disableSkills);
+            return SpawnEcho(new List<Skill> { skill }, duration, combat, disableSkills, maxRange);
         }
     }
 }
