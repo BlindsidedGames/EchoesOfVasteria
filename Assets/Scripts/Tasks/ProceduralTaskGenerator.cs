@@ -485,10 +485,13 @@ namespace TimelessEchoes.Tasks
             var worldX = transform.position.x + localX;
             var baseCell = terrainMap.WorldToCell(new Vector3(worldX, transform.position.y, 0f));
 
-            var maxY = Mathf.Clamp(terrainMap.cellBounds.yMax - topBuffer,
+            var areaBottom = terrainMap.WorldToCell(transform.position).y;
+            var minY = Mathf.Clamp(areaBottom + bottomBuffer,
                                    terrainMap.cellBounds.yMin,
                                    terrainMap.cellBounds.yMax);
-            var minY = terrainMap.cellBounds.yMin + bottomBuffer;
+            var maxY = Mathf.Clamp(areaBottom + Mathf.RoundToInt(height) - topBuffer,
+                                   terrainMap.cellBounds.yMin,
+                                   terrainMap.cellBounds.yMax);
 
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
@@ -593,7 +596,8 @@ namespace TimelessEchoes.Tasks
             var isEdge = IsEdge(cell, settings.tile, settings.taskSettings.edgeOffset);
             if (settings.taskSettings.edgeOnly)
             {
-                var bottomLimit = terrainMap.cellBounds.yMin + bottomBuffer;
+                var areaBottom = terrainMap.WorldToCell(transform.position).y;
+                var bottomLimit = Mathf.Max(areaBottom + bottomBuffer, terrainMap.cellBounds.yMin);
                 if (cell.y < bottomLimit)
                     return false;
                 return isEdge;
