@@ -603,50 +603,40 @@ namespace TimelessEchoes.Tasks
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
 
+            if (!settings.taskSettings.borderOnly)
+            {
+                return IsInCore(cell, settings, tile, 0);
+            }
+
+            var inCore = IsInCore(cell, settings, tile, 0);
+            var inInnerCore = IsInCore(cell, settings, tile, 1);
+            return inCore && !inInnerCore;
+        }
+
+        private bool IsInCore(Vector3Int cell, TerrainSettings settings, TileBase tile, int extraOffset)
+        {
+            if (terrainMap.GetTile(cell) != tile) return false;
+
             var upDist = CountSame(cell + Vector3Int.up, Vector3Int.up, tile);
             var downDist = CountSame(cell + Vector3Int.down, Vector3Int.down, tile);
             var leftDist = CountSame(cell + Vector3Int.left, Vector3Int.left, tile);
             var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
 
-            var topOffset = settings.taskSettings.topBorderOffset;
-            var bottomOffset = settings.taskSettings.bottomBorderOffset;
-            var leftOffset = settings.taskSettings.leftBorderOffset;
-            var rightOffset = settings.taskSettings.rightBorderOffset;
-
-            if (settings.taskSettings.borderOnly)
-            {
-                var areaBottom = terrainMap.WorldToCell(transform.position).y;
-                var bottomLimit = Mathf.Max(areaBottom + bottomBuffer, terrainMap.cellBounds.yMin);
-                if (cell.y < bottomLimit)
-                    return false;
-
-                if (upDist == topOffset || downDist == bottomOffset || leftDist == leftOffset || rightDist == rightOffset)
-                    return true;
-
-                // Allow diagonal corners when cardinal directions are inside the offset
-                if (terrainMap.GetTile(cell + new Vector3Int(1, 1, 0)) != tile && upDist == topOffset && rightDist == rightOffset)
-                    return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(-1, 1, 0)) != tile && upDist == topOffset && leftDist == leftOffset)
-                    return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(1, -1, 0)) != tile && downDist == bottomOffset && rightDist == rightOffset)
-                    return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(-1, -1, 0)) != tile && downDist == bottomOffset && leftDist == leftOffset)
-                    return true;
-
-                return false;
-            }
+            var topOffset = settings.taskSettings.topBorderOffset + extraOffset;
+            var bottomOffset = settings.taskSettings.bottomBorderOffset + extraOffset;
+            var leftOffset = settings.taskSettings.leftBorderOffset + extraOffset;
+            var rightOffset = settings.taskSettings.rightBorderOffset + extraOffset;
 
             if (upDist < topOffset) return false;
             if (downDist < bottomOffset) return false;
             if (leftDist < leftOffset) return false;
             if (rightDist < rightOffset) return false;
 
-            // Validate diagonals when both vertical and horizontal offsets are specified
             for (var dx = -leftOffset; dx <= rightOffset; dx++)
             {
                 for (var dy = -bottomOffset; dy <= topOffset; dy++)
                 {
-                    if (dx == 0 || dy == 0) continue; // skip purely horizontal/vertical checks
+                    if (dx == 0 || dy == 0) continue;
                     var checkPos = cell + new Vector3Int(dx, dy, 0);
                     if (terrainMap.GetTile(checkPos) != tile)
                         return false;
