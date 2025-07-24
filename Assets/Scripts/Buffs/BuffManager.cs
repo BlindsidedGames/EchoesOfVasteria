@@ -29,12 +29,6 @@ namespace TimelessEchoes.Buffs
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
 
-        private HeroController SpawnEcho(IEnumerable<Skill> skills, bool combat, bool disableSkills)
-        {
-            // Use EchoManager to ensure spawned echoes are registered correctly
-            // with an EchoController so enemies can target them.
-            return EchoManager.SpawnEcho(skills, float.PositiveInfinity, combat, disableSkills);
-        }
 
         public int UnlockedSlots
         {
@@ -191,14 +185,13 @@ namespace TimelessEchoes.Buffs
             if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
             {
                 var needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
-                var skills = recipe.echoSpawnConfig.capableSkills;
-                for (var i = 0; i < needed; i++)
+                if (needed > 0)
                 {
-                    var combat = recipe.echoSpawnConfig.combatEnabled;
-                    var disable = recipe.echoSpawnConfig.disableSkills;
-                    var c = SpawnEcho(skills, combat, disable);
-                    if (c != null)
-                        buff.echoes.Add(c);
+                    var spawned = EchoManager.SpawnEchoes(recipe.echoSpawnConfig, float.PositiveInfinity,
+                        null, false, needed);
+                    foreach (var c in spawned)
+                        if (c != null)
+                            buff.echoes.Add(c);
                 }
             }
 
