@@ -260,7 +260,13 @@ namespace TimelessEchoes.Hero
         private void OnEnable()
         {
             if (taskController == null)
-                taskController = GetComponent<TaskController>() ?? GetComponentInParent<TaskController>();
+            {
+                var echo = GetComponent<EchoController>();
+                bool skip = IsEcho && echo != null &&
+                            (echo.Type == EchoType.Combat || echo.Type == EchoType.TaskOnly);
+                if (!skip)
+                    taskController = GetComponent<TaskController>() ?? GetComponentInParent<TaskController>();
+            }
 
             if (buffController == null)
             {
@@ -820,7 +826,7 @@ namespace TimelessEchoes.Hero
 
                 if (enemy == null)
                 {
-                    if (echo != null && echo.disableSkills)
+                    if (echo != null && echo.Type == EchoType.Combat)
                     {
                         if (setter.target != mainHero)
                             setter.target = mainHero;
