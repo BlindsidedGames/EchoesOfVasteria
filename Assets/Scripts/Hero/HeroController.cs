@@ -518,12 +518,6 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
-            if (IsEcho)
-            {
-                setter.target = Instance.transform;
-                return;
-            }
-
             if (state == State.Combat)
             {
                 Log("Hero exiting combat", TELogCategory.Combat, this);
@@ -588,11 +582,6 @@ namespace TimelessEchoes.Hero
             {
                 var hp = enemy.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-
-                var screenPoint = Camera.main.WorldToViewportPoint(enemy.transform.position);
-                var onScreen = screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
-                if (!onScreen && !UnlimitedAggroRange) continue;
-
                 var d = Vector2.Distance(pos, enemy.transform.position);
                 if (d <= range && d < best)
                 {
