@@ -49,11 +49,10 @@ namespace TimelessEchoes.Hero
                 {
                     var tc = obj.GetComponent<TaskController>();
                     if (tc != null)
-                    {
                         Object.Destroy(tc);
-                        echoHero.SetTask(null);
-                        echoHero.ClearTaskController();
-                    }
+
+                    echoHero.SetTask(null);
+                    echoHero.ClearTaskController();
                 }
 
                 var echo = obj.AddComponent<EchoController>();
