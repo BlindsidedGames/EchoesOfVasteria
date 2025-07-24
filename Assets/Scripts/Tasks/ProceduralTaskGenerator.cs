@@ -624,13 +624,13 @@ namespace TimelessEchoes.Tasks
                     return true;
 
                 // Allow diagonal corners when cardinal directions are inside the offset
-                if (terrainMap.GetTile(cell + new Vector3Int(1, 1, 0)) != tile && upDist >= topOffset && rightDist >= rightOffset)
+                if (terrainMap.GetTile(cell + new Vector3Int(1, 1, 0)) != tile && upDist == topOffset && rightDist == rightOffset)
                     return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(-1, 1, 0)) != tile && upDist >= topOffset && leftDist >= leftOffset)
+                if (terrainMap.GetTile(cell + new Vector3Int(-1, 1, 0)) != tile && upDist == topOffset && leftDist == leftOffset)
                     return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(1, -1, 0)) != tile && downDist >= bottomOffset && rightDist >= rightOffset)
+                if (terrainMap.GetTile(cell + new Vector3Int(1, -1, 0)) != tile && downDist == bottomOffset && rightDist == rightOffset)
                     return true;
-                if (terrainMap.GetTile(cell + new Vector3Int(-1, -1, 0)) != tile && downDist >= bottomOffset && leftDist >= leftOffset)
+                if (terrainMap.GetTile(cell + new Vector3Int(-1, -1, 0)) != tile && downDist == bottomOffset && leftDist == leftOffset)
                     return true;
 
                 return false;
