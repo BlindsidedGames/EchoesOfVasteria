@@ -20,8 +20,6 @@ namespace TimelessEchoes.Tasks
     [RequireComponent(typeof(TaskController))]
     public class ProceduralTaskGenerator : MonoBehaviour
     {
-        [SerializeField]
-        private MapGenerationConfig config;
         [TabGroup("Settings", "Area")] [SerializeField]
         [HideInInspector]
         private float minX;
@@ -116,7 +114,7 @@ namespace TimelessEchoes.Tasks
         {
             if (controller == null)
                 controller = GetComponent<TaskController>();
-            ApplyConfig();
+            ApplyConfig(GameManager.CurrentGenerationConfig);
 
             var chunk = GetComponent<TilemapChunkGenerator>();
             chunk?.AssignTilemaps(this);
@@ -124,30 +122,29 @@ namespace TimelessEchoes.Tasks
             EnsureTilemaps();
         }
 
-        private void ApplyConfig()
+        private void ApplyConfig(MapGenerationConfig cfg)
         {
-            if (config == null) return;
-
-            minX = config.taskGeneratorSettings.minX;
-            height = config.taskGeneratorSettings.height;
-            enemyDensity = config.taskGeneratorSettings.enemyDensity;
-            topBuffer = config.taskGeneratorSettings.topBuffer;
-            bottomBuffer = config.taskGeneratorSettings.bottomBuffer;
-            blockingMask = config.taskGeneratorSettings.blockingMask;
-            otherTaskEdgeOffset = config.taskGeneratorSettings.otherTaskEdgeOffset;
-            enemies = config.taskGeneratorSettings.enemies;
+            if (cfg == null) return;
+            minX = cfg.taskGeneratorSettings.minX;
+            height = cfg.taskGeneratorSettings.height;
+            enemyDensity = cfg.taskGeneratorSettings.enemyDensity;
+            topBuffer = cfg.taskGeneratorSettings.topBuffer;
+            bottomBuffer = cfg.taskGeneratorSettings.bottomBuffer;
+            blockingMask = cfg.taskGeneratorSettings.blockingMask;
+            otherTaskEdgeOffset = cfg.taskGeneratorSettings.otherTaskEdgeOffset;
+            enemies = cfg.taskGeneratorSettings.enemies;
 
             taskCategories = new List<WeightedTaskCategory>
             {
-                config.taskGeneratorSettings.woodcutting,
-                config.taskGeneratorSettings.mining,
-                config.taskGeneratorSettings.farming,
-                config.taskGeneratorSettings.fishing,
-                config.taskGeneratorSettings.looting
+                cfg.taskGeneratorSettings.woodcutting,
+                cfg.taskGeneratorSettings.mining,
+                cfg.taskGeneratorSettings.farming,
+                cfg.taskGeneratorSettings.fishing,
+                cfg.taskGeneratorSettings.looting
             };
 
-            npcTasks = config.taskGeneratorSettings.npcTasks;
-            minTaskDistance = config.taskGeneratorSettings.minTaskDistance;
+            npcTasks = cfg.taskGeneratorSettings.npcTasks;
+            minTaskDistance = cfg.taskGeneratorSettings.minTaskDistance;
         }
 
         private void OnDrawGizmos()

@@ -12,7 +12,6 @@ namespace TimelessEchoes.MapGeneration
 {
     public class TilemapChunkGenerator : MonoBehaviour
     {
-        [SerializeField] private MapGenerationConfig config;
 
         [Header("Tilemaps")] [TabGroup("References")] [SerializeField]
         private Tilemap terrainMap;
@@ -68,7 +67,7 @@ namespace TimelessEchoes.MapGeneration
 
         private void Awake()
         {
-            ApplyConfig();
+            ApplyConfig(GameManager.CurrentGenerationConfig);
             var taskGen = GetComponent<ProceduralTaskGenerator>();
             AssignTilemaps(taskGen);
             rng = randomizeSeed ? new Random() : new Random(seed);
@@ -76,23 +75,23 @@ namespace TimelessEchoes.MapGeneration
             prevGrassDepth = -1;
         }
 
-        private void ApplyConfig()
+        private void ApplyConfig(MapGenerationConfig cfg)
         {
-            if (config == null) return;
+            if (cfg == null) return;
 
             if (terrainMap == null)
-                terrainMap = config.tilemapChunkSettings.terrainMap;
+                terrainMap = cfg.tilemapChunkSettings.terrainMap;
             if (decorMap == null)
-                decorMap = config.tilemapChunkSettings.decorMap;
-            bottomTerrain = config.tilemapChunkSettings.bottomTerrain;
-            middleTerrain = config.tilemapChunkSettings.middleTerrain;
-            topTerrain = config.tilemapChunkSettings.topTerrain;
-            minAreaWidth = config.tilemapChunkSettings.minAreaWidth;
-            edgeWaviness = config.tilemapChunkSettings.edgeWaviness;
-            sandDepthRange = config.tilemapChunkSettings.middleDepthRange;
-            grassDepthRange = config.tilemapChunkSettings.topDepthRange;
-            seed = config.tilemapChunkSettings.seed;
-            randomizeSeed = config.tilemapChunkSettings.randomizeSeed;
+                decorMap = cfg.tilemapChunkSettings.decorMap;
+            bottomTerrain = cfg.tilemapChunkSettings.bottomTerrain;
+            middleTerrain = cfg.tilemapChunkSettings.middleTerrain;
+            topTerrain = cfg.tilemapChunkSettings.topTerrain;
+            minAreaWidth = cfg.tilemapChunkSettings.minAreaWidth;
+            edgeWaviness = cfg.tilemapChunkSettings.edgeWaviness;
+            sandDepthRange = cfg.tilemapChunkSettings.middleDepthRange;
+            grassDepthRange = cfg.tilemapChunkSettings.topDepthRange;
+            seed = cfg.tilemapChunkSettings.seed;
+            randomizeSeed = cfg.tilemapChunkSettings.randomizeSeed;
         }
 
         public void AssignTilemaps(ProceduralTaskGenerator generator)

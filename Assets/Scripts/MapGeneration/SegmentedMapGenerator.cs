@@ -14,8 +14,6 @@ namespace TimelessEchoes.MapGeneration
     [RequireComponent(typeof(TaskController))]
     public class SegmentedMapGenerator : MonoBehaviour
     {
-        [SerializeField]
-        private MapGenerationConfig config;
 
         [SerializeField] private Vector2Int segmentSize = new(64, 18);
         [SerializeField] private Transform segmentParent;
@@ -40,16 +38,16 @@ namespace TimelessEchoes.MapGeneration
             chunkGenerator = GetComponent<TilemapChunkGenerator>();
             taskGenerator = GetComponent<ProceduralTaskGenerator>();
             controller = GetComponent<TaskController>();
-            ApplyConfig();
+            ApplyConfig(GameManager.CurrentGenerationConfig);
             if (segmentParent == null)
                 segmentParent = transform;
         }
 
-        private void ApplyConfig()
+        private void ApplyConfig(MapGenerationConfig cfg)
         {
-            if (config == null) return;
+            if (cfg == null) return;
 
-            segmentSize = config.segmentedMapSettings.segmentSize;
+            segmentSize = cfg.segmentedMapSettings.segmentSize;
         }
 
         private IEnumerator Start()
