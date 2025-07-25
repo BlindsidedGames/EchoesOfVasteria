@@ -31,6 +31,7 @@ namespace TimelessEchoes
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+        public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
         [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
         [SerializeField] private GameObject gravestonePrefab;
         [SerializeField] private GameObject reaperPrefab;
@@ -63,6 +64,10 @@ namespace TimelessEchoes
         public GameObject ReaperPrefab => reaperPrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
+
+        [Header("Map Generation")]
+        [SerializeField] private List<MapGenerationConfig> generationConfigs = new();
+        [SerializeField] private int currentConfigIndex;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -274,6 +279,15 @@ namespace TimelessEchoes
         private IEnumerator StartRunRoutine()
         {
             yield return StartCoroutine(CleanupMapRoutine());
+            if (generationConfigs != null && generationConfigs.Count > 0)
+            {
+                var index = Mathf.Clamp(currentConfigIndex, 0, generationConfigs.Count - 1);
+                CurrentGenerationConfig = generationConfigs[index];
+            }
+            else
+            {
+                CurrentGenerationConfig = null;
+            }
             if (statTracker == null)
             {
                 statTracker = GameplayStatTracker.Instance;
