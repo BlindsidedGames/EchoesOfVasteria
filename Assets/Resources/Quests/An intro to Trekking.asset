@@ -14,16 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: EarnUpgrades
   questName: An Intro to Trekking
-  description: Ivan your brother has gone off looking for new materials to work with.
-    Catch up to him and see what he has to say.
-  rewardDescription: 'Gain access to upgrades.
-
-'
+  description: 'Carl the reaper will ensure you don''t stray too far from the town.
+    As you assist these people he will gradually loosen the leash. '
+  rewardDescription: You can now enter The Farmlands, Reap distance is now 50.
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
   requirements:
-  - type: 5
+  - type: 4
     resource: {fileID: 0}
     amount: 1
     enemies: []
@@ -32,3 +30,4 @@ MonoBehaviour:
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

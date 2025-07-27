@@ -19,13 +19,14 @@ MonoBehaviour:
   xpForCompletion: 25
   minX: 500
   maxX: Infinity
-  requiredQuest: {fileID: 0}
+  requiredQuest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
   taskDuration: 7
   sfxInterval: 0.7
   taskPrefab: {fileID: 5366876333383290996, guid: dba5ff011728773449ac4bebb0e57a1c, type: 3}
   weight: 1
   spawnTerrains:
   - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
   resourceDrops:
   - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
     dropRange: {x: 112, y: 420}

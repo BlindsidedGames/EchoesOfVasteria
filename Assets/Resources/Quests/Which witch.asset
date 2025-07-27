@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Witch
   questName: Which Witch
-  description: Eva has gone missing, seek her out and ask about some potions.
-  rewardDescription: You can now do Radish growing tasks.
+  description: Take my magic watering can and fetch some radishes for my jam.
+  rewardDescription: 'You can now do Radish growing tasks.
+
+
+'
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
@@ -29,3 +32,4 @@ MonoBehaviour:
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

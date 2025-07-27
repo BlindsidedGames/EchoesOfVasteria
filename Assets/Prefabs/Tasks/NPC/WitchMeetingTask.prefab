@@ -511,9 +511,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1832289936946605160}
+  - component: {fileID: -8091379227490058525}
   - component: {fileID: 2843715812355913838}
   - component: {fileID: 69090384407675852}
-  - component: {fileID: -8091379227490058525}
   m_Layer: 0
   m_Name: WitchMeetingTask
   m_TagString: Untagged
@@ -538,6 +538,29 @@ Transform:
   - {fileID: 4487724683361477651}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8091379227490058525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909428014693970596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c98e0ca4ffd0c942ae80fbbf7b00ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedSkill: {fileID: 0}
+  taskData: {fileID: 0}
+  npcId: Witch1
+  chatPoint: {fileID: 4487724683361477651}
+  meetingPrefab: {fileID: 6941950203012254310, guid: 727ce843be2c95e45b6c337898a4723f, type: 3}
+  npcSprite: {fileID: -1548542343388229337, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+  lines:
+  - Nyeh heh heh, adventurer.  I am the witch, who will teach you how to tend to
+    the soil.  What, you thought I was going to make potions for you?  Get out of
+    here with your stereotyping.  And bring back five fully grown radishes.  As proof,
+    definitely not for my radish jam.
 --- !u!212 &2843715812355913838
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -615,29 +638,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-8091379227490058525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5909428014693970596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c98e0ca4ffd0c942ae80fbbf7b00ee1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedSkill: {fileID: 0}
-  taskData: {fileID: 0}
-  npcId: Witch1
-  chatPoint: {fileID: 4487724683361477651}
-  meetingPrefab: {fileID: 6941950203012254310, guid: 727ce843be2c95e45b6c337898a4723f, type: 3}
-  npcSprite: {fileID: -1548542343388229337, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
-  lines:
-  - Nyeh heh heh, adventurer.  I am the witch, who will teach you how to tend to
-    the soil.  What, you thought I was going to make potions for you?  Get out of
-    here with your stereotyping.  And bring back five fully grown radishes.  As proof,
-    definitely not for my radish jam.
 --- !u!1 &6154153162205378591
 GameObject:
   m_ObjectHideFlags: 0
