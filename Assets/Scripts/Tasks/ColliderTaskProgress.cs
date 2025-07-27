@@ -1,43 +1,32 @@
 using TimelessEchoes.Hero;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.Tasks
 {
     /// <summary>
-    /// Allows the player to click and hold on a task to manually advance
-    /// its progress.
+    /// Allows the player to click on a task's collider and hold the mouse
+    /// button to manually progress the task.
     /// </summary>
-    public class ManualTaskProgress : MonoBehaviour,
-        IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    [RequireComponent(typeof(Collider2D))]
+    public class ColliderTaskProgress : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour taskObject;
 
         private ITask task;
         private bool held;
         private bool arrived;
+        private HeroController hero;
 
         private void Awake()
         {
             if (taskObject == null)
                 taskObject = GetComponent<MonoBehaviour>();
             task = taskObject as ITask ?? taskObject?.GetComponent<ITask>();
-
-            var canvas = GetComponentInParent<Canvas>();
-            if (canvas != null &&
-                canvas.renderMode == RenderMode.WorldSpace &&
-                canvas.worldCamera == null)
-            {
-                var cam = Camera.main ?? Object.FindFirstObjectByType<Camera>();
-                if (cam != null)
-                    canvas.worldCamera = cam;
-            }
         }
 
         private void OnDisable()
         {
-            held = false;
-            arrived = false;
+            Release();
         }
 
         private void Update()
@@ -45,9 +34,13 @@ namespace TimelessEchoes.Tasks
             if (!held || task == null)
                 return;
 
-            var hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+            if (hero == null)
+                hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
             if (hero == null)
                 return;
+
+            if (task is BaseTask baseTask)
+                baseTask.Claim(hero);
 
             if (!arrived)
             {
@@ -58,20 +51,26 @@ namespace TimelessEchoes.Tasks
             task.Tick(hero);
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        private void OnMouseDown()
         {
             held = true;
             arrived = false;
+            hero = null;
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        private void OnMouseUp()
         {
-            held = false;
+            Release();
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        private void Release()
         {
+            if (held && task is BaseTask baseTask && hero != null)
+                baseTask.ReleaseClaim(hero);
+
             held = false;
+            arrived = false;
         }
     }
 }
+
