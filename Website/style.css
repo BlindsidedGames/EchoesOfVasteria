@@ -45,6 +45,75 @@ main {
   max-width: 800px;
   margin: auto;
 }
+
+section {
+  margin-bottom: 40px;
+}
+
+/* Wiki layout */
+.wiki-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: var(--nav-bg);
+  padding: 15px;
+  color: var(--text-color);
+}
+
+.sidebar h2,
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 6px;
+}
+
+.sidebar a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.enemy-nav {
+  margin-top: 20px;
+  border-top: 1px solid var(--nav-bg);
+  padding-top: 10px;
+}
+
+.enemy-nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.enemy-nav a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.enemy-nav a:hover {
+  text-decoration: underline;
+}
 footer {
   background-color: var(--header-bg);
   color: var(--text-color);
