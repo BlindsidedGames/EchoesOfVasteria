@@ -45,6 +45,9 @@ namespace TimelessEchoes.MapGeneration
 
             public float enemyDensity = 0.1f;
 
+            // Offset applied to all enemy spawn X ranges.
+            public float enemySpawnXOffset;
+
             [MinValue(0)] public int topBuffer;
             [MinValue(0)] public int bottomBuffer;
 

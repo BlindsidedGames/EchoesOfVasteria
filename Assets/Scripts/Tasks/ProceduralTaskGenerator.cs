@@ -37,6 +37,9 @@ namespace TimelessEchoes.Tasks
         [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private float enemyDensity = 0.1f;
 
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
+        private float enemySpawnXOffset;
+
         [TabGroup("Settings", "Generation")] [SerializeField] [HideInInspector]
         private LayerMask blockingMask;
 
@@ -103,11 +106,26 @@ namespace TimelessEchoes.Tasks
             minX = cfg.taskGeneratorSettings.minX;
             height = cfg.taskGeneratorSettings.height;
             enemyDensity = cfg.taskGeneratorSettings.enemyDensity;
+            enemySpawnXOffset = cfg.taskGeneratorSettings.enemySpawnXOffset;
             topBuffer = cfg.taskGeneratorSettings.topBuffer;
             bottomBuffer = cfg.taskGeneratorSettings.bottomBuffer;
             blockingMask = cfg.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = cfg.taskGeneratorSettings.otherTaskEdgeOffset;
-            enemies = cfg.taskGeneratorSettings.enemies;
+
+            enemies = new List<WeightedSpawn>();
+            foreach (var spawn in cfg.taskGeneratorSettings.enemies)
+            {
+                if (spawn == null) continue;
+                var copy = new WeightedSpawn
+                {
+                    prefab = spawn.prefab,
+                    weight = spawn.weight,
+                    minX = spawn.minX + enemySpawnXOffset,
+                    maxX = spawn.maxX + enemySpawnXOffset,
+                    spawnTerrains = spawn.spawnTerrains
+                };
+                enemies.Add(copy);
+            }
 
             taskCategories = new List<WeightedTaskCategory>
             {
