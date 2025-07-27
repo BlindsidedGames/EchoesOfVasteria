@@ -8,20 +8,21 @@
     <link rel="stylesheet" href="wiki.css">
 </head>
 <body class="wiki-page">
-    <header>
-        <div class="top-nav">
-            <div class="nav-left">
-                <a href="../index.html">Home</a>
-                <a href="index.html">Wiki Home</a>
-            </div>
-            <div class="nav-right">
-                <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
-                <button id="light-btn">Light</button>
-                <button id="dark-btn">Dark</button>
-            </div>
-        </div>
-        <h1>Green Slime</h1>
-    </header>
+<header>
+    <h1>Green Slime</h1>
+</header>
+<div class="top-nav">
+    <div class="nav-left">
+        <a href="../index.html">Home</a>
+        <a href="index.html">Wiki Home</a>
+    </div>
+    <div class="nav-right">
+        <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
+        <button id="light-btn">Light</button>
+        <button id="dark-btn">Dark</button>
+    </div>
+</div>
+<div class="wiki-body-container">
     <nav class="sidebar">
         <h2>Navigation</h2>
         <ul>
@@ -36,15 +37,7 @@
             <li><a href="large.html">Large Green Slime</a></li>
         </ul>
     </nav>
-    <datalist id="search-options">
-        <option value="Wiki Home">
-        <option value="Small Green Slime">
-        <option value="Green Slime">
-        <option value="Large Green Slime">
-    </datalist>
-    <div class="wiki-container">
     <main class="main-content">
-        <p>A sturdier version of the green slime. It has moderate health and can take a few hits.</p>
         <aside class="monster-infobox infobox">
             <img src="../images/Slime_Medium_Green.png" alt="Green Slime" class="monster-img pixel-art" />
             <table class="monster-stats stats">
@@ -63,6 +56,7 @@
                 </tbody>
             </table>
         </aside>
+        <p>A sturdier version of the green slime. It has moderate health and can take a few hits.</p>
         <div class="enemy-nav">
             <h2>Other Enemies</h2>
             <ul>
@@ -75,10 +69,16 @@
             <p>No recorded changes.</p>
         </section>
     </main>
-    </div>
-    <footer>
-        &copy; 2025 Echoes of Vasteria
-    </footer>
-    <script src="wiki.js"></script>
+</div>
+<datalist id="search-options">
+    <option value="Wiki Home">
+    <option value="Small Green Slime">
+    <option value="Green Slime">
+    <option value="Large Green Slime">
+</datalist>
+<footer>
+    &copy; 2025 Echoes of Vasteria
+</footer>
+<script src="wiki.js"></script>
 </body>
 </html>

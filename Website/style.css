@@ -11,7 +11,7 @@
     --text-color: #c0cbdc;
     --header-bg: #265c42;
     --nav-bg: #193c3e;
-  --accent-color: #63c74d;
+    --accent-color: #63c74d;
   }
 }
 
@@ -33,17 +33,32 @@
 html,
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
   background-color: var(--bg-color);
   color: var(--text-color);
+}
+
+body.homepage {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+/* New layout for wiki pages */
+body.wiki-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wiki-body-container {
+  display: flex;
+  flex: 1; /* Allows this container to fill space */
 }
 
 body.homepage::before {
@@ -69,45 +84,35 @@ header h1 {
   margin: 0;
 }
 
-header .top-nav {
+.top-nav {
   background-color: var(--nav-bg);
-  padding: 10px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-header .top-nav .nav-left a {
+.top-nav .nav-left a {
   margin-right: 10px;
 }
 
-header .top-nav .nav-right {
+.top-nav .nav-right {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-header .top-nav input[type="search"] {
+.top-nav input[type="search"] {
   padding: 4px;
 }
 nav {
-  background-color: var(--nav-bg);
   padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 nav.center-nav {
-  /* Align navigation links to the left */
-  justify-content: flex-start;
-}
-nav .nav-left a {
-  margin-right: 10px;
-}
-nav .nav-right {
+  background-color: var(--nav-bg);
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 10px;
 }
 nav a {
   color: var(--accent-color);
@@ -117,9 +122,7 @@ nav a {
 nav a:hover {
   color: #fee761;
 }
-nav input[type="search"] {
-  padding: 4px;
-}
+
 a:visited {
   color: var(--accent-color);
 }
@@ -137,38 +140,15 @@ main > section:last-child {
   margin-bottom: 0;
 }
 
-/* Wiki layout */
-.wiki-container {
-  display: flex;
-  gap: 20px;
-  max-width: 1200px;
-  margin: auto;
-  flex: 1;
-}
-
 .sidebar {
-  width: 220px;
+  width: 240px;
   flex-shrink: 0;
-  background-color: var(--nav-bg);
   padding: 15px;
-  color: var(--text-color);
-  height: 100%;
   box-sizing: border-box;
 }
 
-/* Keep wiki navigation fixed on the left while
-   allowing the main content to remain centered */
-body.wiki-page {
-  padding-left: 240px; /* sidebar width + gap */
-}
-
-body.wiki-page .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  height: 100vh;
-  overflow-y: auto;
+.dark-mode .sidebar {
+  background-color: #083b3b;
 }
 
 .sidebar h2,
@@ -195,7 +175,8 @@ body.wiki-page .sidebar {
 }
 
 .main-content {
-  flex: 1;
+  flex-grow: 1;
+  padding: 20px;
 }
 
 .enemy-nav {
@@ -220,31 +201,6 @@ body.wiki-page .sidebar {
   text-decoration: underline;
 }
 
-.enemy-image {
-  width: 150px;
-  image-rendering: pixelated;
-  background-color: var(--header-bg);
-  padding: 4px;
-  border: 1px solid var(--nav-bg);
-  display: block;
-}
-
-.enemy-stats {
-  border-collapse: collapse;
-  margin-top: 0;
-}
-
-.enemy-stats th,
-.enemy-stats td {
-  border: 1px solid var(--nav-bg);
-  padding: 4px 8px;
-}
-
-.enemy-stats th {
-  background-color: var(--header-bg);
-  color: var(--text-color);
-  text-align: left;
-}
 footer {
   background-color: var(--header-bg);
   color: var(--text-color);
@@ -252,16 +208,11 @@ footer {
   padding: 10px;
 }
 @media (max-width: 600px) {
-  nav {
+  .wiki-body-container {
     flex-direction: column;
-    align-items: flex-start;
   }
-  nav a {
-    display: block;
-    margin: 5px 0;
-  }
-  nav .nav-right {
-    margin-top: 10px;
+  .sidebar {
+    width: 100%;
   }
 }
 
@@ -299,7 +250,7 @@ footer {
 
 .monster-infobox th {
   width: 40%;
-  text-align: right;
+  text-align: left;
   font-weight: 600;
   color: var(--text-color);
 }
@@ -307,11 +258,3 @@ footer {
 .monster-infobox td {
   text-align: left;
 }
-
-.monster-infobox .header-row th {
-  background: var(--nav-bg);
-  text-align: center;
-  font-weight: 700;
-  color: var(--text-color);
-}
-

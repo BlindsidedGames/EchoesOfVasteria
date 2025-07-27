@@ -1,26 +1,57 @@
 /* ---------------------------------------------------------- */
-/*  WIKI IMPROVEMENTS                                         */
+/* WIKI-SPECIFIC STYLES                                      */
 /* ---------------------------------------------------------- */
 
-body.wiki-page{margin:0;min-height:100vh;display:grid;
-     grid-template-columns:220px 1fr;
-     grid-template-rows:auto 1fr auto;
-     grid-template-areas:"header header"
-                         "nav    main"
-                         "footer footer";}
+.pixel-art{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    max-width:100%;
+}
 
-body.wiki-page header{grid-area:header;}
-body.wiki-page nav.sidebar{grid-area:nav;background:#083b3b;color:#e6fff2;padding:1.2rem 1rem;
-       position:sticky;top:0;display:block;}
-body.wiki-page main{grid-area:main;margin:0 auto;max-width:60rem;}
-body.wiki-page footer{grid-area:footer;}
+.infobox{
+    float:right;
+    width:240px;
+    margin:0 1rem 1rem 2rem;
+}
 
-.pixel-art{image-rendering:pixelated;image-rendering:crisp-edges;max-width:100%;}
-.infobox{float:right;width:180px;margin:0 1rem 1rem 2rem;}
-h2{clear:right;}
+h2{
+    clear:right;
+}
 
-.stats{width:100%;border-collapse:collapse;}
-.stats th,.stats td{padding:2px 6px;white-space:nowrap;font-weight:400;}
-.stats th::after{content:" |";color:#c0d1c0;}
-.stats td{text-align:right;}
-/* ---------------------------------------------------------- */
+.stats{
+    width:100%;
+    border-collapse:collapse;
+}
+
+/* --- Start of Fix --- */
+
+/* Base styles for both cell types */
+.stats th, .stats td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+/* Styles for the label cell (th) */
+.stats th {
+    text-align: right;
+    padding-left: 8px;
+    padding-right: 0; /* Remove cell's right padding */
+}
+
+/* Styles for the separator after the label */
+.stats th::after {
+    content: "|";
+    color: #c0d1c0;
+    padding: 0 8px; /* Apply 8px of equal space on both sides of the pipe */
+}
+
+/* Styles for the value cell (td) */
+.stats td {
+    text-align: left;
+    padding-left: 0; /* Remove cell's left padding to prevent double spacing */
+    padding-right: 8px;
+}
+
+/* --- End of Fix --- */
