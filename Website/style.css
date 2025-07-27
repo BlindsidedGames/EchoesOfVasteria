@@ -76,7 +76,8 @@ nav {
   align-items: center;
 }
 nav.center-nav {
-  justify-content: center;
+  /* Align navigation links to the left */
+  justify-content: flex-start;
 }
 nav .nav-left a {
   margin-right: 10px;
@@ -119,7 +120,9 @@ main > section:last-child {
   display: flex;
   gap: 20px;
   max-width: 1200px;
-  margin: auto;
+  /* Align sidebar with the left edge of the viewport */
+  margin-left: 0;
+  margin-right: auto;
   flex: 1;
 }
 
@@ -185,6 +188,9 @@ main > section:last-child {
 .enemy-image {
   width: 150px;
   image-rendering: pixelated;
+  background-color: var(--header-bg);
+  padding: 4px;
+  border: 1px solid var(--nav-bg);
 }
 
 .enemy-stats {
