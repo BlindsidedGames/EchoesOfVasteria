@@ -68,6 +68,28 @@ header {
 header h1 {
   margin: 0;
 }
+
+header .top-nav {
+  background-color: var(--nav-bg);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .top-nav .nav-left a {
+  margin-right: 10px;
+}
+
+header .top-nav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header .top-nav input[type="search"] {
+  padding: 4px;
+}
 nav {
   background-color: var(--nav-bg);
   padding: 10px;
