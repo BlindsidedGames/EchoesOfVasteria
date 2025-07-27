@@ -1,0 +1,26 @@
+/* ---------------------------------------------------------- */
+/*  WIKI IMPROVEMENTS                                         */
+/* ---------------------------------------------------------- */
+
+body.wiki-page{margin:0;min-height:100vh;display:grid;
+     grid-template-columns:220px 1fr;
+     grid-template-rows:auto 1fr auto;
+     grid-template-areas:"header header"
+                         "nav    main"
+                         "footer footer";}
+
+body.wiki-page header{grid-area:header;}
+body.wiki-page nav{grid-area:nav;background:#083b3b;color:#e6fff2;padding:1.2rem 1rem;
+       position:sticky;top:0;}
+body.wiki-page main{grid-area:main;margin:0 auto;max-width:60rem;}
+body.wiki-page footer{grid-area:footer;}
+
+.pixel-art{image-rendering:pixelated;image-rendering:crisp-edges;max-width:100%;}
+.infobox{float:right;width:180px;margin:0 1rem 1rem 2rem;}
+h2{clear:right;}
+
+.stats{width:100%;border-collapse:collapse;}
+.stats th,.stats td{padding:2px 6px;white-space:nowrap;font-weight:400;}
+.stats th::after{content:" |";color:#c0d1c0;}
+.stats td{text-align:right;}
+/* ---------------------------------------------------------- */
