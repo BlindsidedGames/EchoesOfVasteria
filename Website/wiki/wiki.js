@@ -1,8 +1,6 @@
 const pages = [
   { title: 'Wiki Home', url: 'index.html' },
-  { title: 'Small Green Slime', url: 'small.html' },
   { title: 'Green Slime', url: 'green.html' },
-  { title: 'Large Green Slime', url: 'large.html' }
 ];
 
 function setTheme(theme) {

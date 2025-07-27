@@ -32,38 +32,36 @@
         </ul>
         <h3>Slimes</h3>
         <ul>
-            <li><a href="small.html">Small Green Slime</a></li>
             <li><a href="green.html">Green Slime</a></li>
-            <li><a href="large.html">Large Green Slime</a></li>
         </ul>
     </nav>
     <main class="main-content">
         <aside class="monster-infobox infobox">
-            <img src="../images/Slime_Medium_Green.png" alt="Green Slime" class="monster-img pixel-art" />
+            <img src="" alt="Green Slime" id="slime-image" class="monster-img pixel-art" />
+            <div class="variant-nav">
+                <button id="prev-slime">&lt;</button>
+                <h3 id="slime-name"></h3>
+                <button id="next-slime">&gt;</button>
+            </div>
+            <div id="slime-dots-container"></div>
             <table class="monster-stats stats">
                 <tbody>
-                <tr><th>Experience</th><td>4</td></tr>
-                <tr><th>Max Health</th><td>25</td></tr>
-                <tr><th>Damage</th><td>2</td></tr>
-                <tr><th>Defense</th><td>0.5</td></tr>
-                <tr><th>Attack Speed</th><td>1.3</td></tr>
-                <tr><th>Attack Range</th><td>1</td></tr>
-                <tr><th>Move Speed</th><td>5</td></tr>
-                <tr><th>Vision Range</th><td>7</td></tr>
-                <tr><th>Assist Range</th><td>5</td></tr>
-                <tr><th>Wander Distance</th><td>3</td></tr>
-                <tr><th>Spawn Range X</th><td>150 - 500</td></tr>
+                <tr><th>Experience</th><td id="stat-exp"></td></tr>
+                <tr><th>Max Health</th><td id="stat-hp"></td></tr>
+                <tr><th>Damage</th><td id="stat-dmg"></td></tr>
+                <tr><th>Defense</th><td id="stat-def"></td></tr>
+                <tr><th>Attack Speed</th><td id="stat-atk-spd"></td></tr>
+                <tr><th>Attack Range</th><td id="stat-atk-range"></td></tr>
+                <tr><th>Move Speed</th><td id="stat-move-spd"></td></tr>
+                <tr><th>Vision Range</th><td id="stat-vision"></td></tr>
+                <tr><th>Assist Range</th><td id="stat-assist"></td></tr>
+                <tr><th>Wander Distance</th><td id="stat-wander"></td></tr>
+                <tr><th>Spawn Range X</th><td id="stat-spawn"></td></tr>
                 </tbody>
             </table>
         </aside>
-        <p>A sturdier version of the green slime. It has moderate health and can take a few hits.</p>
-        <div class="enemy-nav">
-            <h2>Other Enemies</h2>
-            <ul>
-                <li><a href="small.html">Small Green Slime</a></li>
-                <li><a href="large.html">Large Green Slime</a></li>
-            </ul>
-        </div>
+        <p>Green slimes are common enemies found in Vasteria. They come in various sizes, from small, weak variants that travel in groups to large, slow-moving behemoths that can withstand and deal significant damage.</p>
+        
         <section id="changes">
             <h2>Changes</h2>
             <p>No recorded changes.</p>
@@ -72,13 +70,11 @@
 </div>
 <datalist id="search-options">
     <option value="Wiki Home">
-    <option value="Small Green Slime">
     <option value="Green Slime">
-    <option value="Large Green Slime">
 </datalist>
 <footer>
     &copy; 2025 Echoes of Vasteria
 </footer>
 <script src="wiki.js"></script>
-</body>
+<script src="green_slime.js"></script> </body>
 </html>

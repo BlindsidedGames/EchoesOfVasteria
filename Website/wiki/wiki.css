@@ -55,3 +55,50 @@ h2{
 }
 
 /* --- End of Fix --- */
+/* Styles for slime variant navigation */
+.variant-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px 0;
+}
+
+.variant-nav h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.variant-nav button {
+    background: none;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 8px;
+}
+
+.variant-nav button:hover {
+    background-color: var(--nav-bg);
+}
+
+#slime-dots-container {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.dot {
+    cursor: pointer;
+    height: 10px;
+    width: 10px;
+    margin: 0 3px;
+    background-color: var(--nav-bg);
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.dot.active {
+    background-color: var(--accent-color);
+}
+
