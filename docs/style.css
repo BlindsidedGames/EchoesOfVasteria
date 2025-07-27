@@ -114,17 +114,21 @@ nav.center-nav {
   justify-content: flex-start;
   align-items: center;
 }
-nav a {
+a {
   color: var(--accent-color);
-  margin: 0 10px;
   text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:visited {
+  color: var(--accent-color);
+}
+nav a {
+  margin: 0 10px;
 }
 nav a:hover {
   color: #fee761;
-}
-
-a:visited {
-  color: var(--accent-color);
 }
 main {
   flex: 1;
@@ -145,6 +149,7 @@ main > section:last-child {
   flex-shrink: 0;
   padding: 15px;
   box-sizing: border-box;
+  background-color: #265c42;
 }
 
 .dark-mode .sidebar {
