@@ -4,41 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Echoes of Vasteria Wiki</title>
+    <link rel="stylesheet" href="../style.css">
     <style>
-        /* Colors from the Endesga-64 palette */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #262b44;
-            color: #c0cbdc;
-        }
-        header {
-            background-color: #181425;
-            color: #fee761;
+        main {
             padding: 20px;
-            text-align: center;
+            max-width: 800px;
+            margin: auto;
         }
-        nav {
-            background-color: #3a4466;
-            padding: 10px;
-            text-align: center;
-        }
-        nav a {
-            color: #fee761;
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            color: #ff0044;
-        }
-        main { padding: 20px; }
         section { margin-bottom: 40px; }
-        footer {
-            background-color: #181425;
-            color: #c0cbdc;
-            text-align: center;
-            padding: 10px;
+        #sidebar {
+            border-right: 1px solid var(--nav-bg);
+            padding-right: 10px;
+            margin-right: 20px;
+        }
+        @media (min-width: 768px) {
+            .wiki-container {
+                display: flex;
+            }
+            #sidebar {
+                width: 200px;
+            }
         }
     </style>
 </head>
@@ -50,6 +35,15 @@
         <a href="../index.html">Home</a>
         <a href="index.html">Wiki Home</a>
     </nav>
+    <div class="wiki-container">
+    <aside id="sidebar">
+        <h2>Slimes</h2>
+        <ul>
+            <li><a href="small.html">Small Green Slime</a></li>
+            <li><a href="medium.html">Medium Green Slime</a></li>
+            <li><a href="large.html">Large Green Slime</a></li>
+        </ul>
+    </aside>
     <main>
         <section id="tasks">
             <h2>Tasks</h2>
@@ -64,6 +58,7 @@
             <p>Check back for more details on mechanics, gear upgrades, and strategies as the wiki expands.</p>
         </section>
     </main>
+    </div>
     <footer>
         &copy; 2024 Echoes of Vasteria
     </footer>
