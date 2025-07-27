@@ -65,6 +65,9 @@ header {
   padding: 20px;
   text-align: center;
 }
+header h1 {
+  margin: 0;
+}
 nav {
   background-color: var(--nav-bg);
   padding: 10px;
@@ -101,6 +104,9 @@ main {
 section {
   margin-bottom: 40px;
 }
+main > section:last-child {
+  margin-bottom: 0;
+}
 
 /* Wiki layout */
 .wiki-container {
@@ -108,6 +114,7 @@ section {
   gap: 20px;
   max-width: 1200px;
   margin: auto;
+  flex: 1;
 }
 
 .sidebar {
@@ -116,6 +123,8 @@ section {
   background-color: var(--nav-bg);
   padding: 15px;
   color: var(--text-color);
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar h2,
