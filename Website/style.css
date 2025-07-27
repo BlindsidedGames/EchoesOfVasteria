@@ -134,6 +134,21 @@ main > section:last-child {
   box-sizing: border-box;
 }
 
+/* Keep wiki navigation fixed on the left while
+   allowing the main content to remain centered */
+body.wiki-page {
+  padding-left: 240px; /* sidebar width + gap */
+}
+
+body.wiki-page .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .sidebar h2,
 .sidebar h3 {
   margin-top: 0;
