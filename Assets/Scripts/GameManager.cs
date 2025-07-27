@@ -65,6 +65,7 @@ namespace TimelessEchoes
         public GameObject ReaperPrefab => reaperPrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
+        public GameObject CurrentMap => currentMap;
 
         [Header("Map Generation")] [SerializeField]
         private List<MapGenerationConfig> generationConfigs = new();
