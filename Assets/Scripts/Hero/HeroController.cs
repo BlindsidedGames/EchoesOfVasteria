@@ -109,6 +109,8 @@ namespace TimelessEchoes.Hero
 
         private bool reaperSpawnedByDistance;
 
+        public bool ReaperSpawnedByDistance => reaperSpawnedByDistance;
+
         private float damageBonus;
         private float defenseBonus;
 
@@ -262,7 +264,14 @@ namespace TimelessEchoes.Hero
                     var hp = health != null ? health : GetComponent<HeroHealth>();
                     if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null && gm.CurrentMap != null)
                     {
-                        ReaperManager.Spawn(gm.ReaperPrefab, gameObject, gm.CurrentMap.transform, false, null, gm.ReaperSpawnOffset);
+                        ReaperManager.Spawn(gm.ReaperPrefab, gameObject, gm.CurrentMap.transform, false,
+                            () =>
+                            {
+                                gameObject.SetActive(false);
+                                if (gm.GravestonePrefab != null)
+                                    Instantiate(gm.GravestonePrefab, transform.position, Quaternion.identity,
+                                        gm.CurrentMap.transform);
+                            }, gm.ReaperSpawnOffset);
                         reaperSpawnedByDistance = true;
                     }
                 }
