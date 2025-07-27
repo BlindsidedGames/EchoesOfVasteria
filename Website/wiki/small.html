@@ -9,27 +9,20 @@
 </head>
 <body class="wiki-page">
     <header>
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="../index.html">Home</a>
+                <a href="index.html">Wiki Home</a>
+            </div>
+            <div class="nav-right">
+                <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
+                <button id="light-btn">Light</button>
+                <button id="dark-btn">Dark</button>
+            </div>
+        </div>
         <h1>Small Green Slime</h1>
     </header>
-    <nav>
-        <div class="nav-left">
-            <a href="../index.html">Home</a>
-            <a href="index.html">Wiki Home</a>
-        </div>
-        <div class="nav-right">
-            <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
-            <button id="light-btn">Light</button>
-            <button id="dark-btn">Dark</button>
-        </div>
-    </nav>
-    <datalist id="search-options">
-        <option value="Wiki Home">
-        <option value="Small Green Slime">
-        <option value="Green Slime">
-        <option value="Large Green Slime">
-    </datalist>
-    <div class="wiki-container">
-    <aside class="sidebar">
+    <nav class="sidebar">
         <h2>Navigation</h2>
         <ul>
             <li><a href="index.html">Wiki Home</a></li>
@@ -42,7 +35,14 @@
             <li><a href="green.html">Green Slime</a></li>
             <li><a href="large.html">Large Green Slime</a></li>
         </ul>
-    </aside>
+    </nav>
+    <datalist id="search-options">
+        <option value="Wiki Home">
+        <option value="Small Green Slime">
+        <option value="Green Slime">
+        <option value="Large Green Slime">
+    </datalist>
+    <div class="wiki-container">
     <main class="main-content">
         <p>The smallest variant of green slime. These weak creatures often appear in groups.</p>
         <aside class="monster-infobox infobox">

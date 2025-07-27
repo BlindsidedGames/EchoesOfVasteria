@@ -10,8 +10,8 @@ body.wiki-page{margin:0;min-height:100vh;display:grid;
                          "footer footer";}
 
 body.wiki-page header{grid-area:header;}
-body.wiki-page nav{grid-area:nav;background:#083b3b;color:#e6fff2;padding:1.2rem 1rem;
-       position:sticky;top:0;}
+body.wiki-page nav.sidebar{grid-area:nav;background:#083b3b;color:#e6fff2;padding:1.2rem 1rem;
+       position:sticky;top:0;display:block;}
 body.wiki-page main{grid-area:main;margin:0 auto;max-width:60rem;}
 body.wiki-page footer{grid-area:footer;}
 
