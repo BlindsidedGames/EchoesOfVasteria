@@ -63,6 +63,7 @@ namespace TimelessEchoes
         [SerializeField] public string mildredQuestId;
 
         public GameObject ReaperPrefab => reaperPrefab;
+        public GameObject GravestonePrefab => gravestonePrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
         public GameObject CurrentMap => currentMap;
@@ -362,8 +363,13 @@ namespace TimelessEchoes
         private void OnHeroDeath()
         {
             DestroyAllEchoes();
+            bool distanceReaper = false;
             if (hero != null)
             {
+                var controller = hero.GetComponent<Hero.HeroController>();
+                if (controller != null)
+                    distanceReaper = controller.ReaperSpawnedByDistance;
+
                 var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
@@ -372,7 +378,7 @@ namespace TimelessEchoes
                 if (ai != null)
                     ai.enabled = false;
 
-                if (reaperPrefab != null && currentMap != null)
+                if (!distanceReaper && reaperPrefab != null && currentMap != null)
                 {
                     ReaperManager.Spawn(reaperPrefab, hero.gameObject, currentMap.transform, false,
                         () =>
@@ -383,7 +389,7 @@ namespace TimelessEchoes
                                     currentMap.transform);
                         }, reaperSpawnOffset);
                 }
-                else
+                else if (!distanceReaper)
                 {
                     hero.gameObject.SetActive(false);
                     if (gravestonePrefab != null && currentMap != null)
