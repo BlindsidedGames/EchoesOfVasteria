@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using Blindsided.SaveData;
+using Sirenix.OdinInspector;
 using TimelessEchoes.MapGeneration;
-using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using VinTools.BetterRuleTiles;
 using Random = UnityEngine.Random;
 using static Blindsided.Oracle;
 
@@ -20,100 +18,77 @@ namespace TimelessEchoes.Tasks
     [RequireComponent(typeof(TaskController))]
     public class ProceduralTaskGenerator : MonoBehaviour
     {
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private float minX;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private float maxX = 990f;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private float height = 18f;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private int topBuffer;
 
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private int bottomBuffer;
 
 
-
-        [TabGroup("Settings", "Area")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Area")] [SerializeField] [HideInInspector]
         private float enemyDensity = 0.1f;
 
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [HideInInspector]
         private LayerMask blockingMask;
 
-        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0)] [HideInInspector]
         private float otherTaskEdgeOffset = 1f;
 
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [HideInInspector]
         private List<WeightedSpawn> enemies = new();
 
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [HideInInspector]
         private List<WeightedTaskCategory> taskCategories = new();
 
-        [TabGroup("Settings", "Generation")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [HideInInspector]
         private List<MapGenerationConfig.ProceduralTaskSettings.NpcSpawnEntry> npcTasks = new();
 
-        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)]
-        [HideInInspector]
+        [TabGroup("Settings", "Generation")] [SerializeField] [MinValue(0f)] [HideInInspector]
         private float minTaskDistance = 1.5f;
 
-        [TabGroup("Settings", "References")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "References")] [SerializeField] [HideInInspector]
         private Tilemap terrainMap;
 
-        [TabGroup("Settings", "References")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "References")] [SerializeField] [HideInInspector]
         private TerrainSettings bottomTerrain;
 
-        [TabGroup("Settings", "References")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "References")] [SerializeField] [HideInInspector]
         private TerrainSettings middleTerrain;
 
-        [TabGroup("Settings", "References")] [SerializeField]
-        [HideInInspector]
+        [TabGroup("Settings", "References")] [SerializeField] [HideInInspector]
         private TerrainSettings topTerrain;
 
         private readonly List<GameObject> generatedObjects = new();
 
         /// <summary>
-        /// Optional parent for spawned task objects.
+        ///     Optional parent for spawned task objects.
         /// </summary>
         public Transform SpawnParent { get; set; }
 
         /// <summary>
-        /// Minimum world X value allowed for spawned tasks.
+        ///     Minimum world X value allowed for spawned tasks.
         /// </summary>
         public float MinX => minX;
 
-        private TaskController controller;
-
         /// <summary>
-        /// Optional externally assigned TaskController. If null the component
-        /// will attempt to locate one on the same GameObject.
+        ///     Optional externally assigned TaskController. If null the component
+        ///     will attempt to locate one on the same GameObject.
         /// </summary>
-        public TaskController Controller
-        {
-            get => controller;
-            set => controller = value;
-        }
+        public TaskController Controller { get; set; }
 
         private void Awake()
         {
-            if (controller == null)
-                controller = GetComponent<TaskController>();
+            if (Controller == null)
+                Controller = GetComponent<TaskController>();
             ApplyConfig(GameManager.CurrentGenerationConfig);
 
             var chunk = GetComponent<TilemapChunkGenerator>();
@@ -187,7 +162,8 @@ namespace TimelessEchoes.Tasks
         }
 #endif
 
-        internal void SetTilemapReferences(Tilemap map, TerrainSettings bottom, TerrainSettings middle, TerrainSettings top)
+        internal void SetTilemapReferences(Tilemap map, TerrainSettings bottom, TerrainSettings middle,
+            TerrainSettings top)
         {
             terrainMap = map;
             bottomTerrain = bottom;
@@ -204,7 +180,8 @@ namespace TimelessEchoes.Tasks
             {
                 var maps = GetComponentsInChildren<Tilemap>();
                 foreach (var m in maps)
-                    if (terrainMap == null && (m.gameObject.name.Contains("Terrain") || m.gameObject.name.Contains("Water")))
+                    if (terrainMap == null &&
+                        (m.gameObject.name.Contains("Terrain") || m.gameObject.name.Contains("Water")))
                         terrainMap = m;
             }
         }
@@ -230,11 +207,11 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public void Clear()
         {
-            if (controller == null)
-                controller = GetComponent<TaskController>();
+            if (Controller == null)
+                Controller = GetComponent<TaskController>();
 
             ClearSpawnedObjects();
-            controller?.ClearTaskObjects();
+            Controller?.ClearTaskObjects();
         }
 
         /// <summary>
@@ -253,19 +230,21 @@ namespace TimelessEchoes.Tasks
 
         private void GenerateInternal(float localMinX, float localMaxX, Transform parent, bool clearExisting)
         {
-            if (controller == null)
-                controller = GetComponent<TaskController>();
-            if (controller == null)
+            if (Controller == null)
+                Controller = GetComponent<TaskController>();
+            if (Controller == null)
                 return;
 
             if (clearExisting)
             {
                 ClearSpawnedObjects();
-                controller.ClearTaskObjects();
+                Controller.ClearTaskObjects();
             }
 
-            var bottomCount = Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
-            var middleCount = Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
+            var bottomCount =
+                Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
+            var middleCount =
+                Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
             var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
             if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
@@ -274,9 +253,12 @@ namespace TimelessEchoes.Tasks
             var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
             var taskPositions = new List<Vector3>();
             var taskMap = new Dictionary<Vector3, MonoBehaviour>();
-            SpawnTasks(bottomCount, localMinX, localMaxX, parent, clearExisting, true, false, false, spawnedTasks, taskPositions, taskMap);
-            SpawnTasks(middleCount, localMinX, localMaxX, parent, clearExisting, false, true, false, spawnedTasks, taskPositions, taskMap);
-            SpawnTasks(topCount, localMinX, localMaxX, parent, clearExisting, false, false, true, spawnedTasks, taskPositions, taskMap);
+            SpawnTasks(bottomCount, localMinX, localMaxX, parent, clearExisting, true, false, false, spawnedTasks,
+                taskPositions, taskMap);
+            SpawnTasks(middleCount, localMinX, localMaxX, parent, clearExisting, false, true, false, spawnedTasks,
+                taskPositions, taskMap);
+            SpawnTasks(topCount, localMinX, localMaxX, parent, clearExisting, false, false, true, spawnedTasks,
+                taskPositions, taskMap);
 
 
             for (var i = 0; i < enemyCount; i++)
@@ -307,6 +289,7 @@ namespace TimelessEchoes.Tasks
                         positionIsValid = true;
                         break;
                     }
+
                     pos = RandomPositionAtX(localX);
                     attempts++;
                 }
@@ -323,9 +306,9 @@ namespace TimelessEchoes.Tasks
             {
                 if (npc == null || npc.prefab == null) continue;
                 if (npc.localX < localMinX || npc.localX >= localMaxX) continue;
-                if (npc.spawnOnlyOnce && Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(npc.id))
+                if (npc.spawnOnlyOnce && StaticReferences.CompletedNpcTasks.Contains(npc.id))
                     continue;
-                if (!string.IsNullOrEmpty(npc.id) && Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Contains(npc.id))
+                if (!string.IsNullOrEmpty(npc.id) && StaticReferences.ActiveNpcMeetings.Contains(npc.id))
                     continue;
 
                 Vector3 pos;
@@ -334,11 +317,12 @@ namespace TimelessEchoes.Tasks
 
                 var npcTerrain = GetTerrainAt(pos);
                 if (npcTerrain == null ||
-                    (npc.spawnTerrains != null && npc.spawnTerrains.Count > 0 && !npc.spawnTerrains.Contains(npcTerrain)) ||
+                    (npc.spawnTerrains != null && npc.spawnTerrains.Count > 0 &&
+                     !npc.spawnTerrains.Contains(npcTerrain)) ||
                     !ValidateTerrainRules(npcTerrain, terrainMap.WorldToCell(pos)))
                     continue;
 
-                for (int i = taskPositions.Count - 1; i >= 0; i--)
+                for (var i = taskPositions.Count - 1; i >= 0; i--)
                 {
                     var existing = taskPositions[i];
                     if (Vector3.Distance(existing, pos) < minTaskDistance)
@@ -348,7 +332,7 @@ namespace TimelessEchoes.Tasks
                             if (clearExisting)
                                 spawnedTasks.RemoveAll(t => t.obj == objToRemove);
                             else
-                                controller.RemoveTaskObject(objToRemove);
+                                Controller.RemoveTaskObject(objToRemove);
                             generatedObjects.Remove(objToRemove.gameObject);
 #if UNITY_EDITOR
                             if (!Application.isPlaying)
@@ -358,6 +342,7 @@ namespace TimelessEchoes.Tasks
                                 Destroy(objToRemove.gameObject);
                             taskMap.Remove(existing);
                         }
+
                         taskPositions.RemoveAt(i);
                     }
                 }
@@ -371,7 +356,7 @@ namespace TimelessEchoes.Tasks
                     if (clearExisting)
                         spawnedTasks.Add((pos, mono));
                     else
-                        controller.AddRuntimeTaskObject(mono);
+                        Controller.AddRuntimeTaskObject(mono);
                     taskPositions.Add(pos);
                     taskMap[pos] = mono;
                 }
@@ -381,9 +366,9 @@ namespace TimelessEchoes.Tasks
             {
                 spawnedTasks.Sort((a, b) => a.pos.x.CompareTo(b.pos.x));
                 foreach (var pair in spawnedTasks)
-                    controller.AddTaskObject(pair.obj);
+                    Controller.AddTaskObject(pair.obj);
 
-                controller.ResetTasks();
+                Controller.ResetTasks();
             }
         }
 
@@ -393,16 +378,11 @@ namespace TimelessEchoes.Tasks
             Dictionary<Vector3, MonoBehaviour> taskMap)
         {
             for (var i = 0; i < count; i++)
-            {
-                for (var a = 0; a < 10; a++)
-                {
-                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, requireBottomTask, requireMiddleTask, requireTopTask,
-                            spawnedTasks, taskPositions, taskMap))
-                    {
-                        break;
-                    }
-                }
-            }
+            for (var a = 0; a < 10; a++)
+                if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, clearExisting, requireBottomTask,
+                        requireMiddleTask, requireTopTask,
+                        spawnedTasks, taskPositions, taskMap))
+                    break;
         }
 
         private bool TrySpawnTask(float localX, Transform parent, bool clearExisting,
@@ -464,7 +444,7 @@ namespace TimelessEchoes.Tasks
             if (clearExisting)
                 spawnedTasks.Add((pos, mono));
             else
-                controller.AddRuntimeTaskObject(mono);
+                Controller.AddRuntimeTaskObject(mono);
             taskPositions.Add(pos);
             taskMap[pos] = mono;
             return true;
@@ -490,11 +470,11 @@ namespace TimelessEchoes.Tasks
 
             var areaBottom = terrainMap.WorldToCell(transform.position).y;
             var minY = Mathf.Clamp(areaBottom + bottomBuffer,
-                                   terrainMap.cellBounds.yMin,
-                                   terrainMap.cellBounds.yMax);
+                terrainMap.cellBounds.yMin,
+                terrainMap.cellBounds.yMax);
             var maxY = Mathf.Clamp(areaBottom + Mathf.RoundToInt(height) - topBuffer,
-                                   terrainMap.cellBounds.yMin,
-                                   terrainMap.cellBounds.yMax);
+                terrainMap.cellBounds.yMin,
+                terrainMap.cellBounds.yMax);
 
             var validYs = new List<int>();
             for (var y = maxY; y >= minY; y--)
@@ -586,10 +566,7 @@ namespace TimelessEchoes.Tasks
             var tile = terrainMap.GetTile(cell);
             if (tile != settings.tile) return false;
 
-            if (!settings.taskSettings.borderOnly)
-            {
-                return IsInCore(cell, settings, tile, 0);
-            }
+            if (!settings.taskSettings.borderOnly) return IsInCore(cell, settings, tile, 0);
 
             var inCore = IsInCore(cell, settings, tile, 0);
             var inInnerCore = IsInCore(cell, settings, tile, 1);
@@ -616,14 +593,12 @@ namespace TimelessEchoes.Tasks
             if (rightDist < rightOffset) return false;
 
             for (var dx = -leftOffset; dx <= rightOffset; dx++)
+            for (var dy = -bottomOffset; dy <= topOffset; dy++)
             {
-                for (var dy = -bottomOffset; dy <= topOffset; dy++)
-                {
-                    if (dx == 0 || dy == 0) continue;
-                    var checkPos = cell + new Vector3Int(dx, dy, 0);
-                    if (terrainMap.GetTile(checkPos) != tile)
-                        return false;
-                }
+                if (dx == 0 || dy == 0) continue;
+                var checkPos = cell + new Vector3Int(dx, dy, 0);
+                if (terrainMap.GetTile(checkPos) != tile)
+                    return false;
             }
 
             return true;
@@ -642,7 +617,7 @@ namespace TimelessEchoes.Tasks
         private bool TaskAllowed(WeightedSpawn spawn, bool allowBottom, bool allowTop, bool allowMiddle)
         {
             var specific = spawn.spawnTerrains != null && spawn.spawnTerrains.Count > 0;
-            var permitted = (!specific) ||
+            var permitted = !specific ||
                             (allowBottom && spawn.spawnTerrains.Contains(bottomTerrain)) ||
                             (allowMiddle && spawn.spawnTerrains.Contains(middleTerrain)) ||
                             (allowTop && spawn.spawnTerrains.Contains(topTerrain));
@@ -653,7 +628,7 @@ namespace TimelessEchoes.Tasks
         {
             var terrains = data != null ? data.spawnTerrains : null;
             var specific = terrains != null && terrains.Count > 0;
-            var permitted = (!specific) ||
+            var permitted = !specific ||
                             (allowBottom && terrains.Contains(bottomTerrain)) ||
                             (allowMiddle && terrains.Contains(middleTerrain)) ||
                             (allowTop && terrains.Contains(topTerrain));
@@ -666,13 +641,9 @@ namespace TimelessEchoes.Tasks
             {
                 if (!TaskAllowed(t, true, true, true))
                     return false;
-                if (t != null && t.taskPrefab != null && t.taskPrefab is FarmingTask && !StaticReferences.CompletedNpcTasks.Contains("Witch1"))
-                    return false;
                 if (t != null)
-                {
                     if (t.requiredQuest != null && !QuestCompleted(t.requiredQuest.questId))
                         return false;
-                }
                 return true;
             });
         }
@@ -689,12 +660,8 @@ namespace TimelessEchoes.Tasks
         {
             var totalWeight = 0f;
             foreach (var e in entries)
-            {
                 if (filter(e))
-                {
                     totalWeight += e.GetWeight(worldX);
-                }
-            }
 
             if (totalWeight <= 0f)
                 return default;

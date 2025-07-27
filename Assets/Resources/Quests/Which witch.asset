@@ -15,12 +15,12 @@ MonoBehaviour:
   questId: Witch
   questName: Which Witch
   description: Eva has gone missing, seek her out and ask about some potions.
-  rewardDescription: Access to Disciples and Farming tasks.
+  rewardDescription: You can now do Radish growing tasks.
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+  - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
   requirements:
-  - type: 6
+  - type: 4
     resource: {fileID: 0}
     amount: 1
     enemies: []

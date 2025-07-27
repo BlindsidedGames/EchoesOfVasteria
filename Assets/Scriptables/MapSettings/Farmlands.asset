@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7024b925fb721449cb612a187ddd1a, type: 3}
+  m_Name: Farmlands
+  m_EditorClassIdentifier: 
+  tilemapChunkSettings:
+    terrainMap: {fileID: 0}
+    decorMap: {fileID: 0}
+    bottomTerrain: {fileID: 11400000, guid: f2194a486371c5541bd9b70b3d3f84ed, type: 2}
+    middleTerrain: {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+    topTerrain: {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+    minAreaWidth: 4
+    edgeWaviness: 1
+    middleDepthRange: {x: 4, y: 6}
+    topDepthRange: {x: 9, y: 9}
+    seed: 0
+    randomizeSeed: 1
+  taskGeneratorSettings:
+    minX: 15
+    height: 18
+    enemyDensity: 0.18
+    topBuffer: 2
+    bottomBuffer: 2
+    blockingMask:
+      serializedVersion: 2
+      m_Bits: 0
+    otherTaskEdgeOffset: 1
+    enemies:
+    - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      weight: 1
+      minX: 45
+      maxX: 150
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
+      weight: 1
+      minX: 150
+      maxX: 500
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 1185683219414597a297279e896931a0, type: 3}
+      weight: 1
+      minX: 500
+      maxX: Infinity
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
+      weight: 1
+      minX: 80
+      maxX: 220
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
+      weight: 1
+      minX: 220
+      maxX: 1000
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 01e6f73205764380921681e11b211f6e, type: 3}
+      weight: 2
+      minX: 1000
+      maxX: Infinity
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
+      weight: 0.4
+      minX: 150
+      maxX: 300
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
+      weight: 1
+      minX: 300
+      maxX: 1500
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: ccaecf98d6324c84908457395f522ecc, type: 3}
+      weight: 3
+      minX: 1500
+      maxX: Infinity
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
+      weight: 1
+      minX: 250
+      maxX: 1200
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
+      weight: 1
+      minX: 1200
+      maxX: 2500
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 3deffd76865849dd9d0a7ca5462821f8, type: 3}
+      weight: 4
+      minX: 2500
+      maxX: Infinity
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
+      weight: 1
+      minX: 900
+      maxX: 2500
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
+      weight: 1
+      minX: 2500
+      maxX: 10000
+      spawnTerrains: []
+    - prefab: {fileID: 8193780003442596315, guid: cd2a5751f36a480683da922475c0c9a3, type: 3}
+      weight: 5
+      minX: 10000
+      maxX: Infinity
+      spawnTerrains:
+      - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+    woodcutting:
+      weight: 0.3
+      tasks:
+      - {fileID: 11400000, guid: 936d408e4a462034db61d9e94a22a424, type: 2}
+      - {fileID: 11400000, guid: be28fd76aeb073b499a5fe6d63225d6b, type: 2}
+      - {fileID: 11400000, guid: 5b79a1d3e3b8c6049ac8306d32db9416, type: 2}
+      - {fileID: 11400000, guid: 311095139adb56e4baedb88f0634fdc4, type: 2}
+      - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+      - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+      - {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+      - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
+      - {fileID: 11400000, guid: c3af67c9663141c42a4edfc53141e29a, type: 2}
+      - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
+      - {fileID: 11400000, guid: bad32546724fba141a4e46b2a217d438, type: 2}
+      - {fileID: 11400000, guid: b2078539e1a537b4ea4da8b90654f82d, type: 2}
+    mining:
+      weight: 0
+      tasks:
+      - {fileID: 11400000, guid: fa24818abe1da184aafa062af624ec6c, type: 2}
+      - {fileID: 11400000, guid: 668dad8fbc2902843a7e173e243dee9a, type: 2}
+      - {fileID: 11400000, guid: dd52987e13599b240a10458584bc43ca, type: 2}
+      - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+      - {fileID: 11400000, guid: 18eeb6f8f3be4634b964782c3a21e3fb, type: 2}
+      - {fileID: 11400000, guid: 02f191935684d0349a6146c4106198b9, type: 2}
+      - {fileID: 11400000, guid: abfab7093dc8ecb4599d05b5213bfcb4, type: 2}
+      - {fileID: 11400000, guid: 192a1d7580d317a4e9fafc41a46df8df, type: 2}
+    farming:
+      weight: 1
+      tasks:
+      - {fileID: 11400000, guid: 70617213aa5b4282810c56d8c6fef1dc, type: 2}
+      - {fileID: 11400000, guid: 057a73ef4be1461a8f37f4a18cc9ccd7, type: 2}
+      - {fileID: 11400000, guid: 4706c98248fceba4d999590b3af7c998, type: 2}
+      - {fileID: 11400000, guid: e14a18a28eab47f3b4a1ba4fc35feecc, type: 2}
+      - {fileID: 11400000, guid: 32c67278a4d449d1a3b9537021e12b94, type: 2}
+      - {fileID: 11400000, guid: 9f12af72c3d64cb7992be2c5a55e724d, type: 2}
+      - {fileID: 11400000, guid: e0a30f5655974fccaf00c303a1ec8ab8, type: 2}
+      - {fileID: 11400000, guid: 168d8afa5df84514b6f9e8c3f2de25af, type: 2}
+      - {fileID: 11400000, guid: b7927331582c41ad858f05059f361a0a, type: 2}
+      - {fileID: 11400000, guid: 62658544c0614a5490f65bb405af7397, type: 2}
+      - {fileID: 11400000, guid: 9bf4f670cbb2443baabc2867f46fe800, type: 2}
+      - {fileID: 11400000, guid: 42f81ca90b736cd4bb035112a8b22ad3, type: 2}
+      - {fileID: 11400000, guid: 7ce5ada54f204022860133895160fdb0, type: 2}
+      - {fileID: 11400000, guid: d32ac8f14ec6412b970968c95d6630b5, type: 2}
+      - {fileID: 11400000, guid: 86a9b7060b024768a521ceb023a7830d, type: 2}
+      - {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+      - {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+      - {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
+    fishing:
+      weight: 0
+      tasks:
+      - {fileID: 11400000, guid: c549fee4e4f15594698a6f046c39af11, type: 2}
+      - {fileID: 11400000, guid: 05fdfa111cb7016449fc9bdbd752ec6e, type: 2}
+      - {fileID: 11400000, guid: b61d39fcc4e93ff4babb6e6b865dc283, type: 2}
+      - {fileID: 11400000, guid: 27c96eca47585d04dab34a87f062e139, type: 2}
+      - {fileID: 11400000, guid: 4438560ed934d734885b5bc75d4f0956, type: 2}
+      - {fileID: 11400000, guid: 016b841486240b049bbfaf2ed4d4a0d7, type: 2}
+      - {fileID: 11400000, guid: 196b555261e65f844b40c5b3b91fcc7c, type: 2}
+      - {fileID: 11400000, guid: 5d5fce42b69a10243ac8ce6796cd25d7, type: 2}
+    looting:
+      weight: 0.01
+      tasks:
+      - {fileID: 11400000, guid: b1555f4354b02664ab812f41368de535, type: 2}
+      - {fileID: 11400000, guid: 79af76c4f8e5991408e4c1cdeb5a27df, type: 2}
+      - {fileID: 11400000, guid: f5b4b465fd95d1841ae73975a8d3ef1c, type: 2}
+      - {fileID: 11400000, guid: e2768c90f8101cc4fa37685fc26efcc3, type: 2}
+      - {fileID: 11400000, guid: 373703f3a8d5957488dc23e526ff5233, type: 2}
+      - {fileID: 11400000, guid: 37b5bdf51b258d6468f34c9fe61b9355, type: 2}
+      - {fileID: 11400000, guid: 377ea7d0df8bdb34dbd047f58e376e7c, type: 2}
+      - {fileID: 11400000, guid: 70c2ebf6cde62bb4ebd4275e6ff6373a, type: 2}
+    npcTasks:
+    - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
+      id: Witch1
+      localX: 140
+      spawnTerrains: []
+      spawnOnlyOnce: 1
+    - prefab: {fileID: 4000714617541257269, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
+      id: Ivan1
+      localX: 40
+      spawnTerrains: []
+      spawnOnlyOnce: 1
+    minTaskDistance: 2
+  segmentedMapSettings:
+    segmentSize: {x: 64, y: 18}

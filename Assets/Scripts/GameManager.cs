@@ -7,14 +7,15 @@ using Blindsided.SaveData;
 using Blindsided.Utilities;
 using Pathfinding;
 using References.UI;
+using TimelessEchoes.Audio;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
+using TimelessEchoes.MapGeneration;
 using TimelessEchoes.NPC;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Audio;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -65,8 +66,9 @@ namespace TimelessEchoes
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
 
-        [Header("Map Generation")]
-        [SerializeField] private List<MapGenerationConfig> generationConfigs = new();
+        [Header("Map Generation")] [SerializeField]
+        private List<MapGenerationConfig> generationConfigs = new();
+
         [SerializeField] private int currentConfigIndex;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
@@ -257,10 +259,7 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
 #endif
-            if (runEndedByDeath && statTracker != null)
-            {
-                statTracker.EndRun(true);
-            }
+            if (runEndedByDeath && statTracker != null) statTracker.EndRun(true);
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
             if (deathWindowCoroutine != null)
@@ -288,6 +287,7 @@ namespace TimelessEchoes
             {
                 CurrentGenerationConfig = null;
             }
+
             if (statTracker == null)
             {
                 statTracker = GameplayStatTracker.Instance;
@@ -402,10 +402,7 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            if (statTracker != null)
-            {
-                statTracker.AddDeath();
-            }
+            if (statTracker != null) statTracker.AddDeath();
 
             BuffManager.Instance?.ClearActiveBuffs();
             // Temporarily disable autobuff for the remainder of this run.
@@ -522,6 +519,7 @@ namespace TimelessEchoes
                 else
                     statTracker.EndRun(false);
             }
+
             BuffManager.Instance?.ClearActiveBuffs();
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
@@ -581,7 +579,7 @@ namespace TimelessEchoes
 #endif
             foreach (var echo in echoes)
                 if (echo != null)
-                    Object.Destroy(echo.gameObject);
+                    Destroy(echo.gameObject);
         }
 
         private static bool QuestCompleted(string questId)
