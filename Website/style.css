@@ -242,3 +242,54 @@ footer {
     margin-top: 10px;
   }
 }
+
+/* Monster infobox styling */
+.monster-infobox {
+  --border: var(--nav-bg);
+  --bg: var(--header-bg);
+  float: right;
+  margin: 0 0 20px 20px;
+  font: 14px/1.4 "Segoe UI", sans-serif;
+  color: var(--text-color);
+  max-width: 320px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.monster-infobox .monster-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+.monster-infobox .monster-stats {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.monster-infobox th,
+.monster-infobox td {
+  padding: 6px 8px;
+}
+
+.monster-infobox th {
+  width: 40%;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.monster-infobox td {
+  text-align: left;
+}
+
+.monster-infobox .header-row th {
+  background: var(--nav-bg);
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
