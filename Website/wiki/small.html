@@ -11,9 +11,22 @@
         <h1>Small Green Slime</h1>
     </header>
     <nav>
-        <a href="../index.html">Home</a>
-        <a href="index.html">Wiki Home</a>
+        <div class="nav-left">
+            <a href="../index.html">Home</a>
+            <a href="index.html">Wiki Home</a>
+        </div>
+        <div class="nav-right">
+            <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
+            <button id="light-btn">Light</button>
+            <button id="dark-btn">Dark</button>
+        </div>
     </nav>
+    <datalist id="search-options">
+        <option value="Wiki Home">
+        <option value="Small Green Slime">
+        <option value="Green Slime">
+        <option value="Large Green Slime">
+    </datalist>
     <div class="wiki-container">
     <aside class="sidebar">
         <h2>Navigation</h2>
@@ -61,5 +74,6 @@
     <footer>
         &copy; 2025 Echoes of Vasteria
     </footer>
+    <script src="wiki.js"></script>
 </body>
 </html>

@@ -11,8 +11,24 @@
     --text-color: #c0cbdc;
     --header-bg: #265c42;
     --nav-bg: #193c3e;
-    --accent-color: #63c74d;
+  --accent-color: #63c74d;
   }
+}
+
+:root.light-mode {
+  --bg-color: #ffffff;
+  --text-color: #181425;
+  --header-bg: #c0cbdc;
+  --nav-bg: #8b9bb4;
+  --accent-color: #3a4466;
+}
+
+:root.dark-mode {
+  --bg-color: #181425;
+  --text-color: #c0cbdc;
+  --header-bg: #265c42;
+  --nav-bg: #193c3e;
+  --accent-color: #63c74d;
 }
 html,
 body {
@@ -52,7 +68,17 @@ header {
 nav {
   background-color: var(--nav-bg);
   padding: 10px;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav .nav-left a {
+  margin-right: 10px;
+}
+nav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 nav a {
   color: var(--accent-color);
@@ -62,11 +88,14 @@ nav a {
 nav a:hover {
   color: #fee761;
 }
+nav input[type="search"] {
+  padding: 4px;
+}
 main {
   flex: 1;
   padding: 20px;
   max-width: 800px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 section {
@@ -166,8 +195,15 @@ footer {
   padding: 10px;
 }
 @media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   nav a {
     display: block;
     margin: 5px 0;
+  }
+  nav .nav-right {
+    margin-top: 10px;
   }
 }
