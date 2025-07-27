@@ -42,6 +42,7 @@ namespace TimelessEchoes
         [TitleGroup("Prefabs")]
         [SerializeField] private Vector3 reaperSpawnOffset = Vector3.zero;
 
+        [TitleGroup("UI")]
         [TitleGroup("UI/General")]
         [SerializeField] private Button returnToTavernButton;
         [TitleGroup("UI/General")]
