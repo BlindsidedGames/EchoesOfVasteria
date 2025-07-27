@@ -33,33 +33,55 @@ namespace TimelessEchoes
     {
         public static GameManager Instance { get; private set; }
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
-        [Header("Prefabs")] [SerializeField] private GameObject mapPrefab;
+        [TitleGroup("Prefabs")]
+        [SerializeField] private GameObject mapPrefab;
+        [TitleGroup("Prefabs")]
         [SerializeField] private GameObject gravestonePrefab;
+        [TitleGroup("Prefabs")]
         [SerializeField] private GameObject reaperPrefab;
+        [TitleGroup("Prefabs")]
         [SerializeField] private Vector3 reaperSpawnOffset = Vector3.zero;
 
-        [Header("UI References")] [SerializeField]
-        private Button startRunButton;
-
+        [TitleGroup("UI/General")]
         [SerializeField] private Button returnToTavernButton;
+        [TitleGroup("UI/General")]
         [SerializeField] private TMP_Text returnToTavernText;
+        [TitleGroup("UI/General")]
         [SerializeField] private TMP_Text retreatBonusText;
+        [TitleGroup("UI/General")]
         [SerializeField] private Button returnOnDeathButton;
+        [TitleGroup("UI/General")]
         [SerializeField] private TMP_Text returnOnDeathText;
+        [TitleGroup("UI/General")]
         [SerializeField] private GameObject autoBuffRoot;
+        [TitleGroup("UI/General")]
         [SerializeField] private Button autoBuffButton;
+        [TitleGroup("UI/General")]
         [SerializeField] private TMP_Text autoBuffText;
+        [TitleGroup("UI/General")]
         [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
+        [TitleGroup("UI/General")]
         [SerializeField] private GameObject tavernUI;
+        [TitleGroup("UI/General")]
         [SerializeField] private GameObject mapUI;
+        [TitleGroup("UI/General")]
         [SerializeField] private RunDropUI runDropUI;
+        [TitleGroup("UI/General")]
         [SerializeField] private RunCalebUIReferences runCalebUI;
+        [TitleGroup("UI/General")]
         [SerializeField] private Transform meetingParent;
+
+        [TitleGroup("UI/Death Window")]
         [SerializeField] private GameObject deathWindow;
+        [TitleGroup("UI/Death Window")]
         [SerializeField] private Button deathRunButton;
+        [TitleGroup("UI/Death Window")]
         [SerializeField] private Button deathReturnButton;
+        [TitleGroup("UI/Death Window")]
         [SerializeField] private SlicedFilledImage deathTimerImage;
+        [TitleGroup("UI/Death Window")]
         [SerializeField] private float deathWindowDuration = 20f;
+        [TitleGroup("UI/General")]
         [SerializeField] public string mildredQuestId;
 
         public GameObject ReaperPrefab => reaperPrefab;
@@ -67,10 +89,8 @@ namespace TimelessEchoes
         public Transform MeetingParent => meetingParent;
         public GameObject CurrentMap => currentMap;
 
-        [Header("Map Generation")] [SerializeField]
-        private List<MapGenerationConfig> generationConfigs = new();
-
-        [SerializeField] private int currentConfigIndex;
+        [TitleGroup("Map Generation")]
+        [SerializeField] private List<MapGenerationButton> generationButtons = new();
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -86,13 +106,20 @@ namespace TimelessEchoes
         private GameplayStatTracker statTracker;
         private bool returnOnDeathQueued;
         private bool retreatQueued;
+        private readonly Dictionary<Button, UnityEngine.Events.UnityAction> _buttonActions = new();
 
         private void Awake()
         {
             Instance = this;
             cloudSpawner = CloudSpawner.Instance;
-            if (startRunButton != null)
-                startRunButton.onClick.AddListener(StartRun);
+            foreach (var entry in generationButtons)
+            {
+                if (entry?.button == null) continue;
+                var cfg = entry.config;
+                UnityEngine.Events.UnityAction action = () => StartRun(cfg);
+                entry.button.onClick.AddListener(action);
+                _buttonActions.Add(entry.button, action);
+            }
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(OnReturnToTavernButton);
             if (returnOnDeathButton != null)
@@ -115,8 +142,6 @@ namespace TimelessEchoes
         {
             if (Instance == this)
                 Instance = null;
-            if (startRunButton != null)
-                startRunButton.onClick.RemoveListener(StartRun);
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
             if (returnOnDeathButton != null)
@@ -127,6 +152,12 @@ namespace TimelessEchoes
                 deathReturnButton.onClick.RemoveListener(OnDeathReturnButton);
             if (autoBuffButton != null)
                 autoBuffButton.onClick.RemoveListener(ToggleAutoBuff);
+            foreach (var pair in _buttonActions)
+            {
+                if (pair.Key != null)
+                    pair.Key.onClick.RemoveListener(pair.Value);
+            }
+            _buttonActions.Clear();
         }
 
         private void Start()
@@ -246,6 +277,12 @@ namespace TimelessEchoes
                 returnOnDeathText.text = "Queued";
         }
 
+        private void StartRun(MapGenerationConfig config)
+        {
+            CurrentGenerationConfig = config;
+            StartRun();
+        }
+
         private void StartRun()
         {
             HideTooltip();
@@ -279,15 +316,6 @@ namespace TimelessEchoes
         private IEnumerator StartRunRoutine()
         {
             yield return StartCoroutine(CleanupMapRoutine());
-            if (generationConfigs != null && generationConfigs.Count > 0)
-            {
-                var index = Mathf.Clamp(currentConfigIndex, 0, generationConfigs.Count - 1);
-                CurrentGenerationConfig = generationConfigs[index];
-            }
-            else
-            {
-                CurrentGenerationConfig = null;
-            }
 
             if (statTracker == null)
             {
