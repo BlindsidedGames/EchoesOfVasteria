@@ -1,17 +1,17 @@
 :root {
-  --bg-color: #c0cbdc;
+  --bg-color: #ffffff;
   --text-color: #181425;
-  --header-bg: #63c74d;
-  --nav-bg: #3e8948;
-  --accent-color: #0099db;
+  --header-bg: #c0cbdc;
+  --nav-bg: #8b9bb4;
+  --accent-color: #3a4466;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #181425;
     --text-color: #c0cbdc;
-    --header-bg: #124e89;
-    --nav-bg: #262b44;
-    --accent-color: #2ce8f5;
+    --header-bg: #265c42;
+    --nav-bg: #193c3e;
+    --accent-color: #63c74d;
   }
 }
 body {
@@ -20,6 +20,20 @@ body {
   padding: 0;
   background-color: var(--bg-color);
   color: var(--text-color);
+}
+
+body.homepage::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('images/MainPage.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: -1;
 }
 header {
   background-color: var(--header-bg);
@@ -113,6 +127,28 @@ section {
 
 .enemy-nav a:hover {
   text-decoration: underline;
+}
+
+.enemy-image {
+  width: 150px;
+  image-rendering: pixelated;
+}
+
+.enemy-stats {
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.enemy-stats th,
+.enemy-stats td {
+  border: 1px solid var(--nav-bg);
+  padding: 4px 8px;
+}
+
+.enemy-stats th {
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  text-align: left;
 }
 footer {
   background-color: var(--header-bg);
