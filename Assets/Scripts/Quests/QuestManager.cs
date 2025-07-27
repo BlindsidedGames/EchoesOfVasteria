@@ -257,6 +257,8 @@ namespace TimelessEchoes.Quests
                     obj.SetActive(true);
             if (inst.data.unlockBuffSlots > 0)
                 BuffManager.Instance?.UnlockSlots(inst.data.unlockBuffSlots);
+            if (inst.data.maxDistanceIncrease > 0f)
+                GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease);
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 StaticReferences.CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)

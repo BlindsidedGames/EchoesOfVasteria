@@ -22,6 +22,7 @@ namespace TimelessEchoes.Quests
         public GameObject unlockPrefab;
         public List<GameObject> unlockObjects = new();
         public int unlockBuffSlots;
+        public float maxDistanceIncrease;
 
         [Serializable]
         public class Requirement
