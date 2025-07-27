@@ -75,6 +75,9 @@ nav {
   justify-content: space-between;
   align-items: center;
 }
+nav.center-nav {
+  justify-content: center;
+}
 nav .nav-left a {
   margin-right: 10px;
 }
@@ -93,6 +96,9 @@ nav a:hover {
 }
 nav input[type="search"] {
   padding: 4px;
+}
+a:visited {
+  color: var(--accent-color);
 }
 main {
   flex: 1;
