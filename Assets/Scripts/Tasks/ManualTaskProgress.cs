@@ -22,6 +22,16 @@ namespace TimelessEchoes.Tasks
             if (taskObject == null)
                 taskObject = GetComponent<MonoBehaviour>();
             task = taskObject as ITask ?? taskObject?.GetComponent<ITask>();
+
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas != null &&
+                canvas.renderMode == RenderMode.WorldSpace &&
+                canvas.worldCamera == null)
+            {
+                var cam = Camera.main ?? Object.FindFirstObjectByType<Camera>();
+                if (cam != null)
+                    canvas.worldCamera = cam;
+            }
         }
 
         private void OnDisable()
