@@ -23,6 +23,7 @@ using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
+using Sirenix.OdinInspector;
 
 namespace TimelessEchoes
 {
