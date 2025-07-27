@@ -107,6 +107,8 @@ namespace TimelessEchoes.Hero
 
         private bool logicActive = true;
 
+        private bool reaperSpawnedByDistance;
+
         private float damageBonus;
         private float defenseBonus;
 
@@ -254,6 +256,16 @@ namespace TimelessEchoes.Hero
 #if !DISABLESTEAMWORKS
                 RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #endif
+                if (!IsEcho && !reaperSpawnedByDistance && transform.position.x >= tracker.MaxRunDistance)
+                {
+                    var gm = GameManager.Instance;
+                    var hp = health != null ? health : GetComponent<HeroHealth>();
+                    if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null && gm.CurrentMap != null)
+                    {
+                        ReaperManager.Spawn(gm.ReaperPrefab, gameObject, gm.CurrentMap.transform, false, null, gm.ReaperSpawnOffset);
+                        reaperSpawnedByDistance = true;
+                    }
+                }
             }
         }
 
@@ -277,6 +289,8 @@ namespace TimelessEchoes.Hero
 
             if (!IsEcho)
                 buffController?.Resume();
+
+            reaperSpawnedByDistance = false;
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();

@@ -64,6 +64,8 @@ namespace TimelessEchoes.Stats
 
         public float AverageRun { get; private set; }
 
+        public float MaxRunDistance { get; private set; } = 50f;
+
         public int CurrentRunKills { get; private set; }
 
         public double CurrentRunBonusResources { get; private set; }
@@ -136,6 +138,7 @@ namespace TimelessEchoes.Stats
             g.LongestRun = LongestRun;
             g.ShortestRun = ShortestRun;
             g.AverageRun = AverageRun;
+            g.MaxRunDistance = MaxRunDistance;
             g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
         }
@@ -172,6 +175,7 @@ namespace TimelessEchoes.Stats
             LongestRun = g.LongestRun;
             ShortestRun = g.ShortestRun;
             AverageRun = g.AverageRun;
+            MaxRunDistance = g.MaxRunDistance > 0f ? g.MaxRunDistance : 50f;
             if (g.NextRunNumber > 0)
                 nextRunNumber = g.NextRunNumber;
             else if (recentRuns.Count > 0)
@@ -289,6 +293,13 @@ namespace TimelessEchoes.Stats
                         CurrentRunBonusResources += amount;
                 }
             }
+        }
+
+        public void IncreaseMaxRunDistance(float amount)
+        {
+            if (amount <= 0f) return;
+            MaxRunDistance += amount;
+            SaveState();
         }
 
         public void BeginRun()

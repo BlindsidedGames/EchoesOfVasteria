@@ -159,6 +159,7 @@ namespace Blindsided.SaveData
             public float LongestRun;
             public float ShortestRun;
             public float AverageRun;
+            public float MaxRunDistance = 50f;
             public int NextRunNumber = 1;
         }
 
