@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Blindsided;
 using Blindsided.Utilities;
 using References.UI;
 using TimelessEchoes.Upgrades;
@@ -54,13 +55,13 @@ namespace TimelessEchoes.Quests
             if (pinButton != null && data != null)
             {
                 pinButton.onClick.RemoveAllListeners();
-                bool pinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                var pinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
                 UpdatePinVisual(pinned);
                 pinButton.onClick.AddListener(() =>
                 {
-                    var qm = QuestManager.Instance ?? Object.FindFirstObjectByType<QuestManager>();
+                    var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
                     qm?.TogglePinned(data.questId);
-                    bool nowPinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                    var nowPinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
                     UpdatePinVisual(nowPinned);
                 });
                 pinButton.gameObject.SetActive(!completed);
@@ -91,9 +92,7 @@ namespace TimelessEchoes.Quests
                             req.type == QuestData.RequirementType.DistanceRun ||
                             req.type == QuestData.RequirementType.DistanceTravel ||
                             req.type == QuestData.RequirementType.Meet)
-                        {
                             continue;
-                        }
 
                         var slot = Instantiate(costSlotPrefab, costParent);
                         slot.resource = req.type == QuestData.RequirementType.Resource
@@ -218,7 +217,7 @@ namespace TimelessEchoes.Quests
                 case QuestData.RequirementType.DistanceTravel:
                     return "Travel";
                 case QuestData.RequirementType.Instant:
-                    return "Instant";
+                    return "Information";
                 case QuestData.RequirementType.Meet:
                     return "Meet";
                 default:

@@ -15,7 +15,7 @@ MonoBehaviour:
   tilemapChunkSettings:
     terrainMap: {fileID: 0}
     decorMap: {fileID: 0}
-    bottomTerrain: {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+    bottomTerrain: {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
     middleTerrain: {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
     topTerrain: {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
     minAreaWidth: 4
@@ -214,6 +214,12 @@ MonoBehaviour:
     - prefab: {fileID: 4000714617541257269, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
       id: Ivan1
       localX: 40
+      spawnTerrains:
+      - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+      spawnOnlyOnce: 1
+    - prefab: {fileID: 5909428014693970596, guid: 56881595ccac0b244a734c3c5331dcac, type: 3}
+      id: OldTimer1
+      localX: 90
       spawnTerrains:
       - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
       spawnOnlyOnce: 1

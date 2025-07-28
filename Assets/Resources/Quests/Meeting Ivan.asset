@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Meeting Ivan
+  m_EditorClassIdentifier: 
+  questId: Meeting Ivan
+  questName: Meeting Ivan
+  description: '"In this realm Ivan is your brother, he will assist you in upgrading
+    your various stats, but you will need to gather the resources he needs." - The
+    Vast One'
+  rewardDescription: 'You can now purchase the following Upgrades!
+
+    Damage, Attack
+    Rate, and Defense. Reap distance is now 100.'
+  npcId: Ivan1
+  requiredQuests: []
+  requirements:
+  - type: 4
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
+  maxDistanceIncrease: 25
