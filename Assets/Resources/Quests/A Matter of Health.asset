@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: A Matter of Health
+  m_EditorClassIdentifier: 
+  questId: A Matter of Health
+  questName: A Matter of Health
+  description: '"Collect resources for me and I will cook you up a hearty treat!"
+    - Eva'
+  rewardDescription: 'You can now purchase Health Upgrades '
+  npcId: 
+  requiredQuests:
+  - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+  requirements:
+  - type: 4
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killIcon: {fileID: 0}
+    meetNpcId: Barkley1
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
+  maxDistanceIncrease: 0
