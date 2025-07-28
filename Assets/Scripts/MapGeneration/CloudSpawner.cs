@@ -26,6 +26,7 @@ public class CloudSpawner : MonoBehaviour
     private float screenHalfHeight;
     private Cloud[] clouds;
     private Coroutine resetRoutine;
+    private bool allowClouds = true;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -126,6 +127,17 @@ public class CloudSpawner : MonoBehaviour
         screenHalfWidth = screenHalfHeight * cam.aspect;
     }
 
+    public void SetAllowClouds(bool allow)
+    {
+        allowClouds = allow;
+        if (!allowClouds && clouds != null)
+        {
+            foreach (var c in clouds)
+                if (c?.Tr != null)
+                    c.Tr.gameObject.SetActive(false);
+        }
+    }
+
     public void ResetClouds(bool inTown)
     {
         if (resetRoutine != null)
@@ -141,6 +153,14 @@ public class CloudSpawner : MonoBehaviour
         UpdateScreenDimensions();
         if (clouds == null)
             yield break;
+
+        if (!allowClouds)
+        {
+            foreach (var c in clouds)
+                c.Tr.gameObject.SetActive(false);
+            resetRoutine = null;
+            yield break;
+        }
 
         var activeCount = inTown ? TownCloudCount : runCloudCount;
 
