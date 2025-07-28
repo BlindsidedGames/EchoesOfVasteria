@@ -18,6 +18,7 @@ namespace TimelessEchoes.Quests
             public QuestData quest;
             public List<GameObject> disableUntilComplete = new();
             public List<GameObject> enableUntilComplete = new();
+            public List<GameObject> enableWhileInProgress = new();
         }
 
         [SerializeField]
@@ -65,12 +66,16 @@ namespace TimelessEchoes.Quests
             {
                 if (entry == null) continue;
                 bool completed = entry.quest != null && QuestCompleted(entry.quest.questId);
+                bool inProgress = entry.quest != null && QuestInProgress(entry.quest.questId);
                 foreach (var obj in entry.disableUntilComplete)
                     if (obj != null)
                         obj.SetActive(completed);
                 foreach (var obj in entry.enableUntilComplete)
                     if (obj != null)
                         obj.SetActive(!completed);
+                foreach (var obj in entry.enableWhileInProgress)
+                    if (obj != null)
+                        obj.SetActive(inProgress);
             }
         }
 
@@ -82,6 +87,12 @@ namespace TimelessEchoes.Quests
                 return false;
             Oracle.oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
             return Oracle.oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
+        }
+
+        private static bool QuestInProgress(string questId)
+        {
+            var manager = Object.FindFirstObjectByType<QuestManager>();
+            return manager != null && manager.IsQuestInProgress(questId);
         }
     }
 }
