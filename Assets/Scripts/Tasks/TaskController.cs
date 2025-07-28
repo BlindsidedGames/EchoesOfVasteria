@@ -457,6 +457,8 @@ namespace TimelessEchoes.Tasks
                         Destroy(obj.GetComponent<OpenChestTask>());
                     else if (task is WoodcuttingTask)
                         Destroy(obj.GetComponent<WoodcuttingTask>());
+                    else if (task is MiningTask)
+                        Destroy(obj.GetComponent<MiningTask>());
                     else if (task is FarmingTask)
                         Destroy(obj.GetComponent<FarmingTask>());
                     else
@@ -468,6 +470,8 @@ namespace TimelessEchoes.Tasks
                 if (task is OpenChestTask)
                     Destroy(mb);
                 else if (task is WoodcuttingTask)
+                    Destroy(mb);
+                else if (task is MiningTask)
                     Destroy(mb);
                 else if (task is FarmingTask)
                     Destroy(mb);
