@@ -81,6 +81,11 @@ namespace Blindsided.SaveData
             public float MusicVolume = 0.25f;
             public float SfxVolume = 0.7f;
 
+            /// <summary>
+            ///     Desired target frame rate for the game.
+            /// </summary>
+            public int TargetFps = 60;
+
         }
 
         [HideReferenceObjectPicker]
