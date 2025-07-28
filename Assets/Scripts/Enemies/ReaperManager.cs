@@ -78,6 +78,10 @@ namespace TimelessEchoes.Enemies
             if (target == null) return;
             var hp = target.GetComponent<IHasHealth>();
             var dmg = target.GetComponent<IDamageable>();
+            var heroHp = target.GetComponent<Hero.HeroHealth>();
+            var heroCtrl = target.GetComponent<HeroController>();
+            if (heroHp != null)
+                heroHp.Immortal = false; // ensure OnDeath fires
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
 
@@ -87,6 +91,8 @@ namespace TimelessEchoes.Enemies
                 var enemy = target.GetComponent<Enemy>();
                 if (enemy != null && enemy.Stats != null)
                     amount += enemy.Stats.defense + 1f;
+                if (heroCtrl != null)
+                    amount += heroCtrl.Defense + 1f;
                 dmg.TakeDamage(amount);
                 if (fromHero)
                 {
