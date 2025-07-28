@@ -35,6 +35,7 @@ namespace TimelessEchoes.Enemies
         private float nextAttack;
         private float nextTargetUpdate;
         private AIDestinationSetter setter;
+        private Vector2 lastMoveDir = Vector2.down;
         private bool logicActive = true;
         private Vector3 spawnPos;
         private Transform startTarget;
@@ -116,6 +117,9 @@ namespace TimelessEchoes.Enemies
         {
             Vector2 vel = ai.desiredVelocity;
             var dir = vel;
+
+            if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
+                dir = setter.target.position - transform.position;
             if (fourDirectional)
             {
                 if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
@@ -128,11 +132,15 @@ namespace TimelessEchoes.Enemies
                 dir.y = 0f;
             }
 
-            animator.SetFloat("MoveX", dir.x);
-            animator.SetFloat("MoveY", dir.y);
+            if (dir.sqrMagnitude > 0.0001f)
+                lastMoveDir = dir;
+
+            animator.SetFloat("MoveX", lastMoveDir.x);
+            animator.SetFloat("MoveY", lastMoveDir.y);
             animator.SetFloat("MoveMagnitude", vel.magnitude);
+
             if (spriteRenderer != null)
-                spriteRenderer.flipX = vel.x < 0f;
+                spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
 
         private void UpdateBehavior()
