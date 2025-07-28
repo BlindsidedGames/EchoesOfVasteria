@@ -21,13 +21,15 @@ MonoBehaviour:
   rewardDescription: Gain the Disciple of Leather
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: d01f4a93a6144c329b3d8b6fe53588c8, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
     amount: 250
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

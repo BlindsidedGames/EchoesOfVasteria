@@ -18,7 +18,7 @@ MonoBehaviour:
   rewardDescription: Recruit the Disciple of slime.
   npcId: Ivan1
   requiredQuests:
-  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 1
     resource: {fileID: 0}
@@ -39,3 +39,4 @@ MonoBehaviour:
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

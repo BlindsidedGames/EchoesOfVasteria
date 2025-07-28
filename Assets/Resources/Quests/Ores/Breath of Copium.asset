@@ -19,13 +19,15 @@ MonoBehaviour:
   rewardDescription: Unlocks Idle nodes for mining
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 21c838e0a781dcb4c96d7cb663953ff5, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}
     amount: 2500
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

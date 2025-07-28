@@ -210,17 +210,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 37b5bdf51b258d6468f34c9fe61b9355, type: 2}
       - {fileID: 11400000, guid: 377ea7d0df8bdb34dbd047f58e376e7c, type: 2}
       - {fileID: 11400000, guid: 70c2ebf6cde62bb4ebd4275e6ff6373a, type: 2}
-    npcTasks:
-    - prefab: {fileID: 5909428014693970596, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
-      id: Witch1
-      localX: 140
-      spawnTerrains: []
-      spawnOnlyOnce: 1
-    - prefab: {fileID: 4000714617541257269, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
-      id: Ivan1
-      localX: 40
-      spawnTerrains: []
-      spawnOnlyOnce: 1
+    npcTasks: []
     minTaskDistance: 2
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}

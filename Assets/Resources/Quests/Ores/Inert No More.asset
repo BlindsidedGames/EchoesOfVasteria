@@ -19,13 +19,15 @@ MonoBehaviour:
   rewardDescription: Unlocks Vastium nodes for mining
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 63ff8ec529640974ab5843c76a2009bf, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}
     amount: 5000
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

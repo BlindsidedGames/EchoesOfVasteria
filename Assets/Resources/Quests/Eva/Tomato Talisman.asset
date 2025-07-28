@@ -20,6 +20,7 @@ MonoBehaviour:
   rewardDescription: Gain the Disciple of Tomato
   npcId: Witch1
   requiredQuests:
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   - {fileID: 11400000, guid: 9a289dbcc84c4cf9a655456d6f0ec3a9, type: 2}
   requirements:
   - type: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
     amount: 100
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

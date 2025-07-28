@@ -28,7 +28,7 @@ MonoBehaviour:
     minX: 15
     height: 18
     enemyDensity: 0.1
-    enemySpawnXOffset: 0
+    enemySpawnXOffset: 5
     topBuffer: 2
     bottomBuffer: 2
     blockingMask:
@@ -211,11 +211,11 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 377ea7d0df8bdb34dbd047f58e376e7c, type: 2}
       - {fileID: 11400000, guid: 70c2ebf6cde62bb4ebd4275e6ff6373a, type: 2}
     npcTasks:
-    - prefab: {fileID: 5909428014693970596, guid: 34f3291671019ea4b99d82cc970ce458, type: 3}
-      id: Barkley1
+    - prefab: {fileID: 4000714617541257269, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
+      id: Ivan1
       localX: 40
       spawnTerrains:
-      - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+      - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
       spawnOnlyOnce: 1
     minTaskDistance: 2
   segmentedMapSettings:

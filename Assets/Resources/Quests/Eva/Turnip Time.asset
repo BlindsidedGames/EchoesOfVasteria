@@ -18,6 +18,7 @@ MonoBehaviour:
   rewardDescription: Unlock the Turnip crop
   npcId: Witch1
   requiredQuests:
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   - {fileID: 11400000, guid: 72c197707d4c4c529d67db6a7e711132, type: 2}
   requirements:
   - type: 0
@@ -25,6 +26,8 @@ MonoBehaviour:
     amount: 30
     enemies: []
     killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

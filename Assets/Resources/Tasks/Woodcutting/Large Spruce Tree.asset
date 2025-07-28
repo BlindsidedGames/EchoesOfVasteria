@@ -38,6 +38,11 @@ MonoBehaviour:
     dropChance: 0.15
     minX: 0
     maxX: Infinity
+  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+    dropRange: {x: 7, y: 22}
+    dropChance: 1
+    minX: 0
+    maxX: Infinity
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0

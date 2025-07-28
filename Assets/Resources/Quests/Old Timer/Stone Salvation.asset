@@ -20,7 +20,7 @@ MonoBehaviour:
   rewardDescription: Gain the Disciple of Stone
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
@@ -31,3 +31,4 @@ MonoBehaviour:
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
+  maxDistanceIncrease: 0

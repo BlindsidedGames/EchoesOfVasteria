@@ -29,14 +29,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
   resourceDrops:
   - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
-    dropRange: {x: 4, y: 16}
+    dropRange: {x: 3, y: 4}
     dropChance: 1
     minX: 500
-    maxX: Infinity
-  - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
-    dropRange: {x: 5, y: 15}
-    dropChance: 0.15
-    minX: 0
     maxX: Infinity
   resetProgressOnInterrupt: 0
   persistent:
