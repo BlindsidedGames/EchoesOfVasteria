@@ -7,11 +7,12 @@ namespace TimelessEchoes.UI
 {
     /// <summary>
     /// Manages the town UI windows. Clicking a button closes all windows except
-    /// the inventory and opens the associated one. The Start Run button only
-    /// closes the windows. Right-click closes all windows.
+    /// the inventory and opens the associated one. Right-click closes all
+    /// windows.
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
+        public static TownWindowManager Instance { get; private set; }
         [Serializable]
         [InlineProperty]
         public class WindowReference
@@ -31,11 +32,11 @@ namespace TimelessEchoes.UI
         [SerializeField] private WindowReference inventory = new();
         [SerializeField] private WindowReference options = new();
 
-        [SerializeField]
-        private Button startRunButton;
+
 
         private void Awake()
         {
+            Instance = this;
             if (upgrades.button != null)
                 upgrades.button.onClick.AddListener(OpenUpgrades);
             if (buffs.button != null)
@@ -54,8 +55,6 @@ namespace TimelessEchoes.UI
                 options.button.onClick.AddListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.AddListener(ToggleInventory);
-            if (startRunButton != null)
-                startRunButton.onClick.AddListener(CloseAllWindows);
         }
 
         private void Start()
@@ -83,8 +82,8 @@ namespace TimelessEchoes.UI
                 options.button.onClick.RemoveListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.RemoveListener(ToggleInventory);
-            if (startRunButton != null)
-                startRunButton.onClick.RemoveListener(CloseAllWindows);
+            if (Instance == this)
+                Instance = null;
         }
 
         private void Update()
@@ -134,7 +133,7 @@ namespace TimelessEchoes.UI
                 options.window.SetActive(false);
         }
 
-        private void CloseAllWindows()
+        public void CloseAllWindows()
         {
             if (upgrades.window != null)
                 upgrades.window.SetActive(false);

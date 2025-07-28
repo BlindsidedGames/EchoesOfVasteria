@@ -16,6 +16,7 @@ using TimelessEchoes.NPC;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.UI;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -291,6 +292,7 @@ namespace TimelessEchoes
         {
             CurrentGenerationConfig = config;
             cloudSpawner?.SetAllowClouds(config == null || config.allowClouds);
+            TownWindowManager.Instance?.CloseAllWindows();
             StartRun();
         }
 
