@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a01e3aeb3affdd48ab5fa969c12e6c5, type: 3}
+  m_Name: Grass_Woods
+  m_EditorClassIdentifier: 
+  tile: {fileID: -6080419730213009515, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
+  taskSettings:
+    taskDensity: 0.18
+    borderOnly: 0
+    topBorderOffset: 0
+    bottomBorderOffset: 0
+    leftBorderOffset: 0
+    rightBorderOffset: 0
+  decor:
+    density: 0.068
+    decor: []
+  showValidationGizmos: 0
