@@ -2,8 +2,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Keeps the target camera locked to 16:9. Adds black bars on the sides
-/// (pillar-box) or top/bottom (letter-box) when the window is any other ratio.
+/// Keeps the camera within a supported aspect ratio range. Adds black bars on
+/// the sides (pillar-box) or top/bottom (letter-box) if the window falls
+/// outside the range.
 /// </summary>
 namespace TimelessEchoes
 {
@@ -12,8 +13,10 @@ public class AspectRatioBox : MonoBehaviour
     [Tooltip("Camera that should be boxed. Leave null → main camera.")]
     public Camera targetCamera;
 
-    // 16:9 = 1.777…  ;  the numbers don’t change, so keep them literal
-    const float targetAspect = 16f / 9f;
+    // Supported aspect ratios: minimum 16:9 and maximum 32:9. Keep literal
+    // values to avoid floating-point errors.
+    const float minAspect = 16f / 9f; // 1.777...
+    const float maxAspect = 32f / 9f; // 3.555...
 
     Rect originalRect;
 
@@ -36,9 +39,6 @@ public class AspectRatioBox : MonoBehaviour
     void LateUpdate()
     {
         if (targetCamera == null) return;
-        if (Mathf.Approximately(
-                (float)Screen.width / Screen.height,
-                targetCamera.rect.width / targetCamera.rect.height)) return;
 
         UpdateViewport();
     }
@@ -46,6 +46,7 @@ public class AspectRatioBox : MonoBehaviour
     void UpdateViewport()
     {
         float windowAspect = (float)Screen.width / Screen.height;
+        float targetAspect = Mathf.Clamp(windowAspect, minAspect, maxAspect);
         float scale = windowAspect / targetAspect;
 
         Rect rect;
@@ -59,6 +60,7 @@ public class AspectRatioBox : MonoBehaviour
             float invScale = 1f / scale;
             rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
         }
+
         targetCamera.rect = rect;
     }
 }
