@@ -108,6 +108,12 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.SfxVolume = value;
         }
 
+        public static int TargetFps
+        {
+            get => oracle.saveData.SavedPreferences.TargetFps;
+            set => oracle.saveData.SavedPreferences.TargetFps = value;
+        }
+
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
