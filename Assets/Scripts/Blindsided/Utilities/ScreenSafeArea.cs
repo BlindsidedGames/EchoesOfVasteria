@@ -9,25 +9,24 @@ namespace Blindsided.Utilities
         private Vector2 minAnchor;
         private Rect safeArea;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         public bool extraBoarders;
         public float boarderTop = 40;
         public float boarderBottom = 40;
         public float boarderLeft;
         public float boarderRight;
-
 #endif
         private void OnEnable()
         {
             _rectTransform = GetComponent<RectTransform>();
             safeArea = Screen.safeArea;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
             // Subtract 40 from the left, right, and bottom
             if (extraBoarders)
             {
                 _rectTransform.offsetMin = new Vector2(boarderLeft, boarderBottom); // Left, Bottom
-                _rectTransform.offsetMax = new Vector2(-boarderRight, -boarderTop); // Right, Top 
+                _rectTransform.offsetMax = new Vector2(-boarderRight, -boarderTop); // Right, Top
             }
 #endif
 
