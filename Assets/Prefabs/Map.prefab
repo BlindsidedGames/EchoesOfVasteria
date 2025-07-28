@@ -540,7 +540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yLevel: 9
-  minX: 16
+  minX: 0
 --- !u!1 &5682045706784381804
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,7 +879,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0fa70eb35677b14cadbceb8bd0f31dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   terrainMap: {fileID: 5260808751377424494}
   decorMap: {fileID: 1970811859748993408}
   bottomTerrain: {fileID: 0}
@@ -903,14 +902,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e807d7fd8a7b0044baf92113dce857a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   minX: 10
   maxX: 940
   height: 17
   topBuffer: 0
   bottomBuffer: 0
-  taskDensity: 0.1
   enemyDensity: 0.1
+  enemySpawnXOffset: 0
   blockingMask:
     serializedVersion: 2
     m_Bits: 256
@@ -969,7 +967,7 @@ MonoBehaviour:
   taskCategories: []
   npcTasks: []
   minTaskDistance: 1.5
-  terrainMap: {fileID: 0}
+  terrainMap: {fileID: 5260808751377424494}
   bottomTerrain: {fileID: 0}
   middleTerrain: {fileID: 0}
   topTerrain: {fileID: 0}
@@ -985,7 +983,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7adf18044fd82a45bdb6ef941db3141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 020bd1fd9a808ac41817924d698fd642, type: 2}
   segmentSize: {x: 64, y: 18}
   segmentParent: {fileID: 508231011876975185}
   pathfinder: {fileID: 3994575044794960044}
