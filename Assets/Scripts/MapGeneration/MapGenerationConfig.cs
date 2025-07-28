@@ -17,6 +17,9 @@ namespace TimelessEchoes.MapGeneration
         public ProceduralTaskSettings taskGeneratorSettings = new();
         public SegmentedMapSettings segmentedMapSettings = new();
 
+        // Whether clouds should be shown while this map is active.
+        public bool allowClouds = true;
+
         [Serializable]
         public class TilemapChunkSettings
         {

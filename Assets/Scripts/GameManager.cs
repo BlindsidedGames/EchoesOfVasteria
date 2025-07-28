@@ -283,12 +283,14 @@ namespace TimelessEchoes
         private void StartRun(MapGenerationConfig config)
         {
             CurrentGenerationConfig = config;
+            cloudSpawner?.SetAllowClouds(config == null || config.allowClouds);
             StartRun();
         }
 
         private void StartRun()
         {
             HideTooltip();
+            cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
             // Re-enable autobuff for the new run based on the saved preference.
             SetAutoBuffRunDisabled(false);
             returnOnDeathQueued = false;
@@ -562,6 +564,7 @@ namespace TimelessEchoes
             if (tavernCamera != null)
             {
                 tavernCamera.gameObject.SetActive(true);
+                cloudSpawner?.SetAllowClouds(true);
                 cloudSpawner?.ResetClouds(true);
             }
 
