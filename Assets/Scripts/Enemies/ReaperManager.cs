@@ -101,12 +101,12 @@ namespace TimelessEchoes.Enemies
                                FindFirstObjectByType<BuffManager>();
                     var hero = HeroController.Instance ??
                                FindFirstObjectByType<HeroController>();
-                    var heroHp = hero != null ? hero.GetComponent<HeroHealth>() : null;
-                    if (buff != null && heroHp != null)
+                    var heroHealth = hero != null ? hero.GetComponent<HeroHealth>() : null;
+                    if (buff != null && heroHealth != null)
                     {
                         var ls = buff.LifestealPercent;
                         if (ls > 0f)
-                            heroHp.Heal(amount * ls / 100f);
+                            heroHealth.Heal(amount * ls / 100f);
                     }
                 }
             }
