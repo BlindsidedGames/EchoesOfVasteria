@@ -21,6 +21,7 @@ namespace TimelessEchoes.Quests
     /// </summary>
     public class QuestManager : MonoBehaviour
     {
+        public static QuestManager Instance { get; private set; }
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
         private DiscipleGenerationManager generationManager;
@@ -42,6 +43,7 @@ namespace TimelessEchoes.Quests
 
         private void Awake()
         {
+            Instance = this;
             quests = new List<QuestData>(Resources.LoadAll<QuestData>(questResourcePath));
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
@@ -85,6 +87,9 @@ namespace TimelessEchoes.Quests
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
             }
+
+            if (Instance == this)
+                Instance = null;
 
             OnLoadData -= OnLoadDataHandler;
         }
@@ -232,6 +237,8 @@ namespace TimelessEchoes.Quests
             inst.ui?.SetProgress(progress);
             inst.ui?.UpdateRequirementIcons();
             inst.ReadyForTurnIn = progress >= 1f;
+
+            PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
         private void CompleteQuest(QuestInstance inst)
@@ -269,6 +276,8 @@ namespace TimelessEchoes.Quests
             RefreshNoticeboard();
             Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
+
+            PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
         /// <summary>
@@ -305,6 +314,34 @@ namespace TimelessEchoes.Quests
             if (string.IsNullOrEmpty(questId))
                 return false;
             return active.ContainsKey(questId);
+        }
+
+        /// <summary>
+        ///     Returns quest data for the given id or null if not found.
+        /// </summary>
+        public QuestData GetQuestData(string questId)
+        {
+            if (string.IsNullOrEmpty(questId))
+                return null;
+            foreach (var q in quests)
+                if (q != null && q.questId == questId)
+                    return q;
+            return null;
+        }
+
+        /// <summary>
+        ///     Toggle the pinned state of the quest with the given id.
+        /// </summary>
+        public void TogglePinned(string questId)
+        {
+            if (oracle == null || string.IsNullOrEmpty(questId))
+                return;
+            var set = oracle.saveData.PinnedQuests;
+            if (set.Contains(questId))
+                set.Remove(questId);
+            else
+                set.Add(questId);
+            PinnedQuestUIManager.Instance?.RefreshPins();
         }
 
         private void TryStartQuest(QuestData quest)
@@ -350,6 +387,8 @@ namespace TimelessEchoes.Quests
 
             active[quest.questId] = inst;
             UpdateProgress(inst);
+
+            PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
         private void RefreshNoticeboard()

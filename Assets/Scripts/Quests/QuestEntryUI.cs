@@ -23,6 +23,7 @@ namespace TimelessEchoes.Quests
         public SlicedFilledImage progressImage;
         public Image questImage;
         public GameObject progressBar;
+        public Button pinButton;
         public CostResourceUIReferences costSlotPrefab;
         public Transform costParent;
 
@@ -48,6 +49,21 @@ namespace TimelessEchoes.Quests
                 turnInButton.onClick.RemoveAllListeners();
                 if (onTurnIn != null && !completed) turnInButton.onClick.AddListener(() => onTurnIn());
                 turnInButton.gameObject.SetActive(onTurnIn != null && !completed);
+            }
+
+            if (pinButton != null && data != null)
+            {
+                pinButton.onClick.RemoveAllListeners();
+                bool pinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                UpdatePinVisual(pinned);
+                pinButton.onClick.AddListener(() =>
+                {
+                    var qm = QuestManager.Instance ?? Object.FindFirstObjectByType<QuestManager>();
+                    qm?.TogglePinned(data.questId);
+                    bool nowPinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                    UpdatePinVisual(nowPinned);
+                });
+                pinButton.gameObject.SetActive(!completed);
             }
 
             if (questImage != null)
@@ -176,6 +192,14 @@ namespace TimelessEchoes.Quests
                     slot.iconImage.color = Color.white;
                 }
             }
+        }
+
+        private void UpdatePinVisual(bool pinned)
+        {
+            if (pinButton == null) return;
+            var txt = pinButton.GetComponentInChildren<TMP_Text>();
+            if (txt != null)
+                txt.text = pinned ? "Unpin" : "Pin";
         }
 
         private static string GetQuestType(QuestData data)
