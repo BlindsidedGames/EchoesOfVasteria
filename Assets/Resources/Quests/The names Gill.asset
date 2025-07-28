@@ -22,7 +22,13 @@ MonoBehaviour:
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 2f2ff992f4de15a4bb5263366f3fe554, type: 2}
-  requirements: []
+  requirements:
+  - type: 4
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 0
