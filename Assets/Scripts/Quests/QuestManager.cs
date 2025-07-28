@@ -297,6 +297,16 @@ namespace TimelessEchoes.Quests
             return false;
         }
 
+        /// <summary>
+        ///     Returns true if the quest with the given id is currently active.
+        /// </summary>
+        public bool IsQuestInProgress(string questId)
+        {
+            if (string.IsNullOrEmpty(questId))
+                return false;
+            return active.ContainsKey(questId);
+        }
+
         private void TryStartQuest(QuestData quest)
         {
             if (quest == null) return;
