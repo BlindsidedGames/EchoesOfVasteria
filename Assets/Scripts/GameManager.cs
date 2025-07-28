@@ -101,6 +101,7 @@ namespace TimelessEchoes
 
         private GameObject currentMap;
         private bool runEndedByDeath;
+        private bool heroDead;
         private Coroutine deathWindowCoroutine;
         private HeroController hero;
         private CinemachineCamera mapCamera;
@@ -187,7 +188,7 @@ namespace TimelessEchoes
             UpdateAutoBuffUI();
             if (returnToTavernButton != null)
             {
-                var active = hero != null;
+                var active = hero != null && hero.gameObject.activeSelf && !heroDead;
                 returnToTavernButton.interactable = active;
                 if (returnToTavernText != null)
                 {
@@ -222,6 +223,12 @@ namespace TimelessEchoes
                         retreatBonusText.text = "+0% Resources";
                     }
                 }
+            }
+
+            if (returnOnDeathButton != null)
+            {
+                var active = hero != null && hero.gameObject.activeSelf && !heroDead;
+                returnOnDeathButton.interactable = active;
             }
 
             if (retreatQueued && hero != null && !hero.InCombat)
@@ -293,6 +300,7 @@ namespace TimelessEchoes
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
             // Re-enable autobuff for the new run based on the saved preference.
             SetAutoBuffRunDisabled(false);
+            heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
             if (returnOnDeathText != null)
@@ -395,6 +403,11 @@ namespace TimelessEchoes
         private void OnHeroDeath()
         {
             DestroyAllEchoes();
+            heroDead = true;
+            if (returnToTavernButton != null)
+                returnToTavernButton.interactable = false;
+            if (returnOnDeathButton != null)
+                returnOnDeathButton.interactable = false;
             bool distanceReaper = false;
             if (hero != null)
             {
@@ -519,6 +532,7 @@ namespace TimelessEchoes
             // Reactivate autobuff if it was temporarily disabled by death.
             SetAutoBuffRunDisabled(false);
             UpdateAutoBuffUI();
+            heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
             if (returnOnDeathText != null)
