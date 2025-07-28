@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Pathfinding;
 using TimelessEchoes.Tasks;
+using UnityEngine;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -14,7 +13,6 @@ namespace TimelessEchoes.MapGeneration
     [RequireComponent(typeof(TaskController))]
     public class SegmentedMapGenerator : MonoBehaviour
     {
-
         [SerializeField] private Vector2Int segmentSize = new(64, 18);
         [SerializeField] private Transform segmentParent;
         [SerializeField] private AstarPath pathfinder;
@@ -124,7 +122,7 @@ namespace TimelessEchoes.MapGeneration
 
             var arr = segments.ToArray();
             var start = arr[1].startX;
-            gg.SetDimensions(segmentSize.x * 4, segmentSize.y, gg.nodeSize);
+            gg.SetDimensions(segmentSize.x * 8, segmentSize.y * 2, gg.nodeSize);
             gg.center = new Vector3(start + segmentSize.x, 9f, 0f);
             pathfinder.Scan();
         }

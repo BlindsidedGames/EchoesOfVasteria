@@ -598,6 +598,7 @@ MonoBehaviour:
   currentTaskName: 
   currentTaskObject: {fileID: 0}
   allowAttacks: 1
+  combatAggroRange: 20
   idleWalkStep: 5
 --- !u!114 &559727629078150424
 MonoBehaviour:
@@ -718,7 +719,7 @@ MonoBehaviour:
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
-  constrainInsideGraph: 0
+  constrainInsideGraph: 1
 --- !u!114 &3963385185172838639
 MonoBehaviour:
   m_ObjectHideFlags: 0

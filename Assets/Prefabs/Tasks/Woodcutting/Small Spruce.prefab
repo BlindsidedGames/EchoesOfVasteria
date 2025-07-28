@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5817300510109421323}
   - component: {fileID: 2119440013606030}
   - component: {fileID: 2022055861261725834}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 4302974782702743269}
   - component: {fileID: 712674178745616380}
   - component: {fileID: 4821827099416284749}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3659531261967260217}
   - component: {fileID: 6777865665299753724}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 738962969123366820}
   - component: {fileID: 7194258618632810135}
   - component: {fileID: 5273727422902365347}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 3131380844088178764}
   - component: {fileID: 5676500749667333592}
   - component: {fileID: 3738580166200737842}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6224035724133537699}
   - component: {fileID: 5366876333383290996}
-  m_Layer: 0
+  - component: {fileID: 2141090327540647613}
+  m_Layer: 8
   m_Name: Small Spruce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,6 +499,42 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6777865665299753724}
   stumpSprite: {fileID: 5120595313631994069, guid: cbc5d9c181eaf0943969b1c5cb93ba50, type: 3}
   cuttingPoint: {fileID: 3659531261967260217}
+--- !u!58 &2141090327540647613
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5839893854702782364}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.3
 --- !u!1 &7827802749126930448
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +547,7 @@ GameObject:
   - component: {fileID: 229016633527916783}
   - component: {fileID: 4684740912764619985}
   - component: {fileID: 8960994516245489484}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

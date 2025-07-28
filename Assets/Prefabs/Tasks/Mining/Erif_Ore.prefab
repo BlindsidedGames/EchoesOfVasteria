@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3866733754735219859}
   - component: {fileID: 8218323099550633743}
   - component: {fileID: 8674862609695521734}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 4486800737459701123}
   - component: {fileID: 7391275935083591977}
   - component: {fileID: 9214245603428696811}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7850270755409974412}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MiningPoint_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,8 @@ GameObject:
   - component: {fileID: 8245116162548217892}
   - component: {fileID: 344104847789046031}
   - component: {fileID: 33249571399304914}
-  m_Layer: 0
+  - component: {fileID: 4372054252734635913}
+  m_Layer: 8
   m_Name: Erif_Ore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,6 +403,42 @@ MonoBehaviour:
   taskData: {fileID: 11400000, guid: dd52987e13599b240a10458584bc43ca, type: 2}
   progressBarObject: {fileID: 6903395814371763851}
   progressBar: {fileID: 2992031436270654903}
+--- !u!58 &4372054252734635913
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806500026266312091}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.3
 --- !u!1 &2865883067036561459
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1368943804057884850}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MiningPoint_Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,7 +479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3432401142847852912}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MiningPoint_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5969166813684563573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MiningPoint_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +543,7 @@ GameObject:
   - component: {fileID: 6398662446436637119}
   - component: {fileID: 6651780794808078879}
   - component: {fileID: 6544024259036680352}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -582,7 +619,7 @@ GameObject:
   - component: {fileID: 3456071093156386199}
   - component: {fileID: 4484745602308894961}
   - component: {fileID: 2992031436270654903}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -652,7 +689,7 @@ GameObject:
   - component: {fileID: 2925166163914011881}
   - component: {fileID: 3564156660692703375}
   - component: {fileID: 1019417039721754164}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
