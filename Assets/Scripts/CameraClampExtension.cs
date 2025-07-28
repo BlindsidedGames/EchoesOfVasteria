@@ -5,7 +5,7 @@ namespace TimelessEchoes
 {
     /// <summary>
     /// Cinemachine extension that clamps the camera to a fixed Y level and
-    /// prevents the X position from going below a minimum value.
+    /// ensures the left edge of the view never goes left of <c>minX</c>.
     /// Attach this component to a CinemachineCamera.
     /// </summary>
     [SaveDuringPlay]
@@ -25,7 +25,8 @@ namespace TimelessEchoes
             {
                 var pos = state.GetFinalPosition();
                 pos.y = yLevel;
-                pos.x = Mathf.Max(minX, pos.x);
+                float halfWidth = state.Lens.OrthographicSize * state.Lens.Aspect;
+                pos.x = Mathf.Max(minX + halfWidth, pos.x);
                 state.PositionCorrection += pos - state.GetFinalPosition();
             }
         }
