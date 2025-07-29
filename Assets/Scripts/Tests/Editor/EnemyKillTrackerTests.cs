@@ -9,14 +9,14 @@ namespace TimelessEchoes.Tests
     {
         private GameObject obj;
         private EnemyKillTracker tracker;
-        private EnemyStats enemyStats;
+        private EnemyData enemyStats;
 
         [SetUp]
         public void SetUp()
         {
             obj = new GameObject();
             tracker = obj.AddComponent<EnemyKillTracker>();
-            enemyStats = ScriptableObject.CreateInstance<EnemyStats>();
+            enemyStats = ScriptableObject.CreateInstance<EnemyData>();
         }
 
         [TearDown]

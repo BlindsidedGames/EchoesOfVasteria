@@ -25,7 +25,7 @@ namespace TimelessEchoes.Editor
             tree.AddAllAssetsAtPath("Resources", "Assets", typeof(Resource), true);
             tree.AddAllAssetsAtPath("Buff Recipes", "Assets", typeof(BuffRecipe), true);
             tree.AddAllAssetsAtPath("Hero Stats", "Assets", typeof(HeroStats), true);
-            tree.AddAllAssetsAtPath("Enemy Stats", "Assets", typeof(EnemyStats), true);
+            tree.AddAllAssetsAtPath("Enemy Stats", "Assets", typeof(EnemyData), true);
 
             tree.Config.DrawSearchToolbar = true;
             tree.Config.SearchToolbarHeight = 20;

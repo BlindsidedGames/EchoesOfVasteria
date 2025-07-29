@@ -15,7 +15,7 @@ namespace TimelessEchoes.Enemies
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree();
-            tree.AddAllAssetsAtPath("Enemies", "Assets", typeof(EnemyStats), true);
+            tree.AddAllAssetsAtPath("Enemies", "Assets", typeof(EnemyData), true);
             return tree;
         }
     }

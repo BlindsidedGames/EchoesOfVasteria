@@ -14,8 +14,8 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatPanelReferences references;
         private EnemyKillTracker killTracker;
 
-        private readonly Dictionary<EnemyStats, EnemyStatEntryUIReferences> entries = new();
-        private List<EnemyStats> defaultOrder = new();
+        private readonly Dictionary<EnemyData, EnemyStatEntryUIReferences> entries = new();
+        private List<EnemyData> defaultOrder = new();
 
         public enum SortMode
         {
@@ -63,7 +63,7 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.enemyEntryParent)
                 Destroy(child.gameObject);
 
-            var allStats = Resources.LoadAll<EnemyStats>("");
+            var allStats = Resources.LoadAll<EnemyData>("");
             var sorted = allStats
                 .OrderBy(s => s.displayOrder)
                 .ThenBy(s => s.enemyName)
@@ -88,7 +88,7 @@ namespace TimelessEchoes.UI
                 UpdateEntry(pair.Key, pair.Value);
         }
 
-        private void UpdateEntry(EnemyStats stats, EnemyStatEntryUIReferences ui)
+        private void UpdateEntry(EnemyData stats, EnemyStatEntryUIReferences ui)
         {
             if (stats == null || ui == null) return;
             double kills = killTracker ? killTracker.GetKills(stats) : 0;
@@ -166,7 +166,7 @@ namespace TimelessEchoes.UI
                 _ => 0
             };
 
-            float GetValue(EnemyStats s) => sortMode switch
+            float GetValue(EnemyData s) => sortMode switch
             {
                 SortMode.Damage => s.damage,
                 SortMode.Health => s.maxHealth,
@@ -175,8 +175,8 @@ namespace TimelessEchoes.UI
                 _ => 0
             };
 
-            IEnumerable<EnemyStats> known = defaultOrder;
-            IEnumerable<EnemyStats> unknown = Enumerable.Empty<EnemyStats>();
+            IEnumerable<EnemyData> known = defaultOrder;
+            IEnumerable<EnemyData> unknown = Enumerable.Empty<EnemyData>();
             if (killTracker != null)
             {
                 known = defaultOrder.Where(s => killTracker.GetRevealLevel(s) >= threshold);
@@ -192,7 +192,7 @@ namespace TimelessEchoes.UI
             ApplyOrder(finalOrder);
         }
 
-        private void ApplyOrder(IList<EnemyStats> order)
+        private void ApplyOrder(IList<EnemyData> order)
         {
             int index = 0;
             foreach (var stats in order)

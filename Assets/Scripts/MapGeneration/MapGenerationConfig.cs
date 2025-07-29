@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Enemies;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -57,7 +58,7 @@ namespace TimelessEchoes.MapGeneration
             public LayerMask blockingMask;
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
 
-            public List<ProceduralTaskGenerator.WeightedSpawn> enemies = new();
+            public List<TimelessEchoes.Enemies.EnemyData> enemies = new();
 
             [Header("Woodcutting")] public ProceduralTaskGenerator.WeightedTaskCategory woodcutting = new();
             [Header("Mining")] public ProceduralTaskGenerator.WeightedTaskCategory mining = new();
