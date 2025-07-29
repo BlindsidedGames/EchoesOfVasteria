@@ -591,7 +591,7 @@ MonoBehaviour:
     dataString: UEsDBBQAAAgIAABYIexFsyCJ0AIAAAQGAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVNtu4jAQ/RXk5wUl4b5vu0DpPrRFS1d9WPrgxhNiYezIlwKt+PcdO4akrFQJ98ztzJmZfBIuTQW5VXqpOXtQDMj3DvFv8q3TGO/hSLdKrvkHXHxeOLOld6LB5ze1XCGe+jCj9mA1z3/IrfDOCYJO8kLp/YJtYaaMNQgXVBhAk1bWR0uEPjvkiD/dqQ854Ssb+9cHvqZJ54zPHKQF3biOBtFzGv1qNydzQfcVMM+58U6zSXRPJ8FPYjvRJekNfX4lBDeRDbGnKnQ7o5Vx2As6ME6xu0Ah7WUIlMC3pfVc2+FPRWHAxuY1Pc25RpnqvOSnqrXbU7Oryb1T4XylbDgKvOqkD//Zu2kwF1rt7y9108TXsCXPd7/pKafGtsRtw/MW9aDRgYodfRPwUoJ8VEutnGRotNr5UGcgmzf/XlublZDvGrymegO6qhH9Msu0N55M0v501F90k3Ecl2/oHKQ4ri1U16aS3qBB/xgwa6HCLGIBb4lIWBbQOMlf2FxYJRPLIuoZY/wz3bZ3LhruuDYWTVGRiHrfFY4LGMgc4hC63kF6em/KaZ+LLAJXL42zM6UlBDgSrEBSYU8rzGhv9+HG1uJ1Y7mj/vwiu2i7XNVNSIAb/yS5Ma3U4Tp5jbtswoJfXn9f/RBMqQ4PYMonZwWXLbW94REFnikp6zVui3kJWztd0LwVZuFonYY5tTRUQzq4bawdilqGCOmE8IsdGgiMsAH/9+r1LSnWFQEmj0qGQ/zyG+hvHWdfz4VMsmnBiqyggxFNhnm/26cFDAuY9gfFOBtmBQn3xCXKTcWq1itOCbdLNr1IvJ3Lx7Gz1LQKF8w0PSz5x161Js9loda5BpBPdYZrs6CxCH5t2IJxbHMN1nIZ9pJ8bohQ+Q7Y5ppoE4RdHK2mmybLhlT8XVmPbMgsfA03xMPX+8TVfedw8MW/JAOBowP2zAXsaeVNyZmc/wFQSwMEFAAACAgAAFgh7BKcVnVsAAAAdwAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw1TPWs9BRUEovSizIKAYKGII4pZkpIHa0koWRZVpKmlFaoolZooFpsrGucWJaqmlaqqWxSZq5kalRmlIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAWCHsRbMgidACAAAEBgAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAWCHsEpxWdWwAAAB3AAAACQAkAAAAAAAAAAAAAAAdAwAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAANQDAAAAAA==
     file_cachedStartup: {fileID: 0}
     cacheStartup: 0
-  showNavGraphs: 1
+  showNavGraphs: 0
   showUnwalkableNodes: 1
   debugMode: 0
   debugFloor: 0
@@ -914,56 +914,36 @@ MonoBehaviour:
     m_Bits: 256
   otherTaskEdgeOffset: 2
   enemies:
-  - prefab: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
-    weight: 2
+  - data: {fileID: 0}
     minX: 0
     maxX: 200
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 8f2ebb42fcdd95945833d669e550ea87, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 50
     maxX: 500
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 200
     maxX: 700
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 400
     maxX: 1200
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 800
     maxX: 2400
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 300
     maxX: 3200
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 0
     maxX: 1
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 0
     maxX: 1
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 0
     maxX: 1
-    spawnTerrains: []
-  - prefab: {fileID: 8193780003442596315, guid: 518fcc48b92f4b88a369f9442b8dbae8, type: 3}
-    weight: 1
+  - data: {fileID: 0}
     minX: 0
     maxX: 1
-    spawnTerrains: []
   taskCategories: []
   npcTasks: []
   minTaskDistance: 1.5
@@ -1050,7 +1030,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 800407347698755460, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
