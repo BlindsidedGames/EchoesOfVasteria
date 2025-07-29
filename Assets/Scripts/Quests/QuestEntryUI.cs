@@ -21,6 +21,7 @@ namespace TimelessEchoes.Quests
         public TMP_Text rewardText;
         public TMP_Text typeText;
         public Button turnInButton;
+        public TMP_Text turnInText;
         public SlicedFilledImage progressImage;
         public Image questImage;
         public GameObject progressBar;
@@ -50,6 +51,17 @@ namespace TimelessEchoes.Quests
                 turnInButton.onClick.RemoveAllListeners();
                 if (onTurnIn != null && !completed) turnInButton.onClick.AddListener(() => onTurnIn());
                 turnInButton.gameObject.SetActive(onTurnIn != null && !completed);
+            }
+            if (turnInText != null)
+            {
+                var label = "Turn In";
+                if (data != null && data.requirements != null && data.requirements.Count > 0)
+                {
+                    var type = data.requirements[0].type;
+                    if (type == QuestData.RequirementType.Instant || type == QuestData.RequirementType.Meet)
+                        label = "Okay";
+                }
+                turnInText.text = label;
             }
 
             if (pinButton != null && data != null)
