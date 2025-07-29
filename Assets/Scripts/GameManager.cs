@@ -464,18 +464,7 @@ namespace TimelessEchoes
                 if (ai != null)
                     ai.enabled = false;
 
-                if (!distanceReaper && reaperPrefab != null && currentMap != null)
-                {
-                    ReaperManager.Spawn(reaperPrefab, hero.gameObject, currentMap.transform, false,
-                        () =>
-                        {
-                            hero.gameObject.SetActive(false);
-                            if (gravestonePrefab != null)
-                                Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
-                                    currentMap.transform);
-                        }, reaperSpawnOffset);
-                }
-                else if (!distanceReaper)
+                if (!distanceReaper)
                 {
                     hero.gameObject.SetActive(false);
                     if (gravestonePrefab != null && currentMap != null)
