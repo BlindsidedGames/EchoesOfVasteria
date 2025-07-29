@@ -78,6 +78,9 @@ from the edges tasks must spawn. Task spawn counts now rely solely on each
 terrain's `taskSettings.taskDensity` value; the generator's overall density
 setting has been removed.
 
+When `addToTaskList` is disabled on a terrain, the generator still spawns its
+tasks but they are not registered with the hero's `TaskController`.
+
 ## Building
 Use **File > Build Settings...** to create standalone builds.
 
