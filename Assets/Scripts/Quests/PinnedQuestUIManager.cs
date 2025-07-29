@@ -136,10 +136,21 @@ namespace TimelessEchoes.Quests
                             break;
                     }
 
-                    if (target <= 0)
-                        sb.AppendLine(CalcUtils.FormatNumber(current, true));
+                    if (req.type == QuestData.RequirementType.Resource)
+                    {
+                        var name = req.resource ? req.resource.name : "";
+                        if (target <= 0)
+                            sb.AppendLine($"{name}: {CalcUtils.FormatNumber(current, true)}");
+                        else
+                            sb.AppendLine($"{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}");
+                    }
                     else
-                        sb.AppendLine($"{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}");
+                    {
+                        if (target <= 0)
+                            sb.AppendLine(CalcUtils.FormatNumber(current, true));
+                        else
+                            sb.AppendLine($"{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}");
+                    }
                 }
 
                 text.text = sb.ToString();
