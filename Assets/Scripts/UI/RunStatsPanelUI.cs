@@ -261,6 +261,10 @@ namespace TimelessEchoes.UI
             {
                 var avgRatio = longest > 0f ? average / longest : 0f;
                 averageRunSlider.value = Mathf.Clamp01((float)avgRatio);
+                if (averageRunSlider.value < 0.05f)
+                    averageRunSlider.gameObject.SetActive(false);
+                else
+                    averageRunSlider.gameObject.SetActive(true);
             }
 
             if (runs.Count > 0)
