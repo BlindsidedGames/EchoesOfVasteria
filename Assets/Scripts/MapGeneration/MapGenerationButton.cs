@@ -1,5 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.MapGeneration
@@ -11,5 +12,9 @@ namespace TimelessEchoes.MapGeneration
         public Button button;
         [HorizontalGroup("Row")]
         public MapGenerationConfig config;
+        [HorizontalGroup("Row")]
+        public TMP_Text topStatsText;
+        [HorizontalGroup("Row")]
+        public TMP_Text bottomStatsText;
     }
 }

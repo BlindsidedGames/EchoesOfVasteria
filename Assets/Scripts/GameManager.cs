@@ -109,9 +109,36 @@ namespace TimelessEchoes
         private TaskController taskController;
         private NpcObjectStateController npcObjectStateController;
         private GameplayStatTracker statTracker;
+        private System.Action<bool> runEndedAction;
         private bool returnOnDeathQueued;
         private bool retreatQueued;
         private readonly Dictionary<Button, UnityEngine.Events.UnityAction> _buttonActions = new();
+
+        private void UpdateGenerationButtonStats()
+        {
+            if (statTracker == null) return;
+            foreach (var entry in generationButtons)
+            {
+                if (entry?.config == null) continue;
+                var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStats();
+                if (entry.topStatsText != null)
+                {
+                    var dist = CalcUtils.FormatNumber(stats.Steps, true);
+                    var longest = CalcUtils.FormatNumber(stats.LongestTrek, true);
+                    var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
+                    var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
+                    entry.topStatsText.text = $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                }
+                if (entry.bottomStatsText != null)
+                {
+                    var kills = CalcUtils.FormatNumber(stats.Kills, true);
+                    var dealt = CalcUtils.FormatNumber(stats.DamageDealt, true);
+                    var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
+                    var taken = CalcUtils.FormatNumber(stats.DamageTaken, true);
+                    entry.bottomStatsText.text = $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                }
+            }
+        }
 
         private void Awake()
         {
@@ -141,6 +168,11 @@ namespace TimelessEchoes
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
+            else
+            {
+                runEndedAction = _ => UpdateGenerationButtonStats();
+                statTracker.OnRunEnded += runEndedAction;
+            }
         }
 
         private void OnDestroy()
@@ -163,6 +195,11 @@ namespace TimelessEchoes
                     pair.Key.onClick.RemoveListener(pair.Value);
             }
             _buttonActions.Clear();
+            if (statTracker != null && runEndedAction != null)
+            {
+                statTracker.OnRunEnded -= runEndedAction;
+                runEndedAction = null;
+            }
         }
 
         private void Start()
@@ -182,6 +219,7 @@ namespace TimelessEchoes
             UpdateAutoBuffUI();
             if (autoBuffRoot != null)
                 autoBuffRoot.SetActive(false);
+            UpdateGenerationButtonStats();
         }
 
         private void Update()
@@ -339,7 +377,7 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            statTracker?.BeginRun();
+            statTracker?.BeginRun(CurrentGenerationConfig);
             runDropUI?.ResetDrops();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
