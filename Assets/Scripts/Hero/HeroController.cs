@@ -328,13 +328,16 @@ namespace TimelessEchoes.Hero
             destinationOverride = false;
             lastAttack = Time.time - 1f / CurrentAttackRate;
 
-            if (idleWalkTarget == null)
+            if (!IsEcho)
             {
-                idleWalkTarget = new GameObject("IdleWalkTarget").transform;
-                idleWalkTarget.hideFlags = HideFlags.HideInHierarchy;
-            }
+                if (idleWalkTarget == null)
+                {
+                    idleWalkTarget = new GameObject("IdleWalkTarget").transform;
+                    idleWalkTarget.hideFlags = HideFlags.HideInHierarchy;
+                }
 
-            idleWalkTarget.position = transform.position;
+                idleWalkTarget.position = transform.position;
+            }
 
             var skillController = SkillController.Instance;
             if (!IsEcho && skillController != null)
@@ -845,24 +848,15 @@ namespace TimelessEchoes.Hero
             if (IsEcho && HeroController.Instance != null && HeroController.Instance != this)
             {
                 var mainHero = HeroController.Instance.transform;
-                var echo = GetComponent<EchoController>();
-                var enemy = FindNearestEnemy(combatAggroRange);
 
-                if (enemy == null)
+                if (setter.target != mainHero)
                 {
-                    if (echo != null && echo.Type == EchoType.Combat)
-                    {
-                        if (setter.target != mainHero)
-                            setter.target = mainHero;
-                        ai.canMove = true;
-                        return;
-                    }
-
-                    if (setter.target != mainHero)
-                        setter.target = mainHero;
-                    ai.canMove = true;
-                    return;
+                    setter.target = mainHero;
+                    ai?.SearchPath();
                 }
+
+                ai.canMove = true;
+                return;
             }
 
             if (idleWalkTarget == null)
@@ -876,7 +870,10 @@ namespace TimelessEchoes.Hero
                 idleWalkTarget.position = new Vector3(pos.x + idleWalkStep, pos.y, pos.z);
 
             if (setter.target != idleWalkTarget)
+            {
                 setter.target = idleWalkTarget;
+                ai?.SearchPath();
+            }
 
             ai.canMove = true;
         }
