@@ -686,7 +686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  radius: 0.3
+  radius: 0.22
   height: 2
   canMove: 1
   maxSpeed: 4
@@ -694,7 +694,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 0.8
+  endReachedDistance: 0.7
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
@@ -714,12 +714,12 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: 100
   rotationSpeed: 360
-  slowdownDistance: 1.4
-  pickNextWaypointDist: 1.3
+  slowdownDistance: 0.6
+  pickNextWaypointDist: 0.5
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
-  constrainInsideGraph: 1
+  constrainInsideGraph: 0
 --- !u!114 &3963385185172838639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,8 +752,8 @@ MonoBehaviour:
   heightBackingField: 2
   centerBackingField: 1
   locked: 0
-  lockWhenNotMoving: 0
-  agentTimeHorizon: 0.2
+  lockWhenNotMoving: 1
+  agentTimeHorizon: 1.5
   obstacleTimeHorizon: 1
   maxNeighbours: 10
   layer: 128
