@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
@@ -28,6 +29,8 @@ namespace TimelessEchoes.Stats
         private double currentRunResources;
         private float currentRunDamageDealt;
         private float currentRunDamageTaken;
+        private readonly Dictionary<string, GameData.MapStats> mapStats = new();
+        private string currentMapKey;
 
         public float DistanceTravelled { get; private set; }
 
@@ -58,6 +61,7 @@ namespace TimelessEchoes.Stats
         public double TotalResourcesGathered { get; private set; }
 
         public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
+        public IReadOnlyDictionary<string, GameData.MapStats> MapStats => mapStats;
         public float LongestRun { get; private set; }
 
         public float ShortestRun { get; private set; }
@@ -141,6 +145,8 @@ namespace TimelessEchoes.Stats
             g.MaxRunDistance = MaxRunDistance;
             g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
+
+            oracle.saveData.MapStats = new Dictionary<string, GameData.MapStats>(mapStats);
         }
 
         private void LoadState()
@@ -182,6 +188,12 @@ namespace TimelessEchoes.Stats
                 nextRunNumber = recentRuns[recentRuns.Count - 1].RunNumber + 1;
             else
                 nextRunNumber = 1;
+
+            oracle.saveData.MapStats ??= new Dictionary<string, GameData.MapStats>();
+            mapStats.Clear();
+            foreach (var pair in oracle.saveData.MapStats)
+                if (pair.Key != null && pair.Value != null)
+                    mapStats[pair.Key] = pair.Value;
         }
 
         public void RegisterTaskComplete(TaskData data, float duration, float xp)
@@ -199,6 +211,9 @@ namespace TimelessEchoes.Stats
             record.XpGained += xp;
             TasksCompleted++;
             currentRunTasks++;
+            var map = GetOrCreateCurrentMapStats();
+            if (map != null)
+                map.TasksCompleted++;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif
@@ -209,12 +224,36 @@ namespace TimelessEchoes.Stats
             return data != null && taskRecords.TryGetValue(data, out var record) ? record : null;
         }
 
+        public GameData.MapStats GetMapStats(MapGenerationConfig config)
+        {
+            if (config == null) return null;
+            mapStats.TryGetValue(config.name, out var stats);
+            return stats;
+        }
+
+        private GameData.MapStats GetOrCreateCurrentMapStats()
+        {
+            if (string.IsNullOrEmpty(currentMapKey)) return null;
+            if (!mapStats.TryGetValue(currentMapKey, out var stats))
+            {
+                stats = new GameData.MapStats();
+                mapStats[currentMapKey] = stats;
+            }
+            return stats;
+        }
+
         public void AddDistance(float dist)
         {
             if (dist > 0f)
             {
                 DistanceTravelled += dist;
-                if (RunInProgress) OnDistanceAdded?.Invoke(dist);
+                if (RunInProgress)
+                {
+                    OnDistanceAdded?.Invoke(dist);
+                    var map = GetOrCreateCurrentMapStats();
+                    if (map != null)
+                        map.Steps += dist;
+                }
             }
         }
 
@@ -243,12 +282,23 @@ namespace TimelessEchoes.Stats
                 enemy.enemyName.ToLowerInvariant().Contains("slime"))
                 SlimesKilled++;
             if (RunInProgress)
+            {
                 CurrentRunKills++;
+                var map = GetOrCreateCurrentMapStats();
+                if (map != null)
+                    map.Kills++;
+            }
         }
 
         public void AddDeath()
         {
             Deaths++;
+            if (RunInProgress)
+            {
+                var map = GetOrCreateCurrentMapStats();
+                if (map != null)
+                    map.Deaths++;
+            }
         }
 
         public void AddDamageDealt(float amount)
@@ -257,7 +307,12 @@ namespace TimelessEchoes.Stats
             {
                 DamageDealt += amount;
                 if (RunInProgress)
+                {
                     currentRunDamageDealt += amount;
+                    var map = GetOrCreateCurrentMapStats();
+                    if (map != null)
+                        map.DamageDealt += amount;
+                }
             }
         }
 
@@ -267,7 +322,12 @@ namespace TimelessEchoes.Stats
             {
                 DamageTaken += amount;
                 if (RunInProgress)
+                {
                     currentRunDamageTaken += amount;
+                    var map = GetOrCreateCurrentMapStats();
+                    if (map != null)
+                        map.DamageTaken += amount;
+                }
             }
         }
 
@@ -291,6 +351,9 @@ namespace TimelessEchoes.Stats
                     currentRunResources += amount;
                     if (bonus)
                         CurrentRunBonusResources += amount;
+                    var map = GetOrCreateCurrentMapStats();
+                    if (map != null)
+                        map.ResourcesGathered += amount;
                 }
             }
         }
@@ -302,8 +365,9 @@ namespace TimelessEchoes.Stats
             SaveState();
         }
 
-        public void BeginRun()
+        public void BeginRun(MapGenerationConfig config)
         {
+            currentMapKey = config != null ? config.name : null;
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
             RunInProgress = true;
@@ -343,6 +407,12 @@ namespace TimelessEchoes.Stats
                 Abandoned = false
             };
             AddRunRecord(record);
+            var map = GetOrCreateCurrentMapStats();
+            if (map != null)
+            {
+                if (CurrentRunDistance > map.LongestTrek)
+                    map.LongestTrek = CurrentRunDistance;
+            }
             nextRunNumber++;
 
             OnRunEnded?.Invoke(died);
@@ -368,6 +438,12 @@ namespace TimelessEchoes.Stats
                 Abandoned = true
             };
             AddRunRecord(record);
+            var map = GetOrCreateCurrentMapStats();
+            if (map != null)
+            {
+                if (CurrentRunDistance > map.LongestTrek)
+                    map.LongestTrek = CurrentRunDistance;
+            }
             nextRunNumber++;
             OnRunEnded?.Invoke(false);
             ResetCurrentRun();
@@ -385,6 +461,7 @@ namespace TimelessEchoes.Stats
             lastHeroPos = Vector3.zero;
             runStartTime = Time.time;
             RunInProgress = false;
+            currentMapKey = null;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif

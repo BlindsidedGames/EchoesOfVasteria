@@ -42,8 +42,9 @@ namespace TimelessEchoes.UI
                 var average = CalcUtils.FormatNumber(statTracker.AverageRun, true);
                 var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
+                var reapDist = CalcUtils.FormatNumber(statTracker.MaxRunDistance, true);
                 references.distanceLongestTasksText.text =
-                    $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
             }
 
             if (references.killsDamageDeathsText != null)
@@ -52,8 +53,9 @@ namespace TimelessEchoes.UI
                 var dealt = CalcUtils.FormatNumber(statTracker.DamageDealt, true);
                 var deaths = CalcUtils.FormatNumber(statTracker.Deaths, true);
                 var taken = CalcUtils.FormatNumber(statTracker.DamageTaken, true);
+                var reaps = statTracker.TimesReaped.ToString();
                 references.killsDamageDeathsText.text =
-                    $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                    $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}\nTimes Reaped: {reaps}";
             }
         }
     }

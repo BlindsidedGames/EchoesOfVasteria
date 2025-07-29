@@ -44,6 +44,8 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] public Dictionary<string, ResourceRecord> ResourceStats = new();
 
+        [HideReferenceObjectPicker] public Dictionary<string, MapStats> MapStats = new();
+
         [HideReferenceObjectPicker] public GeneralStats General = new();
 
 
@@ -168,6 +170,19 @@ namespace Blindsided.SaveData
             public float AverageRun;
             public float MaxRunDistance = 50f;
             public int NextRunNumber = 1;
+        }
+
+        [HideReferenceObjectPicker]
+        public class MapStats
+        {
+            public float Steps;
+            public float LongestTrek;
+            public int TasksCompleted;
+            public double ResourcesGathered;
+            public int Kills;
+            public float DamageDealt;
+            public int Deaths;
+            public float DamageTaken;
         }
 
 
