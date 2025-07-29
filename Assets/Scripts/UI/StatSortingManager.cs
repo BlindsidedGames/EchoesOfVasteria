@@ -15,6 +15,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatSortButton buttonPrefab;
 
         [SerializeField] private Button generalButton;
+        [SerializeField] private Button graphsButton;
         [SerializeField] private Button enemiesButton;
         [SerializeField] private Button tasksButton;
         [SerializeField] private Button itemsButton;
@@ -37,6 +38,8 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.AddListener(ShowGeneral);
+            if (graphsButton != null)
+                graphsButton.onClick.AddListener(ShowGraphs);
             if (enemiesButton != null)
                 enemiesButton.onClick.AddListener(ShowEnemies);
             if (tasksButton != null)
@@ -56,6 +59,8 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.RemoveListener(ShowGeneral);
+            if (graphsButton != null)
+                graphsButton.onClick.RemoveListener(ShowGraphs);
             if (enemiesButton != null)
                 enemiesButton.onClick.RemoveListener(ShowEnemies);
             if (tasksButton != null)
@@ -69,19 +74,24 @@ namespace TimelessEchoes.UI
             SetTab(0);
         }
 
-        private void ShowEnemies()
+        private void ShowGraphs()
         {
             SetTab(1);
         }
 
-        private void ShowTasks()
+        private void ShowEnemies()
         {
             SetTab(2);
         }
 
-        private void ShowItems()
+        private void ShowTasks()
         {
             SetTab(3);
+        }
+
+        private void ShowItems()
+        {
+            SetTab(4);
         }
 
         private void SetTab(int tab)
@@ -97,15 +107,18 @@ namespace TimelessEchoes.UI
             switch (currentTab)
             {
                 case 0:
-                    BuildGeneralButtons();
+                    // General tab has no sorting buttons
                     break;
                 case 1:
-                    BuildEnemyButtons();
+                    BuildGraphButtons();
                     break;
                 case 2:
-                    BuildTaskButtons();
+                    BuildEnemyButtons();
                     break;
                 case 3:
+                    BuildTaskButtons();
+                    break;
+                case 4:
                     BuildItemButtons();
                     break;
             }
@@ -156,7 +169,7 @@ namespace TimelessEchoes.UI
             UpdateButtonStates();
         }
 
-        private void BuildGeneralButtons()
+        private void BuildGraphButtons()
         {
             CreateButton(RunStatsPanelUI.GraphMode.Distance, () =>
             {
@@ -203,16 +216,16 @@ namespace TimelessEchoes.UI
             Enum selected = null;
             switch (currentTab)
             {
-                case 0:
+                case 1:
                     selected = runMode;
                     break;
-                case 1:
+                case 2:
                     selected = enemyMode;
                     break;
-                case 2:
+                case 3:
                     selected = taskMode;
                     break;
-                case 3:
+                case 4:
                     selected = itemMode;
                     break;
             }
