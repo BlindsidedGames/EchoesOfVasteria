@@ -32,7 +32,7 @@ namespace TimelessEchoes.Enemies
             if (CurrentHealth <= 0f) return;
 
             var enemy = GetComponent<Enemy>();
-            var defense = enemy != null && enemy.Stats != null ? enemy.Stats.defense : 0f;
+            var defense = enemy != null ? enemy.GetDefense() : 0f;
 
             float full = amount + bonusDamage;
             float total = Mathf.Max(full - defense, full * 0.1f);

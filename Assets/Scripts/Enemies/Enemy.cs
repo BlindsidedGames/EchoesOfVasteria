@@ -7,6 +7,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TMPro;
 using UnityEngine;
 using System.Linq;
 using static TimelessEchoes.TELogger;
@@ -26,6 +27,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private float targetUpdateInterval = 1f;
+        [SerializeField] private TMP_Text levelText;
 
         private ResourceManager resourceManager;
 
@@ -37,6 +39,7 @@ namespace TimelessEchoes.Enemies
         private Vector2 lastMoveDir = Vector2.down;
         private bool logicActive = true;
         private Vector3 spawnPos;
+        private int level = 1;
         private Transform startTarget;
         private Transform hero;
         private Transform wanderTarget;
@@ -47,6 +50,12 @@ namespace TimelessEchoes.Enemies
 
         public bool IsEngaged => setter != null && setter.target == hero;
         public EnemyData Stats => stats;
+        public int Level => level;
+
+        public float GetDefense()
+        {
+            return stats != null ? stats.GetDefenseForLevel(level) : 0f;
+        }
 
         public static event Action<Enemy> OnEngage;
 
@@ -56,6 +65,7 @@ namespace TimelessEchoes.Enemies
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             spawnPos = transform.position;
+            level = stats != null ? stats.GetLevel(spawnPos.x) : 1;
 
             var controller = GetComponentInParent<TaskController>();
             if (controller != null)
@@ -67,8 +77,11 @@ namespace TimelessEchoes.Enemies
             if (stats != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
-                health.Init(stats.maxHealth);
+                health.Init(stats.GetMaxHealthForLevel(level));
             }
+
+            if (levelText != null)
+                levelText.text = $"Lvl {level}";
 
             startTarget = setter.target;
             resourceManager = ResourceManager.Instance;
@@ -251,7 +264,7 @@ namespace TimelessEchoes.Enemies
             var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(setter.target, stats.damage);
+                proj.Init(setter.target, stats.GetDamageForLevel(level));
         }
 
         private void OnDeath()
