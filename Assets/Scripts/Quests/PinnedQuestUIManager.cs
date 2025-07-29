@@ -47,6 +47,18 @@ namespace TimelessEchoes.Quests
             {
                 if (string.IsNullOrEmpty(id))
                     continue;
+                var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+                var data = qm != null ? qm.GetQuestData(id) : null;
+                var instant = false;
+                if (data != null && data.requirements != null)
+                    foreach (var req in data.requirements)
+                        if (req != null && req.type == QuestData.RequirementType.Instant)
+                        {
+                            instant = true;
+                            break;
+                        }
+                if (instant)
+                    continue;
                 var txt = Instantiate(entryPrefab, entryParent);
                 entries[id] = txt;
             }

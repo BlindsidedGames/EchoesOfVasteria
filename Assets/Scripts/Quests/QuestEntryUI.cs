@@ -86,7 +86,15 @@ namespace TimelessEchoes.Quests
                                     Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
                     UpdatePinVisual(nowPinned);
                 });
-                pinButton.gameObject.SetActive(!completed);
+                var instant = false;
+                if (data.requirements != null)
+                    foreach (var req in data.requirements)
+                        if (req != null && req.type == QuestData.RequirementType.Instant)
+                        {
+                            instant = true;
+                            break;
+                        }
+                pinButton.gameObject.SetActive(!completed && !instant);
             }
 
             if (questImage != null)

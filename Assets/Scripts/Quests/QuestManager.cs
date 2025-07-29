@@ -166,6 +166,16 @@ namespace TimelessEchoes.Quests
             return true;
         }
 
+        private static bool IsInstantQuest(QuestData quest)
+        {
+            if (quest == null || quest.requirements == null)
+                return false;
+            foreach (var req in quest.requirements)
+                if (req != null && req.type == QuestData.RequirementType.Instant)
+                    return true;
+            return false;
+        }
+
         private void StartAvailableQuests()
         {
             foreach (var q in quests)
@@ -276,8 +286,10 @@ namespace TimelessEchoes.Quests
             RefreshNoticeboard();
             Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
-
-            PinnedQuestUIManager.Instance?.UpdateProgress();
+            if (oracle.saveData.PinnedQuests.Remove(id))
+                PinnedQuestUIManager.Instance?.RefreshPins();
+            else
+                PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
         /// <summary>
@@ -335,6 +347,9 @@ namespace TimelessEchoes.Quests
         public void TogglePinned(string questId)
         {
             if (oracle == null || string.IsNullOrEmpty(questId))
+                return;
+            var data = GetQuestData(questId);
+            if (IsInstantQuest(data))
                 return;
             var set = oracle.saveData.PinnedQuests;
             if (set.Contains(questId))
