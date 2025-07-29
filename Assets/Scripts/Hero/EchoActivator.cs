@@ -1,0 +1,61 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace TimelessEchoes.Hero
+{
+    /// <summary>
+    /// Manages activation of Echoes based on distance to the main hero.
+    /// Echoes far away from the hero are deactivated to conserve resources
+    /// and reactivated when the hero approaches again.
+    /// </summary>
+    [RequireComponent(typeof(HeroController))]
+    public class EchoActivator : MonoBehaviour
+    {
+        [SerializeField] private float activationDistance = 20f;
+
+        private HeroController hero;
+
+        private void Awake()
+        {
+            hero = GetComponent<HeroController>();
+        }
+
+        private void LateUpdate()
+        {
+            if (hero == null)
+                return;
+
+            var pos = hero.transform.position;
+
+            for (int i = EchoController.AllEchoes.Count - 1; i >= 0; i--)
+            {
+                var echo = EchoController.AllEchoes[i];
+                if (echo == null)
+                {
+                    EchoController.AllEchoes.RemoveAt(i);
+                    continue;
+                }
+
+                var echoHero = echo.GetComponent<HeroController>();
+                if (echoHero == null || echoHero == hero)
+                    continue;
+
+                if (echo.Type != EchoType.Combat && echo.Type != EchoType.All)
+                    continue;
+
+                var dist = Vector2.Distance(pos, echo.transform.position);
+                bool active = dist <= activationDistance || echo.transform.position.x < pos.x;
+                echoHero.SetActiveState(active);
+                if (!active)
+                {
+                    var anim = echoHero.Animator;
+                    if (anim != null)
+                    {
+                        anim.SetFloat("MoveX", 0f);
+                        anim.SetFloat("MoveY", -1f);
+                    }
+                }
+            }
+        }
+    }
+}

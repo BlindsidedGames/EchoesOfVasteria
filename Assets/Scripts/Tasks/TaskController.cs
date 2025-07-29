@@ -45,35 +45,6 @@ namespace TimelessEchoes.Tasks
         public CinemachineCamera MapCamera => mapCamera;
         public MonoBehaviour CurrentTaskObject => currentTaskObject;
 
-        private bool IsTaskOnScreen(ITask task)
-        {
-            if (task == null || mapCamera == null)
-                return true;
-
-            var cam = mapCamera.GetComponent<Camera>();
-            if (cam == null)
-                cam = Camera.main;
-
-            if (cam == null || task.Target == null)
-                return true;
-
-            var v = cam.WorldToViewportPoint(task.Target.position);
-            return v.x >= 0f && v.x <= 1f && v.y >= 0f && v.y <= 1f;
-        }
-
-        public bool HasVisibleTasks()
-        {
-            foreach (var t in tasks)
-            {
-                if (t == null || t.IsComplete())
-                    continue;
-                if (IsTaskOnScreen(t))
-                    return true;
-            }
-
-            return false;
-        }
-
         private void Awake()
         {
             AcquireHero();
@@ -346,7 +317,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
-                if (task == null || task.IsComplete() || !IsTaskOnScreen(task))
+                if (task == null || task.IsComplete())
                     continue;
 
                 if (task is BaseTask baseTask)
@@ -404,7 +375,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
-                if (task == null || task.IsComplete() || !IsTaskOnScreen(task))
+                if (task == null || task.IsComplete())
                     continue;
 
                 if (task is BaseTask baseTask)

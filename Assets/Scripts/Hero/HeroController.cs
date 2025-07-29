@@ -590,8 +590,7 @@ namespace TimelessEchoes.Hero
 
             if (CurrentTask == null)
             {
-                bool noVisibleTasks = taskController == null || !taskController.HasVisibleTasks();
-                if (taskController == null || taskController.tasks.Count == 0 || (IsEcho && noVisibleTasks))
+                if (taskController == null || taskController.tasks.Count == 0)
                     AutoAdvance();
                 else
                     setter.target = null;
@@ -858,10 +857,14 @@ namespace TimelessEchoes.Hero
                         return;
                     }
 
-                    if (setter.target != mainHero)
-                        setter.target = mainHero;
-                    ai.canMove = true;
-                    return;
+                    var dist = Vector2.Distance(transform.position, mainHero.position);
+                    if (dist > combatAggroRange)
+                    {
+                        if (setter.target != mainHero)
+                            setter.target = mainHero;
+                        ai.canMove = true;
+                        return;
+                    }
                 }
             }
 
