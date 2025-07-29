@@ -108,6 +108,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -115,19 +128,19 @@ TextureImporter:
       name: Scarecrows_0
       rect:
         serializedVersion: 2
-        x: 1
+        x: 0
         y: 0
-        width: 30
+        width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7c9259762b46f7850800000000000000
+      spriteID: 69b52f7f532dd0f4f9af6c4758846852
       internalID: 6376926314784696775
       vertices: []
       indices: 
@@ -137,19 +150,19 @@ TextureImporter:
       name: Scarecrows_1
       rect:
         serializedVersion: 2
-        x: 33
+        x: 32
         y: 0
-        width: 30
+        width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 755ab4ee0e89d3b60800000000000000
+      spriteID: 32a2a9c2245586e42a3d0d67bf231ef7
       internalID: 7727500627475670359
       vertices: []
       indices: 
@@ -159,19 +172,19 @@ TextureImporter:
       name: Scarecrows_2
       rect:
         serializedVersion: 2
-        x: 65
+        x: 64
         y: 0
-        width: 30
+        width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8034e8a575092ef50800000000000000
+      spriteID: 8fb35035118d5ab4786b87064d933946
       internalID: 6909243483195589384
       vertices: []
       indices: 
@@ -181,19 +194,19 @@ TextureImporter:
       name: Scarecrows_3
       rect:
         serializedVersion: 2
-        x: 97
+        x: 96
         y: 0
-        width: 30
+        width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f7e89208b5227ed40800000000000000
+      spriteID: e94193fe806f98f4b9c98c2684eb9fc6
       internalID: 5613493236928188031
       vertices: []
       indices: 
@@ -203,19 +216,19 @@ TextureImporter:
       name: Scarecrows_4
       rect:
         serializedVersion: 2
-        x: 129
+        x: 128
         y: 0
-        width: 30
+        width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9f17545ea82d766d0800000000000000
+      spriteID: c8b335bee33305847a684c2f816ca286
       internalID: -2997195532997922311
       vertices: []
       indices: 
@@ -225,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7bd5fd145d6abe1449b4108e44e78782
     internalID: 0
     vertices: []
     indices: 
@@ -233,7 +246,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.05000000074505806},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Scarecrows_0: 6376926314784696775
       Scarecrows_1: 7727500627475670359
