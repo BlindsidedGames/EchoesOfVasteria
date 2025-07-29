@@ -593,7 +593,7 @@ namespace TimelessEchoes.Hero
 
             if (CurrentTask == null)
             {
-                bool noVisibleTasks = taskController == null || !taskController.HasVisibleTasks();
+                bool noVisibleTasks = taskController == null || !taskController.HasVisibleTasksForHero(this);
                 if (taskController == null || taskController.tasks.Count == 0 || (IsEcho && noVisibleTasks))
                     AutoAdvance();
                 else

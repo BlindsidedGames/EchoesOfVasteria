@@ -74,6 +74,36 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
+        public bool HasVisibleTasksForHero(HeroController hero)
+        {
+            if (hero == null)
+                return HasVisibleTasks();
+
+            var echo = hero.GetComponent<EchoController>();
+            IList<Skill> skills = echo != null ? echo.capableSkills : null;
+
+            bool restrictToVisible = hero.IsEcho;
+            foreach (var task in tasks)
+            {
+                if (task == null || task.IsComplete())
+                    continue;
+                if (restrictToVisible && !IsTaskOnScreen(task))
+                    continue;
+
+                if (task is BaseTask baseTask)
+                {
+                    if (baseTask.ClaimedBy != null && baseTask.ClaimedBy != hero)
+                        continue;
+                    if (skills != null && skills.Count > 0 && !skills.Contains(baseTask.associatedSkill))
+                        continue;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         private void Awake()
         {
             AcquireHero();
