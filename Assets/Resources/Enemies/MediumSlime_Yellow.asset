@@ -15,6 +15,12 @@ MonoBehaviour:
   enemyName: Yellow Slime
   displayOrder: 4
   icon: {fileID: 8771735074934591030, guid: 378509acf7c2f1f4185edd533b7b3d47, type: 3}
+  prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
+  weight: 1
+  minX: 0
+  maxX: Infinity
+  spawnTerrains: []
+  resourceDrops: []
   experience: 5
   maxHealth: 50
   damage: 3

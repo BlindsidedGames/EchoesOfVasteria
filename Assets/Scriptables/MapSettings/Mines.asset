@@ -36,12 +36,7 @@ MonoBehaviour:
       m_Bits: 0
     otherTaskEdgeOffset: 1
     enemies:
-    - prefab: {fileID: 2377590028762114089, guid: 7669731726e00414fb224fd6ed174c80, type: 3}
-      weight: 1
-      minX: 50
-      maxX: Infinity
-      spawnTerrains:
-      - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
+    - {fileID: 11400000, guid: f982370fcd3f9fd489cd5188f7eb546b, type: 2}
     woodcutting:
       weight: 1
       tasks:

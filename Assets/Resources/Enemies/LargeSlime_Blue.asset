@@ -15,6 +15,12 @@ MonoBehaviour:
   enemyName: Large Blue Slime
   displayOrder: 8
   icon: {fileID: 3374222423758332035, guid: 3e01acf9edb65ef40a82049bae8cb803, type: 3}
+  prefab: {fileID: 8193780003442596315, guid: ccaecf98d6324c84908457395f522ecc, type: 3}
+  weight: 1
+  minX: 0
+  maxX: Infinity
+  spawnTerrains: []
+  resourceDrops: []
   experience: 25
   maxHealth: 750
   damage: 20

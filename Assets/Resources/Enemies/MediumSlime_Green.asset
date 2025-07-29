@@ -15,13 +15,19 @@ MonoBehaviour:
   enemyName: Green Slime
   displayOrder: 1
   icon: {fileID: 5974850342220603758, guid: ed517c4b34720b145ae9a8a233b9963e, type: 3}
-  maxHealth: 25
+  prefab: {fileID: 8193780003442596315, guid: 61d915512172447da09c5d5876e7a097, type: 3}
+  weight: 1
+  minX: 0
+  maxX: Infinity
+  spawnTerrains: []
+  resourceDrops: []
   experience: 4
-  defense: 0.5
+  maxHealth: 25
   damage: 2
-  moveSpeed: 5
+  defense: 0.5
   attackSpeed: 1.3
   attackRange: 1
+  moveSpeed: 5
   visionRange: 7
   assistRange: 5
   wanderDistance: 3

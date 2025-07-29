@@ -15,6 +15,12 @@ MonoBehaviour:
   enemyName: Red Slime
   displayOrder: 10
   icon: {fileID: -4816725795396207319, guid: 4a0032986a96f1848b7dfd28332e79f7, type: 3}
+  prefab: {fileID: 8193780003442596315, guid: 01718d22969a4be7b58fd5e9185de033, type: 3}
+  weight: 1
+  minX: 0
+  maxX: Infinity
+  spawnTerrains: []
+  resourceDrops: []
   experience: 10
   maxHealth: 175
   damage: 10

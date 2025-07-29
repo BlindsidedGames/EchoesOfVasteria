@@ -15,6 +15,18 @@ MonoBehaviour:
   enemyName: Skeleton Swordsman
   displayOrder: 15
   icon: {fileID: -2139014974517455860, guid: 49b3127dae34b4941993a9fad6fa4403, type: 3}
+  prefab: {fileID: 2377590028762114089, guid: 7669731726e00414fb224fd6ed174c80, type: 3}
+  weight: 1
+  minX: 25
+  maxX: Infinity
+  spawnTerrains:
+  - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    dropRange: {x: 1, y: 1}
+    dropChance: 1
+    minX: 0
+    maxX: Infinity
   experience: 4
   maxHealth: 25
   damage: 1
@@ -25,4 +37,8 @@ MonoBehaviour:
   visionRange: 7
   assistRange: 5
   wanderDistance: 3
+  damagePerLevel: 0.1
+  healthPerLevel: 2
+  defensePerLevel: 0.05
+  distancePerLevel: 20
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
