@@ -34,6 +34,27 @@ namespace TimelessEchoes
             }
         }
 
+        [Command("set-all-resources", "Set all resources to the specified amount")]
+        public static void SetAllResources(double amount)
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null) return;
+
+            var dict = new Dictionary<string, GameData.ResourceEntry>();
+            foreach (var res in Resources.LoadAll<Resource>(string.Empty))
+            {
+                if (res == null) continue;
+                dict[res.name] = new GameData.ResourceEntry
+                {
+                    Earned = true,
+                    Amount = amount
+                };
+            }
+
+            oracle.saveData.Resources = dict;
+            Blindsided.EventHandler.LoadData();
+        }
+
         [Command("set-stat-level", "Set the level of a stat upgrade")]
         public static void SetStatLevel(string upgradeName, int level)
         {
