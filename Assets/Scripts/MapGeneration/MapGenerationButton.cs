@@ -1,6 +1,6 @@
 using System;
-using TMPro;
 using UnityEngine.UI;
+using TimelessEchoes.References.StatPanel;
 
 namespace TimelessEchoes.MapGeneration
 {
@@ -9,7 +9,6 @@ namespace TimelessEchoes.MapGeneration
     {
         public Button button;
         public MapGenerationConfig config;
-        public TMP_Text topStatsText;
-        public TMP_Text bottomStatsText;
+        public GeneralStatsUIReferences statsUI;
     }
 }
