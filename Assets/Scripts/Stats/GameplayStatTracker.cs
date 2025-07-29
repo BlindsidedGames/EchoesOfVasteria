@@ -29,7 +29,7 @@ namespace TimelessEchoes.Stats
         private double currentRunResources;
         private float currentRunDamageDealt;
         private float currentRunDamageTaken;
-        private readonly Dictionary<string, GameData.MapStats> mapStats = new();
+        private readonly Dictionary<string, GameData.MapStatistics> mapStats = new();
         private string currentMapKey;
 
         public float DistanceTravelled { get; private set; }
@@ -61,7 +61,7 @@ namespace TimelessEchoes.Stats
         public double TotalResourcesGathered { get; private set; }
 
         public IReadOnlyList<GameData.RunRecord> RecentRuns => recentRuns;
-        public IReadOnlyDictionary<string, GameData.MapStats> MapStats => mapStats;
+        public IReadOnlyDictionary<string, GameData.MapStatistics> MapStats => mapStats;
         public float LongestRun { get; private set; }
 
         public float ShortestRun { get; private set; }
@@ -146,7 +146,7 @@ namespace TimelessEchoes.Stats
             g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
 
-            oracle.saveData.MapStats = new Dictionary<string, GameData.MapStats>(mapStats);
+            oracle.saveData.MapStats = new Dictionary<string, GameData.MapStatistics>(mapStats);
         }
 
         private void LoadState()
@@ -189,7 +189,7 @@ namespace TimelessEchoes.Stats
             else
                 nextRunNumber = 1;
 
-            oracle.saveData.MapStats ??= new Dictionary<string, GameData.MapStats>();
+            oracle.saveData.MapStats ??= new Dictionary<string, GameData.MapStatistics>();
             mapStats.Clear();
             foreach (var pair in oracle.saveData.MapStats)
                 if (pair.Key != null && pair.Value != null)
@@ -224,19 +224,19 @@ namespace TimelessEchoes.Stats
             return data != null && taskRecords.TryGetValue(data, out var record) ? record : null;
         }
 
-        public GameData.MapStats GetMapStats(MapGenerationConfig config)
+        public GameData.MapStatistics GetMapStats(MapGenerationConfig config)
         {
             if (config == null) return null;
             mapStats.TryGetValue(config.name, out var stats);
             return stats;
         }
 
-        private GameData.MapStats GetOrCreateCurrentMapStats()
+        private GameData.MapStatistics GetOrCreateCurrentMapStats()
         {
             if (string.IsNullOrEmpty(currentMapKey)) return null;
             if (!mapStats.TryGetValue(currentMapKey, out var stats))
             {
-                stats = new GameData.MapStats();
+                stats = new GameData.MapStatistics();
                 mapStats[currentMapKey] = stats;
             }
             return stats;
