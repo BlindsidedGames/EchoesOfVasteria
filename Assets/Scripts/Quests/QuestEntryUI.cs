@@ -30,15 +30,19 @@ namespace TimelessEchoes.Quests
         public Transform costParent;
 
         private Action onTurnIn;
+        private string baseNameText = string.Empty;
         private readonly List<(CostResourceUIReferences slot, QuestData.Requirement req)> costSlots = new();
 
         public void Setup(QuestData data, Action turnIn, bool showRequirements = true, bool completed = false)
         {
             onTurnIn = turnIn;
             if (nameText != null)
-                nameText.text = data != null
+            {
+                baseNameText = data != null
                     ? data.questName + (completed ? " | Completed" : string.Empty)
                     : string.Empty;
+                nameText.text = baseNameText;
+            }
             if (descriptionText != null)
                 descriptionText.text = data != null ? data.description : string.Empty;
             if (rewardText != null)
@@ -207,10 +211,15 @@ namespace TimelessEchoes.Quests
 
         private void UpdatePinVisual(bool pinned)
         {
-            if (pinButton == null) return;
-            var txt = pinButton.GetComponentInChildren<TMP_Text>();
-            if (txt != null)
-                txt.text = pinned ? "Unpin" : "Pin";
+            if (pinButton != null)
+            {
+                var txt = pinButton.GetComponentInChildren<TMP_Text>();
+                if (txt != null)
+                    txt.text = pinned ? "Unpin" : "Pin";
+            }
+
+            if (nameText != null)
+                nameText.text = baseNameText + (pinned ? " | Pinned" : string.Empty);
         }
 
         private static string GetQuestType(QuestData data)
