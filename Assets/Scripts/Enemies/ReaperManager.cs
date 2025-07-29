@@ -113,6 +113,14 @@ namespace TimelessEchoes.Enemies
 
             tracker?.AddTimesReaped();
 
+            // If the hero was reaped for reaching the maximum distance,
+            // increase that maximum by 1% for future runs.
+            if (heroCtrl != null && heroCtrl.ReaperSpawnedByDistance && tracker != null)
+            {
+                var increase = tracker.MaxRunDistance * 0.01f;
+                tracker.IncreaseMaxRunDistance(increase);
+            }
+
             onKill?.Invoke();
             target = null;
         }
