@@ -343,10 +343,11 @@ namespace TimelessEchoes.Tasks
             }
 
             RemoveCompletedTasks();
+            bool restrictToVisible = targetHero != null && targetHero.IsEcho;
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
-                if (task == null || task.IsComplete() || !IsTaskOnScreen(task))
+                if (task == null || task.IsComplete() || (restrictToVisible && !IsTaskOnScreen(task)))
                     continue;
 
                 if (task is BaseTask baseTask)
@@ -401,10 +402,11 @@ namespace TimelessEchoes.Tasks
             }
 
             RemoveCompletedTasks();
+            bool restrictToVisible = targetHero != null && targetHero.IsEcho;
             for (var i = 0; i < tasks.Count; i++)
             {
                 var task = tasks[i];
-                if (task == null || task.IsComplete() || !IsTaskOnScreen(task))
+                if (task == null || task.IsComplete() || (restrictToVisible && !IsTaskOnScreen(task)))
                     continue;
 
                 if (task is BaseTask baseTask)
