@@ -388,7 +388,7 @@ namespace TimelessEchoes.Stats
             AverageRun = recentRuns.Count > 0 ? sum / recentRuns.Count : 0f;
         }
 
-        public void EndRun(bool died)
+        public void EndRun(bool died, bool reaped = false)
         {
             if (!RunInProgress)
                 return;
@@ -404,6 +404,7 @@ namespace TimelessEchoes.Stats
                 DamageDealt = currentRunDamageDealt,
                 DamageTaken = currentRunDamageTaken,
                 Died = died,
+                Reaped = reaped,
                 Abandoned = false
             };
             AddRunRecord(record);
@@ -435,6 +436,7 @@ namespace TimelessEchoes.Stats
                 DamageDealt = currentRunDamageDealt,
                 DamageTaken = currentRunDamageTaken,
                 Died = false,
+                Reaped = false,
                 Abandoned = true
             };
             AddRunRecord(record);

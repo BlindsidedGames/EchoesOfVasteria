@@ -103,6 +103,7 @@ namespace TimelessEchoes
 
         private GameObject currentMap;
         private bool runEndedByDeath;
+        private bool runEndedByReaper;
         private bool heroDead;
         private Coroutine deathWindowCoroutine;
         private HeroController hero;
@@ -351,9 +352,11 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
 #endif
-            if (runEndedByDeath && statTracker != null) statTracker.EndRun(true);
+            if (runEndedByDeath && statTracker != null)
+                statTracker.EndRun(true, runEndedByReaper);
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
+            runEndedByReaper = false;
             if (deathWindowCoroutine != null)
             {
                 StopCoroutine(deathWindowCoroutine);
@@ -490,6 +493,7 @@ namespace TimelessEchoes
             UpdateAutoBuffUI();
 
             runEndedByDeath = true;
+            runEndedByReaper = distanceReaper;
             if (runDropUI != null)
                 runDropUI.ResetDrops();
 
@@ -596,7 +600,7 @@ namespace TimelessEchoes
             if (statTracker != null)
             {
                 if (runEndedByDeath)
-                    statTracker.EndRun(true);
+                    statTracker.EndRun(true, runEndedByReaper);
                 else
                     statTracker.EndRun(false);
             }

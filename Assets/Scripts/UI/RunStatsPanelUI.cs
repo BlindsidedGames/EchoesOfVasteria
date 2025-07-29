@@ -27,13 +27,16 @@ namespace TimelessEchoes.UI
         [SerializeField] private Color deathBarColor = Color.red;
         [SerializeField] private Color retreatBarColor = Color.green;
         [SerializeField] private Color abandonedBarColor = Color.gray;
+        [SerializeField] private Color reapedBarColor = Color.magenta;
         [SerializeField] private Color resourcesDeathBarColor = Color.red;
         [SerializeField] private Color resourcesRetreatBarColor = Color.green;
         [SerializeField] private Color resourcesAbandonedBarColor = Color.gray;
+        [SerializeField] private Color resourcesReapedBarColor = Color.magenta;
         [SerializeField] private Color resourcesBonusBarColor = Color.yellow;
         [SerializeField] private Color killsDeathBarColor = Color.red;
         [SerializeField] private Color killsRetreatBarColor = Color.green;
         [SerializeField] private Color killsAbandonedBarColor = Color.gray;
+        [SerializeField] private Color killsReapedBarColor = Color.magenta;
 
         public enum GraphMode
         {
@@ -177,6 +180,8 @@ namespace TimelessEchoes.UI
             {
                 if (record.Abandoned)
                     runStatUI.statusText.text = "Status: Abandoned";
+                else if (record.Reaped)
+                    runStatUI.statusText.text = "Status: Reaped";
                 else
                     runStatUI.statusText.text = record.Died ? "Status: Died" : "Status: Retreated";
             }
@@ -319,6 +324,8 @@ namespace TimelessEchoes.UI
                     {
                         if (runs[index].Abandoned)
                             color = abandonedBarColor;
+                        else if (runs[index].Reaped)
+                            color = reapedBarColor;
                         else
                             color = runs[index].Died ? deathBarColor : retreatBarColor;
                     }
@@ -326,6 +333,8 @@ namespace TimelessEchoes.UI
                     {
                         if (runs[index].Abandoned)
                             color = resourcesAbandonedBarColor;
+                        else if (runs[index].Reaped)
+                            color = resourcesReapedBarColor;
                         else
                             color = runs[index].Died ? resourcesDeathBarColor : resourcesRetreatBarColor;
                         runBars[i].OverlayColor = resourcesBonusBarColor;
@@ -334,6 +343,8 @@ namespace TimelessEchoes.UI
                     {
                         if (runs[index].Abandoned)
                             color = killsAbandonedBarColor;
+                        else if (runs[index].Reaped)
+                            color = killsReapedBarColor;
                         else
                             color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
                     }
