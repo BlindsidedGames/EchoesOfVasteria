@@ -17,6 +17,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
+using TimelessEchoes.References.StatPanel;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -121,21 +122,21 @@ namespace TimelessEchoes
             {
                 if (entry?.config == null) continue;
                 var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStatistics();
-                if (entry.topStatsText != null)
+                if (entry.statsUI != null && entry.statsUI.distanceLongestTasksText != null)
                 {
                     var dist = CalcUtils.FormatNumber(stats.Steps, true);
                     var longest = CalcUtils.FormatNumber(stats.LongestTrek, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
-                    entry.topStatsText.text = $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    entry.statsUI.distanceLongestTasksText.text = $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
                 }
-                if (entry.bottomStatsText != null)
+                if (entry.statsUI != null && entry.statsUI.killsDamageDeathsText != null)
                 {
                     var kills = CalcUtils.FormatNumber(stats.Kills, true);
                     var dealt = CalcUtils.FormatNumber(stats.DamageDealt, true);
                     var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
                     var taken = CalcUtils.FormatNumber(stats.DamageTaken, true);
-                    entry.bottomStatsText.text = $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                    entry.statsUI.killsDamageDeathsText.text = $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
                 }
             }
         }
