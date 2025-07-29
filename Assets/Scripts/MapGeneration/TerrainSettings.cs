@@ -23,6 +23,9 @@ namespace TimelessEchoes.MapGeneration
             [MinValue(0)] public int bottomBorderOffset;
             [MinValue(0)] public int leftBorderOffset;
             [MinValue(0)] public int rightBorderOffset;
+            // When false, spawned tasks are not registered with the TaskController.
+            [ToggleLeft]
+            public bool addToTaskList = true;
         }
 
         [Serializable]

@@ -458,10 +458,16 @@ namespace TimelessEchoes.Tasks
             MonoBehaviour mono = obj;
             if (mono == null) return true;
 
-            if (clearExisting)
-                spawnedTasks.Add((pos, mono));
-            else
-                Controller.AddRuntimeTaskObject(mono);
+            var addToList = chosenTerrain == null || chosenTerrain.taskSettings.addToTaskList;
+
+            if (addToList)
+            {
+                if (clearExisting)
+                    spawnedTasks.Add((pos, mono));
+                else
+                    Controller.AddRuntimeTaskObject(mono);
+            }
+
             taskPositions.Add(pos);
             taskMap[pos] = mono;
             return true;
