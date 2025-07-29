@@ -78,6 +78,22 @@ namespace TimelessEchoes.Enemies
         [TitleGroup("Balance Data/Movement Stats")]
         public float wanderDistance = 2f;
 
+        [TitleGroup("Level Scaling")]
+        [MinValue(0)]
+        public int damagePerLevel = 0;
+
+        [TitleGroup("Level Scaling")]
+        [MinValue(0)]
+        public int healthPerLevel = 0;
+
+        [TitleGroup("Level Scaling")]
+        [MinValue(0f)]
+        public float defensePerLevel = 0f;
+
+        [TitleGroup("Level Scaling")]
+        [MinValue(1f)]
+        public float distancePerLevel = float.PositiveInfinity;
+
         [TitleGroup("References")]
         public GameObject projectilePrefab;
 
@@ -87,6 +103,28 @@ namespace TimelessEchoes.Enemies
             if (worldX < minX || worldX > maxX)
                 return 0f;
             return Mathf.Max(0f, weight);
+        }
+
+        public int GetLevel(float worldX)
+        {
+            if (distancePerLevel <= 0f || float.IsInfinity(distancePerLevel))
+                return 1;
+            return Mathf.FloorToInt(Mathf.Max(0f, worldX) / distancePerLevel) + 1;
+        }
+
+        public int GetMaxHealthForLevel(int level)
+        {
+            return maxHealth + healthPerLevel * level;
+        }
+
+        public int GetDamageForLevel(int level)
+        {
+            return damage + damagePerLevel * level;
+        }
+
+        public float GetDefenseForLevel(int level)
+        {
+            return defense + defensePerLevel * level;
         }
     }
 }
