@@ -120,7 +120,7 @@ namespace TimelessEchoes
             foreach (var entry in generationButtons)
             {
                 if (entry?.config == null) continue;
-                var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStats();
+                var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStatistics();
                 if (entry.topStatsText != null)
                 {
                     var dist = CalcUtils.FormatNumber(stats.Steps, true);
