@@ -389,8 +389,6 @@ namespace TimelessEchoes
             if (hero != null)
             {
                 hero.gameObject.SetActive(true);
-                if (hero.GetComponent<EchoActivator>() == null)
-                    hero.gameObject.AddComponent<EchoActivator>();
                 var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)
                 {
