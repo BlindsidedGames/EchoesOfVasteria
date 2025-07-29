@@ -71,13 +71,19 @@ namespace TimelessEchoes.Quests
             if (pinButton != null && data != null)
             {
                 pinButton.onClick.RemoveAllListeners();
-                var pinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                var pinned = Oracle.oracle != null &&
+                             Oracle.oracle.saveData != null &&
+                             Oracle.oracle.saveData.PinnedQuests != null &&
+                             Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
                 UpdatePinVisual(pinned);
                 pinButton.onClick.AddListener(() =>
                 {
                     var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
                     qm?.TogglePinned(data.questId);
-                    var nowPinned = Oracle.oracle != null && Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
+                    var nowPinned = Oracle.oracle != null &&
+                                    Oracle.oracle.saveData != null &&
+                                    Oracle.oracle.saveData.PinnedQuests != null &&
+                                    Oracle.oracle.saveData.PinnedQuests.Contains(data.questId);
                     UpdatePinVisual(nowPinned);
                 });
                 pinButton.gameObject.SetActive(!completed);
