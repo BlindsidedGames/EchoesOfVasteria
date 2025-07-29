@@ -43,11 +43,8 @@ namespace TimelessEchoes.Enemies
 
             if (Application.isPlaying)
             {
+                // Display only the final damage amount dealt to the enemy.
                 string text = CalcUtils.FormatNumber(total);
-                if (bonusDamage != 0f)
-                    text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
-                if (defense != 0f)
-                    text += $"<size=70%><color=#C69B60>-{CalcUtils.FormatNumber(defense)}</color></size>";
                 FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(), GetFloatingTextSize());
             }
 
