@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TMPro;
 using UnityEngine;
+using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Quests
@@ -29,6 +31,16 @@ namespace TimelessEchoes.Quests
         {
             if (Instance == this)
                 Instance = null;
+        }
+
+        private void OnEnable()
+        {
+            OnLoadData += OnLoadDataHandler;
+        }
+
+        private void OnDisable()
+        {
+            OnLoadData -= OnLoadDataHandler;
         }
 
         /// <summary>
@@ -155,6 +167,17 @@ namespace TimelessEchoes.Quests
 
                 text.text = sb.ToString();
             }
+        }
+
+        private void OnLoadDataHandler()
+        {
+            StartCoroutine(DeferredRefresh());
+        }
+
+        private IEnumerator DeferredRefresh()
+        {
+            yield return null; // wait one frame so data is loaded
+            RefreshPins();
         }
     }
 }
