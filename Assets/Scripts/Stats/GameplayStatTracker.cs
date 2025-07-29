@@ -236,7 +236,7 @@ namespace TimelessEchoes.Stats
                 CurrentRunDistance = position.x;
         }
 
-        public void AddKill(EnemyStats enemy)
+        public void AddKill(EnemyData enemy)
         {
             TotalKills++;
             if (enemy != null && !string.IsNullOrEmpty(enemy.enemyName) &&

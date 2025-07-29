@@ -13,9 +13,9 @@ namespace TimelessEchoes.Stats
         public static EnemyKillTracker Instance { get; private set; }
         public static readonly int[] Thresholds = { 10, 100, 1000, 10000 };
 
-        public event System.Action<EnemyStats> OnKillRegistered;
+        public event System.Action<EnemyData> OnKillRegistered;
 
-        private readonly Dictionary<EnemyStats, double> kills = new();
+        private readonly Dictionary<EnemyData, double> kills = new();
 
         private void Awake()
         {
@@ -33,7 +33,7 @@ namespace TimelessEchoes.Stats
             OnLoadData -= LoadState;
         }
 
-        public void RegisterKill(EnemyStats stats)
+        public void RegisterKill(EnemyData stats)
         {
             if (stats == null) return;
             if (kills.ContainsKey(stats))
@@ -43,12 +43,12 @@ namespace TimelessEchoes.Stats
             OnKillRegistered?.Invoke(stats);
         }
 
-        public double GetKills(EnemyStats stats)
+        public double GetKills(EnemyData stats)
         {
             return stats != null && kills.TryGetValue(stats, out var c) ? c : 0;
         }
 
-        public int GetRevealLevel(EnemyStats stats)
+        public int GetRevealLevel(EnemyData stats)
         {
             double count = GetKills(stats);
             int level = 0;
@@ -59,7 +59,7 @@ namespace TimelessEchoes.Stats
             return level;
         }
 
-        public float GetDamageMultiplier(EnemyStats stats)
+        public float GetDamageMultiplier(EnemyData stats)
         {
             return 1f + GetRevealLevel(stats) * 0.25f;
         }
@@ -81,7 +81,7 @@ namespace TimelessEchoes.Stats
             if (oracle == null) return;
             oracle.saveData.EnemyKills ??= new Dictionary<string, double>();
             kills.Clear();
-            foreach (var enemy in Resources.LoadAll<EnemyStats>(""))
+            foreach (var enemy in Resources.LoadAll<EnemyData>(""))
             {
                 oracle.saveData.EnemyKills.TryGetValue(enemy.name, out var count);
                 kills[enemy] = count;

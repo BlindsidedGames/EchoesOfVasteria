@@ -20,12 +20,11 @@ namespace TimelessEchoes.Enemies
     [RequireComponent(typeof(Health))]
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private EnemyStats stats;
+        [SerializeField] private EnemyData stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
-        [SerializeField] private List<ResourceDrop> resourceDrops = new();
         [SerializeField] private float targetUpdateInterval = 1f;
 
         private ResourceManager resourceManager;
@@ -47,7 +46,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private Skill combatSkill;
 
         public bool IsEngaged => setter != null && setter.target == hero;
-        public EnemyStats Stats => stats;
+        public EnemyData Stats => stats;
 
         public static event Action<Enemy> OnEngage;
 
@@ -278,7 +277,7 @@ namespace TimelessEchoes.Enemies
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
-            foreach (var drop in resourceDrops)
+            foreach (var drop in stats.resourceDrops)
             {
                 if (drop.resource == null) continue;
                 if (Random.value > drop.dropChance) continue;

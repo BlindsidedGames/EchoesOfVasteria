@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blindsided.SaveData;
 using Sirenix.OdinInspector;
 using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Enemies;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -118,11 +119,9 @@ namespace TimelessEchoes.Tasks
                 if (spawn == null) continue;
                 var copy = new WeightedSpawn
                 {
-                    prefab = spawn.prefab,
-                    weight = spawn.weight,
+                    data = spawn,
                     minX = spawn.minX + enemySpawnXOffset,
-                    maxX = spawn.maxX + enemySpawnXOffset,
-                    spawnTerrains = spawn.spawnTerrains
+                    maxX = spawn.maxX + enemySpawnXOffset
                 };
                 enemies.Add(copy);
             }
@@ -285,7 +284,7 @@ namespace TimelessEchoes.Tasks
                 var worldX = transform.position.x + localX;
 
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
-                if (entry == null || entry.prefab == null)
+                if (entry == null || entry.data == null || entry.data.prefab == null)
                     continue;
 
                 if (!TryGetTerrainSpot(localX, entry.spawnTerrains, out var pos))
@@ -316,7 +315,7 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-                var obj = Instantiate(entry.prefab, pos, Quaternion.identity, parentTf);
+                var obj = Instantiate(entry.data.prefab, pos, Quaternion.identity, parentTf);
                 generatedObjects.Add(obj.gameObject);
             }
 
@@ -702,24 +701,21 @@ namespace TimelessEchoes.Tasks
         [HideLabel]
         public class WeightedSpawn : IWeighted
         {
-            [Required] public GameObject prefab;
-
-            [MinValue(0)] public float weight = 1f;
+            [Required] public EnemyData data;
 
             public float minX;
 
             public float maxX = float.PositiveInfinity;
 
-
             // Terrains this entry can spawn on.
-            public List<TerrainSettings> spawnTerrains = new();
+            public List<TerrainSettings> spawnTerrains => data != null ? data.spawnTerrains : null;
 
             public float GetWeight(float worldX)
             {
-                if (prefab == null) return 0f;
+                if (data == null || data.prefab == null) return 0f;
                 if (worldX < minX || worldX > maxX)
                     return 0f;
-                return Mathf.Max(0f, weight);
+                return Mathf.Max(0f, data.weight);
             }
         }
 

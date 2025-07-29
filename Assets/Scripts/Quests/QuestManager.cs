@@ -37,7 +37,7 @@ namespace TimelessEchoes.Quests
         {
             public QuestData data;
             public QuestEntryUI ui;
-            public readonly Dictionary<EnemyStats, double> killCounts = new();
+            public readonly Dictionary<EnemyData, double> killCounts = new();
             public bool ReadyForTurnIn;
         }
 
@@ -103,7 +103,7 @@ namespace TimelessEchoes.Quests
             RefreshNoticeboard();
         }
 
-        private void OnKill(EnemyStats stats)
+        private void OnKill(EnemyData stats)
         {
             if (stats == null) return;
             foreach (var inst in active.Values)
@@ -138,7 +138,7 @@ namespace TimelessEchoes.Quests
                 UpdateProgress(inst);
         }
 
-        private static bool ContainsEnemy(QuestData data, EnemyStats stats)
+        private static bool ContainsEnemy(QuestData data, EnemyData stats)
         {
             foreach (var req in data.requirements)
                 if (req.type == QuestData.RequirementType.Kill && req.enemies.Contains(stats))

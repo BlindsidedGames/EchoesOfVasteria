@@ -1,6 +1,6 @@
 # Enemy Balance Summary
 
-The table below lists each enemy's combat stats from the `EnemyStats` Scriptable Objects along with the spawn distances used by the Beach map.
+The table below lists each enemy's combat stats from the `EnemyData` Scriptable Objects along with the spawn distances used by the Beach map.
 
 ### SmallSlime_Green
 - **Experience:** 1

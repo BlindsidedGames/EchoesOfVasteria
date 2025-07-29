@@ -1,12 +1,15 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Blindsided.Utilities;
+using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Upgrades;
+using System.Collections.Generic;
 
 namespace TimelessEchoes.Enemies
 {
     [ManageableData]
-    [CreateAssetMenu(fileName = "EnemyStats", menuName = "SO/Enemy Stats")]
-    public class EnemyStats : ScriptableObject
+    [CreateAssetMenu(fileName = "EnemyData", menuName = "SO/Enemy Data")]
+    public class EnemyData : ScriptableObject, TimelessEchoes.Tasks.IWeighted
     {
         [TitleGroup("General")]
         public string enemyName;
@@ -17,6 +20,26 @@ namespace TimelessEchoes.Enemies
 
         [TitleGroup("References")]
         public Sprite icon;
+
+        [TitleGroup("Spawn Settings")]
+        [Required]
+        public GameObject prefab;
+
+        [TitleGroup("Spawn Settings")]
+        [MinValue(0)]
+        public float weight = 1f;
+
+        [TitleGroup("Spawn Settings")]
+        public float minX;
+
+        [TitleGroup("Spawn Settings")]
+        public float maxX = float.PositiveInfinity;
+
+        [TitleGroup("Spawn Settings")]
+        public List<TerrainSettings> spawnTerrains = new();
+
+        [TitleGroup("Spawn Settings")]
+        public List<ResourceDrop> resourceDrops = new();
 
         [TitleGroup("Balance Data")]
         public int experience = 10;
@@ -57,5 +80,13 @@ namespace TimelessEchoes.Enemies
 
         [TitleGroup("References")]
         public GameObject projectilePrefab;
+
+        public float GetWeight(float worldX)
+        {
+            if (prefab == null) return 0f;
+            if (worldX < minX || worldX > maxX)
+                return 0f;
+            return Mathf.Max(0f, weight);
+        }
     }
 }

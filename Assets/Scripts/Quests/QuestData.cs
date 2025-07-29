@@ -34,7 +34,7 @@ namespace TimelessEchoes.Quests
             [HideIf("type", RequirementType.Meet)]
             public int amount = 1;
             [ShowIf("type", RequirementType.Kill)]
-            public List<EnemyStats> enemies = new();
+            public List<EnemyData> enemies = new();
             [ShowIf("type", RequirementType.Kill)]
             public Sprite killIcon;
             [ShowIf("type", RequirementType.Meet)]
