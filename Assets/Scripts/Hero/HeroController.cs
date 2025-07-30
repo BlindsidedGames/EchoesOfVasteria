@@ -627,11 +627,9 @@ namespace TimelessEchoes.Hero
         {
             Transform nearest = null;
             var best = float.MaxValue;
-#if UNITY_6000_0_OR_NEWER
-            var enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-#else
-            var enemies = Object.FindObjectsOfType<Enemy>();
-#endif
+            var enemies = EnemyActivator.ActiveEnemies;
+            if (enemies == null)
+                return null;
             Vector2 pos = transform.position;
 
             Camera cam = EnemyActivator.Instance != null
