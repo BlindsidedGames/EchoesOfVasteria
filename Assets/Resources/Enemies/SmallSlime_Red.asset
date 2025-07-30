@@ -16,19 +16,27 @@ MonoBehaviour:
   displayOrder: 9
   icon: {fileID: 3889767076933404985, guid: f67999f43e6e3304d8c33d27330fe20e, type: 3}
   prefab: {fileID: 8193780003442596315, guid: 35a938056f7440f7b42b9b6f98ec5ce1, type: 3}
-  weight: 1
-  minX: 0
-  maxX: Infinity
-  spawnTerrains: []
+  weight: 0.25
+  minX: 50
+  maxX: 1000
+  spawnTerrains:
+  - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+  - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+  - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   resourceDrops: []
   experience: 5
-  maxHealth: 75
-  damage: 5
-  defense: 1.5
-  attackSpeed: 1.2
+  maxHealth: 5
+  damage: 1
+  defense: 0
+  attackSpeed: 1
   attackRange: 1
-  moveSpeed: 4
-  visionRange: 10
+  moveSpeed: 3
+  visionRange: 7
   assistRange: 5
   wanderDistance: 2
+  damagePerLevel: 0.03
+  healthPerLevel: 5
+  defensePerLevel: 0.02
+  distancePerLevel: 20
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
