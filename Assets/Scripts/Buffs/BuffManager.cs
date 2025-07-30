@@ -377,8 +377,7 @@ namespace TimelessEchoes.Buffs
             if (slot < 0 || slot >= autoCastSlots.Count) return;
             autoCastSlots[slot] = !autoCastSlots[slot];
             if (oracle != null && oracle.saveData.AutoBuffSlots != null)
-                oracle.saveData.AutoBuffSlots[slot] = autoCastSlots[slot];
-            AutoBuffChanged?.Invoke();
+                SetAutoBuffSlot(slot, autoCastSlots[slot]);
         }
 
         public BuffRecipe GetAssigned(int slot)
