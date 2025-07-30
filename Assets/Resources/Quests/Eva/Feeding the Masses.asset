@@ -14,19 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: FTM
   questName: Feeding the Masses
-  description: "Eva twirls a ruby-red Rah Dish like a wand. \u201CThese roots turn
-    empty bellies into happy hearts,\u201D she winks as Mildred circles the cauldron.
-    \u201CHarvest 50 crisp Rah Dishes so we can fill every pot\u2014and give Utoes
-    something fresh to gnaw.\u201D"
-  rewardDescription: Gain the Disciple of Rah Dish
-  npcId: Witch1
+  description: '"You''re getting pretty good at this whole farming thing now. If
+    you get me some more I am sure I could attune an Alter-Echo for you, oh and the
+    farmers would probably be happy to give you some space on their farm!" - Eva'
+  rewardDescription: Radish Alter-Echo
+  npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
-    amount: 50
+    amount: 500
     enemies: []
     killIcon: {fileID: 0}
     meetNpcId: 

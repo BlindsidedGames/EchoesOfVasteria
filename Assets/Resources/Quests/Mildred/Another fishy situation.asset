@@ -14,14 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Mildred1
   questName: Another Fishy Situation
-  description: Mildred's power seems to be changing and Utoes thinks that if he can
-    get his hands on some  Muddy Muck Munchers Mildred might be able to help you
-    out even more!
+  description: '"I am prepping a treat for Mildred, help me fish up some Muddy Muck
+    Munchers" - Gill'
   rewardDescription: Another buff slot!
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
-  requirements: []
+  - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+    amount: 50
+    enemies: []
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockPrefab: {fileID: 0}
   unlockObjects: []
   unlockBuffSlots: 1

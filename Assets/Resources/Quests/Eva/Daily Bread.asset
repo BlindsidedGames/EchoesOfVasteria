@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Bread
   questName: Daily Bread
-  description: Deliver 20 Corn so the Witch can bake fresh bread for the village.
+  description: '"Something delicious came to me in a dream last night. I need you
+    to collect some corn for a new recipe. If you do I will teach you to grow Wheat."'
   rewardDescription: 'Unlock the Wheat crop
 
 '
-  npcId: Witch1
+  npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}
-    amount: 20
+    amount: 250
     enemies: []
     killIcon: {fileID: 0}
     meetNpcId: 

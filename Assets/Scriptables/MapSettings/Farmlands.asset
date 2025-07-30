@@ -28,7 +28,7 @@ MonoBehaviour:
     minX: 15
     height: 18
     enemyDensity: 0.1
-    enemySpawnXOffset: 50
+    enemySpawnXOffset: 60
     topBuffer: 2
     bottomBuffer: 2
     blockingMask:
@@ -110,6 +110,12 @@ MonoBehaviour:
     - prefab: {fileID: 5909428014693970596, guid: 34f3291671019ea4b99d82cc970ce458, type: 3}
       id: Barkley1
       localX: 40
+      spawnTerrains:
+      - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+      spawnOnlyOnce: 1
+    - prefab: {fileID: 5909428014693970596, guid: 3c15d1934c54c974cbf50e0b22f7d91d, type: 3}
+      id: Farmers1
+      localX: 90
       spawnTerrains:
       - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
       spawnOnlyOnce: 1

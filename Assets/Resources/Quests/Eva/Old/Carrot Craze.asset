@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Carrot Craze
+  m_EditorClassIdentifier: 
+  questId: CarrotCraze
+  questName: Carrot Craze
+  description: Harvest 10 Wartermelone for Eva to unlock carrot seeds.
+  rewardDescription: Unlock the Carrot crop
+  npcId: 
+  requiredQuests:
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
+  - {fileID: 11400000, guid: e7b996d2be115c74aae9b52d0808a89f, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}
+    amount: 10
+    enemies: []
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  unlockPrefab: {fileID: 0}
+  unlockObjects: []
+  unlockBuffSlots: 0
+  maxDistanceIncrease: 0
