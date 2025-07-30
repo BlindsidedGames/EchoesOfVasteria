@@ -30,13 +30,18 @@ namespace TimelessEchoes.Tasks
             base.StartTask();
             if (spriteRenderer == null)
                 spriteRenderer = GetComponent<SpriteRenderer>();
-            if (wetSpriteRenderer != null)
-                wetSpriteRenderer.enabled = true;
             localTimer = 0f;
             currentStage = 0;
             duration = TaskDuration;
             if (spriteRenderer != null && spriteRenderer.enabled == false)
                 spriteRenderer.enabled = true;
+        }
+
+        public override void OnArrival(HeroController hero)
+        {
+            base.OnArrival(hero);
+            if (wetSpriteRenderer != null)
+                wetSpriteRenderer.enabled = true;
         }
 
         public override void Tick(HeroController hero)
