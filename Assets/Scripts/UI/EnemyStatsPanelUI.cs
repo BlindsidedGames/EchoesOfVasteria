@@ -153,7 +153,25 @@ namespace TimelessEchoes.UI
 
             if (sortMode == SortMode.Default)
             {
-                ApplyOrder(defaultOrder);
+                IEnumerable<EnemyData> known = defaultOrder;
+                IEnumerable<EnemyData> unknown = Enumerable.Empty<EnemyData>();
+                if (killTracker != null)
+                {
+                    known = defaultOrder.Where(s => killTracker.GetKills(s) > 0);
+                    unknown = defaultOrder.Where(s => killTracker.GetKills(s) <= 0);
+                }
+
+                var sortedKnown = known
+                    .OrderBy(s => s.displayOrder)
+                    .ThenBy(s => s.enemyName)
+                    .ToList();
+                var sortedUnknown = unknown
+                    .OrderBy(s => s.displayOrder)
+                    .ThenBy(s => s.enemyName)
+                    .ToList();
+
+                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
+                ApplyOrder(finalDefault);
                 return;
             }
 
