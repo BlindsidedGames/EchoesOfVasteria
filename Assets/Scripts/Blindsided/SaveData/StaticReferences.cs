@@ -133,35 +133,23 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
         }
 
-        /// <summary>
-        ///     Indicates whether autobuff is enabled. The saved preference can
-        ///     temporarily be disabled for the remainder of a run without
-        ///     affecting the persisted value.
-        /// </summary>
-        public static bool AutoBuff
+        public static int UnlockedAutoBuffSlots
         {
-            get => oracle.saveData.AutoBuff && !autoBuffDisabledThisRun;
-            set
-            {
-                if (oracle.saveData.AutoBuff != value)
-                {
-                    oracle.saveData.AutoBuff = value;
-                    AutoBuffChanged?.Invoke();
-                }
-            }
+            get => oracle.saveData.UnlockedAutoBuffSlots;
+            set => oracle.saveData.UnlockedAutoBuffSlots = Mathf.Clamp(value, 0, 5);
         }
 
-        private static bool autoBuffDisabledThisRun;
-
-        /// <summary>
-        ///     Temporarily enable or disable autobuff until the next run starts.
-        /// </summary>
-        /// <param name="disabled">True to disable autobuff for the current run.</param>
-        public static void SetAutoBuffRunDisabled(bool disabled)
+        public static bool GetAutoBuffSlot(int index)
         {
-            if (autoBuffDisabledThisRun != disabled)
+            return index >= 0 && index < oracle.saveData.AutoBuffSlots.Count && oracle.saveData.AutoBuffSlots[index];
+        }
+
+        public static void SetAutoBuffSlot(int index, bool value)
+        {
+            if (index < 0 || index >= oracle.saveData.AutoBuffSlots.Count) return;
+            if (oracle.saveData.AutoBuffSlots[index] != value)
             {
-                autoBuffDisabledThisRun = disabled;
+                oracle.saveData.AutoBuffSlots[index] = value;
                 AutoBuffChanged?.Invoke();
             }
         }

@@ -27,10 +27,9 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
         public int UnlockedBuffSlots = 1;
-        /// <summary>
-        ///     Automatically cast available buffs when enabled.
-        /// </summary>
-        public bool AutoBuff;
+        public int UnlockedAutoBuffSlots = 0;
+        [HideReferenceObjectPicker]
+        public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
 
@@ -134,6 +133,8 @@ namespace Blindsided.SaveData
             public Dictionary<string, double> KillProgress = new();
             public float DistanceBaseline;
             public bool DistanceBaselineSet;
+            public int BuffCastBaseline;
+            public bool BuffCastBaselineSet;
         }
 
         [HideReferenceObjectPicker]

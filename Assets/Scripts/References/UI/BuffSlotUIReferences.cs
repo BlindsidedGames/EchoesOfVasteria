@@ -11,6 +11,7 @@ namespace References.UI
         public Button activateButton;
         public Image iconImage;
         public TMP_Text durationText;
+        public Image autoCastImage;
 
         public event Action<BuffSlotUIReferences> PointerEnter;
         public event Action<BuffSlotUIReferences> PointerExit;

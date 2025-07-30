@@ -57,11 +57,6 @@ namespace TimelessEchoes
         [TitleGroup("UI/General")]
         [SerializeField] private TMP_Text returnOnDeathText;
         [TitleGroup("UI/General")]
-        [SerializeField] private GameObject autoBuffRoot;
-        [TitleGroup("UI/General")]
-        [SerializeField] private Button autoBuffButton;
-        [TitleGroup("UI/General")]
-        [SerializeField] private TMP_Text autoBuffText;
         [TitleGroup("UI/General")]
         [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
         [TitleGroup("UI/General")]
@@ -165,8 +160,6 @@ namespace TimelessEchoes
                 deathRunButton.onClick.AddListener(OnDeathRunButton);
             if (deathReturnButton != null)
                 deathReturnButton.onClick.AddListener(OnDeathReturnButton);
-            if (autoBuffButton != null)
-                autoBuffButton.onClick.AddListener(ToggleAutoBuff);
             npcObjectStateController = NpcObjectStateController.Instance;
             if (npcObjectStateController == null)
                 Log("NpcObjectStateController missing", TELogCategory.General, this);
@@ -192,8 +185,6 @@ namespace TimelessEchoes
                 deathRunButton.onClick.RemoveListener(OnDeathRunButton);
             if (deathReturnButton != null)
                 deathReturnButton.onClick.RemoveListener(OnDeathReturnButton);
-            if (autoBuffButton != null)
-                autoBuffButton.onClick.RemoveListener(ToggleAutoBuff);
             foreach (var pair in _buttonActions)
             {
                 if (pair.Key != null)
@@ -221,16 +212,13 @@ namespace TimelessEchoes
             if (returnOnDeathText != null)
                 returnOnDeathText.text = "Return On Death";
             npcObjectStateController?.UpdateObjectStates();
-            UpdateAutoBuffUI();
-            if (autoBuffRoot != null)
-                autoBuffRoot.SetActive(false);
+            
             UpdateGenerationButtonStats();
             nextStatsUpdateTime = Time.time + statsUpdateInterval;
         }
 
         private void Update()
         {
-            UpdateAutoBuffUI();
             if (Time.time >= nextStatsUpdateTime)
             {
                 UpdateGenerationButtonStats();
@@ -287,8 +275,6 @@ namespace TimelessEchoes
                 StartCoroutine(ReturnToTavernRoutine());
             }
 
-            if (autoBuffRoot != null && statTracker != null)
-                autoBuffRoot.SetActive(statTracker.BuffsCast >= 100);
         }
 
         private void HideTooltip()
@@ -298,17 +284,6 @@ namespace TimelessEchoes
                 tooltip.gameObject.SetActive(false);
         }
 
-        private void ToggleAutoBuff()
-        {
-            AutoBuff = !AutoBuff;
-            UpdateAutoBuffUI();
-        }
-
-        private void UpdateAutoBuffUI()
-        {
-            if (autoBuffText != null)
-                autoBuffText.text = AutoBuff ? "Autobuff | On" : "Autobuff | Off";
-        }
 
         private void OnReturnToTavernButton()
         {
@@ -349,8 +324,6 @@ namespace TimelessEchoes
         {
             HideTooltip();
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
-            // Re-enable autobuff for the new run based on the saved preference.
-            SetAutoBuffRunDisabled(false);
             heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
@@ -497,9 +470,6 @@ namespace TimelessEchoes
             if (statTracker != null) statTracker.AddDeath();
 
             BuffManager.Instance?.ClearActiveBuffs();
-            // Temporarily disable autobuff for the remainder of this run.
-            SetAutoBuffRunDisabled(true);
-            UpdateAutoBuffUI();
 
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
@@ -570,9 +540,7 @@ namespace TimelessEchoes
         private IEnumerator ReturnToTavernRoutine()
         {
             HideTooltip();
-            // Reactivate autobuff if it was temporarily disabled by death.
-            SetAutoBuffRunDisabled(false);
-            UpdateAutoBuffUI();
+            // Reset state after death.
             heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;

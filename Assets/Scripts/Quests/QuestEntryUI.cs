@@ -123,7 +123,8 @@ namespace TimelessEchoes.Quests
                         if (req.type == QuestData.RequirementType.Instant ||
                             req.type == QuestData.RequirementType.DistanceRun ||
                             req.type == QuestData.RequirementType.DistanceTravel ||
-                            req.type == QuestData.RequirementType.Meet)
+                            req.type == QuestData.RequirementType.Meet ||
+                            req.type == QuestData.RequirementType.BuffCast)
                             continue;
 
                         var slot = Instantiate(costSlotPrefab, costParent);
@@ -150,7 +151,8 @@ namespace TimelessEchoes.Quests
                             }
                             else if (req.type == QuestData.RequirementType.DistanceRun ||
                                      req.type == QuestData.RequirementType.DistanceTravel ||
-                                     req.type == QuestData.RequirementType.Meet)
+                                     req.type == QuestData.RequirementType.Meet ||
+                                     req.type == QuestData.RequirementType.BuffCast)
                             {
                                 slot.iconImage.sprite = null;
                                 slot.iconImage.color = Color.white;
@@ -212,7 +214,8 @@ namespace TimelessEchoes.Quests
                 }
                 else if (req.type == QuestData.RequirementType.DistanceRun ||
                          req.type == QuestData.RequirementType.DistanceTravel ||
-                         req.type == QuestData.RequirementType.Meet)
+                         req.type == QuestData.RequirementType.Meet ||
+                         req.type == QuestData.RequirementType.BuffCast)
                 {
                     slot.iconImage.sprite = null;
                     slot.iconImage.color = Color.white;
@@ -253,6 +256,8 @@ namespace TimelessEchoes.Quests
                     return "Run Distance";
                 case QuestData.RequirementType.DistanceTravel:
                     return "Travel";
+                case QuestData.RequirementType.BuffCast:
+                    return "Buffs";
                 case QuestData.RequirementType.Instant:
                     return "Information";
                 case QuestData.RequirementType.Meet:
