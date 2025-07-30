@@ -14,6 +14,9 @@ namespace TimelessEchoes.Enemies
 
         private Camera cam;
         private readonly List<Enemy> enemies = new();
+        private readonly List<Enemy> activeEnemies = new();
+
+        public static IReadOnlyList<Enemy> ActiveEnemies => Instance?.activeEnemies;
 
         public static EnemyActivator Instance { get; private set; }
 
@@ -26,12 +29,17 @@ namespace TimelessEchoes.Enemies
         public void Register(Enemy enemy)
         {
             if (enemy != null && !enemies.Contains(enemy))
+            {
                 enemies.Add(enemy);
+                if (!activeEnemies.Contains(enemy))
+                    activeEnemies.Add(enemy);
+            }
         }
 
         public void Unregister(Enemy enemy)
         {
             enemies.Remove(enemy);
+            activeEnemies.Remove(enemy);
         }
 
         private void LateUpdate()
@@ -52,6 +60,7 @@ namespace TimelessEchoes.Enemies
                 if (e == null)
                 {
                     enemies.RemoveAt(i);
+                    activeEnemies.Remove(e);
                     continue;
                 }
 
@@ -78,7 +87,17 @@ namespace TimelessEchoes.Enemies
                     }
                 }
 
-                e.SetActiveState(inside || e.IsEngaged || nearCombatant);
+                bool active = inside || e.IsEngaged || nearCombatant;
+                e.SetActiveState(active);
+                if (active)
+                {
+                    if (!activeEnemies.Contains(e))
+                        activeEnemies.Add(e);
+                }
+                else
+                {
+                    activeEnemies.Remove(e);
+                }
             }
         }
     }
