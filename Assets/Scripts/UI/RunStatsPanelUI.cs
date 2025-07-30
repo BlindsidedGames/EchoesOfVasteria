@@ -38,6 +38,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private Color killsAbandonedBarColor = Color.gray;
         [SerializeField] private Color killsReapedBarColor = Color.magenta;
 
+        [SerializeField] private float updateInterval = 0.1f;
+        private float nextUpdateTime;
+
         public enum GraphMode
         {
             Distance,
@@ -109,6 +112,7 @@ namespace TimelessEchoes.UI
         {
             UpdateGraphLabel();
             UpdateUI();
+            nextUpdateTime = Time.unscaledTime + updateInterval;
         }
 
         private void OnDisable()
@@ -119,7 +123,11 @@ namespace TimelessEchoes.UI
 
         private void Update()
         {
-            UpdateUI();
+            if (Time.unscaledTime >= nextUpdateTime)
+            {
+                UpdateUI();
+                nextUpdateTime = Time.unscaledTime + updateInterval;
+            }
         }
 
         private void OnBarEnter(RunBarUI bar)
