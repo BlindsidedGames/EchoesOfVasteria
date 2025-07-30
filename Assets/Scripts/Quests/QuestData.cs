@@ -19,8 +19,6 @@ namespace TimelessEchoes.Quests
         public string npcId;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
-        public GameObject unlockPrefab;
-        public List<GameObject> unlockObjects = new();
         public int unlockBuffSlots;
         public float maxDistanceIncrease;
 
@@ -35,6 +33,8 @@ namespace TimelessEchoes.Quests
             public int amount = 1;
             [ShowIf("type", RequirementType.Kill)]
             public List<EnemyData> enemies = new();
+            [ShowIf("type", RequirementType.Kill)]
+            public string killName;
             [ShowIf("type", RequirementType.Kill)]
             public Sprite killIcon;
             [ShowIf("type", RequirementType.Meet)]

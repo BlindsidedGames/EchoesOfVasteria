@@ -267,11 +267,6 @@ namespace TimelessEchoes.Quests
                         resourceManager.Spend(req.resource, req.amount);
 
             record.Completed = true;
-            if (inst.data.unlockPrefab != null)
-                Instantiate(inst.data.unlockPrefab);
-            foreach (var obj in inst.data.unlockObjects)
-                if (obj != null)
-                    obj.SetActive(true);
             if (inst.data.unlockBuffSlots > 0)
                 BuffManager.Instance?.UnlockSlots(inst.data.unlockBuffSlots);
             if (inst.data.maxDistanceIncrease > 0f)

@@ -156,6 +156,13 @@ namespace TimelessEchoes.Quests
                         else
                             sb.AppendLine($"<size=80%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
+                    else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
+                    {
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                    }
                     else
                     {
                         if (target <= 0)
