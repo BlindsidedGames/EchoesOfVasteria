@@ -193,20 +193,20 @@ namespace TimelessEchoes.UI
                 _ => 0
             };
 
-            IEnumerable<EnemyData> known = defaultOrder;
-            IEnumerable<EnemyData> unknown = Enumerable.Empty<EnemyData>();
+            IEnumerable<EnemyData> revealed = defaultOrder;
+            IEnumerable<EnemyData> unrevealed = Enumerable.Empty<EnemyData>();
             if (killTracker != null)
             {
-                known = defaultOrder.Where(s => killTracker.GetRevealLevel(s) >= threshold);
-                unknown = defaultOrder.Where(s => killTracker.GetRevealLevel(s) < threshold);
+                revealed = defaultOrder.Where(s => killTracker.GetRevealLevel(s) >= threshold);
+                unrevealed = defaultOrder.Where(s => killTracker.GetRevealLevel(s) < threshold);
             }
 
-            var sortedKnown = known
+            var sortedRevealed = revealed
                 .OrderByDescending(GetValue)
                 .ThenBy(s => s.displayOrder)
                 .ToList();
 
-            var finalOrder = sortedKnown.Concat(unknown).ToList();
+            var finalOrder = sortedRevealed.Concat(unrevealed).ToList();
             ApplyOrder(finalOrder);
         }
 
