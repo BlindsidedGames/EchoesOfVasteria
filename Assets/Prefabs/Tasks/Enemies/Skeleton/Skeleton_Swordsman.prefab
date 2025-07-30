@@ -77,7 +77,8 @@ MonoBehaviour:
   healthBar: {fileID: 9155458865949015127}
   minFillPercent: 0.07
   barSprites: []
-  healthBarParent: {fileID: 0}
+  healthBarParent: {fileID: 8313214936414744613}
+  healthText: {fileID: 9123932765351807223}
 --- !u!212 &9165481713511291873
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -429,6 +430,22 @@ RectTransform:
 --- !u!114 &7690468655359413076 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5808186465148379705, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
+  m_PrefabInstance: {fileID: 4188588094894631277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8313214936414744613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5295848737936447816, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
+  m_PrefabInstance: {fileID: 4188588094894631277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9123932765351807223 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4953504582543630746, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
   m_PrefabInstance: {fileID: 4188588094894631277}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

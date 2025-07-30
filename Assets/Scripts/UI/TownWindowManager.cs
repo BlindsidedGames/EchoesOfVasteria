@@ -6,34 +6,33 @@ using UnityEngine.UI;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Manages the town UI windows. Clicking a button closes all windows except
-    /// the inventory and opens the associated one. Right-click closes all
-    /// windows.
+    ///     Manages the town UI windows. Clicking a button closes all windows except
+    ///     the inventory and opens the associated one. Right-click closes all
+    ///     windows.
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
         public static TownWindowManager Instance { get; private set; }
+
         [Serializable]
         [InlineProperty]
         public class WindowReference
         {
             [HorizontalGroup("Row")] public Button button;
-            [HorizontalGroup("Row")] public GameObject window;
-            [HorizontalGroup("Row")] public Button closeButton;
+            [HorizontalGroup("Row2")] public GameObject window;
+            [HorizontalGroup("Row3")] public Button closeButton;
         }
 
-        [Title("References")]
-        [SerializeField] private WindowReference upgrades = new();
-        [SerializeField] private WindowReference buffs = new();
-        [SerializeField] private WindowReference quests = new();
-        [SerializeField] private WindowReference credits = new();
-        [SerializeField] private WindowReference disciples = new();
-        [SerializeField] private WindowReference stats = new();
-        [SerializeField] private WindowReference wiki = new();
-        [SerializeField] private WindowReference inventory = new();
-        [SerializeField] private WindowReference options = new();
-        [SerializeField] private GameObject townButtons;
-
+        [Title("References")] [SerializeField] private WindowReference upgrades = new();
+        [SerializeField] [Space] private WindowReference buffs = new();
+        [SerializeField] [Space] private WindowReference quests = new();
+        [SerializeField] [Space] private WindowReference credits = new();
+        [SerializeField] [Space] private WindowReference disciples = new();
+        [SerializeField] [Space] private WindowReference stats = new();
+        [SerializeField] [Space] private WindowReference wiki = new();
+        [SerializeField] [Space] private WindowReference inventory = new();
+        [SerializeField] [Space] private WindowReference options = new();
+        [SerializeField] [Space] private GameObject townButtons;
 
 
         private void Awake()
@@ -130,14 +129,46 @@ namespace TimelessEchoes.UI
                 CloseAllWindows();
         }
 
-        private void OpenUpgrades() => ToggleWindow(upgrades.window);
-        private void OpenBuffs() => ToggleWindow(buffs.window);
-        private void OpenQuests() => ToggleWindow(quests.window);
-        private void OpenCredits() => ToggleWindow(credits.window);
-        private void OpenDisciples() => ToggleWindow(disciples.window);
-        private void OpenStats() => ToggleWindow(stats.window);
-        private void OpenWiki() => ToggleWindow(wiki.window);
-        private void OpenOptions() => ToggleWindow(options.window);
+        private void OpenUpgrades()
+        {
+            ToggleWindow(upgrades.window);
+        }
+
+        private void OpenBuffs()
+        {
+            ToggleWindow(buffs.window);
+        }
+
+        private void OpenQuests()
+        {
+            ToggleWindow(quests.window);
+        }
+
+        private void OpenCredits()
+        {
+            ToggleWindow(credits.window);
+        }
+
+        private void OpenDisciples()
+        {
+            ToggleWindow(disciples.window);
+        }
+
+        private void OpenStats()
+        {
+            ToggleWindow(stats.window);
+        }
+
+        private void OpenWiki()
+        {
+            ToggleWindow(wiki.window);
+        }
+
+        private void OpenOptions()
+        {
+            ToggleWindow(options.window);
+        }
+
         private void ToggleInventory()
         {
             if (inventory.window != null)
@@ -150,11 +181,8 @@ namespace TimelessEchoes.UI
             if (window == null)
                 return;
 
-            bool wasActive = window.activeSelf;
-            if (!wasActive)
-            {
-                CloseAllWindowsExceptInventory();
-            }
+            var wasActive = window.activeSelf;
+            if (!wasActive) CloseAllWindowsExceptInventory();
             window.SetActive(!wasActive);
             UpdateTownButtonsVisibility();
         }

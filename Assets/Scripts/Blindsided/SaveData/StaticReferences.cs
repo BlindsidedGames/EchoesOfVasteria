@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.GameData;
 
@@ -159,4 +160,5 @@ namespace Blindsided.SaveData
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
         public static event Action ShowLevelTextChanged;
         public static event Action AutoBuffChanged;
-    }}
+    }
+}
