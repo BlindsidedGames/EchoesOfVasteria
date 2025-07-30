@@ -127,6 +127,12 @@ namespace Blindsided.SaveData
             }
         }
 
+        public static bool AutoPinActiveQuests
+        {
+            get => oracle.saveData.SavedPreferences.AutoPinActiveQuests;
+            set => oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
+        }
+
         /// <summary>
         ///     Indicates whether autobuff is enabled. The saved preference can
         ///     temporarily be disabled for the remainder of a run without
