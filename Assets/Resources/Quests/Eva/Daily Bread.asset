@@ -15,7 +15,8 @@ MonoBehaviour:
   questId: Bread
   questName: Daily Bread
   description: '"Something delicious came to me in a dream last night. I need you
-    to collect some corn for a new recipe. If you do I will teach you to grow Wheat."'
+    to collect some corn for a new recipe. If you do I will teach you to grow Wheat"
+    - Eva'
   rewardDescription: 'Unlock the Wheat crop
 
 '
@@ -27,9 +28,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}
     amount: 250
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
