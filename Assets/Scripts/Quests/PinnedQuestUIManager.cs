@@ -110,6 +110,9 @@ namespace TimelessEchoes.Quests
                 oracle.saveData.Quests.TryGetValue(id, out var rec);
                 bool completed = rec != null && rec.Completed;
 
+                float progress = 0f;
+                int reqCount = 0;
+
                 var sb = new StringBuilder();
                 sb.AppendLine(data.questName);
 
@@ -117,11 +120,16 @@ namespace TimelessEchoes.Quests
                 {
                     double current = 0;
                     double target = req.amount;
+                    float pct = 0f;
+
+                    reqCount++;
 
                     switch (req.type)
                     {
                         case QuestData.RequirementType.Resource:
                             current = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
+                            if (target > 0)
+                                pct = (float)(current / target);
                             break;
                         case QuestData.RequirementType.Kill:
                             if (rec != null && req.enemies != null)
@@ -132,30 +140,46 @@ namespace TimelessEchoes.Quests
                                         current += c;
                                 }
                             }
+                            if (target > 0)
+                                pct = (float)(current / target);
                             break;
                         case QuestData.RequirementType.DistanceRun:
                             current = tracker ? tracker.LongestRun : 0f;
+                            if (target > 0)
+                                pct = (float)current / (float)target;
                             break;
                         case QuestData.RequirementType.DistanceTravel:
                             current = tracker ? tracker.DistanceTravelled : 0f;
                             if (rec != null)
                                 current -= rec.DistanceBaseline;
+                            if (target > 0)
+                                pct = (float)current / (float)target;
                             break;
                         case QuestData.RequirementType.BuffCast:
                             current = tracker ? tracker.BuffsCast : 0;
                             if (rec != null)
                                 current -= rec.BuffCastBaseline;
+                            if (target > 0)
+                                pct = (float)current / (float)target;
                             break;
                         case QuestData.RequirementType.Instant:
                             current = target;
+                            pct = 1f;
                             break;
                         case QuestData.RequirementType.Meet:
-                            current = !string.IsNullOrEmpty(req.meetNpcId) &&
-                                      StaticReferences.CompletedNpcTasks.Contains(req.meetNpcId)
-                                ? target
-                                : 0;
+                            if (!string.IsNullOrEmpty(req.meetNpcId) && StaticReferences.CompletedNpcTasks.Contains(req.meetNpcId))
+                            {
+                                current = target;
+                                pct = 1f;
+                            }
+                            else
+                            {
+                                current = 0;
+                            }
                             break;
                     }
+
+                    progress += Mathf.Clamp01(pct);
 
                     if (req.type == QuestData.RequirementType.Resource)
                     {
@@ -182,8 +206,13 @@ namespace TimelessEchoes.Quests
                 }
 
                 ui.progressText.text = sb.ToString();
+
+                if (reqCount > 0)
+                    progress /= reqCount;
+                bool ready = progress >= 1f;
+
                 if (ui.completedImage != null)
-                    ui.completedImage.enabled = completed;
+                    ui.completedImage.enabled = completed || ready;
             }
         }
 
