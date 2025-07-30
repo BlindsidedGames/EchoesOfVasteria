@@ -11,6 +11,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private GeneralStatsUIReferences references;
         private GameplayStatTracker statTracker;
 
+        [SerializeField] private float updateInterval = 0.1f;
+        private float nextUpdateTime;
+
         private void Awake()
         {
             if (references == null)
@@ -23,11 +26,16 @@ namespace TimelessEchoes.UI
         private void OnEnable()
         {
             UpdateTexts();
+            nextUpdateTime = Time.unscaledTime + updateInterval;
         }
 
         private void Update()
         {
-            UpdateTexts();
+            if (Time.unscaledTime >= nextUpdateTime)
+            {
+                UpdateTexts();
+                nextUpdateTime = Time.unscaledTime + updateInterval;
+            }
         }
 
         private void UpdateTexts()

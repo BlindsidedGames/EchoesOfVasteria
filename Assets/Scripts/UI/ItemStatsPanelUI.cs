@@ -13,6 +13,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatPanelReferences references;
         private ResourceManager resourceManager;
 
+        [SerializeField] private float updateInterval = 0.1f;
+        private float nextUpdateTime;
+
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
         private List<Resource> defaultOrder = new();
 
@@ -39,12 +42,18 @@ namespace TimelessEchoes.UI
         private void OnEnable()
         {
             UpdateEntries();
+            SortEntries();
+            nextUpdateTime = Time.unscaledTime + updateInterval;
         }
 
         private void Update()
         {
-            UpdateEntries();
-            SortEntries();
+            if (Time.unscaledTime >= nextUpdateTime)
+            {
+                UpdateEntries();
+                SortEntries();
+                nextUpdateTime = Time.unscaledTime + updateInterval;
+            }
         }
 
         public void SetSortMode(SortMode mode)

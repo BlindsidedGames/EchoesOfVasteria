@@ -116,6 +116,9 @@ namespace TimelessEchoes
         private bool retreatQueued;
         private readonly Dictionary<Button, UnityEngine.Events.UnityAction> _buttonActions = new();
 
+        [SerializeField] private float statsUpdateInterval = 0.1f;
+        private float nextStatsUpdateTime;
+
         private void UpdateGenerationButtonStats()
         {
             if (statTracker == null) return;
@@ -222,11 +225,17 @@ namespace TimelessEchoes
             if (autoBuffRoot != null)
                 autoBuffRoot.SetActive(false);
             UpdateGenerationButtonStats();
+            nextStatsUpdateTime = Time.time + statsUpdateInterval;
         }
 
         private void Update()
         {
             UpdateAutoBuffUI();
+            if (Time.time >= nextStatsUpdateTime)
+            {
+                UpdateGenerationButtonStats();
+                nextStatsUpdateTime = Time.time + statsUpdateInterval;
+            }
             if (returnToTavernButton != null)
             {
                 var active = hero != null && hero.gameObject.activeSelf && !heroDead;

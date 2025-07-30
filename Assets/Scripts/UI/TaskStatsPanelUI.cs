@@ -14,6 +14,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatPanelReferences references;
         private GameplayStatTracker statTracker;
 
+        [SerializeField] private float updateInterval = 0.1f;
+        private float nextUpdateTime;
+
         private readonly Dictionary<TaskData, TaskStatEntryUIReferences> entries = new();
         private List<TaskData> defaultOrder = new();
 
@@ -40,12 +43,18 @@ namespace TimelessEchoes.UI
         private void OnEnable()
         {
             UpdateEntries();
+            SortEntries();
+            nextUpdateTime = Time.unscaledTime + updateInterval;
         }
 
         private void Update()
         {
-            UpdateEntries();
-            SortEntries();
+            if (Time.unscaledTime >= nextUpdateTime)
+            {
+                UpdateEntries();
+                SortEntries();
+                nextUpdateTime = Time.unscaledTime + updateInterval;
+            }
         }
 
         public void SetSortMode(SortMode mode)
