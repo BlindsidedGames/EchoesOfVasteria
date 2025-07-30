@@ -46,6 +46,7 @@ namespace TimelessEchoes.Tasks
             talked = true;
             if (!string.IsNullOrEmpty(npcId))
                 StaticReferences.ActiveNpcMeetings.Add(npcId);
+            NotifyCompleted();
         }
 
         private void SpawnMeetingUI()

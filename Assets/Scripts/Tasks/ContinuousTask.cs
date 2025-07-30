@@ -53,6 +53,7 @@ namespace TimelessEchoes.Tasks
                 HideProgressBar();
                 GenerateDrops();
                 GrantCompletionXP();
+                NotifyCompleted();
                 return;
             }
 
@@ -85,6 +86,7 @@ namespace TimelessEchoes.Tasks
                 HideProgressBar();
                 GenerateDrops();
                 GrantCompletionXP();
+                NotifyCompleted();
                 // The hero will get a new task automatically now
             }
         }
