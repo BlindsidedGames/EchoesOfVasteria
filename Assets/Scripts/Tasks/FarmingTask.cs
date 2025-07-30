@@ -11,6 +11,8 @@ namespace TimelessEchoes.Tasks
     public class FarmingTask : ContinuousTask
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [Tooltip("Optional overlay sprite used to show watered soil")]
+        [SerializeField] private SpriteRenderer wetSpriteRenderer;
         [SerializeField] private Sprite[] growthStages = new Sprite[3];
         [SerializeField] private Transform wateringPoint;
 
@@ -28,6 +30,8 @@ namespace TimelessEchoes.Tasks
             base.StartTask();
             if (spriteRenderer == null)
                 spriteRenderer = GetComponent<SpriteRenderer>();
+            if (wetSpriteRenderer != null)
+                wetSpriteRenderer.enabled = true;
             localTimer = 0f;
             currentStage = 0;
             duration = TaskDuration;
@@ -66,7 +70,16 @@ namespace TimelessEchoes.Tasks
             if (IsComplete() && spriteRenderer != null && spriteRenderer.enabled)
             {
                 spriteRenderer.enabled = false;
+                if (wetSpriteRenderer != null)
+                    wetSpriteRenderer.enabled = false;
             }
+        }
+
+        public override void OnInterrupt(HeroController hero)
+        {
+            base.OnInterrupt(hero);
+            if (wetSpriteRenderer != null)
+                wetSpriteRenderer.enabled = false;
         }
 
         // TaskDuration property from ContinuousTask provides the duration
