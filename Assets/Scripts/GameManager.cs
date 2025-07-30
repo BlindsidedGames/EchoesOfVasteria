@@ -66,6 +66,8 @@ namespace TimelessEchoes
         [TitleGroup("UI/General")]
         [SerializeField] private RunDropUI runDropUI;
         [TitleGroup("UI/General")]
+        [SerializeField] private RunResourceTrackerUI runResourceTracker;
+        [TitleGroup("UI/General")]
         [SerializeField] private RunCalebUIReferences runCalebUI;
         [TitleGroup("UI/General")]
         [SerializeField] private Transform meetingParent;
@@ -365,6 +367,7 @@ namespace TimelessEchoes
 
             statTracker?.BeginRun(CurrentGenerationConfig);
             runDropUI?.ResetDrops();
+            runResourceTracker?.BeginRun();
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
@@ -595,6 +598,7 @@ namespace TimelessEchoes
             mapUI?.SetActive(false);
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
+            runResourceTracker?.ShowWindow();
             npcObjectStateController?.UpdateObjectStates();
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
