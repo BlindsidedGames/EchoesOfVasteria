@@ -185,9 +185,9 @@ namespace TimelessEchoes.Quests
                     {
                         var name = req.resource ? req.resource.name : "";
                         if (target <= 0)
-                            sb.AppendLine($"<size=80%>{name}: {CalcUtils.FormatNumber(current, true)}</size>");
+                            sb.AppendLine($"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)}</size>");
                         else
-                            sb.AppendLine($"<size=80%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                            sb.AppendLine($"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
                     else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
                     {
