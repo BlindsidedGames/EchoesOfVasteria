@@ -111,6 +111,8 @@ namespace TimelessEchoes
         private System.Action<bool> runEndedAction;
         private bool returnOnDeathQueued;
         private bool retreatQueued;
+        // Track whether the run resource tracker should reset on the next run
+        private bool resetRunResourceTracker = true;
         private readonly Dictionary<Button, UnityEngine.Events.UnityAction> _buttonActions = new();
 
         [SerializeField] private float statsUpdateInterval = 0.1f;
@@ -367,7 +369,11 @@ namespace TimelessEchoes
 
             statTracker?.BeginRun(CurrentGenerationConfig);
             runDropUI?.ResetDrops();
-            runResourceTracker?.BeginRun();
+            if (resetRunResourceTracker)
+            {
+                runResourceTracker?.BeginRun();
+                resetRunResourceTracker = false;
+            }
             currentMap = Instantiate(mapPrefab);
             taskController = currentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
@@ -599,6 +605,7 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
             runResourceTracker?.ShowWindow();
+            resetRunResourceTracker = true;
             npcObjectStateController?.UpdateObjectStates();
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
