@@ -63,7 +63,14 @@ namespace TimelessEchoes.Buffs
                         ui.iconImage.color = recipe ? Color.white : transparent;
                 }
                 if (ui != null && ui.activateButton != null)
-                    ui.activateButton.interactable = isAssigning && i < unlocked;
+                {
+                    if (isAssigning)
+                        ui.activateButton.interactable = i < unlocked;
+                    else
+                        ui.activateButton.interactable = buffManager != null && buffManager.IsAutoSlotUnlocked(i);
+                }
+                if (ui != null && ui.autoCastImage != null)
+                    ui.autoCastImage.enabled = buffManager != null && buffManager.IsSlotAutoCasting(i);
             }
 
             bool heroAlive = heroHealth != null && heroHealth.gameObject.activeInHierarchy && heroHealth.CurrentHealth > 0f;
@@ -101,6 +108,8 @@ namespace TimelessEchoes.Buffs
 
                 if (ui.activateButton != null)
                     ui.activateButton.interactable = i < unlocked && recipe != null && canBuy && distanceOk && heroAlive;
+                if (ui.autoCastImage != null)
+                    ui.autoCastImage.enabled = buffManager != null && buffManager.IsSlotAutoCasting(i);
 
                 if (ui.durationText != null)
                 {
@@ -334,8 +343,14 @@ namespace TimelessEchoes.Buffs
 
         private void OnAssignSlot(int slot)
         {
-            if (selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
+            if (isAssigning && selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
+            {
                 buffManager.AssignBuff(slot, selectedRecipe);
+            }
+            else
+            {
+                buffManager?.ToggleSlotAutoCast(slot);
+            }
             selectedRecipe = null;
             isAssigning = false;
             RefreshSlots();

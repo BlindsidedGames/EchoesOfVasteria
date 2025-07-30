@@ -32,9 +32,9 @@ combat using projectile attacks. Combat strength and movement speed are
 modified by stat upgrades.
 
 ### Auto Buff
-After you cast 100 buffs the **Autobuff** toggle becomes available in the
-game's UI. When enabled, any assigned buff that is not currently active will be
-automatically cast as soon as you have enough resources.
+Quests now unlock auto buff slots after you cast a set number of buffs. Each
+unlocked slot can be toggled individually and will automatically cast its
+assigned buff whenever it is available.
 
 ## Echoes
 Clones spawned by milestones are referred to as **Echoes**. An Echo performs

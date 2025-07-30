@@ -137,6 +137,11 @@ namespace TimelessEchoes.Quests
                             if (rec != null)
                                 current -= rec.DistanceBaseline;
                             break;
+                        case QuestData.RequirementType.BuffCast:
+                            current = tracker ? tracker.BuffsCast : 0;
+                            if (rec != null)
+                                current -= rec.BuffCastBaseline;
+                            break;
                         case QuestData.RequirementType.Instant:
                             current = target;
                             break;

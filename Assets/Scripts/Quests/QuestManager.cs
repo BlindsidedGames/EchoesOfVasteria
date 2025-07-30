@@ -229,6 +229,15 @@ namespace TimelessEchoes.Quests
                     if (req.amount > 0)
                         pct = travelled / req.amount;
                 }
+                else if (req.type == QuestData.RequirementType.BuffCast)
+                {
+                    var tracker = GameplayStatTracker.Instance;
+                    var casts = tracker ? tracker.BuffsCast : 0;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec) && rec.BuffCastBaselineSet)
+                        casts -= rec.BuffCastBaseline;
+                    if (req.amount > 0)
+                        pct = (float)casts / req.amount;
+                }
                 else if (req.type == QuestData.RequirementType.Instant)
                 {
                     pct = 1f;
@@ -271,6 +280,8 @@ namespace TimelessEchoes.Quests
             record.Completed = true;
             if (inst.data.unlockBuffSlots > 0)
                 BuffManager.Instance?.UnlockSlots(inst.data.unlockBuffSlots);
+            if (inst.data.unlockAutoBuffSlots > 0)
+                BuffManager.Instance?.UnlockAutoSlots(inst.data.unlockAutoBuffSlots);
             if (inst.data.maxDistanceIncrease > 0f)
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease);
             if (!string.IsNullOrEmpty(inst.data.npcId))
@@ -381,6 +392,14 @@ namespace TimelessEchoes.Quests
                     {
                         rec.DistanceBaseline = statTracker ? statTracker.DistanceTravelled : 0f;
                         rec.DistanceBaselineSet = true;
+                        break;
+                    }
+            if (!rec.BuffCastBaselineSet)
+                foreach (var req in quest.requirements)
+                    if (req.type == QuestData.RequirementType.BuffCast)
+                    {
+                        rec.BuffCastBaseline = statTracker ? statTracker.BuffsCast : 0;
+                        rec.BuffCastBaselineSet = true;
                         break;
                     }
 

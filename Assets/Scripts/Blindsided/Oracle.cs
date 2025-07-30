@@ -247,10 +247,18 @@ namespace Blindsided
             if (saveData.BuffSlots.Count < 5)
                 while (saveData.BuffSlots.Count < 5)
                     saveData.BuffSlots.Add(null);
+            saveData.AutoBuffSlots ??= new List<bool>(new bool[5]);
+            if (saveData.AutoBuffSlots.Count < 5)
+                while (saveData.AutoBuffSlots.Count < 5)
+                    saveData.AutoBuffSlots.Add(false);
             if (saveData.UnlockedBuffSlots <= 0)
                 saveData.UnlockedBuffSlots = 1;
             else if (saveData.UnlockedBuffSlots > 5)
                 saveData.UnlockedBuffSlots = 5;
+            if (saveData.UnlockedAutoBuffSlots < 0)
+                saveData.UnlockedAutoBuffSlots = 0;
+            else if (saveData.UnlockedAutoBuffSlots > 5)
+                saveData.UnlockedAutoBuffSlots = 5;
             saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
         }
 

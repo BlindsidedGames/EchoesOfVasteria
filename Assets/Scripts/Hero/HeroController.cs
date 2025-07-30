@@ -881,7 +881,9 @@ namespace TimelessEchoes.Hero
         private void OnAutoBuffChanged()
         {
             if (AutoBuffAnimator == null) return;
-            AutoBuffAnimator.gameObject.SetActive(AutoBuff && !IsEcho);
+            var manager = TimelessEchoes.Buffs.BuffManager.Instance;
+            bool active = manager != null && manager.AnySlotAutoBuffing && !IsEcho;
+            AutoBuffAnimator.gameObject.SetActive(active);
             if (animator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
                 AutoBuffAnimator.runtimeAnimatorController = animator.runtimeAnimatorController;

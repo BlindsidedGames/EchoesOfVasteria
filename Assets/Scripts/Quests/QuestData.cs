@@ -20,6 +20,7 @@ namespace TimelessEchoes.Quests
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
         public int unlockBuffSlots;
+        public int unlockAutoBuffSlots;
         public float maxDistanceIncrease;
 
         [Serializable]
@@ -47,6 +48,7 @@ namespace TimelessEchoes.Quests
             Kill,
             DistanceRun,
             DistanceTravel,
+            BuffCast,
             Instant,
             Meet
         }

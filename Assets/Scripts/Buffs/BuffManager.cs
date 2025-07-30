@@ -28,6 +28,7 @@ namespace TimelessEchoes.Buffs
 
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
+        private readonly List<bool> autoCastSlots = new(new bool[5]);
 
 
         public int UnlockedSlots
@@ -40,9 +41,30 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public int UnlockedAutoSlots
+        {
+            get
+            {
+                if (oracle != null)
+                    return Mathf.Clamp(oracle.saveData.UnlockedAutoBuffSlots, 0, autoCastSlots.Count);
+                return 0;
+            }
+        }
+
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
+
+        public bool AnySlotAutoBuffing
+        {
+            get
+            {
+                foreach (var flag in autoCastSlots)
+                    if (flag)
+                        return true;
+                return false;
+            }
+        }
 
         public bool InstantTaskBuffActive
         {
@@ -276,6 +298,9 @@ namespace TimelessEchoes.Buffs
             oracle.saveData.BuffSlots ??= new List<string>();
             while (oracle.saveData.BuffSlots.Count < slotAssignments.Count)
                 oracle.saveData.BuffSlots.Add(null);
+            oracle.saveData.AutoBuffSlots ??= new List<bool>();
+            while (oracle.saveData.AutoBuffSlots.Count < autoCastSlots.Count)
+                oracle.saveData.AutoBuffSlots.Add(false);
             for (var i = 0; i < slotAssignments.Count; i++)
             {
                 var name = oracle.saveData.BuffSlots[i];
@@ -287,6 +312,7 @@ namespace TimelessEchoes.Buffs
                         slotAssignments[i] = rec;
                         break;
                     }
+                autoCastSlots[i] = oracle.saveData.AutoBuffSlots[i];
             }
         }
 
@@ -326,6 +352,33 @@ namespace TimelessEchoes.Buffs
             if (oracle == null || count <= 0) return;
             var newCount = Mathf.Clamp(oracle.saveData.UnlockedBuffSlots + count, 1, slotAssignments.Count);
             oracle.saveData.UnlockedBuffSlots = newCount;
+        }
+
+        public void UnlockAutoSlots(int count)
+        {
+            if (oracle == null || count <= 0) return;
+            var newCount = Mathf.Clamp(oracle.saveData.UnlockedAutoBuffSlots + count, 0, autoCastSlots.Count);
+            oracle.saveData.UnlockedAutoBuffSlots = newCount;
+        }
+
+        public bool IsAutoSlotUnlocked(int slot)
+        {
+            return slot >= 0 && slot < UnlockedAutoSlots;
+        }
+
+        public bool IsSlotAutoCasting(int slot)
+        {
+            return slot >= 0 && slot < autoCastSlots.Count && autoCastSlots[slot];
+        }
+
+        public void ToggleSlotAutoCast(int slot)
+        {
+            if (!IsAutoSlotUnlocked(slot)) return;
+            if (slot < 0 || slot >= autoCastSlots.Count) return;
+            autoCastSlots[slot] = !autoCastSlots[slot];
+            if (oracle != null && oracle.saveData.AutoBuffSlots != null)
+                oracle.saveData.AutoBuffSlots[slot] = autoCastSlots[slot];
+            AutoBuffChanged?.Invoke();
         }
 
         public BuffRecipe GetAssigned(int slot)
@@ -370,11 +423,11 @@ namespace TimelessEchoes.Buffs
 
         private void AutoCastBuffs()
         {
-            if (!AutoBuff) return;
             EnsureResourceManager();
             var tracker = GameplayStatTracker.Instance;
-            for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots; i++)
+            for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count; i++)
             {
+                if (!autoCastSlots[i]) continue;
                 var recipe = slotAssignments[i];
                 if (recipe == null) continue;
                 if (GetRemaining(recipe) > 0f) continue;
