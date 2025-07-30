@@ -21,10 +21,11 @@ namespace TimelessEchoes.Tasks
                 health.OnDeath -= OnDeath;
 
             complete = false;
-
+            
             if (target == null)
             {
                 complete = true;
+                NotifyCompleted();
                 return;
             }
 
@@ -33,12 +34,16 @@ namespace TimelessEchoes.Tasks
                 health.OnDeath += OnDeath;
 
             if (health == null || health.CurrentHealth <= 0f)
+            {
                 complete = true;
+                NotifyCompleted();
+            }
         }
 
         private void OnDeath()
         {
             complete = true;
+            NotifyCompleted();
             if (health != null)
                 health.OnDeath -= OnDeath;
         }

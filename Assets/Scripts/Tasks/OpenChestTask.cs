@@ -42,6 +42,7 @@ namespace TimelessEchoes.Tasks
                 GrantCompletionXP();
                 opened = true;
                 isWaiting = false;
+                NotifyCompleted();
                 return;
             }
 
@@ -62,6 +63,7 @@ namespace TimelessEchoes.Tasks
             GrantCompletionXP();
             opened = true;
             isWaiting = false;
+            NotifyCompleted();
         }
     }
 }

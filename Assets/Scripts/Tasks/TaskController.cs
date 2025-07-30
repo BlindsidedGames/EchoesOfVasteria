@@ -36,6 +36,11 @@ namespace TimelessEchoes.Tasks
         private int currentIndex = -1;
         public List<ITask> tasks { get; } = new();
 
+        private void OnTaskCompleted(ITask task)
+        {
+            RemoveTask(task);
+        }
+
         /// <summary>
         ///     Read-only access to the objects used when building the task list.
         /// </summary>
@@ -113,7 +118,6 @@ namespace TimelessEchoes.Tasks
 
         private void Update()
         {
-            PruneTasks();
         }
 
         private void OnEnable()
@@ -171,6 +175,7 @@ namespace TimelessEchoes.Tasks
                 if (kill == null)
                     kill = enemy.gameObject.AddComponent<KillEnemyTask>();
                 kill.target = enemy.transform;
+                kill.TaskCompleted += OnTaskCompleted;
                 tasks.Add(kill);
                 taskMap[kill] = obj;
                 SortTaskListsByProximity();
@@ -179,6 +184,8 @@ namespace TimelessEchoes.Tasks
 
             if (obj is ITask existing)
             {
+                if (existing is BaseTask baseTask)
+                    baseTask.TaskCompleted += OnTaskCompleted;
                 tasks.Add(existing);
                 taskMap[existing] = obj;
                 SortTaskListsByProximity();
@@ -188,6 +195,8 @@ namespace TimelessEchoes.Tasks
             var compTask = obj.GetComponent<ITask>();
             if (compTask != null)
             {
+                if (compTask is BaseTask baseTask)
+                    baseTask.TaskCompleted += OnTaskCompleted;
                 tasks.Add(compTask);
                 taskMap[compTask] = obj;
             }
@@ -220,6 +229,11 @@ namespace TimelessEchoes.Tasks
             if (hero == null)
                 Log("ResetTasks called but hero is null", TELogCategory.Task, this);
             currentIndex = -1;
+            foreach (var t in tasks)
+            {
+                if (t is BaseTask bt)
+                    bt.TaskCompleted -= OnTaskCompleted;
+            }
             tasks.Clear();
             taskMap.Clear();
             currentTaskObject = null;
@@ -240,6 +254,7 @@ namespace TimelessEchoes.Tasks
                     if (kill == null)
                         kill = enemy.gameObject.AddComponent<KillEnemyTask>();
                     kill.target = enemy.transform;
+                    kill.TaskCompleted += OnTaskCompleted;
                     tasks.Add(kill);
                     taskMap[kill] = obj;
                     continue;
@@ -247,6 +262,8 @@ namespace TimelessEchoes.Tasks
 
                 if (obj is ITask existing)
                 {
+                    if (existing is BaseTask baseTask)
+                        baseTask.TaskCompleted += OnTaskCompleted;
                     tasks.Add(existing);
                     taskMap[existing] = obj;
                     continue;
@@ -255,6 +272,8 @@ namespace TimelessEchoes.Tasks
                 var compTask = obj.GetComponent<ITask>();
                 if (compTask != null)
                 {
+                    if (compTask is BaseTask baseTask)
+                        baseTask.TaskCompleted += OnTaskCompleted;
                     tasks.Add(compTask);
                     taskMap[compTask] = obj;
                 }
@@ -497,6 +516,8 @@ namespace TimelessEchoes.Tasks
         {
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
+            if (task is BaseTask baseTask)
+                baseTask.TaskCompleted -= OnTaskCompleted;
             tasks.RemoveAt(index);
             if (task is BaseTask bt)
                 bt.ClearClaim();

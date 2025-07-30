@@ -17,6 +17,14 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public Skill associatedSkill;
         [SerializeField] public TaskData taskData;
 
+        /// <summary>
+        ///     Fired when the task completes. Subscribers should
+        ///     remove the task from any tracking collections.
+        /// </summary>
+        public event System.Action<ITask> TaskCompleted;
+
+        private bool completionNotified;
+
         private float lastGrantedXp;
 
         public float LastGrantedXp => lastGrantedXp;
@@ -88,6 +96,18 @@ namespace TimelessEchoes.Tasks
         /// </summary>
         public virtual void OnInterrupt(HeroController hero)
         {
+        }
+
+        /// <summary>
+        ///     Notify listeners that this task has completed. Ensures
+        ///     the event is only invoked once.
+        /// </summary>
+        protected void NotifyCompleted()
+        {
+            if (completionNotified)
+                return;
+            completionNotified = true;
+            TaskCompleted?.Invoke(this);
         }
 
         protected bool ShouldInstantComplete()
