@@ -15,7 +15,7 @@ MonoBehaviour:
   questId: Witch
   questName: Which Witch
   description: Take my magic watering can and fetch some radishes for my jam.
-  rewardDescription: Eva's Magic Watering can!
+  rewardDescription: Eva's Magic Watering Can!
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
@@ -24,9 +24,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
     amount: 5
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: Witch1
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

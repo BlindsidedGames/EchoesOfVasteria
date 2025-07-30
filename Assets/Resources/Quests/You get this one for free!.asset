@@ -14,19 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Intro
   questName: You get this one for free!
-  description: You wake as if from a dream gentle words fade into the distance drifting
-    away on the winds of time. "Begin this journey, see it through and I shall release
-    you from this realm" - The Vast One
+  description: "You wake as if from a dream, gentle words fade into the distance
+    drifting away on the winds of time. \r\n\"Begin this journey, see it through
+    and I shall release you from this realm\" - The Vast One"
   rewardDescription: Access to more quests!
   npcId: 
   requiredQuests: []
   requirements:
-  - type: 4
+  - type: 5
     resource: {fileID: 0}
     amount: 1
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0

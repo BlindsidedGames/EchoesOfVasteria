@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: EarnUpgrades
   questName: An Intro to Trekking
-  description: 'Carl the reaper will ensure you don''t stray too far from the town.
+  description: 'Carl the Reaper will ensure you don''t stray too far from the town.
     As you assist these people he will gradually loosen the leash. '
   rewardDescription: You can now enter The Farmlands, Reap distance increased by
     50.
@@ -22,13 +22,13 @@ MonoBehaviour:
   requiredQuests:
   - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
   requirements:
-  - type: 4
+  - type: 5
     resource: {fileID: 0}
     amount: 1
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: Ivan1
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

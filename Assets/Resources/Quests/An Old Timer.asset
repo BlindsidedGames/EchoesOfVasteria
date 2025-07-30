@@ -22,7 +22,7 @@ MonoBehaviour:
   requiredQuests:
   - {fileID: 11400000, guid: 023383fb0fcbe3b41b7dca4f9ec81b72, type: 2}
   requirements:
-  - type: 5
+  - type: 6
     resource: {fileID: 0}
     amount: 1
     enemies: []
@@ -30,4 +30,5 @@ MonoBehaviour:
     killIcon: {fileID: 0}
     meetNpcId: OldTimer1
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 20

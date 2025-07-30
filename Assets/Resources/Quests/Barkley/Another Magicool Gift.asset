@@ -21,13 +21,13 @@ MonoBehaviour:
   requiredQuests:
   - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
   requirements:
-  - type: 5
+  - type: 6
     resource: {fileID: 0}
     amount: 1
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: Barkley1
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25

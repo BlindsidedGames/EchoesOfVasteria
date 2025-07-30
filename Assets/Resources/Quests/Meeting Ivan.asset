@@ -24,13 +24,13 @@ MonoBehaviour:
   npcId: Ivan1
   requiredQuests: []
   requirements:
-  - type: 4
+  - type: 5
     resource: {fileID: 0}
     amount: 1
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25
