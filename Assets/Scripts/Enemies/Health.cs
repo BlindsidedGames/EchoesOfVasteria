@@ -1,5 +1,6 @@
 using UnityEngine;
 using Blindsided.Utilities;
+using TMPro;
 
 namespace TimelessEchoes.Enemies
 {
@@ -9,14 +10,21 @@ namespace TimelessEchoes.Enemies
     public class Health : HealthBase
     {
         [SerializeField] private GameObject healthBarParent;
+        [SerializeField] private TMP_Text healthText;
 
         protected override void Awake()
         {
+            OnHealthChanged += HandleHealthChanged;
             base.Awake();
             if (healthBarParent != null)
                 healthBarParent.SetActive(false);
             else if (healthBar != null)
                 healthBar.gameObject.SetActive(false);
+        }
+
+        private void OnDisable()
+        {
+            OnHealthChanged -= HandleHealthChanged;
         }
 
         protected override Color GetFloatingTextColor()
@@ -60,6 +68,12 @@ namespace TimelessEchoes.Enemies
                 healthBarParent.SetActive(visible);
             else if (healthBar != null)
                 healthBar.gameObject.SetActive(visible);
+        }
+
+        private void HandleHealthChanged(float current, float max)
+        {
+            if (healthText != null)
+                healthText.text = $"{Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
         }
 
         protected override void OnZeroHealth()
