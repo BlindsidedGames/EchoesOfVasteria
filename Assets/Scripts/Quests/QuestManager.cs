@@ -12,6 +12,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
+using static Blindsided.SaveData.StaticReferences;
 using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.Quests
@@ -396,6 +397,15 @@ namespace TimelessEchoes.Quests
             inst.ui = null;
 
             active[quest.questId] = inst;
+            if (AutoPinActiveQuests && !IsInstantQuest(quest))
+            {
+                var set = oracle.saveData.PinnedQuests;
+                if (!set.Contains(quest.questId))
+                {
+                    set.Add(quest.questId);
+                    PinnedQuestUIManager.Instance?.RefreshPins();
+                }
+            }
             UpdateProgress(inst);
 
             PinnedQuestUIManager.Instance?.UpdateProgress();

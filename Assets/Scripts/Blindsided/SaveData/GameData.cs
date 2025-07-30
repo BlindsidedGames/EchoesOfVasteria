@@ -78,6 +78,10 @@ namespace Blindsided.SaveData
             public bool StatsFoldout;
             public bool TransparentUi;
             public bool Tutorial;
+            /// <summary>
+            ///     Automatically pin new quests when they become active.
+            /// </summary>
+            public bool AutoPinActiveQuests = true;
             public bool UseScaledTimeForValues;
             public float MasterVolume = 1f;
             public float MusicVolume = 0.25f;
