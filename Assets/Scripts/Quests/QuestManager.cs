@@ -14,6 +14,7 @@ using static Blindsided.Oracle;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
 using static TimelessEchoes.TELogger;
+using Resources = UnityEngine.Resources;
 
 namespace TimelessEchoes.Quests
 {
@@ -182,7 +183,7 @@ namespace TimelessEchoes.Quests
             foreach (var q in quests)
             {
                 if (q == null) continue;
-                if (!string.IsNullOrEmpty(q.npcId) && !StaticReferences.CompletedNpcTasks.Contains(q.npcId))
+                if (!string.IsNullOrEmpty(q.npcId) && !CompletedNpcTasks.Contains(q.npcId))
                     continue;
                 TryStartQuest(q);
             }
@@ -235,7 +236,7 @@ namespace TimelessEchoes.Quests
                 else if (req.type == QuestData.RequirementType.Meet)
                 {
                     if (!string.IsNullOrEmpty(req.meetNpcId) &&
-                        StaticReferences.CompletedNpcTasks.Contains(req.meetNpcId))
+                        CompletedNpcTasks.Contains(req.meetNpcId))
                         pct = 1f;
                 }
 
@@ -273,7 +274,7 @@ namespace TimelessEchoes.Quests
             if (inst.data.maxDistanceIncrease > 0f)
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease);
             if (!string.IsNullOrEmpty(inst.data.npcId))
-                StaticReferences.CompletedNpcTasks.Add(inst.data.npcId);
+                CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)
                 uiManager?.RemoveEntry(inst.ui);
             active.Remove(id);
@@ -358,7 +359,7 @@ namespace TimelessEchoes.Quests
         private void TryStartQuest(QuestData quest)
         {
             if (quest == null) return;
-            if (!string.IsNullOrEmpty(quest.npcId) && !StaticReferences.CompletedNpcTasks.Contains(quest.npcId))
+            if (!string.IsNullOrEmpty(quest.npcId) && !CompletedNpcTasks.Contains(quest.npcId))
                 return;
             if (!AreRequirementsMet(quest))
                 return;
@@ -406,6 +407,7 @@ namespace TimelessEchoes.Quests
                     PinnedQuestUIManager.Instance?.RefreshPins();
                 }
             }
+
             UpdateProgress(inst);
 
             PinnedQuestUIManager.Instance?.UpdateProgress();
