@@ -104,13 +104,7 @@ sets the **steam_display** key with a localization token. Example tokens are
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
 
 ## Keystore Credentials
-To avoid storing keystore passwords in the repository, create a local credentials file:
-
-```bash
-python Tools/create_keystore_credentials.py
-```
-
-This script writes a `.keystore_credentials` file which is ignored by Git. Load these credentials in your shell before opening Unity:
+To avoid storing keystore passwords in the repository, create a local credentials file. In the Unity editor choose **Tools > Create Keystore Credentials** and enter your keystore details. The window writes a `.keystore_credentials` file which is ignored by Git. Load these credentials in your shell before opening Unity:
 
 ```bash
 source Tools/load_keystore_credentials.sh
