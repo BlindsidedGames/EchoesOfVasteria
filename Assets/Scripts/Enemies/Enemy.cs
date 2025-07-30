@@ -86,7 +86,12 @@ namespace TimelessEchoes.Enemies
             }
 
             if (levelText != null)
-                levelText.text = $"Lvl {level}";
+            {
+                if (stats != null && !string.IsNullOrEmpty(stats.enemyName))
+                    levelText.text = $"{stats.enemyName} Lvl {level}";
+                else
+                    levelText.text = $"Lvl {level}";
+            }
 
             startTarget = setter.target;
             resourceManager = ResourceManager.Instance;
