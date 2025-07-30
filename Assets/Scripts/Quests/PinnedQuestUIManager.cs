@@ -5,6 +5,7 @@ using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -17,10 +18,10 @@ namespace TimelessEchoes.Quests
     {
         public static PinnedQuestUIManager Instance { get; private set; }
 
-        [SerializeField] private TMP_Text entryPrefab;
+        [SerializeField] private QuestPinUI entryPrefab;
         [SerializeField] private Transform entryParent;
 
-        private readonly Dictionary<string, TMP_Text> entries = new();
+        private readonly Dictionary<string, QuestPinUI> entries = new();
 
         private void Awake()
         {
@@ -71,8 +72,8 @@ namespace TimelessEchoes.Quests
                         }
                 if (instant)
                     continue;
-                var txt = Instantiate(entryPrefab, entryParent);
-                entries[id] = txt;
+                var ui = Instantiate(entryPrefab, entryParent);
+                entries[id] = ui;
             }
 
             UpdateProgress();
@@ -93,18 +94,21 @@ namespace TimelessEchoes.Quests
             foreach (var pair in entries)
             {
                 var id = pair.Key;
-                var text = pair.Value;
-                if (text == null)
+                var ui = pair.Value;
+                if (ui == null || ui.progressText == null)
                     continue;
 
                 var data = manager != null ? manager.GetQuestData(id) : null;
                 if (data == null)
                 {
-                    text.text = id;
+                    ui.progressText.text = id;
+                    if (ui.completedImage != null)
+                        ui.completedImage.enabled = false;
                     continue;
                 }
 
                 oracle.saveData.Quests.TryGetValue(id, out var rec);
+                bool completed = rec != null && rec.Completed;
 
                 var sb = new StringBuilder();
                 sb.AppendLine(data.questName);
@@ -177,7 +181,9 @@ namespace TimelessEchoes.Quests
                     }
                 }
 
-                text.text = sb.ToString();
+                ui.progressText.text = sb.ToString();
+                if (ui.completedImage != null)
+                    ui.completedImage.enabled = completed;
             }
         }
 
