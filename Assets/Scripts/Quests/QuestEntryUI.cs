@@ -62,7 +62,9 @@ namespace TimelessEchoes.Quests
                 if (data != null && data.requirements != null && data.requirements.Count > 0)
                 {
                     var type = data.requirements[0].type;
-                    if (type == QuestData.RequirementType.Instant || type == QuestData.RequirementType.Meet)
+                    if (type == QuestData.RequirementType.Meet)
+                        label = "Done";
+                    else if (type == QuestData.RequirementType.Instant)
                         label = "Okay";
                 }
                 turnInText.text = label;
