@@ -65,7 +65,12 @@ namespace TimelessEchoes.Enemies
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             spawnPos = transform.position;
-            level = stats != null ? stats.GetLevel(spawnPos.x) : 1;
+            float spawnOffset = GameManager.CurrentGenerationConfig != null
+                ? GameManager.CurrentGenerationConfig.taskGeneratorSettings.enemySpawnXOffset
+                : 0f;
+            level = stats != null
+                ? stats.GetLevel(spawnPos.x - spawnOffset - stats.minX)
+                : 1;
 
             var controller = GetComponentInParent<TaskController>();
             if (controller != null)
