@@ -73,7 +73,12 @@ namespace TimelessEchoes.Enemies
         private void HandleHealthChanged(float current, float max)
         {
             if (healthText != null)
-                healthText.text = $"{Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
+            {
+                int shownCurrent = Mathf.FloorToInt(current);
+                if (shownCurrent == 0 && current > 0f)
+                    shownCurrent = 1;
+                healthText.text = $"{shownCurrent} / {Mathf.FloorToInt(max)}";
+            }
         }
 
         protected override void OnZeroHealth()
