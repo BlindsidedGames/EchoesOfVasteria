@@ -14,7 +14,8 @@ namespace TimelessEchoes.UI
     /// </summary>
     public class SettingsPanelUI : MonoBehaviour
     {
-        [SerializeField] private Button fullscreenWindowButton;
+        [SerializeField] private GameObject VersionNumberObject;
+        [SerializeField] [Space] private Button fullscreenWindowButton;
         [SerializeField] private Button windowButton;
         [SerializeField] private Button fpsButton;
         [SerializeField] private TMP_Text fpsButtonText;

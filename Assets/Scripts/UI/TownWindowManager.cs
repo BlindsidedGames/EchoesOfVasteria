@@ -1,9 +1,10 @@
 using System;
+using Blindsided;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Blindsided;
+using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.UI
 {
@@ -154,7 +155,7 @@ namespace TimelessEchoes.UI
                 if (quests.window != null)
                     quests.window.SetActive(true);
                 if (inventory.window != null)
-                    inventory.window.SetActive(false);
+                    inventory.window.SetActive(true);
                 UpdateTownButtonsVisibility();
                 Oracle.oracle.saveData.SavedPreferences.Tutorial = true;
                 EventHandler.SaveData();
