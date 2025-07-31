@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Blindsided
     ///     Single-instance save manager using Easy Save 3 with
     ///     • caching enabled   • 8 KB buffer   • periodic cloud uploads   • one backup / session
     /// </summary>
+    [DefaultExecutionOrder(0)]
     public class Oracle : SerializedMonoBehaviour
     {
         #region Singleton
@@ -27,6 +29,7 @@ namespace Blindsided
             if (oracle == null)
             {
                 oracle = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -74,7 +77,18 @@ namespace Blindsided
         {
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
             Load();
+            StartCoroutine(LoadMainScene());
             InvokeRepeating(nameof(SaveToFile), 10, 10);
+        }
+
+        private IEnumerator LoadMainScene()
+        {
+            var async = SceneManager.LoadSceneAsync("Main");
+            while (!async.isDone)
+                yield return null;
+
+            yield return null; // wait one frame for scene initialization
+            EventHandler.LoadData();
         }
 
         private void Update()
@@ -235,7 +249,6 @@ namespace Blindsided
 
             NullCheckers();
             loaded = true;
-            EventHandler.LoadData();
             AwayForSeconds();
 
             if (saveData.SavedPreferences.OfflineTimeAutoDisable)
