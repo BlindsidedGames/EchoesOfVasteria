@@ -38,8 +38,8 @@ namespace TimelessEchoes.UI
 
         public int BarIndex { get; set; } = -1;
 
-        public event Action<RunBarUI> PointerEnter;
-        public event Action<RunBarUI> PointerExit;
+        public event Action<RunBarUI, PointerEventData> PointerEnter;
+        public event Action<RunBarUI, PointerEventData> PointerExit;
 
         /// <summary>
         /// Sets the bar fill based on a 0-1 ratio.
@@ -59,12 +59,12 @@ namespace TimelessEchoes.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            PointerEnter?.Invoke(this);
+            PointerEnter?.Invoke(this, eventData);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            PointerExit?.Invoke(this);
+            PointerExit?.Invoke(this, eventData);
         }
     }
 }
