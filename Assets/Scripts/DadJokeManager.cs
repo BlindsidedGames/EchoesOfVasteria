@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TimelessEchoes
@@ -26,9 +27,11 @@ namespace TimelessEchoes
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
                 if (textBox != null && textBox.activeSelf)
                     textBox.SetActive(false);
+            }
         }
 
         private void OnDestroy()

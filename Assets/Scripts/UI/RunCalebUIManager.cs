@@ -5,6 +5,7 @@ using TimelessEchoes.Hero;
 using System.Linq;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TimelessEchoes.UI
 {
@@ -82,9 +83,11 @@ namespace TimelessEchoes.UI
         private void Update()
         {
             UpdateStats();
-            if (Input.GetMouseButtonDown(1))
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
                 if (skillsWindow != null && skillsWindow.activeSelf)
                     skillsWindow.SetActive(false);
+            }
         }
 
         private void ToggleSkills()

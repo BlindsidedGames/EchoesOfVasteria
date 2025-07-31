@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
 
@@ -97,9 +98,11 @@ namespace TimelessEchoes.Upgrades
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
                 if (window != null && window.activeSelf)
                     window.SetActive(false);
+            }
         }
 
         private void SetupSlot(ResourceUIReferences slot, Resource res, double amount)
