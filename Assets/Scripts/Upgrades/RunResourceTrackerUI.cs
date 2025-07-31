@@ -78,6 +78,13 @@ namespace TimelessEchoes.Upgrades
         {
             if (slotParent == null || slotPrefab == null)
                 return;
+            if (amounts.Count == 0)
+            {
+                if (window != null)
+                    window.SetActive(false);
+                return;
+            }
+
             ClearSlots();
             foreach (var pair in amounts)
             {
@@ -86,6 +93,13 @@ namespace TimelessEchoes.Upgrades
             }
             if (window != null)
                 window.SetActive(true);
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(1))
+                if (window != null && window.activeSelf)
+                    window.SetActive(false);
         }
 
         private void SetupSlot(ResourceUIReferences slot, Resource res, double amount)
