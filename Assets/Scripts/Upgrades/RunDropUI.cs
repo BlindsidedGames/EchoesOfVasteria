@@ -53,7 +53,6 @@ namespace TimelessEchoes.Upgrades
         }
 
 
-
         /// <summary>
         ///     Clears all collected resource counts.
         /// </summary>
@@ -80,7 +79,6 @@ namespace TimelessEchoes.Upgrades
             if (resource == null || amount <= 0) return;
 
             ResourceUIReferences slot = null;
-            var newSlot = false;
             var index = resources.IndexOf(resource);
             var moved = index > 0;
 
@@ -95,7 +93,6 @@ namespace TimelessEchoes.Upgrades
                     resources.Insert(0, resource);
                     slots.Insert(0, slot);
                     slot.transform.SetSiblingIndex(0);
-
                 }
             }
             else
@@ -119,7 +116,7 @@ namespace TimelessEchoes.Upgrades
                 resources.Insert(0, resource);
                 slots.Insert(0, slot);
                 slot.transform.SetSiblingIndex(0);
-                newSlot = true;
+
 
                 if (slot != null && slot.countText != null)
                     slot.countText.gameObject.SetActive(true);
@@ -132,7 +129,6 @@ namespace TimelessEchoes.Upgrades
             UpdateSlot(resources.IndexOf(resource));
 
             // Floating text is no longer spawned above the run drop UI.
-
         }
 
         private void UpdateSlot(int index)
@@ -155,6 +151,5 @@ namespace TimelessEchoes.Upgrades
                 slot.countText.gameObject.SetActive(true);
             }
         }
-
     }
 }

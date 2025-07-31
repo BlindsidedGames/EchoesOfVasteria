@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Blindsided.SaveData;
 using Blindsided.Utilities;
-using TMPro;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
@@ -15,6 +15,7 @@ namespace TimelessEchoes.Quests
     /// <summary>
     ///     Displays progress for pinned quests.
     /// </summary>
+    [DefaultExecutionOrder(1)]
     public class PinnedQuestUIManager : MonoBehaviour
     {
         public static PinnedQuestUIManager Instance { get; private set; }
@@ -86,6 +87,7 @@ namespace TimelessEchoes.Quests
                             instant = true;
                             break;
                         }
+
                 if (instant)
                     continue;
                 var ui = Instantiate(entryPrefab, entryParent);
@@ -104,8 +106,8 @@ namespace TimelessEchoes.Quests
                 return;
 
             var manager = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
-            var resourceManager = TimelessEchoes.Upgrades.ResourceManager.Instance;
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            var resourceManager = ResourceManager.Instance;
+            var tracker = GameplayStatTracker.Instance;
 
             foreach (var pair in entries)
             {
@@ -124,10 +126,10 @@ namespace TimelessEchoes.Quests
                 }
 
                 oracle.saveData.Quests.TryGetValue(id, out var rec);
-                bool completed = rec != null && rec.Completed;
+                var completed = rec != null && rec.Completed;
 
-                float progress = 0f;
-                int reqCount = 0;
+                var progress = 0f;
+                var reqCount = 0;
 
                 var sb = new StringBuilder();
                 sb.AppendLine(data.questName);
@@ -136,7 +138,7 @@ namespace TimelessEchoes.Quests
                 {
                     double current = 0;
                     double target = req.amount;
-                    float pct = 0f;
+                    var pct = 0f;
 
                     reqCount++;
 
@@ -149,13 +151,10 @@ namespace TimelessEchoes.Quests
                             break;
                         case QuestData.RequirementType.Kill:
                             if (rec != null && req.enemies != null)
-                            {
                                 foreach (var enemy in req.enemies)
-                                {
                                     if (rec.KillProgress.TryGetValue(enemy.name, out var c))
                                         current += c;
-                                }
-                            }
+
                             if (target > 0)
                                 pct = (float)(current / target);
                             break;
@@ -183,7 +182,7 @@ namespace TimelessEchoes.Quests
                             pct = 1f;
                             break;
                         case QuestData.RequirementType.Meet:
-                            if (!string.IsNullOrEmpty(req.meetNpcId) && StaticReferences.CompletedNpcTasks.Contains(req.meetNpcId))
+                            if (!string.IsNullOrEmpty(req.meetNpcId) && CompletedNpcTasks.Contains(req.meetNpcId))
                             {
                                 current = target;
                                 pct = 1f;
@@ -192,6 +191,7 @@ namespace TimelessEchoes.Quests
                             {
                                 current = 0;
                             }
+
                             break;
                     }
 
@@ -203,21 +203,25 @@ namespace TimelessEchoes.Quests
                         if (target <= 0)
                             sb.AppendLine($"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)}</size>");
                         else
-                            sb.AppendLine($"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                            sb.AppendLine(
+                                $"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
                     else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
                     {
                         if (target <= 0)
-                            sb.AppendLine($"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)}</size>");
+                            sb.AppendLine(
+                                $"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)}</size>");
                         else
-                            sb.AppendLine($"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                            sb.AppendLine(
+                                $"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
                     else
                     {
                         if (target <= 0)
                             sb.AppendLine($"<size=80%>{CalcUtils.FormatNumber(current, true)}</size>");
                         else
-                            sb.AppendLine($"<size=80%>{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                            sb.AppendLine(
+                                $"<size=80%>{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
                 }
 
@@ -225,7 +229,7 @@ namespace TimelessEchoes.Quests
 
                 if (reqCount > 0)
                     progress /= reqCount;
-                bool ready = progress >= 1f;
+                var ready = progress >= 1f;
 
                 if (ui.completedImage != null)
                     ui.completedImage.enabled = completed || ready;
@@ -246,7 +250,7 @@ namespace TimelessEchoes.Quests
 
         private void OnToggle()
         {
-            bool newState = !entryParent.gameObject.activeSelf;
+            var newState = !entryParent.gameObject.activeSelf;
             entryParent.gameObject.SetActive(newState);
             UpdateToggleVisual(newState);
             ShowPinnedQuests = newState;
@@ -254,7 +258,7 @@ namespace TimelessEchoes.Quests
 
         private void ApplySavedState()
         {
-            bool show = ShowPinnedQuests;
+            var show = ShowPinnedQuests;
             if (entryParent != null)
                 entryParent.gameObject.SetActive(show);
             UpdateToggleVisual(show);
@@ -267,4 +271,3 @@ namespace TimelessEchoes.Quests
         }
     }
 }
-
