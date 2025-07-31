@@ -135,10 +135,10 @@ namespace TimelessEchoes.Upgrades
             if (slot != null)
             {
                 if (newSlot || moved)
-                    StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
+                    StartCoroutine(SpawnFloatingTextNextFrame(resource, slot, amount));
                 else
                     FloatingText.Spawn(
-                        $"+{Mathf.FloorToInt((float)amount)}",
+                        $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
                         slot.transform.position + Vector3.up,
                         Color.white, 8f, transform);
             }
@@ -166,11 +166,13 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private IEnumerator SpawnFloatingTextNextFrame(ResourceUIReferences slot, double amount)
+        private IEnumerator SpawnFloatingTextNextFrame(Resource resource, ResourceUIReferences slot, double amount)
         {
             yield return null; // wait one frame for layout groups to update
             if (slot != null)
-                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up,
+                FloatingText.Spawn(
+                    $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
+                    slot.transform.position + Vector3.up,
                     Color.white, 8f, transform);
         }
 

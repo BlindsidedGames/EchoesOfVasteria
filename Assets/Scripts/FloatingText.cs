@@ -28,6 +28,7 @@ namespace TimelessEchoes
             ft.tmp.alignment = TextAlignmentOptions.Center;
             ft.tmp.fontSize = fontSize;
             ft.tmp.fontStyle |= FontStyles.SmallCaps;
+            ft.tmp.spriteAsset = TimelessEchoes.Upgrades.ResourceIconLookup.SpriteAsset;
             ft.tmp.text = text;
             ft.tmp.color = color;
 
