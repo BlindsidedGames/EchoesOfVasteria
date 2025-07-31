@@ -36,12 +36,14 @@ namespace TimelessEchoes.NpcGeneration
         private void OnEnable()
         {
             OnQuestHandin += OnQuestHandinHandler;
+            OnLoadData += OnLoadDataHandler;
             BuildEntries();
         }
 
         private void OnDisable()
         {
             OnQuestHandin -= OnQuestHandinHandler;
+            OnLoadData -= OnLoadDataHandler;
         }
 
         private void OnDestroy()
@@ -87,8 +89,14 @@ namespace TimelessEchoes.NpcGeneration
             StartCoroutine(DeferredBuild());
         }
 
+        private void OnLoadDataHandler()
+        {
+            StartCoroutine(DeferredBuild());
+        }
+
         private IEnumerator DeferredBuild()
         {
+            yield return null;
             yield return null;
             BuildEntries();
         }

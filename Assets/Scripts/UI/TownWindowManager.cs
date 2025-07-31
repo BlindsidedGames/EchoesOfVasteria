@@ -31,7 +31,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference buffs = new();
         [SerializeField] [Space] private WindowReference quests = new();
         [SerializeField] [Space] private WindowReference credits = new();
-        [SerializeField] [Space] private WindowReference disciples = new();
+        [SerializeField] [Space] private WindowReference alterEchoes = new();
         [SerializeField] [Space] private WindowReference stats = new();
         [SerializeField] [Space] private WindowReference wiki = new();
         [SerializeField] [Space] private WindowReference inventory = new();
@@ -59,10 +59,10 @@ namespace TimelessEchoes.UI
                 credits.button.onClick.AddListener(OpenCredits);
             if (credits.closeButton != null)
                 credits.closeButton.onClick.AddListener(() => CloseWindow(credits.window));
-            if (disciples.button != null)
-                disciples.button.onClick.AddListener(OpenDisciples);
-            if (disciples.closeButton != null)
-                disciples.closeButton.onClick.AddListener(() => CloseWindow(disciples.window));
+            if (alterEchoes.button != null)
+                alterEchoes.button.onClick.AddListener(OpenAlterEchoes);
+            if (alterEchoes.closeButton != null)
+                alterEchoes.closeButton.onClick.AddListener(() => CloseWindow(alterEchoes.window));
             if (stats.button != null)
                 stats.button.onClick.AddListener(OpenStats);
             if (stats.closeButton != null)
@@ -114,10 +114,10 @@ namespace TimelessEchoes.UI
                 credits.button.onClick.RemoveListener(OpenCredits);
             if (credits.closeButton != null)
                 credits.closeButton.onClick.RemoveAllListeners();
-            if (disciples.button != null)
-                disciples.button.onClick.RemoveListener(OpenDisciples);
-            if (disciples.closeButton != null)
-                disciples.closeButton.onClick.RemoveAllListeners();
+            if (alterEchoes.button != null)
+                alterEchoes.button.onClick.RemoveListener(OpenAlterEchoes);
+            if (alterEchoes.closeButton != null)
+                alterEchoes.closeButton.onClick.RemoveAllListeners();
             if (stats.button != null)
                 stats.button.onClick.RemoveListener(OpenStats);
             if (stats.closeButton != null)
@@ -182,9 +182,9 @@ namespace TimelessEchoes.UI
             ToggleWindow(credits);
         }
 
-        private void OpenDisciples()
+        private void OpenAlterEchoes()
         {
-            ToggleWindow(disciples);
+            ToggleWindow(alterEchoes);
         }
 
         private void OpenStats()
@@ -239,8 +239,8 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
-            if (disciples.window != null)
-                disciples.window.SetActive(false);
+            if (alterEchoes.window != null)
+                alterEchoes.window.SetActive(false);
             if (stats.window != null)
                 stats.window.SetActive(false);
             if (wiki.window != null)
@@ -259,8 +259,8 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
-            if (disciples.window != null)
-                disciples.window.SetActive(false);
+            if (alterEchoes.window != null)
+                alterEchoes.window.SetActive(false);
             if (stats.window != null)
                 stats.window.SetActive(false);
             if (wiki.window != null)
@@ -278,7 +278,7 @@ namespace TimelessEchoes.UI
                    || (buffs.window != null && buffs.window.activeSelf)
                    || (quests.window != null && quests.window.activeSelf)
                    || (credits.window != null && credits.window.activeSelf)
-                   || (disciples.window != null && disciples.window.activeSelf)
+                   || (alterEchoes.window != null && alterEchoes.window.activeSelf)
                    || (stats.window != null && stats.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
@@ -296,7 +296,7 @@ namespace TimelessEchoes.UI
                    || (buffs.window != null && buffs.window.activeSelf)
                    || (quests.window != null && quests.window.activeSelf)
                    || (credits.window != null && credits.window.activeSelf)
-                   || (disciples.window != null && disciples.window.activeSelf)
+                   || (alterEchoes.window != null && alterEchoes.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
                    || (inventory.window != null && inventory.window.activeSelf);
