@@ -26,6 +26,7 @@ namespace TimelessEchoes.Quests
         [SerializeField] private Image stateImage;
         [SerializeField] private Sprite openSprite;
         [SerializeField] private Sprite closeSprite;
+        [SerializeField] private GameObject rootObject;
 
         private readonly Dictionary<string, QuestPinUI> entries = new();
 
@@ -93,6 +94,9 @@ namespace TimelessEchoes.Quests
                 var ui = Instantiate(entryPrefab, entryParent);
                 entries[id] = ui;
             }
+
+            if (rootObject != null)
+                rootObject.SetActive(entries.Count > 0);
 
             UpdateProgress();
         }
