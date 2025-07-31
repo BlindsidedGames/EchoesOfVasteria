@@ -3,6 +3,8 @@ using TimelessEchoes.References.UI;
 using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 
@@ -130,7 +132,7 @@ namespace TimelessEchoes.UI
             }
         }
 
-        private void OnBarEnter(RunBarUI bar)
+        private void OnBarEnter(RunBarUI bar, PointerEventData eventData)
         {
             if (runStatUI == null || statTracker == null || bar == null)
                 return;
@@ -150,7 +152,8 @@ namespace TimelessEchoes.UI
 
             var canvas = runStatUI.GetComponentInParent<Canvas>();
             var cam = canvas != null ? canvas.worldCamera : null;
-            var screenPoint = Input.mousePosition;
+            var screenPoint = eventData != null ? (Vector3)eventData.position :
+                (Mouse.current != null ? (Vector3)Mouse.current.position.ReadValue() : Vector3.zero);
             if (cam != null)
                 screenPoint.z = Mathf.Abs(cam.transform.position.z - runStatUI.transform.position.z);
             var mouseWorld = cam != null
@@ -197,7 +200,7 @@ namespace TimelessEchoes.UI
             runStatUI.gameObject.SetActive(true);
         }
 
-        private void OnBarExit(RunBarUI bar)
+        private void OnBarExit(RunBarUI bar, PointerEventData eventData)
         {
             if (runStatUI != null)
                 runStatUI.gameObject.SetActive(false);
