@@ -140,6 +140,12 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
         }
 
+        public static bool ShowPinnedQuests
+        {
+            get => oracle.saveData.SavedPreferences.ShowPinnedQuests;
+            set => oracle.saveData.SavedPreferences.ShowPinnedQuests = value;
+        }
+
         public static int UnlockedAutoBuffSlots
         {
             get => oracle.saveData.UnlockedAutoBuffSlots;

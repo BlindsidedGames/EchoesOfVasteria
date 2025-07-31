@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Quests
 {
@@ -20,16 +21,31 @@ namespace TimelessEchoes.Quests
 
         [SerializeField] private QuestPinUI entryPrefab;
         [SerializeField] private Transform entryParent;
+        [SerializeField] private Button toggleButton;
+        [SerializeField] private Image stateImage;
+        [SerializeField] private Sprite openSprite;
+        [SerializeField] private Sprite closeSprite;
 
         private readonly Dictionary<string, QuestPinUI> entries = new();
 
         private void Awake()
         {
             Instance = this;
+
+            if (toggleButton == null)
+                toggleButton = GetComponent<Button>();
+
+            if (toggleButton != null)
+                toggleButton.onClick.AddListener(OnToggle);
+
+            ApplySavedState();
         }
 
         private void OnDestroy()
         {
+            if (toggleButton != null)
+                toggleButton.onClick.RemoveListener(OnToggle);
+
             if (Instance == this)
                 Instance = null;
         }
@@ -219,12 +235,35 @@ namespace TimelessEchoes.Quests
         private void OnLoadDataHandler()
         {
             StartCoroutine(DeferredRefresh());
+            ApplySavedState();
         }
 
         private IEnumerator DeferredRefresh()
         {
             yield return null; // wait one frame so data is loaded
             RefreshPins();
+        }
+
+        private void OnToggle()
+        {
+            bool newState = !entryParent.gameObject.activeSelf;
+            entryParent.gameObject.SetActive(newState);
+            UpdateToggleVisual(newState);
+            ShowPinnedQuests = newState;
+        }
+
+        private void ApplySavedState()
+        {
+            bool show = ShowPinnedQuests;
+            if (entryParent != null)
+                entryParent.gameObject.SetActive(show);
+            UpdateToggleVisual(show);
+        }
+
+        private void UpdateToggleVisual(bool show)
+        {
+            if (stateImage != null)
+                stateImage.sprite = show ? closeSprite : openSprite;
         }
     }
 }

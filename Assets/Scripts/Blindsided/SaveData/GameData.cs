@@ -81,6 +81,10 @@ namespace Blindsided.SaveData
             ///     Automatically pin new quests when they become active.
             /// </summary>
             public bool AutoPinActiveQuests = true;
+            /// <summary>
+            ///     Whether the pinned quest panel is visible.
+            /// </summary>
+            public bool ShowPinnedQuests = true;
             public bool UseScaledTimeForValues;
             public float MasterVolume = 1f;
             public float MusicVolume = 0.25f;
