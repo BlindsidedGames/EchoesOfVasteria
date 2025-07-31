@@ -112,9 +112,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2860933407542544843}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -5, y: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5573636506603270764
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -268,8 +268,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8145481669215957089, guid: ecde629c184dc584f86881f523d7e805, type: 3}
+      propertyPath: m_text
+      value: 'For the Jam!
+
+        <size=90%>Radish: 91 / 200<font-weight=400></font-weight></size>
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8145481669215957089, guid: ecde629c184dc584f86881f523d7e805, type: 3}
       propertyPath: m_fontSize
-      value: 6
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8145481669215957089, guid: ecde629c184dc584f86881f523d7e805, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
