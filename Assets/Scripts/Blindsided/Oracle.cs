@@ -14,7 +14,7 @@ namespace Blindsided
 {
     /// <summary>
     ///     Single-instance save manager using Easy Save 3 with
-    ///     • direct file writes   • 8 KB buffer   • periodic cloud uploads   • one backup / session
+    ///     • caching enabled   • 8 KB buffer   • periodic cloud uploads   • one backup / session
     /// </summary>
     public class Oracle : SerializedMonoBehaviour
     {
@@ -34,7 +34,7 @@ namespace Blindsided
                 return;
             }
 
-            _settings = new ES3Settings(_fileName, ES3.Location.File)
+            _settings = new ES3Settings(_fileName, ES3.Location.Cache)
             {
                 bufferSize = 8192
             };
@@ -89,6 +89,7 @@ namespace Blindsided
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
             SaveToFile(false);
+            ES3.StoreCachedFile(_fileName);
             SteamCloudSync.Instance.Upload();
             SafeCreateBackup();
         }
@@ -96,7 +97,11 @@ namespace Blindsided
         private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
-            if (Application.isPlaying && !wipeInProgress) SaveToFile(); // save the latest state immediately
+            if (Application.isPlaying && !wipeInProgress)
+            {
+                SaveToFile(); // save the latest state immediately
+                ES3.StoreCachedFile(_fileName);
+            }
         }
 
 
@@ -104,7 +109,10 @@ namespace Blindsided
         private void OnApplicationFocus(bool focus)
         {
             if (!focus)
+            {
                 SaveToFile();
+                ES3.StoreCachedFile(_fileName);
+            }
         }
 #endif
 
@@ -132,6 +140,7 @@ namespace Blindsided
             EventHandler.ResetData();
             EventHandler.LoadData();
             SaveToFile(false);
+            ES3.StoreCachedFile(_fileName);
             SceneManager.LoadScene(0);
         }
 
@@ -148,6 +157,7 @@ namespace Blindsided
             EventHandler.ResetData();
             EventHandler.LoadData();
             SaveToFile(false);
+            ES3.StoreCachedFile(_fileName);
             SceneManager.LoadScene(0);
         }
 
@@ -186,7 +196,7 @@ namespace Blindsided
                 EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            ES3.Save(_dataName, saveData, _settings); // direct file write
+            ES3.Save(_dataName, saveData, _settings); // write to cache
 
             if (allowUpload && Time.unscaledTime - _lastFlush > FlushInterval)
             {
