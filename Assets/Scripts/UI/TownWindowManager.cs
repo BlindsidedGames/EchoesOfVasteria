@@ -33,6 +33,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference inventory = new();
         [SerializeField] [Space] private WindowReference options = new();
         [SerializeField] [Space] private GameObject townButtons;
+        [SerializeField] [Space] private GameObject windowsOpenIndicator;
 
 
         private void Awake()
@@ -254,6 +255,8 @@ namespace TimelessEchoes.UI
         {
             if (townButtons != null)
                 townButtons.SetActive(!AnyWindowOpen());
+            if (windowsOpenIndicator != null)
+                windowsOpenIndicator.SetActive(AnyWindowOpen());
         }
     }
 }
