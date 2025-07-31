@@ -10,8 +10,9 @@ namespace TimelessEchoes
     public class FloatingText : MonoBehaviour
     {
         public static readonly Color DefaultColor = new Color32(0xEA, 0xD4, 0xAA, 0xFF);
-        [SerializeField] private float speed = 1f;
+        [SerializeField] private float moveDistance = 1f;
         [SerializeField] private float lifetime = 1f;
+        private float speed;
         private TMP_Text tmp;
         private float timer;
 
@@ -48,6 +49,11 @@ namespace TimelessEchoes
         {
             if (tmp == null)
                 tmp = GetComponent<TMP_Text>();
+        }
+
+        private void Start()
+        {
+            speed = moveDistance / Mathf.Max(lifetime, 0.0001f);
         }
 
         private void Update()
