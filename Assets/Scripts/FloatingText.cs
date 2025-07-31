@@ -8,6 +8,7 @@ namespace TimelessEchoes
     /// </summary>
     public class FloatingText : MonoBehaviour
     {
+        public static readonly Color DefaultColor = new Color32(0xEA, 0xD4, 0xAA, 0xFF);
         [SerializeField] private float speed = 1f;
         [SerializeField] private float lifetime = 1f;
         private TMP_Text tmp;

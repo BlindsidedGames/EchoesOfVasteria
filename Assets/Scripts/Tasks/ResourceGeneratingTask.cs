@@ -33,6 +33,7 @@ namespace TimelessEchoes.Tasks
                 return;
 
             var worldX = transform.position.x;
+            var lines = new List<string>();
 
             foreach (var drop in taskData.resourceDrops)
             {
@@ -48,18 +49,22 @@ namespace TimelessEchoes.Tasks
 
                 if (count > 0)
                 {
+                    double final = count;
                     if (skillController)
                     {
                         int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
                         float resourceMult = skillController.GetResourceGainMultiplier();
-                        double amount = count * mult * resourceMult;
-                        resourceManager.Add(drop.resource, amount);
+                        final = count * mult * resourceMult;
                     }
-                    else
-                    {
-                        resourceManager.Add(drop.resource, count);
-                    }
+
+                    resourceManager.Add(drop.resource, final);
+                    lines.Add($"{Blindsided.Utilities.TextStrings.ResourceIcon(drop.resource.resourceID)} {Mathf.FloorToInt((float)final)}");
                 }
+            }
+
+            if (lines.Count > 0)
+            {
+                FloatingText.Spawn(string.Join("\n", lines), transform.position + Vector3.up, FloatingText.DefaultColor);
             }
         }
     }}

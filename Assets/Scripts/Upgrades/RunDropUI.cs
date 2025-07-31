@@ -140,7 +140,7 @@ namespace TimelessEchoes.Upgrades
                     FloatingText.Spawn(
                         $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
                         slot.transform.position + Vector3.up,
-                        Color.white, 8f, transform);
+                        FloatingText.DefaultColor, 8f, transform);
             }
 
         }
@@ -173,7 +173,7 @@ namespace TimelessEchoes.Upgrades
                 FloatingText.Spawn(
                     $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
                     slot.transform.position + Vector3.up,
-                    Color.white, 8f, transform);
+                    FloatingText.DefaultColor, 8f, transform);
         }
 
     }
