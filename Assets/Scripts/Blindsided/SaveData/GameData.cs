@@ -109,12 +109,12 @@ namespace Blindsided.SaveData
             /// <summary>
             ///     Duration for player damage floating text in seconds.
             /// </summary>
-            public float PlayerDamageTextDuration = 1f;
+            public float PlayerDamageTextDuration = 0.5f;
 
             /// <summary>
             ///     Duration for enemy damage floating text in seconds.
             /// </summary>
-            public float EnemyDamageTextDuration = 1f;
+            public float EnemyDamageTextDuration = 0.5f;
 
             /// <summary>
             ///     Whether player damage numbers are shown.

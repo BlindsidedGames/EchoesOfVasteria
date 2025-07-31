@@ -1,6 +1,6 @@
+using System.Collections;
 using Blindsided;
 using Blindsided.SaveData;
-using System.Collections;
 using Blindsided.Utilities;
 using TMPro;
 using UnityEngine;
@@ -179,11 +179,14 @@ namespace TimelessEchoes.UI
         private void UpdateDurationTexts()
         {
             if (dropTextDurationText != null)
-                dropTextDurationText.text = $"Drop floating text duration | {CalcUtils.FormatTime(StaticReferences.DropFloatingTextDuration, true, shortForm: true)}";
+                dropTextDurationText.text =
+                    $"Drops | {CalcUtils.FormatTime(StaticReferences.DropFloatingTextDuration, true, shortForm: true)}";
             if (playerDamageDurationText != null)
-                playerDamageDurationText.text = $"Caleb's damage floating text duration | {CalcUtils.FormatTime(StaticReferences.PlayerDamageTextDuration, true, shortForm: true)}";
+                playerDamageDurationText.text =
+                    $"Enemies damage | {CalcUtils.FormatTime(StaticReferences.PlayerDamageTextDuration, true, shortForm: true)}";
             if (enemyDamageDurationText != null)
-                enemyDamageDurationText.text = $"Enemies damage floating text duration | {CalcUtils.FormatTime(StaticReferences.EnemyDamageTextDuration, true, shortForm: true)}";
+                enemyDamageDurationText.text =
+                    $"Caleb's damage | {CalcUtils.FormatTime(StaticReferences.EnemyDamageTextDuration, true, shortForm: true)}";
         }
 
         private void UpdateButtonVisual(Image img, bool on)
