@@ -235,8 +235,9 @@ namespace Blindsided
             {
                 saveData = ES3.Load<GameData>(_dataName, _settings);
             }
-            catch
+            catch (Exception e)
             {
+                Debug.LogError($"Load failed: {e}");
                 if (ES3.FileExists(backupPath) && ES3.RestoreBackup(_fileName))
                 {
                     Debug.LogWarning("Backup restored; re-loading.");
@@ -313,7 +314,7 @@ namespace Blindsided
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Backup failure: {ex.Message}");
+                Debug.LogError($"Backup failure: {ex}");
             }
         }
 
