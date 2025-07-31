@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
@@ -132,16 +131,7 @@ namespace TimelessEchoes.Upgrades
 
             UpdateSlot(resources.IndexOf(resource));
 
-            if (slot != null)
-            {
-                if (newSlot || moved)
-                    StartCoroutine(SpawnFloatingTextNextFrame(resource, slot, amount));
-                else
-                    FloatingText.Spawn(
-                        $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
-                        slot.transform.position + Vector3.up,
-                        FloatingText.DefaultColor, 8f, transform);
-            }
+            // Floating text is no longer spawned above the run drop UI.
 
         }
 
@@ -164,16 +154,6 @@ namespace TimelessEchoes.Upgrades
                 slot.countText.text = FormatNumber(count, true);
                 slot.countText.gameObject.SetActive(true);
             }
-        }
-
-        private IEnumerator SpawnFloatingTextNextFrame(Resource resource, ResourceUIReferences slot, double amount)
-        {
-            yield return null; // wait one frame for layout groups to update
-            if (slot != null)
-                FloatingText.Spawn(
-                    $"{Blindsided.Utilities.TextStrings.ResourceIcon(resource.resourceID)} {Mathf.FloorToInt((float)amount)}",
-                    slot.transform.position + Vector3.up,
-                    FloatingText.DefaultColor, 8f, transform);
         }
 
     }
