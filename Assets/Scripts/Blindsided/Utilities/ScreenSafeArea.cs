@@ -21,6 +21,7 @@ namespace Blindsided.Utilities
 
         [SerializeField] private Slider ratioSlider;
         [SerializeField] private Image previewImage;
+        [SerializeField] private GameObject hideOnMobile;
 
         const float minAspect = 16f / 9f;
         const float maxAspect = 32f / 9f;
@@ -59,6 +60,14 @@ namespace Blindsided.Utilities
         {
             _rectTransform = GetComponent<RectTransform>();
             EventHandler.OnLoadData += OnLoadDataHandler;
+
+            if (Application.isMobilePlatform)
+            {
+                if (hideOnMobile != null)
+                    hideOnMobile.SetActive(false);
+                RatioPreference = 1f;
+            }
+
             if (previewImage != null)
                 previewImage.enabled = false;
             StartCoroutine(InitRatio());
