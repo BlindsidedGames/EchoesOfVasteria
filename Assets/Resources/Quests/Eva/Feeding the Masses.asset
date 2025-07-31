@@ -16,7 +16,7 @@ MonoBehaviour:
   questName: Feeding the Masses
   description: '"You''re getting pretty good at this whole farming thing now. If
     you get me some more I am sure I could attune an Alter-Echo for you, oh and the
-    farmers would probably be happy to give you some space on their farm!" - Eva'
+    farmers would probably be happy to give you some space on their farm!" -Eva'
   rewardDescription: Radish Alter-Echo
   npcId: 
   requiredQuests:
@@ -26,9 +26,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
     amount: 500
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
