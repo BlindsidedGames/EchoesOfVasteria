@@ -11,6 +11,8 @@ namespace TimelessEchoes.Tasks
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite depletedSprite;
+        [Tooltip("Optional extra depleted sprites chosen at random")] [SerializeField]
+        private Sprite[] depletedSpriteOptions;
         [SerializeField] private Transform miningPoint;
 
         private Sprite originalSprite;
@@ -43,9 +45,26 @@ namespace TimelessEchoes.Tasks
                 isDepleted = true;
                 if (spriteRenderer == null)
                     spriteRenderer = GetComponent<SpriteRenderer>();
-                if (spriteRenderer != null && depletedSprite != null)
-                    spriteRenderer.sprite = depletedSprite;
+                if (spriteRenderer != null)
+                {
+                    var s = ChooseDepletedSprite();
+                    if (s != null)
+                        spriteRenderer.sprite = s;
+                }
             }
+        }
+
+        private Sprite ChooseDepletedSprite()
+        {
+            if (depletedSpriteOptions == null || depletedSpriteOptions.Length == 0)
+                return depletedSprite;
+
+            var count = depletedSpriteOptions.Length + (depletedSprite != null ? 1 : 0);
+            var index = Random.Range(0, count);
+            if (index == 0 && depletedSprite != null)
+                return depletedSprite;
+            var optionIndex = depletedSprite != null ? index - 1 : index;
+            return depletedSpriteOptions[optionIndex];
         }
     }
 }
