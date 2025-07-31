@@ -156,6 +156,7 @@ namespace Blindsided
             SaveToFile(false);
             ES3.StoreCachedFile(_fileName);
             SceneManager.LoadScene(0);
+            StartCoroutine(LoadMainScene());
         }
 
         [TabGroup("SaveData", "Buttons")]
@@ -173,6 +174,7 @@ namespace Blindsided
             SaveToFile(false);
             ES3.StoreCachedFile(_fileName);
             SceneManager.LoadScene(0);
+            StartCoroutine(LoadMainScene());
         }
 
         [TabGroup("SaveData", "Buttons")]
