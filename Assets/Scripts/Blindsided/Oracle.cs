@@ -111,7 +111,7 @@ namespace Blindsided
         private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
-            if (Application.isPlaying && !wipeInProgress)
+            if (Application.isPlaying && !wipeInProgress && oracle == this && _settings != null)
             {
                 SaveToFile(); // save the latest state immediately
                 ES3.StoreCachedFile(_fileName);
