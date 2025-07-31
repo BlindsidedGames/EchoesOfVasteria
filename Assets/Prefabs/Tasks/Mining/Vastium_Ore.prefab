@@ -404,7 +404,11 @@ MonoBehaviour:
   progressBarObject: {fileID: 6903395814371763851}
   progressBar: {fileID: 2992031436270654903}
   spriteRenderer: {fileID: 8245116162548217892}
-  depletedSprite: {fileID: 21300000, guid: 8fafa97771facc84291aed197539e277, type: 3}
+  depletedSprite: {fileID: 3452003437791708593, guid: 8fafa97771facc84291aed197539e277, type: 3}
+  depletedSpriteOptions:
+  - {fileID: 3452003437791708593, guid: 8fafa97771facc84291aed197539e277, type: 3}
+  - {fileID: -1102629230, guid: 8fafa97771facc84291aed197539e277, type: 3}
+  - {fileID: 1506414719, guid: 8fafa97771facc84291aed197539e277, type: 3}
   miningPoint: {fileID: 0}
 --- !u!58 &6098368649504423421
 CircleCollider2D:
