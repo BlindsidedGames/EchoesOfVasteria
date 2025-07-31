@@ -61,7 +61,7 @@ namespace TimelessEchoes.Upgrades
                 Destroy(child.gameObject);
         }
 
-        private void OnResourceAdded(Resource resource, double amount, Vector3 position)
+        private void OnResourceAdded(Resource resource, double amount)
         {
             if (resource == null || amount <= 0)
                 return;

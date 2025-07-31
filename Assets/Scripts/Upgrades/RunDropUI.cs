@@ -76,7 +76,7 @@ namespace TimelessEchoes.Upgrades
         }
 
 
-        private void OnResourceAdded(Resource resource, double amount, Vector3 position)
+        private void OnResourceAdded(Resource resource, double amount)
         {
             if (resource == null || amount <= 0) return;
 
@@ -132,7 +132,16 @@ namespace TimelessEchoes.Upgrades
 
             UpdateSlot(resources.IndexOf(resource));
 
-            // Floating text is now spawned at the drop location instead of the UI
+            if (slot != null)
+            {
+                if (newSlot || moved)
+                    StartCoroutine(SpawnFloatingTextNextFrame(slot, amount));
+                else
+                    FloatingText.Spawn(
+                        $"+{Mathf.FloorToInt((float)amount)}",
+                        slot.transform.position + Vector3.up,
+                        Color.white, 8f, transform);
+            }
 
         }
 
@@ -157,7 +166,13 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        // Floating text display handled at drop location; UI no longer spawns it
+        private IEnumerator SpawnFloatingTextNextFrame(ResourceUIReferences slot, double amount)
+        {
+            yield return null; // wait one frame for layout groups to update
+            if (slot != null)
+                FloatingText.Spawn($"+{Mathf.FloorToInt((float)amount)}", slot.transform.position + Vector3.up,
+                    Color.white, 8f, transform);
+        }
 
     }
 }

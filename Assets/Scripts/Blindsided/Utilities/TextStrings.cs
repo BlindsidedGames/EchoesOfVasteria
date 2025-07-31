@@ -13,16 +13,11 @@ namespace Blindsided.Utilities
         public const string IconWithColour = "<sprite=0 color=#00000>";
         public const string EndColour = "</color>";
 
-        /// <summary>
-        /// Returns a TextMeshPro sprite tag for the given sprite ID.
-        /// </summary>
-        public static string SpriteTag(int id) => $"<sprite={id}>";
-
-        public const int HealthIcon = 0;
-        public const int DamageIcon = 24;
-        public const int AttackSpeedIcon = 150;
-        public const int RangeIcon = 5;
-        public const int MoveSpeedIcon = 11;
-        public const int GoldIcon = 4;
+        public const string HealthIcon = "<sprite=0>";
+        public const string DamageIcon = "<sprite=24>";
+        public const string AttackSpeedIcon = "<sprite=150>";
+        public const string RangeIcon = "<sprite=5>";
+        public const string MoveSpeedIcon = "<sprite=11>";
+        public const string GoldIcon = "<sprite=4>";
     }
 }
