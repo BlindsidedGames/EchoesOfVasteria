@@ -91,6 +91,12 @@ namespace Blindsided.SaveData
             /// </summary>
             public int TargetFps = 60;
 
+            /// <summary>
+            ///     Normalised screen aspect ratio for the safe area limiter.
+            ///     0 → 16:9, 1 → 32:9.
+            /// </summary>
+            public float SafeAreaRatio;
+
         }
 
         [HideReferenceObjectPicker]
