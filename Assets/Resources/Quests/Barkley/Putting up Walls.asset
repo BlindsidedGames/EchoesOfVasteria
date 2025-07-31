@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Putting up Walls
   questName: Putting up Walls
-  description: 
-  rewardDescription: 
+  description: '"Wow you''re a real help! While I get started on these walls would
+    you mind grabbing some more logs for the roof?" -Barkley'
+  rewardDescription: Reaping distance increased by 10.
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 305b32e698de898478ae2a41a5a1322c, type: 2}
@@ -24,9 +25,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     amount: 100
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
-  maxDistanceIncrease: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 10

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Adding A Roof
   questName: Adding A Roof
-  description: 
-  rewardDescription: 
+  description: '"You''re simply the best. Not much to go now! I''ll get this roof
+    on and then we will get started on the walls" -Barkley '
+  rewardDescription: Gain the Alter Echo of Sticks.
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 77b9a54f17b29c84b8dce9da0940a2a4, type: 2}
@@ -24,9 +25,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     amount: 150
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

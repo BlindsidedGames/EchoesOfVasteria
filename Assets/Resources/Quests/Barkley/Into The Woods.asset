@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Into The Woods
   questName: Into The Woods
-  description: Help Barkley with the Logs he needs to build his house.
+  description: '"Here, take my spare axe and go into them woods we''ll need at least
+    10 logs to get this frame started" -Barkley'
   rewardDescription: 'Unlocks the Alter-Echoes screen.
 
     Gain the Alter Echo of
@@ -27,9 +28,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     amount: 10
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: A Sturdier Frame
   questName: A Sturdier Frame
-  description: 
-  rewardDescription: 
+  description: '"Much appreciated lad! Now''s time to reinforce this thing. If you
+    don''t mind fetching me another few logs?" -Barkley'
+  rewardDescription: Reaping distance increased by 10.
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 023383fb0fcbe3b41b7dca4f9ec81b72, type: 2}
@@ -24,9 +25,9 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     amount: 50
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
-  maxDistanceIncrease: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 10

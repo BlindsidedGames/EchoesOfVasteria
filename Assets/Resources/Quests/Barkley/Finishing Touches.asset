@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Finishing Touches
   questName: Finishing Touches
-  description: 
-  rewardDescription: 
+  description: '"The Old Timer suggested reinforcing my walls with Stone! What a
+    fantastic idea! You don''t mind helping me out one last time do you?" -Barkley'
+  rewardDescription: Gain the Alter Echo of Feathers.
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 695c73bb2e02fd744a413ce180b92246, type: 2}
@@ -24,15 +25,16 @@ MonoBehaviour:
     resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     amount: 20
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
   - type: 0
     resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     amount: 200
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
