@@ -17,6 +17,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private GameObject window;
 
         private readonly Dictionary<Resource, double> amounts = new();
+        private readonly Dictionary<Resource, double> bonusAmounts = new();
         private ResourceManager resourceManager;
 
         private void Awake()
@@ -49,6 +50,7 @@ namespace TimelessEchoes.Upgrades
         public void BeginRun()
         {
             amounts.Clear();
+            bonusAmounts.Clear();
             ClearSlots();
             if (window != null)
                 window.SetActive(false);
@@ -62,7 +64,7 @@ namespace TimelessEchoes.Upgrades
                 Destroy(child.gameObject);
         }
 
-        private void OnResourceAdded(Resource resource, double amount)
+        private void OnResourceAdded(Resource resource, double amount, bool bonus)
         {
             if (resource == null || amount <= 0)
                 return;
@@ -70,6 +72,13 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += amount;
             else
                 amounts[resource] = amount;
+            if (bonus)
+            {
+                if (bonusAmounts.ContainsKey(resource))
+                    bonusAmounts[resource] += amount;
+                else
+                    bonusAmounts[resource] = amount;
+            }
         }
 
         /// <summary>
@@ -90,7 +99,8 @@ namespace TimelessEchoes.Upgrades
             foreach (var pair in amounts)
             {
                 var slot = Instantiate(slotPrefab, slotParent);
-                SetupSlot(slot, pair.Key, pair.Value);
+                bonusAmounts.TryGetValue(pair.Key, out var bonus);
+                SetupSlot(slot, pair.Key, pair.Value - bonus, bonus);
             }
             if (window != null)
                 window.SetActive(true);
@@ -105,7 +115,7 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private void SetupSlot(ResourceUIReferences slot, Resource res, double amount)
+        private void SetupSlot(ResourceUIReferences slot, Resource res, double amount, double bonus)
         {
             if (slot == null)
                 return;
@@ -117,6 +127,8 @@ namespace TimelessEchoes.Upgrades
             if (slot.countText)
             {
                 slot.countText.text = FormatNumber(amount, true);
+                if (bonus > 0)
+                    slot.countText.text += $" (+{FormatNumber(bonus, true)})";
                 slot.countText.gameObject.SetActive(true);
             }
         }

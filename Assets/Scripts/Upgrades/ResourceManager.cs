@@ -23,8 +23,10 @@ namespace TimelessEchoes.Upgrades
 
         /// <summary>
         ///     Invoked whenever resources are added via <see cref="Add" />.
+        ///     The boolean parameter indicates whether the resources were a
+        ///     bonus (e.g. from retreating).
         /// </summary>
-        public event Action<Resource, double> OnResourceAdded;
+        public event Action<Resource, double, bool> OnResourceAdded;
 
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
@@ -90,7 +92,7 @@ namespace TimelessEchoes.Upgrades
                 Log("GameplayStatTracker missing", TELogCategory.Resource, this);
             else
                 tracker.AddResources(amount, bonus);
-            OnResourceAdded?.Invoke(resource, amount);
+            OnResourceAdded?.Invoke(resource, amount, bonus);
             InvokeInventoryChanged();
         }
 

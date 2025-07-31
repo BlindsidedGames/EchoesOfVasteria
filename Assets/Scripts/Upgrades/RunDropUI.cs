@@ -74,9 +74,9 @@ namespace TimelessEchoes.Upgrades
         }
 
 
-        private void OnResourceAdded(Resource resource, double amount)
+        private void OnResourceAdded(Resource resource, double amount, bool bonus)
         {
-            if (resource == null || amount <= 0) return;
+            if (bonus || resource == null || amount <= 0) return;
 
             ResourceUIReferences slot = null;
             var index = resources.IndexOf(resource);
