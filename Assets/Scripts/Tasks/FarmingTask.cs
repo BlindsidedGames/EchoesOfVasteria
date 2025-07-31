@@ -1,5 +1,7 @@
 using System.Reflection;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Buffs;
 using UnityEngine;
 
 namespace TimelessEchoes.Tasks
@@ -47,7 +49,15 @@ namespace TimelessEchoes.Tasks
         public override void Tick(HeroController hero)
         {
             base.Tick(hero);
-            localTimer += Time.deltaTime;
+            var delta = Time.deltaTime;
+            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
+            if (controller != null && associatedSkill != null)
+                delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
+
+            var buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            if (buffManager != null)
+                delta *= buffManager.TaskSpeedMultiplier;
+            localTimer += delta;
 
             if (spriteRenderer != null && growthStages.Length >= 3)
             {
