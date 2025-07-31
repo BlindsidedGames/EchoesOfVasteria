@@ -300,6 +300,7 @@ namespace TimelessEchoes.Enemies
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
+            var lines = new List<string>();
             foreach (var drop in stats.resourceDrops)
             {
                 if (drop.resource == null) continue;
@@ -314,10 +315,14 @@ namespace TimelessEchoes.Enemies
                 if (count > 0)
                 {
                     double final = count * mult * gainMult;
-                    resourceManager.Add(drop.resource, final);
+                    resourceManager.Add(drop.resource, final, transform.position);
                     Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
+                    lines.Add($"{TextStrings.SpriteTag(drop.resource.resourceID)}+{Mathf.FloorToInt((float)final)}");
                 }
             }
+
+            if (lines.Count > 0)
+                FloatingText.Spawn(string.Join("\n", lines), transform.position + Vector3.up, Color.white, 8f);
 
             var tracker = EnemyKillTracker.Instance;
             if (tracker == null)

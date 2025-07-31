@@ -24,7 +24,7 @@ namespace TimelessEchoes.Upgrades
         /// <summary>
         ///     Invoked whenever resources are added via <see cref="Add" />.
         /// </summary>
-        public event Action<Resource, double> OnResourceAdded;
+        public event Action<Resource, double, Vector3> OnResourceAdded;
 
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
@@ -78,6 +78,11 @@ namespace TimelessEchoes.Upgrades
 
         public void Add(Resource resource, double amount, bool bonus = false)
         {
+            Add(resource, amount, Vector3.zero, bonus);
+        }
+
+        public void Add(Resource resource, double amount, Vector3 worldPosition, bool bonus = false)
+        {
             if (resource == null || amount <= 0) return;
             unlocked.Add(resource);
             if (amounts.ContainsKey(resource))
@@ -90,7 +95,7 @@ namespace TimelessEchoes.Upgrades
                 Log("GameplayStatTracker missing", TELogCategory.Resource, this);
             else
                 tracker.AddResources(amount, bonus);
-            OnResourceAdded?.Invoke(resource, amount);
+            OnResourceAdded?.Invoke(resource, amount, worldPosition);
             InvokeInventoryChanged();
         }
 
