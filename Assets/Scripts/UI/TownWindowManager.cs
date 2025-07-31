@@ -21,6 +21,7 @@ namespace TimelessEchoes.UI
             [HorizontalGroup("Row")] public Button button;
             [HorizontalGroup("Row2")] public GameObject window;
             [HorizontalGroup("Row3")] public Button closeButton;
+            [HorizontalGroup("Row4")] public bool openInventory;
         }
 
         [Title("References")] [SerializeField] private WindowReference upgrades = new();
@@ -74,7 +75,7 @@ namespace TimelessEchoes.UI
             if (inventory.button != null)
                 inventory.button.onClick.AddListener(ToggleInventory);
             if (inventory.closeButton != null)
-                inventory.closeButton.onClick.AddListener(() => CloseWindow(inventory.window));
+                inventory.closeButton.onClick.AddListener(CloseAllWindows);
         }
 
         private void Start()
@@ -119,7 +120,7 @@ namespace TimelessEchoes.UI
             if (inventory.button != null)
                 inventory.button.onClick.RemoveListener(ToggleInventory);
             if (inventory.closeButton != null)
-                inventory.closeButton.onClick.RemoveAllListeners();
+                inventory.closeButton.onClick.RemoveListener(CloseAllWindows);
             if (Instance == this)
                 Instance = null;
         }
@@ -132,42 +133,42 @@ namespace TimelessEchoes.UI
 
         private void OpenUpgrades()
         {
-            ToggleWindow(upgrades.window);
+            ToggleWindow(upgrades);
         }
 
         private void OpenBuffs()
         {
-            ToggleWindow(buffs.window);
+            ToggleWindow(buffs);
         }
 
         private void OpenQuests()
         {
-            ToggleWindow(quests.window);
+            ToggleWindow(quests);
         }
 
         private void OpenCredits()
         {
-            ToggleWindow(credits.window);
+            ToggleWindow(credits);
         }
 
         private void OpenDisciples()
         {
-            ToggleWindow(disciples.window);
+            ToggleWindow(disciples);
         }
 
         private void OpenStats()
         {
-            ToggleWindow(stats.window);
+            ToggleWindow(stats);
         }
 
         private void OpenWiki()
         {
-            ToggleWindow(wiki.window);
+            ToggleWindow(wiki);
         }
 
         private void OpenOptions()
         {
-            ToggleWindow(options.window);
+            ToggleWindow(options);
         }
 
         private void ToggleInventory()
@@ -177,14 +178,16 @@ namespace TimelessEchoes.UI
             UpdateTownButtonsVisibility();
         }
 
-        private void ToggleWindow(GameObject window)
+        private void ToggleWindow(WindowReference reference)
         {
-            if (window == null)
+            if (reference.window == null)
                 return;
 
-            var wasActive = window.activeSelf;
+            var wasActive = reference.window.activeSelf;
             if (!wasActive) CloseAllWindowsExceptInventory();
-            window.SetActive(!wasActive);
+            reference.window.SetActive(!wasActive);
+            if (reference.openInventory && reference.window.activeSelf && inventory.window != null)
+                inventory.window.SetActive(true);
             UpdateTownButtonsVisibility();
         }
 
