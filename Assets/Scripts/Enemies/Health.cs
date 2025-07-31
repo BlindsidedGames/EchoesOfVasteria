@@ -35,6 +35,16 @@ namespace TimelessEchoes.Enemies
 
         protected override float GetFloatingTextSize() => 8f;
 
+        protected override float GetFloatingTextDuration()
+        {
+            return Blindsided.SaveData.StaticReferences.EnemyDamageTextDuration;
+        }
+
+        protected override bool ShouldShowFloatingText()
+        {
+            return Blindsided.SaveData.StaticReferences.EnemyFloatingDamage;
+        }
+
         public override void TakeDamage(float amount, float bonusDamage = 0f)
         {
             if (CurrentHealth <= 0f) return;
@@ -49,11 +59,12 @@ namespace TimelessEchoes.Enemies
             UpdateBar();
             RaiseHealthChanged();
 
-            if (Application.isPlaying)
+            if (Application.isPlaying && ShouldShowFloatingText())
             {
                 // Display only the final damage amount dealt to the enemy.
                 string text = CalcUtils.FormatNumber(total);
-                FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(), GetFloatingTextSize());
+                FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(),
+                    GetFloatingTextSize(), null, GetFloatingTextDuration());
             }
 
             AfterDamage(total);

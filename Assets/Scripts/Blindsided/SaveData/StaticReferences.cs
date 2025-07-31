@@ -121,6 +121,42 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.SafeAreaRatio = Mathf.Clamp01(value);
         }
 
+        public static float DropFloatingTextDuration
+        {
+            get => oracle.saveData.SavedPreferences.DropFloatingTextDuration;
+            set => oracle.saveData.SavedPreferences.DropFloatingTextDuration = Mathf.Clamp(value, 0f, 10f);
+        }
+
+        public static float PlayerDamageTextDuration
+        {
+            get => oracle.saveData.SavedPreferences.PlayerDamageTextDuration;
+            set => oracle.saveData.SavedPreferences.PlayerDamageTextDuration = Mathf.Clamp(value, 0f, 2f);
+        }
+
+        public static float EnemyDamageTextDuration
+        {
+            get => oracle.saveData.SavedPreferences.EnemyDamageTextDuration;
+            set => oracle.saveData.SavedPreferences.EnemyDamageTextDuration = Mathf.Clamp(value, 0f, 2f);
+        }
+
+        public static bool PlayerFloatingDamage
+        {
+            get => oracle.saveData.SavedPreferences.PlayerFloatingDamage;
+            set => oracle.saveData.SavedPreferences.PlayerFloatingDamage = value;
+        }
+
+        public static bool EnemyFloatingDamage
+        {
+            get => oracle.saveData.SavedPreferences.EnemyFloatingDamage;
+            set => oracle.saveData.SavedPreferences.EnemyFloatingDamage = value;
+        }
+
+        public static bool ItemDropFloatingText
+        {
+            get => oracle.saveData.SavedPreferences.ItemDropFloatingText;
+            set => oracle.saveData.SavedPreferences.ItemDropFloatingText = value;
+        }
+
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
