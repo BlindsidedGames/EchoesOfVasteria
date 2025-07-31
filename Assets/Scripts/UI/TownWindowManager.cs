@@ -254,12 +254,29 @@ namespace TimelessEchoes.UI
                    || (inventory.window != null && inventory.window.activeSelf);
         }
 
+        /// <summary>
+        ///     Determines whether any window other than the stats window is open.
+        ///     Used for the windows open indicator so that opening the stats
+        ///     screen does not activate it.
+        /// </summary>
+        private bool AnyWindowOpenForIndicator()
+        {
+            return (upgrades.window != null && upgrades.window.activeSelf)
+                   || (buffs.window != null && buffs.window.activeSelf)
+                   || (quests.window != null && quests.window.activeSelf)
+                   || (credits.window != null && credits.window.activeSelf)
+                   || (disciples.window != null && disciples.window.activeSelf)
+                   || (wiki.window != null && wiki.window.activeSelf)
+                   || (options.window != null && options.window.activeSelf)
+                   || (inventory.window != null && inventory.window.activeSelf);
+        }
+
         private void UpdateTownButtonsVisibility()
         {
             if (townButtons != null)
                 townButtons.SetActive(!AnyWindowOpen());
             if (windowsOpenIndicator != null)
-                windowsOpenIndicator.SetActive(AnyWindowOpen());
+                windowsOpenIndicator.SetActive(AnyWindowOpenForIndicator());
         }
     }
 }
