@@ -101,6 +101,36 @@ namespace Blindsided.SaveData
             /// </summary>
             public float SafeAreaRatio;
 
+            /// <summary>
+            ///     Duration for drop floating text in seconds.
+            /// </summary>
+            public float DropFloatingTextDuration = 1f;
+
+            /// <summary>
+            ///     Duration for player damage floating text in seconds.
+            /// </summary>
+            public float PlayerDamageTextDuration = 1f;
+
+            /// <summary>
+            ///     Duration for enemy damage floating text in seconds.
+            /// </summary>
+            public float EnemyDamageTextDuration = 1f;
+
+            /// <summary>
+            ///     Whether player damage numbers are shown.
+            /// </summary>
+            public bool PlayerFloatingDamage = true;
+
+            /// <summary>
+            ///     Whether enemy damage numbers are shown.
+            /// </summary>
+            public bool EnemyFloatingDamage = true;
+
+            /// <summary>
+            ///     Whether item drop floating text is shown.
+            /// </summary>
+            public bool ItemDropFloatingText = true;
+
         }
 
         [HideReferenceObjectPicker]

@@ -85,7 +85,10 @@ namespace TimelessEchoes.Tasks
                 if (line.Length > 0)
                     lines.Add(line);
 
-                FloatingText.Spawn(string.Join("\n", lines), transform.position + Vector3.up, FloatingText.DefaultColor);
+                if (Blindsided.SaveData.StaticReferences.ItemDropFloatingText)
+                    FloatingText.Spawn(string.Join("\n", lines), transform.position + Vector3.up,
+                        FloatingText.DefaultColor, 8f, null,
+                        Blindsided.SaveData.StaticReferences.DropFloatingTextDuration);
             }
         }
     }}

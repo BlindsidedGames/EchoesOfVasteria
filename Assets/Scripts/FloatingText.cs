@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Blindsided.SaveData;
 
 namespace TimelessEchoes
 {
@@ -17,7 +18,7 @@ namespace TimelessEchoes
         /// <summary>
         /// Spawns a floating text object displaying the given string.
         /// </summary>
-        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null)
+        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f)
         {
             var obj = new GameObject("FloatingText");
             var offset = Random.insideUnitCircle * 0.25f;
@@ -25,6 +26,7 @@ namespace TimelessEchoes
             if (parent != null)
                 obj.transform.SetParent(parent, true);
             var ft = obj.AddComponent<FloatingText>();
+            ft.lifetime = duration >= 0f ? duration : StaticReferences.DropFloatingTextDuration;
             ft.tmp = obj.AddComponent<TextMeshPro>();
             ft.tmp.alignment = TextAlignmentOptions.Center;
             ft.tmp.fontSize = fontSize;

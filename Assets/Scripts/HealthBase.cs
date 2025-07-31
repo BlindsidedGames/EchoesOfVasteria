@@ -31,7 +31,7 @@ namespace TimelessEchoes
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
-            if (Application.isPlaying)
+            if (Application.isPlaying && ShouldShowFloatingText())
                 ShowFloatingText(total, bonusDamage);
 
             AfterDamage(total);
@@ -120,11 +120,14 @@ namespace TimelessEchoes
             string text = CalcUtils.FormatNumber(total);
             if (bonusDamage != 0f)
                 text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
-            FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(), GetFloatingTextSize());
+            FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(),
+                GetFloatingTextSize(), null, GetFloatingTextDuration());
         }
 
         protected abstract Color GetFloatingTextColor();
         protected abstract float GetFloatingTextSize();
+        protected abstract float GetFloatingTextDuration();
+        protected virtual bool ShouldShowFloatingText() => true;
 
         [Serializable]
         public struct HealthBarSpriteOption

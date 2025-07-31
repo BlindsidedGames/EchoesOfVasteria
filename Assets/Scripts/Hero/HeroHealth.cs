@@ -63,6 +63,16 @@ namespace TimelessEchoes.Hero
             return 6f;
         }
 
+        protected override float GetFloatingTextDuration()
+        {
+            return Blindsided.SaveData.StaticReferences.PlayerDamageTextDuration;
+        }
+
+        protected override bool ShouldShowFloatingText()
+        {
+            return Blindsided.SaveData.StaticReferences.PlayerFloatingDamage;
+        }
+
         public override void TakeDamage(float amount, float bonusDamage = 0f)
         {
             if (Immortal) return;
