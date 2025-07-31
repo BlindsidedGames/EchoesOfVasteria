@@ -82,6 +82,9 @@ namespace TimelessEchoes.UI
         private void Update()
         {
             UpdateStats();
+            if (Input.GetMouseButtonDown(1))
+                if (skillsWindow != null && skillsWindow.activeSelf)
+                    skillsWindow.SetActive(false);
         }
 
         private void ToggleSkills()
