@@ -1,6 +1,7 @@
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.UI
@@ -127,7 +128,7 @@ namespace TimelessEchoes.UI
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
                 CloseAllWindows();
         }
 
