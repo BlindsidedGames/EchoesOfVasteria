@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace Blindsided.Utilities
 {
@@ -8,6 +9,30 @@ namespace Blindsided.Utilities
         private Vector2 maxAnchor;
         private Vector2 minAnchor;
         private Rect safeArea;
+        private Vector2Int lastResolution;
+        private Rect lastSafeArea;
+
+        private float ratioValue;
+
+        const float minAspect = 16f / 9f;
+        const float maxAspect = 32f / 9f;
+
+        [Tooltip("Restrict the aspect ratio based on the saved preference")] public bool limitAspect = true;
+
+        /// <summary>
+        /// Normalised aspect ratio preference. 0 → 16:9, 1 → 32:9.
+        /// Setting this value saves it and reapplies the safe area.
+        /// </summary>
+        public float RatioPreference
+        {
+            get => ratioValue;
+            set
+            {
+                ratioValue = Mathf.Clamp01(value);
+                SafeAreaRatio = ratioValue;
+                ApplySafeArea();
+            }
+        }
 
         [Tooltip("Minimum space from the top edge in pixels")] public float minPaddingTop;
         [Tooltip("Minimum space from the bottom edge in pixels")] public float minPaddingBottom;
@@ -21,9 +46,24 @@ namespace Blindsided.Utilities
         public float boarderLeft;
         public float boarderRight;
 #endif
+
         private void OnEnable()
         {
             _rectTransform = GetComponent<RectTransform>();
+            ratioValue = Mathf.Clamp01(SafeAreaRatio);
+            ApplySafeArea();
+        }
+
+        private void Update()
+        {
+            if (Screen.safeArea != lastSafeArea || Screen.width != lastResolution.x || Screen.height != lastResolution.y)
+            {
+                ApplySafeArea();
+            }
+        }
+
+        void ApplySafeArea()
+        {
             safeArea = Screen.safeArea;
 
             float left = safeArea.xMin;
@@ -39,13 +79,25 @@ namespace Blindsided.Utilities
             safeArea = new Rect(left, bottom, Screen.width - left - right, Screen.height - top - bottom);
 
 #if UNITY_EDITOR || UNITY_STANDALONE
-            // Subtract 40 from the left, right, and bottom
             if (extraBoarders)
             {
                 _rectTransform.offsetMin = new Vector2(boarderLeft, boarderBottom); // Left, Bottom
                 _rectTransform.offsetMax = new Vector2(-boarderRight, -boarderTop); // Right, Top
             }
 #endif
+
+            if (limitAspect)
+            {
+                float prefMax = Mathf.Lerp(minAspect, maxAspect, ratioValue);
+                float safeAspect = safeArea.width / safeArea.height;
+                if (safeAspect > prefMax)
+                {
+                    float targetWidth = safeArea.height * prefMax;
+                    float delta = safeArea.width - targetWidth;
+                    safeArea.xMin += delta * 0.5f;
+                    safeArea.width = targetWidth;
+                }
+            }
 
             minAnchor = safeArea.position;
             maxAnchor = minAnchor + safeArea.size;
@@ -57,6 +109,9 @@ namespace Blindsided.Utilities
 
             _rectTransform.anchorMin = minAnchor;
             _rectTransform.anchorMax = maxAnchor;
+
+            lastSafeArea = Screen.safeArea;
+            lastResolution = new Vector2Int(Screen.width, Screen.height);
         }
     }
 }

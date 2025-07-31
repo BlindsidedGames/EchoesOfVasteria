@@ -115,6 +115,12 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.TargetFps = value;
         }
 
+        public static float SafeAreaRatio
+        {
+            get => oracle.saveData.SavedPreferences.SafeAreaRatio;
+            set => oracle.saveData.SavedPreferences.SafeAreaRatio = Mathf.Clamp01(value);
+        }
+
         public static bool ShowLevelText
         {
             get => oracle.saveData.SavedPreferences.ShowLevelText;
