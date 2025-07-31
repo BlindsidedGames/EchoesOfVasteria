@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Blindsided;
 
 namespace TimelessEchoes.UI
 {
@@ -79,6 +80,16 @@ namespace TimelessEchoes.UI
                 inventory.closeButton.onClick.AddListener(CloseAllWindows);
         }
 
+        private void OnEnable()
+        {
+            EventHandler.OnLoadData += HandleLoadData;
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.OnLoadData -= HandleLoadData;
+        }
+
         private void Start()
         {
             CloseAllWindows();
@@ -130,6 +141,24 @@ namespace TimelessEchoes.UI
         {
             if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
                 CloseAllWindows();
+        }
+
+        private void HandleLoadData()
+        {
+            if (Oracle.oracle == null)
+                return;
+
+            if (!Oracle.oracle.saveData.SavedPreferences.Tutorial)
+            {
+                CloseAllWindows();
+                if (quests.window != null)
+                    quests.window.SetActive(true);
+                if (inventory.window != null)
+                    inventory.window.SetActive(false);
+                UpdateTownButtonsVisibility();
+                Oracle.oracle.saveData.SavedPreferences.Tutorial = true;
+                EventHandler.SaveData();
+            }
         }
 
         private void OpenUpgrades()
