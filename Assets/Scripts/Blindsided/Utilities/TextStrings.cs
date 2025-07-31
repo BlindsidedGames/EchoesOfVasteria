@@ -19,5 +19,10 @@ namespace Blindsided.Utilities
         public const string RangeIcon = "<sprite=5>";
         public const string MoveSpeedIcon = "<sprite=11>";
         public const string GoldIcon = "<sprite=4>";
+
+        public static string ResourceIcon(int resourceID)
+        {
+            return TimelessEchoes.Upgrades.ResourceIconLookup.GetIconTag(resourceID);
+        }
     }
 }
