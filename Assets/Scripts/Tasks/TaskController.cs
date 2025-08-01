@@ -27,6 +27,13 @@ namespace TimelessEchoes.Tasks
 
         // Positive values give tasks located behind the hero a priority bonus
         [SerializeField] public float backtrackingAdditionalWeight;
+
+        // Distance the hero can move past a task on the X axis before it is removed
+        [SerializeField] public float taskRemovalDistance = -1f;
+
+        // How often to check for outdated tasks when pruning
+        [SerializeField] public float pruneInterval = 0.5f;
+        private float nextPruneTime;
         [SerializeField] private CinemachineCamera mapCamera;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
@@ -114,16 +121,23 @@ namespace TimelessEchoes.Tasks
             AcquireHero();
             if (mapCamera == null)
                 mapCamera = GetComponentInChildren<CinemachineCamera>(true);
+            nextPruneTime = Time.time + pruneInterval;
         }
 
         private void Update()
         {
+            if (Time.time >= nextPruneTime)
+            {
+                PruneTasks();
+                nextPruneTime = Time.time + pruneInterval;
+            }
         }
 
         private void OnEnable()
         {
             AcquireHero();
             ResetTasks();
+            nextPruneTime = Time.time + pruneInterval;
         }
 
         private void AcquireHero()
@@ -313,6 +327,26 @@ namespace TimelessEchoes.Tasks
 
                     removed = true;
                     continue;
+                }
+
+                if (taskRemovalDistance >= 0f && hero != null)
+                {
+                    Vector3? pos = null;
+                    if (taskMap.TryGetValue(task, out var obj) && obj != null)
+                        pos = obj.transform.position;
+                    else if (task.Target != null)
+                        pos = task.Target.position;
+
+                    if (pos.HasValue)
+                    {
+                        var deltaX = hero.transform.position.x - pos.Value.x;
+                        if (deltaX > taskRemovalDistance)
+                        {
+                            RemoveTaskAt(i);
+                            removed = true;
+                            continue;
+                        }
+                    }
                 }
 
                 if (task is KillEnemyTask kill)
