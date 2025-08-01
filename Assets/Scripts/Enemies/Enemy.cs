@@ -82,6 +82,9 @@ namespace TimelessEchoes.Enemies
             if (stats != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
+                // Ensure ranged enemies stop moving when within attack range
+                ai.endReachedDistance = stats.attackRange;
+                ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
                 health.Init(stats.GetMaxHealthForLevel(level));
             }
 
