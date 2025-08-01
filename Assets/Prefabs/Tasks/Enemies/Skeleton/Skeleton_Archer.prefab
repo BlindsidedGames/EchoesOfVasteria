@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b89c777ea87a14a94f7b9df68ffc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: f982370fcd3f9fd489cd5188f7eb546b, type: 2}
+  stats: {fileID: 11400000, guid: fa5c5ead31adba84aab4b87031402956, type: 2}
   animator: {fileID: 3857100333722271928}
   spriteRenderer: {fileID: 9165481713511291873}
   fourDirectional: 0
@@ -205,7 +205,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 0.7
+  endReachedDistance: 4
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
