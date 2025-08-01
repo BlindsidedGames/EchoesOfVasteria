@@ -864,6 +864,8 @@ MonoBehaviour:
   hero: {fileID: 2410021182923110199}
   maxBacktrackDistance: -15
   backtrackingAdditionalWeight: 2
+  taskRemovalDistance: -10
+  pruneInterval: 0.5
   mapCamera: {fileID: 2571608917486039915}
   currentTaskName: MiningTask
   currentTaskObject: {fileID: 0}
