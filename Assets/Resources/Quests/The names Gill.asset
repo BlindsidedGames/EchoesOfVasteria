@@ -13,12 +13,33 @@ MonoBehaviour:
   m_Name: The names Gill
   m_EditorClassIdentifier: 
   questId: The names Gill
-  questName: The names Gill
-  description: '"Hows it goin mate? Just got back from the best fishin trip of me
-    life. Whats that you''ve never been fishing!? Here take me spare rod and fish
-    up some Flippy Floppy for Mildred. They can be found just about anywhere!" -Gill'
-  rewardDescription: "You can now catch fish! \nYou can now purchase Regeneration
-    Upgrades "
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5292075401216
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5293610516480
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5294684258304
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 2f2ff992f4de15a4bb5263366f3fe554, type: 2}
@@ -33,3 +54,6 @@ MonoBehaviour:
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
+  references:
+    version: 2
+    RefIds: []

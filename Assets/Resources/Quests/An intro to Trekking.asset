@@ -13,11 +13,33 @@ MonoBehaviour:
   m_Name: An intro to Trekking
   m_EditorClassIdentifier: 
   questId: An Intro to Trekking
-  questName: An Intro to Trekking
-  description: '"Carl the Reaper will ensure you don''t stray too far from the town.
-    As you assist these people he will gradually loosen the leash" -The Vast One'
-  rewardDescription: You can now enter The Farmlands, Reap distance increased by
-    50.
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4506201243648
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4508550053888
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4510643011584
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
@@ -32,3 +54,6 @@ MonoBehaviour:
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
+  references:
+    version: 2
+    RefIds: []

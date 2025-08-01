@@ -13,14 +13,33 @@ MonoBehaviour:
   m_Name: Meeting Ivan
   m_EditorClassIdentifier: 
   questId: Meeting Ivan
-  questName: Meeting Ivan
-  description: '"In this realm Ivan is your brother, he will assist you in upgrading
-    your various stats, but you will need to gather the resources he needs." -The
-    Vast One'
-  rewardDescription: 'You can now purchase the following Upgrades!
-
-    Damage, Attack
-    Rate, and Defense. Reap distance increased by 25.'
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4902881738752
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4904353939456
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4905721282560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   npcId: Ivan1
   requiredQuests: []
   requirements:
@@ -34,3 +53,6 @@ MonoBehaviour:
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25
+  references:
+    version: 2
+    RefIds: []
