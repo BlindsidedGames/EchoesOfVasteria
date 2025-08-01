@@ -33,7 +33,8 @@ namespace TimelessEchoes.Tasks
                 return;
 
             var worldX = transform.position.x;
-            var parts = new List<string>();
+            var dropTotals = new Dictionary<Resource, double>();
+            var dropOrder = new List<Resource>();
 
             foreach (var drop in taskData.resourceDrops)
             {
@@ -58,12 +59,21 @@ namespace TimelessEchoes.Tasks
                     }
 
                     resourceManager.Add(drop.resource, final);
-                    parts.Add($"{Blindsided.Utilities.TextStrings.ResourceIcon(drop.resource.resourceID)}{Mathf.FloorToInt((float)final)}");
+                    if (dropTotals.ContainsKey(drop.resource))
+                        dropTotals[drop.resource] += final;
+                    else
+                    {
+                        dropTotals[drop.resource] = final;
+                        dropOrder.Add(drop.resource);
+                    }
                 }
             }
 
-            if (parts.Count > 0)
+            if (dropTotals.Count > 0)
             {
+                var parts = new List<string>();
+                foreach (var res in dropOrder)
+                    parts.Add($"{Blindsided.Utilities.TextStrings.ResourceIcon(res.resourceID)}{Mathf.FloorToInt((float)dropTotals[res])}");
                 var lines = new List<string>();
                 var line = string.Empty;
                 for (var i = 0; i < parts.Count; i++)
