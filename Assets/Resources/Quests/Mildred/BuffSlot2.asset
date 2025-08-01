@@ -14,32 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: BuffSlot2
   questName:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955967563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955967563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955968563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955968563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   rewardDescription:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955969563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955969563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
@@ -54,3 +54,6 @@ MonoBehaviour:
   unlockBuffSlots: 1
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
+  references:
+    version: 2
+    RefIds: []

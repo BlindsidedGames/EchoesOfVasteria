@@ -14,32 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: Chunky Business
   questName:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955976563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955976563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955977563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955977563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   rewardDescription:
-  m_TableReference:
-    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
-  m_TableEntryReference:
-    m_KeyId: 7955978563392
-    m_Key:
-  m_FallbackState: 0
-  m_WaitForCompletion: 0
-  m_LocalVariables: []
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 7955978563392
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 2f2ff992f4de15a4bb5263366f3fe554, type: 2}
@@ -54,3 +54,6 @@ MonoBehaviour:
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25
+  references:
+    version: 2
+    RefIds: []
