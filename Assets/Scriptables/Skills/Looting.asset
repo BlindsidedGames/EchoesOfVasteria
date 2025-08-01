@@ -59,8 +59,9 @@ MonoBehaviour:
     type: 5
     echoSpawnConfig:
       echoCount: 1
-      capableSkills: []
-      echoType: 0
+      capableSkills:
+      - {fileID: 11400000}
+      echoType: 3
     echoDuration: 10
     chance: 1
     statUpgrade: {fileID: 0}

@@ -17,7 +17,7 @@ MonoBehaviour:
   taskIcon: {fileID: 7054577682481060284, guid: 513dea0f987e3824db48aa939832f2f7, type: 3}
   associatedSkill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
   xpForCompletion: 25
-  minX: 1000
+  minX: 750
   maxX: Infinity
   requiredQuest: {fileID: 11400000, guid: 63ff8ec529640974ab5843c76a2009bf, type: 2}
   taskDuration: 15
@@ -35,7 +35,7 @@ MonoBehaviour:
     maxX: Infinity
   - resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}
     dropRange: {x: 2, y: 5}
-    dropChance: 0.5
+    dropChance: 0.7
     minX: 0
     maxX: Infinity
   - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}
