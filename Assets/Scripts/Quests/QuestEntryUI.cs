@@ -8,7 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.Localization;
 
 namespace TimelessEchoes.Quests
 {
@@ -40,14 +39,14 @@ namespace TimelessEchoes.Quests
             if (nameText != null)
             {
                 baseNameText = data != null
-                    ? data.questName.GetLocalizedString() + (completed ? " | Completed" : string.Empty)
+                    ? data.questName + (completed ? " | Completed" : string.Empty)
                     : string.Empty;
                 nameText.text = baseNameText;
             }
             if (descriptionText != null)
-                descriptionText.text = data != null ? data.description.GetLocalizedString() : string.Empty;
+                descriptionText.text = data != null ? data.description : string.Empty;
             if (rewardText != null)
-                rewardText.text = data != null ? $"Reward: {data.rewardDescription.GetLocalizedString()}" : string.Empty;
+                rewardText.text = data != null ? $"Reward: {data.rewardDescription}" : string.Empty;
             if (typeText != null)
                 typeText.text = data != null ? $"Type | {GetQuestType(data)}" : string.Empty;
 

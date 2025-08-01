@@ -5,7 +5,6 @@ using TimelessEchoes.Upgrades;
 using TimelessEchoes.Enemies;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Localization;
 
 namespace TimelessEchoes.Quests
 {
@@ -14,9 +13,9 @@ namespace TimelessEchoes.Quests
     public class QuestData : ScriptableObject
     {
         public string questId;
-        public LocalizedString questName;
-        [TextArea] public LocalizedString description;
-        [TextArea] public LocalizedString rewardDescription;
+        public string questName;
+        [TextArea] public string description;
+        [TextArea] public string rewardDescription;
         public string npcId;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
