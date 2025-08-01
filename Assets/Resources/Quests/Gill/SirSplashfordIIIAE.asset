@@ -13,11 +13,33 @@ MonoBehaviour:
   m_Name: SirSplashfordIIIAE
   m_EditorClassIdentifier: 
   questId: SirSplashfordIIIAE
-  questName: A Splash of Nobility
-  description: "Gill doffs an imaginary crown. \u201CSir Splashford III is royal
-    to the gills. Snare 50 of the pompous puddle-jumpers\u2014Mildred will curtsey,
-    and Utoes swears their scales boost regen if brewed just right.\u201D"
-  rewardDescription: Gain the Disciple of Sir Splashford III
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7955961563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7955962563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7955963563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}

@@ -13,9 +13,33 @@ MonoBehaviour:
   m_Name: NoriAE
   m_EditorClassIdentifier: 
   questId: NoriAE
-  questName: NoriAE
-  description: 
-  rewardDescription: 
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956018563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956019563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956020563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}

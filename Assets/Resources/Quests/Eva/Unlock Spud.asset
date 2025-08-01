@@ -13,9 +13,33 @@ MonoBehaviour:
   m_Name: Unlock Spud
   m_EditorClassIdentifier: 
   questId: Unlock Spud
-  questName: Unlock Spud
-  description: Coming Soon!
-  rewardDescription: Unlock the Spud crop
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956072563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956073563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956074563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 31c43e7b43e9407791103b070abe9e42, type: 2}

@@ -13,13 +13,33 @@ MonoBehaviour:
   m_Name: Into The Woods
   m_EditorClassIdentifier: 
   questId: Into The Woods
-  questName: Into The Woods
-  description: '"Here, take my spare axe and go into them woods we''ll need at least
-    10 logs to get this frame started" -Barkley'
-  rewardDescription: 'Unlocks the Alter-Echoes screen.
-
-    Gain the Alter Echo of
-    Log.'
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 5493825617920
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 5495314595840
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 5496426086400
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}

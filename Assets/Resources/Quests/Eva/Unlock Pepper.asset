@@ -13,9 +13,33 @@ MonoBehaviour:
   m_Name: Unlock Pepper
   m_EditorClassIdentifier: 
   questId: Unlock Pepper
-  questName: Unlock Pepper
-  description: Coming Soon!
-  rewardDescription: Unlock the Pepper crop
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956066563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956067563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956068563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 00568cbce0574f7680580a71be54f90a, type: 2}

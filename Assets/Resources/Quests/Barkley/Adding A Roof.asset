@@ -13,10 +13,33 @@ MonoBehaviour:
   m_Name: Adding A Roof
   m_EditorClassIdentifier: 
   questId: Adding A Roof
-  questName: Adding A Roof
-  description: '"You''re simply the best. Not much to go now! I''ll get this roof
-    on and then we will get started on the walls" -Barkley '
-  rewardDescription: Gain the Alter Echo of Sticks.
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6098321293312
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6099218874368
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6100049346560
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 77b9a54f17b29c84b8dce9da0940a2a4, type: 2}

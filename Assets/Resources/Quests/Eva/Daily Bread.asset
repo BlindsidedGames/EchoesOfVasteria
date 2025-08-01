@@ -13,13 +13,33 @@ MonoBehaviour:
   m_Name: Daily Bread
   m_EditorClassIdentifier: 
   questId: Daily Bread
-  questName: Daily Bread
-  description: '"Something delicious came to me in a dream last night. I need you
-    to collect some corn for a new recipe. If you do I will teach you to grow Wheat"
-    -Eva'
-  rewardDescription: 'Unlock the Wheat crop
-
-'
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7243521474560
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7244716851200
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7245635403776
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}

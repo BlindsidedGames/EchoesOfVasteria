@@ -13,10 +13,33 @@ MonoBehaviour:
   m_Name: Putting up Walls
   m_EditorClassIdentifier: 
   questId: Putting up Walls
-  questName: Putting up Walls
-  description: '"Wow you''re a real help! While I get started on these walls would
-    you mind grabbing some more logs for the roof?" -Barkley'
-  rewardDescription: Reaping distance increased by 10.
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6023255834624
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6024656732160
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 6025701113856
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 305b32e698de898478ae2a41a5a1322c, type: 2}

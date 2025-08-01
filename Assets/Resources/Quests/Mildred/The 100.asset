@@ -13,10 +13,33 @@ MonoBehaviour:
   m_Name: The 100
   m_EditorClassIdentifier: 
   questId: The 100
-  questName: The 100
-  description: '"Each slot will require more casts than the last to unlock. Such
-    is the nature of Echo Casting..." - The Vast One'
-  rewardDescription: Autocast buff slot 2 is now togglable.
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956033563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956034563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956035563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: a04629c010952d741b32db280e62a8eb, type: 2}

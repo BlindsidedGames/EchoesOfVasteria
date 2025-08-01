@@ -13,12 +13,33 @@ MonoBehaviour:
   m_Name: Muddy Muck MuncherAE
   m_EditorClassIdentifier: 
   questId: Muddy Muck MuncherAE
-  questName: Muck-in-the-Mud Mission
-  description: "\u201CMildred\u2019s whiskers twitch whenever a Muddy Muck Muncher
-    surfaces,\u201D Gill chuckles. \u201CHook me 50 of the sludge-suckers so she
-    can roll in the muck\u2014and I\u2019ll show you how to make even swamp water
-    sparkle.\u201D"
-  rewardDescription: Gain the Disciple of Muddy Muck Muncher
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956012563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956013563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956014563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
