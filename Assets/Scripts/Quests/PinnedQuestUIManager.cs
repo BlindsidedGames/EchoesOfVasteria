@@ -6,6 +6,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
@@ -136,7 +137,7 @@ namespace TimelessEchoes.Quests
                 var reqCount = 0;
 
                 var sb = new StringBuilder();
-                sb.AppendLine(data.questName);
+                sb.AppendLine(data.questName.GetLocalizedString());
 
                 foreach (var req in data.requirements)
                 {
