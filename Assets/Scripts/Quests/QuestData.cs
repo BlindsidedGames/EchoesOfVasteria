@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Blindsided.Utilities;
-using TimelessEchoes.Upgrades;
-using TimelessEchoes.Enemies;
 using Sirenix.OdinInspector;
+using TimelessEchoes.Enemies;
+using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -15,8 +15,8 @@ namespace TimelessEchoes.Quests
     {
         public string questId;
         public LocalizedString questName;
-        [TextArea] public LocalizedString description;
-        [TextArea] public LocalizedString rewardDescription;
+        public LocalizedString description;
+        public LocalizedString rewardDescription;
         public string npcId;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
@@ -28,19 +28,17 @@ namespace TimelessEchoes.Quests
         public class Requirement
         {
             public RequirementType type;
+
             [ShowIf("@type == RequirementType.Resource")]
             public Resource resource;
-            [HideIf("type", RequirementType.Instant)]
-            [HideIf("type", RequirementType.Meet)]
+
+            [HideIf("type", RequirementType.Instant)] [HideIf("type", RequirementType.Meet)]
             public int amount = 1;
-            [ShowIf("type", RequirementType.Kill)]
-            public List<EnemyData> enemies = new();
-            [ShowIf("type", RequirementType.Kill)]
-            public string killName;
-            [ShowIf("type", RequirementType.Kill)]
-            public Sprite killIcon;
-            [ShowIf("type", RequirementType.Meet)]
-            public string meetNpcId;
+
+            [ShowIf("type", RequirementType.Kill)] public List<EnemyData> enemies = new();
+            [ShowIf("type", RequirementType.Kill)] public string killName;
+            [ShowIf("type", RequirementType.Kill)] public Sprite killIcon;
+            [ShowIf("type", RequirementType.Meet)] public string meetNpcId;
         }
 
         public enum RequirementType
