@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Unlock Funion
+  m_EditorClassIdentifier: 
+  questId: FunkyFunion
+  questName: Unlock Funion
+  description: Coming Soon!
+  rewardDescription: Unlock the Funion crop
+  npcId: 
+  requiredQuests:
+  - {fileID: 11400000, guid: 212e527a951e485c8bc8c31cb639f88a, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
+    amount: 290
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0

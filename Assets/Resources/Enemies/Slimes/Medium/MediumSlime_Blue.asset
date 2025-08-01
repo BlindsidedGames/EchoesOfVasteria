@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: MediumSlime_Blue
+  m_EditorClassIdentifier: 
+  enemyName: Blue Slime
+  displayOrder: 7
+  icon: {fileID: 7086287932117018057, guid: 40797916ff6958444a0f54dc5f1c5d2c, type: 3}
+  prefab: {fileID: 8193780003442596315, guid: f816f5c00882400090acde66d6b0d356, type: 3}
+  weight: 0.5
+  minX: 500
+  maxX: 2000
+  spawnTerrains:
+  - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+  - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+  - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+    dropRange: {x: 3, y: 8}
+    dropChance: 1
+    minX: 0
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+    dropRange: {x: 1, y: 1}
+    dropChance: 0.05
+    minX: 0
+    maxX: Infinity
+  experience: 7
+  moveSpeed: 5
+  visionRange: 7
+  assistRange: 5
+  wanderDistance: 3
+  maxHealth: 126
+  damage: 7.2
+  defense: 0.3
+  attackSpeed: 1.5
+  attackRange: 1
+  healthPerLevel: 8
+  damagePerLevel: 1
+  defensePerLevel: 0.02
+  distancePerLevel: 20
+  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

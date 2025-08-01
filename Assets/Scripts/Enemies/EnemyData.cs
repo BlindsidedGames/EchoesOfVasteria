@@ -35,6 +35,21 @@ namespace TimelessEchoes.Enemies
 
         [TitleGroup("Balance Data")] public int experience = 10;
 
+        [TitleGroup("Balance Data/Movement Stats")]
+        public float moveSpeed = 3f;
+
+        [TitleGroup("Balance Data/Movement Stats")]
+        public float visionRange = 5f;
+
+        /// <summary>
+        ///     Distance within which allies will join an engaged enemy.
+        /// </summary>
+        [TitleGroup("Balance Data/Movement Stats")]
+        public float assistRange = 8f;
+
+        [TitleGroup("Balance Data/Movement Stats")]
+        public float wanderDistance = 2f;
+
         [PropertySpace(SpaceBefore = 5, SpaceAfter = 0)] [TitleGroup("Balance Data/Combat Stats")]
         public int maxHealth = 10;
 
@@ -53,26 +68,13 @@ namespace TimelessEchoes.Enemies
         [TitleGroup("Balance Data/Combat Stats")]
         public float attackRange = 1f;
 
-        [TitleGroup("Balance Data/Movement Stats")]
-        public float moveSpeed = 3f;
 
-        [TitleGroup("Balance Data/Movement Stats")]
-        public float visionRange = 5f;
-
-        /// <summary>
-        ///     Distance within which allies will join an engaged enemy.
-        /// </summary>
-        [TitleGroup("Balance Data/Movement Stats")]
-        public float assistRange = 8f;
-
-        [TitleGroup("Balance Data/Movement Stats")]
-        public float wanderDistance = 2f;
+        [TitleGroup("Level Scaling")] [MinValue(0)]
+        public int healthPerLevel;
 
         [TitleGroup("Level Scaling")] [MinValue(0)]
         public float damagePerLevel;
 
-        [TitleGroup("Level Scaling")] [MinValue(0)]
-        public int healthPerLevel;
 
         [TitleGroup("Level Scaling")] [MinValue(0f)]
         public float defensePerLevel;

@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: SmallSlime_Pink
+  m_EditorClassIdentifier: 
+  enemyName: Pink Minislime
+  displayOrder: 12
+  icon: {fileID: -3554783601331016760, guid: cc23d3f964a1e5440aac3fe6a4ab92d1, type: 3}
+  prefab: {fileID: 8193780003442596315, guid: cb00f76c73fd4dd2822d97947dcc97e1, type: 3}
+  weight: 0.1
+  minX: 50
+  maxX: 1000
+  spawnTerrains:
+  - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+  - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
+  - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+    dropRange: {x: 1, y: 5}
+    dropChance: 1
+    minX: 0
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+    dropRange: {x: 1, y: 1}
+    dropChance: 0.05
+    minX: 0
+    maxX: Infinity
+  experience: 10
+  moveSpeed: 3
+  visionRange: 7
+  assistRange: 5
+  wanderDistance: 2
+  maxHealth: 5
+  damage: 1
+  defense: 0
+  attackSpeed: 1
+  attackRange: 1
+  healthPerLevel: 7
+  damagePerLevel: 0.5
+  defensePerLevel: 0.03
+  distancePerLevel: 20
+  projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

@@ -27,18 +27,23 @@ MonoBehaviour:
     dropChance: 1
     minX: 0
     maxX: Infinity
+  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    dropRange: {x: 1, y: 2}
+    dropChance: 1
+    minX: 200
+    maxX: Infinity
   experience: 4
+  moveSpeed: 5
+  visionRange: 7
+  assistRange: 5
+  wanderDistance: 3
   maxHealth: 15
   damage: 1
   defense: 0.5
   attackSpeed: 1.3
   attackRange: 1
-  moveSpeed: 5
-  visionRange: 7
-  assistRange: 5
-  wanderDistance: 3
-  damagePerLevel: 0.1
   healthPerLevel: 2
-  defensePerLevel: 0.05
+  damagePerLevel: 0.25
+  defensePerLevel: 0.1
   distancePerLevel: 25
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
