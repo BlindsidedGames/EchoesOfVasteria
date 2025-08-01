@@ -16,9 +16,16 @@ namespace TimelessEchoes
         [SerializeField] private TMP_Text jokeText;
         [SerializeField] private List<string> dadJokes = new();
 
+        private int currentJokeIndex;
+
 
         private void Start()
         {
+            if (dadJokes.Count > 0)
+            {
+                ShuffleJokes();
+                currentJokeIndex = 0;
+            }
             if (textBox != null)
                 textBox.SetActive(false);
             if (jokeButton != null)
@@ -49,12 +56,27 @@ namespace TimelessEchoes
         {
             if (dadJokes.Count > 0 && jokeText != null)
             {
-                var index = Random.Range(0, dadJokes.Count);
-                jokeText.text = dadJokes[index];
+                if (currentJokeIndex >= dadJokes.Count)
+                {
+                    ShuffleJokes();
+                    currentJokeIndex = 0;
+                }
+
+                jokeText.text = dadJokes[currentJokeIndex];
+                currentJokeIndex++;
             }
 
             if (textBox != null)
                 textBox.SetActive(true);
+        }
+
+        private void ShuffleJokes()
+        {
+            for (var i = dadJokes.Count - 1; i > 0; i--)
+            {
+                var j = Random.Range(0, i + 1);
+                (dadJokes[i], dadJokes[j]) = (dadJokes[j], dadJokes[i]);
+            }
         }
     }
 }
