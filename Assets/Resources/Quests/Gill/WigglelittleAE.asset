@@ -13,11 +13,33 @@ MonoBehaviour:
   m_Name: WigglelittleAE
   m_EditorClassIdentifier: 
   questId: WigglelittleAE
-  questName: Wiggle Room
-  description: "\u201CWigglelittles never stop dancing,\u201D Gill says, tail swishing
-    in time. \u201CCatch 50 before they wriggle off\u2014Mildred wants a new music
-    box, and Utoes thinks their rhythm could sync with your heartbeat.\u201D"
-  rewardDescription: Gain the Disciple of Wigglelittle
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956093563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956094563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956095563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}

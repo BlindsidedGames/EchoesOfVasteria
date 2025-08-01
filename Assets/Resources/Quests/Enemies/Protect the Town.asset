@@ -13,10 +13,33 @@ MonoBehaviour:
   m_Name: Protect the Town
   m_EditorClassIdentifier: 
   questId: Protect the Town
-  questName: Protect the Town
-  description: '"I''ve left an artifact with Ivan, clear out the additional slimes
-    surrounding the town and I am sure he will give it to you" - The Vast One'
-  rewardDescription: Magic dice, provides combat advantages.
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7063816519680
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7083122900992
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7084691570688
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: Ivan1
   requiredQuests:
   - {fileID: 11400000, guid: 001ffd797971b8b4d84531fd428157a8, type: 2}

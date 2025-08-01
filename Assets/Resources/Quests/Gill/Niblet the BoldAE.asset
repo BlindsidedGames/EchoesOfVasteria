@@ -13,11 +13,33 @@ MonoBehaviour:
   m_Name: Niblet the BoldAE
   m_EditorClassIdentifier: 
   questId: Niblet the BoldAE
-  questName: "Niblet\u2019s Nerve"
-  description: "\u201CNiblet the Bold swims straight at sharks,\u201D Gill whispers
-    with admiration. \u201CLand 50 of the fearless fry so we can bottle that courage\u2014Mildred
-    could use it for night patrols, and Utoes for a hearty tonic.\u201D"
-  rewardDescription: Gain the Disciple of Niblet the Bold
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956015563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956016563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7956017563392
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}

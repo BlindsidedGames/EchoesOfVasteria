@@ -13,11 +13,33 @@ MonoBehaviour:
   m_Name: Feeding the Masses
   m_EditorClassIdentifier: 
   questId: Feeding the Masses
-  questName: Feeding the Masses
-  description: '"You''re getting pretty good at this whole farming thing now. If
-    you get me some more I am sure I could attune an Alter-Echo for you, oh and the
-    farmers would probably be happy to give you some space on their farm!" -Eva'
-  rewardDescription: Radish Alter-Echo
+  questName:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7357656875008
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  description:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7358952914944
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
+  rewardDescription:
+  m_TableReference:
+    m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+  m_TableEntryReference:
+    m_KeyId: 7359963742208
+    m_Key:
+  m_FallbackState: 0
+  m_WaitForCompletion: 0
+  m_LocalVariables: []
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
