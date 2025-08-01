@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: A Splash of Nobility
+  m_Name: Niblet the BoldAE
   m_EditorClassIdentifier: 
-  questId: SirSplashfordIII
-  questName: A Splash of Nobility
-  description: "Gill doffs an imaginary crown. \u201CSir Splashford III is royal
-    to the gills. Snare 50 of the pompous puddle-jumpers\u2014Mildred will curtsey,
-    and Utoes swears their scales boost regen if brewed just right.\u201D"
-  rewardDescription: Gain the Disciple of Sir Splashford III
+  questId: Niblet the BoldAE
+  questName: "Niblet\u2019s Nerve"
+  description: "\u201CNiblet the Bold swims straight at sharks,\u201D Gill whispers
+    with admiration. \u201CLand 50 of the fearless fry so we can bottle that courage\u2014Mildred
+    could use it for night patrols, and Utoes for a hearty tonic.\u201D"
+  rewardDescription: Gain the Disciple of Niblet the Bold
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}
+    resource: {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}
     amount: 50
     enemies: []
     killName: 

@@ -10,26 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Flip That Flop
+  m_Name: Bloopicus MaximusAE
   m_EditorClassIdentifier: 
-  questId: Flip that Flop
-  questName: Flip That Flop
-  description: "Gill whistles a watery tune while Mildred bats at minnows on the
-    dock. \u201CThe lady loves her fishy snacks,\u201D he grins. \u201CNet me 100
-    Floppy Fish and I\u2019ll teach \u2019em to flop right into her paws\u2014she\u2019ll
-    purr you a tidy buff for the trouble.\u201D"
-  rewardDescription: Gain a Floppy Disciple.
+  questId: Bloopicus MaximusAE
+  questName: 
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
-    amount: 100
+    resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
+    amount: 50
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Bloop Goes the Dynamite
+  m_Name: WigglelittleAE
   m_EditorClassIdentifier: 
-  questId: BloopicusMaximus
-  questName: Bloop Goes the Dynamite
-  description: "The dock shakes as a distant *BLORP* echoes. \u201CThat\u2019s Bloopicus
-    Maximus announcing dinner,\u201D Gill grins. \u201CHaul in 50 of the boomers\u2014Mildred
-    will nap in the aftershock, and Utoes says their echo can jump-start your veins.\u201D"
-  rewardDescription: Gain the Disciple of Bloopicus Maximus
+  questId: WigglelittleAE
+  questName: Wiggle Room
+  description: "\u201CWigglelittles never stop dancing,\u201D Gill says, tail swishing
+    in time. \u201CCatch 50 before they wriggle off\u2014Mildred wants a new music
+    box, and Utoes thinks their rhythm could sync with your heartbeat.\u201D"
+  rewardDescription: Gain the Disciple of Wigglelittle
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
+    resource: {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}
     amount: 50
     enemies: []
     killName: 

@@ -10,19 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Snap decision
+  m_Name: BuffSlot2
   m_EditorClassIdentifier: 
-  questId: Mildred3
-  questName: Snap decision
-  description: "Utoes swears the feisty Snapjaw Jr. can bite straight through anchor
-    chain\u2014and maybe stubborn gameplay loops. Hook a haul of them so Mildred
-    can crunch the numbers (and the shells) for a sharper edge."
+  questId: BuffSlot2
+  questName: 
+  description: 
   rewardDescription: Another buff slot!
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
-  requirements: []
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
+  - {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+    amount: 50
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 1
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
