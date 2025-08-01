@@ -10,26 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Hide and Seek
+  m_Name: CopiumAE
   m_EditorClassIdentifier: 
-  questId: Leather
-  questName: Hide and Seek
-  description: "The ranger unfurls a weather-softened hide. \u201CGood leather turns
-    arrows into whispers.\u201D She grins as Utoes tests a strip\u2019s stretch.
-    \u201CBring me 250 prime pelts\u2014Mildred wants a new collar, and I\u2019ll
-    stitch quivers light enough to outrun your shadow.\u201D"
-  rewardDescription: Gain the Disciple of Leather
+  questId: CopiumAE
+  questName: CopiumAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-    amount: 250
+    resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}
+    amount: 1500
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

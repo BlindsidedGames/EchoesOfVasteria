@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Erif Ember-Hunt
+  m_Name: LeatherAE
   m_EditorClassIdentifier: 
-  questId: ErifDisc
-  questName: Erif Ember-Hunt
-  description: "Sparks dance in the Old Timer\u2019s beard as he fans a forge. \u201CErif
-    glows like captured lightning. Fetch 750 Erif Chunks so I can bottle that fire
-    and teach the stone to sing.\u201D"
-  rewardDescription: Gain the Disciple of Erif
+  questId: LeatherAE
+  questName: LeatherAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}
-    amount: 750
+    resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+    amount: 250
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

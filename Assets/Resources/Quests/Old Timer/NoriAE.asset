@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Dlog Depth-Breaker
+  m_Name: NoriAE
   m_EditorClassIdentifier: 
-  questId: DlogDisc
-  questName: Dlog Depth-Breaker
-  description: "\u201CDlog\u2019s denser than a dwarf\u2019s oath,\u201D he chuckles,
-    hefting a battered pick. \u201CBring 500 Dlog Chunks to the Old Timer so I can
-    temper tools that crack the core\u2014and maybe sniff out a metal that burns.\u201D"
-  rewardDescription: Gain the Disciple of Dlog
+  questId: NoriAE
+  questName: NoriAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}
-    amount: 500
+    resource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}
+    amount: 250
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

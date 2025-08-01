@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Copium Cavern-Wager
+  m_Name: VastiumAE
   m_EditorClassIdentifier: 
-  questId: CopiumDisc
-  questName: Copium Cavern-Wager
-  description: "The Old Timer sniffs the air. \u201CCopium\u2019s fumes\u2019ll make
-    a miner see visions\u2014or excuses. Fetch 1,500 Copium Chunks and we\u2019ll
-    find out which.\u201D"
-  rewardDescription: Gain the Disciple of Copium
+  questId: VastiumAE
+  questName: VastiumAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}
-    amount: 1500
+    resource: {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}
+    amount: 3000
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

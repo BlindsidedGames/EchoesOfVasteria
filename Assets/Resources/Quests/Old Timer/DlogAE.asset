@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Stone Salvation
+  m_Name: DlogAE
   m_EditorClassIdentifier: 
-  questId: StoneDisc
-  questName: Stone Salvation
-  description: "The Old Timer thumps the cliff with a cracked knuckle. \u201CStone\u2019s
-    the earth\u2019s first secret, kid. Stack me 200 sturdy blocks so I can carve
-    a greeting that the mountain\u2019ll remember.\u201D"
-  rewardDescription: Gain the Disciple of Stone
+  questId: DlogAE
+  questName: DlogAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
-    amount: 200
+    resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}
+    amount: 500
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

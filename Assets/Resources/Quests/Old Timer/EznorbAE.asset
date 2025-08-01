@@ -10,24 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Another Magicool Gift
+  m_Name: EznorbAE
   m_EditorClassIdentifier: 
-  questId: Another Magicool Gift
-  questName: Another Magicool Gift
-  description: '"Seek out Barkley, he''s been searching for the perfect lumber and
-    you can find him in the Farmlands" - The Vast One'
-  rewardDescription: Access to The Woods, Reaping distance increased by 25.
+  questId: EznorbAE
+  questName: EznorbAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
-  - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
-  - type: 6
-    resource: {fileID: 0}
-    amount: 1
+  - type: 0
+    resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}
+    amount: 100
     enemies: []
     killName: 
     killIcon: {fileID: 0}
-    meetNpcId: Barkley1
+    meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
-  maxDistanceIncrease: 25
+  maxDistanceIncrease: 0

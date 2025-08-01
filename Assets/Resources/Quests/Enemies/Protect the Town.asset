@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: Protect the Town
   m_EditorClassIdentifier: 
-  questId: Dice
+  questId: Protect the Town
   questName: Protect the Town
   description: '"I''ve left an artifact with Ivan, clear out the additional slimes
     surrounding the town and I am sure he will give it to you" - The Vast One'
@@ -44,4 +44,5 @@ MonoBehaviour:
     killIcon: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
     meetNpcId: 
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

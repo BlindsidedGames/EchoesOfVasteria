@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
   m_Name: A slime in time
   m_EditorClassIdentifier: 
-  questId: slime
+  questId: A Slime in Time
   questName: A Slime in Time
   description: '"Drive back the slimes in the surrounding area and I shall allow
     you to travel further." - Carl'
@@ -46,4 +46,5 @@ MonoBehaviour:
     killIcon: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
     meetNpcId: 
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 50

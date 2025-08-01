@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Eznorb Earthsong
+  m_Name: StoneAE
   m_EditorClassIdentifier: 
-  questId: EznorbDisc
-  questName: Eznorb Earthsong
-  description: "\u201CFeel that faint vibration? That\u2019s Eznorb\u2019s iron heartbeat.\u201D
-    The Old Timer leans close to the rock. \u201CBring me 100 Eznorb Chunks so I
-    can tune my hammers to its rhythm\u2014and keep the pulse alive.\u201D"
-  rewardDescription: Gain the Disciple of Eznorb
+  questId: StoneAE
+  questName: StoneAE
+  description: 
+  rewardDescription: 
   npcId: 
   requiredQuests:
   - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}
-    amount: 100
+    resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+    amount: 200
     enemies: []
+    killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
-  unlockPrefab: {fileID: 0}
-  unlockObjects: []
   unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
