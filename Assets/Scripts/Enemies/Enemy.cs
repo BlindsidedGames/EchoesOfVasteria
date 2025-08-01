@@ -305,10 +305,12 @@ namespace TimelessEchoes.Enemies
 
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
+            var worldX = transform.position.x;
             foreach (var drop in stats.resourceDrops)
             {
                 if (drop.resource == null) continue;
                 if (Random.value > drop.dropChance) continue;
+                if (worldX < drop.minX || worldX > drop.maxX) continue;
 
                 var min = drop.dropRange.x;
                 var max = drop.dropRange.y;
