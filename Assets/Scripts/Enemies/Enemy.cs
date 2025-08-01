@@ -303,7 +303,8 @@ namespace TimelessEchoes.Enemies
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
-            var parts = new List<string>();
+            var dropTotals = new Dictionary<Resource, double>();
+            var dropOrder = new List<Resource>();
             foreach (var drop in stats.resourceDrops)
             {
                 if (drop.resource == null) continue;
@@ -320,12 +321,21 @@ namespace TimelessEchoes.Enemies
                     double final = count * mult * gainMult;
                     resourceManager.Add(drop.resource, final);
                     Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
-                    parts.Add($"{Blindsided.Utilities.TextStrings.ResourceIcon(drop.resource.resourceID)}{Mathf.FloorToInt((float)final)}");
+                    if (dropTotals.ContainsKey(drop.resource))
+                        dropTotals[drop.resource] += final;
+                    else
+                    {
+                        dropTotals[drop.resource] = final;
+                        dropOrder.Add(drop.resource);
+                    }
                 }
             }
 
-            if (parts.Count > 0)
+            if (dropTotals.Count > 0)
             {
+                var parts = new List<string>();
+                foreach (var res in dropOrder)
+                    parts.Add($"{Blindsided.Utilities.TextStrings.ResourceIcon(res.resourceID)}{Mathf.FloorToInt((float)dropTotals[res])}");
                 var lines = new List<string>();
                 var line = string.Empty;
                 for (var i = 0; i < parts.Count; i++)
