@@ -41,8 +41,10 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 289733cc9f96c56448ed2599984bf8a9, type: 2}
+  - {fileID: 11400000, guid: 2935248e3b8945549be5de2d7f258d0a, type: 2}
+  - {fileID: 11400000, guid: f646904b6b4c43541883f9a6e7ebb312, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}

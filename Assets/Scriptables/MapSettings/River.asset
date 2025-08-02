@@ -20,8 +20,8 @@ MonoBehaviour:
     topTerrain: {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
     minAreaWidth: 4
     edgeWaviness: 1
-    middleDepthRange: {x: 4, y: 6}
-    topDepthRange: {x: 7, y: 9}
+    middleDepthRange: {x: 4, y: 7}
+    topDepthRange: {x: 7, y: 11}
     seed: 0
     randomizeSeed: 1
   taskGeneratorSettings:
@@ -30,7 +30,7 @@ MonoBehaviour:
     enemyDensity: 0.1
     enemySpawnXOffset: 0
     topBuffer: 2
-    bottomBuffer: 2
+    bottomBuffer: 0
     blockingMask:
       serializedVersion: 2
       m_Bits: 0
