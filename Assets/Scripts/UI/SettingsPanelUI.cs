@@ -379,19 +379,7 @@ namespace TimelessEchoes.UI
                 slot.saveButton.interactable = isCurrent || safety;
 
             if (slot.loadDeleteButton != null)
-            {
-                if (safety)
-                {
-                    var oracle = Oracle.oracle;
-                    var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-                    var fileName = $"{prefix}Sd{index}.es3";
-                    slot.loadDeleteButton.interactable = ES3.FileExists(fileName);
-                }
-                else
-                {
-                    slot.loadDeleteButton.interactable = true;
-                }
-            }
+                slot.loadDeleteButton.interactable = true;
         }
 
         private void RefreshAllSlots()
