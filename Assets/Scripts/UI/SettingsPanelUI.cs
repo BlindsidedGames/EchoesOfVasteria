@@ -118,15 +118,17 @@ namespace TimelessEchoes.UI
                     var slot = saveSlots[index];
                     if (slot == null)
                         continue;
-                    if (slot.saveDeleteButton != null)
-                        slot.saveDeleteButton.onClick.AddListener(() => OnSaveDelete(index));
-                    if (slot.loadButton != null)
-                        slot.loadButton.onClick.AddListener(() => OnLoad(index));
+                    if (slot.saveButton != null)
+                        slot.saveButton.onClick.AddListener(() => OnSave(index));
+                    if (slot.loadDeleteButton != null)
+                        slot.loadDeleteButton.onClick.AddListener(() => OnLoadOrDelete(index));
                     if (slot.toggleSafetyButton != null)
                     {
-                        slot.toggleSafetyButton.onClick.AddListener(() => ToggleDelete(index));
-                        slot.toggleDeleteImage = slot.toggleSafetyButton.GetComponent<Image>();
-                        UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
+                        slot.toggleSafetyButton.onClick.AddListener(() => ToggleSafety(index));
+                        slot.safetyToggleImage = slot.toggleSafetyButton.GetComponent<Image>();
+                        UpdateButtonVisual(slot.safetyToggleImage, slot.safetyEnabled);
+                        if (slot.loadDeleteText != null)
+                            slot.loadDeleteText.text = slot.safetyEnabled ? "Delete" : "Load";
                     }
                 }
 
@@ -134,6 +136,7 @@ namespace TimelessEchoes.UI
             }
 
             EventHandler.OnLoadData += ApplyFps;
+            EventHandler.OnLoadData += RefreshAllSlots;
             ApplyFps();
             StartCoroutine(DeferredInit());
         }
@@ -163,15 +166,16 @@ namespace TimelessEchoes.UI
                 {
                     if (slot == null)
                         continue;
-                    if (slot.saveDeleteButton != null)
-                        slot.saveDeleteButton.onClick.RemoveAllListeners();
-                    if (slot.loadButton != null)
-                        slot.loadButton.onClick.RemoveAllListeners();
+                    if (slot.saveButton != null)
+                        slot.saveButton.onClick.RemoveAllListeners();
+                    if (slot.loadDeleteButton != null)
+                        slot.loadDeleteButton.onClick.RemoveAllListeners();
                     if (slot.toggleSafetyButton != null)
                         slot.toggleSafetyButton.onClick.RemoveAllListeners();
                 }
 
             EventHandler.OnLoadData -= ApplyFps;
+            EventHandler.OnLoadData -= RefreshAllSlots;
         }
 
         private static void SetFullscreenWindow()
@@ -292,37 +296,48 @@ namespace TimelessEchoes.UI
                 img.sprite = on ? onSprite : offSprite;
         }
 
-        private void OnSaveDelete(int index)
+        private void OnSave(int index)
         {
             if (saveSlots == null || index >= saveSlots.Length)
                 return;
-            var slot = saveSlots[index];
-            if (slot == null)
-                return;
-            if (slot.deleteMode)
-                DeleteSlot(index);
-            else
-                SaveSlot(index);
+            SaveSlot(index);
             RefreshSlot(index);
         }
 
-        private void OnLoad(int index)
-        {
-            Oracle.oracle.SelectSlot(index);
-            RefreshAllSlots();
-        }
-
-        private void ToggleDelete(int index)
+        private void OnLoadOrDelete(int index)
         {
             if (saveSlots == null || index >= saveSlots.Length)
                 return;
             var slot = saveSlots[index];
             if (slot == null)
                 return;
-            slot.deleteMode = !slot.deleteMode;
-            UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
+
+            if (slot.safetyEnabled)
+            {
+                DeleteSlot(index);
+                RefreshSlot(index);
+            }
+            else
+            {
+                Oracle.oracle.SelectSlot(index);
+                EventHandler.ResetData();
+                EventHandler.LoadData();
+                RefreshAllSlots();
+            }
+        }
+
+        private void ToggleSafety(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+            slot.safetyEnabled = !slot.safetyEnabled;
+            UpdateButtonVisual(slot.safetyToggleImage, slot.safetyEnabled);
             if (slot.loadDeleteText != null)
-                slot.loadDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+                slot.loadDeleteText.text = slot.safetyEnabled ? "Delete" : "Load";
+            UpdateSlotInteractivity(index);
         }
 
         private void SaveSlot(int index)
@@ -347,6 +362,36 @@ namespace TimelessEchoes.UI
             ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
             ES3.DeleteFile(fileName);
             SteamCloudManager.DeleteFile(fileName);
+        }
+
+        private void UpdateSlotInteractivity(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+
+            var isCurrent = index == Oracle.oracle.CurrentSlot;
+            var safety = slot.safetyEnabled;
+
+            if (slot.saveButton != null)
+                slot.saveButton.interactable = isCurrent || safety;
+
+            if (slot.loadDeleteButton != null)
+            {
+                if (safety)
+                {
+                    var oracle = Oracle.oracle;
+                    var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+                    var fileName = $"{prefix}Sd{index}.es3";
+                    slot.loadDeleteButton.interactable = ES3.FileExists(fileName);
+                }
+                else
+                {
+                    slot.loadDeleteButton.interactable = true;
+                }
+            }
         }
 
         private void RefreshAllSlots()
@@ -409,7 +454,9 @@ namespace TimelessEchoes.UI
             UpdateSlotDynamic(index);
 
             if (slot.loadDeleteText != null)
-                slot.loadDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+                slot.loadDeleteText.text = slot.safetyEnabled ? "Delete" : "Load";
+
+            UpdateSlotInteractivity(index);
         }
 
         private void UpdateSlotDynamic(int index)
