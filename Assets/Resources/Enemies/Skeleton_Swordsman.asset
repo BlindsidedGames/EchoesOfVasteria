@@ -23,7 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
   resourceDrops:
   - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
-    dropRange: {x: 1, y: 1}
+    dropRange: {x: 2, y: 3}
     dropChance: 1
     minX: 0
     maxX: Infinity
@@ -31,6 +31,46 @@ MonoBehaviour:
     dropRange: {x: 1, y: 2}
     dropChance: 1
     minX: 200
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
+    dropRange: {x: 4, y: 5}
+    dropChance: 0.75
+    minX: 50
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
+    dropRange: {x: 3, y: 4}
+    dropChance: 0.7
+    minX: 75
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
+    dropRange: {x: 2, y: 4}
+    dropChance: 0.65
+    minX: 175
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
+    dropRange: {x: 2, y: 4}
+    dropChance: 0.6
+    minX: 250
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
+    dropRange: {x: 2, y: 3}
+    dropChance: 0.55
+    minX: 350
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
+    dropRange: {x: 2, y: 3}
+    dropChance: 0.5
+    minX: 600
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+    dropRange: {x: 1, y: 3}
+    dropChance: 0.45
+    minX: 800
+    maxX: Infinity
+  - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
+    dropRange: {x: 1, y: 2}
+    dropChance: 0.4
+    minX: 1000
     maxX: Infinity
   experience: 4
   moveSpeed: 5
