@@ -10,8 +10,6 @@ namespace Blindsided.Utilities
     public class ScreenSafeArea : MonoBehaviour
     {
         private RectTransform _rectTransform;
-        private Vector2 maxAnchor;
-        private Vector2 minAnchor;
         private Rect safeArea;
         private Vector2Int lastResolution;
         private Rect lastSafeArea;
@@ -185,16 +183,11 @@ namespace Blindsided.Utilities
                 }
             }
 
-            minAnchor = safeArea.position;
-            maxAnchor = minAnchor + safeArea.size;
+            var canvas = _rectTransform.GetComponentInParent<Canvas>();
+            float scaleFactor = canvas != null ? canvas.scaleFactor : 1f;
 
-            minAnchor.x /= Screen.width;
-            minAnchor.y /= Screen.height;
-            maxAnchor.x /= Screen.width;
-            maxAnchor.y /= Screen.height;
-
-            _rectTransform.anchorMin = minAnchor;
-            _rectTransform.anchorMax = maxAnchor;
+            _rectTransform.offsetMin = new Vector2(safeArea.xMin / scaleFactor, safeArea.yMin / scaleFactor);
+            _rectTransform.offsetMax = new Vector2(-(Screen.width - safeArea.xMax) / scaleFactor, -(Screen.height - safeArea.yMax) / scaleFactor);
 
             lastSafeArea = Screen.safeArea;
             lastResolution = new Vector2Int(Screen.width, Screen.height);
