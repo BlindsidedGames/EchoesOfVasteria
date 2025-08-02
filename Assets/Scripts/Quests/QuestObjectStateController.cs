@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Blindsided;
 using Blindsided.SaveData;
 using UnityEngine;
+using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.Quests
 {
@@ -77,16 +78,6 @@ namespace TimelessEchoes.Quests
                     if (obj != null)
                         obj.SetActive(inProgress);
             }
-        }
-
-        private static bool QuestCompleted(string questId)
-        {
-            if (string.IsNullOrEmpty(questId))
-                return false;
-            if (Oracle.oracle == null)
-                return false;
-            Oracle.oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return Oracle.oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
         }
 
         private static bool QuestInProgress(string questId)

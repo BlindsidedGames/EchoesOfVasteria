@@ -18,6 +18,7 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
 using TimelessEchoes.References.StatPanel;
+using static TimelessEchoes.Quests.QuestUtils;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -656,15 +657,6 @@ namespace TimelessEchoes
                     Destroy(echo.gameObject);
         }
 
-        private static bool QuestCompleted(string questId)
-        {
-            if (string.IsNullOrEmpty(questId))
-                return true;
-            if (oracle == null)
-                return false;
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
-        }
 
         private void EnableMildred()
         {

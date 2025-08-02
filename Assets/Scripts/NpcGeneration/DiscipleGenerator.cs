@@ -51,12 +51,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private bool QuestCompleted()
         {
-            if (data == null || data.requiredQuest == null)
-                return true;
-            if (oracle == null)
-                return false;
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(data.requiredQuest.questId, out var rec) && rec.Completed;
+            return QuestUtils.QuestCompleted(data != null ? data.requiredQuest : null);
         }
 
         private void Awake()
