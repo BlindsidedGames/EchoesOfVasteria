@@ -1,12 +1,11 @@
 #if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.UIElements;
 using TimelessEchoes.Quests;
 
 namespace TimelessEchoes.Editor
@@ -15,7 +14,12 @@ namespace TimelessEchoes.Editor
     {
         private readonly Dictionary<QuestData, Rect> nodeRects = new();
         private readonly List<QuestData> quests = new();
-        private Vector2 scroll;
+
+        private ScrollView scrollView;
+        private VisualElement content;
+        private bool isPanning;
+        private Vector2 panStart;
+        private Vector2 scrollStart;
 
         [MenuItem("Timeless/Quest Flow")]
         private static void Open()
@@ -30,6 +34,61 @@ namespace TimelessEchoes.Editor
             base.OnEnable();
             titleContent = new GUIContent("Quest Flow");
             Refresh();
+        }
+
+        public override void CreateGUI()
+        {
+            rootVisualElement.Clear();
+
+            var toolbar = new VisualElement
+            {
+                style = { flexDirection = FlexDirection.Row }
+            };
+            var refreshButton = new Button(Refresh) { text = "Refresh" };
+            toolbar.Add(refreshButton);
+            rootVisualElement.Add(toolbar);
+
+            scrollView = new ScrollView(ScrollViewMode.Both)
+            {
+                style = { flexGrow = 1 }
+            };
+            rootVisualElement.Add(scrollView);
+
+            content = new VisualElement
+            {
+                style = { position = Position.Relative }
+            };
+            scrollView.Add(content);
+
+            scrollView.RegisterCallback<MouseDownEvent>(OnMouseDown);
+            scrollView.RegisterCallback<MouseMoveEvent>(OnMouseMove);
+            scrollView.RegisterCallback<MouseUpEvent>(OnMouseUp);
+
+            DrawInterface();
+        }
+
+        private void OnMouseDown(MouseDownEvent e)
+        {
+            if (e.button != 2) return;
+            isPanning = true;
+            panStart = e.localMousePosition;
+            scrollStart = scrollView.scrollOffset;
+            e.StopPropagation();
+        }
+
+        private void OnMouseMove(MouseMoveEvent e)
+        {
+            if (!isPanning) return;
+            var delta = e.localMousePosition - panStart;
+            scrollView.scrollOffset = scrollStart - delta;
+            e.StopPropagation();
+        }
+
+        private void OnMouseUp(MouseUpEvent e)
+        {
+            if (e.button != 2) return;
+            isPanning = false;
+            e.StopPropagation();
         }
 
         private void Refresh()
@@ -47,7 +106,61 @@ namespace TimelessEchoes.Editor
             }
 
             CalculateLayout();
-            Repaint();
+            DrawInterface();
+        }
+
+        private void DrawInterface()
+        {
+            if (scrollView == null || content == null) return;
+
+            content.Clear();
+
+            float width = nodeRects.Count > 0 ? nodeRects.Values.Max(r => r.xMax) + 100f : position.width;
+            float height = nodeRects.Count > 0 ? nodeRects.Values.Max(r => r.yMax) + 100f : position.height;
+            content.style.width = width;
+            content.style.height = height;
+
+            var lines = new ImmediateModeElement(() =>
+            {
+                Handles.color = Color.white;
+                foreach (var quest in quests)
+                {
+                    if (!nodeRects.TryGetValue(quest, out var fromRect)) continue;
+                    if (quest.requiredQuests == null) continue;
+                    foreach (var req in quest.requiredQuests)
+                    {
+                        if (req == null || !nodeRects.TryGetValue(req, out var reqRect)) continue;
+                        var start = new Vector3(reqRect.xMax, reqRect.center.y);
+                        var end = new Vector3(fromRect.xMin, fromRect.center.y);
+                        Handles.DrawLine(start, end);
+                    }
+                }
+            });
+            lines.StretchToParentSize();
+            content.Add(lines);
+
+            foreach (var pair in nodeRects)
+            {
+                string labelText = pair.Key.questName.GetLocalizedString();
+                if (string.IsNullOrEmpty(labelText))
+                {
+                    labelText = pair.Key.questId;
+                }
+
+                var node = new Label(labelText)
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        left = pair.Value.x,
+                        top = pair.Value.y,
+                        width = pair.Value.width,
+                        height = pair.Value.height
+                    }
+                };
+                node.AddToClassList("quest-node");
+                content.Add(node);
+            }
         }
 
         private void CalculateLayout()
@@ -92,62 +205,7 @@ namespace TimelessEchoes.Editor
             visited.Remove(quest);
             return max;
         }
-
-        [Obsolete]
-        protected override void OnGUI()
-        {
-            SirenixEditorGUI.Title("Quest Flow", null, TextAlignment.Left, true);
-            if (GUILayout.Button("Refresh"))
-            {
-                Refresh();
-            }
-            DrawGraph();
-        }
-
-        private void DrawGraph()
-        {
-            float width = nodeRects.Count > 0 ? nodeRects.Values.Max(r => r.xMax) + 100f : position.width;
-            float height = nodeRects.Count > 0 ? nodeRects.Values.Max(r => r.yMax) + 100f : position.height;
-            var contentRect = new Rect(0, 0, width, height);
-
-            var area = GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-
-            scroll = GUI.BeginScrollView(area, scroll, contentRect);
-
-            var e = Event.current;
-            if (e.type == EventType.MouseDrag && e.button == 2)
-            {
-                scroll -= e.delta;
-                e.Use();
-                Repaint();
-            }
-
-            Handles.color = Color.white;
-            foreach (var quest in quests)
-            {
-                if (!nodeRects.TryGetValue(quest, out var fromRect)) continue;
-                if (quest.requiredQuests == null) continue;
-                foreach (var req in quest.requiredQuests)
-                {
-                    if (req == null || !nodeRects.TryGetValue(req, out var reqRect)) continue;
-                    var start = new Vector3(reqRect.xMax, reqRect.center.y);
-                    var end = new Vector3(fromRect.xMin, fromRect.center.y);
-                    Handles.DrawLine(start, end);
-                }
-            }
-
-            foreach (var pair in nodeRects)
-            {
-                string label = pair.Key.questName.GetLocalizedString();
-                if (string.IsNullOrEmpty(label))
-                {
-                    label = pair.Key.questId;
-                }
-                GUI.Box(pair.Value, label, EditorStyles.helpBox);
-            }
-
-            GUI.EndScrollView();
-        }
     }
 }
 #endif
+
