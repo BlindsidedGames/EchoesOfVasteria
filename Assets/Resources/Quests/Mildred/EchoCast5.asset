@@ -10,48 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: LeatherAE
+  m_Name: EchoCast5
   m_EditorClassIdentifier: 
-  questId: LeatherAE
+  questId: EchoCast4
   questName:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 7956006563392
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 7956007563392
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 7956008563392
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  npcId: 
+  npcId: EchoCast5
   autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
-  requirements:
-  - type: 0
-    resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-    amount: 250
-    enemies: []
-    killName: 
-    killIcon: {fileID: 0}
-    meetNpcId: 
+  - {fileID: 11400000, guid: 830426961ecfd32428e89797578ef750, type: 2}
+  requirements: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

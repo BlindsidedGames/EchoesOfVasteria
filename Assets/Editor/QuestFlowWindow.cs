@@ -7,10 +7,9 @@ using UnityEngine;
 /// <summary>
 ///     An editor window to visualize the quest flow graph automatically from QuestData assets.
 ///     Features a fully pannable and zoomable infinite canvas with a robust layout algorithm.
-///     Controls:
-///     - Pan: Hold Alt + Left-Click and Drag, OR Middle-Click and Drag
-///     - Zoom: Mouse Scroll Wheel
-///     - Select/Drag Node: Left-Click and Drag
+///     Nodes are color-coded to show missing localization text.
+///     - Red: Missing Reward Text
+///     - Orange: Missing Description Text
 /// </summary>
 public class QuestFlowWindow : EditorWindow
 {
@@ -25,22 +24,21 @@ public class QuestFlowWindow : EditorWindow
         {
             this.questData = questData;
 
-            // --- FIX: Add a null/empty check to prevent localization errors ---
-            // This checks if the LocalizedString reference is configured before trying to access it.
-            // This prevents the "Empty Table Reference" exception for misconfigured QuestData assets.
+            // Determine title
             if (questData.questName != null && !questData.questName.IsEmpty)
                 title = questData.questName.GetLocalizedString();
-
-            // If the reference was invalid or the resulting string is empty, use the asset's name as a fallback.
             if (string.IsNullOrEmpty(title)) title = questData.name;
 
-            rect = new Rect(position.x, position.y, width, height);
+            // --- FEATURE: Determine node color based on localization status ---
+            // FIX: Corrected property name from rewardText to rewardDescription
+            if (questData.rewardDescription == null || questData.rewardDescription.IsEmpty)
+                style = s_redNodeStyle;
+            else if (questData.description == null || questData.description.IsEmpty)
+                style = s_orangeNodeStyle;
+            else
+                style = s_defaultNodeStyle;
 
-            style = new GUIStyle();
-            style.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-            style.border = new RectOffset(12, 12, 12, 12);
-            style.alignment = TextAnchor.MiddleCenter;
-            style.normal.textColor = Color.white;
+            rect = new Rect(position.x, position.y, width, height);
         }
     }
 
@@ -67,6 +65,12 @@ public class QuestFlowWindow : EditorWindow
     private const float VerticalSpacing = 100f;
     private const float GridSpacing = 20f;
 
+    // --- FEATURE: Static styles for different node states ---
+    private static GUIStyle s_defaultNodeStyle;
+    private static GUIStyle s_redNodeStyle;
+    private static GUIStyle s_orangeNodeStyle;
+    private static bool s_stylesInitialized;
+
     [MenuItem("Window/Quest Flow Editor")]
     private static void OpenWindow()
     {
@@ -75,6 +79,48 @@ public class QuestFlowWindow : EditorWindow
         window.wantsMouseMove = true;
     }
 
+    /// <summary>
+    ///     Creates the GUIStyles for the nodes. Done once to be efficient.
+    /// </summary>
+    private static void InitializeStyles()
+    {
+        if (s_stylesInitialized) return;
+
+        // Helper function to create a style with a solid color background
+        GUIStyle CreateStyle(Color color)
+        {
+            var texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+            // FIX: Combined duplicate 'normal' member initialization
+            return new GUIStyle
+            {
+                normal =
+                {
+                    background = texture,
+                    textColor = Color.white
+                },
+                border = new RectOffset(12, 12, 12, 12),
+                alignment = TextAnchor.MiddleCenter
+            };
+        }
+
+        // Default style using the built-in texture
+        s_defaultNodeStyle = new GUIStyle();
+        s_defaultNodeStyle.normal.background =
+            EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        s_defaultNodeStyle.border = new RectOffset(12, 12, 12, 12);
+        s_defaultNodeStyle.alignment = TextAnchor.MiddleCenter;
+        s_defaultNodeStyle.normal.textColor = Color.white;
+
+        // Custom colored styles
+        s_redNodeStyle = CreateStyle(new Color(0.8f, 0.3f, 0.3f));
+        s_orangeNodeStyle = CreateStyle(new Color(0.9f, 0.6f, 0.2f));
+
+        s_stylesInitialized = true;
+    }
+
+
     private void OnEnable()
     {
         PopulateAndLayoutGraph();
@@ -82,6 +128,8 @@ public class QuestFlowWindow : EditorWindow
 
     private void OnGUI()
     {
+        InitializeStyles(); // Ensure styles are ready
+
         DrawGrid();
         DrawConnections();
         DrawNodes();
@@ -151,6 +199,7 @@ public class QuestFlowWindow : EditorWindow
 
     private void PopulateAndLayoutGraph()
     {
+        InitializeStyles(); // Make sure styles are loaded before creating nodes
         questNodeMap = new Dictionary<QuestData, Node>();
         connections = new List<Connection>();
 
@@ -179,10 +228,6 @@ public class QuestFlowWindow : EditorWindow
         GUI.changed = true;
     }
 
-    /// <summary>
-    ///     --- FIX: New layout algorithm to create straight "swimlane" chains ---
-    ///     This method calculates node positions to keep quest chains horizontally aligned.
-    /// </summary>
     private void LayoutNodes()
     {
         if (questNodeMap == null || !questNodeMap.Any()) return;
@@ -223,8 +268,8 @@ public class QuestFlowWindow : EditorWindow
             foreach (var successor in nodeSuccessors[currentNode])
             {
                 // A node's column is the maximum column of its parents + 1
-                nodeColumns[successor] =
-                    nodePrerequisites[successor].Max(p => nodeColumns.ContainsKey(p) ? nodeColumns[p] : 0) + 1;
+                if (nodePrerequisites[successor].All(p => nodeColumns.ContainsKey(p)))
+                    nodeColumns[successor] = nodePrerequisites[successor].Max(p => nodeColumns[p]) + 1;
 
                 if (!processedNodes.Contains(successor))
                 {
@@ -244,7 +289,7 @@ public class QuestFlowWindow : EditorWindow
 
         foreach (var node in nodesSortedByColumn)
         {
-            var col = nodeColumns[node];
+            var col = nodeColumns.ContainsKey(node) ? nodeColumns[node] : 0;
             float targetY;
 
             if (nodePrerequisites[node].Any())
@@ -263,8 +308,9 @@ public class QuestFlowWindow : EditorWindow
             if (!yPositionsInUse.ContainsKey(col)) yPositionsInUse[col] = new List<float>();
 
             // Find an empty slot
-            while (yPositionsInUse[col].Any(y => Mathf.Abs(y - targetY) < VerticalSpacing - 1))
-                targetY += VerticalSpacing; // Nudge it down until a free slot is found
+            while (yPositionsInUse[col]
+                   .Any(y => Mathf.Abs(y - targetY) <
+                             VerticalSpacing - 1)) targetY += 20; // Nudge it down until a free slot is found
 
             node.rect.position = new Vector2(50f + col * HorizontalSpacing, targetY);
             yPositionsInUse[col].Add(targetY);

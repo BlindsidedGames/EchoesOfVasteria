@@ -42,7 +42,8 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: Ivan1
   autoPin: 1
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
   requirements:
   - type: 5
     resource: {fileID: 0}

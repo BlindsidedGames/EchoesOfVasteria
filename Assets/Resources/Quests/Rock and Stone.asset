@@ -42,7 +42,8 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: OldTimer1
   autoPin: 0
-  requiredQuests: []
+  requiredQuests:
+  - {fileID: 11400000, guid: 04f7d17c91a766641b9b4b77ff071d37, type: 2}
   requirements:
   - type: 5
     resource: {fileID: 0}
