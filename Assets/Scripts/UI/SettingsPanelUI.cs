@@ -69,6 +69,12 @@ namespace TimelessEchoes.UI
         private Image dropTextImage;
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
+        private SaveSlotReferences saveSlot1;
+        [TabGroup("Settings", "Save Files")] [SerializeField]
+        private SaveSlotReferences saveSlot2;
+        [TabGroup("Settings", "Save Files")] [SerializeField]
+        private SaveSlotReferences saveSlot3;
+
         private SaveSlotReferences[] saveSlots;
 
         private const int Fps60 = 60;
@@ -76,6 +82,8 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
+
             if (fullscreenWindowButton != null)
                 fullscreenWindowButton.onClick.AddListener(SetFullscreenWindow);
             if (windowButton != null)
