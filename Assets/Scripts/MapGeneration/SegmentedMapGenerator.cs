@@ -121,9 +121,16 @@ namespace TimelessEchoes.MapGeneration
                 return;
 
             var arr = segments.ToArray();
-            var start = arr[1].startX;
-            gg.SetDimensions(segmentSize.x * 8, segmentSize.y * 2, gg.nodeSize);
-            gg.center = new Vector3(start + segmentSize.x, 9f, 0f);
+
+            // Calculate the leftmost and rightmost bounds one tile in from the
+            // outer segments. The A* grid uses two nodes per tile, so we convert
+            // the tile span into node counts when setting the dimensions.
+            var left = arr[0].startX + 1; // 1 tile in from the left chunk
+            var right = arr[2].startX + segmentSize.x - 1; // 1 tile in from the right chunk
+            var widthTiles = right - left; // total tiles covered by the grid
+
+            gg.SetDimensions(widthTiles * 2, segmentSize.y * 2, gg.nodeSize);
+            gg.center = new Vector3((left + right) * 0.5f, segmentSize.y * 0.5f, 0f);
             pathfinder.Scan();
         }
     }
