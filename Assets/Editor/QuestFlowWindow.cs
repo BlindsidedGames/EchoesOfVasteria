@@ -110,7 +110,16 @@ namespace TimelessEchoes.Editor
             float height = nodeRects.Count > 0 ? nodeRects.Values.Max(r => r.yMax) + 100f : position.height;
             var contentRect = new Rect(0, 0, width, height);
 
-            var area = GUILayoutUtility.GetRect(width, height);
+            var area = GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+
+            var e = Event.current;
+            if (area.Contains(e.mousePosition) && e.type == EventType.MouseDrag && e.button == 2)
+            {
+                scroll -= e.delta;
+                e.Use();
+                Repaint();
+            }
+
             scroll = GUI.BeginScrollView(area, scroll, contentRect);
 
             Handles.BeginGUI();
