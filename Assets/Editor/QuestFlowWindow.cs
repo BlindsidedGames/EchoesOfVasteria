@@ -49,7 +49,10 @@ namespace TimelessEchoes.Editor
             toolbar.Add(refreshButton);
             rootVisualElement.Add(toolbar);
 
-            scrollView = new ScrollView(ScrollViewMode.Both)
+            // Use a ScrollView that supports scrolling in both directions.
+            // ScrollViewMode.Both has been deprecated; VerticalAndHorizontal
+            // provides equivalent functionality in modern Unity versions.
+            scrollView = new ScrollView(ScrollViewMode.VerticalAndHorizontal)
             {
                 style = { flexGrow = 1 }
             };
@@ -121,7 +124,9 @@ namespace TimelessEchoes.Editor
             content.style.width = width;
             content.style.height = height;
 
-            var lines = new ImmediateModeElement(() =>
+            // IMGUIContainer allows drawing with Handles in the UI Toolkit
+            // hierarchy without instantiating the abstract ImmediateModeElement.
+            var lines = new IMGUIContainer(() =>
             {
                 Handles.color = Color.white;
                 foreach (var quest in quests)
