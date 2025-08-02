@@ -59,24 +59,15 @@ namespace TimelessEchoes.UI
 
         private static void SaveGame()
         {
-            if (Oracle.oracle == null)
+            var oracle = Oracle.oracle;
+            if (oracle == null)
                 return;
 
             EventHandler.SaveData();
-            Oracle.oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+            oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            var beta = Oracle.oracle.beta;
-            var iteration = Oracle.oracle.betaSaveIteration;
-            var slot = Oracle.oracle.CurrentSlot;
-            var dataName = (beta ? $"Beta{iteration}" : "") + $"Data{slot}";
-            var fileName = (beta ? $"Beta{iteration}" : "") + $"Sd{slot}.es3";
-            var settings = new ES3Settings(fileName, ES3.Location.Cache)
-            {
-                bufferSize = 8192
-            };
-
-            ES3.Save(dataName, Oracle.oracle.saveData, settings);
-            ES3.StoreCachedFile(fileName);
+            ES3.Save(oracle.DataName, oracle.saveData, oracle.Settings);
+            ES3.StoreCachedFile(oracle.FileName);
         }
     }
 }

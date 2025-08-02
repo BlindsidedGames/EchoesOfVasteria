@@ -59,6 +59,10 @@ namespace Blindsided
         private string _dataName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Data{CurrentSlot}";
         private string _fileName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Sd{CurrentSlot}.es3";
 
+        public string DataName => _dataName;
+        public string FileName => _fileName;
+        public ES3Settings Settings => _settings;
+
         [TabGroup("SaveData")] public GameData saveData = new();
 
         #endregion
