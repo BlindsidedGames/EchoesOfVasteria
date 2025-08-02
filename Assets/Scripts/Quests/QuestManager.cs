@@ -417,7 +417,7 @@ namespace TimelessEchoes.Quests
             inst.ui = null;
 
             active[quest.questId] = inst;
-            if (AutoPinActiveQuests && !IsInstantQuest(quest))
+            if ((AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
             {
                 var set = oracle.saveData.PinnedQuests;
                 if (!set.Contains(quest.questId))
