@@ -37,6 +37,7 @@ namespace Blindsided
                 return;
             }
 
+            CurrentSlot = Mathf.Clamp(PlayerPrefs.GetInt(SlotPrefKey, 0), 0, 2);
             _settings = new ES3Settings(_fileName, ES3.Location.Cache)
             {
                 bufferSize = 8192
@@ -53,8 +54,10 @@ namespace Blindsided
         [TabGroup("SaveData", "Beta")] public bool beta;
         [TabGroup("SaveData", "Beta")] public int betaSaveIteration;
 
-        private string _dataName => (beta ? $"Beta{betaSaveIteration}" : "") + "Data";
-        private string _fileName => (beta ? $"Beta{betaSaveIteration}" : "") + "Sd.es3";
+        [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
+
+        private string _dataName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Data{CurrentSlot}";
+        private string _fileName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Sd{CurrentSlot}.es3";
 
         [TabGroup("SaveData")] public GameData saveData = new();
 
@@ -65,6 +68,7 @@ namespace Blindsided
         private ES3Settings _settings;
         private bool loaded;
         private bool wipeInProgress;
+        private const string SlotPrefKey = "SaveSlot";
 
         private float _lastFlush;
         private const float FlushInterval = 120f; // disk write every 2 min
@@ -129,6 +133,23 @@ namespace Blindsided
             }
         }
 #endif
+
+        #endregion
+
+        #region Slot management
+
+        public void SelectSlot(int slot)
+        {
+            CurrentSlot = Mathf.Clamp(slot, 0, 2);
+            PlayerPrefs.SetInt(SlotPrefKey, CurrentSlot);
+            PlayerPrefs.Save();
+            _settings = new ES3Settings(_fileName, ES3.Location.Cache)
+            {
+                bufferSize = 8192
+            };
+            SteamCloudSync.Instance.SetFileName(_fileName);
+            Load();
+        }
 
         #endregion
 
