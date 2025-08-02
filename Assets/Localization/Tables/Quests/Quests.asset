@@ -30,19 +30,13 @@ MonoBehaviour:
         m_SheetId: 1991999669
         m_Columns:
         - rid: 6305373772456656999
-        - rid: 6305373772456657000
+        - rid: 6305373775624667233
         - rid: 6305373772456657001
         m_RemoveMissingPulledKeys: 1
     - rid: 6305373772456656999
       type: {class: KeyColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
       data:
         m_Column: A
-    - rid: 6305373772456657000
-      type: {class: LocaleCommentColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
-      data:
-        m_Column: B
-        m_LocaleIdentifier:
-          m_Code: en
     - rid: 6305373772456657001
       type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
       data:
@@ -50,3 +44,7 @@ MonoBehaviour:
         m_LocaleIdentifier:
           m_Code: en
         m_IncludeComments: 0
+    - rid: 6305373775624667233
+      type: {class: KeyCommentColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: B
