@@ -5,6 +5,7 @@ using Blindsided.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
 
 namespace TimelessEchoes.UI
 {
@@ -14,22 +15,53 @@ namespace TimelessEchoes.UI
     /// </summary>
     public class SettingsPanelUI : MonoBehaviour
     {
-        [SerializeField] private GameObject VersionNumberObject;
-        [SerializeField] [Space] private Button fullscreenWindowButton;
-        [SerializeField] private Button windowButton;
-        [SerializeField] private Button fpsButton;
-        [SerializeField] private TMP_Text fpsButtonText;
-        [SerializeField] private Slider dropTextDurationSlider;
-        [SerializeField] private TMP_Text dropTextDurationText;
-        [SerializeField] private Slider playerDamageDurationSlider;
-        [SerializeField] private TMP_Text playerDamageDurationText;
-        [SerializeField] private Slider enemyDamageDurationSlider;
-        [SerializeField] private TMP_Text enemyDamageDurationText;
-        [SerializeField] private Button playerDamageButton;
-        [SerializeField] private Button enemyDamageButton;
-        [SerializeField] private Button dropTextButton;
-        [SerializeField] private Sprite onSprite;
-        [SerializeField] private Sprite offSprite;
+        [TabGroup("Settings", "General"), SerializeField]
+        private GameObject VersionNumberObject;
+
+        [TabGroup("Settings", "Window"), SerializeField, Space]
+        private Button fullscreenWindowButton;
+
+        [TabGroup("Settings", "Window"), SerializeField]
+        private Button windowButton;
+
+        [TabGroup("Settings", "Performance"), SerializeField]
+        private Button fpsButton;
+
+        [TabGroup("Settings", "Performance"), SerializeField]
+        private TMP_Text fpsButtonText;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Slider dropTextDurationSlider;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private TMP_Text dropTextDurationText;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Slider playerDamageDurationSlider;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private TMP_Text playerDamageDurationText;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Slider enemyDamageDurationSlider;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private TMP_Text enemyDamageDurationText;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Button playerDamageButton;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Button enemyDamageButton;
+
+        [TabGroup("Settings", "Floating Text"), SerializeField]
+        private Button dropTextButton;
+
+        [TabGroup("Settings", "Sprites"), SerializeField]
+        private Sprite onSprite;
+
+        [TabGroup("Settings", "Sprites"), SerializeField]
+        private Sprite offSprite;
 
         private Image playerDamageImage;
         private Image enemyDamageImage;
