@@ -203,8 +203,9 @@ namespace Blindsided.Utilities
             }
 
             // DEBUG: Log the final calculated values that will be applied to the RectTransform.
-            Debug.Log(
+            /*Debug.Log(
                 $"[ScreenSafeArea] Final Padding in Canvas Units (L,R,T,B): ({left:F2}, {right:F2}, {top:F2}, {bottom:F2})");
+                */
 
             // 4. Apply the final, correct padding values (which are already in canvas units) to the RectTransform's offsets.
             _rectTransform.offsetMin = new Vector2(left, bottom);

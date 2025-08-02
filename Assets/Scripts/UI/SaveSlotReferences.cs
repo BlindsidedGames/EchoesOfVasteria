@@ -7,7 +7,6 @@ namespace TimelessEchoes.UI
 {
     public class SaveSlotReferences : MonoBehaviour
     {
-        public int slot;
         public Button saveDeleteButton;
         public TMP_Text saveDeleteText;
         public Button loadButton;
@@ -18,7 +17,6 @@ namespace TimelessEchoes.UI
 
         [HideInInspector] public Image toggleDeleteImage;
         [HideInInspector] public bool deleteMode;
-        [HideInInspector] public DateTime? lastPlayed;
+        public DateTime? lastPlayed;
     }
 }
-

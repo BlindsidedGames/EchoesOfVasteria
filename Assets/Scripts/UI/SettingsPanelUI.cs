@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.UI
 {
@@ -70,8 +71,10 @@ namespace TimelessEchoes.UI
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot1;
+
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot2;
+
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot3;
 
@@ -126,6 +129,7 @@ namespace TimelessEchoes.UI
                         UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
                     }
                 }
+
                 RefreshAllSlots();
             }
 
@@ -155,7 +159,6 @@ namespace TimelessEchoes.UI
             if (dropTextButton != null)
                 dropTextButton.onClick.RemoveListener(ToggleDropText);
             if (saveSlots != null)
-            {
                 foreach (var slot in saveSlots)
                 {
                     if (slot == null)
@@ -167,7 +170,6 @@ namespace TimelessEchoes.UI
                     if (slot.toggleDeleteButton != null)
                         slot.toggleDeleteButton.onClick.RemoveAllListeners();
                 }
-            }
 
             EventHandler.OnLoadData -= ApplyFps;
         }
@@ -374,7 +376,7 @@ namespace TimelessEchoes.UI
             if (index == oracle.CurrentSlot)
             {
                 slot.lastPlayed = string.IsNullOrEmpty(oracle.saveData.DateQuitString)
-                    ? (DateTime?)null
+                    ? null
                     : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
             }
             else if (ES3.FileExists(fileName))
@@ -387,7 +389,7 @@ namespace TimelessEchoes.UI
                             ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
                             : "Playtime: None";
                     slot.lastPlayed = string.IsNullOrEmpty(data.DateQuitString)
-                        ? (DateTime?)null
+                        ? null
                         : DateTime.Parse(data.DateQuitString, CultureInfo.InvariantCulture);
                 }
                 catch
