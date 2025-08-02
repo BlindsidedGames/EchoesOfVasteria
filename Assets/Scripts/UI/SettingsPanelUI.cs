@@ -122,10 +122,10 @@ namespace TimelessEchoes.UI
                         slot.saveDeleteButton.onClick.AddListener(() => OnSaveDelete(index));
                     if (slot.loadButton != null)
                         slot.loadButton.onClick.AddListener(() => OnLoad(index));
-                    if (slot.toggleDeleteButton != null)
+                    if (slot.toggleSafetyButton != null)
                     {
-                        slot.toggleDeleteButton.onClick.AddListener(() => ToggleDelete(index));
-                        slot.toggleDeleteImage = slot.toggleDeleteButton.GetComponent<Image>();
+                        slot.toggleSafetyButton.onClick.AddListener(() => ToggleDelete(index));
+                        slot.toggleDeleteImage = slot.toggleSafetyButton.GetComponent<Image>();
                         UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
                     }
                 }
@@ -167,8 +167,8 @@ namespace TimelessEchoes.UI
                         slot.saveDeleteButton.onClick.RemoveAllListeners();
                     if (slot.loadButton != null)
                         slot.loadButton.onClick.RemoveAllListeners();
-                    if (slot.toggleDeleteButton != null)
-                        slot.toggleDeleteButton.onClick.RemoveAllListeners();
+                    if (slot.toggleSafetyButton != null)
+                        slot.toggleSafetyButton.onClick.RemoveAllListeners();
                 }
 
             EventHandler.OnLoadData -= ApplyFps;
@@ -321,8 +321,8 @@ namespace TimelessEchoes.UI
                 return;
             slot.deleteMode = !slot.deleteMode;
             UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
-            if (slot.saveDeleteText != null)
-                slot.saveDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+            if (slot.loadDeleteText != null)
+                slot.loadDeleteText.text = slot.deleteMode ? "Delete" : "Save";
         }
 
         private void SaveSlot(int index)
@@ -408,8 +408,8 @@ namespace TimelessEchoes.UI
 
             UpdateSlotDynamic(index);
 
-            if (slot.saveDeleteText != null)
-                slot.saveDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+            if (slot.loadDeleteText != null)
+                slot.loadDeleteText.text = slot.deleteMode ? "Delete" : "Save";
         }
 
         private void UpdateSlotDynamic(int index)
