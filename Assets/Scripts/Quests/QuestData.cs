@@ -18,6 +18,10 @@ namespace TimelessEchoes.Quests
         public LocalizedString description;
         public LocalizedString rewardDescription;
         public string npcId;
+        /// <summary>
+        ///     Automatically pin this quest when it becomes active.
+        /// </summary>
+        public bool autoPin;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
         public int unlockBuffSlots;
