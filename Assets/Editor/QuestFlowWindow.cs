@@ -33,10 +33,11 @@ namespace TimelessEchoes.Editor
         {
             base.OnEnable();
             titleContent = new GUIContent("Quest Flow");
+            SetupUI();
             Refresh();
         }
 
-        public override void CreateGUI()
+        private void SetupUI()
         {
             rootVisualElement.Clear();
 
