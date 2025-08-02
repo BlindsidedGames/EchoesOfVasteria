@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
@@ -92,6 +93,7 @@ namespace TimelessEchoes.Editor
             return max;
         }
 
+        [Obsolete]
         protected override void OnGUI()
         {
             SirenixEditorGUI.Title("Quest Flow", null, TextAlignment.Left, true);
