@@ -48,13 +48,9 @@ namespace Blindsided.Utilities
         [Tooltip("Minimum space from the left edge in pixels")] public float minPaddingLeft;
         [Tooltip("Minimum space from the right edge in pixels")] public float minPaddingRight;
 
-#if UNITY_EDITOR || UNITY_STANDALONE
-        public bool extraBoarders;
-        public float boarderTop = 40;
-        public float boarderBottom = 40;
-        public float boarderLeft;
-        public float boarderRight;
-#endif
+        // Do not apply minimum padding on mobile if the platform already provides
+        // at least this many pixels of safe area on a given edge.
+        const float MobileSafeAreaThreshold = 6f;
 
         private void OnEnable()
         {
@@ -165,20 +161,16 @@ namespace Blindsided.Utilities
             float top = Screen.height - safeArea.yMax;
             float bottom = safeArea.yMin;
 
-            left = Mathf.Max(left, minPaddingLeft);
-            right = Mathf.Max(right, minPaddingRight);
-            top = Mathf.Max(top, minPaddingTop);
-            bottom = Mathf.Max(bottom, minPaddingBottom);
+            if (!Application.isMobilePlatform || left <= MobileSafeAreaThreshold)
+                left = Mathf.Max(left, minPaddingLeft);
+            if (!Application.isMobilePlatform || right <= MobileSafeAreaThreshold)
+                right = Mathf.Max(right, minPaddingRight);
+            if (!Application.isMobilePlatform || top <= MobileSafeAreaThreshold)
+                top = Mathf.Max(top, minPaddingTop);
+            if (!Application.isMobilePlatform || bottom <= MobileSafeAreaThreshold)
+                bottom = Mathf.Max(bottom, minPaddingBottom);
 
             safeArea = new Rect(left, bottom, Screen.width - left - right, Screen.height - top - bottom);
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-            if (extraBoarders)
-            {
-                _rectTransform.offsetMin = new Vector2(boarderLeft, boarderBottom); // Left, Bottom
-                _rectTransform.offsetMax = new Vector2(-boarderRight, -boarderTop); // Right, Top
-            }
-#endif
 
             if (limitAspect)
             {
