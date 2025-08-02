@@ -148,6 +148,7 @@ namespace Blindsided
                 bufferSize = 8192
             };
             SteamCloudSync.Instance.SetFileName(_fileName);
+            SteamCloudSync.Instance.Download(); // ensure local copy is up-to-date
             Load();
         }
 
