@@ -112,17 +112,16 @@ namespace TimelessEchoes.Editor
 
             var area = GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
+            scroll = GUI.BeginScrollView(area, scroll, contentRect);
+
             var e = Event.current;
-            if (area.Contains(e.mousePosition) && e.type == EventType.MouseDrag && e.button == 2)
+            if (e.type == EventType.MouseDrag && e.button == 2)
             {
                 scroll -= e.delta;
                 e.Use();
                 Repaint();
             }
 
-            scroll = GUI.BeginScrollView(area, scroll, contentRect);
-
-            Handles.BeginGUI();
             Handles.color = Color.white;
             foreach (var quest in quests)
             {
@@ -136,7 +135,6 @@ namespace TimelessEchoes.Editor
                     Handles.DrawLine(start, end);
                 }
             }
-            Handles.EndGUI();
 
             foreach (var pair in nodeRects)
             {
