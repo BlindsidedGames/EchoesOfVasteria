@@ -67,8 +67,9 @@ namespace TimelessEchoes.UI
 
             var beta = Oracle.oracle.beta;
             var iteration = Oracle.oracle.betaSaveIteration;
-            var dataName = (beta ? $"Beta{iteration}" : "") + "Data";
-            var fileName = (beta ? $"Beta{iteration}" : "") + "Sd.es3";
+            var slot = Oracle.oracle.CurrentSlot;
+            var dataName = (beta ? $"Beta{iteration}" : "") + $"Data{slot}";
+            var fileName = (beta ? $"Beta{iteration}" : "") + $"Sd{slot}.es3";
             var settings = new ES3Settings(fileName, ES3.Location.Cache)
             {
                 bufferSize = 8192
