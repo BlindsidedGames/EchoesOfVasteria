@@ -24,8 +24,16 @@ public class QuestFlowWindow : EditorWindow
         public Node(QuestData questData, Vector2 position, float width, float height)
         {
             this.questData = questData;
-            title = questData.questName.GetLocalizedString();
+
+            // --- FIX: Add a null/empty check to prevent localization errors ---
+            // This checks if the LocalizedString reference is configured before trying to access it.
+            // This prevents the "Empty Table Reference" exception for misconfigured QuestData assets.
+            if (questData.questName != null && !questData.questName.IsEmpty)
+                title = questData.questName.GetLocalizedString();
+
+            // If the reference was invalid or the resulting string is empty, use the asset's name as a fallback.
             if (string.IsNullOrEmpty(title)) title = questData.name;
+
             rect = new Rect(position.x, position.y, width, height);
 
             style = new GUIStyle();

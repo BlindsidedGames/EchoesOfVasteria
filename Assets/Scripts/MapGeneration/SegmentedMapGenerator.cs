@@ -130,7 +130,7 @@ namespace TimelessEchoes.MapGeneration
             var widthTiles = right - left; // total tiles covered by the grid
 
             gg.SetDimensions(widthTiles * 2, segmentSize.y * 2, gg.nodeSize);
-            gg.center = new Vector3(left + widthTiles * 0.5f, segmentSize.y * 0.5f, 0f);
+            gg.center = new Vector3(1 - left + widthTiles * 0.5f, segmentSize.y * 0.5f, 0f);
             pathfinder.Scan();
         }
     }
