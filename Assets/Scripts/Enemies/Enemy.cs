@@ -7,11 +7,15 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Quests;
+using static TimelessEchoes.Quests.QuestUtils;
+using Blindsided.SaveData;
 using TMPro;
 using UnityEngine;
 using System.Linq;
 using static TimelessEchoes.TELogger;
 using Random = UnityEngine.Random;
+using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Enemies
 {
@@ -310,6 +314,7 @@ namespace TimelessEchoes.Enemies
             {
                 if (drop.resource == null) continue;
                 if (Random.value > drop.dropChance) continue;
+                if (drop.requiredQuest != null && !QuestCompleted(drop.requiredQuest.questId)) continue;
                 if (worldX < drop.minX || worldX > drop.maxX) continue;
 
                 var min = drop.dropRange.x;
@@ -445,5 +450,6 @@ namespace TimelessEchoes.Enemies
                     setter.target = hero;
             }
         }
+
     }
 }

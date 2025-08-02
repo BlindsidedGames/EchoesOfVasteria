@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
+using static Blindsided.Oracle;
+using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.Tasks
 {
@@ -39,6 +42,7 @@ namespace TimelessEchoes.Tasks
             foreach (var drop in taskData.resourceDrops)
             {
                 if (drop.resource == null || Random.value > drop.dropChance) continue;
+                if (drop.requiredQuest != null && !QuestCompleted(drop.requiredQuest.questId)) continue;
                 if (worldX < drop.minX || worldX > drop.maxX) continue;
 
                 var min = drop.dropRange.x;
@@ -101,4 +105,6 @@ namespace TimelessEchoes.Tasks
                         Blindsided.SaveData.StaticReferences.DropFloatingTextDuration);
             }
         }
-    }}
+
+    }
+}

@@ -18,6 +18,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
+using static TimelessEchoes.Quests.QuestUtils;
 using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Hero
@@ -722,15 +723,6 @@ namespace TimelessEchoes.Hero
             isRolling = false;
         }
 
-        private static bool QuestCompleted(string questId)
-        {
-            if (string.IsNullOrEmpty(questId))
-                return true;
-            if (oracle == null)
-                return false;
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
-        }
 
         private void OnEnemyEngage(Enemy enemy)
         {

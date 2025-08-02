@@ -5,6 +5,7 @@ using TimelessEchoes.Quests;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -77,15 +78,7 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
-        private static bool QuestCompleted(QuestData quest)
-        {
-            if (quest == null)
-                return true;
-            if (oracle == null)
-                return false;
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed;
-        }
+
 
 
         private void Update()

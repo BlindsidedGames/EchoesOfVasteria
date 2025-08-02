@@ -10,6 +10,7 @@ using Blindsided.SaveData;
 using Steamworks;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static TimelessEchoes.Quests.QuestUtils;
 #endif
 
 namespace TimelessEchoes
@@ -124,15 +125,6 @@ namespace TimelessEchoes
                 UnlockAchievement("Mildred");
         }
 
-        private static bool QuestCompleted(string questId)
-        {
-            if (string.IsNullOrEmpty(questId))
-                return true;
-            if (oracle == null)
-                return false;
-            oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-            return oracle.saveData.Quests.TryGetValue(questId, out var rec) && rec.Completed;
-        }
 #else
         public static AchievementManager Instance => null;
 #endif
