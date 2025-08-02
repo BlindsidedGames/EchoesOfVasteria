@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Globalization;
 using Blindsided;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
@@ -66,6 +68,9 @@ namespace TimelessEchoes.UI
         private Image enemyDamageImage;
         private Image dropTextImage;
 
+        [TabGroup("Settings", "Save Files")] [SerializeField]
+        private SaveSlotReferences[] saveSlots;
+
         private const int Fps60 = 60;
         private const int Fps120 = 120;
 
@@ -94,6 +99,28 @@ namespace TimelessEchoes.UI
             enemyDamageImage = enemyDamageButton != null ? enemyDamageButton.GetComponent<Image>() : null;
             dropTextImage = dropTextButton != null ? dropTextButton.GetComponent<Image>() : null;
 
+            if (saveSlots != null)
+            {
+                for (var i = 0; i < saveSlots.Length; i++)
+                {
+                    var index = i;
+                    var slot = saveSlots[index];
+                    if (slot == null)
+                        continue;
+                    if (slot.saveDeleteButton != null)
+                        slot.saveDeleteButton.onClick.AddListener(() => OnSaveDelete(index));
+                    if (slot.loadButton != null)
+                        slot.loadButton.onClick.AddListener(() => OnLoad(index));
+                    if (slot.toggleDeleteButton != null)
+                    {
+                        slot.toggleDeleteButton.onClick.AddListener(() => ToggleDelete(index));
+                        slot.toggleDeleteImage = slot.toggleDeleteButton.GetComponent<Image>();
+                        UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
+                    }
+                }
+                RefreshAllSlots();
+            }
+
             EventHandler.OnLoadData += ApplyFps;
             ApplyFps();
             StartCoroutine(DeferredInit());
@@ -119,6 +146,21 @@ namespace TimelessEchoes.UI
                 enemyDamageButton.onClick.RemoveListener(ToggleEnemyDamage);
             if (dropTextButton != null)
                 dropTextButton.onClick.RemoveListener(ToggleDropText);
+            if (saveSlots != null)
+            {
+                foreach (var slot in saveSlots)
+                {
+                    if (slot == null)
+                        continue;
+                    if (slot.saveDeleteButton != null)
+                        slot.saveDeleteButton.onClick.RemoveAllListeners();
+                    if (slot.loadButton != null)
+                        slot.loadButton.onClick.RemoveAllListeners();
+                    if (slot.toggleDeleteButton != null)
+                        slot.toggleDeleteButton.onClick.RemoveAllListeners();
+                }
+            }
+
             EventHandler.OnLoadData -= ApplyFps;
         }
 
@@ -150,6 +192,19 @@ namespace TimelessEchoes.UI
         {
             if (fpsButtonText != null)
                 fpsButtonText.text = $"FPS: {StaticReferences.TargetFps}";
+        }
+
+        private void Update()
+        {
+            UpdateSlotInfo();
+        }
+
+        private void UpdateSlotInfo()
+        {
+            if (saveSlots == null)
+                return;
+            for (var i = 0; i < saveSlots.Length; i++)
+                UpdateSlotDynamic(i);
         }
 
         private IEnumerator DeferredInit()
@@ -225,6 +280,169 @@ namespace TimelessEchoes.UI
         {
             if (img != null)
                 img.sprite = on ? onSprite : offSprite;
+        }
+
+        private void OnSaveDelete(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+            if (slot.deleteMode)
+                DeleteSlot(index);
+            else
+                SaveSlot(index);
+            RefreshSlot(index);
+        }
+
+        private void OnLoad(int index)
+        {
+            Oracle.oracle.SelectSlot(index);
+            RefreshAllSlots();
+        }
+
+        private void ToggleDelete(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+            slot.deleteMode = !slot.deleteMode;
+            UpdateButtonVisual(slot.toggleDeleteImage, slot.deleteMode);
+            if (slot.saveDeleteText != null)
+                slot.saveDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+        }
+
+        private void SaveSlot(int index)
+        {
+            var oracle = Oracle.oracle;
+            EventHandler.SaveData();
+            oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+            var dataName = $"{prefix}Data{index}";
+            var fileName = $"{prefix}Sd{index}.es3";
+            var settings = new ES3Settings(fileName, ES3.Location.Cache);
+            ES3.Save(dataName, oracle.saveData, settings);
+            ES3.StoreCachedFile(fileName);
+            SteamCloudManager.UploadFile(fileName);
+        }
+
+        private void DeleteSlot(int index)
+        {
+            var oracle = Oracle.oracle;
+            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+            var fileName = $"{prefix}Sd{index}.es3";
+            ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
+            ES3.DeleteFile(fileName);
+            SteamCloudManager.DeleteFile(fileName);
+        }
+
+        private void RefreshAllSlots()
+        {
+            if (saveSlots == null)
+                return;
+            for (var i = 0; i < saveSlots.Length; i++)
+                RefreshSlot(i);
+        }
+
+        private void RefreshSlot(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+
+            var oracle = Oracle.oracle;
+            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+            var fileName = $"{prefix}Sd{index}.es3";
+            var dataName = $"{prefix}Data{index}";
+
+            if (slot.fileNameText != null)
+                slot.fileNameText.text = fileName;
+
+            if (index == oracle.CurrentSlot)
+            {
+                slot.lastPlayed = string.IsNullOrEmpty(oracle.saveData.DateQuitString)
+                    ? (DateTime?)null
+                    : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
+            }
+            else if (ES3.FileExists(fileName))
+            {
+                try
+                {
+                    var data = ES3.Load<GameData>(dataName, new ES3Settings(fileName));
+                    if (slot.playtimeText != null)
+                        slot.playtimeText.text = data.PlayTime > 0
+                            ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
+                            : "Playtime: None";
+                    slot.lastPlayed = string.IsNullOrEmpty(data.DateQuitString)
+                        ? (DateTime?)null
+                        : DateTime.Parse(data.DateQuitString, CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    if (slot.playtimeText != null)
+                        slot.playtimeText.text = "Playtime: None";
+                    slot.lastPlayed = null;
+                }
+            }
+            else
+            {
+                if (slot.playtimeText != null)
+                    slot.playtimeText.text = "Playtime: None";
+                slot.lastPlayed = null;
+            }
+
+            UpdateSlotDynamic(index);
+
+            if (slot.saveDeleteText != null)
+                slot.saveDeleteText.text = slot.deleteMode ? "Delete" : "Save";
+        }
+
+        private void UpdateSlotDynamic(int index)
+        {
+            if (saveSlots == null || index >= saveSlots.Length)
+                return;
+            var slot = saveSlots[index];
+            if (slot == null)
+                return;
+
+            if (index == Oracle.oracle.CurrentSlot)
+            {
+                var playtime = Oracle.oracle.saveData.PlayTime;
+                if (slot.playtimeText != null)
+                    slot.playtimeText.text = playtime > 0
+                        ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
+                        : "Playtime: None";
+
+                if (slot.lastPlayed.HasValue)
+                {
+                    var diff = DateTime.UtcNow - slot.lastPlayed.Value;
+                    slot.lastPlayedText.text =
+                        $"Last Save: {CalcUtils.FormatTime(diff.TotalSeconds, shortForm: true)}";
+                }
+                else
+                {
+                    slot.lastPlayedText.text = "Last Save: Never";
+                }
+            }
+            else
+            {
+                if (slot.lastPlayed.HasValue)
+                {
+                    var date = slot.lastPlayed.Value.ToLocalTime().ToString("g");
+                    var diff = DateTime.UtcNow - slot.lastPlayed.Value;
+                    slot.lastPlayedText.text =
+                        $"Last Played: {date} • {CalcUtils.FormatTime(diff.TotalSeconds, shortForm: true)} ago";
+                }
+                else
+                {
+                    slot.lastPlayedText.text = "Last Played: Never";
+                }
+            }
         }
     }
 }
