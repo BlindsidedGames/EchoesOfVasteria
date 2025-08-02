@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 namespace TimelessEchoes.UI
 {
-    [Serializable]
-    public class SaveSlotReferences
+    public class SaveSlotReferences : MonoBehaviour
     {
         public int slot;
         public Button saveDeleteButton;
