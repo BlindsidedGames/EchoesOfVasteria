@@ -72,6 +72,8 @@ namespace TimelessEchoes
         [SerializeField] private RunCalebUIReferences runCalebUI;
         [TitleGroup("UI/General")]
         [SerializeField] private Transform meetingParent;
+        [TitleGroup("UI/General")]
+        [SerializeField] private GameObject savesObject;
 
         [TitleGroup("UI/Death Window")]
         [SerializeField] private GameObject deathWindow;
@@ -207,6 +209,7 @@ namespace TimelessEchoes
         {
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            savesObject?.SetActive(true);
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
 #endif
@@ -332,6 +335,7 @@ namespace TimelessEchoes
             heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
+            savesObject?.SetActive(false);
             if (returnOnDeathText != null)
                 returnOnDeathText.text = "Return On Death";
             if (returnToTavernText != null)
@@ -603,6 +607,7 @@ namespace TimelessEchoes
 
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
+            savesObject?.SetActive(true);
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
             runResourceTracker?.ShowWindow();
