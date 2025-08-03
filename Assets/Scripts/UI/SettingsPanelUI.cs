@@ -1,10 +1,6 @@
-#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
-#define DISABLESTEAMWORKS
-#endif
 using System;
 using System.Collections;
 using System.Globalization;
-using System.IO;
 using Blindsided;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
@@ -12,9 +8,6 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-#if !DISABLESTEAMWORKS
-using Steamworks;
-#endif
 using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.UI
@@ -144,23 +137,7 @@ namespace TimelessEchoes.UI
                 for (var i = 0; i < saveSlots.Length; i++)
                 {
                     var file = $"{prefix}Sd{i}.es3";
-                    var downloaded = false;
-                    var localExists = ES3.FileExists(file);
-#if !DISABLESTEAMWORKS
-                    var path = Path.Combine(Application.persistentDataPath, file);
-                    if (!localExists)
-                    {
-                        downloaded = SteamCloudManager.DownloadFile(file);
-                    }
-                    else if (SteamManager.Initialized && SteamRemoteStorage.FileExists(file))
-                    {
-                        var cloudTimestamp = SteamRemoteStorage.GetFileTimestamp(file);
-                        var localTimestamp = new DateTimeOffset(File.GetLastWriteTimeUtc(path)).ToUnixTimeSeconds();
-                        if (cloudTimestamp > localTimestamp)
-                            downloaded = SteamCloudManager.DownloadFile(file);
-                    }
-#endif
-                    if (downloaded || localExists)
+                    if (SteamCloudManager.DownloadFile(file) || ES3.FileExists(file))
                         ES3.CacheFile(file);
                 }
 
