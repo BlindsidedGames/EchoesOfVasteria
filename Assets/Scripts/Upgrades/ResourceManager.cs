@@ -8,6 +8,7 @@ using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
 using static Blindsided.SaveData.StaticReferences;
+using Resources = UnityEngine.Resources;
 
 namespace TimelessEchoes.Upgrades
 {
