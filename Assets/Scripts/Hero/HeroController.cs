@@ -96,6 +96,11 @@ namespace TimelessEchoes.Hero
         private Transform currentEnemy;
         private Health currentEnemyHealth;
 
+        private readonly HashSet<Enemy> engagedEnemies = new();
+        private readonly Dictionary<Enemy, System.Action> enemyDeathHandlers = new();
+        private readonly Dictionary<Enemy, System.Action<Enemy>> enemyDisengageHandlers = new();
+        private readonly List<Enemy> enemyRemovalBuffer = new();
+
         private AIPath ai;
         private float attackSpeedBonus;
         private float baseAttackSpeed;
@@ -368,6 +373,21 @@ namespace TimelessEchoes.Hero
             if (!IsEcho)
                 Enemy.OnEngage -= OnEnemyEngage;
 
+            foreach (var enemy in engagedEnemies)
+            {
+                if (enemyDeathHandlers.TryGetValue(enemy, out var death))
+                {
+                    var hp = enemy != null ? enemy.GetComponent<Health>() : null;
+                    if (hp != null)
+                        hp.OnDeath -= death;
+                }
+                if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
+                    Enemy.OnEngage -= disengage;
+            }
+            engagedEnemies.Clear();
+            enemyDeathHandlers.Clear();
+            enemyDisengageHandlers.Clear();
+
             if (idleWalkTarget != null)
                 Destroy(idleWalkTarget.gameObject);
             idleWalkTarget = null;
@@ -546,11 +566,40 @@ namespace TimelessEchoes.Hero
                 }
             }
 
-            var nearest = allowAttacks && currentEnemy != null ? currentEnemy : null;
-            if (allowAttacks && nearest == null)
+            enemyRemovalBuffer.Clear();
+            foreach (var enemy in engagedEnemies)
             {
-                var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
-                nearest = FindNearestEnemy(range);
+                var hp = enemy != null ? enemy.GetComponent<Health>() : null;
+                if (enemy == null || hp == null || hp.CurrentHealth <= 0f || !enemy.IsEngaged)
+                    enemyRemovalBuffer.Add(enemy);
+            }
+            foreach (var enemy in enemyRemovalBuffer)
+                UnregisterEngagedEnemy(enemy);
+
+            Transform nearest = null;
+            if (allowAttacks)
+            {
+                if (engagedEnemies.Count > 0)
+                {
+                    float best = float.PositiveInfinity;
+                    Enemy chosen = null;
+                    foreach (var enemy in engagedEnemies)
+                    {
+                        if (enemy == null) continue;
+                        float dist = Vector2.Distance(transform.position, enemy.transform.position);
+                        if (dist < best)
+                        {
+                            best = dist;
+                            chosen = enemy;
+                        }
+                    }
+                    nearest = chosen != null ? chosen.transform : null;
+                }
+                else
+                {
+                    var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
+                    nearest = FindNearestEnemy(range);
+                }
             }
 
             if (allowAttacks && nearest != null)
@@ -573,7 +622,7 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
-            if (state == State.Combat)
+            if (state == State.Combat && engagedEnemies.Count == 0)
             {
                 Log("Hero exiting combat", TELogCategory.Combat, this);
                 combatDamageMultiplier = 1f;
@@ -729,17 +778,43 @@ namespace TimelessEchoes.Hero
             if (enemy == null)
                 return;
 
+            var hp = enemy.GetComponent<Health>();
+            if (hp == null || hp.CurrentHealth <= 0f)
+            {
+                UnregisterEngagedEnemy(enemy);
+                return;
+            }
+
+            if (enemy.IsEngaged)
+            {
+                if (!engagedEnemies.Contains(enemy))
+                {
+                    engagedEnemies.Add(enemy);
+
+                    System.Action deathHandler = () => UnregisterEngagedEnemy(enemy);
+                    hp.OnDeath += deathHandler;
+                    enemyDeathHandlers[enemy] = deathHandler;
+
+                    System.Action<Enemy> disengageHandler = null;
+                    disengageHandler = e =>
+                    {
+                        if (e == enemy && !e.IsEngaged)
+                            UnregisterEngagedEnemy(enemy);
+                    };
+                    Enemy.OnEngage += disengageHandler;
+                    enemyDisengageHandlers[enemy] = disengageHandler;
+                }
+            }
+            else
+            {
+                UnregisterEngagedEnemy(enemy);
+                return;
+            }
+
             if (!allowAttacks)
                 return;
 
-            if (!enemy.IsEngaged)
-                return;
-
             if (currentEnemy != null && currentEnemy != enemy.transform)
-                return;
-
-            var hp = enemy.GetComponent<Health>();
-            if (hp == null || hp.CurrentHealth <= 0f)
                 return;
 
             if (currentEnemy == null)
@@ -754,6 +829,35 @@ namespace TimelessEchoes.Hero
                 CurrentTask.OnInterrupt(this);
 
             HandleCombat(enemy.transform);
+        }
+
+        private void UnregisterEngagedEnemy(Enemy enemy)
+        {
+            if (enemy == null)
+                return;
+
+            if (engagedEnemies.Remove(enemy))
+            {
+                if (enemyDeathHandlers.TryGetValue(enemy, out var death))
+                {
+                    var hp = enemy.GetComponent<Health>();
+                    if (hp != null)
+                        hp.OnDeath -= death;
+                    enemyDeathHandlers.Remove(enemy);
+                }
+                if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
+                {
+                    Enemy.OnEngage -= disengage;
+                    enemyDisengageHandlers.Remove(enemy);
+                }
+            }
+
+            if (currentEnemy == enemy.transform)
+            {
+                currentEnemyHealth?.SetHealthBarVisible(false);
+                currentEnemy = null;
+                currentEnemyHealth = null;
+            }
         }
 
         private void Attack(Transform target)
