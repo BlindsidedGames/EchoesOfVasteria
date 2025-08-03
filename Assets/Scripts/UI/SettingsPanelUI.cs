@@ -462,9 +462,11 @@ namespace TimelessEchoes.UI
                 slot.lastPlayed = null;
             }
 
-            var display = $"File {index + 1} | {completion:0}%";
+            slot.completionPercentage = completion;
+
+            var display = $"File {index + 1} | {slot.completionPercentage:0}%";
             if (index == oracle.CurrentSlot)
-                display += " | Active";
+                display += " - Active";
             if (slot.fileNameText != null)
                 slot.fileNameText.text = display;
 
@@ -486,6 +488,11 @@ namespace TimelessEchoes.UI
 
             if (index == Oracle.oracle.CurrentSlot)
             {
+                slot.completionPercentage = Oracle.oracle.saveData.CompletionPercentage;
+                if (slot.fileNameText != null)
+                    slot.fileNameText.text =
+                        $"File {index + 1} | {slot.completionPercentage:0}% - Active";
+
                 var playtime = Oracle.oracle.saveData.PlayTime;
                 if (slot.playtimeText != null)
                     slot.playtimeText.text = playtime > 0
@@ -505,6 +512,10 @@ namespace TimelessEchoes.UI
             }
             else
             {
+                if (slot.fileNameText != null)
+                    slot.fileNameText.text =
+                        $"File {index + 1} | {slot.completionPercentage:0}%";
+
                 if (slot.lastPlayed.HasValue)
                 {
                     var date = slot.lastPlayed.Value.ToLocalTime().ToString("g");
