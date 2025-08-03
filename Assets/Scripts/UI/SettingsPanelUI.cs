@@ -315,10 +315,19 @@ namespace TimelessEchoes.UI
             if (slot.safetyEnabled)
             {
                 DeleteSlot(index);
-                RefreshSlot(index);
+                if (index == Oracle.oracle.CurrentSlot)
+                {
+                    Oracle.oracle.WipeCloudData();
+                }
+                else
+                {
+                    RefreshSlot(index);
+                }
             }
             else
             {
+                if (index == Oracle.oracle.CurrentSlot)
+                    return;
                 Oracle.oracle.SelectSlot(index);
                 EventHandler.ResetData();
                 EventHandler.LoadData();
@@ -379,7 +388,7 @@ namespace TimelessEchoes.UI
                 slot.saveButton.interactable = isCurrent || safety;
 
             if (slot.loadDeleteButton != null)
-                slot.loadDeleteButton.interactable = true;
+                slot.loadDeleteButton.interactable = !isCurrent || safety;
         }
 
         private void RefreshAllSlots()
