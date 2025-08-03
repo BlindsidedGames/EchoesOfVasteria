@@ -83,19 +83,6 @@ namespace TimelessEchoes.UI
         private const int Fps60 = 60;
         private const int Fps120 = 120;
 
-        private const string SlotCompletionKeyPrefix = "SlotCompletion";
-
-        private static string GetSlotCompletionKey(int index)
-        {
-            return $"{SlotCompletionKeyPrefix}{index}";
-        }
-
-        private static void CacheCompletion(int index, float value)
-        {
-            PlayerPrefs.SetFloat(GetSlotCompletionKey(index), value);
-            PlayerPrefs.Save();
-        }
-
         private void Awake()
         {
             saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
@@ -393,8 +380,10 @@ namespace TimelessEchoes.UI
             var fileName = $"{prefix}Sd{index}.es3";
             ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
             ES3.DeleteFile(fileName);
+
             PlayerPrefs.DeleteKey(GetSlotCompletionKey(index));
             PlayerPrefs.Save();
+
         }
 
         private void UpdateSlotInteractivity(int index)
@@ -438,9 +427,8 @@ namespace TimelessEchoes.UI
             var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
             var fileName = $"{prefix}Sd{index}.es3";
             var dataName = $"{prefix}Data{index}";
-            var key = GetSlotCompletionKey(index);
 
-            float completion = PlayerPrefs.GetFloat(key, 0f);
+            float completion = 0f;
 
             if (index == oracle.CurrentSlot)
             {
@@ -448,13 +436,13 @@ namespace TimelessEchoes.UI
                 slot.lastPlayed = string.IsNullOrEmpty(oracle.saveData.DateQuitString)
                     ? null
                     : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
-                CacheCompletion(index, completion);
             }
             else if (ES3.FileExists(fileName))
             {
                 try
                 {
                     var data = ES3.Load<GameData>(dataName, new ES3Settings(fileName));
+                    completion = data.CompletionPercentage;
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = data.PlayTime > 0
                             ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
@@ -462,15 +450,12 @@ namespace TimelessEchoes.UI
                     slot.lastPlayed = string.IsNullOrEmpty(data.DateQuitString)
                         ? null
                         : DateTime.Parse(data.DateQuitString, CultureInfo.InvariantCulture);
-                    completion = PlayerPrefs.GetFloat(key, data.CompletionPercentage);
-                    CacheCompletion(index, completion);
                 }
                 catch
                 {
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = "Playtime: None";
                     slot.lastPlayed = null;
-                    completion = PlayerPrefs.GetFloat(key, 0f);
                 }
             }
             else
@@ -478,12 +463,11 @@ namespace TimelessEchoes.UI
                 if (slot.playtimeText != null)
                     slot.playtimeText.text = "Playtime: None";
                 slot.lastPlayed = null;
-                completion = PlayerPrefs.GetFloat(key, 0f);
             }
 
             slot.completionPercentage = completion;
 
-            var display = $"File {index + 1} | {slot.completionPercentage:0.0}%";
+            var display = $"File {index + 1} | {slot.completionPercentage:0}%";
             if (index == oracle.CurrentSlot)
                 display += " - Active";
             if (slot.fileNameText != null)
@@ -510,7 +494,7 @@ namespace TimelessEchoes.UI
                 slot.completionPercentage = Oracle.oracle.saveData.CompletionPercentage;
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0.0}% - Active";
+                        $"File {index + 1} | {slot.completionPercentage:0}% - Active";
 
                 var playtime = Oracle.oracle.saveData.PlayTime;
                 if (slot.playtimeText != null)
@@ -533,7 +517,7 @@ namespace TimelessEchoes.UI
             {
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0.0}%";
+                        $"File {index + 1} | {slot.completionPercentage:0}%";
 
                 if (slot.lastPlayed.HasValue)
                 {
