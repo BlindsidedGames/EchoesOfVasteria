@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: CornAE
+  m_Name: Unlock Corn
   m_EditorClassIdentifier: 
-  questId: CornAE
+  questId: For the Jam!
   questName:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956696563392
+      m_KeyId: 7520072908800
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956796563392
+      m_KeyId: 7521440251904
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956896563392
+      m_KeyId: 7522576908288
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -43,9 +43,15 @@ MonoBehaviour:
   npcId: 
   autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
-  - {fileID: 11400000, guid: ba28f0aa2deb1f84aaf33bf4f9f901b1, type: 2}
-  requirements: []
+  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
+    amount: 100
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

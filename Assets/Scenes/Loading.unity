@@ -377,39 +377,12 @@ MonoBehaviour:
     - Name: UseScaledTimeForValues
       Entry: 5
       Data: false
-    - Name: MasterVolume
-      Entry: 4
-      Data: 0
-    - Name: MusicVolume
-      Entry: 4
-      Data: 0
-    - Name: SfxVolume
-      Entry: 4
-      Data: 0
     - Name: TargetFps
       Entry: 3
       Data: 0
     - Name: SafeAreaRatio
       Entry: 4
       Data: 0
-    - Name: DropFloatingTextDuration
-      Entry: 4
-      Data: 0
-    - Name: PlayerDamageTextDuration
-      Entry: 4
-      Data: 0
-    - Name: EnemyDamageTextDuration
-      Entry: 4
-      Data: 0
-    - Name: PlayerFloatingDamage
-      Entry: 5
-      Data: false
-    - Name: EnemyFloatingDamage
-      Entry: 5
-      Data: false
-    - Name: ItemDropFloatingText
-      Entry: 5
-      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -726,6 +699,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: CompletionPercentage
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: ChilliAE
+  m_Name: CucumberAE
   m_EditorClassIdentifier: 
-  questId: ChilliAE
+  questId: CucumberAE
   questName:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956396563392
+      m_KeyId: 7956996563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956496563392
+      m_KeyId: 7957096563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7956596563392
+      m_KeyId: 7957196563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -43,9 +43,23 @@ MonoBehaviour:
   npcId: 
   autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: ba44cb2e20b6fec40be73ccad3b7e368, type: 2}
-  - {fileID: 11400000, guid: 4ca1d6c5bf8245df82a7a75168d51f02, type: 2}
-  requirements: []
+  - {fileID: 11400000, guid: 17c4312ba2941884596f1b250ab94892, type: 2}
+  - {fileID: 11400000, guid: c3c28a1d79264acb8fe05e6880426a43, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}
+    amount: 2500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  - type: 0
+    resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}
+    amount: 1500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

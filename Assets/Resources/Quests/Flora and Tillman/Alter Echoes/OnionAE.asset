@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: Mildred
+  m_Name: OnionAE
   m_EditorClassIdentifier: 
-  questId: Mildred
+  questId: OnionAE
   questName:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7955958563392
+      m_KeyId: 7958796563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7955959563392
+      m_KeyId: 7958896563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -35,18 +35,34 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7955960563392
+      m_KeyId: 7958996563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+  - {fileID: 11400000, guid: c6d1e1c4b9619da4aa75d5fa26b2cc80, type: 2}
+  - {fileID: 11400000, guid: 2395628c18784e2bab0b7af0b4bbc721, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
-    amount: 25
+    resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}
+    amount: 5000
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  - type: 0
+    resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}
+    amount: 2500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  - type: 0
+    resource: {fileID: 11400000, guid: b5b12e283249229419b1a300192d8601, type: 2}
+    amount: 2000
     enemies: []
     killName: 
     killIcon: {fileID: 0}

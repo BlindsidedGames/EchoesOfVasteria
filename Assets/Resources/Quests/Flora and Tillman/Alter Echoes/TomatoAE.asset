@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
-  m_Name: FunionAE
+  m_Name: TomatoAE
   m_EditorClassIdentifier: 
-  questId: FunionAE
+  questId: TomatoAE
   questName:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7957896563392
+      m_KeyId: 7960596563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7957996563392
+      m_KeyId: 7960696563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
     m_TableEntryReference:
-      m_KeyId: 7958096563392
+      m_KeyId: 7960796563392
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -43,9 +43,23 @@ MonoBehaviour:
   npcId: 
   autoPin: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 6ab9b8712c0eb8f4380cb342c29635d0, type: 2}
-  - {fileID: 11400000, guid: 72c197707d4c4c529d67db6a7e711132, type: 2}
-  requirements: []
+  - {fileID: 11400000, guid: 9f0657c851cb11243a282bc4e2a91d22, type: 2}
+  - {fileID: 11400000, guid: a01bc0adc87a48bab23d3700a16800e6, type: 2}
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}
+    amount: 2500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  - type: 0
+    resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}
+    amount: 1500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

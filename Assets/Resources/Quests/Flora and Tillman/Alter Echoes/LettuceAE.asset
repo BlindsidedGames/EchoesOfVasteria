@@ -45,7 +45,21 @@ MonoBehaviour:
   requiredQuests:
   - {fileID: 11400000, guid: c90a7a28299440846a8be16bf168e3f1, type: 2}
   - {fileID: 11400000, guid: 35982548c6994ba5a00d881db3dac34e, type: 2}
-  requirements: []
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}
+    amount: 2500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  - type: 0
+    resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}
+    amount: 1500
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

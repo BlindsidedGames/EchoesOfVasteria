@@ -44,7 +44,14 @@ MonoBehaviour:
   autoPin: 0
   requiredQuests:
   - {fileID: 11400000, guid: 426c7caff520fda45822765ddb29f677, type: 2}
-  requirements: []
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
+    amount: 5000
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
   unlockBuffSlots: 1
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
