@@ -494,7 +494,7 @@ namespace TimelessEchoes.UI
 
             slot.completionPercentage = completion;
 
-            var display = $"File {index + 1} | {slot.completionPercentage:0.0}%";
+            var display = $"File {index + 1} | {slot.completionPercentage:0}%";
             if (index == oracle.CurrentSlot)
                 display += " - Active";
             if (slot.fileNameText != null)
@@ -521,7 +521,7 @@ namespace TimelessEchoes.UI
                 slot.completionPercentage = Oracle.oracle.saveData.CompletionPercentage;
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0.0}% - Active";
+                        $"File {index + 1} | {slot.completionPercentage:0}% - Active";
 
                 var playtime = Oracle.oracle.saveData.PlayTime;
                 if (slot.playtimeText != null)
@@ -544,7 +544,7 @@ namespace TimelessEchoes.UI
             {
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0.0}%";
+                        $"File {index + 1} | {slot.completionPercentage:0}%";
 
                 if (slot.lastPlayed.HasValue)
                 {
