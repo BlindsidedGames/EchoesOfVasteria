@@ -355,6 +355,7 @@ namespace TimelessEchoes
             BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.UpdateDistance(0f);
             StartCoroutine(StartRunRoutine());
+            SettingsPanelUI.RefreshAllSlots();
         }
 
         private IEnumerator StartRunRoutine()
@@ -612,6 +613,7 @@ namespace TimelessEchoes
             RichPresenceManager.Instance?.SetInTown();
 #endif
             Log("Returned to tavern", TELogCategory.Run, this);
+            SettingsPanelUI.RefreshAllSlots();
         }
 
         private void CleanupMap()
