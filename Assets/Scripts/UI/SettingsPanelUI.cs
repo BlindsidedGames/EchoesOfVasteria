@@ -321,18 +321,14 @@ namespace TimelessEchoes.UI
             if (slot == null)
                 return;
 
-                if (slot.safetyEnabled)
-                {
-                    DeleteSlot(index);
-                    if (index == Oracle.oracle.CurrentSlot)
-                    {
-                        Oracle.oracle.WipeAllData();
-                    }
-                    else
-                    {
-                        RefreshSlot(index);
-                    }
-                }
+            if (slot.safetyEnabled)
+            {
+                DeleteSlot(index);
+                if (index == Oracle.oracle.CurrentSlot)
+                    Oracle.oracle.WipeAllData();
+                else
+                    RefreshSlot(index);
+            }
             else
             {
                 if (index == Oracle.oracle.CurrentSlot)
@@ -370,7 +366,6 @@ namespace TimelessEchoes.UI
             var settings = new ES3Settings(fileName, ES3.Location.Cache);
             ES3.Save(dataName, oracle.saveData, settings);
             ES3.StoreCachedFile(fileName);
-            CacheCompletion(index, oracle.saveData.CompletionPercentage);
         }
 
         private void DeleteSlot(int index)
@@ -381,9 +376,7 @@ namespace TimelessEchoes.UI
             ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
             ES3.DeleteFile(fileName);
 
-            PlayerPrefs.DeleteKey(GetSlotCompletionKey(index));
             PlayerPrefs.Save();
-
         }
 
         private void UpdateSlotInteractivity(int index)
@@ -428,7 +421,7 @@ namespace TimelessEchoes.UI
             var fileName = $"{prefix}Sd{index}.es3";
             var dataName = $"{prefix}Data{index}";
 
-            float completion = 0f;
+            var completion = 0f;
 
             if (index == oracle.CurrentSlot)
             {
