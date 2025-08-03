@@ -132,6 +132,15 @@ namespace TimelessEchoes.UI
                     }
                 }
 
+                var oracle = Oracle.oracle;
+                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+                for (var i = 0; i < saveSlots.Length; i++)
+                {
+                    var file = $"{prefix}Sd{i}.es3";
+                    SteamCloudManager.DownloadFile(file);
+                    ES3.StoreCachedFile(file);
+                }
+
                 RefreshAllSlots();
             }
 
