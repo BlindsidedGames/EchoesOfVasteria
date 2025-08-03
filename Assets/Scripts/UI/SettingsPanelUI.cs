@@ -395,7 +395,7 @@ namespace TimelessEchoes.UI
                 var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
                 var fileName = $"{prefix}Sd{index}.es3";
                 ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
-                ES3.DeleteFile(fileName);
+                ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.File));
 
                 PlayerPrefs.DeleteKey(SlotKey(index, "Completion"));
                 PlayerPrefs.DeleteKey(SlotKey(index, "Playtime"));
