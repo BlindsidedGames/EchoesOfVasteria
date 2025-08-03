@@ -208,5 +208,30 @@ namespace Blindsided.SaveData
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
         public static event Action ShowLevelTextChanged;
         public static event Action AutoBuffChanged;
+
+        public static void UpdateCompletionPercentage()
+        {
+            if (oracle == null) return;
+
+            var completedQuests = 0;
+            if (oracle.saveData.Quests != null)
+                foreach (var q in oracle.saveData.Quests.Values)
+                    if (q.Completed)
+                        completedQuests++;
+
+            var unlockedResources = 0;
+            if (oracle.saveData.Resources != null)
+                foreach (var r in oracle.saveData.Resources.Values)
+                    if (r.Earned)
+                        unlockedResources++;
+
+            var totalQuests = UnityEngine.Resources.LoadAll<TimelessEchoes.Quests.QuestData>("Quests").Length;
+            var totalResources = UnityEngine.Resources.LoadAll<TimelessEchoes.Upgrades.Resource>("").Length;
+
+            var total = totalQuests + totalResources;
+            var completed = completedQuests + unlockedResources;
+
+            oracle.saveData.CompletionPercentage = total > 0 ? completed / (float)total * 100f : 0f;
+        }
     }
 }

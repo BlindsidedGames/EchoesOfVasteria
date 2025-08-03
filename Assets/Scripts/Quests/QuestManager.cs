@@ -103,6 +103,7 @@ namespace TimelessEchoes.Quests
             active.Clear();
             StartAvailableQuests();
             RefreshNoticeboard();
+            UpdateCompletionPercentage();
         }
 
         private void OnKill(EnemyData stats)
@@ -294,6 +295,7 @@ namespace TimelessEchoes.Quests
             RefreshNoticeboard();
             Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
+            UpdateCompletionPercentage();
             if (oracle.saveData.PinnedQuests.Remove(id))
                 PinnedQuestUIManager.Instance?.RefreshPins();
             else
