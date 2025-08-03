@@ -137,7 +137,7 @@ namespace TimelessEchoes.UI
                 for (var i = 0; i < saveSlots.Length; i++)
                 {
                     var file = $"{prefix}Sd{i}.es3";
-                    if (SteamCloudManager.DownloadFile(file) || ES3.FileExists(file))
+                    if (ES3.FileExists(file))
                         ES3.CacheFile(file);
                 }
 
@@ -321,18 +321,18 @@ namespace TimelessEchoes.UI
             if (slot == null)
                 return;
 
-            if (slot.safetyEnabled)
-            {
-                DeleteSlot(index);
-                if (index == Oracle.oracle.CurrentSlot)
+                if (slot.safetyEnabled)
                 {
-                    Oracle.oracle.WipeCloudData();
+                    DeleteSlot(index);
+                    if (index == Oracle.oracle.CurrentSlot)
+                    {
+                        Oracle.oracle.WipeAllData();
+                    }
+                    else
+                    {
+                        RefreshSlot(index);
+                    }
                 }
-                else
-                {
-                    RefreshSlot(index);
-                }
-            }
             else
             {
                 if (index == Oracle.oracle.CurrentSlot)
@@ -370,7 +370,7 @@ namespace TimelessEchoes.UI
             var settings = new ES3Settings(fileName, ES3.Location.Cache);
             ES3.Save(dataName, oracle.saveData, settings);
             ES3.StoreCachedFile(fileName);
-            SteamCloudManager.UploadFile(fileName);
+            CacheCompletion(index, oracle.saveData.CompletionPercentage);
         }
 
         private void DeleteSlot(int index)
@@ -380,7 +380,10 @@ namespace TimelessEchoes.UI
             var fileName = $"{prefix}Sd{index}.es3";
             ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
             ES3.DeleteFile(fileName);
-            SteamCloudManager.DeleteFile(fileName);
+
+            PlayerPrefs.DeleteKey(GetSlotCompletionKey(index));
+            PlayerPrefs.Save();
+
         }
 
         private void UpdateSlotInteractivity(int index)
