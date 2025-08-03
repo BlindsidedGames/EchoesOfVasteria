@@ -87,9 +87,6 @@ namespace Blindsided.SaveData
             /// </summary>
             public bool ShowPinnedQuests = true;
             public bool UseScaledTimeForValues;
-            public float MasterVolume = 1f;
-            public float MusicVolume = 0.25f;
-            public float SfxVolume = 0.7f;
 
             /// <summary>
             ///     Desired target frame rate for the game.
@@ -101,36 +98,6 @@ namespace Blindsided.SaveData
             ///     0 → 16:9, 1 → 32:9.
             /// </summary>
             public float SafeAreaRatio;
-
-            /// <summary>
-            ///     Duration for drop floating text in seconds.
-            /// </summary>
-            public float DropFloatingTextDuration = 1f;
-
-            /// <summary>
-            ///     Duration for player damage floating text in seconds.
-            /// </summary>
-            public float PlayerDamageTextDuration = 0.5f;
-
-            /// <summary>
-            ///     Duration for enemy damage floating text in seconds.
-            /// </summary>
-            public float EnemyDamageTextDuration = 0.5f;
-
-            /// <summary>
-            ///     Whether player damage numbers are shown.
-            /// </summary>
-            public bool PlayerFloatingDamage = true;
-
-            /// <summary>
-            ///     Whether enemy damage numbers are shown.
-            /// </summary>
-            public bool EnemyFloatingDamage = true;
-
-            /// <summary>
-            ///     Whether item drop floating text is shown.
-            /// </summary>
-            public bool ItemDropFloatingText = true;
 
         }
 

@@ -8,6 +8,15 @@ namespace Blindsided.SaveData
 {
     public static class StaticReferences
     {
+        private const string MasterVolumeKey = "MasterVolume";
+        private const string MusicVolumeKey = "MusicVolume";
+        private const string SfxVolumeKey = "SfxVolume";
+        private const string DropFloatingTextDurationKey = "DropFloatingTextDuration";
+        private const string PlayerDamageTextDurationKey = "PlayerDamageTextDuration";
+        private const string EnemyDamageTextDurationKey = "EnemyDamageTextDuration";
+        private const string PlayerFloatingDamageKey = "PlayerFloatingDamage";
+        private const string EnemyFloatingDamageKey = "EnemyFloatingDamage";
+        private const string ItemDropFloatingTextKey = "ItemDropFloatingText";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -93,20 +102,20 @@ namespace Blindsided.SaveData
 
         public static float MasterVolume
         {
-            get => oracle.saveData.SavedPreferences.MasterVolume;
-            set => oracle.saveData.SavedPreferences.MasterVolume = value;
+            get => PlayerPrefs.GetFloat(MasterVolumeKey, 1f);
+            set => PlayerPrefs.SetFloat(MasterVolumeKey, Mathf.Clamp01(value));
         }
 
         public static float MusicVolume
         {
-            get => oracle.saveData.SavedPreferences.MusicVolume;
-            set => oracle.saveData.SavedPreferences.MusicVolume = value;
+            get => PlayerPrefs.GetFloat(MusicVolumeKey, 0.25f);
+            set => PlayerPrefs.SetFloat(MusicVolumeKey, Mathf.Clamp01(value));
         }
 
         public static float SfxVolume
         {
-            get => oracle.saveData.SavedPreferences.SfxVolume;
-            set => oracle.saveData.SavedPreferences.SfxVolume = value;
+            get => PlayerPrefs.GetFloat(SfxVolumeKey, 0.7f);
+            set => PlayerPrefs.SetFloat(SfxVolumeKey, Mathf.Clamp01(value));
         }
 
         public static int TargetFps
@@ -123,38 +132,38 @@ namespace Blindsided.SaveData
 
         public static float DropFloatingTextDuration
         {
-            get => oracle.saveData.SavedPreferences.DropFloatingTextDuration;
-            set => oracle.saveData.SavedPreferences.DropFloatingTextDuration = Mathf.Clamp(value, 0f, 10f);
+            get => PlayerPrefs.GetFloat(DropFloatingTextDurationKey, 1f);
+            set => PlayerPrefs.SetFloat(DropFloatingTextDurationKey, Mathf.Clamp(value, 0f, 10f));
         }
 
         public static float PlayerDamageTextDuration
         {
-            get => oracle.saveData.SavedPreferences.PlayerDamageTextDuration;
-            set => oracle.saveData.SavedPreferences.PlayerDamageTextDuration = Mathf.Clamp(value, 0f, 2f);
+            get => PlayerPrefs.GetFloat(PlayerDamageTextDurationKey, 0.5f);
+            set => PlayerPrefs.SetFloat(PlayerDamageTextDurationKey, Mathf.Clamp(value, 0f, 2f));
         }
 
         public static float EnemyDamageTextDuration
         {
-            get => oracle.saveData.SavedPreferences.EnemyDamageTextDuration;
-            set => oracle.saveData.SavedPreferences.EnemyDamageTextDuration = Mathf.Clamp(value, 0f, 2f);
+            get => PlayerPrefs.GetFloat(EnemyDamageTextDurationKey, 0.5f);
+            set => PlayerPrefs.SetFloat(EnemyDamageTextDurationKey, Mathf.Clamp(value, 0f, 2f));
         }
 
         public static bool PlayerFloatingDamage
         {
-            get => oracle.saveData.SavedPreferences.PlayerFloatingDamage;
-            set => oracle.saveData.SavedPreferences.PlayerFloatingDamage = value;
+            get => PlayerPrefs.GetInt(PlayerFloatingDamageKey, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerFloatingDamageKey, value ? 1 : 0);
         }
 
         public static bool EnemyFloatingDamage
         {
-            get => oracle.saveData.SavedPreferences.EnemyFloatingDamage;
-            set => oracle.saveData.SavedPreferences.EnemyFloatingDamage = value;
+            get => PlayerPrefs.GetInt(EnemyFloatingDamageKey, 1) == 1;
+            set => PlayerPrefs.SetInt(EnemyFloatingDamageKey, value ? 1 : 0);
         }
 
         public static bool ItemDropFloatingText
         {
-            get => oracle.saveData.SavedPreferences.ItemDropFloatingText;
-            set => oracle.saveData.SavedPreferences.ItemDropFloatingText = value;
+            get => PlayerPrefs.GetInt(ItemDropFloatingTextKey, 1) == 1;
+            set => PlayerPrefs.SetInt(ItemDropFloatingTextKey, value ? 1 : 0);
         }
 
         public static bool ShowLevelText
