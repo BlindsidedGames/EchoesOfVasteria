@@ -41,12 +41,13 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  autoPin: 0
   requiredQuests:
   - {fileID: 11400000, guid: 959a94840c214b3dae27c81ab2473463, type: 2}
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}
-    amount: 250
+    amount: 1500
     enemies: []
     killName: 
     killIcon: {fileID: 0}
