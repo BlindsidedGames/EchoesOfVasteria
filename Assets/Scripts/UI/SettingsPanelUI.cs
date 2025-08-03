@@ -141,11 +141,11 @@ namespace TimelessEchoes.UI
                         ES3.CacheFile(file);
                 }
 
-                RefreshAllSlots();
+                RefreshAllSlotsInstance();
             }
 
             EventHandler.OnLoadData += ApplyFps;
-            EventHandler.OnLoadData += RefreshAllSlots;
+            EventHandler.OnLoadData += RefreshAllSlotsInstance;
             ApplyFps();
             StartCoroutine(DeferredInit());
         }
@@ -184,7 +184,7 @@ namespace TimelessEchoes.UI
                 }
 
             EventHandler.OnLoadData -= ApplyFps;
-            EventHandler.OnLoadData -= RefreshAllSlots;
+            EventHandler.OnLoadData -= RefreshAllSlotsInstance;
         }
 
         private static void SetFullscreenWindow()
@@ -341,7 +341,7 @@ namespace TimelessEchoes.UI
                 Oracle.oracle.SelectSlot(index);
                 EventHandler.ResetData();
                 EventHandler.LoadData();
-                RefreshAllSlots();
+                RefreshAllSlotsInstance();
             }
         }
 
@@ -400,11 +400,17 @@ namespace TimelessEchoes.UI
             if (slot.loadDeleteButton != null)
             {
                 var inTown = GameManager.Instance == null || GameManager.Instance.CurrentMap == null;
-                slot.loadDeleteButton.interactable = safety || (inTown && !isCurrent);
+                slot.loadDeleteButton.interactable = inTown && (!isCurrent || safety);
             }
         }
 
-        private void RefreshAllSlots()
+        public static void RefreshAllSlots()
+        {
+            var instance = Object.FindFirstObjectByType<SettingsPanelUI>();
+            instance?.RefreshAllSlotsInstance();
+        }
+
+        private void RefreshAllSlotsInstance()
         {
             if (saveSlots == null)
                 return;
