@@ -132,10 +132,16 @@ namespace TimelessEchoes.UI
                     }
                 }
 
+                var oracle = Oracle.oracle;
+                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
                 for (var i = 0; i < saveSlots.Length; i++)
                 {
-                    StartCoroutine(LoadSlotAsync(i));
+                    var file = $"{prefix}Sd{i}.es3";
+                    if (SteamCloudManager.DownloadFile(file) || ES3.FileExists(file))
+                        ES3.CacheFile(file);
                 }
+
+                RefreshAllSlots();
             }
 
             EventHandler.OnLoadData += ApplyFps;
@@ -222,39 +228,6 @@ namespace TimelessEchoes.UI
                 return;
             for (var i = 0; i < saveSlots.Length; i++)
                 UpdateSlotDynamic(i);
-        }
-
-        private IEnumerator LoadSlotAsync(int index)
-        {
-            if (saveSlots == null || index >= saveSlots.Length)
-                yield break;
-
-            var slot = saveSlots[index];
-            if (slot == null)
-                yield break;
-
-            var oracle = Oracle.oracle;
-            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-            var fileName = $"{prefix}Sd{index}.es3";
-
-            if (index != oracle.CurrentSlot)
-            {
-                if (slot.fileNameText != null)
-                    slot.fileNameText.text = $"File {index + 1} | Loading...";
-
-                if (!SteamCloudManager.DownloadFile(fileName) && !ES3.FileExists(fileName))
-                {
-                    RefreshSlot(index);
-                    yield break;
-                }
-
-                while (!ES3.FileExists(fileName))
-                    yield return null;
-
-                ES3.CacheFile(fileName);
-            }
-
-            RefreshSlot(index);
         }
 
         private IEnumerator DeferredInit()
