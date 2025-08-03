@@ -83,6 +83,13 @@ namespace TimelessEchoes.UI
         private const int Fps60 = 60;
         private const int Fps120 = 120;
 
+        private static string SlotKey(int index, string field)
+        {
+            var oracle = Oracle.oracle;
+            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+            return $"{prefix}Slot{index}_{field}";
+        }
+
         private void Awake()
         {
             saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
@@ -357,26 +364,48 @@ namespace TimelessEchoes.UI
 
         private void SaveSlot(int index)
         {
-            var oracle = Oracle.oracle;
-            EventHandler.SaveData();
-            oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-            var dataName = $"{prefix}Data{index}";
-            var fileName = $"{prefix}Sd{index}.es3";
-            var settings = new ES3Settings(fileName, ES3.Location.Cache);
-            ES3.Save(dataName, oracle.saveData, settings);
-            ES3.StoreCachedFile(fileName);
+            try
+            {
+                var oracle = Oracle.oracle;
+                EventHandler.SaveData();
+                oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+                var dataName = $"{prefix}Data{index}";
+                var fileName = $"{prefix}Sd{index}.es3";
+                var settings = new ES3Settings(fileName, ES3.Location.Cache);
+                ES3.Save(dataName, oracle.saveData, settings);
+                ES3.StoreCachedFile(fileName);
+
+                PlayerPrefs.SetFloat(SlotKey(index, "Completion"), oracle.saveData.CompletionPercentage);
+                PlayerPrefs.SetFloat(SlotKey(index, "Playtime"), (float)oracle.saveData.PlayTime);
+                PlayerPrefs.SetString(SlotKey(index, "Date"), oracle.saveData.DateQuitString);
+                PlayerPrefs.Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to save slot {index}: {ex}");
+            }
         }
 
         private void DeleteSlot(int index)
         {
-            var oracle = Oracle.oracle;
-            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-            var fileName = $"{prefix}Sd{index}.es3";
-            ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
-            ES3.DeleteFile(fileName);
+            try
+            {
+                var oracle = Oracle.oracle;
+                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
+                var fileName = $"{prefix}Sd{index}.es3";
+                ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
+                ES3.DeleteFile(fileName);
 
-            PlayerPrefs.Save();
+                PlayerPrefs.DeleteKey(SlotKey(index, "Completion"));
+                PlayerPrefs.DeleteKey(SlotKey(index, "Playtime"));
+                PlayerPrefs.DeleteKey(SlotKey(index, "Date"));
+                PlayerPrefs.Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to delete slot {index}: {ex}");
+            }
         }
 
         private void UpdateSlotInteractivity(int index)
@@ -417,9 +446,6 @@ namespace TimelessEchoes.UI
                 return;
 
             var oracle = Oracle.oracle;
-            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-            var fileName = $"{prefix}Sd{index}.es3";
-            var dataName = $"{prefix}Data{index}";
 
             var completion = 0f;
 
@@ -430,32 +456,28 @@ namespace TimelessEchoes.UI
                     ? null
                     : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
             }
-            else if (ES3.FileExists(fileName))
+            else
             {
                 try
                 {
-                    var data = ES3.Load<GameData>(dataName, new ES3Settings(fileName));
-                    completion = data.CompletionPercentage;
+                    completion = PlayerPrefs.GetFloat(SlotKey(index, "Completion"), 0f);
+                    var playtime = PlayerPrefs.GetFloat(SlotKey(index, "Playtime"), 0f);
                     if (slot.playtimeText != null)
-                        slot.playtimeText.text = data.PlayTime > 0
-                            ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
+                        slot.playtimeText.text = playtime > 0
+                            ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
                             : "Playtime: None";
-                    slot.lastPlayed = string.IsNullOrEmpty(data.DateQuitString)
+                    var dateString = PlayerPrefs.GetString(SlotKey(index, "Date"), string.Empty);
+                    slot.lastPlayed = string.IsNullOrEmpty(dateString)
                         ? null
-                        : DateTime.Parse(data.DateQuitString, CultureInfo.InvariantCulture);
+                        : DateTime.Parse(dateString, CultureInfo.InvariantCulture);
                 }
-                catch
+                catch (Exception ex)
                 {
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = "Playtime: None";
                     slot.lastPlayed = null;
+                    Debug.LogError($"Failed to refresh slot {index}: {ex}");
                 }
-            }
-            else
-            {
-                if (slot.playtimeText != null)
-                    slot.playtimeText.text = "Playtime: None";
-                slot.lastPlayed = null;
             }
 
             slot.completionPercentage = completion;
