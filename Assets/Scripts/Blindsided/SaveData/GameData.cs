@@ -46,6 +46,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] public Dictionary<string, MapStatistics> MapStats = new();
 
         [HideReferenceObjectPicker] public GeneralStats General = new();
+        public float CompletionPercentage;
 
 
         [HideReferenceObjectPicker]

@@ -7,6 +7,7 @@ using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -81,7 +82,7 @@ namespace TimelessEchoes.Upgrades
         public void Add(Resource resource, double amount, bool bonus = false)
         {
             if (resource == null || amount <= 0) return;
-            unlocked.Add(resource);
+            var newlyUnlocked = unlocked.Add(resource);
             if (amounts.ContainsKey(resource))
                 amounts[resource] += amount;
             else
@@ -94,6 +95,8 @@ namespace TimelessEchoes.Upgrades
                 tracker.AddResources(amount, bonus);
             OnResourceAdded?.Invoke(resource, amount, bonus);
             InvokeInventoryChanged();
+            if (newlyUnlocked)
+                UpdateCompletionPercentage();
         }
 
         public bool Spend(Resource resource, double amount)
@@ -177,6 +180,7 @@ namespace TimelessEchoes.Upgrades
                 }
 
             InvokeInventoryChanged();
+            UpdateCompletionPercentage();
         }
 
         private static void EnsureLookup()
