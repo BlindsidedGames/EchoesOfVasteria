@@ -398,6 +398,8 @@ namespace TimelessEchoes.UI
             ES3.Save(dataName, oracle.saveData, settings);
             ES3.StoreCachedFile(fileName);
             SteamCloudManager.UploadFile(fileName);
+            PlayerPrefs.SetFloat($"Slot{index}_Completion", oracle.saveData.CompletionPercentage);
+            PlayerPrefs.Save();
         }
 
         private void DeleteSlot(int index)
@@ -452,7 +454,7 @@ namespace TimelessEchoes.UI
             var fileName = $"{prefix}Sd{index}.es3";
             var dataName = $"{prefix}Data{index}";
 
-            float completion = 0f;
+            float completion = PlayerPrefs.GetFloat($"Slot{index}_Completion", 0f);
 
             if (index == oracle.CurrentSlot)
             {
@@ -467,6 +469,7 @@ namespace TimelessEchoes.UI
                 {
                     var data = ES3.Load<GameData>(dataName, new ES3Settings(fileName));
                     completion = data.CompletionPercentage;
+                    PlayerPrefs.SetFloat($"Slot{index}_Completion", completion);
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = data.PlayTime > 0
                             ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
