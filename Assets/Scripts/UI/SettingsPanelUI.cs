@@ -328,6 +328,7 @@ namespace TimelessEchoes.UI
             {
                 if (index == Oracle.oracle.CurrentSlot)
                     return;
+                SaveSlot(Oracle.oracle.CurrentSlot);
                 Oracle.oracle.SelectSlot(index);
                 EventHandler.ResetData();
                 EventHandler.LoadData();
