@@ -36,5 +36,8 @@ namespace TimelessEchoes.UI
         [HideInInspector] public bool safetyEnabled;
 
         public DateTime? lastPlayed;
+
+        // Completion percentage for the slot.
+        public float completionPercentage;
     }
 }
