@@ -318,15 +318,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65b81b44514341b4588d161a7dabe406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveDeleteButton: {fileID: 1823629093372057112}
-  loadButton: {fileID: 551743581524704154}
+  saveButton: {fileID: 1823629093372057112}
+  loadDeleteButton: {fileID: 551743581524704154}
   loadDeleteText: {fileID: 7764116064244801212}
   toggleSafetyButton: {fileID: 271051180232561236}
   fileNameText: {fileID: 1454767505146461563}
   playtimeText: {fileID: 5077527472315659763}
   lastPlayedText: {fileID: 821732118682794867}
-  toggleDeleteImage: {fileID: 0}
-  deleteMode: 0
+  safetyToggleImage: {fileID: 0}
+  safetyEnabled: 0
 --- !u!1 &2300954487030177252
 GameObject:
   m_ObjectHideFlags: 0
