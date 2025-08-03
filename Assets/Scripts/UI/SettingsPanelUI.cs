@@ -398,7 +398,10 @@ namespace TimelessEchoes.UI
                 slot.saveButton.interactable = isCurrent || safety;
 
             if (slot.loadDeleteButton != null)
-                slot.loadDeleteButton.interactable = !isCurrent || safety;
+            {
+                var inTown = GameManager.Instance == null || GameManager.Instance.CurrentMap == null;
+                slot.loadDeleteButton.interactable = safety || (inTown && !isCurrent);
+            }
         }
 
         private void RefreshAllSlots()
@@ -422,11 +425,11 @@ namespace TimelessEchoes.UI
             var fileName = $"{prefix}Sd{index}.es3";
             var dataName = $"{prefix}Data{index}";
 
-            if (slot.fileNameText != null)
-                slot.fileNameText.text = fileName;
+            float completion = 0f;
 
             if (index == oracle.CurrentSlot)
             {
+                completion = oracle.saveData.CompletionPercentage;
                 slot.lastPlayed = string.IsNullOrEmpty(oracle.saveData.DateQuitString)
                     ? null
                     : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
@@ -436,6 +439,7 @@ namespace TimelessEchoes.UI
                 try
                 {
                     var data = ES3.Load<GameData>(dataName, new ES3Settings(fileName));
+                    completion = data.CompletionPercentage;
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = data.PlayTime > 0
                             ? $"Playtime: {CalcUtils.FormatTime(data.PlayTime, shortForm: true)}"
@@ -457,6 +461,12 @@ namespace TimelessEchoes.UI
                     slot.playtimeText.text = "Playtime: None";
                 slot.lastPlayed = null;
             }
+
+            var display = $"File {index + 1} | {completion:0}%";
+            if (index == oracle.CurrentSlot)
+                display += " | Active";
+            if (slot.fileNameText != null)
+                slot.fileNameText.text = display;
 
             UpdateSlotDynamic(index);
 
