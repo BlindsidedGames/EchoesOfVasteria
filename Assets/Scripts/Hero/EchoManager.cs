@@ -40,6 +40,10 @@ namespace TimelessEchoes.Hero
                 if (hp != null)
                     hp.Immortal = false; // ensure damage can be forwarded
 
+                // Refresh the main hero's health bar since the shared
+                // HeroHealth component on the echo skips UI updates.
+                HeroHealth.Instance?.TakeDamage(0f);
+
                 var combat = type == EchoType.Combat || type == EchoType.All;
                 var disableSkills = type == EchoType.Combat;
 

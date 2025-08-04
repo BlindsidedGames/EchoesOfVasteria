@@ -20,8 +20,14 @@ namespace TimelessEchoes.Hero
             {
                 if (Instance != null && Instance != this) Destroy(Instance.gameObject);
                 Instance = this;
+                base.Awake();
             }
-            base.Awake();
+            else
+            {
+                healthBar = null;
+                if (Instance != null)
+                    CurrentHealth = Instance.CurrentHealth;
+            }
         }
 
         private void OnDestroy()
