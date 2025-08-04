@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
-using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -21,8 +20,6 @@ namespace TimelessEchoes.Buffs
     public class BuffManager : MonoBehaviour
     {
         public static BuffManager Instance { get; private set; }
-
-        private ResourceManager resourceManager;
 
         private BuffRecipe[] cachedRecipes;
 
@@ -97,10 +94,6 @@ namespace TimelessEchoes.Buffs
 
             Instance = this;
 
-            resourceManager = ResourceManager.Instance;
-            if (resourceManager == null)
-                Log("ResourceManager missing", TELogCategory.Resource, this);
-
             OnLoadData += LoadSlots;
         }
 
@@ -157,52 +150,46 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        private void EnsureResourceManager()
+        public bool CanActivate(BuffRecipe recipe)
         {
-            if (resourceManager == null)
-                resourceManager = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-        }
+            if (recipe == null) return false;
+            if (GetRemaining(recipe) > 0f) return false;
 
-        public bool CanPurchase(BuffRecipe recipe)
-        {
-            EnsureResourceManager();
-            if (recipe == null || resourceManager == null) return false;
-            foreach (var req in recipe.requirements)
-                if (resourceManager.GetAmount(req.resource) < req.amount)
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
+            if (recipe.distancePercent > 0f && tracker != null)
+            {
+                var expireDist = tracker.LongestRun * recipe.distancePercent;
+                if (tracker.CurrentRunDistance >= expireDist)
                     return false;
+            }
+
             return true;
         }
 
         public bool PurchaseBuff(BuffRecipe recipe)
         {
-            EnsureResourceManager();
-            if (!CanPurchase(recipe)) return false;
-
-            foreach (var req in recipe.requirements)
-                resourceManager?.Spend(req.resource, req.amount);
+            if (!CanActivate(recipe)) return false;
 
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
             tracker?.AddBuffCast();
 
-            var buff = activeBuffs.Find(b => b.recipe == recipe);
+            if (activeBuffs.Exists(b => b.recipe == recipe))
+                return false;
+
             var expireDist = float.PositiveInfinity;
             if (recipe.distancePercent > 0f && tracker != null)
                 expireDist = tracker.LongestRun * recipe.distancePercent;
-            if (buff == null)
+
+            var buff = new ActiveBuff
             {
-                buff = new ActiveBuff
-                    { recipe = recipe, remaining = recipe.baseDuration, expireAtDistance = expireDist };
-                activeBuffs.Add(buff);
-                Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
-            }
-            else
-            {
-                buff.remaining += recipe.baseDuration;
-                if (expireDist > buff.expireAtDistance)
-                    buff.expireAtDistance = expireDist;
-                Log($"Buff {recipe.name} extended", TELogCategory.Buff, this);
-            }
+                recipe = recipe,
+                remaining = recipe.baseDuration,
+                expireAtDistance = expireDist
+            };
+            activeBuffs.Add(buff);
+            Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
             if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
             {
@@ -344,7 +331,7 @@ namespace TimelessEchoes.Buffs
         {
             if (!IsSlotUnlocked(slot)) return false;
             var recipe = slotAssignments[slot];
-            return recipe != null && PurchaseBuff(recipe);
+            return recipe != null && CanActivate(recipe) && PurchaseBuff(recipe);
         }
 
         public void UnlockSlots(int count)
@@ -422,23 +409,12 @@ namespace TimelessEchoes.Buffs
 
         private void AutoCastBuffs()
         {
-            EnsureResourceManager();
-            var tracker = GameplayStatTracker.Instance;
             for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count; i++)
             {
                 if (!autoCastSlots[i]) continue;
                 var recipe = slotAssignments[i];
                 if (recipe == null) continue;
-                if (GetRemaining(recipe) > 0f) continue;
-
-                var distanceOk = true;
-                if (recipe.distancePercent > 0f && tracker != null)
-                {
-                    var expireDist = tracker.LongestRun * recipe.distancePercent;
-                    distanceOk = tracker.CurrentRunDistance < expireDist;
-                }
-
-                if (distanceOk && CanPurchase(recipe))
+                if (CanActivate(recipe))
                     PurchaseBuff(recipe);
             }
         }
