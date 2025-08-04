@@ -15,6 +15,7 @@ namespace TimelessEchoes.MapGeneration
     {
         [SerializeField] private Vector2Int segmentSize = new(64, 18);
         [SerializeField] private Transform segmentParent;
+        [SerializeField] private Transform decorParent;
         [SerializeField] private AstarPath pathfinder;
 
         private TilemapChunkGenerator chunkGenerator;
@@ -29,6 +30,7 @@ namespace TimelessEchoes.MapGeneration
         {
             public int startX;
             public GameObject tasks;
+            public GameObject decor;
         }
 
         private void Awake()
@@ -39,6 +41,8 @@ namespace TimelessEchoes.MapGeneration
             ApplyConfig(GameManager.CurrentGenerationConfig);
             if (segmentParent == null)
                 segmentParent = transform;
+            if (decorParent == null)
+                decorParent = segmentParent;
         }
 
         private void ApplyConfig(MapGenerationConfig cfg)
@@ -84,6 +88,8 @@ namespace TimelessEchoes.MapGeneration
             }
 
             Destroy(old.tasks);
+            if (old.decor != null)
+                Destroy(old.decor);
 
             yield return StartCoroutine(CreateSegment());
             MoveGraph();
@@ -93,7 +99,9 @@ namespace TimelessEchoes.MapGeneration
         private IEnumerator CreateSegment()
         {
             var offset = new Vector2Int(nextSegmentX, 0);
-            chunkGenerator.GenerateSegment(offset, segmentSize);
+            var decorRoot = new GameObject($"SegmentDecor_{offset.x}");
+            decorRoot.transform.SetParent(decorParent, false);
+            chunkGenerator.GenerateSegment(offset, segmentSize, decorRoot.transform);
             yield return null;
 
             var tasksRoot = new GameObject($"SegmentTasks_{offset.x}");
@@ -104,7 +112,7 @@ namespace TimelessEchoes.MapGeneration
             if (maxX > minX)
                 taskGenerator.GenerateSegment(minX, maxX, tasksRoot.transform);
 
-            segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot });
+            segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot, decor = decorRoot });
             nextSegmentX += segmentSize.x;
         }
 
