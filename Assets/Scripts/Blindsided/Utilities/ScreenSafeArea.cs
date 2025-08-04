@@ -10,8 +10,7 @@ namespace Blindsided.Utilities
     public class ScreenSafeArea : MonoBehaviour
     {
         private RectTransform _rectTransform;
-        private Rect lastSafeArea;
-        private Vector2Int lastResolution;
+        private Coroutine applySafeAreaRoutine;
 
         private float ratioValue;
         private bool sliderSetup;
@@ -57,6 +56,7 @@ namespace Blindsided.Utilities
         {
             _rectTransform = GetComponent<RectTransform>();
             EventHandler.OnLoadData += OnLoadDataHandler;
+            Screen.onResolutionChanged += OnResolutionChanged;
 
             if (Application.isMobilePlatform)
             {
@@ -73,6 +73,7 @@ namespace Blindsided.Utilities
         private void OnDisable()
         {
             EventHandler.OnLoadData -= OnLoadDataHandler;
+            Screen.onResolutionChanged -= OnResolutionChanged;
             if (sliderSetup && ratioSlider != null)
             {
                 ratioSlider.onValueChanged.RemoveListener(OnSliderValueChanged);
@@ -83,15 +84,22 @@ namespace Blindsided.Utilities
                 previewImage.enabled = false;
         }
 
-        private void Update()
-        {
-            if (Screen.safeArea != lastSafeArea || Screen.width != lastResolution.x ||
-                Screen.height != lastResolution.y) ApplySafeArea();
-        }
-
         private void OnLoadDataHandler()
         {
             StartCoroutine(InitRatio());
+        }
+
+        private void OnResolutionChanged(int width, int height)
+        {
+            if (applySafeAreaRoutine != null)
+                StopCoroutine(applySafeAreaRoutine);
+            applySafeAreaRoutine = StartCoroutine(ApplySafeAreaNextFrame());
+        }
+
+        private IEnumerator ApplySafeAreaNextFrame()
+        {
+            yield return null;
+            ApplySafeArea();
         }
 
         private IEnumerator InitRatio()
@@ -211,9 +219,6 @@ namespace Blindsided.Utilities
             _rectTransform.offsetMin = new Vector2(left, bottom);
             _rectTransform.offsetMax = new Vector2(-right, -top);
 
-            // Store the state to avoid unnecessary updates.
-            lastSafeArea = deviceSafeArea;
-            lastResolution = new Vector2Int(Screen.width, Screen.height);
         }
     }
 }
