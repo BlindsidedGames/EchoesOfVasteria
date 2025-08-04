@@ -366,11 +366,17 @@ namespace TimelessEchoes.Quests
             var data = GetQuestData(questId);
             if (IsInstantQuest(data))
                 return;
-            var set = oracle.saveData.PinnedQuests;
-            if (set.Contains(questId))
-                set.Remove(questId);
-            else if (set.Count < PinnedQuestUIManager.MaxPins)
-                set.Add(questId);
+            var pins = oracle.saveData.PinnedQuests;
+            if (pins.Contains(questId))
+            {
+                pins.Remove(questId);
+            }
+            else
+            {
+                pins.Insert(0, questId);
+                if (pins.Count > PinnedQuestUIManager.MaxPins)
+                    pins.RemoveAt(pins.Count - 1);
+            }
             PinnedQuestUIManager.Instance?.RefreshPins();
         }
 
@@ -428,10 +434,12 @@ namespace TimelessEchoes.Quests
             active[quest.questId] = inst;
             if (isNewQuest && (AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
             {
-                var set = oracle.saveData.PinnedQuests;
-                if (!set.Contains(quest.questId))
+                var pins = oracle.saveData.PinnedQuests;
+                if (!pins.Contains(quest.questId))
                 {
-                    set.Add(quest.questId);
+                    pins.Insert(0, quest.questId);
+                    if (pins.Count > PinnedQuestUIManager.MaxPins)
+                        pins.RemoveAt(pins.Count - 1);
                     PinnedQuestUIManager.Instance?.RefreshPins();
                 }
             }
