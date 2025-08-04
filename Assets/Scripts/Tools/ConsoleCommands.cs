@@ -45,7 +45,8 @@ namespace TimelessEchoes
             foreach (var res in Resources.LoadAll<Resource>(string.Empty))
             {
                 if (res == null) continue;
-                existing?.TryGetValue(res.name, out var oldEntry);
+                GameData.ResourceEntry oldEntry = null;
+                existing?.TryGetValue(res.name, out oldEntry);
                 dict[res.name] = new GameData.ResourceEntry
                 {
                     Earned = true,
