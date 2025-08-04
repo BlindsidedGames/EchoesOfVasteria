@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -18,6 +19,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private Button collectAllButton;
         [SerializeField] private TMP_Text availableResourcesText;
+        [SerializeField] private TMP_Text disciplePercentText;
 
         private DiscipleGenerationManager generationManager;
         private readonly Dictionary<DiscipleGenerator, DiscipleGeneratorProgressUI> entries = new();
@@ -121,7 +123,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void UpdateCollectAllButton()
         {
-            if (collectAllButton == null && availableResourcesText == null)
+            if (collectAllButton == null && availableResourcesText == null && disciplePercentText == null)
                 return;
 
             var canCollect = false;
@@ -146,6 +148,9 @@ namespace TimelessEchoes.NpcGeneration
 
             if (availableResourcesText != null)
                 availableResourcesText.text = $"\u2514 {CalcUtils.FormatNumber(totalAvailable, true)}";
+
+            if (disciplePercentText != null)
+                disciplePercentText.text = $"Echo Power {DisciplePercent * 100f:0.#}%";
         }
     }
 }
