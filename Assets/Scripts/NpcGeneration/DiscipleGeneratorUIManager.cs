@@ -28,6 +28,8 @@ namespace TimelessEchoes.NpcGeneration
             generationManager = DiscipleGenerationManager.Instance;
             if (collectAllButton != null)
                 collectAllButton.onClick.AddListener(CollectAll);
+            if (generationManager != null)
+                generationManager.OnGeneratorsRebuilt += OnGeneratorsRebuilt;
             BuildEntries();
         }
 
@@ -53,6 +55,8 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (collectAllButton != null)
                 collectAllButton.onClick.RemoveListener(CollectAll);
+            if (generationManager != null)
+                generationManager.OnGeneratorsRebuilt -= OnGeneratorsRebuilt;
             if (Instance == this)
                 Instance = null;
             OnQuestHandin -= OnQuestHandinHandler;
@@ -98,6 +102,11 @@ namespace TimelessEchoes.NpcGeneration
             StartCoroutine(DeferredBuild());
         }
 
+        private void OnGeneratorsRebuilt()
+        {
+            StartCoroutine(DeferredBuild());
+        }
+
         private IEnumerator DeferredBuild()
         {
             yield return null;
@@ -124,14 +133,12 @@ namespace TimelessEchoes.NpcGeneration
                     if (gen == null || !gen.RequirementsMet)
                         continue;
 
-                    foreach (var entry in gen.ResourceEntries)
-                    {
-                        if (entry.resource == null) continue;
-                        var stored = gen.GetStoredAmount(entry.resource);
-                        totalAvailable += stored;
-                        if (!canCollect && stored > 0)
-                            canCollect = true;
-                    }
+                    var res = gen.Resource;
+                    if (res == null) continue;
+                    var stored = gen.GetStoredAmount(res);
+                    totalAvailable += stored;
+                    if (!canCollect && stored > 0)
+                        canCollect = true;
                 }
 
             if (collectAllButton != null)

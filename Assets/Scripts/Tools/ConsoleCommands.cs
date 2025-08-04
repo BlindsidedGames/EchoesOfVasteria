@@ -170,6 +170,7 @@ namespace TimelessEchoes
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            oracle.saveData.DisciplePercent = 0.1f;
             Blindsided.EventHandler.LoadData();
         }
 

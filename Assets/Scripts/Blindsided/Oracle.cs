@@ -272,6 +272,8 @@ namespace Blindsided
                 saveData.UnlockedAutoBuffSlots = 0;
             else if (saveData.UnlockedAutoBuffSlots > 5)
                 saveData.UnlockedAutoBuffSlots = 5;
+            if (saveData.DisciplePercent <= 0f)
+                saveData.DisciplePercent = 0.1f;
             saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
         }
 

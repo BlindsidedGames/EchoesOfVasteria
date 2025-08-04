@@ -47,6 +47,7 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] public GeneralStats General = new();
         public float CompletionPercentage;
+        public float DisciplePercent = 0.1f;
 
 
         [HideReferenceObjectPicker]
