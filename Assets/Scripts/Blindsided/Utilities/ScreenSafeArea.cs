@@ -19,6 +19,9 @@ namespace Blindsided.Utilities
         [SerializeField] private Image previewImage;
         [SerializeField] private GameObject hideOnMobile;
 
+        private Vector2Int lastScreenSize;
+        private Rect lastSafeArea;
+
         private const float minAspect = 16f / 9f;
         private const float maxAspect = 32f / 9f;
 
@@ -56,7 +59,8 @@ namespace Blindsided.Utilities
         {
             _rectTransform = GetComponent<RectTransform>();
             EventHandler.OnLoadData += OnLoadDataHandler;
-            Screen.onResolutionChanged += OnResolutionChanged;
+            lastScreenSize = new Vector2Int(Screen.width, Screen.height);
+            lastSafeArea = Screen.safeArea;
 
             if (Application.isMobilePlatform)
             {
@@ -73,7 +77,6 @@ namespace Blindsided.Utilities
         private void OnDisable()
         {
             EventHandler.OnLoadData -= OnLoadDataHandler;
-            Screen.onResolutionChanged -= OnResolutionChanged;
             if (sliderSetup && ratioSlider != null)
             {
                 ratioSlider.onValueChanged.RemoveListener(OnSliderValueChanged);
@@ -89,7 +92,17 @@ namespace Blindsided.Utilities
             StartCoroutine(InitRatio());
         }
 
-        private void OnResolutionChanged(int width, int height)
+        private void Update()
+        {
+            if (Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y || Screen.safeArea != lastSafeArea)
+            {
+                lastScreenSize = new Vector2Int(Screen.width, Screen.height);
+                lastSafeArea = Screen.safeArea;
+                OnResolutionChanged();
+            }
+        }
+
+        private void OnResolutionChanged()
         {
             if (applySafeAreaRoutine != null)
                 StopCoroutine(applySafeAreaRoutine);
