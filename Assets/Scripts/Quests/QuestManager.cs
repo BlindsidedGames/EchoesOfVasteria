@@ -382,10 +382,12 @@ namespace TimelessEchoes.Quests
                 return;
 
             var inst = new QuestInstance { data = quest };
+            var isNewQuest = false;
             if (!oracle.saveData.Quests.TryGetValue(quest.questId, out rec))
             {
                 rec = new GameData.QuestRecord();
                 oracle.saveData.Quests[quest.questId] = rec;
+                isNewQuest = true;
             }
 
             if (!rec.DistanceBaselineSet)
@@ -419,7 +421,7 @@ namespace TimelessEchoes.Quests
             inst.ui = null;
 
             active[quest.questId] = inst;
-            if ((AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
+            if (isNewQuest && (AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
             {
                 var set = oracle.saveData.PinnedQuests;
                 if (!set.Contains(quest.questId))
