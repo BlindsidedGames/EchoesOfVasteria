@@ -19,10 +19,14 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "Alter-Echoes are your main source of income while away. \nResources
-      will be gathered and brought to eva for storage. When you return she will happily
+    m_Localized: "Alter-Echoes are your main source of income while away. At the
+      end of each run each resource you earned calculates its income per minute and
+      stores your lifetime best. Alter Echoes use this value to generate resources.\n\nEcho
+      Power is a value that determines the percentage of resources you receive. It
+      is visible at the top right of the Alter Echoes screen.\n \nResources will
+      be gathered and brought to eva for storage. When you return she will happily
       give them to you, all you have to do is ask!\nThese will generate whether the
-      game is open or closed!\n"
+      game is open or closed!"
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
