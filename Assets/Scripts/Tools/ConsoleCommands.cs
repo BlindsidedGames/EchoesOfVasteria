@@ -40,14 +40,17 @@ namespace TimelessEchoes
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
 
+            var existing = oracle.saveData.Resources;
             var dict = new Dictionary<string, GameData.ResourceEntry>();
             foreach (var res in Resources.LoadAll<Resource>(string.Empty))
             {
                 if (res == null) continue;
+                existing?.TryGetValue(res.name, out var oldEntry);
                 dict[res.name] = new GameData.ResourceEntry
                 {
                     Earned = true,
-                    Amount = amount
+                    Amount = amount,
+                    BestPerMinute = oldEntry?.BestPerMinute ?? 0
                 };
             }
 

@@ -31,6 +31,7 @@ namespace TimelessEchoes.Stats
         private float currentRunDamageTaken;
         private readonly Dictionary<string, GameData.MapStatistics> mapStats = new();
         private string currentMapKey;
+        private readonly Dictionary<string, double> currentRunResourceAmounts = new();
 
         public float DistanceTravelled { get; private set; }
 
@@ -90,12 +91,31 @@ namespace TimelessEchoes.Stats
             OnLoadData += LoadState;
         }
 
+        private void Start()
+        {
+            var rm = ResourceManager.Instance;
+            if (rm != null)
+                rm.OnResourceAdded += OnResourceAdded;
+        }
+
         private void OnDestroy()
         {
             if (Instance == this)
                 Instance = null;
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
+            var rm = ResourceManager.Instance;
+            if (rm != null)
+                rm.OnResourceAdded -= OnResourceAdded;
+        }
+
+        private void OnResourceAdded(Resource resource, double amount, bool bonus)
+        {
+            if (!RunInProgress || resource == null) return;
+            if (currentRunResourceAmounts.ContainsKey(resource.name))
+                currentRunResourceAmounts[resource.name] += amount;
+            else
+                currentRunResourceAmounts[resource.name] = amount;
         }
 
         private static void EnsureLookup()
@@ -388,14 +408,40 @@ namespace TimelessEchoes.Stats
             AverageRun = recentRuns.Count > 0 ? sum / recentRuns.Count : 0f;
         }
 
+        private void UpdateBestResourcePerMinute(float duration)
+        {
+            if (duration <= 0f) return;
+            oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
+            foreach (var pair in currentRunResourceAmounts)
+            {
+                var perMinute = pair.Value * 60f / duration;
+                if (oracle.saveData.Resources.TryGetValue(pair.Key, out var entry))
+                {
+                    if (perMinute > entry.BestPerMinute)
+                        entry.BestPerMinute = perMinute;
+                }
+                else
+                {
+                    oracle.saveData.Resources[pair.Key] = new GameData.ResourceEntry
+                    {
+                        Earned = true,
+                        Amount = 0,
+                        BestPerMinute = perMinute
+                    };
+                }
+            }
+        }
+
         public void EndRun(bool died, bool reaped = false)
         {
             if (!RunInProgress)
                 return;
+            var duration = Time.time - runStartTime;
+            UpdateBestResourcePerMinute(duration);
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
-                Duration = Time.time - runStartTime,
+                Duration = duration,
                 Distance = CurrentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
@@ -424,10 +470,12 @@ namespace TimelessEchoes.Stats
         {
             if (!RunInProgress)
                 return;
+            var duration = Time.time - runStartTime;
+            UpdateBestResourcePerMinute(duration);
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
-                Duration = Time.time - runStartTime,
+                Duration = duration,
                 Distance = CurrentRunDistance,
                 TasksCompleted = currentRunTasks,
                 ResourcesCollected = currentRunResources,
@@ -464,6 +512,7 @@ namespace TimelessEchoes.Stats
             runStartTime = Time.time;
             RunInProgress = false;
             currentMapKey = null;
+            currentRunResourceAmounts.Clear();
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif

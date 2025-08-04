@@ -54,6 +54,7 @@ namespace Blindsided.SaveData
         {
             public double Amount;
             public bool Earned;
+            public double BestPerMinute;
         }
 
         [HideReferenceObjectPicker]
