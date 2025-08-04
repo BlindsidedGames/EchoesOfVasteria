@@ -102,14 +102,14 @@ namespace TimelessEchoes.MapGeneration
             generator.SetTilemapReferences(terrainMap, bottomTerrain, middleTerrain, topTerrain);
         }
 
-        public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize)
+        public void GenerateSegment(Vector2Int offset, Vector2Int segmentSize, Transform decorParent = null)
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
 
-            GenerateInternal(offset, segmentSize);
+            GenerateInternal(offset, segmentSize, decorParent);
         }
 
-        private void GenerateInternal(Vector2Int offset, Vector2Int segmentSize)
+        private void GenerateInternal(Vector2Int offset, Vector2Int segmentSize, Transform decorParent)
         {
             var sandDepths = new int[segmentSize.x];
             var grassDepths = new int[segmentSize.x];
@@ -230,7 +230,7 @@ namespace TimelessEchoes.MapGeneration
                 var sandDepth = sandDepths[x];
                 var grassDepth = grassDepths[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
-                PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth);
+                PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth, decorParent);
             }
 
             if (segmentSize.x > 0)
@@ -241,9 +241,9 @@ namespace TimelessEchoes.MapGeneration
             }
         }
 
-        private void PlaceDecorForColumn(int worldX, int offsetY, int waterDepth, int sandDepth, int grassDepth)
+        private void PlaceDecorForColumn(int worldX, int offsetY, int waterDepth, int sandDepth, int grassDepth, Transform decorParent)
         {
-            if (decorMap == null)
+            if (decorMap == null && decorParent == null)
                 return;
 
             for (var y = 0; y < waterDepth + sandDepth + grassDepth; y++)
@@ -289,7 +289,15 @@ namespace TimelessEchoes.MapGeneration
                     r -= d.config.weight;
                     if (r <= 0f)
                     {
-                        decorMap.SetTile(cell, d.tile);
+                        if (d.prefab != null)
+                        {
+                            var center = terrainMap.GetCellCenterWorld(cell);
+                            Instantiate(d.prefab, center, Quaternion.identity, decorParent);
+                        }
+
+                        if (decorMap != null && d.tile != null)
+                            decorMap.SetTile(cell, d.tile);
+
                         break;
                     }
                 }
