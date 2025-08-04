@@ -306,16 +306,5 @@ namespace Blindsided
         }
 
         #endregion
-
-        #region Static colour tags
-
-        [HideInInspector] public static string colorHighlight = "<color=#00FFFD>";
-        [HideInInspector] public static string colorBlack = "<color=#030008>";
-        [HideInInspector] public static string colourWhite = "<color=#DBDBDB>";
-        [HideInInspector] public static string colorOrange = "<color=#DF9500>";
-        [HideInInspector] public static string colorRed = "<color=#FF7D7D>";
-        [HideInInspector] public static string naniteHighlight = "<sprite=0 color=#00FFFD>";
-
-        #endregion
     }
 }
