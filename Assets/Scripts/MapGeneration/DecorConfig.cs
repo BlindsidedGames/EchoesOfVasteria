@@ -30,8 +30,14 @@ namespace TimelessEchoes.MapGeneration
         [HorizontalGroup("Entry", 55)]
         [PreviewField(50, ObjectFieldAlignment.Left)]
         [HideLabel]
-        [Required]
         public TileBase tile;
+
+        // When the prefab is changed, call the UpdateName method.
+        [OnValueChanged("UpdateName")]
+        [HorizontalGroup("Entry", 55)]
+        [PreviewField(50, ObjectFieldAlignment.Left)]
+        [HideLabel]
+        public GameObject prefab;
 
         // When any value inside the config is changed, call the UpdateName method.
         [OnValueChanged("UpdateName", true)] [HorizontalGroup("Entry")] [InlineProperty] [HideLabel]
@@ -42,14 +48,17 @@ namespace TimelessEchoes.MapGeneration
         /// </summary>
         public void UpdateName()
         {
-            var tileName = tile != null ? tile.name : "No Tile";
-
-            Name = tileName;
+            if (tile != null)
+                Name = tile.name;
+            else if (prefab != null)
+                Name = prefab.name;
+            else
+                Name = "None";
         }
 
         public float GetWeight(float worldX)
         {
-            if (tile == null) return 0f;
+            if (tile == null && prefab == null) return 0f;
             if (worldX < config.minX || worldX > config.maxX) return 0f;
             return Mathf.Max(0f, config.weight);
         }
