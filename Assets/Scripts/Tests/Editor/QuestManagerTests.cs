@@ -112,6 +112,29 @@ namespace TimelessEchoes.Tests
 
             Assert.IsTrue((bool)readyField.GetValue(inst));
         }
+
+        [Test]
+        public void TogglePinned_RespectsMaxPins()
+        {
+            var list = new List<QuestData>();
+            for (var i = 0; i < 6; i++)
+            {
+                var q = ScriptableObject.CreateInstance<QuestData>();
+                q.questId = $"Q{i}";
+                list.Add(q);
+            }
+
+            typeof(QuestManager).GetField("quests", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(manager, list);
+
+            foreach (var q in list)
+                manager.TogglePinned(q.questId);
+
+            Assert.AreEqual(PinnedQuestUIManager.MaxPins, oracle.saveData.PinnedQuests.Count);
+
+            foreach (var q in list)
+                Object.DestroyImmediate(q);
+        }
     }
 }
 
