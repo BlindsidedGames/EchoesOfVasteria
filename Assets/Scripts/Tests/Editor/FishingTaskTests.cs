@@ -44,7 +44,7 @@ namespace TimelessEchoes.Tests
         }
 
         [Test]
-        public void AnimationAndInterruptNamesAreCorrect()
+        public void AnimationAndTriggerNamesAreCorrect()
         {
             var animationName =
                 (string)typeof(FishingTask).GetProperty("AnimationName", BindingFlags.NonPublic | BindingFlags.Instance)
@@ -52,9 +52,13 @@ namespace TimelessEchoes.Tests
             var interruptName =
                 (string)typeof(FishingTask).GetProperty("InterruptTriggerName", BindingFlags.NonPublic | BindingFlags.Instance)
                     .GetValue(task);
+            var completionName =
+                (string)typeof(FishingTask).GetProperty("CompletionTriggerName", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetValue(task);
 
             Assert.AreEqual("Fishing", animationName);
-            Assert.AreEqual("CatchFish", interruptName);
+            Assert.AreEqual("StopFishing", interruptName);
+            Assert.AreEqual("CatchFish", completionName);
         }
 
         [Test]

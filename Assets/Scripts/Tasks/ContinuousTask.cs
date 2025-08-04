@@ -24,6 +24,7 @@ namespace TimelessEchoes.Tasks
 
         protected abstract string AnimationName { get; }
         protected abstract string InterruptTriggerName { get; }
+        protected virtual string CompletionTriggerName => InterruptTriggerName;
 
         public override bool BlocksMovement => true;
 
@@ -48,7 +49,7 @@ namespace TimelessEchoes.Tasks
         {
             if (ShouldInstantComplete())
             {
-                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
+                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
                 HideProgressBar();
                 GenerateDrops();
@@ -81,7 +82,7 @@ namespace TimelessEchoes.Tasks
 
             if (timer >= TaskDuration)
             {
-                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
+                AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
                 HideProgressBar();
                 GenerateDrops();
