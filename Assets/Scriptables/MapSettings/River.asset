@@ -20,8 +20,8 @@ MonoBehaviour:
     topTerrain: {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
     minAreaWidth: 4
     edgeWaviness: 1
-    middleDepthRange: {x: 4, y: 7}
-    topDepthRange: {x: 7, y: 11}
+    middleDepthRange: {x: 5, y: 9}
+    topDepthRange: {x: 4, y: 11}
     seed: 0
     randomizeSeed: 1
   taskGeneratorSettings:
@@ -125,3 +125,4 @@ MonoBehaviour:
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}
   allowClouds: 1
+  heroStartY: 15
