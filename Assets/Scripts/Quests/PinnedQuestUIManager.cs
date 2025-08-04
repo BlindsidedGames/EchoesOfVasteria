@@ -76,11 +76,8 @@ namespace TimelessEchoes.Quests
                 Destroy(child.gameObject);
             entries.Clear();
 
-            var count = 0;
             foreach (var id in oracle.saveData.PinnedQuests)
             {
-                if (count >= MaxPins)
-                    break;
                 if (string.IsNullOrEmpty(id))
                     continue;
                 var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
@@ -98,7 +95,6 @@ namespace TimelessEchoes.Quests
                     continue;
                 var ui = Instantiate(entryPrefab, entryParent);
                 entries[id] = ui;
-                count++;
             }
 
             if (rootObject != null)

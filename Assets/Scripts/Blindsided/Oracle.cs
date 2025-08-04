@@ -255,7 +255,7 @@ namespace Blindsided
             saveData.SkillData ??= new Dictionary<string, GameData.SkillProgress>();
             saveData.EnemyKills ??= new Dictionary<string, double>();
             saveData.CompletedNpcTasks ??= new HashSet<string>();
-            saveData.PinnedQuests ??= new HashSet<string>();
+            saveData.PinnedQuests ??= new List<string>();
             saveData.BuffSlots ??= new List<string>(new string[5]);
             if (saveData.BuffSlots.Count < 5)
                 while (saveData.BuffSlots.Count < 5)
