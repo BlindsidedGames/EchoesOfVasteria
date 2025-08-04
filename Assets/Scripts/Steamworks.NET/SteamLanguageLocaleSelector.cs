@@ -89,11 +89,12 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
 /// </summary>
 public static class SteamLanguageLocaleSelectorInstaller
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void RegisterSelector()
-    {
-        var selectors = LocalizationSettings.StartupLocaleSelectors;
-        // Insert at the start so it runs before default selectors.
-        selectors.Insert(0, new SteamLanguageLocaleSelector());
-    }
+    // Temporarily disabled. Previously registered the selector at startup.
+    // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    // private static void RegisterSelector()
+    // {
+    //     var selectors = LocalizationSettings.StartupLocaleSelectors;
+    //     // Insert at the start so it runs before default selectors.
+    //     selectors.Insert(0, new SteamLanguageLocaleSelector());
+    // }
 }
