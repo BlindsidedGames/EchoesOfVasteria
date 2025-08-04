@@ -364,7 +364,7 @@ namespace TimelessEchoes.Quests
             var set = oracle.saveData.PinnedQuests;
             if (set.Contains(questId))
                 set.Remove(questId);
-            else
+            else if (set.Count < PinnedQuestUIManager.MaxPins)
                 set.Add(questId);
             PinnedQuestUIManager.Instance?.RefreshPins();
         }
