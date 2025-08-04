@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
-using TimelessEchoes.UI;
 
 namespace TimelessEchoes.Buffs
 {
     public class BuffUIManager : MonoBehaviour
     {
         private BuffManager buffManager;
-        private Hero.HeroHealth heroHealth;
+        private HeroHealth heroHealth;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
         [SerializeField] private Button openPurchaseButton;
@@ -22,16 +22,11 @@ namespace TimelessEchoes.Buffs
 
         [Header("Slot UI References")] [SerializeField]
         private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
+
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
 
-        [Header("Tooltip References")] [SerializeField]
-        private RunBuffTooltipUIReferences runSlotTooltip;
-
-        [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
-
         private BuffRecipe selectedRecipe;
-        private bool isAssigning = false;
-        private int hoveredRunSlot = -1;
+        private bool isAssigning;
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
 
@@ -40,8 +35,8 @@ namespace TimelessEchoes.Buffs
             if (buffManager == null) return;
 
             if (heroHealth == null || !heroHealth.gameObject.activeInHierarchy)
-                heroHealth = Hero.HeroHealth.Instance ??
-                             FindFirstObjectByType<Hero.HeroHealth>();
+                heroHealth = HeroHealth.Instance ??
+                             FindFirstObjectByType<HeroHealth>();
 
             var transparent = new Color(1f, 1f, 1f, 0f);
             var grey = new Color(1f, 1f, 1f, 0.4f);
@@ -59,6 +54,7 @@ namespace TimelessEchoes.Buffs
                     else
                         ui.iconImage.color = recipe ? Color.white : transparent;
                 }
+
                 if (ui != null && ui.activateButton != null)
                 {
                     if (isAssigning)
@@ -66,23 +62,27 @@ namespace TimelessEchoes.Buffs
                     else
                         ui.activateButton.interactable = buffManager != null && buffManager.IsAutoSlotUnlocked(i);
                 }
+
                 if (ui != null && ui.autoCastImage != null)
                     ui.autoCastImage.enabled = buffManager != null && buffManager.IsSlotAutoCasting(i);
+                if (ui != null && ui.durationText != null)
+                    ui.durationText.text = i >= unlocked ? "Locked" : string.Empty;
             }
 
-            bool heroAlive = heroHealth != null && heroHealth.gameObject.activeInHierarchy && heroHealth.CurrentHealth > 0f;
+            var heroAlive = heroHealth != null && heroHealth.gameObject.activeInHierarchy &&
+                            heroHealth.CurrentHealth > 0f;
 
             for (var i = 0; i < runSlotButtons.Length; i++)
             {
                 var recipe = buffManager.GetAssigned(i);
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
-                bool canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
-                bool distanceOk = true;
-                var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+                var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
+                var distanceOk = true;
+                var tracker = GameplayStatTracker.Instance;
                 if (recipe != null && tracker != null && recipe.distancePercent > 0f)
                 {
-                    float expireDist = tracker.LongestRun * recipe.distancePercent;
+                    var expireDist = tracker.LongestRun * recipe.distancePercent;
                     distanceOk = tracker.CurrentRunDistance < expireDist;
                 }
 
@@ -90,17 +90,11 @@ namespace TimelessEchoes.Buffs
                 {
                     ui.iconImage.sprite = recipe ? recipe.buffIcon : null;
                     if (i >= unlocked)
-                    {
                         ui.iconImage.color = recipe ? grey : transparent;
-                    }
                     else if (recipe == null)
-                    {
                         ui.iconImage.color = transparent;
-                    }
                     else
-                    {
                         ui.iconImage.color = canActivate ? Color.white : grey;
-                    }
                 }
 
                 if (ui.activateButton != null)
@@ -118,19 +112,13 @@ namespace TimelessEchoes.Buffs
                     {
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
                         if (!heroAlive)
-                        {
                             ui.durationText.text = "Dead";
-                        }
                         else if (!distanceOk)
-                        {
                             ui.durationText.text = "Too Far";
-                        }
                         else
-                        {
                             ui.durationText.text = remain > 0f
                                 ? FormatTime(remain, shortForm: true)
                                 : string.Empty;
-                        }
                     }
                 }
             }
@@ -141,9 +129,6 @@ namespace TimelessEchoes.Buffs
             buffManager = BuffManager.Instance;
             if (buffManager == null)
                 Log("BuffManager missing", TELogCategory.Buff, this);
-
-            if (runSlotTooltip == null)
-                runSlotTooltip = FindFirstObjectByType<RunBuffTooltipUIReferences>();
 
             BuildRecipeEntries();
 
@@ -168,27 +153,12 @@ namespace TimelessEchoes.Buffs
                 var index = i;
                 if (runSlotButtons[i] != null && runSlotButtons[i].activateButton != null)
                     runSlotButtons[i].activateButton.onClick.AddListener(() => OnRunSlot(index));
-
-                if (runSlotButtons[i] != null)
-                {
-                    runSlotButtons[i].PointerEnter += _ =>
-                    {
-                        hoveredRunSlot = index;
-                        ShowRunSlotTooltip(index);
-                    };
-                    runSlotButtons[i].PointerExit += _ =>
-                    {
-                        hoveredRunSlot = -1;
-                        if (runSlotTooltip != null && runSlotTooltip.tooltipPanel != null)
-                            runSlotTooltip.tooltipPanel.SetActive(false);
-                    };
-                }
             }
         }
 
         private void OnEnable()
         {
-            heroHealth = Hero.HeroHealth.Instance ?? FindFirstObjectByType<Hero.HeroHealth>();
+            heroHealth = HeroHealth.Instance ?? FindFirstObjectByType<HeroHealth>();
             RefreshSlots();
         }
 
@@ -274,13 +244,9 @@ namespace TimelessEchoes.Buffs
         private void OnAssignSlot(int slot)
         {
             if (isAssigning && selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
-            {
                 buffManager.AssignBuff(slot, selectedRecipe);
-            }
             else
-            {
                 buffManager?.ToggleSlotAutoCast(slot);
-            }
             selectedRecipe = null;
             isAssigning = false;
             RefreshSlots();
@@ -298,41 +264,6 @@ namespace TimelessEchoes.Buffs
         {
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(true);
-        }
-
-        private void ShowRunSlotTooltip(int slot)
-        {
-            if (runSlotTooltip == null || runSlotTooltip.tooltipPanel == null || slot < 0 ||
-                slot >= runSlotButtons.Length)
-                return;
-
-            if (RunCalebUIManager.Instance != null && RunCalebUIManager.Instance.IsSkillsWindowOpen)
-            {
-                runSlotTooltip.tooltipPanel.SetActive(false);
-                return;
-            }
-
-            if (buffManager != null && !buffManager.IsSlotUnlocked(slot))
-            {
-                runSlotTooltip.tooltipPanel.SetActive(false);
-                return;
-            }
-
-            var recipe = buffManager != null ? buffManager.GetAssigned(slot) : null;
-            if (recipe == null)
-            {
-                runSlotTooltip.tooltipPanel.SetActive(false);
-                return;
-            }
-
-            foreach (Transform child in runSlotTooltip.tooltipCostParent)
-                Destroy(child.gameObject);
-
-            var ui = runSlotButtons[slot];
-            if (ui != null)
-                runSlotTooltip.tooltipPanel.transform.position = ui.transform.position + (Vector3)tooltipOffset;
-
-            runSlotTooltip.tooltipPanel.SetActive(true);
         }
     }
 }
