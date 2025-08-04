@@ -2,18 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
-
 #if !DISABLESTEAMWORKS
 using Steamworks;
 #endif
 
 /// <summary>
-/// Selects a locale based on the player's Steam language preference.
+///     Selects a locale based on the player's Steam language preference.
 /// </summary>
 /// <remarks>
-/// Implements <see cref="IStartupLocaleSelector"/> so that Unity Localization
-/// can automatically choose the appropriate locale on startup when the
-/// <see cref="UseSteamLanguage"/> flag is enabled.
+///     Implements <see cref="IStartupLocaleSelector" /> so that Unity Localization
+///     can automatically choose the appropriate locale on startup when the
+///     <see cref="UseSteamLanguage" /> flag is enabled.
 /// </remarks>
 public class SteamLanguageLocaleSelector : IStartupLocaleSelector
 {
@@ -54,8 +53,8 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
     };
 
     /// <summary>
-    /// Flag stored in <see cref="PlayerPrefs"/> indicating whether Steam language
-    /// should be used to select the locale.
+    ///     Flag stored in <see cref="PlayerPrefs" /> indicating whether Steam language
+    ///     should be used to select the locale.
     /// </summary>
     public static bool UseSteamLanguage
     {
@@ -66,22 +65,13 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
     /// <inheritdoc />
     public Locale GetStartupLocale(ILocalesProvider availableLocales)
     {
-        if (!UseSteamLanguage)
-        {
-            return null;
-        }
+        if (!UseSteamLanguage) return null;
 
 #if !DISABLESTEAMWORKS
-        if (!SteamManager.Initialized)
-        {
-            return null;
-        }
+        if (!SteamManager.Initialized) return null;
 
         var steamLang = SteamApps.GetCurrentGameLanguage();
-        if (string.IsNullOrEmpty(steamLang))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(steamLang)) return null;
 
         if (SteamToLocale.TryGetValue(steamLang, out var localeCode))
         {
@@ -94,15 +84,15 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
 }
 
 /// <summary>
-/// Registers the <see cref="SteamLanguageLocaleSelector"/> with
-/// <see cref="LocalizationSettings"/> before the first scene loads.
+///     Registers the <see cref="SteamLanguageLocaleSelector" /> with
+///     <see cref="LocalizationSettings" /> before the first scene loads.
 /// </summary>
 public static class SteamLanguageLocaleSelectorInstaller
 {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void RegisterSelector()
     {
-        var selectors = LocalizationSettings.Instance.StartupLocaleSelectors;
+        var selectors = LocalizationSettings.StartupLocaleSelectors;
         // Insert at the start so it runs before default selectors.
         selectors.Insert(0, new SteamLanguageLocaleSelector());
     }

@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Blindsided.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Blindsided.Utilities;
 using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.NpcGeneration
@@ -115,11 +115,10 @@ namespace TimelessEchoes.NpcGeneration
             if (collectAllButton == null && availableResourcesText == null)
                 return;
 
-            bool canCollect = false;
+            var canCollect = false;
             double totalAvailable = 0;
 
             if (generationManager != null)
-            {
                 foreach (var gen in generationManager.Generators)
                 {
                     if (gen == null || !gen.RequirementsMet)
@@ -134,13 +133,12 @@ namespace TimelessEchoes.NpcGeneration
                             canCollect = true;
                     }
                 }
-            }
 
             if (collectAllButton != null)
                 collectAllButton.interactable = canCollect;
 
             if (availableResourcesText != null)
-                availableResourcesText.text = CalcUtils.FormatNumber(totalAvailable, true);
+                availableResourcesText.text = $"\u2514 {CalcUtils.FormatNumber(totalAvailable, true)}";
         }
     }
 }
