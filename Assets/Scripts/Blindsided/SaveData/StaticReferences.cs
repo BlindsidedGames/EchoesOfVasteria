@@ -17,6 +17,7 @@ namespace Blindsided.SaveData
         private const string PlayerFloatingDamageKey = "PlayerFloatingDamage";
         private const string EnemyFloatingDamageKey = "EnemyFloatingDamage";
         private const string ItemDropFloatingTextKey = "ItemDropFloatingText";
+        private const string AutoPinActiveQuestsKey = "AutoPinActiveQuests";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -181,8 +182,19 @@ namespace Blindsided.SaveData
 
         public static bool AutoPinActiveQuests
         {
-            get => oracle.saveData.SavedPreferences.AutoPinActiveQuests;
-            set => oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
+            get
+            {
+                var defaultVal = oracle.saveData.SavedPreferences.AutoPinActiveQuests ? 1 : 0;
+                var value = PlayerPrefs.GetInt(AutoPinActiveQuestsKey, defaultVal) == 1;
+                oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
+                return value;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(AutoPinActiveQuestsKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+                oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
+            }
         }
 
         public static bool ShowPinnedQuests
