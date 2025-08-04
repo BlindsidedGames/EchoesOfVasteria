@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using References.UI;
-using TimelessEchoes.Upgrades;
 using TimelessEchoes.Hero;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +13,6 @@ namespace TimelessEchoes.Buffs
 {
     public class BuffUIManager : MonoBehaviour
     {
-        private ResourceManager resourceManager;
-        private ResourceInventoryUI resourceInventoryUI;
         private BuffManager buffManager;
         private Hero.HeroHealth heroHealth;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
@@ -80,7 +77,7 @@ namespace TimelessEchoes.Buffs
                 var recipe = buffManager.GetAssigned(i);
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
-                bool canBuy = recipe != null && buffManager != null && buffManager.CanPurchase(recipe) && heroAlive;
+                bool canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 bool distanceOk = true;
                 var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
                 if (recipe != null && tracker != null && recipe.distancePercent > 0f)
@@ -102,12 +99,12 @@ namespace TimelessEchoes.Buffs
                     }
                     else
                     {
-                        ui.iconImage.color = canBuy && distanceOk ? Color.white : grey;
+                        ui.iconImage.color = canActivate ? Color.white : grey;
                     }
                 }
 
                 if (ui.activateButton != null)
-                    ui.activateButton.interactable = i < unlocked && recipe != null && canBuy && distanceOk && heroAlive;
+                    ui.activateButton.interactable = i < unlocked && recipe != null && canActivate;
                 if (ui.autoCastImage != null)
                     ui.autoCastImage.enabled = buffManager != null && buffManager.IsSlotAutoCasting(i);
 
@@ -141,12 +138,6 @@ namespace TimelessEchoes.Buffs
 
         private void Awake()
         {
-            resourceManager = ResourceManager.Instance;
-            if (resourceManager == null)
-                Log("ResourceManager missing", TELogCategory.Resource, this);
-            resourceInventoryUI = ResourceInventoryUI.Instance;
-            if (resourceInventoryUI == null)
-                Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
             buffManager = BuffManager.Instance;
             if (buffManager == null)
                 Log("BuffManager missing", TELogCategory.Buff, this);
@@ -158,9 +149,6 @@ namespace TimelessEchoes.Buffs
 
             OnLoadData += OnLoadDataHandler;
             OnQuestHandin += OnQuestHandinHandler;
-
-            if (resourceManager != null)
-                resourceManager.OnInventoryChanged += OnInventoryChanged;
 
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(false);
@@ -202,13 +190,10 @@ namespace TimelessEchoes.Buffs
         {
             heroHealth = Hero.HeroHealth.Instance ?? FindFirstObjectByType<Hero.HeroHealth>();
             RefreshSlots();
-            OnInventoryChanged();
         }
 
         private void OnDestroy()
         {
-            if (resourceManager != null)
-                resourceManager.OnInventoryChanged -= OnInventoryChanged;
             OnLoadData -= OnLoadDataHandler;
             OnQuestHandin -= OnQuestHandinHandler;
 
@@ -259,62 +244,8 @@ namespace TimelessEchoes.Buffs
                     panel.purchaseButton.onClick.AddListener(() => PurchaseBuff(r));
                 }
 
-                BuildCostSlots(panel, recipe);
                 recipeEntries[recipe] = panel;
             }
-        }
-
-        private void BuildCostSlots(BuffRecipeUIReferences panel, BuffRecipe recipe)
-        {
-            if (panel.costGridLayoutParent == null || panel.costSlotPrefab == null)
-                return;
-
-            foreach (Transform child in panel.costGridLayoutParent.transform)
-                Destroy(child.gameObject);
-
-            foreach (var req in recipe.requirements)
-            {
-                var slot = Instantiate(panel.costSlotPrefab, panel.costGridLayoutParent.transform);
-                slot.resource = req.resource;
-
-                slot.PointerClick += (_, button) =>
-                {
-                    if (button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
-                        resourceInventoryUI?.HighlightResource(req.resource);
-                };
-
-                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-
-                if (slot.iconImage != null)
-                {
-                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
-                    slot.iconImage.sprite = unlocked ? req.resource?.icon : unknownSprite;
-                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
-                    slot.iconImage.enabled = true;
-                }
-
-                if (slot.countText != null)
-                    slot.countText.text = req.amount.ToString();
-
-                if (slot.selectionImage != null)
-                    slot.selectionImage.enabled = false;
-            }
-        }
-
-        private void OnInventoryChanged()
-        {
-            foreach (var pair in recipeEntries)
-            {
-                BuildCostSlots(pair.Value, pair.Key);
-                if (pair.Value.purchaseButton != null)
-                    pair.Value.purchaseButton.interactable = true;
-            }
-
-            RefreshSlots();
-
-            if (hoveredRunSlot >= 0 && runSlotTooltip != null && runSlotTooltip.tooltipPanel != null &&
-                runSlotTooltip.tooltipPanel.activeSelf)
-                ShowRunSlotTooltip(hoveredRunSlot);
         }
 
         private void OnLoadDataHandler()
@@ -331,7 +262,6 @@ namespace TimelessEchoes.Buffs
         {
             yield return null;
             RefreshSlots();
-            OnInventoryChanged();
         }
 
         private void PurchaseBuff(BuffRecipe recipe)
@@ -397,35 +327,6 @@ namespace TimelessEchoes.Buffs
 
             foreach (Transform child in runSlotTooltip.tooltipCostParent)
                 Destroy(child.gameObject);
-
-            var grey = new Color(1f, 1f, 1f, 0.4f);
-
-            foreach (var req in recipe.requirements)
-            {
-                var slotRef = Instantiate(runSlotTooltip.tooltipCostPrefab, runSlotTooltip.tooltipCostParent);
-                bool unlockedRes = resourceManager && resourceManager.IsUnlocked(req.resource);
-                if (slotRef.resourceIcon != null)
-                {
-                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
-                    slotRef.resourceIcon.sprite = unlockedRes && req.resource ? req.resource.icon : unknownSprite;
-                    slotRef.resourceIcon.color = unlockedRes ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
-                }
-                if (slotRef.resourceCostText != null)
-                    slotRef.resourceCostText.text = $"Cost: {FormatNumber(req.amount, true)}";
-
-                var held = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
-                if (slotRef.resourceHeldText != null)
-                    slotRef.resourceHeldText.text = FormatNumber(held, true);
-
-                var enough = held >= req.amount;
-                if (slotRef.resourceIcon != null)
-                {
-                    if (!unlockedRes)
-                        slotRef.resourceIcon.color = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
-                    else
-                        slotRef.resourceIcon.color = enough ? Color.white : grey;
-                }
-            }
 
             var ui = runSlotButtons[slot];
             if (ui != null)

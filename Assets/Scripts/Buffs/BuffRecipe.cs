@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Blindsided.Utilities;
-using TimelessEchoes.Upgrades;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -64,16 +62,6 @@ namespace TimelessEchoes.Buffs
         [Tooltip("Tasks complete instantly while active.")]
         public bool instantTasks;
 
-        [TitleGroup("Requirements")]
-        public List<ResourceRequirement> requirements = new();
-
         public string Title => string.IsNullOrEmpty(title) ? name : title;
-    }
-
-    [Serializable]
-    public class ResourceRequirement
-    {
-        public Resource resource;
-        public int amount;
     }
 }
