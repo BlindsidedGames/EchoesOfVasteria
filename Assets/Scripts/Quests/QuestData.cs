@@ -27,6 +27,7 @@ namespace TimelessEchoes.Quests
         public int unlockBuffSlots;
         public int unlockAutoBuffSlots;
         public float maxDistanceIncrease;
+        public float disciplePercentReward;
 
         [Serializable]
         public class Requirement

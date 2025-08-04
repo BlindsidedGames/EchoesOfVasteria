@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Quests;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -11,60 +10,76 @@ using static TimelessEchoes.TELogger;
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    ///     Generates resources over time for a single disciple.
+    ///     Generates a single resource over time based on the player's best collection rate.
     /// </summary>
     public class DiscipleGenerator : MonoBehaviour
     {
-        [SerializeField] private Disciple data;
-        private bool dataAssigned;
+        [SerializeField] private Resource resource;
 
-        public void SetData(Disciple d)
-        {
-            data = d;
-            dataAssigned = true;
-            if (isActiveAndEnabled && !setup && RequirementsMet)
-                LoadState();
-        }
-
-        private readonly Dictionary<Resource, double> stored = new();
-        private readonly Dictionary<Resource, double> collectedTotals = new();
-
-        private static Dictionary<string, Resource> lookup;
         private ResourceManager resourceManager;
         private bool setup;
 
-        public float Interval => data != null ? data.generationInterval : 0f;
-        public string DiscipleName => data != null ? data.name : string.Empty;
+        private double stored;
+        private double totalCollected;
+
+        private double ratePerMinute;
+
+        public Resource Resource => resource;
+        public float Interval { get; private set; }
+        public double CycleAmount { get; private set; }
         public float Progress { get; private set; }
-        public IReadOnlyList<Disciple.ResourceEntry> ResourceEntries => data ? data.resources : null;
-        public bool RequirementsMet => QuestCompleted();
+        public bool RequirementsMet => true;
 
-        public double GetStoredAmount(Resource resource)
+        public void Configure(Resource res, double rate)
         {
-            return stored.TryGetValue(resource, out var val) ? val : 0;
+            resource = res;
+            UpdateRate(rate);
+            if (isActiveAndEnabled)
+                LoadState();
         }
 
-        public double GetTotalCollected(Resource resource)
+        public void UpdateRate(double rate)
         {
-            return collectedTotals.TryGetValue(resource, out var val) ? val : 0;
+            ratePerMinute = rate;
+            if (ratePerMinute <= 0)
+            {
+                Interval = 0f;
+                CycleAmount = 0;
+                return;
+            }
+
+            if (ratePerMinute <= 60)
+            {
+                Interval = (float)(60.0 / ratePerMinute);
+                CycleAmount = 1;
+            }
+            else
+            {
+                Interval = 1f;
+                CycleAmount = ratePerMinute / 60.0;
+            }
         }
 
-        private bool QuestCompleted()
-        {
-            return QuestUtils.QuestCompleted(data != null ? data.requiredQuest : null);
-        }
+        public double GetStoredAmount(Resource r) => r == resource ? stored : 0;
+        public double GetTotalCollected(Resource r) => r == resource ? totalCollected : 0;
 
         private void Awake()
         {
             OnSaveData += SaveState;
             OnLoadData += LoadState;
-            OnQuestHandin += OnQuestHandinEvent;
             OnResetData += ResetState;
+        }
+
+        private void OnDestroy()
+        {
+            OnSaveData -= SaveState;
+            OnLoadData -= LoadState;
+            OnResetData -= ResetState;
         }
 
         private void OnEnable()
         {
-            if (!setup && dataAssigned && QuestCompleted())
+            if (!setup && resource != null)
                 LoadState();
         }
 
@@ -73,130 +88,89 @@ namespace TimelessEchoes.NpcGeneration
             SaveState();
         }
 
-        private void OnDestroy()
-        {
-            OnSaveData -= SaveState;
-            OnLoadData -= LoadState;
-            OnQuestHandin -= OnQuestHandinEvent;
-            OnResetData -= ResetState;
-        }
-
         public void Tick(float deltaTime)
         {
-            if (!setup || !RequirementsMet) return;
+            if (!setup || Interval <= 0f || resource == null) return;
 
             Progress += deltaTime;
-            while (Progress >= Interval && Interval > 0f)
+            while (Progress >= Interval)
             {
                 Progress -= Interval;
                 AddCycle();
             }
-
-            // UI elements update themselves via DiscipleGeneratorUIManager
         }
 
         public void ApplyOfflineProgress(double seconds)
         {
-            if (!setup || seconds <= 0 || !RequirementsMet) return;
+            if (!setup || seconds <= 0 || Interval <= 0f || resource == null) return;
+
             Progress += (float)seconds;
-            while (Progress >= Interval && Interval > 0f)
+            while (Progress >= Interval)
             {
                 Progress -= Interval;
                 AddCycle();
             }
-
-            // UI elements update themselves via DiscipleGeneratorUIManager
         }
 
         public void CollectResources()
         {
-            if (!setup) return;
+            if (!setup || stored <= 0) return;
+            resourceManager ??= ResourceManager.Instance;
             if (resourceManager == null)
             {
-                resourceManager = ResourceManager.Instance;
-                if (resourceManager == null)
-                    TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
-            }
-            if (resourceManager == null) return;
-
-            foreach (var pair in stored)
-            {
-                resourceManager.Add(pair.Key, pair.Value);
-                if (collectedTotals.ContainsKey(pair.Key))
-                    collectedTotals[pair.Key] += pair.Value;
-                else
-                    collectedTotals[pair.Key] = pair.Value;
+                Log("ResourceManager missing", TELogCategory.Resource, this);
+                return;
             }
 
-            stored.Clear();
-
-            // Persist the updated resource totals immediately
+            resourceManager.Add(resource, stored);
+            totalCollected += stored;
+            stored = 0;
             SaveState();
         }
 
         private void AddCycle()
         {
-            if (data == null) return;
-            foreach (var entry in data.resources)
-            {
-                if (entry.resource == null || entry.amount <= 0) continue;
-                if (stored.ContainsKey(entry.resource))
-                    stored[entry.resource] += entry.amount;
-                else
-                    stored[entry.resource] = entry.amount;
-            }
+            stored += CycleAmount;
         }
 
         private void SaveState()
         {
-            if (!setup || oracle == null) return;
-            if (oracle.saveData.Disciples == null)
-                oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
-
-            string id = data != null ? data.name : gameObject.name;
+            if (!setup || oracle == null || resource == null) return;
+            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
             var rec = new GameData.DiscipleGenerationRecord
             {
-                StoredResources = new Dictionary<string, double>(),
-                TotalCollected = new Dictionary<string, double>(),
+                StoredResources = new Dictionary<string, double> { { resource.name, stored } },
+                TotalCollected = new Dictionary<string, double> { { resource.name, totalCollected } },
                 Progress = Progress,
                 LastGenerationTime = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
             };
-            foreach (var pair in stored)
-                if (pair.Key != null)
-                    rec.StoredResources[pair.Key.name] = pair.Value;
-            foreach (var pair in collectedTotals)
-                if (pair.Key != null)
-                    rec.TotalCollected[pair.Key.name] = pair.Value;
-            oracle.saveData.Disciples[id] = rec;
+            oracle.saveData.Disciples[resource.name] = rec;
         }
 
         private void ResetState()
         {
-            stored.Clear();
-            collectedTotals.Clear();
+            stored = 0;
+            totalCollected = 0;
             Progress = 0f;
         }
 
         private void LoadState()
         {
-            if (oracle == null || !QuestCompleted()) return;
+            if (oracle == null || resource == null) return;
             setup = true;
-            EnsureLookup();
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
-            stored.Clear();
-            collectedTotals.Clear();
+            stored = 0;
+            totalCollected = 0;
             Progress = 0f;
-            string id = data != null ? data.name : gameObject.name;
-            if (oracle.saveData.Disciples.TryGetValue(id, out var rec) && rec != null)
+
+            if (oracle.saveData.Disciples.TryGetValue(resource.name, out var rec) && rec != null)
             {
-                foreach (var pair in rec.StoredResources)
-                    if (lookup.TryGetValue(pair.Key, out var res) && res != null)
-                        stored[res] = pair.Value;
-                foreach (var pair in rec.TotalCollected)
-                    if (lookup.TryGetValue(pair.Key, out var res) && res != null)
-                        collectedTotals[res] = pair.Value;
+                if (rec.StoredResources != null)
+                    rec.StoredResources.TryGetValue(resource.name, out stored);
+                if (rec.TotalCollected != null)
+                    rec.TotalCollected.TryGetValue(resource.name, out totalCollected);
                 Progress = rec.Progress;
 
                 var now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
@@ -204,23 +178,7 @@ namespace TimelessEchoes.NpcGeneration
                 if (seconds > 0)
                     ApplyOfflineProgress(seconds);
             }
-
-            // UI will be created by DiscipleGeneratorUIManager
-        }
-
-        private void OnQuestHandinEvent(string questId)
-        {
-            if (!setup && dataAssigned && data != null && data.requiredQuest != null && questId == data.requiredQuest.questId && QuestCompleted())
-                LoadState();
-        }
-
-        private static void EnsureLookup()
-        {
-            if (lookup != null) return;
-            lookup = new Dictionary<string, Resource>();
-            foreach (var res in Resources.LoadAll<Resource>(""))
-                if (res != null && !lookup.ContainsKey(res.name))
-                    lookup[res.name] = res;
         }
     }
 }
+

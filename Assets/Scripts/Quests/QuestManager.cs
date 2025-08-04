@@ -285,6 +285,11 @@ namespace TimelessEchoes.Quests
                 BuffManager.Instance?.UnlockAutoSlots(inst.data.unlockAutoBuffSlots);
             if (inst.data.maxDistanceIncrease > 0f)
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease);
+            if (inst.data.disciplePercentReward > 0f)
+            {
+                oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
+                DiscipleGenerationManager.Instance?.RefreshRates();
+            }
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)

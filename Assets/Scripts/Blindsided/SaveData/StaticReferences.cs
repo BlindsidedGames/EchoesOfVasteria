@@ -28,6 +28,12 @@ namespace Blindsided.SaveData
         /// </summary>
         public static HashSet<string> ActiveNpcMeetings { get; } = new();
 
+        public static float DisciplePercent
+        {
+            get => oracle.saveData.DisciplePercent;
+            set => oracle.saveData.DisciplePercent = value;
+        }
+
 
         public static BuyMode PurchaseMode
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -7,7 +8,7 @@ namespace TimelessEchoes.NpcGeneration
     /// </summary>
     public class DiscipleCropGrowth : MonoBehaviour
     {
-        [SerializeField] private Disciple disciple;
+        [SerializeField] private Resource resource;
         [SerializeField] private DiscipleGenerator generator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite[] growthStages = new Sprite[4];
@@ -24,6 +25,9 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (generator == null)
                 FindGenerator();
+            var manager = DiscipleGenerationManager.Instance;
+            if (manager != null)
+                manager.OnGeneratorsRebuilt += OnGeneratorsRebuilt;
         }
 
         private void Update()
@@ -51,7 +55,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void FindGenerator()
         {
-            if (disciple == null)
+            if (resource == null)
                 return;
 
             var manager = DiscipleGenerationManager.Instance;
@@ -60,12 +64,24 @@ namespace TimelessEchoes.NpcGeneration
 
             foreach (var gen in manager.Generators)
             {
-                if (gen != null && gen.DiscipleName == disciple.name)
+                if (gen != null && gen.Resource == resource)
                 {
                     generator = gen;
                     break;
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            var manager = DiscipleGenerationManager.Instance;
+            if (manager != null)
+                manager.OnGeneratorsRebuilt -= OnGeneratorsRebuilt;
+        }
+
+        private void OnGeneratorsRebuilt()
+        {
+            FindGenerator();
         }
     }
 }

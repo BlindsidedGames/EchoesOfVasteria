@@ -1,5 +1,4 @@
 using Blindsided.Utilities;
-using System.Collections.Generic;
 using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
@@ -23,8 +22,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private TMP_Text collectionRateText;
         [SerializeField] private Button collectButton;
 
-        private readonly Dictionary<Resource, DiscipleGeneratedResourceUIReferences> resourceUIs = new();
-        private readonly Dictionary<Resource, double> amountsPerCycle = new();
+        private DiscipleGeneratedResourceUIReferences resourceUI;
         private ResourceInventoryUI inventoryUI;
         private ResourceManager resourceManager;
 
@@ -37,29 +35,25 @@ namespace TimelessEchoes.NpcGeneration
 
             foreach (Transform child in generatedParent)
                 Destroy(child.gameObject);
-            resourceUIs.Clear();
-            amountsPerCycle.Clear();
+            resourceUI = null;
 
-            foreach (var entry in generator.ResourceEntries)
+            var res = generator.Resource;
+            if (res != null)
             {
-                if (entry.resource == null) continue;
-                var ui = Instantiate(generatedPrefab, generatedParent);
-                if (ui.iconImage != null)
-                    ui.iconImage.sprite = entry.resource.icon;
-                if (ui.selectButton != null)
+                resourceUI = Instantiate(generatedPrefab, generatedParent);
+                if (resourceUI.iconImage != null)
+                    resourceUI.iconImage.sprite = res.icon;
+                if (resourceUI.selectButton != null)
                 {
                     EnsureInventoryUI();
-                    var r = entry.resource;
-                    ui.selectButton.onClick.RemoveAllListeners();
-                    ui.selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(r));
+                    resourceUI.selectButton.onClick.RemoveAllListeners();
+                    resourceUI.selectButton.onClick.AddListener(() => inventoryUI?.HighlightResource(res));
                 }
-                resourceUIs[entry.resource] = ui;
-                amountsPerCycle[entry.resource] = entry.amount;
             }
 
             if (resourceNameText != null)
             {
-                resourceNameText.text = generator != null ? generator.DiscipleName : string.Empty;
+                resourceNameText.text = res != null ? res.name : string.Empty;
             }
 
             if (collectButton != null)
@@ -90,9 +84,8 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnDestroy()
         {
-            foreach (var ui in resourceUIs.Values)
-                if (ui != null && ui.selectButton != null)
-                    ui.selectButton.onClick.RemoveAllListeners();
+            if (resourceUI != null && resourceUI.selectButton != null)
+                resourceUI.selectButton.onClick.RemoveAllListeners();
             if (collectButton != null)
                 collectButton.onClick.RemoveAllListeners();
         }
@@ -105,54 +98,32 @@ namespace TimelessEchoes.NpcGeneration
             if (image != null)
                 image.fillAmount = pct;
 
-            if (resourceManager != null && totalCollectedText != null)
+            var res = generator.Resource;
+            if (resourceManager != null && totalCollectedText != null && res != null)
             {
-                var parts = new List<string>();
-                foreach (var entry in generator.ResourceEntries)
-                {
-                    if (entry.resource == null) continue;
-                    var val = generator.GetTotalCollected(entry.resource);
-                    parts.Add(CalcUtils.FormatNumber(val, true));
-                }
-                totalCollectedText.text = string.Join(", ", parts);
+                var val = generator.GetTotalCollected(res);
+                totalCollectedText.text = CalcUtils.FormatNumber(val, true);
             }
 
-            foreach (var pair in resourceUIs)
-            {
-                var res = pair.Key;
-                var ui = pair.Value;
-                if (ui != null && ui.awaitingCollectionText != null)
-                    ui.awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(res), true);
-            }
+            if (resourceUI != null && resourceUI.awaitingCollectionText != null && res != null)
+                resourceUI.awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(res), true);
 
-            if (collectionRateText != null)
+            if (collectionRateText != null && res != null)
             {
-                double totalPerCycle = 0;
-                foreach (var amt in amountsPerCycle.Values)
-                    totalPerCycle += amt;
                 if (generator.Interval > 0)
                 {
                     var time = generator.Interval.ToString("0.##");
-                    collectionRateText.text = CalcUtils.FormatNumber(totalPerCycle, true) + " / " + time + "s";
+                    collectionRateText.text = CalcUtils.FormatNumber(generator.CycleAmount, true) + " / " + time + "s";
                 }
                 else
                 {
-                    collectionRateText.text = CalcUtils.FormatNumber(totalPerCycle, true);
+                    collectionRateText.text = CalcUtils.FormatNumber(0, true);
                 }
             }
 
-            if (collectButton != null)
+            if (collectButton != null && res != null)
             {
-                bool interact = false;
-                foreach (var entry in generator.ResourceEntries)
-                {
-                    if (entry.resource != null && generator.GetStoredAmount(entry.resource) > 0)
-                    {
-                        interact = true;
-                        break;
-                    }
-                }
-                collectButton.interactable = interact;
+                collectButton.interactable = generator.GetStoredAmount(res) > 0;
             }
         }
     }
