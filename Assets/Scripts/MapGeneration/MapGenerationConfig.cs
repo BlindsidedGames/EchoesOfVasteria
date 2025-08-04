@@ -21,6 +21,9 @@ namespace TimelessEchoes.MapGeneration
         // Whether clouds should be shown while this map is active.
         public bool allowClouds = true;
 
+        // Starting Y position for the hero when a run begins.
+        public float heroStartY = 0f;
+
         [Serializable]
         public class TilemapChunkSettings
         {

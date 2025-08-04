@@ -398,6 +398,13 @@ namespace TimelessEchoes
                     if (runCalebUI != null)
                         hp.HealthBar = runCalebUI.healthBar;
                 }
+
+                if (CurrentGenerationConfig != null)
+                {
+                    var heroPos = hero.transform.position;
+                    heroPos.y = CurrentGenerationConfig.heroStartY;
+                    hero.transform.position = heroPos;
+                }
             }
 
             EnableMildred();
