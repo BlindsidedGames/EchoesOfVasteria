@@ -80,9 +80,10 @@ namespace TimelessEchoes.Buffs
                 var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
+                var expireDist = 0f;
                 if (recipe != null && tracker != null && recipe.distancePercent > 0f)
                 {
-                    var expireDist = tracker.LongestRun * recipe.distancePercent;
+                    expireDist = tracker.LongestRun * recipe.distancePercent;
                     distanceOk = tracker.CurrentRunDistance < expireDist;
                 }
 
@@ -113,6 +114,18 @@ namespace TimelessEchoes.Buffs
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
                         if (!heroAlive)
                             ui.durationText.text = "Dead";
+                        else if (recipe != null && tracker != null && recipe.distancePercent > 0f)
+                        {
+                            if (!distanceOk)
+                                ui.durationText.text = "Too Far";
+                            else if (remain > 0f)
+                            {
+                                var percent = expireDist > 0f ? tracker.CurrentRunDistance / expireDist * 100f : 0f;
+                                ui.durationText.text = $"{Mathf.FloorToInt(percent)}%";
+                            }
+                            else
+                                ui.durationText.text = string.Empty;
+                        }
                         else if (!distanceOk)
                             ui.durationText.text = "Too Far";
                         else
@@ -185,7 +198,10 @@ namespace TimelessEchoes.Buffs
                 var panel = pair.Value;
                 if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                panel.durationText.text = $"Duration: {Mathf.Ceil(recipe.baseDuration)}";
+                if (recipe.distancePercent > 0f)
+                    panel.durationText.text = $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%";
+                else
+                    panel.durationText.text = $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
             }
         }
 
@@ -207,7 +223,9 @@ namespace TimelessEchoes.Buffs
                 if (panel.descriptionText != null)
                     panel.descriptionText.text = recipe.description;
                 if (panel.durationText != null)
-                    panel.durationText.text = $"Duration: {Mathf.Ceil(recipe.baseDuration)}";
+                    panel.durationText.text = recipe.distancePercent > 0f
+                        ? $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%"
+                        : $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
                 if (panel.purchaseButton != null)
                 {
                     var r = recipe;
