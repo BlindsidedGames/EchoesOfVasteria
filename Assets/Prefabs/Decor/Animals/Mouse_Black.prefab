@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 4891254437283259235}
   - component: {fileID: 4549794364739409662}
   - component: {fileID: 2718269970555017869}
+  - component: {fileID: 3364930137357180203}
   m_Layer: 0
   m_Name: Mouse_Black
   m_TagString: Untagged
@@ -219,3 +220,24 @@ MonoBehaviour:
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
   constrainInsideGraph: 0
+--- !u!114 &3364930137357180203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6951001417029320113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90693976edd14eb28d91af58f7a04e65, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  animator: {fileID: 6169638799197241066}
+  spriteRenderer: {fileID: 1874905378044195023}
+  wanderInterval: {x: 1, y: 3}
+  wanderDistance: 1
+  enableFlee: 0
+  fleeRadius: 2
+  fleeDistance: 3
+  hero: {fileID: 0}
+  eatInterval: {x: 5, y: 10}
