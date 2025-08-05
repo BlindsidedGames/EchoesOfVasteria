@@ -15,14 +15,16 @@ MonoBehaviour:
   title: Slipstream
   description: Instantly complete all tasks up to 50% of your distance record.
   buffIcon: {fileID: 6903983040440877652, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
-  durationType: 1
-  durationMagnitude: 0.5
+  baseDuration: 300
+  distancePercent: 0.5
   echoSpawnConfig:
     echoCount: 0
     capableSkills: []
     echoType: 1
-  requiredQuest: {fileID: 0}
-  baseEffects:
-  - type: 6
-    magnitude: 1
-  upgrades: []
+  moveSpeedPercent: 0
+  damagePercent: 0
+  defensePercent: 0
+  attackSpeedPercent: 0
+  taskSpeedPercent: 0
+  lifestealPercent: 0
+  instantTasks: 1

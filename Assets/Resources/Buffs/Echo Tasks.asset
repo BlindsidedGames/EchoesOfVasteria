@@ -15,12 +15,16 @@ MonoBehaviour:
   title: Echo | Tasks
   description: An Echo of your past will complete tasks alongside you.
   buffIcon: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
-  durationType: 0
-  durationMagnitude: 30
+  baseDuration: 30
+  distancePercent: 0
   echoSpawnConfig:
     echoCount: 1
     capableSkills: []
     echoType: 2
-  requiredQuest: {fileID: 0}
-  baseEffects: []
-  upgrades: []
+  moveSpeedPercent: 0
+  damagePercent: 0
+  defensePercent: 0
+  attackSpeedPercent: 0
+  taskSpeedPercent: 0
+  lifestealPercent: 0
+  instantTasks: 0
