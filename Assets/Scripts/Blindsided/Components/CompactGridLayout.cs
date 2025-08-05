@@ -14,6 +14,15 @@ public class CompactGridLayout : LayoutGroup
     [SerializeField] private Vector2 spacing = Vector2.zero;
     [SerializeField] private int maxColumns = 7;
 
+    public Vector2 CellSize => cellSize;
+    public Vector2 Spacing => spacing;
+
+    public int MaxColumns
+    {
+        get => maxColumns;
+        set => maxColumns = Mathf.Max(1, value);
+    }
+
     /* ---------- Size calculations -------------------------------------------------- */
 
     public override void CalculateLayoutInputHorizontal()
