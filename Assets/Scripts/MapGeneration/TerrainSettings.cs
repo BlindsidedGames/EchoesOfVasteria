@@ -19,6 +19,11 @@ namespace TimelessEchoes.MapGeneration
             [Range(0f,1f)] public float taskDensity = 0.1f;
 
             public bool borderOnly;
+
+            /// <summary>
+            /// Offsets from each edge for task placement.
+            /// Negative values reject cells touching that edge.
+            /// </summary>
             public int topBorderOffset;
             public int bottomBorderOffset;
             public int leftBorderOffset;
