@@ -44,6 +44,7 @@ MonoBehaviour:
   autoPin: 0
   requiredQuests:
   - {fileID: 11400000, guid: c216de0e271f04d4f94dc6f2bb27ac32, type: 2}
+  - {fileID: 11400000, guid: 4ee4003e27570fc4daaf537a82f54839, type: 2}
   requirements:
   - type: 4
     resource: {fileID: 0}
@@ -55,6 +56,7 @@ MonoBehaviour:
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 1
   maxDistanceIncrease: 0
+  disciplePercentReward: 0
   references:
     version: 2
     RefIds: []

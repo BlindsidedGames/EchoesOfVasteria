@@ -8,7 +8,7 @@ using static Blindsided.Utilities.CalcUtils;
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
-    /// Tracks resources gained during a run and displays them when returning to town.
+    ///     Tracks resources gained during a run and displays them when returning to town.
     /// </summary>
     public class RunResourceTrackerUI : MonoBehaviour
     {
@@ -45,7 +45,7 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>
-        /// Clears all recorded resource amounts. Call this when a run begins.
+        ///     Clears all recorded resource amounts. Call this when a run begins.
         /// </summary>
         public void BeginRun()
         {
@@ -82,7 +82,7 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>
-        /// Displays the recorded resources and amounts.
+        ///     Displays the recorded resources and amounts.
         /// </summary>
         public void ShowWindow()
         {
@@ -102,6 +102,7 @@ namespace TimelessEchoes.Upgrades
                 bonusAmounts.TryGetValue(pair.Key, out var bonus);
                 SetupSlot(slot, pair.Key, pair.Value - bonus, bonus);
             }
+
             if (window != null)
                 window.SetActive(true);
         }
@@ -109,10 +110,8 @@ namespace TimelessEchoes.Upgrades
         private void Update()
         {
             if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
-            {
                 if (window != null && window.activeSelf)
                     window.SetActive(false);
-            }
         }
 
         private void SetupSlot(ResourceUIReferences slot, Resource res, double amount, double bonus)
@@ -124,10 +123,11 @@ namespace TimelessEchoes.Upgrades
                 slot.iconImage.sprite = res ? res.icon : null;
                 slot.iconImage.enabled = res != null && res.icon != null;
             }
+
             if (slot.countText)
             {
                 slot.countText.text = FormatNumber(amount, true);
-                if (bonus > 0)
+                if (bonus >= 1)
                     slot.countText.text += $" (+{FormatNumber(bonus, true)})";
                 slot.countText.gameObject.SetActive(true);
             }

@@ -158,9 +158,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3388966477673748854}
     m_Modifications:
+    - target: {fileID: 2278093216645303668, guid: bb1579382e92a92498f0607960660526, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2278093216645303668, guid: bb1579382e92a92498f0607960660526, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2845452599205162772, guid: bb1579382e92a92498f0607960660526, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845452599205162772, guid: bb1579382e92a92498f0607960660526, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845452599205162772, guid: bb1579382e92a92498f0607960660526, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4238692856695173622, guid: bb1579382e92a92498f0607960660526, type: 3}
       propertyPath: m_Name
