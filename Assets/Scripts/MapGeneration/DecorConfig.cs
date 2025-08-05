@@ -15,6 +15,11 @@ namespace TimelessEchoes.MapGeneration
         [MinValue(0)] public int topBuffer = 1;
         [MinValue(0)] public int bottomBuffer;
         [MinValue(0)] public int sideBuffer = 1;
+        public bool borderOnly;
+        [MinValue(0)] public int topBorderOffset;
+        [MinValue(0)] public int bottomBorderOffset;
+        [MinValue(0)] public int leftBorderOffset;
+        [MinValue(0)] public int rightBorderOffset;
 
     }
 
