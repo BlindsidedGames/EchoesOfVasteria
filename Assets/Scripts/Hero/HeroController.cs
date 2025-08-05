@@ -1,9 +1,9 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Blindsided.SaveData;
 using Pathfinding;
 using Pathfinding.RVO;
 using Sirenix.OdinInspector;
@@ -17,9 +17,9 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
-using static Blindsided.Oracle;
 using static TimelessEchoes.Quests.QuestUtils;
 using static Blindsided.SaveData.StaticReferences;
+using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Hero
 {
@@ -49,10 +49,12 @@ namespace TimelessEchoes.Hero
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private DiceRoller diceRoller;
+        [SerializeField] private string diceQuestID = "Protect the Town";
         [SerializeField] private Skill combatSkill;
 
-        [Header("Skill Indicators")]
-        [SerializeField] private GameObject combatIndicator;
+        [Header("Skill Indicators")] [SerializeField]
+        private GameObject combatIndicator;
+
         [SerializeField] private GameObject miningIndicator;
         [SerializeField] private GameObject woodcuttingIndicator;
         [SerializeField] private GameObject fishingIndicator;
@@ -81,11 +83,10 @@ namespace TimelessEchoes.Hero
         public bool UnlimitedAggroRange { get; set; }
 
         /// <summary>
-        /// Maximum distance echoes will search for combat targets when
-        /// <see cref="UnlimitedAggroRange"/> is enabled.
+        ///     Maximum distance echoes will search for combat targets when
+        ///     <see cref="UnlimitedAggroRange" /> is enabled.
         /// </summary>
-        [SerializeField]
-        private float combatAggroRange = 20f;
+        [SerializeField] private float combatAggroRange = 20f;
 
         public float CombatAggroRange
         {
@@ -97,8 +98,8 @@ namespace TimelessEchoes.Hero
         private Health currentEnemyHealth;
 
         private readonly HashSet<Enemy> engagedEnemies = new();
-        private readonly Dictionary<Enemy, System.Action> enemyDeathHandlers = new();
-        private readonly Dictionary<Enemy, System.Action<Enemy>> enemyDisengageHandlers = new();
+        private readonly Dictionary<Enemy, Action> enemyDeathHandlers = new();
+        private readonly Dictionary<Enemy, Action<Enemy>> enemyDisengageHandlers = new();
         private readonly List<Enemy> enemyRemovalBuffer = new();
 
         private AIPath ai;
@@ -113,9 +114,7 @@ namespace TimelessEchoes.Hero
 
         private bool logicActive = true;
 
-        private bool reaperSpawnedByDistance;
-
-        public bool ReaperSpawnedByDistance => reaperSpawnedByDistance;
+        public bool ReaperSpawnedByDistance { get; private set; }
 
         private float damageBonus;
         private float defenseBonus;
@@ -210,7 +209,7 @@ namespace TimelessEchoes.Hero
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
 
-            diceUnlocked = QuestCompleted("Dice");
+            diceUnlocked = QuestCompleted(diceQuestID);
             if (diceRoller != null)
                 diceRoller.gameObject.SetActive(diceUnlocked);
 
@@ -264,11 +263,12 @@ namespace TimelessEchoes.Hero
 #if !DISABLESTEAMWORKS
                 RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #endif
-                if (!IsEcho && !reaperSpawnedByDistance && transform.position.x >= tracker.MaxRunDistance)
+                if (!IsEcho && !ReaperSpawnedByDistance && transform.position.x >= tracker.MaxRunDistance)
                 {
                     var gm = GameManager.Instance;
                     var hp = health != null ? health : GetComponent<HeroHealth>();
-                    if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null && gm.CurrentMap != null)
+                    if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null &&
+                        gm.CurrentMap != null)
                     {
                         ReaperManager.Spawn(gm.ReaperPrefab, gameObject, gm.CurrentMap.transform, false,
                             () =>
@@ -278,7 +278,7 @@ namespace TimelessEchoes.Hero
                                     Instantiate(gm.GravestonePrefab, transform.position, Quaternion.identity,
                                         gm.CurrentMap.transform);
                             }, gm.ReaperSpawnOffset);
-                        reaperSpawnedByDistance = true;
+                        ReaperSpawnedByDistance = true;
                     }
                 }
             }
@@ -289,8 +289,8 @@ namespace TimelessEchoes.Hero
             if (taskController == null)
             {
                 var echo = GetComponent<EchoController>();
-                bool skip = IsEcho && echo != null &&
-                            (echo.Type == EchoType.Combat || echo.Type == EchoType.TaskOnly);
+                var skip = IsEcho && echo != null &&
+                           (echo.Type == EchoType.Combat || echo.Type == EchoType.TaskOnly);
                 if (!skip)
                     taskController = GetComponent<TaskController>() ?? GetComponentInParent<TaskController>();
             }
@@ -305,7 +305,7 @@ namespace TimelessEchoes.Hero
             if (!IsEcho)
                 buffController?.Resume();
 
-            reaperSpawnedByDistance = false;
+            ReaperSpawnedByDistance = false;
 
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
@@ -381,9 +381,11 @@ namespace TimelessEchoes.Hero
                     if (hp != null)
                         hp.OnDeath -= death;
                 }
+
                 if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
                     Enemy.OnEngage -= disengage;
             }
+
             engagedEnemies.Clear();
             enemyDeathHandlers.Clear();
             enemyDisengageHandlers.Clear();
@@ -573,6 +575,7 @@ namespace TimelessEchoes.Hero
                 if (enemy == null || hp == null || hp.CurrentHealth <= 0f || !enemy.IsEngaged)
                     enemyRemovalBuffer.Add(enemy);
             }
+
             foreach (var enemy in enemyRemovalBuffer)
                 UnregisterEngagedEnemy(enemy);
 
@@ -581,18 +584,19 @@ namespace TimelessEchoes.Hero
             {
                 if (engagedEnemies.Count > 0)
                 {
-                    float best = float.PositiveInfinity;
+                    var best = float.PositiveInfinity;
                     Enemy chosen = null;
                     foreach (var enemy in engagedEnemies)
                     {
                         if (enemy == null) continue;
-                        float dist = Vector2.Distance(transform.position, enemy.transform.position);
+                        var dist = Vector2.Distance(transform.position, enemy.transform.position);
                         if (dist < best)
                         {
                             best = dist;
                             chosen = enemy;
                         }
                     }
+
                     nearest = chosen != null ? chosen.transform : null;
                 }
                 else
@@ -643,7 +647,7 @@ namespace TimelessEchoes.Hero
 
             if (CurrentTask == null)
             {
-                bool noVisibleTasks = taskController == null || !taskController.HasVisibleTasksForHero(this);
+                var noVisibleTasks = taskController == null || !taskController.HasVisibleTasksForHero(this);
                 if (taskController == null || taskController.tasks.Count == 0 || (IsEcho && noVisibleTasks))
                     AutoAdvance();
                 else
@@ -682,11 +686,11 @@ namespace TimelessEchoes.Hero
                 return null;
             Vector2 pos = transform.position;
 
-            Camera cam = EnemyActivator.Instance != null
+            var cam = EnemyActivator.Instance != null
                 ? EnemyActivator.Instance.GetComponent<Camera>()
                 : null;
             Vector3 min = Vector3.zero, max = Vector3.zero;
-            bool checkBounds = false;
+            var checkBounds = false;
             if (cam != null)
             {
                 const float padding = 2f;
@@ -700,7 +704,7 @@ namespace TimelessEchoes.Hero
                 if (enemy == null) continue;
                 if (checkBounds)
                 {
-                    Vector3 p = enemy.transform.position;
+                    var p = enemy.transform.position;
                     if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
                         continue;
                 }
@@ -791,11 +795,11 @@ namespace TimelessEchoes.Hero
                 {
                     engagedEnemies.Add(enemy);
 
-                    System.Action deathHandler = () => UnregisterEngagedEnemy(enemy);
+                    Action deathHandler = () => UnregisterEngagedEnemy(enemy);
                     hp.OnDeath += deathHandler;
                     enemyDeathHandlers[enemy] = deathHandler;
 
-                    System.Action<Enemy> disengageHandler = null;
+                    Action<Enemy> disengageHandler = null;
                     disengageHandler = e =>
                     {
                         if (e == enemy && !e.IsEngaged)
@@ -845,6 +849,7 @@ namespace TimelessEchoes.Hero
                         hp.OnDeath -= death;
                     enemyDeathHandlers.Remove(enemy);
                 }
+
                 if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
                 {
                     Enemy.OnEngage -= disengage;
@@ -939,9 +944,9 @@ namespace TimelessEchoes.Hero
 
         private void AutoAdvance()
         {
-            if (IsEcho && HeroController.Instance != null && HeroController.Instance != this)
+            if (IsEcho && Instance != null && Instance != this)
             {
-                var mainHero = HeroController.Instance.transform;
+                var mainHero = Instance.transform;
 
                 if (setter.target != mainHero)
                 {
@@ -975,8 +980,8 @@ namespace TimelessEchoes.Hero
         private void OnAutoBuffChanged()
         {
             if (AutoBuffAnimator == null) return;
-            var manager = TimelessEchoes.Buffs.BuffManager.Instance;
-            bool active = manager != null && manager.AnySlotAutoBuffing && !IsEcho;
+            var manager = BuffManager.Instance;
+            var active = manager != null && manager.AnySlotAutoBuffing && !IsEcho;
             AutoBuffAnimator.gameObject.SetActive(active);
             if (animator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
