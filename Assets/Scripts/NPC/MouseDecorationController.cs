@@ -14,11 +14,13 @@ namespace TimelessEchoes.NPC
             routine = StartCoroutine(EatRoutine());
         }
 
-        protected override void OnDisable()
+        protected void OnDisable()
         {
             if (routine != null)
+            {
                 StopCoroutine(routine);
-            base.OnDisable();
+                routine = null;
+            }
         }
 
         private IEnumerator EatRoutine()
