@@ -16,6 +16,10 @@ namespace TimelessEchoes.MapGeneration
         [MinValue(0)] public int bottomBuffer;
         [MinValue(0)] public int sideBuffer = 1;
         public bool borderOnly;
+        /// <summary>
+        /// Offsets from each edge used for core checks.
+        /// Negative values reject cells touching the corresponding edge.
+        /// </summary>
         public int topBorderOffset;
         public int bottomBorderOffset;
         public int leftBorderOffset;
