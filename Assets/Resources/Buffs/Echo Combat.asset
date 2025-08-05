@@ -16,16 +16,12 @@ MonoBehaviour:
   description: A combat oriented Echo from your past will ignore tasks and attack
     enemies for you.
   buffIcon: {fileID: 7218046035808895280, guid: 16b9f4cabb88e55479fb4cb5a33be70d, type: 3}
-  baseDuration: 30
-  distancePercent: 0
+  durationType: 0
+  durationMagnitude: 30
   echoSpawnConfig:
     echoCount: 1
     capableSkills: []
     echoType: 0
-  moveSpeedPercent: 0
-  damagePercent: 0
-  defensePercent: 0
-  attackSpeedPercent: 0
-  taskSpeedPercent: 0
-  lifestealPercent: 0
-  instantTasks: 0
+  requiredQuest: {fileID: 0}
+  baseEffects: []
+  upgrades: []
