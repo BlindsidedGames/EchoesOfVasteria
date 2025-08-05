@@ -1,6 +1,7 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -290,6 +291,19 @@ namespace TimelessEchoes.Quests
                 oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
                 DiscipleGenerationManager.Instance?.RefreshRates();
             }
+            oracle.saveData.BuffLevels ??= new Dictionary<string, int>();
+            if (inst.data.unlockBuff != null)
+            {
+                var bid = inst.data.unlockBuff.name;
+                oracle.saveData.BuffLevels[bid] = Math.Max(oracle.saveData.BuffLevels.ContainsKey(bid) ? oracle.saveData.BuffLevels[bid] : 0, 1);
+            }
+            if (inst.data.upgradeBuff != null)
+            {
+                var bid = inst.data.upgradeBuff.name;
+                var level = 1;
+                oracle.saveData.BuffLevels.TryGetValue(bid, out level);
+                oracle.saveData.BuffLevels[bid] = level + 1;
+            }
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)
@@ -305,6 +319,25 @@ namespace TimelessEchoes.Quests
                 PinnedQuestUIManager.Instance?.RefreshPins();
             else
                 PinnedQuestUIManager.Instance?.UpdateProgress();
+        }
+
+        /// <summary>
+        ///     Returns true if the given quest has been completed.
+        /// </summary>
+        public bool IsQuestCompleted(QuestData quest)
+        {
+            if (quest == null || oracle == null) return false;
+            if (oracle.saveData.Quests.TryGetValue(quest.questId, out var rec))
+                return rec.Completed;
+            return false;
+        }
+
+        public bool IsQuestCompleted(string questId)
+        {
+            if (string.IsNullOrEmpty(questId) || oracle == null) return false;
+            if (oracle.saveData.Quests.TryGetValue(questId, out var rec))
+                return rec.Completed;
+            return false;
         }
 
         /// <summary>

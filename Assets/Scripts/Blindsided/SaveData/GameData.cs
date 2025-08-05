@@ -35,6 +35,8 @@ namespace Blindsided.SaveData
         [TabGroup("Buffs")] public int UnlockedAutoBuffSlots = 0;
         [HideReferenceObjectPicker]
         [TabGroup("Buffs")] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+        [HideReferenceObjectPicker]
+        [TabGroup("Buffs")] public Dictionary<string, int> BuffLevels = new();
 
         [HideReferenceObjectPicker]
         [TabGroup("Tasks")] public HashSet<string> CompletedNpcTasks = new();
