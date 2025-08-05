@@ -352,13 +352,13 @@ namespace TimelessEchoes.MapGeneration
             var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
 
             var topRaw = config.topBorderOffset;
-            if (topRaw < 0 && upDist > 0) return false;
+            if (topRaw < 0 && upDist <= extraOffset) return false;
             var bottomRaw = config.bottomBorderOffset;
-            if (bottomRaw < 0 && downDist > 0) return false;
+            if (bottomRaw < 0 && downDist <= extraOffset) return false;
             var leftRaw = config.leftBorderOffset;
-            if (leftRaw < 0 && leftDist > 0) return false;
+            if (leftRaw < 0 && leftDist <= extraOffset) return false;
             var rightRaw = config.rightBorderOffset;
-            if (rightRaw < 0 && rightDist > 0) return false;
+            if (rightRaw < 0 && rightDist <= extraOffset) return false;
 
             var topOffset = Mathf.Max(0, topRaw) + extraOffset;
             var bottomOffset = Mathf.Max(0, bottomRaw) + extraOffset;
