@@ -19,10 +19,10 @@ namespace TimelessEchoes.MapGeneration
             [Range(0f,1f)] public float taskDensity = 0.1f;
 
             public bool borderOnly;
-            [MinValue(0)] public int topBorderOffset;
-            [MinValue(0)] public int bottomBorderOffset;
-            [MinValue(0)] public int leftBorderOffset;
-            [MinValue(0)] public int rightBorderOffset;
+            public int topBorderOffset;
+            public int bottomBorderOffset;
+            public int leftBorderOffset;
+            public int rightBorderOffset;
             // When false, spawned tasks are not registered with the TaskController.
             [ToggleLeft]
             public bool addToTaskList = true;
