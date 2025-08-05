@@ -12,9 +12,9 @@ namespace TimelessEchoes.MapGeneration
         [MinValue(0f)] public float weight = 1f;
         public float minX;
         public float maxX = float.PositiveInfinity;
-        [MinValue(0)] public int topBuffer = 1;
-        [MinValue(0)] public int bottomBuffer;
-        [MinValue(0)] public int sideBuffer = 1;
+        [MinValue(0)] [HideIf(nameof(borderOnly))] public int topBuffer = 1;
+        [MinValue(0)] [HideIf(nameof(borderOnly))] public int bottomBuffer;
+        [MinValue(0)] [HideIf(nameof(borderOnly))] public int sideBuffer = 1;
         public bool borderOnly;
         public int topBorderOffset;
         public int bottomBorderOffset;
