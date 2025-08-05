@@ -185,7 +185,7 @@ namespace TimelessEchoes.Buffs
             var buff = new ActiveBuff
             {
                 recipe = recipe,
-                remaining = recipe.baseDuration,
+                remaining = recipe.distancePercent > 0f ? float.PositiveInfinity : recipe.baseDuration,
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
