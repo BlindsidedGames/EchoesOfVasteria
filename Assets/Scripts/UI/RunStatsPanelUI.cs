@@ -174,7 +174,9 @@ namespace TimelessEchoes.UI
                 var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
                 var bonus = CalcUtils.FormatNumber(record.BonusResourcesCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
-                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources} (+{bonus})";
+                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
+                if (record.BonusResourcesCollected > 0)
+                    runStatUI.distanceTasksResourcesText.text += $" (+{bonus})";
             }
 
 
