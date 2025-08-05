@@ -84,7 +84,7 @@ namespace TimelessEchoes.UI
         {
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
-                TELogger.Log("GameplayStatTracker missing", TELogCategory.General, this);
+                Log("GameplayStatTracker missing", TELogCategory.General, this);
             if (runStatUI == null)
                 runStatUI = FindFirstObjectByType<RunStatUIReferences>();
             foreach (var bar in runBars)
@@ -153,7 +153,7 @@ namespace TimelessEchoes.UI
             var canvas = runStatUI.GetComponentInParent<Canvas>();
             var cam = canvas != null ? canvas.worldCamera : null;
             var screenPoint = eventData != null ? (Vector3)eventData.position :
-                (Mouse.current != null ? (Vector3)Mouse.current.position.ReadValue() : Vector3.zero);
+                Mouse.current != null ? Mouse.current.position.ReadValue() : Vector3.zero;
             if (cam != null)
                 screenPoint.z = Mathf.Abs(cam.transform.position.z - runStatUI.transform.position.z);
             var mouseWorld = cam != null
@@ -172,10 +172,11 @@ namespace TimelessEchoes.UI
                 var dist = CalcUtils.FormatNumber(record.Distance, true);
                 var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
-                var bonus = CalcUtils.FormatNumber(record.BonusResourcesCollected, true);
+                var bonusCollected = Mathf.FloorToInt((float)record.BonusResourcesCollected);
+                var bonus = CalcUtils.FormatNumber(bonusCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
                     $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
-                if (record.BonusResourcesCollected > 0)
+                if (bonusCollected >= 1)
                     runStatUI.distanceTasksResourcesText.text += $" (+{bonus})";
             }
 
@@ -233,6 +234,7 @@ namespace TimelessEchoes.UI
                         longest = r.Duration;
                     sum += r.Duration;
                 }
+
                 average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
             else if (graphMode == GraphMode.Resources)
@@ -246,6 +248,7 @@ namespace TimelessEchoes.UI
                         longest = total;
                     sum += total;
                 }
+
                 average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
             else
@@ -258,22 +261,19 @@ namespace TimelessEchoes.UI
                         longest = r.EnemiesKilled;
                     sum += r.EnemiesKilled;
                 }
+
                 average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
 
             if (longestRunText != null)
-            {
                 longestRunText.text = graphMode == GraphMode.Duration
                     ? CalcUtils.FormatTime(longest)
                     : CalcUtils.FormatNumber(longest, true);
-            }
 
             if (averageRunText != null)
-            {
                 averageRunText.text = graphMode == GraphMode.Duration
                     ? CalcUtils.FormatTime(average)
                     : CalcUtils.FormatNumber(average, true);
-            }
 
             if (averageRunSlider != null)
             {
@@ -317,16 +317,23 @@ namespace TimelessEchoes.UI
                     double value;
                     double overlay = 0f;
                     if (graphMode == GraphMode.Distance)
+                    {
                         value = runs[index].Distance;
+                    }
                     else if (graphMode == GraphMode.Duration)
+                    {
                         value = runs[index].Duration;
+                    }
                     else if (graphMode == GraphMode.Resources)
                     {
                         value = runs[index].ResourcesCollected;
                         overlay = runs[index].BonusResourcesCollected;
                     }
                     else
+                    {
                         value = runs[index].EnemiesKilled;
+                    }
+
                     var ratio = longest > 0f ? value / longest : 0f;
                     runBars[i].SetFill((float)ratio);
                     var overlayRatio = longest > 0f ? overlay / longest : 0f;
@@ -361,6 +368,7 @@ namespace TimelessEchoes.UI
                         else
                             color = runs[index].Died ? killsDeathBarColor : killsRetreatBarColor;
                     }
+
                     runBars[i].FillColor = color;
                     if (graphMode != GraphMode.Resources)
                         runBars[i].SetOverlayFill(0f);
