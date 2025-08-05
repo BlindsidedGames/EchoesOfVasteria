@@ -2,7 +2,6 @@
 #define DISABLESTEAMWORKS
 #endif
 using UnityEngine;
-using TimelessEchoes.Stats;
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 using System;
 using System.Runtime.InteropServices;
@@ -27,37 +26,6 @@ namespace TimelessEchoes
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern bool SetWindowText(IntPtr hWnd, string text);
 
-        [DllImport("user32.dll")]
-        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct FLASHWINFO
-        {
-            public uint cbSize;
-            public IntPtr hwnd;
-            public uint dwFlags;
-            public uint uCount;
-            public uint dwTimeout;
-        }
-
-        private const uint FLASHW_TRAY = 0x2;
-        private const uint FLASHW_TIMERNOFG = 0xC;
-
-        private static void FlashWindowAlert()
-        {
-            var handle = GetActiveWindow();
-            if (handle == IntPtr.Zero)
-                return;
-            var fw = new FLASHWINFO
-            {
-                cbSize = (uint)Marshal.SizeOf(typeof(FLASHWINFO)),
-                hwnd = handle,
-                dwFlags = FLASHW_TRAY | FLASHW_TIMERNOFG,
-                uCount = 3,
-                dwTimeout = 0
-            };
-            FlashWindowEx(ref fw);
-        }
 #endif
 
 #if !DISABLESTEAMWORKS
@@ -92,12 +60,6 @@ namespace TimelessEchoes
             instance = this;
             DontDestroyOnLoad(gameObject);
             SetInTown();
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-            var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
-            if (tracker != null)
-                tracker.OnRunEnded += OnRunEnded;
-#endif
         }
 
         /// <summary>
@@ -142,12 +104,6 @@ namespace TimelessEchoes
         {
             if (instance == this)
                 instance = null;
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-            var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
-            if (tracker != null)
-                tracker.OnRunEnded -= OnRunEnded;
-#endif
         }
 
         private void SetWindowTitle(string status)
@@ -159,13 +115,6 @@ namespace TimelessEchoes
 #endif
         }
 
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        private void OnRunEnded(bool died)
-        {
-            if (died)
-                FlashWindowAlert();
-        }
-#endif
 #endif
     }
 }
