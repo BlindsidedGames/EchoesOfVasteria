@@ -13,41 +13,55 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
-        public float CurrentTime = 0;
-        public string DateQuitString;
-        public string DateStarted;
-        public double OfflineTime = 0;
-        public double OfflineTimeCap = 3600f;
-        public double OfflineTimeScaleMultiplier = 2f;
-        public double PlayTime;
-        public float TimeScale = 0f;
-        [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
+        [TabGroup("Time")] public float CurrentTime = 0;
+        [TabGroup("Time")] public string DateQuitString;
+        [TabGroup("Time")] public string DateStarted;
+        [TabGroup("Time")] public double OfflineTime = 0;
+        [TabGroup("Time")] public double OfflineTimeCap = 3600f;
+        [TabGroup("Time")] public double OfflineTimeScaleMultiplier = 2f;
+        [TabGroup("Time")] public double PlayTime;
+        [TabGroup("Time")] public float TimeScale = 0f;
 
-        [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Resources")] public Dictionary<string, ResourceEntry> Resources = new();
+
+        [HideReferenceObjectPicker]
+        [TabGroup("Resources")] public Dictionary<string, double> EnemyKills = new();
 
         // Start with the MoveSpeed buff assigned to the first slot by default
-        [HideReferenceObjectPicker] public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
-        public int UnlockedBuffSlots = 1;
-        public int UnlockedAutoBuffSlots = 0;
-        [HideReferenceObjectPicker] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+        [HideReferenceObjectPicker]
+        [TabGroup("Buffs")] public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
+        [TabGroup("Buffs")] public int UnlockedBuffSlots = 1;
+        [TabGroup("Buffs")] public int UnlockedAutoBuffSlots = 0;
+        [HideReferenceObjectPicker]
+        [TabGroup("Buffs")] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
 
-        [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Tasks")] public HashSet<string> CompletedNpcTasks = new();
 
-        [HideReferenceObjectPicker] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Disciples")] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
 
-        [HideReferenceObjectPicker] public Dictionary<string, QuestRecord> Quests = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Quests")] public Dictionary<string, QuestRecord> Quests = new();
 
-        [HideReferenceObjectPicker] public List<string> PinnedQuests = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Quests")] public List<string> PinnedQuests = new();
 
-        [HideReferenceObjectPicker] public Dictionary<int, TaskRecord> TaskRecords = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Tasks")] public Dictionary<int, TaskRecord> TaskRecords = new();
 
-        [HideReferenceObjectPicker] public Dictionary<string, ResourceRecord> ResourceStats = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Stats")] public Dictionary<string, ResourceRecord> ResourceStats = new();
 
-        [HideReferenceObjectPicker] public Dictionary<string, MapStatistics> MapStats = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Stats")] public Dictionary<string, MapStatistics> MapStats = new();
 
-        [HideReferenceObjectPicker] public GeneralStats General = new();
-        public float CompletionPercentage;
-        public float DisciplePercent = 0.01f;
+        [HideReferenceObjectPicker]
+        [TabGroup("Stats")] public GeneralStats General = new();
+        [TabGroup("Stats")] public float CompletionPercentage;
+
+        [TabGroup("Disciples")] public float DisciplePercent = 0.01f;
 
 
         [HideReferenceObjectPicker]
