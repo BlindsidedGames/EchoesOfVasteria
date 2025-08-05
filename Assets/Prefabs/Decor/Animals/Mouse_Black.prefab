@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  radius: 0.15
+  radius: 0.01
   height: 2
   canMove: 1
   maxSpeed: 1
@@ -230,8 +230,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90693976edd14eb28d91af58f7a04e65, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   animator: {fileID: 6169638799197241066}
   spriteRenderer: {fileID: 1874905378044195023}
   wanderInterval: {x: 1, y: 3}

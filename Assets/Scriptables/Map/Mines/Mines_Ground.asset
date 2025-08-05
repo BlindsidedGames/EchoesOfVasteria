@@ -22,6 +22,141 @@ MonoBehaviour:
     rightBorderOffset: 1
     addToTaskList: 1
   decor:
-    density: 1
-    decor: []
+    density: 0.055
+    decor:
+    - Name: Mouse_Black
+      tile: {fileID: 0}
+      prefab: {fileID: 6951001417029320113, guid: dda79082da2db744d814ad92a5af7973, type: 3}
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Bone 1
+      tile: {fileID: 0}
+      prefab: {fileID: 5954285234474954167, guid: 60551ad20bbb69e459977d730b1f3259, type: 3}
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Bone 2
+      tile: {fileID: 0}
+      prefab: {fileID: 217109750253725304, guid: 19f28c565e12f77469efa5a70bd6a186, type: 3}
+      config:
+        weight: 0.3
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Bone 3
+      tile: {fileID: 0}
+      prefab: {fileID: 5308836658587802506, guid: f69887b65e419c840aaa25c2589f6585, type: 3}
+      config:
+        weight: 0.3
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Crate 2
+      tile: {fileID: 0}
+      prefab: {fileID: 7585964363978284514, guid: 153487017f5f71149bdfdfce0cfe8bdd, type: 3}
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 1
+        topBorderOffset: 1
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Crate 2
+      tile: {fileID: 0}
+      prefab: {fileID: 7585964363978284514, guid: 153487017f5f71149bdfdfce0cfe8bdd, type: 3}
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 1
+        topBorderOffset: 1
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Jar 1
+      tile: {fileID: 0}
+      prefab: {fileID: 6616859640639113959, guid: d0fa712fa790d6f4a83e87b62dc5520a, type: 3}
+      config:
+        weight: 0.3
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 1
+        topBorderOffset: 1
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Jar 2
+      tile: {fileID: 0}
+      prefab: {fileID: 459038898975052413, guid: 624dec571d3055c439f517e067c7341b, type: 3}
+      config:
+        weight: 0.5
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 1
+        sideBuffer: 1
+        borderOnly: 1
+        topBorderOffset: 1
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Web
+      tile: {fileID: 0}
+      prefab: {fileID: 7538177960397694604, guid: 3aa140105c70c6a46b92e51e35ac9705, type: 3}
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 1
+        topBorderOffset: 0
+        bottomBorderOffset: -1
+        leftBorderOffset: -1
+        rightBorderOffset: -1
   showValidationGizmos: 0

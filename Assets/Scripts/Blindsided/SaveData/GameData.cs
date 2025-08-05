@@ -22,14 +22,14 @@ namespace Blindsided.SaveData
         public double PlayTime;
         public float TimeScale = 0f;
         [HideReferenceObjectPicker] public Dictionary<string, ResourceEntry> Resources = new();
+
         [HideReferenceObjectPicker] public Dictionary<string, double> EnemyKills = new();
+
         // Start with the MoveSpeed buff assigned to the first slot by default
-        [HideReferenceObjectPicker]
-        public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
+        [HideReferenceObjectPicker] public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
         public int UnlockedBuffSlots = 1;
         public int UnlockedAutoBuffSlots = 0;
-        [HideReferenceObjectPicker]
-        public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+        [HideReferenceObjectPicker] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
 
         [HideReferenceObjectPicker] public HashSet<string> CompletedNpcTasks = new();
 
@@ -47,7 +47,7 @@ namespace Blindsided.SaveData
 
         [HideReferenceObjectPicker] public GeneralStats General = new();
         public float CompletionPercentage;
-        public float DisciplePercent = 0.1f;
+        public float DisciplePercent = 0.01f;
 
 
         [HideReferenceObjectPicker]
@@ -80,14 +80,17 @@ namespace Blindsided.SaveData
             public bool StatsFoldout;
             public bool TransparentUi;
             public bool Tutorial;
+
             /// <summary>
             ///     Automatically pin new quests when they become active.
             /// </summary>
             public bool AutoPinActiveQuests = false;
+
             /// <summary>
             ///     Whether the pinned quest panel is visible.
             /// </summary>
             public bool ShowPinnedQuests = true;
+
             public bool UseScaledTimeForValues;
 
             /// <summary>
@@ -100,7 +103,6 @@ namespace Blindsided.SaveData
             ///     0 → 16:9, 1 → 32:9.
             /// </summary>
             public float SafeAreaRatio;
-
         }
 
         [HideReferenceObjectPicker]
