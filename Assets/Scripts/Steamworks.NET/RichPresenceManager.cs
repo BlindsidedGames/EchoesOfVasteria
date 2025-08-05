@@ -85,7 +85,9 @@ namespace TimelessEchoes
         {
             if (taskbar != null)
                 return;
-            taskbar = (ITaskbarList3)new CTaskbarList();
+            taskbar = new CTaskbarList() as ITaskbarList3;
+            if (taskbar == null)
+                return;
             taskbar.HrInit();
             windowHandle = GetActiveWindow();
         }
