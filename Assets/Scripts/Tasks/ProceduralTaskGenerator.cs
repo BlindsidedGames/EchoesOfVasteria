@@ -592,9 +592,42 @@ namespace TimelessEchoes.Tasks
 
             if (!settings.taskSettings.borderOnly) return IsInCore(cell, settings, tile, 0);
 
+            return IsBorderCell(cell, settings, tile);
+        }
+
+        private bool IsBorderCell(Vector3Int cell, TerrainSettings settings, TileBase tile)
+        {
             var inCore = IsInCore(cell, settings, tile, 0);
             var inInnerCore = IsInCore(cell, settings, tile, 1);
-            return inCore && !inInnerCore;
+            if (!inCore || inInnerCore) return false;
+
+            var upDist = CountSame(cell + Vector3Int.up, Vector3Int.up, tile);
+            var downDist = CountSame(cell + Vector3Int.down, Vector3Int.down, tile);
+            var leftDist = CountSame(cell + Vector3Int.left, Vector3Int.left, tile);
+            var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
+
+            var ts = settings.taskSettings;
+            if (ts.topBorderOffset < 0 && upDist == 0) return false;
+            if (ts.bottomBorderOffset < 0 && downDist == 0) return false;
+            if (ts.leftBorderOffset < 0 && leftDist == 0) return false;
+            if (ts.rightBorderOffset < 0 && rightDist == 0) return false;
+
+            var touchesTop = ts.topBorderOffset >= 0 &&
+                             upDist == Mathf.Max(0, ts.topBorderOffset);
+            var touchesBottom = ts.bottomBorderOffset >= 0 &&
+                                downDist == Mathf.Max(0, ts.bottomBorderOffset);
+            var touchesLeft = ts.leftBorderOffset >= 0 &&
+                              leftDist == Mathf.Max(0, ts.leftBorderOffset);
+            var touchesRight = ts.rightBorderOffset >= 0 &&
+                               rightDist == Mathf.Max(0, ts.rightBorderOffset);
+
+            var sideCount = 0;
+            if (touchesTop) sideCount++;
+            if (touchesBottom) sideCount++;
+            if (touchesLeft) sideCount++;
+            if (touchesRight) sideCount++;
+
+            return sideCount == 1;
         }
 
         private bool IsInCore(Vector3Int cell, TerrainSettings settings, TileBase tile, int extraOffset)
