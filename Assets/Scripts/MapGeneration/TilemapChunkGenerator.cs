@@ -373,8 +373,7 @@ namespace TimelessEchoes.MapGeneration
             for (var dx = -leftOffset; dx <= rightOffset; dx++)
             for (var dy = -bottomOffset; dy <= topOffset; dy++)
             {
-                // Skip only the cell itself so axis neighbours are evaluated
-                if (dx == 0 && dy == 0) continue;
+                if (dx == 0 || dy == 0) continue;
                 var checkPos = cell + new Vector3Int(dx, dy, 0);
                 if (terrainMap.GetTile(checkPos) != tile)
                     return false;
