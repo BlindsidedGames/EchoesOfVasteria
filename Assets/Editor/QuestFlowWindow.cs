@@ -3,6 +3,7 @@ using System.Linq;
 using TimelessEchoes.Quests;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 /// <summary>
 ///     An editor window to visualize the quest flow graph automatically from QuestData assets.
@@ -26,7 +27,17 @@ public class QuestFlowWindow : EditorWindow
 
             // Determine title
             if (questData.questName != null && !questData.questName.IsEmpty)
+            {
+                if (!LocalizationSettings.InitializationOperation.IsDone)
+                    LocalizationSettings.InitializationOperation.WaitForCompletion();
+
+                if (LocalizationSettings.SelectedLocale == null)
+                    LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales
+                        .FirstOrDefault();
+
                 title = questData.questName.GetLocalizedString();
+            }
+
             if (string.IsNullOrEmpty(title)) title = questData.name;
 
             // --- FEATURE: Determine node color based on localization status ---
