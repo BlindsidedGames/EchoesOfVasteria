@@ -4,6 +4,7 @@ using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
@@ -123,6 +124,16 @@ namespace TimelessEchoes.UI
                 var col = CalcUtils.FormatNumber(collected, true);
                 var sp = CalcUtils.FormatNumber(spent, true);
                 ui.entryHeldCollectedSpentText.text = $"Count: {count}\nCollected: {col}\nSpent: {sp}";
+            }
+
+            if (ui.bestPerMinuteText != null)
+            {
+                double best = 0;
+                if (oracle != null &&
+                    oracle.saveData.Resources != null &&
+                    oracle.saveData.Resources.TryGetValue(res.name, out var record))
+                    best = record.BestPerMinute;
+                ui.bestPerMinuteText.text = $"Best /m: {CalcUtils.FormatNumber(best, true)}";
             }
         }
 
