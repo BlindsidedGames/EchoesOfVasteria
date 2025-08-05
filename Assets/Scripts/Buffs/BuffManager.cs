@@ -63,16 +63,7 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        public bool InstantTaskBuffActive
-        {
-            get
-            {
-                foreach (var b in activeBuffs)
-                    if (b.recipe != null && b.recipe.instantTasks)
-                        return true;
-                return false;
-            }
-        }
+        public bool InstantTaskBuffActive => GetEffectTotal(BuffEffectType.InstantTasks) > 0f;
 
         public IEnumerable<BuffRecipe> Recipes
         {
@@ -153,13 +144,20 @@ namespace TimelessEchoes.Buffs
         public bool CanActivate(BuffRecipe recipe)
         {
             if (recipe == null) return false;
+            if (oracle != null)
+            {
+                oracle.saveData.BuffLevels ??= new Dictionary<string, int>();
+                if (!oracle.saveData.BuffLevels.TryGetValue(recipe.name, out var lvl) || lvl <= 0)
+                    return false;
+            }
+            if (!recipe.IsUnlocked()) return false;
             if (GetRemaining(recipe) > 0f) return false;
 
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
-            if (recipe.distancePercent > 0f && tracker != null)
+            if (recipe.durationType == BuffDurationType.Distance && tracker != null)
             {
-                var expireDist = tracker.LongestRun * recipe.distancePercent;
+                var expireDist = tracker.LongestRun * recipe.durationMagnitude;
                 if (tracker.CurrentRunDistance >= expireDist)
                     return false;
             }
@@ -178,22 +176,40 @@ namespace TimelessEchoes.Buffs
             if (activeBuffs.Exists(b => b.recipe == recipe))
                 return false;
 
-            var expireDist = float.PositiveInfinity;
-            if (recipe.distancePercent > 0f && tracker != null)
-                expireDist = tracker.LongestRun * recipe.distancePercent;
+            var durationMag = recipe.durationMagnitude;
+            var echoCount = recipe.echoSpawnConfig != null ? recipe.echoSpawnConfig.echoCount : 0;
+            foreach (var eff in recipe.GetActiveEffects())
+            {
+                switch (eff.type)
+                {
+                    case BuffEffectType.Duration:
+                        durationMag += eff.magnitude;
+                        break;
+                    case BuffEffectType.EchoCount:
+                        echoCount += Mathf.RoundToInt(eff.magnitude);
+                        break;
+                }
+            }
+
+            float expireDist = float.PositiveInfinity;
+            float remaining = float.PositiveInfinity;
+            if (recipe.durationType == BuffDurationType.Distance && tracker != null)
+                expireDist = tracker.LongestRun * durationMag;
+            else
+                remaining = durationMag;
 
             var buff = new ActiveBuff
             {
                 recipe = recipe,
-                remaining = recipe.distancePercent > 0f ? float.PositiveInfinity : recipe.baseDuration,
+                remaining = remaining,
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
-            if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
+            if (recipe.echoSpawnConfig != null && echoCount > 0)
             {
-                var needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
+                var needed = echoCount - buff.echoes.Count;
                 if (needed > 0)
                 {
                     var spawned = EchoManager.SpawnEchoes(recipe.echoSpawnConfig, float.PositiveInfinity,
@@ -213,71 +229,30 @@ namespace TimelessEchoes.Buffs
             return buff != null ? buff.remaining : 0f;
         }
 
-        public float MoveSpeedMultiplier
+        private float GetEffectTotal(BuffEffectType type)
         {
-            get
+            float total = 0f;
+            foreach (var b in activeBuffs)
             {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.moveSpeedPercent;
-                return 1f + percent / 100f;
+                if (b.recipe == null) continue;
+                foreach (var eff in b.recipe.GetActiveEffects())
+                    if (eff.type == type)
+                        total += eff.magnitude;
             }
+            return total;
         }
 
-        public float DamageMultiplier
-        {
-            get
-            {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.damagePercent;
-                return 1f + percent / 100f;
-            }
-        }
+        public float MoveSpeedMultiplier => 1f + GetEffectTotal(BuffEffectType.MoveSpeed) / 100f;
 
-        public float DefenseMultiplier
-        {
-            get
-            {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.defensePercent;
-                return 1f + percent / 100f;
-            }
-        }
+        public float DamageMultiplier => 1f + GetEffectTotal(BuffEffectType.Damage) / 100f;
 
-        public float AttackSpeedMultiplier
-        {
-            get
-            {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.attackSpeedPercent;
-                return 1f + percent / 100f;
-            }
-        }
+        public float DefenseMultiplier => 1f + GetEffectTotal(BuffEffectType.Defense) / 100f;
 
-        public float TaskSpeedMultiplier
-        {
-            get
-            {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.taskSpeedPercent;
-                return 1f + percent / 100f;
-            }
-        }
+        public float AttackSpeedMultiplier => 1f + GetEffectTotal(BuffEffectType.AttackSpeed) / 100f;
 
-        public float LifestealPercent
-        {
-            get
-            {
-                var percent = 0f;
-                foreach (var b in activeBuffs)
-                    percent += b.recipe.lifestealPercent;
-                return percent;
-            }
-        }
+        public float TaskSpeedMultiplier => 1f + GetEffectTotal(BuffEffectType.TaskSpeed) / 100f;
+
+        public float LifestealPercent => GetEffectTotal(BuffEffectType.Lifesteal);
 
         private void LoadSlots()
         {
@@ -288,6 +263,7 @@ namespace TimelessEchoes.Buffs
             oracle.saveData.AutoBuffSlots ??= new List<bool>();
             while (oracle.saveData.AutoBuffSlots.Count < autoCastSlots.Count)
                 oracle.saveData.AutoBuffSlots.Add(false);
+            oracle.saveData.BuffLevels ??= new Dictionary<string, int>();
             for (var i = 0; i < slotAssignments.Count; i++)
             {
                 var name = oracle.saveData.BuffSlots[i];

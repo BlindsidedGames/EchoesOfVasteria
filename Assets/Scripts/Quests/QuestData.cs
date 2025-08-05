@@ -4,6 +4,7 @@ using Blindsided.Utilities;
 using Sirenix.OdinInspector;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Buffs;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -28,6 +29,8 @@ namespace TimelessEchoes.Quests
         public int unlockAutoBuffSlots;
         public float maxDistanceIncrease;
         public float disciplePercentReward;
+        public BuffRecipe unlockBuff;
+        public BuffRecipe upgradeBuff;
 
         [Serializable]
         public class Requirement

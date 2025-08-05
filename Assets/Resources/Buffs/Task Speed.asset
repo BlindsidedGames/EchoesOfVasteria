@@ -15,16 +15,14 @@ MonoBehaviour:
   title: 
   description: Increases Movespeed by 40% for its duration.
   buffIcon: {fileID: -5882155960153656733, guid: 75e6aad650cc46242a07d1d673daedeb, type: 3}
-  baseDuration: 120
-  distancePercent: 0
+  durationType: 0
+  durationMagnitude: 120
   echoSpawnConfig:
     echoCount: 0
     capableSkills: []
     echoType: 2
-  moveSpeedPercent: 40
-  damagePercent: 0
-  defensePercent: 0
-  attackSpeedPercent: 0
-  taskSpeedPercent: 0
-  lifestealPercent: 0
-  instantTasks: 0
+  requiredQuest: {fileID: 0}
+  baseEffects:
+  - type: 4
+    magnitude: 40
+  upgrades: []
