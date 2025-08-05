@@ -172,9 +172,12 @@ namespace TimelessEchoes.UI
                 var dist = CalcUtils.FormatNumber(record.Distance, true);
                 var tasks = CalcUtils.FormatNumber(record.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(record.ResourcesCollected, true);
-                var bonus = CalcUtils.FormatNumber(record.BonusResourcesCollected, true);
+                var bonusCollected = Mathf.FloorToInt((float)record.BonusResourcesCollected);
+                var bonus = CalcUtils.FormatNumber(bonusCollected, true);
                 runStatUI.distanceTasksResourcesText.text =
-                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources} (+{bonus})";
+                    $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
+                if (bonusCollected >= 1)
+                    runStatUI.distanceTasksResourcesText.text += $" (+{bonus})";
             }
 
 
