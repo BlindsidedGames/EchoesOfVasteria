@@ -133,7 +133,7 @@ namespace TimelessEchoes.UI
                     oracle.saveData.Resources != null &&
                     oracle.saveData.Resources.TryGetValue(res.name, out var record))
                     best = record.BestPerMinute;
-                ui.bestPerMinuteText.text = $"Best /m: {CalcUtils.FormatNumber(best, true)}";
+                ui.bestPerMinuteText.text = $"AE Power: {CalcUtils.FormatNumber(best)}";
             }
         }
 
