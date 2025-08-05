@@ -54,6 +54,7 @@ namespace ES3Internal
             lock (_lock)
             {
                 types[type] = es3Type;
+                lastAccessedType = es3Type;
             }
         }
 

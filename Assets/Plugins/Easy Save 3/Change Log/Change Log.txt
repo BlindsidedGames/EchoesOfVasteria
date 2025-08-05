@@ -1,3 +1,7 @@
+3.5.24
+- Resolved issue where a lower priority ES3Type might be used instead of the higher priority one.
+- Worked around bug at Unity's end where initialisation method wasn't called, so Easy Save's global manager never gets created.
+
 3.5.23
 - Added 'Auto cache file on load' option to the settings.
 - Resolved edge case where ES3Spreadsheet would return an empty string rather than null.

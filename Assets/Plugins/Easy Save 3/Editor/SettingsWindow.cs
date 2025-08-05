@@ -138,15 +138,18 @@ namespace ES3Editor
                         bool useGlobalReferences = !ES3ScriptingDefineSymbols.HasDefineSymbol(disableGlobalDefineName);
                         if(EditorGUILayout.Toggle(useGlobalReferences) != useGlobalReferences)
                         {
-                            // If global references is currently enabled, we want to disable it.
-                            if (!useGlobalReferences)
+                            // If global references is currently enabled, we want to disable it by adding the DISABLE precompiler directive.
+                            if (useGlobalReferences)
                             {
-                                ES3ScriptingDefineSymbols.RemoveDefineSymbol(disableGlobalDefineName);
-                                EditorUtility.DisplayDialog("Global references disabled for build platform", "This will only disable Global References for this build platform. To disable it for other build platforms, open that platform in the Build Settings and uncheck this box again.", "Ok");
-                            }
-                            // Else we want to enable it.
-                            else
                                 ES3ScriptingDefineSymbols.SetDefineSymbol(disableGlobalDefineName);
+                                EditorUtility.DisplayDialog("Global references disabled for build platform", "This will only disable Global References for this build platform. To disable it for other build platforms, open that platform in the Build Settings and uncheck this box again.", "Ok");
+
+                            }
+                            // Else we want to enable it by removing the DISABLE precompiler directive.
+                            else
+                                ES3ScriptingDefineSymbols.RemoveDefineSymbol(disableGlobalDefineName);
+
+                            AssetDatabase.Refresh();
                         }
                     }
 

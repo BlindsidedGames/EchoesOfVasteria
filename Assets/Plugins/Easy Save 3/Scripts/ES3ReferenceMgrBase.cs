@@ -104,7 +104,10 @@ namespace ES3Internal
                         var mgr = GetManagerFromScene(loadedScene, false);
                         if (mgr != null)
                         {
-                            ES3Debug.LogWarning($"The reference you're trying to save does not exist in any scene, or the scene it belongs to does not contain an Easy Save 3 Manager. Using the reference manager from scene {loadedScene.name} instead. This may cause unexpected behaviour or leak memory in some situations. See <a href=\"https://docs.moodkie.com/easy-save-3/es3-guides/saving-and-loading-references/\">the Saving and Loading References guide</a> for more information.");
+                            if(scene != null && scene.IsValid() && !string.IsNullOrEmpty(scene.name))
+                                ES3Debug.LogWarning($"There is no Easy Save 3 Manager in {scene.name}, but you are trying to save a reference which belongs to this scene. Using the reference manager from scene {loadedScene.name} instead. This may cause unexpected behaviour or leak memory in some situations. See <a href=\"https://docs.moodkie.com/easy-save-3/es3-guides/saving-and-loading-references/\">the Saving and Loading References guide</a> for more information.");
+                            else
+                                ES3Debug.LogWarning($"The reference you're trying to save does not exist in any scene or is in DontDestroyOnLoad so cannot be attributed to a specific Easy Save 3 Manager. Using the reference manager from scene {loadedScene.name} instead. This may cause unexpected behaviour or leak memory in some situations. See <a href=\"https://docs.moodkie.com/easy-save-3/es3-guides/saving-and-loading-references/\">the Saving and Loading References guide</a> for more information.");
                             return mgr;
                         }
                     }

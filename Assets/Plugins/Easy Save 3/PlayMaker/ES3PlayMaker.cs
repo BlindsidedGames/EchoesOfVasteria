@@ -1813,7 +1813,7 @@ namespace ES3Types
     }
 
     [UnityEngine.Scripting.Preserve]
-    [ES3Properties("ActiveStateName")]
+    [ES3Properties("ActiveStateName", "Variables")]
     public class ES3Type_Fsm : ES3ObjectType
     {
         public static ES3Type Instance = null;
@@ -1831,6 +1831,7 @@ namespace ES3Types
         protected override void ReadObject<T>(ES3Reader reader, object obj)
         {
             var instance = (Fsm)obj;
+
             if(!instance.Initialized)
             {
                 // Toggle FSM Component twice to trigger initialisation.
@@ -1860,7 +1861,7 @@ namespace ES3Types
         }
     }
 
-    /*[UnityEngine.Scripting.Preserve]
+    [UnityEngine.Scripting.Preserve]
     [ES3Properties("Fsm")]
     public class ES3Type_PlayMakerFSM : ES3ComponentType
     {
@@ -1900,7 +1901,7 @@ namespace ES3Types
                 }
             }
         }
-    }*/
+    }
 }
 
 
