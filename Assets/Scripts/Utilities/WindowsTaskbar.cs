@@ -146,7 +146,7 @@ namespace TimelessEchoes.Utilities
                 hwnd = _hwnd,
                 dwFlags = FLASHW_TRAY | ((count == 0) ? FLASHW_TIMERNOFG : FLASHW_TIMER),
                 uCount = count,
-                dwTimeout = timeoutMs
+                uTimeout = timeoutMs
             };
             FlashWindowEx(ref fw);
         }
@@ -162,7 +162,7 @@ namespace TimelessEchoes.Utilities
                 hwnd = _hwnd,
                 dwFlags = FLASHW_STOP,
                 uCount = 0,
-                dwTimeout = 0
+                uTimeout = 0
             };
             FlashWindowEx(ref fw);
         }
