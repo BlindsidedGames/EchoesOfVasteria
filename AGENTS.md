@@ -9,3 +9,9 @@ When making changes to this **2D** Unity project:
 - Note the warning `CS0618: 'CinemachineVirtualCamera' is obsolete`. Use `CinemachineCamera` instead of the deprecated `CinemachineVirtualCamera`.
 - Do not modify `Assets/Scenes/Main.unity` unless explicitly instructed to do so.
 - Unity tests cannot be run in this environment. Only add or modify Unity tests when explicitly requested; otherwise, skip them but run any tests you can on your changes.
+
+## Task Suggestion Guidelines
+
+- Default to proposing a single task that accomplishes the user's goal.
+- When identifying bugs, refactorings, or performance issues, provide a separate task for each distinct item.
+- If the user explicitly asks for a suggested task, limit the response to one task.
