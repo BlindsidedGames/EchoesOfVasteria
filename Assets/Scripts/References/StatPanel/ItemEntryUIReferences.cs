@@ -10,5 +10,6 @@ namespace TimelessEchoes.References.StatPanel
         public TMP_Text entryIDText;
         public TMP_Text entryNameText;
         public TMP_Text entryHeldCollectedSpentText;
+        public TMP_Text bestPerMinuteText;
     }
 }
