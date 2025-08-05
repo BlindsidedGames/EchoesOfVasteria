@@ -43,89 +43,20 @@ namespace TimelessEchoes
         private const uint FLASHW_TRAY = 0x2;
         private const uint FLASHW_TIMERNOFG = 0xC;
 
-        private static IntPtr windowHandle;
-        private static ITaskbarList3 taskbar;
-
-        [ComImport]
-        [Guid("EA1AFB91-9E28-4B86-90E9-9E9F8A5EA6C9")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface ITaskbarList3
+        private static void FlashWindowAlert()
         {
-            // ITaskbarList
-            void HrInit();
-            void AddTab(IntPtr hwnd);
-            void DeleteTab(IntPtr hwnd);
-            void ActivateTab(IntPtr hwnd);
-            void SetActiveAlt(IntPtr hwnd);
-
-            // ITaskbarList2
-            void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
-
-            // ITaskbarList3
-            void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
-            void SetProgressState(IntPtr hwnd, TBPFLAG tbpFlags);
-        }
-
-        private enum TBPFLAG
-        {
-            TBPF_NOPROGRESS = 0,
-            TBPF_INDETERMINATE = 0x1,
-            TBPF_NORMAL = 0x2,
-            TBPF_ERROR = 0x4,
-            TBPF_PAUSED = 0x8
-        }
-
-        [ComImport]
-        [Guid("56FDF344-FD6D-11D0-958A-006097C9A090")]
-        private class CTaskbarList
-        {
-        }
-
-        private static void InitTaskbar()
-        {
-            if (taskbar == null)
-            {
-                taskbar = new CTaskbarList() as ITaskbarList3;
-                if (taskbar == null)
-                    return;
-                taskbar.HrInit();
-            }
-            if (windowHandle == IntPtr.Zero)
-                windowHandle = GetActiveWindow();
-        }
-
-        private static void ResetTaskbarProgress()
-        {
-            InitTaskbar();
-            if (windowHandle != IntPtr.Zero)
-                taskbar.SetProgressState(windowHandle, TBPFLAG.TBPF_NOPROGRESS);
-        }
-
-        private static void FlashTaskbarError()
-        {
-            InitTaskbar();
-            if (windowHandle == IntPtr.Zero)
+            var handle = GetActiveWindow();
+            if (handle == IntPtr.Zero)
                 return;
-            taskbar.SetProgressState(windowHandle, TBPFLAG.TBPF_ERROR);
-            taskbar.SetProgressValue(windowHandle, 1, 1);
             var fw = new FLASHWINFO
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(FLASHWINFO)),
-                hwnd = windowHandle,
+                hwnd = handle,
                 dwFlags = FLASHW_TRAY | FLASHW_TIMERNOFG,
                 uCount = 3,
                 dwTimeout = 0
             };
             FlashWindowEx(ref fw);
-        }
-
-        public void SetTaskbarProgress(float current, float max)
-        {
-            InitTaskbar();
-            if (windowHandle == IntPtr.Zero)
-                return;
-            taskbar.SetProgressState(windowHandle, TBPFLAG.TBPF_NORMAL);
-            taskbar.SetProgressValue(windowHandle, (ulong)current, (ulong)max);
         }
 #endif
 
@@ -179,9 +110,6 @@ namespace TimelessEchoes
             SteamFriends.SetRichPresence("status", "In Town");
             SteamFriends.SetRichPresence("steam_display", "#Status_InTown");
             SetWindowTitle("In Town");
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-            ResetTaskbarProgress();
-#endif
         }
 
         /// <summary>
@@ -208,12 +136,6 @@ namespace TimelessEchoes
             SteamFriends.SetRichPresence("distance", d.ToString());
             SteamFriends.SetRichPresence("steam_display", "#Status_Distance");
             SetWindowTitle($"Distance: {d}");
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-            var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
-            var maxDistance = tracker != null ? tracker.MaxRunDistance : 1f;
-            SetTaskbarProgress(distance, maxDistance);
-#endif
         }
 
         private void OnDestroy()
@@ -241,9 +163,7 @@ namespace TimelessEchoes
         private void OnRunEnded(bool died)
         {
             if (died)
-                FlashTaskbarError();
-            else
-                ResetTaskbarProgress();
+                FlashWindowAlert();
         }
 #endif
 #endif
