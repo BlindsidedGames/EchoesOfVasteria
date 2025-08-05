@@ -40,21 +40,22 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  npcId: Ivan1
+  npcId: 
   autoPin: 1
   requiredQuests:
   - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
   requirements:
-  - type: 5
+  - type: 6
     resource: {fileID: 0}
     amount: 1
     enemies: []
     killName: 
     killIcon: {fileID: 0}
-    meetNpcId: 
+    meetNpcId: Ivan1
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25
+  disciplePercentReward: 0
   references:
     version: 2
     RefIds: []
