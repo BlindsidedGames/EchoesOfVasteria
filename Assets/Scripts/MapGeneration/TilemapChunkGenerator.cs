@@ -352,13 +352,18 @@ namespace TimelessEchoes.MapGeneration
             var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
 
             var topRaw = config.topBorderOffset;
-            if (topRaw < 0 && upDist == 0) return false;
+            if (topRaw < 0 && upDist > 0) return false;
             var bottomRaw = config.bottomBorderOffset;
-            if (bottomRaw < 0 && downDist == 0) return false;
+            if (bottomRaw < 0 && downDist > 0) return false;
             var leftRaw = config.leftBorderOffset;
-            if (leftRaw < 0 && leftDist == 0) return false;
+            if (leftRaw < 0 && leftDist > 0) return false;
             var rightRaw = config.rightBorderOffset;
-            if (rightRaw < 0 && rightDist == 0) return false;
+            if (rightRaw < 0 && rightDist > 0) return false;
+
+            if (topRaw < 0 && terrainMap.GetTile(cell + Vector3Int.up) != tile) return false;
+            if (bottomRaw < 0 && terrainMap.GetTile(cell + Vector3Int.down) != tile) return false;
+            if (leftRaw < 0 && terrainMap.GetTile(cell + Vector3Int.left) != tile) return false;
+            if (rightRaw < 0 && terrainMap.GetTile(cell + Vector3Int.right) != tile) return false;
 
             var topOffset = Mathf.Max(0, topRaw) + extraOffset;
             var bottomOffset = Mathf.Max(0, bottomRaw) + extraOffset;
@@ -373,7 +378,7 @@ namespace TimelessEchoes.MapGeneration
             for (var dx = -leftOffset; dx <= rightOffset; dx++)
             for (var dy = -bottomOffset; dy <= topOffset; dy++)
             {
-                if (dx == 0 || dy == 0) continue;
+                if (dx == 0 && dy == 0) continue;
                 var checkPos = cell + new Vector3Int(dx, dy, 0);
                 if (terrainMap.GetTile(checkPos) != tile)
                     return false;
