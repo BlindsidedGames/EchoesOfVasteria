@@ -95,6 +95,9 @@ namespace TimelessEchoes.Quests
                     continue;
                 var ui = Instantiate(entryPrefab, entryParent);
                 entries[id] = ui;
+
+                if (ui.progressText != null)
+                    ui.progressText.spriteAsset = ResourceIconLookup.SpriteAsset;
             }
 
             if (rootObject != null)
@@ -205,12 +208,16 @@ namespace TimelessEchoes.Quests
 
                     if (req.type == QuestData.RequirementType.Resource)
                     {
-                        var name = req.resource ? req.resource.name : "";
+                        var iconTag = req.resource ? ResourceIconLookup.GetIconTag(req.resource.resourceID) : string.Empty;
+                        var fallbackName = req.resource ? req.resource.name : string.Empty;
+                        var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
+                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : " ";
+
                         if (target <= 0)
-                            sb.AppendLine($"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)}</size>");
+                            sb.AppendLine($"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)}</size>");
                         else
                             sb.AppendLine(
-                                $"<size=90%>{name}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                                $"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
                     }
                     else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
                     {
