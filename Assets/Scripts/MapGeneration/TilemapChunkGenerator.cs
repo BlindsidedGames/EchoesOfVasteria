@@ -388,7 +388,34 @@ namespace TimelessEchoes.MapGeneration
         {
             var inCore = IsInCore(cell, tile, config, 0);
             var inInnerCore = IsInCore(cell, tile, config, 1);
-            return inCore && !inInnerCore;
+            if (!inCore || inInnerCore) return false;
+
+            var upDist = CountSame(cell + Vector3Int.up, Vector3Int.up, tile);
+            var downDist = CountSame(cell + Vector3Int.down, Vector3Int.down, tile);
+            var leftDist = CountSame(cell + Vector3Int.left, Vector3Int.left, tile);
+            var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
+
+            if (config.topBorderOffset < 0 && upDist == 0) return false;
+            if (config.bottomBorderOffset < 0 && downDist == 0) return false;
+            if (config.leftBorderOffset < 0 && leftDist == 0) return false;
+            if (config.rightBorderOffset < 0 && rightDist == 0) return false;
+
+            var touchesTop = config.topBorderOffset >= 0 &&
+                             upDist == Mathf.Max(0, config.topBorderOffset);
+            var touchesBottom = config.bottomBorderOffset >= 0 &&
+                                downDist == Mathf.Max(0, config.bottomBorderOffset);
+            var touchesLeft = config.leftBorderOffset >= 0 &&
+                              leftDist == Mathf.Max(0, config.leftBorderOffset);
+            var touchesRight = config.rightBorderOffset >= 0 &&
+                               rightDist == Mathf.Max(0, config.rightBorderOffset);
+
+            var sideCount = 0;
+            if (touchesTop) sideCount++;
+            if (touchesBottom) sideCount++;
+            if (touchesLeft) sideCount++;
+            if (touchesRight) sideCount++;
+
+            return sideCount == 1;
         }
 
         // Updated to use HasFlag for the [Flags] enum
