@@ -1,3 +1,8 @@
+// Disable Steamworks usage on unsupported platforms.
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
