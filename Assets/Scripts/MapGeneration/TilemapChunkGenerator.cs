@@ -301,11 +301,27 @@ namespace TimelessEchoes.MapGeneration
                         if (d.prefab != null)
                         {
                             var center = terrainMap.GetCellCenterWorld(cell);
-                            Instantiate(d.prefab, center, Quaternion.identity, decorParent);
+                            var instance = Instantiate(d.prefab, center, Quaternion.identity, decorParent);
+                            if (d.randomFlipX && RandomRangeFloat(0f, 1f) < 0.5f)
+                            {
+                                var renderer = instance.GetComponentInChildren<SpriteRenderer>();
+                                if (renderer != null)
+                                    renderer.flipX = true;
+                            }
                         }
 
                         if (decorMap != null && d.tile != null)
+                        {
                             decorMap.SetTile(cell, d.tile);
+                            if (d.randomFlipX)
+                            {
+                                decorMap.SetTileFlags(cell, TileFlags.None);
+                                var matrix = RandomRangeFloat(0f, 1f) < 0.5f
+                                    ? Matrix4x4.Scale(new Vector3(-1, 1, 1))
+                                    : Matrix4x4.identity;
+                                decorMap.SetTransformMatrix(cell, matrix);
+                            }
+                        }
 
                         break;
                     }
@@ -417,7 +433,11 @@ namespace TimelessEchoes.MapGeneration
             {
                 var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
                 terrainMap.SetTile(pos, null);
-                decorMap?.SetTile(pos, null);
+                if (decorMap != null)
+                {
+                    decorMap.SetTile(pos, null);
+                    decorMap.SetTransformMatrix(pos, Matrix4x4.identity);
+                }
             }
         }
 

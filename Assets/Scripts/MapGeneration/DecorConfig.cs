@@ -44,6 +44,9 @@ namespace TimelessEchoes.MapGeneration
         [HideLabel]
         public GameObject prefab;
 
+        [ToggleLeft]
+        public bool randomFlipX;
+
         // When any value inside the config is changed, call the UpdateName method.
         [OnValueChanged("UpdateName", true)] [HorizontalGroup("Entry")] [InlineProperty] [HideLabel]
         public DecorConfig config = new();
