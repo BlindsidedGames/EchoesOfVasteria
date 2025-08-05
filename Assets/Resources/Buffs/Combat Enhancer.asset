@@ -15,16 +15,16 @@ MonoBehaviour:
   title: 
   description: Buffs Damage, and Defense by 50%
   buffIcon: {fileID: 2601603839896418933, guid: 61614b6dea4e6254e853eb57bbf5ef3b, type: 3}
-  baseDuration: 60
-  distancePercent: 0
+  durationType: 0
+  durationMagnitude: 60
   echoSpawnConfig:
     echoCount: 0
     capableSkills: []
     echoType: 2
-  moveSpeedPercent: 0
-  damagePercent: 50
-  defensePercent: 50
-  attackSpeedPercent: 0
-  taskSpeedPercent: 0
-  lifestealPercent: 0
-  instantTasks: 0
+  requiredQuest: {fileID: 0}
+  baseEffects:
+  - type: 1
+    magnitude: 50
+  - type: 2
+    magnitude: 50
+  upgrades: []
