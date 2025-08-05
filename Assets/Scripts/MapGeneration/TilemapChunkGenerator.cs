@@ -273,9 +273,18 @@ namespace TimelessEchoes.MapGeneration
                 if (settings != null)
                 {
                     foreach (var d in settings.decor.decor)
-                        if (d.GetWeight(worldPos) > 0f &&
-                            !IsBufferedEdge(cell, baseTile, d.config.topBuffer, d.config.bottomBuffer, d.config.sideBuffer))
+                    {
+                        if (d.GetWeight(worldPos) <= 0f)
+                            continue;
+
+                        var cfg = d.config;
+                        var allowed = !cfg.borderOnly
+                            ? !IsBufferedEdge(cell, baseTile, cfg.topBuffer, cfg.bottomBuffer, cfg.sideBuffer)
+                            : IsBorderCell(cell, baseTile, cfg);
+
+                        if (allowed)
                             choices.Add(d);
+                    }
                 }
                 var density = settings != null ? settings.decor.density : 0f;
                 if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > density)
@@ -302,6 +311,57 @@ namespace TimelessEchoes.MapGeneration
                     }
                 }
             }
+        }
+
+        private int CountSame(Vector3Int start, Vector3Int dir, TileBase tile)
+        {
+            var count = 0;
+            var pos = start;
+            while (terrainMap.GetTile(pos) == tile)
+            {
+                count++;
+                pos += dir;
+            }
+
+            return count;
+        }
+
+        private bool IsInCore(Vector3Int cell, TileBase tile, DecorConfig config, int extraOffset)
+        {
+            if (terrainMap.GetTile(cell) != tile) return false;
+
+            var upDist = CountSame(cell + Vector3Int.up, Vector3Int.up, tile);
+            var downDist = CountSame(cell + Vector3Int.down, Vector3Int.down, tile);
+            var leftDist = CountSame(cell + Vector3Int.left, Vector3Int.left, tile);
+            var rightDist = CountSame(cell + Vector3Int.right, Vector3Int.right, tile);
+
+            var topOffset = config.topBorderOffset + extraOffset;
+            var bottomOffset = config.bottomBorderOffset + extraOffset;
+            var leftOffset = config.leftBorderOffset + extraOffset;
+            var rightOffset = config.rightBorderOffset + extraOffset;
+
+            if (upDist < topOffset) return false;
+            if (downDist < bottomOffset) return false;
+            if (leftDist < leftOffset) return false;
+            if (rightDist < rightOffset) return false;
+
+            for (var dx = -leftOffset; dx <= rightOffset; dx++)
+            for (var dy = -bottomOffset; dy <= topOffset; dy++)
+            {
+                if (dx == 0 || dy == 0) continue;
+                var checkPos = cell + new Vector3Int(dx, dy, 0);
+                if (terrainMap.GetTile(checkPos) != tile)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool IsBorderCell(Vector3Int cell, TileBase tile, DecorConfig config)
+        {
+            var inCore = IsInCore(cell, tile, config, 0);
+            var inInnerCore = IsInCore(cell, tile, config, 1);
+            return inCore && !inInnerCore;
         }
 
         // Updated to use HasFlag for the [Flags] enum
