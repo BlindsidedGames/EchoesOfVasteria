@@ -83,13 +83,15 @@ namespace TimelessEchoes
 
         private static void InitTaskbar()
         {
-            if (taskbar != null)
-                return;
-            taskbar = new CTaskbarList() as ITaskbarList3;
             if (taskbar == null)
-                return;
-            taskbar.HrInit();
-            windowHandle = GetActiveWindow();
+            {
+                taskbar = new CTaskbarList() as ITaskbarList3;
+                if (taskbar == null)
+                    return;
+                taskbar.HrInit();
+            }
+            if (windowHandle == IntPtr.Zero)
+                windowHandle = GetActiveWindow();
         }
 
         private static void ResetTaskbarProgress()
