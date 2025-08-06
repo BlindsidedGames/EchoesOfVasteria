@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Blindsided.Utilities;
 using Sirenix.OdinInspector;
+using TimelessEchoes.Quests;
 using UnityEngine;
 
 namespace TimelessEchoes.Buffs
@@ -21,47 +23,141 @@ namespace TimelessEchoes.Buffs
         public Sprite buffIcon;
 
         [TitleGroup("General")]
+        public BuffDurationType durationType = BuffDurationType.Time;
+
+        [TitleGroup("General")]
         [MinValue(0f)]
         public float baseDuration = 30f;
 
         [TitleGroup("General")]
-        [Tooltip("Percent of longest run distance this buff remains active. 0 = no distance limit")]
-        [Range(0f,1f)]
-        public float distancePercent;
+        [MinValue(0)]
+        public int baseEchoCount;
 
         [TitleGroup("General")]
         [SerializeField]
-        public TimelessEchoes.EchoSpawnConfig echoSpawnConfig;
+        public TimelessEchoes.EchoSpawnConfig echoConfig;
+
+        [TitleGroup("General")]
+        public QuestData requiredQuest;
 
         [TitleGroup("Effects")]
-        [Range(-100f, 100f)]
-        public float moveSpeedPercent;
+        public List<BuffEffect> baseEffects = new();
 
-        [TitleGroup("Effects")]
-        [Range(-100f, 100f)]
-        public float damagePercent;
+        [TitleGroup("Upgrades")]
+        public List<BuffUpgrade> upgrades = new();
 
-        [TitleGroup("Effects")]
-        [Range(-100f, 100f)]
-        public float defensePercent;
+        public string GetDisplayName()
+        {
+            return string.IsNullOrEmpty(title) ? name : title;
+        }
 
-        [TitleGroup("Effects")]
-        [Range(-100f, 100f)]
-        public float attackSpeedPercent;
+        public int GetCurrentLevel()
+        {
+            var level = 0;
+            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            if (qm == null) return 0;
+            foreach (var up in upgrades)
+            {
+                if (up?.quest != null && qm.IsQuestCompleted(up.quest))
+                    level++;
+            }
+            return level;
+        }
 
-        [TitleGroup("Effects")]
-        [Range(-100f, 100f)]
-        public float taskSpeedPercent;
+        public List<BuffEffect> GetAggregatedEffects()
+        {
+            var dict = new Dictionary<BuffEffectType, float>();
+            foreach (var eff in baseEffects)
+            {
+                if (dict.ContainsKey(eff.type))
+                    dict[eff.type] += eff.value;
+                else
+                    dict[eff.type] = eff.value;
+            }
+            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            if (qm != null)
+            {
+                foreach (var up in upgrades)
+                {
+                    if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
+                        continue;
+                    foreach (var eff in up.additionalEffects)
+                    {
+                        if (dict.ContainsKey(eff.type))
+                            dict[eff.type] += eff.value;
+                        else
+                            dict[eff.type] = eff.value;
+                    }
+                }
+            }
+            var list = new List<BuffEffect>();
+            foreach (var pair in dict)
+                list.Add(new BuffEffect { type = pair.Key, value = pair.Value });
+            return list;
+        }
 
-        [TitleGroup("Effects")]
-        [Tooltip("Percent of damage returned as health while active.")]
-        [Range(0f, 100f)]
-        public float lifestealPercent;
+        public int GetEchoCount()
+        {
+            var count = baseEchoCount;
+            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            if (qm != null)
+            {
+                foreach (var up in upgrades)
+                {
+                    if (up?.quest != null && qm.IsQuestCompleted(up.quest))
+                        count += up.echoCountDelta;
+                }
+            }
+            return Mathf.Max(0, count);
+        }
 
-        [TitleGroup("Effects")]
-        [Tooltip("Tasks complete instantly while active.")]
-        public bool instantTasks;
+        public float GetDuration()
+        {
+            var duration = baseDuration;
+            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            if (qm != null)
+            {
+                foreach (var up in upgrades)
+                {
+                    if (up?.quest != null && qm.IsQuestCompleted(up.quest))
+                        duration += up.durationDelta;
+                }
+            }
+            return duration;
+        }
 
-        public string Title => string.IsNullOrEmpty(title) ? name : title;
+        public List<string> GetDescriptionLines()
+        {
+            var lines = new List<string>();
+            if (!string.IsNullOrEmpty(description))
+                lines.Add(description);
+            foreach (var eff in GetAggregatedEffects())
+            {
+                lines.Add(DescribeEffect(eff));
+            }
+            var echoCount = GetEchoCount();
+            if (echoCount > 0)
+                lines.Add($"Echoes: {echoCount}");
+            if (durationType == BuffDurationType.DistancePercent)
+                lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
+            else
+                lines.Add($"Duration: {Mathf.CeilToInt(GetDuration())}");
+            return lines;
+        }
+
+        private static string DescribeEffect(BuffEffect eff)
+        {
+            return eff.type switch
+            {
+                BuffEffectType.MoveSpeedPercent => $"Move Speed +{eff.value}%",
+                BuffEffectType.DamagePercent => $"Damage +{eff.value}%",
+                BuffEffectType.DefensePercent => $"Defense +{eff.value}%",
+                BuffEffectType.AttackSpeedPercent => $"Attack Speed +{eff.value}%",
+                BuffEffectType.TaskSpeedPercent => $"Task Speed +{eff.value}%",
+                BuffEffectType.LifestealPercent => $"Lifesteal {eff.value}%",
+                BuffEffectType.InstantTasks => "Tasks complete instantly",
+                _ => string.Empty
+            };
+        }
     }
 }

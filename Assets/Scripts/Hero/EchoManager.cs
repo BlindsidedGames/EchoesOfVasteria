@@ -78,9 +78,9 @@ namespace TimelessEchoes.Hero
         /// <param name="baseDuration">Base lifetime for the spawned Echoes.</param>
         /// <param name="fallbackSkills">Used when the config does not specify any skills.</param>
         /// <param name="applyLifetimeUpgrade">When true, applies the Echo Lifetime upgrade value.</param>
-        /// <param name="countOverride">Optional spawn count override.</param>
+        /// <param name="count">Number of echoes to spawn.</param>
         public static List<HeroController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
-            IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int countOverride = 0)
+            IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int count = 1)
         {
             var duration = baseDuration;
             if (applyLifetimeUpgrade)
@@ -92,21 +92,17 @@ namespace TimelessEchoes.Hero
                     duration += upgradeController.GetTotalValue(echoUpgrade);
             }
 
-            var count = 1;
             var skills = fallbackSkills;
             var type = EchoType.All;
 
             if (config != null)
             {
-                count = countOverride > 0 ? countOverride : Mathf.Max(1, config.echoCount);
                 if (config.capableSkills != null && config.capableSkills.Count > 0)
                     skills = config.capableSkills;
                 type = config.echoType;
             }
-            else if (countOverride > 0)
-            {
-                count = countOverride;
-            }
+            if (count <= 0)
+                count = 1;
 
             var spawned = new List<HeroController>();
             for (var i = 0; i < count; i++)

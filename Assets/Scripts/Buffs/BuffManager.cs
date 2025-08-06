@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -68,8 +69,9 @@ namespace TimelessEchoes.Buffs
             get
             {
                 foreach (var b in activeBuffs)
-                    if (b.recipe != null && b.recipe.instantTasks)
-                        return true;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.InstantTasks && eff.value > 0f)
+                            return true;
                 return false;
             }
         }
@@ -155,11 +157,18 @@ namespace TimelessEchoes.Buffs
             if (recipe == null) return false;
             if (GetRemaining(recipe) > 0f) return false;
 
+            if (recipe.requiredQuest != null)
+            {
+                var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+                if (qm == null || !qm.IsQuestCompleted(recipe.requiredQuest))
+                    return false;
+            }
+
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
-            if (recipe.distancePercent > 0f && tracker != null)
+            if (recipe.durationType == BuffDurationType.DistancePercent && tracker != null)
             {
-                var expireDist = tracker.LongestRun * recipe.distancePercent;
+                var expireDist = tracker.LongestRun * recipe.GetDuration();
                 if (tracker.CurrentRunDistance >= expireDist)
                     return false;
             }
@@ -179,29 +188,27 @@ namespace TimelessEchoes.Buffs
                 return false;
 
             var expireDist = float.PositiveInfinity;
-            if (recipe.distancePercent > 0f && tracker != null)
-                expireDist = tracker.LongestRun * recipe.distancePercent;
+            if (recipe.durationType == BuffDurationType.DistancePercent && tracker != null)
+                expireDist = tracker.LongestRun * recipe.GetDuration();
 
             var buff = new ActiveBuff
             {
                 recipe = recipe,
-                remaining = recipe.distancePercent > 0f ? float.PositiveInfinity : recipe.baseDuration,
+                effects = recipe.GetAggregatedEffects(),
+                remaining = recipe.durationType == BuffDurationType.DistancePercent ? float.PositiveInfinity : recipe.GetDuration(),
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
-            if (recipe.echoSpawnConfig != null && recipe.echoSpawnConfig.echoCount > 0)
+            var echoCount = recipe.GetEchoCount();
+            if (recipe.echoConfig != null && echoCount > 0)
             {
-                var needed = recipe.echoSpawnConfig.echoCount - buff.echoes.Count;
-                if (needed > 0)
-                {
-                    var spawned = EchoManager.SpawnEchoes(recipe.echoSpawnConfig, float.PositiveInfinity,
-                        null, false, needed);
-                    foreach (var c in spawned)
-                        if (c != null)
-                            buff.echoes.Add(c);
-                }
+                var spawned = EchoManager.SpawnEchoes(recipe.echoConfig, float.PositiveInfinity,
+                    null, false, echoCount);
+                foreach (var c in spawned)
+                    if (c != null)
+                        buff.echoes.Add(c);
             }
 
             return true;
@@ -219,7 +226,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.moveSpeedPercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.MoveSpeedPercent)
+                            percent += eff.value;
                 return 1f + percent / 100f;
             }
         }
@@ -230,7 +239,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.damagePercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.DamagePercent)
+                            percent += eff.value;
                 return 1f + percent / 100f;
             }
         }
@@ -241,7 +252,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.defensePercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.DefensePercent)
+                            percent += eff.value;
                 return 1f + percent / 100f;
             }
         }
@@ -252,7 +265,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.attackSpeedPercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.AttackSpeedPercent)
+                            percent += eff.value;
                 return 1f + percent / 100f;
             }
         }
@@ -263,7 +278,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.taskSpeedPercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.TaskSpeedPercent)
+                            percent += eff.value;
                 return 1f + percent / 100f;
             }
         }
@@ -274,7 +291,9 @@ namespace TimelessEchoes.Buffs
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
-                    percent += b.recipe.lifestealPercent;
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.LifestealPercent)
+                            percent += eff.value;
                 return percent;
             }
         }
@@ -424,6 +443,7 @@ namespace TimelessEchoes.Buffs
         public class ActiveBuff
         {
             public BuffRecipe recipe;
+            public List<BuffEffect> effects = new();
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
             public List<HeroController> echoes = new();

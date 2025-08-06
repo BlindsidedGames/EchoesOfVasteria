@@ -343,6 +343,12 @@ namespace TimelessEchoes.Quests
             return active.ContainsKey(questId);
         }
 
+        public bool IsQuestCompleted(QuestData quest)
+        {
+            if (quest == null || oracle == null) return false;
+            return oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) && rec.Completed;
+        }
+
         /// <summary>
         ///     Returns quest data for the given id or null if not found.
         /// </summary>
