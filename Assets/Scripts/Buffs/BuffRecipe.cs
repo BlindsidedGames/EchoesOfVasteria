@@ -131,17 +131,28 @@ namespace TimelessEchoes.Buffs
             var lines = new List<string>();
             if (!string.IsNullOrEmpty(description))
                 lines.Add(description);
+
+            var effectStrings = new List<string>();
             foreach (var eff in GetAggregatedEffects())
             {
-                lines.Add(DescribeEffect(eff));
+                var text = DescribeEffect(eff);
+                if (!string.IsNullOrEmpty(text))
+                    effectStrings.Add(text);
             }
+
+            for (var i = 0; i < effectStrings.Count; i += 3)
+            {
+                var count = Math.Min(3, effectStrings.Count - i);
+                lines.Add(string.Join(", ", effectStrings.GetRange(i, count)));
+            }
+
             var echoCount = GetEchoCount();
             if (echoCount > 0)
                 lines.Add($"Echoes: {echoCount}");
             if (durationType == BuffDurationType.DistancePercent)
                 lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
             else
-                lines.Add($"Duration: {Mathf.CeilToInt(GetDuration())}");
+                lines.Add($"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}");
             return lines;
         }
 
