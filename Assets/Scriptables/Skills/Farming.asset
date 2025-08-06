@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Farming
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -27,12 +27,23 @@ MonoBehaviour:
   xpLevelMultiplier: 1.5
   taskSpeedPerLevel: 0.01
   milestones:
+  - levelRequirement: 2
+    bonusDescription: 
+    bonusID: farming2
+    type: 3
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
   - levelRequirement: 5
     bonusDescription: 
     bonusID: farming5
     type: 2
     echoSpawnConfig:
-      echoCount: 1
       capableSkills: []
       echoType: 1
     echoDuration: 10
@@ -45,21 +56,20 @@ MonoBehaviour:
     bonusID: farming7
     type: 5
     echoSpawnConfig:
-      echoCount: 1
       capableSkills:
       - {fileID: 11400000}
+      - {fileID: 0}
       echoType: 3
     echoDuration: 10
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
     statAmount: 0
-  - levelRequirement: 10
+  - levelRequirement: 9
     bonusDescription: 
-    bonusID: farming10
+    bonusID: farming9
     type: 3
     echoSpawnConfig:
-      echoCount: 1
       capableSkills: []
       echoType: 1
     echoDuration: 10
@@ -67,12 +77,23 @@ MonoBehaviour:
     statUpgrade: {fileID: 0}
     percentBonus: 0
     statAmount: 0
+  - levelRequirement: 10
+    bonusDescription: 
+    bonusID: farming10
+    type: 4
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: c7f07ded9dd812449b8755162070439d, type: 2}
+    percentBonus: 0
+    statAmount: 0.5
   - levelRequirement: 15
     bonusDescription: 
     bonusID: farming15
     type: 4
     echoSpawnConfig:
-      echoCount: 1
       capableSkills: []
       echoType: 1
     echoDuration: 10
@@ -80,3 +101,89 @@ MonoBehaviour:
     statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
     percentBonus: 0
     statAmount: 0.5
+  - levelRequirement: 20
+    bonusDescription: 
+    bonusID: farming20
+    type: 5
+    echoSpawnConfig:
+      capableSkills:
+      - {fileID: 11400000}
+      echoType: 3
+    echoDuration: 15
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 25
+    bonusDescription: 
+    bonusID: farming25
+    type: 2
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 30
+    bonusDescription: 
+    bonusID: farming30
+    type: 4
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
+    percentBonus: 0
+    statAmount: 0.5
+  - levelRequirement: 35
+    bonusDescription: 
+    bonusID: farming35
+    type: 2
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 40
+    bonusDescription: 
+    bonusID: farming40
+    type: 4
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
+    percentBonus: 0
+    statAmount: 0.5
+  - levelRequirement: 45
+    bonusDescription: 
+    bonusID: farming45
+    type: 2
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 50
+    bonusDescription: 
+    bonusID: farming50
+    type: 5
+    echoSpawnConfig:
+      capableSkills:
+      - {fileID: 11400000}
+      echoType: 3
+    echoDuration: 30
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0

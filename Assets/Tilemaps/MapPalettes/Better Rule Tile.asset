@@ -84,7 +84,7 @@ MonoBehaviour:
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 372453216799020652, guid: 8c523df2568d56a42a43f494d14f321b, type: 3}
+    - {fileID: 393573652, guid: 8c523df2568d56a42a43f494d14f321b, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -13999,7 +13999,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 35, y: 60}
-    Sprite: {fileID: 372453216799020652, guid: 8c523df2568d56a42a43f494d14f321b, type: 3}
+    Sprite: {fileID: 393573652, guid: 8c523df2568d56a42a43f494d14f321b, type: 3}
     TileID: 6
     UseDefaultSettings: 1
     AreNeighborPositionsModified: 0
@@ -14575,7 +14575,7 @@ MonoBehaviour:
     - {fileID: 1423786215, guid: 5737bb73436c0bf4682eac52a47b234b, type: 3}
     - {fileID: 1181392628, guid: 5737bb73436c0bf4682eac52a47b234b, type: 3}
     - {fileID: 1622400492, guid: 5737bb73436c0bf4682eac52a47b234b, type: 3}
-    ColliderType: 0
+    ColliderType: 2
     OutputSprite: 2
     NoiseScale: 0.5
     RandomTransform: 0
@@ -14925,7 +14925,7 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 4
     m_PerlinScale: 0.5
     m_Output: 2
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: fdfffffffdfffffffdffffff0000000000000000000000000000000000000000
     m_NeighborPositions:
@@ -15646,7 +15646,7 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 4
     m_PerlinScale: 0.5
     m_Output: 2
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: fffffffffdfffffffdffffff0000000000000000000000000000000000000000
     m_NeighborPositions:
@@ -15674,7 +15674,7 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 4
     m_PerlinScale: 0.5
     m_Output: 2
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: fdfffffffdffffffffffffff0000000000000000000000000000000000000000
     m_NeighborPositions:
@@ -15842,7 +15842,7 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 4
     m_PerlinScale: 0.5
     m_Output: 2
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: 00000000fdffffffffffffff00000000000000000000000000000000ffffffff
     m_NeighborPositions:
@@ -15926,7 +15926,7 @@ MonoBehaviour:
     m_MaxAnimationSpeed: 4
     m_PerlinScale: 0.5
     m_Output: 2
-    m_ColliderType: 0
+    m_ColliderType: 2
     m_RandomTransform: 0
     m_Neighbors: fffffffffdffffff000000000000000000000000ffffffff0000000000000000
     m_NeighborPositions:

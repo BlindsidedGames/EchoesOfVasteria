@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile: {fileID: -5300524179677254502, guid: c2d01cf7440e16c4a99ec3041497a57d, type: 2}
   taskSettings:
-    taskDensity: 1
+    taskDensity: 0
     borderOnly: 0
     topBorderOffset: 0
     bottomBorderOffset: 0
@@ -22,6 +22,438 @@ MonoBehaviour:
     rightBorderOffset: 0
     addToTaskList: 0
   decor:
-    density: 1
-    decor: []
+    density: 0.193
+    decor:
+    - Name: Big_Fruit_Tree_1
+      tile: {fileID: 0}
+      prefab: {fileID: 6259994742296631496, guid: facfbf382e321ca469655d0308540e57, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 0.6
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Big_Oak_Tree_1
+      tile: {fileID: 0}
+      prefab: {fileID: 3971247647412730562, guid: 4a03823238cd4b542bc0501046f3e69a, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 0.4
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Big_Birch_Tree_1
+      tile: {fileID: 0}
+      prefab: {fileID: 2298737343032309402, guid: fc3e3ffda8afccb489a02556ccbe24d7, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_83
+      tile: {fileID: 0}
+      prefab: {fileID: 4519156116380691640, guid: aa8b9280c0a66f64297dc4a74547fed1, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_84
+      tile: {fileID: 0}
+      prefab: {fileID: 768769756562378385, guid: 00f24c0317293e846b309e410d09f8b5, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_141
+      tile: {fileID: 0}
+      prefab: {fileID: 2696402776262976191, guid: e489afb64f969e244bd4fcbaf9c5de70, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_60
+      tile: {fileID: 0}
+      prefab: {fileID: 5917789783902331358, guid: 9bd7ca62c4bb9cd48b6ac364396ef904, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_65
+      tile: {fileID: 0}
+      prefab: {fileID: 7119270767972707061, guid: 23bc1883046fd1948bc06e2d34b98a6d, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_68
+      tile: {fileID: 0}
+      prefab: {fileID: 3824446877876697105, guid: e27f422b71d5693418e824372c64a16c, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_89
+      tile: {fileID: 0}
+      prefab: {fileID: 6264734087972578256, guid: aa6a1740b124a9142868755c2a295452, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_95
+      tile: {fileID: 0}
+      prefab: {fileID: 4804491646850544797, guid: 0abedb09207b76c4595b3b9b37f58875, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_102
+      tile: {fileID: 0}
+      prefab: {fileID: 8104734049040498407, guid: 2344f7d0909dbd141ad2f1d1778232e5, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Stump 2
+      tile: {fileID: 0}
+      prefab: {fileID: 4065333196791015591, guid: 8ccb966f67a3bde4d9d6764ff4171435, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Stump 3
+      tile: {fileID: 0}
+      prefab: {fileID: 1489126708341996933, guid: e88602ffab2ccb64e8697b75ee141b07, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Log 1
+      tile: {fileID: 0}
+      prefab: {fileID: 2714801415846126593, guid: b1f27cc1e3541f04c89bf53cdae8334b, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_140
+      tile: {fileID: 0}
+      prefab: {fileID: 2115276165992851148, guid: d0c52e59f96495d47ad4b2ec573ae803, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_126
+      tile: {fileID: 0}
+      prefab: {fileID: 1167664256034526983, guid: 092233d64cdf67f4cac4ca1c2d6d74d3, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_127
+      tile: {fileID: 0}
+      prefab: {fileID: 8873973390438848799, guid: 0c47affe7e16974439a45aeb9230e183, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Outdoor_Decor_133
+      tile: {fileID: 0}
+      prefab: {fileID: 2129147266421214489, guid: 92c8167f19c3c874c89dd0be95ec37cc, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Flowers_83
+      tile: {fileID: 0}
+      prefab: {fileID: 6676084885215772923, guid: 0b7a0a461ed2f7943b89dacbdd11358b, type: 3}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_Tiles_3_65
+      tile: {fileID: 11400000, guid: 179e32a2da7d74cf097e1e80d974ad1d, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_Tiles_3_66
+      tile: {fileID: 11400000, guid: 161f46f23e4054de990374eec18c242d, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_Tiles_3_67
+      tile: {fileID: 11400000, guid: ee3c97f506b7549f8a9d699eccc8a161, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_Tiles_3_Blob_TEST_0
+      tile: {fileID: 11400000, guid: 27068dd7071134841961fbc62cd1a555, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_1_Anim
+      tile: {fileID: 11400000, guid: 00ec89fd00330c04684b094fae821f5d, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_2_Anim
+      tile: {fileID: 11400000, guid: 39f4593bfd28b8b449cc3a107dee7c11, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Grass_3_Anim
+      tile: {fileID: 11400000, guid: 696c7314c09dded4ea9a82cbc10bf9a9, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
   showValidationGizmos: 0
