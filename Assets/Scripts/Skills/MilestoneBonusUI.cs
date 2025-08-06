@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using References.UI;
+using TimelessEchoes;
 
 namespace TimelessEchoes.Skills
 {
@@ -37,6 +38,20 @@ namespace TimelessEchoes.Skills
                 controller = FindFirstObjectByType<SkillController>();
             if (window == null)
                 window = gameObject;
+        }
+
+        private void OnEnable()
+        {
+            var gm = GameManager.Instance;
+            if (gm != null)
+                gm.HeroDied += CloseWindow;
+        }
+
+        private void OnDisable()
+        {
+            var gm = GameManager.Instance;
+            if (gm != null)
+                gm.HeroDied -= CloseWindow;
         }
 
         public void PopulateMilestones(Skill skill)

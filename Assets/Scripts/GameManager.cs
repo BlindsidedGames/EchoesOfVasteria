@@ -94,6 +94,8 @@ namespace TimelessEchoes
         public Transform MeetingParent => meetingParent;
         public GameObject CurrentMap => currentMap;
 
+        public event System.Action HeroDied;
+
         [TitleGroup("Map Generation")]
         [SerializeField] private List<MapGenerationButton> generationButtons = new();
 
@@ -454,6 +456,7 @@ namespace TimelessEchoes
         {
             DestroyAllEchoes();
             heroDead = true;
+            HeroDied?.Invoke();
             if (returnToTavernButton != null)
                 returnToTavernButton.interactable = false;
             if (returnOnDeathButton != null)
