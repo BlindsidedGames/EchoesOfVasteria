@@ -320,6 +320,11 @@ namespace TimelessEchoes
                 returnOnDeathText.text = "Queued";
         }
 
+        public void AbandonRun()
+        {
+            StartCoroutine(ReturnToTavernRoutine(true));
+        }
+
         private void StartRun(MapGenerationConfig config)
         {
             CurrentGenerationConfig = config;
@@ -558,7 +563,7 @@ namespace TimelessEchoes
             StartCoroutine(ReturnToTavernRoutine());
         }
 
-        private IEnumerator ReturnToTavernRoutine()
+        private IEnumerator ReturnToTavernRoutine(bool abandon = false)
         {
             HideTooltip();
             // Reset state after death.
@@ -578,26 +583,35 @@ namespace TimelessEchoes
 
             if (!runEndedByDeath && runDropUI != null)
             {
-                var manager = ResourceManager.Instance;
-                if (manager == null)
+                if (abandon)
                 {
-                    Log("ResourceManager missing", TELogCategory.Resource, this);
+                    runDropUI.ResetDrops();
                 }
                 else
                 {
-                    var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
-                    var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                    var bonusPercent = kills * bonusPercentPerKill * 0.01f;
-                    foreach (var pair in drops)
-                        manager.Add(pair.Key, pair.Value * bonusPercent, true);
-                }
+                    var manager = ResourceManager.Instance;
+                    if (manager == null)
+                    {
+                        Log("ResourceManager missing", TELogCategory.Resource, this);
+                    }
+                    else
+                    {
+                        var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
+                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        var bonusPercent = kills * bonusPercentPerKill * 0.01f;
+                        foreach (var pair in drops)
+                            manager.Add(pair.Key, pair.Value * bonusPercent, true);
+                    }
 
-                runDropUI.ResetDrops();
+                    runDropUI.ResetDrops();
+                }
             }
 
             if (statTracker != null)
             {
-                if (runEndedByDeath)
+                if (abandon)
+                    statTracker.AbandonRun();
+                else if (runEndedByDeath)
                     statTracker.EndRun(true, runEndedByReaper);
                 else
                     statTracker.EndRun(false);
