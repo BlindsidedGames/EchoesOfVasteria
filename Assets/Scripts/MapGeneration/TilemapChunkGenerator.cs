@@ -59,6 +59,7 @@ namespace TimelessEchoes.MapGeneration
         private Random rng;
         private int prevSandDepth = -1;
         private int prevGrassDepth = -1;
+        private Transform currentDecorParent;
         public Tilemap TerrainMap => terrainMap;
         private BetterRuleTile BottomTile => bottomTerrain != null ? bottomTerrain.tile : null;
         private BetterRuleTile MiddleTile => middleTerrain != null ? middleTerrain.tile : null;
@@ -106,7 +107,28 @@ namespace TimelessEchoes.MapGeneration
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
 
+            currentDecorParent = decorParent;
             GenerateInternal(offset, segmentSize, decorParent);
+        }
+
+        public void ClearDecorAtPosition(Vector3 pos)
+        {
+            if (decorMap != null)
+            {
+                var cell = decorMap.WorldToCell(pos);
+                decorMap.SetTile(cell, null);
+                decorMap.SetTransformMatrix(cell, Matrix4x4.identity);
+            }
+
+            if (currentDecorParent == null)
+                return;
+
+            for (var i = currentDecorParent.childCount - 1; i >= 0; i--)
+            {
+                var child = currentDecorParent.GetChild(i);
+                if (Vector3.Distance(child.position, pos) < 0.1f)
+                    Destroy(child.gameObject);
+            }
         }
 
         private void GenerateInternal(Vector2Int offset, Vector2Int segmentSize, Transform decorParent)

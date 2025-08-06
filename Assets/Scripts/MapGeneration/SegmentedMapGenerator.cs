@@ -110,7 +110,15 @@ namespace TimelessEchoes.MapGeneration
             var minX = Mathf.Max(taskGenerator.MinX, offset.x);
             var maxX = offset.x + segmentSize.x;
             if (maxX > minX)
+            {
                 taskGenerator.GenerateSegment(minX, maxX, tasksRoot.transform);
+
+                foreach (var task in taskGenerator.Controller.TaskObjects)
+                {
+                    if (task != null && task.transform.IsChildOf(tasksRoot.transform))
+                        chunkGenerator.ClearDecorAtPosition(task.transform.position);
+                }
+            }
 
             segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot, decor = decorRoot });
             nextSegmentX += segmentSize.x;
