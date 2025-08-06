@@ -11,20 +11,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
   m_Name: Slipstream
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   title: Slipstream
   description: Instantly complete all tasks up to 50% of your distance record.
   buffIcon: {fileID: 6903983040440877652, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
-  baseDuration: 300
-  distancePercent: 0.5
-  echoSpawnConfig:
-    echoCount: 0
+  durationType: 1
+  baseDuration: 0.5
+  baseEchoCount: 0
+  echoConfig:
     capableSkills: []
     echoType: 1
-  moveSpeedPercent: 0
-  damagePercent: 0
-  defensePercent: 0
-  attackSpeedPercent: 0
-  taskSpeedPercent: 0
-  lifestealPercent: 0
-  instantTasks: 1
+  requiredQuest: {fileID: 0}
+  baseEffects:
+  - type: 6
+    value: 1
+  upgrades: []

@@ -11,20 +11,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
   m_Name: MoveSpeed
-  m_EditorClassIdentifier: 
-  title: 
+  m_EditorClassIdentifier:
+  title:
   description: Increases Movespeed by 40% for its duration.
   buffIcon: {fileID: -5882155960153656733, guid: 75e6aad650cc46242a07d1d673daedeb, type: 3}
+  durationType: 0
   baseDuration: 120
-  distancePercent: 0
-  echoSpawnConfig:
-    echoCount: 0
+  baseEchoCount: 0
+  echoConfig:
     capableSkills: []
     echoType: 2
-  moveSpeedPercent: 40
-  damagePercent: 0
-  defensePercent: 0
-  attackSpeedPercent: 0
-  taskSpeedPercent: 0
-  lifestealPercent: 0
-  instantTasks: 0
+  requiredQuest: {fileID: 0}
+  baseEffects:
+  - type: 0
+    value: 40
+  upgrades: []

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.EventHandler;
@@ -81,9 +82,9 @@ namespace TimelessEchoes.Buffs
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
                 var expireDist = 0f;
-                if (recipe != null && tracker != null && recipe.distancePercent > 0f)
+                if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.DistancePercent)
                 {
-                    expireDist = tracker.LongestRun * recipe.distancePercent;
+                    expireDist = tracker.LongestRun * recipe.GetDuration();
                     distanceOk = tracker.CurrentRunDistance < expireDist;
                 }
 
@@ -114,7 +115,7 @@ namespace TimelessEchoes.Buffs
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
                         if (!heroAlive)
                             ui.durationText.text = "Dead";
-                        else if (recipe != null && tracker != null && recipe.distancePercent > 0f)
+                        else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.DistancePercent)
                         {
                             if (!distanceOk)
                                 ui.durationText.text = "Too Far";
@@ -196,12 +197,9 @@ namespace TimelessEchoes.Buffs
             foreach (var pair in recipeEntries)
             {
                 var panel = pair.Value;
-                if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                if (recipe.distancePercent > 0f)
-                    panel.durationText.text = $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%";
-                else
-                    panel.durationText.text = $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
+                if (panel.descriptionText != null)
+                    panel.descriptionText.text = string.Join("\n", recipe.GetDescriptionLines());
             }
         }
 
@@ -213,25 +211,29 @@ namespace TimelessEchoes.Buffs
             var manager = buffManager;
             if (manager == null) return;
 
+            foreach (var panel in recipeEntries.Values)
+                if (panel != null) Destroy(panel.gameObject);
+            recipeEntries.Clear();
+
+            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+
             foreach (var recipe in manager.Recipes)
             {
+                if (recipe == null) continue;
+                if (recipe.requiredQuest != null && (qm == null || !qm.IsQuestCompleted(recipe.requiredQuest)))
+                    continue;
                 var panel = Instantiate(recipePrefab, recipeParent);
                 if (panel.iconImage != null)
                     panel.iconImage.sprite = recipe.buffIcon;
                 if (panel.nameText != null)
-                    panel.nameText.text = string.IsNullOrEmpty(recipe.title) ? recipe.name : recipe.title;
+                    panel.nameText.text = recipe.GetDisplayName();
                 if (panel.descriptionText != null)
-                    panel.descriptionText.text = recipe.description;
-                if (panel.durationText != null)
-                    panel.durationText.text = recipe.distancePercent > 0f
-                        ? $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%"
-                        : $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
+                    panel.descriptionText.text = string.Join("\n", recipe.GetDescriptionLines());
                 if (panel.purchaseButton != null)
                 {
                     var r = recipe;
                     panel.purchaseButton.onClick.AddListener(() => PurchaseBuff(r));
                 }
-
                 recipeEntries[recipe] = panel;
             }
         }
@@ -249,6 +251,7 @@ namespace TimelessEchoes.Buffs
         private IEnumerator DeferredRefresh()
         {
             yield return null;
+            BuildRecipeEntries();
             RefreshSlots();
         }
 
