@@ -15,14 +15,15 @@ MonoBehaviour:
   title: Vampiric
   description: Gain 15% Lifesteal
   buffIcon: {fileID: -2906203513720773286, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
-  durationType: 0
-  durationMagnitude: 30
+  baseDuration: 30
   echoSpawnConfig:
     echoCount: 0
     capableSkills: []
     echoType: 1
-  requiredQuest: {fileID: 0}
-  baseEffects:
-  - type: 5
-    magnitude: 15
-  upgrades: []
+  moveSpeedPercent: 0
+  damagePercent: 0
+  defensePercent: 0
+  attackSpeedPercent: 0
+  lifestealPercent: 15
+  instantTasks: 0
+  distancePercent: 0

@@ -81,9 +81,9 @@ namespace TimelessEchoes.Buffs
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
                 var expireDist = 0f;
-                if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.Distance)
+                if (recipe != null && tracker != null && recipe.distancePercent > 0f)
                 {
-                    expireDist = tracker.LongestRun * recipe.durationMagnitude;
+                    expireDist = tracker.LongestRun * recipe.distancePercent;
                     distanceOk = tracker.CurrentRunDistance < expireDist;
                 }
 
@@ -114,7 +114,7 @@ namespace TimelessEchoes.Buffs
                         var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
                         if (!heroAlive)
                             ui.durationText.text = "Dead";
-                        else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.Distance)
+                        else if (recipe != null && tracker != null && recipe.distancePercent > 0f)
                         {
                             if (!distanceOk)
                                 ui.durationText.text = "Too Far";
@@ -196,46 +196,36 @@ namespace TimelessEchoes.Buffs
             foreach (var pair in recipeEntries)
             {
                 var panel = pair.Value;
+                if (panel.durationText == null) continue;
                 var recipe = pair.Key;
-                if (panel.nameText != null)
-                    panel.nameText.text = recipe.GetDisplayName();
-                if (panel.descriptionText != null)
-                    panel.descriptionText.text = string.Join("\n", recipe.GetDescriptionLines());
-                if (panel.durationText != null)
-                    panel.durationText.text = recipe.durationType == BuffDurationType.Distance
-                        ? $"Distance: {Mathf.CeilToInt(recipe.durationMagnitude * 100f)}%"
-                        : $"Duration: {Mathf.CeilToInt(recipe.durationMagnitude)}";
+                if (recipe.distancePercent > 0f)
+                    panel.durationText.text = $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%";
+                else
+                    panel.durationText.text = $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
             }
         }
 
-        public void BuildRecipeEntries()
+        private void BuildRecipeEntries()
         {
             if (recipePrefab == null || recipeParent == null)
                 return;
-
-            foreach (Transform child in recipeParent)
-                Destroy(child.gameObject);
-            recipeEntries.Clear();
 
             var manager = buffManager;
             if (manager == null) return;
 
             foreach (var recipe in manager.Recipes)
             {
-                if (recipe != null && !recipe.IsUnlocked())
-                    continue;
-
                 var panel = Instantiate(recipePrefab, recipeParent);
                 if (panel.iconImage != null)
                     panel.iconImage.sprite = recipe.buffIcon;
                 if (panel.nameText != null)
-                    panel.nameText.text = recipe.GetDisplayName();
+                    panel.nameText.text = string.IsNullOrEmpty(recipe.title) ? recipe.name : recipe.title;
                 if (panel.descriptionText != null)
-                    panel.descriptionText.text = string.Join("\n", recipe.GetDescriptionLines());
+                    panel.descriptionText.text = recipe.description;
                 if (panel.durationText != null)
-                    panel.durationText.text = recipe.durationType == BuffDurationType.Distance
-                        ? $"Distance: {Mathf.CeilToInt(recipe.durationMagnitude * 100f)}%"
-                        : $"Duration: {Mathf.CeilToInt(recipe.durationMagnitude)}";
+                    panel.durationText.text = recipe.distancePercent > 0f
+                        ? $"Distance: {Mathf.CeilToInt(recipe.distancePercent * 100f)}%"
+                        : $"Duration: {Mathf.CeilToInt(recipe.baseDuration)}";
                 if (panel.purchaseButton != null)
                 {
                     var r = recipe;
@@ -248,13 +238,11 @@ namespace TimelessEchoes.Buffs
 
         private void OnLoadDataHandler()
         {
-            BuildRecipeEntries();
             StartCoroutine(DeferredRefresh());
         }
 
         private void OnQuestHandinHandler(string questId)
         {
-            BuildRecipeEntries();
             StartCoroutine(DeferredRefresh());
         }
 
