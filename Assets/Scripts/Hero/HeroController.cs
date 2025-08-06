@@ -557,17 +557,6 @@ namespace TimelessEchoes.Hero
         {
             if (stats == null) return;
 
-            if (currentEnemy != null)
-            {
-                var hp = currentEnemy.GetComponent<Health>();
-                if (hp == null || hp.CurrentHealth <= 0f)
-                {
-                    currentEnemyHealth?.SetHealthBarVisible(false);
-                    currentEnemy = null;
-                    currentEnemyHealth = null;
-                }
-            }
-
             enemyRemovalBuffer.Clear();
             foreach (var enemy in engagedEnemies)
             {
@@ -579,8 +568,20 @@ namespace TimelessEchoes.Hero
             foreach (var enemy in enemyRemovalBuffer)
                 UnregisterEngagedEnemy(enemy);
 
-            Transform nearest = null;
-            if (allowAttacks)
+            if (currentEnemy != null)
+            {
+                var hp = currentEnemy.GetComponent<Health>();
+                var enemyComp = currentEnemy.GetComponent<Enemy>();
+                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || !engagedEnemies.Contains(enemyComp))
+                {
+                    currentEnemyHealth?.SetHealthBarVisible(false);
+                    currentEnemy = null;
+                    currentEnemyHealth = null;
+                }
+            }
+
+            Transform nearest = currentEnemy;
+            if (allowAttacks && nearest == null)
             {
                 if (engagedEnemies.Count > 0)
                 {
