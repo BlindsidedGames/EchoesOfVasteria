@@ -174,5 +174,11 @@ namespace TimelessEchoes
             Blindsided.EventHandler.LoadData();
         }
 
+        [Command("abandon-run", "Abandon the current run and return to town")]
+        public static void AbandonRun()
+        {
+            GameManager.Instance?.AbandonRun();
+        }
+
     }
 }
