@@ -201,6 +201,7 @@ namespace TimelessEchoes.Enemies
                 if (dist <= stats.attackRange && Time.time >= nextAttack)
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
+                    FaceTarget();
                     animator.Play("Attack");
                     FireProjectile();
                 }
@@ -209,6 +210,35 @@ namespace TimelessEchoes.Enemies
             {
                 Wander();
             }
+        }
+
+        private void FaceTarget()
+        {
+            if (setter == null || setter.target == null)
+                return;
+
+            var dir = setter.target.position - transform.position;
+            if (fourDirectional)
+            {
+                if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
+                    dir.y = 0f;
+                else
+                    dir.x = 0f;
+            }
+            else
+            {
+                dir.y = 0f;
+            }
+
+            if (dir.sqrMagnitude > 0.0001f)
+                lastMoveDir = dir;
+
+            animator.SetFloat("MoveX", lastMoveDir.x);
+            animator.SetFloat("MoveY", lastMoveDir.y);
+            animator.SetFloat("MoveMagnitude", 0f);
+
+            if (spriteRenderer != null)
+                spriteRenderer.flipX = lastMoveDir.x < 0f;
         }
 
         private Transform ChooseTarget()
