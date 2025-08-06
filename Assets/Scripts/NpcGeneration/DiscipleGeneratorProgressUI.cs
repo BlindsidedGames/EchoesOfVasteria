@@ -112,8 +112,9 @@ namespace TimelessEchoes.NpcGeneration
             {
                 if (generator.Interval > 0)
                 {
-                    var time = generator.Interval.ToString("0.##");
-                    collectionRateText.text = CalcUtils.FormatNumber(generator.CycleAmount, true) + " / " + time + "s";
+                    var time = CalcUtils.FormatTime(generator.Interval, showDecimal: true, shortForm: true);
+                    collectionRateText.text =
+                        $"{CalcUtils.FormatNumber(generator.CycleAmount, true)} / {time}";
                 }
                 else
                 {
