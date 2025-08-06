@@ -20,7 +20,184 @@ MonoBehaviour:
     bottomBorderOffset: 0
     leftBorderOffset: 1
     rightBorderOffset: 1
+    addToTaskList: 1
   decor:
-    density: 1
-    decor: []
+    density: 0.01
+    decor:
+    - Name: Sleeping Swan
+      tile: {fileID: 0}
+      prefab: {fileID: 1311571170013702083, guid: 29e9260b998cfd64aa827e1d7bf7f335, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: CatTail
+      tile: {fileID: 11400000, guid: b911c0e71a990624e9eed03abb6ce2b9, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: CatTail 1
+      tile: {fileID: 11400000, guid: 367fef2f27190914aab734544717b1df, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: CatTail 2
+      tile: {fileID: 11400000, guid: fe088e028cc11af4b87183d287f1da19, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: CatTail 3
+      tile: {fileID: 11400000, guid: 9f89f7a03a57b684cb12dfe96f73d521, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: CatTail 4
+      tile: {fileID: 11400000, guid: 40a42957d626ceb4ba639bf9e1abba49, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Lillypad
+      tile: {fileID: 11400000, guid: 1d85d0e980e47034fa22050a89ca8cf9, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Lillypad 1
+      tile: {fileID: 11400000, guid: 6cdd93be2d22bed48ac49689afc32b24, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: WaterGrass1
+      tile: {fileID: 11400000, guid: 10d47dbd0af073d429263f3469c4743e, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: WaterGrass2
+      tile: {fileID: 11400000, guid: d5e2d087aad0f7342992ab013b9ab89b, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: WaterMiddleAnim1
+      tile: {fileID: 11400000, guid: c7e1f35c0f5e6854f96c50707a45a5a7, type: 2}
+      prefab: {fileID: 0}
+      randomFlipX: 1
+      config:
+        weight: 2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
   showValidationGizmos: 0

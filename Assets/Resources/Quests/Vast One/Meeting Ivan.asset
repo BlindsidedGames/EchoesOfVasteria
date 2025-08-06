@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Meeting Ivan
+  m_EditorClassIdentifier: 
+  questId: Meeting Ivan
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4902881738752
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4904353939456
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 4905721282560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  npcId: 
+  autoPin: 1
+  requiredQuests:
+  - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+  requirements:
+  - type: 6
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: Ivan1
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 25
+  disciplePercentReward: 0
+  references:
+    version: 2
+    RefIds: []

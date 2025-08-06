@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Rock and Stone
+  m_EditorClassIdentifier: 
+  questId: Rock and Stone
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5135506227200
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5136814850048
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 5137989255168
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  npcId: OldTimer1
+  autoPin: 0
+  requiredQuests:
+  - {fileID: 11400000, guid: 04f7d17c91a766641b9b4b77ff071d37, type: 2}
+  requirements:
+  - type: 5
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0
+  references:
+    version: 2
+    RefIds: []
