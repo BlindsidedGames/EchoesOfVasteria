@@ -101,8 +101,8 @@ namespace TimelessEchoes.Hero
                 durationBarParent = hero.EchoDurationBar;
                 durationFill = hero.EchoDurationFill;
                 if (durationBarParent != null)
-                    durationBarParent.SetActive(true);
-                if (durationFill != null)
+                    durationBarParent.SetActive(!float.IsPositiveInfinity(duration));
+                if (durationFill != null && !float.IsPositiveInfinity(duration))
                     durationFill.fillAmount = 1f;
             }
 
@@ -125,7 +125,8 @@ namespace TimelessEchoes.Hero
                 Destroy(gameObject);
                 return;
             }
-            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null)
+            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null &&
+                !float.IsPositiveInfinity(lifetime))
                 durationFill.fillAmount = remaining / lifetime;
 
             if (!disableSkills && taskController != null)

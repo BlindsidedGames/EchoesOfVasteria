@@ -204,7 +204,7 @@ namespace TimelessEchoes.Buffs
             var echoCount = recipe.GetEchoCount();
             if (recipe.echoConfig != null && echoCount > 0)
             {
-                var spawned = EchoManager.SpawnEchoes(recipe.echoConfig, float.PositiveInfinity,
+                var spawned = EchoManager.SpawnEchoes(recipe.echoConfig, buff.remaining,
                     null, false, echoCount);
                 foreach (var c in spawned)
                     if (c != null)
