@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TimelessEchoes.Hero
 {
@@ -29,7 +29,7 @@ namespace TimelessEchoes.Hero
         private float remaining;
         private float defaultAggroRange;
         private GameObject durationBarParent;
-        private Image durationFill;
+        private SlicedFilledImage durationFill;
 
         /// <summary>
         ///     Returns true once <see cref="Init" /> has completed.
@@ -125,6 +125,7 @@ namespace TimelessEchoes.Hero
                 Destroy(gameObject);
                 return;
             }
+
             if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null &&
                 !float.IsPositiveInfinity(lifetime))
                 durationFill.fillAmount = remaining / lifetime;
