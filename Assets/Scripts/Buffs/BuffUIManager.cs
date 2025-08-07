@@ -78,14 +78,24 @@ namespace TimelessEchoes.Buffs
                 var recipe = buffManager.GetAssigned(i);
                 var ui = runSlotButtons[i];
                 if (ui == null) continue;
+                if (ui.radialFillImage != null)
+                    ui.radialFillImage.fillAmount = 0f;
                 var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
                 var expireDist = 0f;
-                if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.DistancePercent)
+                if (recipe != null && tracker != null)
                 {
-                    expireDist = tracker.LongestRun * recipe.GetDuration();
-                    distanceOk = tracker.CurrentRunDistance < expireDist;
+                    if (recipe.durationType == BuffDurationType.DistancePercent)
+                    {
+                        expireDist = tracker.LongestRun * recipe.GetDuration();
+                        distanceOk = tracker.CurrentRunDistance < expireDist;
+                    }
+                    else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
+                    {
+                        expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+                        distanceOk = tracker.CurrentRunDistance < expireDist;
+                    }
                 }
 
                 if (ui.iconImage != null)
@@ -126,6 +136,22 @@ namespace TimelessEchoes.Buffs
                             }
                             else
                                 ui.durationText.text = string.Empty;
+                        }
+                        else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.ExtraDistancePercent &&
+                                 recipe.GetAggregatedEffects().Exists(e => e.type == BuffEffectType.MaxDistancePercent))
+                        {
+                            var baseMax = tracker.MaxRunDistance;
+                            var buffedMax = baseMax * (buffManager != null ? buffManager.MaxDistanceMultiplier : 1f);
+                            var totalPercent = baseMax > 0f ? tracker.CurrentRunDistance / baseMax : 0f;
+                            var bonusPercent = buffedMax > baseMax
+                                ? (tracker.CurrentRunDistance - baseMax) / (buffedMax - baseMax)
+                                : 0f;
+                            if (tracker.CurrentRunDistance > baseMax)
+                                ui.durationText.text = $"{Mathf.FloorToInt(totalPercent * 100f)}%";
+                            else
+                                ui.durationText.text = string.Empty;
+                            if (ui.radialFillImage != null)
+                                ui.radialFillImage.fillAmount = Mathf.Clamp01(bonusPercent);
                         }
                         else if (!distanceOk)
                             ui.durationText.text = "Too Far";

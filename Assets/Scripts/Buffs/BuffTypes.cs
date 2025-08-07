@@ -12,13 +12,15 @@ namespace TimelessEchoes.Buffs
         AttackSpeedPercent,
         TaskSpeedPercent,
         LifestealPercent,
+        MaxDistancePercent,
         InstantTasks
     }
 
     public enum BuffDurationType
     {
         Time,
-        DistancePercent
+        DistancePercent,
+        ExtraDistancePercent
     }
 
     [Serializable]

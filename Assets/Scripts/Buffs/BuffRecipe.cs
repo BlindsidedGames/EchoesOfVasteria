@@ -151,6 +151,8 @@ namespace TimelessEchoes.Buffs
                 lines.Add($"Echoes: {echoCount}");
             if (durationType == BuffDurationType.DistancePercent)
                 lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
+            else if (durationType == BuffDurationType.ExtraDistancePercent)
+                lines.Add($"Extra Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
             else
                 lines.Add($"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}");
             return lines;
@@ -166,6 +168,7 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.AttackSpeedPercent => $"Attack Speed +{eff.value}%",
                 BuffEffectType.TaskSpeedPercent => $"Task Speed +{eff.value}%",
                 BuffEffectType.LifestealPercent => $"Lifesteal {eff.value}%",
+                BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
                 BuffEffectType.InstantTasks => "Tasks complete instantly",
                 _ => string.Empty
             };
