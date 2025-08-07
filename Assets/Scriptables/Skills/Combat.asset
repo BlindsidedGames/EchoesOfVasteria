@@ -78,15 +78,15 @@ MonoBehaviour:
   - levelRequirement: 10
     bonusDescription: 
     bonusID: combat10
-    type: 1
+    type: 4
     echoSpawnConfig:
       capableSkills: []
       echoType: 1
     echoDuration: 10
     chance: 0.01
-    statUpgrade: {fileID: 0}
+    statUpgrade: {fileID: 11400000, guid: d843386ab2363844385f698258595f44, type: 2}
     percentBonus: 0
-    statAmount: 0
+    statAmount: 5
   - levelRequirement: 15
     bonusDescription: 
     bonusID: combat15
@@ -126,23 +126,11 @@ MonoBehaviour:
   - levelRequirement: 50
     bonusDescription: 
     bonusID: combat50
-    type: 1
+    type: 5
     echoSpawnConfig:
       capableSkills: []
-      echoType: 1
-    echoDuration: 10
-    chance: 0.01
-    statUpgrade: {fileID: 0}
-    percentBonus: 0
-    statAmount: 0
-  - levelRequirement: 100
-    bonusDescription: 
-    bonusID: combat100
-    type: 1
-    echoSpawnConfig:
-      capableSkills: []
-      echoType: 1
-    echoDuration: 10
+      echoType: 0
+    echoDuration: 30
     chance: 0.01
     statUpgrade: {fileID: 0}
     percentBonus: 0

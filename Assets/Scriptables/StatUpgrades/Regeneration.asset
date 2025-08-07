@@ -16,9 +16,51 @@ MonoBehaviour:
   description: A good diet leads to good healing.
   thresholds:
   - minLevel: 0
-    maxLevel: 25
+    maxLevel: 10
     requirements:
     - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
       amount: 5
       amountIncreasePerLevel: 5
-  statIncreasePerLevel: 0.02
+  - minLevel: 10
+    maxLevel: 20
+    requirements:
+    - resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+      amount: 5
+      amountIncreasePerLevel: 5
+  - minLevel: 20
+    maxLevel: 30
+    requirements:
+    - resource: {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}
+      amount: 10
+      amountIncreasePerLevel: 10
+  - minLevel: 30
+    maxLevel: 40
+    requirements:
+    - resource: {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}
+      amount: 20
+      amountIncreasePerLevel: 20
+  - minLevel: 40
+    maxLevel: 50
+    requirements:
+    - resource: {fileID: 11400000, guid: bf23b8a0a0d501543b9e7310db929300, type: 2}
+      amount: 30
+      amountIncreasePerLevel: 30
+  - minLevel: 50
+    maxLevel: 60
+    requirements:
+    - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
+      amount: 30
+      amountIncreasePerLevel: 30
+  - minLevel: 60
+    maxLevel: 70
+    requirements:
+    - resource: {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}
+      amount: 40
+      amountIncreasePerLevel: 40
+  - minLevel: 70
+    maxLevel: 80
+    requirements:
+    - resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 50
+  statIncreasePerLevel: 0.03

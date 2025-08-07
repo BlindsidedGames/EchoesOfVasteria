@@ -32,7 +32,6 @@ MonoBehaviour:
     bonusID: mining5
     type: 5
     echoSpawnConfig:
-      echoCount: 1
       capableSkills:
       - {fileID: 11400000}
       echoType: 3
@@ -46,7 +45,6 @@ MonoBehaviour:
     bonusID: mining10
     type: 3
     echoSpawnConfig:
-      echoCount: 1
       capableSkills: []
       echoType: 1
     echoDuration: 10
@@ -59,7 +57,6 @@ MonoBehaviour:
     bonusID: mining15
     type: 4
     echoSpawnConfig:
-      echoCount: 1
       capableSkills: []
       echoType: 1
     echoDuration: 10
@@ -72,11 +69,84 @@ MonoBehaviour:
     bonusID: mining20
     type: 5
     echoSpawnConfig:
-      echoCount: 1
       capableSkills:
       - {fileID: 11400000}
       echoType: 3
     echoDuration: 10
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 25
+    bonusDescription: 
+    bonusID: mining25
+    type: 2
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.1
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 30
+    bonusDescription: 
+    bonusID: mining30
+    type: 4
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
+    percentBonus: 0
+    statAmount: 50
+  - levelRequirement: 35
+    bonusDescription: 
+    bonusID: mining35
+    type: 5
+    echoSpawnConfig:
+      capableSkills:
+      - {fileID: 11400000}
+      echoType: 3
+    echoDuration: 20
+    chance: 0.05
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 40
+    bonusDescription: 
+    bonusID: mining40
+    type: 4
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 1
+    statUpgrade: {fileID: 11400000, guid: 46b4e7a4349a20b4cb76d97fb2d13016, type: 2}
+    percentBonus: 0
+    statAmount: 50
+  - levelRequirement: 45
+    bonusDescription: 
+    bonusID: mining45
+    type: 2
+    echoSpawnConfig:
+      capableSkills: []
+      echoType: 1
+    echoDuration: 10
+    chance: 0.2
+    statUpgrade: {fileID: 0}
+    percentBonus: 0
+    statAmount: 0
+  - levelRequirement: 50
+    bonusDescription: 
+    bonusID: mining50
+    type: 5
+    echoSpawnConfig:
+      capableSkills:
+      - {fileID: 11400000}
+      echoType: 3
+    echoDuration: 30
     chance: 0.05
     statUpgrade: {fileID: 0}
     percentBonus: 0
