@@ -13,6 +13,7 @@ namespace TimelessEchoes.Buffs
         TaskSpeedPercent,
         LifestealPercent,
         MaxDistancePercent,
+        MaxDistanceIncrease,
         InstantTasks
     }
 

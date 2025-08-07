@@ -93,7 +93,8 @@ namespace TimelessEchoes.Buffs
                     }
                     else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
                     {
-                        expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+                        expireDist = tracker.MaxRunDistance +
+                                     recipe.GetExtraDistance(tracker.MaxRunDistance);
                         distanceOk = tracker.CurrentRunDistance < expireDist;
                     }
                 }
@@ -138,10 +139,12 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = string.Empty;
                         }
                         else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.ExtraDistancePercent &&
-                                 recipe.GetAggregatedEffects().Exists(e => e.type == BuffEffectType.MaxDistancePercent))
+                                 recipe.GetAggregatedEffects().Exists(e => e.type == BuffEffectType.MaxDistancePercent ||
+                                                                            e.type == BuffEffectType.MaxDistanceIncrease))
                         {
                             var baseMax = tracker.MaxRunDistance;
-                            var buffedMax = baseMax * (buffManager != null ? buffManager.MaxDistanceMultiplier : 1f);
+                            var buffedMax = baseMax * (buffManager != null ? buffManager.MaxDistanceMultiplier : 1f) +
+                                            (buffManager != null ? buffManager.MaxDistanceFlatBonus : 0f);
                             var totalPercent = baseMax > 0f ? tracker.CurrentRunDistance / baseMax : 0f;
                             var bonusPercent = buffedMax > baseMax
                                 ? (tracker.CurrentRunDistance - baseMax) / (buffedMax - baseMax)

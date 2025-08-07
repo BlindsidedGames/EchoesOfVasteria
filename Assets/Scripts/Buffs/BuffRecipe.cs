@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using Sirenix.OdinInspector;
 using TimelessEchoes.Quests;
+using TimelessEchoes.Stats;
 using UnityEngine;
 
 namespace TimelessEchoes.Buffs
@@ -26,14 +27,17 @@ namespace TimelessEchoes.Buffs
         public BuffDurationType durationType = BuffDurationType.Time;
 
         [TitleGroup("General")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0f)]
         public float baseDuration = 30f;
 
         [TitleGroup("General")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0)]
         public int baseEchoCount;
 
         [TitleGroup("General")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [SerializeField]
         public TimelessEchoes.EchoSpawnConfig echoConfig;
 
@@ -45,6 +49,14 @@ namespace TimelessEchoes.Buffs
 
         [TitleGroup("Upgrades")]
         public List<BuffUpgrade> upgrades = new();
+
+        [TitleGroup("Extra Distance")]
+        [ShowIf("@durationType == BuffDurationType.ExtraDistancePercent")]
+        public List<BuffEffect> extraDistanceEffects = new();
+
+        [TitleGroup("Extra Distance")]
+        [ShowIf("@durationType == BuffDurationType.ExtraDistancePercent")]
+        public List<BuffUpgrade> extraDistanceUpgrades = new();
 
         public string GetDisplayName()
         {
@@ -74,6 +86,16 @@ namespace TimelessEchoes.Buffs
                 else
                     dict[eff.type] = eff.value;
             }
+            if (durationType == BuffDurationType.ExtraDistancePercent)
+            {
+                foreach (var eff in extraDistanceEffects)
+                {
+                    if (dict.ContainsKey(eff.type))
+                        dict[eff.type] += eff.value;
+                    else
+                        dict[eff.type] = eff.value;
+                }
+            }
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
             {
@@ -89,6 +111,21 @@ namespace TimelessEchoes.Buffs
                             dict[eff.type] = eff.value;
                     }
                 }
+                if (durationType == BuffDurationType.ExtraDistancePercent)
+                {
+                    foreach (var up in extraDistanceUpgrades)
+                    {
+                        if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
+                            continue;
+                        foreach (var eff in up.additionalEffects)
+                        {
+                            if (dict.ContainsKey(eff.type))
+                                dict[eff.type] += eff.value;
+                            else
+                                dict[eff.type] = eff.value;
+                        }
+                    }
+                }
             }
             var list = new List<BuffEffect>();
             foreach (var pair in dict)
@@ -98,6 +135,8 @@ namespace TimelessEchoes.Buffs
 
         public int GetEchoCount()
         {
+            if (durationType == BuffDurationType.ExtraDistancePercent)
+                return 0;
             var count = baseEchoCount;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
@@ -113,6 +152,8 @@ namespace TimelessEchoes.Buffs
 
         public float GetDuration()
         {
+            if (durationType == BuffDurationType.ExtraDistancePercent)
+                return 0f;
             var duration = baseDuration;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
@@ -124,6 +165,20 @@ namespace TimelessEchoes.Buffs
                 }
             }
             return duration;
+        }
+
+        public float GetExtraDistance(float baseDistance)
+        {
+            var percent = 0f;
+            var flat = 0f;
+            foreach (var eff in GetAggregatedEffects())
+            {
+                if (eff.type == BuffEffectType.MaxDistancePercent)
+                    percent += eff.value;
+                else if (eff.type == BuffEffectType.MaxDistanceIncrease)
+                    flat += eff.value;
+            }
+            return baseDistance * percent / 100f + flat;
         }
 
         public List<string> GetDescriptionLines()
@@ -146,14 +201,21 @@ namespace TimelessEchoes.Buffs
                 lines.Add(string.Join(", ", effectStrings.GetRange(i, count)));
             }
 
+            if (durationType == BuffDurationType.ExtraDistancePercent)
+            {
+                var tracker = GameplayStatTracker.Instance ??
+                              UnityEngine.Object.FindFirstObjectByType<GameplayStatTracker>();
+                var baseDist = tracker != null ? tracker.MaxRunDistance : 0f;
+                var extra = Mathf.CeilToInt(GetExtraDistance(baseDist));
+                lines.Add($"Total Extra Distance: +{extra}");
+            }
+
             var echoCount = GetEchoCount();
             if (echoCount > 0)
                 lines.Add($"Echoes: {echoCount}");
             if (durationType == BuffDurationType.DistancePercent)
                 lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
-            else if (durationType == BuffDurationType.ExtraDistancePercent)
-                lines.Add($"Extra Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
-            else
+            else if (durationType != BuffDurationType.ExtraDistancePercent)
                 lines.Add($"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}");
             return lines;
         }
@@ -169,6 +231,7 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.TaskSpeedPercent => $"Task Speed +{eff.value}%",
                 BuffEffectType.LifestealPercent => $"Lifesteal {eff.value}%",
                 BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
+                BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
                 BuffEffectType.InstantTasks => "Tasks complete instantly",
                 _ => string.Empty
             };
