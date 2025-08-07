@@ -176,7 +176,8 @@ namespace TimelessEchoes.Buffs
                 }
                 else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
                 {
-                    var expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+                    var baseMax = tracker.MaxRunDistance;
+                    var expireDist = baseMax + recipe.GetExtraDistance(baseMax);
                     if (tracker.CurrentRunDistance >= expireDist)
                         return false;
                 }
@@ -202,7 +203,10 @@ namespace TimelessEchoes.Buffs
                 if (recipe.durationType == BuffDurationType.DistancePercent)
                     expireDist = tracker.LongestRun * recipe.GetDuration();
                 else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
-                    expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+                {
+                    var baseMax = tracker.MaxRunDistance;
+                    expireDist = baseMax + recipe.GetExtraDistance(baseMax);
+                }
             }
 
             var buff = new ActiveBuff
@@ -325,6 +329,19 @@ namespace TimelessEchoes.Buffs
                         if (eff.type == BuffEffectType.MaxDistancePercent)
                             percent += eff.value;
                 return 1f + percent / 100f;
+            }
+        }
+
+        public float MaxDistanceFlatBonus
+        {
+            get
+            {
+                var flat = 0f;
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.MaxDistanceIncrease)
+                            flat += eff.value;
+                return flat;
             }
         }
 

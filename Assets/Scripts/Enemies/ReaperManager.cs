@@ -118,7 +118,8 @@ namespace TimelessEchoes.Enemies
             if (heroCtrl != null && heroCtrl.ReaperSpawnedByDistance && tracker != null)
             {
                 var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-                var buffedMax = tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f);
+                var buffedMax = tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
+                                (buff != null ? buff.MaxDistanceFlatBonus : 0f);
                 var increase = buffedMax * 0.01f;
                 tracker.IncreaseMaxRunDistance(increase);
             }

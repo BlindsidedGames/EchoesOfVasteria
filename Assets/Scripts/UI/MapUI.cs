@@ -32,7 +32,8 @@ namespace TimelessEchoes.UI
                 var tracker = GameplayStatTracker.Instance;
                 var buff = BuffManager.Instance;
                 var max = tracker != null
-                    ? tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f)
+                    ? tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
+                      (buff != null ? buff.MaxDistanceFlatBonus : 0f)
                     : 1f;
                 distanceSlider.value = Mathf.Clamp01(distance / max);
             }
