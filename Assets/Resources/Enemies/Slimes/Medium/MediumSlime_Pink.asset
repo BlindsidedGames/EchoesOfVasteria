@@ -30,11 +30,13 @@ MonoBehaviour:
     dropChance: 1
     minX: 0
     maxX: Infinity
+    requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 1, y: 1}
     dropChance: 0.05
     minX: 0
     maxX: Infinity
+    requiredQuest: {fileID: 0}
   experience: 25
   moveSpeed: 5
   visionRange: 7
@@ -48,5 +50,5 @@ MonoBehaviour:
   healthPerLevel: 14
   damagePerLevel: 2.5
   defensePerLevel: 0.06
-  distancePerLevel: 1
+  distancePerLevel: 20
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}

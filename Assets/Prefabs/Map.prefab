@@ -874,9 +874,9 @@ MonoBehaviour:
     m_Bits: 64
   astarPath: {fileID: 3994575044794960044}
   hero: {fileID: 2410021182923110199}
-  maxBacktrackDistance: -15
+  maxBacktrackDistance: -7
   backtrackingAdditionalWeight: 2
-  taskRemovalDistance: -10
+  taskRemovalDistance: -8
   pruneInterval: 0.5
   mapCamera: {fileID: 2571608917486039915}
   currentTaskName: MiningTask
@@ -979,6 +979,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentSize: {x: 64, y: 18}
   segmentParent: {fileID: 508231011876975185}
+  decorParent: {fileID: 0}
   pathfinder: {fileID: 3994575044794960044}
 --- !u!1001 &1328887465208132358
 PrefabInstance:
