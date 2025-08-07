@@ -166,6 +166,12 @@ namespace TimelessEchoes.UI
             if (runStatUI.runIdText != null)
                 runStatUI.runIdText.text = $"Trek {record.RunNumber}";
 
+            if (runStatUI.mapTypeText != null)
+            {
+                var mapType = string.IsNullOrEmpty(record.MapType) ? "Unknown" : record.MapType;
+                runStatUI.mapTypeText.text = $"Map: {mapType}";
+            }
+
             if (runStatUI.distanceTasksResourcesText != null)
             {
                 var time = CalcUtils.FormatTime(record.Duration);

@@ -167,6 +167,7 @@ namespace Blindsided.SaveData
         public class RunRecord
         {
             public int RunNumber;
+            public string MapType;
             public float Duration;
             public float Distance;
             public int TasksCompleted;
