@@ -166,11 +166,20 @@ namespace TimelessEchoes.Buffs
 
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
-            if (recipe.durationType == BuffDurationType.DistancePercent && tracker != null)
+            if (tracker != null)
             {
-                var expireDist = tracker.LongestRun * recipe.GetDuration();
-                if (tracker.CurrentRunDistance >= expireDist)
-                    return false;
+                if (recipe.durationType == BuffDurationType.DistancePercent)
+                {
+                    var expireDist = tracker.LongestRun * recipe.GetDuration();
+                    if (tracker.CurrentRunDistance >= expireDist)
+                        return false;
+                }
+                else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
+                {
+                    var expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+                    if (tracker.CurrentRunDistance >= expireDist)
+                        return false;
+                }
             }
 
             return true;
@@ -188,14 +197,22 @@ namespace TimelessEchoes.Buffs
                 return false;
 
             var expireDist = float.PositiveInfinity;
-            if (recipe.durationType == BuffDurationType.DistancePercent && tracker != null)
-                expireDist = tracker.LongestRun * recipe.GetDuration();
+            if (tracker != null)
+            {
+                if (recipe.durationType == BuffDurationType.DistancePercent)
+                    expireDist = tracker.LongestRun * recipe.GetDuration();
+                else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
+                    expireDist = tracker.MaxRunDistance * (1f + recipe.GetDuration());
+            }
 
             var buff = new ActiveBuff
             {
                 recipe = recipe,
                 effects = recipe.GetAggregatedEffects(),
-                remaining = recipe.durationType == BuffDurationType.DistancePercent ? float.PositiveInfinity : recipe.GetDuration(),
+                remaining = (recipe.durationType == BuffDurationType.DistancePercent ||
+                             recipe.durationType == BuffDurationType.ExtraDistancePercent)
+                    ? float.PositiveInfinity
+                    : recipe.GetDuration(),
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
@@ -295,6 +312,19 @@ namespace TimelessEchoes.Buffs
                         if (eff.type == BuffEffectType.LifestealPercent)
                             percent += eff.value;
                 return percent;
+            }
+        }
+
+        public float MaxDistanceMultiplier
+        {
+            get
+            {
+                var percent = 0f;
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.MaxDistancePercent)
+                            percent += eff.value;
+                return 1f + percent / 100f;
             }
         }
 

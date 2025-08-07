@@ -1,3 +1,4 @@
+using TimelessEchoes.Buffs;
 using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
@@ -29,7 +30,10 @@ namespace TimelessEchoes.UI
             if (distanceSlider != null)
             {
                 var tracker = GameplayStatTracker.Instance;
-                var max = tracker != null ? tracker.MaxRunDistance : 1f;
+                var buff = BuffManager.Instance;
+                var max = tracker != null
+                    ? tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f)
+                    : 1f;
                 distanceSlider.value = Mathf.Clamp01(distance / max);
             }
         }

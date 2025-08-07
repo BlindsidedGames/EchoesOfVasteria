@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using MPUIKIT;
 
 namespace References.UI
 {
@@ -12,6 +13,7 @@ namespace References.UI
         public Image iconImage;
         public TMP_Text durationText;
         public Image autoCastImage;
+        public MPImageBasic radialFillImage;
 
         public event Action<BuffSlotUIReferences> PointerEnter;
         public event Action<BuffSlotUIReferences> PointerExit;

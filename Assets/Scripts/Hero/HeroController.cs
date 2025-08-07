@@ -268,7 +268,8 @@ namespace TimelessEchoes.Hero
 #if !DISABLESTEAMWORKS
                 RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #endif
-                if (!IsEcho && !ReaperSpawnedByDistance && transform.position.x >= tracker.MaxRunDistance)
+                if (!IsEcho && !ReaperSpawnedByDistance &&
+                    transform.position.x >= tracker.MaxRunDistance * (buffController != null ? buffController.MaxDistanceMultiplier : 1f))
                 {
                     var gm = GameManager.Instance;
                     var hp = health != null ? health : GetComponent<HeroHealth>();
