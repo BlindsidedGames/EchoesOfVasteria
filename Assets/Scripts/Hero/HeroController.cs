@@ -14,6 +14,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
 using TimelessEchoes.Upgrades;
+using Blindsided.Utilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
@@ -60,6 +61,8 @@ namespace TimelessEchoes.Hero
         [SerializeField] private GameObject fishingIndicator;
         [SerializeField] private GameObject farmingIndicator;
         [SerializeField] private GameObject lootingIndicator;
+        [SerializeField] private GameObject echoDurationBar;
+        [SerializeField] private SlicedFilledImage echoDurationFill;
 
         public GameObject CombatIndicator => combatIndicator;
         public GameObject MiningIndicator => miningIndicator;
@@ -67,6 +70,8 @@ namespace TimelessEchoes.Hero
         public GameObject FishingIndicator => fishingIndicator;
         public GameObject FarmingIndicator => farmingIndicator;
         public GameObject LootingIndicator => lootingIndicator;
+        public GameObject EchoDurationBar => echoDurationBar;
+        public SlicedFilledImage EchoDurationFill => echoDurationFill;
         private bool diceUnlocked;
         [SerializeField] private BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;

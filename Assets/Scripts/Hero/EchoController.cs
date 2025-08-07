@@ -3,6 +3,7 @@ using System.Linq;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TimelessEchoes.Hero
 {
@@ -27,6 +28,8 @@ namespace TimelessEchoes.Hero
         private TaskController taskController;
         private float remaining;
         private float defaultAggroRange;
+        private GameObject durationBarParent;
+        private Image durationFill;
 
         /// <summary>
         ///     Returns true once <see cref="Init" /> has completed.
@@ -65,6 +68,8 @@ namespace TimelessEchoes.Hero
         {
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
+            if (durationBarParent != null)
+                durationBarParent.SetActive(false);
             if (hero != null)
             {
                 hero.UnlimitedAggroRange = false;
@@ -93,6 +98,12 @@ namespace TimelessEchoes.Hero
                 hero.UnlimitedAggroRange = combatOnly;
                 if (combatOnly)
                     hero.CombatAggroRange = defaultAggroRange;
+                durationBarParent = hero.EchoDurationBar;
+                durationFill = hero.EchoDurationFill;
+                if (durationBarParent != null)
+                    durationBarParent.SetActive(true);
+                if (durationFill != null)
+                    durationFill.fillAmount = 1f;
             }
 
             Initialized = true;
@@ -114,6 +125,8 @@ namespace TimelessEchoes.Hero
                 Destroy(gameObject);
                 return;
             }
+            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null)
+                durationFill.fillAmount = remaining / lifetime;
 
             if (!disableSkills && taskController != null)
             {
@@ -150,6 +163,8 @@ namespace TimelessEchoes.Hero
         {
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
+            if (durationBarParent != null)
+                durationBarParent.SetActive(false);
             if (hero != null)
             {
                 hero.UnlimitedAggroRange = false;
