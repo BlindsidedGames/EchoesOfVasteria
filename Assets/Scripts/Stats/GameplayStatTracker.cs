@@ -441,6 +441,7 @@ namespace TimelessEchoes.Stats
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
+                MapType = currentMapKey,
                 Duration = duration,
                 Distance = CurrentRunDistance,
                 TasksCompleted = currentRunTasks,
@@ -475,6 +476,7 @@ namespace TimelessEchoes.Stats
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
+                MapType = currentMapKey,
                 Duration = duration,
                 Distance = CurrentRunDistance,
                 TasksCompleted = currentRunTasks,

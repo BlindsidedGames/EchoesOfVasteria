@@ -9,6 +9,7 @@ namespace TimelessEchoes.References.UI
     public class RunStatUIReferences : MonoBehaviour
     {
         public TMP_Text runIdText;
+        public TMP_Text mapTypeText;
         public TMP_Text distanceTasksResourcesText;
         public TMP_Text killsDamageDoneDamageTakenText;
         public TMP_Text statusText;
