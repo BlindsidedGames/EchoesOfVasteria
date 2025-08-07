@@ -3,6 +3,7 @@
 #endif
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
@@ -461,6 +462,10 @@ namespace TimelessEchoes.Quests
                 return;
             uiManager.Clear();
             foreach (var inst in active.Values)
+                UpdateProgress(inst);
+
+            var ordered = active.Values.OrderByDescending(q => q.ReadyForTurnIn);
+            foreach (var inst in ordered)
             {
                 inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst));
                 UpdateProgress(inst);
