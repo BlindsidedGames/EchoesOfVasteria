@@ -130,10 +130,18 @@ namespace TimelessEchoes.UI
 
             if (ui.entrySpawnDistanceText != null)
             {
-                var minStr = CalcUtils.FormatNumber(data.minX, true);
-                var maxStr = CalcUtils.FormatNumber(data.maxX, true);
-                ui.entrySpawnDistanceText.text =
-                    $"Minimum Spawn Distance: {minStr}\nMaximum Spawn Distance: {maxStr}";
+                if (completed > 0)
+                {
+                    var minStr = CalcUtils.FormatNumber(data.minX, true);
+                    var maxStr = CalcUtils.FormatNumber(data.maxX, true);
+                    ui.entrySpawnDistanceText.text =
+                        $"Minimum Spawn Distance: {minStr}\nMaximum Spawn Distance: {maxStr}";
+                }
+                else
+                {
+                    ui.entrySpawnDistanceText.text =
+                        "Minimum Spawn Distance: ???\nMaximum Spawn Distance: ???";
+                }
             }
         }
 
