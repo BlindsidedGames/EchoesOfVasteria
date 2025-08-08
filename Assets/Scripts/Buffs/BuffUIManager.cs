@@ -198,7 +198,7 @@ namespace TimelessEchoes.Buffs
                         else
                         {
                             ui.durationText.text = remain > 0f
-                                ? FormatTime(remain, shortForm: true)
+                                ? FormatTime(remain, showDecimal: remain < 10f, shortForm: true)
                                 : string.Empty;
                             if (ui.radialFillImage != null)
                                 ui.radialFillImage.fillAmount = remain > 0f && recipe != null
