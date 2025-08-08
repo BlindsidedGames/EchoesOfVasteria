@@ -162,12 +162,19 @@ namespace TimelessEchoes.Buffs
                                 var baseMax = tracker.MaxRunDistance;
                                 var totalExtra = expireDist - baseMax;
                                 var remainExtra = expireDist - tracker.CurrentRunDistance;
-                                if (remainExtra > 0f)
+                                var usedExtra = Mathf.Max(0f, tracker.CurrentRunDistance - baseMax);
+                                if (tracker.CurrentRunDistance < baseMax)
+                                {
+                                    ui.durationText.text = "Active";
+                                    if (ui.radialFillImage != null)
+                                        ui.radialFillImage.fillAmount = 0f;
+                                }
+                                else if (remainExtra > 0f)
                                 {
                                     ui.durationText.text = FormatNumber(remainExtra, true);
                                     if (ui.radialFillImage != null)
                                         ui.radialFillImage.fillAmount = totalExtra > 0f
-                                            ? Mathf.Clamp01(remainExtra / totalExtra)
+                                            ? Mathf.Clamp01(usedExtra / totalExtra)
                                             : 0f;
                                 }
                                 else
