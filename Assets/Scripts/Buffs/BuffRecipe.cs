@@ -45,9 +45,11 @@ namespace TimelessEchoes.Buffs
         public QuestData requiredQuest;
 
         [TitleGroup("Effects")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         public List<BuffEffect> baseEffects = new();
 
         [TitleGroup("Upgrades")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         public List<BuffUpgrade> upgrades = new();
 
         [TitleGroup("Extra Distance")]
@@ -68,7 +70,8 @@ namespace TimelessEchoes.Buffs
             var level = 0;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm == null) return 0;
-            foreach (var up in upgrades)
+            var upgradeList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceUpgrades : upgrades;
+            foreach (var up in upgradeList)
             {
                 if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                     level++;
@@ -79,27 +82,20 @@ namespace TimelessEchoes.Buffs
         public List<BuffEffect> GetAggregatedEffects()
         {
             var dict = new Dictionary<BuffEffectType, float>();
-            foreach (var eff in baseEffects)
+            var effList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceEffects : baseEffects;
+            foreach (var eff in effList)
             {
                 if (dict.ContainsKey(eff.type))
                     dict[eff.type] += eff.value;
                 else
                     dict[eff.type] = eff.value;
             }
-            if (durationType == BuffDurationType.ExtraDistancePercent)
-            {
-                foreach (var eff in extraDistanceEffects)
-                {
-                    if (dict.ContainsKey(eff.type))
-                        dict[eff.type] += eff.value;
-                    else
-                        dict[eff.type] = eff.value;
-                }
-            }
+
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
             {
-                foreach (var up in upgrades)
+                var upgradeList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceUpgrades : upgrades;
+                foreach (var up in upgradeList)
                 {
                     if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
                         continue;
@@ -109,21 +105,6 @@ namespace TimelessEchoes.Buffs
                             dict[eff.type] += eff.value;
                         else
                             dict[eff.type] = eff.value;
-                    }
-                }
-                if (durationType == BuffDurationType.ExtraDistancePercent)
-                {
-                    foreach (var up in extraDistanceUpgrades)
-                    {
-                        if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
-                            continue;
-                        foreach (var eff in up.additionalEffects)
-                        {
-                            if (dict.ContainsKey(eff.type))
-                                dict[eff.type] += eff.value;
-                            else
-                                dict[eff.type] = eff.value;
-                        }
                     }
                 }
             }
