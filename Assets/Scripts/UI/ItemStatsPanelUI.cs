@@ -3,6 +3,7 @@ using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Tasks;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
@@ -18,6 +19,7 @@ namespace TimelessEchoes.UI
         private float nextUpdateTime;
 
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
+        private readonly Dictionary<Resource, float> minDistanceLookup = new();
         private List<Resource> defaultOrder = new();
 
         public enum SortMode
@@ -37,6 +39,7 @@ namespace TimelessEchoes.UI
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);
+            BuildMinDistanceLookup();
             BuildEntries();
         }
 
@@ -90,6 +93,24 @@ namespace TimelessEchoes.UI
             SortEntries();
         }
 
+        private void BuildMinDistanceLookup()
+        {
+            minDistanceLookup.Clear();
+            var allTasks = Resources.LoadAll<TaskData>("Tasks");
+            foreach (var task in allTasks)
+            {
+                if (task == null) continue;
+                foreach (var drop in task.resourceDrops)
+                {
+                    if (drop.resource == null) continue;
+                    if (minDistanceLookup.TryGetValue(drop.resource, out var existing))
+                        minDistanceLookup[drop.resource] = Mathf.Min(existing, drop.minX);
+                    else
+                        minDistanceLookup[drop.resource] = drop.minX;
+                }
+            }
+        }
+
         private void UpdateEntries()
         {
             foreach (var pair in entries)
@@ -133,7 +154,9 @@ namespace TimelessEchoes.UI
                     oracle.saveData.Resources != null &&
                     oracle.saveData.Resources.TryGetValue(res.name, out var record))
                     best = record.BestPerMinute;
-                ui.bestPerMinuteText.text = $"AE Power: {CalcUtils.FormatNumber(best)}";
+                var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
+                ui.bestPerMinuteText.text =
+                    $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {CalcUtils.FormatNumber(best)}";
             }
         }
 
