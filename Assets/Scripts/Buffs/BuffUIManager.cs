@@ -270,6 +270,19 @@ namespace TimelessEchoes.Buffs
 
             RefreshSlots();
 
+            if (!Application.isMobilePlatform && buffManager != null)
+            {
+                for (var i = 0; i < 5; i++)
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                    {
+                        var recipe = buffManager.GetAssigned(i);
+                        if (recipe != null && buffManager.CanActivate(recipe))
+                            buffManager.ActivateSlot(i);
+                    }
+                }
+            }
+
             foreach (var pair in recipeEntries)
             {
                 var panel = pair.Value;
