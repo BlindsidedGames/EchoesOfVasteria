@@ -127,6 +127,14 @@ namespace TimelessEchoes.UI
                 ui.entryCompletionsTimeOnTaskExperienceText.text =
                     $"Completions: {comp}\nTime on Task: {timeStr}\nXP Gained: {xpStr}";
             }
+
+            if (ui.entrySpawnDistanceText != null)
+            {
+                var minStr = CalcUtils.FormatNumber(data.minX, true);
+                var maxStr = CalcUtils.FormatNumber(data.maxX, true);
+                ui.entrySpawnDistanceText.text =
+                    $"Minimum Spawn Distance: {minStr}\nMaximum Spawn Distance: {maxStr}";
+            }
         }
 
         private void SortEntries()
