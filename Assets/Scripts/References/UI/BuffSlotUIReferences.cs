@@ -15,6 +15,12 @@ namespace References.UI
         public Image autoCastImage;
         public MPImageBasic radialFillImage;
 
+        private void Awake()
+        {
+            if (radialFillImage != null)
+                radialFillImage.StrokeWidth = 1f;
+        }
+
         public event Action<BuffSlotUIReferences> PointerEnter;
         public event Action<BuffSlotUIReferences> PointerExit;
 
