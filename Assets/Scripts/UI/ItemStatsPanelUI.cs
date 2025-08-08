@@ -4,6 +4,7 @@ using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Enemies;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
@@ -96,6 +97,7 @@ namespace TimelessEchoes.UI
         private void BuildMinDistanceLookup()
         {
             minDistanceLookup.Clear();
+
             var allTasks = Resources.LoadAll<TaskData>("Tasks");
             foreach (var task in allTasks)
             {
@@ -103,10 +105,31 @@ namespace TimelessEchoes.UI
                 foreach (var drop in task.resourceDrops)
                 {
                     if (drop.resource == null) continue;
+                    var minDist = Mathf.Max(task.minX, drop.minX);
                     if (minDistanceLookup.TryGetValue(drop.resource, out var existing))
-                        minDistanceLookup[drop.resource] = Mathf.Min(existing, drop.minX);
+                        minDistanceLookup[drop.resource] = Mathf.Min(existing, minDist);
                     else
-                        minDistanceLookup[drop.resource] = drop.minX;
+                        minDistanceLookup[drop.resource] = minDist;
+                }
+            }
+
+            var allEnemies = Resources.LoadAll<EnemyData>("");
+            foreach (var enemy in allEnemies)
+            {
+                if (enemy == null) continue;
+                foreach (var drop in enemy.resourceDrops)
+                {
+                    if (drop.resource == null) continue;
+
+                    // Enemy drops cannot occur before the enemy itself can spawn.
+                    var spawnMin = enemy.minX;
+                    var dropMin = drop.minX;
+                    var minDist = Mathf.Max(spawnMin, dropMin);
+
+                    if (minDistanceLookup.TryGetValue(drop.resource, out var existing))
+                        minDistanceLookup[drop.resource] = Mathf.Min(existing, minDist);
+                    else
+                        minDistanceLookup[drop.resource] = minDist;
                 }
             }
         }
