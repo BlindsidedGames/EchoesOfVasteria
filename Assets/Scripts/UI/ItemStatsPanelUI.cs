@@ -177,9 +177,18 @@ namespace TimelessEchoes.UI
                     oracle.saveData.Resources != null &&
                     oracle.saveData.Resources.TryGetValue(res.name, out var record))
                     best = record.BestPerMinute;
-                var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
-                ui.bestPerMinuteText.text =
-                    $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {CalcUtils.FormatNumber(best)}";
+
+                if (earned)
+                {
+                    var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
+                    ui.bestPerMinuteText.text =
+                        $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {CalcUtils.FormatNumber(best)}";
+                }
+                else
+                {
+                    ui.bestPerMinuteText.text =
+                        $"Min Distance: ???\nAE Power: {CalcUtils.FormatNumber(best)}";
+                }
             }
         }
 
