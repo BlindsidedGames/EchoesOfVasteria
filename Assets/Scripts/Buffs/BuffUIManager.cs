@@ -162,7 +162,6 @@ namespace TimelessEchoes.Buffs
                                 var baseMax = tracker.MaxRunDistance;
                                 var totalExtra = expireDist - baseMax;
                                 var remainExtra = expireDist - tracker.CurrentRunDistance;
-                                var usedExtra = Mathf.Max(0f, tracker.CurrentRunDistance - baseMax);
                                 if (tracker.CurrentRunDistance < baseMax)
                                 {
                                     ui.durationText.text = "Active";
@@ -173,8 +172,9 @@ namespace TimelessEchoes.Buffs
                                 {
                                     ui.durationText.text = FormatNumber(remainExtra, true);
                                     if (ui.radialFillImage != null)
+                                        // Use remaining distance so the radial fill drains instead of grows.
                                         ui.radialFillImage.fillAmount = totalExtra > 0f
-                                            ? Mathf.Clamp01(usedExtra / totalExtra)
+                                            ? Mathf.Clamp01(remainExtra / totalExtra)
                                             : 0f;
                                 }
                                 else
