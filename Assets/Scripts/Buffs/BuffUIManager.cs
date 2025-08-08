@@ -138,23 +138,35 @@ namespace TimelessEchoes.Buffs
                             else
                                 ui.durationText.text = string.Empty;
                         }
-                        else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.ExtraDistancePercent &&
-                                 recipe.GetAggregatedEffects().Exists(e => e.type == BuffEffectType.MaxDistancePercent ||
-                                                                            e.type == BuffEffectType.MaxDistanceIncrease))
+                        else if (recipe != null && tracker != null &&
+                                 recipe.durationType == BuffDurationType.ExtraDistancePercent &&
+                                 recipe.GetAggregatedEffects().Exists(e =>
+                                     e.type == BuffEffectType.MaxDistancePercent ||
+                                     e.type == BuffEffectType.MaxDistanceIncrease))
                         {
-                            var baseMax = tracker.MaxRunDistance;
-                            var buffedMax = baseMax * (buffManager != null ? buffManager.MaxDistanceMultiplier : 1f) +
-                                            (buffManager != null ? buffManager.MaxDistanceFlatBonus : 0f);
-                            var totalPercent = baseMax > 0f ? tracker.CurrentRunDistance / baseMax : 0f;
-                            var bonusPercent = buffedMax > baseMax
-                                ? (tracker.CurrentRunDistance - baseMax) / (buffedMax - baseMax)
-                                : 0f;
-                            if (tracker.CurrentRunDistance > baseMax)
-                                ui.durationText.text = $"{Mathf.FloorToInt(totalPercent * 100f)}%";
+                            if (remain > 0f)
+                            {
+                                var baseMax = tracker.MaxRunDistance;
+                                var buffedMax =
+                                    baseMax * (buffManager != null ? buffManager.MaxDistanceMultiplier : 1f) +
+                                    (buffManager != null ? buffManager.MaxDistanceFlatBonus : 0f);
+                                var totalPercent =
+                                    baseMax > 0f ? tracker.CurrentRunDistance / baseMax : 0f;
+                                var bonusPercent = buffedMax > baseMax
+                                    ? (tracker.CurrentRunDistance - baseMax) / (buffedMax - baseMax)
+                                    : 0f;
+                                if (tracker.CurrentRunDistance > baseMax)
+                                    ui.durationText.text =
+                                        $"{Mathf.FloorToInt(totalPercent * 100f)}%";
+                                else
+                                    ui.durationText.text = "Active";
+                                if (ui.radialFillImage != null)
+                                    ui.radialFillImage.fillAmount = Mathf.Clamp01(bonusPercent);
+                            }
                             else
-                                ui.durationText.text = "Active";
-                            if (ui.radialFillImage != null)
-                                ui.radialFillImage.fillAmount = Mathf.Clamp01(bonusPercent);
+                            {
+                                ui.durationText.text = string.Empty;
+                            }
                         }
                         else if (!distanceOk)
                             ui.durationText.text = "Too Far";
