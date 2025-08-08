@@ -37,13 +37,13 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}
     dropRange: {x: 2, y: 5}
     dropChance: 0.7
-    minX: 0
+    minX: 500
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
     dropRange: {x: 1, y: 4}
     dropChance: 0.4
-    minX: 0
+    minX: 500
     maxX: Infinity
     requiredQuest: {fileID: 0}
   resetProgressOnInterrupt: 0
