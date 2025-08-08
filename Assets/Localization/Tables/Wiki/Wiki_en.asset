@@ -78,7 +78,14 @@ MonoBehaviour:
 
 
       These are completed automatically,
-      and you will complete them faster as your skills level.'
+      and you will complete them faster as your skills level.
+
+
+      Task spawns
+      have a range from minimum to maximum distance, however after reaching maximum
+      distance their chance to spawn goes down by 90% With this considered once all
+      tasks are at their maximum the weight system will average out and all tasks
+      will be equally available based on their weights.'
     m_Metadata:
       m_Items: []
   - m_Id: 505754247643136
