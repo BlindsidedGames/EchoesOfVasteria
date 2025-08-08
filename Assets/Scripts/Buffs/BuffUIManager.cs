@@ -6,6 +6,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
@@ -270,11 +271,12 @@ namespace TimelessEchoes.Buffs
 
             RefreshSlots();
 
-            if (!Application.isMobilePlatform && buffManager != null)
+            if (!Application.isMobilePlatform && buffManager != null && Keyboard.current != null)
             {
                 for (var i = 0; i < 5; i++)
                 {
-                    if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                    var key = Keyboard.current[(Key)((int)Key.Digit1 + i)];
+                    if (key != null && key.wasPressedThisFrame)
                     {
                         var recipe = buffManager.GetAssigned(i);
                         if (recipe != null && buffManager.CanActivate(recipe))
