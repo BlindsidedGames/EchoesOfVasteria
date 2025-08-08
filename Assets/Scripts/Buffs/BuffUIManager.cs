@@ -152,7 +152,7 @@ namespace TimelessEchoes.Buffs
                             if (tracker.CurrentRunDistance > baseMax)
                                 ui.durationText.text = $"{Mathf.FloorToInt(totalPercent * 100f)}%";
                             else
-                                ui.durationText.text = string.Empty;
+                                ui.durationText.text = "Active";
                             if (ui.radialFillImage != null)
                                 ui.radialFillImage.fillAmount = Mathf.Clamp01(bonusPercent);
                         }
