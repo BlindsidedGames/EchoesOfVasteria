@@ -145,6 +145,11 @@ namespace TimelessEchoes.Hero
         private float moveSpeedBonus;
         private AIDestinationSetter setter;
         private MapUI mapUI;
+        
+#if !DISABLESTEAMWORKS
+        [SerializeField] private float richPresenceUpdateInterval = 2f;
+        private float nextRichPresenceUpdate;
+#endif
 
         private State state;
 

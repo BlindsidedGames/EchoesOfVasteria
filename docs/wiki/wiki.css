@@ -2,103 +2,372 @@
 /* WIKI-SPECIFIC STYLES                                      */
 /* ---------------------------------------------------------- */
 
-.pixel-art{
-    image-rendering:pixelated;
-    image-rendering:crisp-edges;
-    max-width:100%;
+.pixel-art {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+    border-radius: var(--radius-md);
 }
 
-.infobox{
-    float:right;
-    width:240px;
-    margin:0 1rem 1rem 2rem;
+.infobox {
+    float: right;
+    width: 280px;
+    margin: 0 0 var(--spacing-lg) var(--spacing-lg);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
 }
 
-h2{
-    clear:right;
+h2 {
+    clear: right;
 }
 
-.stats{
-    width:100%;
-    border-collapse:collapse;
+.stats {
+    width: 100%;
+    border-collapse: collapse;
 }
-
-/* --- Start of Fix --- */
 
 /* Base styles for both cell types */
 .stats th, .stats td {
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding: var(--spacing-sm) var(--spacing-md);
     white-space: nowrap;
-    font-weight: 400;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Styles for the label cell (th) */
 .stats th {
     text-align: right;
-    padding-left: 8px;
-    padding-right: 0; /* Remove cell's right padding */
+    padding-left: var(--spacing-md);
+    padding-right: 0;
+    color: var(--text-color);
+    font-weight: 600;
+    background-color: var(--bg-secondary);
 }
 
 /* Styles for the separator after the label */
 .stats th::after {
     content: "|";
-    color: #c0d1c0;
-    padding: 0 8px; /* Apply 8px of equal space on both sides of the pipe */
+    color: var(--text-muted);
+    padding: 0 var(--spacing-sm);
 }
 
 /* Styles for the value cell (td) */
 .stats td {
     text-align: left;
-    padding-left: 0; /* Remove cell's left padding to prevent double spacing */
-    padding-right: 8px;
+    padding-left: 0;
+    padding-right: var(--spacing-md);
+    color: var(--text-muted);
 }
 
-/* --- End of Fix --- */
+.stats tr:last-child th,
+.stats tr:last-child td {
+    border-bottom: none;
+}
+
 /* Styles for slime variant navigation */
 .variant-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 15px 0;
+    padding: var(--spacing-md) var(--spacing-lg) 0;
+    margin-bottom: var(--spacing-lg);
 }
 
 .variant-nav h3 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: var(--font-size-lg);
+    color: var(--text-color);
+    font-weight: 600;
 }
 
 .variant-nav button {
-    background: none;
-    border: 1px solid var(--accent-color);
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
     color: var(--text-color);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 16px;
-    padding: 0 8px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    transition: all var(--transition-fast);
+    font-weight: 500;
 }
 
 .variant-nav button:hover {
-    background-color: var(--nav-bg);
+    background-color: var(--bg-secondary);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 #slime-dots-container {
     text-align: center;
-    padding: 8px 0;
+    padding: var(--spacing-md) 0;
 }
 
 .dot {
     cursor: pointer;
-    height: 10px;
-    width: 10px;
-    margin: 0 3px;
-    background-color: var(--nav-bg);
+    height: 12px;
+    width: 12px;
+    margin: 0 var(--spacing-xs);
+    background-color: var(--border-color);
     border-radius: 50%;
     display: inline-block;
-    transition: background-color 0.6s ease;
+    transition: all var(--transition-fast);
+}
+
+.dot:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.1);
 }
 
 .dot.active {
-    background-color: var(--accent-color);
+    background-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* Task types and enemy categories styling */
+.task-types,
+.enemy-categories,
+.upcoming-content,
+.quest-types,
+.enemy-details,
+.slime-variants,
+.skeleton-variants,
+.buff-categories,
+.buff-list,
+.buff-item {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+}
+
+.task-types h3,
+.enemy-categories h3,
+.upcoming-content h3,
+.quest-types h3,
+.enemy-details h3,
+.slime-variants h4,
+.skeleton-variants h4,
+.buff-categories h3,
+.buff-item h4 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.enemy-details h3 {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.enemy-details h3:first-child {
+    margin-top: 0;
+}
+
+.slime-variants h4,
+.skeleton-variants h4,
+.buff-item h4 {
+    font-size: var(--font-size-base);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+}
+
+.task-types ul,
+.enemy-categories ul,
+.upcoming-content ul,
+.quest-types ul,
+.enemy-details ul,
+.slime-variants ul,
+.skeleton-variants ul,
+.buff-categories ul,
+.buff-item ul {
+    margin: 0;
+    padding-left: var(--spacing-lg);
+}
+
+.task-types li,
+.enemy-categories li,
+.upcoming-content li,
+.quest-types li,
+.enemy-details li,
+.slime-variants li,
+.skeleton-variants li,
+.buff-categories li,
+.buff-item li {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.task-types strong,
+.enemy-categories strong,
+.upcoming-content strong,
+.quest-types strong,
+.enemy-details strong,
+.slime-variants strong,
+.skeleton-variants strong,
+.buff-categories strong,
+.buff-item strong {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.enemy-details p,
+.buff-item p {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.slime-variants p,
+.skeleton-variants p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.buff-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.buff-list h3 {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-color);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.buff-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+}
+
+.buff-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.buff-item h4 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.buff-item p {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.buff-item ul {
+    margin: 0;
+    padding-left: var(--spacing-md);
+}
+
+.buff-item li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.enemy-showcase {
+    margin-top: var(--spacing-xl);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+}
+.enemy-showcase h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+}
+.enemy-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+.enemy-card {
+    background: linear-gradient(180deg, var(--card-bg), rgba(0,0,0,0));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.enemy-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.enemy-card .sprite {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+}
+/* Real images scale up crisply */
+.slime-img { width: 240px; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+/* Color swatches for non-image placeholders */
+.slime-swatch[data-color="green"],
+.slime-swatch[data-color="yellow"],
+.slime-swatch[data-color="blue"],
+.slime-swatch[data-color="red"],
+.slime-swatch[data-color="pink"] { width: 144px; height: 144px; border-radius: 12px; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.05); }
+.skeleton-swatch { background: linear-gradient(135deg, #94a3b8, #475569); width: 144px; height: 144px; border-radius: 12px; }
+
+.variant-nav { display: flex; align-items: center; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm); }
+.variant-nav .prev,
+.variant-nav .next { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--header-bg); border: 1px solid var(--border-color); color: var(--text-color); cursor: pointer; font-weight: 700; }
+.variant-nav .prev:hover,
+.variant-nav .next:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.variant-nav .variant-name { margin: 0; font-weight: 600; min-width: 10ch; text-align: center; }
+
+.enemy-card .dots { display: flex; justify-content: center; gap: 10px; margin-bottom: var(--spacing-md); }
+.enemy-card .dots .dot { width: 14px; height: 14px; border-radius: 6px; background: var(--bg-secondary); opacity: 0.95; border: 1px solid var(--border-color); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+/* Thumbnails shown on non-active dots */
+.enemy-card .dots .dot.has-thumb { background-size: cover; background-position: center; }
+.enemy-card .dots .dot.active { background-color: var(--primary-color); background-image: none; border-color: transparent; box-shadow: 0 0 0 2px rgba(59,130,246,0.35); }
+
+.enemy-card table.stats { width: 100%; border-collapse: collapse; }
+.enemy-card table.stats th, .enemy-card table.stats td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+.enemy-card table.stats th { text-align: left; width: 60%; color: var(--text-color); background: transparent; font-weight: 600; }
+.enemy-card table.stats th::after { content: none; }
+.enemy-card table.stats td { text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* Responsive adjustments for wiki */
+@media (max-width: 768px) {
+    .infobox {
+        float: none;
+        width: 100%;
+        margin: var(--spacing-lg) 0;
+    }
+    
+    .variant-nav {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+    }
+    
+    .variant-nav button {
+        width: 100%;
+    }
 }
 

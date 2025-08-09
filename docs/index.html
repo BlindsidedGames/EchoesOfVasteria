@@ -3,30 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echoes of Vasteria</title>
+    <meta name="description" content="Echoes of Vasteria - An incremental hero management game where your hero automatically ventures through procedurally generated maps. Collect gear, complete tasks and battle enemies as you progress.">
+    <meta name="keywords" content="Echoes of Vasteria, incremental game, hero management, procedurally generated, Steam game">
+    <title>Echoes of Vasteria - Incremental Hero Management Game</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="images/Icon2.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="homepage">
     <header>
-        <h1>Echoes of Vasteria</h1>
+        <div class="container">
+            <h1>Echoes of Vasteria</h1>
+            <p class="tagline">Incremental Hero Management Adventure</p>
+        </div>
     </header>
+    
     <nav class="center-nav">
-        <a href="index.html">Home</a>
-        <a href="wiki/index.html">Wiki</a>
-        <a href="privacy.html">Privacy Policy</a>
+        <div class="container">
+            <a href="index.html" aria-current="page">Home</a>
+            <a href="wiki/index.html">Wiki</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
     </nav>
+    
     <main>
-        <h2>Welcome to Echoes of Vasteria</h2>
-        <p>Echoes of Vasteria is an incremental hero management game where your hero automatically ventures through procedurally generated maps. Collect gear, complete tasks and battle enemies as you progress.</p>
-        <p>Play the game on Steam: <a href="https://store.steampowered.com/app/2940000" target="_blank" rel="noopener">Echoes of Vasteria on Steam</a></p>
-        <section id="changes">
-            <h2>Changes</h2>
-            <p>No recorded changes.</p>
-        </section>
+        <div class="container">
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Welcome to Echoes of Vasteria</h2>
+                    <p class="hero-description">
+                        Embark on an epic journey in Echoes of Vasteria, an incremental hero management game where your hero automatically ventures through procedurally generated maps. Complete tasks, take on quests, and battle formidable enemies as you progress through this captivating adventure.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="https://store.steampowered.com/app/2940000" target="_blank" rel="noopener" class="btn btn-primary">
+                            <span>Play on Steam</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15,3 21,3 21,9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                        <a href="wiki/index.html" class="btn btn-secondary">Explore Wiki</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features">
+                <h2>Game Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚔️</div>
+                        <h3>Automatic Combat</h3>
+                        <p>Your hero automatically battles enemies while you manage strategy and progression.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <h3>Procedural Maps</h3>
+                        <p>Explore endlessly generated maps with unique challenges and opportunities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌳</div>
+                        <h3>Task System</h3>
+                        <p>Complete various tasks like cutting down trees, growing crops, and other world activities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Quest System</h3>
+                        <p>Take on dedicated quests and objectives to progress through the game world.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about">
+                <h2>About the Game</h2>
+                <p>
+                    Echoes of Vasteria combines the addictive nature of incremental games with the strategic depth of hero management. 
+                    Watch as your hero grows stronger with each adventure, facing increasingly challenging foes and completing various tasks in the world.
+                </p>
+                <p>
+                    The game features a unique blend of automatic progression and strategic decision-making, allowing you to focus on 
+                    optimizing your hero's build and managing resources while the adventure unfolds automatically. Complete tasks like 
+                    harvesting resources, growing crops, and taking on quests as you explore the procedurally generated world.
+                </p>
+            </section>
+
+            <section class="changes">
+                <h2>Latest Changes</h2>
+                <div class="changes-content">
+                    <p class="no-changes">No recorded changes at this time.</p>
+                </div>
+            </section>
+        </div>
     </main>
+    
     <footer>
-        &copy; 2025 Echoes of Vasteria | <a href="privacy.html">Privacy Policy</a>
+        <div class="container">
+            <p>&copy; 2025 Echoes of Vasteria. All rights reserved.</p>
+            <p><a href="privacy.html">Privacy Policy</a></p>
+        </div>
     </footer>
+    
+    <script src="script.js"></script>
 </body>
 </html>

@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Echoes of Vasteria Wiki - Comprehensive guide to tasks, enemies, and game mechanics.">
     <title>Echoes of Vasteria Wiki</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="wiki.css">
     <link rel="icon" href="../images/Icon2.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="wiki-page">
 <header>
+        <div class="container">
     <h1>Echoes of Vasteria Wiki</h1>
+        </div>
 </header>
+    
 <div class="top-nav">
+        <div class="container">
     <div class="nav-left">
         <a href="../index.html">Home</a>
-        <a href="index.html">Wiki Home</a>
+                <a href="index.html" aria-current="page">Wiki Home</a>
         <a href="../privacy.html">Privacy Policy</a>
     </div>
     <div class="nav-right">
@@ -24,45 +32,402 @@
         <button id="dark-btn">Dark</button>
     </div>
 </div>
+    </div>
+    
 <div class="wiki-body-container">
     <nav class="sidebar">
         <h2>Navigation</h2>
         <ul>
-            <li><a href="index.html">Wiki Home</a></li>
+                <li><a href="index.html" aria-current="page">Wiki Home</a></li>
+                <li><a href="index.html#tasks">Tasks</a></li>
             <li><a href="index.html#quests">Quests</a></li>
+                <li><a href="index.html#buffs">Buffs</a></li>
             <li><a href="index.html#enemies">Enemies</a></li>
         </ul>
-        <h3>Slimes</h3>
-        <ul>
-            <li><a href="green.html">Green Slime</a></li>
-        </ul>
     </nav>
+        
     <main class="main-content">
         <section id="tasks">
             <h2>Tasks</h2>
-            <p>Tasks are objectives your hero must complete during each run. They range from gathering resources to defeating specific enemies.</p>
+                <p>
+                    Tasks are activities your hero performs while out in the world. These are gathering activities that can be completed 
+                    to earn experience, resources, and progression opportunities. Combat occurs automatically when enemies are encountered.
+                </p>
+                <div class="task-types">
+                    <h3>Task Types</h3>
+                    <ul>
+                        <li><strong>Farming:</strong> Growing crops and tending to plants</li>
+                        <li><strong>Fishing:</strong> Catching fish from water sources</li>
+                        <li><strong>Mining:</strong> Extracting ores and minerals from rocks</li>
+                        <li><strong>Looting:</strong> Searching for items and treasures</li>
+                        <li><strong>Woodcutting:</strong> Cutting down trees and harvesting wood</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="quests">
+                <h2>Quests</h2>
+                <p>
+                    Quests are dedicated objectives that provide structured goals and rewards. The quest system offers various challenges 
+                    and storylines to follow as you progress through the game world.
+                </p>
+                <div class="quest-types">
+                    <h3>Quest Categories</h3>
+                    <ul>
+                        <li><strong>Story Quests:</strong> Main storyline and narrative-driven objectives</li>
+                        <li><strong>Side Quests:</strong> Optional objectives that provide additional rewards</li>
+                        <li><strong>Daily Quests:</strong> Recurring objectives that reset daily</li>
+                        <li><strong>Achievement Quests:</strong> Long-term goals and milestones</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="buffs">
+                <h2>Buffs</h2>
+                <p>
+                    Buffs are temporary enhancements that can be activated to improve your hero's performance. They provide various 
+                    bonuses to combat, movement, task completion, and other abilities.
+                </p>
+                <div class="buff-categories">
+                    <h3>Buff Categories</h3>
+                    <ul>
+                        <li><strong>Combat Buffs:</strong> Enhance damage, defense, and attack speed</li>
+                        <li><strong>Movement Buffs:</strong> Increase movement speed and distance</li>
+                        <li><strong>Task Buffs:</strong> Improve task completion speed and efficiency</li>
+                        <li><strong>Utility Buffs:</strong> Provide special abilities like lifesteal and instant tasks</li>
+                    </ul>
+                </div>
+                
+                <div class="buff-list">
+                    <h3>Available Buffs</h3>
+                    <div class="buff-item">
+                        <h4>Carl's Blessing (Reaping Distance)</h4>
+                        <p>Increases the maximum reaping distance by 30 units.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Utility</li>
+                            <li><strong>Effect:</strong> Max Reap Distance +30</li>
+                            <li><strong>Duration:</strong> 0.5 seconds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Task Speed</h4>
+                        <p>Increases task completion speed by 30%.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Task</li>
+                            <li><strong>Effect:</strong> Task Speed +30%</li>
+                            <li><strong>Duration:</strong> 2 minutes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Combat Enhancer</h4>
+                        <p>Increases both damage and defense by 50%.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Combat</li>
+                            <li><strong>Effects:</strong> Damage +50%, Defense +50%</li>
+                            <li><strong>Duration:</strong> 1 minute</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Vampiric</h4>
+                        <p>Provides 15% lifesteal during combat.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Combat</li>
+                            <li><strong>Effect:</strong> Lifesteal 15%</li>
+                            <li><strong>Duration:</strong> 30 seconds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Move Speed</h4>
+                        <p>Increases movement speed by 40%.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Movement</li>
+                            <li><strong>Effect:</strong> Move Speed +40%</li>
+                            <li><strong>Duration:</strong> 2 minutes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Slipstream</h4>
+                        <p>Provides instant task completion.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Utility</li>
+                            <li><strong>Effect:</strong> Tasks complete instantly</li>
+                            <li><strong>Duration:</strong> 0.5 seconds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Echo | Tasks</h4>
+                        <p>Spawns an echo that can perform tasks.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Utility</li>
+                            <li><strong>Effect:</strong> Spawns 1 task echo</li>
+                            <li><strong>Duration:</strong> 30 seconds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-item">
+                        <h4>Echo | Combat</h4>
+                        <p>Spawns an echo that can engage in combat.</p>
+                        <ul>
+                            <li><strong>Type:</strong> Combat</li>
+                            <li><strong>Effect:</strong> Spawns 1 combat echo</li>
+                            <li><strong>Duration:</strong> 30 seconds</li>
+                        </ul>
+                    </div>
+                </div>
         </section>
+            
         <section id="enemies">
             <h2>Enemies</h2>
-            <p>The world of Vasteria is filled with a variety of foes. Each enemy has unique behaviors and drops gear that can aid in your progression.</p>
+                <p>
+                    The world of Vasteria is filled with various foes. Each enemy has unique behaviors, strengths, and weaknesses. 
+                    Defeating enemies rewards you with experience and sometimes special items that can aid in your progression.
+                </p>
+                <div class="enemy-categories">
+                    <h3>Enemy Categories</h3>
+                    <ul>
+                        <li><strong>Slimes:</strong> Gelatinous creatures that come in different sizes and colors</li>
+                        <li><strong>Skeletons:</strong> Undead warriors with different combat specialties</li>
+                    </ul>
+                </div>
+                
+                <div class="enemy-showcase">
+                    <h3>Enemy Showcase</h3>
+                    <div class="enemy-card-grid">
+                        <div class="enemy-card slime-card" data-type="slime" data-color="green">
+                            <div class="card-header"><h4>Green Slime</h4></div>
+                            <div class="sprite">
+                                <img class="slime-img" src="../images/Slime_Small_Green.png" alt="Small Green Slime" />
+                            </div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous size">&lt;</button>
+                                <h5 class="variant-name">Small</h5>
+                                <button class="next" aria-label="Next size">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats">
+                                <tbody>
+                                    <tr><th>Experience</th><td class="exp"></td></tr>
+                                    <tr><th>Max Health</th><td class="hp"></td></tr>
+                                    <tr><th>Damage</th><td class="dmg"></td></tr>
+                                    <tr><th>Defense</th><td class="def"></td></tr>
+                                    <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                    <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                    <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                    <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                    <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                    <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                    <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="enemy-card slime-card" data-type="slime" data-color="yellow">
+                            <div class="card-header"><h4>Yellow Slime</h4></div>
+                            <div class="sprite"><div class="slime-swatch" data-color="yellow"></div></div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous size">&lt;</button>
+                                <h5 class="variant-name">Small</h5>
+                                <button class="next" aria-label="Next size">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats"><tbody>
+                                <tr><th>Experience</th><td class="exp"></td></tr>
+                                <tr><th>Max Health</th><td class="hp"></td></tr>
+                                <tr><th>Damage</th><td class="dmg"></td></tr>
+                                <tr><th>Defense</th><td class="def"></td></tr>
+                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                            </tbody></table>
+                        </div>
+                        
+                        <div class="enemy-card slime-card" data-type="slime" data-color="blue">
+                            <div class="card-header"><h4>Blue Slime</h4></div>
+                            <div class="sprite"><div class="slime-swatch" data-color="blue"></div></div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous size">&lt;</button>
+                                <h5 class="variant-name">Small</h5>
+                                <button class="next" aria-label="Next size">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats"><tbody>
+                                <tr><th>Experience</th><td class="exp"></td></tr>
+                                <tr><th>Max Health</th><td class="hp"></td></tr>
+                                <tr><th>Damage</th><td class="dmg"></td></tr>
+                                <tr><th>Defense</th><td class="def"></td></tr>
+                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                            </tbody></table>
+                        </div>
+                        
+                        <div class="enemy-card slime-card" data-type="slime" data-color="red">
+                            <div class="card-header"><h4>Red Slime</h4></div>
+                            <div class="sprite"><div class="slime-swatch" data-color="red"></div></div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous size">&lt;</button>
+                                <h5 class="variant-name">Small</h5>
+                                <button class="next" aria-label="Next size">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats"><tbody>
+                                <tr><th>Experience</th><td class="exp"></td></tr>
+                                <tr><th>Max Health</th><td class="hp"></td></tr>
+                                <tr><th>Damage</th><td class="dmg"></td></tr>
+                                <tr><th>Defense</th><td class="def"></td></tr>
+                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                            </tbody></table>
+                        </div>
+                        
+                        <div class="enemy-card slime-card" data-type="slime" data-color="pink">
+                            <div class="card-header"><h4>Pink Slime</h4></div>
+                            <div class="sprite"><div class="slime-swatch" data-color="pink"></div></div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous size">&lt;</button>
+                                <h5 class="variant-name">Small</h5>
+                                <button class="next" aria-label="Next size">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats"><tbody>
+                                <tr><th>Experience</th><td class="exp"></td></tr>
+                                <tr><th>Max Health</th><td class="hp"></td></tr>
+                                <tr><th>Damage</th><td class="dmg"></td></tr>
+                                <tr><th>Defense</th><td class="def"></td></tr>
+                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                            </tbody></table>
+                        </div>
+                        
+                        <div class="enemy-card skeleton-card" data-type="skeletons">
+                            <div class="card-header"><h4>Skeletons</h4></div>
+                            <div class="sprite"><div class="skeleton-swatch"></div></div>
+                            <div class="variant-nav">
+                                <button class="prev" aria-label="Previous type">&lt;</button>
+                                <h5 class="variant-name">Swordsman</h5>
+                                <button class="next" aria-label="Next type">&gt;</button>
+                            </div>
+                            <div class="dots"></div>
+                            <table class="stats"><tbody>
+                                <tr><th>Experience</th><td class="exp"></td></tr>
+                                <tr><th>Max Health</th><td class="hp"></td></tr>
+                                <tr><th>Damage</th><td class="dmg"></td></tr>
+                                <tr><th>Defense</th><td class="def"></td></tr>
+                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
+                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
+                                <tr><th>Vision Range</th><td class="vision"></td></tr>
+                                <tr><th>Assist Range</th><td class="assist"></td></tr>
+                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
+                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                            </tbody></table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="enemy-details">
+                    <h3>Slimes</h3>
+                    <p>
+                        Slimes are the most common enemies in Vasteria. They come in three sizes (Small, Medium, Large) and five colors 
+                        (Green, Yellow, Blue, Red, Pink), each with different stats and difficulty levels.
+                    </p>
+                    <div class="slime-variants">
+                        <h4>Slime Variants</h4>
+                        <ul>
+                            <li><strong>Small Slimes:</strong> Basic enemies with low health and damage, found in early areas</li>
+                            <li><strong>Medium Slimes:</strong> Stronger variants with increased health and damage</li>
+                            <li><strong>Large Slimes:</strong> Powerful enemies with high health and damage, found in later areas</li>
+                        </ul>
+                        <p>
+                            <strong>Color Progression:</strong> Green (weakest) → Yellow → Blue → Red → Pink (strongest)
+                        </p>
+                    </div>
+                    
+                    <h3>Skeletons</h3>
+                    <p>
+                        Skeletons are undead warriors that appear throughout the world. They have different combat specialties and 
+                        can be more challenging than slimes.
+                    </p>
+                    <div class="skeleton-variants">
+                        <h4>Skeleton Types</h4>
+                        <ul>
+                            <li><strong>Skeleton Swordsman:</strong> Melee fighter with balanced stats</li>
+                            <li><strong>Skeleton Archer:</strong> Ranged attacker with high damage but low health</li>
+                            <li><strong>Skeleton Mage:</strong> Magic user with high damage and extended attack range</li>
+                        </ul>
+                    </div>
+                </div>
         </section>
+            
         <section id="other">
             <h2>Other Information</h2>
-            <p>Check back for more details on mechanics, gear upgrades, and strategies as the wiki expands.</p>
+                <p>
+                    Check back for more details on mechanics, character progression, and strategies as the wiki expands. 
+                    The game is constantly evolving with new content and features.
+                </p>
+                <div class="upcoming-content">
+                    <h3>Coming Soon</h3>
+                    <ul>
+                        <li>Detailed character progression strategies</li>
+                        <li>Map generation mechanics</li>
+                        <li>Advanced combat tactics</li>
+                        <li>Resource management guides</li>
+                    </ul>
+                </div>
         </section>
+            
         <section id="changes">
             <h2>Changes</h2>
-            <p>No recorded changes.</p>
+                <div class="changes-content">
+                    <p class="no-changes">No recorded changes at this time.</p>
+                </div>
         </section>
     </main>
 </div>
+    
 <datalist id="search-options">
     <option value="Wiki Home">
-    <option value="Green Slime">
+        <option value="Tasks">
+        <option value="Quests">
+        <option value="Buffs">
+        <option value="Enemies">
+        <option value="Slimes">
+        <option value="Skeletons">
 </datalist>
+    
 <footer>
-    &copy; 2025 Echoes of Vasteria | <a href="../privacy.html">Privacy Policy</a>
+        <div class="container">
+            <p>&copy; 2025 Echoes of Vasteria. All rights reserved.</p>
+            <p><a href="../privacy.html">Privacy Policy</a></p>
+        </div>
 </footer>
+    
 <script src="wiki.js"></script>
+    <script src="enemies_home.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>
