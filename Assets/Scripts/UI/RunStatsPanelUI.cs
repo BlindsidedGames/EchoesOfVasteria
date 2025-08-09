@@ -115,21 +115,29 @@ namespace TimelessEchoes.UI
             UpdateGraphLabel();
             UpdateUI();
             nextUpdateTime = Time.unscaledTime + updateInterval;
+            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
+        }
+
+        private void Update()
+        {
+            if (UITicker.Instance != null) return;
+            if (Time.unscaledTime >= nextUpdateTime)
+            {
+                UpdateUI();
+                nextUpdateTime = Time.unscaledTime + updateInterval;
+            }
         }
 
         private void OnDisable()
         {
             if (runStatUI != null)
                 runStatUI.gameObject.SetActive(false);
+            UITicker.Instance?.Unsubscribe(RefreshTick);
         }
 
-        private void Update()
+        private void RefreshTick()
         {
-            if (Time.unscaledTime >= nextUpdateTime)
-            {
-                UpdateUI();
-                nextUpdateTime = Time.unscaledTime + updateInterval;
-            }
+            UpdateUI();
         }
 
         private void OnBarEnter(RunBarUI bar, PointerEventData eventData)
