@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
-  m_Name: Large Fruit Tree
+  m_Name: Medium Tree
   m_EditorClassIdentifier: 
-  taskName: Large Fruit Tree
-  taskID: 2
-  taskIcon: {fileID: 621266246945384593, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
+  taskName: Medium Tree
+  taskID: 1
+  taskIcon: {fileID: -6213476910104009479, guid: 25ec107e317209041985b70a5dc05d93, type: 3}
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
-  xpForCompletion: 7
+  xpForCompletion: 3
   minX: 0
   maxX: 500
   requiredQuest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
-  taskDuration: 3
+  taskDuration: 2
   sfxInterval: 0.7
-  taskPrefab: {fileID: 5366876333383290996, guid: 23a208c18bbf07e48838b7045b65fe33, type: 3}
+  taskPrefab: {fileID: 5366876333383290996, guid: 387944b50565dcf45bb989d7688df07e, type: 3}
   weight: 1
   spawnTerrains:
   - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
@@ -32,19 +32,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
   resourceDrops:
   - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
-    dropRange: {x: 8, y: 16}
+    dropRange: {x: 2, y: 5}
     dropChance: 1
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
-    dropRange: {x: 5, y: 15}
-    dropChance: 0.15
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
-    dropRange: {x: 2, y: 7}
+    dropRange: {x: 1, y: 2}
     dropChance: 1
     minX: 0
     maxX: Infinity

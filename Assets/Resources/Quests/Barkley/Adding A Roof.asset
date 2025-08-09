@@ -41,6 +41,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  autoPin: 0
   requiredQuests:
   - {fileID: 11400000, guid: 77b9a54f17b29c84b8dce9da0940a2a4, type: 2}
   requirements:
@@ -53,7 +54,10 @@ MonoBehaviour:
     meetNpcId: 
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
-  maxDistanceIncrease: 0
+  maxDistanceIncrease: 25
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
   references:
     version: 2
     RefIds: []

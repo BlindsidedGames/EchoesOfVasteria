@@ -665,6 +665,98 @@ MonoBehaviour:
     m_Key: Fence3.reward
     m_Metadata:
       m_Items: []
+  - m_Id: 2561275523907584
+    m_Key: Watch Them Rattle.Name
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691297
+  - m_Id: 2561275549073408
+    m_Key: Watch Them Rattle.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691298
+  - m_Id: 2561275549073409
+    m_Key: Watch Them Rattle.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869056
+    m_Key: "Rattle\u2018n\u2019Roll.name"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869057
+    m_Key: "Rattle\u2018n\u2019Roll.desc"
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691300
+  - m_Id: 2570098317869058
+    m_Key: "Rattle\u2018n\u2019Roll.reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869059
+    m_Key: BonefireNight.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869060
+    m_Key: BonefireNight.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691301
+  - m_Id: 2570098317869061
+    m_Key: BonefireNight.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869062
+    m_Key: ShiverInYourBones.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869063
+    m_Key: ShiverInYourBones.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691302
+  - m_Id: 2570098317869064
+    m_Key: ShiverInYourBones.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869065
+    m_Key: BoneToPick.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869066
+    m_Key: BoneToPick.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691303
+  - m_Id: 2570098317869067
+    m_Key: BoneToPick.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869068
+    m_Key: GrindTheirBones.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869069
+    m_Key: GrindTheirBones.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691304
+  - m_Id: 2570098317869070
+    m_Key: GrindTheirBones.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869071
+    m_Key: BeyondTheBone.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869072
+    m_Key: BeyondTheBone.desc
+    m_Metadata:
+      m_Items:
+      - rid: 6305373932368691305
+  - m_Id: 2570098317869073
+    m_Key: BeyondTheBone.reward
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
@@ -676,3 +768,35 @@ MonoBehaviour:
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
         m_CustomEpoch: 1754082518893
+    - rid: 6305373932368691297
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Requires unlocking the Mines
+    - rid: 6305373932368691298
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 100 Skeletons
+    - rid: 6305373932368691300
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 200 Skeletons
+    - rid: 6305373932368691301
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 350 Skeletons
+    - rid: 6305373932368691302
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 550 Skeletons
+    - rid: 6305373932368691303
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 850 Skeletons
+    - rid: 6305373932368691304
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 1250 Skeletons
+    - rid: 6305373932368691305
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Kill 2000 Skeletons

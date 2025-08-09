@@ -686,7 +686,7 @@ MonoBehaviour:
   endReachedDistance: 0.7
   whenCloseToDestination: 0
   rvoDensityBehavior:
-    enabled: 1
+    enabled: 0
     densityThreshold: 0.5
     returnAfterBeingPushedAway: 0
     progressAverage: 0
@@ -741,7 +741,7 @@ MonoBehaviour:
   heightBackingField: 2
   centerBackingField: 1
   locked: 0
-  lockWhenNotMoving: 1
+  lockWhenNotMoving: 0
   agentTimeHorizon: 1.5
   obstacleTimeHorizon: 1
   maxNeighbours: 10

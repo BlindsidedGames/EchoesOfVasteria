@@ -47,7 +47,7 @@ MonoBehaviour:
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
-    amount: 7500
+    amount: 2500
     enemies: []
     killName: 
     killIcon: {fileID: 0}
@@ -55,6 +55,9 @@ MonoBehaviour:
   unlockBuffSlots: 1
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
   references:
     version: 2
     RefIds: []
