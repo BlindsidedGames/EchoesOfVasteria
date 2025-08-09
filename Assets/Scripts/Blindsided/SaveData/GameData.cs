@@ -99,7 +99,7 @@ namespace Blindsided.SaveData
             ///     Automatically pin new quests when they become active.
             /// </summary>
             [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
-            public bool AutoPinActiveQuests = false;
+            public bool AutoPinActiveQuests = true;
 
             /// <summary>
             ///     Whether the pinned quest panel is visible.

@@ -210,7 +210,7 @@ namespace Blindsided.SaveData
 
         public static bool AutoPinActiveQuests
         {
-            get => PlayerPrefs.GetInt(AutoPinActiveQuestsKey, 0) == 1;
+            get => PlayerPrefs.GetInt(AutoPinActiveQuestsKey, 1) == 1;
             set
             {
                 PlayerPrefs.SetInt(AutoPinActiveQuestsKey, value ? 1 : 0);
