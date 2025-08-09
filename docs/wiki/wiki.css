@@ -325,6 +325,7 @@ h2 {
 }
 /* Real images scale up crisply */
 .slime-img { width: 240px; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.skeleton-img { width: 240px; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
 /* Color swatches for non-image placeholders */
 .slime-swatch[data-color="green"],
 .slime-swatch[data-color="yellow"],

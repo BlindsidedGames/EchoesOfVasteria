@@ -10,6 +10,7 @@ namespace TimelessEchoes.UI
     /// </summary>
     public class UITicker : MonoBehaviour
     {
+        private static bool _isQuitting;
         private class Subscription
         {
             public Action Callback;
@@ -18,12 +19,15 @@ namespace TimelessEchoes.UI
         }
 
         private static UITicker _instance;
+        public static bool HasInstance => _instance != null;
         public static UITicker Instance
         {
             get
             {
                 if (_instance == null)
                 {
+                    if (_isQuitting)
+                        return null;
                     var go = new GameObject("UITicker");
                     _instance = go.AddComponent<UITicker>();
                     DontDestroyOnLoad(go);
@@ -81,6 +85,17 @@ namespace TimelessEchoes.UI
                     sub.NextTime = now + sub.Interval;
                 }
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            _isQuitting = true;
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this)
+                _instance = null;
         }
     }
 }
