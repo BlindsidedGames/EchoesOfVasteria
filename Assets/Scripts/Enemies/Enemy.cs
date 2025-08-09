@@ -24,6 +24,11 @@ namespace TimelessEchoes.Enemies
     [RequireComponent(typeof(AIDestinationSetter))]
     [RequireComponent(typeof(RVOController))]
     [RequireComponent(typeof(Health))]
+    /// <summary>
+    /// Runtime enemy AI: computes level from world X, idles/wanders when idle,
+    /// periodically selects a target (hero or eligible echo), moves using A* and
+    /// attacks with projectiles when in range. Handles resource drops and UI on death.
+    /// </summary>
     public class Enemy : MonoBehaviour
     {
         [SerializeField] private EnemyData stats;
@@ -62,6 +67,10 @@ namespace TimelessEchoes.Enemies
             return stats != null ? stats.GetDefenseForLevel(level) : 0f;
         }
 
+        /// <summary>
+        /// Fired when an enemy switches to an engagement target (hero or echo).
+        /// Useful for systems that react to aggro (e.g., swarms, UI cues).
+        /// </summary>
         public static event Action<Enemy> OnEngage;
 
         private void Awake()

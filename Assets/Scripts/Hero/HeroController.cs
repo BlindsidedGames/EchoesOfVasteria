@@ -29,6 +29,12 @@ namespace TimelessEchoes.Hero
     [RequireComponent(typeof(AIDestinationSetter))]
     [RequireComponent(typeof(RVOController))]
     [RequireComponent(typeof(HeroHealth))]
+    /// <summary>
+    /// Controls the main hero and echo clones: movement (A*), combat targeting and attacks,
+    /// task interaction, stat application, and hooks into Buffs/Skills/Stats/UI.
+    /// Exposes computed properties like Damage, AttackRate, MoveSpeed, Defense, and MaxHealthValue
+    /// which include permanent upgrades and active buff multipliers.
+    /// </summary>
     public class HeroController : MonoBehaviour
     {
         public static HeroController Instance { get; private set; }
