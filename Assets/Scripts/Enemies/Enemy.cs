@@ -16,6 +16,7 @@ using System.Linq;
 using static TimelessEchoes.TELogger;
 using Random = UnityEngine.Random;
 using static Blindsided.Oracle;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes.Enemies
 {
@@ -308,7 +309,9 @@ namespace TimelessEchoes.Enemies
         {
             if (stats.projectilePrefab == null || setter.target == null) return;
             var origin = projectileOrigin ? projectileOrigin : transform;
-            var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
+            var projObj = PoolManager.Get(stats.projectilePrefab);
+            projObj.transform.position = origin.position;
+            projObj.transform.rotation = Quaternion.identity;
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
                 proj.Init(setter.target, stats.GetDamageForLevel(level));

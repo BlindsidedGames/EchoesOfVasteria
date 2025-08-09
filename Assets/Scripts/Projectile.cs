@@ -54,20 +54,21 @@ namespace TimelessEchoes
             this.fromHero = fromHero;
             this.combatSkill = combatSkill;
             effectPrefab = hitEffect ?? hitEffectPrefab;
+            transform.rotation = Quaternion.identity;
         }
 
         private void Update()
         {
             if (target == null)
             {
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
                 return;
             }
 
             IHasHealth health = target.GetComponent<IHasHealth>();
             if (health != null && health.CurrentHealth <= 0f)
             {
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
                 return;
             }
 
@@ -99,7 +100,7 @@ namespace TimelessEchoes
                             var sfx2 = GetComponent<ProjectileHitSfx>();
                             sfx2?.PlayHit();
                             SpawnEffect();
-                            Destroy(gameObject);
+                            PoolManager.Release(gameObject);
                             return;
                         }
                         var hp = target.GetComponent<IHasHealth>();
@@ -131,7 +132,7 @@ namespace TimelessEchoes
                 var sfx = GetComponent<ProjectileHitSfx>();
                 sfx?.PlayHit();
                 SpawnEffect();
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
                 return;
             }
 

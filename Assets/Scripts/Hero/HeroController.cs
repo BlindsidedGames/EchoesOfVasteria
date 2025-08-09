@@ -15,6 +15,7 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
 using TimelessEchoes.Upgrades;
 using Blindsided.Utilities;
+using Blindsided.Utilities.Pooling;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
@@ -886,7 +887,9 @@ namespace TimelessEchoes.Hero
                 AutoBuffAnimator.Play("Attack");
 
             var origin = projectileOrigin ? projectileOrigin : transform;
-            var projObj = Instantiate(stats.projectilePrefab, origin.position, Quaternion.identity);
+            var projObj = PoolManager.Get(stats.projectilePrefab);
+            projObj.transform.position = origin.position;
+            projObj.transform.rotation = Quaternion.identity;
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
             {
