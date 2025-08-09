@@ -102,11 +102,11 @@
                     <h3>Available Buffs</h3>
                     <div class="buff-item">
                         <h4>Carl's Blessing (Reaping Distance)</h4>
-                        <p>Increases the maximum reaping distance by 30 units.</p>
+                        <p>Increases the maximum reaping distance by 30%.</p>
                         <ul>
                             <li><strong>Type:</strong> Utility</li>
-                            <li><strong>Effect:</strong> Max Reap Distance +30</li>
-                            <li><strong>Duration:</strong> 0.5 seconds</li>
+                            <li><strong>Effect:</strong> Max Reap Distance +30%</li>
+                            <li><strong>Duration:</strong> Infinite</li>
                         </ul>
                     </div>
                     
@@ -156,7 +156,7 @@
                         <ul>
                             <li><strong>Type:</strong> Utility</li>
                             <li><strong>Effect:</strong> Tasks complete instantly</li>
-                            <li><strong>Duration:</strong> 0.5 seconds</li>
+                            <li><strong>Duration:</strong> Until 50% of your Max Distance is reached</li>
                         </ul>
                     </div>
                     
@@ -210,19 +210,28 @@
                                 <button class="next" aria-label="Next size">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats">
                                 <tbody>
-                                    <tr><th>Experience</th><td class="exp"></td></tr>
-                                    <tr><th>Max Health</th><td class="hp"></td></tr>
-                                    <tr><th>Damage</th><td class="dmg"></td></tr>
-                                    <tr><th>Defense</th><td class="def"></td></tr>
-                                    <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                    <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                    <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                    <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                    <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                    <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                    <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                    <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                     <tr class="group-base"><th>❤️ Health</th><td class="hp"></td></tr>
+                                    <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                    <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                     <tr class="group-base"><th>⚡ Attacks/s</th><td class="atkSpd"></td></tr>
+                                     <tr class="group-base"><th>🏹 Range</th><td class="atkRange"></td></tr>
+                                    <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                    <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                    <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                    <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                     <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                    <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                    <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                    <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                    <tr class="group-perlevel"><th title="Distance Per Level">📶 Distance</th><td class="distPerLvl"></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -238,18 +247,27 @@
                                 <button class="next" aria-label="Next size">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats"><tbody>
-                                <tr><th>Experience</th><td class="exp"></td></tr>
-                                <tr><th>Max Health</th><td class="hp"></td></tr>
-                                <tr><th>Damage</th><td class="dmg"></td></tr>
-                                <tr><th>Defense</th><td class="def"></td></tr>
-                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                <tr class="group-base"><th>❤️ Health</th><td class="hp"></td></tr>
+                                <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                <tr class="group-base"><th>⚡ Attacks/s</th><td class="atkSpd"></td></tr>
+                                <tr class="group-base"><th>🏹 Range</th><td class="atkRange"></td></tr>
+                                    <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                    <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                    <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                    <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                    <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Distance Per Level">📶 Distance</th><td class="distPerLvl"></td></tr>
                             </tbody></table>
                         </div>
                         
@@ -264,18 +282,27 @@
                                 <button class="next" aria-label="Next size">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats"><tbody>
-                                <tr><th>Experience</th><td class="exp"></td></tr>
-                                <tr><th>Max Health</th><td class="hp"></td></tr>
-                                <tr><th>Damage</th><td class="dmg"></td></tr>
-                                <tr><th>Defense</th><td class="def"></td></tr>
-                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                <tr class="group-base"><th>❤️ Health</th><td class="hp"></td></tr>
+                                <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                <tr class="group-base"><th>⚡ Attacks/s</th><td class="atkSpd"></td></tr>
+                                <tr class="group-base"><th>🏹 Range</th><td class="atkRange"></td></tr>
+                                <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Distance Per Level">📶 Distance</th><td class="distPerLvl"></td></tr>
                             </tbody></table>
                         </div>
                         
@@ -290,18 +317,27 @@
                                 <button class="next" aria-label="Next size">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats"><tbody>
-                                <tr><th>Experience</th><td class="exp"></td></tr>
-                                <tr><th>Max Health</th><td class="hp"></td></tr>
-                                <tr><th>Damage</th><td class="dmg"></td></tr>
-                                <tr><th>Defense</th><td class="def"></td></tr>
-                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                <tr class="group-base"><th>❤️ Health</th><td class="hp"></td></tr>
+                                <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                <tr class="group-base"><th>⚡ Attacks/s</th><td class="atkSpd"></td></tr>
+                                <tr class="group-base"><th>🏹 Range</th><td class="atkRange"></td></tr>
+                                <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Distance Per Level">📶 Distance</th><td class="distPerLvl"></td></tr>
                             </tbody></table>
                         </div>
                         
@@ -316,18 +352,27 @@
                                 <button class="next" aria-label="Next size">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats"><tbody>
-                                <tr><th>Experience</th><td class="exp"></td></tr>
-                                <tr><th>Max Health</th><td class="hp"></td></tr>
-                                <tr><th>Damage</th><td class="dmg"></td></tr>
-                                <tr><th>Defense</th><td class="def"></td></tr>
-                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                <tr class="group-base"><th>❤️ Max Health</th><td class="hp"></td></tr>
+                                <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                <tr class="group-base"><th>⚡ Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr class="group-base"><th>🏹 Attack Range</th><td class="atkRange"></td></tr>
+                                <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Distance Per Level">📶 Distance</th><td class="distPerLvl"></td></tr>
                             </tbody></table>
                         </div>
                         
@@ -342,18 +387,27 @@
                                 <button class="next" aria-label="Next type">&gt;</button>
                             </div>
                             <div class="dots"></div>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+                                <button class="tab-btn" data-tab="perlevel" role="tab" aria-selected="false">Per Level</button>
+                                <button class="tab-btn" data-tab="behavior" role="tab" aria-selected="false">Behavior</button>
+                            </div>
                             <table class="stats"><tbody>
-                                <tr><th>Experience</th><td class="exp"></td></tr>
-                                <tr><th>Max Health</th><td class="hp"></td></tr>
-                                <tr><th>Damage</th><td class="dmg"></td></tr>
-                                <tr><th>Defense</th><td class="def"></td></tr>
-                                <tr><th>Attack Speed</th><td class="atkSpd"></td></tr>
-                                <tr><th>Attack Range</th><td class="atkRange"></td></tr>
-                                <tr><th>Move Speed</th><td class="moveSpd"></td></tr>
-                                <tr><th>Vision Range</th><td class="vision"></td></tr>
-                                <tr><th>Assist Range</th><td class="assist"></td></tr>
-                                <tr><th>Wander Distance</th><td class="wander"></td></tr>
-                                <tr><th>Spawn Range X</th><td class="spawn"></td></tr>
+                                <tr class="group-base"><th>✨ Experience</th><td class="exp"></td></tr>
+                                <tr class="group-base"><th>❤️ Max Health</th><td class="hp"></td></tr>
+                                <tr class="group-base"><th>⚔️ Damage</th><td class="dmg"></td></tr>
+                                <tr class="group-base"><th>🛡️ Defense</th><td class="def"></td></tr>
+                                <tr class="group-base"><th>⚡ Attack Speed</th><td class="atkSpd"></td></tr>
+                                <tr class="group-base"><th>🏹 Attack Range</th><td class="atkRange"></td></tr>
+                                <tr class="group-behavior"><th>🏃 Movement</th><td class="moveSpd"></td></tr>
+                                <tr class="group-behavior"><th>👁️ Vision</th><td class="vision"></td></tr>
+                                <tr class="group-behavior"><th>🤝 Assist Range</th><td class="assist"></td></tr>
+                                <tr class="group-behavior"><th>🧭 Wander</th><td class="wander"></td></tr>
+                                <tr class="group-behavior"><th>↔️ Spawn</th><td class="spawn"></td></tr>
+                                <tr class="group-perlevel"><th title="Health Per Level">❤️ Health</th><td class="hpPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Damage Per Level">⚔️ Damage</th><td class="dmgPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Defense Per Level">🛡️ Defense</th><td class="defPerLvl"></td></tr>
+                                <tr class="group-perlevel"><th title="Distance Per Level">📏 Distance</th><td class="distPerLvl"></td></tr>
                             </tbody></table>
                         </div>
                     </div>

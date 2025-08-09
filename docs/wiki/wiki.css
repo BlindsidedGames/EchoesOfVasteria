@@ -348,10 +348,33 @@ h2 {
 .enemy-card .dots .dot.active { background-color: var(--primary-color); background-image: none; border-color: transparent; box-shadow: 0 0 0 2px rgba(59,130,246,0.35); }
 
 .enemy-card table.stats { width: 100%; border-collapse: collapse; }
-.enemy-card table.stats th, .enemy-card table.stats td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+.enemy-card table.stats th, .enemy-card table.stats td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    /* Keep cells on one line; shorten labels in HTML to prevent overflow */
+    white-space: nowrap;
+}
 .enemy-card table.stats th { text-align: left; width: 60%; color: var(--text-color); background: transparent; font-weight: 600; }
 .enemy-card table.stats th::after { content: none; }
 .enemy-card table.stats td { text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* Tabs within enemy cards */
+.enemy-card .tab-buttons { display: flex; gap: 8px; justify-content: center; margin: var(--spacing-sm) 0 var(--spacing-md); }
+.enemy-card .tab-buttons .tab-btn { padding: 6px 10px; border: 1px solid var(--border-color); background: var(--header-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; }
+.enemy-card .tab-buttons .tab-btn.active { border-color: var(--primary-color); color: var(--primary-color); box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
+
+/* Group visibility controlled via JS by adding data-active-tab on .enemy-card */
+.enemy-card[data-active-tab="base"] .group-base { display: table-row; }
+.enemy-card[data-active-tab="base"] .group-perlevel,
+.enemy-card[data-active-tab="base"] .group-behavior { display: none; }
+
+.enemy-card[data-active-tab="perlevel"] .group-perlevel { display: table-row; }
+.enemy-card[data-active-tab="perlevel"] .group-base,
+.enemy-card[data-active-tab="perlevel"] .group-behavior { display: none; }
+
+.enemy-card[data-active-tab="behavior"] .group-behavior { display: table-row; }
+.enemy-card[data-active-tab="behavior"] .group-base,
+.enemy-card[data-active-tab="behavior"] .group-perlevel { display: none; }
 
 /* Responsive adjustments for wiki */
 @media (max-width: 768px) {
