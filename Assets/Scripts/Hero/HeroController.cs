@@ -273,7 +273,11 @@ namespace TimelessEchoes.Hero
                     tracker.RecordHeroPosition(transform.position);
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #if !DISABLESTEAMWORKS
-                RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+                if (Time.unscaledTime >= nextRichPresenceUpdate)
+                {
+                    RichPresenceManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
+                    nextRichPresenceUpdate = Time.unscaledTime + richPresenceUpdateInterval;
+                }
 #endif
                 if (!IsEcho && !ReaperSpawnedByDistance &&
                     transform.position.x >= tracker.MaxRunDistance *

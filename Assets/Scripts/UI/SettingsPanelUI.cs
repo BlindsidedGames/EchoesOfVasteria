@@ -279,9 +279,21 @@ namespace TimelessEchoes.UI
                 fpsButtonText.text = $"FPS: {StaticReferences.TargetFps}";
         }
 
+        [SerializeField] private float slotInfoUpdateInterval = 1f;
+        private float nextSlotInfoUpdate;
+
+        private void OnEnable()
+        {
+            nextSlotInfoUpdate = Time.unscaledTime + slotInfoUpdateInterval;
+        }
+
         private void Update()
         {
-            UpdateSlotInfo();
+            if (Time.unscaledTime >= nextSlotInfoUpdate)
+            {
+                UpdateSlotInfo();
+                nextSlotInfoUpdate = Time.unscaledTime + slotInfoUpdateInterval;
+            }
         }
 
         private void UpdateSlotInfo()

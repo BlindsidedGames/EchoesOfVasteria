@@ -30,6 +30,9 @@ namespace TimelessEchoes
         private bool fromHero;
         private TimelessEchoes.Skills.Skill combatSkill;
 
+        private IHasHealth targetHasHealth;
+        private IDamageable targetDamageable;
+
         private void OnEnable()
         {
             active.Add(this);
@@ -55,6 +58,9 @@ namespace TimelessEchoes
             this.combatSkill = combatSkill;
             effectPrefab = hitEffect ?? hitEffectPrefab;
             transform.rotation = Quaternion.identity;
+
+            targetHasHealth = target ? target.GetComponent<IHasHealth>() : null;
+            targetDamageable = target ? target.GetComponent<IDamageable>() : null;
         }
 
         private void Update()
@@ -65,24 +71,17 @@ namespace TimelessEchoes
                 return;
             }
 
-            IHasHealth health = target.GetComponent<IHasHealth>();
-            if (health != null && health.CurrentHealth <= 0f)
+            if (targetHasHealth != null && targetHasHealth.CurrentHealth <= 0f)
             {
                 PoolManager.Release(gameObject);
                 return;
             }
 
             Vector3 dir = target.position - transform.position;
-            // Rotate only around the Z axis so slight vertical offsets between
-            // the fire point and target don't cause unwanted tilting.
-            if (dir.sqrMagnitude > 0f)
-            {
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            }
             float distanceThisFrame = speed * Time.deltaTime;
+            float mag = dir.magnitude;
 
-            if (dir.magnitude <= hitDistance)
+            if (mag <= hitDistance)
             {
                 float dmgAmount = damage;
                 if (fromHero && combatSkill != null)
@@ -103,15 +102,13 @@ namespace TimelessEchoes
                             PoolManager.Release(gameObject);
                             return;
                         }
-                        var hp = target.GetComponent<IHasHealth>();
-                        if (hp != null)
-                            dmgAmount = Mathf.Max(dmgAmount, hp.CurrentHealth);
+                        if (targetHasHealth != null)
+                            dmgAmount = Mathf.Max(dmgAmount, targetHasHealth.CurrentHealth);
                     }
                 }
 
-                var dmg = target.GetComponent<IDamageable>();
                 float baseAmount = dmgAmount - bonusDamage;
-                dmg?.TakeDamage(baseAmount, bonusDamage);
+                targetDamageable?.TakeDamage(baseAmount, bonusDamage);
                 if (fromHero)
                 {
                     var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
@@ -136,7 +133,13 @@ namespace TimelessEchoes
                 return;
             }
 
-            transform.position += dir.normalized * distanceThisFrame;
+            if (mag > 1e-6f)
+            {
+                transform.position += dir * (distanceThisFrame / mag);
+                // Rotate only around Z
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
         }
 
         private void SpawnEffect()

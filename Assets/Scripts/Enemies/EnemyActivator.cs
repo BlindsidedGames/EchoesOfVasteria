@@ -70,15 +70,20 @@ namespace TimelessEchoes.Enemies
 
                 if (!inside && e.Stats != null)
                 {
+                    float rangeSq = e.Stats.visionRange * e.Stats.visionRange;
                     if (hero != null)
-                        nearCombatant = Vector2.Distance(hero.transform.position, p) <= e.Stats.visionRange;
+                    {
+                        var d = (hero.transform.position - p);
+                        if (d.sqrMagnitude <= rangeSq) nearCombatant = true;
+                    }
 
                     if (!nearCombatant)
                     {
                         foreach (var echo in EchoController.CombatEchoes)
                         {
                             if (echo == null || !echo.isActiveAndEnabled) continue;
-                            if (Vector2.Distance(echo.transform.position, p) <= e.Stats.visionRange)
+                            var d2 = (echo.transform.position - p);
+                            if (d2.sqrMagnitude <= rangeSq)
                             {
                                 nearCombatant = true;
                                 break;

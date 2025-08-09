@@ -27,15 +27,27 @@ namespace TimelessEchoes.UI
         {
             UpdateTexts();
             nextUpdateTime = Time.unscaledTime + updateInterval;
+            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
         }
 
         private void Update()
         {
+            if (UITicker.Instance != null) return;
             if (Time.unscaledTime >= nextUpdateTime)
             {
                 UpdateTexts();
                 nextUpdateTime = Time.unscaledTime + updateInterval;
             }
+        }
+
+        private void OnDisable()
+        {
+            UITicker.Instance?.Unsubscribe(RefreshTick);
+        }
+
+        private void RefreshTick()
+        {
+            UpdateTexts();
         }
 
         private void UpdateTexts()
