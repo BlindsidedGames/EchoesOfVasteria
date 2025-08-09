@@ -32,6 +32,9 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Performance")] [SerializeField]
         private TMP_Text fpsButtonText;
 
+        [TabGroup("Settings", "Performance")] [SerializeField]
+        private Toggle vSyncToggle;
+
         [TabGroup("Settings", "Floating Text")] [SerializeField]
         private Slider dropTextDurationSlider;
 
@@ -100,6 +103,13 @@ namespace TimelessEchoes.UI
                 windowButton.onClick.AddListener(SetWindowed);
             if (fpsButton != null)
                 fpsButton.onClick.AddListener(ToggleFps);
+            if (vSyncToggle != null)
+            {
+                vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
+                vSyncToggle.onValueChanged.AddListener(OnVSyncChanged);
+                if (fpsButton != null)
+                    fpsButton.interactable = !vSyncToggle.isOn;
+            }
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.AddListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -165,6 +175,8 @@ namespace TimelessEchoes.UI
                 windowButton.onClick.RemoveListener(SetWindowed);
             if (fpsButton != null)
                 fpsButton.onClick.RemoveListener(ToggleFps);
+            if (vSyncToggle != null)
+                vSyncToggle.onValueChanged.RemoveListener(OnVSyncChanged);
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.RemoveListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -210,11 +222,34 @@ namespace TimelessEchoes.UI
             ApplyFps();
         }
 
+        private void OnVSyncChanged(bool on)
+        {
+            QualitySettings.vSyncCount = on ? 1 : 0;
+            if (fpsButton != null)
+                fpsButton.interactable = !on;
+            if (on)
+            {
+                Application.targetFrameRate = -1;
+                UpdateFpsButtonText();
+            }
+            else
+            {
+                ApplyFps();
+            }
+        }
+
         private void ApplyFps()
         {
             if (StaticReferences.TargetFps == 0)
                 StaticReferences.TargetFps = Fps60;
+            QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = StaticReferences.TargetFps;
+            if (vSyncToggle != null)
+            {
+                vSyncToggle.SetIsOnWithoutNotify(false);
+                if (fpsButton != null)
+                    fpsButton.interactable = true;
+            }
             UpdateFpsButtonText();
         }
 
