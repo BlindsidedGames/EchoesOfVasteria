@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Beyond the Bone
+  m_EditorClassIdentifier: 
+  questId: Beyond the Bone
+  questName:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 2570098317869071
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 2570098317869072
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+    m_TableEntryReference:
+      m_KeyId: 2570098317869073
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  npcId: 
+  autoPin: 0
+  requiredQuests:
+  - {fileID: 11400000, guid: 0393b767d52dded48b4147f39f25f9ff, type: 2}
+  requirements:
+  - type: 1
+    resource: {fileID: 0}
+    amount: 1
+    enemies:
+    - {fileID: 11400000, guid: f982370fcd3f9fd489cd5188f7eb546b, type: 2}
+    - {fileID: 11400000, guid: fa5c5ead31adba84aab4b87031402956, type: 2}
+    - {fileID: 11400000, guid: 628c77d48f420ba4eb9103538adfeae6, type: 2}
+    killName: Skeleton
+    killIcon: {fileID: 7755512622975735135, guid: 7b3a664246d6a94499b2eaa4786e8cf9, type: 3}
+    meetNpcId: 
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
+  references:
+    version: 2
+    RefIds: []

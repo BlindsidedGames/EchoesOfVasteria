@@ -94,7 +94,8 @@ namespace Blindsided.Utilities
 
         private void Update()
         {
-            if (Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y || Screen.safeArea != lastSafeArea)
+            if (Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y ||
+                Screen.safeArea != lastSafeArea)
             {
                 lastScreenSize = new Vector2Int(Screen.width, Screen.height);
                 lastSafeArea = Screen.safeArea;
@@ -176,62 +177,136 @@ namespace Blindsided.Utilities
         /// <summary>
         ///     Applies padding to the RectTransform based on the screen's safe area,
         ///     minimum padding values, and aspect ratio preferences.
+        ///     Guarantees the usable area never becomes narrower than the baseline safe aspect (or 16:9).
+        ///     On desktop, it preserves height and widens first by reducing horizontal padding down to the min,
+        ///     only then letterboxes vertically if necessary.
         /// </summary>
         private void ApplySafeArea()
         {
             if (_rectTransform == null) return;
 
-            var deviceSafeArea = Screen.safeArea;
+            var root = _rectTransform.root as RectTransform;
+            if (root == null) return;
             var canvas = _rectTransform.GetComponentInParent<Canvas>();
             var scaleFactor = canvas != null ? canvas.scaleFactor : 1f;
 
-            // 1. Start with the device's safe area, but immediately convert to Canvas units.
-            var left = deviceSafeArea.xMin / scaleFactor;
-            var right = (Screen.width - deviceSafeArea.xMax) / scaleFactor;
-            var top = (Screen.height - deviceSafeArea.yMax) / scaleFactor;
-            var bottom = deviceSafeArea.yMin / scaleFactor;
+            // Use the actual canvas rect (not Screen.*), so Game View/letterboxing/editor panels are respected.
+            var canvasRect = root.rect; // already in canvas units
+            var canvasW = canvasRect.width;
+            var canvasH = canvasRect.height;
 
-            // 2. Enforce the minimum padding IN CANVAS UNITS.
-            // This ensures the final value is never less than the minimum, regardless of scale factor.
-            left = Mathf.Max(left, minPaddingLeft);
-            right = Mathf.Max(right, minPaddingRight);
-            top = Mathf.Max(top, minPaddingTop);
-            bottom = Mathf.Max(bottom, minPaddingBottom);
+            // Map device safe area to canvas units using scale factors per axis.
+            var deviceSafe = Screen.safeArea; // in pixels
+            var scaleX = canvasW / Screen.width;
+            var scaleY = canvasH / Screen.height;
 
-            // 3. Correct for aspect ratio by adjusting the padding variables directly (already in canvas units).
+            var devLeft = deviceSafe.xMin * scaleX;
+            var devRight = (Screen.width - deviceSafe.xMax) * scaleX;
+            var devTop = (Screen.height - deviceSafe.yMax) * scaleY;
+            var devBottom = deviceSafe.yMin * scaleY;
+
+            // Start from device insets, then enforce user min padding (in canvas units)
+            var left = Mathf.Max(devLeft, minPaddingLeft);
+            var right = Mathf.Max(devRight, minPaddingRight);
+            var top = Mathf.Max(devTop, minPaddingTop);
+            var bottom = Mathf.Max(devBottom, minPaddingBottom);
+
             if (limitAspect)
             {
+                // Working sizes in canvas units
+                var width = canvasW - left - right;
+                var height = canvasH - top - bottom;
+
+                // --- Enforce MIN aspect (≥ baseline safe-aspect) ---
+                // Baseline is whatever the canvas can use after device + min padding.
+                // This guarantees we never add extra L/R padding beyond safe area at 16:9,
+                // and allows slightly-wider-than-16:9 when T/B padding reduces height.
+                var baselineAspect = width / height; // current safe aspect from insets
+                var minAllowedAspect = Mathf.Max(minAspect, baselineAspect);
+                var desiredMinWidth = height * minAllowedAspect;
+
+                if (width < desiredMinWidth)
+                {
+                    // Prefer to widen (reduce L/R) only down to device/min padding.
+                    var trueMinLeft = Mathf.Max(devLeft, minPaddingLeft);
+                    var trueMinRight = Mathf.Max(devRight, minPaddingRight);
+
+                    var reducibleLeft = Mathf.Max(0f, left - trueMinLeft);
+                    var reducibleRight = Mathf.Max(0f, right - trueMinRight);
+                    var totalReducible = reducibleLeft + reducibleRight;
+
+                    var needed = desiredMinWidth - width;
+                    if (totalReducible > 0f)
+                    {
+                        var reduce = Mathf.Min(needed, totalReducible);
+                        var reduceLeft = totalReducible > 0f ? reduce * (reducibleLeft / totalReducible) : 0f;
+                        var reduceRight = reduce - reduceLeft;
+
+                        left -= reduceLeft;
+                        right -= reduceRight;
+
+                        width += reduce;
+                        needed = desiredMinWidth - width;
+                    }
+
+                    // If still narrower than the baseline (e.g., hard device notch), letterbox (increase T/B).
+                    if (needed > 0f)
+                    {
+                        var targetHeight = width / minAllowedAspect;
+                        var delta = height - targetHeight;
+                        if (delta > 0f)
+                        {
+                            top += delta * 0.5f;
+                            bottom += delta * 0.5f;
+                            height = targetHeight;
+                        }
+                    }
+                }
+
+                // --- Enforce MAX aspect (≤ user slider up to 32:9) ---
                 var maxAllowedAspect = Mathf.Lerp(minAspect, maxAspect, ratioValue);
 
-                // Get screen dimensions in canvas units to perform the calculation in the correct space.
-                var screenWidthInCanvasUnits = Screen.width / scaleFactor;
-                var screenHeightInCanvasUnits = Screen.height / scaleFactor;
+// Recompute after any min-aspect fixes
+                width = canvasW - left - right;
+                height = canvasH - top - bottom;
 
-                var currentWidth = screenWidthInCanvasUnits - left - right;
-                var currentHeight = screenHeightInCanvasUnits - top - bottom;
-                var currentAspect = currentWidth / currentHeight;
+                const float aspectEpsilon = 0.0005f;
+                var isNative16by9 = Mathf.Abs(Screen.width / (float)Screen.height - minAspect) < aspectEpsilon;
 
-                if (currentAspect > maxAllowedAspect)
+// If we're on a native 16:9 screen, DO NOT bring the sides in beyond the safe/min padding.
+                if (!isNative16by9)
                 {
-                    // The area is too wide, so we need to add horizontal padding.
-                    var targetWidth = currentHeight * maxAllowedAspect;
-                    var delta = currentWidth - targetWidth;
+                    var currentAspect = width / height;
+                    if (currentAspect > maxAllowedAspect)
+                    {
+                        var targetWidth = height * maxAllowedAspect;
+                        var delta = width - targetWidth;
 
-                    // Distribute the change equally to the left and right padding variables.
-                    left += delta * 0.5f;
-                    right += delta * 0.5f;
+                        // Distribute padding equally
+                        left += delta * 0.5f;
+                        right += delta * 0.5f;
+
+                        // Ensure we don't go below min/safe-area padding
+                        var minLeft = Mathf.Max(devLeft, minPaddingLeft);
+                        var minRight = Mathf.Max(devRight, minPaddingRight);
+                        if (left < minLeft) left = minLeft;
+                        if (right < minRight) right = minRight;
+                    }
                 }
+
+
+                // Stretch anchors are required; warn if misconfigured.
+                if (_rectTransform.anchorMin != Vector2.zero || _rectTransform.anchorMax != Vector2.one)
+                    Debug.LogWarning(
+                        "[ScreenSafeArea] The target RectTransform is not stretch-stretch. Offsets will not behave as intended.");
+
+                // Apply in canvas units
+                _rectTransform.offsetMin = new Vector2(left, bottom);
+                _rectTransform.offsetMax = new Vector2(-right, -top);
+
+                // Ensure layout has stabilized; if a layout system changes sizes after this call, schedule a re-apply.
+                Canvas.ForceUpdateCanvases();
             }
-
-            // DEBUG: Log the final calculated values that will be applied to the RectTransform.
-            /*Debug.Log(
-                $"[ScreenSafeArea] Final Padding in Canvas Units (L,R,T,B): ({left:F2}, {right:F2}, {top:F2}, {bottom:F2})");
-                */
-
-            // 4. Apply the final, correct padding values (which are already in canvas units) to the RectTransform's offsets.
-            _rectTransform.offsetMin = new Vector2(left, bottom);
-            _rectTransform.offsetMax = new Vector2(-right, -top);
-
         }
     }
 }
