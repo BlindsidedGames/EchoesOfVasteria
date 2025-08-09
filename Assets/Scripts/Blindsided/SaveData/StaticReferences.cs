@@ -18,6 +18,9 @@ namespace Blindsided.SaveData
         private const string EnemyFloatingDamageKey = "EnemyFloatingDamage";
         private const string ItemDropFloatingTextKey = "ItemDropFloatingText";
         private const string AutoPinActiveQuestsKey = "AutoPinActiveQuests";
+        private const string TargetFpsKey = "TargetFps";
+        private const string VSyncEnabledKey = "VSyncEnabled";
+        private const string SafeAreaRatioKey = "SafeAreaRatio";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -127,14 +130,33 @@ namespace Blindsided.SaveData
 
         public static int TargetFps
         {
-            get => oracle.saveData.SavedPreferences.TargetFps;
-            set => oracle.saveData.SavedPreferences.TargetFps = value;
+            get => PlayerPrefs.GetInt(TargetFpsKey, 60);
+            set
+            {
+                PlayerPrefs.SetInt(TargetFpsKey, Mathf.Clamp(value, 30, 1000));
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static bool VSyncEnabled
+        {
+            get => PlayerPrefs.GetInt(VSyncEnabledKey, 0) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(VSyncEnabledKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+                QualitySettings.vSyncCount = value ? 1 : 0;
+            }
         }
 
         public static float SafeAreaRatio
         {
-            get => oracle.saveData.SavedPreferences.SafeAreaRatio;
-            set => oracle.saveData.SavedPreferences.SafeAreaRatio = Mathf.Clamp01(value);
+            get => Mathf.Clamp01(PlayerPrefs.GetFloat(SafeAreaRatioKey, 0f));
+            set
+            {
+                PlayerPrefs.SetFloat(SafeAreaRatioKey, Mathf.Clamp01(value));
+                PlayerPrefs.Save();
+            }
         }
 
         public static float DropFloatingTextDuration
@@ -188,18 +210,11 @@ namespace Blindsided.SaveData
 
         public static bool AutoPinActiveQuests
         {
-            get
-            {
-                var defaultVal = oracle.saveData.SavedPreferences.AutoPinActiveQuests ? 1 : 0;
-                var value = PlayerPrefs.GetInt(AutoPinActiveQuestsKey, defaultVal) == 1;
-                oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
-                return value;
-            }
+            get => PlayerPrefs.GetInt(AutoPinActiveQuestsKey, 0) == 1;
             set
             {
                 PlayerPrefs.SetInt(AutoPinActiveQuestsKey, value ? 1 : 0);
                 PlayerPrefs.Save();
-                oracle.saveData.SavedPreferences.AutoPinActiveQuests = value;
             }
         }
 

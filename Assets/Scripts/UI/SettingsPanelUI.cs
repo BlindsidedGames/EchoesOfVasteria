@@ -62,6 +62,9 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Floating Text")] [SerializeField]
         private Button dropTextButton;
 
+        [TabGroup("Settings", "Quests")] [SerializeField]
+        private Button autoPinButton;
+
         [TabGroup("Settings", "Sprites")] [SerializeField]
         private Sprite onSprite;
 
@@ -72,6 +75,7 @@ namespace TimelessEchoes.UI
         private Image enemyDamageImage;
         private Image dropTextImage;
         private Image vSyncImage;
+        private Image autoPinImage;
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot1;
@@ -108,7 +112,8 @@ namespace TimelessEchoes.UI
             {
                 vSyncButton.onClick.AddListener(ToggleVSync);
                 vSyncImage = vSyncButton.GetComponent<Image>();
-                var on = QualitySettings.vSyncCount > 0;
+                var on = StaticReferences.VSyncEnabled;
+                QualitySettings.vSyncCount = on ? 1 : 0;
                 UpdateButtonVisual(vSyncImage, on);
                 if (fpsButton != null)
                     fpsButton.interactable = !on;
@@ -125,11 +130,18 @@ namespace TimelessEchoes.UI
                 enemyDamageButton.onClick.AddListener(ToggleEnemyDamage);
             if (dropTextButton != null)
                 dropTextButton.onClick.AddListener(ToggleDropText);
+            if (autoPinButton != null)
+            {
+                autoPinButton.onClick.AddListener(ToggleAutoPin);
+                autoPinImage = autoPinButton.GetComponent<Image>();
+                UpdateButtonVisual(autoPinImage, StaticReferences.AutoPinActiveQuests);
+            }
 
             playerDamageImage = playerDamageButton != null ? playerDamageButton.GetComponent<Image>() : null;
             enemyDamageImage = enemyDamageButton != null ? enemyDamageButton.GetComponent<Image>() : null;
             dropTextImage = dropTextButton != null ? dropTextButton.GetComponent<Image>() : null;
             vSyncImage ??= vSyncButton != null ? vSyncButton.GetComponent<Image>() : null;
+            autoPinImage ??= autoPinButton != null ? autoPinButton.GetComponent<Image>() : null;
 
             if (saveSlots != null)
             {
@@ -181,6 +193,8 @@ namespace TimelessEchoes.UI
                 fpsButton.onClick.RemoveListener(ToggleFps);
             if (vSyncButton != null)
                 vSyncButton.onClick.RemoveListener(ToggleVSync);
+            if (autoPinButton != null)
+                autoPinButton.onClick.RemoveListener(ToggleAutoPin);
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.RemoveListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -228,9 +242,8 @@ namespace TimelessEchoes.UI
 
         private void ToggleVSync()
         {
-            var on = QualitySettings.vSyncCount > 0;
-            QualitySettings.vSyncCount = on ? 0 : 1;
-            var nowOn = !on;
+            StaticReferences.VSyncEnabled = !StaticReferences.VSyncEnabled;
+            var nowOn = StaticReferences.VSyncEnabled;
             UpdateButtonVisual(vSyncImage, nowOn);
             if (fpsButton != null)
                 fpsButton.interactable = !nowOn;
@@ -249,13 +262,13 @@ namespace TimelessEchoes.UI
         {
             if (StaticReferences.TargetFps == 0)
                 StaticReferences.TargetFps = Fps60;
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = StaticReferences.TargetFps;
+            QualitySettings.vSyncCount = StaticReferences.VSyncEnabled ? 1 : 0;
+            Application.targetFrameRate = StaticReferences.VSyncEnabled ? -1 : StaticReferences.TargetFps;
             if (vSyncButton != null)
             {
-                UpdateButtonVisual(vSyncImage, false);
+                UpdateButtonVisual(vSyncImage, StaticReferences.VSyncEnabled);
                 if (fpsButton != null)
-                    fpsButton.interactable = true;
+                    fpsButton.interactable = !StaticReferences.VSyncEnabled;
             }
             UpdateFpsButtonText();
         }
@@ -297,7 +310,11 @@ namespace TimelessEchoes.UI
             UpdateButtonVisual(playerDamageImage, StaticReferences.PlayerFloatingDamage);
             UpdateButtonVisual(enemyDamageImage, StaticReferences.EnemyFloatingDamage);
             UpdateButtonVisual(dropTextImage, StaticReferences.ItemDropFloatingText);
-            UpdateButtonVisual(vSyncImage, QualitySettings.vSyncCount > 0);
+            UpdateButtonVisual(autoPinImage, StaticReferences.AutoPinActiveQuests);
+            QualitySettings.vSyncCount = StaticReferences.VSyncEnabled ? 1 : 0;
+            UpdateButtonVisual(vSyncImage, StaticReferences.VSyncEnabled);
+            if (fpsButton != null)
+                fpsButton.interactable = !StaticReferences.VSyncEnabled;
         }
 
         private void OnDropDurationChanged(float value)
@@ -334,6 +351,12 @@ namespace TimelessEchoes.UI
         {
             StaticReferences.ItemDropFloatingText = !StaticReferences.ItemDropFloatingText;
             UpdateButtonVisual(dropTextImage, StaticReferences.ItemDropFloatingText);
+        }
+
+        private void ToggleAutoPin()
+        {
+            StaticReferences.AutoPinActiveQuests = !StaticReferences.AutoPinActiveQuests;
+            UpdateButtonVisual(autoPinImage, StaticReferences.AutoPinActiveQuests);
         }
 
         private void UpdateDurationTexts()
