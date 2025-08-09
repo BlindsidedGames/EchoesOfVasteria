@@ -151,7 +151,7 @@ namespace TimelessEchoes.Upgrades
             oracle.saveData.Resources = dict;
 
             var stats = new Dictionary<string, GameData.ResourceRecord>();
-            foreach (var res in Resources.LoadAll<Resource>(""))
+            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
             {
                 if (res == null) continue;
                 stats[res.name] = new GameData.ResourceRecord
@@ -207,7 +207,7 @@ namespace TimelessEchoes.Upgrades
         {
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
-            foreach (var res in Resources.LoadAll<Resource>(""))
+            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }

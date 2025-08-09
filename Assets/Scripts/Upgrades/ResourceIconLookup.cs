@@ -15,7 +15,7 @@ namespace TimelessEchoes.Upgrades
 
         static ResourceIconLookup()
         {
-            spriteAsset = Resources.Load<TMP_SpriteAsset>(SpriteAssetPath);
+            spriteAsset = Blindsided.Utilities.AssetCache.GetOne<TMP_SpriteAsset>(SpriteAssetPath);
 
             // Pre-populate the dictionary so values can be manually edited.
             // Each key corresponds to a ResourceID with a default index of 0.

@@ -71,7 +71,7 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.taskEntryParent)
                 Destroy(child.gameObject);
 
-            var allTasks = Resources.LoadAll<TaskData>("Tasks");
+            var allTasks = Blindsided.Utilities.AssetCache.GetAll<TaskData>("Tasks");
             var sorted = allTasks
                 .OrderBy(t => t.taskID)
                 .ThenBy(t => t.taskName)

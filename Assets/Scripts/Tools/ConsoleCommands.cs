@@ -27,7 +27,7 @@ namespace TimelessEchoes
                 return;
             }
 
-            var res = Resources.LoadAll<Resource>(string.Empty).FirstOrDefault(r => r.name == resourceName);
+            var res = Blindsided.Utilities.AssetCache.GetAll<Resource>(string.Empty).FirstOrDefault(r => r.name == resourceName);
             if (res != null)
             {
                 manager.Add(res, amount);
@@ -42,7 +42,7 @@ namespace TimelessEchoes
 
             var existing = oracle.saveData.Resources;
             var dict = new Dictionary<string, GameData.ResourceEntry>();
-            foreach (var res in Resources.LoadAll<Resource>(string.Empty))
+            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(string.Empty))
             {
                 if (res == null) continue;
                 GameData.ResourceEntry oldEntry = null;

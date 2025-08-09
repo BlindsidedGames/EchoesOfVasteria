@@ -72,7 +72,7 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.enemyEntryParent)
                 Destroy(child.gameObject);
 
-            var allStats = Resources.LoadAll<EnemyData>("");
+            var allStats = Blindsided.Utilities.AssetCache.GetAll<EnemyData>("");
             var sorted = allStats
                 .OrderBy(s => s.displayOrder)
                 .ThenBy(s => s.enemyName)
