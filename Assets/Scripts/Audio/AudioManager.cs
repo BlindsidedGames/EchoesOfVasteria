@@ -7,6 +7,10 @@ using static Blindsided.EventHandler;
 
 namespace TimelessEchoes.Audio
 {
+    /// <summary>
+    /// Initializes audio mixers and applies saved volumes. Provides helpers to play
+    /// task/combat/hero/chest SFX and background music routed to the proper mixer groups.
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }

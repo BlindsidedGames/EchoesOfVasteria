@@ -101,6 +101,11 @@ For the one-line rich presence shown under a friend's name, the script also
 sets the **steam_display** key with a localization token. Example tokens are
 `#Status_InTown`, `#Status_InRun` and `#Status_Distance`.
 
+## Documentation
+- Architecture overview: `Documentation/ARCHITECTURE.md`
+- Code map: `Documentation/CODEMAP.md`
+- Developer how-tos: `Documentation/HOW_TO_ADD_FEATURES.md`
+
 ## Development Guidelines
 Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
 
