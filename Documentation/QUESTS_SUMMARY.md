@@ -1,671 +1,102 @@
 # Quest Configuration Summary
 
+## Barkley
+
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| A Sturdier Frame | A Sturdier Frame | "Much appreciated lad! Now's time to reinforce this thing, if you don't mind fetching me another few logs?" - Barkley | Reaping distance increased by 10. | Into The Woods | Log x50 |
+| Adding A Roof | Adding a Roof | "You're simply the best. Not much to go now! I'll get this roof on and then we will get started on the walls" - Barkley  | Reaping distance increased by 25. | Putting up Walls | Log x150 |
+| Another Magicool Gift | Another Magicool Gift | "Seek out Barkley, he's been searching for the perfect lumber and you can find him in the Farmlands" - The Vast One | You can now enter The Woods!<br>Reaping distance increased by 25. | An Intro to Trekking |  |
+| Fence1 | A Fence For Your Farm | "Tillman tells me you're growing crops with your essence now? *whistles* that's incredible. Anyhow don't tell him I told ya but he's planning to give you that plot of land over by the windmill and asked me to get started on a fence. If you give me some of them sticks you've collected I would be more than happy to get started for you" - Barkley | Reaping distance increased by 50. | Unlock Corn | Stick x2500 |
+| Fence2 | Out Of Materials | "So what do you think?! It's nice right? I'll need some more sticks to continue though and I am out of logs for the posts. You wouldn't mind fetching some more would ya?" - Barkley | Reaping distance increased by 100. | Unlock Wheat<br>Fence1 | Stick x10000<br>Log x1250 |
+| Fence3 | That's One Fine Gate | "Few more and we'll be done, this time I will need a bit of slime as well, I'll use it in the lashings for the gate" - Barkley | Reaping distance increased by 150. | Fence2 | Stick x25000<br>Log x5000<br>Slime x1000 |
+| Finishing Touches | Finishing Touches | "The Old Timer suggested reinforcing my walls with Stone! What a fantastic idea! You don't mind helping me out one last time do you?" - Barkley | 1% Increased Alter-Echo power | Adding A Roof | Log x20<br>Stone x200 |
+| Into The Woods | Into The Woods | "Here, take my spare axe and go into them woods. We'll need at least 10 logs to get this frame started" - Barkley | Unlocks the Alter-Echoes screen! | Another Magicool Gift | Log x10 |
+| Putting up Walls | Putting up Walls | "Wow, you're a real help! While I get started on these walls would you mind grabbing some more logs for the roof?" - Barkley | Reaping distance increased by 10. | A Sturdier Frame | Log x100 |
+
+## Enemies
+
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| A Slime in Time | A Slime in Time | "Drive back the slimes in the surrounding area and I shall allow you to travel further" - Carl | Slime Alter-Echo.<br>Reaping distance increased by 50. | Another Magicool Gift |  |
+| Beyond the Bone | Beyond the Bone | "Okay, I'm about out of Skelleton based names, finish this last one off for me will ya? You've done well to get this far. I appreciate you" - The Vast One | Skeletons can now drop Vastium Ingots | Grind Their Bones |  |
+| Bone to Pick | Bone to Pick | "Lifes tough kid, but you're tougher. Keep up the great work!" - The Vast One | Skeletons can now drop Copium Ingots | Shiver in Your Bones |  |
+| Bonefire Night | Bonefire Night | "Erif is hot enough to melt bones, bit of magic should solve that though" - The Vast One | Skeletons can now drop Erif Ingots | Watch Them Rattle |  |
+| Grind Their Bones | Grind Their Bones | "At this point you're crushing everything you touch right? Well it just keeps getting tougher from here so strap in" - The Vast One | Skeletons can now drop Idle Ingots | Bone to Pick |  |
+| Protect the Town | Protect the Town | "I've left an artifact with Ivan. Clear out the additional slimes surrounding the town and I am sure he will give it to you" - The Vast One | Magic Dice: provides combat advantages! | A Slime in Time |  |
+| Rattle ‘n’ Roll | Rattle ‘n’ Roll | "Rattles made of skeletons, skeletons made of rattles, oh I don't know how this stuff works anymore" - The Vast One | Skeletons can now drop Dlog Ingots | Bonefire Night |  |
+| Shiver in Your Bones | Shiver in Your Bones | "Contrary to popular belief Lirium is actually quite warm, but the essence sends a shiver through anyone who touches it so people assume its cold" - The Vast One | Skeletons can now drop Lirium Ingots | Rattle ‘n’ Roll |  |
+| Watch Them Rattle | Watch Them Rattle | "Killing Skeletons is a lot of fun. Don't believe me? Just try it and I will make it worth your while" - The Vast One | Skeletons can now drop ingots up to and including Nori | Rock and Stone |  |
+
 ## Eva
-### Berry Sweet
-- **Quest ID:** Strawberry
-- **NPC:** Witch1
-- **Description:** Bring 30 Pumkings to satisfy Eva's cravings.
-- **Reward:** Unlock the Strawberry crop
-  - **Required Quest:** Pumking Party
-  - **Requirements:**
-    - Resource x30
 
-### Carrot Craze
-- **Quest ID:** Carrot
-- **NPC:** Witch1
-- **Description:** Harvest 10 Wartermelone for Eva to unlock carrot seeds.
-- **Reward:** Unlock the Carrot crop
-  - **Required Quest:** Sweet Summer
-  - **Requirements:**
-    - Resource x10
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| A Matter of Health | A Matter of Health | "Collect resources for me and I will cook you up a hearty treat!" - Eva | You can now purchase Health Upgrades! | Another Magicool Gift |  |
+| Tracking Twins | Tracking Twins | "The jam was a real hit! But now everyone in the town wants some. The Twins provide me with all my farming needs. You can find them somewhere in Farmlands, place an order for me and I will teach you to expand your connection to Echoes" - Eva | You can now purchase the following Upgrades:<br>Echo Lifetime. | Which Witch |  |
+| Which Witch | Which Witch? | "Take my magic watering can and fetch some radishes for my jam" - Eva | Eva's Magic Watering Can! | You get this one for free! | Radish x5 |
 
-### Chili Challenge
-- **Quest ID:** Chillie
-- **NPC:** Witch1
-- **Description:** Offer 15 Peppers to test some fiery magic.
-- **Reward:** Unlock the Chillie crop
-  - **Required Quest:** Pepper Pursuit
-  - **Requirements:**
-    - Resource x15
+## Flora and Tillman
 
-### Cool Cucumber
-- **Quest ID:** Cucumber
-- **NPC:** Witch1
-- **Description:** Hand over 20 Lettuce for a refreshing crop upgrade.
-- **Reward:** Unlock the Cucumber crop
-  - **Required Quest:** Lettuce Feast
-  - **Requirements:**
-    - Resource x20
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| Unlock Carrot | Set the Rows | <i>giggles</i> "Thanks for helping with all that wheat Tillman’s been setting out. I’d like to make a refreshing drink for the whole town. I’ll set out some watermelones; would you mind growing them for me?" - Flora | Unlock the Carrot crop. | Unlock Watermelone | Watermelone x300 |
+| Unlock Chilli | Some Like It Hot | “You’ve been such a help. Could you fetch me some of those peppers? I’d like to send Eva a gift basket—she absolutely adores them.” — Flora | Unlock the Chili crop. | Unlock Pepper | Pepper x2000 |
+| Unlock Corn | Too Big to Handle | "There's no way we can get that many radishes in time for Eva... Oh! I see you have her magic watering can! If you gather me 100 Radishes I'd happily get Tillman to teach you a thing or two about corn" - Flora | Unlock the Corn crop. | Tracking Twins | Radish x100 |
+| Unlock Cucumber | Cool as a Cucumber | “Let’s whip up a salad to surprise Eva. Fetch us some tomatoes and lettuce, and we’ll see what we can do.” — Flora & Tillman  | Unlock the Cucumber crop. | Unlock Lettuce | Lettuce x750<br>Tomato x850 |
+| Unlock Funion | Ring Leader | “Strawberries are about the sweetest fruit we know. You’re almost a master farmer now, and I think it’s time for a reward.” — Flora | Unlock the Funion crop. | Unlock Strawberry | Strawberry x3500 |
+| Unlock Leek | Leek the Deal | “Gill promised to trade us a new plant he found on his travels in exchange for some onions! You don’t mind fetching me some onions, do you?” — Tillman | Unlock the Leek crop. | Unlock Onion | Onion x1250 |
+| Unlock Lettuce | Leaf It To Me | “At this point you know the drill — walk with me while I set these tomato seeds, will you? Bring me some of your juiciest Tomatoes and I’ll show you the secret to growing crisp, refreshing Lettuce.” — Flora | Unlock the Lettuce crop. | Unlock Tomato | Tomato x500 |
+| Unlock Onion | Layer It On | “Fantastic work on those ingredients! Could you fetch some cucumber to finish this salad? That would make it perfect—and once you do, we’ll show you the secret to cultivating onions.” — Flora & Tillman | Unlock the Onion crop. | Unlock Cucumber | Cucumber x1000 |
+| Unlock Parsnip | Root Awakening | “Gill says they’re called leeks—whatever that means! Anyway, the rabbits are hungry; let’s see if they like them.” — Tillman | Unlock the Parsnip crop. | Unlock Leek | Leek x1500 |
+| Unlock Pepper | Pepper Upper | “Uh… we definitely shouldn’t feed leeks to the rabbits. Luckily Eva was here to help. I think we’ll stick to parsnip for now — please, please get some for my babies.” — Flora | Unlock the Pepper crop. | Unlock Parsnip | Parsnip x1750 |
+| Unlock Pumpking | Gourd Deeds | “Beats me why The Old Timer likes this stuff, but he promised us some Pumpking seeds if we help him out.” — Tillman | Unlock the Pumking crop. | Unlock Chilli | Chillie x2500 |
+| Unlock Spud | Roots of the Matter | "That watermelone juice hit the spot—reminds me of the old days when I wanted to try carrot juice. How about I set out some seeds and you help me try this out? Bring the carrots in and let’s see where this goes." - Tillman | Unlock the Spud crop. | Unlock Carrot | Carrot x350 |
+| Unlock Strawberry | Berry Scary | “Pumpkings make perfect scarecrow heads. Fetch us some and we’ll help you keep the pests away.” — Flora & Tillman | Unlock the Strawberry crop. | Unlock Pumpking | Pumking x3000 |
+| Unlock Tomato | Vine and Dine | <i>smiles</i> "Eva’s at it again—she must be cooking up a feast with that many potatoes in mind! I’ll seed some potatoes for you; would you mind growing them for me?" - Flora | Unlock the Tomato crop. | Unlock Spud | Spud x400 |
+| Unlock Turnip | Feisty Funions | “Every master farmer needs to know how to wrangle the most devilish food of them all: Funions! Don’t let the name deceive you—this crop may test your sanity. Fetch me some, and I’ll teach you how to grow turnips.” — Flora | Unlock the Turnip crop. | Unlock Funion | Funion x5000 |
+| Unlock Watermelone | Way of The Water | <i>A piece of wheat chaff between his teeth</i> "Well then... looks like each time you harvest something your connection to these plants increases. I've asked Barkley to build a fence and I'm giving you this bit of land, I'm going to teach you to grow every type of crop I know!" | Unlock the Watermelone crop. | Unlock Wheat | Wheat x250 |
+| Unlock Wheat | Strange Patterns | "Much obliged sir, you're welcome to grow our corn crops any time you need some. Wait whats that!? I've never seen a Radish grow like that before! It seems to be connected to you somehow! I'd love to see where this goes. Fetch me some Corn and I will teach you how to grow Wheat" - Tillman | Unlock the Wheat crop. | Unlock Corn | Corn x250 |
 
-### Daily Bread
-- **Quest ID:** Bread
-- **NPC:** Witch1
-- **Description:** Deliver 20 Corn so the Witch can bake fresh bread for the village.
-- **Reward:** Unlock the Wheat crop
-  - **Required Quest:** For the Jam!
-  - **Requirements:**
-    - Resource x20
+## Gill
 
-### For the Jam!
-- **Quest ID:** Jam
-- **NPC:** Witch1
-- **Description:** Collect radishes for Evas Jam
-- **Reward:** Unlock the Corn Crop
-  - **Requirements:**
-    - Resource x5
-
-### Funky Funion
-- **Quest ID:** Funion
-- **NPC:** Witch1
-- **Description:** Donate 20 Strawberries for Eva's new stew.
-- **Reward:** Unlock the Funion crop
-  - **Required Quest:** Berry Sweet
-  - **Requirements:**
-    - Resource x20
-
-### Leek Leak
-- **Quest ID:** Leek
-- **NPC:** Witch1
-- **Description:** Share 20 Onions so Eva can grow hearty leeks.
-- **Reward:** Unlock the Leek crop
-  - **Required Quest:** Onion Odyssey
-  - **Requirements:**
-    - Resource x20
-
-### Lettuce Feast
-- **Quest ID:** Lettuce
-- **NPC:** Witch1
-- **Description:** Supply 20 Tomatoes so Eva can craft a healthy salad.
-- **Reward:** Unlock the Lettuce crop
-  - **Required Quest:** Tomato Triumph
-  - **Requirements:**
-    - Resource x20
-
-### Onion Odyssey
-- **Quest ID:** Onion
-- **NPC:** Witch1
-- **Description:** Deliver 20 Cucumbers for a tearful experiment.
-- **Reward:** Unlock the Onion crop
-  - **Required Quest:** Cool Cucumber
-  - **Requirements:**
-    - Resource x20
-
-### Parsnip Plan
-- **Quest ID:** Parsnip
-- **NPC:** Witch1
-- **Description:** Provide 20 Leeks to expand the root cellar.
-- **Reward:** Unlock the Parsnip crop
-  - **Required Quest:** Leek Leak
-  - **Requirements:**
-    - Resource x20
-
-### Pepper Pursuit
-- **Quest ID:** Pepper
-- **NPC:** Witch1
-- **Description:** Gather 20 Parsnips to spice up the fields.
-- **Reward:** Unlock the Pepper crop
-  - **Required Quest:** Parsnip Plan
-  - **Requirements:**
-    - Resource x20
-
-### Pumking Party
-- **Quest ID:** Pumking
-- **NPC:** Witch1
-- **Description:** Trade 25 Chillies for seeds fit for a king.
-- **Reward:** Unlock the Pumking crop
-  - **Required Quest:** Chili Challenge
-  - **Requirements:**
-    - Resource x25
-
-### Spud Bud
-- **Quest ID:** Spud
-- **NPC:** Witch1
-- **Description:** Bring 15 Carrots so Eva can perfect potato farming.
-- **Reward:** Unlock the Spud crop
-  - **Required Quest:** Carrot Craze
-  - **Requirements:**
-    - Resource x15
-
-### Sweet Summer
-- **Quest ID:** Melon
-- **NPC:** Witch1
-- **Description:** Harvest 30 Wheat to prove your farming prowess and earn the right to grow Watermelone.
-- **Reward:** Unlock the Watermelone crop
-  - **Required Quest:** Daily Bread
-  - **Requirements:**
-    - Resource x30
-
-### Tomato Triumph
-- **Quest ID:** Tomato
-- **NPC:** Witch1
-- **Description:** Deliver 20 Spuds for Evas secret sauce recipe.
-- **Reward:** Unlock the Tomato crop
-  - **Required Quest:** Spud Bud
-  - **Requirements:**
-    - Resource x20
-
-### Turnip Time
-- **Quest ID:** Turnip
-- **NPC:** Witch1
-- **Description:** Deliver 30 Funions to master the final crop.
-- **Reward:** Unlock the Turnip crop
-  - **Required Quest:** Funky Funion
-  - **Requirements:**
-    - Resource x30
-
-
----
-### Feeding the Masses
-- **Quest ID:** FTM
-- **NPC:** Eva
-- **Description:** Eva twirls a ruby-red Rah Dish like a wand. “These roots turn empty bellies into happy hearts,” she winks as Mildred circles the cauldron. “Harvest 50 crisp Rah Dishes so we can fill every pot—and give Utoes something fresh to gnaw.”
-- **Reward:** Gain the Disciple of Rah Dish
-  - **Required Quest:** For the Jam!
-  - **Requirements:**
-    - Resource: Rah Dish x50
-
-### Cornfield Chorus
-- **Quest ID:** Corn
-- **NPC:** Eva
-- **Description:** The witch closes her eyes to the rustling stalks. “Corn sings in four-part harmony. Bring me 100 golden ears so I can weave a lullaby that lulls pests—and leaves Mildred a maze to prowl.”
-- **Reward:** Gain the Disciple of Corn
-  - **Required Quest:** FTM
-  - **Requirements:**
-    - Resource: Corn x100
-
-### Wheat Warding
-- **Quest ID:** Wheat
-- **NPC:** Eva
-- **Description:** Eva sprinkles flour like fairy dust. “A circle of wheat keeps blight and boredom at bay. Reap 100 bundles so we can bake ward-bread for the town (and a crusty treat for the cats).”
-- **Reward:** Gain the Disciple of Wheat
-  - **Required Quest:** Corn
-  - **Requirements:**
-    - Resource: Wheat x100
-
-### Wartermelone Wave
-- **Quest ID:** Wartermelone
-- **NPC:** Eva
-- **Description:** She taps a sloshing melon. “Wartermelone holds the laughter of summer rain. Slice me 100 of these juicy bombs and we’ll flood the square with sweet relief—Mildred can surf the rinds.”
-- **Reward:** Gain the Disciple of Wartermelone
-  - **Required Quest:** Wheat
-  - **Requirements:**
-    - Resource: Wartermelone x100
-
-### Carrot Conjuring
-- **Quest ID:** Carrot
-- **NPC:** Eva
-- **Description:** Eva polishes a bright carrot. “Carrots sharpen vision—no offence, love.” She grins. “Gather 100 so Mildred sees in starlight and Utoes can brew sight-seer soup.”
-- **Reward:** Gain the Disciple of Carrot
-  - **Required Quest:** Wartermelone
-  - **Requirements:**
-    - Resource: Carrot x100
-
-### Spud Spellwork
-- **Quest ID:** Spud
-- **NPC:** Eva
-- **Description:** A potato hovers between her palms. “Spuds ground wild magic. Deliver 100 hearty tubers so we can steady tonight’s rituals—and bake a pillow for Mildred.”
-- **Reward:** Gain the Disciple of Spud
-  - **Required Quest:** Carrot
-  - **Requirements:**
-    - Resource: Spud x100
-
-### Tomato Talisman
-- **Quest ID:** Tomato
-- **NPC:** Eva
-- **Description:** Tomato juice glows as she crushes it. “These sun-hearts bottle warmth for winter. Fetch 100 ripe orbs—Utoes says the pulp gives regen a red-hot kick.”
-- **Reward:** Gain the Disciple of Tomato
-  - **Required Quest:** Spud
-  - **Requirements:**
-    - Resource: Tomato x100
-
-### Lettuce Lullaby
-- **Quest ID:** Lettuce
-- **NPC:** Eva
-- **Description:** She fans a leafy head. “A bed of crisp lettuce hushes restless spirits. Deliver 100 heads so we can line every cot and craft dream-wraps for Mildred’s catnaps.”
-- **Reward:** Gain the Disciple of Lettuce
-  - **Required Quest:** Tomato
-  - **Requirements:**
-    - Resource: Lettuce x100
-
-### Cucumber Chant
-- **Quest ID:** Cucumber
-- **NPC:** Eva
-- **Description:** Eva snaps a cucumber; a cool mist forms. “Cucumbers calm tempers and bruises. Bring 100 so we can chill the forge—and soothe Utoes after his sprinting sprees.”
-- **Reward:** Gain the Disciple of Cucumber
-  - **Required Quest:** Lettuce
-  - **Requirements:**
-    - Resource: Cucumber x100
-
-### Onion Orison
-- **Quest ID:** Onion
-- **NPC:** Eva
-- **Description:** Tears sparkle as she peels an onion. “Onion prayers sting but cleanse. Harvest 100 bulbs so we can cry away curses—Mildred will handle the mopping.”
-- **Reward:** Gain the Disciple of Onion
-  - **Required Quest:** Cucumber
-  - **Requirements:**
-    - Resource: Onion x100
-
-### Leek Lattice
-- **Quest ID:** Leek
-- **NPC:** Eva
-- **Description:** She weaves leeks into a glowing grid. “Leeks channel moonlight into straight lines. Provide 100 sturdy stalks and we’ll raise protective lattices over every row.”
-- **Reward:** Gain the Disciple of Leek
-  - **Required Quest:** Onion
-  - **Requirements:**
-    - Resource: Leek x100
-
-### Parsnip Pact
-- **Quest ID:** Parsnip
-- **NPC:** Eva
-- **Description:** Eva carves runes into a parsnip. “Parsnips remember winter’s patience. Bring 100 so we can seal a pact of endurance—Utoes could use the stamina for night patrol.”
-- **Reward:** Gain the Disciple of Parsnip
-  - **Required Quest:** Leek
-  - **Requirements:**
-    - Resource: Parsnip x100
-
-### Pepper Petition
-- **Quest ID:** Pepper
-- **NPC:** Eva
-- **Description:** She sniffs fiery flakes. “A pinch of pepper wakes even lazy gods. Deliver 100 peppers so Mildred’s whiskers twitch and the spirits perk up to our pleas.”
-- **Reward:** Gain the Disciple of Pepper
-  - **Required Quest:** Parsnip
-  - **Requirements:**
-    - Resource: Pepper x100
-
-### Chillie Charm
-- **Quest ID:** Chillie
-- **NPC:** Eva
-- **Description:** A chilie glows in her hand. “Chillies are peppers with purpose. Fetch 100 and I’ll craft charms that melt frost and fear alike.”
-- **Reward:** Gain the Disciple of Chillie
-  - **Required Quest:** Pepper
-  - **Requirements:**
-    - Resource: Chillie x100
-
-### Pumking Parade
-- **Quest ID:** Pumking
-- **NPC:** Eva
-- **Description:** Eva pats a massive gourd. “Lantern lords of the harvest! Bring 100 pumkings so we can host a parade bright enough for spirits and cats both.”
-- **Reward:** Gain the Disciple of Pumking
-  - **Required Quest:** Chillie
-  - **Requirements:**
-    - Resource: Pumking x100
-
-### Strawberry Summons
-- **Quest ID:** Strawberry
-- **NPC:** Eva
-- **Description:** She plucks a ruby berry. “Strawberries call early-summer sprites. Gather 100 so we can sweet-talk them into blessing the fields—Mildred’s already drooling.”
-- **Reward:** Gain the Disciple of Strawberry
-  - **Required Quest:** Pumking
-  - **Requirements:**
-    - Resource: Strawberry x100
-
-### Funion Festival
-- **Quest ID:** Funion
-- **NPC:** Eva
-- **Description:** Eva laughs, flipping a ring-shaped funion. “These crunchy halos turn any frown upside-down. Deliver 100 to fuel the festival feast and lace the air with joy.”
-- **Reward:** Gain the Disciple of Funion
-  - **Required Quest:** Strawberry
-  - **Requirements:**
-    - Resource: Funion x100
-
-### Turnip Triumph
-- **Quest ID:** Turnip
-- **NPC:** Eva
-- **Description:** She balances a stout turnip on her hat. “Turnips are victory in root form. Bring 100 so we can crown the season’s triumph—and give Utoes a medal he can actually eat.”
-- **Reward:** Gain the Disciple of Turnip
-  - **Required Quest:** Funion
-  - **Requirements:**
-    - Resource: Turnip x100
-
-
-## Ivan
-
-### A slime in time
-- **Quest ID:** slime
-- **NPC:** Ivan1
-- **Description:** Kill slimes in the surrounding area.
-- **Reward:** Recruit the Disciple of slime.
-  - **Requirements:**
-    - Kill 25 enemies
-
-### Protect the Town
-- **Quest ID:** Dice
-- **NPC:** Ivan1
-- **Description:** Kill slimes in the surrounding area.
-- **Reward:** Magic dice, provides combat advantages.
-  - **Required Quest:** A slime in time
-  - **Requirements:**
-## Ores
-    - Kill 500 enemies
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| The names Gill | The Name's Gill | "Hows it goin' mate? Just got back from the best fishin' trip of me life. What's that? You've never been fishing!? Here, take me spare rod and fish up some Flippy Floppy for Mildred. They can be found just about anywhere!" - Gill | You can now purchase the following Upgrades:<br>Regeneration.<br>You can now catch fish!  | Finishing Touches |  |
 
 ## Mildred
 
-### A fishy situation
-- **Quest ID:** Mildred
-- **Description:** Mildred is hungry and Utoes is out of options. Fish up some Flippy Floppy and donate them to Utoes who will grant you more regen as a bonus!
-- **Reward:** Mildred follows and provides you with buffs in exchange for resources!
-  - **Requirements:**
-    - Donate 50 691350e69adc08a4082225a8015d2955
-
-### Another fishy situation
-- **Quest ID:** Mildred1
-- **Description:** Mildred's power seems to be changing and Utoes thinks that if he can get his hands on some Muddy Muck Munchers Mildred might be able to help you out even more!
-- **Reward:** Another buff slot!
-  - **Required Quest:** A fishy situation
-  - **Requirements:**
-    - Donate 50 457dbb132eac48d429163353adb4b532
-- **Unlock Buff Slots:** 1
-
-## Ores
-
-### Chunky Business
-- **Quest ID:** Nori
-- **Description:** “I’ve heard talk of a tougher rock called Dlog, but I need proof we can mine deep enough. Bring me 100 Nori Chunks so I can test my new chisels.” – Ivan
-- **Reward:** Unlocks Dlog nodes for mining
-  - **Requirements:**
-    - Resource x100
-
-### Digging into Dlog
-- **Quest ID:** Dlog
-- **Description:** “That Dlog ore’s dense! Fetch 250 Dlog Chunks so I can temper stronger picks—and maybe sniff out a fiery metal I’ve read about.”
-- **Reward:** Unlocks Erif nodes for mining
-  - **Required Quest:** Chunky Business
-  - **Requirements:**
-    - Resource x250
-
-### Fan the Erif Flames
-- **Quest ID:** Erif
-- **Description:** “Erif burns red-hot in the forge. Haul in 500 Erif Chunks and I’ll show you what a real blade looks like.”
-- **Reward:** Unlocks Lirium nodes for mining
-  - **Required Quest:** Digging into Dlog
-  - **Requirements:**
-    - Resource x500
-
-### Lustrous Lirium Load
-- **Quest ID:** Lirium
-- **Description:** “Lirium’s shine is unmatched. Deliver 1,000 Lirium Chunks so we can inlay your gear—and maybe uncover a curious green ore I keep dreaming about.”
-- **Reward:** Unlocks Copium nodes
-  - **Required Quest:** Fan the Erif Flames
-  - **Requirements:**
-    - Resource x1000
-
-### Breath of Copium
-- **Quest ID:** Copium
-- **Description:** Copium’s lighter than air! Gather 2,500 Copium Chunks so I can craft buoyant plating—and crack the secret of something even rarer.”
-- **Reward:** Unlocks Idle nodes for mining
-  - **Required Quest:** Lustrous Lirium Load
-  - **Requirements:**
-    - Resource x2500
-
-### Inert No More
-- **Quest ID:** Idle
-- **Description:** “Idle ore looks dull, but it resonates with strange energy. Bring me 5,000 Idle Chunks and we’ll finally reach the pinnacle—Vastium.”
-- **Reward:** Unlocks Vastium nodes for mining
-  - **Required Quest:** Breath of Copium
-  - **Requirements:**
-    - Resource x5000
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| BuffSlot2 | Mew | Mildred looks hungry, perhaps you should feed her. | Another buff slot. | Mildred | Muddy Muck Muncher x100 |
+| BuffSlot3 | Seriously? | Seriously. This cat want's more food. | Another buff slot. | BuffSlot2 | Wigglelittle x300 |
+| BuffSlot4 | Just Keep Eating. | Mildred purrs and licks her paws, then she sits back expectantly waiting for more. | Another buff slot! | BuffSlot3 | Flipzoid x1000 |
+| BuffSlot5 | A lap, and a Feast | Mildred jumps onto your lap and paws at the sack of fish. Perhaps you should just give it to her. | Another buff slot! | BuffSlot4 | Bloopicus Maximus x2500 |
+| Echo Casting | Echo Casting | "As you use these buffs more often, my power will feel more natural to you and echoes from your past will cast them for you" - The Vast One | Autocast buff slot 1 is now togglable. | Mildred |  |
+| EchoCast3 | Did you say 1000!? | "I enjoy building worlds, but at times it gets a little lonely" - The Vast One | Autocast buff slot 3 is now togglable. | BuffSlot3<br>The 100 |  |
+| EchoCast4 | You cannot be serious... | "As you explore this world consider the implications of your actions. You're growing the lives of characters I created, assisting them as you assist yourself. Remember yourself in your love for others as sometimes you're all you've got" - The Vast One | Autocast buff slot 4 is now togglable. | BuffSlot4<br>EchoCast3 |  |
+| EchoCast5 | It's over 9000! | "With great power comes great responsibility...Use this wisely young one" - The Vast One | Autocast buff slot 5 is now togglable. | BuffSlot5<br>EchoCast4 |  |
+| Mildred | A Fishy Situation | "It looks like Mildred has taken a liking to you! I bet if you give her some of your Flippy Floppys she will happily help you out on your travels!" - Eva | Mildred follows and provides you with buffs! | The names Gill | Flippy Floppy x25 |
+| The 100 | The 100 | "Each slot will require more casts than the last to unlock. Such is the nature of Echo Casting..." - The Vast One | Autocast buff slot 2 is now togglable. | BuffSlot2<br>Echo Casting |  |
 
 ## Old Timer
-### Stone Salvation
-- **Quest ID:** StoneDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer thumps the cliff with a cracked knuckle. “Stone’s the earth’s first secret, kid. Stack me 200 sturdy blocks so I can carve a greeting that the mountain’ll remember.”
-- **Reward:** Gain the Disciple of Stone
-  - **Requirements:**
-    - Resource: Stone x200
 
-### Eznorb Earthsong
-- **Quest ID:** EznorbDisc
-- **NPC:** Old Timer
-- **Description:** “Feel that faint vibration? That’s Eznorb’s iron heartbeat.” The Old Timer leans close to the rock. “Bring me 100 Eznorb Chunks so I can tune my hammers to its rhythm—and keep the pulse alive.”
-- **Reward:** Gain the Disciple of Eznorb
-  - **Required Quest:** StoneDisc
-  - **Requirements:**
-    - Resource: Eznorb Chunks x100
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| Chunky Business | Chunky Business | "*Grumbles* This town could sure use a better footing. Go fetch some Nori Chunks and we will get started on some pathing" - The Old Timer | Unlocks Dlog nodes.<br>Reaping distance increased by 25. | Finishing Touches | Nori Chunks x100 |
+| Rock and Stone | Rock and Stone | "I may be old but I know me stuff. The metals you find down here will make ye speedy. If ye help me gather some I will share my secrets with Ivan" - The Old Timer | You can now purchase the following Upgrades:<br>Move Speed.<br>You can now enter The Mines. | An Old Timer |  |
+| Unlock Copium | Coping Strategies | "What's that you've got there? Pretty shiny and blue—Lirium, eh? I bet I could forge some top-tier upgrades with that stuff! Could you fetch me some more?" — Ivan | Unlocks Copium nodes. | Unlock Lirium | Lirium Chunks x1000 |
+| Unlock Erif | Stoking the Flames | *Chuckles* "Hah! You actually did it—well I'll be damned. Bring me some of that Dlog ore and we'll see about getting Ivan's forge improved!" - The Old Timer | Unlocks Erif nodes. | Chunky Business | Dlog Chunks x250 |
+| Unlock Idle | Full Steam Ahead | “Pheeewwww! Well then, that green stuff’s got a bit of a kick—these minecarts’ll be moving faster than Eva on a broom! What say ye mine some more Copium and we’ll see how much deeper we can get.” — The Old Timer | Unlocks Idle nodes. | Unlock Copium | Copium Chunks x2500 |
+| Unlock Lirium | Fueling Forges | "I'm beginning to like you, young one. Now that the forge can handle it, fetch some of that Erif you spotted—It’ll get the forge burning hotter than anything this side of the sun." — The Old Timer | Unlocks Lirium nodes. | Unlock Erif | Erif Chunks x500 |
+| Unlock Vastium | Bottomless Ambition | “By the Vast One’s beard, this mine never ends, does it? I’ll wager that Idle ore you’re hauling could be put to fine use. Let’s see how far you can go—I’m just gonna plant myself right here and watch.” — The Old Timer | Unlocks Vastium nodes. | Unlock Idle | Idle Chunks x5000 |
 
-### Nori Night-Vein
-- **Quest ID:** NoriDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer lights a lantern, revealing veins that shimmer midnight blue. “Nori hides where light won’t follow. Haul me 250 Nori Chunks so I can craft chisels that bite through the dark.”
-- **Reward:** Gain the Disciple of Nori
-  - **Required Quest:** EznorbDisc
-  - **Requirements:**
-    - Resource: Nori Chunks x250
+## Vast One
 
-### Dlog Depth-Breaker
-- **Quest ID:** DlogDisc
-- **NPC:** Old Timer
-- **Description:** “Dlog’s denser than a dwarf’s oath,” he chuckles, hefting a battered pick. “Bring 500 Dlog Chunks to the Old Timer so I can temper tools that crack the core—and maybe sniff out a metal that burns.”
-- **Reward:** Gain the Disciple of Dlog
-  - **Required Quest:** NoriDisc
-  - **Requirements:**
-    - Resource: Dlog Chunks x500
-
-### Erif Ember-Hunt
-- **Quest ID:** ErifDisc
-- **NPC:** Old Timer
-- **Description:** Sparks dance in the Old Timer’s beard as he fans a forge. “Erif glows like captured lightning. Fetch 750 Erif Chunks so I can bottle that fire and teach the stone to sing.”
-- **Reward:** Gain the Disciple of Erif
-  - **Required Quest:** DlogDisc
-  - **Requirements:**
-    - Resource: Erif Chunks x750
-
-### Lirium Luster
-- **Quest ID:** LiriumDisc
-- **NPC:** Old Timer
-- **Description:** “They say Lirium reflects the dreams of giants.” The Old Timer hands you a mirror-polished shard. “Bring me 1,000 Lirium Chunks so I can craft lenses that glimpse tomorrow.”
-- **Reward:** Gain the Disciple of Lirium
-  - **Required Quest:** ErifDisc
-  - **Requirements:**
-    - Resource: Lirium Chunks x1000
-
-### Copium Cavern-Wager
-- **Quest ID:** CopiumDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer sniffs the air. “Copium’s fumes’ll make a miner see visions—or excuses. Fetch 1,500 Copium Chunks and we’ll find out which.”
-- **Reward:** Gain the Disciple of Copium
-  - **Required Quest:** LiriumDisc
-  - **Requirements:**
-    - Resource: Copium Chunks x1500
-
-### Idle Core Calling
-- **Quest ID:** IdleDisc
-- **NPC:** Old Timer
-- **Description:** “Idle ore lies still, but its power never sleeps.” He taps a ticking pocket-watch. “Deliver 2,000 Idle Chunks so I can forge gears that grind even while we dream.”
-- **Reward:** Gain the Disciple of Idle
-  - **Required Quest:** CopiumDisc
-  - **Requirements:**
-    - Resource: Idle Chunks x2000
-
-### Vastium Vein Venture
-- **Quest ID:** VastiumDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer spreads a map stitched with starlight. “Vastium stretches farther than any seam I’ve walked. Bring me 3,000 Vastium Chunks and we’ll test whether distance can beat determination.”
-- **Reward:** Gain the Disciple of Vastium
-  - **Required Quest:** IdleDisc
-  - **Requirements:**
-    - Resource: Vastium Chunks x3000
-
----
-
-### Eznorb Crystal Echo
-- **Quest ID:** EznorbCrystalDisc
-- **NPC:** Old Timer
-- **Description:** “A crystal’s just a song trapped in stone.” Deliver 25 Eznorb Crystals to the Old Timer so he can coax out the first verse.
-- **Reward:** Gain the Disciple of Eznorb Crystal
-  - **Requirements:**
-    - Resource: Eznorb Crystals x25
-
-### Nori Crystal Chime
-- **Quest ID:** NoriCrystalDisc
-- **NPC:** Old Timer
-- **Description:** “Nori crystals ring like midnight bells.” Bring 50 of ’em so I can forge a melody the dark itself will dance to.
-- **Reward:** Gain the Disciple of Nori Crystal
-  - **Required Quest:** EznorbCrystalDisc
-  - **Requirements:**
-    - Resource: Nori Crystals x50
-
-### Dlog Crystal Thrum
-- **Quest ID:** DlogCrystalDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer presses a Dlog shard to his ear. “Hear that slow thump? With 75 Dlog Crystals I could build a heart that never halts.”
-- **Reward:** Gain the Disciple of Dlog Crystal
-  - **Required Quest:** NoriCrystalDisc
-  - **Requirements:**
-    - Resource: Dlog Crystals x75
-
-### Erif Crystal Blaze
-- **Quest ID:** ErifCrystalDisc
-- **NPC:** Old Timer
-- **Description:** Flames flicker inside a translucent gem. “Fetch 100 Erif Crystals so we can trap wildfire inside glass—and keep our fingers intact.”
-- **Reward:** Gain the Disciple of Erif Crystal
-  - **Required Quest:** DlogCrystalDisc
-  - **Requirements:**
-    - Resource: Erif Crystals x100
-
-### Lirium Crystal Gleam
-- **Quest ID:** LiriumCrystalDisc
-- **NPC:** Old Timer
-- **Description:** “Lirium Crystals refract moonlight into memories.” Bring 150 to the Old Timer and he’ll grind them into lenses that remember every step you take.
-- **Reward:** Gain the Disciple of Lirium Crystal
-  - **Required Quest:** ErifCrystalDisc
-  - **Requirements:**
-    - Resource: Lirium Crystals x150
-
-### Copium Crystal Whisper
-- **Quest ID:** CopiumCrystalDisc
-- **NPC:** Old Timer
-- **Description:** “Listen close—Copium Crystals tell tall tales.” Deliver 200 and we’ll see whether they’re prophecy or plain old puff.”
-- **Reward:** Gain the Disciple of Copium Crystal
-  - **Required Quest:** LiriumCrystalDisc
-  - **Requirements:**
-    - Resource: Copium Crystals x200
-
-### Idle Crystal Pulse
-- **Quest ID:** IdleCrystalDisc
-- **NPC:** Old Timer
-- **Description:** The Old Timer taps a crystal; it ticks back. “Give me 250 Idle Crystals and I’ll wind the world’s smallest clockwork colossus.”
-- **Reward:** Gain the Disciple of Idle Crystal
-  - **Required Quest:** CopiumCrystalDisc
-  - **Requirements:**
-    - Resource: Idle Crystals x250
-
-### Vastium Crystal Roar
-- **Quest ID:** VastiumCrystalDisc
-- **NPC:** Old Timer
-- **Description:** Vastium Crystals vibrate like distant thunder. “Bring 300 of ’em,” he grins, “and we’ll shake the sky itself awake.”
-- **Reward:** Gain the Disciple of Vastium Crystal
-  - **Required Quest:** IdleCrystalDisc
-  - **Requirements:**
-    - Resource: Vastium Crystals x300
-
-## Gill
-### Flip That Flop
-- **Quest ID:** FlipThatFlop
-- **NPC:** Gill
-- **Description:** Gill whistles a watery tune while Mildred bats at minnows on the dock. “The lady loves her fishy snacks,” he grins. “Net me 100 Floppy Fish and I’ll teach ’em to flop right into her paws—she’ll purr you a tidy buff for the trouble.”
-- **Reward:** Gain a Floppy Disciple
-  - **Required Quest:** For the Jam!
-  - **Requirements:**
-    - Resource: Floppy Fish x100
-
-### Muck-in-the-Mud Mission
-- **Quest ID:** MuddyMuckMuncher
-- **NPC:** Gill
-- **Description:** “Mildred’s whiskers twitch whenever a Muddy Muck Muncher surfaces,” Gill chuckles. “Hook me 50 of the sludge-suckers so she can roll in the muck—and I’ll show you how to make even swamp water sparkle.”
-- **Reward:** Gain the Disciple of Muddy Muck Muncher
-  - **Required Quest:** FlipThatFlop
-  - **Requirements:**
-    - Resource: Muddy Muck Muncher x50
-
-### A Splash of Nobility
-- **Quest ID:** SirSplashfordIII
-- **NPC:** Gill
-- **Description:** Gill doffs an imaginary crown. “Sir Splashford III is royal to the gills. Snare 50 of the pompous puddle-jumpers—Mildred will curtsey, and Utoes swears their scales boost regen if brewed just right.”
-- **Reward:** Gain the Disciple of Sir Splashford III
-  - **Required Quest:** MuddyMuckMuncher
-  - **Requirements:**
-    - Resource: Sir Splashford III x50
-
-### Wiggle Room
-- **Quest ID:** Wigglelittle
-- **NPC:** Gill
-- **Description:** “Wigglelittles never stop dancing,” Gill says, tail swishing in time. “Catch 50 before they wriggle off—Mildred wants a new music box, and Utoes thinks their rhythm could sync with your heartbeat.”
-- **Reward:** Gain the Disciple of Wigglelittle
-  - **Required Quest:** SirSplashfordIII
-  - **Requirements:**
-    - Resource: Wigglelittle x50
-
-### Junior Chompers
-- **Quest ID:** SnapjawJr
-- **NPC:** Gill
-- **Description:** Gill holds up a dented gauntlet. “Snapjaw Jr. bit right through this. Bring me 50 nippers and I’ll forge a brace that even Utoes can’t chew through—plus Mildred loves the click-clack sound.”
-- **Reward:** Gain the Disciple of Snapjaw Jr.
-  - **Required Quest:** Wigglelittle
-  - **Requirements:**
-    - Resource: Snapjaw Jr. x50
-
-### Flipzoid Frenzy
-- **Quest ID:** Flipzoid
-- **NPC:** Gill
-- **Description:** “Flipzoids launch themselves sky-high to stargaze,” Gill laughs. “Snag 50 mid-arc and we’ll grind their fins into gliders—Utoes promises they’ll puff your regen, and Mildred just wants the feathers.”
-- **Reward:** Gain the Disciple of Flipzoid
-  - **Required Quest:** SnapjawJr
-  - **Requirements:**
-    - Resource: Flipzoid x50
-
-### Niblet’s Nerve
-- **Quest ID:** NibletTheBold
-- **NPC:** Gill
-- **Description:** “Niblet the Bold swims straight at sharks,” Gill whispers with admiration. “Land 50 of the fearless fry so we can bottle that courage—Mildred could use it for night patrols, and Utoes for a hearty tonic.”
-- **Reward:** Gain the Disciple of Niblet the Bold
-  - **Required Quest:** Flipzoid
-  - **Requirements:**
-    - Resource: Niblet the Bold x50
-
-### Bloop Goes the Dynamite
-- **Quest ID:** BloopicusMaximus
-- **NPC:** Gill
-- **Description:** The dock shakes as a distant *BLORP* echoes. “That’s Bloopicus Maximus announcing dinner,” Gill grins. “Haul in 50 of the boomers—Mildred will nap in the aftershock, and Utoes says their echo can jump-start your veins.”
-- **Reward:** Gain the Disciple of Bloopicus Maximus
-  - **Required Quest:** NibletTheBold
-  - **Requirements:**
-    - Resource: Bloopicus Maximus x50
-
-
-## Barkley
-### Kindling Call
-- **Quest ID:** Stick
-- **NPC:** Barkley
-- **Description:** Barkley rests his axe on a mossy stump. “A camp-fire’s more than a glow, friend—it’s the forest spirit’s heartbeat in ember form. Stack me 200 sturdy sticks so we can coax that heartbeat to our side (and give Mildred a warm perch after her midnight patrol).”
-- **Reward:** Gain the Disciple of Stick
-  - **Requirements:**
-    - Resource: Sticks x200
-
-### Feathered Whisper
-- **Quest ID:** Feather
-- **NPC:** Barkley
-- **Description:** A single white plume drifts onto Barkley’s brim. He smiles. “Feathers carry the forest’s hush. Gather 100 unruffled plumes.”
-- **Reward:** Gain the Disciple of Feather
-  - **Required Quest:** Stick
-  - **Requirements:**
-    - Resource: Feathers x100
-
-## Wren
-### Bone Rattle Rally
-- **Quest ID:** Bone
-- **NPC:** Wren
-- **Description:** Wren twirls a coyote skull on her finger. “Bones keep stories, you know—rattling maps of every battle fought.” She nods toward Mildred, who’s already pawing at a femur. “Fetch me 500 stout bones so I can carve talismans that point to hidden troves—and give the cat a chew toy or two.”
-- **Reward:** Gain the Disciple of Bone
-  - **Requirements:**
-    - Resource: Bones x500
-
-### Hide and Seek
-- **Quest ID:** Leather
-- **NPC:** Wren
-- **Description:** The ranger unfurls a weather-softened hide. “Good leather turns arrows into whispers.” She grins as Utoes tests a strip’s stretch. “Bring me 250 prime pelts—Mildred wants a new collar, and I’ll stitch quivers light enough to outrun your shadow.”
-- **Reward:** Gain the Disciple of Leather
-  - **Required Quest:** Bone
-  - **Requirements:**
-    - Resource: Leather x250  
-
+| Quest ID | Name | Description | Reward | Required Quests | Resources |
+| --- | --- | --- | --- | --- | --- |
+| An Intro to Trekking | An Intro to Trekking | "Carl the Reaper will ensure you don't stray too far from the town. As you assist the townsfolk he will gradually loosen the leash" - The Vast One | You can now enter The Farmlands!<br>Reap distance increased by 50. | You get this one for free! |  |
+| An Old Timer | An Old Timer | "Heh, this guy's almost been here as long as me. You can find him in the Woods, Barkley probably shouldn't be prospecting anyways" - The Vast One | Reap Distance increased by 20. | Into The Woods |  |
+| Into The Multiverse | Into The Multiverse | "No doubt by now you have noticed occasional spikes in temporal energy, shadows of yourself assisting you. All my realms are connected, these... Echoes of your past bleed through to assist you. Your persistance in aiding the townsfolk has earned you the right to harness some of my power to summon Echoes at will" - The Vast One | New Buffs:<br>Echo \| Combat, Echo \| Tasks | Mildred |  |
+| Meeting Ivan | Meeting Ivan | "In this realm Ivan is your brother. He will assist you in upgrading your various stats, but you will need to gather the resources he needs" - The Vast One | You can now purchase the following Upgrades:<br>Damage, Attack Rate, and Defense.<br>Reap distance increased by 25. | Another Magicool Gift |  |
+| You get this one for free! | You get this one for free! | You wake as if from a dream, gentle words fade into the distance drifting away on the winds of time. <br>"Begin this journey, see it through and I shall release you from this realm" - The Vast One | Access to more quests! |  |  |
