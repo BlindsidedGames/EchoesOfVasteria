@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Blindsided.SaveData;
 using UnityEngine;
 
 namespace TimelessEchoes.Quests
@@ -14,7 +15,6 @@ namespace TimelessEchoes.Quests
         [SerializeField] private QuestEntryUI questEntryPrefab;
         [SerializeField] private GameObject dividerPrefab;
         [SerializeField] private Transform questParent;
-
         private readonly List<QuestEntryUI> entries = new();
         private readonly List<GameObject> extras = new();
 
@@ -66,5 +66,6 @@ namespace TimelessEchoes.Quests
             entries.Remove(entry);
             Destroy(entry.gameObject);
         }
+
     }
 }

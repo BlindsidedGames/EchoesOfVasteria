@@ -38,7 +38,7 @@ namespace Blindsided.Utilities
             set
             {
                 ratioValue = Mathf.Clamp01(value);
-                SafeAreaRatio = ratioValue; // Assuming this is saved elsewhere
+                SafeAreaRatio = ratioValue; // persisted via StaticReferences
                 ApplySafeArea();
             }
         }

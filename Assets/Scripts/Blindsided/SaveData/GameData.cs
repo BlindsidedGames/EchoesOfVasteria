@@ -98,6 +98,7 @@ namespace Blindsided.SaveData
             /// <summary>
             ///     Automatically pin new quests when they become active.
             /// </summary>
+            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public bool AutoPinActiveQuests = false;
 
             /// <summary>
@@ -110,12 +111,14 @@ namespace Blindsided.SaveData
             /// <summary>
             ///     Desired target frame rate for the game.
             /// </summary>
+            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public int TargetFps = 60;
 
             /// <summary>
             ///     Normalised screen aspect ratio for the safe area limiter.
             ///     0 → 16:9, 1 → 32:9.
             /// </summary>
+            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public float SafeAreaRatio;
         }
 
