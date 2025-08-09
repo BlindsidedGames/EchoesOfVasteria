@@ -298,6 +298,20 @@ namespace TimelessEchoes.Quests
             active.Remove(id);
             StartAvailableQuests();
 
+            var pins = oracle.saveData.PinnedQuests;
+            if (AutoPinActiveQuests && pins.Count < PinnedQuestUIManager.MaxPins)
+            {
+                var next = active.Values
+                    .Select(q => q.data)
+                    .FirstOrDefault(q => !pins.Contains(q.questId) && !IsInstantQuest(q));
+                if (next != null)
+                {
+                    // Fill open pin slots with the next active quest when auto-pinning is enabled.
+                    pins.Insert(0, next.questId);
+                    PinnedQuestUIManager.Instance?.RefreshPins();
+                }
+            }
+
             RefreshNoticeboard();
             Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
@@ -442,11 +456,10 @@ namespace TimelessEchoes.Quests
             if (isNewQuest && (AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
             {
                 var pins = oracle.saveData.PinnedQuests;
-                if (!pins.Contains(quest.questId))
+                if (!pins.Contains(quest.questId) && pins.Count < PinnedQuestUIManager.MaxPins)
                 {
+                    // Auto-pin newly started quests when there's room; skip if list is full.
                     pins.Insert(0, quest.questId);
-                    if (pins.Count > PinnedQuestUIManager.MaxPins)
-                        pins.RemoveAt(pins.Count - 1);
                     PinnedQuestUIManager.Instance?.RefreshPins();
                 }
             }
