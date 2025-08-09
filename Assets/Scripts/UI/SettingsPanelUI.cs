@@ -33,7 +33,7 @@ namespace TimelessEchoes.UI
         private TMP_Text fpsButtonText;
 
         [TabGroup("Settings", "Performance")] [SerializeField]
-        private Toggle vSyncToggle;
+        private Button vSyncButton;
 
         [TabGroup("Settings", "Floating Text")] [SerializeField]
         private Slider dropTextDurationSlider;
@@ -71,6 +71,7 @@ namespace TimelessEchoes.UI
         private Image playerDamageImage;
         private Image enemyDamageImage;
         private Image dropTextImage;
+        private Image vSyncImage;
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot1;
@@ -103,12 +104,14 @@ namespace TimelessEchoes.UI
                 windowButton.onClick.AddListener(SetWindowed);
             if (fpsButton != null)
                 fpsButton.onClick.AddListener(ToggleFps);
-            if (vSyncToggle != null)
+            if (vSyncButton != null)
             {
-                vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
-                vSyncToggle.onValueChanged.AddListener(OnVSyncChanged);
+                vSyncButton.onClick.AddListener(ToggleVSync);
+                vSyncImage = vSyncButton.GetComponent<Image>();
+                var on = QualitySettings.vSyncCount > 0;
+                UpdateButtonVisual(vSyncImage, on);
                 if (fpsButton != null)
-                    fpsButton.interactable = !vSyncToggle.isOn;
+                    fpsButton.interactable = !on;
             }
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.AddListener(OnDropDurationChanged);
@@ -126,6 +129,7 @@ namespace TimelessEchoes.UI
             playerDamageImage = playerDamageButton != null ? playerDamageButton.GetComponent<Image>() : null;
             enemyDamageImage = enemyDamageButton != null ? enemyDamageButton.GetComponent<Image>() : null;
             dropTextImage = dropTextButton != null ? dropTextButton.GetComponent<Image>() : null;
+            vSyncImage ??= vSyncButton != null ? vSyncButton.GetComponent<Image>() : null;
 
             if (saveSlots != null)
             {
@@ -175,8 +179,8 @@ namespace TimelessEchoes.UI
                 windowButton.onClick.RemoveListener(SetWindowed);
             if (fpsButton != null)
                 fpsButton.onClick.RemoveListener(ToggleFps);
-            if (vSyncToggle != null)
-                vSyncToggle.onValueChanged.RemoveListener(OnVSyncChanged);
+            if (vSyncButton != null)
+                vSyncButton.onClick.RemoveListener(ToggleVSync);
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.RemoveListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -222,12 +226,15 @@ namespace TimelessEchoes.UI
             ApplyFps();
         }
 
-        private void OnVSyncChanged(bool on)
+        private void ToggleVSync()
         {
-            QualitySettings.vSyncCount = on ? 1 : 0;
+            var on = QualitySettings.vSyncCount > 0;
+            QualitySettings.vSyncCount = on ? 0 : 1;
+            var nowOn = !on;
+            UpdateButtonVisual(vSyncImage, nowOn);
             if (fpsButton != null)
-                fpsButton.interactable = !on;
-            if (on)
+                fpsButton.interactable = !nowOn;
+            if (nowOn)
             {
                 Application.targetFrameRate = -1;
                 UpdateFpsButtonText();
@@ -244,9 +251,9 @@ namespace TimelessEchoes.UI
                 StaticReferences.TargetFps = Fps60;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = StaticReferences.TargetFps;
-            if (vSyncToggle != null)
+            if (vSyncButton != null)
             {
-                vSyncToggle.SetIsOnWithoutNotify(false);
+                UpdateButtonVisual(vSyncImage, false);
                 if (fpsButton != null)
                     fpsButton.interactable = true;
             }
@@ -290,6 +297,7 @@ namespace TimelessEchoes.UI
             UpdateButtonVisual(playerDamageImage, StaticReferences.PlayerFloatingDamage);
             UpdateButtonVisual(enemyDamageImage, StaticReferences.EnemyFloatingDamage);
             UpdateButtonVisual(dropTextImage, StaticReferences.ItemDropFloatingText);
+            UpdateButtonVisual(vSyncImage, QualitySettings.vSyncCount > 0);
         }
 
         private void OnDropDurationChanged(float value)
