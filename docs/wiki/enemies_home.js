@@ -16,29 +16,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const slimeStatsByColor = {
     green: {
-      small: { exp: 1, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/Slime_Small_Green.png' },
-      medium:{ exp: 4, hp: 66, dmg: 4.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, img: '../images/Slime_Medium_Green.png' },
-      large: { exp: 15, hp: 200, dmg: 20, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, img: '../images/Slime_Big_Green.png' },
+      small: { exp: 1, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/enemies/slimes/Slime_Small_Green.png' },
+      medium:{ exp: 4, hp: 66, dmg: 4.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, img: '../images/enemies/slimes/Slime_Medium_Green.png' },
+      large: { exp: 15, hp: 200, dmg: 20, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, img: '../images/enemies/slimes/Slime_Big_Green.png' },
     },
     yellow: {
-      small: { exp: 2, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, color: '#eab308' },
-      medium:{ exp: 5, hp: 96, dmg: 4.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, color: '#eab308' },
-      large: { exp: 20, hp: 295, dmg: 20, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, color: '#eab308' },
+      small: { exp: 2, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/enemies/slimes/Slime_Small_Yellow.png' },
+      medium:{ exp: 5, hp: 96, dmg: 4.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, img: '../images/enemies/slimes/Slime_Medium_Yellow.png' },
+      large: { exp: 20, hp: 295, dmg: 20, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, img: '../images/enemies/slimes/Slime_Big_Yellow.png' },
     },
     blue: {
-      small: { exp: 3, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, color: '#3b82f6' },
-      medium:{ exp: 7, hp: 126, dmg: 7.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, color: '#3b82f6' },
-      large: { exp: 25, hp: 391, dmg: 38, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, color: '#3b82f6' },
+      small: { exp: 3, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/enemies/slimes/Slime_Small_Blue.png' },
+      medium:{ exp: 7, hp: 126, dmg: 7.2, def: 0.3, atkSpd: 1.5, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: spawn.medium, img: '../images/enemies/slimes/Slime_Medium_Blue.png' },
+      large: { exp: 25, hp: 391, dmg: 38, def: 1, atkSpd: 2, atkRange: 1, moveSpd: 6, vision: 7, assist: 5, wander: 4, spawn: spawn.large, img: '../images/enemies/slimes/Slime_Big_Blue.png' },
     },
     red: {
-      small: { exp: 5, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, color: '#ef4444' },
-      medium:{ exp:10, hp:156, dmg:10.2, def:0.6, atkSpd:1.5, atkRange:1, moveSpd:5, vision:7, assist:5, wander:3, spawn: spawn.medium, color: '#ef4444' },
-      large: { exp:30, hp:487, dmg:57,   def:2,   atkSpd:2,   atkRange:1, moveSpd:6, vision:7, assist:5, wander:4, spawn: spawn.large, color: '#ef4444' },
+      small: { exp: 5, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/enemies/slimes/Slime_Small_Red.png' },
+      medium:{ exp:10, hp:156, dmg:10.2, def:0.6, atkSpd:1.5, atkRange:1, moveSpd:5, vision:7, assist:5, wander:3, spawn: spawn.medium, img: '../images/enemies/slimes/Slime_Medium_Red.png' },
+      large: { exp:30, hp:487, dmg:57,   def:2,   atkSpd:2,   atkRange:1, moveSpd:6, vision:7, assist:5, wander:4, spawn: spawn.large, img: '../images/enemies/slimes/Slime_Big_Red.png' },
     },
     pink: {
-      small: { exp:10, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, color: '#ec4899' },
-      medium:{ exp:25, hp:216, dmg:16.2, def:0.9, atkSpd:1.5, atkRange:1, moveSpd:5, vision:7, assist:5, wander:3, spawn: spawn.medium, color: '#ec4899' },
-      large: { exp:50, hp:679, dmg:94,   def:3,   atkSpd:2,   atkRange:1, moveSpd:6, vision:7, assist:5, wander:4, spawn: spawn.large, color: '#ec4899' },
+      small: { exp:10, hp: 5, dmg: 1, def: 0, atkSpd: 1, atkRange: 1, moveSpd: 3, vision: 7, assist: 5, wander: 2, spawn: spawn.small, img: '../images/enemies/slimes/Slime_Small_Pink.png' },
+      medium:{ exp:25, hp:216, dmg:16.2, def:0.9, atkSpd:1.5, atkRange:1, moveSpd:5, vision:7, assist:5, wander:3, spawn: spawn.medium, img: '../images/enemies/slimes/Slime_Medium_Pink.png' },
+      large: { exp:50, hp:679, dmg:94,   def:3,   atkSpd:2,   atkRange:1, moveSpd:6, vision:7, assist:5, wander:4, spawn: spawn.large, img: '../images/enemies/slimes/Slime_Big_Pink.png' },
     }
   };
 
@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const variantName = card.querySelector('.variant-name');
     const prevBtn = card.querySelector('.prev');
     const nextBtn = card.querySelector('.next');
+    const imgEl = card.querySelector('.skeleton-img');
 
     prevBtn.textContent = '‹';
     nextBtn.textContent = '›';
@@ -119,11 +120,21 @@ document.addEventListener('DOMContentLoaded', () => {
       dots.appendChild(dot);
     });
 
+    const skeletonImages = {
+      'Swordsman': '../images/enemies/skeletons/Skeleton_Swordman.png',
+      'Archer': '../images/enemies/skeletons/Skeleton_Bowman.png',
+      'Mage': '../images/enemies/skeletons/Skeleton_Mage.png'
+    };
+
     const update = () => {
       const data = skeletons[idx];
       variantName.textContent = data.name;
       setStats(statsEls, data);
       syncDots(dots, idx);
+      if (imgEl && skeletonImages[data.name]) {
+        imgEl.src = skeletonImages[data.name];
+        imgEl.alt = `Skeleton ${data.name}`;
+      }
     };
 
     prevBtn.addEventListener('click', () => { idx = (idx - 1 + skeletons.length) % skeletons.length; update(); });

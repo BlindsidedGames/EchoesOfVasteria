@@ -19,6 +19,7 @@ function initTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Let wiki control its own theme; default to dark if unset
   initTheme();
   const lightBtn = document.getElementById('light-btn');
   const darkBtn = document.getElementById('dark-btn');

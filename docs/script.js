@@ -57,13 +57,28 @@ function addSmoothScrolling() {
 }
 
 function addThemeToggle() {
-    // Check for saved theme preference or default to system preference
+    // Let wiki control its theme independently
+    if (document.body.classList.contains('wiki-page')) {
+        return;
+    }
+
+    // If page declares a locked theme, enforce it
+    const lockedTheme = document.documentElement.getAttribute('data-lock-theme');
+    if (lockedTheme === 'dark') {
+        document.documentElement.classList.remove('light-mode');
+        document.documentElement.classList.add('dark-mode');
+        return;
+    }
+
+    // Check for saved theme preference; default to dark when not set
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme) {
+
+    // Start from a clean state to avoid both classes present
+    document.documentElement.classList.remove('light-mode', 'dark-mode');
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
         document.documentElement.classList.add(savedTheme + '-mode');
-    } else if (prefersDark) {
+    } else {
         document.documentElement.classList.add('dark-mode');
     }
     
