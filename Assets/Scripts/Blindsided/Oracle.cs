@@ -78,8 +78,10 @@ namespace Blindsided
 
         private void Start()
         {
-            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
             Load();
+            if (StaticReferences.TargetFps <= 0)
+                StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
+            Application.targetFrameRate = StaticReferences.TargetFps;
             StartCoroutine(LoadMainScene());
             InvokeRepeating(nameof(SaveToFile), 10, 10);
         }
