@@ -207,23 +207,19 @@ namespace Blindsided.Utilities
                 var screenWidthInCanvasUnits = Screen.width / scaleFactor;
                 var screenHeightInCanvasUnits = Screen.height / scaleFactor;
 
-                var outerHeight = screenHeightInCanvasUnits; // full height
                 var currentWidth = screenWidthInCanvasUnits - left - right;
-                var targetWidth = outerHeight * maxAllowedAspect - (left + right);
+                var currentHeight = screenHeightInCanvasUnits - top - bottom;
+                var currentAspect = currentWidth / currentHeight;
 
-                if (currentWidth > targetWidth)
+                if (currentAspect > maxAllowedAspect)
                 {
+                    // The area is too wide, so we need to add horizontal padding.
+                    var targetWidth = currentHeight * maxAllowedAspect;
                     var delta = currentWidth - targetWidth;
+
+                    // Distribute the change equally to the left and right padding variables.
                     left += delta * 0.5f;
                     right += delta * 0.5f;
-                }
-                else if (currentWidth < targetWidth)
-                {
-                    var targetHeight = (screenWidthInCanvasUnits - left - right) / maxAllowedAspect;
-                    var delta = screenHeightInCanvasUnits - targetHeight;
-                    var halfDelta = delta * 0.5f;
-                    top = Mathf.Max(minPaddingTop, top + halfDelta);
-                    bottom = Mathf.Max(minPaddingBottom, bottom + halfDelta);
                 }
             }
 
