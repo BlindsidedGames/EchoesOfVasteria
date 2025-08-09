@@ -327,6 +327,7 @@ MonoBehaviour:
   lastPlayedText: {fileID: 821732118682794867}
   safetyToggleImage: {fileID: 0}
   safetyEnabled: 0
+  completionPercentage: 0
 --- !u!1 &2300954487030177252
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,8 +832,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 40
-  m_MinHeight: 21
+  m_MinWidth: 32
+  m_MinHeight: -1
   m_PreferredWidth: -1
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
