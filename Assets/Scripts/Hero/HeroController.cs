@@ -146,6 +146,11 @@ namespace TimelessEchoes.Hero
         private AIDestinationSetter setter;
         private MapUI mapUI;
 
+#if !DISABLESTEAMWORKS
+        [SerializeField] private float richPresenceUpdateInterval = 1f;
+        private float nextRichPresenceUpdate;
+#endif
+
         private State state;
 
         private TaskController taskController;
