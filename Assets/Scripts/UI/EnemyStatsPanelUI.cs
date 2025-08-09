@@ -45,19 +45,7 @@ namespace TimelessEchoes.UI
         {
             UpdateEntries();
             SortEntries();
-            nextUpdateTime = Time.unscaledTime + updateInterval;
             UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-        }
-
-        private void Update()
-        {
-            if (UITicker.Instance != null) return;
-            if (Time.unscaledTime >= nextUpdateTime)
-            {
-                UpdateEntries();
-                SortEntries();
-                nextUpdateTime = Time.unscaledTime + updateInterval;
-            }
         }
 
         private void OnDisable()

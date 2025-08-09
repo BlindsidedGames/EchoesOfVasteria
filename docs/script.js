@@ -1,3 +1,111 @@
+// Basic carousel logic for homepage screenshots and any other .carousel instances
+(function(){
+  function initCarousel(root){
+    const track = root.querySelector('.carousel-track');
+    const slides = Array.from(root.querySelectorAll('.carousel-slide'));
+    const prevBtn = root.querySelector('.carousel-btn.prev');
+    const nextBtn = root.querySelector('.carousel-btn.next');
+    const dotsContainer = root.querySelector('.carousel-dots');
+    if (!track || slides.length === 0) return;
+
+    let currentIndex = 0;
+    let isPointerDown = false;
+    let startX = 0;
+    let deltaX = 0;
+
+    // Accessibility roles
+    root.setAttribute('role', 'region');
+    track.setAttribute('role', 'group');
+    slides.forEach((slide, i) => {
+      slide.setAttribute('role', 'group');
+      slide.setAttribute('aria-roledescription', 'slide');
+      slide.setAttribute('aria-label', `Slide ${i+1} of ${slides.length}`);
+    });
+
+    // Build dots
+    let dots = [];
+    if (dotsContainer){
+      dotsContainer.innerHTML = '';
+      dots = slides.map((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-label', `Go to slide ${i+1}`);
+        b.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(b);
+        return b;
+      });
+    }
+
+    function updateUI(){
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      if (dots.length){
+        dots.forEach((d, i) => d.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false'));
+      }
+      slides.forEach((s, i) => s.setAttribute('aria-hidden', i === currentIndex ? 'false' : 'true'));
+    }
+
+    function goTo(i){
+      const max = slides.length - 1;
+      currentIndex = Math.max(0, Math.min(max, i));
+      updateUI();
+    }
+
+    function next(){ goTo(currentIndex + 1); }
+    function prev(){ goTo(currentIndex - 1); }
+
+    // Buttons
+    if (prevBtn) prevBtn.addEventListener('click', prev);
+    if (nextBtn) nextBtn.addEventListener('click', next);
+
+    // Pointer/touch swipe
+    function onPointerDown(e){
+      isPointerDown = true;
+      startX = (e.touches ? e.touches[0].clientX : e.clientX);
+      deltaX = 0;
+      root.classList.add('grabbing');
+    }
+    function onPointerMove(e){
+      if (!isPointerDown) return;
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      deltaX = x - startX;
+    }
+    function onPointerUp(){
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      root.classList.remove('grabbing');
+      const threshold = Math.max(40, root.clientWidth * 0.08);
+      if (deltaX > threshold) prev();
+      else if (deltaX < -threshold) next();
+      deltaX = 0;
+    }
+
+    const viewport = root.querySelector('.carousel-viewport') || root;
+    viewport.addEventListener('mousedown', onPointerDown);
+    viewport.addEventListener('mousemove', onPointerMove);
+    viewport.addEventListener('mouseup', onPointerUp);
+    viewport.addEventListener('mouseleave', onPointerUp);
+    viewport.addEventListener('touchstart', onPointerDown, { passive: true });
+    viewport.addEventListener('touchmove', onPointerMove, { passive: true });
+    viewport.addEventListener('touchend', onPointerUp);
+
+    // Keyboard support
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    });
+
+    // Initialize
+    goTo(0);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.carousel').forEach(initCarousel);
+    // Localize any <time> elements on the page
+    localizeAllTimes();
+  });
+})();
+
 // Modern JavaScript for Echoes of Vasteria website
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the website
@@ -23,6 +131,24 @@ function initializeWebsite() {
     // Compute dynamic offsets
     setDynamicOffsets();
     window.addEventListener('resize', setDynamicOffsets);
+}
+
+function localizeAllTimes(){
+  try {
+    const times = document.querySelectorAll('time');
+    times.forEach(t => {
+      const raw = t.getAttribute('datetime') || t.textContent || '';
+      const normalized = raw.replace(/(st|nd|rd|th)/g, '');
+      let d = new Date(normalized);
+      if (isNaN(d.getTime())){
+        const m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if (m){ d = new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1])); }
+      }
+      if (!isNaN(d.getTime())){
+        t.textContent = d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+    });
+  } catch {}
 }
 
 function setDynamicOffsets() {

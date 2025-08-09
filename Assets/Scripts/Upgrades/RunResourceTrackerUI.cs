@@ -36,12 +36,14 @@ namespace TimelessEchoes.Upgrades
         {
             if (resourceManager != null)
                 resourceManager.OnResourceAdded += OnResourceAdded;
+            TimelessEchoes.UI.UITicker.Instance?.Subscribe(PollHideWindow, 0.05f);
         }
 
         private void OnDisable()
         {
             if (resourceManager != null)
                 resourceManager.OnResourceAdded -= OnResourceAdded;
+            TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(PollHideWindow);
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace TimelessEchoes.Upgrades
                 window.SetActive(true);
         }
 
-        private void Update()
+        private void PollHideWindow()
         {
             if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
                 if (window != null && window.activeSelf)

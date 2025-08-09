@@ -56,9 +56,9 @@ namespace Blindsided.Utilities.Pooling
             {
                 pool = new ObjectPool<GameObject>(
                     () => Object.Instantiate(prefab),
-                    o => o.SetActive(true),
-                    o => o.SetActive(false),
-                    Object.Destroy);
+                    o => { if (o != null) o.SetActive(true); },
+                    o => { if (o != null) o.SetActive(false); },
+                    o => { if (o != null) Object.Destroy(o); });
                 pools[id] = pool;
             }
             return pool;

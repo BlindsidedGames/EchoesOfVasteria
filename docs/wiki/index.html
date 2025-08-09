@@ -23,13 +23,11 @@
         <div class="container">
     <div class="nav-left">
         <a href="../index.html">Home</a>
-                <a href="index.html" aria-current="page">Wiki Home</a>
         <a href="../privacy.html">Privacy Policy</a>
     </div>
     <div class="nav-right">
-        <input type="search" id="search-input" list="search-options" placeholder="Search wiki...">
-        <button id="light-btn">Light</button>
-        <button id="dark-btn">Dark</button>
+        <button id="light-btn" class="theme-toggle" aria-label="Switch to light mode" title="Light">☀️</button>
+        <button id="dark-btn" class="theme-toggle" aria-label="Switch to dark mode" title="Dark">🌙</button>
     </div>
 </div>
     </div>
@@ -43,6 +41,7 @@
             <li><a href="index.html#quests">Quests</a></li>
                 <li><a href="index.html#buffs">Buffs</a></li>
             <li><a href="index.html#enemies">Enemies</a></li>
+            <li><a href="index.html#changes">Changes</a></li>
         </ul>
     </nav>
         
@@ -466,22 +465,497 @@
             
         <section id="changes">
             <h2>Changes</h2>
-                <div class="changes-content">
-                    <p class="no-changes">No recorded changes at this time.</p>
-                </div>
+            <div class="changes-content">
+                <div id="latestPatch"></div>
+                <div id="olderPatches" class="patches-scroll" aria-label="Older patches"></div>
+            </div>
+            <!-- Embedded source to avoid external file loads -->
+            <script id="patchnotes-source" type="text/plain">
+# Echoes of Vasteria Patch 23 | August 8th, 2025
+### Changes
+- Maptype now shows on the graph hover
+- New buff type: Extra Reap Distance
+- Added minimum distances to item entries
+- Added minimum and maximum spawn distances for task entries
+- Added name and description for the rest of the quests
+- Buff timers now show decimal time if under 10 seconds remain
+- Added hotkeys 1-5 for buff casting on desktop
+### Bugfixes
+- Pink slime now scales at the proper 20 distance per level up from the 1 it was accidentally set to.
+
+# Echoes of Vasteria Patch 22 | August 7th, 2025 
+- Small trees are no longer tasks
+- Quests that are ready to complete will now appear at the top of the noticeboard
+### Quests
+- 3 new fence related quests to get the farm protected, yields a total of 300 additional distance.
+- Made some progress on quest descriptions/names. All the crop quests are now done!
+### Balance
+- Bones in chests 100% -> 10%
+- More levels for regen and health
+- Instead of onions for the first few levels echo duration now takes wheat
+### Milestones
+- Updated Combat Milestones
+- Updated and added new Mining Milestones
+
+
+# Echoes of Vasteria Patch 21 | August 6th, 2025 
+## Changes
+- Best /m now shows on each resource in the resource tab of stats
+- On windows the title of the window now shows the same status as steam rich presence
+- Distance based buffs no longer expire based on time
+- Reworked buffs to be quest rewardable, and quest upgradeable
+- Goals -> Quests
+- There is now a console command to abandon-run
+- Skills window should now close on death
+- Added decor for Farmlands, Woods, and River
+- Removed non description upgrade texts.
+### Quests
+- Eva now gives tracking twins quest which involves meeting the Twins in the farmlands.
+- The Twins now give a quest to fetch Eva's radish order for them.
+- New Information quest after A Fishy Situation, Rewards the two echo buffs.
+  - For now the rest of the buffs unlock when you get buff slot 2.
+### Skills
+- Farming now has Milestones up to level 50. 
+## Bugfixes
+- Dice will now correctly enable itself again
+- Trees now correctly show in the stats screen
+- Removed the dead instance of the movement buff
+- Hopefully fixed that pesky river bug
+- The hero should no longer switch targets mid combat
+
+
+# Echoes of Vasteria Patch 20 | August 5th, 2025
+## Changes
+- Various typos and grammatical changes. Thanks <@111403531608522752> 
+- Slimes now only have 3 spawn stages, one for small, one for medium, one for large. Their colours have different rarities, and higher tier ones scale faster with their level. Small slimes start at 50 and spawn all the way to 1000 distance, not accounting for any map offsets.
+- The enemy you are currently fighting now shows its hp to the right of its health bar.
+- The map start buttons now hide themselves while any town window is open.
+- Valid Goals now automatically pin themselves.
+- Buff slots are now able to be toggled to autocast specific slots. I call this Echo Casting.
+- Enemies now show their name while you're attacking them.
+- Added a new window that shows your total earned resources since beginning a run.
+- Swapped the Settings and stats buttons.
+- Floating text now shows your resources at the location you get them and has icons for each resource type.
+- Added medium and large slimes back in.
+- Added the rest of the crops back in.
+- Added the rest of the ores back in.
+- Added all Alter Echoes back, and added goals to get them.
+- Added back the Medium and Large slimes.
+- Alter Echoes have been overhauled, they instead now produce 1% of your best resource per minute of that resource type. This will scale with goals.
+- Buffs no longer have a cost.
+- Buffs are no longer able to be stacked.
+
+- Another UI overhaul
+- Reworked save system allowing for 3 save slots.
+## Balance
+- Enemies level now takes into account their starting spawn distance as well as the map offset so you don't start out fighting level 5+ slimes.
+### Resources
+- Chunk drop chance 50% -> 70%
+- Crystal drop chance 20% -> 40%
+### Enemies
+- Skeleton Swordsman
+  - Damage/lvl 0.1 -> 0.25
+  - Defense/lvl 0.05 -> 0.1
+## Bugfixes
+- Enemies now spawn on the river.
+- Inventory is no longer incorrectly offset.
+- All slimes now have drops.
+- Hero can now once again get past 125 run distance.
+- Hero now keeps a list of enemies that are engaged to avoid leaving combat unintentionally between skeleton fights.
+## Backend
+- Improved enemies to keep a list of themselves for access by the player instead of using findobjectsbytype constantly.
+- Reworked backend to allow localization to be pushed to google sheets and pulled from.
+
+# Timeless Patch 19 | July 30th, 2025
+## Changes
+- Runs are now abandoned in the stats when the application is closed mid run.
+- "Distance Travelled:" -> "Distance Reached:".
+- Wiki -> Library.
+- Echoes now stay active up to 30 units ahead of the hero up from 20.
+- Echoes now have icons instead of colours.
+- Regen has been changed to a regular stat Upgrade.
+- Donation quests and donation in general has been removed.
+- Utoes removed from the game.
+- Mildred is now Eva's cat. 
+- Entirely new quest line.
+- Echoes now complete tasks on screen and return to Caleb if they cannot find any.
+- Credits was moved to the settings screen.
+- Disciples -> Alter Echoes
+- Quests -> Goals
+- Caleb now correctly paths around tasks.
+- Ores now leave rock behind when they are mined similar to how tree stumps are left.
+- New Maps
+  - Farmlands
+  - Woods
+  - Mines
+  - River
+- Enemies now have level and their level increases the further you go.
+- Floating damage now just shows your actual damage without the additional values.
+## Balance
+- Tasks no longer have a 0% chance to spawn after their maxX, instead their chance is reduced to 10%
+- Defense has been buffed 0.01 -> 0.02
+## Bugfixes
+- Opening the stats window will no longer bug out the skills window.
+- Large slimes now have the correct image in stats.
+- Echoes are no longer multiplying Calebs stats.
+- Rest of metal disciples have had their setup fixed.
+- Echoes can no longer set the run distance.
+- Autobuff no longer looks deactivated when returning to town after dying.
+- A Slime in Time now correctly unlocks its disciple.
+## Backend
+- Swaped to a flags system instead of booleans for the can spawn areas. Before it was a bool for each "Grass" "Sand" "Water" flags scales far better and lets me add additonal ones. EG "Mines" "MineWalls"
+- Rewrote the procedural generation to be data driven rather than hardcoded.
+- Doubled the fidelity of pathfinding, movement should feel less jankey, and this allows for tasks to be pathed around by Caleb and Enemies
+
+P.s much of the previous content is still missing. Developing quests is time consuming also some of the town visuals are just wrong or out of place. Please bare with me as I get this right.
+
+There are currently two enemies in the game the small green slime and the Skeleton Swordsman. I will add more as it feels right. 
+
+# Timeless Patch 18 | July 22nd, 2025 Happy Birthday to me!
+*The thing I want most for my birthday is more bug reports and suggestions!*
+## Changes
+- Echoes no longer also receive the Autocast Echo.
+- New settings button.
+- Moved the skills window to the left side of the screen.
+- Dad joke can now be closed by clicking on it, or right clicking.
+- Dad jokes are no longer so powerful that they can block the inventory.
+- Echoes are now colour tinted.
+   - Farming only: **Yellow**.
+  - Woodcutting only: **Green**.
+  - Fishing only: **Blue**.
+  - Mining only: **Orange**.
+  - Looting only: **Purple**.
+  - Combat only: **Red**.
+  - Combination of any: Caleb's colour at 70% alpha.
+- Added large variants for each of the slimes.
+- Added new crops to the town that show up as you earn disciples.
+- Added a fenced area around the crops.
+- Reworked the Town UI.
+- New intro quests.
+- New Font, sorry needed to do this for translation purposes.
+- New Dev note seciton just click on it to make it go away.
+## Balance Changes
+- Updated Red and Pink slimes values. 
+- Attack speed cost now starts at 2 and scales by 2 per level from levles 0-200 then starts at 5000 from level 201 and increases by 5 per level until level 1000 where it caps out.
+- Defense now scales up to 1000 where it maxes out.
+## Bugfixes
+- Radish no longer spawns everywhere.
+- Nori Crystal disciple is no longer there.
+- Echoes finishing tasks no longer interrupt Caleb.
+- Fixed an issue where some fish were not dropping before 10km
+- Combat triggers from enemies should now work properly.
+- Should no longer be able to cast buffs when dead.
+## Backend
+- Documented enemy balance and updated the references to make them easier to edit.
+
+# Timeless Patch 17 | July 20th, 2025
+## Changes
+- Echoes are now a thing.
+- Added Disciples for remaining resources
+- Added Quests for the new Disciples using placeholder names for the NPC's
+- Added Steam stat tracking for Reaps, Total Kills, and Slimes Killed.
+- Instant task milestones will now instead spawn echoes.
+- New text in inventory shows the last selected resource. 
+- 3 New Mildred quests for the remaining buff slots.
+- 2 New Buffs: Echo, and Combat Echo.
+- Buff autocasting unlocks after casting 100 buffs.
+## Balance Changes
+- Reduced the rate of chests by  25%-90% scaling with rarity. so whilst wooden chests had a rate of 0.2 before they now have a rate of 0.15 and Vastium chests have gone from 0.01 to 0.001 with the others having similar reductions in-between those values.
+- Fish have gone from 1.5 up to 2 across the board.
+## Bugfixes
+- Dice now works again.
+## Backend
+- Reworked Disciple data into scriptable objects to make expanding the system easier, and the workflow is now in line with how the rest of the projects data management works allowing for an expandable system and a LOT less work in the editor.
+- Refactored Buffs, Quests, and Disciples to pull directly from the resources folder rather than manually managing a list of each that can be set wrong by the designer. (Not me I swear!)
+- Another rework on the map generation. Task categories now have their own set of weights which are iterated over first when choosing a task.
+
+# Timeless Patch 16 | July 18th, 2025
+## Changes
+- Quests now highlight with a star when you have one able to be turned in.
+- Quests now display their type category.
+## Minor Changes
+- Chest opening sound.
+- Watering Sound.
+- Hero death sound.
+- Animated Swan.
+## Bugfixes
+- Quests now properly update their icons when you discover resources.
+- Distance buffs now properly reset when you restart a run.
+## Backend
+- Shifted task distance logic to task data and tidied up the formatting to make balancing easier in the future.
+- Created documentation for tasks.
+
+# Timeless Patch 15 | July 17th, 2025
+## Changes
+- Added patreons to the credits
+- Reduced enemy density 0.2 -> 0.18
+- Remade the inventory UI
+- Movespeed now caps out at level 250
+- New drop icons for Run Drop UI
+## Minor Changes
+- Version number finally in options.
+- Better watering can icon.
+- Retreat button now reflects that it is queued.
+- Fixed the shadow on the distance UI.
+## Bugfixes
+- Clouds are now on the correct layer.
+
+# Timeless Patch 14 | July 16th, 2025
+Restarting is recommended for this patch.
+## Changes
+- Reworked movement and Health costs.
+- Added the rest of the crops to the spawn logic (Oops)
+- Chests can now spawn on grass as well.
+- Caleb's shoes now require metal to break the sound barrier. You will still need plenty of sticks and slime to distribute the heat that is generated and avoid burns.
+- New meeting system for NPCs
+- Enemy Balance | Vision no longer scales with their power, should help avoid offscreen swarming.
+  - All enemies now have a vision range of 7
+  - All enemies now have an assist ally range of 5
+- Pressing the return to town button during combat is now possible and queues up your return to town.
+- New button to auto return at the end of run when the hero dies so you can queue up a return rather than worrying about your lovely graphs.
+- You can now hold to repeatedly purchase upgrades you can afford.
+## Minor Changes
+- Preferences are now saved when wiping
+- The reaper can now enter from the right as well!
+## Bugfixes
+- Invisible buttons no longer have shadows.
+- Mildred can now walk backwards.
+- Fixed shadow on the buffs display in run.
+## Backend
+- Caleb now targets any enemies who engage with him rather than ignoring them till they hit him.
+
+# Timeless Patch 13 | July 15th, 2025
+
+## Notice!
+- All tasks are now in the game, I have shuffled the ID's which means that your statistics will be all messed up. I'm not going to force a wipe but I do strongly encourage you to start over. 
+- Upgrades for Attack, Attack Rate, and Defense have had their recipes changed so a fresh save will give the intended experience on those. However I still need to do health and movement, so feel free to wait till next patch.
+## Changes
+- Attack speed now entirely upgraded using feathers.
+- Damage now upgraded using various chunks and crystals.
+- Added 7 new chests.
+  - Chest types are now guaranteed to spawn Bones, and Leather. As well as all ingot types at a 80% -> 10% chance at their respective distances from earliest to latest game ores. 
+  - Rarer chests provide more resources, rather than different ones.
+- Added quests for the remaining crops.
+- Added The first wiki content.
+## Minor Changes
+- New descriptions for the Stat upgrades.
+- Shadows for run UI
+## Bugfixes
+- Inventory no longer appears behind start run and other buttons.
+- Discord button was squished thanks <@1082504076597674075> 
+## Backend
+- Created a bunch of chest animations.
+
+# Timeless Patch 12 | July 14th, 2025
+## Changes
+- 7 New Ores
+- Nerfed Red Minislime
+  - HP 100 -> 75
+  - Defense 3 -> 1.5
+- Reworked the task sorting, a little less up and down should occur now.
+- Added Wiki
+## Minor Changes
+- Eznorb ore now spawns from 40, down from 100.
+-  Discord button
+- Slowed down the reap animation
+- Added a shadow for town buttons.
+## Bugfixes
+- Hero health can now reach 0% on the healthbar.
+- Fixed a bug where duplicate entries would happen with the stats screen.
+## Backend
+- Separated the weight logic for tasks between Sand Grass and Water, we can now set density of tasks on each area separately.
+- Split fishing tasks so that they can show up correctly in the Tasks stats.
+- Split the tasks list into separate skill based lists to make setup of tasks far easier to manage as well as balance.
+
+# Timeless Patch 11 | July 13th, 2025
+## Changes
+- Quests window now shows completed quests.
+- Quests
+  - Daily Bread
+  - Sweet Summer
+  - Another fishy situation
+- New Crops
+  - Wheat
+  - Watermelone
+- 3 new Farming milestones.
+- Added a reap animation for instant kills, and for player death.
+- Disciple of slime.
+- Added a bunch of stuff to the town map.
+## Minor Changes
+- Town windows now properly close when selecting stats, and visa versa
+- New visuals in town for the disciples.
+## Bugfixes
+- Fixed an issue where the wrong skill was selected when reopening the skills window.
+
+# Timeless Patch 10 | July 12th, 2025
+## Changes
+- Buffs
+  - Vampirism 
+  - Lerp
+- Added run duration as a graph view.
+- Medium slimes have been added
+  - *Green* 150 -500
+  - *Yellow * 220-1000
+  - *Blue* 300-1500
+  - *Red * 1200 - 2500
+  - *Pink * 2500 - infinity
+- Split Buffs away from Eva, Mildred is now responsible for buffs. Buff slots are now unlocked via quests.
+## Minor Changes
+- Skills window now show the skill name just above the experience
+- Skill experience now properly uses calcutils
+- Buff time now shows as a time rather than a straight up number.
+## Bugfixes
+- Slots that are not assigned, and unavailable buffs are now greyed out.
+## Backend
+- Distance based buffs are now possible. 
+- Lifesteal buff now possible
+- Instant tasks now possible
+- Split Health into two components with an abstract base class. Now theres HealthBase, Health (For enemies) and HeroHealth
+
+# Timeless Patch 9 | July 11th, 2025
+## Features
+- Reworked buffs
+- New Combat Enhancer buff (Mostly for testing, expect this to change)
+## Minor Changes
+- Tooltips now function on hover instead of click.
+- Tooltip for buffs
+- Combat sounds
+## Bugfixes
+- Loud sounds no longer happen
+- Achievement manager is no longer getting destroyed.
+## Backend
+- Ton of code stuff for the new buff system.
+- Removed Deminishing cuve on buff durations. Now give a flat value.
+
+# Timeless Patch 8 | July 10th, 2025
+## Features
+- New Achievements
+  - Mildred
+  - Slimey Situation
+  - Meet Eva
+-  New Milestones
+  - 4 new Combat milestones
+  - 3 new Fishing milestones
+  - 2 new Mining milestones
+  - 3 new Woodcutting milestones
+- New Quest
+  - For the Jam!
+    - Unlocks Corn
+- Corn Crop
+## Minor Changes
+- Feed the masses is now locked behind For the Jam!
+## Bugfixes
+- Earning health milestone now properly applies the bonus health.
+- Quests now subtract their resources when turned in.
+- SFX sounds now correctly assign themselves to the mixer.
+## Backend
+- Quests now have a list of prerequisites and no longer have a NextQuest section.
+- Tasks can now optionally check if a quest is completed.
+
+# Timeless Patch 7 | July 10th, 2025
+## Features
+- Skills now grant 1% increased rate completing tasks of that type per level. Combat grants 1% additional resources per level.
+- Most tasks no longer reset when entering combat and starting them back up. Fishing still does. You can thank <@111403531608522752> 
+- Audio
+  - Music
+  - SFX
+- Options Screen
+  - Audio sliders.
+- Mildred <@111403531608522752> 
+  - New quest to unlock Mildred. Donate 200 Flippy Floppy
+## Minor Changes
+- The stats panel now shows "Steps Taken" instead of "Distance Travelled" to more accurately represent the value.
+- Wipe save button in options. For now no warning.
+- NPC Dialogue is now white.
+## Bugfixes
+- Tooltips no longer show decimal values.
+
+# Timeless Patch 6 | July 9th, 2025
+## Features
+- Combat skill
+  - lvl 2 | 0.1 dmg
+  - lvl 5 | 1% instant kill chance
+- Cloud Save
+## Minor Changes
+- Ivan now spawns at 40 down from 50 distance (we need a better way to describe this metric)
+- Changed a bunch of findfirstobjectbytype references to static references and created logging for when these are missing.
+## Bugfixes
+- Calebs healthbar can now go down to 1% fill instead of 5 to avoid it looking like you still have a bunch of health.
+
+# Timeless Patch 5 | July 8th, 2025
+## Changes
+- Percent bonus resources now scale at 2% per kill IF you retreat manually. Risk reward.
+- The resources graph now shows a separate graph colour for the bonus resources amount.
+- Overhauled Run UI
+- New Achievement, Meet Ivan
+## Minor Changes
+- New gravestone when you die.
+## Bugfixes
+- fish values weren't loading correctly when the game starts.
+
+# Timeless Patch 4 | July 8th, 2025
+## Changes
+-  New Quest for Ivan kill slimes to earn the dice.
+- New Cat npc, Utoes the Regen Master.
+  - Donate fish to Utoes to gain log10/10 of that amount as regen.
+- Returning to town manually now gives 50% more resources
+- Dying now brings upo a death screen with return to town and retry button, automatically retry after 20 seconds.
+- New blacksmith art.
+- New return to town button shows text and the bonus resources from manually returning.
+## Minor Changes
+- Quest reward line now prefixes with "Reward: "
+## Bugfixes
+- Enemy counts on the quests now correctly show the kills since the quest started and show the correct values when the game loads.
+
+# Timeless Patch 3 | 06/07/2025
+## Changes
+- Calebs healthbar is now below to avoid it going off the top of the screen. 
+  - His healthbar now starts off green and goes red when below 25% health.
+- Healthbars no longer look empty when enemies have very low health.
+- New town window manager. Now clicking any button to open windows other than the inventory closes other windows except the inventory.
+- Tasks no longer spawn on the first 15 tiles.
+- Reduced Large Fruit Tree task time from 7 seconds down to 3
+- Changed Tree progress bar colours to be blue. From now on all tasks will have blue bars.
+- Overhauled the stats screen, its now a window like the rest of the town.
+- Reduced stick scaling on levels before 50, still scales like crazy after 50
+## Bugfixes
+- Dad-O-Cado button no longer open and closes its window, now has its old refresh functionality with right click to close.
+- Tasks now sort correctly.
+- Quests now correctly hide until their respective NPCS are met.
+
+# Timeless Patch 2 | 06/07/2025
+## Changes
+- Separated Enemy and Task spawning density. Should make things more consistent when adding new tasks.
+- Removed the tavern scene in favour of a small town.
+- Dad-O'cado now has his own button in the Town
+- Reworked the witch UI
+- Added Disciples to the witch. (This is her passive generation system, it functions on and offline.)
+- Added a windmill
+- Added Quest UI
+- Added Quest System
+- Added a Quit button
+- Added Credits button.
+## Bugfixes
+- None for this patch, please report some if you find them and give me lots of feedback on the new system.
+
+# Timeless Patch | 05/07/2025
+## Changes
+- Drops during a run now shuffle to the front.
+- New Trees!
+  - Small | Fruit, Oak, Birch, Spruce
+  - Medium| Fruit, Oak, Birch, Spruce
+  - Large| Fruit, Oak, Birch, Spruce
+  - These start at depths 0, 100, 500, 2500 and have different chopping times chances to spawn and amounts of sticks that they give.
+## Bugfixes
+- Drop text now correctly spawns at its new location rather than the old one. Ty <@102618255281131520> 
+- Task progress bars are now hidden by default Thanks again <@102618255281131520> 
+- The buff bar now correctly hides itself when there are no active buffs, Again thanks <@102618255281131520>
+            </script>
         </section>
     </main>
 </div>
     
-<datalist id="search-options">
-    <option value="Wiki Home">
-        <option value="Tasks">
-        <option value="Quests">
-        <option value="Buffs">
-        <option value="Enemies">
-        <option value="Slimes">
-        <option value="Skeletons">
-</datalist>
+<!-- Removed search UI -->
     
 <footer>
         <div class="container">
@@ -490,8 +964,145 @@
         </div>
 </footer>
     
+<button class="pie-fab" id="pieFab" aria-label="Open navigation"></button>
+<div class="pie-backdrop" id="pieBackdrop"></div>
+<div class="pie-menu" id="pieMenu" aria-hidden="true">
+    <a href="#tasks">Tasks</a>
+    <a href="#quests">Quests</a>
+    <a href="#buffs">Buffs</a>
+    <a href="#enemies">Enemies</a>
+    <a href="#changes">Changes</a>
+    <!-- more could be added as needed -->
+  </div>
+
 <script src="wiki.js"></script>
-    <script src="enemies_home.js"></script>
-    <script src="../script.js"></script>
+<script src="enemies_home.js"></script>
+<script src="../script.js"></script>
+<script>
+// Build collapsible patch notes from embedded source
+(function(){
+  const latestTarget = document.getElementById('latestPatch');
+  const olderTarget = document.getElementById('olderPatches');
+  const source = document.getElementById('patchnotes-source');
+  if (!latestTarget || !olderTarget || !source) return;
+  const text = source.textContent || source.innerText || '';
+
+  const blocks = splitIntoPatches(text);
+  if (!blocks.length) return;
+  // Latest at top (first block in file is latest)
+  latestTarget.innerHTML = '';
+  latestTarget.appendChild(renderPatch(blocks[0], true));
+
+  const fragOlder = document.createDocumentFragment();
+  blocks.slice(1).forEach(b => fragOlder.appendChild(renderPatch(b, false)));
+  olderTarget.innerHTML = '';
+  olderTarget.appendChild(fragOlder);
+
+  function splitIntoPatches(text){
+    const lines = text.split(/\r?\n/);
+    const patches = [];
+    let current = null;
+    for (const line of lines){
+      const m = /^\s*#\s*(.*?)\s*Patch(?:\s*(\d+))?\s*\|\s*(.+)$/i.exec(line);
+      if (m){
+        if (current) patches.push(current);
+        current = {
+          prefix: (m[1] || '').trim(),
+          patchNumber: m[2] ? m[2].trim() : null,
+          rawDate: m[3].trim(),
+          lines: []
+        };
+      } else if (current) {
+        current.lines.push(line);
+      }
+    }
+    if (current) patches.push(current);
+    return patches;
+  }
+
+  function localizeDate(raw){
+    const parsed = Date.parse(raw.replace(/(st|nd|rd|th)/g, ''));
+    if (!isNaN(parsed)){
+      return new Date(parsed).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    const ddmmyyyy = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (ddmmyyyy){
+      const d = new Date(parseInt(ddmmyyyy[3]), parseInt(ddmmyyyy[2]) - 1, parseInt(ddmmyyyy[1]));
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    return raw;
+  }
+
+  function renderPatch(block, open){
+    const details = document.createElement('details');
+    details.className = 'patch';
+    if (open) details.setAttribute('open','');
+
+    const summary = document.createElement('summary');
+    const title = document.createElement('div');
+    title.className = 'patch-title';
+    const h = document.createElement('strong');
+    h.textContent = block.patchNumber ? `Patch ${block.patchNumber}` : 'Patch';
+    const dateEl = document.createElement('time');
+    dateEl.textContent = localizeDate(block.rawDate);
+    dateEl.dateTime = block.rawDate;
+    title.appendChild(h);
+    title.appendChild(dateEl);
+    summary.appendChild(title);
+    details.appendChild(summary);
+
+    const body = document.createElement('div');
+    body.className = 'patch-body';
+    body.appendChild(formatMarkdownLike(block.lines.join('\n')));
+    details.appendChild(body);
+    return details;
+  }
+
+  function formatMarkdownLike(raw){
+    const container = document.createElement('div');
+    const lines = raw.split(/\r?\n/);
+    let ul = null;
+    function closeUl(){ if (ul){ container.appendChild(ul); ul = null; } }
+    for (let line of lines){
+      if (!line.trim()) { closeUl(); continue; }
+      const h4 = /^\s*####\s*(.+)$/.exec(line); // rarely used
+      const h3 = /^\s*###\s*(.+)$/.exec(line);
+      const h2 = /^\s*##\s*(.+)$/.exec(line);
+      const h1 = /^\s*#\s*(.+)$/.exec(line);
+      const li = /^\s*-\s+(.*)$/.exec(line);
+      if (h4){ closeUl(); const el = document.createElement('h4'); el.textContent = h4[1]; container.appendChild(el); continue; }
+      if (h3){ closeUl(); const el = document.createElement('h3'); el.textContent = h3[1]; container.appendChild(el); continue; }
+      if (h2){ closeUl(); const el = document.createElement('h3'); el.textContent = h2[1]; container.appendChild(el); continue; }
+      if (h1){ closeUl(); const el = document.createElement('h3'); el.textContent = h1[1]; container.appendChild(el); continue; }
+      if (li){ if (!ul) ul = document.createElement('ul'); const item = document.createElement('li'); item.textContent = li[1]; ul.appendChild(item); continue; }
+      closeUl(); const p = document.createElement('p'); p.textContent = line; container.appendChild(p);
+    }
+    closeUl();
+    return container;
+  }
+})();
+</script>
+<script>
+  // Toggle pie menu on mobile
+  (function(){
+    const fab = document.getElementById('pieFab');
+    const menu = document.getElementById('pieMenu');
+    const backdrop = document.getElementById('pieBackdrop');
+    if (!fab || !menu) return;
+    function toggle(){
+      const isOpen = menu.classList.toggle('open');
+      menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      if (backdrop) backdrop.classList.toggle('open', isOpen);
+    }
+    fab.addEventListener('click', toggle);
+    // close when clicking a link
+    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+      menu.classList.remove('open');
+      menu.setAttribute('aria-hidden', 'true');
+      if (backdrop) backdrop.classList.remove('open');
+    }));
+    if (backdrop) backdrop.addEventListener('click', toggle);
+  })();
+</script>
 </body>
 </html>

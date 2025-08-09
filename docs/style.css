@@ -52,6 +52,11 @@
   --transition-fast: 150ms ease-in-out;
   --transition-normal: 250ms ease-in-out;
   --transition-slow: 350ms ease-in-out;
+
+  /* Sticky element sizing (used for offsets and anchor scroll margins) */
+  --header-height: 60px;
+  --topnav-height: 52px;
+  --nav-offset: calc(var(--header-height) + var(--topnav-height) + 12px);
 }
 
 /* Dark mode */
@@ -151,31 +156,9 @@ body.homepage::before {
   z-index: -1;
 }
 
-/* Header */
+/* Header (removed on homepage) */
 header {
-  background-color: var(--header-bg);
-  border-bottom: 1px solid var(--border-color);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.95);
-}
-
-:root.dark-mode header {
-  background-color: rgba(15, 23, 42, 0.95);
-}
-
-header h1 {
-  margin: 0;
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  display: none;
 }
 
 /* Navigation */
@@ -229,15 +212,21 @@ nav a:hover::after {
   background-color: var(--nav-bg);
   border-bottom: 1px solid var(--border-color);
   padding: var(--spacing-md) var(--spacing-xl);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
   flex-wrap: wrap;
   gap: var(--spacing-md);
   position: sticky;
   top: var(--header-height, 0px);
   z-index: 99;
   backdrop-filter: blur(8px);
+  min-height: var(--topnav-height);
+}
+
+.top-nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .top-nav .nav-left {
@@ -249,23 +238,29 @@ nav a:hover::after {
 .top-nav .nav-right {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 6px;
 }
 
-.top-nav input[type="search"] {
-  padding: var(--spacing-sm) var(--spacing-md);
+
+/* Theme toggle icon buttons */
+.theme-toggle {
+  padding: 6px 8px;
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  width: 36px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.top-nav input[type="search"]:focus {
-  outline: none;
+.theme-toggle:hover {
+  background-color: var(--bg-secondary);
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
 }
 
 .top-nav button {
@@ -388,6 +383,14 @@ a:visited {
 /* Ensure anchor jumps account for header + top-nav on wiki pages */
 .wiki-page section {
   scroll-margin-top: var(--nav-offset, 0px);
+}
+
+/* Minimalist wiki sections: remove card chrome */
+body.wiki-page section {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 .sidebar h2,
@@ -581,6 +584,19 @@ footer a:hover {
   transform: translateY(-2px);
 }
 
+/* Store buttons */
+.btn-store {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.btn-store svg {
+  width: 18px;
+  height: 18px;
+}
+.btn-store .icon { width: 18px; height: 18px; }
+.btn-store .icon-ext { opacity: 0.85; }
+
 .cta-buttons {
   display: flex;
   gap: var(--spacing-md);
@@ -633,6 +649,22 @@ footer a:hover {
   margin: 0;
 }
 
+/* Make feature card links behave like cards and be fully clickable */
+.feature-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.feature-link:hover {
+  text-decoration: none;
+}
+
+/* Features section CTA */
+.features-cta {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+}
+
 /* About section */
 .about {
   margin-bottom: var(--spacing-2xl);
@@ -642,6 +674,97 @@ footer a:hover {
   font-size: var(--font-size-lg);
   line-height: 1.7;
   color: var(--text-muted);
+}
+
+/* Screenshots carousel */
+.screenshots .carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform var(--transition-slow);
+  will-change: transform;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+
+.carousel-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+
+.carousel-btn:hover {
+  background: rgba(0,0,0,0.55);
+}
+
+.carousel-btn.prev { left: 12px; }
+.carousel-btn.next { right: 12px; }
+
+.carousel-dots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.carousel-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
+
+.carousel-dots button[aria-selected="true"] {
+  background: rgba(255,255,255,0.95);
+}
+
+/* Store badges */
+.store-badge {
+  display: inline-block;
+  line-height: 0;
+}
+.store-badge img { height: 78px; width: auto; }
+.store-badge--google img { height: 78px; }
+.store-badge--apple img { height: 78px; }
+.store-badge--steam img { height: 78px; }
+
+@media (max-width: 480px) {
+  .store-badge img { height: 67px; }
 }
 
 /* Changes section */
@@ -662,6 +785,63 @@ footer a:hover {
   font-style: italic;
   margin: 0;
 }
+
+/* Remove outer box around patch list on homepage; keep on wiki */
+body.homepage .changes .changes-content {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Also remove outer box on wiki changes section */
+/* Remove outer box on wiki changes AND the section's own card chrome */
+body.wiki-page #changes {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+body.wiki-page .changes .changes-content { background: transparent; border: none; padding: 0; }
+
+/* Patch collapsible shared styles (homepage + wiki) */
+.patch {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.patch > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--bg-secondary), rgba(0,0,0,0));
+  border-bottom: 1px solid var(--border-color);
+}
+
+.patch > summary::-webkit-details-marker { display: none; }
+.patch > summary::after { content: '▸'; transform: rotate(0deg); transition: transform var(--transition-fast); color: var(--text-muted); }
+.patch[open] > summary::after { transform: rotate(90deg); }
+.patch .patch-title { display: flex; align-items: baseline; gap: var(--spacing-sm); }
+.patch .patch-body { padding: var(--spacing-lg); }
+.patch time { color: var(--text-muted); font-weight: 600; }
+
+/* Scroll area for older patches on wiki */
+.patches-scroll {
+  max-height: 480px;
+  overflow: auto;
+  padding-top: var(--spacing-md);
+}
+
+.patches-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.patches-scroll::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 8px; }
+.patches-scroll::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* Tagline */
 .tagline {
@@ -689,15 +869,15 @@ footer a:hover {
     gap: var(--spacing-sm);
   }
   
-  .top-nav {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  .top-nav { flex-direction: column; align-items: stretch; }
+  .top-nav .container { flex-wrap: wrap; justify-content: center; }
   
   .top-nav .nav-left,
   .top-nav .nav-right {
     justify-content: center;
   }
+  .top-nav .nav-right { width: 100%; }
+  .top-nav input[type="search"] { width: 100%; }
   
   main {
     padding: var(--spacing-lg);

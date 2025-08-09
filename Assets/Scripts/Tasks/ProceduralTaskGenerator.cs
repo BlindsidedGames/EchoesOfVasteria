@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
+using Blindsided.Utilities.Pooling;
 using Sirenix.OdinInspector;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Enemies;
@@ -214,7 +215,19 @@ namespace TimelessEchoes.Tasks
                     DestroyImmediate(obj);
                 else
 #endif
-                    Destroy(obj);
+                {
+                    var marker = obj.GetComponent<Blindsided.Utilities.Pooling.PooledObject>();
+                    // If it looks pooled and is currently active, return to pool. If already inactive, skip.
+                    if (marker != null)
+                    {
+                        if (obj.activeInHierarchy)
+                            PoolManager.Release(obj);
+                    }
+                    else
+                    {
+                        Destroy(obj);
+                    }
+                }
             }
 
             generatedObjects.Clear();
@@ -317,7 +330,8 @@ namespace TimelessEchoes.Tasks
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
                 var obj = Instantiate(entry.data.prefab, pos, Quaternion.identity, parentTf);
-                generatedObjects.Add(obj.gameObject);
+                if (clearExisting)
+                    generatedObjects.Add(obj.gameObject);
             }
 
             foreach (var npc in npcTasks)
@@ -367,7 +381,8 @@ namespace TimelessEchoes.Tasks
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
                 var obj = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
-                generatedObjects.Add(obj);
+                if (clearExisting)
+                    generatedObjects.Add(obj);
                 var mono = obj.GetComponent<MonoBehaviour>();
                 if (mono != null)
                 {
@@ -453,10 +468,32 @@ namespace TimelessEchoes.Tasks
                     return false;
 
             var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-            var obj = Instantiate(data.taskPrefab, pos, Quaternion.identity, parentTf);
-            generatedObjects.Add(obj.gameObject);
 
-            MonoBehaviour mono = obj;
+            // Tasks that leave persistent visuals behind should be instantiated, not pooled
+            bool isPersistentTask = data.taskPrefab is WoodcuttingTask ||
+                                    data.taskPrefab is MiningTask ||
+                                    data.taskPrefab is FarmingTask ||
+                                    data.taskPrefab is OpenChestTask;
+
+            GameObject spawned;
+            if (isPersistentTask)
+            {
+                spawned = Instantiate(data.taskPrefab.gameObject, pos, Quaternion.identity, parentTf);
+            }
+            else
+            {
+                // Ensure the pool is created fresh for this prefab to avoid reusing destroyed template instances
+                PoolManager.CreatePool(data.taskPrefab.gameObject, 0);
+                spawned = PoolManager.Get(data.taskPrefab.gameObject);
+                // Parent under the tasks root; segment shifting will explicitly release pooled children first
+                spawned.transform.SetParent(parentTf, true);
+                spawned.transform.position = pos;
+                spawned.transform.rotation = Quaternion.identity;
+            }
+
+            generatedObjects.Add(spawned);
+
+            var mono = spawned.GetComponent<BaseTask>();
             if (mono == null) return true;
 
             var addToList = chosenTerrain == null || chosenTerrain.taskSettings.addToTaskList;

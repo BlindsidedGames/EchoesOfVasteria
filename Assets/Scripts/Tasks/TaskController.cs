@@ -6,6 +6,7 @@ using TimelessEchoes.Stats;
 using Unity.Cinemachine;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes.Tasks
 {
@@ -578,7 +579,7 @@ namespace TimelessEchoes.Tasks
                     else if (task is FarmingTask)
                         Destroy(obj.GetComponent<FarmingTask>());
                     else
-                        Destroy(obj.gameObject);
+                        PoolManager.Release(obj.gameObject);
                 }
             }
             else if (task is MonoBehaviour mb)
@@ -592,7 +593,7 @@ namespace TimelessEchoes.Tasks
                 else if (task is FarmingTask)
                     Destroy(mb);
                 else
-                    Destroy(mb.gameObject);
+                    PoolManager.Release(mb.gameObject);
             }
 
             if (task != null && task.IsComplete())

@@ -84,11 +84,13 @@ namespace TimelessEchoes.UI
         private void OnEnable()
         {
             EventHandler.OnLoadData += HandleLoadData;
+            UITicker.Instance?.Subscribe(PollCloseAllWindows, 0.05f);
         }
 
         private void OnDisable()
         {
             EventHandler.OnLoadData -= HandleLoadData;
+            UITicker.Instance?.Unsubscribe(PollCloseAllWindows);
         }
 
         private void Start()
@@ -138,9 +140,9 @@ namespace TimelessEchoes.UI
                 Instance = null;
         }
 
-        private void Update()
+        private void PollCloseAllWindows()
         {
-            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            if (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.rightButton.wasPressedThisFrame)
                 CloseAllWindows();
         }
 

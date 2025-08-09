@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TimelessEchoes.Tasks;
+using Blindsided.Utilities.Pooling;
 using UnityEngine;
 
 namespace TimelessEchoes.MapGeneration
@@ -87,7 +88,22 @@ namespace TimelessEchoes.MapGeneration
                     controller.RemoveTaskObject(obj);
             }
 
-            Destroy(old.tasks);
+            // Before destroying the old tasks root, release any pooled children back to their pools
+            if (old.tasks != null)
+            {
+                var pooledChildren = old.tasks.GetComponentsInChildren<PooledObject>(true);
+                foreach (var marker in pooledChildren)
+                {
+                    if (marker == null) continue;
+                    var go = marker.gameObject;
+                    if (go == null) continue;
+                    // Detach so it isn't destroyed with the parent, then release
+                    go.transform.SetParent(null, true);
+                    if (go.activeInHierarchy)
+                        PoolManager.Release(go);
+                }
+                Destroy(old.tasks);
+            }
             if (old.decor != null)
                 Destroy(old.decor);
 

@@ -13,12 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="homepage">
-    <header>
-        <div class="container">
-            <h1>Echoes of Vasteria</h1>
-            <p class="tagline">Incremental Hero Management Adventure</p>
-        </div>
-    </header>
+    
     
     <nav class="center-nav">
         <div class="container">
@@ -37,42 +32,44 @@
                         Embark on an epic journey in Echoes of Vasteria, an incremental hero management game where your hero automatically ventures through procedurally generated maps. Complete tasks, take on quests, and battle formidable enemies as you progress through this captivating adventure.
                     </p>
                     <div class="cta-buttons">
-                        <a href="https://store.steampowered.com/app/2940000" target="_blank" rel="noopener" class="btn btn-primary">
-                            <span>Play on Steam</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                <polyline points="15,3 21,3 21,9"></polyline>
-                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                            </svg>
+                        <a href="https://store.steampowered.com/app/2940000" target="_blank" rel="noopener" class="store-badge store-badge--steam" aria-label="Play on Steam">
+                            <img src="images/steam-store-badge.png" alt="Available on Steam" loading="lazy">
                         </a>
-                        <a href="wiki/index.html" class="btn btn-secondary">Explore Wiki</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.example.echoesofvasteria" target="_blank" rel="noopener" class="store-badge store-badge--google" aria-label="Get it on Google Play">
+                            <img src="images/google-play-badge-600x232.png" alt="Get it on Google Play" loading="lazy">
+                        </a>
+                        <a href="https://apps.apple.com/app/id0000000000" target="_blank" rel="noopener" class="store-badge store-badge--apple" aria-label="Download on the App Store">
+                            <img src="images/app-store-badge-600x232.png" alt="Download on the App Store" loading="lazy">
+                        </a>
                     </div>
                 </div>
             </section>
 
-            <section class="features">
-                <h2>Game Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">⚔️</div>
-                        <h3>Automatic Combat</h3>
-                        <p>Your hero automatically battles enemies while you manage strategy and progression.</p>
+            <section class="screenshots" aria-label="Screenshots">
+                <h2>Screenshots</h2>
+                <div class="carousel" aria-roledescription="carousel">
+                    <button class="carousel-btn prev" aria-label="Previous slide">&#8249;</button>
+                    <div class="carousel-viewport">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <img src="images/Screenshots/Farmlands.png" alt="Farmlands screenshot">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="images/Screenshots/Mines.png" alt="Mines screenshot">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="images/Screenshots/River.png" alt="River screenshot">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="images/Screenshots/Town.png" alt="Town screenshot">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="images/Screenshots/Woods.png" alt="Woods screenshot">
+                            </div>
+                        </div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🗺️</div>
-                        <h3>Procedural Maps</h3>
-                        <p>Explore endlessly generated maps with unique challenges and opportunities.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌳</div>
-                        <h3>Task System</h3>
-                        <p>Complete various tasks like cutting down trees, growing crops, and other world activities.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📋</div>
-                        <h3>Quest System</h3>
-                        <p>Take on dedicated quests and objectives to progress through the game world.</p>
-                    </div>
+                    <button class="carousel-btn next" aria-label="Next slide">&#8250;</button>
+                    <div class="carousel-dots" role="tablist" aria-label="Slide navigation"></div>
                 </div>
             </section>
 
@@ -89,10 +86,65 @@
                 </p>
             </section>
 
+            <section class="features">
+                <h2>Game Features</h2>
+                <div class="features-grid">
+                    <a href="wiki/index.html#enemies" class="feature-card feature-link" aria-label="Learn about enemies">
+                        <div class="feature-icon">⚔️</div>
+                        <h3>Automatic Combat</h3>
+                        <p>Your hero automatically battles enemies while you manage strategy and progression.</p>
+                    </a>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <h3>Procedural Maps</h3>
+                        <p>Explore endlessly generated maps with unique challenges and opportunities.</p>
+                    </div>
+                    <a href="wiki/index.html#tasks" class="feature-card feature-link" aria-label="Learn about tasks">
+                        <div class="feature-icon">🌳</div>
+                        <h3>Task System</h3>
+                        <p>Complete various tasks like cutting down trees, growing crops, and other world activities.</p>
+                    </a>
+                    <a href="wiki/index.html#quests" class="feature-card feature-link" aria-label="Learn about quests">
+                        <div class="feature-icon">📋</div>
+                        <h3>Quest System</h3>
+                        <p>Take on dedicated quests and objectives to progress through the game world.</p>
+                    </a>
+                    <a href="wiki/index.html" class="feature-card feature-link" aria-label="Explore the Wiki">
+                        <div class="feature-icon">📖</div>
+                        <h3>Explore Wiki</h3>
+                        <p>Dive into systems, items, enemies, and patch notes.</p>
+                    </a>
+                </div>
+            </section>
+
             <section class="changes">
                 <h2>Latest Changes</h2>
                 <div class="changes-content">
-                    <p class="no-changes">No recorded changes at this time.</p>
+                    <details class="patch" open>
+                        <summary>
+                            <div class="patch-title">
+                                <strong>Patch 23</strong>
+                                <time datetime="2025-08-08">August 8, 2025</time>
+                            </div>
+                        </summary>
+                        <div class="patch-body">
+                            <h4>Changes</h4>
+                            <ul>
+                                <li>Maptype now shows on the graph hover</li>
+                                <li>New buff type: Extra Reap Distance</li>
+                                <li>Added minimum distances to item entries</li>
+                                <li>Added minimum and maximum spawn distances for task entries</li>
+                                <li>Added name and description for the rest of the quests</li>
+                                <li>Buff timers now show decimal time if under 10 seconds remain</li>
+                                <li>Added hotkeys 1–5 for buff casting on desktop</li>
+                            </ul>
+                            <h4>Bugfixes</h4>
+                            <ul>
+                                <li>Pink slime now scales at the proper 20 distance per level (was 1)</li>
+                            </ul>
+                            <p><a href="wiki/index.html#changes">View full patch history →</a></p>
+                        </div>
+                    </details>
                 </div>
             </section>
         </div>

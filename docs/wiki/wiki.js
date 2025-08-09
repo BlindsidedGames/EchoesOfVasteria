@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   const lightBtn = document.getElementById('light-btn');
   const darkBtn = document.getElementById('dark-btn');
-  const searchInput = document.getElementById('search-input');
 
   if (lightBtn) {
     lightBtn.addEventListener('click', () => setTheme('light'));
@@ -31,13 +30,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (darkBtn) {
     darkBtn.addEventListener('click', () => setTheme('dark'));
   }
-  if (searchInput) {
-    searchInput.addEventListener('change', () => {
-      const query = searchInput.value.toLowerCase();
-      const page = pages.find(p => p.title.toLowerCase() === query);
-      if (page) {
-        window.location.href = page.url;
-      }
-    });
-  }
+  // search removed
 });

@@ -114,18 +114,7 @@ namespace TimelessEchoes.UI
         {
             UpdateGraphLabel();
             UpdateUI();
-            nextUpdateTime = Time.unscaledTime + updateInterval;
             UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-        }
-
-        private void Update()
-        {
-            if (UITicker.Instance != null) return;
-            if (Time.unscaledTime >= nextUpdateTime)
-            {
-                UpdateUI();
-                nextUpdateTime = Time.unscaledTime + updateInterval;
-            }
         }
 
         private void OnDisable()
