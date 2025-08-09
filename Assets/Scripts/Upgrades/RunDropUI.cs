@@ -15,7 +15,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private Transform slotParent;
         [SerializeField] private GameObject displayObject;
-        [SerializeField] [Min(1)] private int maxVisibleDrops = 5;
+        [SerializeField] [Min(1)] private int maxVisibleDrops = 10;
         private CompactGridLayout layout;
 
         private readonly List<Resource> resources = new();
@@ -38,13 +38,9 @@ namespace TimelessEchoes.Upgrades
             if (displayObject == null)
                 displayObject = gameObject;
             layout = slotParent != null ? slotParent.GetComponent<CompactGridLayout>() : GetComponent<CompactGridLayout>();
-            RecalculateCapacity();
+            if (layout != null)
+                layout.MaxColumns = maxVisibleDrops;
             ClearDrops();
-        }
-
-        private void OnRectTransformDimensionsChange()
-        {
-            RecalculateCapacity();
         }
 
         private void OnEnable()
@@ -81,23 +77,6 @@ namespace TimelessEchoes.Upgrades
                 displayObject.SetActive(false);
         }
 
-        private void RecalculateCapacity()
-        {
-            if (layout == null) return;
-
-            var canvas = GetComponentInParent<Canvas>();
-            var scale = canvas ? canvas.scaleFactor : 1f;
-            var safeWidth = Screen.safeArea.width / scale;
-            const float hudWidth = 200f;
-            const float hudGap = 1f;
-
-            var slotWidth = layout.CellSize.x + layout.Spacing.x;  // e.g., 26 + 1
-            var available = safeWidth - hudWidth - hudGap;
-
-            maxVisibleDrops = Mathf.Max(1,
-                Mathf.FloorToInt((available + layout.Spacing.x) / slotWidth));
-            layout.MaxColumns = maxVisibleDrops;
-        }
 
 
         private void OnResourceAdded(Resource resource, double amount, bool bonus)
