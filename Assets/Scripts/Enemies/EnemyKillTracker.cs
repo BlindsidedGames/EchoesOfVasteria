@@ -81,7 +81,7 @@ namespace TimelessEchoes.Stats
             if (oracle == null) return;
             oracle.saveData.EnemyKills ??= new Dictionary<string, double>();
             kills.Clear();
-            foreach (var enemy in Resources.LoadAll<EnemyData>(""))
+            foreach (var enemy in Blindsided.Utilities.AssetCache.GetAll<EnemyData>(""))
             {
                 oracle.saveData.EnemyKills.TryGetValue(enemy.name, out var count);
                 kills[enemy] = count;

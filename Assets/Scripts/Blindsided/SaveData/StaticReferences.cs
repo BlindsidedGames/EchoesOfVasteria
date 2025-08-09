@@ -267,8 +267,8 @@ namespace Blindsided.SaveData
                     if (r.Earned)
                         unlockedResources++;
 
-            var totalQuests = UnityEngine.Resources.LoadAll<TimelessEchoes.Quests.QuestData>("Quests").Length;
-            var totalResources = UnityEngine.Resources.LoadAll<TimelessEchoes.Upgrades.Resource>("").Length;
+            var totalQuests = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Quests.QuestData>("Quests").Length;
+            var totalResources = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.Resource>("").Length;
 
             var total = totalQuests + totalResources;
             var completed = completedQuests + unlockedResources;

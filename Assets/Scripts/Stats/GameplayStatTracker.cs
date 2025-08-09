@@ -122,7 +122,7 @@ namespace TimelessEchoes.Stats
         {
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
-            foreach (var res in Resources.LoadAll<Resource>(""))
+            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }
@@ -131,7 +131,7 @@ namespace TimelessEchoes.Stats
         {
             if (taskLookup != null) return;
             taskLookup = new Dictionary<int, TaskData>();
-            foreach (var data in Resources.LoadAll<TaskData>(""))
+            foreach (var data in Blindsided.Utilities.AssetCache.GetAll<TaskData>(""))
                 if (data != null && !taskLookup.ContainsKey(data.taskID))
                     taskLookup[data.taskID] = data;
         }

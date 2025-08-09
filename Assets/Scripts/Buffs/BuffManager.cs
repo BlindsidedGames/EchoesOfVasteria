@@ -81,7 +81,7 @@ namespace TimelessEchoes.Buffs
             get
             {
                 if (cachedRecipes == null || cachedRecipes.Length == 0)
-                    cachedRecipes = Resources.LoadAll<BuffRecipe>("Buffs");
+                    cachedRecipes = Blindsided.Utilities.AssetCache.GetAll<BuffRecipe>("Buffs");
                 return cachedRecipes;
             }
         }

@@ -75,7 +75,7 @@ namespace TimelessEchoes.UI
             foreach (Transform child in references.itemEntryParent)
                 Destroy(child.gameObject);
 
-            var allResources = Resources.LoadAll<Resource>("Resource Items");
+            var allResources = Blindsided.Utilities.AssetCache.GetAll<Resource>("Resource Items");
             var sorted = allResources
                 .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
                 .ThenBy(r => r.name)
@@ -98,7 +98,7 @@ namespace TimelessEchoes.UI
         {
             minDistanceLookup.Clear();
 
-            var allTasks = Resources.LoadAll<TaskData>("Tasks");
+            var allTasks = Blindsided.Utilities.AssetCache.GetAll<TaskData>("Tasks");
             foreach (var task in allTasks)
             {
                 if (task == null) continue;
@@ -113,7 +113,7 @@ namespace TimelessEchoes.UI
                 }
             }
 
-            var allEnemies = Resources.LoadAll<EnemyData>("");
+            var allEnemies = Blindsided.Utilities.AssetCache.GetAll<EnemyData>("");
             foreach (var enemy in allEnemies)
             {
                 if (enemy == null) continue;

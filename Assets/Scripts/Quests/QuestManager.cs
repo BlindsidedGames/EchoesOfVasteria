@@ -47,7 +47,7 @@ namespace TimelessEchoes.Quests
         private void Awake()
         {
             Instance = this;
-            quests = new List<QuestData>(Resources.LoadAll<QuestData>(questResourcePath));
+            quests = new List<QuestData>(Blindsided.Utilities.AssetCache.GetAll<QuestData>(questResourcePath));
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);

@@ -94,7 +94,7 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
-            foreach (var res in Resources.LoadAll<Resource>(string.Empty))
+            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(string.Empty))
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }
