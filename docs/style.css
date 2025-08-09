@@ -551,6 +551,16 @@ footer a:hover {
   box-shadow: var(--shadow-md);
 }
 
+.btn:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.btn-primary:visited {
+  color: white;
+  text-decoration: none;
+}
+
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
