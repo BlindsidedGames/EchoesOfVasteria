@@ -13,6 +13,19 @@ namespace Blindsided.Utilities.Pooling
         private static readonly Dictionary<int, IObjectPool<GameObject>> pools = new();
 
         /// <summary>
+        /// Create a pool for the given prefab and optionally prewarm it.
+        /// </summary>
+        public static void CreatePool(GameObject prefab, int initialSize = 0)
+        {
+            var pool = GetPool(prefab);
+            for (int i = 0; i < initialSize; i++)
+            {
+                var obj = pool.Get();
+                pool.Release(obj);
+            }
+        }
+
+        /// <summary>
         /// Get an instance of the given prefab from its pool.
         /// </summary>
         public static GameObject Get(GameObject prefab)

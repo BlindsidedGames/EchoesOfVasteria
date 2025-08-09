@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using Blindsided.SaveData;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes
 {
@@ -10,6 +11,7 @@ namespace TimelessEchoes
     public class FloatingText : MonoBehaviour
     {
         public static readonly Color DefaultColor = new Color32(0xEA, 0xD4, 0xAA, 0xFF);
+        private static GameObject prefab = null;
         [SerializeField] private float moveDistance = 1f;
         [SerializeField] private float lifetime = 1f;
         private float speed;
@@ -21,39 +23,45 @@ namespace TimelessEchoes
         /// </summary>
         public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f)
         {
-            var obj = new GameObject("FloatingText");
+            if (prefab == null)
+            {
+                prefab = new GameObject("FloatingText");
+                prefab.SetActive(false);
+                var ft = prefab.AddComponent<FloatingText>();
+                ft.tmp = prefab.AddComponent<TextMeshPro>();
+                ft.tmp.alignment = TextAlignmentOptions.Center;
+                ft.tmp.fontSize = fontSize;
+                ft.tmp.fontStyle |= FontStyles.SmallCaps;
+                ft.tmp.spriteAsset = TimelessEchoes.Upgrades.ResourceIconLookup.SpriteAsset;
+
+                var renderer = ft.tmp.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.sortingLayerName = "Canvas";
+                    renderer.sortingOrder = 10;
+                }
+
+                PoolManager.CreatePool(prefab, 1);
+            }
+
+            var obj = PoolManager.Get(prefab);
             var offset = Random.insideUnitCircle * 0.25f;
             obj.transform.position = position + new Vector3(offset.x, offset.y, 0f);
-            if (parent != null)
-                obj.transform.SetParent(parent, true);
-            var ft = obj.AddComponent<FloatingText>();
-            ft.lifetime = duration >= 0f ? duration : StaticReferences.DropFloatingTextDuration;
-            ft.tmp = obj.AddComponent<TextMeshPro>();
-            ft.tmp.alignment = TextAlignmentOptions.Center;
-            ft.tmp.fontSize = fontSize;
-            ft.tmp.fontStyle |= FontStyles.SmallCaps;
-            ft.tmp.spriteAsset = TimelessEchoes.Upgrades.ResourceIconLookup.SpriteAsset;
-            ft.tmp.text = text;
-            ft.tmp.color = color;
+            obj.transform.SetParent(parent, true);
 
-            // Ensure the floating text renders in front of other objects.
-            var renderer = ft.tmp.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sortingLayerName = "Canvas";
-                renderer.sortingOrder = 10;
-            }
+            var ftInstance = obj.GetComponent<FloatingText>();
+            ftInstance.lifetime = duration >= 0f ? duration : StaticReferences.DropFloatingTextDuration;
+            ftInstance.tmp.fontSize = fontSize;
+            ftInstance.tmp.text = text;
+            ftInstance.tmp.color = color;
+            ftInstance.speed = ftInstance.moveDistance / Mathf.Max(ftInstance.lifetime, 0.0001f);
+            ftInstance.timer = 0f;
         }
 
         private void Awake()
         {
             if (tmp == null)
                 tmp = GetComponent<TMP_Text>();
-        }
-
-        private void Start()
-        {
-            speed = moveDistance / Mathf.Max(lifetime, 0.0001f);
         }
 
         private void Update()
@@ -67,7 +75,14 @@ namespace TimelessEchoes
                 tmp.color = c;
             }
             if (timer >= lifetime)
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            timer = 0f;
+            speed = 0f;
+            transform.SetParent(null);
         }
     }
 }
