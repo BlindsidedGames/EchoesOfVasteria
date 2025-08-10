@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const skeletons = [
-    { name: 'Swordsman', exp: 4, hp: 15, dmg: 1, def: 0.5, atkSpd: 1.3, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: '50 - ∞',  hpPerLvl: 2, dmgPerLvl: 0.25, defPerLvl: 0.1, distPerLvl: 25 },
-    { name: 'Archer',    exp: 4, hp: 5,  dmg: 3, def: 0.5, atkSpd: 1.3, atkRange: 6, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: '50 - ∞',  hpPerLvl: 2, dmgPerLvl: 0.5,  defPerLvl: 0.1, distPerLvl: 25 },
-    { name: 'Mage',      exp: 7, hp: 25, dmg: 4, def: 0.5, atkSpd: 1.5, atkRange: 8, moveSpd: 5, vision: 8, assist: 6, wander: 4, spawn: '150 - ∞', hpPerLvl: 4, dmgPerLvl: 0.5,  defPerLvl: 0.1, distPerLvl: 25 },
+    { name: 'Swordsman', exp: 4, hp: 20,  dmg: 2,  def: 0.5, atkSpd: 1.3, atkRange: 1, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: '50 - ∞',   hpPerLvl: 5,  dmgPerLvl: 0.6,  defPerLvl: 0.12, distPerLvl: 20 },
+    { name: 'Archer',    exp: 4, hp: 100, dmg: 8,  def: 0.6, atkSpd: 1.3, atkRange: 6, moveSpd: 5, vision: 7, assist: 5, wander: 3, spawn: '500 - ∞', hpPerLvl: 8,  dmgPerLvl: 1.5, defPerLvl: 0.12, distPerLvl: 20 },
+    { name: 'Mage',      exp: 7, hp: 300, dmg: 30, def: 1,   atkSpd: 1.5, atkRange: 8, moveSpd: 5, vision: 8, assist: 6, wander: 4, spawn: '1000 - ∞',hpPerLvl: 20, dmgPerLvl: 5,   defPerLvl: 0.15, distPerLvl: 20 },
   ];
 
   // Initialize all slime cards

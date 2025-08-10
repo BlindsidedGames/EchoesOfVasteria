@@ -26,17 +26,14 @@ MonoBehaviour:
     maxLevel: 25
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-      amount: 1
-      amountIncreasePerLevel: 1
-    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
-      amount: 1
-      amountIncreasePerLevel: 1
+      amount: 5
+      amountIncreasePerLevel: 2
   - minLevel: 25
     maxLevel: 50
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
       amount: 25
-      amountIncreasePerLevel: 1
+      amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
       amount: 1
       amountIncreasePerLevel: 1
@@ -44,29 +41,29 @@ MonoBehaviour:
     maxLevel: 75
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-      amount: 50
+      amount: 40
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
       amount: 1
-      amountIncreasePerLevel: 1
+      amountIncreasePerLevel: 2
   - minLevel: 75
     maxLevel: 100
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-      amount: 50
+      amount: 55
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
-      amount: 1
-      amountIncreasePerLevel: 1
+      amount: 2
+      amountIncreasePerLevel: 2
   - minLevel: 100
     maxLevel: 150
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-      amount: 75
+      amount: 70
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
-      amount: 1
-      amountIncreasePerLevel: 2
+      amount: 3
+      amountIncreasePerLevel: 3
   - minLevel: 150
     maxLevel: 200
     requirements:
@@ -74,24 +71,45 @@ MonoBehaviour:
       amount: 100
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
-      amount: 1
+      amount: 4
       amountIncreasePerLevel: 3
   - minLevel: 200
     maxLevel: 250
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
-      amount: 150
+      amount: 140
       amountIncreasePerLevel: 0
     - resource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
-      amount: 1
+      amount: 5
       amountIncreasePerLevel: 4
   - minLevel: 250
-    maxLevel: 1000
+    maxLevel: 350
     requirements:
     - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
       amount: 200
-      amountIncreasePerLevel: 5
+      amountIncreasePerLevel: 2
     - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
-      amount: 1
+      amount: 6
       amountIncreasePerLevel: 5
+    - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+      amount: 2
+      amountIncreasePerLevel: 1
+  - minLevel: 350
+    maxLevel: 2147483647
+    requirements:
+    - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+      amount: 8
+      amountIncreasePerLevel: 6
+    - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
+      amount: 5
+      amountIncreasePerLevel: 6
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+      amount: 250
+      amountIncreasePerLevel: 4
+    - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+      amount: 10
+      amountIncreasePerLevel: 2
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 3
   statIncreasePerLevel: 0.02

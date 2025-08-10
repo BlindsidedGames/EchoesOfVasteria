@@ -123,6 +123,20 @@ namespace TimelessEchoes
         [SerializeField] private float statsUpdateInterval = 0.1f;
         private float nextStatsUpdateTime;
 
+        // Auto-restart on stall settings
+        [TitleGroup("Run Stall Monitor")] [SerializeField]
+        private bool enableStallAutoRestart = true;
+        [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(1f)]
+        private float stallTimeoutSeconds = 60f;
+        [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(0.1f)]
+        private float stallCheckIntervalSeconds = 5f;
+        [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(0f)]
+        private float stallDistanceEpsilon = 0.01f;
+        private Coroutine stallMonitorCoroutine;
+        private float lastObservedRunDistance;
+        private float lastRunDistanceChangeTime;
+        private bool pendingAutoRestartFromStall;
+
         private void UpdateGenerationButtonStats()
         {
             if (statTracker == null) return;
@@ -450,6 +464,15 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(true);
             npcObjectStateController?.UpdateObjectStates();
+
+            // Start monitoring for stalled distance after run begins
+            if (stallMonitorCoroutine != null)
+            {
+                StopCoroutine(stallMonitorCoroutine);
+                stallMonitorCoroutine = null;
+            }
+            if (enableStallAutoRestart)
+                stallMonitorCoroutine = StartCoroutine(MonitorRunStallRoutine());
         }
 
         private void OnHeroDeath()
@@ -641,6 +664,13 @@ namespace TimelessEchoes
             RichPresenceManager.Instance?.SetInTown();
 #endif
             Log("Returned to tavern", TELogCategory.Run, this);
+
+            // If we abandoned due to stall, auto-start a fresh run with the same config
+            if (pendingAutoRestartFromStall && CurrentGenerationConfig != null)
+            {
+                pendingAutoRestartFromStall = false;
+                StartRun();
+            }
         }
 
         private void CleanupMap()
@@ -651,6 +681,11 @@ namespace TimelessEchoes
         private IEnumerator CleanupMapRoutine()
         {
             BuffManager.Instance?.Pause();
+            if (stallMonitorCoroutine != null)
+            {
+                StopCoroutine(stallMonitorCoroutine);
+                stallMonitorCoroutine = null;
+            }
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
 
@@ -671,6 +706,53 @@ namespace TimelessEchoes
             {
                 Destroy(currentMap); // safe to destroy AstarPath now
                 currentMap = null;
+            }
+        }
+
+        /// <summary>
+        ///     Periodically checks the hero's current run distance and, if it hasn't
+        ///     increased for more than <see cref="stallTimeoutSeconds"/>, abandons
+        ///     the run and starts a fresh one.
+        /// </summary>
+        private IEnumerator MonitorRunStallRoutine()
+        {
+            // Small delay to allow the run to fully initialize
+            yield return new WaitForSeconds(2f);
+
+            if (statTracker == null)
+                statTracker = GameplayStatTracker.Instance;
+
+            lastObservedRunDistance = statTracker != null ? statTracker.CurrentRunDistance : 0f;
+            lastRunDistanceChangeTime = Time.time;
+
+            while (true)
+            {
+                // If the run ends or hero/map is gone, stop monitoring
+                if (statTracker == null || !statTracker.RunInProgress || hero == null || currentMap == null)
+                    yield break;
+
+                // Skip while the hero is dead
+                if (heroDead)
+                {
+                    yield return new WaitForSeconds(stallCheckIntervalSeconds);
+                    continue;
+                }
+
+                var currentDistance = statTracker.CurrentRunDistance;
+                if (Mathf.Abs(currentDistance - lastObservedRunDistance) > stallDistanceEpsilon)
+                {
+                    lastObservedRunDistance = currentDistance;
+                    lastRunDistanceChangeTime = Time.time;
+                }
+                else if (Time.time - lastRunDistanceChangeTime >= stallTimeoutSeconds)
+                {
+                    Log("Run stalled; abandoning and restarting.", TELogCategory.Run, this);
+                    pendingAutoRestartFromStall = true;
+                    AbandonRun();
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(stallCheckIntervalSeconds);
             }
         }
 

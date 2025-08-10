@@ -263,8 +263,8 @@ The table below lists each enemy's combat stats from the `EnemyData` Scriptable 
 
 ### Skeleton_Swordsman
 - **Experience:** 4
-- **Max Health:** 15
-- **Damage:** 1
+- **Max Health:** 20
+- **Damage:** 2
 - **Defense:** 0.5
 - **Attack Speed:** 1.3
 - **Attack Range:** 1
@@ -273,41 +273,41 @@ The table below lists each enemy's combat stats from the `EnemyData` Scriptable 
 - **Assist Range:** 5
 - **Wander Distance:** 3
 - **Spawn Range X:** 50 to Infinity
-- **Health Per Level:** 2
-- **Damage Per Level:** 0.25
-- **Defense Per Level:** 0.1
-- **Distance Per Level:** 25
+- **Health Per Level:** 5
+- **Damage Per Level:** 0.6
+- **Defense Per Level:** 0.12
+- **Distance Per Level:** 20
 
 ### Skeleton_Archer
 - **Experience:** 4
-- **Max Health:** 5
-- **Damage:** 3
-- **Defense:** 0.5
+- **Max Health:** 100
+- **Damage:** 8
+- **Defense:** 0.6
 - **Attack Speed:** 1.3
 - **Attack Range:** 6
 - **Move Speed:** 5
 - **Vision Range:** 7
 - **Assist Range:** 5
 - **Wander Distance:** 3
-- **Spawn Range X:** 50 to Infinity
-- **Health Per Level:** 2
-- **Damage Per Level:** 0.5
-- **Defense Per Level:** 0.1
-- **Distance Per Level:** 25
+- **Spawn Range X:** 500 to Infinity
+- **Health Per Level:** 8
+- **Damage Per Level:** 1.5
+- **Defense Per Level:** 0.12
+- **Distance Per Level:** 20
 
 ### Skeleton_Mage
 - **Experience:** 7
-- **Max Health:** 25
-- **Damage:** 4
-- **Defense:** 0.5
+- **Max Health:** 300
+- **Damage:** 30
+- **Defense:** 1
 - **Attack Speed:** 1.5
 - **Attack Range:** 8
 - **Move Speed:** 5
 - **Vision Range:** 8
 - **Assist Range:** 6
 - **Wander Distance:** 4
-- **Spawn Range X:** 150 to Infinity
-- **Health Per Level:** 4
-- **Damage Per Level:** 0.5
-- **Defense Per Level:** 0.1
-- **Distance Per Level:** 25
+- **Spawn Range X:** 1000 to Infinity
+- **Health Per Level:** 20
+- **Damage Per Level:** 5
+- **Defense Per Level:** 0.15
+- **Distance Per Level:** 20

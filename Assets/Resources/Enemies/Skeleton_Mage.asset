@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 7755512622975735135, guid: 7b3a664246d6a94499b2eaa4786e8cf9, type: 3}
   prefab: {fileID: 2377590028762114089, guid: b144e03d8801ec641899db6a352888ac, type: 3}
   weight: 0.25
-  minX: 150
+  minX: 1000
   maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
@@ -87,13 +87,13 @@ MonoBehaviour:
   visionRange: 8
   assistRange: 6
   wanderDistance: 4
-  maxHealth: 25
-  damage: 4
-  defense: 0.5
+  maxHealth: 300
+  damage: 30
+  defense: 1
   attackSpeed: 1.5
   attackRange: 8
-  healthPerLevel: 4
-  damagePerLevel: 0.5
-  defensePerLevel: 0.1
-  distancePerLevel: 25
+  healthPerLevel: 20
+  damagePerLevel: 5
+  defensePerLevel: 0.15
+  distancePerLevel: 20
   projectilePrefab: {fileID: 4543230581087699070, guid: d2c6b79fa36a2ab498a54809cfd8f544, type: 3}

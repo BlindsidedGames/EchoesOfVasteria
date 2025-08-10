@@ -39,6 +39,8 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
 
+        private bool _rightMouseWasDown;
+
 
         private void Awake()
         {
@@ -142,8 +144,16 @@ namespace TimelessEchoes.UI
 
         private void PollCloseAllWindows()
         {
-            if (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.rightButton.wasPressedThisFrame)
+            var mouse = UnityEngine.InputSystem.Mouse.current;
+            if (mouse == null)
+                return;
+
+            bool isDown = mouse.rightButton.isPressed;
+            if (isDown && !_rightMouseWasDown)
+            {
                 CloseAllWindows();
+            }
+            _rightMouseWasDown = isDown;
         }
 
         private void HandleLoadData()
