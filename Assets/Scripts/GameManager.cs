@@ -136,6 +136,8 @@ namespace TimelessEchoes
         private float lastObservedRunDistance;
         private float lastRunDistanceChangeTime;
         private bool pendingAutoRestartFromStall;
+        // One-shot watchdog to ensure the death UI or auto-return engages after hero death.
+        private float deathUiFailsafeCheckAt = -1f;
 
         private void UpdateGenerationButtonStats()
         {
@@ -299,6 +301,34 @@ namespace TimelessEchoes
                 StartCoroutine(ReturnToTavernRoutine());
             }
 
+            // Death UI failsafe: if the hero is dead but neither the death window nor the
+            // tavern UI is visible after a short delay, re-trigger the expected flow.
+            if (heroDead && deathUiFailsafeCheckAt > 0f && Time.time >= deathUiFailsafeCheckAt)
+            {
+                bool deathWindowActive = deathWindow != null && deathWindow.activeInHierarchy;
+                bool tavernActive = tavernUI != null && tavernUI.activeInHierarchy;
+                if (!deathWindowActive && !tavernActive)
+                {
+                    if (returnOnDeathQueued || retreatQueued)
+                    {
+                        returnOnDeathQueued = false;
+                        retreatQueued = false;
+                        StartCoroutine(ReturnToTavernRoutine());
+                    }
+                    else
+                    {
+                        if (deathWindowCoroutine == null)
+                            deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
+                    }
+                    // Check again in case the first attempt is interrupted by ordering.
+                    deathUiFailsafeCheckAt = Time.time + 2f;
+                }
+                else
+                {
+                    // Flow engaged; stop checking.
+                    deathUiFailsafeCheckAt = -1f;
+                }
+            }
         }
 
         private void HideTooltip()
@@ -538,6 +568,8 @@ namespace TimelessEchoes
             {
                 deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
             }
+            // Engage failsafe in case UI does not appear due to timing/ordering on some setups.
+            deathUiFailsafeCheckAt = Time.time + 1f;
         }
 
         private void OnDeathRunButton()
@@ -547,6 +579,7 @@ namespace TimelessEchoes
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             StartRun();
+            deathUiFailsafeCheckAt = -1f;
         }
 
         private void OnDeathReturnButton()
@@ -556,6 +589,47 @@ namespace TimelessEchoes
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             StartCoroutine(ReturnToTavernRoutine());
+            deathUiFailsafeCheckAt = -1f;
+        }
+
+        /// <summary>
+        ///     Fallback invoked when the hero is reaped. If a return was queued (return-on-death
+        ///     or retreat), force an immediate return to the tavern and mark the run as ended by
+        ///     a reaper death. This guards against any edge cases where the death event flow is
+        ///     interrupted (e.g., due to timing) and ensures the expected UX.
+        /// </summary>
+        public void EnsureAutoReturnOnReapIfQueued()
+        {
+            if (!(returnOnDeathQueued || retreatQueued))
+                return;
+
+            // Ensure state reflects a death by reaper
+            heroDead = true;
+            runEndedByDeath = true;
+            runEndedByReaper = true;
+
+            // Close any pending death window flow if it exists
+            if (deathWindowCoroutine != null)
+            {
+                StopCoroutine(deathWindowCoroutine);
+                deathWindowCoroutine = null;
+            }
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
+
+            // Start returning to tavern now
+            StartCoroutine(ReturnToTavernRoutine());
+        }
+
+        /// <summary>
+        ///     If, for any reason, the standard OnDeath event chain did not invoke
+        ///     <see cref="OnHeroDeath"/>, this method triggers it exactly once.
+        /// </summary>
+        public void ForceHandleHeroDeath()
+        {
+            if (heroDead)
+                return;
+            OnHeroDeath();
         }
 
         private IEnumerator DeathWindowRoutine()

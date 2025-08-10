@@ -17,6 +17,11 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public Skill associatedSkill;
         [SerializeField] public TaskData taskData;
 
+        [Header("Auto Removal When Behind")]
+        [SerializeField] private bool enableAutoRemovalWhenBehind = true;
+        [SerializeField] private float autoRemovalDistanceX = 20f;
+        [SerializeField] private float autoRemovalIntervalSeconds = 2f;
+
         /// <summary>
         ///     Fired when the task completes. Subscribers should
         ///     remove the task from any tracking collections.
@@ -31,6 +36,9 @@ namespace TimelessEchoes.Tasks
 
         private HeroController claimedBy;
         public HeroController ClaimedBy => claimedBy;
+
+        private TaskController cachedTaskController;
+        private bool autoRemovalScheduled;
 
         public bool Claim(HeroController hero)
         {
@@ -108,6 +116,54 @@ namespace TimelessEchoes.Tasks
                 return;
             completionNotified = true;
             TaskCompleted?.Invoke(this);
+        }
+
+        private void OnEnable()
+        {
+            // Schedule a light periodic check to self-remove when hero is far ahead.
+            if (enableAutoRemovalWhenBehind && !autoRemovalScheduled)
+            {
+                // Slight jitter to avoid synchronized spikes
+                var initialDelay = UnityEngine.Random.Range(0f, 0.25f);
+                InvokeRepeating(nameof(CheckAutoRemovalBehindHero), initialDelay, Mathf.Max(0.1f, autoRemovalIntervalSeconds));
+                autoRemovalScheduled = true;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (autoRemovalScheduled)
+            {
+                CancelInvoke(nameof(CheckAutoRemovalBehindHero));
+                autoRemovalScheduled = false;
+            }
+        }
+
+        private void CheckAutoRemovalBehindHero()
+        {
+            // Only main hero position is considered
+            var hero = HeroController.Instance;
+            if (hero == null)
+                return;
+
+            // If this task is already complete, let normal completion flow remove it
+            if (IsComplete())
+                return;
+
+            // Compare along X axis using the task's Target if available
+            var target = Target != null ? Target : transform;
+            if (target == null)
+                return;
+
+            var deltaX = hero.transform.position.x - target.position.x;
+            if (deltaX <= autoRemovalDistanceX)
+                return;
+
+            // Remove from the active TaskController safely
+            if (cachedTaskController == null)
+                cachedTaskController = hero.GetComponentInParent<TaskController>();
+
+            cachedTaskController?.RemoveTask(this);
         }
 
         protected bool ShouldInstantComplete()

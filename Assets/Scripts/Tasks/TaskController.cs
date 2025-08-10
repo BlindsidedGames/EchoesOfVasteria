@@ -606,6 +606,13 @@ namespace TimelessEchoes.Tasks
 
             if (index <= currentIndex)
                 currentIndex--;
+
+            // If the hero is still targeting the removed task, clear it and select the next
+            if (hero != null && hero.CurrentTask == task)
+            {
+                hero.SetTask(null);
+                SelectEarliestTask(hero);
+            }
         }
 
 

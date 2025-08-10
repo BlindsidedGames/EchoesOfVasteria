@@ -614,7 +614,21 @@ namespace TimelessEchoes.Hero
                     foreach (var enemy in engagedEnemies)
                     {
                         if (enemy == null) continue;
-                        var dist = Vector2.Distance(transform.position, enemy.transform.position);
+
+                        Transform enemyTransform = null;
+                        try
+                        {
+                            enemyTransform = enemy.transform;
+                        }
+                        catch
+                        {
+                            // Enemy may have been destroyed mid-frame
+                            continue;
+                        }
+
+                        if (enemyTransform == null) continue;
+
+                        var dist = Vector2.Distance(transform.position, enemyTransform.position);
                         if (dist < best)
                         {
                             best = dist;
@@ -622,7 +636,12 @@ namespace TimelessEchoes.Hero
                         }
                     }
 
-                    nearest = chosen != null ? chosen.transform : null;
+                    Transform chosenTransform = null;
+                    if (chosen != null)
+                    {
+                        try { chosenTransform = chosen.transform; } catch { chosenTransform = null; }
+                    }
+                    nearest = chosenTransform;
                 }
                 else
                 {
@@ -727,20 +746,34 @@ namespace TimelessEchoes.Hero
             foreach (var enemy in enemies)
             {
                 if (enemy == null) continue;
+
+                Transform enemyTransform = null;
+                try
+                {
+                    enemyTransform = enemy.transform;
+                }
+                catch
+                {
+                    // Enemy may have been destroyed mid-iteration
+                    continue;
+                }
+
+                if (enemyTransform == null) continue;
+
                 if (checkBounds)
                 {
-                    var p = enemy.transform.position;
+                    var p = enemyTransform.position;
                     if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
                         continue;
                 }
 
                 var hp = enemy.GetComponent<Health>();
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(pos, enemy.transform.position);
+                var d = Vector2.Distance(pos, enemyTransform.position);
                 if (d <= range && d < best)
                 {
                     best = d;
-                    nearest = enemy.transform;
+                    nearest = enemyTransform;
                 }
             }
 
@@ -882,7 +915,17 @@ namespace TimelessEchoes.Hero
                 }
             }
 
-            if (currentEnemy == enemy.transform)
+            Transform enemyTransformSafe = null;
+            try
+            {
+                enemyTransformSafe = enemy.transform;
+            }
+            catch
+            {
+                enemyTransformSafe = null;
+            }
+
+            if (enemyTransformSafe != null && currentEnemy == enemyTransformSafe)
             {
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemy = null;

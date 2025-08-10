@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6892406957738032772}
   - component: {fileID: 2897011531704098943}
   - component: {fileID: -7012693531278695410}
-  - component: {fileID: 6597550497042910658}
+  - component: {fileID: 3927416357352757508}
   m_Layer: 8
   m_Name: 2 Golden Chest
   m_TagString: Untagged
@@ -128,6 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   taskData: {fileID: 11400000, guid: f5b4b465fd95d1841ae73975a8d3ef1c, type: 2}
+  enableAutoRemovalWhenBehind: 1
+  autoRemovalDistanceX: 20
+  autoRemovalIntervalSeconds: 2
   chestAnimator: {fileID: 6892406957738032772}
   openPoint: {fileID: 973583102418991227}
   openDuration: 0.5
@@ -143,8 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f52902e337de34fbc606aaa16c0cf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &6597550497042910658
-CircleCollider2D:
+--- !u!61 &3927416357352757508
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -177,8 +180,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.3
+  m_Offset: {x: 0.00060653687, y: -0.18703699}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.62198067, y: 0.12578917}
+  m_EdgeRadius: 0
 --- !u!1 &8349381861943391664
 GameObject:
   m_ObjectHideFlags: 0

@@ -68,6 +68,8 @@ namespace TimelessEchoes
                 UnlockAchievement("MeetFarmers");
             else if (npcId == "Barkley1")
                 UnlockAchievement("MeetBarkley");
+            else if (npcId == "OldTimer1")
+                UnlockAchievement("MeetOldTimer");
         }
 
         /// <summary>
@@ -128,6 +130,10 @@ namespace TimelessEchoes
             if (StaticReferences.CompletedNpcTasks.Contains("Barkley1") &&
                 SteamUserStats.GetAchievement("MeetBarkley", out achieved) && !achieved)
                 UnlockAchievement("MeetBarkley");
+
+            if (StaticReferences.CompletedNpcTasks.Contains("OldTimer1") &&
+                SteamUserStats.GetAchievement("MeetOldTimer", out achieved) && !achieved)
+                UnlockAchievement("MeetOldTimer");
 
             if (QuestCompleted("The names Gill") &&
                 SteamUserStats.GetAchievement("MeetGill", out achieved) && !achieved)

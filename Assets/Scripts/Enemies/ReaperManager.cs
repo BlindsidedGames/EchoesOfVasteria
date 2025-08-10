@@ -126,6 +126,17 @@ namespace TimelessEchoes.Enemies
 
             onKill?.Invoke();
             target = null;
+
+            // Fallback: if the hero was reaped and a return was queued, force an
+            // immediate return to the tavern. This covers edge cases where the
+            // death event flow is interrupted and ensures expected UX.
+            if (heroCtrl != null)
+            {
+                var gm = TimelessEchoes.GameManager.Instance;
+                gm?.EnsureAutoReturnOnReapIfQueued();
+                // If the OnDeath flow somehow didn't fire yet, enforce it.
+                gm?.ForceHandleHeroDeath();
+            }
         }
 
         /// <summary>

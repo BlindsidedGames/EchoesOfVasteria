@@ -10,6 +10,14 @@ using Blindsided.SaveData;
 using Blindsided;
 using static TimelessEchoes.TELogger;
 
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
+
+#if !DISABLESTEAMWORKS
+using Steamworks;
+#endif
+
 namespace TimelessEchoes
 {
     /// <summary>
@@ -184,6 +192,48 @@ namespace TimelessEchoes
             oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
             oracle.saveData.DisciplePercent = 0.1f;
             Blindsided.EventHandler.LoadData();
+        }
+
+        [Command("wipe-achievements", "Clear all Steam achievements for the current user")]
+        public static void WipeAchievements()
+        {
+            ConsoleAuth.EnsureAuthenticated();
+#if !DISABLESTEAMWORKS
+            if (!SteamManager.Initialized)
+            {
+                if (QFSW.QC.QuantumConsole.Instance != null)
+                {
+                    QFSW.QC.QuantumConsole.Instance.LogToConsole("Steam not initialized.");
+                }
+                return;
+            }
+
+            uint total = SteamUserStats.GetNumAchievements();
+            int cleared = 0;
+            for (uint i = 0; i < total; i++)
+            {
+                string achName = SteamUserStats.GetAchievementName(i);
+                if (!string.IsNullOrEmpty(achName))
+                {
+                    if (SteamUserStats.ClearAchievement(achName))
+                    {
+                        cleared++;
+                    }
+                }
+            }
+
+            SteamUserStats.StoreStats();
+
+            if (QFSW.QC.QuantumConsole.Instance != null)
+            {
+                QFSW.QC.QuantumConsole.Instance.LogToConsole($"Cleared {cleared}/{total} achievements.");
+            }
+#else
+            if (QFSW.QC.QuantumConsole.Instance != null)
+            {
+                QFSW.QC.QuantumConsole.Instance.LogToConsole("Steamworks is disabled on this platform.");
+            }
+#endif
         }
 
         [Command("abandon-run", "Abandon the current run and return to town")]

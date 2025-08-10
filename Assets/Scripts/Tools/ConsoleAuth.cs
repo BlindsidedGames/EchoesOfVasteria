@@ -54,7 +54,7 @@ namespace TimelessEchoes
         {
             if (!_isAuthenticated)
             {
-                throw new System.Exception("Developer commands are locked. Use: login MattsTheBest");
+                throw new System.Exception("Developer commands are locked. Use: login <password>");
             }
         }
     }

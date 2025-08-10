@@ -26,7 +26,7 @@ namespace TimelessEchoes.Tasks
 
         public override void StartTask()
         {
-            opened = false;
+            // Do not reset 'opened' so completed chests remain complete if re-selected
             isWaiting = false;
         }
 

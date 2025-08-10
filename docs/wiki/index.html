@@ -471,6 +471,14 @@
             </div>
             <!-- Embedded source to avoid external file loads -->
             <script id="patchnotes-source" type="text/plain">
+# Version 1.1 | August 11th, 2025
+### Changes
+- Made a couple of backend changes to chest tasks to hopefully fix the issue with them.
+- DeathUI is now correctly anchored to the left.
+- Console is now password protected.
+- Meet The Old Timer Achievement
+- Potential fix for getting stuck on death.
+
 # Echoes of Vasteria Patch 24 | August 10th, 2025
 ### Changes
 - Looting tasks can now spawn in the mines
@@ -1019,13 +1027,15 @@ Restarting is recommended for this patch.
     const patches = [];
     let current = null;
     for (const line of lines){
-      const m = /^\s*#\s*(.*?)\s*Patch(?:\s*(\d+))?\s*\|\s*(.+)$/i.exec(line);
+      // Support both legacy "Patch N" and new "Version X.Y.Z" headings
+      const m = /^\s*#\s*(.*?)\s*(?:Patch\s*(\d+)|Version\s*([0-9]+(?:\.[0-9]+)*))\s*\|\s*(.+)$/i.exec(line);
       if (m){
         if (current) patches.push(current);
         current = {
           prefix: (m[1] || '').trim(),
           patchNumber: m[2] ? m[2].trim() : null,
-          rawDate: m[3].trim(),
+          version: m[3] ? m[3].trim() : null,
+          rawDate: m[4].trim(),
           lines: []
         };
       } else if (current) {
@@ -1058,7 +1068,7 @@ Restarting is recommended for this patch.
     const title = document.createElement('div');
     title.className = 'patch-title';
     const h = document.createElement('strong');
-    h.textContent = block.patchNumber ? `Patch ${block.patchNumber}` : 'Patch';
+    h.textContent = block.version ? `Version ${block.version}` : (block.patchNumber ? `Patch ${block.patchNumber}` : 'Patch');
     const dateEl = document.createElement('time');
     dateEl.textContent = localizeDate(block.rawDate);
     dateEl.dateTime = block.rawDate;
