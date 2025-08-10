@@ -119,11 +119,10 @@ namespace TimelessEchoes.Upgrades
             var amount = resourceManager ? resourceManager.GetAmount(resource) : 0;
             var unlocked = resourceManager && resourceManager.IsUnlocked(resource);
 
-            var unknownColor = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
             if (slot.iconImage)
             {
-                slot.iconImage.sprite = unlocked ? resource?.icon : UnknownSprite;
-                slot.iconImage.color = unlocked ? Color.white : unknownColor;
+                slot.iconImage.sprite = unlocked ? resource?.icon : resource?.UnknownIcon;
+                slot.iconImage.color = Color.white;
                 slot.iconImage.enabled = true;
                 slot.gameObject.name = resource.name;
             }

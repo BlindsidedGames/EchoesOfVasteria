@@ -169,11 +169,9 @@ namespace TimelessEchoes.Upgrades
 
                 if (slot.iconImage)
                 {
-                    var unknownSprite = resourceInventoryUI ? resourceInventoryUI.UnknownSprite : null;
-                    slot.iconImage.sprite = unlocked ? req.resource?.icon : unknownSprite;
-                    var unknownColor = new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    slot.iconImage.sprite = unlocked ? req.resource?.icon : req.resource?.UnknownIcon;
                     var grey = new Color(1f, 1f, 1f, 0.4f);
-                    slot.iconImage.color = unlocked ? (hasEnough ? Color.white : grey) : unknownColor;
+                    slot.iconImage.color = unlocked ? (hasEnough ? Color.white : grey) : Color.white;
                     slot.iconImage.enabled = true;
                 }
 

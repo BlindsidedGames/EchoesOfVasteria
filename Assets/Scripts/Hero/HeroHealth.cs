@@ -1,4 +1,5 @@
 using TimelessEchoes.Stats;
+using UnityEngine.Serialization;
 using UnityEngine;
 
 namespace TimelessEchoes.Hero
@@ -12,6 +13,17 @@ namespace TimelessEchoes.Hero
         public static HeroHealth Instance { get; private set; }
         private HeroController controller;
         public bool Immortal { get; set; }
+
+        [Header("Defense Tuning")]
+        [SerializeField]
+        private TimelessEchoes.DefenseTuning defenseTuning = new TimelessEchoes.DefenseTuning
+        {
+            N = 60f
+        };
+
+        // When a projectile from an enemy hits, it sets this before calling TakeDamage
+        // so CalculateDamage can apply the scaling defense formula.
+        private int pendingAttackerLevel = -1;
 
         protected override void Awake()
         {
@@ -44,8 +56,10 @@ namespace TimelessEchoes.Hero
             controller = controller != null ? controller : GetComponent<HeroController>();
             if (controller != null)
             {
-                var min = fullDamage * 0.1f;
-                return Mathf.Max(fullDamage - controller.Defense, min);
+                // Apply simplified defense formula always
+                var total = TimelessEchoes.Combat.ApplyDefense(fullDamage, controller.Defense, defenseTuning);
+                pendingAttackerLevel = -1;
+                return total;
             }
 
             return fullDamage;
@@ -89,6 +103,23 @@ namespace TimelessEchoes.Hero
                 return;
             }
             base.TakeDamage(amount, bonusDamage);
+        }
+
+        /// <summary>
+        /// Apply damage from an enemy, providing the enemy's level so defense scaling can be applied.
+        /// </summary>
+        public void TakeDamageFromEnemy(float amount, int enemyLevel, float bonusDamage = 0f)
+        {
+            controller = controller != null ? controller : GetComponent<HeroController>();
+            if (controller != null && controller.IsEcho && Instance != null && Instance != this)
+            {
+                // Echo forwards to main hero with the echo damage reduction
+                Instance.TakeDamageFromEnemy(amount * 0.5f, enemyLevel, bonusDamage);
+                return;
+            }
+
+            pendingAttackerLevel = Mathf.Max(0, enemyLevel);
+            TakeDamage(amount, bonusDamage);
         }
     }
 }

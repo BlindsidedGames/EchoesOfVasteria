@@ -323,7 +323,7 @@ namespace TimelessEchoes.Enemies
             projObj.transform.rotation = Quaternion.identity;
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)
-                proj.Init(setter.target, stats.GetDamageForLevel(level));
+                proj.Init(setter.target, stats.GetDamageForLevel(level), false, null, null, 0f, level);
         }
 
         private void OnDeath()

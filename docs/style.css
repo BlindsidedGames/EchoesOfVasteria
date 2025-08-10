@@ -604,6 +604,14 @@ footer a:hover {
   flex-wrap: wrap;
   margin-top: var(--spacing-xl);
 }
+/* Note above mobile store links */
+.cta-buttons .cta-note {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: var(--spacing-sm);
+}
 
 /* Features section */
 .features {

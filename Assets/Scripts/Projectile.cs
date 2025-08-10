@@ -29,6 +29,7 @@ namespace TimelessEchoes
         private float bonusDamage;
         private bool fromHero;
         private TimelessEchoes.Skills.Skill combatSkill;
+        private int attackerLevel = -1;
 
         private IHasHealth targetHasHealth;
         private IDamageable targetDamageable;
@@ -49,13 +50,15 @@ namespace TimelessEchoes
             bool fromHero = false,
             GameObject hitEffect = null,
             TimelessEchoes.Skills.Skill combatSkill = null,
-            float bonusDamage = 0f)
+            float bonusDamage = 0f,
+            int attackerLevel = -1)
         {
             this.target = target;
             this.damage = damage;
             this.bonusDamage = bonusDamage;
             this.fromHero = fromHero;
             this.combatSkill = combatSkill;
+            this.attackerLevel = attackerLevel;
             effectPrefab = hitEffect ?? hitEffectPrefab;
             transform.rotation = Quaternion.identity;
 
@@ -108,7 +111,29 @@ namespace TimelessEchoes
                 }
 
                 float baseAmount = dmgAmount - bonusDamage;
-                targetDamageable?.TakeDamage(baseAmount, bonusDamage);
+                bool appliedCustom = false;
+                if (!fromHero && attackerLevel >= 0)
+                {
+                    var heroHealth = target.GetComponent<TimelessEchoes.Hero.HeroHealth>();
+                    if (heroHealth != null)
+                    {
+                        heroHealth.TakeDamageFromEnemy(baseAmount, attackerLevel, bonusDamage);
+                        appliedCustom = true;
+                    }
+                    else
+                    {
+                        var echoProxy = target.GetComponent<TimelessEchoes.Hero.EchoHealthProxy>();
+                        if (echoProxy != null)
+                        {
+                            // Echo forwards to main hero at 50% effectiveness
+                            TimelessEchoes.Hero.HeroHealth.Instance?.TakeDamageFromEnemy(baseAmount * 0.5f, attackerLevel, bonusDamage);
+                            appliedCustom = true;
+                        }
+                    }
+                }
+
+                if (!appliedCustom)
+                    targetDamageable?.TakeDamage(baseAmount, bonusDamage);
                 if (fromHero)
                 {
                     var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??

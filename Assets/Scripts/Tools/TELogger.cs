@@ -51,12 +51,24 @@ namespace TimelessEchoes
         }
 
         [Command("enable-log", "Enable logging for a category")] 
-        public static void EnableLogCategory(TELogCategory category) => _enabledCategories.Add(category);
+        public static void EnableLogCategory(TELogCategory category)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            _enabledCategories.Add(category);
+        }
 
         [Command("disable-log", "Disable logging for a category")]
-        public static void DisableLogCategory(TELogCategory category) => _enabledCategories.Remove(category);
+        public static void DisableLogCategory(TELogCategory category)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            _enabledCategories.Remove(category);
+        }
 
         [Command("list-log-categories", "Lists currently enabled log categories")]
-        public static IEnumerable<TELogCategory> ListLogCategories() => _enabledCategories;
+        public static IEnumerable<TELogCategory> ListLogCategories()
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            return _enabledCategories;
+        }
     }
 }

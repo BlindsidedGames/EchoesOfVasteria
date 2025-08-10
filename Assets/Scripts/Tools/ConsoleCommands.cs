@@ -20,6 +20,7 @@ namespace TimelessEchoes
         [Command("add-resource", "Add an amount of a resource by name")]
         public static void AddResource(string resourceName, double amount)
         {
+            ConsoleAuth.EnsureAuthenticated();
             var manager = ResourceManager.Instance;
             if (manager == null)
             {
@@ -37,6 +38,7 @@ namespace TimelessEchoes
         [Command("set-all-resources", "Set all resources to the specified amount")]
         public static void SetAllResources(double amount)
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
 
@@ -62,6 +64,7 @@ namespace TimelessEchoes
         [Command("set-stat-level", "Set the level of a stat upgrade")]
         public static void SetStatLevel(string upgradeName, int level)
         {
+            ConsoleAuth.EnsureAuthenticated();
             var upgrade = Resources.FindObjectsOfTypeAll<StatUpgrade>().FirstOrDefault(u => u.name == upgradeName);
             if (upgrade == null) return;
             var oracle = Blindsided.Oracle.oracle;
@@ -74,6 +77,7 @@ namespace TimelessEchoes
         [Command("set-skill-level", "Set the level of a skill")]
         public static void SetSkillLevel(string skillName, int level)
         {
+            ConsoleAuth.EnsureAuthenticated();
             var skill = Resources.FindObjectsOfTypeAll<Skill>().FirstOrDefault(s => s.name == skillName);
             if (skill == null) return;
             var oracle = Blindsided.Oracle.oracle;
@@ -90,6 +94,7 @@ namespace TimelessEchoes
         [Command("unlock-witch", "Unlock the witch NPC")]
         public static void UnlockWitch()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.CompletedNpcTasks ??= new HashSet<string>();
@@ -104,6 +109,7 @@ namespace TimelessEchoes
         [Command("complete-mildred", "Complete the Mildred quest")]
         public static void CompleteMildredQuest()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
@@ -119,6 +125,7 @@ namespace TimelessEchoes
         [Command("wipe-quests", "Clear all quest progress")]
         public static void WipeQuests()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.Quests = new Dictionary<string, GameData.QuestRecord>();
@@ -128,6 +135,7 @@ namespace TimelessEchoes
         [Command("wipe-resources", "Remove all stored resources")]
         public static void WipeResources()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.Resources = new Dictionary<string, GameData.ResourceEntry>();
@@ -138,6 +146,7 @@ namespace TimelessEchoes
         [Command("wipe-upgrades", "Reset all upgrade levels")]
         public static void WipeUpgrades()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.UpgradeLevels = new Dictionary<string, int>();
@@ -147,6 +156,7 @@ namespace TimelessEchoes
         [Command("wipe-skills", "Reset all skill progress")]
         public static void WipeSkills()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.SkillData = new Dictionary<string, GameData.SkillProgress>();
@@ -156,6 +166,7 @@ namespace TimelessEchoes
         [Command("wipe-npc", "Reset NPC tasks and generation data")]
         public static void WipeNpc()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.CompletedNpcTasks = new HashSet<string>();
@@ -167,6 +178,7 @@ namespace TimelessEchoes
         [Command("wipe-disciples", "Clear all disciple generation data")]
         public static void WipeDisciples()
         {
+            ConsoleAuth.EnsureAuthenticated();
             var oracle = Blindsided.Oracle.oracle;
             if (oracle == null) return;
             oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
@@ -177,6 +189,7 @@ namespace TimelessEchoes
         [Command("abandon-run", "Abandon the current run and return to town")]
         public static void AbandonRun()
         {
+            ConsoleAuth.EnsureAuthenticated();
             GameManager.Instance?.AbandonRun();
         }
 

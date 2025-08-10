@@ -139,11 +139,9 @@ namespace TimelessEchoes.Quests
                             if (req.type == QuestData.RequirementType.Resource)
                             {
                                 var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                                var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
                                 slot.iconImage.sprite =
-                                    unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
-                                slot.iconImage.color =
-                                    unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                                    unlocked ? (req.resource ? req.resource.icon : null) : (req.resource ? req.resource.UnknownIcon : null);
+                                slot.iconImage.color = Color.white;
                             }
                             else if (req.type == QuestData.RequirementType.Kill)
                             {
@@ -204,9 +202,8 @@ namespace TimelessEchoes.Quests
                 if (req.type == QuestData.RequirementType.Resource)
                 {
                     var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                    var unknownSprite = inventoryUI ? inventoryUI.UnknownSprite : null;
-                    slot.iconImage.sprite = unlocked ? req.resource ? req.resource.icon : null : unknownSprite;
-                    slot.iconImage.color = unlocked ? Color.white : new Color(0x74 / 255f, 0x3E / 255f, 0x38 / 255f);
+                    slot.iconImage.sprite = unlocked ? (req.resource ? req.resource.icon : null) : (req.resource ? req.resource.UnknownIcon : null);
+                    slot.iconImage.color = Color.white;
                 }
                 else if (req.type == QuestData.RequirementType.Kill)
                 {

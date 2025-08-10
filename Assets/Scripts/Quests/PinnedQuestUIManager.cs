@@ -96,8 +96,8 @@ namespace TimelessEchoes.Quests
                 var ui = Instantiate(entryPrefab, entryParent);
                 entries[id] = ui;
 
-                if (ui.progressText != null)
-                    ui.progressText.spriteAsset = ResourceIconLookup.SpriteAsset;
+                    if (ui.progressText != null)
+                        ui.progressText.spriteAsset = ResourceIconLookup.SpriteAsset;
             }
 
             if (rootObject != null)
@@ -208,7 +208,14 @@ namespace TimelessEchoes.Quests
 
                     if (req.type == QuestData.RequirementType.Resource)
                     {
-                        var iconTag = req.resource ? ResourceIconLookup.GetIconTag(req.resource.resourceID) : string.Empty;
+                        var iconTag = string.Empty;
+                        if (req.resource)
+                        {
+                            var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                            iconTag = unlocked
+                                ? ResourceIconLookup.GetIconTag(req.resource.resourceID)
+                                : ResourceIconLookup.GetUnknownIconTag(req.resource.resourceID);
+                        }
                         var fallbackName = req.resource ? req.resource.name : string.Empty;
                         var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
                         var separator = string.IsNullOrEmpty(iconTag) ? ": " : " ";
@@ -238,11 +245,21 @@ namespace TimelessEchoes.Quests
                     }
                 }
 
-                ui.progressText.text = sb.ToString();
-
                 if (reqCount > 0)
                     progress /= reqCount;
                 var ready = progress >= 1f;
+
+                if (completed || ready)
+                {
+                    var title = data.questName.GetLocalizedString();
+                    ui.progressText.text = string.IsNullOrEmpty(title)
+                        ? "<size=80%>Complete</size>"
+                        : $"{title}\n<size=80%>Complete</size>";
+                }
+                else
+                {
+                    ui.progressText.text = sb.ToString();
+                }
 
                 if (ui.completedImage != null)
                     ui.completedImage.enabled = completed || ready;

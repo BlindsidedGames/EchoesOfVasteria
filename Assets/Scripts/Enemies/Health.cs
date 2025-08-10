@@ -53,7 +53,9 @@ namespace TimelessEchoes.Enemies
             var defense = enemy != null ? enemy.GetDefense() : 0f;
 
             float full = amount + bonusDamage;
-            float total = Mathf.Max(full - defense, full * 0.1f);
+            // Use same simplified defense formula as hero
+            var tuning = new TimelessEchoes.DefenseTuning { N = 60f };
+            float total = TimelessEchoes.Combat.ApplyDefense(full, defense, tuning);
 
             CurrentHealth -= total;
             UpdateBar();

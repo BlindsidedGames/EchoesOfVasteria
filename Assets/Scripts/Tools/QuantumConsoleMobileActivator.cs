@@ -1,5 +1,8 @@
 using QFSW.QC;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace TimelessEchoes
 {
@@ -27,6 +30,16 @@ namespace TimelessEchoes
             _console = FindFirstObjectByType<QuantumConsole>(FindObjectsInactive.Include);
         }
 
+        private void OnEnable()
+        {
+            EnhancedTouchSupport.Enable();
+        }
+
+        private void OnDisable()
+        {
+            EnhancedTouchSupport.Disable();
+        }
+
         private void Update()
         {
             if (!Application.isMobilePlatform)
@@ -43,29 +56,15 @@ namespace TimelessEchoes
                 }
             }
 
-            if (Input.touchCount >= 3)
+            if (Touch.activeTouches.Count >= 3)
             {
-                bool allHeld = true;
-                for (int i = 0; i < Input.touchCount; i++)
+                _touchTimer += Time.unscaledDeltaTime;
+                if (_touchTimer >= holdDuration)
                 {
-                    var phase = Input.touches[i].phase;
-                    if (phase == TouchPhase.Ended || phase == TouchPhase.Canceled)
-                    {
-                        allHeld = false;
-                        break;
-                    }
+                    _console.Toggle();
+                    _touchTimer = 0f;
                 }
-
-                if (allHeld)
-                {
-                    _touchTimer += Time.unscaledDeltaTime;
-                    if (_touchTimer >= holdDuration)
-                    {
-                        _console.Toggle();
-                        _touchTimer = 0f;
-                    }
-                    return;
-                }
+                return;
             }
 
             _touchTimer = 0f;

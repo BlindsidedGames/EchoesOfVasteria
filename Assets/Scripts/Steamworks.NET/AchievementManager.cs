@@ -64,7 +64,10 @@ namespace TimelessEchoes
         {
             if (npcId == "Ivan1")
                 UnlockAchievement("MeetIvan");
-            else if (npcId == "Witch1") UnlockAchievement("MeetEva");
+            else if (npcId == "Farmers1")
+                UnlockAchievement("MeetFarmers");
+            else if (npcId == "Barkley1")
+                UnlockAchievement("MeetBarkley");
         }
 
         /// <summary>
@@ -89,6 +92,9 @@ namespace TimelessEchoes
 
         private void OnQuestHandinHandler(string questId)
         {
+            if (questId == "The names Gill")
+                UnlockAchievement("MeetGill");
+
             var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
             if (!string.IsNullOrEmpty(mildredId) && questId == mildredId)
                 UnlockAchievement("Mildred");
@@ -115,9 +121,17 @@ namespace TimelessEchoes
                 SteamUserStats.GetAchievement("MeetIvan", out achieved) && !achieved)
                 UnlockAchievement("MeetIvan");
 
-            if (StaticReferences.CompletedNpcTasks.Contains("Witch1") &&
-                SteamUserStats.GetAchievement("MeetEva", out achieved) && !achieved)
-                UnlockAchievement("MeetEva");
+            if (StaticReferences.CompletedNpcTasks.Contains("Farmers1") &&
+                SteamUserStats.GetAchievement("MeetFarmers", out achieved) && !achieved)
+                UnlockAchievement("MeetFarmers");
+
+            if (StaticReferences.CompletedNpcTasks.Contains("Barkley1") &&
+                SteamUserStats.GetAchievement("MeetBarkley", out achieved) && !achieved)
+                UnlockAchievement("MeetBarkley");
+
+            if (QuestCompleted("The names Gill") &&
+                SteamUserStats.GetAchievement("MeetGill", out achieved) && !achieved)
+                UnlockAchievement("MeetGill");
 
             var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
             if (!string.IsNullOrEmpty(mildredId) && QuestCompleted(mildredId) &&
