@@ -11,7 +11,7 @@ namespace TimelessEchoes
 
     public static class Combat
     {
-        private const float DefaultArmorScalarN = 60f;
+        private const float DefaultArmorScalarN = 25f;
 
         public static float ApplyDefense(float incomingDamage, float defense)
         {

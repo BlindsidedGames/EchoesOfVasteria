@@ -54,6 +54,21 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        protected override void OnTaskCompleted(HeroController hero)
+        {
+            if (isDepleted)
+                return;
+            isDepleted = true;
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                var s = ChooseDepletedSprite();
+                if (s != null)
+                    spriteRenderer.sprite = s;
+            }
+        }
+
         private Sprite ChooseDepletedSprite()
         {
             if (depletedSpriteOptions == null || depletedSpriteOptions.Length == 0)

@@ -54,6 +54,7 @@ namespace TimelessEchoes.Tasks
                 HideProgressBar();
                 GenerateDrops();
                 GrantCompletionXP();
+                OnTaskCompleted(hero);
                 NotifyCompleted();
                 return;
             }
@@ -87,6 +88,7 @@ namespace TimelessEchoes.Tasks
                 HideProgressBar();
                 GenerateDrops();
                 GrantCompletionXP();
+                OnTaskCompleted(hero);
                 NotifyCompleted();
                 // The hero will get a new task automatically now
             }
@@ -121,6 +123,16 @@ namespace TimelessEchoes.Tasks
         {
             if (progressBar != null && TaskDuration > 0f)
                 progressBar.fillAmount = Mathf.Clamp01((TaskDuration - timer) / TaskDuration);
+        }
+
+        /// <summary>
+        ///     Optional hook invoked when the task reaches completion (either instantly on arrival
+        ///     or after the normal duration). Subclasses can override to perform completion-side
+        ///     effects such as swapping sprites or playing VFX before the task component is removed.
+        /// </summary>
+        /// <param name="hero">The hero performing the task.</param>
+        protected virtual void OnTaskCompleted(HeroController hero)
+        {
         }
     }
 }

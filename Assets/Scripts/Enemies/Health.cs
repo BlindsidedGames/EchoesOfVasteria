@@ -53,7 +53,7 @@ namespace TimelessEchoes.Enemies
             var defense = enemy != null ? enemy.GetDefense() : 0f;
 
             float full = amount + bonusDamage;
-            // Use same simplified defense formula as hero
+            // Enemies use a different scalar (N=60) via overload tuning
             var tuning = new TimelessEchoes.DefenseTuning { N = 60f };
             float total = TimelessEchoes.Combat.ApplyDefense(full, defense, tuning);
 

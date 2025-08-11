@@ -67,6 +67,7 @@ namespace TimelessEchoes.Upgrades
             BuildAllCostSlots();
             UpdateStatLevels();
             UpdateStatDisplayValues();
+            UpdateDefenseInfoAndTitle();
         }
 
         private void OnEnable()
@@ -139,6 +140,7 @@ namespace TimelessEchoes.Upgrades
             UpdateAllCostSlotValues();
             UpdateStatDisplayValues();
             UpdateUpgradeButtons();
+        UpdateDefenseInfoAndTitle();
         }
 
         private void UpdateAllCostSlotValues()
@@ -221,6 +223,7 @@ namespace TimelessEchoes.Upgrades
                 BuildAllCostSlots();
                 UpdateStatLevels();
                 UpdateStatDisplayValues();
+                UpdateDefenseInfoAndTitle();
             }
         }
 
@@ -276,6 +279,46 @@ namespace TimelessEchoes.Upgrades
                     refs.statDisplayText.text = $"{current:0.###}";
                 else
                     refs.statDisplayText.text = $"{current:0.###} -> {next:0.###}";
+            }
+        }
+
+        /// <summary>
+        /// Updates the Defense upgrade's title to include current reduction percent and
+        /// sets a concise description with the formula and key breakpoints.
+        /// </summary>
+        private void UpdateDefenseInfoAndTitle()
+        {
+            // Find the Defense upgrade entry and its UI refs
+            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            {
+                var upgrade = upgrades[i];
+                var refs = statReferences[i];
+                if (upgrade == null || refs == null) continue;
+                if (!string.Equals(upgrade.name, "Defense")) continue;
+
+                // Compute current Defense value shown in this panel (same logic as display text)
+                int lvl = controller ? controller.GetLevel(upgrade) : 0;
+                float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+                float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+                float baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
+                float currentDefense = baseCurrent * (1f + percent);
+
+                // Use Combat's default defense tuning to avoid duplicating the scalar.
+                float damageFraction = TimelessEchoes.Combat.ApplyDefense(1f, currentDefense);
+                float reduction = 1f - Mathf.Clamp01(damageFraction);
+
+                if (refs.nameText != null)
+                    refs.nameText.text = $"{upgrade.name} | {(reduction * 100f):0.#}%";
+
+                if (refs.descriptionText != null)
+                {
+                    refs.descriptionText.text =
+                        "Reduces incoming damage with diminishing returns.\n" +
+                        "Key breakpoints: 25 Def = 50% less, 50 = 66.7% less, 125 = 83.3% less.";
+                }
+
+                // Only one Defense entry expected
+                break;
             }
         }
     }

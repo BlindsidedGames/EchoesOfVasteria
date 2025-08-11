@@ -14,12 +14,7 @@ namespace TimelessEchoes.Hero
         private HeroController controller;
         public bool Immortal { get; set; }
 
-        [Header("Defense Tuning")]
-        [SerializeField]
-        private TimelessEchoes.DefenseTuning defenseTuning = new TimelessEchoes.DefenseTuning
-        {
-            N = 60f
-        };
+        // Defense tuning removed; hero now uses the global default defined in Combat
 
         // When a projectile from an enemy hits, it sets this before calling TakeDamage
         // so CalculateDamage can apply the scaling defense formula.
@@ -56,8 +51,8 @@ namespace TimelessEchoes.Hero
             controller = controller != null ? controller : GetComponent<HeroController>();
             if (controller != null)
             {
-                // Apply simplified defense formula always
-                var total = TimelessEchoes.Combat.ApplyDefense(fullDamage, controller.Defense, defenseTuning);
+                // Apply simplified defense formula using Combat's default tuning (single source of truth)
+                var total = TimelessEchoes.Combat.ApplyDefense(fullDamage, controller.Defense);
                 pendingAttackerLevel = -1;
                 return total;
             }

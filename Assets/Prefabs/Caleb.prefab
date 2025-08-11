@@ -602,6 +602,7 @@ MonoBehaviour:
   allowAttacks: 1
   combatAggroRange: 20
   idleWalkStep: 5
+  richPresenceUpdateInterval: 2
 --- !u!114 &559727629078150424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,6 +623,8 @@ MonoBehaviour:
     minPercent: 0.25
   - sprite: {fileID: -7347752700975796469, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
     minPercent: 0
+  defenseTuning:
+    N: 25
 --- !u!114 &5365100460582800124
 MonoBehaviour:
   m_ObjectHideFlags: 0
