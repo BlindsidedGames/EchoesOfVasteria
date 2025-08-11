@@ -41,7 +41,10 @@ namespace TimelessEchoes.Tasks
 
         public override void OnArrival(HeroController hero)
         {
+            // Ensure base handles instant-complete first; if it does, it will early-return
             base.OnArrival(hero);
+            if (IsComplete())
+                return;
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = true;
         }
@@ -93,6 +96,15 @@ namespace TimelessEchoes.Tasks
         public override void OnInterrupt(HeroController hero)
         {
             base.OnInterrupt(hero);
+            if (wetSpriteRenderer != null)
+                wetSpriteRenderer.enabled = false;
+        }
+
+        protected override void OnTaskCompleted(HeroController hero)
+        {
+            // Mirror the visual cleanup that happens in Tick() when complete
+            if (spriteRenderer != null && spriteRenderer.enabled)
+                spriteRenderer.enabled = false;
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = false;
         }

@@ -55,6 +55,21 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        protected override void OnTaskCompleted(HeroController hero)
+        {
+            if (spawnedStump)
+                return;
+            spawnedStump = true;
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                var s = ChooseStumpSprite();
+                if (s != null)
+                    spriteRenderer.sprite = s;
+            }
+        }
+
         private Sprite ChooseStumpSprite()
         {
             if (stumpSpriteOptions == null || stumpSpriteOptions.Length == 0)

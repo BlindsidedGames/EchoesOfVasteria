@@ -159,11 +159,15 @@ namespace TimelessEchoes.UI
 
             if (uiReferences.rightText != null)
             {
+                // Convert flat defense into a damage reduction percent using the global combat formula
+                float damageFraction = TimelessEchoes.Combat.ApplyDefense(1f, defense);
+                float reductionPercent = (1f - Mathf.Clamp01(damageFraction)) * 100f;
+
                 var hpLine = heroHealth != null
                     ? $"HP: {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
                     : string.Empty;
                 uiReferences.rightText.text =
-                    $"Defense: {defense:0.##}\n" +
+                    $"Defense: {reductionPercent:0.#}%\n" +
                     $"Regen: {regen:0.###} /s\n" +
                     hpLine;
             }

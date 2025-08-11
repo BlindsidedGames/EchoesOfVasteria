@@ -80,6 +80,14 @@ namespace TimelessEchoes.Stats
         public bool RunInProgress { get; private set; }
 
         private Vector3 lastHeroPos;
+        public float CurrentRunSteps { get; private set; }
+        public float LastRunSteps { get; private set; }
+        public float LastRunDuration { get; private set; }
+        // Aggregates across multiple runs until returning to town
+        public int SessionDeaths { get; private set; }
+        public int SessionReaps { get; private set; }
+        public float SessionSteps { get; private set; }
+        public float SessionDuration { get; private set; }
         private static Dictionary<string, Resource> lookup;
         private static Dictionary<int, TaskData> taskLookup;
 
@@ -270,6 +278,8 @@ namespace TimelessEchoes.Stats
                 if (RunInProgress)
                 {
                     OnDistanceAdded?.Invoke(dist);
+                    CurrentRunSteps += dist;
+                    SessionSteps += dist;
                     var map = GetOrCreateCurrentMapStats();
                     if (map != null)
                         map.Steps += dist;
@@ -315,6 +325,7 @@ namespace TimelessEchoes.Stats
             Deaths++;
             if (RunInProgress)
             {
+                SessionDeaths++;
                 var map = GetOrCreateCurrentMapStats();
                 if (map != null)
                     map.Deaths++;
@@ -354,6 +365,8 @@ namespace TimelessEchoes.Stats
         public void AddTimesReaped()
         {
             TimesReaped++;
+            if (RunInProgress)
+                SessionReaps++;
         }
 
         public void AddBuffCast()
@@ -391,6 +404,7 @@ namespace TimelessEchoes.Stats
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
             RunInProgress = true;
+            CurrentRunSteps = 0f;
         }
 
         private void AddRunRecord(GameData.RunRecord record)
@@ -437,6 +451,8 @@ namespace TimelessEchoes.Stats
             if (!RunInProgress)
                 return;
             var duration = Time.time - runStartTime;
+            LastRunDuration = duration;
+            SessionDuration += duration;
             UpdateBestResourcePerMinute(duration);
             var record = new GameData.RunRecord
             {
@@ -455,6 +471,7 @@ namespace TimelessEchoes.Stats
                 Abandoned = false
             };
             AddRunRecord(record);
+            LastRunSteps = CurrentRunSteps;
             var map = GetOrCreateCurrentMapStats();
             if (map != null)
             {
@@ -472,6 +489,8 @@ namespace TimelessEchoes.Stats
             if (!RunInProgress)
                 return;
             var duration = Time.time - runStartTime;
+            LastRunDuration = duration;
+            SessionDuration += duration;
             UpdateBestResourcePerMinute(duration);
             var record = new GameData.RunRecord
             {
@@ -490,6 +509,7 @@ namespace TimelessEchoes.Stats
                 Abandoned = true
             };
             AddRunRecord(record);
+            LastRunSteps = CurrentRunSteps;
             var map = GetOrCreateCurrentMapStats();
             if (map != null)
             {
@@ -515,9 +535,22 @@ namespace TimelessEchoes.Stats
             RunInProgress = false;
             currentMapKey = null;
             currentRunResourceAmounts.Clear();
+            CurrentRunSteps = 0f;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
 #endif
+        }
+
+        /// <summary>
+        ///     Resets session aggregates that span multiple runs until returning to town.
+        ///     Call this before the first run of a session begins.
+        /// </summary>
+        public void BeginSession()
+        {
+            SessionDeaths = 0;
+            SessionReaps = 0;
+            SessionSteps = 0f;
+            SessionDuration = 0f;
         }
     }
 }

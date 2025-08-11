@@ -93,6 +93,7 @@ namespace TimelessEchoes
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
         public GameObject CurrentMap => currentMap;
+        public float BonusPercentPerKill => bonusPercentPerKill;
 
         public event System.Action HeroDied;
 
@@ -409,6 +410,9 @@ namespace TimelessEchoes
                 deathWindow.SetActive(false);
             BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.UpdateDistance(0f);
+            // If this is the first run of a session (tavern was active), reset session aggregates
+            if (statTracker != null && (tavernUI != null && tavernUI.activeSelf))
+                statTracker.BeginSession();
             StartCoroutine(StartRunRoutine());
         }
 
