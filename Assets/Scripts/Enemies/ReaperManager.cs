@@ -111,7 +111,9 @@ namespace TimelessEchoes.Enemies
                 }
             }
 
-            tracker?.AddTimesReaped();
+            // Count reaps only when the hero is the target
+            if (heroCtrl != null)
+                tracker?.AddTimesReaped();
 
             // If the hero was reaped for reaching the maximum distance,
             // increase that maximum by 1% for future runs.

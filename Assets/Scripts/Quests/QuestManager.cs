@@ -259,7 +259,14 @@ namespace TimelessEchoes.Quests
 
             inst.ui?.SetProgress(progress);
             inst.ui?.UpdateRequirementIcons();
+
+            var wasReady = inst.ReadyForTurnIn;
             inst.ReadyForTurnIn = progress >= 1f;
+            if (wasReady != inst.ReadyForTurnIn)
+            {
+                // Rebuild and re-sort the noticeboard when readiness changes so ready quests float to the top.
+                RefreshNoticeboard();
+            }
 
             PinnedQuestUIManager.Instance?.UpdateProgress();
         }
@@ -469,7 +476,7 @@ namespace TimelessEchoes.Quests
             PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
-        private void RefreshNoticeboard()
+        public void RefreshNoticeboard()
         {
             if (uiManager == null)
                 return;

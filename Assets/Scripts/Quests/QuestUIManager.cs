@@ -67,5 +67,12 @@ namespace TimelessEchoes.Quests
             Destroy(entry.gameObject);
         }
 
+        private void OnEnable()
+        {
+            // Ensure the list is freshly built and sorted whenever the quest UI opens
+            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+            qm?.RefreshNoticeboard();
+        }
+
     }
 }

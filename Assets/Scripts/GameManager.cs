@@ -153,7 +153,7 @@ namespace TimelessEchoes
                     var longest = CalcUtils.FormatNumber(stats.LongestTrek, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
-                    entry.statsUI.distanceLongestTasksText.text = $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    entry.statsUI.distanceLongestTasksText.text = $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
                 }
                 if (entry.statsUI != null && entry.statsUI.killsDamageDeathsText != null)
                 {
@@ -553,7 +553,9 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            if (statTracker != null) statTracker.AddDeath();
+            // Only count a death if it was not caused by the distance reaper
+            if (statTracker != null && !distanceReaper)
+                statTracker.AddDeath();
 
             BuffManager.Instance?.ClearActiveBuffs();
 
@@ -659,6 +661,10 @@ namespace TimelessEchoes
 
             if (deathWindow != null)
                 deathWindow.SetActive(false);
+            // If we've already returned to the tavern or death state was cleared,
+            // do not auto-start a new run from the death timer.
+            if (!heroDead || (tavernUI != null && tavernUI.activeInHierarchy))
+                yield break;
             StartRun();
         }
 
@@ -670,6 +676,15 @@ namespace TimelessEchoes
         private IEnumerator ReturnToTavernRoutine(bool abandon = false)
         {
             HideTooltip();
+            // Ensure any death window countdown is cancelled to avoid unintended auto-run
+            if (deathWindowCoroutine != null)
+            {
+                StopCoroutine(deathWindowCoroutine);
+                deathWindowCoroutine = null;
+            }
+            if (deathWindow != null)
+                deathWindow.SetActive(false);
+            deathUiFailsafeCheckAt = -1f;
             // Reset state after death.
             heroDead = false;
             returnOnDeathQueued = false;

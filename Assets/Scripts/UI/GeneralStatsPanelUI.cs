@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI
                 var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
                 var reapDist = CalcUtils.FormatNumber(statTracker.MaxRunDistance, true);
                 references.distanceLongestTasksText.text =
-                    $"Steps Taken: {dist}\nLongest Trek: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
+                    $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
             }
 
             if (references.killsDamageDeathsText != null)

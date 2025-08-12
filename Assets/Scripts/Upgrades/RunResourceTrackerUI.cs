@@ -165,7 +165,7 @@ namespace TimelessEchoes.Upgrades
             // Line 2: Died/Reaped (session totals)
             var diedTotal = tracker.SessionDeaths;
             var reapedTotal = tracker.SessionReaps;
-            lines.Add($"Died {diedTotal} times, Reaped {reapedTotal} times");
+            lines.Add($"Died {diedTotal} times, Reaped by Carl {reapedTotal} times");
 
             // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)
             var runs = tracker.RecentRuns;

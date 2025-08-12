@@ -209,6 +209,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -216,10 +229,10 @@ TextureImporter:
       name: Desert_Trader_Camp_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 25
-        width: 22
-        height: 14
+        x: 0
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -238,10 +251,10 @@ TextureImporter:
       name: Desert_Trader_Camp_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 35
-        width: 34
-        height: 24
+        x: 96
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +273,10 @@ TextureImporter:
       name: Desert_Trader_Camp_2
       rect:
         serializedVersion: 2
-        x: 36
-        y: 1
-        width: 43
-        height: 45
+        x: 192
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -282,10 +295,10 @@ TextureImporter:
       name: Desert_Trader_Camp_3
       rect:
         serializedVersion: 2
-        x: 97
-        y: 25
-        width: 22
-        height: 14
+        x: 288
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,10 +317,10 @@ TextureImporter:
       name: Desert_Trader_Camp_4
       rect:
         serializedVersion: 2
-        x: 112
-        y: 35
-        width: 34
-        height: 23
+        x: 384
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -326,10 +339,10 @@ TextureImporter:
       name: Desert_Trader_Camp_5
       rect:
         serializedVersion: 2
-        x: 132
-        y: 1
-        width: 43
-        height: 45
+        x: 480
+        y: 0
+        width: 96
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -344,539 +357,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_6
-      rect:
-        serializedVersion: 2
-        x: 193
-        y: 25
-        width: 22
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7c83e9663c3c653a0800000000000000
-      internalID: -6676934153522497337
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_7
-      rect:
-        serializedVersion: 2
-        x: 208
-        y: 35
-        width: 34
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 86cc393b81885f380800000000000000
-      internalID: -8938088245773480856
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_8
-      rect:
-        serializedVersion: 2
-        x: 228
-        y: 1
-        width: 43
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d488f58295d0343c0800000000000000
-      internalID: -4376639736293390259
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_9
-      rect:
-        serializedVersion: 2
-        x: 289
-        y: 25
-        width: 22
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f3fce3a90d90db840800000000000000
-      internalID: 5241356332874780479
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_10
-      rect:
-        serializedVersion: 2
-        x: 304
-        y: 35
-        width: 34
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 82f21f350e9320a20800000000000000
-      internalID: 3027045535190167336
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_11
-      rect:
-        serializedVersion: 2
-        x: 324
-        y: 1
-        width: 43
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 76e9039ec6e21c610800000000000000
-      internalID: 1639642784643194471
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_12
-      rect:
-        serializedVersion: 2
-        x: 385
-        y: 25
-        width: 22
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bd5991b9ad80ee6e0800000000000000
-      internalID: -1806496665530952229
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_13
-      rect:
-        serializedVersion: 2
-        x: 400
-        y: 35
-        width: 34
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a21e9d54d196c09d0800000000000000
-      internalID: -2806752893311786710
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_14
-      rect:
-        serializedVersion: 2
-        x: 420
-        y: 1
-        width: 43
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa486489113aded30800000000000000
-      internalID: 4462402101758559407
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_15
-      rect:
-        serializedVersion: 2
-        x: 481
-        y: 25
-        width: 22
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b9bf75a0fe68d8b80800000000000000
-      internalID: -8390902169492522085
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_16
-      rect:
-        serializedVersion: 2
-        x: 496
-        y: 35
-        width: 34
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 19da329035b04afb0800000000000000
-      internalID: -4637569265021244015
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_17
-      rect:
-        serializedVersion: 2
-        x: 516
-        y: 1
-        width: 43
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f8f296d93fc8574d0800000000000000
-      internalID: -3137446587447824497
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_18
-      rect:
-        serializedVersion: 2
-        x: 5
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 02531fcb8f0b49aa0800000000000000
-      internalID: -6155100208340323040
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_19
-      rect:
-        serializedVersion: 2
-        x: 18
-        y: 19
-        width: 14
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 14891e17064455dc0800000000000000
-      internalID: -3650936741895759807
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_20
-      rect:
-        serializedVersion: 2
-        x: 101
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5cea2cbab19697620800000000000000
-      internalID: 2772362613189947077
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_21
-      rect:
-        serializedVersion: 2
-        x: 114
-        y: 19
-        width: 14
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 555e8174518ba6db0800000000000000
-      internalID: -4797820051483204267
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_22
-      rect:
-        serializedVersion: 2
-        x: 197
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8be0bfd3337141b40800000000000000
-      internalID: 5409974561229442744
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_23
-      rect:
-        serializedVersion: 2
-        x: 210
-        y: 19
-        width: 14
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 311c062c1e6d27bc0800000000000000
-      internalID: -3786728071548059373
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_24
-      rect:
-        serializedVersion: 2
-        x: 293
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 994d27c4d584de8a0800000000000000
-      internalID: -6274279140305480551
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_25
-      rect:
-        serializedVersion: 2
-        x: 306
-        y: 19
-        width: 14
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2b9a5a1d1014ac220800000000000000
-      internalID: 2506887618653170098
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_26
-      rect:
-        serializedVersion: 2
-        x: 389
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6b746ad8826b01f70800000000000000
-      internalID: 9156018327735650230
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_27
-      rect:
-        serializedVersion: 2
-        x: 402
-        y: 19
-        width: 14
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f5e28d6043a1a20a0800000000000000
-      internalID: -6905678267863781793
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_28
-      rect:
-        serializedVersion: 2
-        x: 485
-        y: 8
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9a30106fd151c1e30800000000000000
-      internalID: 4475475348124926889
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Desert_Trader_Camp_29
-      rect:
-        serializedVersion: 2
-        x: 498
-        y: 19
-        width: 14
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8e954b00747290010800000000000000
-      internalID: 1155497965305223656
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e11c0b39364f1784c80134ee948847c4
     internalID: 0
     vertices: []
     indices: 
@@ -884,38 +369,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":96.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Desert_Trader_Camp_0: 580094249674185342
       Desert_Trader_Camp_1: -5631061924285587115
-      Desert_Trader_Camp_10: 3027045535190167336
-      Desert_Trader_Camp_11: 1639642784643194471
-      Desert_Trader_Camp_12: -1806496665530952229
-      Desert_Trader_Camp_13: -2806752893311786710
-      Desert_Trader_Camp_14: 4462402101758559407
-      Desert_Trader_Camp_15: -8390902169492522085
-      Desert_Trader_Camp_16: -4637569265021244015
-      Desert_Trader_Camp_17: -3137446587447824497
-      Desert_Trader_Camp_18: -6155100208340323040
-      Desert_Trader_Camp_19: -3650936741895759807
       Desert_Trader_Camp_2: -6012756374331821131
-      Desert_Trader_Camp_20: 2772362613189947077
-      Desert_Trader_Camp_21: -4797820051483204267
-      Desert_Trader_Camp_22: 5409974561229442744
-      Desert_Trader_Camp_23: -3786728071548059373
-      Desert_Trader_Camp_24: -6274279140305480551
-      Desert_Trader_Camp_25: 2506887618653170098
-      Desert_Trader_Camp_26: 9156018327735650230
-      Desert_Trader_Camp_27: -6905678267863781793
-      Desert_Trader_Camp_28: 4475475348124926889
-      Desert_Trader_Camp_29: 1155497965305223656
       Desert_Trader_Camp_3: 4204631928654699720
       Desert_Trader_Camp_4: -5787785720475204667
       Desert_Trader_Camp_5: -8068095377322215479
-      Desert_Trader_Camp_6: -6676934153522497337
-      Desert_Trader_Camp_7: -8938088245773480856
-      Desert_Trader_Camp_8: -4376639736293390259
-      Desert_Trader_Camp_9: 5241356332874780479
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -76,7 +76,13 @@ namespace TimelessEchoes
 
             if (SteamUserStats.GetStat("DistanceReached", out int storedDistance))
             {
-                int newDistance = Mathf.FloorToInt(tracker.LongestRun);
+                // Only advance the DistanceReached stat based on the player's current run progress.
+                // This prevents retroactively pushing an older, larger LongestRun value on load
+                // and accidentally unlocking distance achievements the player hasn't reached this run.
+                int newDistance = tracker.RunInProgress
+                    ? Mathf.FloorToInt(tracker.CurrentRunDistance)
+                    : storedDistance; // do not change when not actively running
+
                 if (newDistance > storedDistance)
                 {
                     SteamUserStats.SetStat("DistanceReached", newDistance);

@@ -28,9 +28,9 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         [TabGroup("Resources")] public Dictionary<string, double> EnemyKills = new();
 
-        // Start with the MoveSpeed buff assigned to the first slot by default
+        // Start with the Echo Tasks buff assigned to the first slot by default
         [HideReferenceObjectPicker]
-        [TabGroup("Buffs")] public List<string> BuffSlots = new() { "MoveSpeed", null, null, null, null };
+        [TabGroup("Buffs")] public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
         [TabGroup("Buffs")] public int UnlockedBuffSlots = 1;
         [TabGroup("Buffs")] public int UnlockedAutoBuffSlots = 0;
         [HideReferenceObjectPicker]

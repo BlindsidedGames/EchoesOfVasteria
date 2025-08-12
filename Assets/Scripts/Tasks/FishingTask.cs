@@ -1,4 +1,5 @@
 using UnityEngine;
+using TimelessEchoes.Hero;
 
 namespace TimelessEchoes.Tasks
 {
@@ -8,7 +9,23 @@ namespace TimelessEchoes.Tasks
         public override Transform Target => fishingPoint != null ? fishingPoint : transform;
 
         protected override string AnimationName => "Fishing";
-        protected override string InterruptTriggerName => "StopFishing";
+        // Disable interrupt trigger usage for fishing; we'll force Idle instead on interrupt
+        protected override string InterruptTriggerName => string.Empty;
         protected override string CompletionTriggerName => "CatchFish";
+
+        public override void OnInterrupt(HeroController hero)
+        {
+            // Hide progress bar via base (no trigger will be set because InterruptTriggerName is empty)
+            base.OnInterrupt(hero);
+
+            if (hero != null)
+            {
+                if (hero.Animator != null)
+                    hero.Animator.Play("Idle");
+
+                if (hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
+                    hero.AutoBuffAnimator.Play("Idle");
+            }
+        }
     }
 }

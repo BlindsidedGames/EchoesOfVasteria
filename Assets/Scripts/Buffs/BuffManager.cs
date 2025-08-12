@@ -410,8 +410,23 @@ namespace TimelessEchoes.Buffs
         public void UnlockAutoSlots(int count)
         {
             if (oracle == null || count <= 0) return;
-            var newCount = Mathf.Clamp(oracle.saveData.UnlockedAutoBuffSlots + count, 0, autoCastSlots.Count);
+
+            // Determine previously unlocked count and new unlocked count
+            var oldCount = Mathf.Clamp(oracle.saveData.UnlockedAutoBuffSlots, 0, autoCastSlots.Count);
+            var newCount = Mathf.Clamp(oldCount + count, 0, autoCastSlots.Count);
             oracle.saveData.UnlockedAutoBuffSlots = newCount;
+
+            // Ensure save list exists and is properly sized
+            oracle.saveData.AutoBuffSlots ??= new List<bool>();
+            while (oracle.saveData.AutoBuffSlots.Count < autoCastSlots.Count)
+                oracle.saveData.AutoBuffSlots.Add(false);
+
+            // Default any newly unlocked auto-cast slots to ON
+            for (var i = oldCount; i < newCount; i++)
+            {
+                autoCastSlots[i] = true;
+                SetAutoBuffSlot(i, true);
+            }
         }
 
         public bool IsAutoSlotUnlocked(int slot)
@@ -421,7 +436,9 @@ namespace TimelessEchoes.Buffs
 
         public bool IsSlotAutoCasting(int slot)
         {
-            return slot >= 0 && slot < autoCastSlots.Count && autoCastSlots[slot];
+            // Only report auto-casting when the corresponding auto slot is unlocked
+            // to avoid showing stale UI states after wipes or before unlocks.
+            return IsAutoSlotUnlocked(slot) && slot >= 0 && slot < autoCastSlots.Count && autoCastSlots[slot];
         }
 
         public void ToggleSlotAutoCast(int slot)
@@ -475,7 +492,7 @@ namespace TimelessEchoes.Buffs
 
         private void AutoCastBuffs()
         {
-            for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count; i++)
+            for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count && i < UnlockedAutoSlots; i++)
             {
                 if (!autoCastSlots[i]) continue;
                 var recipe = slotAssignments[i];

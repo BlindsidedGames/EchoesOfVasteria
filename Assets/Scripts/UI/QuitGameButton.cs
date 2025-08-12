@@ -63,11 +63,8 @@ namespace TimelessEchoes.UI
             if (oracle == null)
                 return;
 
-            EventHandler.SaveData();
-            oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-
-            ES3.Save(oracle.DataName, oracle.saveData, oracle.Settings);
-            ES3.StoreCachedFile(oracle.FileName);
+            // Save to the currently-selected slot using centralized logic
+            oracle.SaveToSlot(oracle.CurrentSlot);
         }
     }
 }

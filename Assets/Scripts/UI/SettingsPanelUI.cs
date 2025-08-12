@@ -445,19 +445,7 @@ namespace TimelessEchoes.UI
             try
             {
                 var oracle = Oracle.oracle;
-                EventHandler.SaveData();
-                oracle.saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-                var dataName = $"{prefix}Data{index}";
-                var fileName = $"{prefix}Sd{index}.es3";
-                var settings = new ES3Settings(fileName, ES3.Location.Cache);
-                ES3.Save(dataName, oracle.saveData, settings);
-                ES3.StoreCachedFile(fileName);
-
-                PlayerPrefs.SetFloat(SlotKey(index, "Completion"), oracle.saveData.CompletionPercentage);
-                PlayerPrefs.SetFloat(SlotKey(index, "Playtime"), (float)oracle.saveData.PlayTime);
-                PlayerPrefs.SetString(SlotKey(index, "Date"), oracle.saveData.DateQuitString);
-                PlayerPrefs.Save();
+                oracle.SaveToSlot(index);
             }
             catch (Exception ex)
             {

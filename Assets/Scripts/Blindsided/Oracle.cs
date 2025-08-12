@@ -10,6 +10,9 @@ using TimelessEchoes;
 using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
+using Blindsided.Utilities;
 
 namespace Blindsided
 {
@@ -72,6 +75,23 @@ namespace Blindsided
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
 
+        // Regression detection thresholds and state
+        private const float PlaytimeRegressionToleranceSeconds = 60f; // allow minor discrepancies
+        private const float CompletionRegressionTolerance = 0.25f;    // percent points
+        [ShowInInspector, ReadOnly] public bool RegressionDetected { get; private set; }
+        [ShowInInspector, ReadOnly] public string RegressionMessage { get; private set; }
+
+        // Detailed deltas for the regression prompt
+        private float _lastPlaytimeDropSec;
+        private float _lastCompletionDropPct;
+        private double _lastMinutesNewer;
+
+        [Header("Regression Confirmation UI")] [TabGroup("SaveData")]
+        [SerializeField] private GameObject regressionConfirmWindow;
+        [SerializeField] private Button regressionYesButton;
+        [SerializeField] private Button regressionNoButton;
+        [SerializeField] private TMP_Text regressionMessageText;
+
         #endregion
 
         #region Unity lifecycle
@@ -84,6 +104,18 @@ namespace Blindsided
             Application.targetFrameRate = StaticReferences.TargetFps;
             StartCoroutine(LoadMainScene());
             InvokeRepeating(nameof(SaveToFile), 10, 10);
+
+            // Wire up regression confirmation UI if present
+            if (regressionYesButton != null)
+            {
+                regressionYesButton.onClick.RemoveAllListeners();
+                regressionYesButton.onClick.AddListener(ConfirmRegressionKeepLoaded);
+            }
+            if (regressionNoButton != null)
+            {
+                regressionNoButton.onClick.RemoveAllListeners();
+                regressionNoButton.onClick.AddListener(AttemptRestoreBackupAndReload);
+            }
         }
 
         private IEnumerator LoadMainScene()
@@ -197,6 +229,26 @@ namespace Blindsided
             GUIUtility.systemCopyBuffer = beta ? Encoding.UTF8.GetString(bytes) : Convert.ToBase64String(bytes);
         }
 
+        [TabGroup("SaveData", "Buttons")]
+        [Button("Test Regression Prompt")]
+        public void TestRegressionPrompt()
+        {
+            // Seed some dummy deltas
+            _lastPlaytimeDropSec = 600f; // 10 minutes
+            _lastCompletionDropPct = 2.5f; // 2.5%
+            _lastMinutesNewer = 45.0; // 45 minutes
+
+            RegressionDetected = true;
+            RegressionMessage = "[TEST] Simulated regression for preview";
+
+            float loadedPt = (float)saveData.PlayTime;
+            float loadedComp = saveData.CompletionPercentage;
+            float prevPt = loadedPt + _lastPlaytimeDropSec;
+            float prevComp = loadedComp + _lastCompletionDropPct;
+
+            TryShowRegressionWindow(CurrentSlot, prevPt, prevComp, loadedPt, loadedComp);
+        }
+
         #endregion
 
         #region Core save / load
@@ -208,6 +260,9 @@ namespace Blindsided
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             ES3.Save(_dataName, saveData, _settings); // write to cache
+
+            // Ensure PlayerPrefs metadata for the current slot is kept in sync for all saves/autosaves
+            PersistSlotMetadataToPlayerPrefs();
         }
 
         private void Load()
@@ -240,6 +295,10 @@ namespace Blindsided
             }
 
             NullCheckers();
+
+            // Check for potential regression relative to what this device previously recorded
+            DetectRegressionAgainstPlayerPrefs();
+
             loaded = true;
             AwayForSeconds();
 
@@ -250,6 +309,206 @@ namespace Blindsided
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Compares the just-loaded save data with this device's last-known metadata in PlayerPrefs.
+        /// If a significant regression is detected, sets flags and stores a brief report for UI/logging.
+        /// </summary>
+        private void DetectRegressionAgainstPlayerPrefs()
+        {
+            try
+            {
+                var index = Mathf.Clamp(CurrentSlot, 0, 2);
+                var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+                var completionKey = $"{prefix}Slot{index}_Completion";
+                var playtimeKey = $"{prefix}Slot{index}_Playtime";
+                var dateKey = $"{prefix}Slot{index}_Date";
+
+                var prevCompletion = PlayerPrefs.GetFloat(completionKey, -1f);
+                var prevPlaytime = PlayerPrefs.GetFloat(playtimeKey, -1f);
+                var prevDateString = PlayerPrefs.GetString(dateKey, string.Empty);
+
+                var haveBaseline = prevCompletion >= 0f || prevPlaytime >= 0f || !string.IsNullOrEmpty(prevDateString);
+                if (!haveBaseline) return; // nothing to compare on this device
+
+                float loadedPlaytime = (float)saveData.PlayTime;
+                float loadedCompletion = saveData.CompletionPercentage;
+
+                var playtimeDrop = prevPlaytime - loadedPlaytime;
+                var completionDrop = prevCompletion - loadedCompletion;
+
+                bool regression = false;
+                string reason = string.Empty;
+
+                if (playtimeDrop > PlaytimeRegressionToleranceSeconds)
+                {
+                    regression = true;
+                    reason = $"Playtime drop {playtimeDrop:0}s (> {PlaytimeRegressionToleranceSeconds:0}s)";
+                    _lastPlaytimeDropSec = playtimeDrop;
+                }
+                else if (completionDrop > CompletionRegressionTolerance)
+                {
+                    regression = true;
+                    reason = $"Completion drop {completionDrop:0.##}% (> {CompletionRegressionTolerance:0.##}%)";
+                    _lastCompletionDropPct = completionDrop;
+                }
+                else if (!string.IsNullOrEmpty(prevDateString) && !string.IsNullOrEmpty(saveData.DateQuitString))
+                {
+                    // If stored date is substantially newer than loaded, consider it a regression
+                    if (DateTime.TryParse(prevDateString, CultureInfo.InvariantCulture, DateTimeStyles.None, out var prevDate)
+                        && DateTime.TryParse(saveData.DateQuitString, CultureInfo.InvariantCulture, DateTimeStyles.None, out var loadedDate))
+                    {
+                        var minutesNewer = (prevDate - loadedDate).TotalMinutes;
+                        if (minutesNewer > 10) // 10 minutes grace
+                        {
+                            regression = true;
+                            reason = $"Last save time moved back by {minutesNewer:0} minutes";
+                            _lastMinutesNewer = minutesNewer;
+                        }
+                    }
+                }
+
+                if (!regression) return;
+
+                RegressionDetected = true;
+                RegressionMessage =
+                    $"Regression detected for slot {index}. Prev PT={prevPlaytime:0}s, Prev %={prevCompletion:0.##}; Loaded PT={loadedPlaytime:0}s, %={loadedCompletion:0.##}. Reason: {reason}";
+
+                Debug.LogWarning(RegressionMessage);
+
+                // Record a simple marker & message in PlayerPrefs so UI can surface it
+                var regKey = $"{prefix}Slot{index}_RegressionDetected";
+                var regInfoKey = $"{prefix}Slot{index}_RegressionInfo";
+                PlayerPrefs.SetInt(regKey, 1);
+                PlayerPrefs.SetString(regInfoKey, RegressionMessage);
+                PlayerPrefs.Save();
+
+                TryShowRegressionWindow(index, prevPlaytime, prevCompletion, loadedPlaytime, loadedCompletion);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Regression detection failed: {ex}");
+            }
+        }
+
+        private void TryShowRegressionWindow(int slotIndex, float prevPlaytime, float prevCompletion,
+            float loadedPlaytime, float loadedCompletion)
+        {
+            if (regressionConfirmWindow == null)
+                return;
+
+            var reasons = new List<string>(3);
+            if (_lastPlaytimeDropSec > PlaytimeRegressionToleranceSeconds)
+                reasons.Add($"Playtime: -{CalcUtils.FormatTime(_lastPlaytimeDropSec, shortForm: true)}");
+            if (_lastCompletionDropPct > CompletionRegressionTolerance)
+                reasons.Add($"Completion: -{_lastCompletionDropPct:0.##}%");
+            if (_lastMinutesNewer > 10)
+                reasons.Add($"Time: -{_lastMinutesNewer:0} min");
+
+            var summary = reasons.Count > 0 ? string.Join(" • ", reasons) : "Progress appears lower.";
+
+            if (regressionMessageText != null)
+            {
+                regressionMessageText.text =
+                    $"Detected older progress for File {slotIndex + 1}.\n{summary}\nKeep currently loaded data?";
+            }
+
+            regressionConfirmWindow.SetActive(true);
+        }
+
+        private void ConfirmRegressionKeepLoaded()
+        {
+            // User accepts the loaded (possibly regressed) data; persist metadata so this prompt won't repeat.
+            PersistSlotMetadataToPlayerPrefs();
+            DismissRegressionWindow();
+        }
+
+        private void DismissRegressionWindow()
+        {
+            if (regressionConfirmWindow != null)
+                regressionConfirmWindow.SetActive(false);
+        }
+
+        /// <summary>
+        /// Called by the "No" button: attempts to restore the Easy Save .bac backup for the current slot
+        /// and reloads the scene so the restored data is applied everywhere.
+        /// </summary>
+        [Button]
+        public void AttemptRestoreBackupAndReload()
+        {
+            try
+            {
+                var restored = ES3.RestoreBackup(_settings);
+                if (!restored)
+                {
+                    Debug.LogWarning("No backup found to restore.");
+                }
+                else
+                {
+                    Debug.Log("Backup restored. Reloading save and scene.");
+                }
+
+                // Reload save from disk regardless; if restore failed, this reloads the current file.
+                Load();
+                DismissRegressionWindow();
+
+                // Reload the active scene(s) to ensure all systems pick up the new data
+                // We already have a helper to load Main on boot, but here reload current.
+                var active = SceneManager.GetActiveScene();
+                SceneManager.LoadScene(active.name);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Backup restore failed: {ex}");
+                DismissRegressionWindow();
+            }
+        }
+
+        /// <summary>
+        /// Writes the specified slot's save metadata to PlayerPrefs so UI and other systems
+        /// relying on PlayerPrefs reflect the latest save/autosave.
+        /// </summary>
+        public void PersistSlotMetadataToPlayerPrefs(int slotIndex)
+        {
+            var index = Mathf.Clamp(slotIndex, 0, 2);
+            var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+            var completionKey = $"{prefix}Slot{index}_Completion";
+            var playtimeKey = $"{prefix}Slot{index}_Playtime";
+            var dateKey = $"{prefix}Slot{index}_Date";
+
+            PlayerPrefs.SetFloat(completionKey, saveData.CompletionPercentage);
+            PlayerPrefs.SetFloat(playtimeKey, (float)saveData.PlayTime);
+            PlayerPrefs.SetString(dateKey, saveData.DateQuitString);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
+        /// Convenience overload for current slot.
+        /// </summary>
+        public void PersistSlotMetadataToPlayerPrefs()
+        {
+            PersistSlotMetadataToPlayerPrefs(CurrentSlot);
+        }
+
+        /// <summary>
+        /// Saves current game data into the specified slot index and updates PlayerPrefs for that slot.
+        /// </summary>
+        public void SaveToSlot(int slotIndex)
+        {
+            var index = Mathf.Clamp(slotIndex, 0, 2);
+            if (!wipeInProgress)
+                EventHandler.SaveData();
+            saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+
+            var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+            var dataName = $"{prefix}Data{index}";
+            var fileName = $"{prefix}Sd{index}.es3";
+            var settings = new ES3Settings(fileName, ES3.Location.Cache);
+            ES3.Save(dataName, saveData, settings);
+            ES3.StoreCachedFile(fileName);
+
+            PersistSlotMetadataToPlayerPrefs(index);
+        }
 
         private void NullCheckers()
         {
