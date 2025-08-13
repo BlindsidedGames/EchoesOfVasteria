@@ -16,29 +16,29 @@ namespace TimelessEchoes.Upgrades
         private static Dictionary<int, int> idToUnknownIndex;
 
         static ResourceIconLookup()
-{
-    spriteAsset = Blindsided.Utilities.AssetCache.GetOne<TMP_SpriteAsset>(SpriteAssetPath);
+        {
+            spriteAsset = Blindsided.Utilities.AssetCache.GetOne<TMP_SpriteAsset>(SpriteAssetPath);
 
-    // New indices for the alternating sheet (known icons at even slots).
-    idToIndex = new Dictionary<int, int>(57)
-    {
-        {1, 64},  {2, 58},  {3, 66},  {4, 56},  {5, 60},  {6, 62},  {7, 12},  {8, 18},
-        {9, 0},   {10, 36}, {11, 24}, {12, 6},  {13, 30}, {14, 42}, {15, 14}, {16, 20},
-        {17, 2},  {18, 38}, {19, 26}, {20, 8},  {21, 32}, {22, 44}, {23, 16}, {24, 22},
-        {25, 4},  {26, 40}, {27, 28}, {28, 10}, {29, 34}, {30, 46}, {31, 86}, {32, 80},
-        {33, 76}, {34, 78}, {35, 82}, {36, 74}, {37, 72}, {38, 84}, {39, 126},{40, 144},
-        {41, 120},{42, 134},{43, 150},{44, 138},{45, 132},{46, 136},{47, 152},{48, 142},
-        {49, 146},{50, 118},{51, 128},{52, 148},{53, 130},{54, 140},{55, 124},{56, 122},
-        {57, 54}
-    };
+            // New indices for the alternating sheet (known icons at even slots).
+            idToIndex = new Dictionary<int, int>(57)
+            {
+                {1, 64},  {2, 58},  {3, 66},  {4, 56},  {5, 60},  {6, 62},  {7, 12},  {8, 18},
+                {9, 0},   {10, 36}, {11, 24}, {12, 6},  {13, 30}, {14, 42}, {15, 14}, {16, 20},
+                {17, 2},  {18, 38}, {19, 26}, {20, 8},  {21, 32}, {22, 44}, {23, 16}, {24, 22},
+                {25, 4},  {26, 40}, {27, 28}, {28, 10}, {29, 34}, {30, 46}, {31, 86}, {32, 80},
+                {33, 76}, {34, 78}, {35, 82}, {36, 74}, {37, 72}, {38, 84}, {39, 126},{40, 144},
+                {41, 120},{42, 134},{43, 150},{44, 138},{45, 132},{46, 136},{47, 152},{48, 142},
+                {49, 146},{50, 118},{51, 128},{52, 148},{53, 130},{54, 140},{55, 124},{56, 122},
+                {57, 54}
+            };
 
-    // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
-    idToUnknownIndex = new Dictionary<int, int>(idToIndex.Count);
-    foreach (var pair in idToIndex)
-    {
-        idToUnknownIndex[pair.Key] = pair.Value + 1;
-    }
-}
+            // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
+            idToUnknownIndex = new Dictionary<int, int>(idToIndex.Count);
+            foreach (var pair in idToIndex)
+            {
+                idToUnknownIndex[pair.Key] = pair.Value + 1;
+            }
+        }
 
 
         /// <summary>

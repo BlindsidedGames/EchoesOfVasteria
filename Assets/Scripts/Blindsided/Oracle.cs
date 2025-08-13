@@ -109,7 +109,7 @@ namespace Blindsided
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
             StartCoroutine(LoadMainScene());
-			InvokeRepeating(nameof(SaveToFile), 10, 30);
+			InvokeRepeating(nameof(SaveToFile), 1, 30);
 
             // Wire up regression confirmation UI if present
             if (regressionYesButton != null)

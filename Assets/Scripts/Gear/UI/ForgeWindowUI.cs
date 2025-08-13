@@ -469,18 +469,7 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
         }
 
-		private void OnPreSave()
-		{
-			// If a crafted item is pending, salvage it before the save proceeds
-			if (lastCrafted != null)
-			{
-				SalvageService.Instance?.Salvage(lastCrafted);
-				lastCrafted = null;
-				if (resultText != null) resultText.text = string.Empty;
-				ClearResultPreview();
-				RefreshActionButtons();
-			}
-		}
+		
 
 		private void OnPostLoad()
 		{
@@ -512,8 +501,7 @@ namespace TimelessEchoes.Gear.UI
 				svc.OnIvanXpChanged += OnIvanXpChanged;
 				svc.OnIvanLevelUp += OnIvanLevelUp;
 			}
-			// Auto-salvage pending craft before saving, and clear UI on load
-			Blindsided.EventHandler.OnSaveData += OnPreSave;
+			// Clear UI on load (do not clear on save to avoid autosave side-effects)
 			Blindsided.EventHandler.OnLoadData += OnPostLoad;
         }
 
@@ -532,7 +520,6 @@ namespace TimelessEchoes.Gear.UI
 				svc.OnIvanXpChanged -= OnIvanXpChanged;
 				svc.OnIvanLevelUp -= OnIvanLevelUp;
 			}
-			Blindsided.EventHandler.OnSaveData -= OnPreSave;
 			Blindsided.EventHandler.OnLoadData -= OnPostLoad;
         }
 		private void OnIvanXpChanged(int level, float current, float needed)

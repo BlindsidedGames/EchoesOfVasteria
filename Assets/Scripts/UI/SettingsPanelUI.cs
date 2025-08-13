@@ -583,6 +583,24 @@ namespace TimelessEchoes.UI
                         ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
                         : "Playtime: None";
 
+                // Re-evaluate last save time from live save data so autosaves are reflected
+                var lastSaveString = Oracle.oracle.saveData.DateQuitString;
+                if (!string.IsNullOrEmpty(lastSaveString))
+                {
+                    try
+                    {
+                        slot.lastPlayed = DateTime.Parse(lastSaveString, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        slot.lastPlayed = null;
+                    }
+                }
+                else
+                {
+                    slot.lastPlayed = null;
+                }
+
                 if (slot.lastPlayed.HasValue)
                 {
                     var diff = DateTime.UtcNow - slot.lastPlayed.Value;
