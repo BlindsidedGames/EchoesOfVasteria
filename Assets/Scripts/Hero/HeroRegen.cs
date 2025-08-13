@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Gear;
 
 namespace TimelessEchoes.Hero
 {
@@ -22,18 +23,23 @@ namespace TimelessEchoes.Hero
             if (health == null)
                 return;
 
-            var controller = StatUpgradeController.Instance ??
-                              FindFirstObjectByType<StatUpgradeController>();
-            if (controller == null)
-                return;
+            float upgradeRegen = 0f;
+            var controller = StatUpgradeController.Instance ?? FindFirstObjectByType<StatUpgradeController>();
+            if (controller != null)
+            {
+                var regenUpgrade = controller.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
+                if (regenUpgrade != null)
+                    upgradeRegen = controller.GetTotalValue(regenUpgrade);
+            }
 
-            var regenUpgrade = controller.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
-            if (regenUpgrade == null)
-                return;
+            float gearRegen = 0f;
+            var equip = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+            if (equip != null)
+                gearRegen = equip.GetTotalForMapping(HeroStatMapping.HealthRegen);
 
-            float regen = controller.GetTotalValue(regenUpgrade);
-            if (regen > 0f && health.CurrentHealth < health.MaxHealth)
-                health.Heal(regen * Time.deltaTime);
+            float totalRegen = upgradeRegen + gearRegen;
+            if (totalRegen > 0f && health.CurrentHealth < health.MaxHealth)
+                health.Heal(totalRegen * Time.deltaTime);
         }
     }
 }

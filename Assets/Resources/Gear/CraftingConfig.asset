@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab91ad0292ba2944b587f46daf1488c, type: 3}
+  m_Name: CraftingConfig
+  m_EditorClassIdentifier: 
+  pityRareWithin: 10
+  pityEpicWithin: 40
+  pityLegendaryWithin: 120
+  pityMythicWithin: 300
+  craftHistoryLimit: 0
+  enableSmartSlotProtection: 1
+  recentSlotPenalty: 0.25
+  recentWindow: 4
+  enableLevelScaling: 1
+  baselineXpPerCoreTier: 020000000300000005000000080000000d000000150000002200000037000000
+  xpPerRarityStepAbove: 3
+  useRolledRarityXp: 1
+  xpForFirstLevel: 10
+  xpLevelMultiplier: 1.25

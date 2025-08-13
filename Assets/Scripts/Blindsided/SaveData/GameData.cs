@@ -45,6 +45,15 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         [TabGroup("Quests")] public Dictionary<string, QuestRecord> Quests = new();
 
+        // --- Gear system (phase 1) ---
+        [HideReferenceObjectPicker]
+        [TabGroup("Gear")] public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
+        [HideReferenceObjectPicker]
+        [TabGroup("Gear")] public List<GearItemRecord> CraftHistory = new();
+        [TabGroup("Gear")] public int CraftingMasteryLevel = 0; // Ivan's level
+        [TabGroup("Gear")] public float CraftingMasteryXP = 0f; // Ivan's current XP toward next level
+        [TabGroup("Gear")] public int PityCraftsSinceLast = 0;
+
         [HideReferenceObjectPicker]
         [TabGroup("Quests")] public List<string> PinnedQuests = new();
 
@@ -295,5 +304,20 @@ namespace Blindsided.SaveData
         #endregion
 
         #endregion
+    }
+
+    [System.Serializable]
+    public class GearAffixRecord
+    {
+        public string statId;
+        public float value;
+    }
+
+    [System.Serializable]
+    public class GearItemRecord
+    {
+        public string slot;
+        public string rarity; // rarity asset name
+        public System.Collections.Generic.List<GearAffixRecord> affixes = new();
     }
 }

@@ -50,6 +50,23 @@ namespace TimelessEchoes.Upgrades
                     refs.nameText.text = upgrade ? upgrade.name : string.Empty;
                 if (refs.descriptionText != null)
                     refs.descriptionText.text = upgrade ? upgrade.description : string.Empty;
+
+                // Set stat icon from the StatIcons TMP sprite asset using the upgrade's name mapping
+                if (refs.iconImage != null)
+                {
+                    if (upgrade != null && TimelessEchoes.Upgrades.StatIconLookup.TryGetIcon(upgrade.name, out var sprite))
+                    {
+                        refs.iconImage.sprite = sprite;
+                        refs.iconImage.enabled = sprite != null;
+                        if (sprite != null)
+                            refs.iconImage.SetNativeSize();
+                    }
+                    else
+                    {
+                        refs.iconImage.sprite = null;
+                        refs.iconImage.enabled = false;
+                    }
+                }
             }
 
             for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)

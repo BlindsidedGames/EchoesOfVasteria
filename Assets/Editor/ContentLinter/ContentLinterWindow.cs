@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Quests;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -14,8 +15,8 @@ namespace TimelessEchoes.EditorTools
 {
     /// <summary>
     /// Content Linter + ID Registry
-    /// - Scans QuestData, TaskData, and BuffRecipe assets for common content issues
-    /// - Provides Fix All for duplicate/empty IDs and obvious data errors
+    /// - Scans QuestData, TaskData, Resource, and BuffRecipe assets for common content issues
+    /// - Provides Fix All for duplicate/empty/invalid IDs and obvious data errors
     /// </summary>
     public class ContentLinterWindow : EditorWindow
     {
@@ -30,7 +31,7 @@ namespace TimelessEchoes.EditorTools
 
         private readonly List<Issue> issues = new List<Issue>();
         private Vector2 scroll;
-        private bool groupQuests = true, groupTasks = true, groupBuffs = true;
+        private bool groupQuests = true, groupTasks = true, groupResources = true, groupBuffs = true;
 
         private enum Severity { Info, Warning, Error }
 
@@ -75,6 +76,10 @@ namespace TimelessEchoes.EditorTools
             GUILayout.Space(8);
             DrawSectionHeader("Tasks", ref groupTasks);
             if (groupTasks) DrawIssues("Task");
+
+            GUILayout.Space(8);
+            DrawSectionHeader("Resources", ref groupResources);
+            if (groupResources) DrawIssues("Resource");
 
             GUILayout.Space(8);
             DrawSectionHeader("Buffs", ref groupBuffs);
@@ -162,6 +167,7 @@ namespace TimelessEchoes.EditorTools
             issues.Clear();
             ScanQuests();
             ScanTasks();
+            ScanResources();
             ScanBuffs();
             Repaint();
         }
@@ -387,6 +393,85 @@ namespace TimelessEchoes.EditorTools
             used.Add(nextId);
             nextId++;
             EditorUtility.SetDirty(task);
+        }
+
+        #endregion
+
+        #region Resource Scans
+
+        private void ScanResources()
+        {
+            var guids = AssetDatabase.FindAssets("t:Resource");
+            var resources = guids
+                .Select(g => AssetDatabase.LoadAssetAtPath<Resource>(AssetDatabase.GUIDToAssetPath(g)))
+                .Where(a => a != null)
+                .ToList();
+
+            // Unique resourceID mapping
+            var idToAssets = new Dictionary<int, List<Resource>>();
+            foreach (var r in resources)
+            {
+                if (!idToAssets.TryGetValue(r.resourceID, out var list))
+                {
+                    list = new List<Resource>();
+                    idToAssets[r.resourceID] = list;
+                }
+                list.Add(r);
+            }
+
+            var usedIds = new HashSet<int>(resources.Where(r => r.resourceID > 0).Select(r => r.resourceID));
+            var nextId = usedIds.Count > 0 ? usedIds.Max() + 1 : 1;
+
+            // Invalid IDs
+            foreach (var r in resources)
+            {
+                if (r.resourceID <= 0)
+                {
+                    AddIssue("Resources", Severity.Error,
+                        $"Resource '{r.name}' has invalid resourceID ({r.resourceID})",
+                        r,
+                        fix: () => AssignResourceId(r, ref nextId, usedIds));
+                }
+            }
+
+            // Duplicates
+            foreach (var pair in idToAssets)
+            {
+                var id = pair.Key;
+                var list = pair.Value;
+                if (id <= 0) continue; // handled above
+                if (list.Count > 1)
+                {
+                    foreach (var r in list.Skip(1))
+                    {
+                        AddIssue("Resources", Severity.Error,
+                            $"Duplicate resourceID {id} on '{r.name}'",
+                            r,
+                            fix: () => AssignResourceId(r, ref nextId, usedIds));
+                    }
+                }
+            }
+
+            // Optional hint: missing icon mapping in ResourceIconLookup
+            foreach (var r in resources)
+            {
+                if (r.resourceID > 0 && !ResourceIconLookup.TryGetIconIndex(r.resourceID, out _))
+                {
+                    AddIssue("Resources", Severity.Info,
+                        $"Resource '{r.name}' (ID {r.resourceID}) has no mapping in ResourceIconLookup",
+                        r, fix: null);
+                }
+            }
+        }
+
+        private void AssignResourceId(Resource res, ref int nextId, HashSet<int> used)
+        {
+            while (used.Contains(nextId)) nextId++;
+            Undo.RecordObject(res, "Assign Resource ID");
+            res.resourceID = nextId;
+            used.Add(nextId);
+            nextId++;
+            EditorUtility.SetDirty(res);
         }
 
         #endregion

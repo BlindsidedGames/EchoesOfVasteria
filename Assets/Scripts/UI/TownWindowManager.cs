@@ -34,6 +34,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference alterEchoes = new();
         [SerializeField] [Space] private WindowReference stats = new();
         [SerializeField] [Space] private WindowReference wiki = new();
+        [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
         [SerializeField] [Space] private WindowReference options = new();
         [SerializeField] [Space] private GameObject townButtons;
@@ -73,6 +74,10 @@ namespace TimelessEchoes.UI
                 wiki.button.onClick.AddListener(OpenWiki);
             if (wiki.closeButton != null)
                 wiki.closeButton.onClick.AddListener(() => CloseWindow(wiki.window));
+            if (forge.button != null)
+                forge.button.onClick.AddListener(OpenForge);
+            if (forge.closeButton != null)
+                forge.closeButton.onClick.AddListener(() => CloseWindow(forge.window));
             if (options.button != null)
                 options.button.onClick.AddListener(OpenOptions);
             if (options.closeButton != null)
@@ -130,6 +135,10 @@ namespace TimelessEchoes.UI
                 wiki.button.onClick.RemoveListener(OpenWiki);
             if (wiki.closeButton != null)
                 wiki.closeButton.onClick.RemoveAllListeners();
+            if (forge.button != null)
+                forge.button.onClick.RemoveListener(OpenForge);
+            if (forge.closeButton != null)
+                forge.closeButton.onClick.RemoveAllListeners();
             if (options.button != null)
                 options.button.onClick.RemoveListener(OpenOptions);
             if (options.closeButton != null)
@@ -214,6 +223,11 @@ namespace TimelessEchoes.UI
             ToggleWindow(options);
         }
 
+        private void OpenForge()
+        {
+            ToggleWindow(forge);
+        }
+
         private void ToggleInventory()
         {
             if (inventory.window != null)
@@ -259,6 +273,8 @@ namespace TimelessEchoes.UI
                 wiki.window.SetActive(false);
             if (options.window != null)
                 options.window.SetActive(false);
+            if (forge.window != null)
+                forge.window.SetActive(false);
         }
 
         public void CloseAllWindows()
@@ -279,6 +295,8 @@ namespace TimelessEchoes.UI
                 wiki.window.SetActive(false);
             if (options.window != null)
                 options.window.SetActive(false);
+            if (forge.window != null)
+                forge.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
             UpdateTownButtonsVisibility();
@@ -294,6 +312,7 @@ namespace TimelessEchoes.UI
                    || (stats.window != null && stats.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
+                   || (forge.window != null && forge.window.activeSelf)
                    || (inventory.window != null && inventory.window.activeSelf);
         }
 
@@ -311,6 +330,7 @@ namespace TimelessEchoes.UI
                    || (alterEchoes.window != null && alterEchoes.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
+                   || (forge.window != null && forge.window.activeSelf)
                    || (inventory.window != null && inventory.window.activeSelf);
         }
 

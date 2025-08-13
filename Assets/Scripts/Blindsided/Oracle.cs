@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text;
 using Blindsided.SaveData;
 using Sirenix.OdinInspector;
@@ -55,7 +57,7 @@ namespace Blindsided
         [TabGroup("SaveData", "Beta")] public bool beta;
         [TabGroup("SaveData", "Beta")] public int betaSaveIteration;
 
-        [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
+		[TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
 
         private string _dataName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Data{CurrentSlot}";
         private string _fileName => (beta ? $"Beta{betaSaveIteration}" : "") + $"Sd{CurrentSlot}.es3";
@@ -64,7 +66,11 @@ namespace Blindsided
         public string FileName => _fileName;
         public ES3Settings Settings => _settings;
 
-        [TabGroup("SaveData")] public GameData saveData = new();
+		[TabGroup("SaveData")] public GameData saveData = new();
+
+		[Header("Backups")] 
+		[Tooltip("How many timestamped session backups to keep per slot in PersistentDataPath/Backups/<FileNameWithoutExtension>.")]
+		[Range(1, 50)] public int backupsToKeepPerSlot = 10;
 
         #endregion
 
@@ -103,7 +109,7 @@ namespace Blindsided
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
             StartCoroutine(LoadMainScene());
-            InvokeRepeating(nameof(SaveToFile), 10, 10);
+			InvokeRepeating(nameof(SaveToFile), 10, 30);
 
             // Wire up regression confirmation UI if present
             if (regressionYesButton != null)
@@ -133,24 +139,26 @@ namespace Blindsided
             if (loaded) saveData.PlayTime += Time.deltaTime;
         }
 
-        private void OnApplicationQuit()
+		private void OnApplicationQuit()
         {
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
-            SaveToFile();
-            ES3.StoreCachedFile(_fileName);
-            SafeCreateBackup();
+			SaveToFile();
+			ES3.StoreCachedFile(_fileName);
+			SafeCreateBackup();
+			CreateRotatingBackup();
         }
 
-        private void OnDisable()
+		private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
             if (Application.isPlaying && !wipeInProgress && oracle == this && _settings != null)
             {
                 SaveToFile(); // save the latest state immediately
                 ES3.StoreCachedFile(_fileName);
+				CreateRotatingBackup();
             }
         }
 
@@ -164,15 +172,42 @@ namespace Blindsided
                 ES3.StoreCachedFile(_fileName);
             }
         }
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused)
+            {
+                SaveToFile();
+                ES3.StoreCachedFile(_fileName);
+            }
+        }
 #endif
 
         #endregion
 
         #region Slot management
 
-        public void SelectSlot(int slot)
+		public void SelectSlot(int slot)
         {
-            CurrentSlot = Mathf.Clamp(slot, 0, 2);
+			var clamped = Mathf.Clamp(slot, 0, 2);
+			if (clamped == CurrentSlot)
+				return;
+
+			// Save and backup the current slot before switching
+			try
+			{
+				if (_settings != null)
+				{
+					SaveToFile();
+					ES3.StoreCachedFile(_fileName);
+					CreateRotatingBackup();
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError($"Pre-switch backup failed: {ex}");
+			}
+
+			CurrentSlot = clamped;
             PlayerPrefs.SetInt(SlotPrefKey, CurrentSlot);
             PlayerPrefs.Save();
             _settings = new ES3Settings(_fileName, ES3.Location.Cache)
@@ -260,6 +295,7 @@ namespace Blindsided
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             ES3.Save(_dataName, saveData, _settings); // write to cache
+            ES3.StoreCachedFile(_fileName);
 
             // Ensure PlayerPrefs metadata for the current slot is kept in sync for all saves/autosaves
             PersistSlotMetadataToPlayerPrefs();
@@ -270,28 +306,38 @@ namespace Blindsided
             loaded = false;
             saveData = new GameData();
 
-            var backupPath = _fileName + ".bac";
+			var backupPath = _fileName + ".bac";
 
-            if (!ES3.FileExists(_fileName) && ES3.FileExists(backupPath))
-                ES3.RestoreBackup(_fileName);
+			if (!ES3.FileExists(_fileName))
+			{
+				if (ES3.FileExists(backupPath))
+					ES3.RestoreBackup(_fileName);
+				else
+					TryRestoreFromLatestRotatingBackup();
+			}
 
             try
             {
                 saveData = ES3.Load<GameData>(_dataName, _settings);
             }
-            catch (Exception e)
+			catch (Exception e)
             {
                 Debug.LogError($"Load failed: {e}");
-                if (ES3.FileExists(backupPath) && ES3.RestoreBackup(_fileName))
-                {
-                    Debug.LogWarning("Backup restored; re-loading.");
-                    saveData = ES3.Load<GameData>(_dataName, _settings);
-                }
-                else
-                {
-                    saveData.DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-                    Debug.LogWarning($"Save not found; new game @ {saveData.DateStarted}");
-                }
+				if (ES3.FileExists(backupPath) && ES3.RestoreBackup(_fileName))
+				{
+					Debug.LogWarning("Backup restored; re-loading.");
+					saveData = ES3.Load<GameData>(_dataName, _settings);
+				}
+				else if (TryRestoreFromLatestRotatingBackup())
+				{
+					Debug.LogWarning("Rotating backup restored; re-loading.");
+					saveData = ES3.Load<GameData>(_dataName, _settings);
+				}
+				else
+				{
+					saveData.DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+					Debug.LogWarning($"Save not found; new game @ {saveData.DateStarted}");
+				}
             }
 
             NullCheckers();
@@ -439,9 +485,12 @@ namespace Blindsided
             try
             {
                 var restored = ES3.RestoreBackup(_settings);
-                if (!restored)
+				if (!restored)
                 {
-                    Debug.LogWarning("No backup found to restore.");
+					// Fall back to our rotating backups directory
+					restored = TryRestoreFromLatestRotatingBackup();
+					if (!restored)
+						Debug.LogWarning("No backup found to restore.");
                 }
                 else
                 {
@@ -493,7 +542,7 @@ namespace Blindsided
         /// <summary>
         /// Saves current game data into the specified slot index and updates PlayerPrefs for that slot.
         /// </summary>
-        public void SaveToSlot(int slotIndex)
+		public void SaveToSlot(int slotIndex)
         {
             var index = Mathf.Clamp(slotIndex, 0, 2);
             if (!wipeInProgress)
@@ -506,6 +555,7 @@ namespace Blindsided
             var settings = new ES3Settings(fileName, ES3.Location.Cache);
             ES3.Save(dataName, saveData, settings);
             ES3.StoreCachedFile(fileName);
+			CreateRotatingBackupForFile(fileName);
 
             PersistSlotMetadataToPlayerPrefs(index);
         }
@@ -517,6 +567,9 @@ namespace Blindsided
             saveData.EnemyKills ??= new Dictionary<string, double>();
             saveData.CompletedNpcTasks ??= new HashSet<string>();
             saveData.PinnedQuests ??= new List<string>();
+			// Gear system collections
+			saveData.EquipmentBySlot ??= new Dictionary<string, GearItemRecord>();
+			saveData.CraftHistory ??= new List<GearItemRecord>();
             saveData.BuffSlots ??= new List<string>(new string[5]);
             if (saveData.BuffSlots.Count < 5)
                 while (saveData.BuffSlots.Count < 5)
@@ -552,7 +605,7 @@ namespace Blindsided
         }
 
         /// <summary>Deletes any existing .bac backup, then creates a fresh one.</summary>
-        private void SafeCreateBackup()
+		private void SafeCreateBackup()
         {
             var backupPath = _fileName + ".bac"; // Easy Save uses .bac
             if (ES3.FileExists(backupPath))
@@ -567,6 +620,112 @@ namespace Blindsided
                 Debug.LogError($"Backup failure: {ex}");
             }
         }
+
+		/// <summary>
+		/// Creates a timestamped backup copy of the persisted save file under
+		/// PersistentDataPath/Backups/<baseName>/<baseName>_yyyyMMdd-HHmmss.es3
+		/// and prunes older backups beyond <see cref="backupsToKeepPerSlot"/>.
+		/// </summary>
+		private void CreateRotatingBackup()
+		{
+			CreateRotatingBackupForFile(_fileName);
+		}
+
+		private void CreateRotatingBackupForFile(string fileName)
+		{
+			try
+			{
+				// Ensure the persisted file exists (we copy from File location, not Cache)
+				var sourceSettings = new ES3Settings(fileName, ES3.Location.File);
+				if (!ES3.FileExists(sourceSettings))
+					return;
+
+				var sourceFullPath = sourceSettings.FullPath;
+				var baseName = Path.GetFileNameWithoutExtension(fileName); // e.g., "Sd0" or "Beta3Sd0"
+				var saveDir = Path.GetDirectoryName(sourceFullPath);
+				var backupDir = Path.Combine(saveDir ?? string.Empty, "Backups", baseName);
+				Directory.CreateDirectory(backupDir);
+
+				var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmssfff");
+				var backupFileName = $"{baseName}_{timestamp}.es3";
+				var backupFullPath = Path.Combine(backupDir, backupFileName);
+				// Ensure uniqueness if multiple backups occur within the same millisecond
+				int dupeIndex = 1;
+				while (File.Exists(backupFullPath))
+				{
+					backupFileName = $"{baseName}_{timestamp}_{dupeIndex:00}.es3";
+					backupFullPath = Path.Combine(backupDir, backupFileName);
+					dupeIndex++;
+				}
+
+				File.Copy(sourceFullPath, backupFullPath, false);
+
+				PruneOldBackups(backupDir, baseName, backupsToKeepPerSlot);
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError($"Rotating backup failed: {ex}");
+			}
+		}
+
+		/// <summary>
+		/// Attempts to restore the latest timestamped rotating backup into the live save file.
+		/// Returns true if a backup was restored.
+		/// </summary>
+		private bool TryRestoreFromLatestRotatingBackup()
+		{
+			try
+			{
+				var targetSettings = new ES3Settings(_fileName, ES3.Location.File);
+				var targetFullPath = targetSettings.FullPath;
+				var baseName = Path.GetFileNameWithoutExtension(_fileName);
+				var saveDir = Path.GetDirectoryName(targetFullPath);
+				var backupDir = Path.Combine(saveDir ?? string.Empty, "Backups", baseName);
+
+				if (!Directory.Exists(backupDir))
+					return false;
+
+				var candidates = Directory.GetFiles(backupDir, $"{baseName}_*.es3", SearchOption.TopDirectoryOnly);
+				if (candidates == null || candidates.Length == 0)
+					return false;
+
+				// Sort descending by name (timestamp in name ensures correct order)
+				var latest = candidates.OrderByDescending(f => Path.GetFileName(f), StringComparer.Ordinal).First();
+				File.Copy(latest, targetFullPath, true);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError($"Failed to restore rotating backup: {ex}");
+				return false;
+			}
+		}
+
+		private void PruneOldBackups(string backupDir, string baseName, int keepCount)
+		{
+			try
+			{
+				var pattern = $"{baseName}_*.es3";
+				var files = Directory.Exists(backupDir)
+					? Directory.GetFiles(backupDir, pattern, SearchOption.TopDirectoryOnly)
+					: Array.Empty<string>();
+
+				if (files.Length <= keepCount)
+					return;
+
+				// Our filenames embed a UTC timestamp in sortable format, so sort by name
+				var ordered = files.OrderBy(f => Path.GetFileName(f), StringComparer.Ordinal).ToArray();
+				var toDelete = ordered.Length - keepCount;
+				for (int i = 0; i < toDelete; i++)
+				{
+					File.Delete(ordered[i]);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError($"Pruning backups failed: {ex}");
+			}
+		}
 
         #endregion
     }

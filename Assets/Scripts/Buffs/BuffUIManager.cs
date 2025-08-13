@@ -275,8 +275,11 @@ namespace TimelessEchoes.Buffs
             {
                 for (var i = 0; i < 5; i++)
                 {
-                    var key = Keyboard.current[(Key)((int)Key.Digit1 + i)];
-                    if (key != null && key.wasPressedThisFrame)
+                    var digitKey = Keyboard.current[(Key)((int)Key.Digit1 + i)];
+                    var numpadKey = Keyboard.current[(Key)((int)Key.Numpad1 + i)];
+                    var pressed = (digitKey != null && digitKey.wasPressedThisFrame) ||
+                                  (numpadKey != null && numpadKey.wasPressedThisFrame);
+                    if (pressed)
                     {
                         var recipe = buffManager.GetAssigned(i);
                         if (recipe != null && buffManager.CanActivate(recipe))

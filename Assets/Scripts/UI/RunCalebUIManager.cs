@@ -4,6 +4,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using System.Linq;
 using TimelessEchoes.Upgrades;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -63,6 +64,15 @@ namespace TimelessEchoes.UI
         {
             hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
             heroHealth = hero ? hero.GetComponent<HeroHealth>() : null;
+            // Ensure HUD text fields use the StatIcons sprite asset so <sprite=..> tags render
+            var spriteAsset = StatIconLookup.GetSpriteAsset();
+            if (uiReferences != null)
+            {
+                if (uiReferences.leftText != null)
+                    uiReferences.leftText.spriteAsset = spriteAsset != null ? spriteAsset : uiReferences.leftText.spriteAsset;
+                if (uiReferences.rightText != null)
+                    uiReferences.rightText.spriteAsset = spriteAsset != null ? spriteAsset : uiReferences.rightText.spriteAsset;
+            }
             if (heroHealth != null)
             {
                 heroHealth.OnHealthChanged += OnHealthChanged;
@@ -112,7 +122,8 @@ namespace TimelessEchoes.UI
                 var lines = uiReferences.rightText.text.Split('\n');
                 if (lines.Length >= 3)
                 {
-                    lines[2] = $"HP: {Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
+                    var hpTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MaxHealth);
+                    lines[2] = $"{hpTag} {Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
                     uiReferences.rightText.text = string.Join("\n", lines);
                 }
             }
@@ -131,7 +142,13 @@ namespace TimelessEchoes.UI
             var defense = hero.Defense;
             var controller = StatUpgradeController.Instance;
             var regenUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
-            var regen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;
+            float upgradeRegen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;
+
+            float gearRegen = 0f;
+            var equip = TimelessEchoes.Gear.EquipmentController.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            if (equip != null)
+                gearRegen = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.HealthRegen);
+            var regen = upgradeRegen + gearRegen;
 
             if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
                 && Mathf.Approximately(attack, lastAttack)
@@ -148,13 +165,17 @@ namespace TimelessEchoes.UI
 
             if (uiReferences.leftText != null)
             {
-                string dmgLine = $"Damage: {baseDamage:0.##}";
+                var dmgTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.Damage);
+                var atkTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
+                var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
+
+                string dmgLine = $"{dmgTag} {totalDamage:0.##}";
                 if (bonusDamage > 0f)
                     dmgLine += $" (+{bonusDamage:0.##})";
                 uiReferences.leftText.text =
                     dmgLine + "\n" +
-                    $"Attack Rate: {attack:0.###} /s\n" +
-                    $"Movement Speed {move:0.##}";
+                    $"{atkTag} {attack:0.###} /s\n" +
+                    $"{moveTag} {move:0.##}";
             }
 
             if (uiReferences.rightText != null)
@@ -163,12 +184,16 @@ namespace TimelessEchoes.UI
                 float damageFraction = TimelessEchoes.Combat.ApplyDefense(1f, defense);
                 float reductionPercent = (1f - Mathf.Clamp01(damageFraction)) * 100f;
 
+                var defTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.Defense);
+                var regenTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.HealthRegen);
+                var hpTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MaxHealth);
+
                 var hpLine = heroHealth != null
-                    ? $"HP: {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
+                    ? $"{hpTag} {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
                     : string.Empty;
                 uiReferences.rightText.text =
-                    $"Defense: {reductionPercent:0.#}%\n" +
-                    $"Regen: {regen:0.###} /s\n" +
+                    $"{defTag} {reductionPercent:0.#}%\n" +
+                    $"{regenTag} {regen:0.###} /s\n" +
                     hpLine;
             }
         }

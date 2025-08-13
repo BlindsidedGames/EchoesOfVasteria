@@ -116,12 +116,18 @@ namespace TimelessEchoes.Hero
 
         private AIPath ai;
         private float attackSpeedBonus;
+        // Gear-derived additive bonuses
+        private float gearAttackSpeedBonus;
         private float baseAttackSpeed;
 
         private float baseDamage;
         private float baseDefense;
         private float baseHealth;
         private float baseMoveSpeed;
+        private float gearDamageBonus;
+        private float gearDefenseBonus;
+        private float gearHealthBonus;
+        private float gearMoveSpeedBonus;
         private float combatDamageMultiplier = 1f;
 
         private bool logicActive = true;
@@ -162,14 +168,14 @@ namespace TimelessEchoes.Hero
         ///     Current attack damage after upgrades, buffs and dice multipliers.
         /// </summary>
         public float Damage =>
-            (baseDamage + damageBonus) *
+            (baseDamage + damageBonus + gearDamageBonus) *
             (buffController != null ? buffController.DamageMultiplier : 1f) *
             combatDamageMultiplier;
 
         /// <summary>
-        ///     Base attack damage after permanent upgrades.
+        ///     Base attack damage after permanent upgrades and gear (before buffs and dice multipliers).
         /// </summary>
-        public float BaseDamage => baseDamage + damageBonus;
+        public float BaseDamage => baseDamage + damageBonus + gearDamageBonus;
 
         /// <summary>
         ///     Current attacks per second after upgrades and buffs.
@@ -180,20 +186,20 @@ namespace TimelessEchoes.Hero
         ///     Current movement speed after upgrades and buffs.
         /// </summary>
         public float MoveSpeed =>
-            (baseMoveSpeed + moveSpeedBonus) *
+            (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
             (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
 
         /// <summary>
         ///     Maximum health after upgrades.
         /// </summary>
-        public float MaxHealthValue => baseHealth + healthBonus;
+        public float MaxHealthValue => baseHealth + healthBonus + gearHealthBonus;
 
         private float CurrentAttackRate =>
-            (baseAttackSpeed + attackSpeedBonus) *
+            (baseAttackSpeed + attackSpeedBonus + gearAttackSpeedBonus) *
             (buffController != null ? buffController.AttackSpeedMultiplier : 1f);
 
         public float Defense =>
-            (baseDefense + defenseBonus) *
+            (baseDefense + defenseBonus + gearDefenseBonus) *
             (buffController != null ? buffController.DefenseMultiplier : 1f);
 
         private void Awake()
@@ -233,6 +239,13 @@ namespace TimelessEchoes.Hero
             state = State.Idle;
 
             ApplyStatUpgrades();
+
+            // Subscribe to equipment changes and initialize gear bonuses
+            var equipInit = TimelessEchoes.Gear.EquipmentController.Instance ??
+                            FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            if (equipInit != null)
+                equipInit.OnEquipmentChanged += RecalculateGearBonuses;
+            RecalculateGearBonuses();
 
             if (stats != null)
             {
@@ -304,6 +317,38 @@ namespace TimelessEchoes.Hero
                             }, gm.ReaperSpawnOffset);
                         ReaperSpawnedByDistance = true;
                     }
+                }
+            }
+        }
+
+        private void RecalculateGearBonuses()
+        {
+            var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
+                        FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            if (equip == null)
+            {
+                gearDamageBonus = gearAttackSpeedBonus = gearDefenseBonus = gearHealthBonus = gearMoveSpeedBonus = 0f;
+                return;
+            }
+
+            gearDamageBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.Damage);
+            gearAttackSpeedBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
+            gearDefenseBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.Defense);
+            gearHealthBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.MaxHealth);
+            gearMoveSpeedBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
+
+            // If MaxHealth changes, re-init health so UI reflects new max
+            if (health != null)
+            {
+                var oldMax = Mathf.RoundToInt(health.MaxHealth);
+                var current = Mathf.RoundToInt(health.CurrentHealth);
+                var newMax = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
+                if (Mathf.Abs(newMax - oldMax) > 0.01f && newMax > 0)
+                {
+                    var newCurrent = Mathf.Min(current + (newMax - oldMax), newMax);
+                    health.Init(newMax);
+                    if (newCurrent < newMax)
+                        health.TakeDamage(newMax - newCurrent);
                 }
             }
         }
@@ -429,6 +474,11 @@ namespace TimelessEchoes.Hero
 
             if (idleWalkTarget != null)
                 Destroy(idleWalkTarget.gameObject);
+
+            var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
+                        FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            if (equip != null)
+                equip.OnEquipmentChanged -= RecalculateGearBonuses;
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
@@ -956,10 +1006,28 @@ namespace TimelessEchoes.Hero
                     Log("EnemyKillTracker missing", TELogCategory.Combat, this);
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                var dmgBase = (baseDamage + damageBonus) *
+                var dmgBase = (baseDamage + damageBonus + gearDamageBonus) *
                               (buffController != null ? buffController.DamageMultiplier : 1f) *
                               combatDamageMultiplier;
                 var total = dmgBase * bonus;
+
+                // Gear crit chance (2x damage). Only from gear.
+                var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
+                            FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+                float critChance = 0f;
+                if (equip != null)
+                {
+                    var crafting = TimelessEchoes.Gear.CraftingService.Instance ??
+                                   FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
+                    var critDef = crafting != null ? crafting.GetStatByMapping(TimelessEchoes.Gear.HeroStatMapping.CritChance) : null;
+                    critChance = critDef != null ? equip.GetCritChance(critDef) : 0f;
+                }
+
+                if (critChance > 0f && Random.value < critChance)
+                {
+                    total *= 2f;
+                }
+
                 var bonusDamage = total - dmgBase;
                 proj.Init(target, total, true, null, combatSkill, bonusDamage);
             }
