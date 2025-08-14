@@ -53,6 +53,11 @@ namespace TimelessEchoes.Tasks
         public List<ResourceDrop> resourceDrops = new();
 
         [TitleGroup("General")]
+        [Tooltip("Chance (0-1) for each additional drop slot; evaluated sequentially after the first guaranteed slot.")]
+        [MinValue(0f), MaxValue(1f)]
+        public List<float> additionalLootChances = new();
+
+        [TitleGroup("General")]
         [Tooltip("Restart task progress when returning after an interrupt.")]
         public bool resetProgressOnInterrupt;
 

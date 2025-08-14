@@ -7,8 +7,6 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Quests;
-using static TimelessEchoes.Quests.QuestUtils;
 using Blindsided.SaveData;
 using TMPro;
 using UnityEngine;
@@ -352,31 +350,19 @@ namespace TimelessEchoes.Enemies
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
             var worldX = transform.position.x;
-            foreach (var drop in stats.resourceDrops)
-            {
-                if (drop.resource == null) continue;
-                if (Random.value > drop.dropChance) continue;
-                if (drop.requiredQuest != null && !QuestCompleted(drop.requiredQuest.questId)) continue;
-                if (worldX < drop.minX || worldX > drop.maxX) continue;
 
-                var min = drop.dropRange.x;
-                var max = drop.dropRange.y;
-                if (max < min) max = min;
-                var t = Random.value;
-                t *= t; // bias towards lower values
-                var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
-                if (count > 0)
+            var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances, worldX);
+            foreach (var res in results)
+            {
+                double final = res.count * mult * gainMult;
+                resourceManager.Add(res.resource, final);
+                Log($"Dropped {final} {res.resource.name}", TELogCategory.Resource, this);
+                if (dropTotals.ContainsKey(res.resource))
+                    dropTotals[res.resource] += final;
+                else
                 {
-                    double final = count * mult * gainMult;
-                    resourceManager.Add(drop.resource, final);
-                    Log($"Dropped {final} {drop.resource.name}", TELogCategory.Resource, this);
-                    if (dropTotals.ContainsKey(drop.resource))
-                        dropTotals[drop.resource] += final;
-                    else
-                    {
-                        dropTotals[drop.resource] = final;
-                        dropOrder.Add(drop.resource);
-                    }
+                    dropTotals[res.resource] = final;
+                    dropOrder.Add(res.resource);
                 }
             }
 

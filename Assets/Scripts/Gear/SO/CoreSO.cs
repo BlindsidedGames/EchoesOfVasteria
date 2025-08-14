@@ -31,9 +31,14 @@ namespace TimelessEchoes.Gear
         public List<string> slotNames = new();
         public List<float> slotWeights = new();
 
-        [Title("Salvage Drops")] 
+        [Title("Salvage Drops")]
         [Tooltip("Resources to award when salvaging an item crafted with this core. Similar format to enemy/task drops.")]
         public List<ResourceDrop> salvageDrops = new();
+
+        [Title("Additional Salvage Slot Chances")]
+        [Tooltip("Chance (0-1) for each additional salvage slot; evaluated sequentially after the first guaranteed slot.")]
+        [MinValue(0f), MaxValue(1f)]
+        public List<float> salvageAdditionalLootChances = new();
 
         public float GetRarityWeight(RaritySO rarity)
         {

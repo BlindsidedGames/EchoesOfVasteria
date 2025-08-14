@@ -12,10 +12,10 @@ using UnityEngine;
 namespace TimelessEchoes.EditorTools
 {
 	/// <summary>
-	/// Compare per-item drop chances between all chest tasks at a given distance.
-	/// - Loads Looting tasks (TaskData) and sorts by taskID
-	/// - Simulates GenerateDrops logic (ResourceGeneratingTask) for accuracy
-	/// - Reports per-resource: probability of any drop and expected count per chest
+        /// Compare per-item drop outcomes between all chest tasks at a given distance using weighted slot rolls.
+        /// - Loads Looting tasks (TaskData) and sorts by taskID
+        /// - Simulates GenerateDrops logic (ResourceGeneratingTask) for accuracy
+        /// - Reports per-resource: probability of any drop and expected count per chest
 	/// </summary>
 	public class ChestDropComparatorWindow : OdinEditorWindow
 	{
@@ -281,36 +281,23 @@ namespace TimelessEchoes.EditorTools
 				results[t] = map;
 				foreach (var r in resources) map[r] = (0f, 0f);
 
-				for (int i = 0; i < count; i++)
-				{
-					// For each resource drop entry, simulate like ResourceGeneratingTask.GenerateDrops
-					var produced = new Dictionary<Resource, int>();
-					foreach (var drop in t.resourceDrops)
-					{
-						if (drop == null || drop.resource == null) continue;
-						if (x < drop.minX || x > drop.maxX) continue;
-						if (!assumeQuests && drop.requiredQuest != null) continue;
-						if (Rand01() > drop.dropChance) continue;
+                                for (int i = 0; i < count; i++)
+                                {
+                                        var produced = new Dictionary<Resource, int>();
+                                        var rolled = DropResolver.RollDrops(t.resourceDrops, t.additionalLootChances, x, assumeQuests, Rand01);
+                                        foreach (var res in rolled)
+                                        {
+                                                produced.TryGetValue(res.resource, out var prev);
+                                                produced[res.resource] = prev + res.count;
+                                        }
 
-						var min = drop.dropRange.x;
-						var max = drop.dropRange.y;
-						if (max < min) max = min;
-						var u = Rand01();
-						var tt = u * u; // bias towards lower values
-						var cnt = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, tt)), min, max);
-						if (cnt <= 0) continue;
-
-						produced.TryGetValue(drop.resource, out var prev);
-						produced[drop.resource] = prev + cnt;
-					}
-
-					foreach (var r in resources)
-					{
-						produced.TryGetValue(r, out var c);
-						var s = map[r];
-						map[r] = (s.p + (c > 0 ? 1f : 0f), s.e + c);
-					}
-				}
+                                        foreach (var r in resources)
+                                        {
+                                                produced.TryGetValue(r, out var c);
+                                                var s = map[r];
+                                                map[r] = (s.p + (c > 0 ? 1f : 0f), s.e + c);
+                                        }
+                                }
 
 				// Normalize to probabilities / expected per run
 				foreach (var r in resources)
