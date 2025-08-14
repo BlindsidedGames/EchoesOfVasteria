@@ -4,7 +4,6 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
-using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.Tasks
 {
@@ -19,6 +18,8 @@ namespace TimelessEchoes.Tasks
 
         protected void GenerateDrops()
         {
+            // Builds a weighted list of eligible drops. The first slot is always rolled,
+            // then additionalLootChances are processed sequentially for extra slots.
             if (resourceManager == null)
             {
                 resourceManager = ResourceManager.Instance;
@@ -39,37 +40,24 @@ namespace TimelessEchoes.Tasks
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
 
-            foreach (var drop in taskData.resourceDrops)
+            var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, worldX);
+            foreach (var res in results)
             {
-                if (drop.resource == null || Random.value > drop.dropChance) continue;
-                if (drop.requiredQuest != null && !QuestCompleted(drop.requiredQuest.questId)) continue;
-                if (worldX < drop.minX || worldX > drop.maxX) continue;
-
-                var min = drop.dropRange.x;
-                var max = drop.dropRange.y;
-                if (max < min) max = min;
-
-                var t = Random.value * Random.value; // Bias towards lower numbers
-                var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
-
-                if (count > 0)
+                double final = res.count;
+                if (skillController)
                 {
-                    double final = count;
-                    if (skillController)
-                    {
-                        int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
-                        float resourceMult = skillController.GetResourceGainMultiplier();
-                        final = count * mult * resourceMult;
-                    }
+                    int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                    float resourceMult = skillController.GetResourceGainMultiplier();
+                    final = res.count * mult * resourceMult;
+                }
 
-                    resourceManager.Add(drop.resource, final);
-                    if (dropTotals.ContainsKey(drop.resource))
-                        dropTotals[drop.resource] += final;
-                    else
-                    {
-                        dropTotals[drop.resource] = final;
-                        dropOrder.Add(drop.resource);
-                    }
+                resourceManager.Add(res.resource, final);
+                if (dropTotals.ContainsKey(res.resource))
+                    dropTotals[res.resource] += final;
+                else
+                {
+                    dropTotals[res.resource] = final;
+                    dropOrder.Add(res.resource);
                 }
             }
 

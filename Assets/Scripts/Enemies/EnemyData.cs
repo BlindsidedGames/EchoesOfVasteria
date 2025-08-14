@@ -33,6 +33,11 @@ namespace TimelessEchoes.Enemies
 
         [TitleGroup("Spawn Settings")] public List<ResourceDrop> resourceDrops = new();
 
+        [TitleGroup("Spawn Settings")]
+        [Tooltip("Chance (0-1) for each additional drop slot; evaluated sequentially after the first guaranteed slot.")]
+        [MinValue(0f), MaxValue(1f)]
+        public List<float> additionalLootChances = new();
+
         [TitleGroup("Balance Data")] public int experience = 10;
 
         [TitleGroup("Balance Data/Movement Stats")]
