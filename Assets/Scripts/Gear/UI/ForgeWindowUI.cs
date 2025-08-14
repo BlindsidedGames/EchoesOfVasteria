@@ -370,8 +370,9 @@ namespace TimelessEchoes.Gear.UI
             var summary = BuildItemSummary(lastCrafted, eq);
             ShowResult(summary);
             UpdateResultPreview(lastCrafted);
-            // Ensure selected core/ingot previews reflect updated resource counts after craft
+            			// Ensure selected core/ingot previews reflect updated resource counts after craft
 			OnResourcesChanged();
+			ForceRefreshAllCoreSlots();
 			RefreshActionButtons();
 			// Odds may change due to pity counter updates; refresh the pie/text
 			RefreshOdds();
@@ -565,14 +566,23 @@ namespace TimelessEchoes.Gear.UI
 			RefreshOdds();
 		}
 
-        private void OnResourcesChanged()
-        {
-            var previewSlot = GetSlotForCore(selectedCore);
-            UpdateSelectedCorePreview(previewSlot);
-            UpdateIngotPreview(selectedCore);
+        		private void OnResourcesChanged()
+		{
+			var previewSlot = GetSlotForCore(selectedCore);
+			UpdateSelectedCorePreview(previewSlot);
+			UpdateIngotPreview(selectedCore);
 			UpdateIvanXpUI();
 			RefreshActionButtons();
-        }
+		}
+
+		private void ForceRefreshAllCoreSlots()
+		{
+			// Force refresh all core slots to ensure UI consistency
+			foreach (var slot in coreSlots)
+			{
+				if (slot != null) slot.Refresh();
+			}
+		}
 
 		private void UpdateIvanXpUI()
 		{
@@ -828,6 +838,7 @@ namespace TimelessEchoes.Gear.UI
 				ShowResult(summary);
 				UpdateResultPreview(lastCrafted);
 				OnResourcesChanged();
+				ForceRefreshAllCoreSlots();
 				RefreshOdds();
 
 				if (IsPotentialUpgrade(lastCrafted, eq))
