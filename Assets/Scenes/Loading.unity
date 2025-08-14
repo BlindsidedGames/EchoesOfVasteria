@@ -1042,6 +1042,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114239546219754470, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 511
+      objectReference: {fileID: 0}
     - target: {fileID: 114600693638766706, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: _singletonMode
       value: 1
@@ -2328,6 +2332,21 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: EquipmentBySlot
+      Entry: 6
+      Data: 
+    - Name: CraftHistory
+      Entry: 6
+      Data: 
+    - Name: CraftingMasteryLevel
+      Entry: 3
+      Data: 0
+    - Name: CraftingMasteryXP
+      Entry: 4
+      Data: 0
+    - Name: PityCraftsSinceLast
+      Entry: 3
+      Data: 0
     - Name: PinnedQuests
       Entry: 6
       Data: 
@@ -2463,12 +2482,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  beta: 1
+  beta: 0
   betaSaveIteration: 5
+  backupsToKeepPerSlot: 10
   regressionConfirmWindow: {fileID: 1014696284}
   regressionYesButton: {fileID: 456357307}
   regressionNoButton: {fileID: 436060088}
   regressionMessageText: {fileID: 1501250653}
+  regressionYesText: {fileID: 438780278}
+  regressionNoText: {fileID: 247430796}
 --- !u!4 &1159035180
 Transform:
   m_ObjectHideFlags: 0

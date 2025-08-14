@@ -92,6 +92,54 @@ MonoBehaviour:
     minX: 2500
     maxX: Infinity
     requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.8
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.7
+    minX: 250
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.6
+    minX: 500
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.5
+    minX: 750
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.4
+    minX: 1000
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.3
+    minX: 1250
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.2
+    minX: 1500
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
+    dropRange: {x: 1, y: 4}
+    dropChance: 0.1
+    minX: 1750
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0

@@ -119,8 +119,8 @@ namespace TimelessEchoes.Gear
 				weights.Add((r, w));
 			}
 
-            // Pity: raise min rarity based on counters
-            var minTier = GetPityMinTier();
+            // Pity: raise min rarity based on counters (unless globally disabled)
+            var minTier = UpgradeFeatureToggle.DisableCraftingPity ? 0 : GetPityMinTier();
             for (int i = 0; i < weights.Count; i++)
             {
                 var r = weights[i].rarity;
@@ -277,13 +277,26 @@ namespace TimelessEchoes.Gear
 					break;
 			}
 
-			// Helper to roll a value with rarity floor
+			// Helper to roll a value with rarity-aware bands, optional jackpot, and rarity floor
 			float RollValue(StatDefSO def)
 			{
-				float t = UnityEngine.Random.value;
+				if (def == null) return 0f;
+				var rarity = item.rarity;
+				var band = def.GetBandForRarity(rarity);
+
+				float t;
+				// Sample inside the rarity band, shaped by within-tier curve (jackpot disabled)
+				float u = UnityEngine.Random.value;
+				float shaped = (band != null && band.withinTierCurve != null) ? band.withinTierCurve.Evaluate(u) : u;
+				float minQ = band != null ? band.GetClampedMin() : 0f;
+				float maxQ = band != null ? band.GetClampedMax() : 1f;
+				if (maxQ < minQ) { var tmp = minQ; minQ = maxQ; maxQ = tmp; }
+				t = Mathf.Lerp(minQ, maxQ, Mathf.Clamp01(shaped));
+
 				float v = def.RemapRoll(t);
-				float floor = item.rarity.floorPercent / 100f;
-				float floorValue = Mathf.Lerp(def.minRoll, def.maxRoll, floor);
+				// Apply rarity floor as a lower bound in value space
+				float floorQ = rarity != null ? Mathf.Clamp01(rarity.floorPercent / 100f) : 0f;
+				float floorValue = Mathf.Lerp(def.minRoll, def.maxRoll, floorQ);
 				return Mathf.Max(v, floorValue);
 			}
 

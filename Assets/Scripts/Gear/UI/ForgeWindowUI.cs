@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace TimelessEchoes.Gear.UI
         [SerializeField] private TMP_Text resultText;
         [SerializeField] private Button replaceButton;
 		[SerializeField] private Button salvageButton;
+		[SerializeField] private Button craftUntilUpgradeButton;
+		[SerializeField] private TMP_Text craftUntilUpgradeButtonText;
 
         [Header("Gear Slot UI")]
         [Tooltip("References to each visible gear slot in this window. Their Button will be wired to SelectSlot.")]
@@ -62,6 +65,8 @@ namespace TimelessEchoes.Gear.UI
         private CoreSO selectedCore;
         private string selectedSlot;
         private GearItem lastCrafted;
+		private bool isAutoCrafting;
+		private Coroutine autoCraftCoroutine;
 
         // Runtime maps for robust selection/highlight handling
         private readonly Dictionary<GearSlotUIReferences, string> gearSlotNameByRef = new();
@@ -99,6 +104,8 @@ namespace TimelessEchoes.Gear.UI
                 replaceButton.onClick.AddListener(OnReplaceClicked);
             if (salvageButton != null)
                 salvageButton.onClick.AddListener(OnSalvageClicked);
+			if (craftUntilUpgradeButton != null)
+				craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
 
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
@@ -129,6 +136,14 @@ namespace TimelessEchoes.Gear.UI
 			if (replaceButton != null) replaceButton.interactable = false;
 			if (salvageButton != null) salvageButton.interactable = false;
 
+			// Ensure TMP texts that use <sprite> tags render with the StatIcons sprite asset
+			var statSpriteAsset = TimelessEchoes.Upgrades.StatIconLookup.GetSpriteAsset();
+			if (statSpriteAsset != null)
+			{
+				if (selectedSlotStatsText != null) selectedSlotStatsText.spriteAsset = statSpriteAsset;
+				if (resultText != null) resultText.spriteAsset = statSpriteAsset;
+			}
+
 			// Initialize previews
             ClearResultPreview();
             UpdateAllGearSlots();
@@ -150,6 +165,9 @@ namespace TimelessEchoes.Gear.UI
 
         private void SelectCore(CoreSO core)
         {
+            // Stop auto-crafting if the player changes the selected core
+            if (isAutoCrafting && core != selectedCore)
+                StopAutoCrafting();
             selectedCore = core;
             // update visual selections using mapped cores
             foreach (var slot in coreSlots)
@@ -214,15 +232,15 @@ namespace TimelessEchoes.Gear.UI
 			var conf = svc != null ? svc.Config : null;
 			var o = Blindsided.Oracle.oracle;
 			int level = (o != null && o.saveData != null) ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;
-			int craftsSince = (o != null && o.saveData != null) ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
-			int pityMinTier = 0;
-			if (conf != null)
-			{
-				if (craftsSince >= conf.pityMythicWithin) pityMinTier = 5;
-				else if (craftsSince >= conf.pityLegendaryWithin) pityMinTier = 4;
-				else if (craftsSince >= conf.pityEpicWithin) pityMinTier = 3;
-				else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
-			}
+            int craftsSince = (o != null && o.saveData != null) ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
+            int pityMinTier = 0;
+            if (conf != null && !TimelessEchoes.Upgrades.UpgradeFeatureToggle.DisableCraftingPity)
+            {
+                if (craftsSince >= conf.pityMythicWithin) pityMinTier = 5;
+                else if (craftsSince >= conf.pityLegendaryWithin) pityMinTier = 4;
+                else if (craftsSince >= conf.pityEpicWithin) pityMinTier = 3;
+                else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
+            }
 
 			// Compute weights consistent with CraftingService.RollRarity (including pity clamp)
 			var weights = new List<(RaritySO r, float w)>();
@@ -362,6 +380,9 @@ namespace TimelessEchoes.Gear.UI
         // Called by UI slot buttons (e.g., Weapon/Helmet/Chest/Boots)
         public void SelectSlot(string slot)
         {
+            // Stop auto-crafting if the player changes the selected gear slot
+            if (isAutoCrafting && !string.Equals(selectedSlot, slot))
+                StopAutoCrafting();
             selectedSlot = slot;
         }
 
@@ -521,6 +542,7 @@ namespace TimelessEchoes.Gear.UI
 				svc.OnIvanLevelUp -= OnIvanLevelUp;
 			}
 			Blindsided.EventHandler.OnLoadData -= OnPostLoad;
+			StopAutoCrafting();
         }
 		private void OnIvanXpChanged(int level, float current, float needed)
 		{
@@ -735,11 +757,138 @@ namespace TimelessEchoes.Gear.UI
 		private void RefreshActionButtons()
 		{
 			bool canCraft = CanCraft();
-			if (craftButton != null) craftButton.interactable = canCraft;
-			// Disable salvage/replace when crafting is not available; require a pending result
+			if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
+			// Replace/Salvage depend only on having a pending result; do not gate on craftability
 			bool hasResult = lastCrafted != null;
-			if (replaceButton != null) replaceButton.interactable = canCraft && hasResult;
-			if (salvageButton != null) salvageButton.interactable = canCraft && hasResult;
+			if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
+			if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
+			// Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
+			if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
+			if (craftUntilUpgradeButtonText != null) craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
+		}
+
+		private void OnCraftUntilUpgradeClicked()
+		{
+			if (isAutoCrafting)
+			{
+				StopAutoCrafting();
+				return;
+			}
+			if (!CanCraft())
+			{
+				RefreshActionButtons();
+				return;
+			}
+			isAutoCrafting = true;
+			autoCraftCoroutine = StartCoroutine(CraftUntilUpgradeCoroutine());
+			RefreshActionButtons();
+		}
+
+		private void StopAutoCrafting()
+		{
+			if (!isAutoCrafting) return;
+			isAutoCrafting = false;
+			if (autoCraftCoroutine != null)
+			{
+				StopCoroutine(autoCraftCoroutine);
+				autoCraftCoroutine = null;
+			}
+			RefreshActionButtons();
+		}
+
+		private IEnumerator CraftUntilUpgradeCoroutine()
+		{
+			var wait = new WaitForSecondsRealtime(0.1f); // ~10 crafts per second
+			while (isAutoCrafting)
+			{
+				if (!CanCraft())
+					break;
+
+				// Auto-salvage previous craft before rolling a new one
+				if (lastCrafted != null)
+				{
+					SalvageService.Instance?.Salvage(lastCrafted);
+					lastCrafted = null;
+				}
+
+				if (selectedCore == null || crafting == null)
+					break;
+
+				var coreSlot = GetSlotForCore(selectedCore);
+				var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
+				lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes, 1);
+				if (lastCrafted == null)
+				{
+					RefreshActionButtons();
+					break;
+				}
+				crafting.RegisterCraftOutcome(lastCrafted.rarity);
+				var eq = equipment?.GetEquipped(lastCrafted.slot);
+				var summary = BuildItemSummary(lastCrafted, eq);
+				ShowResult(summary);
+				UpdateResultPreview(lastCrafted);
+				OnResourcesChanged();
+				RefreshOdds();
+
+				if (IsPotentialUpgrade(lastCrafted, eq))
+				{
+					break; // leave lastCrafted for player to review/replace/salvage
+				}
+
+				// Not an upgrade, salvage and continue
+				SalvageService.Instance?.Salvage(lastCrafted);
+				lastCrafted = null;
+				RefreshActionButtons();
+				yield return wait;
+			}
+
+			isAutoCrafting = false;
+			autoCraftCoroutine = null;
+			RefreshActionButtons();
+		}
+
+		private bool IsPotentialUpgrade(GearItem candidate, GearItem current)
+		{
+			if (candidate == null) return false;
+			float score = ComputeUpgradeScore(candidate, current);
+			return score > 0.0001f;
+		}
+
+		private float ComputeUpgradeScore(GearItem candidate, GearItem current)
+		{
+			// Aggregate by hero mapping to compare like-for-like
+			var deltaByMapping = new Dictionary<TimelessEchoes.Gear.HeroStatMapping, float>();
+			if (candidate != null)
+			{
+				for (int i = 0; i < candidate.affixes.Count; i++)
+				{
+					var a = candidate.affixes[i];
+					if (a == null || a.stat == null) continue;
+					var map = a.stat.heroMapping;
+					if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
+					deltaByMapping[map] += a.value;
+				}
+			}
+			if (current != null)
+			{
+				for (int i = 0; i < current.affixes.Count; i++)
+				{
+					var a = current.affixes[i];
+					if (a == null || a.stat == null) continue;
+					var map = a.stat.heroMapping;
+					if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
+					deltaByMapping[map] -= a.value;
+				}
+			}
+
+			float score = 0f;
+			foreach (var kv in deltaByMapping)
+			{
+				var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
+				float scale = def != null ? Mathf.Max(0f, def.comparisonScale) : 1f;
+				score += kv.Value * scale;
+			}
+			return score;
 		}
 
         private void ClearResultPreview()
@@ -802,7 +951,7 @@ namespace TimelessEchoes.Gear.UI
         private string BuildEquippedStatsText(GearItem item, string slotName)
         {
             if (item == null)
-                return $"No {slotName} equipped";
+                return TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.Minus);
 
             var lines = new List<string>();
 

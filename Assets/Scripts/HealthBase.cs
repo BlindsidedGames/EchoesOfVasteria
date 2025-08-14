@@ -14,6 +14,9 @@ namespace TimelessEchoes
         [SerializeField] protected SlicedFilledImage healthBar;
         [SerializeField, Range(0f, 1f)] protected float minFillPercent = 0.05f;
         [SerializeField] protected HealthBarSpriteOption[] barSprites;
+        
+        // Set by TakeDamage when the incoming hit appears to be a critical strike
+        protected bool lastHitWasCritical;
 
         protected virtual void Awake()
         {
@@ -30,6 +33,9 @@ namespace TimelessEchoes
             CurrentHealth -= total;
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+
+            // Heuristic: consider it a crit if bonusDamage is at least the base portion
+            lastHitWasCritical = bonusDamage >= amount - 0.0001f;
 
             if (Application.isPlaying && ShouldShowFloatingText())
                 ShowFloatingText(total, bonusDamage);
@@ -120,8 +126,15 @@ namespace TimelessEchoes
             string text = CalcUtils.FormatNumber(total);
             if (bonusDamage != 0f)
                 text += $"<size=70%><color=#60C560>+{CalcUtils.FormatNumber(bonusDamage)}</color></size>";
-            FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(),
-                GetFloatingTextSize(), null, GetFloatingTextDuration());
+            var size = GetFloatingTextSize() * (lastHitWasCritical ? 1.5f : 1f);
+            if (lastHitWasCritical)
+            {
+                var critTag = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.CritChance);
+                if (!string.IsNullOrEmpty(critTag))
+                    text = $"{critTag} " + text;
+            }
+            FloatingText.SpawnDamageText(text, transform.position + Vector3.up, GetFloatingTextColor(),
+                size, null, GetFloatingTextDuration());
         }
 
         protected abstract Color GetFloatingTextColor();

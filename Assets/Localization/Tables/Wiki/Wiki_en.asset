@@ -31,8 +31,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 478381752320
     m_Localized: Buffs are short-term, timed powers that expire when they run out
-      or if you return to town.  They cost resources to activate and give you powerful
-      bonuses for your run.
+      or if you return to town.  They can be autocast after completing the required
+      number of casts and the aucocasting defaults to on. You can toggle it off by
+      clicking the slot in the buffs management window.
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
@@ -117,7 +118,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.0.4c
+    m_Localized: v1.1.7 Unstable
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448

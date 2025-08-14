@@ -5,72 +5,73 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        [TabGroup("Preferences")] public Preferences SavedPreferences = new();
+        [ShowInInspector]
+        [TabGroup("GameDataTabs", "Preferences")] public Preferences SavedPreferences = new();
 
-        [HideReferenceObjectPicker] [TabGroup("Skills")]
+        [ShowInInspector, HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Skills")]
         public Dictionary<string, SkillProgress> SkillData = new();
 
-        [HideReferenceObjectPicker] [TabGroup("UpgradeSystem")]
+        [ShowInInspector, HideReferenceObjectPicker] [TabGroup("GameDataTabs", "UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
-        [TabGroup("Time")] public float CurrentTime = 0;
-        [TabGroup("Time")] public string DateQuitString;
-        [TabGroup("Time")] public string DateStarted;
-        [TabGroup("Time")] public double OfflineTime = 0;
-        [TabGroup("Time")] public double OfflineTimeCap = 3600f;
-        [TabGroup("Time")] public double OfflineTimeScaleMultiplier = 2f;
-        [TabGroup("Time")] public double PlayTime;
-        [TabGroup("Time")] public float TimeScale = 0f;
+        [TabGroup("GameDataTabs", "Time")] public float CurrentTime = 0;
+        [TabGroup("GameDataTabs", "Time")] public string DateQuitString;
+        [TabGroup("GameDataTabs", "Time")] public string DateStarted;
+        [TabGroup("GameDataTabs", "Time")] public double OfflineTime = 0;
+        [TabGroup("GameDataTabs", "Time")] public double OfflineTimeCap = 3600f;
+        [TabGroup("GameDataTabs", "Time")] public double OfflineTimeScaleMultiplier = 2f;
+        [TabGroup("GameDataTabs", "Time")] public double PlayTime;
+        [TabGroup("GameDataTabs", "Time")] public float TimeScale = 0f;
 
-        [HideReferenceObjectPicker]
-        [TabGroup("Resources")] public Dictionary<string, ResourceEntry> Resources = new();
+        [ShowInInspector, HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Resources")] public Dictionary<string, ResourceEntry> Resources = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("Resources")] public Dictionary<string, double> EnemyKills = new();
+        [ShowInInspector, HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Resources")] public Dictionary<string, double> EnemyKills = new();
 
         // Start with the Echo Tasks buff assigned to the first slot by default
         [HideReferenceObjectPicker]
-        [TabGroup("Buffs")] public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
-        [TabGroup("Buffs")] public int UnlockedBuffSlots = 1;
-        [TabGroup("Buffs")] public int UnlockedAutoBuffSlots = 0;
+        [TabGroup("GameDataTabs", "Buffs")] public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
+        [TabGroup("GameDataTabs", "Buffs")] public int UnlockedBuffSlots = 1;
+        [TabGroup("GameDataTabs", "Buffs")] public int UnlockedAutoBuffSlots = 0;
         [HideReferenceObjectPicker]
-        [TabGroup("Buffs")] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+        [TabGroup("GameDataTabs", "Buffs")] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+
+        [ShowInInspector, HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Tasks")] public HashSet<string> CompletedNpcTasks = new();
 
         [HideReferenceObjectPicker]
-        [TabGroup("Tasks")] public HashSet<string> CompletedNpcTasks = new();
+        [TabGroup("GameDataTabs", "Disciples")] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
 
         [HideReferenceObjectPicker]
-        [TabGroup("Disciples")] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
-
-        [HideReferenceObjectPicker]
-        [TabGroup("Quests")] public Dictionary<string, QuestRecord> Quests = new();
+        [TabGroup("GameDataTabs", "Quests")] public Dictionary<string, QuestRecord> Quests = new();
 
         // --- Gear system (phase 1) ---
         [HideReferenceObjectPicker]
-        [TabGroup("Gear")] public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
+        [TabGroup("GameDataTabs", "Gear")] public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
         [HideReferenceObjectPicker]
-        [TabGroup("Gear")] public List<GearItemRecord> CraftHistory = new();
-        [TabGroup("Gear")] public int CraftingMasteryLevel = 0; // Ivan's level
-        [TabGroup("Gear")] public float CraftingMasteryXP = 0f; // Ivan's current XP toward next level
-        [TabGroup("Gear")] public int PityCraftsSinceLast = 0;
+        [TabGroup("GameDataTabs", "Gear")] public List<GearItemRecord> CraftHistory = new();
+        [TabGroup("GameDataTabs", "Gear")] public int CraftingMasteryLevel = 0; // Ivan's level
+        [TabGroup("GameDataTabs", "Gear")] public float CraftingMasteryXP = 0f; // Ivan's current XP toward next level
+        [TabGroup("GameDataTabs", "Gear")] public int PityCraftsSinceLast = 0;
 
         [HideReferenceObjectPicker]
-        [TabGroup("Quests")] public List<string> PinnedQuests = new();
+        [TabGroup("GameDataTabs", "Quests")] public List<string> PinnedQuests = new();
+
+        [ShowInInspector, HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Tasks")] public Dictionary<int, TaskRecord> TaskRecords = new();
 
         [HideReferenceObjectPicker]
-        [TabGroup("Tasks")] public Dictionary<int, TaskRecord> TaskRecords = new();
+        [TabGroup("GameDataTabs", "Stats")] public Dictionary<string, ResourceRecord> ResourceStats = new();
 
         [HideReferenceObjectPicker]
-        [TabGroup("Stats")] public Dictionary<string, ResourceRecord> ResourceStats = new();
+        [TabGroup("GameDataTabs", "Stats")] public Dictionary<string, MapStatistics> MapStats = new();
 
         [HideReferenceObjectPicker]
-        [TabGroup("Stats")] public Dictionary<string, MapStatistics> MapStats = new();
+        [TabGroup("GameDataTabs", "Stats")] public GeneralStats General = new();
+        [TabGroup("GameDataTabs", "Stats")] public float CompletionPercentage;
 
-        [HideReferenceObjectPicker]
-        [TabGroup("Stats")] public GeneralStats General = new();
-        [TabGroup("Stats")] public float CompletionPercentage;
-
-        [TabGroup("Disciples")] public float DisciplePercent = 0.01f;
+        [TabGroup("GameDataTabs", "Disciples")] public float DisciplePercent = 0.01f;
 
 
         [HideReferenceObjectPicker]

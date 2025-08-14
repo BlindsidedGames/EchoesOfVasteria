@@ -65,8 +65,15 @@ namespace TimelessEchoes.Enemies
             {
                 // Display only the final damage amount dealt to the enemy.
                 string text = CalcUtils.FormatNumber(total);
-                FloatingText.Spawn(text, transform.position + Vector3.up, GetFloatingTextColor(),
-                    GetFloatingTextSize(), null, GetFloatingTextDuration());
+                var size = GetFloatingTextSize() * (lastHitWasCritical ? 1.5f : 1f);
+                if (lastHitWasCritical)
+                {
+                    var critTag = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.CritChance);
+                    if (!string.IsNullOrEmpty(critTag))
+                        text = $"{critTag} " + text;
+                }
+                FloatingText.SpawnDamageText(text, transform.position + Vector3.up, GetFloatingTextColor(),
+                    size, null, GetFloatingTextDuration());
             }
 
             AfterDamage(total);

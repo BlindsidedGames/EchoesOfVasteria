@@ -302,8 +302,8 @@ namespace TimelessEchoes.EditorTools
 					GUILayout.Label(applyGlobalMultiplier ? mult.ToString("0.###") : "1", GUILayout.Width(70));
 					GUILayout.Label(eff0.ToString("0.###"), GUILayout.Width(80));
 					GUILayout.Label(eff.ToString("0.###"), GUILayout.Width(80));
-					GUILayout.Label(p0.ToString("0.###"), GUILayout.Width(80));
-					GUILayout.Label(pLevel.ToString("0.###"), GUILayout.Width(90));
+					GUILayout.Label(p0.ToString("0.0000"), GUILayout.Width(80));
+					GUILayout.Label(pLevel.ToString("0.0000"), GUILayout.Width(90));
 				}
 			}
 		}

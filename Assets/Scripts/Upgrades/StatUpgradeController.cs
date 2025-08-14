@@ -41,6 +41,8 @@ namespace TimelessEchoes.Upgrades
 
         public int GetLevel(StatUpgrade upgrade)
         {
+            if (UpgradeFeatureToggle.DisableStatUpgrades)
+                return 0;
             return upgrade != null && levels.TryGetValue(upgrade, out var lvl) ? lvl : 0;
         }
 
@@ -50,6 +52,8 @@ namespace TimelessEchoes.Upgrades
         public float GetIncrease(StatUpgrade upgrade)
         {
             if (upgrade == null) return 0f;
+            if (UpgradeFeatureToggle.DisableStatUpgrades)
+                return 0f;
             var lvl = GetLevel(upgrade);
             return lvl * upgrade.statIncreasePerLevel;
         }
@@ -77,7 +81,7 @@ namespace TimelessEchoes.Upgrades
         {
             if (upgrade == null) return 0f;
 
-            int lvl = GetLevel(upgrade);
+            int lvl = UpgradeFeatureToggle.DisableStatUpgrades ? 0 : GetLevel(upgrade);
             float baseVal = GetBaseValue(upgrade);
             float levelIncrease = lvl * upgrade.statIncreasePerLevel;
 
@@ -91,6 +95,8 @@ namespace TimelessEchoes.Upgrades
 
         public bool CanUpgrade(StatUpgrade upgrade)
         {
+            if (UpgradeFeatureToggle.DisableStatUpgrades)
+                return false;
             var threshold = GetThreshold(upgrade);
             if (threshold == null) return false;
             foreach (var req in threshold.requirements)
@@ -107,6 +113,8 @@ namespace TimelessEchoes.Upgrades
 
         public bool ApplyUpgrade(StatUpgrade upgrade)
         {
+            if (UpgradeFeatureToggle.DisableStatUpgrades)
+                return false;
             var threshold = GetThreshold(upgrade);
             if (threshold == null || !CanUpgrade(upgrade))
                 return false;

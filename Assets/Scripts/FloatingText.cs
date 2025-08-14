@@ -21,7 +21,7 @@ namespace TimelessEchoes
         /// <summary>
         /// Spawns a floating text object displaying the given string.
         /// </summary>
-        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f)
+        public static void Spawn(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f, TMPro.TMP_SpriteAsset spriteAssetOverride = null)
         {
             if (prefab == null)
             {
@@ -32,7 +32,7 @@ namespace TimelessEchoes
                 ft.tmp.alignment = TextAlignmentOptions.Center;
                 ft.tmp.fontSize = fontSize;
                 ft.tmp.fontStyle |= FontStyles.SmallCaps;
-                ft.tmp.spriteAsset = TimelessEchoes.Upgrades.ResourceIconLookup.SpriteAsset;
+                ft.tmp.spriteAsset = TimelessEchoes.Upgrades.StatIconLookup.GetSpriteAsset();
 
                 var renderer = ft.tmp.GetComponent<Renderer>();
                 if (renderer != null)
@@ -50,12 +50,33 @@ namespace TimelessEchoes
             obj.transform.SetParent(parent, true);
 
             var ftInstance = obj.GetComponent<FloatingText>();
+            // Use override sprite asset if provided; otherwise keep whatever the prefab configured
+            if (ftInstance != null && ftInstance.tmp != null && spriteAssetOverride != null)
+                ftInstance.tmp.spriteAsset = spriteAssetOverride;
             ftInstance.lifetime = duration >= 0f ? duration : StaticReferences.DropFloatingTextDuration;
             ftInstance.tmp.fontSize = fontSize;
             ftInstance.tmp.text = text;
             ftInstance.tmp.color = color;
             ftInstance.speed = ftInstance.moveDistance / Mathf.Max(ftInstance.lifetime, 0.0001f);
             ftInstance.timer = 0f;
+        }
+
+        /// <summary>
+        /// Convenience: spawn damage/combat text using the StatIcons sprite asset for <sprite> tags.
+        /// </summary>
+        public static void SpawnDamageText(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f)
+        {
+            var asset = TimelessEchoes.Upgrades.StatIconLookup.GetSpriteAsset();
+            Spawn(text, position, color, fontSize, parent, duration, asset);
+        }
+
+        /// <summary>
+        /// Convenience: spawn resource/item drop text using the FloatingTextIcons sprite asset for <sprite> tags.
+        /// </summary>
+        public static void SpawnResourceText(string text, Vector3 position, Color color, float fontSize = 8f, Transform parent = null, float duration = -1f)
+        {
+            var asset = TimelessEchoes.Upgrades.ResourceIconLookup.SpriteAsset;
+            Spawn(text, position, color, fontSize, parent, duration, asset);
         }
 
         private void Awake()

@@ -76,6 +76,11 @@ namespace TimelessEchoes.Upgrades
                 if (refs != null && refs.upgradeButton != null)
                 {
                     refs.upgradeButton.onClick.AddListener(() => ApplyUpgrade(index));
+                    // Disable interactivity entirely when feature is off
+                    if (UpgradeFeatureToggle.DisableStatUpgrades)
+                    {
+                        refs.upgradeButton.interactable = false;
+                    }
                     var repeat = refs.upgradeButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = refs.upgradeButton;
                 }
@@ -209,6 +214,13 @@ namespace TimelessEchoes.Upgrades
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
                 {
+                    if (UpgradeFeatureToggle.DisableStatUpgrades)
+                    {
+                        refs.upgradeButton.interactable = false;
+                        if (refs.upgradeButtonText != null)
+                            refs.upgradeButtonText.text = "Disabled";
+                        continue;
+                    }
                     var threshold = GetThreshold(upgrades[i]);
                     if (threshold == null)
                     {
@@ -235,6 +247,7 @@ namespace TimelessEchoes.Upgrades
         private void ApplyUpgrade(int index)
         {
             if (index < 0 || index >= upgrades.Count) return;
+            if (UpgradeFeatureToggle.DisableStatUpgrades) return;
             if (controller != null && controller.ApplyUpgrade(upgrades[index]))
             {
                 BuildAllCostSlots();

@@ -249,9 +249,9 @@ namespace TimelessEchoes.Hero
 
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
-                var hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                var hp = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
                 health?.Init(hp);
             }
 
@@ -273,7 +273,7 @@ namespace TimelessEchoes.Hero
             if (!IsEcho)
                 BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
             UpdateAnimation();
             UpdateBehavior();
@@ -382,9 +382,9 @@ namespace TimelessEchoes.Hero
             ApplyStatUpgrades();
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus) *
+                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
-                var hp = Mathf.RoundToInt(baseHealth + healthBonus);
+                var hp = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
                 health?.Init(hp);
             }
 
@@ -517,7 +517,7 @@ namespace TimelessEchoes.Hero
             {
                 if (upgrade == null) continue;
                 var baseVal = controller.GetBaseValue(upgrade);
-                var levelIncrease = controller.GetIncrease(upgrade);
+                var levelIncrease = UpgradeFeatureToggle.DisableStatUpgrades ? 0f : controller.GetIncrease(upgrade);
                 var flatBonus = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
                 var percentBonus = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
 
@@ -1020,10 +1020,14 @@ namespace TimelessEchoes.Hero
                     var crafting = TimelessEchoes.Gear.CraftingService.Instance ??
                                    FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
                     var critDef = crafting != null ? crafting.GetStatByMapping(TimelessEchoes.Gear.HeroStatMapping.CritChance) : null;
-                    critChance = critDef != null ? equip.GetCritChance(critDef) : 0f;
+                    if (critDef != null)
+                    {
+                        var raw = equip.GetCritChance(critDef);
+                        critChance = critDef.isPercent ? raw / 100f : raw;
+                    }
                 }
 
-                if (critChance > 0f && Random.value < critChance)
+                if (critChance > 0f && Random.value < Mathf.Clamp01(critChance))
                 {
                     total *= 2f;
                 }
