@@ -290,7 +290,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 var p = total > 0f ? w / total : 0f;
                 var name = r != null ? r.GetName() : "(null)";
-                lines.Add($"{name}: {p * 100f:0.###}%");
+                lines.Add($"{name}: {p * 100f:0.000}%");
             }
 
             return (lines, weights);
