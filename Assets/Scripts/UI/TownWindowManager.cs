@@ -36,6 +36,8 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
         [SerializeField] [Space] private WindowReference options = new();
+        [SerializeField] [Space] private GameObject discord;
+        [SerializeField] [Space] private GameObject autoPin;
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
         [SerializeField] [Space] private Button closeButton;
@@ -140,6 +142,8 @@ namespace TimelessEchoes.UI
                 if (quests.window != null)
                 {
                     quests.window.SetActive(true);
+                    if (autoPin != null)
+                        autoPin.SetActive(true);
                     if (quests.button != null)
                         quests.button.interactable = false;
                 }
@@ -168,6 +172,8 @@ namespace TimelessEchoes.UI
         private void OpenQuests()
         {
             ToggleWindow(quests);
+            if (autoPin != null)
+                autoPin.SetActive(true);
         }
 
         private void OpenCredits()
@@ -193,6 +199,8 @@ namespace TimelessEchoes.UI
         private void OpenOptions()
         {
             ToggleWindow(options);
+            if (discord != null)
+                discord.SetActive(true);
         }
 
         private void OpenForge()
@@ -256,6 +264,10 @@ namespace TimelessEchoes.UI
                 forge.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
+            if (discord != null)
+                discord.SetActive(false);
+            if (autoPin != null)
+                autoPin.SetActive(false);
 
             EnableAllWindowButtons();
             UpdateTownButtonsVisibility();
