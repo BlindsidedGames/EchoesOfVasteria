@@ -15,6 +15,10 @@ MonoBehaviour:
   tierIndex: 4
   requiredIngot: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
   ingotCost: 1
+  chunkResource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}
+  chunkCostPerIngot: 1
+  crystalResource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
+  crystalCostPerIngot: 1
   rarityWeights:
   - rarity: {fileID: 11400000, guid: f7417ae215ccd5e468d50a87118a46f7, type: 2}
     weight: 1000
@@ -45,13 +49,14 @@ MonoBehaviour:
   salvageDrops:
   - resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}
     dropRange: {x: 1, y: 1}
-    dropChance: 1
+    weight: 1
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
     dropRange: {x: 1, y: 1}
-    dropChance: 0.5
+    weight: 0.5
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
+  salvageAdditionalLootChances: []
