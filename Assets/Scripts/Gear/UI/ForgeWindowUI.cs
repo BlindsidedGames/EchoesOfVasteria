@@ -59,18 +59,8 @@ namespace TimelessEchoes.Gear.UI
         [Tooltip("Text to display remaining Ingot count for the selected Core.")] [SerializeField]
         private TMP_Text selectedIngotCountText;
 
-        [Header("Ingot Conversion UI")] [SerializeField]
-        private Image ingotResultImage;
-
-        [SerializeField] private TMP_Text resultCountText;
-
-        [SerializeField] private TMP_Text maxSmeltsText;
-        [SerializeField] private Image chunkCostImage;
-        [SerializeField] private TMP_Text chunkCostText;
-        [SerializeField] private Image crystalCostImage;
-        [SerializeField] private TMP_Text crystalCostText;
-        [SerializeField] private Button craftIngotButton;
-        [SerializeField] private Button craftAllIngotsButton;
+        [Header("Ingot Conversion UI")]
+        [SerializeField] private CraftSection2x1UIReferences ingotConversionSection;
 
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
@@ -132,16 +122,19 @@ namespace TimelessEchoes.Gear.UI
                 salvageButton.onClick.AddListener(OnSalvageClicked);
             if (craftUntilUpgradeButton != null)
                 craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
-            if (craftIngotButton != null)
+            if (ingotConversionSection != null)
             {
-                craftIngotButton.onClick.AddListener(OnCraftIngotClicked);
-                var repeat = craftIngotButton.GetComponent<RepeatButtonClick>() ??
-                             craftIngotButton.gameObject.AddComponent<RepeatButtonClick>();
-                repeat.button = craftIngotButton;
-            }
+                if (ingotConversionSection.craftButton != null)
+                {
+                    ingotConversionSection.craftButton.onClick.AddListener(OnCraftIngotClicked);
+                    var repeat = ingotConversionSection.craftButton.GetComponent<RepeatButtonClick>() ??
+                                 ingotConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
+                    repeat.button = ingotConversionSection.craftButton;
+                }
 
-            if (craftAllIngotsButton != null)
-                craftAllIngotsButton.onClick.AddListener(OnCraftAllIngotsClicked);
+                if (ingotConversionSection.craftAllButton != null)
+                    ingotConversionSection.craftAllButton.onClick.AddListener(OnCraftAllIngotsClicked);
+            }
 
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
@@ -786,7 +779,10 @@ namespace TimelessEchoes.Gear.UI
         private void UpdateIngotCraftPreview(CoreSO core)
         {
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            if (ingotResultImage != null)
+            var section = ingotConversionSection;
+            if (section == null) return;
+
+            if (section.resultImage != null)
             {
                 Sprite sprite = null;
                 var ingotRes = core != null ? core.requiredIngot : null;
@@ -796,18 +792,18 @@ namespace TimelessEchoes.Gear.UI
                     sprite = discovered ? ingotRes.icon : ingotRes.UnknownIcon;
                 }
 
-                ingotResultImage.sprite = sprite;
-                ingotResultImage.enabled = sprite != null;
+                section.resultImage.sprite = sprite;
+                section.resultImage.enabled = sprite != null;
             }
 
-            if (resultCountText != null)
+            if (section.resultText != null)
             {
                 var ingotRes = core != null ? core.requiredIngot : null;
                 var amount = rm != null && ingotRes != null ? rm.GetAmount(ingotRes) : 0;
-                resultCountText.text = amount.ToString("0");
+                section.resultText.text = amount.ToString("0");
             }
 
-            if (maxSmeltsText != null)
+            if (section.maxCraftsText != null)
             {
                 var max = 0;
                 if (core != null && rm != null)
@@ -823,10 +819,10 @@ namespace TimelessEchoes.Gear.UI
                     if (max == int.MaxValue) max = 0;
                 }
 
-                maxSmeltsText.text = $"Max: {Mathf.Max(0, max)}";
+                section.maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
             }
 
-            if (chunkCostImage != null)
+            if (section.cost1Image != null)
             {
                 Sprite sprite = null;
                 if (core != null && core.chunkResource != null)
@@ -836,13 +832,13 @@ namespace TimelessEchoes.Gear.UI
                     sprite = discovered && have ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
                 }
 
-                chunkCostImage.sprite = sprite;
-                chunkCostImage.enabled = sprite != null;
+                section.cost1Image.sprite = sprite;
+                section.cost1Image.enabled = sprite != null;
             }
 
-            if (chunkCostText != null)
-                chunkCostText.text = core != null ? core.chunkCostPerIngot.ToString("0") : string.Empty;
-            if (crystalCostImage != null)
+            if (section.cost1Text != null)
+                section.cost1Text.text = core != null ? core.chunkCostPerIngot.ToString("0") : string.Empty;
+            if (section.cost2Image != null)
             {
                 Sprite sprite = null;
                 if (core != null && core.crystalResource != null)
@@ -852,12 +848,18 @@ namespace TimelessEchoes.Gear.UI
                     sprite = discovered && have ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
                 }
 
-                crystalCostImage.sprite = sprite;
-                crystalCostImage.enabled = sprite != null;
+                section.cost2Image.sprite = sprite;
+                section.cost2Image.enabled = sprite != null;
             }
 
-            if (crystalCostText != null)
-                crystalCostText.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
+            if (section.cost2Text != null)
+                section.cost2Text.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
+
+            if (section.craftArrow != null && section.craftArrow.image != null)
+            {
+                var arrowSprite = CanCraftIngot() ? section.validArrow : section.invalidArrow;
+                section.craftArrow.image.sprite = arrowSprite;
+            }
         }
 
         private void UpdateMaxCraftsText()
@@ -999,8 +1001,13 @@ namespace TimelessEchoes.Gear.UI
             var canCraft = CanCraft();
             if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
             var canCraftIngot = CanCraftIngot();
-            if (craftIngotButton != null) craftIngotButton.interactable = canCraftIngot && !isAutoCrafting;
-            if (craftAllIngotsButton != null) craftAllIngotsButton.interactable = canCraftIngot && !isAutoCrafting;
+            if (ingotConversionSection != null)
+            {
+                if (ingotConversionSection.craftButton != null)
+                    ingotConversionSection.craftButton.interactable = canCraftIngot && !isAutoCrafting;
+                if (ingotConversionSection.craftAllButton != null)
+                    ingotConversionSection.craftAllButton.interactable = canCraftIngot && !isAutoCrafting;
+            }
             // Replace/Salvage depend only on having a pending result; do not gate on craftability
             var hasResult = lastCrafted != null;
             if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
