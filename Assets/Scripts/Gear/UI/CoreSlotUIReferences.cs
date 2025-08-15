@@ -7,7 +7,7 @@ namespace TimelessEchoes.Gear.UI
 {
     /// <summary>
     /// Reference holder for a single Core slot button in the Forge UI.
-    /// Handles selection visuals and shows core discovery/amount using ResourceManager.
+    /// Handles selection visuals and shows core discovery and craftable count using ResourceManager.
     /// </summary>
     public class CoreSlotUIReferences : MonoBehaviour
     {
@@ -67,22 +67,30 @@ namespace TimelessEchoes.Gear.UI
         }
 
         /// <summary>
-        /// Refreshes discovery visibility and amount text from the ResourceManager.
+        /// Refreshes discovery visibility and craftable count from the ResourceManager.
         /// If no resource is assigned, the count displays 0.
         /// </summary>
         public void Refresh()
         {
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            var hasResource = coreResource != null;
-            var discovered = hasResource && rm != null && rm.IsUnlocked(coreResource);
+            var hasCoreResource = coreResource != null;
+            var discovered = hasCoreResource && rm != null && rm.IsUnlocked(coreResource);
 
             if (coreImage != null)
                 coreImage.enabled = discovered;
 
             if (coreCountText != null)
             {
-                var amount = hasResource && rm != null ? rm.GetAmount(coreResource) : 0;
-                coreCountText.text = amount.ToString("0");
+                var coreAmount = hasCoreResource && rm != null ? rm.GetAmount(coreResource) : 0;
+                var crafts = coreAmount;
+                if (rm != null)
+                {
+                    var ingotAmount = ingotResource != null ? rm.GetAmount(ingotResource) : 0;
+                    var cost = core != null ? core.ingotCost : 1;
+                    if (cost > 0)
+                        crafts = Mathf.Min(crafts, ingotAmount / cost);
+                }
+                coreCountText.text = crafts.ToString("0");
             }
         }
     }
