@@ -1,21 +1,20 @@
 using System.Collections;
+using Blindsided.SaveData;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TimelessEchoes;
-using TimelessEchoes.Stats;
 
 namespace Blindsided
 {
     public partial class Oracle
     {
-
         private void Start()
         {
             Load();
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
-                        InvokeRepeating(nameof(SaveToFile), 1, 30);
+            InvokeRepeating(nameof(SaveToFile), 1, 30);
 
             // Wire up regression confirmation UI if present
             if (regressionYesButton != null)
@@ -23,27 +22,28 @@ namespace Blindsided
                 regressionYesButton.onClick.RemoveAllListeners();
                 regressionYesButton.onClick.AddListener(ConfirmRegressionKeepLoaded);
             }
+
             if (regressionNoButton != null)
             {
                 regressionNoButton.onClick.RemoveAllListeners();
                 regressionNoButton.onClick.AddListener(AttemptRestoreBackupAndReload);
             }
 
-                        if (_pendingLoadFailureNotice)
-                        {
-                                TryShowLoadFailureWindow(_pendingLoadFailureMessage);
-                                _pendingLoadFailureNotice = false;
-                                _pendingLoadFailureMessage = null;
-                                _mainSceneLoadDeferred = true;
-                        }
-                        else if (regressionConfirmWindow != null && regressionConfirmWindow.activeSelf)
-                        {
-                                _mainSceneLoadDeferred = true;
-                        }
-                        else
-                        {
-                                StartCoroutine(LoadMainScene());
-                        }
+            if (_pendingLoadFailureNotice)
+            {
+                TryShowLoadFailureWindow(_pendingLoadFailureMessage);
+                _pendingLoadFailureNotice = false;
+                _pendingLoadFailureMessage = null;
+                _mainSceneLoadDeferred = true;
+            }
+            else if (regressionConfirmWindow != null && regressionConfirmWindow.activeSelf)
+            {
+                _mainSceneLoadDeferred = true;
+            }
+            else
+            {
+                StartCoroutine(LoadMainScene());
+            }
         }
 
         private IEnumerator LoadMainScene()
@@ -61,26 +61,26 @@ namespace Blindsided
             if (loaded) saveData.PlayTime += Time.deltaTime;
         }
 
-		private void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
-			SaveToFile();
-			ES3.StoreCachedFile(_fileName);
-			SafeCreateBackup();
-			CreateRotatingBackup();
+            SaveToFile();
+            ES3.StoreCachedFile(_fileName);
+            SafeCreateBackup();
+            CreateRotatingBackup();
         }
 
-		private void OnDisable()
+        private void OnDisable()
         {
             // This is called when you exit Play Mode in the Editor
             if (Application.isPlaying && !wipeInProgress && oracle == this && _settings != null)
             {
                 SaveToFile(); // save the latest state immediately
                 ES3.StoreCachedFile(_fileName);
-				CreateRotatingBackup();
+                CreateRotatingBackup();
             }
         }
 
@@ -103,7 +103,5 @@ namespace Blindsided
             }
         }
 #endif
-
     }
 }
-
