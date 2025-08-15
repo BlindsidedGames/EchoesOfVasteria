@@ -6,6 +6,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.UI
 {
@@ -81,8 +82,7 @@ namespace TimelessEchoes.UI
             if (references == null || references.taskEntryParent == null || references.taskEntryPrefab == null)
                 return;
 
-            foreach (Transform child in references.taskEntryParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(references.taskEntryParent);
 
             var allTasks = Blindsided.Utilities.AssetCache.GetAll<TaskData>("Tasks");
             var sorted = allTasks

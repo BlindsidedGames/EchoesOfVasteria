@@ -6,6 +6,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Stats;
 using Blindsided.Utilities;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.UI
 {
@@ -70,8 +71,7 @@ namespace TimelessEchoes.UI
             if (references == null || references.enemyEntryParent == null || references.enemyEntryPrefab == null)
                 return;
 
-            foreach (Transform child in references.enemyEntryParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(references.enemyEntryParent);
 
             var allStats = Blindsided.Utilities.AssetCache.GetAll<EnemyData>("");
             var sorted = allStats

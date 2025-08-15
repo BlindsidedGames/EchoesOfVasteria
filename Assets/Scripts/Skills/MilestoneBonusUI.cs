@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using References.UI;
 using TimelessEchoes;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Skills
 {
@@ -69,8 +70,7 @@ namespace TimelessEchoes.Skills
             if (entryParent == null)
                 return;
 
-            foreach (Transform child in entryParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(entryParent);
 
 
             foreach (var milestone in skill.milestones)
