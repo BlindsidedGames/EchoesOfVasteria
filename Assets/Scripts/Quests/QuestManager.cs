@@ -16,15 +16,15 @@ using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
 using static TimelessEchoes.TELogger;
 using Resources = UnityEngine.Resources;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Quests
 {
     /// <summary>
     ///     Handles quest logic and progress tracking.
     /// </summary>
-    public class QuestManager : MonoBehaviour
+    public class QuestManager : Singleton<QuestManager>
     {
-        public static QuestManager Instance { get; private set; }
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
         private DiscipleGenerationManager generationManager;
@@ -44,9 +44,10 @@ namespace TimelessEchoes.Quests
             public bool ReadyForTurnIn;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+            if (Instance != this) return;
             quests = new List<QuestData>(Blindsided.Utilities.AssetCache.GetAll<QuestData>(questResourcePath));
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
@@ -79,8 +80,9 @@ namespace TimelessEchoes.Quests
             OnLoadData += OnLoadDataHandler;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= UpdateAllProgress;
             if (killTracker != null)
@@ -90,9 +92,6 @@ namespace TimelessEchoes.Quests
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
             }
-
-            if (Instance == this)
-                Instance = null;
 
             OnLoadData -= OnLoadDataHandler;
         }

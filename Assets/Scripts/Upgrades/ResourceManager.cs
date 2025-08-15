@@ -9,13 +9,13 @@ using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
 using static Blindsided.SaveData.StaticReferences;
 using Resources = UnityEngine.Resources;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Upgrades
 {
     [DefaultExecutionOrder(-2)]
-    public class ResourceManager : MonoBehaviour
+    public class ResourceManager : Singleton<ResourceManager>
     {
-        public static ResourceManager Instance { get; private set; }
         private static Dictionary<string, Resource> lookup;
 
         /// <summary>
@@ -42,18 +42,18 @@ namespace TimelessEchoes.Upgrades
             OnInventoryChanged?.Invoke();
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+            if (Instance != this) return;
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
         }
