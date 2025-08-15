@@ -1,9 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Stats;
 using UnityEngine;
+using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using TimelessEchoes.Utilities;
@@ -70,24 +70,18 @@ namespace TimelessEchoes.NpcGeneration
             if (count != lastUnlockedCount)
             {
                 lastUnlockedCount = count;
-                StartCoroutine(DeferredBuild());
+                CoroutineUtils.RunNextFrame(this, BuildGenerators);
             }
         }
 
         private void OnLoadDataHandler()
         {
-            StartCoroutine(DeferredBuild());
+            CoroutineUtils.RunNextFrame(this, BuildGenerators);
         }
 
         private void OnQuestHandinHandler(string questId)
         {
-            StartCoroutine(DeferredBuild());
-        }
-
-        private IEnumerator DeferredBuild()
-        {
-            yield return null;
-            BuildGenerators();
+            CoroutineUtils.RunNextFrame(this, BuildGenerators);
         }
 
         private static void EnsureLookup()

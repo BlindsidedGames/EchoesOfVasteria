@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
 
@@ -39,7 +39,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void Start()
         {
-            StartCoroutine(DeferredBuild());
+            CoroutineUtils.RunNextFrame(this, BuildEntries, 2);
         }
 
         private void OnEnable()
@@ -96,24 +96,17 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnQuestHandinHandler(string questId)
         {
-            StartCoroutine(DeferredBuild());
+            CoroutineUtils.RunNextFrame(this, BuildEntries, 2);
         }
 
         private void OnLoadDataHandler()
         {
-            StartCoroutine(DeferredBuild());
+            CoroutineUtils.RunNextFrame(this, BuildEntries, 2);
         }
 
         private void OnGeneratorsRebuilt()
         {
-            StartCoroutine(DeferredBuild());
-        }
-
-        private IEnumerator DeferredBuild()
-        {
-            yield return null;
-            yield return null;
-            BuildEntries();
+            CoroutineUtils.RunNextFrame(this, BuildEntries, 2);
         }
 
         private void Update()
