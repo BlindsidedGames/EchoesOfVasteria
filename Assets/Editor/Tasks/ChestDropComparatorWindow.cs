@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -42,6 +43,12 @@ namespace TimelessEchoes.EditorTools
 		public ValueMode valueMode = ValueMode.Probability; // Toggle per-cell main value
 		[BoxGroup("Display"), LabelText("Weight By Chest Spawn Probability"), Tooltip("Compute an Overall column by weighting each chest's stats by its spawn probability at Distance X.")]
 		public bool weightBySpawnProbability = false;
+		[BoxGroup("Display"), LabelText("Expected as Hits/Samples"), Tooltip("If enabled and Value = ExpectedCount, show number of chests that dropped the resource (hits) over Samples, instead of the average amount.")]
+		public bool showExpectedAsFraction = false;
+		[BoxGroup("Display"), LabelText("Show Additional Loot Chances"), Tooltip("Display each chest's configured additional loot chances under the table header.")]
+		public bool showAdditionalLootChances = true;
+		[BoxGroup("Display"), LabelText("Wrap Loot Rolls (2 lines)"), Tooltip("Wrap the Loot Rolls row to up to two lines and increase column width by 50% for readability.")]
+		public bool wrapLootRolls = false;
 
 		private readonly List<TaskData> chests = new List<TaskData>();
 		private readonly Dictionary<TaskData, bool> selection = new Dictionary<TaskData, bool>();
@@ -130,7 +137,7 @@ namespace TimelessEchoes.EditorTools
 			EditorGUILayout.Space(8);
 			GUILayout.Label("Sampling", EditorStyles.boldLabel);
 			distanceX = EditorGUILayout.FloatField("Distance X", distanceX);
-			samples = EditorGUILayout.IntSlider("Samples", samples, 100, 200000);
+			samples = EditorGUILayout.IntSlider("Samples", samples, 10, 10000);
 			assumeQuestsCompleted = EditorGUILayout.Toggle("Assume Quests Completed", assumeQuestsCompleted);
 
 			EditorGUILayout.Space(8);
@@ -142,6 +149,12 @@ namespace TimelessEchoes.EditorTools
 			GUILayout.Label("Display", EditorStyles.boldLabel);
 			resourceSort = (ResourceSort)EditorGUILayout.EnumPopup("Sort Resources By", resourceSort);
 			valueMode = (ValueMode)EditorGUILayout.EnumPopup("Value", valueMode);
+			if (valueMode == ValueMode.ExpectedCount)
+				showExpectedAsFraction = EditorGUILayout.Toggle("Expected as Hits/Samples", showExpectedAsFraction);
+			weightBySpawnProbability = EditorGUILayout.Toggle("Weight By Chest Spawn Probability", weightBySpawnProbability);
+			showAdditionalLootChances = EditorGUILayout.Toggle("Show Additional Loot Chances", showAdditionalLootChances);
+			if (showAdditionalLootChances)
+				wrapLootRolls = EditorGUILayout.Toggle("Wrap Loot Rolls (2 lines)", wrapLootRolls);
 
 			EditorGUILayout.Space(8);
 			using (new EditorGUILayout.HorizontalScope())
@@ -183,13 +196,14 @@ namespace TimelessEchoes.EditorTools
 				resources = resources.Where(r => resourceSet[r].name.IndexOf(resourceNameFilter, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
 
 			// Simulate
-			var results = SimulateDrops(sel, resources, distanceX, samples, assumeQuestsCompleted);
+			var results = SimulateDrops(sel, resources, distanceX, samples, assumeQuestsCompleted, showAdditionalLootChances);
 
 			// Optionally filter out rows with all zeros
 			if (onlyShowWithAnyChance)
 				resources = resources.Where(r => results.Any(kv => kv.Value.TryGetValue(r, out var s) && s.probability > 0f)).ToList();
 
 			// Header
+			var chestColWidth = showAdditionalLootChances ? (wrapLootRolls ? 225f : 180f) : 150f;
 			using (var sv = new EditorGUILayout.ScrollViewScope(tableScroll))
 			{
 				tableScroll = sv.scrollPosition;
@@ -198,10 +212,33 @@ namespace TimelessEchoes.EditorTools
 					GUILayout.Label("Resource", GUILayout.Width(220));
 					foreach (var t in sel)
 					{
-						GUILayout.Label($"{t.taskID:00} {t.taskName}", GUILayout.Width(150));
+						GUILayout.Label($"{t.taskID:00} {t.taskName}", GUILayout.Width(chestColWidth));
 					}
 					if (weightBySpawnProbability)
 						GUILayout.Label("Overall", GUILayout.Width(150));
+				}
+
+				// Optional row: show configured additional loot chances per chest
+				if (showAdditionalLootChances)
+				{
+					using (new EditorGUILayout.HorizontalScope())
+					{
+						GUILayout.Label("Loot Rolls", GUILayout.Width(220));
+						GUIStyle lootStyle = null;
+						if (wrapLootRolls)
+						{
+							lootStyle = new GUIStyle(EditorStyles.miniLabel) { wordWrap = true };
+						}
+						foreach (var t in sel)
+						{
+							if (lootStyle != null)
+								GUILayout.Label(FormatLootChances(t), lootStyle, GUILayout.Width(chestColWidth));
+							else
+								GUILayout.Label(FormatLootChances(t), GUILayout.Width(chestColWidth));
+						}
+						if (weightBySpawnProbability)
+							GUILayout.Label("—", GUILayout.Width(150));
+					}
 				}
 
 				// Rows
@@ -217,17 +254,33 @@ namespace TimelessEchoes.EditorTools
 								GUILayout.Label("-", GUILayout.Width(150));
 								continue;
 							}
-							var text = valueMode == ValueMode.Probability
-								? $"{stat.probability * 100f:0.###}%"
-								: $"{stat.expectedCount:0.###}";
-							GUILayout.Label(text, GUILayout.Width(150));
+							string text;
+							if (valueMode == ValueMode.Probability)
+							{
+								text = $"{stat.probability * 100f:0.###}%";
+							}
+							else
+							{
+								text = showExpectedAsFraction
+									? $"{FormatInt(Mathf.RoundToInt(stat.probability * samples))} / {FormatInt(samples)}"
+									: FormatDouble(stat.expectedCount);
+							}
+							GUILayout.Label(text, GUILayout.Width(chestColWidth));
 						}
 						if (weightBySpawnProbability)
 						{
 							var overall = ComputeWeightedOverall(sel, results, r, distanceX);
-							var text = valueMode == ValueMode.Probability
-								? $"{overall.probability * 100f:0.###}%"
-								: $"{overall.expectedCount:0.###}";
+							string text;
+							if (valueMode == ValueMode.Probability)
+							{
+								text = $"{overall.probability * 100f:0.###}%";
+							}
+							else
+							{
+								text = showExpectedAsFraction
+									? $"{FormatInt(Mathf.RoundToInt(overall.probability * samples))} / {FormatInt(samples)}"
+									: FormatDouble(overall.expectedCount);
+							}
 							GUILayout.Label(text, GUILayout.Width(150));
 						}
 					}
@@ -269,7 +322,8 @@ namespace TimelessEchoes.EditorTools
 			List<Resource> resources,
 			float x,
 			int count,
-			bool assumeQuests)
+			bool assumeQuests,
+			bool includeAdditionalLootChances)
 		{
 			var rng = new System.Random(12345);
 			float Rand01() => (float)rng.NextDouble();
@@ -284,7 +338,7 @@ namespace TimelessEchoes.EditorTools
                                 for (int i = 0; i < count; i++)
                                 {
                                         var produced = new Dictionary<Resource, int>();
-                                        var rolled = DropResolver.RollDrops(t.resourceDrops, t.additionalLootChances, x, assumeQuests, Rand01);
+                                        var rolled = DropResolver.RollDrops(t.resourceDrops, includeAdditionalLootChances ? t.additionalLootChances : null, x, assumeQuests, Rand01);
                                         foreach (var res in rolled)
                                         {
                                                 produced.TryGetValue(res.resource, out var prev);
@@ -325,7 +379,7 @@ namespace TimelessEchoes.EditorTools
 			var resources = resourceSet.Keys.ToList();
 			resources.Sort((a, b) => resourceSet[a].id.CompareTo(resourceSet[b].id));
 
-			var stats = SimulateDrops(sel, resources, distanceX, samples, assumeQuestsCompleted);
+			var stats = SimulateDrops(sel, resources, distanceX, samples, assumeQuestsCompleted, showAdditionalLootChances);
 
 			var lines = new List<string>();
 			lines.Add("Resource," + string.Join(",", sel.Select(t => SanitizeCsv($"{t.taskID}_{t.taskName}"))));
@@ -382,6 +436,24 @@ namespace TimelessEchoes.EditorTools
 			s = s.Replace('\n', ' ');
 			s = s.Replace('\r', ' ');
 			return s;
+		}
+
+		private static string FormatLootChances(TaskData t)
+		{
+			if (t == null || t.additionalLootChances == null || t.additionalLootChances.Count == 0)
+				return "1"; // one guaranteed slot
+			var parts = t.additionalLootChances.Select(p => $"{Mathf.Clamp01(p) * 100f:0.###}%");
+			return $"1 + {string.Join(", ", parts)}";
+		}
+
+		private static string FormatInt(int v)
+		{
+			return v.ToString("N0", CultureInfo.InvariantCulture);
+		}
+
+		private static string FormatDouble(float v)
+		{
+			return ((double)v).ToString("#,0.###", CultureInfo.InvariantCulture);
 		}
 	}
 }

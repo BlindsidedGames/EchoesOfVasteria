@@ -18,12 +18,12 @@ MonoBehaviour:
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 2
   minX: 0
-  maxX: 500
+  maxX: Infinity
   requiredQuest: {fileID: 0}
   taskDuration: 1
   sfxInterval: 0
   taskPrefab: {fileID: 2897011531704098943, guid: ad56585e3f159564198f944c82f4ca0c, type: 3}
-  weight: 10
+  weight: 1000
   spawnTerrains:
   - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
   - {fileID: 11400000, guid: 1a20e4b5c68ff4e4f9347e6a9f252914, type: 2}
@@ -32,114 +32,65 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
   resourceDrops:
-  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
-    dropRange: {x: 1, y: 1}
-    dropChance: 0.1
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
     dropRange: {x: 1, y: 2}
-    dropChance: 1
+    weight: 1000
     minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.8
-    minX: 40
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.7
-    minX: 100
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.6
-    minX: 150
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.5
-    minX: 200
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.4
-    minX: 300
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.3
-    minX: 500
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.2
-    minX: 1000
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
-    dropRange: {x: 1, y: 5}
-    dropChance: 0.1
-    minX: 2500
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.8
+    dropRange: {x: 1, y: 2}
+    weight: 500
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.7
-    minX: 250
+    dropRange: {x: 1, y: 1}
+    weight: 100
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.6
-    minX: 500
+    dropRange: {x: 1, y: 1}
+    weight: 50
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.5
-    minX: 750
+    dropRange: {x: 1, y: 1}
+    weight: 25
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.4
-    minX: 1000
+    dropRange: {x: 1, y: 1}
+    weight: 10
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.3
-    minX: 1250
+    dropRange: {x: 1, y: 1}
+    weight: 5
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.2
-    minX: 1500
+    dropRange: {x: 1, y: 1}
+    weight: 2
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
-    dropRange: {x: 1, y: 4}
-    dropChance: 0.1
-    minX: 1750
+    dropRange: {x: 1, y: 1}
+    weight: 1
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
+  additionalLootChances:
+  - 0.1
+  - 0.075
+  - 0.05
+  - 0.025
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
