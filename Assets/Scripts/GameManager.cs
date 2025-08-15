@@ -18,6 +18,7 @@ using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
 using TimelessEchoes.References.StatPanel;
+using TimelessEchoes.Utilities;
 using static TimelessEchoes.Quests.QuestUtils;
 using TMPro;
 using Unity.Cinemachine;
@@ -33,9 +34,8 @@ namespace TimelessEchoes
     /// <summary>
     ///     Controls map generation, camera switching and UI visibility.
     /// </summary>
-    public class GameManager : MonoBehaviour
+    public class GameManager : Singleton<GameManager>
     {
-        public static GameManager Instance { get; private set; }
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
         [TitleGroup("Prefabs")]
         [SerializeField] private GameObject mapPrefab;
@@ -166,9 +166,10 @@ namespace TimelessEchoes
             }
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+            if (Instance != this) return;
             cloudSpawner = CloudSpawner.Instance;
             foreach (var entry in generationButtons)
             {
@@ -199,10 +200,9 @@ namespace TimelessEchoes
             }
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
             if (returnOnDeathButton != null)

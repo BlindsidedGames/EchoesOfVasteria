@@ -7,15 +7,15 @@ using UnityEngine.UI;
 using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
     ///     Builds UI entries for all disciple generators and handles collecting resources.
     /// </summary>
-    public class DiscipleGeneratorUIManager : MonoBehaviour
+    public class DiscipleGeneratorUIManager : Singleton<DiscipleGeneratorUIManager>
     {
-        public static DiscipleGeneratorUIManager Instance { get; private set; }
         [SerializeField] private DiscipleGeneratorProgressUI progressUIPrefab;
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private Button collectAllButton;
@@ -25,9 +25,10 @@ namespace TimelessEchoes.NpcGeneration
         private DiscipleGenerationManager generationManager;
         private readonly Dictionary<DiscipleGenerator, DiscipleGeneratorProgressUI> entries = new();
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+            if (Instance != this) return;
             generationManager = DiscipleGenerationManager.Instance;
             if (collectAllButton != null)
                 collectAllButton.onClick.AddListener(CollectAll);
@@ -54,14 +55,13 @@ namespace TimelessEchoes.NpcGeneration
             OnLoadData -= OnLoadDataHandler;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (collectAllButton != null)
                 collectAllButton.onClick.RemoveListener(CollectAll);
             if (generationManager != null)
                 generationManager.OnGeneratorsRebuilt -= OnGeneratorsRebuilt;
-            if (Instance == this)
-                Instance = null;
             OnQuestHandin -= OnQuestHandinHandler;
         }
 

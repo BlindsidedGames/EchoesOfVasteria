@@ -6,6 +6,7 @@ using TimelessEchoes.Stats;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -13,9 +14,8 @@ namespace TimelessEchoes.NpcGeneration
     /// Central manager that updates all NPC resource generators and applies offline progress.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class DiscipleGenerationManager : MonoBehaviour
+    public class DiscipleGenerationManager : Singleton<DiscipleGenerationManager>
     {
-        public static DiscipleGenerationManager Instance { get; private set; }
         [SerializeField] private DiscipleGenerator generatorPrefab;
 
         private readonly List<DiscipleGenerator> generators = new();
@@ -30,9 +30,10 @@ namespace TimelessEchoes.NpcGeneration
 
         private static Dictionary<string, Resource> lookup;
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
+            if (Instance != this) return;
             resourceManager = ResourceManager.Instance;
             statTracker = GameplayStatTracker.Instance;
             if (resourceManager != null)
@@ -43,16 +44,15 @@ namespace TimelessEchoes.NpcGeneration
             OnQuestHandin += OnQuestHandinHandler;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChanged;
             if (statTracker != null)
                 statTracker.OnRunEnded -= OnRunEnded;
             OnLoadData -= OnLoadDataHandler;
             OnQuestHandin -= OnQuestHandinHandler;
-            if (Instance == this)
-                Instance = null;
         }
 
         private void OnRunEnded(bool died)
