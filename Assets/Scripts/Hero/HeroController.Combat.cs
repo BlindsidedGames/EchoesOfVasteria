@@ -6,9 +6,11 @@ using System.Collections;
 using UnityEngine;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Stats;
 using Blindsided.Utilities;
 using Blindsided.Utilities.Pooling;
 using static TimelessEchoes.TELogger;
+using Random = UnityEngine.Random;
 
 namespace TimelessEchoes.Hero
 {

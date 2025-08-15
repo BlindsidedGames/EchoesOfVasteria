@@ -3,6 +3,7 @@
 #endif
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Enemies;
 using static TimelessEchoes.TELogger;
