@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Localization;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Quests
 {
@@ -113,8 +114,7 @@ namespace TimelessEchoes.Quests
             costSlots.Clear();
             if (costParent != null)
             {
-                foreach (Transform child in costParent)
-                    Destroy(child.gameObject);
+                UIUtils.ClearChildren(costParent);
                 if (data != null && costSlotPrefab != null && showRequirements)
                 {
                     var inventoryUI = ResourceInventoryUI.Instance;

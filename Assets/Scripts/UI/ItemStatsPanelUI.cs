@@ -8,6 +8,7 @@ using TimelessEchoes.Enemies;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.UI
 {
@@ -73,8 +74,7 @@ namespace TimelessEchoes.UI
             if (references == null || references.itemEntryParent == null || references.itemEntryPrefab == null)
                 return;
 
-            foreach (Transform child in references.itemEntryParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(references.itemEntryParent);
 
             var allResources = Blindsided.Utilities.AssetCache.GetAll<Resource>("Resource Items");
             var sorted = allResources

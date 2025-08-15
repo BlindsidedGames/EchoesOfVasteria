@@ -7,6 +7,7 @@ using UnityEngine;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -138,8 +139,7 @@ namespace TimelessEchoes.Upgrades
 
                 if (parent != null && prefab != null)
                 {
-                    foreach (Transform child in parent.transform)
-                        Destroy(child.gameObject);
+                    UIUtils.ClearChildren(parent);
 
                     var threshold = GetThreshold(upgrades[i]);
                     if (threshold != null)

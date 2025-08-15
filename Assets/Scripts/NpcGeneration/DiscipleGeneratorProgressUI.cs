@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using References.UI;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.NpcGeneration
 {
@@ -33,8 +34,7 @@ namespace TimelessEchoes.NpcGeneration
             if (generatedParent == null || generatedPrefab == null || generator == null)
                 return;
 
-            foreach (Transform child in generatedParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(generatedParent);
             resourceUI = null;
 
             var res = generator.Resource;

@@ -4,6 +4,7 @@ using Blindsided.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
 
@@ -69,8 +70,7 @@ namespace TimelessEchoes.NpcGeneration
             if (progressUIPrefab == null || progressUIParent == null || generationManager == null)
                 return;
 
-            foreach (Transform child in progressUIParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(progressUIParent);
             entries.Clear();
 
             foreach (var gen in generationManager.Generators)

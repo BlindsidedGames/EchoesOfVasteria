@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
 using TMPro;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -67,10 +68,7 @@ namespace TimelessEchoes.Upgrades
 
         private void ClearSlots()
         {
-            if (slotParent == null)
-                return;
-            foreach (Transform child in slotParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(slotParent);
         }
 
         private void OnResourceAdded(Resource resource, double amount, bool bonus)

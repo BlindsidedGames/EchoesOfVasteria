@@ -10,6 +10,7 @@ using UnityEngine.Localization;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Quests
 {
@@ -72,8 +73,7 @@ namespace TimelessEchoes.Quests
             if (entryPrefab == null || entryParent == null || oracle == null)
                 return;
 
-            foreach (Transform child in entryParent)
-                Destroy(child.gameObject);
+            UIUtils.ClearChildren(entryParent);
             entries.Clear();
 
             foreach (var id in oracle.saveData.PinnedQuests)
