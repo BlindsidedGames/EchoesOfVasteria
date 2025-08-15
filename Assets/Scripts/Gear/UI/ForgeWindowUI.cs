@@ -42,11 +42,10 @@ namespace TimelessEchoes.Gear.UI
         [SerializeField] private TMP_Text ivanXpText;
         [SerializeField] private TMP_Text ivanLevelText;
 
-        [Header("Craft UI")]
-        [SerializeField] private CraftSection2x1UIReferences craftSection;
+        [Header("Craft UI")] [SerializeField] private CraftSection2x1UIReferences craftSection;
 
-        [Header("Ingot Conversion UI")]
-        [SerializeField] private CraftSection2x1UIReferences ingotConversionSection;
+        [Header("Ingot Conversion UI")] [SerializeField]
+        private CraftSection2x1UIReferences ingotConversionSection;
 
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
@@ -993,11 +992,12 @@ namespace TimelessEchoes.Gear.UI
         {
             var canCraft = CanCraft();
             if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
-            if (craftSection != null && craftSection.craftArrow != null && craftSection.craftArrow.image != null)
+            if (craftSection != null && craftSection.craftArrow != null)
             {
                 var arrowSprite = canCraft ? craftSection.validArrow : craftSection.invalidArrow;
-                craftSection.craftArrow.image.sprite = arrowSprite;
+                craftSection.craftArrow.sprite = arrowSprite;
             }
+
             var canCraftIngot = CanCraftIngot();
             if (ingotConversionSection != null)
             {
@@ -1006,6 +1006,7 @@ namespace TimelessEchoes.Gear.UI
                 if (ingotConversionSection.craftAllButton != null)
                     ingotConversionSection.craftAllButton.interactable = canCraftIngot && !isAutoCrafting;
             }
+
             // Replace/Salvage depend only on having a pending result; do not gate on craftability
             var hasResult = lastCrafted != null;
             if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
