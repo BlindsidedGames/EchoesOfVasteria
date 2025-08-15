@@ -10,9 +10,9 @@ namespace TimelessEchoes.Hero
         public float CurrentHealth => HeroHealth.Instance != null ? HeroHealth.Instance.CurrentHealth : 0f;
         public float MaxHealth => HeroHealth.Instance != null ? HeroHealth.Instance.MaxHealth : 0f;
 
-        public void TakeDamage(float amount, float bonusDamage = 0f)
+        public void TakeDamage(float amount, float bonusDamage = 0f, bool isCritical = false)
         {
-            HeroHealth.Instance?.TakeDamage(amount, bonusDamage);
+            HeroHealth.Instance?.TakeDamage(amount, bonusDamage, isCritical);
         }
     }
 }

@@ -45,9 +45,11 @@ namespace TimelessEchoes.Enemies
             return Blindsided.SaveData.StaticReferences.EnemyFloatingDamage;
         }
 
-        public override void TakeDamage(float amount, float bonusDamage = 0f)
+        public override void TakeDamage(float amount, float bonusDamage = 0f, bool isCritical = false)
         {
             if (CurrentHealth <= 0f) return;
+
+            lastHitWasCritical = isCritical;
 
             var enemy = GetComponent<Enemy>();
             var defense = enemy != null ? enemy.GetDefense() : 0f;

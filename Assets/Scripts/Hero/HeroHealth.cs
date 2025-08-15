@@ -88,33 +88,33 @@ namespace TimelessEchoes.Hero
             return Blindsided.SaveData.StaticReferences.PlayerFloatingDamage;
         }
 
-        public override void TakeDamage(float amount, float bonusDamage = 0f)
+        public override void TakeDamage(float amount, float bonusDamage = 0f, bool isCritical = false)
         {
             if (Immortal) return;
             controller = controller != null ? controller : GetComponent<HeroController>();
             if (controller != null && controller.IsEcho && Instance != null && Instance != this)
             {
-                Instance.TakeDamage(amount * 0.5f, bonusDamage);
+                Instance.TakeDamage(amount * 0.5f, bonusDamage, isCritical);
                 return;
             }
-            base.TakeDamage(amount, bonusDamage);
+            base.TakeDamage(amount, bonusDamage, isCritical);
         }
 
         /// <summary>
         /// Apply damage from an enemy, providing the enemy's level so defense scaling can be applied.
         /// </summary>
-        public void TakeDamageFromEnemy(float amount, int enemyLevel, float bonusDamage = 0f)
+        public void TakeDamageFromEnemy(float amount, int enemyLevel, float bonusDamage = 0f, bool isCritical = false)
         {
             controller = controller != null ? controller : GetComponent<HeroController>();
             if (controller != null && controller.IsEcho && Instance != null && Instance != this)
             {
                 // Echo forwards to main hero with the echo damage reduction
-                Instance.TakeDamageFromEnemy(amount * 0.5f, enemyLevel, bonusDamage);
+                Instance.TakeDamageFromEnemy(amount * 0.5f, enemyLevel, bonusDamage, isCritical);
                 return;
             }
 
             pendingAttackerLevel = Mathf.Max(0, enemyLevel);
-            TakeDamage(amount, bonusDamage);
+            TakeDamage(amount, bonusDamage, isCritical);
         }
     }
 }
