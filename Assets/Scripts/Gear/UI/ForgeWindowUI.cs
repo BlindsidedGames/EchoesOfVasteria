@@ -737,12 +737,13 @@ namespace TimelessEchoes.Gear.UI
                 Sprite sprite = null;
                 if (res != null)
                 {
+                    const int coreCost = 1;
                     var discovered = rm != null && rm.IsUnlocked(res);
-                    sprite = discovered
-                        ? slot != null && slot.CoreImage != null && slot.CoreImage.sprite != null
-                            ? slot.CoreImage.sprite
-                            : res.icon
-                        : res.UnknownIcon;
+                    var have = rm != null && rm.GetAmount(res) >= coreCost;
+                    var baseSprite = slot != null && slot.CoreImage != null && slot.CoreImage.sprite != null
+                        ? slot.CoreImage.sprite
+                        : res.icon;
+                    sprite = discovered && have ? baseSprite : res.UnknownIcon;
                 }
 
                 selectedCoreImage.sprite = sprite;
@@ -751,15 +752,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (selectedCoreCountText != null)
             {
-                if (slot != null && slot.CoreResource != null && rm != null)
-                {
-                    var amount = rm.GetAmount(slot.CoreResource);
-                    selectedCoreCountText.text = amount > 0 ? amount.ToString("0") : "0";
-                }
-                else
-                {
-                    selectedCoreCountText.text = "0";
-                }
+                const int coreCost = 1;
+                selectedCoreCountText.text = selectedCore != null ? coreCost.ToString("0") : "0";
             }
         }
 
@@ -777,7 +771,8 @@ namespace TimelessEchoes.Gear.UI
                 {
                     var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
                     var discovered = rm != null && rm.IsUnlocked(ingot);
-                    sprite = discovered ? ingot.icon : ingot.UnknownIcon;
+                    var have = rm != null && rm.GetAmount(ingot) >= (core != null ? core.ingotCost : 0);
+                    sprite = discovered && have ? ingot.icon : ingot.UnknownIcon;
                 }
 
                 selectedIngotImage.sprite = sprite;
@@ -785,7 +780,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (selectedIngotCountText != null)
-                selectedIngotCountText.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : string.Empty;
+                selectedIngotCountText.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : "0";
         }
 
         private void UpdateIngotCraftPreview(CoreSO core)
@@ -837,7 +832,8 @@ namespace TimelessEchoes.Gear.UI
                 if (core != null && core.chunkResource != null)
                 {
                     var discovered = rm != null && rm.IsUnlocked(core.chunkResource);
-                    sprite = discovered ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
+                    var have = rm != null && rm.GetAmount(core.chunkResource) >= core.chunkCostPerIngot;
+                    sprite = discovered && have ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
                 }
 
                 chunkCostImage.sprite = sprite;
@@ -852,7 +848,8 @@ namespace TimelessEchoes.Gear.UI
                 if (core != null && core.crystalResource != null)
                 {
                     var discovered = rm != null && rm.IsUnlocked(core.crystalResource);
-                    sprite = discovered ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
+                    var have = rm != null && rm.GetAmount(core.crystalResource) >= core.crystalCostPerIngot;
+                    sprite = discovered && have ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
                 }
 
                 crystalCostImage.sprite = sprite;
