@@ -99,12 +99,13 @@ namespace Blindsided
         [SerializeField] private Button regressionYesButton;
         [SerializeField] private Button regressionNoButton;
         [SerializeField] private TMP_Text regressionMessageText;
-		[SerializeField] private TMP_Text regressionYesText;
-		[SerializeField] private TMP_Text regressionNoText;
+                [SerializeField] private TMP_Text regressionYesText;
+                [SerializeField] private TMP_Text regressionNoText;
 
-		// Defer showing load-failure notice until UI is ready
-		private bool _pendingLoadFailureNotice;
-		private string _pendingLoadFailureMessage;
+                // Defer showing load-failure notice until UI is ready
+                private bool _pendingLoadFailureNotice;
+                private string _pendingLoadFailureMessage;
+                private bool _mainSceneLoadDeferred;
 
         #endregion
 
@@ -116,8 +117,7 @@ namespace Blindsided
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
-            StartCoroutine(LoadMainScene());
-			InvokeRepeating(nameof(SaveToFile), 1, 30);
+                        InvokeRepeating(nameof(SaveToFile), 1, 30);
 
             // Wire up regression confirmation UI if present
             if (regressionYesButton != null)
@@ -130,9 +130,25 @@ namespace Blindsided
                 regressionNoButton.onClick.RemoveAllListeners();
                 regressionNoButton.onClick.AddListener(AttemptRestoreBackupAndReload);
             }
+
+                        if (_pendingLoadFailureNotice)
+                        {
+                                TryShowLoadFailureWindow(_pendingLoadFailureMessage);
+                                _pendingLoadFailureNotice = false;
+                                _pendingLoadFailureMessage = null;
+                                _mainSceneLoadDeferred = true;
+                        }
+                        else if (regressionConfirmWindow != null && regressionConfirmWindow.activeSelf)
+                        {
+                                _mainSceneLoadDeferred = true;
+                        }
+                        else
+                        {
+                                StartCoroutine(LoadMainScene());
+                        }
         }
 
-		private IEnumerator LoadMainScene()
+        private IEnumerator LoadMainScene()
         {
             var async = SceneManager.LoadSceneAsync("Main");
             while (!async.isDone)
@@ -140,14 +156,6 @@ namespace Blindsided
 
             yield return null; // wait one frame for scene initialization
             EventHandler.LoadData();
-
-			// If a load failure occurred before UI existed, show the notice now
-			if (_pendingLoadFailureNotice)
-			{
-				TryShowLoadFailureWindow(_pendingLoadFailureMessage);
-				_pendingLoadFailureNotice = false;
-				_pendingLoadFailureMessage = null;
-			}
         }
 
         private void Update()
@@ -811,6 +819,12 @@ namespace Blindsided
             // User accepts the loaded (possibly regressed) data; persist metadata so this prompt won't repeat.
             PersistSlotMetadataToPlayerPrefs();
             DismissRegressionWindow();
+
+            if (_mainSceneLoadDeferred)
+            {
+                _mainSceneLoadDeferred = false;
+                StartCoroutine(LoadMainScene());
+            }
         }
 
         private void DismissRegressionWindow()
@@ -832,33 +846,50 @@ namespace Blindsided
         /// and reloads the scene so the restored data is applied everywhere.
         /// </summary>
         [Button]
-		public void AttemptRestoreBackupAndReload()
+                public void AttemptRestoreBackupAndReload()
         {
             try
             {
-				// Prefer rotating backups; fall back to Easy Save's .bac
-				var restored = TryRestoreFromLatestRotatingBackup();
-				if (!restored)
-				{
-					restored = ES3.RestoreBackup(_settings);
-					if (!restored)
-						Debug.LogWarning("No rotating or .bac backup found to restore.");
-					else
-						Debug.Log(".bac backup restored. Reloading save and scene.");
-				}
-				else
-				{
-					Debug.Log("Rotating backup restored. Reloading save and scene.");
-				}
+                                DismissRegressionWindow();
+
+                                // Prefer rotating backups; fall back to Easy Save's .bac
+                                var restored = TryRestoreFromLatestRotatingBackup();
+                                if (!restored)
+                                {
+                                        restored = ES3.RestoreBackup(_settings);
+                                        if (!restored)
+                                                Debug.LogWarning("No rotating or .bac backup found to restore.");
+                                        else
+                                                Debug.Log(".bac backup restored. Reloading save and scene.");
+                                }
+                                else
+                                {
+                                        Debug.Log("Rotating backup restored. Reloading save and scene.");
+                                }
 
                 // Reload save from disk regardless; if restore failed, this reloads the current file.
                 Load();
-                DismissRegressionWindow();
+
+                                if (_pendingLoadFailureNotice)
+                                {
+                                        TryShowLoadFailureWindow(_pendingLoadFailureMessage);
+                                        _pendingLoadFailureNotice = false;
+                                        _pendingLoadFailureMessage = null;
+                                        _mainSceneLoadDeferred = true;
+                                        return;
+                                }
+                                if (RegressionDetected)
+                                {
+                                        _mainSceneLoadDeferred = true;
+                                        return;
+                                }
 
                 // Reload the active scene(s) to ensure all systems pick up the new data
                 // We already have a helper to load Main on boot, but here reload current.
                 var active = SceneManager.GetActiveScene();
                 SceneManager.LoadScene(active.name);
+                                _mainSceneLoadDeferred = false;
+                                StartCoroutine(LoadMainScene());
             }
             catch (Exception ex)
             {
