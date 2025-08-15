@@ -4,7 +4,6 @@ using TimelessEchoes.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
 

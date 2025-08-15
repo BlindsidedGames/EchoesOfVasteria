@@ -1,17 +1,19 @@
+using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
-using TimelessEchoes.Upgrades;
+using Blindsided.Utilities;
 using TimelessEchoes.Stats;
-using UnityEngine;
+using TimelessEchoes.Upgrades;
 using TimelessEchoes.Utilities;
+using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
-using TimelessEchoes.Utilities;
+
 
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    /// Central manager that updates all NPC resource generators and applies offline progress.
+    ///     Central manager that updates all NPC resource generators and applies offline progress.
     /// </summary>
     [DefaultExecutionOrder(-1)]
     public class DiscipleGenerationManager : Singleton<DiscipleGenerationManager>
@@ -26,7 +28,7 @@ namespace TimelessEchoes.NpcGeneration
 
         public IReadOnlyList<DiscipleGenerator> Generators => generators;
 
-        public event System.Action OnGeneratorsRebuilt;
+        public event Action OnGeneratorsRebuilt;
 
         private static Dictionary<string, Resource> lookup;
 
@@ -66,7 +68,8 @@ namespace TimelessEchoes.NpcGeneration
             oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             var count = 0;
             foreach (var entry in oracle.saveData.Resources.Values)
-                if (entry.Earned) count++;
+                if (entry.Earned)
+                    count++;
             if (count != lastUnlockedCount)
             {
                 lastUnlockedCount = count;
@@ -88,7 +91,7 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
-            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(string.Empty))
+            foreach (var res in AssetCache.GetAll<Resource>(string.Empty))
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }
@@ -146,12 +149,10 @@ namespace TimelessEchoes.NpcGeneration
 
         private void Update()
         {
-            float dt = Time.deltaTime;
+            var dt = Time.deltaTime;
             foreach (var gen in generators)
-            {
                 if (gen != null)
                     gen.Tick(dt);
-            }
         }
     }
 }

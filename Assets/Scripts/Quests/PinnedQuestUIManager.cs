@@ -3,14 +3,13 @@ using System.Text;
 using Blindsided.Utilities;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Localization;
-using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
-using TimelessEchoes.Utilities;
+
 
 namespace TimelessEchoes.Quests
 {
@@ -96,8 +95,8 @@ namespace TimelessEchoes.Quests
                 var ui = Instantiate(entryPrefab, entryParent);
                 entries[id] = ui;
 
-                    if (ui.progressText != null)
-                        ui.progressText.spriteAsset = ResourceIconLookup.SpriteAsset;
+                if (ui.progressText != null)
+                    ui.progressText.spriteAsset = ResourceIconLookup.SpriteAsset;
             }
 
             if (rootObject != null)
@@ -216,12 +215,14 @@ namespace TimelessEchoes.Quests
                                 ? ResourceIconLookup.GetIconTag(req.resource.resourceID)
                                 : ResourceIconLookup.GetUnknownIconTag(req.resource.resourceID);
                         }
+
                         var fallbackName = req.resource ? req.resource.name : string.Empty;
                         var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
                         var separator = string.IsNullOrEmpty(iconTag) ? ": " : " ";
 
                         if (target <= 0)
-                            sb.AppendLine($"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)}</size>");
+                            sb.AppendLine(
+                                $"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)}</size>");
                         else
                             sb.AppendLine(
                                 $"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
