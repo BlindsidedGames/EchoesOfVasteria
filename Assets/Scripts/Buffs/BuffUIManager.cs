@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Hero;
@@ -10,6 +9,7 @@ using UnityEngine.InputSystem;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
+using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Buffs
 {
@@ -334,19 +334,20 @@ namespace TimelessEchoes.Buffs
 
         private void OnLoadDataHandler()
         {
-            StartCoroutine(DeferredRefresh());
+            CoroutineUtils.RunNextFrame(this, () =>
+            {
+                BuildRecipeEntries();
+                RefreshSlots();
+            });
         }
 
         private void OnQuestHandinHandler(string questId)
         {
-            StartCoroutine(DeferredRefresh());
-        }
-
-        private IEnumerator DeferredRefresh()
-        {
-            yield return null;
-            BuildRecipeEntries();
-            RefreshSlots();
+            CoroutineUtils.RunNextFrame(this, () =>
+            {
+                BuildRecipeEntries();
+                RefreshSlots();
+            });
         }
 
         private void PurchaseBuff(BuffRecipe recipe)

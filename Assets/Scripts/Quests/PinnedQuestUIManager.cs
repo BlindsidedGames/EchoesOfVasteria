@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Blindsided.Utilities;
@@ -7,6 +6,7 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Localization;
+using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
@@ -268,14 +268,8 @@ namespace TimelessEchoes.Quests
 
         private void OnLoadDataHandler()
         {
-            StartCoroutine(DeferredRefresh());
+            CoroutineUtils.RunNextFrame(this, RefreshPins);
             ApplySavedState();
-        }
-
-        private IEnumerator DeferredRefresh()
-        {
-            yield return null; // wait one frame so data is loaded
-            RefreshPins();
         }
 
         private void OnToggle()
