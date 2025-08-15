@@ -52,6 +52,17 @@ namespace TimelessEchoes.Gear.UI
         [Header("Ingot Conversion UI")] [SerializeField]
         private CraftSection2x1UIReferences ingotConversionSection;
 
+        [Header("Crystal Conversion UI")] [SerializeField]
+        private CraftSection2x1UIReferences crystalConversionSection;
+
+        [Header("Chunk Conversion UI")] [SerializeField]
+        private CraftSection2x1UIReferences chunkConversionSection;
+
+        [Header("Additional Resource References")] [SerializeField]
+        private Resource slimeResource;
+
+        [SerializeField] private Resource stoneResource;
+
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
         [SerializeField]
@@ -124,6 +135,34 @@ namespace TimelessEchoes.Gear.UI
 
                 if (ingotConversionSection.craftAllButton != null)
                     ingotConversionSection.craftAllButton.onClick.AddListener(OnCraftAllIngotsClicked);
+            }
+
+            if (crystalConversionSection != null)
+            {
+                if (crystalConversionSection.craftButton != null)
+                {
+                    crystalConversionSection.craftButton.onClick.AddListener(OnCraftCrystalClicked);
+                    var repeat = crystalConversionSection.craftButton.GetComponent<RepeatButtonClick>() ??
+                                 crystalConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
+                    repeat.button = crystalConversionSection.craftButton;
+                }
+
+                if (crystalConversionSection.craftAllButton != null)
+                    crystalConversionSection.craftAllButton.onClick.AddListener(OnCraftAllCrystalsClicked);
+            }
+
+            if (chunkConversionSection != null)
+            {
+                if (chunkConversionSection.craftButton != null)
+                {
+                    chunkConversionSection.craftButton.onClick.AddListener(OnCraftChunkClicked);
+                    var repeat = chunkConversionSection.craftButton.GetComponent<RepeatButtonClick>() ??
+                                 chunkConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
+                    repeat.button = chunkConversionSection.craftButton;
+                }
+
+                if (chunkConversionSection.craftAllButton != null)
+                    chunkConversionSection.craftAllButton.onClick.AddListener(OnCraftAllChunksClicked);
             }
 
             // Wire gear slot buttons with fallback to EquipmentController order
@@ -222,6 +261,8 @@ namespace TimelessEchoes.Gear.UI
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);
             UpdateIngotCraftPreview(selectedCore);
+            UpdateCrystalCraftPreview(selectedCore);
+            UpdateChunkCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             RefreshOdds();
             RefreshActionButtons();
@@ -670,6 +711,8 @@ namespace TimelessEchoes.Gear.UI
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);
             UpdateIngotCraftPreview(selectedCore);
+            UpdateCrystalCraftPreview(selectedCore);
+            UpdateChunkCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             UpdateIvanXpUI();
             RefreshActionButtons();
@@ -901,6 +944,168 @@ namespace TimelessEchoes.Gear.UI
             }
         }
 
+        private void UpdateCrystalCraftPreview(CoreSO core)
+        {
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var section = crystalConversionSection;
+            if (section == null) return;
+
+            if (section.resultImage != null)
+            {
+                Sprite sprite = null;
+                var res = core != null ? core.crystalResource : null;
+                if (res != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(res);
+                    sprite = discovered ? res.icon : res.UnknownIcon;
+                }
+
+                section.resultImage.sprite = sprite;
+                section.resultImage.enabled = sprite != null;
+            }
+
+            if (section.resultText != null)
+            {
+                var res = core != null ? core.crystalResource : null;
+                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                section.resultText.text = amount.ToString("0");
+            }
+
+            if (section.maxCraftsText != null)
+            {
+                var max = 0;
+                if (core != null && rm != null && core.chunkResource != null && slimeResource != null)
+                {
+                    var chunkMax = Mathf.FloorToInt((float)(rm.GetAmount(core.chunkResource) / 2f));
+                    var slimeMax = Mathf.FloorToInt((float)(rm.GetAmount(slimeResource) / 1f));
+                    max = Mathf.Min(chunkMax, slimeMax);
+                }
+
+                section.maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
+            }
+
+            if (section.cost1Image != null)
+            {
+                Sprite sprite = null;
+                if (core != null && core.chunkResource != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(core.chunkResource);
+                    var have = rm != null && rm.GetAmount(core.chunkResource) >= 2;
+                    sprite = discovered && have ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
+                }
+
+                section.cost1Image.sprite = sprite;
+                section.cost1Image.enabled = sprite != null;
+            }
+
+            if (section.cost1Text != null)
+                section.cost1Text.text = core != null ? "2" : string.Empty;
+
+            if (section.cost2Image != null)
+            {
+                Sprite sprite = null;
+                if (slimeResource != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(slimeResource);
+                    var have = rm != null && rm.GetAmount(slimeResource) >= 1;
+                    sprite = discovered && have ? slimeResource.icon : slimeResource.UnknownIcon;
+                }
+
+                section.cost2Image.sprite = sprite;
+                section.cost2Image.enabled = sprite != null;
+            }
+
+            if (section.cost2Text != null)
+                section.cost2Text.text = slimeResource != null ? "1" : string.Empty;
+
+            if (section.craftArrow != null)
+            {
+                var arrowSprite = CanCraftCrystal() ? section.validArrow : section.invalidArrow;
+                section.craftArrow.sprite = arrowSprite;
+            }
+        }
+
+        private void UpdateChunkCraftPreview(CoreSO core)
+        {
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var section = chunkConversionSection;
+            if (section == null) return;
+
+            if (section.resultImage != null)
+            {
+                Sprite sprite = null;
+                var res = core != null ? core.chunkResource : null;
+                if (res != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(res);
+                    sprite = discovered ? res.icon : res.UnknownIcon;
+                }
+
+                section.resultImage.sprite = sprite;
+                section.resultImage.enabled = sprite != null;
+            }
+
+            if (section.resultText != null)
+            {
+                var res = core != null ? core.chunkResource : null;
+                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                section.resultText.text = amount.ToString("0");
+            }
+
+            if (section.maxCraftsText != null)
+            {
+                var max = 0;
+                if (core != null && rm != null && core.crystalResource != null && stoneResource != null)
+                {
+                    var crystalMax = Mathf.FloorToInt((float)(rm.GetAmount(core.crystalResource) / 1f));
+                    var stoneMax = Mathf.FloorToInt((float)(rm.GetAmount(stoneResource) / 2f));
+                    max = Mathf.Min(crystalMax, stoneMax);
+                }
+
+                section.maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
+            }
+
+            if (section.cost1Image != null)
+            {
+                Sprite sprite = null;
+                if (core != null && core.crystalResource != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(core.crystalResource);
+                    var have = rm != null && rm.GetAmount(core.crystalResource) >= 1;
+                    sprite = discovered && have ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
+                }
+
+                section.cost1Image.sprite = sprite;
+                section.cost1Image.enabled = sprite != null;
+            }
+
+            if (section.cost1Text != null)
+                section.cost1Text.text = core != null ? "1" : string.Empty;
+
+            if (section.cost2Image != null)
+            {
+                Sprite sprite = null;
+                if (stoneResource != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(stoneResource);
+                    var have = rm != null && rm.GetAmount(stoneResource) >= 2;
+                    sprite = discovered && have ? stoneResource.icon : stoneResource.UnknownIcon;
+                }
+
+                section.cost2Image.sprite = sprite;
+                section.cost2Image.enabled = sprite != null;
+            }
+
+            if (section.cost2Text != null)
+                section.cost2Text.text = stoneResource != null ? "2" : string.Empty;
+
+            if (section.craftArrow != null)
+            {
+                var arrowSprite = CanCraftChunk() ? section.validArrow : section.invalidArrow;
+                section.craftArrow.sprite = arrowSprite;
+            }
+        }
+
         private void UpdateMaxCraftsText()
         {
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
@@ -1007,6 +1212,36 @@ namespace TimelessEchoes.Gear.UI
             return true;
         }
 
+        private bool CanCraftCrystal()
+        {
+            if (selectedCore == null)
+                return false;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            if (rm == null) return false;
+            if (selectedCore.chunkResource == null || slimeResource == null || selectedCore.crystalResource == null)
+                return false;
+            if (rm.GetAmount(selectedCore.chunkResource) < 2)
+                return false;
+            if (rm.GetAmount(slimeResource) < 1)
+                return false;
+            return true;
+        }
+
+        private bool CanCraftChunk()
+        {
+            if (selectedCore == null)
+                return false;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            if (rm == null) return false;
+            if (selectedCore.crystalResource == null || stoneResource == null || selectedCore.chunkResource == null)
+                return false;
+            if (rm.GetAmount(selectedCore.crystalResource) < 1)
+                return false;
+            if (rm.GetAmount(stoneResource) < 2)
+                return false;
+            return true;
+        }
+
         private void OnCraftIngotClicked()
         {
             if (!CanCraftIngot()) return;
@@ -1040,6 +1275,68 @@ namespace TimelessEchoes.Gear.UI
             OnResourcesChanged();
         }
 
+        private void OnCraftCrystalClicked()
+        {
+            if (!CanCraftCrystal()) return;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null) return;
+            if (core.chunkResource != null)
+                rm.Spend(core.chunkResource, 2);
+            if (slimeResource != null)
+                rm.Spend(slimeResource, 1);
+            if (core.crystalResource != null)
+                rm.Add(core.crystalResource, 1);
+            OnResourcesChanged();
+        }
+
+        private void OnCraftAllCrystalsClicked()
+        {
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null || core.crystalResource == null || core.chunkResource == null ||
+                slimeResource == null)
+                return;
+            var craftable = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
+                (int)(rm.GetAmount(slimeResource) / 1f));
+            if (craftable <= 0) return;
+            rm.Spend(core.chunkResource, 2 * craftable);
+            rm.Spend(slimeResource, 1 * craftable);
+            rm.Add(core.crystalResource, craftable);
+            OnResourcesChanged();
+        }
+
+        private void OnCraftChunkClicked()
+        {
+            if (!CanCraftChunk()) return;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null) return;
+            if (core.crystalResource != null)
+                rm.Spend(core.crystalResource, 1);
+            if (stoneResource != null)
+                rm.Spend(stoneResource, 2);
+            if (core.chunkResource != null)
+                rm.Add(core.chunkResource, 1);
+            OnResourcesChanged();
+        }
+
+        private void OnCraftAllChunksClicked()
+        {
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null || core.crystalResource == null || core.chunkResource == null ||
+                stoneResource == null)
+                return;
+            var craftable = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
+                (int)(rm.GetAmount(stoneResource) / 2f));
+            if (craftable <= 0) return;
+            rm.Spend(core.crystalResource, 1 * craftable);
+            rm.Spend(stoneResource, 2 * craftable);
+            rm.Add(core.chunkResource, craftable);
+            OnResourcesChanged();
+        }
+
         private void RefreshActionButtons()
         {
             var canCraft = CanCraft();
@@ -1057,6 +1354,38 @@ namespace TimelessEchoes.Gear.UI
                     ingotConversionSection.craftButton.interactable = canCraftIngot && !isAutoCrafting;
                 if (ingotConversionSection.craftAllButton != null)
                     ingotConversionSection.craftAllButton.interactable = canCraftIngot && !isAutoCrafting;
+            }
+
+            var canCraftCrystal = CanCraftCrystal();
+            if (crystalConversionSection != null)
+            {
+                if (crystalConversionSection.craftButton != null)
+                    crystalConversionSection.craftButton.interactable = canCraftCrystal && !isAutoCrafting;
+                if (crystalConversionSection.craftAllButton != null)
+                    crystalConversionSection.craftAllButton.interactable = canCraftCrystal && !isAutoCrafting;
+                if (crystalConversionSection.craftArrow != null)
+                {
+                    var arrowSprite = canCraftCrystal
+                        ? crystalConversionSection.validArrow
+                        : crystalConversionSection.invalidArrow;
+                    crystalConversionSection.craftArrow.sprite = arrowSprite;
+                }
+            }
+
+            var canCraftChunk = CanCraftChunk();
+            if (chunkConversionSection != null)
+            {
+                if (chunkConversionSection.craftButton != null)
+                    chunkConversionSection.craftButton.interactable = canCraftChunk && !isAutoCrafting;
+                if (chunkConversionSection.craftAllButton != null)
+                    chunkConversionSection.craftAllButton.interactable = canCraftChunk && !isAutoCrafting;
+                if (chunkConversionSection.craftArrow != null)
+                {
+                    var arrowSprite = canCraftChunk
+                        ? chunkConversionSection.validArrow
+                        : chunkConversionSection.invalidArrow;
+                    chunkConversionSection.craftArrow.sprite = arrowSprite;
+                }
             }
 
             // Replace/Salvage depend only on having a pending result; do not gate on craftability
