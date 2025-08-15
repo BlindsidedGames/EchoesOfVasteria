@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.Utilities;
+using TimelessEchoes.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TimelessEchoes.Utilities;
 using static Blindsided.EventHandler;
 using static Blindsided.SaveData.StaticReferences;
-using TimelessEchoes.Utilities;
+
 
 namespace TimelessEchoes.NpcGeneration
 {

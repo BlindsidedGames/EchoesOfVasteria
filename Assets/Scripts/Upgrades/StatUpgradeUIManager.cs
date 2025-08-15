@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using References.UI;
 using Blindsided.Utilities;
+using References.UI;
 using TimelessEchoes.Skills;
+using TimelessEchoes.Utilities;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
-using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -30,20 +31,20 @@ namespace TimelessEchoes.Upgrades
         {
             controller = StatUpgradeController.Instance;
             if (controller == null)
-                TELogger.Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
+                Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
-                TELogger.Log("ResourceManager missing", TELogCategory.Resource, this);
+                Log("ResourceManager missing", TELogCategory.Resource, this);
             resourceInventoryUI = ResourceInventoryUI.Instance;
             if (resourceInventoryUI == null)
-                TELogger.Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
+                Log("ResourceInventoryUI missing", TELogCategory.Resource, this);
             skillController = SkillController.Instance;
             if (skillController == null)
-                TELogger.Log("SkillController missing", TELogCategory.Upgrade, this);
+                Log("SkillController missing", TELogCategory.Upgrade, this);
             if (statReferences.Count == 0)
                 statReferences.AddRange(GetComponentsInChildren<StatUIReferences>(true));
 
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var refs = statReferences[i];
                 var upgrade = upgrades[i];
@@ -55,7 +56,7 @@ namespace TimelessEchoes.Upgrades
                 // Set stat icon from the StatIcons TMP sprite asset using the upgrade's name mapping
                 if (refs.iconImage != null)
                 {
-                    if (upgrade != null && TimelessEchoes.Upgrades.StatIconLookup.TryGetIcon(upgrade.name, out var sprite))
+                    if (upgrade != null && StatIconLookup.TryGetIcon(upgrade.name, out var sprite))
                     {
                         refs.iconImage.sprite = sprite;
                         refs.iconImage.enabled = sprite != null;
@@ -70,18 +71,15 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
-                int index = i;
+                var index = i;
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
                 {
                     refs.upgradeButton.onClick.AddListener(() => ApplyUpgrade(index));
                     // Disable interactivity entirely when feature is off
-                    if (UpgradeFeatureToggle.DisableStatUpgrades)
-                    {
-                        refs.upgradeButton.interactable = false;
-                    }
+                    if (UpgradeFeatureToggle.DisableStatUpgrades) refs.upgradeButton.interactable = false;
                     var repeat = refs.upgradeButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = refs.upgradeButton;
                 }
@@ -130,7 +128,7 @@ namespace TimelessEchoes.Upgrades
         private void BuildAllCostSlots()
         {
             costSlots.Clear();
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var refs = statReferences[i];
                 var list = new List<CostResourceUIReferences>();
@@ -139,35 +137,35 @@ namespace TimelessEchoes.Upgrades
 
                 if (parent != null && prefab != null)
                 {
-                    UIUtils.ClearChildren(parent);
+                    UIUtils.ClearChildren(parent.transform);
 
                     var threshold = GetThreshold(upgrades[i]);
                     if (threshold != null)
-                    {
                         foreach (var req in threshold.requirements)
                         {
                             var slot = Instantiate(prefab, parent.transform);
                             slot.resource = req.resource;
                             slot.PointerClick += (_, button) =>
                             {
-                                if (button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
+                                if (button == PointerEventData.InputButton.Left)
                                     resourceInventoryUI?.HighlightResource(req.resource);
                             };
                             list.Add(slot);
                         }
-                    }
                 }
+
                 costSlots.Add(list);
             }
+
             UpdateAllCostSlotValues();
             UpdateStatDisplayValues();
             UpdateUpgradeButtons();
-        UpdateDefenseInfoAndTitle();
+            UpdateDefenseInfoAndTitle();
         }
 
         private void UpdateAllCostSlotValues()
         {
-            for (int i = 0; i < costSlots.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < costSlots.Count && i < upgrades.Count; i++)
                 UpdateCostSlotValues(i);
         }
 
@@ -180,22 +178,22 @@ namespace TimelessEchoes.Upgrades
             var slots = costSlots[index];
             if (threshold == null) return;
 
-            for (int j = 0; j < slots.Count && j < threshold.requirements.Count; j++)
+            for (var j = 0; j < slots.Count && j < threshold.requirements.Count; j++)
             {
                 var slot = slots[j];
                 var req = threshold.requirements[j];
-                int lvl = controller ? controller.GetLevel(upgrades[index]) : 0;
-                int cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
+                var lvl = controller ? controller.GetLevel(upgrades[index]) : 0;
+                var cost = req.amount + Mathf.Max(0, lvl - threshold.minLevel) * req.amountIncreasePerLevel;
 
 
-                bool unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                bool hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
+                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
+                var hasEnough = resourceManager == null || resourceManager.GetAmount(req.resource) >= cost;
 
                 if (slot.iconImage)
                 {
                     slot.iconImage.sprite = unlocked ? req.resource?.icon : req.resource?.UnknownIcon;
                     var grey = new Color(1f, 1f, 1f, 0.4f);
-                    slot.iconImage.color = unlocked ? (hasEnough ? Color.white : grey) : Color.white;
+                    slot.iconImage.color = unlocked ? hasEnough ? Color.white : grey : Color.white;
                     slot.iconImage.enabled = true;
                 }
 
@@ -209,7 +207,7 @@ namespace TimelessEchoes.Upgrades
 
         private void UpdateUpgradeButtons()
         {
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var refs = statReferences[i];
                 if (refs != null && refs.upgradeButton != null)
@@ -221,6 +219,7 @@ namespace TimelessEchoes.Upgrades
                             refs.upgradeButtonText.text = "Disabled";
                         continue;
                     }
+
                     var threshold = GetThreshold(upgrades[i]);
                     if (threshold == null)
                     {
@@ -260,7 +259,7 @@ namespace TimelessEchoes.Upgrades
         private StatUpgrade.Threshold GetThreshold(StatUpgrade upgrade)
         {
             if (upgrade == null) return null;
-            int lvl = controller ? controller.GetLevel(upgrade) : 0;
+            var lvl = controller ? controller.GetLevel(upgrade) : 0;
             foreach (var t in upgrade.thresholds)
                 if (lvl >= t.minLevel && lvl < t.maxLevel)
                     return t;
@@ -269,7 +268,7 @@ namespace TimelessEchoes.Upgrades
 
         private void UpdateStatLevels()
         {
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var selector = statReferences[i];
                 var upgrade = upgrades[i];
@@ -277,7 +276,7 @@ namespace TimelessEchoes.Upgrades
 
                 if (ShowLevelText)
                 {
-                    int lvl = controller ? controller.GetLevel(upgrade) : 0;
+                    var lvl = controller ? controller.GetLevel(upgrade) : 0;
                     selector.countText.text = $"Lvl {lvl}";
                 }
                 else
@@ -289,21 +288,21 @@ namespace TimelessEchoes.Upgrades
 
         private void UpdateStatDisplayValues()
         {
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var refs = statReferences[i];
                 var upgrade = upgrades[i];
                 if (refs == null || refs.statDisplayText == null || upgrade == null) continue;
 
-                int lvl = controller ? controller.GetLevel(upgrade) : 0;
-                float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
-                float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+                var lvl = controller ? controller.GetLevel(upgrade) : 0;
+                var flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+                var percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
 
-                float baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
-                float current = baseCurrent * (1f + percent);
+                var baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
+                var current = baseCurrent * (1f + percent);
 
-                float baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
-                float next = baseNext * (1f + percent);
+                var baseNext = upgrade.baseValue + (lvl + 1) * upgrade.statIncreasePerLevel + flat;
+                var next = baseNext * (1f + percent);
 
                 if (GetThreshold(upgrade) == null)
                     refs.statDisplayText.text = $"{current:0.###}";
@@ -313,13 +312,13 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>
-        /// Updates the Defense upgrade's title to include current reduction percent and
-        /// sets a concise description with the formula and key breakpoints.
+        ///     Updates the Defense upgrade's title to include current reduction percent and
+        ///     sets a concise description with the formula and key breakpoints.
         /// </summary>
         private void UpdateDefenseInfoAndTitle()
         {
             // Find the Defense upgrade entry and its UI refs
-            for (int i = 0; i < statReferences.Count && i < upgrades.Count; i++)
+            for (var i = 0; i < statReferences.Count && i < upgrades.Count; i++)
             {
                 var upgrade = upgrades[i];
                 var refs = statReferences[i];
@@ -327,25 +326,23 @@ namespace TimelessEchoes.Upgrades
                 if (!string.Equals(upgrade.name, "Defense")) continue;
 
                 // Compute current Defense value shown in this panel (same logic as display text)
-                int lvl = controller ? controller.GetLevel(upgrade) : 0;
-                float flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
-                float percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
-                float baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
-                float currentDefense = baseCurrent * (1f + percent);
+                var lvl = controller ? controller.GetLevel(upgrade) : 0;
+                var flat = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
+                var percent = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+                var baseCurrent = upgrade.baseValue + lvl * upgrade.statIncreasePerLevel + flat;
+                var currentDefense = baseCurrent * (1f + percent);
 
                 // Use Combat's default defense tuning to avoid duplicating the scalar.
-                float damageFraction = TimelessEchoes.Combat.ApplyDefense(1f, currentDefense);
-                float reduction = 1f - Mathf.Clamp01(damageFraction);
+                var damageFraction = Combat.ApplyDefense(1f, currentDefense);
+                var reduction = 1f - Mathf.Clamp01(damageFraction);
 
                 if (refs.nameText != null)
-                    refs.nameText.text = $"{upgrade.name} | {(reduction * 100f):0.#}%";
+                    refs.nameText.text = $"{upgrade.name} | {reduction * 100f:0.#}%";
 
                 if (refs.descriptionText != null)
-                {
                     refs.descriptionText.text =
                         "Reduces incoming damage with diminishing returns.\n" +
                         "Key breakpoints: 25 Def = 50% less, 50 = 66.7% less, 125 = 83.3% less.";
-                }
 
                 // Only one Defense entry expected
                 break;
