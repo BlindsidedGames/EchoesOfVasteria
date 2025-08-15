@@ -25,7 +25,7 @@ namespace TimelessEchoes
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
-        public virtual void TakeDamage(float amount, float bonusDamage = 0f)
+        public virtual void TakeDamage(float amount, float bonusDamage = 0f, bool isCritical = false)
         {
             if (CurrentHealth <= 0f) return;
 
@@ -34,8 +34,7 @@ namespace TimelessEchoes
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
-            // Heuristic: consider it a crit if bonusDamage is at least the base portion
-            lastHitWasCritical = bonusDamage >= amount - 0.0001f;
+            lastHitWasCritical = isCritical;
 
             if (Application.isPlaying && ShouldShowFloatingText())
                 ShowFloatingText(total, bonusDamage);

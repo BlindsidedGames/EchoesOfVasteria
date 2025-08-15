@@ -1027,13 +1027,15 @@ namespace TimelessEchoes.Hero
                     }
                 }
 
+                bool isCritical = false;
                 if (critChance > 0f && Random.value < Mathf.Clamp01(critChance))
                 {
                     total *= 2f;
+                    isCritical = true;
                 }
 
                 var bonusDamage = total - dmgBase;
-                proj.Init(target, total, true, null, combatSkill, bonusDamage);
+                proj.Init(target, total, true, null, combatSkill, bonusDamage, isCritical);
             }
         }
 

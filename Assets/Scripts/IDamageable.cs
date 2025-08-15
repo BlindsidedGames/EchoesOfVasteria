@@ -12,6 +12,7 @@ namespace TimelessEchoes
         /// </summary>
         /// <param name="amount">Base damage dealt.</param>
         /// <param name="bonusDamage">Additional bonus damage displayed to the right at a smaller size.</param>
-        void TakeDamage(float amount, float bonusDamage = 0f);
+        /// <param name="isCritical">True if the hit was a critical strike.</param>
+        void TakeDamage(float amount, float bonusDamage = 0f, bool isCritical = false);
     }
 }
