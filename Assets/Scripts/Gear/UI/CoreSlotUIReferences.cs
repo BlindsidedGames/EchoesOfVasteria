@@ -68,7 +68,7 @@ namespace TimelessEchoes.Gear.UI
 
         /// <summary>
         /// Refreshes discovery visibility and amount text from the ResourceManager.
-        /// If no resource is assigned, the core image remains as-is and count is cleared.
+        /// If no resource is assigned, the count displays 0.
         /// </summary>
         public void Refresh()
         {
@@ -81,15 +81,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (coreCountText != null)
             {
-                if (hasResource && rm != null)
-                {
-                    var amount = rm.GetAmount(coreResource);
-                    coreCountText.text = amount > 0 ? amount.ToString("0") : "0";
-                }
-                else
-                {
-                    coreCountText.text = string.Empty;
-                }
+                var amount = hasResource && rm != null ? rm.GetAmount(coreResource) : 0;
+                coreCountText.text = amount.ToString("0");
             }
         }
     }
