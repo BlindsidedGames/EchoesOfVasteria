@@ -53,6 +53,14 @@ namespace TimelessEchoes.Gear.UI
             set => ingotResource = value;
         }
 
+        private Sprite baseCoreSprite;
+
+        private void Awake()
+        {
+            if (coreImage != null)
+                baseCoreSprite = coreImage.sprite;
+        }
+
         private void OnEnable()
         {
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
@@ -83,7 +91,20 @@ namespace TimelessEchoes.Gear.UI
             var discovered = hasCoreResource && rm != null && rm.IsUnlocked(coreResource);
 
             if (coreImage != null)
+            {
+                if (discovered && hasCoreResource && rm != null)
+                {
+                    if (baseCoreSprite == null)
+                        baseCoreSprite = coreImage.sprite;
+                    var haveAtLeastOne = rm.GetAmount(coreResource) >= 1;
+                    coreImage.sprite = haveAtLeastOne
+                        ? (baseCoreSprite != null ? baseCoreSprite : coreResource.icon)
+                        : coreResource.UnknownIcon;
+                }
+
+
                 coreImage.enabled = discovered;
+            }
 
             if (coreCountText != null)
             {

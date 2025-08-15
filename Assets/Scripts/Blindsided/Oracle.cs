@@ -82,6 +82,7 @@ namespace Blindsided
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
         private const string BetaMigrationPrefKey = "BetaToLiveMigrationDone";
+        private const string GenericMigrationPrefKey = "GenericEs3MigrationDone";
 
         // Regression detection thresholds and state
         private const float PlaytimeRegressionToleranceSeconds = 60f; // allow minor discrepancies
@@ -358,7 +359,20 @@ namespace Blindsided
 					}
 					else
 					{
-						throw new KeyNotFoundException($"No compatible save key found in '{_fileName}'.");
+						// Fallback: no save found in our canonical file. Probe any .es3 in the save dir and
+						// migrate only for the CURRENT slot if a valid snapshot is discovered.
+						if (TryFindAndMigrateAnyEs3ForCurrentSlot(out var migratedSnapshot))
+						{
+							// We have copied the physical file; ensure canonical key is written to cache and file
+							saveData = migratedSnapshot;
+							ES3.Save(_dataName, saveData, _settings);
+							ES3.StoreCachedFile(_fileName);
+							PersistSlotMetadataToPlayerPrefs();
+						}
+						else
+						{
+							throw new KeyNotFoundException($"No compatible save key found in '{_fileName}' or any other .es3 file.");
+						}
 					}
 				}
 			}
@@ -519,6 +533,186 @@ namespace Blindsided
             }
         }
 
+        /// <summary>
+        /// One-time migration: scans the persistent save directory for any top-level .es3 files
+        /// which are not already using our canonical naming. If a file contains a recognizable
+        /// GameData payload (matched via known keys), migrates it to the canonical filename for
+        /// the inferred slot (or first free slot) without overwriting existing canonical files.
+        /// Also copies any accompanying .bac backup and writes PlayerPrefs metadata.
+        /// </summary>
+        private void TryMigrateFromUnrecognizedEs3IfNeeded()
+        {
+            try
+            {
+                if (PlayerPrefs.GetInt(GenericMigrationPrefKey, 0) == 1)
+                    return;
+
+                // Resolve the persistent directory where ES3 saves our files
+                var probe = new ES3Settings(_fileName, ES3.Location.File);
+                var dir = Path.GetDirectoryName(probe.FullPath);
+                if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
+                    return;
+
+                // Build a map of canonical targets per slot and whether they already exist
+                var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+                var slotToLivePath = new Dictionary<int, string>(3);
+                var existingCanonical = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                for (int i = 0; i < 3; i++)
+                {
+                    var liveName = $"{prefix}Sd{i}.es3";
+                    var livePath = Path.Combine(dir, liveName);
+                    slotToLivePath[i] = livePath;
+                    if (File.Exists(livePath))
+                        existingCanonical.Add(liveName);
+                }
+
+                // Enumerate top-level .es3 files (exclude Backups/, previews, and canonical names)
+                var candidates = Directory.GetFiles(dir, "*.es3", SearchOption.TopDirectoryOnly)
+                    .Where(p =>
+                    {
+                        var name = Path.GetFileName(p);
+                        if (name.IndexOf("_preview_", StringComparison.OrdinalIgnoreCase) >= 0)
+                            return false;
+                        if (existingCanonical.Contains(name))
+                            return false;
+                        return true;
+                    })
+                    .ToArray();
+
+                if (candidates.Length == 0)
+                {
+                    PlayerPrefs.SetInt(GenericMigrationPrefKey, 1);
+                    PlayerPrefs.Save();
+                    return;
+                }
+
+                bool migratedAny = false;
+
+                foreach (var candidatePath in candidates)
+                {
+                    try
+                    {
+                        var candidateName = Path.GetFileName(candidatePath);
+
+                        // Validate contents: try to load with our known keys from this file
+                        var settings = new ES3Settings(candidatePath, ES3.Location.File);
+                        if (!TryLoadWithKeyFallback(settings, out var snapshot, out var usedKey) || snapshot == null)
+                            continue;
+
+                        // Infer target slot from the used key when possible
+                        int targetSlot = -1;
+                        if (!string.IsNullOrEmpty(usedKey) && TryParseSlotIndexFromKey(usedKey, out var parsed))
+                            targetSlot = parsed;
+
+                        // If we couldn't infer slot, pick the first free slot
+                        if (targetSlot < 0)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                if (!File.Exists(slotToLivePath[i]))
+                                {
+                                    targetSlot = i;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (targetSlot < 0 || targetSlot > 2)
+                            continue; // no free slot
+
+                        var livePath = slotToLivePath[targetSlot];
+                        if (File.Exists(livePath))
+                            continue; // don't overwrite existing canonical save
+
+                        // Ensure directory exists and copy file
+                        Directory.CreateDirectory(Path.GetDirectoryName(livePath) ?? string.Empty);
+                        File.Copy(candidatePath, livePath, false);
+
+                        // Copy Easy Save .bac backup if present alongside the candidate
+                        var candidateBac = candidatePath + ".bac";
+                        var liveBac = livePath + ".bac";
+                        if (File.Exists(candidateBac) && !File.Exists(liveBac))
+                        {
+                            try { File.Copy(candidateBac, liveBac, false); } catch { }
+                        }
+
+                        // Persist metadata for this slot based on the migrated snapshot
+                        PersistSlotMetadataToPlayerPrefs(targetSlot, snapshot);
+
+                        Debug.Log($"Migrated unrecognized ES3 file '{candidateName}' to '{Path.GetFileName(livePath)}'.");
+                        migratedAny = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"Generic .es3 migration skipped for '{candidatePath}': {ex.Message}");
+                    }
+                }
+
+                // No global flag anymore; this path is now used as a targeted fallback.
+                if (migratedAny)
+                {
+                    Debug.Log("Generic .es3 migration complete. Any discovered saves were copied to canonical slot names.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Generic .es3 migration encountered an error: {ex.Message}");
+            }
+        }
+
+        private static bool TryParseSlotIndexFromKey(string key, out int slotIndex)
+        {
+            slotIndex = -1;
+            try
+            {
+                if (string.IsNullOrEmpty(key))
+                    return false;
+                var i = key.LastIndexOf("Data", StringComparison.OrdinalIgnoreCase);
+                if (i < 0 || i + 4 >= key.Length)
+                    return false;
+                var j = i + 4;
+                var sb = new StringBuilder();
+                while (j < key.Length && char.IsDigit(key[j]))
+                {
+                    sb.Append(key[j]);
+                    j++;
+                }
+                if (sb.Length == 0)
+                    return false;
+                if (!int.TryParse(sb.ToString(), out var parsed))
+                    return false;
+                if (parsed < 0 || parsed > 2)
+                    return false;
+                slotIndex = parsed;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void PersistSlotMetadataToPlayerPrefs(int slotIndex, GameData snapshot)
+        {
+            try
+            {
+                var index = Mathf.Clamp(slotIndex, 0, 2);
+                var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+                var completionKey = $"{prefix}Slot{index}_Completion";
+                var playtimeKey = $"{prefix}Slot{index}_Playtime";
+                var dateKey = $"{prefix}Slot{index}_Date";
+
+                PlayerPrefs.SetFloat(completionKey, snapshot?.CompletionPercentage ?? 0f);
+                PlayerPrefs.SetFloat(playtimeKey, (float)(snapshot?.PlayTime ?? 0));
+                PlayerPrefs.SetString(dateKey, snapshot?.DateQuitString ?? DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+                PlayerPrefs.Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to persist migrated slot metadata: {ex.Message}");
+            }
+        }
+
 		/// <summary>
 		/// Attempts to locate and load a <see cref="GameData"/> payload from the physical ES3 file
 		/// when the expected key is missing. Tries a set of historical/candidate keys.
@@ -598,6 +792,137 @@ namespace Blindsided
 			foreach (var r in results)
 				if (seen.Add(r))
 					yield return r;
+		}
+
+		/// <summary>
+		/// Probes all top-level .es3 files in the persistent save directory for a valid GameData snapshot
+		/// that belongs to the CURRENT slot (inferred via key). If found, copies that file to the canonical
+		/// filename for the current slot and returns the loaded snapshot.
+		/// Does not touch any other slot's canonical files.
+		/// </summary>
+		private bool TryFindAndMigrateAnyEs3ForCurrentSlot(out GameData migratedSnapshot)
+		{
+			migratedSnapshot = null;
+			try
+			{
+				var fileSettings = new ES3Settings(_fileName, ES3.Location.File);
+				var dir = Path.GetDirectoryName(fileSettings.FullPath);
+				if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
+					return false;
+
+				var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
+				var targetName = $"{prefix}Sd{CurrentSlot}.es3";
+				var targetPath = Path.Combine(dir, targetName);
+
+				// If target already exists, do nothing here
+				if (File.Exists(targetPath))
+					return false;
+
+				var candidates = Directory.GetFiles(dir, "*.es3", SearchOption.TopDirectoryOnly)
+					.Where(p => !string.Equals(Path.GetFileName(p), targetName, StringComparison.OrdinalIgnoreCase))
+					.Where(p => Path.GetFileName(p).IndexOf("_preview_", StringComparison.OrdinalIgnoreCase) < 0)
+					.ToArray();
+
+				foreach (var candidate in candidates)
+				{
+					try
+					{
+						var settings = new ES3Settings(candidate, ES3.Location.File);
+						GameData snapshot = null;
+						string usedKey = null;
+						var loaded = TryLoadWithKeyFallback(settings, out snapshot, out usedKey) && snapshot != null;
+						if (!loaded)
+						{
+							// Some ES3 APIs require file name relative to save root; try a temp preview copy
+							var previewBaseFull = Path.Combine(dir, targetName);
+							var tempPreviewPath = MakeTempPreviewPath(previewBaseFull);
+							try
+							{
+								File.Copy(candidate, tempPreviewPath, true);
+								var tempPreviewName = Path.GetFileName(tempPreviewPath);
+								var previewSettings = new ES3Settings(tempPreviewName, ES3.Location.File);
+								loaded = TryLoadWithKeyFallback(previewSettings, out snapshot, out usedKey) && snapshot != null;
+							}
+							catch { loaded = false; }
+							finally
+							{
+								try { if (!string.IsNullOrEmpty(tempPreviewPath)) File.Delete(tempPreviewPath); } catch { }
+							}
+						}
+						if (!loaded)
+							continue;
+
+						// Ensure the snapshot belongs to the CURRENT slot by inspecting the key or filename
+						int inferredSlot;
+						var nameOnly = Path.GetFileName(candidate);
+						if (!string.IsNullOrEmpty(usedKey) && TryParseSlotIndexFromKey(usedKey, out inferredSlot))
+						{
+							if (inferredSlot != CurrentSlot)
+								continue;
+						}
+						else if (TryParseSlotIndexFromFileName(nameOnly, out inferredSlot))
+						{
+							if (inferredSlot != CurrentSlot)
+								continue;
+						}
+						else
+						{
+							// Unknown slot; to be safe, do not migrate
+							continue;
+						}
+
+						// Copy candidate to canonical name for current slot
+						Directory.CreateDirectory(Path.GetDirectoryName(targetPath) ?? string.Empty);
+						File.Copy(candidate, targetPath, false);
+
+						// Copy .bac if present
+						var bacSrc = candidate + ".bac";
+						var bacDst = targetPath + ".bac";
+						if (File.Exists(bacSrc) && !File.Exists(bacDst))
+						{
+							try { File.Copy(bacSrc, bacDst, false); } catch { }
+						}
+
+						migratedSnapshot = snapshot;
+						return true;
+					}
+					catch { }
+				}
+			}
+			catch { }
+			return false;
+		}
+
+		private static bool TryParseSlotIndexFromFileName(string fileName, out int slotIndex)
+		{
+			slotIndex = -1;
+			try
+			{
+				if (string.IsNullOrEmpty(fileName))
+					return false;
+				var i = fileName.LastIndexOf("Sd", StringComparison.OrdinalIgnoreCase);
+				if (i < 0 || i + 2 >= fileName.Length)
+					return false;
+				var j = i + 2;
+				var sb = new StringBuilder();
+				while (j < fileName.Length && char.IsDigit(fileName[j]))
+				{
+					sb.Append(fileName[j]);
+					j++;
+				}
+				if (sb.Length == 0)
+					return false;
+				if (!int.TryParse(sb.ToString(), out var parsed))
+					return false;
+				if (parsed < 0 || parsed > 2)
+					return false;
+				slotIndex = parsed;
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
         /// <summary>

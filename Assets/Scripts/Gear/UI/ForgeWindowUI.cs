@@ -295,47 +295,7 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
         }
 
-        private (List<string> lines, List<(RaritySO r, float w)> weights) BuildRarityWeightInfo(CoreSO core)
-        {
-            var rarities = AssetCache.GetAll<RaritySO>().OrderBy(r => r.tierIndex).ToList();
-            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
-            var conf = svc != null ? svc.Config : null;
-            var o = Oracle.oracle;
-            var level = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;
-            var craftsSince = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
-            var pityMinTier = 0;
-            if (conf != null && !UpgradeFeatureToggle.DisableCraftingPity)
-            {
-                if (craftsSince >= conf.pityMythicWithin) pityMinTier = 5;
-                else if (craftsSince >= conf.pityLegendaryWithin) pityMinTier = 4;
-                else if (craftsSince >= conf.pityEpicWithin) pityMinTier = 3;
-                else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
-            }
-
-            var weights = new List<(RaritySO r, float w)>();
-            foreach (var r in rarities)
-            {
-                var baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
-                var bonus = r != null && conf != null && conf.enableLevelScaling
-                    ? core.GetRarityWeightPerLevel(r) * level
-                    : 0f;
-                var w = Mathf.Max(0f, baseW + bonus);
-                if (r != null && r.tierIndex < pityMinTier)
-                    w = 0f;
-                weights.Add((r, w));
-            }
-
-            var total = weights.Sum(t => t.w);
-            var lines = new List<string>(rarities.Count);
-            foreach (var (r, w) in weights)
-            {
-                var p = total > 0f ? w / total : 0f;
-                var name = r != null ? r.GetName() : "(null)";
-                lines.Add($"{name}: {p * 100f:0.000}%");
-            }
-
-            return (lines, weights);
-        }
+        // Rarity odds computation moved to RarityOddsCalculator
 
         private void RefreshOdds()
         {
@@ -359,7 +319,7 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            var info = BuildRarityWeightInfo(core);
+            var info = RarityOddsCalculator.BuildRarityWeightInfo(core);
             var lines = info.lines;
             if (hasLeft && hasRight)
             {
@@ -462,7 +422,7 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            var info = BuildRarityWeightInfo(core);
+            var info = RarityOddsCalculator.BuildRarityWeightInfo(core);
             coreWeightHoverText.text = string.Join("\n", info.lines);
         }
 
@@ -513,7 +473,7 @@ namespace TimelessEchoes.Gear.UI
 
             crafting.RegisterCraftOutcome(lastCrafted.rarity);
             var eq = equipment?.GetEquipped(lastCrafted.slot);
-            var summary = BuildItemSummary(lastCrafted, eq);
+            var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
             ShowResult(summary);
             UpdateResultPreview(lastCrafted);
             // Ensure selected core/ingot previews reflect updated resource counts after craft
@@ -533,69 +493,7 @@ namespace TimelessEchoes.Gear.UI
             selectedSlot = slot;
         }
 
-        private string BuildItemSummary(GearItem item, GearItem current)
-        {
-            var lines = new List<string>();
-            // Build a quick lookup of current affix values by hero stat mapping for comparison
-            var currentByMapping = new Dictionary<HeroStatMapping, (float value, bool isPercent, string name)>();
-            if (current != null)
-                foreach (var ca in current.affixes)
-                {
-                    if (ca == null || ca.stat == null) continue;
-                    currentByMapping[ca.stat.heroMapping] = (ca.value, ca.stat.isPercent, ca.stat.GetName());
-                }
-
-            var craftedMappings = new HashSet<HeroStatMapping>();
-            var currentMappings = new HashSet<HeroStatMapping>(currentByMapping.Keys);
-            foreach (var a in item.affixes)
-            {
-                if (a == null || a.stat == null) continue;
-                var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
-                var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
-                var nameText = a.stat.GetName();
-
-                // Compare against current equipped's same stat (if present)
-                var cv = currentByMapping.TryGetValue(a.stat.heroMapping, out var cur) ? cur.value : 0f;
-                var diff = a.value - cv;
-                var arrow = diff > 0.0001f
-                    ? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
-                    : diff < -0.0001f
-                        ? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
-                        : StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
-                var arrowPrefix = string.IsNullOrEmpty(arrow) ? string.Empty : arrow + " ";
-
-                // Entirely new stat (not present on current): use plus glyph instead of up arrow
-                if (!currentMappings.Contains(a.stat.heroMapping))
-                    arrowPrefix = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus) + " ";
-
-                if (!string.IsNullOrEmpty(iconTag))
-                    lines.Add($"{arrowPrefix}{iconTag} {valueText}");
-                else
-                    lines.Add($"{arrowPrefix}{nameText} {valueText}");
-
-                craftedMappings.Add(a.stat.heroMapping);
-            }
-
-            // Include stats that were present on current but missing on the crafted item as 0 with minus icon
-            foreach (var kv in currentByMapping)
-            {
-                var mapping = kv.Key;
-                if (craftedMappings.Contains(mapping)) continue;
-
-                var minus = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
-                var prefix = string.IsNullOrEmpty(minus) ? string.Empty : minus + " ";
-                var iconTag = StatIconLookup.GetIconTag(mapping);
-                var isPercent = kv.Value.isPercent;
-                var name = kv.Value.name;
-                var valueText = $"{CalcUtils.FormatNumber(0)}{(isPercent ? "%" : "")}";
-                if (!string.IsNullOrEmpty(iconTag))
-                    lines.Add($"{prefix}{iconTag} {valueText}");
-                else
-                    lines.Add($"{prefix}{name} {valueText}");
-            }
-
-            return string.Join("\n", lines);
-        }
+        // Craft result/equipped stat text building moved to GearStatTextBuilder
 
         private void ShowResult(string text)
         {
@@ -1469,14 +1367,14 @@ namespace TimelessEchoes.Gear.UI
 
                 crafting.RegisterCraftOutcome(lastCrafted.rarity);
                 var eq = equipment?.GetEquipped(lastCrafted.slot);
-                var summary = BuildItemSummary(lastCrafted, eq);
+                var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
                 ShowResult(summary);
                 UpdateResultPreview(lastCrafted);
                 OnResourcesChanged();
                 ForceRefreshAllCoreSlots();
                 RefreshOdds();
 
-                if (IsPotentialUpgrade(lastCrafted,
+                if (UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted,
                         eq)) break; // leave lastCrafted for player to review/replace/salvage
 
                 // Not an upgrade, salvage and continue
@@ -1491,47 +1389,7 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
         }
 
-        private bool IsPotentialUpgrade(GearItem candidate, GearItem current)
-        {
-            if (candidate == null) return false;
-            var score = ComputeUpgradeScore(candidate, current);
-            return score > 0.0001f;
-        }
-
-        private float ComputeUpgradeScore(GearItem candidate, GearItem current)
-        {
-            // Aggregate by hero mapping to compare like-for-like
-            var deltaByMapping = new Dictionary<HeroStatMapping, float>();
-            if (candidate != null)
-                for (var i = 0; i < candidate.affixes.Count; i++)
-                {
-                    var a = candidate.affixes[i];
-                    if (a == null || a.stat == null) continue;
-                    var map = a.stat.heroMapping;
-                    if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
-                    deltaByMapping[map] += a.value;
-                }
-
-            if (current != null)
-                for (var i = 0; i < current.affixes.Count; i++)
-                {
-                    var a = current.affixes[i];
-                    if (a == null || a.stat == null) continue;
-                    var map = a.stat.heroMapping;
-                    if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
-                    deltaByMapping[map] -= a.value;
-                }
-
-            var score = 0f;
-            foreach (var kv in deltaByMapping)
-            {
-                var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
-                var scale = def != null ? Mathf.Max(0f, def.comparisonScale) : 1f;
-                score += kv.Value * scale;
-            }
-
-            return score;
-        }
+        // Upgrade evaluation moved to UpgradeEvaluator
 
         private void ClearResultPreview()
         {
@@ -1590,7 +1448,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             var equipped = equipment != null ? equipment.GetEquipped(selectedSlot) : null;
-            selectedSlotStatsText.text = BuildEquippedStatsText(equipped, selectedSlot);
+            selectedSlotStatsText.text = GearStatTextBuilder.BuildEquippedStatsText(equipped, selectedSlot);
         }
 
         private string BuildEquippedStatsText(GearItem item, string slotName)
