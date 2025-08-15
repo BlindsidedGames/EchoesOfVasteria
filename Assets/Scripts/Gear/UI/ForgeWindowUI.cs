@@ -15,10 +15,11 @@ namespace TimelessEchoes.Gear.UI
         [Header("UI References")]
         [SerializeField] private Button craftButton;
         [SerializeField] private TMP_Text resultText;
+        [SerializeField] private TMP_Text maxCraftsText;
         [SerializeField] private Button replaceButton;
-		[SerializeField] private Button salvageButton;
-		[SerializeField] private Button craftUntilUpgradeButton;
-		[SerializeField] private TMP_Text craftUntilUpgradeButtonText;
+                [SerializeField] private Button salvageButton;
+                [SerializeField] private Button craftUntilUpgradeButton;
+                [SerializeField] private TMP_Text craftUntilUpgradeButtonText;
 
         [Header("Gear Slot UI")]
         [Tooltip("References to each visible gear slot in this window. Their Button will be wired to SelectSlot.")]
@@ -51,6 +52,9 @@ namespace TimelessEchoes.Gear.UI
         [SerializeField] private TMP_Text selectedIngotCountText;
 
         [Header("Ingot Conversion UI")]
+        [SerializeField] private Image ingotResultImage;
+        [SerializeField] private TMP_Text resultCountText;
+        [SerializeField] private TMP_Text maxSmeltsText;
         [SerializeField] private Image chunkCostImage;
         [SerializeField] private TMP_Text chunkCostText;
         [SerializeField] private Image crystalCostImage;
@@ -197,6 +201,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);
             UpdateIngotCraftPreview(selectedCore);
+            UpdateMaxCraftsText();
             RefreshOdds();
                         RefreshActionButtons();
         }
@@ -535,13 +540,14 @@ namespace TimelessEchoes.Gear.UI
             if (rm != null) rm.OnInventoryChanged += OnResourcesChanged;
 			// Subscribe to Ivan XP events if available
 			var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-			if (svc != null)
-			{
-				svc.OnIvanXpChanged += OnIvanXpChanged;
-				svc.OnIvanLevelUp += OnIvanLevelUp;
-			}
-			// Clear UI on load (do not clear on save to avoid autosave side-effects)
-			Blindsided.EventHandler.OnLoadData += OnPostLoad;
+                        if (svc != null)
+                        {
+                                svc.OnIvanXpChanged += OnIvanXpChanged;
+                                svc.OnIvanLevelUp += OnIvanLevelUp;
+                        }
+                        // Clear UI on load (do not clear on save to avoid autosave side-effects)
+                        Blindsided.EventHandler.OnLoadData += OnPostLoad;
+            OnResourcesChanged();
         }
 
         private void OnDisable()
@@ -589,6 +595,7 @@ namespace TimelessEchoes.Gear.UI
                         UpdateSelectedCorePreview(previewSlot);
                         UpdateIngotPreview(selectedCore);
                         UpdateIngotCraftPreview(selectedCore);
+                        UpdateMaxCraftsText();
                         UpdateIvanXpUI();
                         RefreshActionButtons();
                 }
@@ -716,6 +723,40 @@ namespace TimelessEchoes.Gear.UI
         private void UpdateIngotCraftPreview(CoreSO core)
         {
             var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            if (ingotResultImage != null)
+            {
+                Sprite sprite = null;
+                var ingotRes = core != null ? core.requiredIngot : null;
+                if (ingotRes != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(ingotRes);
+                    sprite = discovered ? ingotRes.icon : ingotRes.UnknownIcon;
+                }
+                ingotResultImage.sprite = sprite;
+                ingotResultImage.enabled = sprite != null;
+            }
+            if (resultCountText != null)
+            {
+                var ingotRes = core != null ? core.requiredIngot : null;
+                double amount = (rm != null && ingotRes != null) ? rm.GetAmount(ingotRes) : 0;
+                resultCountText.text = amount.ToString("0");
+            }
+            if (maxSmeltsText != null)
+            {
+                int max = 0;
+                if (core != null && rm != null)
+                {
+                    int chunkMax = int.MaxValue;
+                    if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                        chunkMax = Mathf.FloorToInt((float)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+                    int crystalMax = int.MaxValue;
+                    if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                        crystalMax = Mathf.FloorToInt((float)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+                    max = Mathf.Min(chunkMax, crystalMax);
+                    if (max == int.MaxValue) max = 0;
+                }
+                maxSmeltsText.text = $"Max: {Mathf.Max(0, max)}";
+            }
             if (chunkCostImage != null)
             {
                 Sprite sprite = null;
@@ -746,6 +787,32 @@ namespace TimelessEchoes.Gear.UI
             {
                 crystalCostText.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
             }
+        }
+
+        private void UpdateMaxCraftsText()
+        {
+            if (maxCraftsText == null) return;
+            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            if (selectedCore == null)
+            {
+                maxCraftsText.text = "Max: 0";
+                return;
+            }
+            var coreSlot = GetSlotForCore(selectedCore);
+            var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
+            var ingotRes = coreSlot != null && coreSlot.IngotResource != null ? coreSlot.IngotResource : selectedCore.requiredIngot;
+            if (rm == null || coreRes == null || ingotRes == null)
+            {
+                maxCraftsText.text = "Max: 0";
+                return;
+            }
+            double coreAmount = rm.GetAmount(coreRes);
+            double ingotAmount = rm.GetAmount(ingotRes);
+            int ingotCost = Mathf.Max(1, selectedCore.ingotCost);
+            int maxByIngots = Mathf.FloorToInt((float)(ingotAmount / ingotCost));
+            int maxByCores = Mathf.FloorToInt((float)coreAmount);
+            int max = Mathf.Min(maxByIngots, maxByCores);
+            maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
         }
 
         private void UpdateResultPreview(GearItem item)
