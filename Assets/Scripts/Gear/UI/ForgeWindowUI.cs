@@ -8,6 +8,7 @@ using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -35,6 +36,10 @@ namespace TimelessEchoes.Gear.UI
         [Header("Odds UI")] [SerializeField] private TMP_Text rarityOddsLeftText;
         [SerializeField] private TMP_Text rarityOddsRightText;
         [SerializeField] private List<MPImageBasic> oddsPieSlices = new();
+
+        [Header("Core Weight Tooltip")] [SerializeField] private Image coreWeightHoverImage;
+        [SerializeField] private TMP_Text coreWeightHoverText;
+        [SerializeField] private GameObject coreWeightHoverObject;
 
         [Header("Ivan XP UI")] [SerializeField]
         private SlicedFilledImage ivanXpBar;
@@ -182,6 +187,20 @@ namespace TimelessEchoes.Gear.UI
 
             // Initialize button states based on current selections/resources
             RefreshActionButtons();
+
+            if (coreWeightHoverObject != null)
+                coreWeightHoverObject.SetActive(false);
+            if (coreWeightHoverImage != null)
+            {
+                var trigger = coreWeightHoverImage.GetComponent<EventTrigger>() ?? coreWeightHoverImage.gameObject.AddComponent<EventTrigger>();
+                trigger.triggers.Clear();
+                var enter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+                enter.callback.AddListener(_ => ShowCoreWeightTooltip());
+                trigger.triggers.Add(enter);
+                var exit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+                exit.callback.AddListener(_ => HideCoreWeightTooltip());
+                trigger.triggers.Add(exit);
+            }
         }
 
         private void SelectCore(CoreSO core)
@@ -235,28 +254,8 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
         }
 
-        private void RefreshOdds()
+        private (List<string> lines, List<(RaritySO r, float w)> weights) BuildRarityWeightInfo(CoreSO core)
         {
-            var hasLeft = rarityOddsLeftText != null;
-            var hasRight = rarityOddsRightText != null;
-            if (!hasLeft && !hasRight)
-            {
-                Debug.LogWarning(
-                    "ForgeWindowUI: rarityOddsLeftText/rarityOddsRightText are not assigned; odds UI will not be displayed.");
-                return;
-            }
-
-            var core = selectedCore;
-            if (core == null && cores != null && cores.Count > 0)
-                core = cores[0];
-            if (core == null)
-            {
-                if (hasLeft) rarityOddsLeftText.text = string.Empty;
-                if (hasRight) rarityOddsRightText.text = string.Empty;
-                RefreshOddsPieChart(null);
-                return;
-            }
-
             var rarities = AssetCache.GetAll<RaritySO>().OrderBy(r => r.tierIndex).ToList();
             var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
             var conf = svc != null ? svc.Config : null;
@@ -272,7 +271,6 @@ namespace TimelessEchoes.Gear.UI
                 else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
             }
 
-            // Compute weights consistent with CraftingService.RollRarity (including pity clamp)
             var weights = new List<(RaritySO r, float w)>();
             foreach (var r in rarities)
             {
@@ -295,7 +293,33 @@ namespace TimelessEchoes.Gear.UI
                 lines.Add($"{name}: {p * 100f:0.###}%");
             }
 
-            // Split lines between left/right columns. If only one is assigned, show all in that one.
+            return (lines, weights);
+        }
+
+        private void RefreshOdds()
+        {
+            var hasLeft = rarityOddsLeftText != null;
+            var hasRight = rarityOddsRightText != null;
+            if (!hasLeft && !hasRight)
+            {
+                Debug.LogWarning(
+                    "ForgeWindowUI: rarityOddsLeftText/rarityOddsRightText are not assigned; odds UI will not be displayed.");
+                return;
+            }
+
+            var core = selectedCore;
+            if (core == null && cores != null && cores.Count > 0)
+                core = cores[0];
+            if (core == null)
+            {
+                if (hasLeft) rarityOddsLeftText.text = string.Empty;
+                if (hasRight) rarityOddsRightText.text = string.Empty;
+                RefreshOddsPieChart(null);
+                return;
+            }
+
+            var info = BuildRarityWeightInfo(core);
+            var lines = info.lines;
             if (hasLeft && hasRight)
             {
                 var mid = (lines.Count + 1) / 2; // put the longer half on the left
@@ -313,8 +337,7 @@ namespace TimelessEchoes.Gear.UI
                 rarityOddsRightText.text = string.Join("\n", lines);
             }
 
-            // Update pie chart slices
-            RefreshOddsPieChart(weights);
+            RefreshOddsPieChart(info.weights);
         }
 
         private void RefreshOddsPieChart(List<(RaritySO r, float w)> weights)
@@ -374,6 +397,35 @@ namespace TimelessEchoes.Gear.UI
             for (var i = sliceCount; i < oddsPieSlices.Count; i++)
                 if (oddsPieSlices[i] != null)
                     oddsPieSlices[i].enabled = false;
+        }
+
+        private void UpdateCoreWeightTooltipText()
+        {
+            if (coreWeightHoverText == null)
+                return;
+
+            var core = selectedCore ?? (cores != null && cores.Count > 0 ? cores[0] : null);
+            if (core == null)
+            {
+                coreWeightHoverText.text = string.Empty;
+                return;
+            }
+
+            var info = BuildRarityWeightInfo(core);
+            coreWeightHoverText.text = string.Join("\n", info.lines);
+        }
+
+        private void ShowCoreWeightTooltip()
+        {
+            UpdateCoreWeightTooltipText();
+            if (coreWeightHoverObject != null)
+                coreWeightHoverObject.SetActive(true);
+        }
+
+        private void HideCoreWeightTooltip()
+        {
+            if (coreWeightHoverObject != null)
+                coreWeightHoverObject.SetActive(false);
         }
 
         private void OnCraftClicked()
