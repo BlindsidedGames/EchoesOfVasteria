@@ -24,7 +24,7 @@ namespace TimelessEchoes.UI
             if (distanceText != null)
             {
                 var x = Mathf.FloorToInt(distance);
-                distanceText.text = $"Distance Reached: {x}";
+                distanceText.text = x.ToString();
             }
 
             if (distanceSlider != null)
