@@ -17,7 +17,6 @@ namespace TimelessEchoes.Gear.UI
         private Button craftButton;
 
         [SerializeField] private TMP_Text resultText;
-        [SerializeField] private TMP_Text maxCraftsText;
         [SerializeField] private Button replaceButton;
         [SerializeField] private Button salvageButton;
         [SerializeField] private Button craftUntilUpgradeButton;
@@ -43,21 +42,8 @@ namespace TimelessEchoes.Gear.UI
         [SerializeField] private TMP_Text ivanXpText;
         [SerializeField] private TMP_Text ivanLevelText;
 
-        [Header("Preview UI")] [Tooltip("Image to display the currently selected Core.")] [SerializeField]
-        private Image selectedCoreImage;
-
-        [Tooltip("Image to display the required Ingot for the selected Core.")] [SerializeField]
-        private Image selectedIngotImage;
-
-        [Tooltip("Image to display the most recently crafted item preview.")] [SerializeField]
-        private Image resultItemImage;
-
-
-        [Tooltip("Text to display remaining Core count for the selected Core.")] [SerializeField]
-        private TMP_Text selectedCoreCountText;
-
-        [Tooltip("Text to display remaining Ingot count for the selected Core.")] [SerializeField]
-        private TMP_Text selectedIngotCountText;
+        [Header("Craft UI")]
+        [SerializeField] private CraftSection2x1UIReferences craftSection;
 
         [Header("Ingot Conversion UI")]
         [SerializeField] private CraftSection2x1UIReferences ingotConversionSection;
@@ -724,7 +710,8 @@ namespace TimelessEchoes.Gear.UI
         {
             // Update selected core image and count based on the clicked slot
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            if (selectedCoreImage != null)
+            var section = craftSection;
+            if (section != null && section.cost1Image != null)
             {
                 var res = slot != null ? slot.CoreResource : null;
                 Sprite sprite = null;
@@ -739,14 +726,14 @@ namespace TimelessEchoes.Gear.UI
                     sprite = discovered && have ? baseSprite : res.UnknownIcon;
                 }
 
-                selectedCoreImage.sprite = sprite;
-                selectedCoreImage.enabled = sprite != null;
+                section.cost1Image.sprite = sprite;
+                section.cost1Image.enabled = sprite != null;
             }
 
-            if (selectedCoreCountText != null)
+            if (section != null && section.cost1Text != null)
             {
                 const int coreCost = 1;
-                selectedCoreCountText.text = selectedCore != null ? coreCost.ToString("0") : "0";
+                section.cost1Text.text = selectedCore != null ? coreCost.ToString("0") : "0";
             }
         }
 
@@ -757,7 +744,8 @@ namespace TimelessEchoes.Gear.UI
             var ingot = slot != null && slot.IngotResource != null ? slot.IngotResource :
                 core != null ? core.requiredIngot : null;
 
-            if (selectedIngotImage != null)
+            var section = craftSection;
+            if (section != null && section.cost2Image != null)
             {
                 Sprite sprite = null;
                 if (ingot != null)
@@ -768,12 +756,12 @@ namespace TimelessEchoes.Gear.UI
                     sprite = discovered && have ? ingot.icon : ingot.UnknownIcon;
                 }
 
-                selectedIngotImage.sprite = sprite;
-                selectedIngotImage.enabled = sprite != null;
+                section.cost2Image.sprite = sprite;
+                section.cost2Image.enabled = sprite != null;
             }
 
-            if (selectedIngotCountText != null)
-                selectedIngotCountText.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : "0";
+            if (section != null && section.cost2Text != null)
+                section.cost2Text.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : "0";
         }
 
         private void UpdateIngotCraftPreview(CoreSO core)
@@ -864,11 +852,14 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateMaxCraftsText()
         {
-            if (maxCraftsText == null) return;
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var text = craftSection != null ? craftSection.maxCraftsText : null;
+            if (text == null)
+                return;
+
             if (selectedCore == null)
             {
-                maxCraftsText.text = "Max: 0";
+                text.text = "Max: 0";
                 return;
             }
 
@@ -877,9 +868,10 @@ namespace TimelessEchoes.Gear.UI
             var ingotRes = coreSlot != null && coreSlot.IngotResource != null
                 ? coreSlot.IngotResource
                 : selectedCore.requiredIngot;
+
             if (rm == null || coreRes == null || ingotRes == null)
             {
-                maxCraftsText.text = "Max: 0";
+                text.text = "Max: 0";
                 return;
             }
 
@@ -889,16 +881,17 @@ namespace TimelessEchoes.Gear.UI
             var maxByIngots = Mathf.FloorToInt((float)(ingotAmount / ingotCost));
             var maxByCores = Mathf.FloorToInt((float)coreAmount);
             var max = Mathf.Min(maxByIngots, maxByCores);
-            maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
+            text.text = $"Max: {Mathf.Max(0, max)}";
         }
 
         private void UpdateResultPreview(GearItem item)
         {
-            if (resultItemImage == null) return;
+            var img = craftSection != null ? craftSection.resultImage : null;
+            if (img == null) return;
             if (item == null || item.rarity == null)
             {
-                resultItemImage.enabled = false;
-                resultItemImage.sprite = null;
+                img.enabled = false;
+                img.sprite = null;
                 return;
             }
 
@@ -926,8 +919,8 @@ namespace TimelessEchoes.Gear.UI
                     sprite = unknownGearSprites[idx];
             }
 
-            resultItemImage.sprite = sprite;
-            resultItemImage.enabled = sprite != null;
+            img.sprite = sprite;
+            img.enabled = sprite != null;
         }
 
         private bool CanCraft()
@@ -1000,6 +993,11 @@ namespace TimelessEchoes.Gear.UI
         {
             var canCraft = CanCraft();
             if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
+            if (craftSection != null && craftSection.craftArrow != null && craftSection.craftArrow.image != null)
+            {
+                var arrowSprite = canCraft ? craftSection.validArrow : craftSection.invalidArrow;
+                craftSection.craftArrow.image.sprite = arrowSprite;
+            }
             var canCraftIngot = CanCraftIngot();
             if (ingotConversionSection != null)
             {
@@ -1151,11 +1149,12 @@ namespace TimelessEchoes.Gear.UI
 
         private void SetResultUnknownForSlot(string slot)
         {
-            if (resultItemImage == null) return;
+            var img = craftSection != null ? craftSection.resultImage : null;
+            if (img == null) return;
             if (string.IsNullOrWhiteSpace(slot))
             {
-                resultItemImage.enabled = false;
-                resultItemImage.sprite = null;
+                img.enabled = false;
+                img.sprite = null;
                 return;
             }
 
@@ -1183,8 +1182,8 @@ namespace TimelessEchoes.Gear.UI
             if (idx >= 0 && idx < unknownGearSprites.Count)
                 sprite = unknownGearSprites[idx];
 
-            resultItemImage.sprite = sprite;
-            resultItemImage.enabled = sprite != null;
+            img.sprite = sprite;
+            img.enabled = sprite != null;
         }
 
         private void UpdateSelectedSlotStats()
