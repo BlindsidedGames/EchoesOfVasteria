@@ -404,38 +404,48 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            var sliceCount = Mathf.Min(oddsPieSlices.Count, weights.Count);
-            var used = 0f;
-            var startAngle = 0f;
+            // Layering approach with background at index 0, reversed order
+            var overlayCapacity = Mathf.Max(0, oddsPieSlices.Count - 1);
+            var sliceCount = Mathf.Min(overlayCapacity, weights.Count);
+
+            // Keep background (index 0) where it is; ensure overlays are in indices [1..sliceCount]
             for (var i = 0; i < sliceCount; i++)
             {
-                var img = oddsPieSlices[i];
-                if (img == null) continue;
-
-                var fraction = Mathf.Max(0f, weights[i].w) / total;
-                if (i == sliceCount - 1) fraction = Mathf.Clamp01(1f - used); // ensure we cover full 360
-                else used += fraction;
-
-                img.enabled = fraction > 0f;
-                img.type = Image.Type.Filled;
-                img.fillMethod = Image.FillMethod.Radial360;
-                img.fillOrigin = 2; // Top origin; we rotate transform to position
-                img.fillClockwise = true;
-                img.fillAmount = Mathf.Clamp01(fraction);
-                img.color = weights[i].r != null ? weights[i].r.color : Color.white;
-                var rt = img.rectTransform;
-                if (rt != null)
-                {
-                    var e = rt.localEulerAngles;
-                    e.z = -startAngle;
-                    rt.localEulerAngles = e;
-                }
-
-                startAngle += fraction * 360f;
+                var img = oddsPieSlices[i + 1];
+                if (img != null)
+                    img.transform.SetSiblingIndex(i + 1);
             }
 
-            // Disable any extra slices beyond available weights
-            for (var i = sliceCount; i < oddsPieSlices.Count; i++)
+            // Precompute normalized fractions of weights we will use
+            var fractions = new float[sliceCount];
+            for (var i = 0; i < sliceCount; i++)
+                fractions[i] = Mathf.Max(0f, weights[i].w) / total;
+
+            var used = 0f;
+            for (var layer = 0; layer < sliceCount; layer++)
+            {
+                // Reverse the mapping so visual order is reversed
+                var weightIndex = sliceCount - 1 - layer;
+                var img = oddsPieSlices[layer + 1];
+                if (img == null) { used += fractions[weightIndex]; continue; }
+
+                var fill = layer == 0 ? 1f : Mathf.Clamp01(1f - used);
+                used += fractions[weightIndex];
+
+                img.enabled = fill > 0f;
+                img.type = Image.Type.Filled;
+                img.fillMethod = Image.FillMethod.Radial360;
+                img.fillOrigin = 2;
+                img.fillClockwise = true;
+                img.fillAmount = fill;
+                img.color = weights[weightIndex].r != null ? weights[weightIndex].r.color : Color.white;
+                var rt = img.rectTransform;
+                if (rt != null)
+                    rt.localEulerAngles = Vector3.zero;
+            }
+
+            // Disable any extra overlay slices beyond available weights (leave background alone)
+            for (var i = sliceCount + 1; i < oddsPieSlices.Count; i++)
                 if (oddsPieSlices[i] != null)
                     oddsPieSlices[i].enabled = false;
         }
