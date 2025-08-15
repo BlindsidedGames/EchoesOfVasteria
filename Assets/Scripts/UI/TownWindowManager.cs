@@ -9,9 +9,9 @@ using EventHandler = Blindsided.EventHandler;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    ///     Manages the town UI windows. Clicking a button closes all windows except
-    ///     the inventory and opens the associated one. Right-click closes all
-    ///     windows.
+    ///     Manages the town UI windows. Clicking a button closes all windows,
+    ///     opens the associated one, and shows a global close button. Right-click
+    ///     or the close button closes all windows.
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
@@ -23,8 +23,7 @@ namespace TimelessEchoes.UI
         {
             [HorizontalGroup("Row")] public Button button;
             [HorizontalGroup("Row2")] public GameObject window;
-            [HorizontalGroup("Row3")] public Button closeButton;
-            [HorizontalGroup("Row4")] public bool openInventory;
+            [HorizontalGroup("Row3")] public bool openInventory;
         }
 
         [Title("References")] [SerializeField] private WindowReference upgrades = new();
@@ -39,6 +38,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference options = new();
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
+        [SerializeField] [Space] private Button closeButton;
 
         private bool _rightMouseWasDown;
 
@@ -48,44 +48,26 @@ namespace TimelessEchoes.UI
             Instance = this;
             if (upgrades.button != null)
                 upgrades.button.onClick.AddListener(OpenUpgrades);
-            if (upgrades.closeButton != null)
-                upgrades.closeButton.onClick.AddListener(() => CloseWindow(upgrades.window));
             if (buffs.button != null)
                 buffs.button.onClick.AddListener(OpenBuffs);
-            if (buffs.closeButton != null)
-                buffs.closeButton.onClick.AddListener(() => CloseWindow(buffs.window));
             if (quests.button != null)
                 quests.button.onClick.AddListener(OpenQuests);
-            if (quests.closeButton != null)
-                quests.closeButton.onClick.AddListener(() => CloseWindow(quests.window));
             if (credits.button != null)
                 credits.button.onClick.AddListener(OpenCredits);
-            if (credits.closeButton != null)
-                credits.closeButton.onClick.AddListener(() => CloseWindow(credits.window));
             if (alterEchoes.button != null)
                 alterEchoes.button.onClick.AddListener(OpenAlterEchoes);
-            if (alterEchoes.closeButton != null)
-                alterEchoes.closeButton.onClick.AddListener(() => CloseWindow(alterEchoes.window));
             if (stats.button != null)
                 stats.button.onClick.AddListener(OpenStats);
-            if (stats.closeButton != null)
-                stats.closeButton.onClick.AddListener(() => CloseWindow(stats.window));
             if (wiki.button != null)
                 wiki.button.onClick.AddListener(OpenWiki);
-            if (wiki.closeButton != null)
-                wiki.closeButton.onClick.AddListener(() => CloseWindow(wiki.window));
             if (forge.button != null)
                 forge.button.onClick.AddListener(OpenForge);
-            if (forge.closeButton != null)
-                forge.closeButton.onClick.AddListener(() => CloseWindow(forge.window));
             if (options.button != null)
                 options.button.onClick.AddListener(OpenOptions);
-            if (options.closeButton != null)
-                options.closeButton.onClick.AddListener(() => CloseWindow(options.window));
             if (inventory.button != null)
-                inventory.button.onClick.AddListener(ToggleInventory);
-            if (inventory.closeButton != null)
-                inventory.closeButton.onClick.AddListener(CloseAllWindows);
+                inventory.button.onClick.AddListener(OpenInventory);
+            if (closeButton != null)
+                closeButton.onClick.AddListener(CloseAllWindows);
         }
 
         private void OnEnable()
@@ -109,44 +91,26 @@ namespace TimelessEchoes.UI
         {
             if (upgrades.button != null)
                 upgrades.button.onClick.RemoveListener(OpenUpgrades);
-            if (upgrades.closeButton != null)
-                upgrades.closeButton.onClick.RemoveAllListeners();
             if (buffs.button != null)
                 buffs.button.onClick.RemoveListener(OpenBuffs);
-            if (buffs.closeButton != null)
-                buffs.closeButton.onClick.RemoveAllListeners();
             if (quests.button != null)
                 quests.button.onClick.RemoveListener(OpenQuests);
-            if (quests.closeButton != null)
-                quests.closeButton.onClick.RemoveAllListeners();
             if (credits.button != null)
                 credits.button.onClick.RemoveListener(OpenCredits);
-            if (credits.closeButton != null)
-                credits.closeButton.onClick.RemoveAllListeners();
             if (alterEchoes.button != null)
                 alterEchoes.button.onClick.RemoveListener(OpenAlterEchoes);
-            if (alterEchoes.closeButton != null)
-                alterEchoes.closeButton.onClick.RemoveAllListeners();
             if (stats.button != null)
                 stats.button.onClick.RemoveListener(OpenStats);
-            if (stats.closeButton != null)
-                stats.closeButton.onClick.RemoveAllListeners();
             if (wiki.button != null)
                 wiki.button.onClick.RemoveListener(OpenWiki);
-            if (wiki.closeButton != null)
-                wiki.closeButton.onClick.RemoveAllListeners();
             if (forge.button != null)
                 forge.button.onClick.RemoveListener(OpenForge);
-            if (forge.closeButton != null)
-                forge.closeButton.onClick.RemoveAllListeners();
             if (options.button != null)
                 options.button.onClick.RemoveListener(OpenOptions);
-            if (options.closeButton != null)
-                options.closeButton.onClick.RemoveAllListeners();
             if (inventory.button != null)
-                inventory.button.onClick.RemoveListener(ToggleInventory);
-            if (inventory.closeButton != null)
-                inventory.closeButton.onClick.RemoveListener(CloseAllWindows);
+                inventory.button.onClick.RemoveListener(OpenInventory);
+            if (closeButton != null)
+                closeButton.onClick.RemoveListener(CloseAllWindows);
             if (Instance == this)
                 Instance = null;
         }
@@ -174,9 +138,17 @@ namespace TimelessEchoes.UI
             {
                 CloseAllWindows();
                 if (quests.window != null)
+                {
                     quests.window.SetActive(true);
+                    if (quests.button != null)
+                        quests.button.interactable = false;
+                }
                 if (inventory.window != null)
+                {
                     inventory.window.SetActive(true);
+                    if (inventory.button != null)
+                        inventory.button.interactable = false;
+                }
                 UpdateTownButtonsVisibility();
                 Oracle.oracle.saveData.SavedPreferences.Tutorial = true;
                 EventHandler.SaveData();
@@ -228,53 +200,38 @@ namespace TimelessEchoes.UI
             ToggleWindow(forge);
         }
 
-        private void ToggleInventory()
+        private void OpenInventory()
         {
-            if (inventory.window != null)
-                inventory.window.SetActive(!inventory.window.activeSelf);
-            UpdateTownButtonsVisibility();
+            ToggleWindow(inventory);
         }
 
         private void ToggleWindow(WindowReference reference)
         {
-            if (reference.window == null)
+            if (reference.window == null || reference.button == null)
                 return;
 
-            var wasActive = reference.window.activeSelf;
-            if (!wasActive) CloseAllWindowsExceptInventory();
-            reference.window.SetActive(!wasActive);
-            if (reference.openInventory && reference.window.activeSelf && inventory.window != null)
-                inventory.window.SetActive(true);
-            UpdateTownButtonsVisibility();
-        }
+            bool windowWasActive = reference.window.activeSelf;
+            bool inventoryWasOpen = inventory.window != null && inventory.window.activeSelf;
 
-        private void CloseWindow(GameObject window)
-        {
-            if (window != null)
-                window.SetActive(false);
-            UpdateTownButtonsVisibility();
-        }
+            CloseAllWindows();
 
-        private void CloseAllWindowsExceptInventory()
-        {
-            if (upgrades.window != null)
-                upgrades.window.SetActive(false);
-            if (buffs.window != null)
-                buffs.window.SetActive(false);
-            if (quests.window != null)
-                quests.window.SetActive(false);
-            if (credits.window != null)
-                credits.window.SetActive(false);
-            if (alterEchoes.window != null)
-                alterEchoes.window.SetActive(false);
-            if (stats.window != null)
-                stats.window.SetActive(false);
-            if (wiki.window != null)
-                wiki.window.SetActive(false);
-            if (options.window != null)
-                options.window.SetActive(false);
-            if (forge.window != null)
-                forge.window.SetActive(false);
+            if (!windowWasActive)
+            {
+                reference.window.SetActive(true);
+                reference.button.interactable = false;
+
+                if (reference.openInventory || inventoryWasOpen)
+                {
+                    if (inventory.window != null)
+                    {
+                        inventory.window.SetActive(true);
+                        if (inventory.button != null)
+                            inventory.button.interactable = false;
+                    }
+                }
+            }
+
+            UpdateTownButtonsVisibility();
         }
 
         public void CloseAllWindows()
@@ -299,7 +256,33 @@ namespace TimelessEchoes.UI
                 forge.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
+
+            EnableAllWindowButtons();
             UpdateTownButtonsVisibility();
+        }
+
+        private void EnableAllWindowButtons()
+        {
+            if (upgrades.button != null)
+                upgrades.button.interactable = true;
+            if (buffs.button != null)
+                buffs.button.interactable = true;
+            if (quests.button != null)
+                quests.button.interactable = true;
+            if (credits.button != null)
+                credits.button.interactable = true;
+            if (alterEchoes.button != null)
+                alterEchoes.button.interactable = true;
+            if (stats.button != null)
+                stats.button.interactable = true;
+            if (wiki.button != null)
+                wiki.button.interactable = true;
+            if (forge.button != null)
+                forge.button.interactable = true;
+            if (options.button != null)
+                options.button.interactable = true;
+            if (inventory.button != null)
+                inventory.button.interactable = true;
         }
 
         private bool AnyWindowOpen()
@@ -337,9 +320,11 @@ namespace TimelessEchoes.UI
         private void UpdateTownButtonsVisibility()
         {
             if (townButtons != null)
-                townButtons.SetActive(!AnyWindowOpen());
+                townButtons.SetActive(true);
             if (windowsOpenIndicator != null)
                 windowsOpenIndicator.SetActive(AnyWindowOpenForIndicator());
+            if (closeButton != null)
+                closeButton.gameObject.SetActive(AnyWindowOpen());
         }
     }
 }
