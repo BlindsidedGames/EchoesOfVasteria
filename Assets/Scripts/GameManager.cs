@@ -113,6 +113,7 @@ namespace TimelessEchoes
         private CinemachineCamera mapCamera;
         private TaskController taskController;
         private NpcObjectStateController npcObjectStateController;
+        private LocationObjectStateController locationObjectStateController;
         private GameplayStatTracker statTracker;
         private System.Action<bool> runEndedAction;
         private bool returnOnDeathQueued;
@@ -190,6 +191,9 @@ namespace TimelessEchoes
             npcObjectStateController = NpcObjectStateController.Instance;
             if (npcObjectStateController == null)
                 Log("NpcObjectStateController missing", TELogCategory.General, this);
+            locationObjectStateController = LocationObjectStateController.Instance;
+            if (locationObjectStateController == null)
+                Log("LocationObjectStateController missing", TELogCategory.General, this);
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
@@ -239,7 +243,8 @@ namespace TimelessEchoes
             if (returnOnDeathText != null)
                 returnOnDeathText.text = "Return On Death";
             npcObjectStateController?.UpdateObjectStates();
-            
+            locationObjectStateController?.UpdateObjectStates();
+
             UpdateGenerationButtonStats();
             nextStatsUpdateTime = Time.time + statsUpdateInterval;
         }
@@ -498,6 +503,7 @@ namespace TimelessEchoes
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(true);
             npcObjectStateController?.UpdateObjectStates();
+            locationObjectStateController?.UpdateObjectStates();
 
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
@@ -753,6 +759,7 @@ namespace TimelessEchoes
             runResourceTracker?.ShowWindow();
             resetRunResourceTracker = true;
             npcObjectStateController?.UpdateObjectStates();
+            locationObjectStateController?.UpdateObjectStates();
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
 #endif
