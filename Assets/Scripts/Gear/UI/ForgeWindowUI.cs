@@ -1,59 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Blindsided;
+using Blindsided.Utilities;
+using MPUIKIT;
+using TimelessEchoes.Upgrades;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using MPUIKIT;
-using UnityEngine.Serialization;
-using TMPro;
-using Blindsided.Utilities;
 
 namespace TimelessEchoes.Gear.UI
 {
     public class ForgeWindowUI : MonoBehaviour
     {
-        [Header("UI References")]
-        [SerializeField] private Button craftButton;
+        [Header("UI References")] [SerializeField]
+        private Button craftButton;
+
         [SerializeField] private TMP_Text resultText;
         [SerializeField] private TMP_Text maxCraftsText;
         [SerializeField] private Button replaceButton;
-                [SerializeField] private Button salvageButton;
-                [SerializeField] private Button craftUntilUpgradeButton;
-                [SerializeField] private TMP_Text craftUntilUpgradeButtonText;
+        [SerializeField] private Button salvageButton;
+        [SerializeField] private Button craftUntilUpgradeButton;
+        [SerializeField] private TMP_Text craftUntilUpgradeButtonText;
 
         [Header("Gear Slot UI")]
         [Tooltip("References to each visible gear slot in this window. Their Button will be wired to SelectSlot.")]
-        [SerializeField] private List<GearSlotUIReferences> gearSlots = new();
+        [SerializeField]
+        private List<GearSlotUIReferences> gearSlots = new();
 
         [Header("Core Slot UI")]
         [Tooltip("Pre-placed core slot references in the scene. No prefab route is used.")]
-        [SerializeField] private List<CoreSlotUIReferences> coreSlots = new();
+        [SerializeField]
+        private List<CoreSlotUIReferences> coreSlots = new();
 
-		[Header("Odds UI")]
-		[SerializeField] private TMP_Text rarityOddsLeftText;
-		[SerializeField] private TMP_Text rarityOddsRightText;
-		[SerializeField] private List<MPImageBasic> oddsPieSlices = new();
+        [Header("Odds UI")] [SerializeField] private TMP_Text rarityOddsLeftText;
+        [SerializeField] private TMP_Text rarityOddsRightText;
+        [SerializeField] private List<MPImageBasic> oddsPieSlices = new();
 
-		[Header("Ivan XP UI")]
-		[SerializeField] private Blindsided.Utilities.SlicedFilledImage ivanXpBar;
-		[SerializeField] private TMP_Text ivanXpText;
-		[SerializeField] private TMP_Text ivanLevelText;
+        [Header("Ivan XP UI")] [SerializeField]
+        private SlicedFilledImage ivanXpBar;
 
-        [Header("Preview UI")]
-        [Tooltip("Image to display the currently selected Core.")]
-        [SerializeField] private Image selectedCoreImage;
-        [Tooltip("Image to display the required Ingot for the selected Core.")]
-        [SerializeField] private Image selectedIngotImage;
-        [Tooltip("Image to display the most recently crafted item preview.")]
-        [SerializeField] private Image resultItemImage;
-        [Tooltip("Text to display remaining Core count for the selected Core.")]
-        [SerializeField] private TMP_Text selectedCoreCountText;
-        [Tooltip("Text to display remaining Ingot count for the selected Core.")]
-        [SerializeField] private TMP_Text selectedIngotCountText;
+        [SerializeField] private TMP_Text ivanXpText;
+        [SerializeField] private TMP_Text ivanLevelText;
 
-        [Header("Ingot Conversion UI")]
-        [SerializeField] private Image ingotResultImage;
+        [Header("Preview UI")] [Tooltip("Image to display the currently selected Core.")] [SerializeField]
+        private Image selectedCoreImage;
+
+        [Tooltip("Image to display the required Ingot for the selected Core.")] [SerializeField]
+        private Image selectedIngotImage;
+
+        [Tooltip("Image to display the most recently crafted item preview.")] [SerializeField]
+        private Image resultItemImage;
+
+
+        [Tooltip("Text to display remaining Core count for the selected Core.")] [SerializeField]
+        private TMP_Text selectedCoreCountText;
+
+        [Tooltip("Text to display remaining Ingot count for the selected Core.")] [SerializeField]
+        private TMP_Text selectedIngotCountText;
+
+        [Header("Ingot Conversion UI")] [SerializeField]
+        private Image ingotResultImage;
+
         [SerializeField] private TMP_Text resultCountText;
+
         [SerializeField] private TMP_Text maxSmeltsText;
         [SerializeField] private Image chunkCostImage;
         [SerializeField] private TMP_Text chunkCostText;
@@ -64,11 +74,13 @@ namespace TimelessEchoes.Gear.UI
 
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
-        [SerializeField] private TMP_Text selectedSlotStatsText;
+        [SerializeField]
+        private TMP_Text selectedSlotStatsText;
 
         [Header("Unknown Gear Sprites (by slot order)")]
         [Tooltip("Fallback unknown sprites for each gear slot: Weapon, Helmet, Chest, Boots")]
-        [SerializeField] private List<Sprite> unknownGearSprites = new();
+        [SerializeField]
+        private List<Sprite> unknownGearSprites = new();
 
         private CraftingService crafting;
         private EquipmentController equipment;
@@ -77,8 +89,8 @@ namespace TimelessEchoes.Gear.UI
         private CoreSO selectedCore;
         private string selectedSlot;
         private GearItem lastCrafted;
-		private bool isAutoCrafting;
-		private Coroutine autoCraftCoroutine;
+        private bool isAutoCrafting;
+        private Coroutine autoCraftCoroutine;
 
         // Runtime maps for robust selection/highlight handling
         private readonly Dictionary<GearSlotUIReferences, string> gearSlotNameByRef = new();
@@ -88,16 +100,16 @@ namespace TimelessEchoes.Gear.UI
         {
             crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
             equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
-            cores = AssetCache.GetAll<CoreSO>("").Where(b => b != null).OrderBy(b => b.tierIndex).ToList();
+            cores = AssetCache.GetAll<CoreSO>().Where(b => b != null).OrderBy(b => b.tierIndex).ToList();
 
             // Build Core selection UI using only pre-placed slots (no prefab route)
             coreSlotCoreByRef.Clear();
-            for (int i = 0; i < coreSlots.Count; i++)
+            for (var i = 0; i < coreSlots.Count; i++)
             {
                 var slot = coreSlots[i];
                 if (slot == null) continue;
                 slot.SetSelected(false);
-                var mappedCore = slot.Core != null ? slot.Core : (i < cores.Count ? cores[i] : null);
+                var mappedCore = slot.Core != null ? slot.Core : i < cores.Count ? cores[i] : null;
                 coreSlotCoreByRef[slot] = mappedCore;
                 if (slot.SelectSlotButton != null)
                 {
@@ -106,40 +118,49 @@ namespace TimelessEchoes.Gear.UI
                     var capturedCore = mappedCore;
                     slot.SelectSlotButton.onClick.AddListener(() => OnCoreSlotClicked(capturedSlot, capturedCore));
                 }
+
                 if (mappedCore == null)
-                    Debug.LogWarning($"ForgeWindowUI: Core slot at index {i} has no Core mapped; assign Core on the slot or ensure cores are discoverable.");
+                    Debug.LogWarning(
+                        $"ForgeWindowUI: Core slot at index {i} has no Core mapped; assign Core on the slot or ensure cores are discoverable.");
             }
 
-                        if (craftButton != null)
+            if (craftButton != null)
                 craftButton.onClick.AddListener(OnCraftClicked);
             if (replaceButton != null)
                 replaceButton.onClick.AddListener(OnReplaceClicked);
             if (salvageButton != null)
                 salvageButton.onClick.AddListener(OnSalvageClicked);
-                        if (craftUntilUpgradeButton != null)
-                                craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
+            if (craftUntilUpgradeButton != null)
+                craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
             if (craftIngotButton != null)
             {
                 craftIngotButton.onClick.AddListener(OnCraftIngotClicked);
-                var repeat = craftIngotButton.GetComponent<Blindsided.Utilities.RepeatButtonClick>() ?? craftIngotButton.gameObject.AddComponent<Blindsided.Utilities.RepeatButtonClick>();
+                var repeat = craftIngotButton.GetComponent<RepeatButtonClick>() ??
+                             craftIngotButton.gameObject.AddComponent<RepeatButtonClick>();
                 repeat.button = craftIngotButton;
             }
+
             if (craftAllIngotsButton != null)
                 craftAllIngotsButton.onClick.AddListener(OnCraftAllIngotsClicked);
 
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
-            var slotNames = equipment != null ? equipment.Slots : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-            for (int i = 0; i < gearSlots.Count; i++)
+            var slotNames = equipment != null
+                ? equipment.Slots
+                : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+            for (var i = 0; i < gearSlots.Count; i++)
             {
                 var slotRef = gearSlots[i];
                 if (slotRef == null) continue;
-                var resolvedName = !string.IsNullOrWhiteSpace(slotRef.SlotName) ? slotRef.SlotName : (i < slotNames.Count ? slotNames[i] : null);
+                var resolvedName = !string.IsNullOrWhiteSpace(slotRef.SlotName) ? slotRef.SlotName :
+                    i < slotNames.Count ? slotNames[i] : null;
                 if (string.IsNullOrWhiteSpace(resolvedName))
                 {
-                    Debug.LogWarning($"ForgeWindowUI: Could not resolve slot name for gear slot at index {i}. Assign SlotName or extend EquipmentController.Slots.");
+                    Debug.LogWarning(
+                        $"ForgeWindowUI: Could not resolve slot name for gear slot at index {i}. Assign SlotName or extend EquipmentController.Slots.");
                     continue;
                 }
+
                 gearSlotNameByRef[slotRef] = resolvedName;
                 if (slotRef.SelectSlotButton != null)
                 {
@@ -147,24 +168,25 @@ namespace TimelessEchoes.Gear.UI
                     var capturedName = resolvedName;
                     slotRef.SelectSlotButton.onClick.AddListener(() => OnGearSlotClicked(capturedName));
                 }
+
                 slotRef.SetSelected(false);
             }
 
-			// Assume result panel is always active; clear text and disable action buttons
-			if (resultText != null)
-				resultText.text = string.Empty;
-			if (replaceButton != null) replaceButton.interactable = false;
-			if (salvageButton != null) salvageButton.interactable = false;
+            // Assume result panel is always active; clear text and disable action buttons
+            if (resultText != null)
+                resultText.text = string.Empty;
+            if (replaceButton != null) replaceButton.interactable = false;
+            if (salvageButton != null) salvageButton.interactable = false;
 
-			// Ensure TMP texts that use <sprite> tags render with the StatIcons sprite asset
-			var statSpriteAsset = TimelessEchoes.Upgrades.StatIconLookup.GetSpriteAsset();
-			if (statSpriteAsset != null)
-			{
-				if (selectedSlotStatsText != null) selectedSlotStatsText.spriteAsset = statSpriteAsset;
-				if (resultText != null) resultText.spriteAsset = statSpriteAsset;
-			}
+            // Ensure TMP texts that use <sprite> tags render with the StatIcons sprite asset
+            var statSpriteAsset = StatIconLookup.GetSpriteAsset();
+            if (statSpriteAsset != null)
+            {
+                if (selectedSlotStatsText != null) selectedSlotStatsText.spriteAsset = statSpriteAsset;
+                if (resultText != null) resultText.spriteAsset = statSpriteAsset;
+            }
 
-			// Initialize previews
+            // Initialize previews
             ClearResultPreview();
             UpdateAllGearSlots();
 
@@ -175,12 +197,13 @@ namespace TimelessEchoes.Gear.UI
                 if (firstCore != null)
                     SelectCore(firstCore);
             }
+
             // Select Weapon by default if present
             var defaultSlotName = equipment != null && equipment.Slots.Count > 0 ? equipment.Slots[0] : "Weapon";
             OnGearSlotClicked(defaultSlotName);
 
-			// Initialize button states based on current selections/resources
-			RefreshActionButtons();
+            // Initialize button states based on current selections/resources
+            RefreshActionButtons();
         }
 
         private void SelectCore(CoreSO core)
@@ -196,6 +219,7 @@ namespace TimelessEchoes.Gear.UI
                 var mappedCore = coreSlotCoreByRef.TryGetValue(slot, out var mc) ? mc : slot.Core;
                 slot.SetSelected(mappedCore == selectedCore);
             }
+
             // update selected core/ingot previews
             var previewSlot = GetSlotForCore(selectedCore);
             UpdateSelectedCorePreview(previewSlot);
@@ -203,12 +227,14 @@ namespace TimelessEchoes.Gear.UI
             UpdateIngotCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             RefreshOdds();
-                        RefreshActionButtons();
+            RefreshActionButtons();
         }
 
         private void OnCoreSlotClicked(CoreSlotUIReferences slot, CoreSO core)
         {
-            Debug.Log(core != null ? $"ForgeWindowUI: Core clicked -> {core.name}" : "ForgeWindowUI: Core clicked -> (null)");
+            Debug.Log(core != null
+                ? $"ForgeWindowUI: Core clicked -> {core.name}"
+                : "ForgeWindowUI: Core clicked -> (null)");
             SelectCore(core);
         }
 
@@ -223,40 +249,44 @@ namespace TimelessEchoes.Gear.UI
                 var resolved = gearSlotNameByRef.TryGetValue(gs, out var name) ? name : gs.SlotName;
                 gs.SetSelected(string.Equals(resolved, slot));
             }
+
             // When choosing a slot (but not crafting), show the unknown gear sprite for that slot in result
             SetResultUnknownForSlot(slot);
             // Update equipped stats display for the selected slot
             UpdateSelectedSlotStats();
-			RefreshActionButtons();
+            RefreshActionButtons();
         }
 
-		private void RefreshOdds()
-		{
-			bool hasLeft = rarityOddsLeftText != null;
-			bool hasRight = rarityOddsRightText != null;
-			if (!hasLeft && !hasRight)
-			{
-				Debug.LogWarning("ForgeWindowUI: rarityOddsLeftText/rarityOddsRightText are not assigned; odds UI will not be displayed.");
-				return;
-			}
-			var core = selectedCore;
-			if (core == null && cores != null && cores.Count > 0)
-				core = cores[0];
-			if (core == null)
-			{
-				if (hasLeft) rarityOddsLeftText.text = string.Empty;
-				if (hasRight) rarityOddsRightText.text = string.Empty;
-				RefreshOddsPieChart(null);
-				return;
-			}
-			var rarities = AssetCache.GetAll<RaritySO>("").OrderBy(r => r.tierIndex).ToList();
-			var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-			var conf = svc != null ? svc.Config : null;
-			var o = Blindsided.Oracle.oracle;
-			int level = (o != null && o.saveData != null) ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;
-            int craftsSince = (o != null && o.saveData != null) ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
-            int pityMinTier = 0;
-            if (conf != null && !TimelessEchoes.Upgrades.UpgradeFeatureToggle.DisableCraftingPity)
+        private void RefreshOdds()
+        {
+            var hasLeft = rarityOddsLeftText != null;
+            var hasRight = rarityOddsRightText != null;
+            if (!hasLeft && !hasRight)
+            {
+                Debug.LogWarning(
+                    "ForgeWindowUI: rarityOddsLeftText/rarityOddsRightText are not assigned; odds UI will not be displayed.");
+                return;
+            }
+
+            var core = selectedCore;
+            if (core == null && cores != null && cores.Count > 0)
+                core = cores[0];
+            if (core == null)
+            {
+                if (hasLeft) rarityOddsLeftText.text = string.Empty;
+                if (hasRight) rarityOddsRightText.text = string.Empty;
+                RefreshOddsPieChart(null);
+                return;
+            }
+
+            var rarities = AssetCache.GetAll<RaritySO>().OrderBy(r => r.tierIndex).ToList();
+            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+            var conf = svc != null ? svc.Config : null;
+            var o = Oracle.oracle;
+            var level = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;
+            var craftsSince = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
+            var pityMinTier = 0;
+            if (conf != null && !UpgradeFeatureToggle.DisableCraftingPity)
             {
                 if (craftsSince >= conf.pityMythicWithin) pityMinTier = 5;
                 else if (craftsSince >= conf.pityLegendaryWithin) pityMinTier = 4;
@@ -264,104 +294,109 @@ namespace TimelessEchoes.Gear.UI
                 else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
             }
 
-			// Compute weights consistent with CraftingService.RollRarity (including pity clamp)
-			var weights = new List<(RaritySO r, float w)>();
-			foreach (var r in rarities)
-			{
-				float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
-				float bonus = (r != null && conf != null && conf.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
-				float w = Mathf.Max(0f, baseW + bonus);
-				if (r != null && r.tierIndex < pityMinTier)
-					w = 0f;
-				weights.Add((r, w));
-			}
+            // Compute weights consistent with CraftingService.RollRarity (including pity clamp)
+            var weights = new List<(RaritySO r, float w)>();
+            foreach (var r in rarities)
+            {
+                var baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
+                var bonus = r != null && conf != null && conf.enableLevelScaling
+                    ? core.GetRarityWeightPerLevel(r) * level
+                    : 0f;
+                var w = Mathf.Max(0f, baseW + bonus);
+                if (r != null && r.tierIndex < pityMinTier)
+                    w = 0f;
+                weights.Add((r, w));
+            }
 
-			float total = weights.Sum(t => t.w);
-			var lines = new List<string>(rarities.Count);
-			foreach (var (r, w) in weights)
-			{
-				float p = total > 0f ? (w / total) : 0f;
-				var name = r != null ? r.GetName() : "(null)";
-				lines.Add($"{name}: {(p * 100f):0.###}%");
-			}
+            var total = weights.Sum(t => t.w);
+            var lines = new List<string>(rarities.Count);
+            foreach (var (r, w) in weights)
+            {
+                var p = total > 0f ? w / total : 0f;
+                var name = r != null ? r.GetName() : "(null)";
+                lines.Add($"{name}: {p * 100f:0.###}%");
+            }
 
-			// Split lines between left/right columns. If only one is assigned, show all in that one.
-			if (hasLeft && hasRight)
-			{
-				int mid = (lines.Count + 1) / 2; // put the longer half on the left
-				var leftLines = lines.Take(mid);
-				var rightLines = lines.Skip(mid);
-				rarityOddsLeftText.text = string.Join("\n", leftLines);
-				rarityOddsRightText.text = string.Join("\n", rightLines);
-			}
-			else if (hasLeft)
-			{
-				rarityOddsLeftText.text = string.Join("\n", lines);
-			}
-			else if (hasRight)
-			{
-				rarityOddsRightText.text = string.Join("\n", lines);
-			}
+            // Split lines between left/right columns. If only one is assigned, show all in that one.
+            if (hasLeft && hasRight)
+            {
+                var mid = (lines.Count + 1) / 2; // put the longer half on the left
+                var leftLines = lines.Take(mid);
+                var rightLines = lines.Skip(mid);
+                rarityOddsLeftText.text = string.Join("\n", leftLines);
+                rarityOddsRightText.text = string.Join("\n", rightLines);
+            }
+            else if (hasLeft)
+            {
+                rarityOddsLeftText.text = string.Join("\n", lines);
+            }
+            else if (hasRight)
+            {
+                rarityOddsRightText.text = string.Join("\n", lines);
+            }
 
-			// Update pie chart slices
-			RefreshOddsPieChart(weights);
-		}
+            // Update pie chart slices
+            RefreshOddsPieChart(weights);
+        }
 
-		private void RefreshOddsPieChart(List<(RaritySO r, float w)> weights)
-		{
-			if (oddsPieSlices == null || oddsPieSlices.Count == 0)
-				return;
+        private void RefreshOddsPieChart(List<(RaritySO r, float w)> weights)
+        {
+            if (oddsPieSlices == null || oddsPieSlices.Count == 0)
+                return;
 
-			if (weights == null || weights.Count == 0)
-			{
-				for (int i = 0; i < oddsPieSlices.Count; i++)
-					if (oddsPieSlices[i] != null) oddsPieSlices[i].enabled = false;
-				return;
-			}
+            if (weights == null || weights.Count == 0)
+            {
+                for (var i = 0; i < oddsPieSlices.Count; i++)
+                    if (oddsPieSlices[i] != null)
+                        oddsPieSlices[i].enabled = false;
+                return;
+            }
 
-			float total = 0f;
-			for (int i = 0; i < weights.Count; i++) total += Mathf.Max(0f, weights[i].w);
-			if (total <= 0f)
-			{
-				for (int i = 0; i < oddsPieSlices.Count; i++)
-					if (oddsPieSlices[i] != null) oddsPieSlices[i].enabled = false;
-				return;
-			}
+            var total = 0f;
+            for (var i = 0; i < weights.Count; i++) total += Mathf.Max(0f, weights[i].w);
+            if (total <= 0f)
+            {
+                for (var i = 0; i < oddsPieSlices.Count; i++)
+                    if (oddsPieSlices[i] != null)
+                        oddsPieSlices[i].enabled = false;
+                return;
+            }
 
-			int sliceCount = Mathf.Min(oddsPieSlices.Count, weights.Count);
-			float used = 0f;
-			float startAngle = 0f;
-			for (int i = 0; i < sliceCount; i++)
-			{
-				var img = oddsPieSlices[i];
-				if (img == null) continue;
+            var sliceCount = Mathf.Min(oddsPieSlices.Count, weights.Count);
+            var used = 0f;
+            var startAngle = 0f;
+            for (var i = 0; i < sliceCount; i++)
+            {
+                var img = oddsPieSlices[i];
+                if (img == null) continue;
 
-				float fraction = Mathf.Max(0f, weights[i].w) / total;
-				if (i == sliceCount - 1) fraction = Mathf.Clamp01(1f - used); // ensure we cover full 360
-				else used += fraction;
+                var fraction = Mathf.Max(0f, weights[i].w) / total;
+                if (i == sliceCount - 1) fraction = Mathf.Clamp01(1f - used); // ensure we cover full 360
+                else used += fraction;
 
-				img.enabled = fraction > 0f;
-				img.type = Image.Type.Filled;
-				img.fillMethod = Image.FillMethod.Radial360;
-				img.fillOrigin = 2; // Top origin; we rotate transform to position
-				img.fillClockwise = true;
-				img.fillAmount = Mathf.Clamp01(fraction);
-				img.color = weights[i].r != null ? weights[i].r.color : Color.white;
-				var rt = img.rectTransform;
-				if (rt != null)
-				{
-					var e = rt.localEulerAngles;
-					e.z = -startAngle;
-					rt.localEulerAngles = e;
-				}
+                img.enabled = fraction > 0f;
+                img.type = Image.Type.Filled;
+                img.fillMethod = Image.FillMethod.Radial360;
+                img.fillOrigin = 2; // Top origin; we rotate transform to position
+                img.fillClockwise = true;
+                img.fillAmount = Mathf.Clamp01(fraction);
+                img.color = weights[i].r != null ? weights[i].r.color : Color.white;
+                var rt = img.rectTransform;
+                if (rt != null)
+                {
+                    var e = rt.localEulerAngles;
+                    e.z = -startAngle;
+                    rt.localEulerAngles = e;
+                }
 
-				startAngle += fraction * 360f;
-			}
+                startAngle += fraction * 360f;
+            }
 
-			// Disable any extra slices beyond available weights
-			for (int i = sliceCount; i < oddsPieSlices.Count; i++)
-				if (oddsPieSlices[i] != null) oddsPieSlices[i].enabled = false;
-		}
+            // Disable any extra slices beyond available weights
+            for (var i = sliceCount; i < oddsPieSlices.Count; i++)
+                if (oddsPieSlices[i] != null)
+                    oddsPieSlices[i].enabled = false;
+        }
 
         private void OnCraftClicked()
         {
@@ -370,34 +405,42 @@ namespace TimelessEchoes.Gear.UI
                 RefreshActionButtons();
                 return;
             }
-            if (selectedCore == null || crafting == null) { RefreshActionButtons(); return; }
+
+            if (selectedCore == null || crafting == null)
+            {
+                RefreshActionButtons();
+                return;
+            }
+
             // Auto-salvage previous craft if one exists
             if (lastCrafted != null)
             {
                 SalvageService.Instance?.Salvage(lastCrafted);
                 lastCrafted = null;
             }
+
             // Consume one core item along with ingots
             var coreSlot = GetSlotForCore(selectedCore);
             var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-            lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes, 1);
+            lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
             if (lastCrafted == null)
             {
                 // Do not show error text; just ensure buttons reflect current state
                 RefreshActionButtons();
                 return;
             }
+
             crafting.RegisterCraftOutcome(lastCrafted.rarity);
             var eq = equipment?.GetEquipped(lastCrafted.slot);
             var summary = BuildItemSummary(lastCrafted, eq);
             ShowResult(summary);
             UpdateResultPreview(lastCrafted);
-            			// Ensure selected core/ingot previews reflect updated resource counts after craft
-			OnResourcesChanged();
-			ForceRefreshAllCoreSlots();
-			RefreshActionButtons();
-			// Odds may change due to pity counter updates; refresh the pie/text
-			RefreshOdds();
+            // Ensure selected core/ingot previews reflect updated resource counts after craft
+            OnResourcesChanged();
+            ForceRefreshAllCoreSlots();
+            RefreshActionButtons();
+            // Odds may change due to pity counter updates; refresh the pie/text
+            RefreshOdds();
         }
 
         // Called by UI slot buttons (e.g., Weapon/Helmet/Chest/Boots)
@@ -413,40 +456,36 @@ namespace TimelessEchoes.Gear.UI
         {
             var lines = new List<string>();
             // Build a quick lookup of current affix values by hero stat mapping for comparison
-            var currentByMapping = new Dictionary<TimelessEchoes.Gear.HeroStatMapping, (float value, bool isPercent, string name)>();
+            var currentByMapping = new Dictionary<HeroStatMapping, (float value, bool isPercent, string name)>();
             if (current != null)
-            {
                 foreach (var ca in current.affixes)
                 {
                     if (ca == null || ca.stat == null) continue;
                     currentByMapping[ca.stat.heroMapping] = (ca.value, ca.stat.isPercent, ca.stat.GetName());
                 }
-            }
 
-            var craftedMappings = new HashSet<TimelessEchoes.Gear.HeroStatMapping>();
-            var currentMappings = new HashSet<TimelessEchoes.Gear.HeroStatMapping>(currentByMapping.Keys);
+            var craftedMappings = new HashSet<HeroStatMapping>();
+            var currentMappings = new HashSet<HeroStatMapping>(currentByMapping.Keys);
             foreach (var a in item.affixes)
             {
                 if (a == null || a.stat == null) continue;
-                string iconTag = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(a.stat.heroMapping);
-                var valueText = $"{Blindsided.Utilities.CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
+                var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
+                var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
                 var nameText = a.stat.GetName();
 
                 // Compare against current equipped's same stat (if present)
                 var cv = currentByMapping.TryGetValue(a.stat.heroMapping, out var cur) ? cur.value : 0f;
-                float diff = a.value - cv;
-                string arrow = diff > 0.0001f
-                    ? TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.UpArrow)
-                    : (diff < -0.0001f
-                        ? TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.DownArrow)
-                        : TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.RightArrow));
-                string arrowPrefix = string.IsNullOrEmpty(arrow) ? string.Empty : (arrow + " ");
+                var diff = a.value - cv;
+                var arrow = diff > 0.0001f
+                    ? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
+                    : diff < -0.0001f
+                        ? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
+                        : StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+                var arrowPrefix = string.IsNullOrEmpty(arrow) ? string.Empty : arrow + " ";
 
                 // Entirely new stat (not present on current): use plus glyph instead of up arrow
                 if (!currentMappings.Contains(a.stat.heroMapping))
-                {
-                    arrowPrefix = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.Plus) + " ";
-                }
+                    arrowPrefix = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus) + " ";
 
                 if (!string.IsNullOrEmpty(iconTag))
                     lines.Add($"{arrowPrefix}{iconTag} {valueText}");
@@ -462,21 +501,22 @@ namespace TimelessEchoes.Gear.UI
                 var mapping = kv.Key;
                 if (craftedMappings.Contains(mapping)) continue;
 
-                string minus = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.Minus);
-                string prefix = string.IsNullOrEmpty(minus) ? string.Empty : (minus + " ");
-                string iconTag = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(mapping);
+                var minus = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
+                var prefix = string.IsNullOrEmpty(minus) ? string.Empty : minus + " ";
+                var iconTag = StatIconLookup.GetIconTag(mapping);
                 var isPercent = kv.Value.isPercent;
                 var name = kv.Value.name;
-                var valueText = $"{Blindsided.Utilities.CalcUtils.FormatNumber(0)}{(isPercent ? "%" : "")}";
+                var valueText = $"{CalcUtils.FormatNumber(0)}{(isPercent ? "%" : "")}";
                 if (!string.IsNullOrEmpty(iconTag))
                     lines.Add($"{prefix}{iconTag} {valueText}");
                 else
                     lines.Add($"{prefix}{name} {valueText}");
             }
+
             return string.Join("\n", lines);
         }
 
-		private void ShowResult(string text)
+        private void ShowResult(string text)
         {
             if (resultText != null) resultText.text = text;
             else Debug.LogWarning("ForgeWindowUI: resultText is not assigned; cannot display result text.");
@@ -488,11 +528,11 @@ namespace TimelessEchoes.Gear.UI
         {
             if (lastCrafted == null || equipment == null) return;
             equipment.Equip(lastCrafted);
-			lastCrafted = null;
-			// Clear result text and disable action buttons when no active craft
-			if (resultText != null) resultText.text = string.Empty;
-			if (replaceButton != null) replaceButton.interactable = false;
-			if (salvageButton != null) salvageButton.interactable = false;
+            lastCrafted = null;
+            // Clear result text and disable action buttons when no active craft
+            if (resultText != null) resultText.text = string.Empty;
+            if (replaceButton != null) replaceButton.interactable = false;
+            if (salvageButton != null) salvageButton.interactable = false;
             // Clear result preview when result is equipped
             ClearResultPreview();
             UpdateAllGearSlots();
@@ -503,28 +543,27 @@ namespace TimelessEchoes.Gear.UI
         {
             if (lastCrafted == null) return;
             SalvageService.Instance?.Salvage(lastCrafted);
-			lastCrafted = null;
-			// Clear result text and disable action buttons when no active craft
-			if (resultText != null) resultText.text = string.Empty;
-			if (replaceButton != null) replaceButton.interactable = false;
-			if (salvageButton != null) salvageButton.interactable = false;
+            lastCrafted = null;
+            // Clear result text and disable action buttons when no active craft
+            if (resultText != null) resultText.text = string.Empty;
+            if (replaceButton != null) replaceButton.interactable = false;
+            if (salvageButton != null) salvageButton.interactable = false;
             // Clear result preview when salvaged
             ClearResultPreview();
             RefreshActionButtons();
         }
 
-		
 
-		private void OnPostLoad()
-		{
-			// Clear any stale UI state after loading another save
-			lastCrafted = null;
-			if (resultText != null) resultText.text = string.Empty;
-			ClearResultPreview();
-			RefreshActionButtons();
-			UpdateAllGearSlots();
-			UpdateSelectedSlotStats();
-		}
+        private void OnPostLoad()
+        {
+            // Clear any stale UI state after loading another save
+            lastCrafted = null;
+            if (resultText != null) resultText.text = string.Empty;
+            ClearResultPreview();
+            RefreshActionButtons();
+            UpdateAllGearSlots();
+            UpdateSelectedSlotStats();
+        }
 
         private void OnEnable()
         {
@@ -533,20 +572,22 @@ namespace TimelessEchoes.Gear.UI
                 equipment.OnEquipmentChanged += UpdateAllGearSlots;
                 equipment.OnEquipmentChanged += UpdateSelectedSlotStats;
             }
-			// Refresh Ivan XP display on open
-			UpdateIvanXpUI();
+
+            // Refresh Ivan XP display on open
+            UpdateIvanXpUI();
             // Refresh selected previews when inventory changes (e.g., crafting spends ingots)
-            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             if (rm != null) rm.OnInventoryChanged += OnResourcesChanged;
-			// Subscribe to Ivan XP events if available
-			var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-                        if (svc != null)
-                        {
-                                svc.OnIvanXpChanged += OnIvanXpChanged;
-                                svc.OnIvanLevelUp += OnIvanLevelUp;
-                        }
-                        // Clear UI on load (do not clear on save to avoid autosave side-effects)
-                        Blindsided.EventHandler.OnLoadData += OnPostLoad;
+            // Subscribe to Ivan XP events if available
+            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+            if (svc != null)
+            {
+                svc.OnIvanXpChanged += OnIvanXpChanged;
+                svc.OnIvanLevelUp += OnIvanLevelUp;
+            }
+
+            // Clear UI on load (do not clear on save to avoid autosave side-effects)
+            EventHandler.OnLoadData += OnPostLoad;
             OnResourcesChanged();
         }
 
@@ -557,103 +598,114 @@ namespace TimelessEchoes.Gear.UI
                 equipment.OnEquipmentChanged -= UpdateAllGearSlots;
                 equipment.OnEquipmentChanged -= UpdateSelectedSlotStats;
             }
-			var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             if (rm != null) rm.OnInventoryChanged -= OnResourcesChanged;
-			var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-			if (svc != null)
-			{
-				svc.OnIvanXpChanged -= OnIvanXpChanged;
-				svc.OnIvanLevelUp -= OnIvanLevelUp;
-			}
-			Blindsided.EventHandler.OnLoadData -= OnPostLoad;
-			StopAutoCrafting();
+            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+            if (svc != null)
+            {
+                svc.OnIvanXpChanged -= OnIvanXpChanged;
+                svc.OnIvanLevelUp -= OnIvanLevelUp;
+            }
+
+            EventHandler.OnLoadData -= OnPostLoad;
+            StopAutoCrafting();
         }
-		private void OnIvanXpChanged(int level, float current, float needed)
-		{
-			SetIvanLevelLabel(level);
-			if (ivanXpText != null)
-				ivanXpText.text = $"{current:0}/{needed:0}";
-			if (ivanXpBar != null)
-				ivanXpBar.fillAmount = needed > 0f ? Mathf.Clamp01(current / needed) : 0f;
-		}
 
-		private void OnIvanLevelUp(int newLevel)
-		{
-			// Could play an effect or flash; for now just update text immediately
-			OnIvanXpChanged(newLevel,
-				Blindsided.Oracle.oracle != null ? Blindsided.Oracle.oracle.saveData.CraftingMasteryXP : 0f,
-				TimelessEchoes.Gear.CraftingService.Instance != null ?
-					TimelessEchoes.Gear.CraftingService.Instance.Config.xpForFirstLevel * Mathf.Pow(Mathf.Max(1, newLevel), TimelessEchoes.Gear.CraftingService.Instance.Config.xpLevelMultiplier)
-					: 1f);
-			// Odds depend on level scaling; refresh them when level changes
-			RefreshOdds();
-		}
+        private void OnIvanXpChanged(int level, float current, float needed)
+        {
+            SetIvanLevelLabel(level);
+            if (ivanXpText != null)
+                ivanXpText.text = $"{current:0}/{needed:0}";
+            if (ivanXpBar != null)
+                ivanXpBar.fillAmount = needed > 0f ? Mathf.Clamp01(current / needed) : 0f;
+        }
 
-        		private void OnResourcesChanged()
-		{
-                        var previewSlot = GetSlotForCore(selectedCore);
-                        UpdateSelectedCorePreview(previewSlot);
-                        UpdateIngotPreview(selectedCore);
-                        UpdateIngotCraftPreview(selectedCore);
-                        UpdateMaxCraftsText();
-                        UpdateIvanXpUI();
-                        RefreshActionButtons();
-                }
+        private void OnIvanLevelUp(int newLevel)
+        {
+            // Could play an effect or flash; for now just update text immediately
+            OnIvanXpChanged(newLevel,
+                Oracle.oracle != null ? Oracle.oracle.saveData.CraftingMasteryXP : 0f,
+                CraftingService.Instance != null
+                    ? CraftingService.Instance.Config.xpForFirstLevel * Mathf.Pow(Mathf.Max(1, newLevel),
+                        CraftingService.Instance.Config.xpLevelMultiplier)
+                    : 1f);
+            // Odds depend on level scaling; refresh them when level changes
+            RefreshOdds();
+        }
 
-		private void ForceRefreshAllCoreSlots()
-		{
-			// Force refresh all core slots to ensure UI consistency
-			foreach (var slot in coreSlots)
-			{
-				if (slot != null) slot.Refresh();
-			}
-		}
+        private void OnResourcesChanged()
+        {
+            var previewSlot = GetSlotForCore(selectedCore);
+            UpdateSelectedCorePreview(previewSlot);
+            UpdateIngotPreview(selectedCore);
+            UpdateIngotCraftPreview(selectedCore);
+            UpdateMaxCraftsText();
+            UpdateIvanXpUI();
+            RefreshActionButtons();
+        }
 
-		private void UpdateIvanXpUI()
-		{
-			var o = Blindsided.Oracle.oracle;
-			if (o == null || o.saveData == null) return;
-			SetIvanLevelLabel(o.saveData.CraftingMasteryLevel);
-			if (ivanXpText != null)
-			{
-				var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-				var conf = svc != null ? svc.Config : null;
-				float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
-				float need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
-				ivanXpText.text = $"{o.saveData.CraftingMasteryXP:0}/{need:0}";
-			}
-			if (ivanXpBar != null)
-			{
-				var svc = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-				var conf = svc != null ? svc.Config : null;
-				float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
-				float need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
-				float ratio = need > 0f ? Mathf.Clamp01(o.saveData.CraftingMasteryXP / need) : 0f;
-				ivanXpBar.fillAmount = ratio;
-			}
-		}
+        private void ForceRefreshAllCoreSlots()
+        {
+            // Force refresh all core slots to ensure UI consistency
+            foreach (var slot in coreSlots)
+                if (slot != null)
+                    slot.Refresh();
+        }
 
-		private void SetIvanLevelLabel(int level)
-		{
-			if (ivanLevelText != null)
-				ivanLevelText.text = $"Ivan | Level {Mathf.Max(0, level)}";
-		}
+        private void UpdateIvanXpUI()
+        {
+            var o = Oracle.oracle;
+            if (o == null || o.saveData == null) return;
+            SetIvanLevelLabel(o.saveData.CraftingMasteryLevel);
+            if (ivanXpText != null)
+            {
+                var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+                var conf = svc != null ? svc.Config : null;
+                float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
+                var need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
+                ivanXpText.text = $"{o.saveData.CraftingMasteryXP:0}/{need:0}";
+            }
+
+            if (ivanXpBar != null)
+            {
+                var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+                var conf = svc != null ? svc.Config : null;
+                float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
+                var need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
+                var ratio = need > 0f ? Mathf.Clamp01(o.saveData.CraftingMasteryXP / need) : 0f;
+                ivanXpBar.fillAmount = ratio;
+            }
+        }
+
+        private void SetIvanLevelLabel(int level)
+        {
+            if (ivanLevelText != null)
+                ivanLevelText.text = $"Ivan | Level {Mathf.Max(0, level)}";
+        }
 
         private void UpdateAllGearSlots()
         {
-            var slotNames = equipment != null ? equipment.Slots : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-            for (int i = 0; i < gearSlots.Count; i++)
+            var slotNames = equipment != null
+                ? equipment.Slots
+                : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+            for (var i = 0; i < gearSlots.Count; i++)
             {
                 var slotRef = gearSlots[i];
                 if (slotRef == null) continue;
                 var name = gearSlotNameByRef.TryGetValue(slotRef, out var n)
                     ? n
-                    : (!string.IsNullOrWhiteSpace(slotRef.SlotName) ? slotRef.SlotName : (i < slotNames.Count ? slotNames[i] : null));
+                    : !string.IsNullOrWhiteSpace(slotRef.SlotName)
+                        ? slotRef.SlotName
+                        : i < slotNames.Count
+                            ? slotNames[i]
+                            : null;
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     slotRef.ClearGearSprite();
                     continue;
                 }
+
                 var item = equipment != null ? equipment.GetEquipped(name) : null;
                 if (item != null)
                     slotRef.ApplyGearSprite(item);
@@ -671,13 +723,14 @@ namespace TimelessEchoes.Gear.UI
                 var mapped = coreSlotCoreByRef.TryGetValue(s, out var mc) ? mc : s.Core;
                 if (mapped == core) return s;
             }
+
             return null;
         }
 
         private void UpdateSelectedCorePreview(CoreSlotUIReferences slot)
         {
             // Update selected core image and count based on the clicked slot
-            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             if (selectedCoreImage != null)
             {
                 var res = slot != null ? slot.CoreResource : null;
@@ -685,44 +738,49 @@ namespace TimelessEchoes.Gear.UI
                 if (res != null)
                 {
                     var discovered = rm != null && rm.IsUnlocked(res);
-                    sprite = discovered ? (slot != null && slot.CoreImage != null && slot.CoreImage.sprite != null ? slot.CoreImage.sprite : res.icon) : res.UnknownIcon;
+                    sprite = discovered
+                        ? slot != null && slot.CoreImage != null && slot.CoreImage.sprite != null
+                            ? slot.CoreImage.sprite
+                            : res.icon
+                        : res.UnknownIcon;
                 }
+
                 selectedCoreImage.sprite = sprite;
                 selectedCoreImage.enabled = sprite != null;
             }
+
             if (selectedCoreCountText != null)
-            {
                 selectedCoreCountText.text = slot != null && slot.CoreResource != null ? "1" : string.Empty;
-            }
         }
 
         private void UpdateIngotPreview(CoreSO core)
         {
             // Resolve from the selected core slot's ingot resource reference first
             var slot = GetSlotForCore(core);
-            var ingot = slot != null && slot.IngotResource != null ? slot.IngotResource : (core != null ? core.requiredIngot : null);
+            var ingot = slot != null && slot.IngotResource != null ? slot.IngotResource :
+                core != null ? core.requiredIngot : null;
 
             if (selectedIngotImage != null)
             {
                 Sprite sprite = null;
                 if (ingot != null)
                 {
-                    var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+                    var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
                     var discovered = rm != null && rm.IsUnlocked(ingot);
                     sprite = discovered ? ingot.icon : ingot.UnknownIcon;
                 }
+
                 selectedIngotImage.sprite = sprite;
                 selectedIngotImage.enabled = sprite != null;
             }
+
             if (selectedIngotCountText != null)
-            {
                 selectedIngotCountText.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : string.Empty;
-            }
         }
 
         private void UpdateIngotCraftPreview(CoreSO core)
         {
-            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             if (ingotResultImage != null)
             {
                 Sprite sprite = null;
@@ -732,31 +790,37 @@ namespace TimelessEchoes.Gear.UI
                     var discovered = rm != null && rm.IsUnlocked(ingotRes);
                     sprite = discovered ? ingotRes.icon : ingotRes.UnknownIcon;
                 }
+
                 ingotResultImage.sprite = sprite;
                 ingotResultImage.enabled = sprite != null;
             }
+
             if (resultCountText != null)
             {
                 var ingotRes = core != null ? core.requiredIngot : null;
-                double amount = (rm != null && ingotRes != null) ? rm.GetAmount(ingotRes) : 0;
+                var amount = rm != null && ingotRes != null ? rm.GetAmount(ingotRes) : 0;
                 resultCountText.text = amount.ToString("0");
             }
+
             if (maxSmeltsText != null)
             {
-                int max = 0;
+                var max = 0;
                 if (core != null && rm != null)
                 {
-                    int chunkMax = int.MaxValue;
+                    var chunkMax = int.MaxValue;
                     if (core.chunkResource != null && core.chunkCostPerIngot > 0)
                         chunkMax = Mathf.FloorToInt((float)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
-                    int crystalMax = int.MaxValue;
+                    var crystalMax = int.MaxValue;
                     if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                        crystalMax = Mathf.FloorToInt((float)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+                        crystalMax =
+                            Mathf.FloorToInt((float)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
                     max = Mathf.Min(chunkMax, crystalMax);
                     if (max == int.MaxValue) max = 0;
                 }
+
                 maxSmeltsText.text = $"Max: {Mathf.Max(0, max)}";
             }
+
             if (chunkCostImage != null)
             {
                 Sprite sprite = null;
@@ -765,13 +829,13 @@ namespace TimelessEchoes.Gear.UI
                     var discovered = rm != null && rm.IsUnlocked(core.chunkResource);
                     sprite = discovered ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
                 }
+
                 chunkCostImage.sprite = sprite;
                 chunkCostImage.enabled = sprite != null;
             }
+
             if (chunkCostText != null)
-            {
                 chunkCostText.text = core != null ? core.chunkCostPerIngot.ToString("0") : string.Empty;
-            }
             if (crystalCostImage != null)
             {
                 Sprite sprite = null;
@@ -780,38 +844,42 @@ namespace TimelessEchoes.Gear.UI
                     var discovered = rm != null && rm.IsUnlocked(core.crystalResource);
                     sprite = discovered ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
                 }
+
                 crystalCostImage.sprite = sprite;
                 crystalCostImage.enabled = sprite != null;
             }
+
             if (crystalCostText != null)
-            {
                 crystalCostText.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
-            }
         }
 
         private void UpdateMaxCraftsText()
         {
             if (maxCraftsText == null) return;
-            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             if (selectedCore == null)
             {
                 maxCraftsText.text = "Max: 0";
                 return;
             }
+
             var coreSlot = GetSlotForCore(selectedCore);
             var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-            var ingotRes = coreSlot != null && coreSlot.IngotResource != null ? coreSlot.IngotResource : selectedCore.requiredIngot;
+            var ingotRes = coreSlot != null && coreSlot.IngotResource != null
+                ? coreSlot.IngotResource
+                : selectedCore.requiredIngot;
             if (rm == null || coreRes == null || ingotRes == null)
             {
                 maxCraftsText.text = "Max: 0";
                 return;
             }
-            double coreAmount = rm.GetAmount(coreRes);
-            double ingotAmount = rm.GetAmount(ingotRes);
-            int ingotCost = Mathf.Max(1, selectedCore.ingotCost);
-            int maxByIngots = Mathf.FloorToInt((float)(ingotAmount / ingotCost));
-            int maxByCores = Mathf.FloorToInt((float)coreAmount);
-            int max = Mathf.Min(maxByIngots, maxByCores);
+
+            var coreAmount = rm.GetAmount(coreRes);
+            var ingotAmount = rm.GetAmount(ingotRes);
+            var ingotCost = Mathf.Max(1, selectedCore.ingotCost);
+            var maxByIngots = Mathf.FloorToInt((float)(ingotAmount / ingotCost));
+            var maxByCores = Mathf.FloorToInt((float)coreAmount);
+            var max = Mathf.Min(maxByIngots, maxByCores);
             maxCraftsText.text = $"Max: {Mathf.Max(0, max)}";
         }
 
@@ -824,10 +892,11 @@ namespace TimelessEchoes.Gear.UI
                 resultItemImage.sprite = null;
                 return;
             }
+
             // Use the mapped sprite from the appropriate gear slot UI rather than a separate rarity list
             Sprite sprite = null;
             // Find the gear slot UI that corresponds to the crafted item's slot
-            for (int i = 0; i < gearSlots.Count; i++)
+            for (var i = 0; i < gearSlots.Count; i++)
             {
                 var gs = gearSlots[i];
                 if (gs == null) continue;
@@ -838,6 +907,7 @@ namespace TimelessEchoes.Gear.UI
                     break;
                 }
             }
+
             // Fallback to unknown sprite per slot order if needed
             if (sprite == null)
             {
@@ -846,212 +916,218 @@ namespace TimelessEchoes.Gear.UI
                 if (idx >= 0 && idx < unknownGearSprites.Count)
                     sprite = unknownGearSprites[idx];
             }
+
             resultItemImage.sprite = sprite;
             resultItemImage.enabled = sprite != null;
         }
 
-                private bool CanCraft()
+        private bool CanCraft()
+        {
+            // Validate core and required resources
+            if (crafting == null || selectedCore == null) return false;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            if (rm == null) return false;
+            var coreSlot = GetSlotForCore(selectedCore);
+            var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
+            if (coreRes == null) return false;
+            var ingot = coreSlot != null && coreSlot.IngotResource != null
+                ? coreSlot.IngotResource
+                : selectedCore.requiredIngot;
+            if (ingot == null) return false;
+            var haveIngots = rm.GetAmount(ingot) >= Mathf.Max(0, selectedCore.ingotCost);
+            var haveCores = rm.GetAmount(coreRes) >= 1;
+            return haveIngots && haveCores;
+        }
+
+        private bool CanCraftIngot()
+        {
+            if (selectedCore == null || selectedCore.requiredIngot == null)
+                return false;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            if (rm == null) return false;
+            if (selectedCore.chunkResource != null &&
+                rm.GetAmount(selectedCore.chunkResource) < selectedCore.chunkCostPerIngot)
+                return false;
+            if (selectedCore.crystalResource != null &&
+                rm.GetAmount(selectedCore.crystalResource) < selectedCore.crystalCostPerIngot)
+                return false;
+            return true;
+        }
+
+        private void OnCraftIngotClicked()
+        {
+            if (!CanCraftIngot()) return;
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null) return;
+            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                rm.Spend(core.chunkResource, core.chunkCostPerIngot);
+            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                rm.Spend(core.crystalResource, core.crystalCostPerIngot);
+            rm.Add(core.requiredIngot, 1);
+            OnResourcesChanged();
+        }
+
+        private void OnCraftAllIngotsClicked()
+        {
+            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var core = selectedCore;
+            if (rm == null || core == null || core.requiredIngot == null) return;
+            var craftable = int.MaxValue;
+            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+            if (craftable <= 0) return;
+            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                rm.Spend(core.chunkResource, core.chunkCostPerIngot * craftable);
+            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                rm.Spend(core.crystalResource, core.crystalCostPerIngot * craftable);
+            rm.Add(core.requiredIngot, craftable);
+            OnResourcesChanged();
+        }
+
+        private void RefreshActionButtons()
+        {
+            var canCraft = CanCraft();
+            if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
+            var canCraftIngot = CanCraftIngot();
+            if (craftIngotButton != null) craftIngotButton.interactable = canCraftIngot && !isAutoCrafting;
+            if (craftAllIngotsButton != null) craftAllIngotsButton.interactable = canCraftIngot && !isAutoCrafting;
+            // Replace/Salvage depend only on having a pending result; do not gate on craftability
+            var hasResult = lastCrafted != null;
+            if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
+            if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
+            // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
+            if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
+            if (craftUntilUpgradeButtonText != null)
+                craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
+        }
+
+        private void OnCraftUntilUpgradeClicked()
+        {
+            if (isAutoCrafting)
+            {
+                StopAutoCrafting();
+                return;
+            }
+
+            if (!CanCraft())
+            {
+                RefreshActionButtons();
+                return;
+            }
+
+            isAutoCrafting = true;
+            autoCraftCoroutine = StartCoroutine(CraftUntilUpgradeCoroutine());
+            RefreshActionButtons();
+        }
+
+        private void StopAutoCrafting()
+        {
+            if (!isAutoCrafting) return;
+            isAutoCrafting = false;
+            if (autoCraftCoroutine != null)
+            {
+                StopCoroutine(autoCraftCoroutine);
+                autoCraftCoroutine = null;
+            }
+
+            RefreshActionButtons();
+        }
+
+        private IEnumerator CraftUntilUpgradeCoroutine()
+        {
+            var wait = new WaitForSecondsRealtime(0.1f); // ~10 crafts per second
+            while (isAutoCrafting)
+            {
+                if (!CanCraft())
+                    break;
+
+                // Auto-salvage previous craft before rolling a new one
+                if (lastCrafted != null)
                 {
-                        // Validate core and required resources
-                        if (crafting == null || selectedCore == null) return false;
-                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
-			if (rm == null) return false;
-			var coreSlot = GetSlotForCore(selectedCore);
-			var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-			if (coreRes == null) return false;
-			var ingot = (coreSlot != null && coreSlot.IngotResource != null) ? coreSlot.IngotResource : selectedCore.requiredIngot;
-			if (ingot == null) return false;
-                        bool haveIngots = rm.GetAmount(ingot) >= Mathf.Max(0, selectedCore.ingotCost);
-                        bool haveCores = rm.GetAmount(coreRes) >= 1;
-                        return haveIngots && haveCores;
+                    SalvageService.Instance?.Salvage(lastCrafted);
+                    lastCrafted = null;
                 }
 
-                private bool CanCraftIngot()
+                if (selectedCore == null || crafting == null)
+                    break;
+
+                var coreSlot = GetSlotForCore(selectedCore);
+                var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
+                lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
+                if (lastCrafted == null)
                 {
-                        if (selectedCore == null || selectedCore.requiredIngot == null)
-                                return false;
-                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
-                        if (rm == null) return false;
-                        if (selectedCore.chunkResource != null && rm.GetAmount(selectedCore.chunkResource) < selectedCore.chunkCostPerIngot)
-                                return false;
-                        if (selectedCore.crystalResource != null && rm.GetAmount(selectedCore.crystalResource) < selectedCore.crystalCostPerIngot)
-                                return false;
-                        return true;
+                    RefreshActionButtons();
+                    break;
                 }
 
-                private void OnCraftIngotClicked()
+                crafting.RegisterCraftOutcome(lastCrafted.rarity);
+                var eq = equipment?.GetEquipped(lastCrafted.slot);
+                var summary = BuildItemSummary(lastCrafted, eq);
+                ShowResult(summary);
+                UpdateResultPreview(lastCrafted);
+                OnResourcesChanged();
+                ForceRefreshAllCoreSlots();
+                RefreshOdds();
+
+                if (IsPotentialUpgrade(lastCrafted,
+                        eq)) break; // leave lastCrafted for player to review/replace/salvage
+
+                // Not an upgrade, salvage and continue
+                SalvageService.Instance?.Salvage(lastCrafted);
+                lastCrafted = null;
+                RefreshActionButtons();
+                yield return wait;
+            }
+
+            isAutoCrafting = false;
+            autoCraftCoroutine = null;
+            RefreshActionButtons();
+        }
+
+        private bool IsPotentialUpgrade(GearItem candidate, GearItem current)
+        {
+            if (candidate == null) return false;
+            var score = ComputeUpgradeScore(candidate, current);
+            return score > 0.0001f;
+        }
+
+        private float ComputeUpgradeScore(GearItem candidate, GearItem current)
+        {
+            // Aggregate by hero mapping to compare like-for-like
+            var deltaByMapping = new Dictionary<HeroStatMapping, float>();
+            if (candidate != null)
+                for (var i = 0; i < candidate.affixes.Count; i++)
                 {
-                        if (!CanCraftIngot()) return;
-                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
-                        var core = selectedCore;
-                        if (rm == null || core == null) return;
-                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                                rm.Spend(core.chunkResource, core.chunkCostPerIngot);
-                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                                rm.Spend(core.crystalResource, core.crystalCostPerIngot);
-                        rm.Add(core.requiredIngot, 1);
-                        OnResourcesChanged();
+                    var a = candidate.affixes[i];
+                    if (a == null || a.stat == null) continue;
+                    var map = a.stat.heroMapping;
+                    if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
+                    deltaByMapping[map] += a.value;
                 }
 
-                private void OnCraftAllIngotsClicked()
+            if (current != null)
+                for (var i = 0; i < current.affixes.Count; i++)
                 {
-                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
-                        var core = selectedCore;
-                        if (rm == null || core == null || core.requiredIngot == null) return;
-                        int craftable = int.MaxValue;
-                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
-                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
-                        if (craftable <= 0) return;
-                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                                rm.Spend(core.chunkResource, core.chunkCostPerIngot * craftable);
-                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                                rm.Spend(core.crystalResource, core.crystalCostPerIngot * craftable);
-                        rm.Add(core.requiredIngot, craftable);
-                        OnResourcesChanged();
+                    var a = current.affixes[i];
+                    if (a == null || a.stat == null) continue;
+                    var map = a.stat.heroMapping;
+                    if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
+                    deltaByMapping[map] -= a.value;
                 }
 
-                private void RefreshActionButtons()
-                {
-                        bool canCraft = CanCraft();
-                        if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
-                        bool canCraftIngot = CanCraftIngot();
-                        if (craftIngotButton != null) craftIngotButton.interactable = canCraftIngot && !isAutoCrafting;
-                        if (craftAllIngotsButton != null) craftAllIngotsButton.interactable = canCraftIngot && !isAutoCrafting;
-                        // Replace/Salvage depend only on having a pending result; do not gate on craftability
-                        bool hasResult = lastCrafted != null;
-                        if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
-                        if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
-                        // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
-                        if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
-                        if (craftUntilUpgradeButtonText != null) craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
-                }
+            var score = 0f;
+            foreach (var kv in deltaByMapping)
+            {
+                var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
+                var scale = def != null ? Mathf.Max(0f, def.comparisonScale) : 1f;
+                score += kv.Value * scale;
+            }
 
-		private void OnCraftUntilUpgradeClicked()
-		{
-			if (isAutoCrafting)
-			{
-				StopAutoCrafting();
-				return;
-			}
-			if (!CanCraft())
-			{
-				RefreshActionButtons();
-				return;
-			}
-			isAutoCrafting = true;
-			autoCraftCoroutine = StartCoroutine(CraftUntilUpgradeCoroutine());
-			RefreshActionButtons();
-		}
-
-		private void StopAutoCrafting()
-		{
-			if (!isAutoCrafting) return;
-			isAutoCrafting = false;
-			if (autoCraftCoroutine != null)
-			{
-				StopCoroutine(autoCraftCoroutine);
-				autoCraftCoroutine = null;
-			}
-			RefreshActionButtons();
-		}
-
-		private IEnumerator CraftUntilUpgradeCoroutine()
-		{
-			var wait = new WaitForSecondsRealtime(0.1f); // ~10 crafts per second
-			while (isAutoCrafting)
-			{
-				if (!CanCraft())
-					break;
-
-				// Auto-salvage previous craft before rolling a new one
-				if (lastCrafted != null)
-				{
-					SalvageService.Instance?.Salvage(lastCrafted);
-					lastCrafted = null;
-				}
-
-				if (selectedCore == null || crafting == null)
-					break;
-
-				var coreSlot = GetSlotForCore(selectedCore);
-				var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-				lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes, 1);
-				if (lastCrafted == null)
-				{
-					RefreshActionButtons();
-					break;
-				}
-				crafting.RegisterCraftOutcome(lastCrafted.rarity);
-				var eq = equipment?.GetEquipped(lastCrafted.slot);
-				var summary = BuildItemSummary(lastCrafted, eq);
-				ShowResult(summary);
-				UpdateResultPreview(lastCrafted);
-				OnResourcesChanged();
-				ForceRefreshAllCoreSlots();
-				RefreshOdds();
-
-				if (IsPotentialUpgrade(lastCrafted, eq))
-				{
-					break; // leave lastCrafted for player to review/replace/salvage
-				}
-
-				// Not an upgrade, salvage and continue
-				SalvageService.Instance?.Salvage(lastCrafted);
-				lastCrafted = null;
-				RefreshActionButtons();
-				yield return wait;
-			}
-
-			isAutoCrafting = false;
-			autoCraftCoroutine = null;
-			RefreshActionButtons();
-		}
-
-		private bool IsPotentialUpgrade(GearItem candidate, GearItem current)
-		{
-			if (candidate == null) return false;
-			float score = ComputeUpgradeScore(candidate, current);
-			return score > 0.0001f;
-		}
-
-		private float ComputeUpgradeScore(GearItem candidate, GearItem current)
-		{
-			// Aggregate by hero mapping to compare like-for-like
-			var deltaByMapping = new Dictionary<TimelessEchoes.Gear.HeroStatMapping, float>();
-			if (candidate != null)
-			{
-				for (int i = 0; i < candidate.affixes.Count; i++)
-				{
-					var a = candidate.affixes[i];
-					if (a == null || a.stat == null) continue;
-					var map = a.stat.heroMapping;
-					if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
-					deltaByMapping[map] += a.value;
-				}
-			}
-			if (current != null)
-			{
-				for (int i = 0; i < current.affixes.Count; i++)
-				{
-					var a = current.affixes[i];
-					if (a == null || a.stat == null) continue;
-					var map = a.stat.heroMapping;
-					if (!deltaByMapping.ContainsKey(map)) deltaByMapping[map] = 0f;
-					deltaByMapping[map] -= a.value;
-				}
-			}
-
-			float score = 0f;
-			foreach (var kv in deltaByMapping)
-			{
-				var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
-				float scale = def != null ? Mathf.Max(0f, def.comparisonScale) : 1f;
-				score += kv.Value * scale;
-			}
-			return score;
-		}
+            return score;
+        }
 
         private void ClearResultPreview()
         {
@@ -1071,8 +1147,8 @@ namespace TimelessEchoes.Gear.UI
 
             Sprite sprite = null;
             // Prefer finding the gear slot index by matching resolved names
-            int idx = -1;
-            for (int i = 0; i < gearSlots.Count; i++)
+            var idx = -1;
+            for (var i = 0; i < gearSlots.Count; i++)
             {
                 var gs = gearSlots[i];
                 if (gs == null) continue;
@@ -1083,11 +1159,13 @@ namespace TimelessEchoes.Gear.UI
                     break;
                 }
             }
+
             if (idx < 0)
             {
                 var order = new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
                 idx = order.IndexOf(slot);
             }
+
             if (idx >= 0 && idx < unknownGearSprites.Count)
                 sprite = unknownGearSprites[idx];
 
@@ -1113,7 +1191,7 @@ namespace TimelessEchoes.Gear.UI
         private string BuildEquippedStatsText(GearItem item, string slotName)
         {
             if (item == null)
-                return TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(TimelessEchoes.Upgrades.StatIconLookup.StatKey.Minus);
+                return StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
 
             var lines = new List<string>();
 
@@ -1121,17 +1199,16 @@ namespace TimelessEchoes.Gear.UI
             foreach (var a in item.affixes)
             {
                 if (a == null || a.stat == null) continue;
-                string iconTag = TimelessEchoes.Upgrades.StatIconLookup.GetIconTag(a.stat.heroMapping);
-                var valueText = $"{Blindsided.Utilities.CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
+                var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
+                var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
                 var nameText = a.stat.GetName();
                 if (!string.IsNullOrEmpty(iconTag))
                     lines.Add($"{iconTag} {valueText}");
                 else
                     lines.Add($"{nameText} {valueText}");
             }
+
             return string.Join("\n", lines);
         }
     }
 }
-
-

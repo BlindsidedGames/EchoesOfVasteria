@@ -219,7 +219,6 @@ namespace TimelessEchoes.UI
                 return;
 
             bool windowWasActive = reference.window.activeSelf;
-            bool inventoryWasOpen = inventory.window != null && inventory.window.activeSelf;
 
             CloseAllWindows();
 
@@ -228,7 +227,7 @@ namespace TimelessEchoes.UI
                 reference.window.SetActive(true);
                 reference.button.interactable = false;
 
-                if (reference.openInventory || inventoryWasOpen)
+                if (reference.openInventory)
                 {
                     if (inventory.window != null)
                     {
@@ -336,7 +335,18 @@ namespace TimelessEchoes.UI
             if (windowsOpenIndicator != null)
                 windowsOpenIndicator.SetActive(AnyWindowOpenForIndicator());
             if (closeButton != null)
-                closeButton.gameObject.SetActive(AnyWindowOpen());
+                closeButton.gameObject.SetActive(ShouldShowGlobalCloseButton());
+        }
+
+        /// <summary>
+        ///     Determines whether the global close button should be shown.
+        ///     The stats window has its own close button, so hide the global one
+        ///     when stats is open.
+        /// </summary>
+        private bool ShouldShowGlobalCloseButton()
+        {
+            bool isStatsOpen = stats.window != null && stats.window.activeSelf;
+            return AnyWindowOpen() && !isStatsOpen;
         }
     }
 }

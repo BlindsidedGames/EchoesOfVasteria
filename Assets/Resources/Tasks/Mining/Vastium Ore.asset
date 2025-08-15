@@ -32,22 +32,26 @@ MonoBehaviour:
   resourceDrops:
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 4, y: 12}
-    dropChance: 1
+    weight: 1
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}
     dropRange: {x: 2, y: 5}
-    dropChance: 0.7
+    weight: 0.7
     minX: 1000
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}
     dropRange: {x: 1, y: 4}
-    dropChance: 0.4
+    weight: 0.4
     minX: 1000
     maxX: Infinity
     requiredQuest: {fileID: 0}
+  additionalLootChances:
+  - 1
+  - 0.4
+  - 0.2
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0
