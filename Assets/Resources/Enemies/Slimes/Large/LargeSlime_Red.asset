@@ -27,14 +27,67 @@ MonoBehaviour:
   resourceDrops:
   - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
     dropRange: {x: 10, y: 20}
-    dropChance: 1
+    weight: 1
     minX: 0
     maxX: Infinity
+    requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 1, y: 1}
-    dropChance: 0.05
+    weight: 0.05
     minX: 0
     maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 300
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 150
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 100
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 50
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 25
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 10
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 5
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 1
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  additionalLootChances:
+  - 0.5
+  - 0.3
   experience: 30
   moveSpeed: 6
   visionRange: 7

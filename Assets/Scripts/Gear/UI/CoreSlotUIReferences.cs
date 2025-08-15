@@ -1,46 +1,52 @@
-using TMPro;
+using System;
 using TimelessEchoes.Upgrades;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.Gear.UI
 {
     /// <summary>
-    /// Reference holder for a single Core slot button in the Forge UI.
-    /// Handles selection visuals and shows core discovery and craftable count using ResourceManager.
+    ///     Reference holder for a single Core slot button in the Forge UI.
+    ///     Handles selection visuals and shows core discovery and craftable count using ResourceManager.
     /// </summary>
     public class CoreSlotUIReferences : MonoBehaviour
     {
         [Header("Data")]
         [Tooltip("Core this slot represents (optional; used for pre-placed core slots).")]
-        [SerializeField] private TimelessEchoes.Gear.CoreSO core;
+        [SerializeField]
+        private CoreSO core;
+
         [Header("Resources")]
         [Tooltip("Resource representing the required ingot for this core (used for preview/count).")]
-        [SerializeField] private TimelessEchoes.Upgrades.Resource ingotResource;
+        [SerializeField]
+        private Resource ingotResource;
 
-        [Header("Wiring")]
-        [SerializeField] private Button selectSlotButton;
+        [Header("Wiring")] [SerializeField] private Button selectSlotButton;
         [SerializeField] private Image selectionImage;
         [SerializeField] private Image coreImage;
         [SerializeField] private TMP_Text coreCountText;
 
-        [Header("Core Resource (for discovery/amount)")]
-        [SerializeField] private Resource coreResource;
+        [Header("Core Resource (for discovery/amount)")] [SerializeField]
+        private Resource coreResource;
 
         public Button SelectSlotButton => selectSlotButton;
         public Image SelectionImage => selectionImage;
         public Image CoreImage => coreImage;
         public TMP_Text CoreCountText => coreCountText;
-        public TimelessEchoes.Gear.CoreSO Core
+
+        public CoreSO Core
         {
             get => core;
             set => core = value;
         }
+
         public Resource CoreResource
         {
             get => coreResource;
             set => coreResource = value;
         }
+
         public Resource IngotResource
         {
             get => ingotResource;
@@ -67,8 +73,8 @@ namespace TimelessEchoes.Gear.UI
         }
 
         /// <summary>
-        /// Refreshes discovery visibility and craftable count from the ResourceManager.
-        /// If no resource is assigned, the count displays 0.
+        ///     Refreshes discovery visibility and craftable count from the ResourceManager.
+        ///     If no resource is assigned, the count displays 0.
         /// </summary>
         public void Refresh()
         {
@@ -82,18 +88,17 @@ namespace TimelessEchoes.Gear.UI
             if (coreCountText != null)
             {
                 var coreAmount = hasCoreResource && rm != null ? rm.GetAmount(coreResource) : 0;
-                var crafts = coreAmount;
+                var crafts = Math.Floor(coreAmount);
                 if (rm != null)
                 {
                     var ingotAmount = ingotResource != null ? rm.GetAmount(ingotResource) : 0;
                     var cost = core != null ? core.ingotCost : 1;
                     if (cost > 0)
-                        crafts = Mathf.Min(crafts, ingotAmount / cost);
+                        crafts = Math.Min(crafts, Math.Floor(ingotAmount) / cost);
                 }
+
                 coreCountText.text = crafts.ToString("0");
             }
         }
     }
 }
-
-

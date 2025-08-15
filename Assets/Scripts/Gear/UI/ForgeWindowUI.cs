@@ -843,10 +843,10 @@ namespace TimelessEchoes.Gear.UI
             if (section.cost2Text != null)
                 section.cost2Text.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
 
-            if (section.craftArrow != null && section.craftArrow.image != null)
+            if (section.craftArrow != null)
             {
                 var arrowSprite = CanCraftIngot() ? section.validArrow : section.invalidArrow;
-                section.craftArrow.image.sprite = arrowSprite;
+                section.craftArrow.sprite = arrowSprite;
             }
         }
 

@@ -5,11 +5,11 @@ using UnityEngine.UI;
 namespace TimelessEchoes.Gear.UI
 {
     /// <summary>
-    /// Reference holder for a 2x1 craft section UI.
+    ///     Reference holder for a 2x1 craft section UI.
     /// </summary>
     public class CraftSection2x1UIReferences : MonoBehaviour
     {
-        public ImageReference craftArrow;
+        public Image craftArrow;
         public Sprite invalidArrow;
         public Sprite validArrow;
         public Image resultImage;
