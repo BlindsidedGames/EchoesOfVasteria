@@ -31,6 +31,7 @@ namespace TimelessEchoes.UI
         private float lastMove;
         private float lastDefense;
         private float lastRegen;
+        private float lastCrit;
 
         private void Awake()
         {
@@ -70,6 +71,8 @@ namespace TimelessEchoes.UI
             {
                 if (uiReferences.leftText != null)
                     uiReferences.leftText.spriteAsset = spriteAsset != null ? spriteAsset : uiReferences.leftText.spriteAsset;
+                if (uiReferences.middleText != null)
+                    uiReferences.middleText.spriteAsset = spriteAsset != null ? spriteAsset : uiReferences.middleText.spriteAsset;
                 if (uiReferences.rightText != null)
                     uiReferences.rightText.spriteAsset = spriteAsset != null ? spriteAsset : uiReferences.rightText.spriteAsset;
             }
@@ -117,14 +120,14 @@ namespace TimelessEchoes.UI
 
         private void OnHealthChanged(float current, float max)
         {
-            if (uiReferences != null && uiReferences.rightText != null)
+            if (uiReferences != null && uiReferences.leftText != null)
             {
-                var lines = uiReferences.rightText.text.Split('\n');
+                var lines = uiReferences.leftText.text.Split('\n');
                 if (lines.Length >= 3)
                 {
                     var hpTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MaxHealth);
                     lines[2] = $"{hpTag} {Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
-                    uiReferences.rightText.text = string.Join("\n", lines);
+                    uiReferences.leftText.text = string.Join("\n", lines);
                 }
             }
         }
@@ -140,18 +143,29 @@ namespace TimelessEchoes.UI
             var attack = hero.AttackRate;
             var move = hero.MoveSpeed;
             var defense = hero.Defense;
+            float critChance = 0f;
+            var equip = TimelessEchoes.Gear.EquipmentController.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            if (equip != null)
+            {
+                var crafting = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
+                var critDef = crafting != null ? crafting.GetStatByMapping(TimelessEchoes.Gear.HeroStatMapping.CritChance) : null;
+                if (critDef != null)
+                {
+                    var raw = equip.GetCritChance(critDef);
+                    critChance = critDef.isPercent ? raw : raw * 100f;
+                }
+            }
             var controller = StatUpgradeController.Instance;
             var regenUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
             float upgradeRegen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;
 
             float gearRegen = 0f;
-            var equip = TimelessEchoes.Gear.EquipmentController.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
             if (equip != null)
                 gearRegen = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.HealthRegen);
             var regen = upgradeRegen + gearRegen;
 
             if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
-                && Mathf.Approximately(attack, lastAttack)
+                && Mathf.Approximately(attack, lastAttack) && Mathf.Approximately(critChance, lastCrit)
                 && Mathf.Approximately(move, lastMove) && Mathf.Approximately(defense, lastDefense)
                 && Mathf.Approximately(regen, lastRegen))
                 return;
@@ -159,26 +173,12 @@ namespace TimelessEchoes.UI
             lastBaseDamage = baseDamage;
             lastBonusDamage = bonusDamage;
             lastAttack = attack;
+            lastCrit = critChance;
             lastMove = move;
             lastDefense = defense;
             lastRegen = regen;
 
             if (uiReferences.leftText != null)
-            {
-                var dmgTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.Damage);
-                var atkTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
-                var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
-
-                string dmgLine = $"{dmgTag} {totalDamage:0.##}";
-                if (bonusDamage > 0f)
-                    dmgLine += $" (+{bonusDamage:0.##})";
-                uiReferences.leftText.text =
-                    dmgLine + "\n" +
-                    $"{atkTag} {attack:0.###} /s\n" +
-                    $"{moveTag} {move:0.##}";
-            }
-
-            if (uiReferences.rightText != null)
             {
                 // Convert flat defense into a damage reduction percent using the global combat formula
                 float damageFraction = TimelessEchoes.Combat.ApplyDefense(1f, defense);
@@ -191,10 +191,31 @@ namespace TimelessEchoes.UI
                 var hpLine = heroHealth != null
                     ? $"{hpTag} {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
                     : string.Empty;
-                uiReferences.rightText.text =
+                uiReferences.leftText.text =
                     $"{defTag} {reductionPercent:0.#}%\n" +
                     $"{regenTag} {regen:0.###} /s\n" +
                     hpLine;
+            }
+
+            if (uiReferences.middleText != null)
+            {
+                var dmgTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.Damage);
+                var atkTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
+                var critTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.CritChance);
+
+                string dmgLine = $"{dmgTag} {totalDamage:0.##}";
+                if (bonusDamage > 0f)
+                    dmgLine += $" (+{bonusDamage:0.##})";
+                uiReferences.middleText.text =
+                    dmgLine + "\n" +
+                    $"{atkTag} {attack:0.###} /s\n" +
+                    $"{critTag} {critChance:0.#}%";
+            }
+
+            if (uiReferences.rightText != null)
+            {
+                var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
+                uiReferences.rightText.text = $"{moveTag} {move:0.##}";
             }
         }
     }

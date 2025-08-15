@@ -8,6 +8,7 @@ namespace References.UI
     public class RunCalebUIReferences : MonoBehaviour
     {
         public TMP_Text leftText;
+        public TMP_Text middleText;
         public TMP_Text rightText;
         public Button skillsButton;
         public SlicedFilledImage healthBar;
