@@ -750,7 +750,17 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (selectedCoreCountText != null)
-                selectedCoreCountText.text = slot != null && slot.CoreResource != null ? "1" : string.Empty;
+            {
+                if (slot != null && slot.CoreResource != null && rm != null)
+                {
+                    var amount = rm.GetAmount(slot.CoreResource);
+                    selectedCoreCountText.text = amount > 0 ? amount.ToString("0") : "0";
+                }
+                else
+                {
+                    selectedCoreCountText.text = "0";
+                }
+            }
         }
 
         private void UpdateIngotPreview(CoreSO core)
