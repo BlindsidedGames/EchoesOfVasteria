@@ -50,6 +50,14 @@ namespace TimelessEchoes.Gear.UI
         [Tooltip("Text to display remaining Ingot count for the selected Core.")]
         [SerializeField] private TMP_Text selectedIngotCountText;
 
+        [Header("Ingot Conversion UI")]
+        [SerializeField] private Image chunkCostImage;
+        [SerializeField] private TMP_Text chunkCostText;
+        [SerializeField] private Image crystalCostImage;
+        [SerializeField] private TMP_Text crystalCostText;
+        [SerializeField] private Button craftIngotButton;
+        [SerializeField] private Button craftAllIngotsButton;
+
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
         [SerializeField] private TMP_Text selectedSlotStatsText;
@@ -98,14 +106,22 @@ namespace TimelessEchoes.Gear.UI
                     Debug.LogWarning($"ForgeWindowUI: Core slot at index {i} has no Core mapped; assign Core on the slot or ensure cores are discoverable.");
             }
 
-			if (craftButton != null)
+                        if (craftButton != null)
                 craftButton.onClick.AddListener(OnCraftClicked);
             if (replaceButton != null)
                 replaceButton.onClick.AddListener(OnReplaceClicked);
             if (salvageButton != null)
                 salvageButton.onClick.AddListener(OnSalvageClicked);
-			if (craftUntilUpgradeButton != null)
-				craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
+                        if (craftUntilUpgradeButton != null)
+                                craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
+            if (craftIngotButton != null)
+            {
+                craftIngotButton.onClick.AddListener(OnCraftIngotClicked);
+                var repeat = craftIngotButton.GetComponent<Blindsided.Utilities.RepeatButtonClick>() ?? craftIngotButton.gameObject.AddComponent<Blindsided.Utilities.RepeatButtonClick>();
+                repeat.button = craftIngotButton;
+            }
+            if (craftAllIngotsButton != null)
+                craftAllIngotsButton.onClick.AddListener(OnCraftAllIngotsClicked);
 
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
@@ -180,8 +196,9 @@ namespace TimelessEchoes.Gear.UI
             var previewSlot = GetSlotForCore(selectedCore);
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);
+            UpdateIngotCraftPreview(selectedCore);
             RefreshOdds();
-			RefreshActionButtons();
+                        RefreshActionButtons();
         }
 
         private void OnCoreSlotClicked(CoreSlotUIReferences slot, CoreSO core)
@@ -568,12 +585,13 @@ namespace TimelessEchoes.Gear.UI
 
         		private void OnResourcesChanged()
 		{
-			var previewSlot = GetSlotForCore(selectedCore);
-			UpdateSelectedCorePreview(previewSlot);
-			UpdateIngotPreview(selectedCore);
-			UpdateIvanXpUI();
-			RefreshActionButtons();
-		}
+                        var previewSlot = GetSlotForCore(selectedCore);
+                        UpdateSelectedCorePreview(previewSlot);
+                        UpdateIngotPreview(selectedCore);
+                        UpdateIngotCraftPreview(selectedCore);
+                        UpdateIvanXpUI();
+                        RefreshActionButtons();
+                }
 
 		private void ForceRefreshAllCoreSlots()
 		{
@@ -667,16 +685,7 @@ namespace TimelessEchoes.Gear.UI
             }
             if (selectedCoreCountText != null)
             {
-                var res = slot != null ? slot.CoreResource : null;
-                if (rm != null && res != null)
-                {
-                    var amt = rm.GetAmount(res);
-                    selectedCoreCountText.text = amt > 0 ? amt.ToString("0") : "0";
-                }
-                else
-                {
-                    selectedCoreCountText.text = string.Empty;
-                }
+                selectedCoreCountText.text = slot != null && slot.CoreResource != null ? "1" : string.Empty;
             }
         }
 
@@ -700,16 +709,42 @@ namespace TimelessEchoes.Gear.UI
             }
             if (selectedIngotCountText != null)
             {
-                var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
-                if (rm != null && ingot != null)
+                selectedIngotCountText.text = core != null ? Mathf.Max(0, core.ingotCost).ToString("0") : string.Empty;
+            }
+        }
+
+        private void UpdateIngotCraftPreview(CoreSO core)
+        {
+            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+            if (chunkCostImage != null)
+            {
+                Sprite sprite = null;
+                if (core != null && core.chunkResource != null)
                 {
-                    var amt = rm.GetAmount(ingot);
-                    selectedIngotCountText.text = amt > 0 ? amt.ToString("0") : "0";
+                    var discovered = rm != null && rm.IsUnlocked(core.chunkResource);
+                    sprite = discovered ? core.chunkResource.icon : core.chunkResource.UnknownIcon;
                 }
-                else
+                chunkCostImage.sprite = sprite;
+                chunkCostImage.enabled = sprite != null;
+            }
+            if (chunkCostText != null)
+            {
+                chunkCostText.text = core != null ? core.chunkCostPerIngot.ToString("0") : string.Empty;
+            }
+            if (crystalCostImage != null)
+            {
+                Sprite sprite = null;
+                if (core != null && core.crystalResource != null)
                 {
-                    selectedIngotCountText.text = string.Empty;
+                    var discovered = rm != null && rm.IsUnlocked(core.crystalResource);
+                    sprite = discovered ? core.crystalResource.icon : core.crystalResource.UnknownIcon;
                 }
+                crystalCostImage.sprite = sprite;
+                crystalCostImage.enabled = sprite != null;
+            }
+            if (crystalCostText != null)
+            {
+                crystalCostText.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
             }
         }
 
@@ -748,34 +783,83 @@ namespace TimelessEchoes.Gear.UI
             resultItemImage.enabled = sprite != null;
         }
 
-		private bool CanCraft()
-		{
-			// Validate core and required resources
-			if (crafting == null || selectedCore == null) return false;
-			var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+                private bool CanCraft()
+                {
+                        // Validate core and required resources
+                        if (crafting == null || selectedCore == null) return false;
+                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
 			if (rm == null) return false;
 			var coreSlot = GetSlotForCore(selectedCore);
 			var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
 			if (coreRes == null) return false;
 			var ingot = (coreSlot != null && coreSlot.IngotResource != null) ? coreSlot.IngotResource : selectedCore.requiredIngot;
 			if (ingot == null) return false;
-			bool haveIngots = rm.GetAmount(ingot) >= Mathf.Max(0, selectedCore.ingotCost);
-			bool haveCores = rm.GetAmount(coreRes) >= 1;
-			return haveIngots && haveCores;
-		}
+                        bool haveIngots = rm.GetAmount(ingot) >= Mathf.Max(0, selectedCore.ingotCost);
+                        bool haveCores = rm.GetAmount(coreRes) >= 1;
+                        return haveIngots && haveCores;
+                }
 
-		private void RefreshActionButtons()
-		{
-			bool canCraft = CanCraft();
-			if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
-			// Replace/Salvage depend only on having a pending result; do not gate on craftability
-			bool hasResult = lastCrafted != null;
-			if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
-			if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
-			// Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
-			if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
-			if (craftUntilUpgradeButtonText != null) craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
-		}
+                private bool CanCraftIngot()
+                {
+                        if (selectedCore == null || selectedCore.requiredIngot == null)
+                                return false;
+                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+                        if (rm == null) return false;
+                        if (selectedCore.chunkResource != null && rm.GetAmount(selectedCore.chunkResource) < selectedCore.chunkCostPerIngot)
+                                return false;
+                        if (selectedCore.crystalResource != null && rm.GetAmount(selectedCore.crystalResource) < selectedCore.crystalCostPerIngot)
+                                return false;
+                        return true;
+                }
+
+                private void OnCraftIngotClicked()
+                {
+                        if (!CanCraftIngot()) return;
+                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+                        var core = selectedCore;
+                        if (rm == null || core == null) return;
+                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                                rm.Spend(core.chunkResource, core.chunkCostPerIngot);
+                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                                rm.Spend(core.crystalResource, core.crystalCostPerIngot);
+                        rm.Add(core.requiredIngot, 1);
+                        OnResourcesChanged();
+                }
+
+                private void OnCraftAllIngotsClicked()
+                {
+                        var rm = TimelessEchoes.Upgrades.ResourceManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.ResourceManager>();
+                        var core = selectedCore;
+                        if (rm == null || core == null || core.requiredIngot == null) return;
+                        int craftable = int.MaxValue;
+                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+                        if (craftable <= 0) return;
+                        if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                                rm.Spend(core.chunkResource, core.chunkCostPerIngot * craftable);
+                        if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                                rm.Spend(core.crystalResource, core.crystalCostPerIngot * craftable);
+                        rm.Add(core.requiredIngot, craftable);
+                        OnResourcesChanged();
+                }
+
+                private void RefreshActionButtons()
+                {
+                        bool canCraft = CanCraft();
+                        if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
+                        bool canCraftIngot = CanCraftIngot();
+                        if (craftIngotButton != null) craftIngotButton.interactable = canCraftIngot && !isAutoCrafting;
+                        if (craftAllIngotsButton != null) craftAllIngotsButton.interactable = canCraftIngot && !isAutoCrafting;
+                        // Replace/Salvage depend only on having a pending result; do not gate on craftability
+                        bool hasResult = lastCrafted != null;
+                        if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
+                        if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
+                        // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
+                        if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
+                        if (craftUntilUpgradeButtonText != null) craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
+                }
 
 		private void OnCraftUntilUpgradeClicked()
 		{

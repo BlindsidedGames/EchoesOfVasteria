@@ -19,8 +19,12 @@ namespace TimelessEchoes.Gear
     public class CoreSO : ScriptableObject
     {
         [Range(0, 7)] public int tierIndex;
-        [Title("Cost")] public Resource requiredIngot;
+        [Title("Associated Resources")] public Resource requiredIngot;
         [MinValue(0)] public int ingotCost = 1;
+        public Resource chunkResource;
+        [MinValue(0)] public int chunkCostPerIngot = 0;
+        public Resource crystalResource;
+        [MinValue(0)] public int crystalCostPerIngot = 0;
 
         [Title("Rarity Weights (manual)")]
         [Tooltip("Manual weights normalized at runtime to pick a rarity. Leave 0 to exclude a rarity.")]
