@@ -39,6 +39,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateMaxCraftsText();
             UpdateIvanXpUI();
             RefreshActionButtons();
+            RefreshOdds();
         }
 
         private void UpdateIvanXpUI()

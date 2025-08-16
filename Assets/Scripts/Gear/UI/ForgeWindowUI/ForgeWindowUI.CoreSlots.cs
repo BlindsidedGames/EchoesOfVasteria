@@ -46,45 +46,27 @@ namespace TimelessEchoes.Gear.UI
 
         private void RefreshOdds()
         {
-            var hasLeft = rarityOddsLeftText != null;
-            var hasRight = rarityOddsRightText != null;
-            if (!hasLeft && !hasRight)
+            if (rarityOddsLeftText != null)
             {
-                Debug.LogWarning(
-                    "ForgeWindowUI: rarityOddsLeftText/rarityOddsRightText are not assigned; odds UI will not be displayed.");
-                return;
+                rarityOddsLeftText.text = string.Empty;
+                if (rarityOddsLeftText.gameObject.activeSelf)
+                    rarityOddsLeftText.gameObject.SetActive(false);
+            }
+            if (rarityOddsRightText != null)
+            {
+                rarityOddsRightText.text = string.Empty;
+                if (rarityOddsRightText.gameObject.activeSelf)
+                    rarityOddsRightText.gameObject.SetActive(false);
             }
 
-            var core = selectedCore;
-            if (core == null && cores != null && cores.Count > 0)
-                core = cores[0];
+            var core = selectedCore ?? (cores != null && cores.Count > 0 ? cores[0] : null);
             if (core == null)
             {
-                if (hasLeft) rarityOddsLeftText.text = string.Empty;
-                if (hasRight) rarityOddsRightText.text = string.Empty;
                 RefreshOddsPieChart(null);
                 return;
             }
 
             var info = RarityOddsCalculator.BuildRarityWeightInfo(core);
-            var lines = info.lines;
-            if (hasLeft && hasRight)
-            {
-                var mid = (lines.Count + 1) / 2; // put the longer half on the left
-                var leftLines = lines.Take(mid);
-                var rightLines = lines.Skip(mid);
-                rarityOddsLeftText.text = string.Join("\n", leftLines);
-                rarityOddsRightText.text = string.Join("\n", rightLines);
-            }
-            else if (hasLeft)
-            {
-                rarityOddsLeftText.text = string.Join("\n", lines);
-            }
-            else if (hasRight)
-            {
-                rarityOddsRightText.text = string.Join("\n", lines);
-            }
-
             RefreshOddsPieChart(info.weights);
         }
 
@@ -111,7 +93,7 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            // Layering approach with background at index 0, reversed order
+            // Layered approach with background at index 0, reversed order
             var overlayCapacity = Mathf.Max(0, oddsPieSlices.Count - 1);
             var sliceCount = Mathf.Min(overlayCapacity, weights.Count);
 
