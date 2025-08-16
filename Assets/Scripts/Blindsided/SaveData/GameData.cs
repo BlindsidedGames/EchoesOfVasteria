@@ -49,7 +49,7 @@ namespace Blindsided.SaveData
         [TabGroup("GameDataTabs", "Quests")] public Dictionary<string, QuestRecord> Quests = new();
 
         // --- Gear system (phase 1) ---
-        [HideReferenceObjectPicker]
+        [ShowInInspector, HideReferenceObjectPicker]
         [TabGroup("GameDataTabs", "Gear")] public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
         [HideReferenceObjectPicker]
         [TabGroup("GameDataTabs", "Gear")] public List<GearItemRecord> CraftHistory = new();
