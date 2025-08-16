@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79fdaab072066594bad454607db52b83, type: 3}
+  m_Name: Regeneration
+  m_EditorClassIdentifier: 
+  associatedStat: {fileID: 11400000, guid: 99cc36cd6850f124eb699fcb7fd0eaaf, type: 2}
+  baseValue: 0
+  description: A good diet leads to good healing.
+  thresholds:
+  - minLevel: 0
+    maxLevel: 10
+    requirements:
+    - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
+      amount: 3
+      amountIncreasePerLevel: 3
+  - minLevel: 10
+    maxLevel: 20
+    requirements:
+    - resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}
+      amount: 4
+      amountIncreasePerLevel: 4
+  - minLevel: 20
+    maxLevel: 30
+    requirements:
+    - resource: {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}
+      amount: 6
+      amountIncreasePerLevel: 6
+  - minLevel: 30
+    maxLevel: 40
+    requirements:
+    - resource: {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}
+      amount: 8
+      amountIncreasePerLevel: 8
+  - minLevel: 40
+    maxLevel: 50
+    requirements:
+    - resource: {fileID: 11400000, guid: bf23b8a0a0d501543b9e7310db929300, type: 2}
+      amount: 10
+      amountIncreasePerLevel: 10
+  - minLevel: 50
+    maxLevel: 60
+    requirements:
+    - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
+      amount: 12
+      amountIncreasePerLevel: 12
+  - minLevel: 60
+    maxLevel: 80
+    requirements:
+    - resource: {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}
+      amount: 15
+      amountIncreasePerLevel: 15
+  - minLevel: 80
+    maxLevel: 2147483647
+    requirements:
+    - resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
+      amount: 20
+      amountIncreasePerLevel: 20
+    - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}
+      amount: 30
+      amountIncreasePerLevel: 10
+    - resource: {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}
+      amount: 25
+      amountIncreasePerLevel: 12
+  statIncreasePerLevel: 0.03

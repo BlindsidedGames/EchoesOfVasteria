@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79fdaab072066594bad454607db52b83, type: 3}
+  m_Name: Health
+  m_EditorClassIdentifier: 
+  associatedStat: {fileID: 11400000, guid: 87eb568606f1e074c9f83edacb429af2, type: 2}
+  baseValue: 30
+  description: The blade may strike, but it is the heart that endures.
+  thresholds:
+  - minLevel: 0
+    maxLevel: 25
+    requirements:
+    - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
+      amount: 5
+      amountIncreasePerLevel: 5
+  - minLevel: 25
+    maxLevel: 50
+    requirements:
+    - resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}
+      amount: 25
+      amountIncreasePerLevel: 6
+  - minLevel: 50
+    maxLevel: 75
+    requirements:
+    - resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}
+      amount: 40
+      amountIncreasePerLevel: 7
+  - minLevel: 75
+    maxLevel: 100
+    requirements:
+    - resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 9
+  - minLevel: 100
+    maxLevel: 150
+    requirements:
+    - resource: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}
+      amount: 80
+      amountIncreasePerLevel: 10
+    - resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}
+      amount: 60
+      amountIncreasePerLevel: 8
+  - minLevel: 150
+    maxLevel: 200
+    requirements:
+    - resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}
+      amount: 100
+      amountIncreasePerLevel: 12
+    - resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}
+      amount: 100
+      amountIncreasePerLevel: 12
+    - resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}
+      amount: 90
+      amountIncreasePerLevel: 10
+  - minLevel: 200
+    maxLevel: 250
+    requirements:
+    - resource: {fileID: 11400000, guid: b5b12e283249229419b1a300192d8601, type: 2}
+      amount: 120
+      amountIncreasePerLevel: 14
+    - resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}
+      amount: 120
+      amountIncreasePerLevel: 14
+    - resource: {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}
+      amount: 120
+      amountIncreasePerLevel: 12
+  - minLevel: 250
+    maxLevel: 350
+    requirements:
+    - resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}
+      amount: 160
+      amountIncreasePerLevel: 16
+    - resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}
+      amount: 160
+      amountIncreasePerLevel: 16
+    - resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}
+      amount: 180
+      amountIncreasePerLevel: 18
+    - resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
+      amount: 200
+      amountIncreasePerLevel: 18
+  - minLevel: 350
+    maxLevel: 500
+    requirements:
+    - resource: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}
+      amount: 220
+      amountIncreasePerLevel: 20
+    - resource: {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}
+      amount: 220
+      amountIncreasePerLevel: 20
+    - resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}
+      amount: 180
+      amountIncreasePerLevel: 14
+    - resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}
+      amount: 200
+      amountIncreasePerLevel: 16
+    - resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}
+      amount: 8
+      amountIncreasePerLevel: 2
+  - minLevel: 500
+    maxLevel: 2147483647
+    requirements:
+    - resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}
+      amount: 300
+      amountIncreasePerLevel: 25
+    - resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}
+      amount: 320
+      amountIncreasePerLevel: 25
+    - resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}
+      amount: 350
+      amountIncreasePerLevel: 28
+    - resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
+      amount: 380
+      amountIncreasePerLevel: 28
+    - resource: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}
+      amount: 420
+      amountIncreasePerLevel: 30
+  statIncreasePerLevel: 5

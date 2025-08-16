@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79fdaab072066594bad454607db52b83, type: 3}
+  m_Name: Move Speed
+  m_EditorClassIdentifier: 
+  associatedStat: {fileID: 11400000, guid: 549ccbb059dfa464d92b27e541046533, type: 2}
+  baseValue: 3
+  description: The path favors the swift, but only the wise know when to run.
+  thresholds:
+  - minLevel: 0
+    maxLevel: 25
+    requirements:
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
+  - minLevel: 25
+    maxLevel: 50
+    requirements:
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 5
+      amountIncreasePerLevel: 2
+  - minLevel: 50
+    maxLevel: 75
+    requirements:
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 20
+      amountIncreasePerLevel: 3
+    - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
+  - minLevel: 75
+    maxLevel: 100
+    requirements:
+    - resource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 1
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 3
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 3
+  - minLevel: 100
+    maxLevel: 150
+    requirements:
+    - resource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 2
+    - resource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
+      amount: 1
+      amountIncreasePerLevel: 2
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 100
+      amountIncreasePerLevel: 4
+  - minLevel: 150
+    maxLevel: 200
+    requirements:
+    - resource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
+      amount: 2
+      amountIncreasePerLevel: 3
+    - resource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
+      amount: 2
+      amountIncreasePerLevel: 3
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+      amount: 50
+      amountIncreasePerLevel: 2
+  - minLevel: 200
+    maxLevel: 225
+    requirements:
+    - resource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
+      amount: 2
+      amountIncreasePerLevel: 4
+    - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+      amount: 2
+      amountIncreasePerLevel: 4
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 150
+      amountIncreasePerLevel: 5
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 150
+      amountIncreasePerLevel: 5
+  - minLevel: 225
+    maxLevel: 240
+    requirements:
+    - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
+      amount: 3
+      amountIncreasePerLevel: 5
+    - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+      amount: 3
+      amountIncreasePerLevel: 5
+    - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+      amount: 120
+      amountIncreasePerLevel: 4
+    - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+      amount: 80
+      amountIncreasePerLevel: 3
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 200
+      amountIncreasePerLevel: 6
+  - minLevel: 240
+    maxLevel: 250
+    requirements:
+    - resource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
+      amount: 10
+      amountIncreasePerLevel: 10
+    - resource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+      amount: 10
+      amountIncreasePerLevel: 10
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 300
+      amountIncreasePerLevel: 8
+    - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+      amount: 300
+      amountIncreasePerLevel: 8
+    - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
+      amount: 25
+      amountIncreasePerLevel: 4
+  statIncreasePerLevel: 0.02

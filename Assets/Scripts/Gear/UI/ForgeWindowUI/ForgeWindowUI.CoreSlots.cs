@@ -46,18 +46,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void RefreshOdds()
         {
-            if (rarityOddsLeftText != null)
-            {
-                rarityOddsLeftText.text = string.Empty;
-                if (rarityOddsLeftText.gameObject.activeSelf)
-                    rarityOddsLeftText.gameObject.SetActive(false);
-            }
-            if (rarityOddsRightText != null)
-            {
-                rarityOddsRightText.text = string.Empty;
-                if (rarityOddsRightText.gameObject.activeSelf)
-                    rarityOddsRightText.gameObject.SetActive(false);
-            }
+            // Removed text odds UI; pie chart handles visualization now
 
             var core = selectedCore ?? (cores != null && cores.Count > 0 ? cores[0] : null);
             if (core == null)

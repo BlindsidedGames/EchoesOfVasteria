@@ -23,9 +23,7 @@ namespace TimelessEchoes.Gear.UI
         public Button craftButton;
         public TMP_Text craftButtonText;
 
-        [FormerlySerializedAs("craftAllButton")]
-        public Button modeButton;
-
-        public TMP_Text modeButtonText;
+        // Replace mode toggle with a numeric input for desired craft amount.
+        public TMP_InputField amountInput;
     }
 }

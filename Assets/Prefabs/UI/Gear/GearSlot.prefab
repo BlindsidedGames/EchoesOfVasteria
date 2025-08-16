@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381bec62152da474b9d935877353c938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotName: 
   selectSlotButton: {fileID: 5060332313966484832}
   selectionImage: {fileID: 7783886083354345991}
   gearImage: {fileID: 4342964929784807331}
@@ -254,10 +255,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7268434454160436129}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -2, y: -2}
+  m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7445888551187199197
 CanvasRenderer:

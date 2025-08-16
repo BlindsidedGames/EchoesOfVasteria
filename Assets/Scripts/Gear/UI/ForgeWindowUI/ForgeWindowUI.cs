@@ -70,12 +70,12 @@ namespace TimelessEchoes.Gear.UI
                                  ingotConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = ingotConversionSection.craftButton;
                 }
-                if (ingotConversionSection.modeButton != null)
+                // Wire input
+                if (ingotConversionSection.amountInput != null)
                 {
-                    ingotConversionSection.modeButton.onClick.AddListener(OnIngotModeClicked);
-                    // Restore saved mode
-                    ingotCraftMode = IntToCraftMode(IngotCraftMode);
-                    UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
+                    ingotConversionSection.amountInput.onValueChanged.RemoveAllListeners();
+                    ingotConversionSection.amountInput.onValueChanged.AddListener(_ =>
+                        OnAmountInputChanged(ingotConversionSection, ref ingotCraftAmount));
                 }
             }
 
@@ -88,11 +88,11 @@ namespace TimelessEchoes.Gear.UI
                                  crystalConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = crystalConversionSection.craftButton;
                 }
-                if (crystalConversionSection.modeButton != null)
+                if (crystalConversionSection.amountInput != null)
                 {
-                    crystalConversionSection.modeButton.onClick.AddListener(OnCrystalModeClicked);
-                    crystalCraftMode = IntToCraftMode(CrystalCraftMode);
-                    UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
+                    crystalConversionSection.amountInput.onValueChanged.RemoveAllListeners();
+                    crystalConversionSection.amountInput.onValueChanged.AddListener(_ =>
+                        OnAmountInputChanged(crystalConversionSection, ref crystalCraftAmount));
                 }
             }
 
@@ -105,11 +105,11 @@ namespace TimelessEchoes.Gear.UI
                                  chunkConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = chunkConversionSection.craftButton;
                 }
-                if (chunkConversionSection.modeButton != null)
+                if (chunkConversionSection.amountInput != null)
                 {
-                    chunkConversionSection.modeButton.onClick.AddListener(OnChunkModeClicked);
-                    chunkCraftMode = IntToCraftMode(ChunkCraftMode);
-                    UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
+                    chunkConversionSection.amountInput.onValueChanged.RemoveAllListeners();
+                    chunkConversionSection.amountInput.onValueChanged.AddListener(_ =>
+                        OnAmountInputChanged(chunkConversionSection, ref chunkCraftAmount));
                 }
             }
 
@@ -200,13 +200,16 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
             UpdateAllGearSlots();
             UpdateSelectedSlotStats();
-            // Restore saved craft modes and refresh previews
-            ingotCraftMode = IntToCraftMode(IngotCraftMode);
-            UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
-            crystalCraftMode = IntToCraftMode(CrystalCraftMode);
-            UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
-            chunkCraftMode = IntToCraftMode(ChunkCraftMode);
-            UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
+            // Restore saved craft amounts and refresh previews
+            ingotCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("IngotCraftAmount", 1));
+            crystalCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("CrystalCraftAmount", 1));
+            chunkCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("ChunkCraftAmount", 1));
+            if (ingotConversionSection?.amountInput != null)
+                ingotConversionSection.amountInput.text = ingotCraftAmount.ToString();
+            if (crystalConversionSection?.amountInput != null)
+                crystalConversionSection.amountInput.text = crystalCraftAmount.ToString();
+            if (chunkConversionSection?.amountInput != null)
+                chunkConversionSection.amountInput.text = chunkCraftAmount.ToString();
             OnResourcesChanged();
         }
 

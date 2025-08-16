@@ -59,9 +59,40 @@ namespace TimelessEchoes.Gear.UI
 
                 var item = equipment != null ? equipment.GetEquipped(name) : null;
                 if (item != null)
-                    slotRef.ApplyGearSprite(item);
+                {
+                    // If migrated helmet has no rarity, show migrated sprite
+                    if (string.Equals(name, "Helmet") && (item.rarity == null) && slotRef.GearImage != null)
+                    {
+                        if (migratedHelmetSprite != null)
+                        {
+                            slotRef.GearImage.sprite = migratedHelmetSprite;
+                            slotRef.GearImage.enabled = true;
+                        }
+                        else
+                        {
+                            slotRef.ApplyGearSprite(item);
+                        }
+                    }
+                    else
+                    {
+                        slotRef.ApplyGearSprite(item);
+                    }
+                }
                 else
-                    slotRef.ClearGearSprite();
+                {
+                    // If unknown state, show the unknown sprite for this slot and set native size
+                    var order = new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+                    var idx = order.IndexOf(name);
+                    if (idx >= 0 && idx < unknownGearSprites.Count && slotRef.GearImage != null)
+                    {
+                        slotRef.GearImage.sprite = unknownGearSprites[idx];
+                        slotRef.GearImage.enabled = true;
+                    }
+                    else
+                    {
+                        slotRef.ClearGearSprite();
+                    }
+                }
             }
         }
 

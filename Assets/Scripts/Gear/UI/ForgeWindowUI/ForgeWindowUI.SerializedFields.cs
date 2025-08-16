@@ -27,9 +27,7 @@ namespace TimelessEchoes.Gear.UI
         [Tooltip("Pre-placed core slot references in the scene. No prefab route is used.")]
         [SerializeField] private List<CoreSlotUIReferences> coreSlots = new();
 
-        [Header("Odds UI")] [SerializeField] private TMP_Text rarityOddsLeftText;
-        [SerializeField] private TMP_Text rarityOddsRightText;
-        [SerializeField] private List<MPImageBasic> oddsPieSlices = new();
+        [Header("Odds UI")] [SerializeField] private List<MPImageBasic> oddsPieSlices = new();
 
         [Header("Core Weight Tooltip")] [SerializeField] private Image coreWeightHoverImage;
         [SerializeField] private TMP_Text coreWeightHoverText;
@@ -64,5 +62,9 @@ namespace TimelessEchoes.Gear.UI
         [Header("Unknown Gear Sprites (by slot order)")]
         [Tooltip("Fallback unknown sprites for each gear slot: Weapon, Helmet, Chest, Boots")]
         [SerializeField] private List<Sprite> unknownGearSprites = new();
+
+        [Header("Migrated Gear Sprites")] [SerializeField]
+        [Tooltip("Sprite to use for migrated Helmet gear that has no rarity assigned.")]
+        private Sprite migratedHelmetSprite;
     }
 }

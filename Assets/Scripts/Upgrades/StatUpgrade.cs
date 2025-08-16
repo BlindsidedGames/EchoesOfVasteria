@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using UnityEngine;
+using TimelessEchoes.Gear;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -9,6 +10,12 @@ namespace TimelessEchoes.Upgrades
     [CreateAssetMenu(fileName = "StatUpgrade", menuName = "SO/Stat Upgrade")]
     public class StatUpgrade : ScriptableObject
     {
+        /// <summary>
+        ///     Explicit mapping to a gear stat definition used by migration and gear systems.
+        ///     Prevents name-based ambiguity between upgrades and stats.
+        /// </summary>
+        public StatDefSO associatedStat;
+
         /// <summary>
         ///     Base value of the stat before any upgrades are applied.
         /// </summary>

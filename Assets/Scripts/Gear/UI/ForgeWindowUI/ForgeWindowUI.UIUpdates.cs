@@ -155,15 +155,23 @@ namespace TimelessEchoes.Gear.UI
             {
                 var ingotRes = core != null ? core.requiredIngot : null;
                 var amount = rm != null && ingotRes != null ? rm.GetAmount(ingotRes) : 0;
-                section.resultText.text = amount.ToString("0");
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
             }
 
             if (section.maxCraftsText != null)
             {
-                var amount = 0;
+                // Show the max possible crafts (not the selected amount)
+                var max = 0;
                 if (core != null && rm != null)
-                    amount = Mathf.Max(0, GetCraftAmountForIngots(rm, core));
-                section.maxCraftsText.text = amount.ToString("0");
+                {
+                    max = int.MaxValue;
+                    if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                        max = Mathf.Min(max, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+                    if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                        max = Mathf.Min(max, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+                    if (max < 0) max = 0;
+                }
+                section.maxCraftsText.text = max.ToString("0");
             }
 
             if (section.cost1Image != null)
@@ -181,7 +189,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost1Text != null)
-                section.cost1Text.text = core != null ? core.chunkCostPerIngot.ToString("0") : string.Empty;
+                section.cost1Text.text = core != null ? Mathf.Max(0, core.chunkCostPerIngot).ToString("0") : string.Empty;
             if (section.cost2Image != null)
             {
                 Sprite sprite = null;
@@ -197,7 +205,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost2Text != null)
-                section.cost2Text.text = core != null ? core.crystalCostPerIngot.ToString("0") : string.Empty;
+                section.cost2Text.text = core != null ? Mathf.Max(0, core.crystalCostPerIngot).ToString("0") : string.Empty;
 
             if (section.craftArrow != null)
             {
@@ -230,15 +238,17 @@ namespace TimelessEchoes.Gear.UI
             {
                 var res = core != null ? core.crystalResource : null;
                 var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
-                section.resultText.text = amount.ToString("0");
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
             }
 
             if (section.maxCraftsText != null)
             {
-                var amount = 0;
+                var max = 0;
                 if (core != null && rm != null)
-                    amount = Mathf.Max(0, GetCraftAmountForCrystals(rm, core));
-                section.maxCraftsText.text = amount.ToString("0");
+                    max = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
+                        (int)(rm.GetAmount(slimeResource) / 1f));
+                if (max < 0) max = 0;
+                section.maxCraftsText.text = max.ToString("0");
             }
 
             if (section.cost1Image != null)
@@ -306,15 +316,17 @@ namespace TimelessEchoes.Gear.UI
             {
                 var res = core != null ? core.chunkResource : null;
                 var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
-                section.resultText.text = amount.ToString("0");
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
             }
 
             if (section.maxCraftsText != null)
             {
-                var amount = 0;
+                var max = 0;
                 if (core != null && rm != null)
-                    amount = Mathf.Max(0, GetCraftAmountForChunks(rm, core));
-                section.maxCraftsText.text = amount.ToString("0");
+                    max = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
+                        (int)(rm.GetAmount(stoneResource) / 2f));
+                if (max < 0) max = 0;
+                section.maxCraftsText.text = max.ToString("0");
             }
 
             if (section.cost1Image != null)
@@ -407,8 +419,6 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (ingotConversionSection.craftButton != null)
                     ingotConversionSection.craftButton.interactable = canCraftIngot && !isAutoCrafting;
-                if (ingotConversionSection.modeButton != null)
-                    ingotConversionSection.modeButton.interactable = canCraftIngot && !isAutoCrafting;
             }
 
             var canCraftCrystal = CanCraftCrystal();
@@ -416,8 +426,6 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (crystalConversionSection.craftButton != null)
                     crystalConversionSection.craftButton.interactable = canCraftCrystal && !isAutoCrafting;
-                if (crystalConversionSection.modeButton != null)
-                    crystalConversionSection.modeButton.interactable = canCraftCrystal && !isAutoCrafting;
                 if (crystalConversionSection.craftArrow != null)
                 {
                     var arrowSprite = canCraftCrystal
@@ -432,8 +440,6 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (chunkConversionSection.craftButton != null)
                     chunkConversionSection.craftButton.interactable = canCraftChunk && !isAutoCrafting;
-                if (chunkConversionSection.modeButton != null)
-                    chunkConversionSection.modeButton.interactable = canCraftChunk && !isAutoCrafting;
                 if (chunkConversionSection.craftArrow != null)
                 {
                     var arrowSprite = canCraftChunk

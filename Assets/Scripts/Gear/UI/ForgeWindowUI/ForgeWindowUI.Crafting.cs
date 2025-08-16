@@ -7,49 +7,10 @@ namespace TimelessEchoes.Gear.UI
 {
     public partial class ForgeWindowUI
     {
-        private enum CraftMode
-        {
-            Single,
-            Half,
-            All
-        }
-
-        private CraftMode ingotCraftMode = CraftMode.Single;
-        private CraftMode crystalCraftMode = CraftMode.Single;
-        private CraftMode chunkCraftMode = CraftMode.Single;
-
-        private static CraftMode NextMode(CraftMode mode)
-        {
-            return (CraftMode)(((int)mode + 1) % 3);
-        }
-
-        private static string ModeToText(CraftMode mode)
-        {
-            var prefix = "Mode: ";
-            return mode switch
-            {
-                CraftMode.Half => prefix + "50%",
-                CraftMode.All => prefix + "All",
-                _ => prefix + "1"
-            };
-        }
-
-        private void UpdateModeButtonText(CraftSection2x1UIReferences section, CraftMode mode)
-        {
-            if (section?.modeButtonText != null)
-                section.modeButtonText.text = ModeToText(mode);
-        }
-
-        private static int CraftModeToInt(CraftMode mode)
-        {
-            return (int)mode;
-        }
-
-        private static CraftMode IntToCraftMode(int value)
-        {
-            value = Mathf.Clamp(value, 0, 2);
-            return (CraftMode)value;
-        }
+        // User-selected amounts for conversions (persisted in PlayerPrefs)
+        private int ingotCraftAmount = 1;
+        private int crystalCraftAmount = 1;
+        private int chunkCraftAmount = 1;
 
         private int GetCraftAmountForIngots(ResourceManager rm, CoreSO core)
         {
@@ -59,12 +20,8 @@ namespace TimelessEchoes.Gear.UI
             if (core.crystalResource != null && core.crystalCostPerIngot > 0)
                 max = Mathf.Min(max, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
             if (max <= 0) return 0;
-            return ingotCraftMode switch
-            {
-                CraftMode.All => max,
-                CraftMode.Half => Mathf.Max(1, max / 2),
-                _ => 1
-            };
+            var desired = Mathf.Max(1, ingotCraftAmount);
+            return Mathf.Min(desired, max);
         }
 
         private int GetCraftAmountForCrystals(ResourceManager rm, CoreSO core)
@@ -73,12 +30,8 @@ namespace TimelessEchoes.Gear.UI
             var max = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
                 (int)(rm.GetAmount(slimeResource) / 1f));
             if (max <= 0) return 0;
-            return crystalCraftMode switch
-            {
-                CraftMode.All => max,
-                CraftMode.Half => Mathf.Max(1, max / 2),
-                _ => 1
-            };
+            var desired = Mathf.Max(1, crystalCraftAmount);
+            return Mathf.Min(desired, max);
         }
 
         private int GetCraftAmountForChunks(ResourceManager rm, CoreSO core)
@@ -87,37 +40,28 @@ namespace TimelessEchoes.Gear.UI
             var max = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
                 (int)(rm.GetAmount(stoneResource) / 2f));
             if (max <= 0) return 0;
-            return chunkCraftMode switch
+            var desired = Mathf.Max(1, chunkCraftAmount);
+            return Mathf.Min(desired, max);
+        }
+
+        private void OnAmountInputChanged(CraftSection2x1UIReferences section, ref int backingField)
+        {
+            if (section == null || section.amountInput == null) return;
+            var text = section.amountInput.text;
+            if (string.IsNullOrWhiteSpace(text))
             {
-                CraftMode.All => max,
-                CraftMode.Half => Mathf.Max(1, max / 2),
-                _ => 1
-            };
-        }
-
-        private void OnIngotModeClicked()
-        {
-            ingotCraftMode = NextMode(ingotCraftMode);
-            UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
-            IngotCraftMode = CraftModeToInt(ingotCraftMode);
-            // Refresh amount text immediately to reflect new mode
-            UpdateIngotCraftPreview(selectedCore);
-        }
-
-        private void OnCrystalModeClicked()
-        {
-            crystalCraftMode = NextMode(crystalCraftMode);
-            UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
-            CrystalCraftMode = CraftModeToInt(crystalCraftMode);
-            UpdateCrystalCraftPreview(selectedCore);
-        }
-
-        private void OnChunkModeClicked()
-        {
-            chunkCraftMode = NextMode(chunkCraftMode);
-            UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
-            ChunkCraftMode = CraftModeToInt(chunkCraftMode);
-            UpdateChunkCraftPreview(selectedCore);
+                backingField = 1;
+                return;
+            }
+            if (int.TryParse(text, out var value))
+            {
+                backingField = Mathf.Max(1, value);
+            }
+            else
+            {
+                backingField = 1;
+                section.amountInput.text = "1";
+            }
         }
 
         private void OnCraftClicked()
@@ -206,11 +150,22 @@ namespace TimelessEchoes.Gear.UI
         {
             var img = craftSection != null ? craftSection.resultImage : null;
             if (img == null) return;
-            if (item == null || item.rarity == null)
+            if (item == null)
             {
                 img.enabled = false;
                 img.sprite = null;
                 return;
+            }
+
+            // Handle migrated helmet with no rarity: show explicit migrated sprite
+            if (item.rarity == null && string.Equals(item.slot, "Helmet"))
+            {
+                if (migratedHelmetSprite != null)
+                {
+                    img.sprite = migratedHelmetSprite;
+                    img.enabled = true;
+                    return;
+                }
             }
 
             // Use the mapped sprite from the appropriate gear slot UI rather than a separate rarity list
@@ -235,6 +190,12 @@ namespace TimelessEchoes.Gear.UI
                 var idx = order.IndexOf(item.slot);
                 if (idx >= 0 && idx < unknownGearSprites.Count)
                     sprite = unknownGearSprites[idx];
+                if (sprite != null)
+                {
+                    img.sprite = sprite;
+                    img.enabled = true;
+                    return;
+                }
             }
 
             img.sprite = sprite;
@@ -362,6 +323,10 @@ namespace TimelessEchoes.Gear.UI
             if (core.crystalResource != null && core.crystalCostPerIngot > 0)
                 rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
             rm.Add(core.requiredIngot, amount);
+            // Persist desired amount
+            ingotCraftAmount = Mathf.Max(1, ingotCraftAmount);
+            PlayerPrefs.SetInt("IngotCraftAmount", ingotCraftAmount);
+            PlayerPrefs.Save();
             OnResourcesChanged();
         }
 
@@ -379,6 +344,9 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(slimeResource, 1 * amount);
             if (core.crystalResource != null)
                 rm.Add(core.crystalResource, amount);
+            crystalCraftAmount = Mathf.Max(1, crystalCraftAmount);
+            PlayerPrefs.SetInt("CrystalCraftAmount", crystalCraftAmount);
+            PlayerPrefs.Save();
             OnResourcesChanged();
         }
 
@@ -396,6 +364,9 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(stoneResource, 2 * amount);
             if (core.chunkResource != null)
                 rm.Add(core.chunkResource, amount);
+            chunkCraftAmount = Mathf.Max(1, chunkCraftAmount);
+            PlayerPrefs.SetInt("ChunkCraftAmount", chunkCraftAmount);
+            PlayerPrefs.Save();
             OnResourcesChanged();
         }
     }
