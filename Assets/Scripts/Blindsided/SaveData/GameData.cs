@@ -14,6 +14,8 @@ namespace Blindsided.SaveData
         [ShowInInspector, HideReferenceObjectPicker] [TabGroup("GameDataTabs", "UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
+        [TabGroup("GameDataTabs", "UpgradeSystem")] public bool StatUpgradesMigratedToGear = false;
+
         [TabGroup("GameDataTabs", "Time")] public float CurrentTime = 0;
         [TabGroup("GameDataTabs", "Time")] public string DateQuitString;
         [TabGroup("GameDataTabs", "Time")] public string DateStarted;
