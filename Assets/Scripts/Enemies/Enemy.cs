@@ -100,10 +100,15 @@ namespace TimelessEchoes.Enemies
                 health.Init(stats.GetMaxHealthForLevel(level));
             }
 
+            var displayName = stats != null ? stats.enemyName : null;
+            displayName = EnemyNameProvider.GetName(displayName);
+            if (!string.IsNullOrEmpty(displayName))
+                gameObject.name = displayName;
+
             if (levelText != null)
             {
-                if (stats != null && !string.IsNullOrEmpty(stats.enemyName))
-                    levelText.text = $"{stats.enemyName} Lvl {level}";
+                if (!string.IsNullOrEmpty(displayName))
+                    levelText.text = $"{displayName} Lvl {level}";
                 else
                     levelText.text = $"Lvl {level}";
             }
