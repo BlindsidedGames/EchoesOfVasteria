@@ -42,16 +42,8 @@ MonoBehaviour:
     minX: 300
     maxX: Infinity
     requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
-    dropRange: {x: 1, y: 4}
-    weight: 0.4
-    minX: 300
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
   additionalLootChances:
-  - 1
-  - 0.4
-  - 0.2
+  - 0.5
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0

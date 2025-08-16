@@ -3,17 +3,18 @@ using UnityEngine;
 namespace TimelessEchoes.Audio
 {
     /// <summary>
-    /// Plays a hit sound effect based on projectile type.
-    /// Attach to projectile prefabs and invoke <see cref="PlayHit"/> on impact.
+    ///     Plays a hit sound effect based on projectile type.
+    ///     Attach to projectile prefabs and invoke <see cref="PlayHit" /> on impact.
     /// </summary>
     public class ProjectileHitSfx : MonoBehaviour
     {
         private AudioManager Audio => AudioManager.Instance ??
-            Object.FindFirstObjectByType<AudioManager>();
+                                      FindFirstObjectByType<AudioManager>();
 
         public enum HitType
         {
-            Slime
+            Slime,
+            Sword
         }
 
         [SerializeField] private HitType hitType = HitType.Slime;
@@ -24,6 +25,9 @@ namespace TimelessEchoes.Audio
             {
                 case HitType.Slime:
                     Audio?.PlaySlimeClip();
+                    break;
+                case HitType.Sword:
+                    Audio?.PlayWeaponSwingClip();
                     break;
             }
         }
