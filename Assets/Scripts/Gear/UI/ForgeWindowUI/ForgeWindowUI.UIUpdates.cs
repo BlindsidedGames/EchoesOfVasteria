@@ -1,9 +1,6 @@
 using Blindsided;
-using MPUIKIT;
 using TimelessEchoes.Upgrades;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -430,8 +427,8 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (ingotConversionSection.craftButton != null)
                     ingotConversionSection.craftButton.interactable = canCraftIngot && !isAutoCrafting;
-                if (ingotConversionSection.craftAllButton != null)
-                    ingotConversionSection.craftAllButton.interactable = canCraftIngot && !isAutoCrafting;
+                if (ingotConversionSection.modeButton != null)
+                    ingotConversionSection.modeButton.interactable = canCraftIngot && !isAutoCrafting;
             }
 
             var canCraftCrystal = CanCraftCrystal();
@@ -439,8 +436,8 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (crystalConversionSection.craftButton != null)
                     crystalConversionSection.craftButton.interactable = canCraftCrystal && !isAutoCrafting;
-                if (crystalConversionSection.craftAllButton != null)
-                    crystalConversionSection.craftAllButton.interactable = canCraftCrystal && !isAutoCrafting;
+                if (crystalConversionSection.modeButton != null)
+                    crystalConversionSection.modeButton.interactable = canCraftCrystal && !isAutoCrafting;
                 if (crystalConversionSection.craftArrow != null)
                 {
                     var arrowSprite = canCraftCrystal
@@ -455,8 +452,8 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (chunkConversionSection.craftButton != null)
                     chunkConversionSection.craftButton.interactable = canCraftChunk && !isAutoCrafting;
-                if (chunkConversionSection.craftAllButton != null)
-                    chunkConversionSection.craftAllButton.interactable = canCraftChunk && !isAutoCrafting;
+                if (chunkConversionSection.modeButton != null)
+                    chunkConversionSection.modeButton.interactable = canCraftChunk && !isAutoCrafting;
                 if (chunkConversionSection.craftArrow != null)
                 {
                     var arrowSprite = canCraftChunk

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.Gear.UI
@@ -20,6 +21,11 @@ namespace TimelessEchoes.Gear.UI
         public TMP_Text cost2Text;
         public TMP_Text maxCraftsText;
         public Button craftButton;
-        public Button craftAllButton;
+        public TMP_Text craftButtonText;
+
+        [FormerlySerializedAs("craftAllButton")]
+        public Button modeButton;
+
+        public TMP_Text modeButtonText;
     }
 }

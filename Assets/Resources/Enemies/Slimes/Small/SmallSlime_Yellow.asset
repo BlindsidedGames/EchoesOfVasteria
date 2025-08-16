@@ -27,13 +27,13 @@ MonoBehaviour:
   resourceDrops:
   - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
     dropRange: {x: 1, y: 2}
-    weight: 1
+    weight: 500
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 1, y: 1}
-    weight: 0.05
+    weight: 50
     minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
@@ -87,7 +87,6 @@ MonoBehaviour:
     requiredQuest: {fileID: 0}
   additionalLootChances:
   - 0.5
-  - 0.3
   experience: 2
   moveSpeed: 3
   visionRange: 7

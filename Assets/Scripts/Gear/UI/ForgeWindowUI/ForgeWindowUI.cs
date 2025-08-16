@@ -2,11 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Blindsided;
 using Blindsided.Utilities;
-using MPUIKIT;
 using TimelessEchoes.Upgrades;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.Gear.UI
@@ -73,8 +70,8 @@ namespace TimelessEchoes.Gear.UI
                     repeat.button = ingotConversionSection.craftButton;
                 }
 
-                if (ingotConversionSection.craftAllButton != null)
-                    ingotConversionSection.craftAllButton.onClick.AddListener(OnCraftAllIngotsClicked);
+                if (ingotConversionSection.modeButton != null)
+                    ingotConversionSection.modeButton.onClick.AddListener(OnCraftAllIngotsClicked);
             }
 
             if (crystalConversionSection != null)
@@ -87,8 +84,8 @@ namespace TimelessEchoes.Gear.UI
                     repeat.button = crystalConversionSection.craftButton;
                 }
 
-                if (crystalConversionSection.craftAllButton != null)
-                    crystalConversionSection.craftAllButton.onClick.AddListener(OnCraftAllCrystalsClicked);
+                if (crystalConversionSection.modeButton != null)
+                    crystalConversionSection.modeButton.onClick.AddListener(OnCraftAllCrystalsClicked);
             }
 
             if (chunkConversionSection != null)
@@ -101,8 +98,8 @@ namespace TimelessEchoes.Gear.UI
                     repeat.button = chunkConversionSection.craftButton;
                 }
 
-                if (chunkConversionSection.craftAllButton != null)
-                    chunkConversionSection.craftAllButton.onClick.AddListener(OnCraftAllChunksClicked);
+                if (chunkConversionSection.modeButton != null)
+                    chunkConversionSection.modeButton.onClick.AddListener(OnCraftAllChunksClicked);
             }
 
             // Wire gear slot buttons with fallback to EquipmentController order
@@ -171,7 +168,8 @@ namespace TimelessEchoes.Gear.UI
                 coreWeightHoverObject.SetActive(false);
             if (coreWeightHoverImage != null)
             {
-                var trigger = coreWeightHoverImage.GetComponent<EventTrigger>() ?? coreWeightHoverImage.gameObject.AddComponent<EventTrigger>();
+                var trigger = coreWeightHoverImage.GetComponent<EventTrigger>() ??
+                              coreWeightHoverImage.gameObject.AddComponent<EventTrigger>();
                 trigger.triggers.Clear();
                 var enter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
                 enter.callback.AddListener(_ => ShowCoreWeightTooltip());

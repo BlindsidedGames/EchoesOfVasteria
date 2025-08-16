@@ -171,8 +171,6 @@ namespace TimelessEchoes.Gear.UI
             img.sprite = sprite;
             img.enabled = sprite != null;
         }
-    }
-}
         private bool CanCraft()
         {
             // Validate core and required resources

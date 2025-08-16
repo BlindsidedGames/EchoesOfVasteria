@@ -343,7 +343,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -357,7 +357,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -381,7 +381,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -448,10 +448,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 145
-        width: 8
-        height: 8
+        x: 0
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -470,10 +470,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_1
       rect:
         serializedVersion: 2
-        x: 3
-        y: 152
-        width: 7
-        height: 7
+        x: 16
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -492,10 +492,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_2
       rect:
         serializedVersion: 2
-        x: 8
-        y: 146
-        width: 8
-        height: 10
+        x: 32
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -514,10 +514,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_3
       rect:
         serializedVersion: 2
-        x: 18
-        y: 145
-        width: 12
-        height: 15
+        x: 48
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -536,10 +536,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_4
       rect:
         serializedVersion: 2
-        x: 32
+        x: 64
         y: 144
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -558,10 +558,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_5
       rect:
         serializedVersion: 2
-        x: 49
-        y: 145
-        width: 8
-        height: 8
+        x: 80
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -580,10 +580,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_6
       rect:
         serializedVersion: 2
-        x: 51
-        y: 152
-        width: 7
-        height: 7
+        x: 96
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -602,10 +602,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_7
       rect:
         serializedVersion: 2
-        x: 56
-        y: 146
-        width: 8
-        height: 10
+        x: 112
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -624,10 +624,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_8
       rect:
         serializedVersion: 2
-        x: 66
-        y: 145
-        width: 12
-        height: 15
+        x: 128
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -646,10 +646,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_9
       rect:
         serializedVersion: 2
-        x: 80
-        y: 144
+        x: 0
+        y: 128
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -668,10 +668,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_10
       rect:
         serializedVersion: 2
-        x: 97
-        y: 145
-        width: 8
-        height: 8
+        x: 16
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -690,10 +690,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_11
       rect:
         serializedVersion: 2
-        x: 99
-        y: 152
-        width: 7
-        height: 7
+        x: 32
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -712,10 +712,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_12
       rect:
         serializedVersion: 2
-        x: 104
-        y: 146
-        width: 8
-        height: 10
+        x: 48
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -734,10 +734,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_13
       rect:
         serializedVersion: 2
-        x: 114
-        y: 145
-        width: 12
-        height: 15
+        x: 64
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -756,10 +756,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_14
       rect:
         serializedVersion: 2
-        x: 128
-        y: 144
+        x: 80
+        y: 128
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -778,10 +778,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_15
       rect:
         serializedVersion: 2
-        x: 1
-        y: 129
-        width: 8
-        height: 8
+        x: 96
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -800,10 +800,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_16
       rect:
         serializedVersion: 2
-        x: 3
-        y: 136
-        width: 7
-        height: 7
+        x: 112
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -822,10 +822,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_17
       rect:
         serializedVersion: 2
-        x: 8
-        y: 130
-        width: 8
-        height: 10
+        x: 128
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -844,10 +844,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_18
       rect:
         serializedVersion: 2
-        x: 18
-        y: 129
-        width: 12
-        height: 15
+        x: 0
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -866,10 +866,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_19
       rect:
         serializedVersion: 2
-        x: 32
-        y: 128
+        x: 16
+        y: 112
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -888,10 +888,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_20
       rect:
         serializedVersion: 2
-        x: 49
-        y: 129
-        width: 8
-        height: 8
+        x: 32
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -910,10 +910,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_21
       rect:
         serializedVersion: 2
-        x: 51
-        y: 136
-        width: 7
-        height: 7
+        x: 48
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -932,10 +932,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_22
       rect:
         serializedVersion: 2
-        x: 56
-        y: 130
-        width: 8
-        height: 10
+        x: 64
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -954,10 +954,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_23
       rect:
         serializedVersion: 2
-        x: 66
-        y: 129
-        width: 12
-        height: 15
+        x: 80
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -976,10 +976,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_24
       rect:
         serializedVersion: 2
-        x: 80
-        y: 128
+        x: 96
+        y: 112
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -998,10 +998,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_25
       rect:
         serializedVersion: 2
-        x: 97
-        y: 129
-        width: 8
-        height: 8
+        x: 112
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1020,10 +1020,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_26
       rect:
         serializedVersion: 2
-        x: 99
-        y: 136
-        width: 7
-        height: 7
+        x: 128
+        y: 112
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1042,10 +1042,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_27
       rect:
         serializedVersion: 2
-        x: 104
-        y: 130
-        width: 8
-        height: 10
+        x: 0
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1064,10 +1064,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_28
       rect:
         serializedVersion: 2
-        x: 114
-        y: 129
-        width: 12
-        height: 15
+        x: 16
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1086,10 +1086,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_29
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
+        x: 32
+        y: 96
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1108,10 +1108,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_30
       rect:
         serializedVersion: 2
-        x: 1
-        y: 113
-        width: 8
-        height: 8
+        x: 48
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1130,10 +1130,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_31
       rect:
         serializedVersion: 2
-        x: 3
-        y: 120
-        width: 7
-        height: 7
+        x: 64
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1152,10 +1152,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_32
       rect:
         serializedVersion: 2
-        x: 8
-        y: 114
-        width: 8
-        height: 10
+        x: 80
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1174,10 +1174,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_33
       rect:
         serializedVersion: 2
-        x: 18
-        y: 113
-        width: 12
-        height: 15
+        x: 96
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1196,10 +1196,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_34
       rect:
         serializedVersion: 2
-        x: 32
-        y: 112
+        x: 112
+        y: 96
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1218,10 +1218,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_35
       rect:
         serializedVersion: 2
-        x: 49
-        y: 113
-        width: 8
-        height: 8
+        x: 128
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1240,10 +1240,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_36
       rect:
         serializedVersion: 2
-        x: 51
-        y: 120
-        width: 7
-        height: 7
+        x: 0
+        y: 80
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1262,10 +1262,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_37
       rect:
         serializedVersion: 2
-        x: 56
-        y: 114
-        width: 8
-        height: 10
+        x: 16
+        y: 80
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1284,10 +1284,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_38
       rect:
         serializedVersion: 2
-        x: 66
-        y: 113
-        width: 12
-        height: 15
+        x: 32
+        y: 80
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1306,10 +1306,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_39
       rect:
         serializedVersion: 2
-        x: 80
-        y: 112
+        x: 48
+        y: 80
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1328,8 +1328,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_40
       rect:
         serializedVersion: 2
-        x: 96
-        y: 112
+        x: 64
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -1350,8 +1350,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_41
       rect:
         serializedVersion: 2
-        x: 112
-        y: 112
+        x: 80
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -1372,8 +1372,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_42
       rect:
         serializedVersion: 2
-        x: 128
-        y: 112
+        x: 96
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -1394,8 +1394,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_43
       rect:
         serializedVersion: 2
-        x: 0
-        y: 96
+        x: 112
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -1416,8 +1416,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_44
       rect:
         serializedVersion: 2
-        x: 16
-        y: 96
+        x: 128
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -1438,9 +1438,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_45
       rect:
         serializedVersion: 2
-        x: 32
-        y: 96
-        width: 15
+        x: 0
+        y: 64
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1460,8 +1460,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_46
       rect:
         serializedVersion: 2
-        x: 48
-        y: 96
+        x: 16
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -1482,8 +1482,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_47
       rect:
         serializedVersion: 2
-        x: 64
-        y: 96
+        x: 32
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -1504,8 +1504,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_48
       rect:
         serializedVersion: 2
-        x: 80
-        y: 96
+        x: 48
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -1526,9 +1526,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_49
       rect:
         serializedVersion: 2
-        x: 96
-        y: 96
-        width: 14
+        x: 64
+        y: 64
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1548,10 +1548,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_50
       rect:
         serializedVersion: 2
-        x: 105
-        y: 104
-        width: 7
-        height: 8
+        x: 80
+        y: 64
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1570,8 +1570,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_51
       rect:
         serializedVersion: 2
-        x: 112
-        y: 96
+        x: 96
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -1592,8 +1592,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_52
       rect:
         serializedVersion: 2
-        x: 128
-        y: 96
+        x: 112
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -1614,7 +1614,7 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_53
       rect:
         serializedVersion: 2
-        x: 0
+        x: 128
         y: 64
         width: 16
         height: 16
@@ -1636,9 +1636,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_54
       rect:
         serializedVersion: 2
-        x: 1
-        y: 80
-        width: 15
+        x: 0
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1659,7 +1659,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 64
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -1680,9 +1680,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_56
       rect:
         serializedVersion: 2
-        x: 17
-        y: 80
-        width: 15
+        x: 32
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1702,8 +1702,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_57
       rect:
         serializedVersion: 2
-        x: 32
-        y: 64
+        x: 48
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -1724,9 +1724,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_58
       rect:
         serializedVersion: 2
-        x: 33
-        y: 80
-        width: 15
+        x: 64
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1746,8 +1746,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_59
       rect:
         serializedVersion: 2
-        x: 48
-        y: 64
+        x: 80
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -1768,9 +1768,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_60
       rect:
         serializedVersion: 2
-        x: 49
-        y: 80
-        width: 15
+        x: 96
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1790,9 +1790,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_61
       rect:
         serializedVersion: 2
-        x: 65
-        y: 80
-        width: 15
+        x: 112
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1812,9 +1812,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_62
       rect:
         serializedVersion: 2
-        x: 65
-        y: 64
-        width: 15
+        x: 128
+        y: 48
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1834,8 +1834,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_63
       rect:
         serializedVersion: 2
-        x: 80
-        y: 64
+        x: 0
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -1856,9 +1856,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_64
       rect:
         serializedVersion: 2
-        x: 81
-        y: 80
-        width: 15
+        x: 16
+        y: 32
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1878,8 +1878,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_65
       rect:
         serializedVersion: 2
-        x: 96
-        y: 64
+        x: 32
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -1900,9 +1900,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_66
       rect:
         serializedVersion: 2
-        x: 97
-        y: 80
-        width: 15
+        x: 48
+        y: 32
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1922,8 +1922,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_67
       rect:
         serializedVersion: 2
-        x: 112
-        y: 64
+        x: 64
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -1944,9 +1944,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_68
       rect:
         serializedVersion: 2
-        x: 113
-        y: 80
-        width: 15
+        x: 80
+        y: 32
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1966,8 +1966,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_69
       rect:
         serializedVersion: 2
-        x: 128
-        y: 80
+        x: 96
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -1988,8 +1988,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_70
       rect:
         serializedVersion: 2
-        x: 128
-        y: 64
+        x: 112
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -2010,8 +2010,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_71
       rect:
         serializedVersion: 2
-        x: 0
-        y: 48
+        x: 128
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -2032,8 +2032,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_72
       rect:
         serializedVersion: 2
-        x: 16
-        y: 48
+        x: 0
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -2054,9 +2054,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_73
       rect:
         serializedVersion: 2
-        x: 33
-        y: 48
-        width: 13
+        x: 16
+        y: 16
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -2076,9 +2076,9 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_74
       rect:
         serializedVersion: 2
-        x: 49
-        y: 48
-        width: 13
+        x: 32
+        y: 16
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -2098,10 +2098,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_75
       rect:
         serializedVersion: 2
-        x: 65
-        y: 49
-        width: 14
-        height: 14
+        x: 48
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2120,8 +2120,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_76
       rect:
         serializedVersion: 2
-        x: 80
-        y: 48
+        x: 64
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -2142,8 +2142,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_77
       rect:
         serializedVersion: 2
-        x: 96
-        y: 48
+        x: 80
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -2164,10 +2164,10 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_78
       rect:
         serializedVersion: 2
-        x: 112
-        y: 48
+        x: 96
+        y: 16
         width: 16
-        height: 15
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2186,8 +2186,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_79
       rect:
         serializedVersion: 2
-        x: 128
-        y: 48
+        x: 112
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -2208,8 +2208,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_80
       rect:
         serializedVersion: 2
-        x: 0
-        y: 32
+        x: 128
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -2231,7 +2231,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -2253,7 +2253,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 32
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -2274,8 +2274,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_83
       rect:
         serializedVersion: 2
-        x: 16
-        y: 16
+        x: 32
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -2296,8 +2296,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_84
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
+        x: 48
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -2318,8 +2318,8 @@ TextureImporter:
       name: FloatingTextIconsNoOutline_85
       rect:
         serializedVersion: 2
-        x: 32
-        y: 16
+        x: 64
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -2336,385 +2336,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_86
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: baa4f220125d30230800000000000000
-      internalID: 3603958464573819563
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_87
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 60722d6a5e93527c0800000000000000
-      internalID: -4096804627514513658
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_88
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 717b500d99ce08ff0800000000000000
-      internalID: -35768651654777065
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_89
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c084b4ed963969ff0800000000000000
-      internalID: -29674264621004788
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_90
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b9d8125629e636e10800000000000000
-      internalID: 2189715418873171355
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_91
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 494da02804081ea80800000000000000
-      internalID: -8439323212167588716
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_92
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7cc643c2f3bbb5320800000000000000
-      internalID: 2547835894207114439
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_93
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 185eabe3ce9dff4b0800000000000000
-      internalID: -5404361419133360767
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_94
-      rect:
-        serializedVersion: 2
-        x: 113
-        y: 17
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: caf6982ee1823f5d0800000000000000
-      internalID: -3030034011175424084
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_95
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 32
-        width: 16
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a13eab87a742537b0800000000000000
-      internalID: -5245246082572950758
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_96
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 19305c01a35bb80f0800000000000000
-      internalID: -1113597221849988207
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_97
-      rect:
-        serializedVersion: 2
-        x: 97
-        y: 17
-        width: 14
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d3d7dd97bd95bfe40800000000000000
-      internalID: 5691241353290022205
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_98
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7f6de4c7cdcb9adf0800000000000000
-      internalID: -168395855885314313
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_99
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4436705995488e390800000000000000
-      internalID: -7788830035250027708
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_100
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 24bfeeb25aef414b0800000000000000
-      internalID: -5470467661988168894
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_101
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f9e2b801682813500800000000000000
-      internalID: 374223756363247263
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FloatingTextIconsNoOutline_102
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5b26b1a25e79278e0800000000000000
-      internalID: -1697127099055512907
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 21273000244c53f4283ce8a935a906e8
     internalID: 0
     vertices: []
     indices: 
@@ -2722,14 +2348,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       FloatingTextIconsNoOutline_0: -2641897780650487160
       FloatingTextIconsNoOutline_1: -647810002690871268
       FloatingTextIconsNoOutline_10: -7717413715795521530
-      FloatingTextIconsNoOutline_100: -5470467661988168894
-      FloatingTextIconsNoOutline_101: 374223756363247263
-      FloatingTextIconsNoOutline_102: -1697127099055512907
       FloatingTextIconsNoOutline_11: -228559432458882974
       FloatingTextIconsNoOutline_12: 935284296176337901
       FloatingTextIconsNoOutline_13: -2514398598658381257
@@ -2812,21 +2437,7 @@ TextureImporter:
       FloatingTextIconsNoOutline_83: -3785871472702449466
       FloatingTextIconsNoOutline_84: -4129456234045185200
       FloatingTextIconsNoOutline_85: -2257054954301601473
-      FloatingTextIconsNoOutline_86: 3603958464573819563
-      FloatingTextIconsNoOutline_87: -4096804627514513658
-      FloatingTextIconsNoOutline_88: -35768651654777065
-      FloatingTextIconsNoOutline_89: -29674264621004788
       FloatingTextIconsNoOutline_9: -5165626659388852326
-      FloatingTextIconsNoOutline_90: 2189715418873171355
-      FloatingTextIconsNoOutline_91: -8439323212167588716
-      FloatingTextIconsNoOutline_92: 2547835894207114439
-      FloatingTextIconsNoOutline_93: -5404361419133360767
-      FloatingTextIconsNoOutline_94: -3030034011175424084
-      FloatingTextIconsNoOutline_95: -5245246082572950758
-      FloatingTextIconsNoOutline_96: -1113597221849988207
-      FloatingTextIconsNoOutline_97: 5691241353290022205
-      FloatingTextIconsNoOutline_98: -168395855885314313
-      FloatingTextIconsNoOutline_99: -7788830035250027708
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
