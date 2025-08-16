@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TimelessEchoes.References.UI
 {
@@ -13,5 +14,8 @@ namespace TimelessEchoes.References.UI
         public TMP_Text distanceTasksResourcesText;
         public TMP_Text killsDamageDoneDamageTakenText;
         public TMP_Text statusText;
+        public Image image;
+        public Sprite leftSprite;
+        public Sprite rightSprite;
     }
 }
