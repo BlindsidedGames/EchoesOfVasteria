@@ -6,6 +6,100 @@ namespace TimelessEchoes.Gear.UI
 {
     public partial class ForgeWindowUI
     {
+        private enum CraftMode
+        {
+            Single,
+            Half,
+            All
+        }
+
+        private CraftMode ingotCraftMode = CraftMode.Single;
+        private CraftMode crystalCraftMode = CraftMode.Single;
+        private CraftMode chunkCraftMode = CraftMode.Single;
+
+        private static CraftMode NextMode(CraftMode mode)
+        {
+            return (CraftMode)(((int)mode + 1) % 3);
+        }
+
+        private static string ModeToText(CraftMode mode)
+        {
+            return mode switch
+            {
+                CraftMode.Half => "50%",
+                CraftMode.All => "All",
+                _ => "1"
+            };
+        }
+
+        private void UpdateModeButtonText(CraftSection2x1UIReferences section, CraftMode mode)
+        {
+            if (section?.modeButtonText != null)
+                section.modeButtonText.text = ModeToText(mode);
+        }
+
+        private int GetCraftAmountForIngots(ResourceManager rm, CoreSO core)
+        {
+            var max = int.MaxValue;
+            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                max = Mathf.Min(max, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                max = Mathf.Min(max, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+            if (max <= 0) return 0;
+            return ingotCraftMode switch
+            {
+                CraftMode.All => max,
+                CraftMode.Half => Mathf.Max(1, max / 2),
+                _ => 1
+            };
+        }
+
+        private int GetCraftAmountForCrystals(ResourceManager rm, CoreSO core)
+        {
+            if (core.crystalResource == null || core.chunkResource == null || slimeResource == null) return 0;
+            var max = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
+                                (int)(rm.GetAmount(slimeResource) / 1f));
+            if (max <= 0) return 0;
+            return crystalCraftMode switch
+            {
+                CraftMode.All => max,
+                CraftMode.Half => Mathf.Max(1, max / 2),
+                _ => 1
+            };
+        }
+
+        private int GetCraftAmountForChunks(ResourceManager rm, CoreSO core)
+        {
+            if (core.crystalResource == null || core.chunkResource == null || stoneResource == null) return 0;
+            var max = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
+                                (int)(rm.GetAmount(stoneResource) / 2f));
+            if (max <= 0) return 0;
+            return chunkCraftMode switch
+            {
+                CraftMode.All => max,
+                CraftMode.Half => Mathf.Max(1, max / 2),
+                _ => 1
+            };
+        }
+
+        private void OnIngotModeClicked()
+        {
+            ingotCraftMode = NextMode(ingotCraftMode);
+            UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
+        }
+
+        private void OnCrystalModeClicked()
+        {
+            crystalCraftMode = NextMode(crystalCraftMode);
+            UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
+        }
+
+        private void OnChunkModeClicked()
+        {
+            chunkCraftMode = NextMode(chunkCraftMode);
+            UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
+        }
+
         private void OnCraftClicked()
         {
             if (!CanCraft())
@@ -240,30 +334,13 @@ namespace TimelessEchoes.Gear.UI
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             var core = selectedCore;
             if (rm == null || core == null) return;
+            var amount = GetCraftAmountForIngots(rm, core);
+            if (amount <= 0) return;
             if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                rm.Spend(core.chunkResource, core.chunkCostPerIngot);
+                rm.Spend(core.chunkResource, core.chunkCostPerIngot * amount);
             if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                rm.Spend(core.crystalResource, core.crystalCostPerIngot);
-            rm.Add(core.requiredIngot, 1);
-            OnResourcesChanged();
-        }
-
-        private void OnCraftAllIngotsClicked()
-        {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            var core = selectedCore;
-            if (rm == null || core == null || core.requiredIngot == null) return;
-            var craftable = int.MaxValue;
-            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
-            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                craftable = Mathf.Min(craftable, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
-            if (craftable <= 0) return;
-            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                rm.Spend(core.chunkResource, core.chunkCostPerIngot * craftable);
-            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                rm.Spend(core.crystalResource, core.crystalCostPerIngot * craftable);
-            rm.Add(core.requiredIngot, craftable);
+                rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
+            rm.Add(core.requiredIngot, amount);
             OnResourcesChanged();
         }
 
@@ -273,28 +350,14 @@ namespace TimelessEchoes.Gear.UI
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             var core = selectedCore;
             if (rm == null || core == null) return;
+            var amount = GetCraftAmountForCrystals(rm, core);
+            if (amount <= 0) return;
             if (core.chunkResource != null)
-                rm.Spend(core.chunkResource, 2);
+                rm.Spend(core.chunkResource, 2 * amount);
             if (slimeResource != null)
-                rm.Spend(slimeResource, 1);
+                rm.Spend(slimeResource, 1 * amount);
             if (core.crystalResource != null)
-                rm.Add(core.crystalResource, 1);
-            OnResourcesChanged();
-        }
-
-        private void OnCraftAllCrystalsClicked()
-        {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            var core = selectedCore;
-            if (rm == null || core == null || core.crystalResource == null || core.chunkResource == null ||
-                slimeResource == null)
-                return;
-            var craftable = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
-                (int)(rm.GetAmount(slimeResource) / 1f));
-            if (craftable <= 0) return;
-            rm.Spend(core.chunkResource, 2 * craftable);
-            rm.Spend(slimeResource, 1 * craftable);
-            rm.Add(core.crystalResource, craftable);
+                rm.Add(core.crystalResource, amount);
             OnResourcesChanged();
         }
 
@@ -304,28 +367,14 @@ namespace TimelessEchoes.Gear.UI
             var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             var core = selectedCore;
             if (rm == null || core == null) return;
+            var amount = GetCraftAmountForChunks(rm, core);
+            if (amount <= 0) return;
             if (core.crystalResource != null)
-                rm.Spend(core.crystalResource, 1);
+                rm.Spend(core.crystalResource, 1 * amount);
             if (stoneResource != null)
-                rm.Spend(stoneResource, 2);
+                rm.Spend(stoneResource, 2 * amount);
             if (core.chunkResource != null)
-                rm.Add(core.chunkResource, 1);
-            OnResourcesChanged();
-        }
-
-        private void OnCraftAllChunksClicked()
-        {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            var core = selectedCore;
-            if (rm == null || core == null || core.crystalResource == null || core.chunkResource == null ||
-                stoneResource == null)
-                return;
-            var craftable = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
-                (int)(rm.GetAmount(stoneResource) / 2f));
-            if (craftable <= 0) return;
-            rm.Spend(core.crystalResource, 1 * craftable);
-            rm.Spend(stoneResource, 2 * craftable);
-            rm.Add(core.chunkResource, craftable);
+                rm.Add(core.chunkResource, amount);
             OnResourcesChanged();
         }
     }

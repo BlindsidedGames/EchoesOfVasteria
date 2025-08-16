@@ -69,9 +69,11 @@ namespace TimelessEchoes.Gear.UI
                                  ingotConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = ingotConversionSection.craftButton;
                 }
-
                 if (ingotConversionSection.modeButton != null)
-                    ingotConversionSection.modeButton.onClick.AddListener(OnCraftAllIngotsClicked);
+                {
+                    ingotConversionSection.modeButton.onClick.AddListener(OnIngotModeClicked);
+                    UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
+                }
             }
 
             if (crystalConversionSection != null)
@@ -83,9 +85,11 @@ namespace TimelessEchoes.Gear.UI
                                  crystalConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = crystalConversionSection.craftButton;
                 }
-
                 if (crystalConversionSection.modeButton != null)
-                    crystalConversionSection.modeButton.onClick.AddListener(OnCraftAllCrystalsClicked);
+                {
+                    crystalConversionSection.modeButton.onClick.AddListener(OnCrystalModeClicked);
+                    UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
+                }
             }
 
             if (chunkConversionSection != null)
@@ -97,9 +101,11 @@ namespace TimelessEchoes.Gear.UI
                                  chunkConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
                     repeat.button = chunkConversionSection.craftButton;
                 }
-
                 if (chunkConversionSection.modeButton != null)
-                    chunkConversionSection.modeButton.onClick.AddListener(OnCraftAllChunksClicked);
+                {
+                    chunkConversionSection.modeButton.onClick.AddListener(OnChunkModeClicked);
+                    UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
+                }
             }
 
             // Wire gear slot buttons with fallback to EquipmentController order
