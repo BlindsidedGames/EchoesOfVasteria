@@ -44,6 +44,25 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.BuyMode = value;
         }
 
+        // Forge conversion mode persistence (0=Single, 1=Half, 2=All)
+        public static int IngotCraftMode
+        {
+            get => oracle.saveData.SavedPreferences.IngotCraftMode;
+            set => oracle.saveData.SavedPreferences.IngotCraftMode = Mathf.Clamp(value, 0, 2);
+        }
+
+        public static int CrystalCraftMode
+        {
+            get => oracle.saveData.SavedPreferences.CrystalCraftMode;
+            set => oracle.saveData.SavedPreferences.CrystalCraftMode = Mathf.Clamp(value, 0, 2);
+        }
+
+        public static int ChunkCraftMode
+        {
+            get => oracle.saveData.SavedPreferences.ChunkCraftMode;
+            set => oracle.saveData.SavedPreferences.ChunkCraftMode = Mathf.Clamp(value, 0, 2);
+        }
+
         public static bool RoundedBulkBuy
         {
             get => oracle.saveData.SavedPreferences.RoundedBulkBuy;

@@ -247,15 +247,18 @@ namespace TimelessEchoes.EditorTools
 				GUILayout.Label($"Eff@{level}", GUILayout.Width(80));
 				GUILayout.Label("Chance@0", GUILayout.Width(80));
 				GUILayout.Label($"Chance@{level}", GUILayout.Width(90));
+				GUILayout.Label("Chance@1000", GUILayout.Width(100));
 			}
 
 			// Precompute totals
 			float total = 0f;
 			float totalAtLevel = 0f;
 			float totalAt0 = 0f;
+			float totalAt1000 = 0f;
 			var effByRarity = new Dictionary<RaritySO, float>();
 			var effAtLevelByRarity = new Dictionary<RaritySO, float>();
 			var effAt0ByRarity = new Dictionary<RaritySO, float>();
+			var effAt1000ByRarity = new Dictionary<RaritySO, float>();
 			foreach (var r in raritiesByTier)
 			{
 				float effL = ComputeEffective(core, r, level);
@@ -264,6 +267,9 @@ namespace TimelessEchoes.EditorTools
 				float e0 = ComputeEffective(core, r, 0);
 				effAt0ByRarity[r] = e0;
 				totalAt0 += e0;
+				float e1000 = ComputeEffective(core, r, 1000);
+				effAt1000ByRarity[r] = e1000;
+				totalAt1000 += e1000;
 				// Maintain 'total' for Eff@{level} row % calc below
 				total += effL;
 			}
@@ -278,8 +284,10 @@ namespace TimelessEchoes.EditorTools
 				float mult = rarity != null ? rarity.globalWeightMultiplier : 1f;
 				float eff = effByRarity[rarity];
 				float eff0 = effAt0ByRarity[rarity];
+				float eff1000 = effAt1000ByRarity[rarity];
 				float p0 = totalAt0 > 0f ? (eff0 / totalAt0) * 100f : 0f;
 				float pLevel = totalAtLevel > 0f ? (eff / totalAtLevel) * 100f : 0f;
+				float p1000 = totalAt1000 > 0f ? (eff1000 / totalAt1000) * 100f : 0f;
 
 				using (new EditorGUILayout.HorizontalScope())
 				{
@@ -304,6 +312,7 @@ namespace TimelessEchoes.EditorTools
 					GUILayout.Label(eff.ToString("0.###"), GUILayout.Width(80));
 					GUILayout.Label(p0.ToString("0.0000"), GUILayout.Width(80));
 					GUILayout.Label(pLevel.ToString("0.0000"), GUILayout.Width(90));
+					GUILayout.Label(p1000.ToString("0.0000"), GUILayout.Width(100));
 				}
 			}
 		}

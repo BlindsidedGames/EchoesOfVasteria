@@ -5,6 +5,7 @@ using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -72,6 +73,8 @@ namespace TimelessEchoes.Gear.UI
                 if (ingotConversionSection.modeButton != null)
                 {
                     ingotConversionSection.modeButton.onClick.AddListener(OnIngotModeClicked);
+                    // Restore saved mode
+                    ingotCraftMode = IntToCraftMode(IngotCraftMode);
                     UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
                 }
             }
@@ -88,6 +91,7 @@ namespace TimelessEchoes.Gear.UI
                 if (crystalConversionSection.modeButton != null)
                 {
                     crystalConversionSection.modeButton.onClick.AddListener(OnCrystalModeClicked);
+                    crystalCraftMode = IntToCraftMode(CrystalCraftMode);
                     UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
                 }
             }
@@ -104,6 +108,7 @@ namespace TimelessEchoes.Gear.UI
                 if (chunkConversionSection.modeButton != null)
                 {
                     chunkConversionSection.modeButton.onClick.AddListener(OnChunkModeClicked);
+                    chunkCraftMode = IntToCraftMode(ChunkCraftMode);
                     UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
                 }
             }
@@ -195,6 +200,14 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
             UpdateAllGearSlots();
             UpdateSelectedSlotStats();
+            // Restore saved craft modes and refresh previews
+            ingotCraftMode = IntToCraftMode(IngotCraftMode);
+            UpdateModeButtonText(ingotConversionSection, ingotCraftMode);
+            crystalCraftMode = IntToCraftMode(CrystalCraftMode);
+            UpdateModeButtonText(crystalConversionSection, crystalCraftMode);
+            chunkCraftMode = IntToCraftMode(ChunkCraftMode);
+            UpdateModeButtonText(chunkConversionSection, chunkCraftMode);
+            OnResourcesChanged();
         }
 
         private void OnEnable()

@@ -95,6 +95,10 @@ namespace Blindsided.SaveData
             public bool OfflineTimeActive;
             public bool OfflineTimeAutoDisable;
             public bool RoundedBulkBuy = true;
+            // Persist Forge conversion mode selections (0=Single, 1=Half, 2=All)
+            public int IngotCraftMode = 0;
+            public int CrystalCraftMode = 0;
+            public int ChunkCraftMode = 0;
             public bool SettingsFoldout;
             public bool ShopFoldout = false;
 
