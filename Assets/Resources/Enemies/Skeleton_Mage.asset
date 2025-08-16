@@ -43,25 +43,25 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}
     dropRange: {x: 3, y: 4}
     weight: 0.8
-    minX: 75
+    minX: 150
     maxX: Infinity
     requiredQuest: {fileID: 11400000, guid: 2f44203294b08aa48ae12596adc07c8d, type: 2}
   - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}
     dropRange: {x: 2, y: 4}
     weight: 0.75
-    minX: 175
+    minX: 250
     maxX: Infinity
     requiredQuest: {fileID: 11400000, guid: 4299317281158b54b805206d5dc7ace5, type: 2}
   - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}
     dropRange: {x: 2, y: 4}
     weight: 0.7
-    minX: 250
+    minX: 300
     maxX: Infinity
     requiredQuest: {fileID: 11400000, guid: 5d911cd1d4ad28b4684302804dcf44d2, type: 2}
   - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
     dropRange: {x: 2, y: 3}
     weight: 0.65
-    minX: 350
+    minX: 500
     maxX: Infinity
     requiredQuest: {fileID: 11400000, guid: 7eccc7dde778fd24d98f5f37cb4e9451, type: 2}
   - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
@@ -73,7 +73,7 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 0.55
-    minX: 800
+    minX: 750
     maxX: Infinity
     requiredQuest: {fileID: 11400000, guid: 0393b767d52dded48b4147f39f25f9ff, type: 2}
   - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}

@@ -47,43 +47,43 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 100
-    minX: 0
+    minX: 50
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 50
-    minX: 0
+    minX: 150
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 25
-    minX: 0
+    minX: 250
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 10
-    minX: 0
+    minX: 300
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 5
-    minX: 0
+    minX: 500
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 2
-    minX: 0
+    minX: 600
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 1
-    minX: 0
+    minX: 750
     maxX: Infinity
     requiredQuest: {fileID: 0}
   additionalLootChances:
