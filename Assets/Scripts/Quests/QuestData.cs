@@ -24,6 +24,7 @@ namespace TimelessEchoes.Quests
         public bool autoPin;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
+        public List<Reward> rewards = new();
         public int unlockBuffSlots;
         public int unlockAutoBuffSlots;
         public float maxDistanceIncrease;
@@ -46,6 +47,13 @@ namespace TimelessEchoes.Quests
             [ShowIf("type", RequirementType.Kill)] public string killName;
             [ShowIf("type", RequirementType.Kill)] public Sprite killIcon;
             [ShowIf("type", RequirementType.Meet)] public string meetNpcId;
+        }
+
+        [Serializable]
+        public struct Reward
+        {
+            public Resource resource;
+            public int amount;
         }
 
         public enum RequirementType
