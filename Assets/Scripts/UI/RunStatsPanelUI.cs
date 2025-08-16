@@ -25,7 +25,8 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text graphLabelText;
         private GameplayStatTracker statTracker;
         [SerializeField] private RunStatUIReferences runStatUI;
-        [SerializeField] private Vector2 statOffset = Vector2.zero;
+        [SerializeField] private Vector2 statOffset = new Vector2(0.12f, 0.78f);
+        [SerializeField] private Vector2 hoverOffset = Vector2.zero;
         [SerializeField] private Color deathBarColor = Color.red;
         [SerializeField] private Color retreatBarColor = Color.green;
         [SerializeField] private Color abandonedBarColor = Color.gray;
@@ -145,7 +146,7 @@ namespace TimelessEchoes.UI
             var record = runs[index];
 
             var pos = bar.transform.position;
-            pos.x += statOffset.x;
+            pos.x += hoverOffset.x;
 
             var canvas = runStatUI.GetComponentInParent<Canvas>();
             var cam = canvas != null ? canvas.worldCamera : null;
@@ -157,7 +158,20 @@ namespace TimelessEchoes.UI
                 ? cam.ScreenToWorldPoint(screenPoint)
                 : runStatUI.transform.position;
 
-            pos.y = mouseWorld.y + statOffset.y;
+            pos.y = mouseWorld.y + hoverOffset.y;
+
+            var isLeftSide = screenPoint.x < Screen.width / 2f;
+            if (runStatUI.image != null)
+                runStatUI.image.sprite = isLeftSide ? runStatUI.leftSprite : runStatUI.rightSprite;
+
+            var rect = runStatUI.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                var pivot = rect.pivot;
+                pivot.x = isLeftSide ? statOffset.x : statOffset.y;
+                rect.pivot = pivot;
+            }
+
             runStatUI.transform.position = pos;
 
             if (runStatUI.runIdText != null)
