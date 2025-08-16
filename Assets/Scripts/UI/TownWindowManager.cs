@@ -32,6 +32,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference credits = new();
         [SerializeField] [Space] private WindowReference alterEchoes = new();
         [SerializeField] [Space] private WindowReference stats = new();
+        [SerializeField] [Space] private WindowReference skills = new();
         [SerializeField] [Space] private WindowReference wiki = new();
         [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
@@ -60,6 +61,8 @@ namespace TimelessEchoes.UI
                 alterEchoes.button.onClick.AddListener(OpenAlterEchoes);
             if (stats.button != null)
                 stats.button.onClick.AddListener(OpenStats);
+            if (skills.button != null)
+                skills.button.onClick.AddListener(OpenSkills);
             if (wiki.button != null)
                 wiki.button.onClick.AddListener(OpenWiki);
             if (forge.button != null)
@@ -103,6 +106,8 @@ namespace TimelessEchoes.UI
                 alterEchoes.button.onClick.RemoveListener(OpenAlterEchoes);
             if (stats.button != null)
                 stats.button.onClick.RemoveListener(OpenStats);
+            if (skills.button != null)
+                skills.button.onClick.RemoveListener(OpenSkills);
             if (wiki.button != null)
                 wiki.button.onClick.RemoveListener(OpenWiki);
             if (forge.button != null)
@@ -191,6 +196,11 @@ namespace TimelessEchoes.UI
             ToggleWindow(stats);
         }
 
+        private void OpenSkills()
+        {
+            ToggleWindow(skills);
+        }
+
         private void OpenWiki()
         {
             ToggleWindow(wiki);
@@ -255,6 +265,8 @@ namespace TimelessEchoes.UI
                 alterEchoes.window.SetActive(false);
             if (stats.window != null)
                 stats.window.SetActive(false);
+            if (skills.window != null)
+                skills.window.SetActive(false);
             if (wiki.window != null)
                 wiki.window.SetActive(false);
             if (options.window != null)
@@ -286,6 +298,8 @@ namespace TimelessEchoes.UI
                 alterEchoes.button.interactable = true;
             if (stats.button != null)
                 stats.button.interactable = true;
+            if (skills.button != null)
+                skills.button.interactable = true;
             if (wiki.button != null)
                 wiki.button.interactable = true;
             if (forge.button != null)
@@ -304,24 +318,7 @@ namespace TimelessEchoes.UI
                    || (credits.window != null && credits.window.activeSelf)
                    || (alterEchoes.window != null && alterEchoes.window.activeSelf)
                    || (stats.window != null && stats.window.activeSelf)
-                   || (wiki.window != null && wiki.window.activeSelf)
-                   || (options.window != null && options.window.activeSelf)
-                   || (forge.window != null && forge.window.activeSelf)
-                   || (inventory.window != null && inventory.window.activeSelf);
-        }
-
-        /// <summary>
-        ///     Determines whether any window other than the stats window is open.
-        ///     Used for the windows open indicator so that opening the stats
-        ///     screen does not activate it.
-        /// </summary>
-        private bool AnyWindowOpenForIndicator()
-        {
-            return (upgrades.window != null && upgrades.window.activeSelf)
-                   || (buffs.window != null && buffs.window.activeSelf)
-                   || (quests.window != null && quests.window.activeSelf)
-                   || (credits.window != null && credits.window.activeSelf)
-                   || (alterEchoes.window != null && alterEchoes.window.activeSelf)
+                   || (skills.window != null && skills.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
                    || (forge.window != null && forge.window.activeSelf)
@@ -333,20 +330,18 @@ namespace TimelessEchoes.UI
             if (townButtons != null)
                 townButtons.SetActive(true);
             if (windowsOpenIndicator != null)
-                windowsOpenIndicator.SetActive(AnyWindowOpenForIndicator());
+                windowsOpenIndicator.SetActive(AnyWindowOpen());
             if (closeButton != null)
                 closeButton.gameObject.SetActive(ShouldShowGlobalCloseButton());
         }
 
         /// <summary>
         ///     Determines whether the global close button should be shown.
-        ///     The stats window has its own close button, so hide the global one
-        ///     when stats is open.
+        ///     Show it whenever any window is open.
         /// </summary>
         private bool ShouldShowGlobalCloseButton()
         {
-            bool isStatsOpen = stats.window != null && stats.window.activeSelf;
-            return AnyWindowOpen() && !isStatsOpen;
+            return AnyWindowOpen();
         }
     }
 }
