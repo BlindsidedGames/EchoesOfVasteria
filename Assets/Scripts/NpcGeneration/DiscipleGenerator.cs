@@ -122,7 +122,7 @@ namespace TimelessEchoes.NpcGeneration
                 return;
             }
 
-            resourceManager.Add(resource, stored);
+            resourceManager.Add(resource, stored, trackStats: false);
             totalCollected += stored;
             stored = 0;
             SaveState();

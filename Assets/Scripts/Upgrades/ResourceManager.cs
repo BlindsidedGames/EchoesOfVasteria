@@ -80,7 +80,7 @@ namespace TimelessEchoes.Upgrades
             return amounts.TryGetValue(resource, out var value) ? value : 0;
         }
 
-        public void Add(Resource resource, double amount, bool bonus = false)
+        public void Add(Resource resource, double amount, bool bonus = false, bool trackStats = true)
         {
             if (resource == null || amount <= 0) return;
             var newlyUnlocked = unlocked.Add(resource);
@@ -89,11 +89,14 @@ namespace TimelessEchoes.Upgrades
             else
                 amounts[resource] = amount;
             resource.totalReceived += Mathf.RoundToInt((float)amount);
-            var tracker = GameplayStatTracker.Instance;
-            if (tracker == null)
-                Log("GameplayStatTracker missing", TELogCategory.Resource, this);
-            else
-                tracker.AddResources(amount, bonus);
+            if (trackStats)
+            {
+                var tracker = GameplayStatTracker.Instance;
+                if (tracker == null)
+                    Log("GameplayStatTracker missing", TELogCategory.Resource, this);
+                else
+                    tracker.AddResources(amount, bonus);
+            }
             OnResourceAdded?.Invoke(resource, amount, bonus);
             InvokeInventoryChanged();
             if (newlyUnlocked)

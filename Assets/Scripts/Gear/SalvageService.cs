@@ -33,7 +33,7 @@ namespace TimelessEchoes.Gear
             int totalAwardedEntries = 0;
             foreach (var res in results)
             {
-                rm.Add(res.resource, res.count);
+                rm.Add(res.resource, res.count, trackStats: false);
                 totalAwardedEntries++;
             }
 
