@@ -1,5 +1,4 @@
 using System.Collections;
-using TimelessEchoes.Upgrades;
 using UnityEngine;
 
 namespace TimelessEchoes.Gear.UI
@@ -65,7 +64,6 @@ namespace TimelessEchoes.Gear.UI
                     break;
                 }
 
-                crafting.RegisterCraftOutcome(lastCrafted.rarity);
                 var eq = equipment?.GetEquipped(lastCrafted.slot);
                 var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
                 ShowResult(summary);
