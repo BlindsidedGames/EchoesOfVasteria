@@ -286,7 +286,7 @@ namespace TimelessEchoes.Quests
                         resourceManager.Spend(req.resource, req.amount);
 
             foreach (var reward in inst.data.rewards)
-                ResourceManager.Instance.Add(reward.resource, reward.amount);
+                ResourceManager.Instance.Add(reward.resource, reward.amount, trackStats: false);
 
             record.Completed = true;
             if (inst.data.unlockBuffSlots > 0)

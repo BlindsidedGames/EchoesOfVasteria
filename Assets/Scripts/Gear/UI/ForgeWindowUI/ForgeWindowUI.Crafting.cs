@@ -322,7 +322,7 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(core.chunkResource, core.chunkCostPerIngot * amount);
             if (core.crystalResource != null && core.crystalCostPerIngot > 0)
                 rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
-            rm.Add(core.requiredIngot, amount);
+            rm.Add(core.requiredIngot, amount, trackStats: false);
             // Persist desired amount
             ingotCraftAmount = Mathf.Max(1, ingotCraftAmount);
             PlayerPrefs.SetInt("IngotCraftAmount", ingotCraftAmount);
@@ -343,7 +343,7 @@ namespace TimelessEchoes.Gear.UI
             if (slimeResource != null)
                 rm.Spend(slimeResource, 1 * amount);
             if (core.crystalResource != null)
-                rm.Add(core.crystalResource, amount);
+                rm.Add(core.crystalResource, amount, trackStats: false);
             crystalCraftAmount = Mathf.Max(1, crystalCraftAmount);
             PlayerPrefs.SetInt("CrystalCraftAmount", crystalCraftAmount);
             PlayerPrefs.Save();
@@ -363,7 +363,7 @@ namespace TimelessEchoes.Gear.UI
             if (stoneResource != null)
                 rm.Spend(stoneResource, 2 * amount);
             if (core.chunkResource != null)
-                rm.Add(core.chunkResource, amount);
+                rm.Add(core.chunkResource, amount, trackStats: false);
             chunkCraftAmount = Mathf.Max(1, chunkCraftAmount);
             PlayerPrefs.SetInt("ChunkCraftAmount", chunkCraftAmount);
             PlayerPrefs.Save();
