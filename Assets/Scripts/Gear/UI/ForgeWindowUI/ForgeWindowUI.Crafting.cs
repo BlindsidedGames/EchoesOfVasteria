@@ -95,8 +95,6 @@ namespace TimelessEchoes.Gear.UI
                 RefreshActionButtons();
                 return;
             }
-
-            crafting.RegisterCraftOutcome(lastCrafted.rarity);
             var eq = equipment?.GetEquipped(lastCrafted.slot);
             var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
             ShowResult(summary);
@@ -105,7 +103,7 @@ namespace TimelessEchoes.Gear.UI
             OnResourcesChanged();
             ForceRefreshAllCoreSlots();
             RefreshActionButtons();
-            // Odds may change due to pity counter updates; refresh the pie/text
+            // Refresh the odds display after crafting
             RefreshOdds();
 
             // Persist resource spends and craft result to in-memory save (defer disk write)

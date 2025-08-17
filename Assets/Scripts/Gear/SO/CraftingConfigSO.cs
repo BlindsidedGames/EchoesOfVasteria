@@ -7,13 +7,7 @@ namespace TimelessEchoes.Gear
     [CreateAssetMenu(fileName = "CraftingConfig", menuName = "SO/Gear/Crafting Config")]
     public class CraftingConfigSO : ScriptableObject
     {
-        [Title("Pity Thresholds")]
-        [MinValue(1)] public int pityRareWithin = 10;
-        [MinValue(1)] public int pityEpicWithin = 40;
-        [MinValue(1)] public int pityLegendaryWithin = 120;
-        [MinValue(1)] public int pityMythicWithin = 300;
-
-			[Title("Crafting")] public int craftHistoryLimit = 10;
+                        [Title("Crafting")] public int craftHistoryLimit = 10;
 
 			[Title("Slot Protection")]
         [Tooltip("If enabled, bias away from recently rolled slots to reduce streaks.")]
