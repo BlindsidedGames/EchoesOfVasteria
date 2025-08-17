@@ -9,9 +9,12 @@ namespace TimelessEchoes.Enemies
     {
         private static readonly string[] SpecialNames =
         {
-            "ArcaneMage",
-            "ShadowWalker",
-            "MysticEcho",
+            "Phraox",
+            "MrVastayan",
+            "tanty.",
+            "The Wize",
+            "MatHeadGetz",
+            "Latimer Cross",
         };
 
         /// <summary>

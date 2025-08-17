@@ -53,6 +53,9 @@ MonoBehaviour:
     killName: Skeleton Archers
     killIcon: {fileID: 4288904503397713336, guid: 304ae9f776fc0074db2d80bf4916bddc, type: 3}
     meetNpcId: 
+  rewards:
+  - resource: {fileID: 11400000, guid: 416796f474e145744b71c52fa8da1e8a, type: 2}
+    amount: 1000
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

@@ -23,6 +23,7 @@ namespace TimelessEchoes
         [SerializeField] private float hitDistance = 0.1f;
         [SerializeField] private GameObject hitEffectPrefab;
         [SerializeField] private float effectDuration = 0.5f;
+        [SerializeField] private bool rotateToFaceTarget = true;
 
         private Transform target;
         private float damage;
@@ -83,91 +84,93 @@ namespace TimelessEchoes
                 return;
             }
 
-            Vector3 dir = target.position - transform.position;
-            float distanceThisFrame = speed * Time.deltaTime;
-            float mag = dir.magnitude;
+			float distanceThisFrame = speed * Time.deltaTime;
+			if (rotateToFaceTarget)
+			{
+				Vector3 dir = target.position - transform.position;
+				if (dir.sqrMagnitude > 1e-12f)
+				{
+					float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+					transform.rotation = Quaternion.Euler(0f, 0f, angle);
+				}
+			}
+			Vector2 next = Vector2.MoveTowards((Vector2)transform.position, (Vector2)target.position, distanceThisFrame);
+			transform.position = new Vector3(next.x, next.y, transform.position.z);
 
-            if (mag <= hitDistance)
-            {
-                float dmgAmount = damage;
-                if (fromHero && combatSkill != null)
-                {
-                    var controller = TimelessEchoes.Skills.SkillController.Instance ??
-                                     FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-                    if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
-                    {
-                        var prefab = TimelessEchoes.GameManager.Instance != null ?
-                                     TimelessEchoes.GameManager.Instance.ReaperPrefab : null;
-                        var offset = TimelessEchoes.GameManager.Instance != null ?
-                                     (Vector3?)TimelessEchoes.GameManager.Instance.ReaperSpawnOffset : null;
-                        if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true, null, offset) != null)
-                        {
-                            var sfx2 = GetComponent<ProjectileHitSfx>();
-                            sfx2?.PlayHit();
-                            SpawnEffect();
-                            PoolManager.Release(gameObject);
-                            return;
-                        }
-                        if (targetHasHealth != null)
-                            dmgAmount = Mathf.Max(dmgAmount, targetHasHealth.CurrentHealth);
-                    }
-                }
+			float remainingDistance = Vector2.Distance((Vector2)transform.position, (Vector2)target.position);
+			if (remainingDistance <= hitDistance)
+			{
+				float dmgAmount = damage;
+				if (fromHero && combatSkill != null)
+				{
+					var controller = TimelessEchoes.Skills.SkillController.Instance ??
+									   FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+					if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
+					{
+						var prefab = TimelessEchoes.GameManager.Instance != null ?
+										 TimelessEchoes.GameManager.Instance.ReaperPrefab : null;
+						var offset = TimelessEchoes.GameManager.Instance != null ?
+										 (Vector3?)TimelessEchoes.GameManager.Instance.ReaperSpawnOffset : null;
+						if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true, null, offset) != null)
+						{
+							var sfx2 = GetComponent<ProjectileHitSfx>();
+							sfx2?.PlayHit();
+							SpawnEffect();
+							PoolManager.Release(gameObject);
+							return;
+						}
+						if (targetHasHealth != null)
+							dmgAmount = Mathf.Max(dmgAmount, targetHasHealth.CurrentHealth);
+					}
+				}
 
-                float baseAmount = dmgAmount - bonusDamage;
-                bool appliedCustom = false;
-                if (!fromHero && attackerLevel >= 0)
-                {
-                    var heroHealth = target.GetComponent<TimelessEchoes.Hero.HeroHealth>();
-                    if (heroHealth != null)
-                    {
-                        heroHealth.TakeDamageFromEnemy(baseAmount, attackerLevel, bonusDamage, isCritical);
-                        appliedCustom = true;
-                    }
-                    else
-                    {
-                        var echoProxy = target.GetComponent<TimelessEchoes.Hero.EchoHealthProxy>();
-                        if (echoProxy != null)
-                        {
-                            // Echo forwards to main hero at 50% effectiveness
-                            TimelessEchoes.Hero.HeroHealth.Instance?.TakeDamageFromEnemy(baseAmount * 0.5f, attackerLevel, bonusDamage, isCritical);
-                            appliedCustom = true;
-                        }
-                    }
-                }
+				float baseAmount = dmgAmount - bonusDamage;
+				bool appliedCustom = false;
+				if (!fromHero && attackerLevel >= 0)
+				{
+					var heroHealth = target.GetComponent<TimelessEchoes.Hero.HeroHealth>();
+					if (heroHealth != null)
+					{
+						heroHealth.TakeDamageFromEnemy(baseAmount, attackerLevel, bonusDamage, isCritical);
+						appliedCustom = true;
+					}
+					else
+					{
+						var echoProxy = target.GetComponent<TimelessEchoes.Hero.EchoHealthProxy>();
+						if (echoProxy != null)
+						{
+							// Echo forwards to main hero at 50% effectiveness
+							TimelessEchoes.Hero.HeroHealth.Instance?.TakeDamageFromEnemy(baseAmount * 0.5f, attackerLevel, bonusDamage, isCritical);
+							appliedCustom = true;
+						}
+					}
+				}
 
-                if (!appliedCustom)
-                    targetDamageable?.TakeDamage(baseAmount, bonusDamage, isCritical);
-                if (fromHero)
-                {
-                    var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-                                     FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
-                    tracker?.AddDamageDealt(dmgAmount);
-                    var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ??
-                                      FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
-                    var hero = TimelessEchoes.Hero.HeroController.Instance ??
-                                FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
-                    var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Hero.HeroHealth>() : null;
-                    if (buffManager != null && heroHealth != null)
-                    {
-                        float ls = buffManager.LifestealPercent;
-                        if (ls > 0f)
-                            heroHealth.Heal(dmgAmount * ls / 100f);
-                    }
-                }
-                var sfx = GetComponent<ProjectileHitSfx>();
-                sfx?.PlayHit();
-                SpawnEffect();
-                PoolManager.Release(gameObject);
-                return;
-            }
-
-            if (mag > 1e-6f)
-            {
-                transform.position += dir * (distanceThisFrame / mag);
-                // Rotate only around Z
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            }
+				if (!appliedCustom)
+					targetDamageable?.TakeDamage(baseAmount, bonusDamage, isCritical);
+				if (fromHero)
+				{
+					var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+									 FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+					tracker?.AddDamageDealt(dmgAmount);
+					var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ??
+									   FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+					var hero = TimelessEchoes.Hero.HeroController.Instance ??
+								 FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
+					var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Hero.HeroHealth>() : null;
+					if (buffManager != null && heroHealth != null)
+					{
+						float ls = buffManager.LifestealPercent;
+						if (ls > 0f)
+							heroHealth.Heal(dmgAmount * ls / 100f);
+					}
+				}
+				var sfx = GetComponent<ProjectileHitSfx>();
+				sfx?.PlayHit();
+				SpawnEffect();
+				PoolManager.Release(gameObject);
+				return;
+			}
         }
 
         private void SpawnEffect()
