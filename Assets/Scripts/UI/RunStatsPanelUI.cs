@@ -238,8 +238,16 @@ namespace TimelessEchoes.UI
 
             if (graphMode == GraphMode.Distance)
             {
-                longest = statTracker.LongestRun;
-                average = statTracker.AverageRun;
+                longest = 0f;
+                double sum = 0f;
+                foreach (var r in runs)
+                {
+                    if (r.Distance > longest)
+                        longest = r.Distance;
+                    sum += r.Distance;
+                }
+
+                average = runs.Count > 0 ? sum / runs.Count : 0f;
             }
             else if (graphMode == GraphMode.Duration)
             {
