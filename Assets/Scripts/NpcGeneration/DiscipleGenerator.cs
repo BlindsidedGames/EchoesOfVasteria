@@ -126,6 +126,16 @@ namespace TimelessEchoes.NpcGeneration
             totalCollected += stored;
             stored = 0;
             SaveState();
+
+            // Persist collected resources to in-memory save (defer disk write)
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after disciple collect failed: {ex}");
+            }
         }
 
         private void AddCycle()

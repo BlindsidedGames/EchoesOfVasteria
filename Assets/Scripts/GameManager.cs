@@ -771,6 +771,19 @@ namespace TimelessEchoes
                 pendingAutoRestartFromStall = false;
                 StartRun();
             }
+
+            // Ensure resource/inventory state is immediately reflected in save data after a run ends.
+            // This synchronizes the in-memory save snapshot (oracle.saveData) with the live
+            // ResourceManager amounts so switching slots or inspecting the save right now shows
+            // the correct values instead of interim zeros.
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Immediate save after return failed: {ex}");
+            }
         }
 
         private void CleanupMap()

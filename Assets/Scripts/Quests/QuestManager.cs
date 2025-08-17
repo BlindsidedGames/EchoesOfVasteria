@@ -329,6 +329,16 @@ namespace TimelessEchoes.Quests
                 PinnedQuestUIManager.Instance?.RefreshPins();
             else
                 PinnedQuestUIManager.Instance?.UpdateProgress();
+
+            // Immediately persist rewards and quest state so saved data matches live inventory.
+            try
+            {
+                SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Immediate save after quest completion failed: {ex}");
+            }
         }
 
         /// <summary>

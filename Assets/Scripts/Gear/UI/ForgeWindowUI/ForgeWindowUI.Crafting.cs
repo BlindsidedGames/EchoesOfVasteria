@@ -107,6 +107,16 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
             // Odds may change due to pity counter updates; refresh the pie/text
             RefreshOdds();
+
+            // Persist resource spends and craft result to in-memory save (defer disk write)
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after crafting failed: {ex}");
+            }
         }
 
         private void ShowResult(string text)
@@ -328,6 +338,16 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.SetInt("IngotCraftAmount", ingotCraftAmount);
             PlayerPrefs.Save();
             OnResourcesChanged();
+
+            // Persist conversion to in-memory save (defer disk write)
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after ingot craft failed: {ex}");
+            }
         }
 
         private void OnCraftCrystalClicked()
@@ -348,6 +368,16 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.SetInt("CrystalCraftAmount", crystalCraftAmount);
             PlayerPrefs.Save();
             OnResourcesChanged();
+
+            // Persist conversion to in-memory save (defer disk write)
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after crystal craft failed: {ex}");
+            }
         }
 
         private void OnCraftChunkClicked()
@@ -368,6 +398,16 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.SetInt("ChunkCraftAmount", chunkCraftAmount);
             PlayerPrefs.Save();
             OnResourcesChanged();
+
+            // Persist conversion to in-memory save (defer disk write)
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after chunk craft failed: {ex}");
+            }
         }
     }
 }

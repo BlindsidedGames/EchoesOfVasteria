@@ -37,6 +37,19 @@ namespace TimelessEchoes.Gear
                 totalAwardedEntries++;
             }
 
+            // Persist awarded salvage to in-memory save (defer disk write) when anything was given
+            if (totalAwardedEntries > 0)
+            {
+                try
+                {
+                    Blindsided.EventHandler.SaveData();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"SaveData after salvage failed: {ex}");
+                }
+            }
+
             return totalAwardedEntries;
         }
     }
