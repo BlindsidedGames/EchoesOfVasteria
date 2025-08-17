@@ -55,7 +55,6 @@ namespace Blindsided.SaveData
         [TabGroup("GameDataTabs", "Gear")] public List<GearItemRecord> CraftHistory = new();
         [TabGroup("GameDataTabs", "Gear")] public int CraftingMasteryLevel = 0; // Ivan's level
         [TabGroup("GameDataTabs", "Gear")] public float CraftingMasteryXP = 0f; // Ivan's current XP toward next level
-        [TabGroup("GameDataTabs", "Gear")] public int PityCraftsSinceLast = 0;
 
         [HideReferenceObjectPicker]
         [TabGroup("GameDataTabs", "Quests")] public List<string> PinnedQuests = new();

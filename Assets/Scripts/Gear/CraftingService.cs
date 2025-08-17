@@ -4,7 +4,6 @@ using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
-using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Gear
@@ -23,8 +22,6 @@ namespace TimelessEchoes.Gear
         public event Action<int, float, float> OnIvanXpChanged; // level, current, needed
         public event Action<int> OnIvanLevelUp;
 
-        // Pity tracking: crafts since last guaranteed at each tier (Rare/Epic/Legendary/Mythic)
-        private readonly Dictionary<int, int> pityCounters = new();
         private readonly Queue<string> recentSlots = new();
 
         private void Awake()
@@ -38,30 +35,13 @@ namespace TimelessEchoes.Gear
             if (equipment == null)
                 equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
 
-			// Persist pity across saves
-			OnSaveData += SaveState;
-			OnLoadData += LoadState;
-
             // Fallback to auto-load assets if not assigned in inspector
             if (rarities == null || rarities.Count == 0)
                 rarities = AssetCache.GetAll<RaritySO>("").Where(r => r != null).OrderBy(r => r.tierIndex).ToList();
             if (stats == null || stats.Count == 0)
                 stats = AssetCache.GetAll<StatDefSO>("").Where(s => s != null).ToList();
-
-            // Initialize pity from loaded save if available
-			if (oracle != null && oracle.saveData != null)
-			{
-				pityCounters[0] = Mathf.Max(0, oracle.saveData.PityCraftsSinceLast);
-			}
-
             // Emit initial XP state once listeners subscribe later (UI can also poll)
         }
-
-		private void OnDestroy()
-		{
-			OnSaveData -= SaveState;
-			OnLoadData -= LoadState;
-		}
 
         public StatDefSO GetStatByMapping(HeroStatMapping mapping)
         {
@@ -106,27 +86,18 @@ namespace TimelessEchoes.Gear
             return item;
         }
 
-		private RaritySO RollRarity(CoreSO core)
+                private RaritySO RollRarity(CoreSO core)
         {
-			// Compute weights with pity clamp and optional level scaling
-			var weights = new List<(RaritySO rarity, float w)>();
-			int level = GetIvanLevel();
-			foreach (var r in rarities)
-			{
-				float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
-				float bonus = (r != null && config != null && config.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
-				var w = Mathf.Max(0f, baseW + bonus);
-				weights.Add((r, w));
-			}
-
-            // Pity: raise min rarity based on counters (unless globally disabled)
-            var minTier = UpgradeFeatureToggle.DisableCraftingPity ? 0 : GetPityMinTier();
-            for (int i = 0; i < weights.Count; i++)
-            {
-                var r = weights[i].rarity;
-                if (r != null && r.tierIndex < minTier)
-                    weights[i] = (r, 0f);
-            }
+                        // Compute rarity weights with optional level scaling
+                        var weights = new List<(RaritySO rarity, float w)>();
+                        int level = GetIvanLevel();
+                        foreach (var r in rarities)
+                        {
+                                float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
+                                float bonus = (r != null && config != null && config.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
+                                var w = Mathf.Max(0f, baseW + bonus);
+                                weights.Add((r, w));
+                        }
 
             var total = weights.Sum(t => t.w);
             if (total <= 0f)
@@ -324,48 +295,6 @@ namespace TimelessEchoes.Gear
             while (recentSlots.Count > Mathf.Max(1, config.recentWindow))
                 recentSlots.Dequeue();
         }
-
-        private int GetPityMinTier()
-        {
-            if (config == null) return 0;
-            // Simple interpretation: based on crafts since last trigger, clamp minimum rarity tier
-            // Tiers: Rare=2, Epic=3, Legendary=4, Mythic=5 (0=Common,1=Uncommon)
-            int crafts = 0;
-            pityCounters.TryGetValue(0, out crafts);
-
-            if (crafts >= config.pityMythicWithin) return 5;
-            if (crafts >= config.pityLegendaryWithin) return 4;
-            if (crafts >= config.pityEpicWithin) return 3;
-            if (crafts >= config.pityRareWithin) return 2;
-            return 0;
-        }
-
-        // Call this from outside after each craft resolves to update pity counters
-		public void RegisterCraftOutcome(RaritySO rarity)
-        {
-            int crafts = 0;
-            pityCounters.TryGetValue(0, out crafts);
-            crafts += 1;
-            pityCounters[0] = crafts;
-
-			// Reset counter if we hit Rare or better
-			if (rarity != null && rarity.tierIndex >= 2)
-				pityCounters[0] = 0;
-        }
-
-		private void SaveState()
-		{
-			if (oracle == null) return;
-			int crafts;
-			pityCounters.TryGetValue(0, out crafts);
-			oracle.saveData.PityCraftsSinceLast = Mathf.Max(0, crafts);
-		}
-
-		private void LoadState()
-		{
-			if (oracle == null) return;
-			pityCounters[0] = Mathf.Max(0, oracle.saveData.PityCraftsSinceLast);
-		}
     }
 }
 

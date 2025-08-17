@@ -3,14 +3,13 @@ using System.Linq;
 using Blindsided;
 using Blindsided.Utilities;
 using UnityEngine;
-using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Gear.UI
 {
     public static class RarityOddsCalculator
     {
         /// <summary>
-        /// Computes rarity weight lines and raw weights for a given core, applying level scaling and pity rules.
+        /// Computes rarity weight lines and raw weights for a given core, applying level scaling.
         /// </summary>
         public static (List<string> lines, List<(RaritySO r, float w)> weights) BuildRarityWeightInfo(CoreSO core)
         {
@@ -19,15 +18,6 @@ namespace TimelessEchoes.Gear.UI
             var conf = svc != null ? svc.Config : null;
             var o = Oracle.oracle;
             var level = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;
-            var craftsSince = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.PityCraftsSinceLast) : 0;
-            var pityMinTier = 0;
-            if (conf != null && !UpgradeFeatureToggle.DisableCraftingPity)
-            {
-                if (craftsSince >= conf.pityMythicWithin) pityMinTier = 5;
-                else if (craftsSince >= conf.pityLegendaryWithin) pityMinTier = 4;
-                else if (craftsSince >= conf.pityEpicWithin) pityMinTier = 3;
-                else if (craftsSince >= conf.pityRareWithin) pityMinTier = 2;
-            }
 
             var weights = new List<(RaritySO r, float w)>();
             foreach (var r in rarities)
@@ -37,8 +27,6 @@ namespace TimelessEchoes.Gear.UI
                     ? core.GetRarityWeightPerLevel(r) * level
                     : 0f;
                 var w = Mathf.Max(0f, baseW + bonus);
-                if (r != null && r.tierIndex < pityMinTier)
-                    w = 0f;
                 weights.Add((r, w));
             }
 
