@@ -29,22 +29,22 @@ namespace TimelessEchoes.Hero
             }
 
             if (dir.sqrMagnitude > 0.0001f)
-                lastMoveDir = dir;
+                lastMoveDir = dir.normalized;
 
-            var mag = dir.magnitude;
+            var speed = vel.magnitude;
 
             if (animator != null)
             {
                 animator.SetFloat("MoveX", lastMoveDir.x);
                 animator.SetFloat("MoveY", lastMoveDir.y);
-                animator.SetFloat("MoveMagnitude", mag);
+                animator.SetFloat("MoveMagnitude", speed);
             }
 
             if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
                 AutoBuffAnimator.SetFloat("MoveX", lastMoveDir.x);
                 AutoBuffAnimator.SetFloat("MoveY", lastMoveDir.y);
-                AutoBuffAnimator.SetFloat("MoveMagnitude", mag);
+                AutoBuffAnimator.SetFloat("MoveMagnitude", speed);
             }
 
             if (spriteRenderer != null)
