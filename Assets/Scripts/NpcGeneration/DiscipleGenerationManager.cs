@@ -113,8 +113,16 @@ namespace TimelessEchoes.NpcGeneration
             // purge legacy entries that no longer map to resources
             var toRemove = new List<string>();
             foreach (var key in oracle.saveData.Disciples.Keys)
+            {
                 if (!oracle.saveData.Resources.ContainsKey(key))
+                {
                     toRemove.Add(key);
+                    continue;
+                }
+
+                if (lookup.TryGetValue(key, out var res) && res != null && res.DisableAlterEcho)
+                    toRemove.Add(key);
+            }
             foreach (var k in toRemove)
                 oracle.saveData.Disciples.Remove(k);
 
@@ -123,7 +131,7 @@ namespace TimelessEchoes.NpcGeneration
             {
                 if (!pair.Value.Earned) continue;
                 lastUnlockedCount++;
-                if (!lookup.TryGetValue(pair.Key, out var res) || res == null)
+                if (!lookup.TryGetValue(pair.Key, out var res) || res == null || res.DisableAlterEcho)
                     continue;
 
                 var gen = Instantiate(generatorPrefab, transform);
