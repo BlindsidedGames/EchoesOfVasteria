@@ -173,14 +173,22 @@ namespace TimelessEchoes.Upgrades
             oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
-            // purge legacy disciple keys that do not map to resources
+            EnsureLookup();
+            // purge legacy disciple keys that do not map to resources or are disabled
             var toRemove = new List<string>();
             foreach (var key in oracle.saveData.Disciples.Keys)
+            {
                 if (!oracle.saveData.Resources.ContainsKey(key))
+                {
                     toRemove.Add(key);
+                    continue;
+                }
+
+                if (lookup.TryGetValue(key, out var res) && res != null && res.DisableAlterEcho)
+                    toRemove.Add(key);
+            }
             foreach (var k in toRemove)
                 oracle.saveData.Disciples.Remove(k);
-            EnsureLookup();
             amounts.Clear();
             unlocked.Clear();
             foreach (var pair in oracle.saveData.Resources)
