@@ -96,8 +96,8 @@ namespace TimelessEchoes.Upgrades
                     Log("GameplayStatTracker missing", TELogCategory.Resource, this);
                 else
                     tracker.AddResources(amount, bonus);
+                OnResourceAdded?.Invoke(resource, amount, bonus);
             }
-            OnResourceAdded?.Invoke(resource, amount, bonus);
             InvokeInventoryChanged();
             if (newlyUnlocked)
                 UpdateCompletionPercentage();

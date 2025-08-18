@@ -76,6 +76,9 @@ namespace TimelessEchoes.Upgrades
         {
             if (resource == null || amount <= 0)
                 return;
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker?.RunInProgress != true || resource.DisableAlterEcho)
+                return;
             if (amounts.ContainsKey(resource))
                 amounts[resource] += amount;
             else

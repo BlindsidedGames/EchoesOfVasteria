@@ -82,6 +82,8 @@ namespace TimelessEchoes.Upgrades
         private void OnResourceAdded(Resource resource, double amount, bool bonus)
         {
             if (bonus || resource == null || amount <= 0) return;
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker?.RunInProgress != true || resource.DisableAlterEcho) return;
 
             ResourceUIReferences slot = null;
             var index = resources.IndexOf(resource);
