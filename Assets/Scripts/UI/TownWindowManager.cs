@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.UI
@@ -36,6 +37,9 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference wiki = new();
         [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
+        [SerializeField] [Space] private GameObject forgeInfo;
+        [SerializeField] [Space] private Button forgeInfoButton;
+        [SerializeField] [Space] private TMP_Text forgeInfoButtonText;
         [SerializeField] [Space] private WindowReference options = new();
         [SerializeField] [Space] private GameObject discord;
         [SerializeField] [Space] private GameObject autoPin;
@@ -71,6 +75,8 @@ namespace TimelessEchoes.UI
                 options.button.onClick.AddListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.AddListener(OpenInventory);
+            if (forgeInfoButton != null)
+                forgeInfoButton.onClick.AddListener(ToggleForgeInfo);
             if (closeButton != null)
                 closeButton.onClick.AddListener(CloseAllWindows);
         }
@@ -116,6 +122,8 @@ namespace TimelessEchoes.UI
                 options.button.onClick.RemoveListener(OpenOptions);
             if (inventory.button != null)
                 inventory.button.onClick.RemoveListener(OpenInventory);
+            if (forgeInfoButton != null)
+                forgeInfoButton.onClick.RemoveListener(ToggleForgeInfo);
             if (closeButton != null)
                 closeButton.onClick.RemoveListener(CloseAllWindows);
             if (Instance == this)
@@ -216,11 +224,39 @@ namespace TimelessEchoes.UI
         private void OpenForge()
         {
             ToggleWindow(forge);
+            if (inventory.window != null)
+            {
+                inventory.window.SetActive(false);
+                if (inventory.button != null)
+                    inventory.button.interactable = true;
+            }
+            if (forgeInfo != null)
+                forgeInfo.SetActive(true);
+            if (forgeInfoButtonText != null)
+                forgeInfoButtonText.text = "Inventory";
         }
 
         private void OpenInventory()
         {
             ToggleWindow(inventory);
+        }
+
+        private void ToggleForgeInfo()
+        {
+            if (forgeInfo == null || inventory.window == null)
+                return;
+
+            bool inventoryActive = inventory.window.activeSelf;
+            bool showInventory = !inventoryActive;
+
+            inventory.window.SetActive(showInventory);
+            if (inventory.button != null)
+                inventory.button.interactable = !showInventory;
+
+            forgeInfo.SetActive(!showInventory);
+
+            if (forgeInfoButtonText != null)
+                forgeInfoButtonText.text = showInventory ? "Info" : "Inventory";
         }
 
         private void ToggleWindow(WindowReference reference)
@@ -275,6 +311,8 @@ namespace TimelessEchoes.UI
                 forge.window.SetActive(false);
             if (inventory.window != null)
                 inventory.window.SetActive(false);
+            if (forgeInfo != null)
+                forgeInfo.SetActive(false);
             if (discord != null)
                 discord.SetActive(false);
             if (autoPin != null)
