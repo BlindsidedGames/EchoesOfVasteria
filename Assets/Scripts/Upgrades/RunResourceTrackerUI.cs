@@ -22,6 +22,7 @@ namespace TimelessEchoes.Upgrades
         private readonly Dictionary<Resource, double> amounts = new();
         private readonly Dictionary<Resource, double> bonusAmounts = new();
         private ResourceManager resourceManager;
+        private float startingReapDistance;
 
         private void Awake()
         {
@@ -57,6 +58,8 @@ namespace TimelessEchoes.Upgrades
             amounts.Clear();
             bonusAmounts.Clear();
             ClearSlots();
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            startingReapDistance = tracker != null ? tracker.MaxRunDistance : 0f;
             if (window != null)
                 window.SetActive(false);
             if (runSummaryText != null)
@@ -164,6 +167,13 @@ namespace TimelessEchoes.Upgrades
             var diedTotal = tracker.SessionDeaths;
             var reapedTotal = tracker.SessionReaps;
             lines.Add($"Died {diedTotal} times, Reaped by Carl {reapedTotal} times");
+
+            if (startingReapDistance != 0f && !Mathf.Approximately(startingReapDistance, tracker.MaxRunDistance))
+            {
+                var oldDist = FormatNumber(startingReapDistance, true);
+                var newDist = FormatNumber(tracker.MaxRunDistance, true);
+                lines.Add($"Reaping Distance: {oldDist} -> {newDist}");
+            }
 
             // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)
             var runs = tracker.RecentRuns;
