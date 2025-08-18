@@ -95,7 +95,35 @@ namespace TimelessEchoes.Gear.UI
                 RefreshActionButtons();
                 return;
             }
-            var eq = equipment?.GetEquipped(lastCrafted.slot);
+
+            // Ensure we have an EquipmentController reference
+            equipment ??= EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+            var eq = equipment != null ? equipment.GetEquipped(lastCrafted.slot) : null;
+            if (eq == null && equipment != null)
+            {
+                equipment.Equip(lastCrafted);
+                lastCrafted = null;
+                if (resultText != null) resultText.text = string.Empty;
+                UpdateAllGearSlots();
+                UpdateSelectedSlotStats();
+                ClearResultPreview();
+                RefreshActionButtons();
+                // Ensure selected core/ingot previews reflect updated resource counts after craft
+                OnResourcesChanged();
+                ForceRefreshAllCoreSlots();
+                // Refresh the odds display after crafting
+                RefreshOdds();
+                try
+                {
+                    Blindsided.EventHandler.SaveData();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"SaveData after crafting failed: {ex}");
+                }
+                return;
+            }
+
             var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
             ShowResult(summary);
             UpdateResultPreview(lastCrafted);
