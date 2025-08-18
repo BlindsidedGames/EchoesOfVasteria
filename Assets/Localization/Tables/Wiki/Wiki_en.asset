@@ -163,14 +163,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9824133160779776
-    m_Localized: "Ivan's forge is a magical place whether you're chilling in town
-      or out on the road you can help guide him as he improves his smithing skills.\n\nThis
-      is where you craft gear and choose the best pieces for your intentions. \nRight
-      now there are 7 stats that can roll on gear with each piece guaranteeing one
-      of them.\n\n<sprite=0> = Damage.\n<sprite=1> = Crit Chance. \n<sprite=2> =
-      Attack Speed. \n\n<sprite=3> = Defense.\n<sprite=4> = Health.\n<sprite=5> =
-      Regen.\n<sprite=6> = Movement.\n\n<sprite=7> Stat is better, <sprite=8> Stat
-      is worse. \n<sprite=9> Stat is equal.\n<sprite=10> Stat is not on new item.\n<sprite=11>
+    m_Localized: "Ivan's forge is a magical place. Whether you're chilling in town
+      or out on the road, you can help guide him as he improves his smithing skills.\n\nThis
+      is where you craft gear and choose the best stats for your build. \nRight now
+      there are 7 stats that can be rolled on gear with each piece guaranteeing a
+      specific one.\n\n<sprite=0> = Damage.\n<sprite=1> = Crit Chance. \n<sprite=2>
+      = Attack Speed. \n\n<sprite=3> = Defense.\n<sprite=4> = Health.\n<sprite=5>
+      = Regen.\n<sprite=6> = Movement.\n\n<sprite=7> = Upgrade.\n<sprite=8> = Downgrade.
+      \n<sprite=9> = No change.\n<sprite=10> Stat is not on new item.\n<sprite=11>
       Stat is not on old item.\n\n<b>Weapon</b> | Guarantees <sprite=0>\n<b>Helmet</b>
       | Guarantees <sprite=4>\n<b>Chest</b> | Guarantees <sprite=3>\n<b>Boots</b>
       | Guarantees <sprite=6> which is exclusive to this slot.\n\nGear is automatically
@@ -199,16 +199,17 @@ MonoBehaviour:
       window.\n\u2022 Ivan now actually hands you his sword when you complete the
       quest.\n\u2022 The forge now automatically equips the first piece you craft
       for a slot.\n\u2022 Core counts now show at the bottom of their selection boxes.\n\u2022
-      Added stat tracking to the forge.\n1.1.23\n\u2022 Reduced the min distance
-      for Bloop down to 1750\n\u2022 Fixed an issue where all fish would entirely
-      stop dropping resources beyond their softcaps.\n\u2022 Added a new field to
-      the while you were away screen that shows your reap distance increase if it
-      went up.\n\u2022 Dramatically reduced the size of the game by removing unused
-      font files. Oops.\n\u2022 Right click should now consistently work on the run
-      summary screen.\n1.1.22\n\u2022 Fixed an issue where the Lirium chestpieces
-      looked like helmets.\n\u2022 Fixed the skill window not correctly showing its
-      data.\n\u2022 Potentially fixed the issue where gear would disappear for some
-      users."
+      Added comprehensive stat tracking to the forge.\n\u2022 There is now an inventory
+      button in the forge to swap between stats and inventory.\n1.1.23\n\u2022 Reduced
+      the min distance for Bloop down to 1750\n\u2022 Fixed an issue where all fish
+      would entirely stop dropping resources beyond their softcaps.\n\u2022 Added
+      a new field to the while you were away screen that shows your reap distance
+      increase if it went up.\n\u2022 Dramatically reduced the size of the game by
+      removing unused font files. Oops.\n\u2022 Right click should now consistently
+      work on the run summary screen.\n1.1.22\n\u2022 Fixed an issue where the Lirium
+      chestpieces looked like helmets.\n\u2022 Fixed the skill window not correctly
+      showing its data.\n\u2022 Potentially fixed the issue where gear would disappear
+      for some users."
     m_Metadata:
       m_Items: []
   references:
