@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace TimelessEchoes.Gear
@@ -19,8 +20,7 @@ namespace TimelessEchoes.Gear
     [CreateAssetMenu(fileName = "StatDef", menuName = "SO/Gear/Stat Definition")]
     public class StatDefSO : ScriptableObject
     {
-        [Title("Identity")]
-        [Tooltip("Unique string id used for save data and lookups.")]
+        [Title("Identity")] [Tooltip("Unique string id used for save data and lookups.")]
         public string id;
 
         [Tooltip("Readable name for UI; if empty the asset name will be shown.")]
@@ -31,37 +31,51 @@ namespace TimelessEchoes.Gear
 
         [Title("Rolling")] public bool isPercent;
 
-        [MinValue(0f)] public float minRoll = 0f;
+        [MinValue(0f)] public float minRoll;
         [MinValue(0f)] public float maxRoll = 1f;
 
-		[InfoBox("Roll Curve maps a normalized quantile t ∈ [0,1] to a value between Min and Max. Rarity Bands clamp the t-range per rarity, and Within-Tier Curve biases samples inside that band.")]
+        [InfoBox(
+            "Roll Curve maps a normalized quantile t ∈ [0,1] to a value between Min and Max. Rarity Bands clamp the t-range per rarity, and Within-Tier Curve biases samples inside that band.")]
         [Tooltip("Distribution curve for random rolls in [0,1]. Value is remapped to [minRoll,maxRoll].")]
         public AnimationCurve rollCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+
+        [Title("Comparison")]
+        [Tooltip(
+            "How many comparison points per 1 unit of this stat. Example: 0.01 for AttackRate (per 1%), 1.0 for Damage per point.")]
+        public float comparisonScale = 1f;
 
         [Serializable]
         public class RarityBand
         {
             [Title("Rarity Band")] public RaritySO rarity;
 
-            [PropertyRange(0f, 1f)] [LabelText("Min Quantile")] public float minQuantile = 0f;
-            [PropertyRange(0f, 1f)] [LabelText("Max Quantile")] public float maxQuantile = 1f;
+            [PropertyRange(0f, 1f)] [LabelText("Min Quantile")]
+            public float minQuantile;
 
-			[InfoBox("Within-Tier Curve shapes sampling inside [MinQ, MaxQ]. For example, an ease-out curve biases towards the higher end of the band's range.")]
-            [LabelText("Within-Tier Curve")] public AnimationCurve withinTierCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+            [PropertyRange(0f, 1f)] [LabelText("Max Quantile")]
+            public float maxQuantile = 1f;
 
-            public float GetClampedMin() => Mathf.Clamp01(Mathf.Min(minQuantile, maxQuantile));
-            public float GetClampedMax() => Mathf.Clamp01(Mathf.Max(minQuantile, maxQuantile));
+            [InfoBox(
+                "Within-Tier Curve shapes sampling inside [MinQ, MaxQ]. For example, an ease-out curve biases towards the higher end of the band's range.")]
+            [LabelText("Within-Tier Curve")]
+            public AnimationCurve withinTierCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+
+            public float GetClampedMin()
+            {
+                return Mathf.Clamp01(Mathf.Min(minQuantile, maxQuantile));
+            }
+
+            public float GetClampedMax()
+            {
+                return Mathf.Clamp01(Mathf.Max(minQuantile, maxQuantile));
+            }
         }
 
-        [Title("Rarity Bands")]
-        [ListDrawerSettings(ShowPaging = true, DraggableItems = true)]
+        [Title("Rarity Bands")] [ListDrawerSettings(ShowPaging = true, DraggableItems = true)]
         public List<RarityBand> rarityBands = new();
 
         [Title("Application")] public HeroStatMapping heroMapping;
 
-        [Title("Comparison")]
-        [Tooltip("How many comparison points per 1 unit of this stat. Example: 0.01 for AttackRate (per 1%), 1.0 for Damage per point.")]
-        public float comparisonScale = 1f;
 
         public float RemapRoll(float t)
         {
@@ -69,25 +83,32 @@ namespace TimelessEchoes.Gear
             return Mathf.Lerp(minRoll, maxRoll, v);
         }
 
-        public string GetName() => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string GetName()
+        {
+            return string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        }
 
         public RarityBand GetBandForRarity(RaritySO r)
         {
             if (r == null) return null;
-            for (int i = 0; i < rarityBands.Count; i++)
+            for (var i = 0; i < rarityBands.Count; i++)
             {
                 var b = rarityBands[i];
                 if (b != null && b.rarity == r)
                     return b;
             }
+
             return null;
         }
 
 #if UNITY_EDITOR
         [PropertySpace]
         [Title("Auto-Distribution (Editor)")]
-        [InfoBox("Auto-distribute uniform bands with overlap. Optionally reserve the very top quantile slice exclusively for the highest rarity tier.")]
-        [PropertyRange(0f, 0.5f)] public float defaultOverlapPercent = 0.10f;
+        [InfoBox(
+            "Auto-distribute uniform bands with overlap. Optionally reserve the very top quantile slice exclusively for the highest rarity tier.")]
+        [PropertyRange(0f, 0.5f)]
+        public float defaultOverlapPercent = 0.10f;
+
         [PropertyRange(0f, 0.25f)] public float topReservePercent = 0.02f;
         public bool reserveTopForHighest = true;
 
@@ -95,22 +116,23 @@ namespace TimelessEchoes.Gear
         private void AutoDistributeBands()
         {
             var list = new List<RaritySO>();
-            foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:RaritySO"))
+            foreach (var guid in AssetDatabase.FindAssets("t:RaritySO"))
             {
-                var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
-                var r = UnityEditor.AssetDatabase.LoadAssetAtPath<RaritySO>(path);
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var r = AssetDatabase.LoadAssetAtPath<RaritySO>(path);
                 if (r != null) list.Add(r);
             }
+
             list.Sort((a, b) => a.tierIndex.CompareTo(b.tierIndex));
             if (list.Count == 0) return;
 
-            int n = list.Count;
-            float baseWidth = 1f / n;
-            float overlap = Mathf.Clamp01(defaultOverlapPercent) * baseWidth;
-            float topReserve = reserveTopForHighest ? Mathf.Clamp01(topReservePercent) : 0f;
+            var n = list.Count;
+            var baseWidth = 1f / n;
+            var overlap = Mathf.Clamp01(defaultOverlapPercent) * baseWidth;
+            var topReserve = reserveTopForHighest ? Mathf.Clamp01(topReservePercent) : 0f;
 
             // Ensure we have entries for all rarities
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 var r = list[i];
                 var band = GetBandForRarity(r);
@@ -121,22 +143,17 @@ namespace TimelessEchoes.Gear
                 }
             }
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                float start = i * baseWidth - overlap;
-                float end = (i + 1) * baseWidth + overlap;
+                var start = i * baseWidth - overlap;
+                var end = (i + 1) * baseWidth + overlap;
                 if (i == list.Count - 1 && reserveTopForHighest)
-                {
                     // Make sure last tier covers to 1 and owns the topReserve slice
                     end = 1f;
-                }
-                float minQ = Mathf.Clamp01(start);
-                float maxQ = Mathf.Clamp01(end);
+                var minQ = Mathf.Clamp01(start);
+                var maxQ = Mathf.Clamp01(end);
                 // Clip others away from the reserved top slice, if requested
-                if (reserveTopForHighest && i < list.Count - 1)
-                {
-                    maxQ = Mathf.Min(maxQ, 1f - topReserve);
-                }
+                if (reserveTopForHighest && i < list.Count - 1) maxQ = Mathf.Min(maxQ, 1f - topReserve);
                 var band = GetBandForRarity(list[i]);
                 if (band != null)
                 {
@@ -147,10 +164,8 @@ namespace TimelessEchoes.Gear
                 }
             }
 
-            UnityEditor.EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(this);
         }
 #endif
     }
 }
-
-

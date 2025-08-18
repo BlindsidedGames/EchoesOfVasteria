@@ -31,7 +31,7 @@ namespace TimelessEchoes.Gear.UI
         {
             if (lastCrafted != null && !string.Equals(lastCrafted.slot, slot))
             {
-                SalvageService.Instance?.Salvage(lastCrafted);
+                SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
                 lastCrafted = null;
                 if (resultText != null) resultText.text = string.Empty;
                 ClearResultPreview();

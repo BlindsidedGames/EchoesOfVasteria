@@ -59,6 +59,10 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         [TabGroup("GameDataTabs", "Quests")] public List<string> PinnedQuests = new();
 
+        // --- Forge stats ---
+        [HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Forge")] public ForgeStats Forge = new();
+
         [ShowInInspector, HideReferenceObjectPicker]
         [TabGroup("GameDataTabs", "Tasks")] public Dictionary<int, TaskRecord> TaskRecords = new();
 
@@ -234,6 +238,113 @@ namespace Blindsided.SaveData
             public float DamageDealt;
             public int Deaths;
             public float DamageTaken;
+        }
+
+
+        [HideReferenceObjectPicker]
+        public class ForgeStats
+        {
+            // Top-level totals
+            public int TotalCrafts;
+            public int TotalEquippedFromCraft;
+            public int TotalSalvaged;
+            public int TotalAutocraftSessions;
+            public int TotalCraftUntilUpgradeSessions;
+            public int TotalFailedCraftAttempts;
+
+            // Resource usage and returns
+            public Dictionary<string, double> ResourcesSpent = new(); // ingots/cores/chunks/crystals spends
+            public Dictionary<string, double> ResourcesGainedFromSalvage = new();
+            public Dictionary<string, double> CoresSpentByCore = new(); // coreName -> cores spent
+            public Dictionary<string, double> IngotsSpentByCore = new(); // coreName -> ingots spent
+
+            // Distributions (what was crafted)
+            public Dictionary<string, int> CraftsByCore = new();
+            public Dictionary<string, int> CraftsBySlot = new();
+            public Dictionary<string, int> CraftsByRarity = new();
+            public Dictionary<string, Dictionary<string, int>> RarityCountsByCore = new(); // core -> rarity -> count
+            public Dictionary<string, Dictionary<string, int>> SlotCountsByCore = new(); // core -> slot -> count
+            public Dictionary<int, int> AffixCountDistribution = new();
+
+            // Upgrade outcomes
+            public Dictionary<string, int> UpgradesBySlot = new();
+            public Dictionary<string, int> UpgradesByRarity = new();
+            public int CraftsSinceLastUpgrade;
+            public int MaxCraftsBetweenUpgrades;
+            public int TotalUpgradeEvents;
+            public int CumulativeCraftsBetweenUpgrades;
+            public float AverageCraftsPerUpgrade; // derived but cached for convenience
+            public Dictionary<string, FloatAgg> UpgradeScoreDeltaBySlot = new(); // slot -> {sum,count}
+
+            // Affix/stat roll quality
+            public Dictionary<string, StatAgg> StatRolls = new(); // statId -> agg
+            public Dictionary<string, Dictionary<string, StatAgg>> StatRollsByRarity = new(); // rarity -> statId -> agg
+            public Dictionary<string, Dictionary<string, StatAgg>> StatRollsBySlot = new(); // slot -> statId -> agg
+            public Dictionary<string, int> HighRollsByStat = new(); // statId -> count above threshold
+            public float HighRollTopPercentThreshold = 0.9f; // default top 10%
+            public Dictionary<string, double> CumulativeStatTotalsByStat = new(); // statId -> running sum across all crafts
+            public Dictionary<string, float> HighestRollByStat = new(); // statId -> highest single affix roll value
+
+            // Ivan progression (forge mastery)
+            public int IvanLevelAtCraft;
+            public float IvanXpAtCraft;
+            public double IvanXpGainedTotal;
+            public int IvanLevelUpsFromCrafts;
+            public Dictionary<string, double> IvanXpByCore = new();
+            public Dictionary<string, double> IvanXpByRarity = new();
+
+            // Autocraft specifics
+            public int AutocraftCrafts;
+            public Dictionary<string, int> AutocraftStopReasons = new(); // {Upgraded,OutOfResources,Cancelled,MaxIterations}
+            public Dictionary<string, int> AutocraftBestRarityTierBySlot = new(); // slot -> highest rarity tier index
+
+            // Salvage specifics
+            public Dictionary<string, int> SalvagesByRarity = new();
+            public Dictionary<string, int> SalvagesByCore = new();
+            public int SalvageItems; // number of items salvaged
+            public int SalvageEntries; // total individual entries awarded across all salvages
+            public Dictionary<string, ResourceAgg> SalvageYieldPerResource = new(); // resName -> {sum,count}
+
+            // Conversion actions (forge side-panels)
+            public int IngotConversions; // actions performed
+            public double CrystalCrafted; // total units produced
+            public double ChunksCrafted; // total units produced
+            public Dictionary<string, double> ConversionSpentByResource = new();
+
+            // Best single-piece scores
+            public Dictionary<string, float> BestPieceScoreBySlot = new(); // slot -> highest score (absolute)
+            public Dictionary<string, float> BestPieceScoreByCore = new(); // coreName -> highest score (absolute)
+            public Dictionary<string, float> MinPieceScoreByCore = new(); // coreName -> min observed piece score
+            public Dictionary<string, float> MaxPieceScoreByCore = new(); // coreName -> max observed piece score
+            public Dictionary<string, float> BestPieceScoreByRarity = new(); // rarityName -> highest score
+
+            // Per-slot totals
+            public Dictionary<string, int> EquipsBySlot = new();
+            public Dictionary<string, int> SalvagesBySlot = new();
+            public Dictionary<string, int> CraftsBySlotTotals = new();
+
+            [HideReferenceObjectPicker]
+            public class StatAgg
+            {
+                public int count;
+                public double sum;
+                public float min = float.PositiveInfinity;
+                public float max = float.NegativeInfinity;
+            }
+
+            [HideReferenceObjectPicker]
+            public class FloatAgg
+            {
+                public int count;
+                public double sum;
+            }
+
+            [HideReferenceObjectPicker]
+            public class ResourceAgg
+            {
+                public int count;
+                public double sum;
+            }
         }
 
 

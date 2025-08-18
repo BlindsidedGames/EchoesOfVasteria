@@ -68,12 +68,18 @@ namespace TimelessEchoes.Gear.UI
         {
             if (!CanCraft())
             {
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                    o.saveData.Forge.TotalFailedCraftAttempts++;
                 RefreshActionButtons();
                 return;
             }
 
             if (selectedCore == null || crafting == null)
             {
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                    o.saveData.Forge.TotalFailedCraftAttempts++;
                 RefreshActionButtons();
                 return;
             }
@@ -81,7 +87,7 @@ namespace TimelessEchoes.Gear.UI
             // Auto-salvage previous craft if one exists
             if (lastCrafted != null)
             {
-                SalvageService.Instance?.Salvage(lastCrafted);
+                SalvageService.Instance?.Salvage(lastCrafted, isAuto: false);
                 lastCrafted = null;
             }
 
@@ -102,6 +108,18 @@ namespace TimelessEchoes.Gear.UI
             if (eq == null && equipment != null)
             {
                 equipment.Equip(lastCrafted);
+                // Track immediate equip from craft
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                {
+                    var forge = o.saveData.Forge;
+                    forge.TotalEquippedFromCraft++;
+                    if (!string.IsNullOrWhiteSpace(selectedSlot))
+                    {
+                        if (!forge.EquipsBySlot.ContainsKey(selectedSlot)) forge.EquipsBySlot[selectedSlot] = 0;
+                        forge.EquipsBySlot[selectedSlot]++;
+                    }
+                }
                 lastCrafted = null;
                 if (resultText != null) resultText.text = string.Empty;
                 UpdateAllGearSlots();
@@ -157,6 +175,10 @@ namespace TimelessEchoes.Gear.UI
         {
             if (lastCrafted == null || equipment == null) return;
             equipment.Equip(lastCrafted);
+            // Track replace equip from craft
+            var o = Blindsided.Oracle.oracle;
+            if (o != null && o.saveData != null && o.saveData.Forge != null)
+                o.saveData.Forge.TotalEquippedFromCraft++;
             lastCrafted = null;
             // Clear result text and disable action buttons when no active craft
             if (resultText != null) resultText.text = string.Empty;
@@ -344,6 +366,21 @@ namespace TimelessEchoes.Gear.UI
             if (core.crystalResource != null && core.crystalCostPerIngot > 0)
                 rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
             rm.Add(core.requiredIngot, amount, trackStats: false);
+            // Stats: conversion action and resource deltas
+            var o = Blindsided.Oracle.oracle;
+            if (o != null && o.saveData != null && o.saveData.Forge != null)
+            {
+                var forge = o.saveData.Forge;
+                forge.IngotConversions++;
+                if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                {
+                    var k = core.chunkResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += core.chunkCostPerIngot * amount;
+                }
+                if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                {
+                    var k = core.crystalResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += core.crystalCostPerIngot * amount;
+                }
+            }
             // Persist desired amount
             ingotCraftAmount = Mathf.Max(1, ingotCraftAmount);
             PlayerPrefs.SetInt("IngotCraftAmount", ingotCraftAmount);
@@ -375,6 +412,17 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(slimeResource, 1 * amount);
             if (core.crystalResource != null)
                 rm.Add(core.crystalResource, amount, trackStats: false);
+            // Stats: crystal conversion
+            {
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                {
+                    var forge = o.saveData.Forge;
+                    forge.CrystalCrafted += amount;
+                    if (core.chunkResource != null) { var k = core.chunkResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 2 * amount; }
+                    if (slimeResource != null) { var k = slimeResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 1 * amount; }
+                }
+            }
             crystalCraftAmount = Mathf.Max(1, crystalCraftAmount);
             PlayerPrefs.SetInt("CrystalCraftAmount", crystalCraftAmount);
             PlayerPrefs.Save();
@@ -405,6 +453,17 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(stoneResource, 2 * amount);
             if (core.chunkResource != null)
                 rm.Add(core.chunkResource, amount, trackStats: false);
+            // Stats: chunk conversion
+            {
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                {
+                    var forge = o.saveData.Forge;
+                    forge.ChunksCrafted += amount;
+                    if (core.crystalResource != null) { var k = core.crystalResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 1 * amount; }
+                    if (stoneResource != null) { var k = stoneResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 2 * amount; }
+                }
+            }
             chunkCraftAmount = Mathf.Max(1, chunkCraftAmount);
             PlayerPrefs.SetInt("ChunkCraftAmount", chunkCraftAmount);
             PlayerPrefs.Save();
