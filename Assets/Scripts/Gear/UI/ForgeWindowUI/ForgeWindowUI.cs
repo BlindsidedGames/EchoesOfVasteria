@@ -57,8 +57,6 @@ namespace TimelessEchoes.Gear.UI
                 craftButton.onClick.AddListener(OnCraftClicked);
             if (replaceButton != null)
                 replaceButton.onClick.AddListener(OnReplaceClicked);
-            if (salvageButton != null)
-                salvageButton.onClick.AddListener(OnSalvageClicked);
             if (craftUntilUpgradeButton != null)
                 craftUntilUpgradeButton.onClick.AddListener(OnCraftUntilUpgradeClicked);
             if (ingotConversionSection != null)
@@ -146,7 +144,6 @@ namespace TimelessEchoes.Gear.UI
             if (resultText != null)
                 resultText.text = string.Empty;
             if (replaceButton != null) replaceButton.interactable = false;
-            if (salvageButton != null) salvageButton.interactable = false;
 
             // Ensure TMP texts that use <sprite> tags render with the StatIcons sprite asset
             var statSpriteAsset = StatIconLookup.GetSpriteAsset();

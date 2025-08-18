@@ -133,24 +133,9 @@ namespace TimelessEchoes.Gear.UI
             // Clear result text and disable action buttons when no active craft
             if (resultText != null) resultText.text = string.Empty;
             if (replaceButton != null) replaceButton.interactable = false;
-            if (salvageButton != null) salvageButton.interactable = false;
             // Clear result preview when result is equipped
             ClearResultPreview();
             UpdateAllGearSlots();
-            RefreshActionButtons();
-        }
-
-        private void OnSalvageClicked()
-        {
-            if (lastCrafted == null) return;
-            SalvageService.Instance?.Salvage(lastCrafted);
-            lastCrafted = null;
-            // Clear result text and disable action buttons when no active craft
-            if (resultText != null) resultText.text = string.Empty;
-            if (replaceButton != null) replaceButton.interactable = false;
-            if (salvageButton != null) salvageButton.interactable = false;
-            // Clear result preview when salvaged
-            ClearResultPreview();
             RefreshActionButtons();
         }
 
