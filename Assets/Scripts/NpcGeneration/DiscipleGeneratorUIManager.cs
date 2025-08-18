@@ -139,7 +139,7 @@ namespace TimelessEchoes.NpcGeneration
                 collectAllButton.interactable = canCollect;
 
             if (availableResourcesText != null)
-                availableResourcesText.text = $"\u2514 {CalcUtils.FormatNumber(totalAvailable, true)}";
+                availableResourcesText.text = $"{CalcUtils.FormatNumber(totalAvailable, true)}";
 
             if (disciplePercentText != null)
                 disciplePercentText.text = $"Echo Power {DisciplePercent * 100f:0.#}%";
