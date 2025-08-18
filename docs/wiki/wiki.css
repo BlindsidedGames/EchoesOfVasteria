@@ -37,6 +37,15 @@ h2 {
     border-bottom: 1px solid var(--border-color);
 }
 
+/* Inline stat icons for wiki tables */
+.stat-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+    margin-right: 6px;
+    image-rendering: pixelated;
+}
+
 /* Styles for the label cell (th) */
 .stats th {
     text-align: right;
