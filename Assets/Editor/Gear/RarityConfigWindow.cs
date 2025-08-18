@@ -239,40 +239,39 @@ namespace TimelessEchoes.EditorTools
 			// Header
 			using (new EditorGUILayout.HorizontalScope())
 			{
-				GUILayout.Label("Rarity", GUILayout.Width(150));
-				GUILayout.Label("Base", GUILayout.Width(70));
-				GUILayout.Label("/Level", GUILayout.Width(70));
-				GUILayout.Label("Global", GUILayout.Width(70));
-				GUILayout.Label("Eff@0", GUILayout.Width(80));
-				GUILayout.Label($"Eff@{level}", GUILayout.Width(80));
-				GUILayout.Label("Chance@0", GUILayout.Width(80));
-				GUILayout.Label($"Chance@{level}", GUILayout.Width(90));
-				GUILayout.Label("Chance@1000", GUILayout.Width(100));
-			}
+                               GUILayout.Label("Rarity", GUILayout.Width(150));
+                               GUILayout.Label("Base", GUILayout.Width(70));
+                               GUILayout.Label("/Level", GUILayout.Width(70));
+                               GUILayout.Label("Global", GUILayout.Width(70));
+                               GUILayout.Label("Eff@100", GUILayout.Width(80));
+                               GUILayout.Label("Eff@1000", GUILayout.Width(80));
+                               GUILayout.Label("Chance@0", GUILayout.Width(80));
+                               GUILayout.Label($"Chance@{level}", GUILayout.Width(90));
+                               GUILayout.Label("Chance@1000", GUILayout.Width(100));
+                       }
 
-			// Precompute totals
-			float total = 0f;
-			float totalAtLevel = 0f;
-			float totalAt0 = 0f;
-			float totalAt1000 = 0f;
-			var effByRarity = new Dictionary<RaritySO, float>();
-			var effAtLevelByRarity = new Dictionary<RaritySO, float>();
-			var effAt0ByRarity = new Dictionary<RaritySO, float>();
-			var effAt1000ByRarity = new Dictionary<RaritySO, float>();
-			foreach (var r in raritiesByTier)
-			{
-				float effL = ComputeEffective(core, r, level);
-				effByRarity[r] = effL;
-				totalAtLevel += effL;
-				float e0 = ComputeEffective(core, r, 0);
-				effAt0ByRarity[r] = e0;
-				totalAt0 += e0;
-				float e1000 = ComputeEffective(core, r, 1000);
-				effAt1000ByRarity[r] = e1000;
-				totalAt1000 += e1000;
-				// Maintain 'total' for Eff@{level} row % calc below
-				total += effL;
-			}
+                       // Precompute totals
+                       float totalAtLevel = 0f;
+                       float totalAt0 = 0f;
+                       float totalAt1000 = 0f;
+                       var effByRarity = new Dictionary<RaritySO, float>();
+                       var effAt0ByRarity = new Dictionary<RaritySO, float>();
+                       var effAt100ByRarity = new Dictionary<RaritySO, float>();
+                       var effAt1000ByRarity = new Dictionary<RaritySO, float>();
+                       foreach (var r in raritiesByTier)
+                       {
+                               float effL = ComputeEffective(core, r, level);
+                               effByRarity[r] = effL;
+                               totalAtLevel += effL;
+                               float e0 = ComputeEffective(core, r, 0);
+                               effAt0ByRarity[r] = e0;
+                               totalAt0 += e0;
+                               float e100 = ComputeEffective(core, r, 100);
+                               effAt100ByRarity[r] = e100;
+                               float e1000 = ComputeEffective(core, r, 1000);
+                               effAt1000ByRarity[r] = e1000;
+                               totalAt1000 += e1000;
+                       }
 
 			foreach (var rarity in raritiesByTier)
 			{
@@ -282,19 +281,20 @@ namespace TimelessEchoes.EditorTools
 				float baseW = GetWeight(core, rarity);
 				float perLvl = GetWeightPerLevel(core, rarity);
 				float mult = rarity != null ? rarity.globalWeightMultiplier : 1f;
-				float eff = effByRarity[rarity];
-				float eff0 = effAt0ByRarity[rarity];
-				float eff1000 = effAt1000ByRarity[rarity];
-				float p0 = totalAt0 > 0f ? (eff0 / totalAt0) * 100f : 0f;
-				float pLevel = totalAtLevel > 0f ? (eff / totalAtLevel) * 100f : 0f;
-				float p1000 = totalAt1000 > 0f ? (eff1000 / totalAt1000) * 100f : 0f;
+                               float effLevel = effByRarity[rarity];
+                               float eff100 = effAt100ByRarity[rarity];
+                               float eff1000 = effAt1000ByRarity[rarity];
+                               float eff0 = effAt0ByRarity[rarity];
+                               float p0 = totalAt0 > 0f ? (eff0 / totalAt0) * 100f : 0f;
+                               float pLevel = totalAtLevel > 0f ? (effLevel / totalAtLevel) * 100f : 0f;
+                               float p1000 = totalAt1000 > 0f ? (eff1000 / totalAt1000) * 100f : 0f;
 
-				using (new EditorGUILayout.HorizontalScope())
-				{
-					var c = rarity != null ? rarity.color : Color.white;
-					var colorRect = GUILayoutUtility.GetRect(8, 16, GUILayout.Width(16));
-					EditorGUI.DrawRect(new Rect(colorRect.x, colorRect.y + 2, 12, 12), c);
-					GUILayout.Label(rarity != null ? rarity.GetName() : "(null)", GUILayout.Width(120));
+                               using (new EditorGUILayout.HorizontalScope())
+                               {
+                                       var c = rarity != null ? rarity.color : Color.white;
+                                       var colorRect = GUILayoutUtility.GetRect(8, 16, GUILayout.Width(16));
+                                       EditorGUI.DrawRect(new Rect(colorRect.x, colorRect.y + 2, 12, 12), c);
+                                       GUILayout.Label(rarity != null ? rarity.GetName() : "(null)", GUILayout.Width(120));
 
 					EditorGUI.BeginChangeCheck();
 					float newBase = EditorGUILayout.FloatField(baseW, GUILayout.Width(70));
@@ -307,15 +307,15 @@ namespace TimelessEchoes.EditorTools
 						if (autoSave) AssetDatabase.SaveAssets();
 					}
 
-					GUILayout.Label(applyGlobalMultiplier ? mult.ToString("0.###") : "1", GUILayout.Width(70));
-					GUILayout.Label(eff0.ToString("0.###"), GUILayout.Width(80));
-					GUILayout.Label(eff.ToString("0.###"), GUILayout.Width(80));
-					GUILayout.Label(p0.ToString("0.0000"), GUILayout.Width(80));
-					GUILayout.Label(pLevel.ToString("0.0000"), GUILayout.Width(90));
-					GUILayout.Label(p1000.ToString("0.0000"), GUILayout.Width(100));
-				}
-			}
-		}
+                                       GUILayout.Label(applyGlobalMultiplier ? mult.ToString("0.###") : "1", GUILayout.Width(70));
+                                       GUILayout.Label(eff100.ToString("0.###"), GUILayout.Width(80));
+                                       GUILayout.Label(eff1000.ToString("0.###"), GUILayout.Width(80));
+                                       GUILayout.Label(p0.ToString("0.0000"), GUILayout.Width(80));
+                                       GUILayout.Label(pLevel.ToString("0.0000"), GUILayout.Width(90));
+                                       GUILayout.Label(p1000.ToString("0.0000"), GUILayout.Width(100));
+                               }
+                       }
+               }
 
 		private void DrawCoreSummary(CoreSO core)
 		{
