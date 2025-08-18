@@ -8,13 +8,16 @@ namespace Blindsided
 {
     public partial class Oracle
     {
+        // Autosave management
+        private Coroutine _autosaveRoutine;
+        private const float FirstAutosaveDelaySeconds = 30f;
+        private const float AutosaveIntervalSeconds = 30f;
         private void Start()
         {
             Load();
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
-            InvokeRepeating(nameof(SaveToFile), 1, 30);
 
             // Wire up regression confirmation UI if present
             if (regressionYesButton != null)
@@ -54,6 +57,9 @@ namespace Blindsided
 
             yield return null; // wait one frame for scene initialization
             EventHandler.LoadData();
+            // Start autosave only after data is loaded and applied in the main scene.
+            // First autosave should occur 30 seconds after load, then every 30 seconds.
+            StartAutosaveLoop(FirstAutosaveDelaySeconds);
         }
 
         private void Update()
@@ -81,6 +87,7 @@ namespace Blindsided
                 SaveToFile(); // save the latest state immediately
                 ES3.StoreCachedFile(_fileName);
                 CreateRotatingBackup();
+                StopAutosaveLoop();
             }
         }
 
@@ -103,5 +110,59 @@ namespace Blindsided
             }
         }
 #endif
+    }
+}
+
+// Autosave helpers for Oracle
+namespace Blindsided
+{
+    public partial class Oracle
+    {
+        private System.Collections.IEnumerator AutosaveRoutine(float initialDelay, float interval)
+        {
+            if (initialDelay > 0)
+                yield return new WaitForSecondsRealtime(initialDelay);
+
+            while (true)
+            {
+                // Skip autosave while wiping, when a regression or load-failure prompt is active
+                var regressionActive = regressionConfirmWindow != null && regressionConfirmWindow.activeSelf;
+                if (!wipeInProgress && !regressionActive && !_pendingLoadFailureNotice)
+                {
+                    try
+                    {
+                        SaveToFile();
+                        ES3.StoreCachedFile(_fileName);
+                        CreateRotatingBackup();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"Autosave failed: {ex}");
+                    }
+                }
+
+                yield return new WaitForSecondsRealtime(interval);
+            }
+        }
+
+        private void StartAutosaveLoop(float initialDelaySeconds)
+        {
+            StopAutosaveLoop();
+            _autosaveRoutine = StartCoroutine(AutosaveRoutine(initialDelaySeconds, AutosaveIntervalSeconds));
+        }
+
+        private void StopAutosaveLoop()
+        {
+            if (_autosaveRoutine != null)
+            {
+                try { StopCoroutine(_autosaveRoutine); } catch { }
+                _autosaveRoutine = null;
+            }
+        }
+
+        private void RestartAutosaveLoop(float initialDelaySeconds)
+        {
+            StartAutosaveLoop(initialDelaySeconds);
+        }
     }
 }

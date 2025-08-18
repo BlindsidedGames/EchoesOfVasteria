@@ -849,6 +849,8 @@ namespace Blindsided
                 _mainSceneLoadDeferred = false;
                 StartCoroutine(LoadMainScene());
             }
+            // Resume autosave scheduling after the user confirms
+            RestartAutosaveLoop(AutosaveIntervalSeconds);
         }
 
         private void DismissRegressionWindow()
@@ -870,11 +872,11 @@ namespace Blindsided
         /// and reloads the scene so the restored data is applied everywhere.
         /// </summary>
         [Button]
-                public void AttemptRestoreBackupAndReload()
+        public void AttemptRestoreBackupAndReload()
         {
             try
             {
-                                DismissRegressionWindow();
+                DismissRegressionWindow();
 
                                 // Prefer rotating backups; fall back to Easy Save's .bac
                                 var restored = TryRestoreFromLatestRotatingBackup();
@@ -894,26 +896,28 @@ namespace Blindsided
                 // Reload save from disk regardless; if restore failed, this reloads the current file.
                 Load();
 
-                                if (_pendingLoadFailureNotice)
-                                {
-                                        TryShowLoadFailureWindow(_pendingLoadFailureMessage);
-                                        _pendingLoadFailureNotice = false;
-                                        _pendingLoadFailureMessage = null;
-                                        _mainSceneLoadDeferred = true;
-                                        return;
-                                }
-                                if (RegressionDetected)
-                                {
-                                        _mainSceneLoadDeferred = true;
-                                        return;
-                                }
+                if (_pendingLoadFailureNotice)
+                {
+                    TryShowLoadFailureWindow(_pendingLoadFailureMessage);
+                    _pendingLoadFailureNotice = false;
+                    _pendingLoadFailureMessage = null;
+                    _mainSceneLoadDeferred = true;
+                    return;
+                }
+                if (RegressionDetected)
+                {
+                    _mainSceneLoadDeferred = true;
+                    return;
+                }
 
                 // Reload the active scene(s) to ensure all systems pick up the new data
                 // We already have a helper to load Main on boot, but here reload current.
                 var active = SceneManager.GetActiveScene();
                 SceneManager.LoadScene(active.name);
-                                _mainSceneLoadDeferred = false;
-                                StartCoroutine(LoadMainScene());
+                _mainSceneLoadDeferred = false;
+                StartCoroutine(LoadMainScene());
+                // Resume autosave scheduling after reload begins
+                RestartAutosaveLoop(FirstAutosaveDelaySeconds);
             }
             catch (Exception ex)
             {

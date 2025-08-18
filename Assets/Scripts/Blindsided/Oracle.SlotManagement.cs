@@ -34,7 +34,13 @@ namespace Blindsided
             {
                 bufferSize = 8192
             };
+			// Stop autosave while switching to avoid snapshotting a half-applied state
+			StopAutosaveLoop();
             Load();
+			// Ensure all systems reload their state for the new slot
+			EventHandler.LoadData();
+			// Restart autosave with the standard interval after a slot switch
+			RestartAutosaveLoop(FirstAutosaveDelaySeconds);
         }
 
     }

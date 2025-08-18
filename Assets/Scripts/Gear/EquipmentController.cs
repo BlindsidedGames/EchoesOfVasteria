@@ -148,13 +148,19 @@ namespace TimelessEchoes.Gear
             {
                 var rec = kv.Value;
                 if (rec == null) continue;
-                var normalizedSlot = NormalizeSlotName(rec.slot);
-                var item = new GearItem { slot = normalizedSlot, rarity = null };
+                // Resolve the canonical slot name. Prefer the record's slot, but
+                // fall back to the dictionary key for compatibility with older saves
+                // where the record.slot field may be null/empty or differently cased.
+                var resolvedSlot = ResolveSlotName(rec.slot, kv.Key);
+                if (string.IsNullOrWhiteSpace(resolvedSlot))
+                    continue; // cannot determine a valid slot; skip
+
+                var item = new GearItem { slot = resolvedSlot, rarity = null };
 				if (!string.IsNullOrWhiteSpace(rec.rarity))
 				{
 					item.rarity = allRarities.FirstOrDefault(r => r != null && r.name == rec.rarity);
 					if (item.rarity == null)
-						Debug.LogWarning($"EquipmentController: Rarity '{rec.rarity}' not found in Resources – item sprite may be missing for slot '{normalizedSlot}'.");
+						Debug.LogWarning($"EquipmentController: Rarity '{rec.rarity}' not found in Resources – item sprite may be missing for slot '{resolvedSlot}'.");
 				}
 
                 if (rec.affixes != null)
@@ -165,7 +171,7 @@ namespace TimelessEchoes.Gear
 						var stat = allStats.FirstOrDefault(s => s != null && (s.id == ar.statId || s.name == ar.statId));
 						if (stat == null)
 						{
-							Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources – affix skipped for slot '{normalizedSlot}'.");
+							Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources – affix skipped for slot '{resolvedSlot}'.");
 							continue;
 						}
                         item.affixes.Add(new GearAffix { stat = stat, value = ar.value });
@@ -183,6 +189,27 @@ namespace TimelessEchoes.Gear
             if (string.IsNullOrWhiteSpace(slot)) return slot;
             if (slot == "Helm") return "Helmet";
             return slot;
+        }
+
+        private string ResolveSlotName(string recordSlot, string dictKeySlot)
+        {
+            // Try preferred: recordSlot, then fallback: dictKeySlot
+            foreach (var candidate in new[] { recordSlot, dictKeySlot })
+            {
+                var s = candidate;
+                if (string.IsNullOrWhiteSpace(s)) continue;
+                s = s.Trim();
+                // Map common alias
+                if (s.Equals("Helm", System.StringComparison.OrdinalIgnoreCase))
+                    s = "Helmet";
+                // If candidate already exactly matches a configured slot, accept
+                var exact = slots.FirstOrDefault(x => x != null && x.Equals(s, System.StringComparison.Ordinal));
+                if (!string.IsNullOrEmpty(exact)) return exact;
+                // Case-insensitive match to configured slots
+                var ci = slots.FirstOrDefault(x => x != null && x.Equals(s, System.StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(ci)) return ci;
+            }
+            return null;
         }
     }
 }

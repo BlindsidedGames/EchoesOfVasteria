@@ -9,7 +9,6 @@ namespace TimelessEchoes.Skills
 {
     public class MilestoneBonusUI : MonoBehaviour
     {
-        [SerializeField] private GameObject window;
         [SerializeField] private Transform entryParent;
         [SerializeField] private GameObject entryPrefab;
         [SerializeField] private SkillController controller;
@@ -18,41 +17,12 @@ namespace TimelessEchoes.Skills
         {
             entryParent = parent;
         }
-
-        public void OpenWindow()
-        {
-            if (window == null)
-                window = gameObject;
-            window.SetActive(true);
-        }
-
-        public void CloseWindow()
-        {
-            if (window == null)
-                window = gameObject;
-            window.SetActive(false);
-        }
+        
 
         private void Awake()
         {
             if (controller == null)
                 controller = FindFirstObjectByType<SkillController>();
-            if (window == null)
-                window = gameObject;
-        }
-
-        private void OnEnable()
-        {
-            var gm = GameManager.Instance;
-            if (gm != null)
-                gm.HeroDied += CloseWindow;
-        }
-
-        private void OnDisable()
-        {
-            var gm = GameManager.Instance;
-            if (gm != null)
-                gm.HeroDied -= CloseWindow;
         }
 
         public void PopulateMilestones(Skill skill)
