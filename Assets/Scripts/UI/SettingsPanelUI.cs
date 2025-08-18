@@ -86,6 +86,9 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot3;
 
+        [TabGroup("Settings", "Save Files")] [SerializeField]
+        private Button openSaveFolderButton;
+
         private SaveSlotReferences[] saveSlots;
 
         private const int Fps60 = 60;
@@ -101,6 +104,9 @@ namespace TimelessEchoes.UI
         private void Awake()
         {
             saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
+
+            if (openSaveFolderButton != null)
+                openSaveFolderButton.onClick.AddListener(OpenSaveLocation);
 
             if (fullscreenWindowButton != null)
                 fullscreenWindowButton.onClick.AddListener(SetFullscreenWindow);
@@ -207,6 +213,8 @@ namespace TimelessEchoes.UI
                 enemyDamageButton.onClick.RemoveListener(ToggleEnemyDamage);
             if (dropTextButton != null)
                 dropTextButton.onClick.RemoveListener(ToggleDropText);
+            if (openSaveFolderButton != null)
+                openSaveFolderButton.onClick.RemoveListener(OpenSaveLocation);
             if (saveSlots != null)
                 foreach (var slot in saveSlots)
                 {
@@ -472,6 +480,12 @@ namespace TimelessEchoes.UI
             {
                 Debug.LogError($"Failed to delete slot {index}: {ex}");
             }
+        }
+
+        private static void OpenSaveLocation()
+        {
+            var path = Application.persistentDataPath;
+            Application.OpenURL($"file://{path}");
         }
 
         private void UpdateSlotInteractivity(int index)
