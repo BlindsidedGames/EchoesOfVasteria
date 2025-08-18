@@ -29,6 +29,14 @@ namespace TimelessEchoes.Gear.UI
         // Called by UI slot buttons (e.g., Weapon/Helmet/Chest/Boots)
         public void SelectSlot(string slot)
         {
+            if (lastCrafted != null && !string.Equals(lastCrafted.slot, slot))
+            {
+                SalvageService.Instance?.Salvage(lastCrafted);
+                lastCrafted = null;
+                if (resultText != null) resultText.text = string.Empty;
+                ClearResultPreview();
+            }
+
             // Stop auto-crafting if the player changes the selected gear slot
             if (isAutoCrafting && !string.Equals(selectedSlot, slot))
                 StopAutoCrafting();

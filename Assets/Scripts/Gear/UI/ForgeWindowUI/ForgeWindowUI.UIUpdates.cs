@@ -449,10 +449,9 @@ namespace TimelessEchoes.Gear.UI
                 }
             }
 
-            // Replace/Salvage depend only on having a pending result; do not gate on craftability
+            // Replace depends only on having a pending result; do not gate on craftability
             var hasResult = lastCrafted != null;
             if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
-            if (salvageButton != null) salvageButton.interactable = hasResult && !isAutoCrafting;
             // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
             if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
             if (craftUntilUpgradeButtonText != null)
