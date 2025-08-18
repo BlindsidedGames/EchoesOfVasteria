@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TimelessEchoes.Quests
 {
@@ -15,6 +16,7 @@ namespace TimelessEchoes.Quests
         [SerializeField] private QuestEntryUI questEntryPrefab;
         [SerializeField] private GameObject dividerPrefab;
         [SerializeField] private Transform questParent;
+        [SerializeField] private ScrollRect questScroll;
         private readonly List<QuestEntryUI> entries = new();
         private readonly List<GameObject> extras = new();
 
@@ -72,6 +74,9 @@ namespace TimelessEchoes.Quests
             // Ensure the list is freshly built and sorted whenever the quest UI opens
             var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
             qm?.RefreshNoticeboard();
+            Canvas.ForceUpdateCanvases(); // ensure layout is valid
+            if (questScroll != null)
+                questScroll.verticalNormalizedPosition = 1f; // top
         }
 
     }
