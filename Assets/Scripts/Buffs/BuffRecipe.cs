@@ -221,7 +221,9 @@ namespace TimelessEchoes.Buffs
             if (durationType == BuffDurationType.DistancePercent)
                 lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
             else if (durationType != BuffDurationType.ExtraDistancePercent)
-                lines.Add($"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}");
+                lines.Add(
+                    $"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}, " +
+                    $"Cooldown: {CalcUtils.FormatTime(GetCooldown(), shortForm: true)}");
             return lines;
         }
 
