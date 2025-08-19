@@ -167,9 +167,8 @@ namespace TimelessEchoes.Buffs
                         cooldown += up.cooldownDelta;
                 }
             }
-            var duration = GetDuration();
-            if (cooldown <= duration)
-                cooldown = duration + 0.01f;
+            // Cooldown now starts after the buff duration finishes, so it is not
+            // forced to be longer than the duration.
             return cooldown;
         }
 

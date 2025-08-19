@@ -497,11 +497,18 @@ namespace TimelessEchoes.Buffs
             for (var i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 var buff = activeBuffs[i];
-                if (heroX >= buff.expireAtDistance) RemoveBuffAt(i);
+                if (heroX >= buff.expireAtDistance)
+                {
+                    var startCooldown = buff.recipe == null ||
+                                        (buff.recipe.durationType != BuffDurationType.DistancePercent &&
+                                         buff.recipe.durationType != BuffDurationType.ExtraDistancePercent);
+                    // Distance-based buffs that expire from distance do not start their cooldown.
+                    RemoveBuffAt(i, startCooldown);
+                }
             }
         }
 
-        private void RemoveBuffAt(int index)
+        private void RemoveBuffAt(int index, bool startCooldown = true)
         {
             if (index < 0 || index >= activeBuffs.Count) return;
             var buff = activeBuffs[index];
@@ -509,7 +516,8 @@ namespace TimelessEchoes.Buffs
             activeBuffs.RemoveAt(index);
             if (buff.recipe != null)
             {
-                cooldowns[buff.recipe] = buff.recipe.GetCooldown();
+                if (startCooldown)
+                    cooldowns[buff.recipe] = buff.recipe.GetCooldown();
                 Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
             }
             NotifyAutoBuffChanged();
