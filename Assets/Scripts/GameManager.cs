@@ -100,6 +100,7 @@ namespace TimelessEchoes
 
         [TitleGroup("Map Generation")]
         [SerializeField] private List<MapGenerationButton> generationButtons = new();
+        [SerializeField] private float fadeDuration = 1f;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
@@ -181,7 +182,12 @@ namespace TimelessEchoes
             {
                 if (entry?.button == null) continue;
                 var cfg = entry.config;
-                UnityEngine.Events.UnityAction action = () => StartRun(cfg);
+                var track = entry.musicTrack;
+                UnityEngine.Events.UnityAction action = () =>
+                {
+                    AudioManager.Instance.PlayMusic(track, fadeDuration);
+                    StartRun(cfg);
+                };
                 entry.button.onClick.AddListener(action);
                 _buttonActions.Add(entry.button, action);
             }

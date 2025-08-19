@@ -1,4 +1,6 @@
 using Blindsided.SaveData;
+using System.Collections;
+using System.Collections.Generic;
 using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -22,7 +24,8 @@ namespace TimelessEchoes.Audio
         [SerializeField] private AudioMixerGroup ambianceGroup;
 
         [Header("Music")] [SerializeField] private AudioSource musicSource;
-        [SerializeField] private AudioClip musicClip;
+        [SerializeField] private AudioSource musicSourceB;
+        [SerializeField] private Dictionary<MusicTrack, AudioClip> musicClips = new();
 
         [Header("Task Clips")] [SerializeField]
         private AudioClip[] woodcuttingClips;
@@ -47,6 +50,12 @@ namespace TimelessEchoes.Audio
         [Header("Hero Clips")] [SerializeField]
         private AudioClip heroDeathClip;
 
+        public enum MusicTrack
+        {
+            Main,
+            Mines
+        }
+
         public enum TaskType
         {
             Woodcutting,
@@ -68,12 +77,22 @@ namespace TimelessEchoes.Audio
                 return;
             }
 
-            if (musicClip != null && musicSource != null)
+            if (musicSource != null)
             {
-                musicSource.clip = musicClip;
                 musicSource.loop = true;
                 musicSource.outputAudioMixerGroup = musicGroup;
-                musicSource.Play();
+                if (musicClips.TryGetValue(MusicTrack.Main, out var clip))
+                {
+                    musicSource.clip = clip;
+                    musicSource.Play();
+                }
+            }
+
+            if (musicSourceB != null)
+            {
+                musicSourceB.loop = true;
+                musicSourceB.outputAudioMixerGroup = musicGroup;
+                musicSourceB.volume = 0f;
             }
 
             ApplyVolumes();
@@ -186,6 +205,52 @@ namespace TimelessEchoes.Audio
         {
             if (clips == null || clips.Length == 0) return null;
             return clips[Random.Range(0, clips.Length)];
+        }
+
+        public void PlayMusic(MusicTrack track, float fadeDuration)
+        {
+            if (musicSource == null || musicSourceB == null) return;
+            if (!musicClips.TryGetValue(track, out var clip)) return;
+            if (musicSource.clip == clip) return;
+            StartCoroutine(CrossfadeRoutine(clip, fadeDuration));
+        }
+
+        private IEnumerator CrossfadeRoutine(AudioClip newClip, float duration)
+        {
+            var from = musicSource;
+            var to = musicSourceB;
+            if (from == null || to == null || newClip == null) yield break;
+
+            to.clip = newClip;
+            to.loop = true;
+            to.outputAudioMixerGroup = musicGroup;
+            to.volume = 0f;
+            to.Play();
+
+            if (duration <= 0f)
+            {
+                from.Stop();
+                to.volume = 1f;
+            }
+            else
+            {
+                float time = 0f;
+                float start = from.volume;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    var t = time / duration;
+                    from.volume = Mathf.Lerp(start, 0f, t);
+                    to.volume = Mathf.Lerp(0f, 1f, t);
+                    yield return null;
+                }
+
+                from.Stop();
+                to.volume = 1f;
+            }
+
+            musicSource = to;
+            musicSourceB = from;
         }
 
         private static float LinearToDecibel(float value)
