@@ -14,7 +14,9 @@ namespace TimelessEchoes.Audio
         public enum HitType
         {
             Slime,
-            Sword
+            Sword,
+            SkeletonArcher,
+            SkeletonMage
         }
 
         [SerializeField] private HitType hitType = HitType.Slime;
@@ -28,6 +30,12 @@ namespace TimelessEchoes.Audio
                     break;
                 case HitType.Sword:
                     Audio?.PlayWeaponSwingClip();
+                    break;
+                case HitType.SkeletonArcher:
+                    Audio?.PlaySkeletonArcherClip();
+                    break;
+                case HitType.SkeletonMage:
+                    Audio?.PlaySkeletonMageClip();
                     break;
             }
         }
