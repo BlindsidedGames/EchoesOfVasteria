@@ -233,8 +233,6 @@ namespace TimelessEchoes.Hero
         {
             if (!logicActive)
                 return;
-            if (!IsEcho)
-                BuffManager.Instance?.Tick(Time.deltaTime);
             if (stats != null)
                 ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
                               (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
@@ -358,9 +356,6 @@ namespace TimelessEchoes.Hero
 
         private void OnDisable()
         {
-            if (!IsEcho)
-                buffController?.Pause();
-
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
