@@ -16,7 +16,8 @@ MonoBehaviour:
   description: 
   buffIcon: {fileID: -5882155960153656733, guid: 75e6aad650cc46242a07d1d673daedeb, type: 3}
   durationType: 0
-  baseDuration: 120
+  baseDuration: 30
+  baseCooldown: 60
   baseEchoCount: 0
   echoConfig:
     capableSkills: []
@@ -26,3 +27,5 @@ MonoBehaviour:
   - type: 0
     value: 40
   upgrades: []
+  extraDistanceEffects: []
+  extraDistanceUpgrades: []
