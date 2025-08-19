@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 
@@ -5,78 +6,82 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        [ShowInInspector]
-        [TabGroup("GameDataTabs", "Preferences")] public Preferences SavedPreferences = new();
+        [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]
+        public Preferences SavedPreferences = new();
 
-        [ShowInInspector, HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Skills")]
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Skills")]
         public Dictionary<string, SkillProgress> SkillData = new();
 
-        [ShowInInspector, HideReferenceObjectPicker] [TabGroup("GameDataTabs", "UpgradeSystem")]
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "UpgradeSystem")]
         public Dictionary<string, int> UpgradeLevels = new();
 
-        [TabGroup("GameDataTabs", "UpgradeSystem")] public bool StatUpgradesMigratedToGear = false;
+        [TabGroup("GameDataTabs", "UpgradeSystem")]
+        public bool StatUpgradesMigratedToGear;
 
-        [TabGroup("GameDataTabs", "Time")] public float CurrentTime = 0;
+        [TabGroup("GameDataTabs", "Time")] public float CurrentTime;
         [TabGroup("GameDataTabs", "Time")] public string DateQuitString;
         [TabGroup("GameDataTabs", "Time")] public string DateStarted;
-        [TabGroup("GameDataTabs", "Time")] public double OfflineTime = 0;
+        [TabGroup("GameDataTabs", "Time")] public double OfflineTime;
         [TabGroup("GameDataTabs", "Time")] public double OfflineTimeCap = 3600f;
         [TabGroup("GameDataTabs", "Time")] public double OfflineTimeScaleMultiplier = 2f;
         [TabGroup("GameDataTabs", "Time")] public double PlayTime;
-        [TabGroup("GameDataTabs", "Time")] public float TimeScale = 0f;
+        [TabGroup("GameDataTabs", "Time")] public float TimeScale;
 
-        [ShowInInspector, HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Resources")] public Dictionary<string, ResourceEntry> Resources = new();
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Resources")]
+        public Dictionary<string, ResourceEntry> Resources = new();
 
-        [ShowInInspector, HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Resources")] public Dictionary<string, double> EnemyKills = new();
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Resources")]
+        public Dictionary<string, double> EnemyKills = new();
 
         // Start with the Echo Tasks buff assigned to the first slot by default
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Buffs")] public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Buffs")]
+        public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
+
         [TabGroup("GameDataTabs", "Buffs")] public int UnlockedBuffSlots = 1;
-        [TabGroup("GameDataTabs", "Buffs")] public int UnlockedAutoBuffSlots = 0;
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Buffs")] public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
+        [TabGroup("GameDataTabs", "Buffs")] public int UnlockedAutoBuffSlots;
 
-        [ShowInInspector, HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Tasks")] public HashSet<string> CompletedNpcTasks = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Buffs")]
+        public List<bool> AutoBuffSlots = new() { false, false, false, false, false };
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Disciples")] public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Tasks")]
+        public HashSet<string> CompletedNpcTasks = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Quests")] public Dictionary<string, QuestRecord> Quests = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Disciples")]
+        public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
+
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]
+        public Dictionary<string, QuestRecord> Quests = new();
 
         // --- Gear system (phase 1) ---
-        [ShowInInspector, HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Gear")] public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Gear")] public List<GearItemRecord> CraftHistory = new();
-        [TabGroup("GameDataTabs", "Gear")] public int CraftingMasteryLevel = 0; // Ivan's level
-        [TabGroup("GameDataTabs", "Gear")] public float CraftingMasteryXP = 0f; // Ivan's current XP toward next level
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Gear")]
+        public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Quests")] public List<string> PinnedQuests = new();
+        [TabGroup("GameDataTabs", "Gear")] public int CraftingMasteryLevel; // Ivan's level
+        [TabGroup("GameDataTabs", "Gear")] public float CraftingMasteryXP; // Ivan's current XP toward next level
+
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]
+        public List<string> PinnedQuests = new();
 
         // --- Forge stats ---
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Forge")] public ForgeStats Forge = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Forge")]
+        public ForgeStats Forge = new();
 
-        [ShowInInspector, HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Tasks")] public Dictionary<int, TaskRecord> TaskRecords = new();
+        [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Tasks")]
+        public Dictionary<int, TaskRecord> TaskRecords = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Stats")] public Dictionary<string, ResourceRecord> ResourceStats = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Stats")]
+        public Dictionary<string, ResourceRecord> ResourceStats = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Stats")] public Dictionary<string, MapStatistics> MapStats = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Stats")]
+        public Dictionary<string, MapStatistics> MapStats = new();
 
-        [HideReferenceObjectPicker]
-        [TabGroup("GameDataTabs", "Stats")] public GeneralStats General = new();
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Stats")]
+        public GeneralStats General = new();
+
         [TabGroup("GameDataTabs", "Stats")] public float CompletionPercentage;
 
-        [TabGroup("GameDataTabs", "Disciples")] public float DisciplePercent = 0.01f;
+        [TabGroup("GameDataTabs", "Disciples")]
+        public float DisciplePercent = 0.01f;
 
 
         [HideReferenceObjectPicker]
@@ -99,7 +104,9 @@ namespace Blindsided.SaveData
             public NumberTypes Notation;
             public bool OfflineTimeActive;
             public bool OfflineTimeAutoDisable;
+
             public bool RoundedBulkBuy = true;
+
             // Persist Forge conversion mode selections (0=Single, 1=Half, 2=All)
             public int IngotCraftMode = 0;
             public int CrystalCraftMode = 0;
@@ -117,7 +124,7 @@ namespace Blindsided.SaveData
             /// <summary>
             ///     Automatically pin new quests when they become active.
             /// </summary>
-            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
+            [Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public bool AutoPinActiveQuests = true;
 
             /// <summary>
@@ -130,14 +137,14 @@ namespace Blindsided.SaveData
             /// <summary>
             ///     Desired target frame rate for the game.
             /// </summary>
-            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
+            [Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public int TargetFps = 60;
 
             /// <summary>
             ///     Normalised screen aspect ratio for the safe area limiter.
             ///     0 → 16:9, 1 → 32:9.
             /// </summary>
-            [System.Obsolete("Use PlayerPrefs via StaticReferences instead.")]
+            [Obsolete("Use PlayerPrefs via StaticReferences instead.")]
             public float SafeAreaRatio;
         }
 
@@ -282,7 +289,10 @@ namespace Blindsided.SaveData
             public Dictionary<string, Dictionary<string, StatAgg>> StatRollsBySlot = new(); // slot -> statId -> agg
             public Dictionary<string, int> HighRollsByStat = new(); // statId -> count above threshold
             public float HighRollTopPercentThreshold = 0.9f; // default top 10%
-            public Dictionary<string, double> CumulativeStatTotalsByStat = new(); // statId -> running sum across all crafts
+
+            public Dictionary<string, double>
+                CumulativeStatTotalsByStat = new(); // statId -> running sum across all crafts
+
             public Dictionary<string, float> HighestRollByStat = new(); // statId -> highest single affix roll value
 
             // Ivan progression (forge mastery)
@@ -295,7 +305,10 @@ namespace Blindsided.SaveData
 
             // Autocraft specifics
             public int AutocraftCrafts;
-            public Dictionary<string, int> AutocraftStopReasons = new(); // {Upgraded,OutOfResources,Cancelled,MaxIterations}
+
+            public Dictionary<string, int>
+                AutocraftStopReasons = new(); // {Upgraded,OutOfResources,Cancelled,MaxIterations}
+
             public Dictionary<string, int> AutocraftBestRarityTierBySlot = new(); // slot -> highest rarity tier index
 
             // Salvage specifics
@@ -426,18 +439,18 @@ namespace Blindsided.SaveData
         #endregion
     }
 
-    [System.Serializable]
+    [Serializable]
     public class GearAffixRecord
     {
         public string statId;
         public float value;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class GearItemRecord
     {
         public string slot;
         public string rarity; // rarity asset name
-        public System.Collections.Generic.List<GearAffixRecord> affixes = new();
+        public List<GearAffixRecord> affixes = new();
     }
 }

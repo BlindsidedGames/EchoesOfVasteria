@@ -16,6 +16,7 @@ namespace TimelessEchoes.Gear
         [SerializeField] private List<string> slots = new() { "Weapon", "Helmet", "Chest", "Boots" };
 
         private readonly Dictionary<string, GearItem> equippedBySlot = new();
+		private bool equipmentLoaded;
 
         public event Action OnEquipmentChanged;
 
@@ -48,20 +49,21 @@ namespace TimelessEchoes.Gear
 
         public void Equip(GearItem item)
         {
-            if (item == null || string.IsNullOrWhiteSpace(item.slot)) return;
-            equippedBySlot[item.slot] = item;
-            OnEquipmentChanged?.Invoke();
-			// Persist snapshot immediately so save file reflects latest equipment even if SaveData event doesn't fire before exit
-			SaveState();
-        }
-
-        public void Unequip(string slot)
-        {
-            if (string.IsNullOrWhiteSpace(slot)) return;
-            if (equippedBySlot.Remove(slot))
+            try
+            {
+                if (item == null || string.IsNullOrWhiteSpace(item.slot)) return;
+                equippedBySlot[item.slot] = item;
                 OnEquipmentChanged?.Invoke();
-			// Persist snapshot immediately so save file reflects latest equipment even if SaveData event doesn't fire before exit
-			SaveState();
+                // Persist snapshot immediately (only after initial load) so save reflects latest equipment
+                if (equipmentLoaded)
+                    SaveState();
+            }
+            catch (Exception ex)
+            {
+                var slotStr = item != null ? item.slot : "null";
+                var rarityStr = (item != null && item.rarity != null) ? item.rarity.name : "null";
+                Debug.LogError($"EquipmentController: Equip failed (slot='{slotStr}', rarity='{rarityStr}'). {ex}");
+            }
         }
 
         public float GetTotalForStat(StatDefSO stat)
@@ -105,82 +107,118 @@ namespace TimelessEchoes.Gear
         private void SaveState()
         {
             if (oracle == null) return;
-            var dict = new System.Collections.Generic.Dictionary<string, Blindsided.SaveData.GearItemRecord>();
-            foreach (var kv in equippedBySlot)
+            try
             {
-                var slot = kv.Key;
-                var item = kv.Value;
-                if (item == null) continue;
-                var rec = new Blindsided.SaveData.GearItemRecord
+                // Never overwrite existing saved gear with an empty/partial snapshot before we've loaded at least once
+                if (!equipmentLoaded)
                 {
-                    slot = slot,
-                    rarity = item.rarity != null ? item.rarity.name : null,
-                    affixes = new System.Collections.Generic.List<Blindsided.SaveData.GearAffixRecord>()
-                };
-                foreach (var a in item.affixes)
-                {
-                    if (a == null || a.stat == null) continue;
-                    rec.affixes.Add(new Blindsided.SaveData.GearAffixRecord
-                    {
-                        statId = a.stat.id ?? a.stat.name,
-                        value = a.value
-                    });
+                    var existing = oracle.saveData?.EquipmentBySlot;
+                    if (existing != null && existing.Count > 0)
+                        return;
                 }
-                dict[slot] = rec;
+                var dict = new System.Collections.Generic.Dictionary<string, Blindsided.SaveData.GearItemRecord>();
+                foreach (var kv in equippedBySlot)
+                {
+                    try
+                    {
+                        var slot = kv.Key;
+                        var item = kv.Value;
+                        if (item == null) continue;
+                        var rec = new Blindsided.SaveData.GearItemRecord
+                        {
+                            slot = slot,
+                            rarity = item.rarity != null ? item.rarity.name : null,
+                            affixes = new System.Collections.Generic.List<Blindsided.SaveData.GearAffixRecord>()
+                        };
+                        foreach (var a in item.affixes)
+                        {
+                            if (a == null || a.stat == null) continue;
+                            rec.affixes.Add(new Blindsided.SaveData.GearAffixRecord
+                            {
+                                statId = a.stat.id ?? a.stat.name,
+                                value = a.value
+                            });
+                        }
+                        dict[slot] = rec;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"EquipmentController: Failed to serialize equipment for slot '{kv.Key}'. {ex}");
+                    }
+                }
+                oracle.saveData.EquipmentBySlot = dict;
             }
-            oracle.saveData.EquipmentBySlot = dict;
+            catch (Exception ex)
+            {
+                Debug.LogError($"EquipmentController: SaveState failed. {ex}");
+            }
         }
 
         private void LoadState()
         {
             if (oracle == null) return;
-            equippedBySlot.Clear();
-            var data = oracle.saveData.EquipmentBySlot;
-            if (data == null) return;
-
-			var allRarities = AssetCache.GetAll<RaritySO>("");
-			var allStats = AssetCache.GetAll<StatDefSO>("");
-			if (allRarities == null || allRarities.Length == 0)
-				Debug.LogWarning("EquipmentController: No RaritySO assets found in Resources – cannot fully reconstruct gear visuals.");
-			if (allStats == null || allStats.Length == 0)
-				Debug.LogWarning("EquipmentController: No StatDefSO assets found in Resources – cannot reconstruct gear affixes.");
-            foreach (var kv in data)
+            try
             {
-                var rec = kv.Value;
-                if (rec == null) continue;
-                // Resolve the canonical slot name. Prefer the record's slot, but
-                // fall back to the dictionary key for compatibility with older saves
-                // where the record.slot field may be null/empty or differently cased.
-                var resolvedSlot = ResolveSlotName(rec.slot, kv.Key);
-                if (string.IsNullOrWhiteSpace(resolvedSlot))
-                    continue; // cannot determine a valid slot; skip
+                equippedBySlot.Clear();
+                var data = oracle.saveData.EquipmentBySlot;
+                if (data == null) return;
 
-                var item = new GearItem { slot = resolvedSlot, rarity = null };
-				if (!string.IsNullOrWhiteSpace(rec.rarity))
-				{
-					item.rarity = allRarities.FirstOrDefault(r => r != null && r.name == rec.rarity);
-					if (item.rarity == null)
-						Debug.LogWarning($"EquipmentController: Rarity '{rec.rarity}' not found in Resources – item sprite may be missing for slot '{resolvedSlot}'.");
-				}
-
-                if (rec.affixes != null)
+                var allRarities = AssetCache.GetAll<RaritySO>("");
+                var allStats = AssetCache.GetAll<StatDefSO>("");
+                if (allRarities == null || allRarities.Length == 0)
+                    Debug.LogWarning("EquipmentController: No RaritySO assets found in Resources – cannot fully reconstruct gear visuals.");
+                if (allStats == null || allStats.Length == 0)
+                    Debug.LogWarning("EquipmentController: No StatDefSO assets found in Resources – cannot reconstruct gear affixes.");
+                foreach (var kv in data)
                 {
-                    foreach (var ar in rec.affixes)
+                    try
                     {
-                        if (ar == null) continue;
-						var stat = allStats.FirstOrDefault(s => s != null && (s.id == ar.statId || s.name == ar.statId));
-						if (stat == null)
-						{
-							Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources – affix skipped for slot '{resolvedSlot}'.");
-							continue;
-						}
-                        item.affixes.Add(new GearAffix { stat = stat, value = ar.value });
+                        var rec = kv.Value;
+                        if (rec == null) continue;
+                        // Resolve the canonical slot name. Prefer the record's slot, but
+                        // fall back to the dictionary key for compatibility with older saves
+                        // where the record.slot field may be null/empty or differently cased.
+                        var resolvedSlot = ResolveSlotName(rec.slot, kv.Key);
+                        if (string.IsNullOrWhiteSpace(resolvedSlot))
+                            continue; // cannot determine a valid slot; skip
+
+                        var item = new GearItem { slot = resolvedSlot, rarity = null };
+                        if (!string.IsNullOrWhiteSpace(rec.rarity))
+                        {
+                            item.rarity = allRarities.FirstOrDefault(r => r != null && r.name == rec.rarity);
+                            if (item.rarity == null)
+                                Debug.LogWarning($"EquipmentController: Rarity '{rec.rarity}' not found in Resources – item sprite may be missing for slot '{resolvedSlot}'.");
+                        }
+
+                        if (rec.affixes != null)
+                        {
+                            foreach (var ar in rec.affixes)
+                            {
+                                if (ar == null) continue;
+                                var stat = allStats.FirstOrDefault(s => s != null && (s.id == ar.statId || s.name == ar.statId));
+                                if (stat == null)
+                                {
+                                    Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources – affix skipped for slot '{resolvedSlot}'.");
+                                    continue;
+                                }
+                                item.affixes.Add(new GearAffix { stat = stat, value = ar.value });
+                            }
+                        }
+                        if (!string.IsNullOrWhiteSpace(item.slot) && slots.Contains(item.slot))
+                            equippedBySlot[item.slot] = item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"EquipmentController: Failed to reconstruct item for slot key '{kv.Key}'. {ex}");
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(item.slot) && slots.Contains(item.slot))
-                    equippedBySlot[item.slot] = item;
+                OnEquipmentChanged?.Invoke();
+                equipmentLoaded = true;
             }
-            OnEquipmentChanged?.Invoke();
+            catch (Exception ex)
+            {
+                Debug.LogError($"EquipmentController: LoadState failed. {ex}");
+            }
         }
         #endregion
 
