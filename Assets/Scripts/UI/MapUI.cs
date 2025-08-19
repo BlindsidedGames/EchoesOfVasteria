@@ -1,6 +1,6 @@
+using Blindsided;
 using Blindsided.Utilities;
 using TimelessEchoes.Buffs;
-using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,18 +22,22 @@ namespace TimelessEchoes.UI
         /// <param name="distance">The hero's X position.</param>
         public void UpdateDistance(float distance)
         {
-            var tracker = GameplayStatTracker.Instance;
             var buff = BuffManager.Instance;
-            var reapDistance = tracker != null
-                ? tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
-                  (buff != null ? buff.MaxDistanceFlatBonus : 0f)
-                : 1f;
+            var baseReapDistance = Oracle.oracle?.saveData?.General.MaxRunDistance ?? 1f;
+            var reapDistance = baseReapDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
+                               (buff != null ? buff.MaxDistanceFlatBonus : 0f);
 
             if (distanceText != null)
             {
                 var current = Mathf.FloorToInt(distance);
-                distanceText.text =
+                var text =
                     $"{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(reapDistance, true)}";
+                if (!Mathf.Approximately(reapDistance, baseReapDistance))
+                {
+                    text += $" ({CalcUtils.FormatNumber(baseReapDistance, true)})";
+                }
+
+                distanceText.text = text;
             }
 
             if (distanceSlider != null)
