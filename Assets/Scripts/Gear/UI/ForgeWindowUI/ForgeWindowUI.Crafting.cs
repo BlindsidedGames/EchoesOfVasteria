@@ -386,10 +386,21 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.SetInt("IngotCraftAmount", ingotCraftAmount);
             PlayerPrefs.Save();
             OnResourcesChanged();
+            // Refresh stats UI
+            var statsUi1 = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi1 != null) statsUi1.MarkDirty();
 
-            // Persist conversion to in-memory save (defer disk write)
+            // Persist conversion to in-memory save (defer disk write) and update stats
             try
             {
+                var o1 = Blindsided.Oracle.oracle;
+                if (o1 != null && o1.saveData != null && o1.saveData.Forge != null)
+                {
+                    var forge = o1.saveData.Forge;
+                    var ingotName = core.requiredIngot != null ? core.requiredIngot.name : "Ingot";
+                    if (!forge.IngotsCraftedByResource.ContainsKey(ingotName)) forge.IngotsCraftedByResource[ingotName] = 0;
+                    forge.IngotsCraftedByResource[ingotName] += amount;
+                }
                 Blindsided.EventHandler.SaveData();
             }
             catch (System.Exception ex)
@@ -412,6 +423,9 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(slimeResource, 1 * amount);
             if (core.crystalResource != null)
                 rm.Add(core.crystalResource, amount, trackStats: false);
+            // Refresh stats UI
+            var statsUi2 = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi2 != null) statsUi2.MarkDirty();
             // Stats: crystal conversion
             {
                 var o = Blindsided.Oracle.oracle;
@@ -428,9 +442,17 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.Save();
             OnResourcesChanged();
 
-            // Persist conversion to in-memory save (defer disk write)
+            // Persist conversion to in-memory save (defer disk write) and update stats
             try
             {
+                var o2 = Blindsided.Oracle.oracle;
+                if (o2 != null && o2.saveData != null && o2.saveData.Forge != null)
+                {
+                    var forge = o2.saveData.Forge;
+                    var crystalName = core.crystalResource != null ? core.crystalResource.name : "Crystal";
+                    if (!forge.CrystalsCraftedByResource.ContainsKey(crystalName)) forge.CrystalsCraftedByResource[crystalName] = 0;
+                    forge.CrystalsCraftedByResource[crystalName] += amount;
+                }
                 Blindsided.EventHandler.SaveData();
             }
             catch (System.Exception ex)
@@ -453,6 +475,9 @@ namespace TimelessEchoes.Gear.UI
                 rm.Spend(stoneResource, 2 * amount);
             if (core.chunkResource != null)
                 rm.Add(core.chunkResource, amount, trackStats: false);
+            // Refresh stats UI
+            var statsUi3 = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi3 != null) statsUi3.MarkDirty();
             // Stats: chunk conversion
             {
                 var o = Blindsided.Oracle.oracle;
@@ -469,9 +494,17 @@ namespace TimelessEchoes.Gear.UI
             PlayerPrefs.Save();
             OnResourcesChanged();
 
-            // Persist conversion to in-memory save (defer disk write)
+            // Persist conversion to in-memory save (defer disk write) and update stats
             try
             {
+                var o3 = Blindsided.Oracle.oracle;
+                if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
+                {
+                    var forge = o3.saveData.Forge;
+                    var chunkName = core.chunkResource != null ? core.chunkResource.name : "Chunk";
+                    if (!forge.ChunksCraftedByResource.ContainsKey(chunkName)) forge.ChunksCraftedByResource[chunkName] = 0;
+                    forge.ChunksCraftedByResource[chunkName] += amount;
+                }
                 Blindsided.EventHandler.SaveData();
             }
             catch (System.Exception ex)

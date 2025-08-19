@@ -307,9 +307,12 @@ namespace Blindsided.SaveData
 
             // Conversion actions (forge side-panels)
             public int IngotConversions; // actions performed
-            public double CrystalCrafted; // total units produced
-            public double ChunksCrafted; // total units produced
+            public double CrystalCrafted; // total units produced (legacy total)
+            public double ChunksCrafted; // total units produced (legacy total)
             public Dictionary<string, double> ConversionSpentByResource = new();
+            public Dictionary<string, double> CrystalsCraftedByResource = new();
+            public Dictionary<string, double> ChunksCraftedByResource = new();
+            public Dictionary<string, double> IngotsCraftedByResource = new();
 
             // Best single-piece scores
             public Dictionary<string, float> BestPieceScoreBySlot = new(); // slot -> highest score (absolute)

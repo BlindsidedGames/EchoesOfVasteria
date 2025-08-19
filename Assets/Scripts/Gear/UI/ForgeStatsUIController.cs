@@ -140,13 +140,6 @@ namespace TimelessEchoes.Gear.UI
 			sb.AppendLine($"• Sessions: {forge.TotalAutocraftSessions:N0}, Crafts: {forge.AutocraftCrafts:N0}");
 			AppendTopK(sb, forge.AutocraftStopReasons, maxListEntries, formatKey: k => k, prefix: "• Stop Reasons:");
 
-			// Conversions
-			sb.AppendLine("<size=105%><b>Conversions</b></size>");
-			sb.AppendLine($"• Ingot Conversions: {forge.IngotConversions:N0}");
-			sb.AppendLine($"• Crystals Crafted: {forge.CrystalCrafted:N0}");
-			sb.AppendLine($"• Chunks Crafted: {forge.ChunksCrafted:N0}");
-			AppendTopK(sb, forge.ConversionSpentByResource, maxListEntries, formatKey: k => $"spent {k}");
-
 			// Salvage
 			sb.AppendLine("<size=105%><b>Salvage</b></size>");
 			sb.AppendLine($"• Items: {forge.SalvageItems:N0}  • Entries: {forge.SalvageEntries:N0}  • Avg/Item: {SafeDiv(forge.SalvageEntries, forge.SalvageItems):N2}");
@@ -201,11 +194,9 @@ namespace TimelessEchoes.Gear.UI
 				}
 			}
 
-			// Per-Slot Totals
+			// Per-Slot Totals (sorted by slot name)
 			sb.AppendLine("<size=105%><b>Per-Slot Totals</b></size>");
-			AppendTopK(sb, forge.CraftsBySlotTotals, Math.Max(4, maxListEntries), formatKey: k => $"{k} crafts");
-			AppendTopK(sb, forge.EquipsBySlot, Math.Max(4, maxListEntries), formatKey: k => $"{k} equips");
-			AppendTopK(sb, forge.SalvagesBySlot, Math.Max(4, maxListEntries), formatKey: k => $"{k} salvages");
+			AppendCountsByKey(sb, forge.CraftsBySlotTotals, "");
 
 			// Stat Rolls (highlights)
 			sb.AppendLine("<size=105%><b>Stat Rolls</b></size>");
@@ -233,6 +224,24 @@ namespace TimelessEchoes.Gear.UI
 			// Describe high rolls threshold dynamically from saved settings
 			var topPct = Mathf.Clamp01(1f - forge.HighRollTopPercentThreshold) * 100f;
 			AppendAll(sb, forge.HighRollsByStat, formatKey: k => GetIconForStatId(k), prefix: $"• High Rolls | Times rolled in top {topPct:0.#}% of stat:");
+
+			// Conversions moved to bottom
+			sb.AppendLine("<size=105%><b>Conversions</b></size>");
+			sb.AppendLine($"• Ingot Conversions: {forge.IngotConversions:N0}");
+			// Totals at top
+			double totalCrystals = forge.CrystalsCraftedByResource?.Values.Sum() ?? forge.CrystalCrafted;
+			double totalIngots = forge.IngotsCraftedByResource?.Values.Sum() ?? 0;
+			sb.AppendLine($"• Total Crystals: {Blindsided.Utilities.CalcUtils.FormatNumber(totalCrystals, true)}");
+			sb.AppendLine($"• Total Ingots: {Blindsided.Utilities.CalcUtils.FormatNumber(totalIngots, true)}");
+
+			sb.AppendLine("Created:");
+			// Group created resources by core and add a 20% spacer between core groups, mirroring Consumed spacing
+			RenderCreatedByCore(sb, forge.CrystalsCraftedByResource, forge.ChunksCraftedByResource, null);
+			if (forge.ConversionSpentByResource != null && forge.ConversionSpentByResource.Count > 0)
+			{
+				sb.AppendLine("Consumed:");
+				RenderConversionSpends(sb, forge.ConversionSpentByResource);
+			}
 
 			return sb.ToString();
 		}
@@ -325,11 +334,12 @@ namespace TimelessEchoes.Gear.UI
 				sb.AppendLine($"  • {core}:");
 				if (forge.RarityCountsByCore.TryGetValue(core, out var rarMap) && rarMap != null && rarMap.Count > 0)
 				{
-					// order rarities by count desc
-					foreach (var pair in rarMap.OrderByDescending(p => p.Value))
+					// order rarities by tier order, not by count
+					foreach (var rar in OrderRaritiesByTier(rarMap.Keys))
 					{
-						double pct = total > 0 ? 100.0 * pair.Value / total : 0.0;
-						sb.AppendLine($"    • {pair.Key}: {pair.Value:N0} ({pct:N1}%)");
+						int value = rarMap.TryGetValue(rar, out var v) ? v : 0;
+						double pct = total > 0 ? 100.0 * value / total : 0.0;
+						sb.AppendLine($"    • {rar}: {value:N0} ({pct:N1}%)");
 					}
 				}
 			}
@@ -344,6 +354,137 @@ namespace TimelessEchoes.Gear.UI
 			// Append any others not in the preferred list, stable order
 			foreach (var other in set)
 				if (!preferred.Contains(other)) yield return other;
+		}
+
+		private IEnumerable<string> OrderRaritiesByTier(IEnumerable<string> rarityNames)
+		{
+			// Build name -> tier index lookup once
+			var lookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+			foreach (var r in AssetCache.GetAll<RaritySO>(string.Empty))
+				if (r != null && !lookup.ContainsKey(r.name)) lookup[r.name] = r.tierIndex;
+			var list = new List<string>(rarityNames ?? Array.Empty<string>());
+			list.Sort((a, b) =>
+			{
+				lookup.TryGetValue(a ?? string.Empty, out var ta);
+				lookup.TryGetValue(b ?? string.Empty, out var tb);
+				var cmp = ta.CompareTo(tb);
+				if (cmp != 0) return cmp;
+				return string.Compare(a, b, StringComparison.OrdinalIgnoreCase);
+			});
+			return list;
+		}
+
+		private void RenderConversionSpends(StringBuilder sb, System.Collections.Generic.Dictionary<string, double> dict)
+		{
+			// Build remaining keys by guessed core name (prefix before first space)
+			var remaining = dict.Keys.Where(k => !string.Equals(k, "Slime", StringComparison.OrdinalIgnoreCase)
+				&& !string.Equals(k, "Stone", StringComparison.OrdinalIgnoreCase)).ToList();
+			var byCore = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>(StringComparer.OrdinalIgnoreCase);
+			foreach (var key in remaining)
+			{
+				var parts = key.Split(' ');
+				var core = parts.Length > 0 ? parts[0] : key;
+				if (!byCore.ContainsKey(core)) byCore[core] = new System.Collections.Generic.List<string>();
+				byCore[core].Add(key);
+			}
+
+			// Write Slime and Stone first, appending a 20% half-line break if we have any core groups following
+			bool hasCoreGroups = byCore.Keys.Any();
+			bool wroteAny = false;
+			bool hasSlime = dict.TryGetValue("Slime", out var slime);
+			bool hasStone = dict.TryGetValue("Stone", out var stone);
+			if (hasSlime)
+			{
+				sb.Append($"• Slime: {Blindsided.Utilities.CalcUtils.FormatNumber(slime, true)}");
+				if (hasCoreGroups && !hasStone)
+					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
+				else sb.Append("\n");
+				wroteAny = true;
+			}
+			if (hasStone)
+			{
+				sb.Append($"• Stone: {Blindsided.Utilities.CalcUtils.FormatNumber(stone, true)}");
+				if (hasCoreGroups)
+					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
+				else sb.Append("\n");
+				wroteAny = true;
+			}
+
+			// Now each core group in preferred order. Between core groups, add a half-line spacer appended to the prior line
+			var coresOrdered = OrderCoresByPreferred(byCore.Keys).ToList();
+			for (int c = 0; c < coresOrdered.Count; c++)
+			{
+				var core = coresOrdered[c];
+				var keys = byCore[core];
+				if (keys == null || keys.Count == 0) continue;
+				// Sort entries by name for stability
+				keys.Sort((a, b) => string.Compare(a, b, StringComparison.OrdinalIgnoreCase));
+
+				for (int i = 0; i < keys.Count; i++)
+				{
+					var k = keys[i];
+					bool isLastInGroup = i == keys.Count - 1;
+					bool needsSpacer = isLastInGroup && (c < coresOrdered.Count - 1); // spacer between groups only
+					sb.Append($"• {k}: {Blindsided.Utilities.CalcUtils.FormatNumber(dict[k], true)}");
+					if (needsSpacer)
+						sb.Append("<line-height=20%>\n\u200B</line-height>\n");
+					else sb.Append("\n");
+				}
+			}
+		}
+
+		private void RenderCreatedByCore(StringBuilder sb,
+			System.Collections.Generic.Dictionary<string, double> crystals,
+			System.Collections.Generic.Dictionary<string, double> chunks,
+			System.Collections.Generic.Dictionary<string, double> ingots)
+		{
+			// Aggregate keys by guessed core (prefix before first space)
+			var hasCrystals = crystals != null && crystals.Count > 0;
+			var hasChunks = chunks != null && chunks.Count > 0;
+			var hasIngots = ingots != null && ingots.Count > 0;
+			if (!hasCrystals && !hasChunks && !hasIngots) return;
+
+			var byCore = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>(StringComparer.OrdinalIgnoreCase);
+			void AddKeys(System.Collections.Generic.Dictionary<string, double> d)
+			{
+				if (d == null) return;
+				foreach (var key in d.Keys)
+				{
+					var parts = key.Split(' ');
+					var core = parts.Length > 0 ? parts[0] : key;
+					if (!byCore.ContainsKey(core)) byCore[core] = new System.Collections.Generic.List<string>();
+					if (!byCore[core].Contains(key)) byCore[core].Add(key);
+				}
+			}
+
+			AddKeys(crystals);
+			AddKeys(chunks);
+			AddKeys(ingots);
+
+			var coresOrdered = OrderCoresByPreferred(byCore.Keys).ToList();
+			for (int c = 0; c < coresOrdered.Count; c++)
+			{
+				var core = coresOrdered[c];
+				var keys = byCore[core];
+				if (keys == null || keys.Count == 0) continue;
+				// Sort entries by name for stability
+				keys.Sort((a, b) => string.Compare(a, b, StringComparison.OrdinalIgnoreCase));
+
+				for (int i = 0; i < keys.Count; i++)
+				{
+					var k = keys[i];
+					bool isLastInGroup = i == keys.Count - 1;
+					bool needsSpacer = isLastInGroup && (c < coresOrdered.Count - 1); // spacer between groups only
+					double value = 0;
+					if ((hasCrystals && crystals.TryGetValue(k, out var v1))) value = v1;
+					else if ((hasChunks && chunks.TryGetValue(k, out var v2))) value = v2;
+					else if ((hasIngots && ingots.TryGetValue(k, out var v3))) value = v3;
+					sb.Append($"• {k}: {Blindsided.Utilities.CalcUtils.FormatNumber(value, true)}");
+					if (needsSpacer)
+						sb.Append("<line-height=20%>\n\u200B</line-height>\n");
+					else sb.Append("\n");
+				}
+			}
 		}
 
 		private (float minScore, float maxScore, int affixCount) ComputeTheoreticalBestStatScoreRange()
@@ -418,6 +559,51 @@ namespace TimelessEchoes.Gear.UI
 			if (count <= 0) return string.Empty;
 			// Use <mspace> to reserve width; assumes monospace-like TMP spacing for digits
 			return $"<mspace={0.6f}em>{new string(' ', count)}</mspace>";
+		}
+
+		private void AppendCountsByKey(StringBuilder sb, Dictionary<string, int> dict, string unused)
+		{
+			var o = Blindsided.Oracle.oracle;
+			var forge = o != null ? o.saveData?.Forge : null;
+			if (forge == null) return;
+			var allSlots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+			if (forge.CraftsBySlotTotals != null) foreach (var k in forge.CraftsBySlotTotals.Keys) allSlots.Add(k);
+			if (forge.EquipsBySlot != null) foreach (var k in forge.EquipsBySlot.Keys) allSlots.Add(k);
+			if (forge.SalvagesBySlot != null) foreach (var k in forge.SalvagesBySlot.Keys) allSlots.Add(k);
+			foreach (var slot in allSlots.OrderBy(k => k, StringComparer.OrdinalIgnoreCase))
+			{
+				int crafts = 0, equips = 0, salvages = 0;
+				if (forge.CraftsBySlotTotals != null) forge.CraftsBySlotTotals.TryGetValue(slot, out crafts);
+				if (forge.EquipsBySlot != null) forge.EquipsBySlot.TryGetValue(slot, out equips);
+				if (forge.SalvagesBySlot != null) forge.SalvagesBySlot.TryGetValue(slot, out salvages);
+				sb.AppendLine($"  • {slot} crafts: {crafts:N0}");
+				sb.AppendLine($"  • {slot} equips: {equips:N0}");
+				sb.Append($"  • {slot} salvages: {salvages:N0}");
+				sb.Append("<line-height=20%>\n\u200B</line-height>\n");
+			}
+		}
+
+		private IEnumerable<string> OrderResourcesByCore(IEnumerable<string> resources)
+		{
+			var list = new List<string>(resources ?? Array.Empty<string>());
+			var preferred = new List<string> { "Eznorb", "Nori", "Dlog", "Erif", "Lirium", "Copium", "Idle", "Vastium" };
+			int CoreIndex(string res)
+			{
+				if (string.IsNullOrWhiteSpace(res)) return int.MaxValue;
+				var parts = res.Split(' ');
+				var core = parts.Length > 0 ? parts[0] : res;
+				var idx = preferred.FindIndex(c => string.Equals(c, core, StringComparison.OrdinalIgnoreCase));
+				return idx < 0 ? int.MaxValue : idx;
+			}
+			list.Sort((a, b) =>
+			{
+				int ia = CoreIndex(a);
+				int ib = CoreIndex(b);
+				int cmp = ia.CompareTo(ib);
+				if (cmp != 0) return cmp;
+				return string.Compare(a, b, StringComparison.OrdinalIgnoreCase);
+			});
+			return list;
 		}
 	}
 }
