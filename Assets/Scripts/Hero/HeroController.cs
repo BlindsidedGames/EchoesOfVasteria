@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using Pathfinding.RVO;
 using Sirenix.OdinInspector;
@@ -423,7 +424,14 @@ namespace TimelessEchoes.Hero
         {
             if (AutoBuffAnimator == null) return;
             var manager = BuffManager.Instance;
-            var active = manager != null && manager.AnySlotAutoBuffing && !IsEcho;
+            var active = false;
+            if (manager != null && !IsEcho)
+            {
+                active = manager.ActiveBuffs.Any(b =>
+                    b.effects.Any(e =>
+                        (e.type == BuffEffectType.MaxDistancePercent ||
+                         e.type == BuffEffectType.MaxDistanceIncrease) && e.value > 0f));
+            }
             AutoBuffAnimator.gameObject.SetActive(active);
             if (animator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
