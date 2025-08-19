@@ -27,6 +27,7 @@ namespace TimelessEchoes.Buffs
         private readonly List<ActiveBuff> activeBuffs = new();
         private readonly List<BuffRecipe> slotAssignments = new(new BuffRecipe[5]);
         private readonly List<bool> autoCastSlots = new(new bool[5]);
+        private readonly Dictionary<BuffRecipe, float> cooldowns = new();
 
 
         public int UnlockedSlots
@@ -124,7 +125,10 @@ namespace TimelessEchoes.Buffs
         public void Tick(float delta)
         {
             if (ticking)
+            {
                 TickBuffs(delta);
+                TickCooldowns(delta);
+            }
 
             AutoCastBuffs();
         }
@@ -152,10 +156,23 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        private void TickCooldowns(float delta)
+        {
+            if (delta <= 0f || cooldowns.Count == 0) return;
+            var keys = new List<BuffRecipe>(cooldowns.Keys);
+            foreach (var recipe in keys)
+            {
+                cooldowns[recipe] -= delta;
+                if (cooldowns[recipe] <= 0f)
+                    cooldowns.Remove(recipe);
+            }
+        }
+
         public bool CanActivate(BuffRecipe recipe)
         {
             if (recipe == null) return false;
             if (GetRemaining(recipe) > 0f) return false;
+            if (cooldowns.TryGetValue(recipe, out var cd) && cd > 0f) return false;
 
             if (recipe.requiredQuest != null)
             {
@@ -220,6 +237,7 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+            cooldowns[recipe] = recipe.GetCooldown();
             AutoBuffChanged?.Invoke();
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
@@ -240,6 +258,11 @@ namespace TimelessEchoes.Buffs
         {
             var buff = activeBuffs.Find(b => b.recipe == recipe);
             return buff != null ? buff.remaining : 0f;
+        }
+
+        public float GetCooldownRemaining(BuffRecipe recipe)
+        {
+            return cooldowns.TryGetValue(recipe, out var cd) ? Mathf.Max(0f, cd) : 0f;
         }
 
         public float MoveSpeedMultiplier
