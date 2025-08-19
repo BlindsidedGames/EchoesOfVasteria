@@ -43,6 +43,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference options = new();
         [SerializeField] [Space] private GameObject discord;
         [SerializeField] [Space] private GameObject autoPin;
+        [SerializeField] [Space] private GameObject stopOnVastium;
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
         [SerializeField] [Space] private Button closeButton;
@@ -224,6 +225,8 @@ namespace TimelessEchoes.UI
         private void OpenForge()
         {
             ToggleWindow(forge);
+            if (stopOnVastium != null)
+                stopOnVastium.SetActive(true);
             if (inventory.window != null)
             {
                 inventory.window.SetActive(false);
@@ -317,6 +320,8 @@ namespace TimelessEchoes.UI
                 discord.SetActive(false);
             if (autoPin != null)
                 autoPin.SetActive(false);
+            if (stopOnVastium != null)
+                stopOnVastium.SetActive(false);
 
             EnableAllWindowButtons();
             UpdateTownButtonsVisibility();

@@ -18,6 +18,7 @@ namespace Blindsided.SaveData
         private const string EnemyFloatingDamageKey = "EnemyFloatingDamage";
         private const string ItemDropFloatingTextKey = "ItemDropFloatingText";
         private const string AutoPinActiveQuestsKey = "AutoPinActiveQuests";
+        private const string StopAutocraftOnVastiumKey = "StopAutocraftOnVastium";
         private const string TargetFpsKey = "TargetFps";
         private const string VSyncEnabledKey = "VSyncEnabled";
         private const string SafeAreaRatioKey = "SafeAreaRatio";
@@ -233,6 +234,16 @@ namespace Blindsided.SaveData
             set
             {
                 PlayerPrefs.SetInt(AutoPinActiveQuestsKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static bool StopAutocraftOnVastium
+        {
+            get => PlayerPrefs.GetInt(StopAutocraftOnVastiumKey, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(StopAutocraftOnVastiumKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
         }
