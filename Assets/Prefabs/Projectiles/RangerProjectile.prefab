@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4483371865807376152}
   - component: {fileID: 5007485650910153838}
   - component: {fileID: 44568012943118267}
+  - component: {fileID: 2676407595572047666}
   m_Layer: 0
   m_Name: RangerProjectile
   m_TagString: Untagged
@@ -104,3 +105,17 @@ MonoBehaviour:
   hitDistance: 0.1
   hitEffectPrefab: {fileID: 0}
   effectDuration: 0.5
+  rotateToFaceTarget: 1
+--- !u!114 &2676407595572047666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5086888241769898753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5977c48932c0d75409aa9f3bffeaaf1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitType: 2

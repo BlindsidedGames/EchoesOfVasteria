@@ -17,6 +17,7 @@ MonoBehaviour:
   buffIcon: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
   durationType: 0
   baseDuration: 30
+  baseCooldown: 30
   baseEchoCount: 1
   echoConfig:
     capableSkills: []
@@ -24,3 +25,5 @@ MonoBehaviour:
   requiredQuest: {fileID: 11400000, guid: 6290a22786cc71c4898ee37154292231, type: 2}
   baseEffects: []
   upgrades: []
+  extraDistanceEffects: []
+  extraDistanceUpgrades: []

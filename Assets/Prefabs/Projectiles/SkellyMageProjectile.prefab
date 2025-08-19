@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4346864850755528972}
   - component: {fileID: 5394937116669230316}
+  - component: {fileID: 118061751657537180}
   m_Layer: 0
   m_Name: SkellyMageProjectile
   m_TagString: Untagged
@@ -49,6 +50,20 @@ MonoBehaviour:
   hitDistance: 0.1
   hitEffectPrefab: {fileID: 0}
   effectDuration: 0.5
+  rotateToFaceTarget: 1
+--- !u!114 &118061751657537180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543230581087699070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5977c48932c0d75409aa9f3bffeaaf1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitType: 3
 --- !u!1 &9043775845837117122
 GameObject:
   m_ObjectHideFlags: 0

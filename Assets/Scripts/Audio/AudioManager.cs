@@ -1,6 +1,7 @@
-using Blindsided.SaveData;
 using System.Collections;
 using System.Collections.Generic;
+using Blindsided.SaveData;
+using Sirenix.OdinInspector;
 using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -10,10 +11,10 @@ using static Blindsided.EventHandler;
 namespace TimelessEchoes.Audio
 {
     /// <summary>
-    /// Initializes audio mixers and applies saved volumes. Provides helpers to play
-    /// task/combat/hero/chest SFX and background music routed to the proper mixer groups.
+    ///     Initializes audio mixers and applies saved volumes. Provides helpers to play
+    ///     task/combat/hero/chest SFX and background music routed to the proper mixer groups.
     /// </summary>
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : SerializedMonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
         [SerializeField] private AudioSettingsUI audioSettingsUI;
@@ -242,8 +243,8 @@ namespace TimelessEchoes.Audio
             }
             else
             {
-                float time = 0f;
-                float start = from.volume;
+                var time = 0f;
+                var start = from.volume;
                 while (time < duration)
                 {
                     time += Time.deltaTime;
