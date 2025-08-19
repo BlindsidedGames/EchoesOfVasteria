@@ -24,6 +24,7 @@ using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.StaticReferences;
@@ -124,6 +125,10 @@ namespace TimelessEchoes
 
         [SerializeField] private float statsUpdateInterval = 0.1f;
         private float nextStatsUpdateTime;
+
+        [SerializeField] private float startingDistance;
+        [SerializeField] private GameObject loadingOverlay;
+        [SerializeField] private float warpDuration = 1f;
 
         // Auto-restart on stall settings
         [TitleGroup("Run Stall Monitor")] [SerializeField]
@@ -505,6 +510,8 @@ namespace TimelessEchoes
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
+            yield return StartCoroutine(FastForwardStart());
+
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
             {
@@ -513,6 +520,59 @@ namespace TimelessEchoes
             }
             if (enableStallAutoRestart)
                 stallMonitorCoroutine = StartCoroutine(MonitorRunStallRoutine());
+        }
+
+        private IEnumerator FastForwardStart()
+        {
+            if (hero == null)
+                yield break;
+
+            var playerInput = hero.GetComponent<PlayerInput>();
+            if (playerInput != null)
+                playerInput.enabled = false;
+            hero.SetActiveState(false);
+            if (loadingOverlay != null)
+                loadingOverlay.SetActive(true);
+
+            var startPos = hero.transform.position;
+            if (warpDuration > 0f)
+            {
+                var speed = Mathf.Abs(startingDistance - startPos.x) / warpDuration;
+                float elapsed = 0f;
+                while (elapsed < warpDuration && !Mathf.Approximately(hero.transform.position.x, startingDistance))
+                {
+                    var pos = hero.transform.position;
+                    pos.x = Mathf.MoveTowards(pos.x, startingDistance, speed * Time.deltaTime);
+                    hero.transform.position = pos;
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+            var finalPos = hero.transform.position;
+            finalPos.x = startingDistance;
+            hero.transform.position = finalPos;
+
+            yield return null;
+
+            taskController?.RemoveTasksLeftOf(hero.transform.position.x);
+
+            var enemies = EnemyActivator.ActiveEnemies;
+            if (enemies != null)
+            {
+                for (int i = enemies.Count - 1; i >= 0; i--)
+                {
+                    var enemy = enemies[i];
+                    if (enemy != null && enemy.transform.position.x < hero.transform.position.x)
+                        Destroy(enemy.gameObject);
+                }
+            }
+
+            hero.SetActiveState(true);
+            if (playerInput != null)
+                playerInput.enabled = true;
+            if (loadingOverlay != null)
+                loadingOverlay.SetActive(false);
         }
 
         private void OnHeroDeath()
