@@ -151,7 +151,7 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        ? 1f - Mathf.Clamp01(cooldown / recipe.GetCooldown())
                                         : 0f;
                             }
                             else
@@ -192,7 +192,7 @@ namespace TimelessEchoes.Buffs
                                     ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                     if (ui.radialFillImage != null)
                                         ui.radialFillImage.fillAmount = recipe != null
-                                            ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                            ? 1f - Mathf.Clamp01(cooldown / recipe.GetCooldown())
                                             : 0f;
                                 }
                                 else
@@ -228,7 +228,7 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        ? 1f - Mathf.Clamp01(cooldown / recipe.GetCooldown())
                                         : 0f;
                             }
                             else

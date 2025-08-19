@@ -853,7 +853,6 @@ namespace TimelessEchoes
 
         private IEnumerator CleanupMapRoutine()
         {
-            BuffManager.Instance?.Pause();
             if (stallMonitorCoroutine != null)
             {
                 StopCoroutine(stallMonitorCoroutine);

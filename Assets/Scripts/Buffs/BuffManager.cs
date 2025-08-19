@@ -97,12 +97,20 @@ namespace TimelessEchoes.Buffs
 
             Instance = this;
 
+            // Ensure no active buffs linger between sessions
+            ClearActiveBuffs();
+
             OnLoadData += LoadSlots;
         }
 
         private void Start()
         {
             StartCoroutine(DelayedLoad());
+        }
+
+        private void Update()
+        {
+            Tick(Time.deltaTime);
         }
 
         private IEnumerator DelayedLoad()
@@ -237,7 +245,6 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
-            cooldowns[recipe] = recipe.GetCooldown();
             NotifyAutoBuffChanged();
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
@@ -481,10 +488,8 @@ namespace TimelessEchoes.Buffs
 
         public void ClearActiveBuffs()
         {
-            foreach (var buff in activeBuffs)
-                DestroyEchoes(buff);
-            activeBuffs.Clear();
-            NotifyAutoBuffChanged();
+            for (var i = activeBuffs.Count - 1; i >= 0; i--)
+                RemoveBuffAt(i);
         }
 
         public void UpdateDistance(float heroX)
@@ -503,7 +508,10 @@ namespace TimelessEchoes.Buffs
             DestroyEchoes(buff);
             activeBuffs.RemoveAt(index);
             if (buff.recipe != null)
+            {
+                cooldowns[buff.recipe] = buff.recipe.GetCooldown();
                 Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
+            }
             NotifyAutoBuffChanged();
         }
 
