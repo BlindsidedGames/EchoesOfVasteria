@@ -65,6 +65,9 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Quests")] [SerializeField]
         private Button autoPinButton;
 
+        [TabGroup("Settings", "Forge")] [SerializeField]
+        private Button stopVastiumButton;
+
         [TabGroup("Settings", "Sprites")] [SerializeField]
         private Sprite onSprite;
 
@@ -76,6 +79,7 @@ namespace TimelessEchoes.UI
         private Image dropTextImage;
         private Image vSyncImage;
         private Image autoPinImage;
+        private Image stopVastiumImage;
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot1;
@@ -142,12 +146,19 @@ namespace TimelessEchoes.UI
                 autoPinImage = autoPinButton.GetComponent<Image>();
                 UpdateButtonVisual(autoPinImage, StaticReferences.AutoPinActiveQuests);
             }
+            if (stopVastiumButton != null)
+            {
+                stopVastiumButton.onClick.AddListener(ToggleStopOnVastium);
+                stopVastiumImage = stopVastiumButton.GetComponent<Image>();
+                UpdateButtonVisual(stopVastiumImage, StaticReferences.StopAutocraftOnVastium);
+            }
 
             playerDamageImage = playerDamageButton != null ? playerDamageButton.GetComponent<Image>() : null;
             enemyDamageImage = enemyDamageButton != null ? enemyDamageButton.GetComponent<Image>() : null;
             dropTextImage = dropTextButton != null ? dropTextButton.GetComponent<Image>() : null;
             vSyncImage ??= vSyncButton != null ? vSyncButton.GetComponent<Image>() : null;
             autoPinImage ??= autoPinButton != null ? autoPinButton.GetComponent<Image>() : null;
+            stopVastiumImage ??= stopVastiumButton != null ? stopVastiumButton.GetComponent<Image>() : null;
 
             if (saveSlots != null)
             {
@@ -201,6 +212,8 @@ namespace TimelessEchoes.UI
                 vSyncButton.onClick.RemoveListener(ToggleVSync);
             if (autoPinButton != null)
                 autoPinButton.onClick.RemoveListener(ToggleAutoPin);
+            if (stopVastiumButton != null)
+                stopVastiumButton.onClick.RemoveListener(ToggleStopOnVastium);
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.RemoveListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -377,6 +390,12 @@ namespace TimelessEchoes.UI
         {
             StaticReferences.AutoPinActiveQuests = !StaticReferences.AutoPinActiveQuests;
             UpdateButtonVisual(autoPinImage, StaticReferences.AutoPinActiveQuests);
+        }
+
+        private void ToggleStopOnVastium()
+        {
+            StaticReferences.StopAutocraftOnVastium = !StaticReferences.StopAutocraftOnVastium;
+            UpdateButtonVisual(stopVastiumImage, StaticReferences.StopAutocraftOnVastium);
         }
 
         private void UpdateDurationTexts()

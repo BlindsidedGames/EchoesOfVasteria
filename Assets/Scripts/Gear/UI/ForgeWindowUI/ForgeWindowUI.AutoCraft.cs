@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Blindsided.SaveData;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -124,6 +125,19 @@ namespace TimelessEchoes.Gear.UI
                         }
                     }
                     break; // leave lastCrafted for player to review/replace/salvage
+                }
+
+                if (StaticReferences.StopAutocraftOnVastium &&
+                    lastCrafted?.rarity?.GetName() == "Vastium")
+                {
+                    var o3 = Blindsided.Oracle.oracle;
+                    if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
+                    {
+                        var forge = o3.saveData.Forge;
+                        if (!forge.AutocraftStopReasons.ContainsKey("Vastium")) forge.AutocraftStopReasons["Vastium"] = 0;
+                        forge.AutocraftStopReasons["Vastium"]++;
+                    }
+                    break;
                 }
 
                 // Not an upgrade, salvage and continue
