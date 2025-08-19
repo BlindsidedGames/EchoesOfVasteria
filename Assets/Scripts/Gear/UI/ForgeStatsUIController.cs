@@ -20,7 +20,7 @@ namespace TimelessEchoes.Gear.UI
 	{
 		[SerializeField] private TMP_Text statsText;
 		[SerializeField] [Min(0.1f)] private float refreshIntervalSeconds = 0.75f;
-		[SerializeField] private int maxListEntries = 3;
+		// Removed maxListEntries; always show all entries in lists
 
 		private bool dirty = true;
 		private Coroutine refreshRoutine;
@@ -138,14 +138,14 @@ namespace TimelessEchoes.Gear.UI
 			// Autocraft
 			sb.AppendLine("<size=105%><b>Autocraft</b></size>");
 			sb.AppendLine($"• Sessions: {forge.TotalAutocraftSessions:N0}, Crafts: {forge.AutocraftCrafts:N0}");
-			AppendTopK(sb, forge.AutocraftStopReasons, maxListEntries, formatKey: k => k, prefix: "• Stop Reasons:");
+			AppendAll(sb, forge.AutocraftStopReasons, formatKey: k => FormatStopReason(k), prefix: "• Stop Reasons:");
 
 			// Salvage
 			sb.AppendLine("<size=105%><b>Salvage</b></size>");
 			sb.AppendLine($"• Items: {forge.SalvageItems:N0}  • Entries: {forge.SalvageEntries:N0}  • Avg/Item: {SafeDiv(forge.SalvageEntries, forge.SalvageItems):N2}");
-			AppendTopK(sb, forge.SalvagesByRarity, maxListEntries, formatKey: k => $"rarity {k}");
-			AppendTopK(sb, forge.SalvagesByCore, maxListEntries, formatKey: k => $"core {k}");
-			AppendTopK(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), maxListEntries, formatKey: k => $"gained {k}");
+			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => $"rarity {k}");
+			AppendAll(sb, forge.SalvagesByCore, formatKey: k => $"core {k}");
+			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => $"gained {k}");
 
 			// Distributions
 			sb.AppendLine("<size=105%><b>Distributions</b></size>");
@@ -159,7 +159,7 @@ namespace TimelessEchoes.Gear.UI
 
 			// Upgrades
 			sb.AppendLine("<size=105%><b>Upgrades</b></size>");
-			AppendTopK(sb, forge.UpgradesBySlot, Math.Max(4, maxListEntries), formatKey: k => k);
+			AppendAll(sb, forge.UpgradesBySlot, formatKey: k => k);
 			sb.AppendLine($"• Avg Crafts / Upgrade: {forge.AverageCraftsPerUpgrade:N2}  • Longest Gap: {forge.MaxCraftsBetweenUpgrades:N0}");
 
 			// Best Stat Scores (theoretical min–max based on stat defs and max affixes)
@@ -317,6 +317,17 @@ namespace TimelessEchoes.Gear.UI
 			{
 				string vf = valueFormat != null ? valueFormat(value) : value.ToString("N0");
 				sb.AppendLine($"  • {formatKey(key)}: {vf}");
+			}
+		}
+
+		private string FormatStopReason(string reasonKey)
+		{
+			if (string.IsNullOrWhiteSpace(reasonKey)) return reasonKey;
+			switch (reasonKey)
+			{
+				case "OutOfResources": return "Out of Resources";
+				case "MaxIterations": return "Max Iterations";
+				default: return reasonKey; // e.g., "Vastium", "Upgraded", "Cancelled"
 			}
 		}
 
