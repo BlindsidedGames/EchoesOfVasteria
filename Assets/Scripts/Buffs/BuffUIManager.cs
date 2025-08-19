@@ -81,6 +81,7 @@ namespace TimelessEchoes.Buffs
                 if (ui == null) continue;
                 if (ui.radialFillImage != null)
                     ui.radialFillImage.fillAmount = 0f;
+                var cooldown = recipe != null && buffManager != null ? buffManager.GetCooldownRemaining(recipe) : 0f;
                 var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
@@ -145,6 +146,14 @@ namespace TimelessEchoes.Buffs
                                         : 0f;
                                 }
                             }
+                            else if (cooldown > 0f)
+                            {
+                                ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                if (ui.radialFillImage != null)
+                                    ui.radialFillImage.fillAmount = recipe != null
+                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        : 0f;
+                            }
                             else
                             {
                                 ui.durationText.text = string.Empty;
@@ -178,6 +187,14 @@ namespace TimelessEchoes.Buffs
                                             ? Mathf.Clamp01(remainExtra / totalExtra)
                                             : 0f;
                                 }
+                                else if (cooldown > 0f)
+                                {
+                                    ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                    if (ui.radialFillImage != null)
+                                        ui.radialFillImage.fillAmount = recipe != null
+                                            ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                            : 0f;
+                                }
                                 else
                                 {
                                     ui.durationText.text = string.Empty;
@@ -198,13 +215,28 @@ namespace TimelessEchoes.Buffs
                         }
                         else
                         {
-                            ui.durationText.text = remain > 0f
-                                ? FormatTime(remain, showDecimal: remain < 10f, shortForm: true)
-                                : string.Empty;
-                            if (ui.radialFillImage != null)
-                                ui.radialFillImage.fillAmount = remain > 0f && recipe != null
-                                    ? Mathf.Clamp01(remain / recipe.GetDuration())
-                                    : 0f;
+                            if (remain > 0f)
+                            {
+                                ui.durationText.text = FormatTime(remain, showDecimal: remain < 10f, shortForm: true);
+                                if (ui.radialFillImage != null)
+                                    ui.radialFillImage.fillAmount = recipe != null
+                                        ? Mathf.Clamp01(remain / recipe.GetDuration())
+                                        : 0f;
+                            }
+                            else if (cooldown > 0f)
+                            {
+                                ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                if (ui.radialFillImage != null)
+                                    ui.radialFillImage.fillAmount = recipe != null
+                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        : 0f;
+                            }
+                            else
+                            {
+                                ui.durationText.text = string.Empty;
+                                if (ui.radialFillImage != null)
+                                    ui.radialFillImage.fillAmount = 0f;
+                            }
                         }
                     }
                 }

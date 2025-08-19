@@ -33,6 +33,11 @@ namespace TimelessEchoes.Buffs
 
         [TitleGroup("General")]
         [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
+        [MinValue(0f)]
+        public float baseCooldown = 60f;
+
+        [TitleGroup("General")]
+        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0)]
         public int baseEchoCount;
 
@@ -146,6 +151,26 @@ namespace TimelessEchoes.Buffs
                 }
             }
             return duration;
+        }
+
+        public float GetCooldown()
+        {
+            if (durationType == BuffDurationType.ExtraDistancePercent)
+                return 0f;
+            var cooldown = baseCooldown;
+            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            if (qm != null)
+            {
+                foreach (var up in upgrades)
+                {
+                    if (up?.quest != null && qm.IsQuestCompleted(up.quest))
+                        cooldown += up.cooldownDelta;
+                }
+            }
+            var duration = GetDuration();
+            if (cooldown <= duration)
+                cooldown = duration + 0.01f;
+            return cooldown;
         }
 
         public float GetExtraDistance(float baseDistance)

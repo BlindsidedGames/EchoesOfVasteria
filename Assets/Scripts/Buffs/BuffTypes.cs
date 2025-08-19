@@ -38,5 +38,6 @@ namespace TimelessEchoes.Buffs
         public List<BuffEffect> additionalEffects = new();
         public float durationDelta;
         public int echoCountDelta;
+        public float cooldownDelta = 0f;
     }
 }
