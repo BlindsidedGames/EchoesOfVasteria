@@ -37,6 +37,10 @@ namespace TimelessEchoes.Audio
 
         [SerializeField] private AudioClip[] weaponSwingClips;
 
+        [SerializeField] private AudioClip[] skeletonArcherClips;
+
+        [SerializeField] private AudioClip[] skeletonMageClips;
+
         [Header("Chest Clips")] [SerializeField]
         private AudioClip[] chestOpenClips;
 
@@ -146,6 +150,16 @@ namespace TimelessEchoes.Audio
         public void PlayWeaponSwingClip()
         {
             PlayCombatClip(weaponSwingClips);
+        }
+
+        public void PlaySkeletonArcherClip()
+        {
+            PlayCombatClip(skeletonArcherClips);
+        }
+
+        public void PlaySkeletonMageClip()
+        {
+            PlayCombatClip(skeletonMageClips);
         }
 
         public void PlayChestOpenClip()
