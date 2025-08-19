@@ -11,6 +11,9 @@ namespace TimelessEchoes.Audio
         private static AudioClip _lastClip;
         private static float _lastPlay;
 
+        private const float MinPitch = 0.95f;
+        private const float MaxPitch = 1.05f;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
@@ -40,7 +43,9 @@ namespace TimelessEchoes.Audio
                 return;
             _lastClip = clip;
             _lastPlay = t;
+            _source.pitch = Random.Range(MinPitch, MaxPitch);
             _source.PlayOneShot(clip, StaticReferences.SfxVolume);
+            _source.pitch = 1f;
         }
     }
 }
