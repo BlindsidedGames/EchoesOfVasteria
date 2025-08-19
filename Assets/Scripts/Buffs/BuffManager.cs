@@ -238,7 +238,7 @@ namespace TimelessEchoes.Buffs
             };
             activeBuffs.Add(buff);
             cooldowns[recipe] = recipe.GetCooldown();
-            AutoBuffChanged?.Invoke();
+            NotifyAutoBuffChanged();
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
             var echoCount = recipe.GetEchoCount();
@@ -484,7 +484,7 @@ namespace TimelessEchoes.Buffs
             foreach (var buff in activeBuffs)
                 DestroyEchoes(buff);
             activeBuffs.Clear();
-            AutoBuffChanged?.Invoke();
+            NotifyAutoBuffChanged();
         }
 
         public void UpdateDistance(float heroX)
@@ -504,7 +504,7 @@ namespace TimelessEchoes.Buffs
             activeBuffs.RemoveAt(index);
             if (buff.recipe != null)
                 Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
-            AutoBuffChanged?.Invoke();
+            NotifyAutoBuffChanged();
         }
 
         private void DestroyEchoes(ActiveBuff buff)

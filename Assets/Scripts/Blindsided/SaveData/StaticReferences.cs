@@ -280,6 +280,10 @@ namespace Blindsided.SaveData
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;
         public static event Action ShowLevelTextChanged;
         public static event Action AutoBuffChanged;
+        public static void NotifyAutoBuffChanged()
+        {
+            AutoBuffChanged?.Invoke();
+        }
 
         public static void UpdateCompletionPercentage()
         {

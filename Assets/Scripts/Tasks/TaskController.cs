@@ -698,5 +698,50 @@ namespace TimelessEchoes.Tasks
                     RemoveTaskAt(i);
             }
         }
+
+        /// <summary>
+        ///     Remove all tasks whose world X position is strictly less than the provided threshold.
+        ///     Intended for fast-forwarding the run start so any tasks behind the hero are cleared.
+        /// </summary>
+        public void RemoveTasksLeftOf(float xThreshold)
+        {
+            var removedAny = false;
+            for (var i = tasks.Count - 1; i >= 0; i--)
+            {
+                var task = tasks[i];
+
+                // Safely drop null entries without trying to touch dictionaries with a null key
+                if (task == null)
+                {
+                    if (i <= currentIndex)
+                        currentIndex--;
+                    tasks.RemoveAt(i);
+                    removedAny = true;
+                    continue;
+                }
+
+                Vector3? pos = null;
+                if (taskMap.TryGetValue(task, out var obj) && obj != null)
+                    pos = obj.transform.position;
+                else if (task.Target != null)
+                    pos = task.Target.position;
+
+                if (pos.HasValue && pos.Value.x < xThreshold)
+                {
+                    RemoveTaskAt(i);
+                    removedAny = true;
+                }
+            }
+
+            if (removedAny && hero != null)
+            {
+                var current = hero.CurrentTask;
+                if (current == null || current.IsComplete() || !tasks.Contains(current))
+                {
+                    hero.SetTask(null);
+                    SelectEarliestTask(hero);
+                }
+            }
+        }
     }
 }

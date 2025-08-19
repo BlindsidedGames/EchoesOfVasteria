@@ -35,21 +35,13 @@ Grouped by task category from `Assets/Resources/Tasks`:
 ### Mining
 - Stone
 - Eznorb Chunks
-- Eznorb Crystal
 - Nori Chunks
-- Nori Crystal
 - Dlog Chunks
-- Dlog Crystal
 - Erif Chunks
-- Erif Crystal
 - Lirium Chunks
-- Lirium Crystal
 - Copium Chunks
-- Copium Crystal
 - Idle Chunks
-- Idle Crystal
 - Vastium Chunks
-- Vastium Crystal
 
 ### Woodcutting
 - Stick
@@ -59,6 +51,27 @@ Grouped by task category from `Assets/Resources/Tasks`:
 ### Looting
 - Bone
 - Leather
+- Eznorb Core
+- Nori Core
+- Dlog Core
+- Erif Core
+- Lirium Core
+- Copium Core
+- Idle Core
+- Vastium Core
+
+### Enemies
+- Slime
+- Eznorb Crystal
+- Nori Crystal
+- Dlog Crystal
+- Erif Crystal
+- Lirium Crystal
+- Copium Crystal
+- Idle Crystal
+- Vastium Crystal
+
+### Crafted Items
 - Eznorb Ingot
 - Nori Ingot
 - Dlog Ingot
@@ -67,9 +80,6 @@ Grouped by task category from `Assets/Resources/Tasks`:
 - Copium Ingot
 - Idle Ingot
 - Vastium Ingot
-
-### Uncategorized
-- Slime
 
 ## Stat Upgrades Cost Progression
 

@@ -401,7 +401,6 @@ namespace TimelessEchoes.Gear.UI
 
 			// Write Slime and Stone first, appending a 20% half-line break if we have any core groups following
 			bool hasCoreGroups = byCore.Keys.Any();
-			bool wroteAny = false;
 			bool hasSlime = dict.TryGetValue("Slime", out var slime);
 			bool hasStone = dict.TryGetValue("Stone", out var stone);
 			if (hasSlime)
@@ -410,7 +409,6 @@ namespace TimelessEchoes.Gear.UI
 				if (hasCoreGroups && !hasStone)
 					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
 				else sb.Append("\n");
-				wroteAny = true;
 			}
 			if (hasStone)
 			{
@@ -418,7 +416,6 @@ namespace TimelessEchoes.Gear.UI
 				if (hasCoreGroups)
 					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
 				else sb.Append("\n");
-				wroteAny = true;
 			}
 
 			// Now each core group in preferred order. Between core groups, add a half-line spacer appended to the prior line
