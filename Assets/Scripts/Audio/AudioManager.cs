@@ -50,6 +50,9 @@ namespace TimelessEchoes.Audio
         [Header("Hero Clips")] [SerializeField]
         private AudioClip heroDeathClip;
 
+        [Header("Enemy Death Clips")] [SerializeField]
+        private AudioClip[] skeletonDeathClips;
+
         public enum MusicTrack
         {
             Main,
@@ -194,6 +197,11 @@ namespace TimelessEchoes.Audio
         public void PlayHeroDeathClip()
         {
             PlaySfx(heroDeathClip);
+        }
+
+        public void PlaySkeletonDeathClip()
+        {
+            PlaySfx(GetRandom(skeletonDeathClips));
         }
 
         private void PlaySfx(AudioClip clip)

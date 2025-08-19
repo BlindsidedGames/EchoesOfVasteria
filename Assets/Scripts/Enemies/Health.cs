@@ -1,6 +1,7 @@
 using UnityEngine;
 using Blindsided.Utilities;
 using TMPro;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.Enemies
 {
@@ -9,8 +10,15 @@ namespace TimelessEchoes.Enemies
     /// </summary>
     public class Health : HealthBase
     {
+        public enum DeathSfx
+        {
+            None,
+            Skeleton
+        }
+
         [SerializeField] private GameObject healthBarParent;
         [SerializeField] private TMP_Text healthText;
+        [SerializeField] private DeathSfx deathSfx = DeathSfx.None;
 
         protected override void Awake()
         {
@@ -106,6 +114,14 @@ namespace TimelessEchoes.Enemies
         protected override void OnZeroHealth()
         {
             base.OnZeroHealth();
+
+            switch (deathSfx)
+            {
+                case DeathSfx.Skeleton:
+                    AudioManager.Instance?.PlaySkeletonDeathClip();
+                    break;
+            }
+
             if (GetComponent<Enemy>() != null)
                 Destroy(gameObject);
         }
