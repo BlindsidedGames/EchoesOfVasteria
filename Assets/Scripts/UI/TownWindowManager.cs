@@ -184,15 +184,16 @@ namespace TimelessEchoes.UI
         {
             bool wasActive = buffs.window != null && buffs.window.activeSelf;
             ToggleWindow(buffs);
-            if (wasActive && buffs.window != null)
-                buffs.window.GetComponent<BuffUIManager>()?.ClosePurchaseWindow();
+            if (wasActive)
+                buffs.window?.GetComponentInChildren<BuffUIManager>(true)?.ClosePurchaseWindow();
         }
 
         private void OpenQuests()
         {
+            bool wasActive = quests.window != null && quests.window.activeSelf;
             ToggleWindow(quests);
             if (autoPin != null)
-                autoPin.SetActive(true);
+                autoPin.SetActive(!wasActive);
         }
 
         private void OpenCredits()
