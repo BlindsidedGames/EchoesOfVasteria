@@ -32,7 +32,6 @@ namespace TimelessEchoes.Buffs
         public float baseDuration = 30f;
 
         [TitleGroup("General")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0f)]
         public float baseCooldown = 60f;
 
@@ -155,13 +154,14 @@ namespace TimelessEchoes.Buffs
 
         public float GetCooldown()
         {
-            if (durationType == BuffDurationType.ExtraDistancePercent)
-                return 0f;
             var cooldown = baseCooldown;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
             {
-                foreach (var up in upgrades)
+                var upgradeList = durationType == BuffDurationType.ExtraDistancePercent
+                    ? extraDistanceUpgrades
+                    : upgrades;
+                foreach (var up in upgradeList)
                 {
                     if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                         cooldown += up.cooldownDelta;

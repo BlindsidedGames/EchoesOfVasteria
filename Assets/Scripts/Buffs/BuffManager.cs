@@ -245,6 +245,14 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+
+            // Start cooldown immediately for recipes that modify max distance so the timer
+            // runs concurrently with the buff's active state.
+            if (buff.effects.Exists(e =>
+                    e.type == BuffEffectType.MaxDistanceIncrease ||
+                    e.type == BuffEffectType.MaxDistancePercent))
+                cooldowns[recipe] = recipe.GetCooldown();
+
             NotifyAutoBuffChanged();
             Log($"Buff {recipe.name} added", TELogCategory.Buff, this);
 
@@ -517,7 +525,14 @@ namespace TimelessEchoes.Buffs
             if (buff.recipe != null)
             {
                 if (startCooldown)
-                    cooldowns[buff.recipe] = buff.recipe.GetCooldown();
+                {
+                    var hasMaxDistEffect = buff.effects != null &&
+                                          buff.effects.Exists(e =>
+                                              e.type == BuffEffectType.MaxDistanceIncrease ||
+                                              e.type == BuffEffectType.MaxDistancePercent);
+                    if (!hasMaxDistEffect)
+                        cooldowns[buff.recipe] = buff.recipe.GetCooldown();
+                }
                 Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
             }
             NotifyAutoBuffChanged();

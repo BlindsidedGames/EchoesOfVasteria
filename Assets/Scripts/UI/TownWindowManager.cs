@@ -259,6 +259,12 @@ namespace TimelessEchoes.UI
                 forgeInfoButtonText.text = showInventory ? "Info" : "Inventory";
         }
 
+        public void CloseForgeInfo()
+        {
+            if (forgeInfo != null)
+                forgeInfo.SetActive(false);
+        }
+
         private void ToggleWindow(WindowReference reference)
         {
             if (reference.window == null || reference.button == null)
