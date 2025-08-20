@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.18431373, g: 0.10980392, b: 0.14117648, a: 1}
+  m_Color: {r: 0.3529412, g: 0.18431373, b: 0.16470589, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -429,6 +429,7 @@ MonoBehaviour:
   durationText: {fileID: 8098836068402067121}
   autoCastImage: {fileID: 1865189447101397955}
   radialFillImage: {fileID: 4903498743250885854}
+  cooldownRadialFillImage: {fileID: 4824846842912159217}
 --- !u!222 &7321993387068301578
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -582,7 +583,7 @@ MonoBehaviour:
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 0
-  m_FillClockwise: 1
+  m_FillClockwise: 0
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
