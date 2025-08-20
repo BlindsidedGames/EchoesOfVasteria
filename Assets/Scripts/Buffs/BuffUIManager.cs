@@ -115,6 +115,9 @@ namespace TimelessEchoes.Buffs
                         ui.iconImage.color = recipe ? grey : transparent;
                     else if (recipe == null)
                         ui.iconImage.color = transparent;
+
+                    else if (!distanceOk)
+                        ui.iconImage.color = grey;
                     else if (remain <= 0f && cooldown > 0f)
                         ui.iconImage.color = grey;
                     else
