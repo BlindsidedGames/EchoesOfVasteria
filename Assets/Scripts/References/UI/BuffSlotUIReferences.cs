@@ -14,11 +14,14 @@ namespace References.UI
         public TMP_Text durationText;
         public Image autoCastImage;
         public MPImage radialFillImage;
+        public MPImage cooldownRadialFillImage;
 
         private void Awake()
         {
             if (radialFillImage != null)
                 radialFillImage.StrokeWidth = 1f;
+            if (cooldownRadialFillImage != null)
+                cooldownRadialFillImage.StrokeWidth = 1f;
         }
 
         public event Action<BuffSlotUIReferences> PointerEnter;
