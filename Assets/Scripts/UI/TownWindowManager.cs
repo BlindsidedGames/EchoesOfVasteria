@@ -1,12 +1,11 @@
 using System;
 using Blindsided;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using TMPro;
 using EventHandler = Blindsided.EventHandler;
-using TimelessEchoes.Buffs;
 
 namespace TimelessEchoes.UI
 {
@@ -135,15 +134,12 @@ namespace TimelessEchoes.UI
 
         private void PollCloseAllWindows()
         {
-            var mouse = UnityEngine.InputSystem.Mouse.current;
+            var mouse = Mouse.current;
             if (mouse == null)
                 return;
 
-            bool isDown = mouse.rightButton.isPressed;
-            if (isDown && !_rightMouseWasDown)
-            {
-                CloseAllWindows();
-            }
+            var isDown = mouse.rightButton.isPressed;
+            if (isDown && !_rightMouseWasDown) CloseAllWindows();
             _rightMouseWasDown = isDown;
         }
 
@@ -163,12 +159,14 @@ namespace TimelessEchoes.UI
                     if (quests.button != null)
                         quests.button.interactable = false;
                 }
+
                 if (inventory.window != null)
                 {
                     inventory.window.SetActive(true);
                     if (inventory.button != null)
                         inventory.button.interactable = false;
                 }
+
                 UpdateTownButtonsVisibility();
                 Oracle.oracle.saveData.SavedPreferences.Tutorial = true;
                 EventHandler.SaveData();
@@ -182,15 +180,14 @@ namespace TimelessEchoes.UI
 
         private void OpenBuffs()
         {
-            bool wasActive = buffs.window != null && buffs.window.activeSelf;
+            var wasActive = buffs.window != null && buffs.window.activeSelf;
             ToggleWindow(buffs);
-            if (wasActive)
-                buffs.window?.GetComponentInChildren<BuffUIManager>(true)?.ClosePurchaseWindow();
+            if (wasActive) buffs.window.SetActive(false);
         }
 
         private void OpenQuests()
         {
-            bool wasActive = quests.window != null && quests.window.activeSelf;
+            var wasActive = quests.window != null && quests.window.activeSelf;
             ToggleWindow(quests);
             if (autoPin != null)
                 autoPin.SetActive(!wasActive);
@@ -230,18 +227,15 @@ namespace TimelessEchoes.UI
 
         private void OpenForge()
         {
-            bool wasActive = forge.window != null && forge.window.activeSelf;
+            var wasActive = forge.window != null && forge.window.activeSelf;
             ToggleWindow(forge);
-            bool isActive = forge.window != null && forge.window.activeSelf;
+            var isActive = forge.window != null && forge.window.activeSelf;
 
             if (isActive)
             {
                 if (stopOnVastium != null)
                     stopOnVastium.SetActive(true);
-                if (inventory.window != null)
-                {
-                    inventory.window.SetActive(false);
-                }
+                if (inventory.window != null) inventory.window.SetActive(false);
                 if (forgeInfo != null)
                     forgeInfo.SetActive(true);
                 if (forgeInfoButtonText != null)
@@ -266,8 +260,8 @@ namespace TimelessEchoes.UI
             if (forgeInfo == null || inventory.window == null)
                 return;
 
-            bool inventoryActive = inventory.window.activeSelf;
-            bool showInventory = !inventoryActive;
+            var inventoryActive = inventory.window.activeSelf;
+            var showInventory = !inventoryActive;
 
             inventory.window.SetActive(showInventory);
 
@@ -288,7 +282,7 @@ namespace TimelessEchoes.UI
             if (reference.window == null || reference.button == null)
                 return;
 
-            bool windowWasActive = reference.window.activeSelf;
+            var windowWasActive = reference.window.activeSelf;
 
             CloseAllWindows();
 
@@ -297,12 +291,8 @@ namespace TimelessEchoes.UI
                 reference.window.SetActive(true);
 
                 if (reference.openInventory)
-                {
                     if (inventory.window != null)
-                    {
                         inventory.window.SetActive(true);
-                    }
-                }
             }
 
             UpdateTownButtonsVisibility();

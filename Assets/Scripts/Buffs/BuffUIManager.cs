@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using References.UI;
 using TimelessEchoes.Hero;
-using TimelessEchoes.Stats;
 using TimelessEchoes.Quests;
+using TimelessEchoes.Stats;
+using TimelessEchoes.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using static Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
-using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Buffs
 {
@@ -19,14 +18,12 @@ namespace TimelessEchoes.Buffs
         private HeroHealth heroHealth;
         [SerializeField] private BuffRecipeUIReferences recipePrefab;
         [SerializeField] private Transform recipeParent;
-        [SerializeField] private Button openPurchaseButton;
-        [SerializeField] private GameObject buffPurchaseWindow;
 
         [Header("Slot UI References")] [SerializeField]
         private BuffSlotUIReferences[] assignSlotButtons = new BuffSlotUIReferences[5];
 
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
-
+        [SerializeField] private GameObject buffPurchaseWindow;
         private BuffRecipe selectedRecipe;
         private bool isAssigning;
 
@@ -138,8 +135,11 @@ namespace TimelessEchoes.Buffs
                     else
                     {
                         if (!heroAlive)
+                        {
                             ui.durationText.text = "Dead";
-                        else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.DistancePercent)
+                        }
+                        else if (recipe != null && tracker != null &&
+                                 recipe.durationType == BuffDurationType.DistancePercent)
                         {
                             if (!distanceOk)
                             {
@@ -161,7 +161,7 @@ namespace TimelessEchoes.Buffs
                             }
                             else if (cooldown > 0f)
                             {
-                                ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                ui.durationText.text = FormatTime(cooldown, cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
                                         ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
@@ -220,7 +220,7 @@ namespace TimelessEchoes.Buffs
                             }
                             else if (cooldown > 0f)
                             {
-                                ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                ui.durationText.text = FormatTime(cooldown, cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
                                         ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
@@ -245,7 +245,7 @@ namespace TimelessEchoes.Buffs
                         {
                             if (remain > 0f)
                             {
-                                ui.durationText.text = FormatTime(remain, showDecimal: remain < 10f, shortForm: true);
+                                ui.durationText.text = FormatTime(remain, remain < 10f, shortForm: true);
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = recipe != null
                                         ? Mathf.Clamp01(remain / recipe.GetDuration())
@@ -253,7 +253,7 @@ namespace TimelessEchoes.Buffs
                             }
                             else if (cooldown > 0f)
                             {
-                                ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
+                                ui.durationText.text = FormatTime(cooldown, cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
                                         ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
@@ -283,12 +283,6 @@ namespace TimelessEchoes.Buffs
 
             OnLoadData += OnLoadDataHandler;
             OnQuestHandin += OnQuestHandinHandler;
-
-            if (buffPurchaseWindow != null)
-                buffPurchaseWindow.SetActive(false);
-
-            if (openPurchaseButton != null)
-                openPurchaseButton.onClick.AddListener(OpenPurchaseWindow);
 
             for (var i = 0; i < assignSlotButtons.Length; i++)
             {
@@ -334,7 +328,6 @@ namespace TimelessEchoes.Buffs
             RefreshSlots();
 
             if (!Application.isMobilePlatform && buffManager != null && Keyboard.current != null)
-            {
                 for (var i = 0; i < 5; i++)
                 {
                     var digitKey = Keyboard.current[(Key)((int)Key.Digit1 + i)];
@@ -348,7 +341,6 @@ namespace TimelessEchoes.Buffs
                             buffManager.ActivateSlot(i);
                     }
                 }
-            }
 
             foreach (var pair in recipeEntries)
             {
@@ -368,7 +360,8 @@ namespace TimelessEchoes.Buffs
             if (manager == null) return;
 
             foreach (var panel in recipeEntries.Values)
-                if (panel != null) Destroy(panel.gameObject);
+                if (panel != null)
+                    Destroy(panel.gameObject);
             recipeEntries.Clear();
 
             var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
@@ -390,6 +383,7 @@ namespace TimelessEchoes.Buffs
                     var r = recipe;
                     panel.purchaseButton.onClick.AddListener(() => PurchaseBuff(r));
                 }
+
                 recipeEntries[recipe] = panel;
             }
         }
@@ -435,19 +429,6 @@ namespace TimelessEchoes.Buffs
             if (buffManager != null)
                 buffManager.ActivateSlot(slot);
             RefreshSlots();
-        }
-
-
-        private void OpenPurchaseWindow()
-        {
-            if (buffPurchaseWindow != null)
-                buffPurchaseWindow.SetActive(true);
-        }
-
-        public void ClosePurchaseWindow()
-        {
-            if (buffPurchaseWindow != null)
-                buffPurchaseWindow.SetActive(false);
         }
     }
 }
