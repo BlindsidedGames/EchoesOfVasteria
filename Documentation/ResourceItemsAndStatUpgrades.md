@@ -49,7 +49,6 @@ Grouped by task category from `Assets/Resources/Tasks`:
 - Feather
 
 ### Looting
-- Bone
 - Leather
 - Eznorb Core
 - Nori Core
@@ -62,6 +61,7 @@ Grouped by task category from `Assets/Resources/Tasks`:
 
 ### Enemies
 - Slime
+- Bone
 - Eznorb Crystal
 - Nori Crystal
 - Dlog Crystal
