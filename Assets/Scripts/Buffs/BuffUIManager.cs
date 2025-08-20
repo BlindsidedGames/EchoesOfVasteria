@@ -84,6 +84,7 @@ namespace TimelessEchoes.Buffs
                 if (ui.cooldownRadialFillImage != null)
                     ui.cooldownRadialFillImage.fillAmount = 0f;
                 var cooldown = recipe != null && buffManager != null ? buffManager.GetCooldownRemaining(recipe) : 0f;
+                var onCooldown = cooldown > 0f;
                 var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
@@ -111,7 +112,7 @@ namespace TimelessEchoes.Buffs
                     else if (recipe == null)
                         ui.iconImage.color = transparent;
                     else
-                        ui.iconImage.color = canActivate ? Color.white : grey;
+                        ui.iconImage.color = onCooldown ? grey : Color.white;
                 }
 
                 if (ui.activateButton != null)
