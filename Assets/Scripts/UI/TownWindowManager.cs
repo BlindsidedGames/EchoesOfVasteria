@@ -11,8 +11,9 @@ namespace TimelessEchoes.UI
 {
     /// <summary>
     ///     Manages the town UI windows. Clicking a button closes all windows,
-    ///     opens the associated one, and shows a global close button. Right-click
-    ///     or the close button closes all windows.
+    ///     opens the associated one, and shows a global close button. Selecting the
+    ///     same button again closes its window. Right-click or the close button
+    ///     closes all windows.
     /// </summary>
     public class TownWindowManager : MonoBehaviour
     {
@@ -230,8 +231,6 @@ namespace TimelessEchoes.UI
             if (inventory.window != null)
             {
                 inventory.window.SetActive(false);
-                if (inventory.button != null)
-                    inventory.button.interactable = true;
             }
             if (forgeInfo != null)
                 forgeInfo.SetActive(true);
@@ -253,8 +252,6 @@ namespace TimelessEchoes.UI
             bool showInventory = !inventoryActive;
 
             inventory.window.SetActive(showInventory);
-            if (inventory.button != null)
-                inventory.button.interactable = !showInventory;
 
             forgeInfo.SetActive(!showInventory);
 
@@ -274,15 +271,12 @@ namespace TimelessEchoes.UI
             if (!windowWasActive)
             {
                 reference.window.SetActive(true);
-                reference.button.interactable = false;
 
                 if (reference.openInventory)
                 {
                     if (inventory.window != null)
                     {
                         inventory.window.SetActive(true);
-                        if (inventory.button != null)
-                            inventory.button.interactable = false;
                     }
                 }
             }
