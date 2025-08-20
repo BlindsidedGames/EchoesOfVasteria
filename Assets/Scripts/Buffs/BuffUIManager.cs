@@ -443,5 +443,11 @@ namespace TimelessEchoes.Buffs
             if (buffPurchaseWindow != null)
                 buffPurchaseWindow.SetActive(true);
         }
+
+        public void ClosePurchaseWindow()
+        {
+            if (buffPurchaseWindow != null)
+                buffPurchaseWindow.SetActive(false);
+        }
     }
 }

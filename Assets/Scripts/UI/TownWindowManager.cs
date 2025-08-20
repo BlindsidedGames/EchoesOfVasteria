@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using EventHandler = Blindsided.EventHandler;
+using TimelessEchoes.Buffs;
 
 namespace TimelessEchoes.UI
 {
@@ -181,7 +182,10 @@ namespace TimelessEchoes.UI
 
         private void OpenBuffs()
         {
+            bool wasActive = buffs.window != null && buffs.window.activeSelf;
             ToggleWindow(buffs);
+            if (wasActive && buffs.window != null)
+                buffs.window.GetComponent<BuffUIManager>()?.ClosePurchaseWindow();
         }
 
         private void OpenQuests()
@@ -225,17 +229,30 @@ namespace TimelessEchoes.UI
 
         private void OpenForge()
         {
+            bool wasActive = forge.window != null && forge.window.activeSelf;
             ToggleWindow(forge);
-            if (stopOnVastium != null)
-                stopOnVastium.SetActive(true);
-            if (inventory.window != null)
+            bool isActive = forge.window != null && forge.window.activeSelf;
+
+            if (isActive)
             {
-                inventory.window.SetActive(false);
+                if (stopOnVastium != null)
+                    stopOnVastium.SetActive(true);
+                if (inventory.window != null)
+                {
+                    inventory.window.SetActive(false);
+                }
+                if (forgeInfo != null)
+                    forgeInfo.SetActive(true);
+                if (forgeInfoButtonText != null)
+                    forgeInfoButtonText.text = "Inventory";
             }
-            if (forgeInfo != null)
-                forgeInfo.SetActive(true);
-            if (forgeInfoButtonText != null)
-                forgeInfoButtonText.text = "Inventory";
+            else if (wasActive)
+            {
+                if (forgeInfo != null)
+                    forgeInfo.SetActive(false);
+                if (forgeInfoButtonText != null)
+                    forgeInfoButtonText.text = "Info";
+            }
         }
 
         private void OpenInventory()
