@@ -3,6 +3,7 @@ using System.Linq;
 using Blindsided;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static Blindsided.SaveData.StaticReferences;
@@ -255,6 +256,7 @@ namespace TimelessEchoes.Gear.UI
 
             EventHandler.OnLoadData -= OnPostLoad;
             StopAutoCrafting();
+            TownWindowManager.Instance?.CloseForgeInfo();
         }
     }
 }
