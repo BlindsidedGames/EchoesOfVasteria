@@ -83,7 +83,12 @@ namespace TimelessEchoes.Buffs
                     ui.radialFillImage.fillAmount = 0f;
                 if (ui.cooldownRadialFillImage != null)
                     ui.cooldownRadialFillImage.fillAmount = 0f;
-                var cooldown = recipe != null && buffManager != null ? buffManager.GetCooldownRemaining(recipe) : 0f;
+                var cooldown = recipe != null && buffManager != null
+                    ? buffManager.GetCooldownRemaining(recipe)
+                    : 0f;
+                var remain = recipe != null && buffManager != null
+                    ? buffManager.GetRemaining(recipe)
+                    : 0f;
                 var canActivate = recipe != null && buffManager != null && buffManager.CanActivate(recipe) && heroAlive;
                 var distanceOk = true;
                 var tracker = GameplayStatTracker.Instance;
@@ -110,9 +115,10 @@ namespace TimelessEchoes.Buffs
                         ui.iconImage.color = recipe ? grey : transparent;
                     else if (recipe == null)
                         ui.iconImage.color = transparent;
+
                     else if (!distanceOk)
                         ui.iconImage.color = grey;
-                    else if (cooldown > 0f)
+                    else if (remain <= 0f && cooldown > 0f)
                         ui.iconImage.color = grey;
                     else
                         ui.iconImage.color = Color.white;
@@ -131,7 +137,6 @@ namespace TimelessEchoes.Buffs
                     }
                     else
                     {
-                        var remain = recipe ? buffManager.GetRemaining(recipe) : 0f;
                         if (!heroAlive)
                             ui.durationText.text = "Dead";
                         else if (recipe != null && tracker != null && recipe.durationType == BuffDurationType.DistancePercent)
