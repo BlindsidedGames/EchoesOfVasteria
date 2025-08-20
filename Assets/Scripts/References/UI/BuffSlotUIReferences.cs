@@ -20,8 +20,6 @@ namespace References.UI
         {
             if (radialFillImage != null)
                 radialFillImage.StrokeWidth = 1f;
-            if (cooldownRadialFillImage != null)
-                cooldownRadialFillImage.StrokeWidth = 1f;
         }
 
         public event Action<BuffSlotUIReferences> PointerEnter;

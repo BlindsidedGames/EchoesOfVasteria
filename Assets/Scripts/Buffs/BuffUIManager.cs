@@ -155,7 +155,7 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
                                         : 0f;
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = 0f;
@@ -214,7 +214,7 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
                                         : 0f;
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = 0f;
@@ -247,7 +247,7 @@ namespace TimelessEchoes.Buffs
                                 ui.durationText.text = FormatTime(cooldown, showDecimal: cooldown < 10f, shortForm: true);
                                 if (ui.cooldownRadialFillImage != null)
                                     ui.cooldownRadialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(cooldown / recipe.GetCooldown())
+                                        ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
                                         : 0f;
                                 if (ui.radialFillImage != null)
                                     ui.radialFillImage.fillAmount = 0f;
