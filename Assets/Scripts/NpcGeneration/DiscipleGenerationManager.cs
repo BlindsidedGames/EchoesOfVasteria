@@ -136,7 +136,11 @@ namespace TimelessEchoes.NpcGeneration
 
                 var gen = Instantiate(generatorPrefab, transform);
                 gen.name = res.name;
-                var rate = pair.Value.BestPerMinute * oracle.saveData.DisciplePercent;
+                var baseRate = pair.Value.BestPerMinute * oracle.saveData.DisciplePercent;
+                var bonusMult = CauldronManager.Instance != null
+                    ? CauldronManager.Instance.GetResourceAlterEchoMultiplier(res.name)
+                    : 1f;
+                var rate = baseRate * bonusMult;
                 gen.Configure(res, rate);
                 generators.Add(gen);
             }
@@ -151,7 +155,13 @@ namespace TimelessEchoes.NpcGeneration
             {
                 if (gen == null || gen.Resource == null) continue;
                 if (oracle.saveData.Resources.TryGetValue(gen.Resource.name, out var entry))
-                    gen.UpdateRate(entry.BestPerMinute * oracle.saveData.DisciplePercent);
+                {
+                    var baseRate = entry.BestPerMinute * oracle.saveData.DisciplePercent;
+                    var bonusMult = CauldronManager.Instance != null
+                        ? CauldronManager.Instance.GetResourceAlterEchoMultiplier(gen.Resource.name)
+                        : 1f;
+                    gen.UpdateRate(baseRate * bonusMult);
+                }
             }
         }
 

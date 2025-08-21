@@ -24,13 +24,50 @@ namespace TimelessEchoes.Upgrades
 
         private ResourceManager resourceManager;
         private bool tastingActive;
-        private double sessionCardsGained;
+        private int sessionCardsGained;
+        private int sessionTastings;
+        private int countNothing;
+        private int countAlterEcho;
+        private int countBuffs;
+        private int countLowCards;
+        private int countEvasBlessing;
+        private int countVastSurge;
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
         public event Action<string, int> OnCardGained; // (cardId, amount)
         public event Action OnTasteSessionStarted;
         public event Action OnTasteSessionStopped;
+        public event Action<int> OnSessionCardsChanged;
+        public event Action<TastingStats> OnStatsChanged;
+
+        public struct TastingStats
+        {
+            public int tastings;
+            public int cardsGained;
+            public int gainedNothing;
+            public int alterEcho;
+            public int buffs;
+            public int lowCards;
+            public int evasBlessing;
+            public int vastSurge;
+        }
+
+        private TastingStats GetStatsSnapshot()
+        {
+            // Report persisted totals, not per-session
+            return new TastingStats
+            {
+                tastings = oracle != null ? oracle.saveData.CauldronTotals.TotalTastings : 0,
+                cardsGained = oracle != null ? oracle.saveData.CauldronTotals.TotalCards : 0,
+                gainedNothing = oracle != null ? oracle.saveData.CauldronTotals.GainedNothing : 0,
+                alterEcho = oracle != null ? oracle.saveData.CauldronTotals.AlterEcho : 0,
+                buffs = oracle != null ? oracle.saveData.CauldronTotals.Buffs : 0,
+                lowCards = oracle != null ? oracle.saveData.CauldronTotals.LowCards : 0,
+                evasBlessing = oracle != null ? oracle.saveData.CauldronTotals.EvasBlessing : 0,
+                vastSurge = oracle != null ? oracle.saveData.CauldronTotals.VastSurge : 0
+            };
+        }
 
         public double Stew
         {
@@ -71,6 +108,73 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
+        // -------- Tier Helpers & Bonuses --------
+        private int GetTierFromThresholds(int count, int[] thresholds)
+        {
+            if (thresholds == null || thresholds.Length == 0)
+                return 0;
+            var tier = 0;
+            for (var i = 0; i < thresholds.Length; i++)
+                if (count >= thresholds[i]) tier = i + 1;
+            return tier; // 0 when below first threshold
+        }
+
+        public int GetResourceTier(string resourceName)
+        {
+            if (oracle == null || string.IsNullOrEmpty(resourceName)) return 0;
+            var key = $"RES:{resourceName}";
+            var dict = oracle.saveData.CauldronCardCounts;
+            var count = dict.TryGetValue(key, out var c) ? c : 0;
+            return GetTierFromThresholds(count, config != null ? config.resourceTierThresholds : null);
+        }
+
+        public int GetBuffTier(string buffName)
+        {
+            if (oracle == null || string.IsNullOrEmpty(buffName)) return 0;
+            var key = $"BUFF:{buffName}";
+            var dict = oracle.saveData.CauldronCardCounts;
+            var count = dict.TryGetValue(key, out var c) ? c : 0;
+            return GetTierFromThresholds(count, config != null ? config.buffTierThresholds : null);
+        }
+
+        public float GetResourceAlterEchoMultiplier(string resourceName)
+        {
+            // Multiplier applied to per-resource disciple generation rate
+            if (config == null) return 1f;
+            var tier = GetResourceTier(resourceName);
+            if (tier <= 0 || config.resourcePowerBonusPerTier == null || config.resourcePowerBonusPerTier.Length == 0)
+                return 1f;
+            var idx = Mathf.Clamp(tier - 1, 0, config.resourcePowerBonusPerTier.Length - 1);
+            var bonusPercent = config.resourcePowerBonusPerTier[idx];
+            return 1f + Mathf.Max(0f, bonusPercent) / 100f;
+        }
+
+        public float GetBuffCooldownReductionPercent(string buffName)
+        {
+            if (config == null) return 0f;
+            var tier = GetBuffTier(buffName);
+            if (tier <= 0 || config.buffCooldownReductionPerTier == null || config.buffCooldownReductionPerTier.Length == 0)
+                return 0f;
+            var idx = Mathf.Clamp(tier - 1, 0, config.buffCooldownReductionPerTier.Length - 1);
+            return Mathf.Max(0f, config.buffCooldownReductionPerTier[idx]);
+        }
+
+        public float GetBuffPowerPercent(string buffName)
+        {
+            if (config == null) return 0f;
+            var tier = GetBuffTier(buffName);
+            if (tier <= 0 || config.buffPowerBonusPerTier == null || config.buffPowerBonusPerTier.Length == 0)
+                return 0f;
+            var idx = Mathf.Clamp(tier - 1, 0, config.buffPowerBonusPerTier.Length - 1);
+            return Mathf.Max(0f, config.buffPowerBonusPerTier[idx]);
+        }
+
+        public float GetBuffPowerMultiplier(string buffName)
+        {
+            var percent = GetBuffPowerPercent(buffName);
+            return 1f + percent / 100f;
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -84,11 +188,14 @@ namespace TimelessEchoes.Upgrades
             if (UITicker.Instance != null)
                 UITicker.Instance.Subscribe(TasteTick,
                     1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f));
+            // Reset session stats on save load
+            EventHandler.OnLoadData += ResetSessionStats;
         }
 
         private void OnDisable()
         {
             UITicker.Instance?.Unsubscribe(TasteTick);
+            EventHandler.OnLoadData -= ResetSessionStats;
         }
 
         // -------- Mixing --------
@@ -118,8 +225,10 @@ namespace TimelessEchoes.Upgrades
         {
             if (tastingActive) return;
             tastingActive = true;
-            sessionCardsGained = 0;
+            ResetSessionStats();
             OnTasteSessionStarted?.Invoke();
+            OnSessionCardsChanged?.Invoke(sessionCardsGained);
+            OnStatsChanged?.Invoke(GetStatsSnapshot());
         }
 
         public void StopTasting()
@@ -142,7 +251,10 @@ namespace TimelessEchoes.Upgrades
 
             Stew -= cost;
             GainEvaXp(1); // 1 XP per roll (1 stew)
+            sessionTastings++;
+            if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
             ResolveTasteOutcome();
+            OnStatsChanged?.Invoke(GetStatsSnapshot());
         }
 
         private void GainEvaXp(double amount)
@@ -196,20 +308,32 @@ namespace TimelessEchoes.Upgrades
             switch (pick)
             {
                 case RollType.Nothing:
+                    countNothing++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.GainedNothing++;
                     break;
                 case RollType.AlterEcho:
+                    countAlterEcho++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.AlterEcho++;
                     GrantRandomCards(1, true);
                     break;
                 case RollType.Buff:
+                    countBuffs++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.Buffs++;
                     GrantRandomCards(1, onlyBuffs: true);
                     break;
                 case RollType.Lowest:
+                    countLowCards++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.LowCards++;
                     GrantLowestCard(1);
                     break;
                 case RollType.EvasX2:
+                    countEvasBlessing++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.EvasBlessing++;
                     GrantRandomCards(2);
                     break;
                 case RollType.VastX10:
+                    countVastSurge++;
+                    if (oracle != null) oracle.saveData.CauldronTotals.VastSurge++;
                     GrantRandomCards(10);
                     break;
             }
@@ -270,6 +394,19 @@ namespace TimelessEchoes.Upgrades
             dict[id] += delta;
             sessionCardsGained += delta;
             OnCardGained?.Invoke(id, delta);
+            OnSessionCardsChanged?.Invoke(sessionCardsGained);
+            if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += delta;
+            OnStatsChanged?.Invoke(GetStatsSnapshot());
+
+            // Update disciple generation rates when card counts change
+            try
+            {
+                TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.RefreshRates();
+            }
+            catch (Exception)
+            {
+                // ignore: manager may not be available in some scenes
+            }
         }
 
         private List<string> BuildAllCardIds(bool onlyAlterEcho, bool onlyBuffs)
@@ -298,6 +435,18 @@ namespace TimelessEchoes.Upgrades
             {
                 Debug.LogError($"Cauldron SaveData failed: {ex}");
             }
+        }
+
+        private void ResetSessionStats()
+        {
+            sessionCardsGained = 0;
+            sessionTastings = 0;
+            countNothing = 0;
+            countAlterEcho = 0;
+            countBuffs = 0;
+            countLowCards = 0;
+            countEvasBlessing = 0;
+            countVastSurge = 0;
         }
     }
 }

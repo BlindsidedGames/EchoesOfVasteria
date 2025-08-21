@@ -92,6 +92,10 @@ namespace Blindsided.SaveData
         public Dictionary<string, int> CauldronCardCounts = new();
         [TabGroup("GameDataTabs", "Cauldron")] public bool CauldronShowAllCards;
 
+        // Cauldron persisted totals (not per-session)
+        [HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Cauldron")] public CauldronTotalsRecord CauldronTotals = new();
+
 
         [HideReferenceObjectPicker]
         public class ResourceEntry
@@ -99,6 +103,19 @@ namespace Blindsided.SaveData
             public double Amount;
             public bool Earned;
             public double BestPerMinute;
+        }
+
+        [HideReferenceObjectPicker]
+        public class CauldronTotalsRecord
+        {
+            public int TotalTastings;
+            public int TotalCards;
+            public int GainedNothing;
+            public int AlterEcho;
+            public int Buffs;
+            public int LowCards;
+            public int EvasBlessing;
+            public int VastSurge;
         }
 
         [HideReferenceObjectPicker]

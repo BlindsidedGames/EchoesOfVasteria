@@ -195,7 +195,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 7
+  m_fontSize: 2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -249,7 +249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8641012046233080892}
   - component: {fileID: 2114561808089698973}
-  - component: {fileID: 3701795321979998026}
+  - component: {fileID: 506135257901899692}
   - component: {fileID: 9032703538104913505}
   - component: {fileID: 7554797277845381156}
   m_Layer: 5
@@ -288,7 +288,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5457163940482046871}
   m_CullTransparentMesh: 1
---- !u!114 &3701795321979998026
+--- !u!114 &506135257901899692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,9 +297,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5457163940482046871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19562c4603d94eb08e9e5dcc277fa9bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 768ba1b89ad172644a40c95b188e4511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  titleText: {fileID: 1140931380099937617}
   contentTransform: {fileID: 4574970549979652699}
 --- !u!114 &9032703538104913505
 MonoBehaviour:

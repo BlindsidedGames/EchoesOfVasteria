@@ -83,6 +83,51 @@ namespace TimelessEchoes.Buffs
             return level;
         }
 
+        private struct BuffPower
+        {
+            public float durationMultiplier;          // Multiplier for time-based durations
+            public float distanceFractionAdd;         // Additive fraction for DistancePercent (e.g., +0.3)
+            public float extraDistancePercentAdd;     // Additive percent points for ExtraDistancePercent (e.g., +30)
+            public float effectValueMultiplier;       // Multiplier for non-distance effect values
+        }
+
+        private BuffPower ComputePowerPolicy()
+        {
+            var power = 0f;
+            var cm = TimelessEchoes.Upgrades.CauldronManager.Instance;
+            if (cm != null)
+                power = cm.GetBuffPowerPercent(name);
+
+            var policy = new BuffPower
+            {
+                durationMultiplier = 1f,
+                distanceFractionAdd = 0f,
+                extraDistancePercentAdd = 0f,
+                effectValueMultiplier = 1f
+            };
+
+            if (power <= 0f)
+                return policy;
+
+            if (durationType == BuffDurationType.DistancePercent)
+            {
+                policy.distanceFractionAdd = power / 100f; // add absolute percent points to fraction
+                policy.effectValueMultiplier = 1f + power / 100f;
+            }
+            else if (durationType == BuffDurationType.ExtraDistancePercent)
+            {
+                policy.extraDistancePercentAdd = power;     // add absolute percent points to extra distance
+                policy.effectValueMultiplier = 1f + power / 100f;
+            }
+            else
+            {
+                policy.durationMultiplier = 1f + power / 100f; // extend time-based duration
+                policy.effectValueMultiplier = 1f + power / 100f;
+            }
+
+            return policy;
+        }
+
         public List<BuffEffect> GetAggregatedEffects()
         {
             var dict = new Dictionary<BuffEffectType, float>();
@@ -112,9 +157,18 @@ namespace TimelessEchoes.Buffs
                     }
                 }
             }
+            // Apply power policy: multiply only non-distance effects
+            var policy = ComputePowerPolicy();
             var list = new List<BuffEffect>();
             foreach (var pair in dict)
-                list.Add(new BuffEffect { type = pair.Key, value = pair.Value });
+            {
+                var val = pair.Value;
+                var isDistanceEffect = pair.Key == BuffEffectType.MaxDistancePercent ||
+                                       pair.Key == BuffEffectType.MaxDistanceIncrease;
+                if (!isDistanceEffect)
+                    val *= policy.effectValueMultiplier;
+                list.Add(new BuffEffect { type = pair.Key, value = val });
+            }
             return list;
         }
 
@@ -149,6 +203,12 @@ namespace TimelessEchoes.Buffs
                         duration += up.durationDelta;
                 }
             }
+            // Apply power via policy
+            var policy = ComputePowerPolicy();
+            if (durationType == BuffDurationType.DistancePercent)
+                duration = Mathf.Clamp01(duration + policy.distanceFractionAdd);
+            else
+                duration *= policy.durationMultiplier;
             return duration;
         }
 
@@ -167,8 +227,15 @@ namespace TimelessEchoes.Buffs
                         cooldown += up.cooldownDelta;
                 }
             }
-            // Cooldown now starts after the buff duration finishes, so it is not
-            // forced to be longer than the duration.
+            // Apply Cauldron tier-based cooldown reduction
+            var cm = TimelessEchoes.Upgrades.CauldronManager.Instance;
+            if (cm != null)
+            {
+                var reducePercent = cm.GetBuffCooldownReductionPercent(name);
+                cooldown *= Mathf.Max(0f, 1f - reducePercent / 100f);
+            }
+
+            // Cooldown now starts after the buff duration finishes.
             return cooldown;
         }
 
@@ -183,6 +250,9 @@ namespace TimelessEchoes.Buffs
                 else if (eff.type == BuffEffectType.MaxDistanceIncrease)
                     flat += eff.value;
             }
+            // Apply power via policy
+            var policy = ComputePowerPolicy();
+            percent += Mathf.Max(0f, policy.extraDistancePercentAdd);
             return baseDistance * percent / 100f + flat;
         }
 

@@ -7,6 +7,8 @@ using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
+using static Blindsided.Oracle;
+using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.UI
 {
@@ -31,6 +33,30 @@ namespace TimelessEchoes.UI
 		[SerializeField] private CauldronDrinkingUIReferences drinking;
 		// Layered pie slices: index 0 is background
 		[SerializeField] private List<MPImageBasic> oddsPieSlices = new();
+
+		[Header("Eva Progress")]
+		[SerializeField] private SlicedFilledImage evaXpBar;
+		[SerializeField] private TMP_Text evaLevelText;
+		[SerializeField] private TMP_Text evaXpText;
+
+		[Header("Session Stats")]
+		[SerializeField] private TMP_Text statsText;
+
+		[Header("Tier Sprites")] 
+		[SerializeField] private List<Sprite> tierSprites = new(); // 8 entries: index 0 used for unknown and tier 1
+		[SerializeField] private List<Sprite> borderTierSprites = new(); // 8 entries matching tiers
+
+		public Sprite GetTierSprite(int tier)
+		{
+			var idx = Mathf.Clamp(tier <= 1 ? 0 : tier - 1, 0, tierSprites.Count - 1);
+			return tierSprites.Count > 0 ? tierSprites[idx] : null;
+		}
+
+		public Sprite GetBorderTierSprite(int tier)
+		{
+			var idx = Mathf.Clamp(tier <= 1 ? 0 : tier - 1, 0, borderTierSprites.Count - 1);
+			return borderTierSprites.Count > 0 ? borderTierSprites[idx] : null;
+		}
 
 		private readonly List<CauldronMixItemUIReferences> mixSlots = new();
 
@@ -69,7 +95,14 @@ namespace TimelessEchoes.UI
 				cauldron.OnStewChanged += RefreshDrinkingTexts;
 				cauldron.OnWeightsChanged += RefreshPieChart;
 				cauldron.OnCardGained += OnCardGained;
+				cauldron.OnTasteSessionStarted += OnTasteSessionStarted;
+				cauldron.OnSessionCardsChanged += OnSessionCardsChanged;
 			}
+			// Handle switching save files gracefully (only on load)
+			EventHandler.OnLoadData += OnSaveOrLoad;
+			// Subscribe to stats updates
+			if (cauldron != null)
+				cauldron.OnStatsChanged += OnStatsChanged;
 		}
 
 		private void OnDisable()
@@ -79,7 +112,11 @@ namespace TimelessEchoes.UI
 				cauldron.OnStewChanged -= RefreshDrinkingTexts;
 				cauldron.OnWeightsChanged -= RefreshPieChart;
 				cauldron.OnCardGained -= OnCardGained;
+				cauldron.OnTasteSessionStarted -= OnTasteSessionStarted;
+				cauldron.OnSessionCardsChanged -= OnSessionCardsChanged;
+				cauldron.OnStatsChanged -= OnStatsChanged;
 			}
+			EventHandler.OnLoadData -= OnSaveOrLoad;
 		}
 
 		private void RefreshMixSlots()
@@ -108,12 +145,19 @@ namespace TimelessEchoes.UI
 				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(rm.GetAmount(r), true);
 				if (ui.selectButton != null)
 				{
-					ui.selectButton.interactable = true;
 					ui.selectButton.onClick.RemoveAllListeners();
-					ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
+					var isSelA = selectedA == r;
+					var isSelB = selectedB == r;
+					ui.selectButton.interactable = !(isSelA || isSelB);
+					if (ui.selectButton.interactable)
+						ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
 				}
-				if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = selectedA == r && nextGreen == false;
-				if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = selectedB == r && nextGreen == true;
+				{
+					var isSelA = selectedA == r;
+					var isSelB = selectedB == r;
+					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = (isSelA && !nextGreen) || (isSelB && nextGreen);
+					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = (isSelA && nextGreen) || (isSelB && !nextGreen);
+				}
 			}
 			RefreshMixButton();
 		}
@@ -148,8 +192,9 @@ namespace TimelessEchoes.UI
 				var isB = s != null && rm != null && s.iconImage != null && selectedB != null && s.iconImage.sprite == selectedB.icon;
 				if (s != null)
 				{
-					if (s.selectionImageGreen != null) s.selectionImageGreen.enabled = isA && !nextGreen;
-					if (s.selectionImageWhite != null) s.selectionImageWhite.enabled = isB && nextGreen;
+					if (s.selectionImageGreen != null) s.selectionImageGreen.enabled = (isA && !nextGreen) || (isB && nextGreen);
+					if (s.selectionImageWhite != null) s.selectionImageWhite.enabled = (isA && nextGreen) || (isB && !nextGreen);
+					if (s.selectButton != null) s.selectButton.interactable = !(isA || isB);
 				}
 			}
 		}
@@ -192,8 +237,39 @@ namespace TimelessEchoes.UI
 		private void RefreshDrinkingTexts()
 		{
 			if (drinking == null || cauldron == null) return;
+			// Guard against early calls before save is available
+			if (oracle == null || oracle.saveData == null) return;
 			if (drinking.stewRemainingText != null)
-				drinking.stewRemainingText.text = CalcUtils.FormatNumber(cauldron.Stew);
+				drinking.stewRemainingText.text = $"Stew Remaining | {CalcUtils.FormatNumber(cauldron.Stew)}";
+			// Eva XP bar & texts
+			if (evaLevelText != null)
+				evaLevelText.text = $"Eva | Level {cauldron.EvaLevel}";
+			if (evaXpBar != null || evaXpText != null)
+			{
+				var lvl = cauldron.EvaLevel;
+				var current = cauldron.EvaXp;
+				// match CauldronManager's formula 50 + 10*(level-1)
+				var needed = 50 + 10 * Mathf.Max(0, lvl - 1);
+				if (evaXpBar != null)
+					evaXpBar.fillAmount = needed > 0f ? Mathf.Clamp01((float)(current / needed)) : 0f;
+				if (evaXpText != null)
+					evaXpText.text = $"xp: {CalcUtils.FormatNumber(current)} / {CalcUtils.FormatNumber(needed)}";
+			}
+		}
+
+		private void OnSaveOrLoad()
+		{
+			RefreshMixSlots();
+			RefreshDrinkingTexts();
+			RefreshPieChart();
+			// Reset session counter on data reload
+			if (drinking != null && drinking.cardsGainedThisSessionText != null)
+				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
+			// Refresh stats from persisted totals on load
+			if (cauldron != null)
+				OnStatsChanged(cauldron != null ? cauldron.GetType()
+					.GetMethod("GetStatsSnapshot", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+					?.Invoke(cauldron, null) as CauldronManager.TastingStats? ?? default : default);
 		}
 
 		private void RefreshPieChart()
@@ -260,11 +336,38 @@ namespace TimelessEchoes.UI
 
 		private void OnCardGained(string id, int amt)
 		{
-			if (drinking != null && drinking.cardsGainedThisSessionText != null)
-			{
-				drinking.cardsGainedThisSessionText.text = "Gained +" + amt;
-			}
+			// Collection highlights handled in Collections window
 			// Collection highlights are handled by the Collection UI (subscribing to OnCardGained)
+		}
+
+		private void OnTasteSessionStarted()
+		{
+			// Reset cards gained counter in UI
+			if (drinking != null && drinking.cardsGainedThisSessionText != null)
+				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
+		}
+
+		private void OnSessionCardsChanged(int total)
+		{
+			if (drinking != null && drinking.cardsGainedThisSessionText != null)
+				drinking.cardsGainedThisSessionText.text = $"Cards Gained | {total}";
+		}
+
+		private void OnStatsChanged(CauldronManager.TastingStats s)
+		{
+			if (statsText == null) return;
+			// Use <b> headers and bullet character
+			statsText.text =
+				$"<b>Totals</b>\n" +
+				$"• Tastings: {s.tastings}\n" +
+				$"• Cards Gained: {s.cardsGained}\n" +
+				$"<b>Roll Distribution</b>\n" +
+				$"• Gained Nothing: {s.gainedNothing}\n" +
+				$"• Alter-Echo: {s.alterEcho}\n" +
+				$"• Buffs: {s.buffs}\n" +
+				$"• Low Cards: {s.lowCards}\n" +
+				$"• Eva's Blessing: {s.evasBlessing}\n" +
+				$"• The Vast One's Surge: {s.vastSurge}";
 		}
 	}
 }

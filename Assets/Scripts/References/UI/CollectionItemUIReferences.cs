@@ -11,6 +11,8 @@ namespace References.UI
 		public TMP_Text tierText;
 		public TMP_Text countText;
 		public Image selectionImage;
+		public Image tierImage;
+		public Image borderTierImage;
 	}
 }
 
