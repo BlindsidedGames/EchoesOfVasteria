@@ -549,6 +549,11 @@ namespace TimelessEchoes.Buffs
 
         private void AutoCastBuffs()
         {
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
+            if (tracker == null || !tracker.RunInProgress)
+                return;
+
             for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count && i < UnlockedAutoSlots; i++)
             {
                 if (!autoCastSlots[i]) continue;
