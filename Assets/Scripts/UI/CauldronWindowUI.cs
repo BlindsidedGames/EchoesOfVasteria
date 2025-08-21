@@ -1,0 +1,272 @@
+using System.Collections.Generic;
+using System.Linq;
+using Blindsided.Utilities;
+using References.UI;
+using TMPro;
+using TimelessEchoes.Upgrades;
+using UnityEngine;
+using UnityEngine.UI;
+using MPUIKIT;
+
+namespace TimelessEchoes.UI
+{
+	/// <summary>
+	/// Thin presenter that binds CauldronManager to prefabs.
+	/// Assumes prefabs wired in the scene.
+	/// </summary>
+	public class CauldronWindowUI : MonoBehaviour
+	{
+		[SerializeField] private CauldronManager cauldron;
+		[SerializeField] private CauldronConfig config;
+
+		[Header("Mixing")]
+		[SerializeField] private Transform mixSlotsParent; // 6 children with CauldronMixItemUIReferences
+		[SerializeField] private Button mixButton;
+        [SerializeField] private TMP_Text predictedStewText;
+        [SerializeField] private Image mixArrowImage;
+        [SerializeField] private Sprite mixArrowGreenSprite;
+        [SerializeField] private Sprite mixArrowRedSprite;
+
+		[Header("Drinking")]
+		[SerializeField] private CauldronDrinkingUIReferences drinking;
+		// Layered pie slices: index 0 is background
+		[SerializeField] private List<MPImageBasic> oddsPieSlices = new();
+
+		private readonly List<CauldronMixItemUIReferences> mixSlots = new();
+
+
+		private Resource selectedA;
+		private Resource selectedB;
+		private bool nextGreen = true;
+		private ResourceManager rm;
+
+		private void Awake()
+		{
+			cauldron ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+			if (mixSlotsParent != null)
+				foreach (Transform t in mixSlotsParent)
+				{
+					var slot = t.GetComponent<CauldronMixItemUIReferences>();
+					if (slot != null) mixSlots.Add(slot);
+				}
+			if (rm != null) rm.OnInventoryChanged += RefreshMixSlots;
+			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
+			if (drinking != null)
+			{
+				if (drinking.tasteButton != null) drinking.tasteButton.onClick.AddListener(() => cauldron?.StartTasting());
+				if (drinking.stopButton != null) drinking.stopButton.onClick.AddListener(() => cauldron?.StopTasting());
+			}
+		}
+
+		private void OnEnable()
+		{
+			RefreshMixSlots();
+			RefreshDrinkingTexts();
+			RefreshPieChart();
+			if (cauldron != null)
+			{
+				cauldron.OnStewChanged += RefreshDrinkingTexts;
+				cauldron.OnWeightsChanged += RefreshPieChart;
+				cauldron.OnCardGained += OnCardGained;
+			}
+		}
+
+		private void OnDisable()
+		{
+			if (cauldron != null)
+			{
+				cauldron.OnStewChanged -= RefreshDrinkingTexts;
+				cauldron.OnWeightsChanged -= RefreshPieChart;
+				cauldron.OnCardGained -= OnCardGained;
+			}
+		}
+
+		private void RefreshMixSlots()
+		{
+			if (rm == null || mixSlots.Count == 0) return;
+			var all = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
+				.Where(r => r != null && rm.GetAmount(r) > 0)
+				.OrderByDescending(r => rm.GetAmount(r))
+				.Take(6)
+				.ToList();
+			for (int i = 0; i < mixSlots.Count; i++)
+			{
+				var ui = mixSlots[i];
+				Resource r = i < all.Count ? all[i] : null;
+				if (ui == null) continue;
+				if (r == null)
+				{
+					if (ui.iconImage != null) { ui.iconImage.enabled = false; ui.iconImage.sprite = null; }
+					if (ui.countText != null) { ui.countText.text = ""; }
+					if (ui.selectButton != null) ui.selectButton.interactable = false;
+					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = false;
+					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = false;
+					continue;
+				}
+				if (ui.iconImage != null) { ui.iconImage.enabled = true; ui.iconImage.sprite = r.icon; }
+				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(rm.GetAmount(r), true);
+				if (ui.selectButton != null)
+				{
+					ui.selectButton.interactable = true;
+					ui.selectButton.onClick.RemoveAllListeners();
+					ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
+				}
+				if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = selectedA == r && nextGreen == false;
+				if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = selectedB == r && nextGreen == true;
+			}
+			RefreshMixButton();
+		}
+
+		private void ToggleSelection(Resource r, CauldronMixItemUIReferences ui)
+		{
+			// Always distinct; selecting another replaces the oldest (alternating colors)
+			if (selectedA == null && selectedB == null)
+			{
+				selectedA = r; nextGreen = false;
+			}
+			else if (selectedA != null && selectedB == null)
+			{
+				selectedB = r; nextGreen = true;
+			}
+			else
+			{
+				if (nextGreen)
+				{
+					selectedA = r; nextGreen = false;
+				}
+				else
+				{
+					selectedB = r; nextGreen = true;
+				}
+			}
+			RefreshMixButton();
+			// Force visuals
+			foreach (var s in mixSlots)
+			{
+				var isA = s != null && rm != null && s.iconImage != null && selectedA != null && s.iconImage.sprite == selectedA.icon;
+				var isB = s != null && rm != null && s.iconImage != null && selectedB != null && s.iconImage.sprite == selectedB.icon;
+				if (s != null)
+				{
+					if (s.selectionImageGreen != null) s.selectionImageGreen.enabled = isA && !nextGreen;
+					if (s.selectionImageWhite != null) s.selectionImageWhite.enabled = isB && nextGreen;
+				}
+			}
+		}
+
+		private void RefreshMixButton()
+		{
+			var canMix = selectedA != null && selectedB != null && selectedA != selectedB && cauldron != null && cauldron.CanMix(selectedA, selectedB);
+			if (mixButton != null) mixButton.interactable = canMix;
+
+			// Update predicted stew text
+			double predicted = 0;
+			if (rm != null && selectedA != null && selectedB != null && selectedA != selectedB)
+			{
+				var amountA = rm.GetAmount(selectedA);
+				var amountB = rm.GetAmount(selectedB);
+				double points = amountA * selectedA.baseValue * selectedA.valueMultiplier + amountB * selectedB.baseValue * selectedB.valueMultiplier;
+				predicted = points / 100.0;
+			}
+			if (predictedStewText != null)
+				predictedStewText.text = CalcUtils.FormatNumber(predicted);
+
+			// Arrow color
+			if (mixArrowImage != null)
+			{
+				mixArrowImage.sprite = canMix ? mixArrowGreenSprite : mixArrowRedSprite;
+				mixArrowImage.enabled = mixArrowImage.sprite != null;
+			}
+		}
+
+		private void OnMixClicked()
+		{
+			if (cauldron == null || selectedA == null || selectedB == null) return;
+			cauldron.MixMax(selectedA, selectedB);
+			selectedA = selectedB = null;
+			nextGreen = true;
+			RefreshMixSlots();
+			RefreshDrinkingTexts();
+		}
+
+		private void RefreshDrinkingTexts()
+		{
+			if (drinking == null || cauldron == null) return;
+			if (drinking.stewRemainingText != null)
+				drinking.stewRemainingText.text = CalcUtils.FormatNumber(cauldron.Stew);
+		}
+
+		private void RefreshPieChart()
+		{
+			if (config == null || oddsPieSlices == null || oddsPieSlices.Count == 0) return;
+			var lvl = cauldron != null ? cauldron.EvaLevel : 1;
+			var weights = new (Color c, float w)[]
+			{
+				(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
+				(config.sliceAlterEcho, config.weightAlterEchoCard.Evaluate(lvl)),
+				(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
+				(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
+				(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
+				(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
+			};
+
+			var total = 0f;
+			for (var i = 0; i < weights.Length; i++) total += Mathf.Max(0f, weights[i].w);
+			if (total <= 0f)
+			{
+				for (var i = 0; i < oddsPieSlices.Count; i++)
+					if (oddsPieSlices[i] != null) oddsPieSlices[i].enabled = false;
+				return;
+			}
+
+			// background is at index 0; overlays are 1..N using the same layering logic as forge
+			var overlayCapacity = Mathf.Max(0, oddsPieSlices.Count - 1);
+			var sliceCount = Mathf.Min(overlayCapacity, weights.Length);
+
+			for (var i = 0; i < sliceCount; i++)
+			{
+				var img = oddsPieSlices[i + 1];
+				if (img != null) img.transform.SetSiblingIndex(i + 1);
+			}
+
+			var fractions = new float[sliceCount];
+			for (var i = 0; i < sliceCount; i++)
+				fractions[i] = Mathf.Max(0f, weights[i].w) / total;
+
+			var used = 0f;
+			for (var layer = 0; layer < sliceCount; layer++)
+			{
+				var weightIndex = sliceCount - 1 - layer; // reverse like forge
+				var img = oddsPieSlices[layer + 1];
+				if (img == null) { used += fractions[weightIndex]; continue; }
+
+				var fill = layer == 0 ? 1f : Mathf.Clamp01(1f - used);
+				used += fractions[weightIndex];
+
+				img.enabled = fill > 0f;
+				img.type = Image.Type.Filled;
+				img.fillMethod = Image.FillMethod.Radial360;
+				img.fillOrigin = 2;
+				img.fillClockwise = true;
+				img.fillAmount = fill;
+				img.color = weights[weightIndex].c;
+				var rt = img.rectTransform;
+				if (rt != null) rt.localEulerAngles = Vector3.zero;
+			}
+
+			for (var i = sliceCount + 1; i < oddsPieSlices.Count; i++)
+				if (oddsPieSlices[i] != null) oddsPieSlices[i].enabled = false;
+		}
+
+		private void OnCardGained(string id, int amt)
+		{
+			if (drinking != null && drinking.cardsGainedThisSessionText != null)
+			{
+				drinking.cardsGainedThisSessionText.text = "Gained +" + amt;
+			}
+			// Collection highlights are handled by the Collection UI (subscribing to OnCardGained)
+		}
+	}
+}
+
+

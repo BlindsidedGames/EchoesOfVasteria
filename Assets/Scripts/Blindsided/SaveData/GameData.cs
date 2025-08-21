@@ -83,6 +83,15 @@ namespace Blindsided.SaveData
         [TabGroup("GameDataTabs", "Disciples")]
         public float DisciplePercent = 0.01f;
 
+        // --- Cauldron (Stew/Collections) ---
+        [TabGroup("GameDataTabs", "Cauldron")] public double CauldronStew;
+        [TabGroup("GameDataTabs", "Cauldron")] public int CauldronEvaLevel = 1;
+        [TabGroup("GameDataTabs", "Cauldron")] public double CauldronEvaXp;
+        [ShowInInspector] [HideReferenceObjectPicker]
+        [TabGroup("GameDataTabs", "Cauldron")]
+        public Dictionary<string, int> CauldronCardCounts = new();
+        [TabGroup("GameDataTabs", "Cauldron")] public bool CauldronShowAllCards;
+
 
         [HideReferenceObjectPicker]
         public class ResourceEntry
