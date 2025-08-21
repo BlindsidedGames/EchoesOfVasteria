@@ -19,7 +19,8 @@ namespace TimelessEchoes.Upgrades
         [PreviewField(50, ObjectFieldAlignment.Left)]
         public Sprite UnknownIcon;
 
-        public double coinValue = 1.0;
+        public double baseValue = 1.0;
+        public double valueMultiplier = 1.0f;
 
         [Tooltip("If true, disciples will not generate this resource and Alter Echo data is ignored")]
         public bool DisableAlterEcho;

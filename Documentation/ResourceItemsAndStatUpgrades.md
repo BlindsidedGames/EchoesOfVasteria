@@ -3,34 +3,34 @@
 Grouped by task category from `Assets/Resources/Tasks`:
 
 ### Farming
-- Carrot
-- Chillie
+- Radish
 - Corn
-- Cucumber
-- Funion
-- Leek
+- Wheat
+- Watermelone
+- Carrot
+- Spud
+- Tomato
 - Lettuce
+- Cucumber
 - Onion
+- Leek
 - Parsnip
 - Pepper
+- Chillie
 - Pumking
-- Radish
-- Spud
 - Strawberry
-- Tomato
+- Funion
 - Turnip
-- Watermelone
-- Wheat
 
 ### Fishing
-- Bloopicus Maximus
 - Flippy Floppy
-- Flipzoid
 - Muddy Muck Muncher
-- Niblet the Bold
 - Sir Splashford III
-- Snapjaw Jr.
 - Wigglelittle
+- Snapjaw Jr.
+- Flipzoid
+- Niblet the Bold
+- Bloopicus Maximus
 
 ### Mining
 - Stone
