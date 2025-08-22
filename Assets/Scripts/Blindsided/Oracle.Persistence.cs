@@ -25,6 +25,18 @@ namespace Blindsided
 
             // Ensure PlayerPrefs metadata for the current slot is kept in sync for all saves/autosaves
             PersistSlotMetadataToPlayerPrefs();
+
+            // If we had marked this slot as deleted to suppress migration, clear the marker after the first save
+            try
+            {
+                var deletedKey = $"Slot{CurrentSlot}_Deleted";
+                if (PlayerPrefs.GetInt(deletedKey, 0) == 1)
+                {
+                    PlayerPrefs.DeleteKey(deletedKey);
+                    PlayerPrefs.Save();
+                }
+            }
+            catch { }
         }
 
         private void Load()
@@ -44,6 +56,10 @@ namespace Blindsided
                 else
                 {
                     // Backward-compat: discover the correct key inside the physical save file and migrate
+                    // If this slot was intentionally deleted, skip discovery & migration for one cycle
+                    var deletedKey = $"Slot{CurrentSlot}_Deleted";
+                    var suppressMigration = false;
+                    try { suppressMigration = PlayerPrefs.GetInt(deletedKey, 0) == 1; } catch { suppressMigration = false; }
                     if (TryLoadWithKeyFallback(out var discoveredData, out var usedKey))
                     {
                         saveData = discoveredData;
@@ -76,7 +92,7 @@ namespace Blindsided
                     {
                         // Fallback: no save found in our canonical file. Probe any .es3 in the save dir and
                         // migrate only for the CURRENT slot if a valid snapshot is discovered.
-                        if (TryFindAndMigrateAnyEs3ForCurrentSlot(out var migratedSnapshot))
+                        if (!suppressMigration && TryFindAndMigrateAnyEs3ForCurrentSlot(out var migratedSnapshot))
                         {
                             // We have copied the physical file; ensure canonical key is written to cache and file
                             saveData = migratedSnapshot;
@@ -104,6 +120,14 @@ namespace Blindsided
                 _pendingLoadFailureMessage = message;
                 _pendingLoadFailureNotice = true;
                 Debug.LogWarning(message);
+
+                // Persist an empty, canonical file immediately so future loads are stable
+                try
+                {
+                    ES3.Save(_dataName, saveData, _settings);
+                    ES3.StoreCachedFile(_fileName);
+                }
+                catch { }
             }
 
             NullCheckers();

@@ -49,6 +49,7 @@ namespace TimelessEchoes.Upgrades
             LoadState();
             OnSaveData += SaveState;
             OnLoadData += LoadState;
+            OnResetData += ResetState;
         }
 
         protected override void OnDestroy()
@@ -56,6 +57,7 @@ namespace TimelessEchoes.Upgrades
             base.OnDestroy();
             OnSaveData -= SaveState;
             OnLoadData -= LoadState;
+            OnResetData -= ResetState;
         }
 
         [Button]
@@ -117,6 +119,13 @@ namespace TimelessEchoes.Upgrades
         public bool IsUnlocked(Resource resource)
         {
             return resource != null && unlocked.Contains(resource);
+        }
+
+        private void ResetState()
+        {
+            amounts.Clear();
+            unlocked.Clear();
+            InvokeInventoryChanged();
         }
 
         private void SaveState()

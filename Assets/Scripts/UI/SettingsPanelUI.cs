@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Globalization;
 using Blindsided;
@@ -486,9 +487,68 @@ namespace TimelessEchoes.UI
             {
                 var oracle = Oracle.oracle;
                 var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-                var fileName = $"{prefix}Sd{index}.es3";
-                ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.Cache));
-                ES3.DeleteFile(fileName, new ES3Settings(ES3.Location.File));
+
+                // Build list of base names to hard-delete: live and all Beta variants
+                var baseNames = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal)
+                {
+                    $"Sd{index}"
+                };
+                for (var b = 0; b <= 12; b++) baseNames.Add($"Beta{b}Sd{index}");
+                if (!string.IsNullOrEmpty(prefix)) baseNames.Add($"{prefix}Sd{index}");
+
+                // Resolve persistent directory (from any target)
+                string saveDir = null;
+                try
+                {
+                    var probe = new ES3Settings($"Sd{index}.es3", ES3.Location.File);
+                    saveDir = Path.GetDirectoryName(probe.FullPath);
+                }
+                catch { }
+
+                foreach (var baseName in baseNames)
+                {
+                    try
+                    {
+                        var relFile = baseName + ".es3";
+                        // Remove ES3 cache and physical file
+                        ES3.DeleteFile(relFile, new ES3Settings(ES3.Location.Cache));
+                        ES3.DeleteFile(relFile, new ES3Settings(ES3.Location.File));
+
+                        // Remove Easy Save .bac backup
+                        try
+                        {
+                            var live = new ES3Settings(relFile, ES3.Location.File);
+                            var bacPath = live.FullPath + ".bac";
+                            if (!string.IsNullOrEmpty(bacPath) && File.Exists(bacPath))
+                                File.Delete(bacPath);
+                        }
+                        catch { }
+
+                        // Remove rotating backups under Backups/<baseName>
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(saveDir))
+                            {
+                                var backupDir = Path.Combine(saveDir, "Backups", baseName);
+                                if (Directory.Exists(backupDir))
+                                    Directory.Delete(backupDir, true);
+                            }
+                        }
+                        catch { }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"Failed to hard-delete artifacts for '{baseName}': {ex.Message}");
+                    }
+                }
+
+                // Mark this slot as intentionally deleted to suppress migration on next load
+                try
+                {
+                    PlayerPrefs.SetInt($"Slot{index}_Deleted", 1);
+                    PlayerPrefs.Save();
+                }
+                catch { }
 
                 PlayerPrefs.DeleteKey(SlotKey(index, "Completion"));
                 PlayerPrefs.DeleteKey(SlotKey(index, "Playtime"));

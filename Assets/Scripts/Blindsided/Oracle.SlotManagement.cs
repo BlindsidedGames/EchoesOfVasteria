@@ -27,6 +27,10 @@ namespace Blindsided
 				Debug.LogError($"Pre-switch backup failed: {ex}");
 			}
 
+			// Stop autosave BEFORE switching slots so no autosave can write the old slot's data
+			// into the new slot's file due to _settings changing mid-cycle.
+			StopAutosaveLoop();
+
 			CurrentSlot = clamped;
             PlayerPrefs.SetInt(SlotPrefKey, CurrentSlot);
             PlayerPrefs.Save();
@@ -34,8 +38,7 @@ namespace Blindsided
             {
                 bufferSize = 8192
             };
-			// Stop autosave while switching to avoid snapshotting a half-applied state
-			StopAutosaveLoop();
+            EventHandler.ResetData();
             Load();
 			// Ensure all systems reload their state for the new slot
 			EventHandler.LoadData();

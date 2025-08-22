@@ -440,7 +440,10 @@ namespace TimelessEchoes.UI
 		{
 			if (drinking == null || cauldron == null) return;
 			var isTasting = cauldron.IsTasting;
-			if (drinking.tasteButton != null) drinking.tasteButton.interactable = !isTasting;
+			// Require enough stew to start tasting (default: 1 stew per roll)
+			var cost = Mathf.Max(0.0001f, config != null ? config.stewPerRoll : 1f);
+			var hasStewForOneRoll = cauldron.Stew >= cost;
+			if (drinking.tasteButton != null) drinking.tasteButton.interactable = !isTasting && hasStewForOneRoll;
 			if (drinking.stopButton != null) drinking.stopButton.interactable = isTasting;
 		}
 
