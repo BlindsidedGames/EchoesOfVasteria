@@ -77,6 +77,18 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public bool DoubleResourcesActive
+        {
+            get
+            {
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.DoubleResources && eff.value > 0f)
+                            return true;
+                return false;
+            }
+        }
+
         public IEnumerable<BuffRecipe> Recipes
         {
             get
@@ -199,13 +211,6 @@ namespace TimelessEchoes.Buffs
                     if (tracker.CurrentRunDistance >= expireDist)
                         return false;
                 }
-                else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
-                {
-                    var baseMax = tracker.MaxRunDistance;
-                    var expireDist = baseMax + recipe.GetExtraDistance(baseMax);
-                    if (tracker.CurrentRunDistance >= expireDist)
-                        return false;
-                }
             }
 
             return true;
@@ -227,19 +232,13 @@ namespace TimelessEchoes.Buffs
             {
                 if (recipe.durationType == BuffDurationType.DistancePercent)
                     expireDist = tracker.LongestRun * recipe.GetDuration();
-                else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
-                {
-                    var baseMax = tracker.MaxRunDistance;
-                    expireDist = baseMax + recipe.GetExtraDistance(baseMax);
-                }
             }
 
             var buff = new ActiveBuff
             {
                 recipe = recipe,
                 effects = recipe.GetAggregatedEffects(),
-                remaining = (recipe.durationType == BuffDurationType.DistancePercent ||
-                             recipe.durationType == BuffDurationType.ExtraDistancePercent)
+                remaining = (recipe.durationType == BuffDurationType.DistancePercent)
                     ? float.PositiveInfinity
                     : recipe.GetDuration(),
                 expireAtDistance = expireDist
@@ -353,6 +352,19 @@ namespace TimelessEchoes.Buffs
                 foreach (var b in activeBuffs)
                     foreach (var eff in b.effects)
                         if (eff.type == BuffEffectType.LifestealPercent)
+                            percent += eff.value;
+                return percent;
+            }
+        }
+
+        public float CritChancePercent
+        {
+            get
+            {
+                var percent = 0f;
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.CritChancePercent)
                             percent += eff.value;
                 return percent;
             }
@@ -508,8 +520,7 @@ namespace TimelessEchoes.Buffs
                 if (heroX >= buff.expireAtDistance)
                 {
                     var startCooldown = buff.recipe == null ||
-                                        (buff.recipe.durationType != BuffDurationType.DistancePercent &&
-                                         buff.recipe.durationType != BuffDurationType.ExtraDistancePercent);
+                                        (buff.recipe.durationType != BuffDurationType.DistancePercent);
                     // Distance-based buffs that expire from distance do not start their cooldown.
                     RemoveBuffAt(i, startCooldown);
                 }

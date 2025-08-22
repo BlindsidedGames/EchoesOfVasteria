@@ -110,16 +110,19 @@ namespace TimelessEchoes.NpcGeneration
 
             if (collectionRateText != null && res != null)
             {
+                var cm = CauldronManager.Instance ?? Object.FindFirstObjectByType<CauldronManager>();
+                var mult = cm != null ? cm.GetResourceAlterEchoMultiplier(res.name) : 1f;
+                var cardPct = Mathf.Max(0f, (mult - 1f) * 100f);
                 if (generator.Interval > 0)
                 {
                     var showDecimal = generator.Interval < 60f;
                     var time = CalcUtils.FormatTime(generator.Interval, showDecimal: showDecimal, shortForm: true);
                     collectionRateText.text =
-                        $"{CalcUtils.FormatNumber(generator.CycleAmount, true)} / {time}";
+                        $"{CalcUtils.FormatNumber(generator.CycleAmount, true)} / {time} +{cardPct:0}% Card Power";
                 }
                 else
                 {
-                    collectionRateText.text = CalcUtils.FormatNumber(0, true);
+                    collectionRateText.text = $"{CalcUtils.FormatNumber(0, true)} +{cardPct:0}% Card Power";
                 }
             }
 
@@ -127,6 +130,8 @@ namespace TimelessEchoes.NpcGeneration
             {
                 collectButton.interactable = generator.GetStoredAmount(res) > 0;
             }
+
         }
+
     }
 }

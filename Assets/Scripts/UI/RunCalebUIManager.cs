@@ -155,6 +155,9 @@ namespace TimelessEchoes.UI
                     critChance = critDef.isPercent ? raw : raw * 100f;
                 }
             }
+            // Add buff crit percent on top of gear
+            if (buffManager != null)
+                critChance += Mathf.Max(0f, buffManager.CritChancePercent);
             var controller = StatUpgradeController.Instance;
             var regenUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
             float upgradeRegen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;

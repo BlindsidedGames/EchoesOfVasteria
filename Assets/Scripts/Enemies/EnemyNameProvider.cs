@@ -15,13 +15,15 @@ namespace TimelessEchoes.Enemies
             "The Wize",
             "MatHeadGetz",
             "Latimer Cross",
+            "Kr4yon5",
+            "Leroy Jenkins",
         };
 
         /// <summary>
         /// Chance (0-1) that an enemy will use a special name.
         /// Defaults to 1 in 100.
         /// </summary>
-        public static float SpecialNameChance = 0.01f;
+        public static float SpecialNameChance = 0.02f;
 
         /// <summary>
         /// Returns either the provided default name or a special name.

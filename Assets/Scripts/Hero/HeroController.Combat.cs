@@ -271,6 +271,11 @@ namespace TimelessEchoes.Hero
                     }
                 }
 
+                // Add crit chance from active buffs (percent value)
+                var buffMgr = buffController != null ? buffController : FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+                if (buffMgr != null)
+                    critChance += Mathf.Max(0f, buffMgr.CritChancePercent) / 100f;
+
                 bool isCritical = false;
                 if (critChance > 0f && Random.value < Mathf.Clamp01(critChance))
                 {

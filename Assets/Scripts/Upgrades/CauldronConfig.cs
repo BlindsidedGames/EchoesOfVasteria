@@ -26,23 +26,44 @@ namespace TimelessEchoes.Upgrades
 
 		[Header("Weights (Base/PerLevel)")]
 		public WeightedValue weightNothing;
-		public WeightedValue weightAlterEchoCard;
+		// Legacy single Alter-Echo weight (kept for backward compatibility; not used when subcategories are present)
 		public WeightedValue weightBuffCard;
 		public WeightedValue weightLowestCountCard;
 		public WeightedValue weightEvasBlessingX2;
 		public WeightedValue weightVastSurgeX10;
 
+		// Alter-Echo subcategory weights
+		public WeightedValue weightAEFarming;
+		public WeightedValue weightAEFishing;
+		public WeightedValue weightAEMining;
+		public WeightedValue weightAEWoodcutting;
+		public WeightedValue weightAECombat;
+		public WeightedValue weightAELooting;
+
 		public Color sliceNothing = new Color(0.3f, 0.3f, 0.3f);
-		public Color sliceAlterEcho = new Color(0.2f, 0.7f, 1f);
 		public Color sliceBuff = new Color(0.9f, 0.7f, 0.2f);
 		public Color sliceLowest = new Color(0.6f, 0.9f, 0.3f);
 		public Color sliceEvas = new Color(0.8f, 0.4f, 1f);
 		public Color sliceVast = new Color(1f, 0.3f, 0.3f);
 
+		// Alter-Echo subcategory slice colors
+		public Color sliceAEFarming = new Color(0.20f, 0.70f, 1.00f);
+		public Color sliceAEFishing = new Color(0.20f, 0.55f, 0.95f);
+		public Color sliceAEMining = new Color(0.15f, 0.40f, 0.85f);
+		public Color sliceAEWoodcutting = new Color(0.10f, 0.30f, 0.75f);
+		public Color sliceAECombat = new Color(0.05f, 0.20f, 0.65f);
+		public Color sliceAELooting = new Color(0.12f, 0.65f, 0.85f);
+
 		public float GetTotalWeight(int evaLevel)
 		{
+			// Sum all categories including AE subcategories
 			return weightNothing.Evaluate(evaLevel)
-			       + weightAlterEchoCard.Evaluate(evaLevel)
+			       + weightAEFarming.Evaluate(evaLevel)
+			       + weightAEFishing.Evaluate(evaLevel)
+			       + weightAEMining.Evaluate(evaLevel)
+			       + weightAEWoodcutting.Evaluate(evaLevel)
+			       + weightAECombat.Evaluate(evaLevel)
+			       + weightAELooting.Evaluate(evaLevel)
 			       + weightBuffCard.Evaluate(evaLevel)
 			       + weightLowestCountCard.Evaluate(evaLevel)
 			       + weightEvasBlessingX2.Evaluate(evaLevel)

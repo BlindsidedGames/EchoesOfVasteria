@@ -49,6 +49,8 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
         [SerializeField] [Space] private Button closeButton;
+        [SerializeField] [Space] private Button townsfolkButton;
+        [SerializeField] [Space] private GameObject townsfolkDropdown;
 
         private bool _rightMouseWasDown;
 
@@ -84,6 +86,8 @@ namespace TimelessEchoes.UI
                 forgeInfoButton.onClick.AddListener(ToggleForgeInfo);
             if (closeButton != null)
                 closeButton.onClick.AddListener(CloseAllWindows);
+            if (townsfolkButton != null)
+                townsfolkButton.onClick.AddListener(ToggleTownsfolkDropdown);
         }
 
         private void OnEnable()
@@ -133,6 +137,8 @@ namespace TimelessEchoes.UI
                 forgeInfoButton.onClick.RemoveListener(ToggleForgeInfo);
             if (closeButton != null)
                 closeButton.onClick.RemoveListener(CloseAllWindows);
+            if (townsfolkButton != null)
+                townsfolkButton.onClick.RemoveListener(ToggleTownsfolkDropdown);
             if (Instance == this)
                 Instance = null;
         }
@@ -281,6 +287,21 @@ namespace TimelessEchoes.UI
                 forgeInfoButtonText.text = showInventory ? "Info" : "Inventory";
         }
 
+        private void ToggleTownsfolkDropdown()
+        {
+            if (townsfolkDropdown == null)
+                return;
+
+            var newActive = !townsfolkDropdown.activeSelf;
+            townsfolkDropdown.SetActive(newActive);
+        }
+
+        private void CloseTownsfolkDropdown()
+        {
+            if (townsfolkDropdown != null && townsfolkDropdown.activeSelf)
+                townsfolkDropdown.SetActive(false);
+        }
+
         public void CloseForgeInfo()
         {
             if (forgeInfo != null)
@@ -293,6 +314,9 @@ namespace TimelessEchoes.UI
                 return;
 
             var windowWasActive = reference.window.activeSelf;
+
+            // Close the townsfolk dropdown when any other button is pressed
+            CloseTownsfolkDropdown();
 
             CloseAllWindows();
 
@@ -342,6 +366,7 @@ namespace TimelessEchoes.UI
                 autoPin.SetActive(false);
             if (stopOnVastium != null)
                 stopOnVastium.SetActive(false);
+            CloseTownsfolkDropdown();
 
             EnableAllWindowButtons();
             UpdateTownButtonsVisibility();

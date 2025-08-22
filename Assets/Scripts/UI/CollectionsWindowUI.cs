@@ -56,21 +56,7 @@ namespace TimelessEchoes.UI
 			UIUtils.ClearChildren(parent);
 			itemById.Clear();
 
-			// Alter-Echoes section
-			var secAE = Instantiate(sectionPrefab, parent);
-			if (secAE.titleText != null) secAE.titleText.text = "Alter-Echoes";
-			foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
-			{
-				if (res == null || res.DisableAlterEcho) continue;
-				var ui = Instantiate(itemPrefab, secAE.contentTransform);
-				ui.nameText.text = res.name;
-				ui.iconImage.sprite = res.UnknownIcon; // default to unknown
-				var id = $"RES:{res.name}";
-				itemById[id] = ui;
-				UpdateItemCount(id);
-			}
-
-			// Buffs section
+			// Buffs section first
 			var secB = Instantiate(sectionPrefab, parent);
 			if (secB.titleText != null) secB.titleText.text = "Buffs";
 			foreach (var buff in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>(""))
@@ -83,6 +69,55 @@ namespace TimelessEchoes.UI
 				itemById[id] = ui;
 				UpdateItemCount(id);
 			}
+
+			// Alter-Echoes split into subcategories
+			var cm = CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			var sections = new Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences>();
+			// Create sections in desired order
+			var orderedGroups = new[]
+			{
+				CauldronManager.AEResourceGroup.Farming,
+				CauldronManager.AEResourceGroup.Fishing,
+				CauldronManager.AEResourceGroup.Mining,
+				CauldronManager.AEResourceGroup.Woodcutting,
+				CauldronManager.AEResourceGroup.Looting,
+				CauldronManager.AEResourceGroup.Combat
+			};
+			foreach (var g in orderedGroups)
+			{
+				var sec = Instantiate(sectionPrefab, parent);
+				if (sec.titleText != null)
+					sec.titleText.text = g switch
+					{
+						CauldronManager.AEResourceGroup.Farming => "Alter-Echoes — Farming",
+						CauldronManager.AEResourceGroup.Fishing => "Alter-Echoes — Fishing",
+						CauldronManager.AEResourceGroup.Mining => "Alter-Echoes — Mining",
+						CauldronManager.AEResourceGroup.Woodcutting => "Alter-Echoes — Woodcutting",
+						CauldronManager.AEResourceGroup.Looting => "Alter-Echoes — Looting",
+						_ => "Alter-Echoes — Combat"
+					};
+				sections[g] = sec;
+			}
+
+			var allRes = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
+				.Where(r => r != null && !r.DisableAlterEcho)
+				.OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+				.ThenBy(r => r.name)
+				.ToList();
+			foreach (var res in allRes)
+			{
+				var grp = cm != null ? cm.GetResourceGroup(res) : CauldronManager.AEResourceGroup.Combat;
+				if (!sections.TryGetValue(grp, out var sec) || sec == null) continue;
+				var ui = Instantiate(itemPrefab, sec.contentTransform);
+				// Show plain resource name only
+				ui.nameText.text = res.name;
+				ui.iconImage.sprite = res.UnknownIcon; // default to unknown
+				var key = $"RES:{res.name}";
+				itemById[key] = ui;
+				UpdateItemCount(key);
+			}
+
+			// (Buffs were added first above)
 		}
 
 		private void OnCardGained(string id, int amt)
@@ -119,8 +154,14 @@ namespace TimelessEchoes.UI
 			{
 				var resName = id.Substring(4);
 				var res = Blindsided.Utilities.AssetCache.GetAll<Resource>("").FirstOrDefault(r => r != null && r.name == resName);
-				if (res != null && ui.iconImage != null)
-					ui.iconImage.sprite = count > 0 ? res.icon : res.UnknownIcon;
+				if (res != null)
+				{
+					if (ui.iconImage != null)
+						ui.iconImage.sprite = count > 0 ? res.icon : res.UnknownIcon;
+					// Keep card name as plain resource name (no AE percent here)
+					if (ui.nameText != null)
+						ui.nameText.text = res.name;
+				}
 			}
 			// Tier images (placeholder: compute tier index later when thresholds are available)
 			if (ui.tierImage != null || ui.borderTierImage != null)

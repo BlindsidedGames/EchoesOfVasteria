@@ -14,12 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rollsPerSecond: 10
   stewPerRoll: 1
+  resourceTierThresholds: 0100000005000000140000003200000064000000c80000005e010000f4010000
+  buffTierThresholds: 01000000030000000a000000190000003200000064000000c80000002c010000
+  resourcePowerBonusPerTier:
+  - 10
+  - 25
+  - 50
+  - 75
+  - 120
+  - 180
+  - 250
+  - 400
+  buffCooldownReductionPerTier:
+  - 5
+  - 10
+  - 15
+  - 25
+  - 40
+  - 60
+  - 80
+  - 100
+  buffPowerBonusPerTier:
+  - 0
+  - 0
+  - 5
+  - 10
+  - 15
+  - 20
+  - 25
+  - 30
   weightNothing:
-    baseWeight: 20
-    weightPerLevel: 0
-  weightAlterEchoCard:
-    baseWeight: 30
-    weightPerLevel: 1
+    baseWeight: 500
+    weightPerLevel: -10
   weightBuffCard:
     baseWeight: 25
     weightPerLevel: 1
@@ -32,9 +58,32 @@ MonoBehaviour:
   weightVastSurgeX10:
     baseWeight: 5
     weightPerLevel: 0.1
+  weightAEFarming:
+    baseWeight: 100
+    weightPerLevel: 0
+  weightAEFishing:
+    baseWeight: 100
+    weightPerLevel: 0
+  weightAEMining:
+    baseWeight: 100
+    weightPerLevel: 0
+  weightAEWoodcutting:
+    baseWeight: 100
+    weightPerLevel: 0
+  weightAECombat:
+    baseWeight: 100
+    weightPerLevel: 0
+  weightAELooting:
+    baseWeight: 100
+    weightPerLevel: 0
   sliceNothing: {r: 0.3, g: 0.3, b: 0.3, a: 1}
-  sliceAlterEcho: {r: 0.2, g: 0.7, b: 1, a: 1}
   sliceBuff: {r: 0.9, g: 0.7, b: 0.2, a: 1}
   sliceLowest: {r: 0.6, g: 0.9, b: 0.3, a: 1}
   sliceEvas: {r: 0.8, g: 0.4, b: 1, a: 1}
   sliceVast: {r: 1, g: 0.3, b: 0.3, a: 1}
+  sliceAEFarming: {r: 0.2, g: 0.7, b: 1, a: 1}
+  sliceAEFishing: {r: 0.2, g: 0.55, b: 0.95, a: 1}
+  sliceAEMining: {r: 0.15, g: 0.4, b: 0.85, a: 1}
+  sliceAEWoodcutting: {r: 0.1, g: 0.3, b: 0.75, a: 1}
+  sliceAECombat: {r: 0.05, g: 0.2, b: 0.65, a: 1}
+  sliceAELooting: {r: 0.12, g: 0.65, b: 0.85, a: 1}

@@ -27,7 +27,6 @@ namespace TimelessEchoes.Buffs
         public BuffDurationType durationType = BuffDurationType.Time;
 
         [TitleGroup("General")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0f)]
         public float baseDuration = 30f;
 
@@ -36,12 +35,10 @@ namespace TimelessEchoes.Buffs
         public float baseCooldown = 60f;
 
         [TitleGroup("General")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [MinValue(0)]
         public int baseEchoCount;
 
         [TitleGroup("General")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         [SerializeField]
         public TimelessEchoes.EchoSpawnConfig echoConfig;
 
@@ -49,20 +46,12 @@ namespace TimelessEchoes.Buffs
         public QuestData requiredQuest;
 
         [TitleGroup("Effects")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         public List<BuffEffect> baseEffects = new();
 
         [TitleGroup("Upgrades")]
-        [HideIf("@durationType == BuffDurationType.ExtraDistancePercent")]
         public List<BuffUpgrade> upgrades = new();
 
-        [TitleGroup("Extra Distance")]
-        [ShowIf("@durationType == BuffDurationType.ExtraDistancePercent")]
-        public List<BuffEffect> extraDistanceEffects = new();
-
-        [TitleGroup("Extra Distance")]
-        [ShowIf("@durationType == BuffDurationType.ExtraDistancePercent")]
-        public List<BuffUpgrade> extraDistanceUpgrades = new();
+        // Removed Extra Distance-specific fields
 
         public string GetDisplayName()
         {
@@ -74,8 +63,7 @@ namespace TimelessEchoes.Buffs
             var level = 0;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm == null) return 0;
-            var upgradeList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceUpgrades : upgrades;
-            foreach (var up in upgradeList)
+            foreach (var up in upgrades)
             {
                 if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                     level++;
@@ -87,7 +75,6 @@ namespace TimelessEchoes.Buffs
         {
             public float durationMultiplier;          // Multiplier for time-based durations
             public float distanceFractionAdd;         // Additive fraction for DistancePercent (e.g., +0.3)
-            public float extraDistancePercentAdd;     // Additive percent points for ExtraDistancePercent (e.g., +30)
             public float effectValueMultiplier;       // Multiplier for non-distance effect values
         }
 
@@ -102,7 +89,6 @@ namespace TimelessEchoes.Buffs
             {
                 durationMultiplier = 1f,
                 distanceFractionAdd = 0f,
-                extraDistancePercentAdd = 0f,
                 effectValueMultiplier = 1f
             };
 
@@ -112,11 +98,6 @@ namespace TimelessEchoes.Buffs
             if (durationType == BuffDurationType.DistancePercent)
             {
                 policy.distanceFractionAdd = power / 100f; // add absolute percent points to fraction
-                policy.effectValueMultiplier = 1f + power / 100f;
-            }
-            else if (durationType == BuffDurationType.ExtraDistancePercent)
-            {
-                policy.extraDistancePercentAdd = power;     // add absolute percent points to extra distance
                 policy.effectValueMultiplier = 1f + power / 100f;
             }
             else
@@ -131,8 +112,7 @@ namespace TimelessEchoes.Buffs
         public List<BuffEffect> GetAggregatedEffects()
         {
             var dict = new Dictionary<BuffEffectType, float>();
-            var effList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceEffects : baseEffects;
-            foreach (var eff in effList)
+            foreach (var eff in baseEffects)
             {
                 if (dict.ContainsKey(eff.type))
                     dict[eff.type] += eff.value;
@@ -143,8 +123,7 @@ namespace TimelessEchoes.Buffs
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
             {
-                var upgradeList = durationType == BuffDurationType.ExtraDistancePercent ? extraDistanceUpgrades : upgrades;
-                foreach (var up in upgradeList)
+                foreach (var up in upgrades)
                 {
                     if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
                         continue;
@@ -174,8 +153,6 @@ namespace TimelessEchoes.Buffs
 
         public int GetEchoCount()
         {
-            if (durationType == BuffDurationType.ExtraDistancePercent)
-                return 0;
             var count = baseEchoCount;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
@@ -191,8 +168,6 @@ namespace TimelessEchoes.Buffs
 
         public float GetDuration()
         {
-            if (durationType == BuffDurationType.ExtraDistancePercent)
-                return 0f;
             var duration = baseDuration;
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
@@ -218,10 +193,7 @@ namespace TimelessEchoes.Buffs
             var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
             if (qm != null)
             {
-                var upgradeList = durationType == BuffDurationType.ExtraDistancePercent
-                    ? extraDistanceUpgrades
-                    : upgrades;
-                foreach (var up in upgradeList)
+                foreach (var up in upgrades)
                 {
                     if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                         cooldown += up.cooldownDelta;
@@ -239,22 +211,7 @@ namespace TimelessEchoes.Buffs
             return cooldown;
         }
 
-        public float GetExtraDistance(float baseDistance)
-        {
-            var percent = 0f;
-            var flat = 0f;
-            foreach (var eff in GetAggregatedEffects())
-            {
-                if (eff.type == BuffEffectType.MaxDistancePercent)
-                    percent += eff.value;
-                else if (eff.type == BuffEffectType.MaxDistanceIncrease)
-                    flat += eff.value;
-            }
-            // Apply power via policy
-            var policy = ComputePowerPolicy();
-            percent += Mathf.Max(0f, policy.extraDistancePercentAdd);
-            return baseDistance * percent / 100f + flat;
-        }
+        // Removed GetExtraDistance; extra distance percent duration is no longer supported
 
         public List<string> GetDescriptionLines()
         {
@@ -276,21 +233,14 @@ namespace TimelessEchoes.Buffs
                 lines.Add(string.Join(", ", effectStrings.GetRange(i, count)));
             }
 
-            if (durationType == BuffDurationType.ExtraDistancePercent)
-            {
-                var tracker = GameplayStatTracker.Instance ??
-                              UnityEngine.Object.FindFirstObjectByType<GameplayStatTracker>();
-                var baseDist = tracker != null ? tracker.MaxRunDistance : 0f;
-                var extra = Mathf.CeilToInt(GetExtraDistance(baseDist));
-                lines.Add($"Total Extra Distance: +{extra}");
-            }
+            // Removed Extra Distance-specific description
 
             var echoCount = GetEchoCount();
             if (echoCount > 0)
                 lines.Add($"Echoes: {echoCount}");
             if (durationType == BuffDurationType.DistancePercent)
                 lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
-            else if (durationType != BuffDurationType.ExtraDistancePercent)
+            else
                 lines.Add(
                     $"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}, " +
                     $"Cooldown: {CalcUtils.FormatTime(GetCooldown(), shortForm: true)}");
@@ -310,6 +260,8 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
                 BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
                 BuffEffectType.InstantTasks => "Tasks complete instantly",
+                BuffEffectType.DoubleResources => "Resources doubled",
+                BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
                 _ => string.Empty
             };
         }

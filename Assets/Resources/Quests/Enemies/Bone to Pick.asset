@@ -53,12 +53,10 @@ MonoBehaviour:
     killName: Skeleton Mages
     killIcon: {fileID: 7755512622975735135, guid: 7b3a664246d6a94499b2eaa4786e8cf9, type: 3}
     meetNpcId: 
-  rewards:
-  - resource: {fileID: 11400000, guid: 416796f474e145744b71c52fa8da1e8a, type: 2}
-    amount: 1000
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
-  maxDistanceIncrease: 0
+  maxDistanceIncrease: 150
   disciplePercentReward: 0
   unlocksBuff: 0
   upgradesBuff: 0

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Buffs;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
@@ -50,6 +51,10 @@ namespace TimelessEchoes.Tasks
                     float resourceMult = skillController.GetResourceGainMultiplier();
                     final = res.count * mult * resourceMult;
                 }
+
+                var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                if (buff != null && buff.DoubleResourcesActive)
+                    final *= 2;
 
                 resourceManager.Add(res.resource, final);
                 if (dropTotals.ContainsKey(res.resource))

@@ -244,6 +244,7 @@ namespace TimelessEchoes.Stats
                 map.TasksCompleted++;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
+            SteamLeaderboardsReporter.Instance?.RequestUploadNow();
 #endif
         }
 
@@ -538,6 +539,7 @@ namespace TimelessEchoes.Stats
             CurrentRunSteps = 0f;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
+            SteamLeaderboardsReporter.Instance?.RequestUploadNow();
 #endif
         }
 

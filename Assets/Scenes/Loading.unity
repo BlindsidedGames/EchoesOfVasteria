@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &159018874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 159018876}
+  - component: {fileID: 159018875}
+  m_Layer: 0
+  m_Name: SteamLeaderboardManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &159018875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159018874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2b13acd128b8045bb16dd0ff24123c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.SteamLeaderboardsReporter
+  updateInterval: 5
+--- !u!4 &159018876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159018874}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -81.6156, y: 14.92036, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &247430794
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,7 +429,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -392,6 +436,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &436060083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,10 +2389,13 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: EquipmentBySlot
+    - Name: RetroQuestRewardsApplied
       Entry: 6
       Data: 
-    - Name: CraftHistory
+    - Name: RetroQuestRewardsPassRan
+      Entry: 5
+      Data: false
+    - Name: EquipmentBySlot
       Entry: 6
       Data: 
     - Name: CraftingMasteryLevel
@@ -2356,10 +2404,10 @@ MonoBehaviour:
     - Name: CraftingMasteryXP
       Entry: 4
       Data: 0
-    - Name: PityCraftsSinceLast
-      Entry: 3
-      Data: 0
     - Name: PinnedQuests
+      Entry: 6
+      Data: 
+    - Name: Forge
       Entry: 6
       Data: 
     - Name: TaskRecords
@@ -2491,6 +2539,24 @@ MonoBehaviour:
     - Name: DisciplePercent
       Entry: 4
       Data: 0
+    - Name: CauldronStew
+      Entry: 4
+      Data: 0
+    - Name: CauldronEvaLevel
+      Entry: 3
+      Data: 0
+    - Name: CauldronEvaXp
+      Entry: 4
+      Data: 0
+    - Name: CauldronCardCounts
+      Entry: 6
+      Data: 
+    - Name: CauldronShowAllCards
+      Entry: 5
+      Data: false
+    - Name: CauldronTotals
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2918,5 +2984,6 @@ SceneRoots:
   - {fileID: 1629561173}
   - {fileID: 1771861787}
   - {fileID: 1170292370}
+  - {fileID: 159018876}
   - {fileID: 1159035180}
   - {fileID: 894741052}

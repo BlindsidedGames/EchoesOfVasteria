@@ -52,6 +52,11 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]
         public Dictionary<string, QuestRecord> Quests = new();
 
+        [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]
+        public HashSet<string> RetroQuestRewardsApplied = new();
+
+        [TabGroup("GameDataTabs", "Quests")] public bool RetroQuestRewardsPassRan;
+
         // --- Gear system (phase 1) ---
         [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Gear")]
         public Dictionary<string, GearItemRecord> EquipmentBySlot = new();
@@ -116,6 +121,13 @@ namespace Blindsided.SaveData
             public int LowCards;
             public int EvasBlessing;
             public int VastSurge;
+            // Alter-Echo subcategory totals
+            public int AEFarming;
+            public int AEFishing;
+            public int AEMining;
+            public int AEWoodcutting;
+            public int AELooting;
+            public int AECombat;
         }
 
         [HideReferenceObjectPicker]

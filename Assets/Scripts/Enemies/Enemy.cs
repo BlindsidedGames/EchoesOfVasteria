@@ -7,6 +7,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Buffs;
 using Blindsided.SaveData;
 using TMPro;
 using UnityEngine;
@@ -360,6 +361,9 @@ namespace TimelessEchoes.Enemies
             foreach (var res in results)
             {
                 double final = res.count * mult * gainMult;
+                var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                if (buff != null && buff.DoubleResourcesActive)
+                    final *= 2;
                 resourceManager.Add(res.resource, final);
                 Log($"Dropped {final} {res.resource.name}", TELogCategory.Resource, this);
                 if (dropTotals.ContainsKey(res.resource))

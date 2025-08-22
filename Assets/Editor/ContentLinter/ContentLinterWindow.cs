@@ -492,14 +492,7 @@ namespace TimelessEchoes.EditorTools
                 // (Unity ensures object refs are either valid or null, so we only check list-like scenarios in BuffRecipe if needed.)
 
                 // Duration sanity hints
-                if (b.durationType == BuffDurationType.ExtraDistancePercent && (b.extraDistanceEffects == null || b.extraDistanceEffects.Count == 0))
-                {
-                    AddIssue("Buffs", Severity.Warning,
-                        $"Buff '{b.name}' uses ExtraDistancePercent but has no extraDistanceEffects",
-                        b, fix: null);
-                }
-
-                if (b.durationType != BuffDurationType.ExtraDistancePercent && (b.baseEffects == null || b.baseEffects.Count == 0))
+                if (b.baseEffects == null || b.baseEffects.Count == 0)
                 {
                     AddIssue("Buffs", Severity.Info,
                         $"Buff '{b.name}' has no baseEffects (durationType: {b.durationType})",

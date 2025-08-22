@@ -97,12 +97,6 @@ namespace TimelessEchoes.Buffs
                         expireDist = tracker.LongestRun * recipe.GetDuration();
                         distanceOk = tracker.CurrentRunDistance < expireDist;
                     }
-                    else if (recipe.durationType == BuffDurationType.ExtraDistancePercent)
-                    {
-                        expireDist = tracker.MaxRunDistance +
-                                     recipe.GetExtraDistance(tracker.MaxRunDistance);
-                        distanceOk = tracker.CurrentRunDistance < expireDist;
-                    }
                 }
 
                 if (ui.iconImage != null)
@@ -176,65 +170,7 @@ namespace TimelessEchoes.Buffs
                                     ui.radialFillImage.fillAmount = 0f;
                             }
                         }
-                        else if (recipe != null && tracker != null &&
-                                 recipe.durationType == BuffDurationType.ExtraDistancePercent &&
-                                 recipe.GetAggregatedEffects().Exists(e =>
-                                     e.type == BuffEffectType.MaxDistancePercent ||
-                                     e.type == BuffEffectType.MaxDistanceIncrease))
-                        {
-                            if (!distanceOk)
-                            {
-                                ui.durationText.text = "Too Far";
-                                if (ui.radialFillImage != null)
-                                    ui.radialFillImage.fillAmount = 0f;
-                            }
-                            else if (remain > 0f)
-                            {
-                                var baseMax = tracker.MaxRunDistance;
-                                var totalExtra = expireDist - baseMax;
-                                if (tracker.CurrentRunDistance < baseMax)
-                                {
-                                    ui.durationText.text = "Active";
-                                    if (ui.radialFillImage != null)
-                                        ui.radialFillImage.fillAmount = 0f;
-                                }
-                                else
-                                {
-                                    var remainExtra = expireDist - tracker.CurrentRunDistance;
-                                    if (remainExtra > 0f)
-                                    {
-                                        ui.durationText.text = FormatNumber(remainExtra, true);
-                                        if (ui.radialFillImage != null)
-                                            // Use remaining distance so the radial fill drains instead of grows.
-                                            ui.radialFillImage.fillAmount = totalExtra > 0f
-                                                ? Mathf.Clamp01(remainExtra / totalExtra)
-                                                : 0f;
-                                    }
-                                    else
-                                    {
-                                        ui.durationText.text = string.Empty;
-                                        if (ui.radialFillImage != null)
-                                            ui.radialFillImage.fillAmount = 0f;
-                                    }
-                                }
-                            }
-                            else if (cooldown > 0f)
-                            {
-                                ui.durationText.text = FormatTime(cooldown, cooldown < 10f, shortForm: true);
-                                if (ui.cooldownRadialFillImage != null)
-                                    ui.cooldownRadialFillImage.fillAmount = recipe != null
-                                        ? Mathf.Clamp01(1f - cooldown / recipe.GetCooldown())
-                                        : 0f;
-                                if (ui.radialFillImage != null)
-                                    ui.radialFillImage.fillAmount = 0f;
-                            }
-                            else
-                            {
-                                ui.durationText.text = string.Empty;
-                                if (ui.radialFillImage != null)
-                                    ui.radialFillImage.fillAmount = 0f;
-                            }
-                        }
+                        // Removed ExtraDistancePercent UI handling
                         else if (!distanceOk)
                         {
                             ui.durationText.text = "Too Far";
@@ -278,8 +214,6 @@ namespace TimelessEchoes.Buffs
             buffManager = BuffManager.Instance;
             if (buffManager == null)
                 Log("BuffManager missing", TELogCategory.Buff, this);
-
-            BuildRecipeEntries();
 
             OnLoadData += OnLoadDataHandler;
             OnQuestHandin += OnQuestHandinHandler;

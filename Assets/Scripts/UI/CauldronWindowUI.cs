@@ -42,6 +42,9 @@ namespace TimelessEchoes.UI
 		[Header("Session Stats")]
 		[SerializeField] private TMP_Text statsText;
 
+		[Header("Weights Preview")]
+		[SerializeField] private TMP_Text weightsText;
+
 		[Header("Tier Sprites")] 
 		[SerializeField] private List<Sprite> tierSprites = new(); // 8 entries: index 0 used for unknown and tier 1
 		[SerializeField] private List<Sprite> borderTierSprites = new(); // 8 entries matching tiers
@@ -90,12 +93,15 @@ namespace TimelessEchoes.UI
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();
+			RefreshWeightsText();
 			if (cauldron != null)
 			{
 				cauldron.OnStewChanged += RefreshDrinkingTexts;
 				cauldron.OnWeightsChanged += RefreshPieChart;
+				cauldron.OnWeightsChanged += RefreshWeightsText;
 				cauldron.OnCardGained += OnCardGained;
 				cauldron.OnTasteSessionStarted += OnTasteSessionStarted;
+				cauldron.OnTasteSessionStopped += OnTasteSessionStopped;
 				cauldron.OnSessionCardsChanged += OnSessionCardsChanged;
 			}
 			// Handle switching save files gracefully (only on load)
@@ -111,8 +117,10 @@ namespace TimelessEchoes.UI
 			{
 				cauldron.OnStewChanged -= RefreshDrinkingTexts;
 				cauldron.OnWeightsChanged -= RefreshPieChart;
+				cauldron.OnWeightsChanged -= RefreshWeightsText;
 				cauldron.OnCardGained -= OnCardGained;
 				cauldron.OnTasteSessionStarted -= OnTasteSessionStarted;
+				cauldron.OnTasteSessionStopped -= OnTasteSessionStopped;
 				cauldron.OnSessionCardsChanged -= OnSessionCardsChanged;
 				cauldron.OnStatsChanged -= OnStatsChanged;
 			}
@@ -255,6 +263,7 @@ namespace TimelessEchoes.UI
 				if (evaXpText != null)
 					evaXpText.text = $"xp: {CalcUtils.FormatNumber(current)} / {CalcUtils.FormatNumber(needed)}";
 			}
+			UpdateTasteStopButtons();
 		}
 
 		private void OnSaveOrLoad()
@@ -262,6 +271,7 @@ namespace TimelessEchoes.UI
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();
+			RefreshWeightsText();
 			// Reset session counter on data reload
 			if (drinking != null && drinking.cardsGainedThisSessionText != null)
 				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
@@ -276,15 +286,42 @@ namespace TimelessEchoes.UI
 		{
 			if (config == null || oddsPieSlices == null || oddsPieSlices.Count == 0) return;
 			var lvl = cauldron != null ? cauldron.EvaLevel : 1;
-			var weights = new (Color c, float w)[]
+			// Prefer subcategory slices if configured; otherwise fall back to legacy single Alter-Echo slice
+			var hasSub = (config.weightAEFarming.Evaluate(lvl)
+				       + config.weightAEFishing.Evaluate(lvl)
+				       + config.weightAEMining.Evaluate(lvl)
+				       + config.weightAEWoodcutting.Evaluate(lvl)
+				       + config.weightAELooting.Evaluate(lvl)
+				       + config.weightAECombat.Evaluate(lvl)) > 0f;
+			(UnityEngine.Color c, float w)[] weights;
+			if (hasSub)
 			{
-				(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
-				(config.sliceAlterEcho, config.weightAlterEchoCard.Evaluate(lvl)),
-				(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
-				(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
-				(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
-				(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
-			};
+				weights = new (Color c, float w)[]
+				{
+					(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
+					(config.sliceAEFarming, config.weightAEFarming.Evaluate(lvl)),
+					(config.sliceAEFishing, config.weightAEFishing.Evaluate(lvl)),
+					(config.sliceAEMining, config.weightAEMining.Evaluate(lvl)),
+					(config.sliceAEWoodcutting, config.weightAEWoodcutting.Evaluate(lvl)),
+					(config.sliceAELooting, config.weightAELooting.Evaluate(lvl)),
+					(config.sliceAECombat, config.weightAECombat.Evaluate(lvl)),
+					(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
+					(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
+					(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
+					(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
+				};
+			}
+			else
+			{
+				weights = new (Color c, float w)[]
+				{
+					(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
+					(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
+					(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
+					(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
+					(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
+				};
+			}
 
 			var total = 0f;
 			for (var i = 0; i < weights.Length; i++) total += Mathf.Max(0f, weights[i].w);
@@ -345,6 +382,12 @@ namespace TimelessEchoes.UI
 			// Reset cards gained counter in UI
 			if (drinking != null && drinking.cardsGainedThisSessionText != null)
 				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
+			UpdateTasteStopButtons();
+		}
+
+		private void OnTasteSessionStopped()
+		{
+			UpdateTasteStopButtons();
 		}
 
 		private void OnSessionCardsChanged(int total)
@@ -357,17 +400,117 @@ namespace TimelessEchoes.UI
 		{
 			if (statsText == null) return;
 			// Use <b> headers and bullet character
-			statsText.text =
-				$"<b>Totals</b>\n" +
-				$"• Tastings: {s.tastings}\n" +
-				$"• Cards Gained: {s.cardsGained}\n" +
-				$"<b>Roll Distribution</b>\n" +
-				$"• Gained Nothing: {s.gainedNothing}\n" +
-				$"• Alter-Echo: {s.alterEcho}\n" +
-				$"• Buffs: {s.buffs}\n" +
-				$"• Low Cards: {s.lowCards}\n" +
-				$"• Eva's Blessing: {s.evasBlessing}\n" +
-				$"• The Vast One's Surge: {s.vastSurge}";
+			var hasSub = s.aeFarming + s.aeFishing + s.aeMining + s.aeWoodcutting + s.aeCombat > 0;
+			if (!hasSub)
+			{
+				statsText.text =
+					$"<b>Totals</b>\n" +
+					$"• Tastings: {s.tastings}\n" +
+					$"• Cards Gained: {s.cardsGained}\n" +
+					$"<b>Roll Distribution</b>\n" +
+					$"• Gained Nothing: {s.gainedNothing}\n" +
+					$"• Alter-Echo: {s.alterEcho}\n" +
+					$"• Buffs: {s.buffs}\n" +
+					$"• Low Cards: {s.lowCards}\n" +
+					$"• Eva's Blessing: {s.evasBlessing}\n" +
+					$"• The Vast One's Surge: {s.vastSurge}";
+			}
+			else
+			{
+				statsText.text =
+					$"<b>Totals</b>\n" +
+					$"• Tastings: {s.tastings}\n" +
+					$"• Cards Gained: {s.cardsGained}\n" +
+					$"<b>Roll Distribution</b>\n" +
+					$"• Gained Nothing: {s.gainedNothing}\n" +
+					$"• AE - Farming: {s.aeFarming}\n" +
+					$"• AE - Fishing: {s.aeFishing}\n" +
+					$"• AE - Mining: {s.aeMining}\n" +
+					$"• AE - Woodcutting: {s.aeWoodcutting}\n" +
+					$"• AE - Looting: {s.aeLooting}\n" +
+					$"• AE - Combat: {s.aeCombat}\n" +
+					$"• Buffs: {s.buffs}\n" +
+					$"• Low Cards: {s.lowCards}\n" +
+					$"• Eva's Blessing: {s.evasBlessing}\n" +
+					$"• The Vast One's Surge: {s.vastSurge}";
+			}
+		}
+
+		private void UpdateTasteStopButtons()
+		{
+			if (drinking == null || cauldron == null) return;
+			var isTasting = cauldron.IsTasting;
+			if (drinking.tasteButton != null) drinking.tasteButton.interactable = !isTasting;
+			if (drinking.stopButton != null) drinking.stopButton.interactable = isTasting;
+		}
+
+		private void RefreshWeightsText()
+		{
+			if (weightsText == null || config == null || cauldron == null) return;
+			var lvl = Mathf.Max(1, cauldron.EvaLevel);
+			var next = lvl + 1;
+
+			float wNothing = config.weightNothing.Evaluate(lvl);
+			float wAEF = config.weightAEFarming.Evaluate(lvl);
+			float wAEFi = config.weightAEFishing.Evaluate(lvl);
+			float wAEM = config.weightAEMining.Evaluate(lvl);
+			float wAEW = config.weightAEWoodcutting.Evaluate(lvl);
+			float wAEL = config.weightAELooting.Evaluate(lvl);
+			float wAEC = config.weightAECombat.Evaluate(lvl);
+			float wBuff = config.weightBuffCard.Evaluate(lvl);
+			float wLow = config.weightLowestCountCard.Evaluate(lvl);
+			float wX2 = config.weightEvasBlessingX2.Evaluate(lvl);
+			float wX10 = config.weightVastSurgeX10.Evaluate(lvl);
+
+			float tCurrent = wNothing + wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC + wBuff + wLow + wX2 + wX10;
+			if (tCurrent <= 0f) { weightsText.text = string.Empty; return; }
+
+			float nNothing = config.weightNothing.Evaluate(next);
+			float nAEF = config.weightAEFarming.Evaluate(next);
+			float nAEFi = config.weightAEFishing.Evaluate(next);
+			float nAEM = config.weightAEMining.Evaluate(next);
+			float nAEW = config.weightAEWoodcutting.Evaluate(next);
+			float nAEL = config.weightAELooting.Evaluate(next);
+			float nAEC = config.weightAECombat.Evaluate(next);
+			float nBuff = config.weightBuffCard.Evaluate(next);
+			float nLow = config.weightLowestCountCard.Evaluate(next);
+			float nX2 = config.weightEvasBlessingX2.Evaluate(next);
+			float nX10 = config.weightVastSurgeX10.Evaluate(next);
+
+			float tNext = nNothing + nAEF + nAEFi + nAEM + nAEW + nAEL + nAEC + nBuff + nLow + nX2 + nX10;
+			if (tNext <= 0f) tNext = 1f;
+
+			string Header() => "<b>Weights</b>\nCurrent<sprite=9 color=#4C4C4C>Next Level";
+			string ColorHex(Color c) => ColorUtility.ToHtmlStringRGB(c);
+			string Row(string label, float cur, float nxt, Color spriteColor)
+			{
+				var cp = Mathf.Clamp01(cur / tCurrent) * 100f;
+				var np = Mathf.Clamp01(nxt / tNext) * 100f;
+				var hex = ColorHex(spriteColor);
+				return $"\n{cp:0.##}%<sprite=9 color=#{hex}>{np:0.##}% • {label}";
+			}
+
+			// Determine if AE subcategories are present
+			bool hasAE = (wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC) > 0f;
+
+			var sb = new System.Text.StringBuilder();
+			sb.Append(Header());
+			sb.Append(Row("Nothing", wNothing, nNothing, config.sliceNothing));
+			if (hasAE)
+			{
+				sb.Append(Row("AE - Farming", wAEF, nAEF, config.sliceAEFarming));
+				sb.Append(Row("AE - Fishing", wAEFi, nAEFi, config.sliceAEFishing));
+				sb.Append(Row("AE - Mining", wAEM, nAEM, config.sliceAEMining));
+				sb.Append(Row("AE - Woodcutting", wAEW, nAEW, config.sliceAEWoodcutting));
+				sb.Append(Row("AE - Looting", wAEL, nAEL, config.sliceAELooting));
+				sb.Append(Row("AE - Combat", wAEC, nAEC, config.sliceAECombat));
+			}
+			sb.Append(Row("Buffs", wBuff, nBuff, config.sliceBuff));
+			sb.Append(Row("Lowest", wLow, nLow, config.sliceLowest));
+			sb.Append(Row("Eva's Blessing x2", wX2, nX2, config.sliceEvas));
+			sb.Append(Row("Vast Surge x10", wX10, nX10, config.sliceVast));
+
+			weightsText.text = sb.ToString();
 		}
 	}
 }

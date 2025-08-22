@@ -206,20 +206,8 @@ MonoBehaviour:
     IsBackgroundRecursive: 0
     IsHidden: 0
   - Type: 0
-    Key: Scripts
-    Ordinal: 16
-    Priority: 0
-    IconType: 510
-    SmallIcon: {fileID: 0}
-    LargeIcon: {fileID: 0}
-    IsIconRecursive: 1
-    BackgroundType: 0
-    BackgroundTexture: {fileID: 0}
-    IsBackgroundRecursive: 0
-    IsHidden: 0
-  - Type: 0
     Key: Shaders
-    Ordinal: 17
+    Ordinal: 16
     Priority: 0
     IconType: 2170
     SmallIcon: {fileID: 0}
@@ -231,7 +219,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Terrains
-    Ordinal: 18
+    Ordinal: 17
     Priority: 0
     IconType: 2180
     SmallIcon: {fileID: 0}
@@ -243,7 +231,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Textures
-    Ordinal: 19
+    Ordinal: 18
     Priority: 0
     IconType: 2190
     SmallIcon: {fileID: 0}
@@ -255,7 +243,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Physics
-    Ordinal: 20
+    Ordinal: 19
     Priority: 0
     IconType: 2090
     SmallIcon: {fileID: 0}
@@ -267,7 +255,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Flares
-    Ordinal: 21
+    Ordinal: 20
     Priority: 0
     IconType: 2050
     SmallIcon: {fileID: 0}
@@ -279,7 +267,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Android
-    Ordinal: 22
+    Ordinal: 21
     Priority: 0
     IconType: 3000
     SmallIcon: {fileID: 0}
@@ -291,7 +279,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: iOS
-    Ordinal: 23
+    Ordinal: 22
     Priority: 0
     IconType: 3010
     SmallIcon: {fileID: 0}
@@ -303,7 +291,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Windows
-    Ordinal: 24
+    Ordinal: 23
     Priority: 0
     IconType: 3040
     SmallIcon: {fileID: 0}
@@ -315,7 +303,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: Mac
-    Ordinal: 25
+    Ordinal: 24
     Priority: 0
     IconType: 3020
     SmallIcon: {fileID: 0}
@@ -327,7 +315,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 0
     Key: WebGL
-    Ordinal: 26
+    Ordinal: 25
     Priority: 0
     IconType: 3030
     SmallIcon: {fileID: 0}
@@ -339,7 +327,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Resources/Buffs
-    Ordinal: 27
+    Ordinal: 26
     Priority: 0
     IconType: 0
     SmallIcon: {fileID: 0}
@@ -351,7 +339,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Art/Packs/Cute_Fantasy_UI
-    Ordinal: 28
+    Ordinal: 27
     Priority: 0
     IconType: 0
     SmallIcon: {fileID: 0}
@@ -363,7 +351,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Resources/Gear
-    Ordinal: 29
+    Ordinal: 28
     Priority: 0
     IconType: 20
     SmallIcon: {fileID: 0}
@@ -375,7 +363,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Resources/Quests
-    Ordinal: 30
+    Ordinal: 29
     Priority: 0
     IconType: 120
     SmallIcon: {fileID: 0}
@@ -387,7 +375,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Resources/Resource Items
-    Ordinal: 31
+    Ordinal: 30
     Priority: 0
     IconType: 50
     SmallIcon: {fileID: 0}
@@ -399,7 +387,7 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Resources/Tasks
-    Ordinal: 32
+    Ordinal: 31
     Priority: 0
     IconType: 170
     SmallIcon: {fileID: 0}
@@ -411,13 +399,25 @@ MonoBehaviour:
     IsHidden: 0
   - Type: 1
     Key: Assets/Art
-    Ordinal: 33
+    Ordinal: 32
     Priority: 0
     IconType: 1140
     SmallIcon: {fileID: 0}
     LargeIcon: {fileID: 0}
     IsIconRecursive: 1
     BackgroundType: 0
+    BackgroundTexture: {fileID: 0}
+    IsBackgroundRecursive: 0
+    IsHidden: 0
+  - Type: 1
+    Key: Assets/Scripts
+    Ordinal: 33
+    Priority: 0
+    IconType: 120
+    SmallIcon: {fileID: 0}
+    LargeIcon: {fileID: 0}
+    IsIconRecursive: 0
+    BackgroundType: 120
     BackgroundTexture: {fileID: 0}
     IsBackgroundRecursive: 0
     IsHidden: 0

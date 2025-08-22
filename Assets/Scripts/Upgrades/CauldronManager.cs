@@ -27,11 +27,23 @@ namespace TimelessEchoes.Upgrades
         private int sessionCardsGained;
         private int sessionTastings;
         private int countNothing;
-        private int countAlterEcho;
+        private int countAlterEcho; // legacy total (sum of subcategories)
         private int countBuffs;
         private int countLowCards;
         private int countEvasBlessing;
         private int countVastSurge;
+
+        // Per-AE-subcategory session counters
+        private int countAEFarming;
+        private int countAEFishing;
+        private int countAEMining;
+        private int countAEWoodcutting;
+        private int countAECombat;
+
+        // Mapping of resources into AE subcategories, built lazily
+        public enum AEResourceGroup { Farming, Fishing, Mining, Woodcutting, Looting, Combat }
+        private readonly Dictionary<Resource, AEResourceGroup> resourceGroupMap = new();
+        private readonly Dictionary<AEResourceGroup, List<string>> cachedGroupPools = new(); // group -> RES:<name>
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
@@ -51,6 +63,13 @@ namespace TimelessEchoes.Upgrades
             public int lowCards;
             public int evasBlessing;
             public int vastSurge;
+            // AE subcategories (persisted totals)
+            public int aeFarming;
+            public int aeFishing;
+            public int aeMining;
+            public int aeWoodcutting;
+            public int aeLooting;
+            public int aeCombat;
         }
 
         private TastingStats GetStatsSnapshot()
@@ -65,7 +84,13 @@ namespace TimelessEchoes.Upgrades
                 buffs = oracle != null ? oracle.saveData.CauldronTotals.Buffs : 0,
                 lowCards = oracle != null ? oracle.saveData.CauldronTotals.LowCards : 0,
                 evasBlessing = oracle != null ? oracle.saveData.CauldronTotals.EvasBlessing : 0,
-                vastSurge = oracle != null ? oracle.saveData.CauldronTotals.VastSurge : 0
+                vastSurge = oracle != null ? oracle.saveData.CauldronTotals.VastSurge : 0,
+                aeFarming = oracle != null ? oracle.saveData.CauldronTotals.AEFarming : 0,
+                aeFishing = oracle != null ? oracle.saveData.CauldronTotals.AEFishing : 0,
+                aeMining = oracle != null ? oracle.saveData.CauldronTotals.AEMining : 0,
+                aeWoodcutting = oracle != null ? oracle.saveData.CauldronTotals.AEWoodcutting : 0,
+                aeLooting = oracle != null ? oracle.saveData.CauldronTotals.AELooting : 0,
+                aeCombat = oracle != null ? oracle.saveData.CauldronTotals.AECombat : 0
             };
         }
 
@@ -79,6 +104,8 @@ namespace TimelessEchoes.Upgrades
                 OnStewChanged?.Invoke();
             }
         }
+
+        public bool IsTasting => tastingActive;
 
         public int EvaLevel
         {
@@ -277,7 +304,13 @@ namespace TimelessEchoes.Upgrades
         private enum RollType
         {
             Nothing,
-            AlterEcho,
+            AlterEcho, // legacy single AE
+            AEFarming,
+            AEFishing,
+            AEMining,
+            AEWoodcutting,
+            AELooting,
+            AECombat,
             Buff,
             Lowest,
             EvasX2,
@@ -288,22 +321,49 @@ namespace TimelessEchoes.Upgrades
         {
             var lvl = EvaLevel;
             var wNothing = config.weightNothing.Evaluate(lvl);
-            var wAE = config.weightAlterEchoCard.Evaluate(lvl);
+            var wAE_Farm = config.weightAEFarming.Evaluate(lvl);
+            var wAE_Fish = config.weightAEFishing.Evaluate(lvl);
+            var wAE_Mine = config.weightAEMining.Evaluate(lvl);
+            var wAE_Wood = config.weightAEWoodcutting.Evaluate(lvl);
+            var wAE_Combat = config.weightAECombat.Evaluate(lvl);
+            var wAE_Loot = config.weightAELooting.Evaluate(lvl);
             var wBuff = config.weightBuffCard.Evaluate(lvl);
             var wLow = config.weightLowestCountCard.Evaluate(lvl);
             var wX2 = config.weightEvasBlessingX2.Evaluate(lvl);
             var wX10 = config.weightVastSurgeX10.Evaluate(lvl);
-            var total = wNothing + wAE + wBuff + wLow + wX2 + wX10;
+
+            var subAEPresent = (wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat) > 0f;
+            float total = wNothing + wBuff + wLow + wX2 + wX10;
+            if (subAEPresent)
+                total += wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat;
+            // No legacy AE weight
+
             if (total <= 0f) return;
 
             var r = Random.value * total;
             RollType pick;
             if ((r -= wNothing) <= 0) pick = RollType.Nothing;
-            else if ((r -= wAE) <= 0) pick = RollType.AlterEcho;
-            else if ((r -= wBuff) <= 0) pick = RollType.Buff;
-            else if ((r -= wLow) <= 0) pick = RollType.Lowest;
-            else if ((r -= wX2) <= 0) pick = RollType.EvasX2;
-            else pick = RollType.VastX10;
+            else if (subAEPresent)
+            {
+                if ((r -= wAE_Farm) <= 0) pick = RollType.AEFarming;
+                else if ((r -= wAE_Fish) <= 0) pick = RollType.AEFishing;
+                else if ((r -= wAE_Mine) <= 0) pick = RollType.AEMining;
+                else if ((r -= wAE_Wood) <= 0) pick = RollType.AEWoodcutting;
+                else if ((r -= wAE_Loot) <= 0) pick = RollType.AELooting;
+                else if ((r -= wAE_Combat) <= 0) pick = RollType.AECombat;
+                else if ((r -= wBuff) <= 0) pick = RollType.Buff;
+                else if ((r -= wLow) <= 0) pick = RollType.Lowest;
+                else if ((r -= wX2) <= 0) pick = RollType.EvasX2;
+                else pick = RollType.VastX10;
+            }
+            else
+            {
+                // If subcategories are not configured with non-zero weights, treat AE as absent
+                if ((r -= wBuff) <= 0) pick = RollType.Buff;
+                else if ((r -= wLow) <= 0) pick = RollType.Lowest;
+                else if ((r -= wX2) <= 0) pick = RollType.EvasX2;
+                else pick = RollType.VastX10;
+            }
 
             switch (pick)
             {
@@ -311,10 +371,42 @@ namespace TimelessEchoes.Upgrades
                     countNothing++;
                     if (oracle != null) oracle.saveData.CauldronTotals.GainedNothing++;
                     break;
-                case RollType.AlterEcho:
+                // Legacy AlterEcho removed
+                case RollType.AEFarming:
+                    countAEFarming++;
                     countAlterEcho++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.AlterEcho++;
-                    GrantRandomCards(1, true);
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AEFarming++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Farming);
+                    break;
+                case RollType.AEFishing:
+                    countAEFishing++;
+                    countAlterEcho++;
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AEFishing++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Fishing);
+                    break;
+                case RollType.AEMining:
+                    countAEMining++;
+                    countAlterEcho++;
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AEMining++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Mining);
+                    break;
+                case RollType.AEWoodcutting:
+                    countAEWoodcutting++;
+                    countAlterEcho++;
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AEWoodcutting++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Woodcutting);
+                    break;
+                case RollType.AELooting:
+                    countAECombat++; // session total remains under legacy AE; per-sub has its own counter below
+                    countAlterEcho++;
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AELooting++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Looting);
+                    break;
+                case RollType.AECombat:
+                    countAECombat++;
+                    countAlterEcho++;
+                    if (oracle != null) { oracle.saveData.CauldronTotals.AECombat++; oracle.saveData.CauldronTotals.AlterEcho++; }
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Combat);
                     break;
                 case RollType.Buff:
                     countBuffs++;
@@ -347,6 +439,17 @@ namespace TimelessEchoes.Upgrades
                 if (id == null) continue;
                 AddCardCount(id, 1);
             }
+        }
+
+        private void GrantRandomResourceCardFromGroup(AEResourceGroup group)
+        {
+            var id = PickRandomResourceCardIdByGroup(group);
+            if (id == null)
+            {
+                // Fallback to any resource
+                id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
+            }
+            if (id != null) AddCardCount(id, 1);
         }
 
         private string PickRandomCardId(bool onlyAlterEcho, bool onlyBuffs)
@@ -425,6 +528,115 @@ namespace TimelessEchoes.Upgrades
             return list;
         }
 
+        private string PickRandomResourceCardIdByGroup(AEResourceGroup group)
+        {
+            var pool = BuildResourceIdsForGroup(group);
+            if (pool == null || pool.Count == 0) return null;
+            var idx = Random.Range(0, pool.Count);
+            return pool[idx];
+        }
+
+        private List<string> BuildResourceIdsForGroup(AEResourceGroup group)
+        {
+            if (cachedGroupPools.TryGetValue(group, out var cached) && cached != null && cached.Count > 0)
+                return cached;
+
+            var list = new List<string>();
+            foreach (var res in AssetCache.GetAll<Resource>())
+            {
+                if (res == null || res.DisableAlterEcho) continue;
+                if (GetResourceGroup(res) == group)
+                    list.Add($"RES:{res.name}");
+            }
+            cachedGroupPools[group] = list;
+            return list;
+        }
+
+        public AEResourceGroup GetResourceGroup(Resource res)
+        {
+            if (res == null) return AEResourceGroup.Combat;
+            if (resourceGroupMap.TryGetValue(res, out var g)) return g;
+
+            // Build counts per group using TaskData and EnemyData
+            var counts = new Dictionary<AEResourceGroup, int>
+            {
+                { AEResourceGroup.Farming, 0 },
+                { AEResourceGroup.Fishing, 0 },
+                { AEResourceGroup.Mining, 0 },
+                { AEResourceGroup.Woodcutting, 0 },
+                { AEResourceGroup.Looting, 0 },
+                { AEResourceGroup.Combat, 0 }
+            };
+
+            // Tasks
+            foreach (var t in AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
+            {
+                if (t == null) continue;
+                var group = InferGroupFromTask(t);
+                if (group == null) continue;
+                foreach (var drop in t.resourceDrops)
+                {
+                    if (drop == null || drop.resource == null) continue;
+                    if (drop.resource == res) counts[group.Value]++;
+                }
+            }
+
+            // Enemies → Combat
+            foreach (var e in AssetCache.GetAll<TimelessEchoes.Enemies.EnemyData>(""))
+            {
+                if (e == null) continue;
+                foreach (var drop in e.resourceDrops)
+                {
+                    if (drop == null || drop.resource == null) continue;
+                    if (drop.resource == res) counts[AEResourceGroup.Combat]++;
+                }
+            }
+
+            // Chests/NPC looting tasks likely map to Looting skill/prefab naming through tasks
+
+            // Decide best group
+            var bestGroup = AEResourceGroup.Combat;
+            var bestCount = -1;
+            foreach (var kv in counts)
+            {
+                if (kv.Value > bestCount)
+                {
+                    bestCount = kv.Value;
+                    bestGroup = kv.Key;
+                }
+            }
+
+            resourceGroupMap[res] = bestGroup;
+            return bestGroup;
+        }
+
+        private AEResourceGroup? InferGroupFromTask(TimelessEchoes.Tasks.TaskData t)
+        {
+            var skill = t != null ? t.associatedSkill : null;
+            var name = skill != null ? skill.name : null;
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (name.Contains("Farm", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Farming;
+                if (name.Contains("Fish", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Fishing;
+                if (name.Contains("Min", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Mining;
+                if (name.Contains("Wood", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Woodcutting;
+                if (name.Contains("Loot", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Looting;
+                if (name.Contains("Combat", StringComparison.OrdinalIgnoreCase)) return AEResourceGroup.Combat;
+            }
+            // Fallback: try prefab type name
+            var prefab = t != null ? t.taskPrefab : null;
+            if (prefab != null)
+            {
+                var typeName = prefab.GetType().Name;
+                if (typeName.Contains("Farming")) return AEResourceGroup.Farming;
+                if (typeName.Contains("Fishing")) return AEResourceGroup.Fishing;
+                if (typeName.Contains("Mining")) return AEResourceGroup.Mining;
+                if (typeName.Contains("Woodcutting")) return AEResourceGroup.Woodcutting;
+                if (typeName.Contains("Chest") || typeName.Contains("Loot")) return AEResourceGroup.Looting;
+            }
+            return null;
+        }
+
         private static void TrySave()
         {
             try
@@ -447,6 +659,12 @@ namespace TimelessEchoes.Upgrades
             countLowCards = 0;
             countEvasBlessing = 0;
             countVastSurge = 0;
+            countAEFarming = 0;
+            countAEFishing = 0;
+            countAEMining = 0;
+            countAEWoodcutting = 0;
+            // No separate session counter for Looting yet; AlterEcho total covers aggregate
+            countAECombat = 0;
         }
     }
 }

@@ -118,7 +118,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.1.26
+    m_Localized: v1.2.0
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -188,43 +188,46 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed the text wrapping on reap distance at higher values.\n\u2022
-      Echo casting shadow now instead applies to reaping distance buffs. Whenever
-      your max reap distance is extended beyond your base it will show your shadow
-      self.\n\u2022 New music track.\n\u2022 Skeleton Death SFX\n\u2022 Skeleton
-      Archer Attack SFX\n\u2022 Skeleton Mage Attack SFX\n\u2022 Buffs now have a
-      cooldown outside of their active window. (In a future update these will become
-      upgradable.)\n\u2022 SFX now apply a small pitch offset to be less repetitive.\n\u2022
-      Your shadow self only comes out when using Carl's Blessing now.\n\u2022 Added
-      detailed logging and try catch blocks around the gear save and load. Additionally
-      added a flag to stop any saves before load has been attempted. Hopefully we
-      figure out this gear issue soon!\n1.1.25\n\u2022 Run distance now shows {Distance}
-      / {ReapDistance}\n\u2022 New reaping line makes it very obvious where carl
-      will take you home.\n\u2022 Added a button that opens the save location.\n\u2022
-      Updated the layout of the forge stats to be more legible.\n\u2022 Added max
-      distances back to the fish spawn areas.\n\u2022 Added stop on vastium option
-      to the forge.\n1.1.24\n\u2022 Meeting cards now sit in the top left.\n\u2022
-      Library is now visible during a run.\n\u2022 Items that do not have an Alter-Echo
-      now show N/A for AE Power.\n\u2022 Buffed the per level chances for rarer gear
-      on Eznorb, Nori, and Dlog Cores.\n\u2022 Updated the Forge Library entry to
-      show icons and give better explinations.\n\u2022 Removed the dedicated salvage
-      button from the forge.\n\u2022 Fixed the value of attack rate so it now counts
-      as an upgrade properly.\n\u2022 Forging should finally no longer count towards
-      run stats.\n\u2022 Quests now scrolls to the top whenever you open the quests
-      window.\n\u2022 Ivan now actually hands you his sword when you complete the
-      quest.\n\u2022 The forge now automatically equips the first piece you craft
-      for a slot.\n\u2022 Core counts now show at the bottom of their selection boxes.\n\u2022
-      Added comprehensive stat tracking to the forge.\n\u2022 There is now an inventory
-      button in the forge to swap between stats and inventory.\n1.1.23\n\u2022 Reduced
-      the min distance for Bloop down to 1750\n\u2022 Fixed an issue where all fish
-      would entirely stop dropping resources beyond their softcaps.\n\u2022 Added
-      a new field to the while you were away screen that shows your reap distance
-      increase if it went up.\n\u2022 Dramatically reduced the size of the game by
-      removing unused font files. Oops.\n\u2022 Right click should now consistently
-      work on the run summary screen.\n1.1.22\n\u2022 Fixed an issue where the Lirium
-      chestpieces looked like helmets.\n\u2022 Fixed the skill window not correctly
-      showing its data.\n\u2022 Potentially fixed the issue where gear would disappear
-      for some users."
+    m_Localized: "\u2022 New Gear icons.\n\u2022 Windows can now be closed by pressing
+      their window button again.\n\u2022 Buffs more naturally display their timers
+      and active states to reduce confusion.\n\u2022 Removed Carl's Blessing\n\u2022
+      Added the Cauldron.\n1.1.26\n\u2022 Fixed the text wrapping on reap distance
+      at higher values.\n\u2022 Echo casting shadow now instead applies to reaping
+      distance buffs. Whenever your max reap distance is extended beyond your base
+      it will show your shadow self.\n\u2022 New music track.\n\u2022 Skeleton Death
+      SFX\n\u2022 Skeleton Archer Attack SFX\n\u2022 Skeleton Mage Attack SFX\n\u2022
+      Buffs now have a cooldown outside of their active window. (In a future update
+      these will become upgradable.)\n\u2022 SFX now apply a small pitch offset to
+      be less repetitive.\n\u2022 Your shadow self only comes out when using Carl's
+      Blessing now.\n\u2022 Added detailed logging and try catch blocks around the
+      gear save and load. Additionally added a flag to stop any saves before load
+      has been attempted. Hopefully we figure out this gear issue soon!\n1.1.25\n\u2022
+      Run distance now shows {Distance} / {ReapDistance}\n\u2022 New reaping line
+      makes it very obvious where carl will take you home.\n\u2022 Added a button
+      that opens the save location.\n\u2022 Updated the layout of the forge stats
+      to be more legible.\n\u2022 Added max distances back to the fish spawn areas.\n\u2022
+      Added stop on vastium option to the forge.\n1.1.24\n\u2022 Meeting cards now
+      sit in the top left.\n\u2022 Library is now visible during a run.\n\u2022 Items
+      that do not have an Alter-Echo now show N/A for AE Power.\n\u2022 Buffed the
+      per level chances for rarer gear on Eznorb, Nori, and Dlog Cores.\n\u2022 Updated
+      the Forge Library entry to show icons and give better explinations.\n\u2022
+      Removed the dedicated salvage button from the forge.\n\u2022 Fixed the value
+      of attack rate so it now counts as an upgrade properly.\n\u2022 Forging should
+      finally no longer count towards run stats.\n\u2022 Quests now scrolls to the
+      top whenever you open the quests window.\n\u2022 Ivan now actually hands you
+      his sword when you complete the quest.\n\u2022 The forge now automatically
+      equips the first piece you craft for a slot.\n\u2022 Core counts now show at
+      the bottom of their selection boxes.\n\u2022 Added comprehensive stat tracking
+      to the forge.\n\u2022 There is now an inventory button in the forge to swap
+      between stats and inventory.\n1.1.23\n\u2022 Reduced the min distance for Bloop
+      down to 1750\n\u2022 Fixed an issue where all fish would entirely stop dropping
+      resources beyond their softcaps.\n\u2022 Added a new field to the while you
+      were away screen that shows your reap distance increase if it went up.\n\u2022
+      Dramatically reduced the size of the game by removing unused font files. Oops.\n\u2022
+      Right click should now consistently work on the run summary screen.\n1.1.22\n\u2022
+      Fixed an issue where the Lirium chestpieces looked like helmets.\n\u2022 Fixed
+      the skill window not correctly showing its data.\n\u2022 Potentially fixed
+      the issue where gear would disappear for some users."
     m_Metadata:
       m_Items: []
   references:
