@@ -18,7 +18,8 @@ namespace TimelessEchoes.Enemies
             "Kr4yon5",
             "Leroy Jenkins",
             "Dragon slaying pope",
-            "HelFrost"
+            "Hisuma",
+            "HelFrost",
         };
 
         /// <summary>

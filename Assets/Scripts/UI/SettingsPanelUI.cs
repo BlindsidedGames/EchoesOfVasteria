@@ -510,9 +510,7 @@ namespace TimelessEchoes.UI
                     try
                     {
                         var relFile = baseName + ".es3";
-                        // Remove ES3 cache and physical file
-                        ES3.DeleteFile(relFile, new ES3Settings(ES3.Location.Cache));
-                        ES3.DeleteFile(relFile, new ES3Settings(ES3.Location.File));
+                        // ES3 deletion disabled; leave legacy files untouched
 
                         // Remove Easy Save .bac backup
                         try
@@ -554,6 +552,16 @@ namespace TimelessEchoes.UI
                 PlayerPrefs.DeleteKey(SlotKey(index, "Playtime"));
                 PlayerPrefs.DeleteKey(SlotKey(index, "Date"));
                 PlayerPrefs.Save();
+
+                // Also delete the new save system files for this slot (Saves/Save{N})
+                try
+                {
+                    var slotName = $"Save{index + 1}";
+                    var slotDir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
+                    if (Directory.Exists(slotDir))
+                        Directory.Delete(slotDir, true);
+                }
+                catch { }
             }
             catch (Exception ex)
             {
@@ -617,18 +625,42 @@ namespace TimelessEchoes.UI
             }
             else
             {
+                // Read from meta.json of the target slot
                 try
                 {
-                    completion = PlayerPrefs.GetFloat(SlotKey(index, "Completion"), 0f);
-                    var playtime = PlayerPrefs.GetFloat(SlotKey(index, "Playtime"), 0f);
-                    if (slot.playtimeText != null)
-                        slot.playtimeText.text = playtime > 0
-                            ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
-                            : "Playtime: None";
-                    var dateString = PlayerPrefs.GetString(SlotKey(index, "Date"), string.Empty);
-                    slot.lastPlayed = string.IsNullOrEmpty(dateString)
-                        ? null
-                        : DateTime.Parse(dateString, CultureInfo.InvariantCulture);
+                    var slotName = $"Save{index + 1}";
+                    var dir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
+                    var metaPath = Path.Combine(dir, "meta.json");
+                    if (File.Exists(metaPath))
+                    {
+                        var json = File.ReadAllText(metaPath);
+                        var meta = JsonUtility.FromJson<SlotMetaView>(json);
+                        completion = meta != null && meta.schemaVersion > 0 ? PlayerPrefs.GetFloat(SlotKey(index, "Completion"), 0f) : 0f;
+                        // For playtime and last played, prefer meta fields if present
+                        if (slot.playtimeText != null)
+                        {
+                            var playtime = PlayerPrefs.GetFloat(SlotKey(index, "Playtime"), 0f);
+                            slot.playtimeText.text = playtime > 0
+                                ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
+                                : "Playtime: None";
+                        }
+                        if (!string.IsNullOrEmpty(meta?.timestampUtc))
+                        {
+                            try { slot.lastPlayed = DateTime.Parse(meta.timestampUtc, null, DateTimeStyles.RoundtripKind); }
+                            catch { slot.lastPlayed = null; }
+                        }
+                        else
+                        {
+                            slot.lastPlayed = null;
+                        }
+                    }
+                    else
+                    {
+                        // No meta found
+                        completion = 0f;
+                        slot.lastPlayed = null;
+                        if (slot.playtimeText != null) slot.playtimeText.text = "Playtime: None";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -653,6 +685,16 @@ namespace TimelessEchoes.UI
                 slot.loadDeleteText.text = slot.safetyEnabled ? "Delete" : "Load";
 
             UpdateSlotInteractivity(index);
+        }
+
+        [Serializable]
+        private class SlotMetaView
+        {
+            public int schemaVersion;
+            public string timestampUtc;
+            public string buildId;
+            public int sizeBytes;
+            public string integrity;
         }
 
         private void UpdateSlotDynamic(int index)

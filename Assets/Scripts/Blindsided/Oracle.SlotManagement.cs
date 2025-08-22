@@ -17,9 +17,8 @@ namespace Blindsided
 			{
 				if (_settings != null)
 				{
+					// Save current slot using new system only
 					SaveToFile();
-					ES3.StoreCachedFile(_fileName);
-					CreateRotatingBackup();
 				}
 			}
 			catch (Exception ex)
@@ -39,6 +38,8 @@ namespace Blindsided
                 bufferSize = 8192
             };
             EventHandler.ResetData();
+            // Clear transient runtime meeting flags to avoid cross-file bleed
+            Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Clear();
             Load();
 			// Ensure all systems reload their state for the new slot
 			EventHandler.LoadData();

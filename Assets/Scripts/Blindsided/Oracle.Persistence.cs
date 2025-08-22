@@ -20,13 +20,22 @@ namespace Blindsided
                 EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            ES3.Save(_dataName, saveData, _settings); // write to cache
-            ES3.StoreCachedFile(_fileName);
+            // New save system only
+            try
+            {
+                var slotName = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
+                SaveManager.Instance.SetCurrentSlot(slotName);
+                SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"New save system Save failed: {ex}");
+            }
 
-            // Ensure PlayerPrefs metadata for the current slot is kept in sync for all saves/autosaves
+            // Keep PlayerPrefs metadata in sync for UI which still reads playtime/completion
             PersistSlotMetadataToPlayerPrefs();
 
-            // If we had marked this slot as deleted to suppress migration, clear the marker after the first save
+            // Clear deleted marker after first successful save
             try
             {
                 var deletedKey = $"Slot{CurrentSlot}_Deleted";
@@ -43,99 +52,96 @@ namespace Blindsided
         {
             loaded = false;
             saveData = new GameData();
+            var deletedMarkerKey = $"Slot{Mathf.Clamp(CurrentSlot, 0, 2)}_Deleted";
+            var wasIntentionallyDeleted = false;
+            try { wasIntentionallyDeleted = PlayerPrefs.GetInt(deletedMarkerKey, 0) == 1; } catch { wasIntentionallyDeleted = false; }
 
-            var failedLoad = false;
-
+            // Prefer new save system first
             try
             {
-                // Primary: try canonical key in cache/file per _settings
+                var slotName = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
+                SaveManager.Instance.SetCurrentSlot(slotName);
+                var result = SaveManager.Instance.LoadAsync().GetAwaiter().GetResult();
+                if (result.ok && result.data != null)
+                {
+                    saveData = result.data;
+                    NullCheckers();
+                    loaded = true;
+                    AwayForSeconds();
+                    if (saveData.SavedPreferences.OfflineTimeAutoDisable)
+                        saveData.SavedPreferences.OfflineTimeActive = false;
+                    PersistSlotMetadataToPlayerPrefs();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"New save system load failed or missing; trying ES3 fallback. {ex.Message}");
+            }
+
+            // Fallback: attempt to read ES3 and migrate to new system (read-only)
+            try
+            {
+                // Try canonical ES3 key
                 if (ES3.KeyExists(_dataName, _settings))
                 {
                     saveData = ES3.Load<GameData>(_dataName, _settings);
                 }
                 else
                 {
-                    // Backward-compat: discover the correct key inside the physical save file and migrate
-                    // If this slot was intentionally deleted, skip discovery & migration for one cycle
                     var deletedKey = $"Slot{CurrentSlot}_Deleted";
                     var suppressMigration = false;
                     try { suppressMigration = PlayerPrefs.GetInt(deletedKey, 0) == 1; } catch { suppressMigration = false; }
-                    if (TryLoadWithKeyFallback(out var discoveredData, out var usedKey))
+
+                    if (TryLoadWithKeyFallback(out var discoveredData, out _))
                     {
                         saveData = discoveredData;
-                        if (!string.Equals(usedKey, _dataName, StringComparison.Ordinal))
-                        {
-                            Debug.LogWarning(
-                                $"Loaded save using fallback key '{usedKey}'. Migrating to '{_dataName}'.");
-                            // Re-save under canonical key to prevent future mismatches
-                            ES3.Save(_dataName, saveData, _settings);
-                            ES3.StoreCachedFile(_fileName);
-                            // Attempt to remove legacy key from both cache & file to avoid ambiguity
-                            try
-                            {
-                                ES3.DeleteKey(usedKey, _settings);
-                            }
-                            catch
-                            {
-                            }
-
-                            try
-                            {
-                                ES3.DeleteKey(usedKey, new ES3Settings(_fileName, ES3.Location.File));
-                            }
-                            catch
-                            {
-                            }
-                        }
+                    }
+                    else if (!suppressMigration && TryFindAndMigrateAnyEs3ForCurrentSlot(out var migratedSnapshot))
+                    {
+                        saveData = migratedSnapshot;
+                        PersistSlotMetadataToPlayerPrefs();
                     }
                     else
                     {
-                        // Fallback: no save found in our canonical file. Probe any .es3 in the save dir and
-                        // migrate only for the CURRENT slot if a valid snapshot is discovered.
-                        if (!suppressMigration && TryFindAndMigrateAnyEs3ForCurrentSlot(out var migratedSnapshot))
-                        {
-                            // We have copied the physical file; ensure canonical key is written to cache and file
-                            saveData = migratedSnapshot;
-                            ES3.Save(_dataName, saveData, _settings);
-                            ES3.StoreCachedFile(_fileName);
-                            PersistSlotMetadataToPlayerPrefs();
-                        }
-                        else
-                        {
-                            throw new KeyNotFoundException(
-                                $"No compatible save key found in '{_fileName}' or any other .es3 file.");
-                        }
+                        throw new KeyNotFoundException($"No compatible ES3 save found for slot {CurrentSlot}.");
                     }
+                }
+
+                // After loading from ES3, immediately persist to new system
+                try
+                {
+                    var slotName2 = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
+                    SaveManager.Instance.SetCurrentSlot(slotName2);
+                    SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"Failed to persist migrated ES3 save to new system: {ex.Message}");
                 }
             }
             catch (Exception e)
             {
-                failedLoad = true;
-                Debug.LogError($"Load failed: {e}");
-                // Start a fresh save but inform the player and offer backup restore
-                saveData.DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-                var message = BuildLoadFailureMessage();
-                if (string.IsNullOrEmpty(message))
-                    message = $"Save data for File {CurrentSlot + 1} could not be loaded. A new game will be created.";
-                _pendingLoadFailureMessage = message;
-                _pendingLoadFailureNotice = true;
-                Debug.LogWarning(message);
-
-                // Persist an empty, canonical file immediately so future loads are stable
-                try
+                // If this slot was intentionally deleted, silently create a new game without prompting
+                if (wasIntentionallyDeleted)
                 {
-                    ES3.Save(_dataName, saveData, _settings);
-                    ES3.StoreCachedFile(_fileName);
+                    Debug.Log($"No save found for intentionally deleted slot {CurrentSlot}; starting new game.");
+                    saveData.DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
                 }
-                catch { }
+                else
+                {
+                    Debug.LogError($"Load failed: {e}");
+                    saveData.DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+                    var message = BuildLoadFailureMessage();
+                    if (string.IsNullOrEmpty(message))
+                        message = $"Save data for File {CurrentSlot + 1} could not be loaded. A new game will be created.";
+                    _pendingLoadFailureMessage = message;
+                    _pendingLoadFailureNotice = true;
+                    Debug.LogWarning(message);
+                }
             }
 
             NullCheckers();
-
-            // Check for potential regression relative to what this device previously recorded
-            if (!failedLoad)
-                DetectRegressionAgainstPlayerPrefs();
-
             loaded = true;
             AwayForSeconds();
 
@@ -691,215 +697,6 @@ namespace Blindsided
         ///     Compares the just-loaded save data with this device's last-known metadata in PlayerPrefs.
         ///     If a significant regression is detected, sets flags and stores a brief report for UI/logging.
         /// </summary>
-        private void DetectRegressionAgainstPlayerPrefs()
-        {
-            try
-            {
-                var index = Mathf.Clamp(CurrentSlot, 0, 2);
-                var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
-                var completionKey = $"{prefix}Slot{index}_Completion";
-                var playtimeKey = $"{prefix}Slot{index}_Playtime";
-                var dateKey = $"{prefix}Slot{index}_Date";
-
-                var prevCompletion = PlayerPrefs.GetFloat(completionKey, -1f);
-                var prevPlaytime = PlayerPrefs.GetFloat(playtimeKey, -1f);
-                var prevDateString = PlayerPrefs.GetString(dateKey, string.Empty);
-
-                var haveBaseline = prevCompletion >= 0f || prevPlaytime >= 0f || !string.IsNullOrEmpty(prevDateString);
-                if (!haveBaseline) return; // nothing to compare on this device
-
-                var loadedPlaytime = (float)saveData.PlayTime;
-                var loadedCompletion = saveData.CompletionPercentage;
-
-                var playtimeDrop = prevPlaytime - loadedPlaytime;
-                var completionDrop = prevCompletion - loadedCompletion;
-
-                var regression = false;
-                var reason = string.Empty;
-
-                if (playtimeDrop > PlaytimeRegressionToleranceSeconds)
-                {
-                    regression = true;
-                    reason = $"Playtime drop {playtimeDrop:0}s (> {PlaytimeRegressionToleranceSeconds:0}s)";
-                    _lastPlaytimeDropSec = playtimeDrop;
-                }
-                else if (completionDrop > CompletionRegressionTolerance)
-                {
-                    regression = true;
-                    reason = $"Completion drop {completionDrop:0.##}% (> {CompletionRegressionTolerance:0.##}%)";
-                    _lastCompletionDropPct = completionDrop;
-                }
-                else if (!string.IsNullOrEmpty(prevDateString) && !string.IsNullOrEmpty(saveData.DateQuitString))
-                {
-                    // If stored date is substantially newer than loaded, consider it a regression
-                    if (DateTime.TryParse(prevDateString, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                            out var prevDate)
-                        && DateTime.TryParse(saveData.DateQuitString, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                            out var loadedDate))
-                    {
-                        var minutesNewer = (prevDate - loadedDate).TotalMinutes;
-                        if (minutesNewer > 10) // 10 minutes grace
-                        {
-                            regression = true;
-                            reason = $"Last save time moved back by {minutesNewer:0} minutes";
-                            _lastMinutesNewer = minutesNewer;
-                        }
-                    }
-                }
-
-                if (!regression) return;
-
-                RegressionDetected = true;
-                RegressionMessage =
-                    $"Regression detected for slot {index}. Prev PT={prevPlaytime:0}s, Prev %={prevCompletion:0.##}; Loaded PT={loadedPlaytime:0}s, %={loadedCompletion:0.##}. Reason: {reason}";
-
-                Debug.LogWarning(RegressionMessage);
-
-                // Record a simple marker & message in PlayerPrefs so UI can surface it
-                var regKey = $"{prefix}Slot{index}_RegressionDetected";
-                var regInfoKey = $"{prefix}Slot{index}_RegressionInfo";
-                PlayerPrefs.SetInt(regKey, 1);
-                PlayerPrefs.SetString(regInfoKey, RegressionMessage);
-                PlayerPrefs.Save();
-
-                TryShowRegressionWindow(index, prevPlaytime, prevCompletion, loadedPlaytime, loadedCompletion);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Regression detection failed: {ex}");
-            }
-        }
-
-        private void TryShowRegressionWindow(int slotIndex, float prevPlaytime, float prevCompletion,
-            float loadedPlaytime, float loadedCompletion)
-        {
-            if (regressionConfirmWindow == null)
-                return;
-
-            // Gather current (loaded) info
-            var loadedLastPlayed = ParseDateOrNull(saveData.DateQuitString);
-
-            // Start with PlayerPrefs metadata as the backup candidate
-            var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
-            var completionKey = $"{prefix}Slot{slotIndex}_Completion";
-            var playtimeKey = $"{prefix}Slot{slotIndex}_Playtime";
-            var dateKey = $"{prefix}Slot{slotIndex}_Date";
-            var backupPlaytime = PlayerPrefs.GetFloat(playtimeKey, prevPlaytime);
-            var backupCompletion = PlayerPrefs.GetFloat(completionKey, prevCompletion);
-            var backupDateString = PlayerPrefs.GetString(dateKey, string.Empty);
-            var backupLastPlayed = ParseDateOrNull(backupDateString);
-            var backupSource = "PlayerPrefs";
-
-            // Prefer actual backup contents when available: try .bac first, then latest rotating backup
-            try
-            {
-                var fileSettings = new ES3Settings(_fileName, ES3.Location.File);
-                var liveFullPath = fileSettings.FullPath;
-                var bacFullPath = liveFullPath + ".bac";
-                GameData backupData = null;
-                string tempPreviewPath = null;
-                if (File.Exists(bacFullPath))
-                {
-                    tempPreviewPath = MakeTempPreviewPath(liveFullPath);
-                    File.Copy(bacFullPath, tempPreviewPath, true);
-                    var tempPreviewName = Path.GetFileName(tempPreviewPath);
-                    var previewSettings = new ES3Settings(tempPreviewName, ES3.Location.File);
-                    if (!TryLoadWithKeyFallback(previewSettings, out backupData, out _))
-                        backupData = null;
-                    backupSource = "Backup (.bac)";
-                }
-                else
-                {
-                    // Try rotating backups directory
-                    var baseName = Path.GetFileNameWithoutExtension(_fileName);
-                    var saveDir = Path.GetDirectoryName(liveFullPath);
-                    var backupDir = Path.Combine(saveDir ?? string.Empty, "Backups", baseName);
-                    if (Directory.Exists(backupDir))
-                    {
-                        var candidates = Directory.GetFiles(backupDir, $"{baseName}_*.es3",
-                            SearchOption.TopDirectoryOnly);
-                        if (candidates != null && candidates.Length > 0)
-                        {
-                            var latest = candidates.OrderByDescending(f => Path.GetFileName(f), StringComparer.Ordinal)
-                                .First();
-                            // Copy to root for easy ES3 loading by file name
-                            tempPreviewPath = MakeTempPreviewPath(liveFullPath);
-                            File.Copy(latest, tempPreviewPath, true);
-                            var tempPreviewName = Path.GetFileName(tempPreviewPath);
-                            var previewSettings = new ES3Settings(tempPreviewName, ES3.Location.File);
-                            if (!TryLoadWithKeyFallback(previewSettings, out backupData, out _))
-                                backupData = null;
-                            backupSource = "Backup (Rotating)";
-                        }
-                    }
-                }
-
-                if (backupData != null)
-                {
-                    backupPlaytime = (float)backupData.PlayTime;
-                    backupCompletion = backupData.CompletionPercentage;
-                    backupLastPlayed = ParseDateOrNull(backupData.DateQuitString);
-                }
-
-                // Cleanup temp preview
-                if (!string.IsNullOrEmpty(tempPreviewPath))
-                    try
-                    {
-                        File.Delete(tempPreviewPath);
-                    }
-                    catch
-                    {
-                        /* ignore */
-                    }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"Failed to preview backup contents: {ex.Message}");
-            }
-
-            var reasons = new List<string>(3);
-            if (_lastPlaytimeDropSec > PlaytimeRegressionToleranceSeconds)
-                reasons.Add($"Playtime: -{CalcUtils.FormatTime(_lastPlaytimeDropSec, shortForm: true)}");
-            if (_lastCompletionDropPct > CompletionRegressionTolerance)
-                reasons.Add($"Completion: -{_lastCompletionDropPct:0.##}%");
-            if (_lastMinutesNewer > 10)
-                reasons.Add($"Time: -{_lastMinutesNewer:0} min");
-
-            var summary = reasons.Count > 0 ? string.Join(" • ", reasons) : "Progress appears lower.";
-
-            if (regressionMessageText != null)
-            {
-                var localPlay = loadedPlaytime > 0 ? CalcUtils.FormatTime(loadedPlaytime, shortForm: true) : "None";
-                var localComp = $"{loadedCompletion:0.##}%";
-                var localLast = loadedLastPlayed.HasValue
-                    ? loadedLastPlayed.Value.ToLocalTime().ToString("g")
-                    : "Never";
-
-                var backupPlay = backupPlaytime > 0 ? CalcUtils.FormatTime(backupPlaytime, shortForm: true) : "None";
-                var backupCompStr = $"{backupCompletion:0.##}%";
-                var backupLast = backupLastPlayed.HasValue
-                    ? backupLastPlayed.Value.ToLocalTime().ToString("g")
-                    : "Unknown";
-
-                regressionMessageText.text =
-                    $"Progress mismatch detected for File {slotIndex + 1}.\n{summary}\n\n" +
-                    "Local (Loaded)\n" +
-                    $"• Playtime: {localPlay}\n" +
-                    $"• Completion: {localComp}\n" +
-                    $"• Last Played: {localLast}\n\n" +
-                    $"Backup ({backupSource})\n" +
-                    $"• Playtime: {backupPlay}\n" +
-                    $"• Completion: {backupCompStr}\n" +
-                    $"• Last Played: {backupLast}\n\n" +
-                    "Choose which save to keep: Keep Loaded or Restore Backup.";
-            }
-
-            // Always ensure buttons are labeled consistently when showing the window
-            SetRegressionButtonsText("Keep Loaded", "Restore Backup");
-
-            regressionConfirmWindow.SetActive(true);
-        }
-
         private static DateTime? ParseDateOrNull(string date)
         {
             if (string.IsNullOrEmpty(date)) return null;
@@ -921,95 +718,7 @@ namespace Blindsided
             return Path.Combine(dir, tempName);
         }
 
-        private void ConfirmRegressionKeepLoaded()
-        {
-            // User accepts the loaded (possibly regressed) data; persist metadata so this prompt won't repeat.
-            PersistSlotMetadataToPlayerPrefs();
-            DismissRegressionWindow();
-
-            if (_mainSceneLoadDeferred)
-            {
-                _mainSceneLoadDeferred = false;
-                StartCoroutine(LoadMainScene());
-            }
-
-            // Resume autosave scheduling after the user confirms
-            RestartAutosaveLoop(AutosaveIntervalSeconds);
-        }
-
-        private void DismissRegressionWindow()
-        {
-            if (regressionConfirmWindow != null)
-                regressionConfirmWindow.SetActive(false);
-        }
-
-        private void SetRegressionButtonsText(string yes, string no)
-        {
-            if (regressionYesText != null)
-                regressionYesText.text = yes;
-            if (regressionNoText != null)
-                regressionNoText.text = no;
-        }
-
-        /// <summary>
-        ///     Called by the "No" button: attempts to restore the Easy Save .bac backup for the current slot
-        ///     and reloads the scene so the restored data is applied everywhere.
-        /// </summary>
-        [Button]
-        public void AttemptRestoreBackupAndReload()
-        {
-            try
-            {
-                DismissRegressionWindow();
-
-                // Prefer rotating backups; fall back to Easy Save's .bac
-                var restored = TryRestoreFromLatestRotatingBackup();
-                if (!restored)
-                {
-                    restored = ES3.RestoreBackup(_settings);
-                    if (!restored)
-                        Debug.LogWarning("No rotating or .bac backup found to restore.");
-                    else
-                        Debug.Log(".bac backup restored. Reloading save and scene.");
-                }
-                else
-                {
-                    Debug.Log("Rotating backup restored. Reloading save and scene.");
-                }
-
-                // Reload save from disk regardless; if restore failed, this reloads the current file.
-                Load();
-
-                if (_pendingLoadFailureNotice)
-                {
-                    TryShowLoadFailureWindow(_pendingLoadFailureMessage);
-                    _pendingLoadFailureNotice = false;
-                    _pendingLoadFailureMessage = null;
-                    _mainSceneLoadDeferred = true;
-                    return;
-                }
-
-                if (RegressionDetected)
-                {
-                    _mainSceneLoadDeferred = true;
-                    return;
-                }
-
-                // Reload the active scene(s) to ensure all systems pick up the new data
-                // We already have a helper to load Main on boot, but here reload current.
-                var active = SceneManager.GetActiveScene();
-                SceneManager.LoadScene(active.name);
-                _mainSceneLoadDeferred = false;
-                StartCoroutine(LoadMainScene());
-                // Resume autosave scheduling after reload begins
-                RestartAutosaveLoop(FirstAutosaveDelaySeconds);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Backup restore failed: {ex}");
-                DismissRegressionWindow();
-            }
-        }
+        // Regression prompt removed
 
         /// <summary>
         ///     Writes the specified slot's save metadata to PlayerPrefs so UI and other systems
@@ -1039,39 +748,20 @@ namespace Blindsided
 
         private void TryShowLoadFailureWindow(string message)
         {
-            if (regressionConfirmWindow == null)
-                return;
-
-            var hint = GetLatestBackupHintText();
-            var full = string.IsNullOrEmpty(hint) ? message : message + "\n" + hint;
-
-            if (regressionMessageText != null)
-                regressionMessageText.text = full + "\nKeep this new game, or try restoring from a backup?";
-
-            SetRegressionButtonsText("Keep Loaded", "Restore Backup");
-
-            regressionConfirmWindow.SetActive(true);
+            // Regression UI removed; no UI shown here anymore
+            Debug.LogWarning(message);
         }
 
         private string GetLatestBackupHintText()
         {
             try
             {
-                if (TryGetLatestRotatingBackup(out var path, out var ts))
-                {
-                    var local = ts.ToLocalTime();
-                    return $"Most recent rotating backup: {local:yyyy-MM-dd HH:mm}.";
-                }
-
-                var bacPath = _fileName + ".bac";
-                if (ES3.FileExists(bacPath))
-                    return "An Easy Save backup (.bac) is available.";
+                // New system manages backups internally; no legacy hints.
             }
             catch
             {
             }
-
-            return "No backups were found.";
+            return "";
         }
 
         private string BuildLoadFailureMessage()
@@ -1144,13 +834,17 @@ namespace Blindsided
                 EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
-            var dataName = $"{prefix}Data{index}";
-            var fileName = $"{prefix}Sd{index}.es3";
-            var settings = new ES3Settings(fileName, ES3.Location.Cache);
-            ES3.Save(dataName, saveData, settings);
-            ES3.StoreCachedFile(fileName);
-            CreateRotatingBackupForFile(fileName);
+            // New system write for the targeted slot (no ES3)
+            try
+            {
+                var slotName = $"Save{index + 1}";
+                SaveManager.Instance.SetCurrentSlot(slotName);
+                SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"New save system SaveToSlot failed: {ex.Message}");
+            }
 
             PersistSlotMetadataToPlayerPrefs(index);
         }
@@ -1198,22 +892,7 @@ namespace Blindsided
             EventHandler.AwayForTime(seconds);
         }
 
-        /// <summary>Deletes any existing .bac backup, then creates a fresh one.</summary>
-        private void SafeCreateBackup()
-        {
-            var backupPath = _fileName + ".bac"; // Easy Save uses .bac
-            if (ES3.FileExists(backupPath))
-                ES3.DeleteFile(backupPath);
-
-            try
-            {
-                ES3.CreateBackup(_fileName);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Backup failure: {ex}");
-            }
-        }
+        // Easy Save backup removed; new system uses rolling prev files
 
         /// <summary>
         ///     Creates a timestamped backup copy of the persisted save file under
@@ -1224,102 +903,14 @@ namespace Blindsided
         ///             _yyyyMMdd-HHmmss.es3
         ///             and prunes older backups beyond <see cref="backupsToKeepPerSlot" />.
         /// </summary>
-        private void CreateRotatingBackup()
-        {
-            CreateRotatingBackupForFile(_fileName);
-        }
-
-        private void CreateRotatingBackupForFile(string fileName)
-        {
-            try
-            {
-                // Ensure the persisted file exists (we copy from File location, not Cache)
-                var sourceSettings = new ES3Settings(fileName, ES3.Location.File);
-                if (!ES3.FileExists(sourceSettings))
-                    return;
-
-                var sourceFullPath = sourceSettings.FullPath;
-                var baseName = Path.GetFileNameWithoutExtension(fileName); // e.g., "Sd0" or "Beta3Sd0"
-                var saveDir = Path.GetDirectoryName(sourceFullPath);
-                var backupDir = Path.Combine(saveDir ?? string.Empty, "Backups", baseName);
-                Directory.CreateDirectory(backupDir);
-
-                var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmssfff");
-                var backupFileName = $"{baseName}_{timestamp}.es3";
-                var backupFullPath = Path.Combine(backupDir, backupFileName);
-                // Ensure uniqueness if multiple backups occur within the same millisecond
-                var dupeIndex = 1;
-                while (File.Exists(backupFullPath))
-                {
-                    backupFileName = $"{baseName}_{timestamp}_{dupeIndex:00}.es3";
-                    backupFullPath = Path.Combine(backupDir, backupFileName);
-                    dupeIndex++;
-                }
-
-                File.Copy(sourceFullPath, backupFullPath, false);
-
-                PruneOldBackups(backupDir, baseName, backupsToKeepPerSlot);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Rotating backup failed: {ex}");
-            }
-        }
+        // Easy Save rotating backups removed; new system does backups internally
 
         /// <summary>
         ///     Attempts to restore the latest timestamped rotating backup into the live save file.
         ///     Returns true if a backup was restored.
         /// </summary>
-        private bool TryRestoreFromLatestRotatingBackup()
-        {
-            try
-            {
-                var targetSettings = new ES3Settings(_fileName, ES3.Location.File);
-                var targetFullPath = targetSettings.FullPath;
-                var baseName = Path.GetFileNameWithoutExtension(_fileName);
-                var saveDir = Path.GetDirectoryName(targetFullPath);
-                var backupDir = Path.Combine(saveDir ?? string.Empty, "Backups", baseName);
+        // Easy Save backup restore removed
 
-                if (!Directory.Exists(backupDir))
-                    return false;
-
-                var candidates = Directory.GetFiles(backupDir, $"{baseName}_*.es3", SearchOption.TopDirectoryOnly);
-                if (candidates == null || candidates.Length == 0)
-                    return false;
-
-                // Sort descending by name (timestamp in name ensures correct order)
-                var latest = candidates.OrderByDescending(f => Path.GetFileName(f), StringComparer.Ordinal).First();
-                File.Copy(latest, targetFullPath, true);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to restore rotating backup: {ex}");
-                return false;
-            }
-        }
-
-        private void PruneOldBackups(string backupDir, string baseName, int keepCount)
-        {
-            try
-            {
-                var pattern = $"{baseName}_*.es3";
-                var files = Directory.Exists(backupDir)
-                    ? Directory.GetFiles(backupDir, pattern, SearchOption.TopDirectoryOnly)
-                    : Array.Empty<string>();
-
-                if (files.Length <= keepCount)
-                    return;
-
-                // Our filenames embed a UTC timestamp in sortable format, so sort by name
-                var ordered = files.OrderBy(f => Path.GetFileName(f), StringComparer.Ordinal).ToArray();
-                var toDelete = ordered.Length - keepCount;
-                for (var i = 0; i < toDelete; i++) File.Delete(ordered[i]);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Pruning backups failed: {ex}");
-            }
-        }
+        // Easy Save backup pruning not used
     }
 }

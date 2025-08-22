@@ -63,29 +63,10 @@ namespace Blindsided
         private const string BetaMigrationPrefKey = "BetaToLiveMigrationDone";
         private const string GenericMigrationPrefKey = "GenericEs3MigrationDone";
 
-        // Regression detection thresholds and state
-        private const float PlaytimeRegressionToleranceSeconds = 60f; // allow minor discrepancies
-        private const float CompletionRegressionTolerance = 0.25f;    // percent points
-        [ShowInInspector, ReadOnly] public bool RegressionDetected { get; private set; }
-        [ShowInInspector, ReadOnly] public string RegressionMessage { get; private set; }
-
-        // Detailed deltas for the regression prompt
-        private float _lastPlaytimeDropSec;
-        private float _lastCompletionDropPct;
-        private double _lastMinutesNewer;
-
-        [Header("Regression Confirmation UI")] [TabGroup("SaveData")]
-        [SerializeField] private GameObject regressionConfirmWindow;
-        [SerializeField] private Button regressionYesButton;
-        [SerializeField] private Button regressionNoButton;
-        [SerializeField] private TMP_Text regressionMessageText;
-                [SerializeField] private TMP_Text regressionYesText;
-                [SerializeField] private TMP_Text regressionNoText;
-
-                // Defer showing load-failure notice until UI is ready
-                private bool _pendingLoadFailureNotice;
-                private string _pendingLoadFailureMessage;
-                private bool _mainSceneLoadDeferred;
+        // Defer showing load-failure notice until UI is ready
+        private bool _pendingLoadFailureNotice;
+        private string _pendingLoadFailureMessage;
+        private bool _mainSceneLoadDeferred;
 
     }
 }

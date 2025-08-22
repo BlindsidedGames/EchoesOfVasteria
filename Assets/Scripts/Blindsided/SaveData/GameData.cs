@@ -6,6 +6,7 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
+        public int SchemaVersion = 1;
         [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]
         public Preferences SavedPreferences = new();
 

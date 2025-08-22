@@ -18,35 +18,7 @@ namespace Blindsided
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
             Application.targetFrameRate = StaticReferences.TargetFps;
-
-            // Wire up regression confirmation UI if present
-            if (regressionYesButton != null)
-            {
-                regressionYesButton.onClick.RemoveAllListeners();
-                regressionYesButton.onClick.AddListener(ConfirmRegressionKeepLoaded);
-            }
-
-            if (regressionNoButton != null)
-            {
-                regressionNoButton.onClick.RemoveAllListeners();
-                regressionNoButton.onClick.AddListener(AttemptRestoreBackupAndReload);
-            }
-
-            if (_pendingLoadFailureNotice)
-            {
-                TryShowLoadFailureWindow(_pendingLoadFailureMessage);
-                _pendingLoadFailureNotice = false;
-                _pendingLoadFailureMessage = null;
-                _mainSceneLoadDeferred = true;
-            }
-            else if (regressionConfirmWindow != null && regressionConfirmWindow.activeSelf)
-            {
-                _mainSceneLoadDeferred = true;
-            }
-            else
-            {
-                StartCoroutine(LoadMainScene());
-            }
+            StartCoroutine(LoadMainScene());
         }
 
         private IEnumerator LoadMainScene()
@@ -74,9 +46,6 @@ namespace Blindsided
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
             SaveToFile();
-            ES3.StoreCachedFile(_fileName);
-            SafeCreateBackup();
-            CreateRotatingBackup();
         }
 
         private void OnDisable()
@@ -84,9 +53,7 @@ namespace Blindsided
             // This is called when you exit Play Mode in the Editor
             if (Application.isPlaying && !wipeInProgress && oracle == this && _settings != null)
             {
-                SaveToFile(); // save the latest state immediately
-                ES3.StoreCachedFile(_fileName);
-                CreateRotatingBackup();
+                SaveToFile(); // save the latest state immediately (new system only)
                 StopAutosaveLoop();
             }
         }
@@ -98,7 +65,6 @@ namespace Blindsided
             if (!focus)
             {
                 SaveToFile();
-                ES3.StoreCachedFile(_fileName);
             }
         }
         private void OnApplicationPause(bool paused)
@@ -106,7 +72,6 @@ namespace Blindsided
             if (paused)
             {
                 SaveToFile();
-                ES3.StoreCachedFile(_fileName);
             }
         }
 #endif
@@ -125,15 +90,12 @@ namespace Blindsided
 
             while (true)
             {
-                // Skip autosave while wiping, when a regression or load-failure prompt is active
-                var regressionActive = regressionConfirmWindow != null && regressionConfirmWindow.activeSelf;
-                if (!wipeInProgress && !regressionActive && !_pendingLoadFailureNotice)
+                // Skip autosave while wiping or when a load-failure notice is pending
+                if (!wipeInProgress && !_pendingLoadFailureNotice)
                 {
                     try
                     {
                         SaveToFile();
-                        ES3.StoreCachedFile(_fileName);
-                        CreateRotatingBackup();
                     }
                     catch (System.Exception ex)
                     {

@@ -27,11 +27,11 @@ namespace Blindsided
             saveData = new GameData();
             saveData.SavedPreferences = prefs;
             EventHandler.ResetData();
+            // Clear transient runtime meeting flags to avoid cross-file bleed
+            Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Clear();
             EventHandler.LoadData();
             SaveToFile();
-            ES3.StoreCachedFile(_fileName);
-            SceneManager.LoadScene(0);
-            StartCoroutine(LoadMainScene());
+            wipeInProgress = false;
         }
 
         [TabGroup("SaveData", "Buttons")]
@@ -54,25 +54,7 @@ namespace Blindsided
             GUIUtility.systemCopyBuffer = beta ? Encoding.UTF8.GetString(bytes) : Convert.ToBase64String(bytes);
         }
 
-        [TabGroup("SaveData", "Buttons")]
-        [Button("Test Regression Prompt")]
-        public void TestRegressionPrompt()
-        {
-            // Seed some dummy deltas
-            _lastPlaytimeDropSec = 600f; // 10 minutes
-            _lastCompletionDropPct = 2.5f; // 2.5%
-            _lastMinutesNewer = 45.0; // 45 minutes
-
-            RegressionDetected = true;
-            RegressionMessage = "[TEST] Simulated regression for preview";
-
-            float loadedPt = (float)saveData.PlayTime;
-            float loadedComp = saveData.CompletionPercentage;
-            float prevPt = loadedPt + _lastPlaytimeDropSec;
-            float prevComp = loadedComp + _lastCompletionDropPct;
-
-            TryShowRegressionWindow(CurrentSlot, prevPt, prevComp, loadedPt, loadedComp);
-        }
+        // Regression prompt test removed
 
     }
 }
