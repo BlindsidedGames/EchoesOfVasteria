@@ -92,7 +92,7 @@ namespace TimelessEchoes.UI
 						CauldronManager.AEResourceGroup.Farming => "Alter-Echoes — Farming",
 						CauldronManager.AEResourceGroup.Fishing => "Alter-Echoes — Fishing",
 						CauldronManager.AEResourceGroup.Mining => "Alter-Echoes — Mining",
-						CauldronManager.AEResourceGroup.Woodcutting => "Alter-Echoes — Woodcutting",
+						CauldronManager.AEResourceGroup.Woodcutting => "Alter-Echoes — Logging",
 						CauldronManager.AEResourceGroup.Looting => "Alter-Echoes — Looting",
 						_ => "Alter-Echoes — Combat"
 					};

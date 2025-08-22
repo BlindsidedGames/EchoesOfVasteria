@@ -43,7 +43,10 @@ namespace TimelessEchoes.UI
 		[SerializeField] private TMP_Text statsText;
 
 		[Header("Weights Preview")]
-		[SerializeField] private TMP_Text weightsText;
+		[SerializeField] private TMP_Text firstPercentText;
+		[SerializeField] private TMP_Text spriteColText;
+		[SerializeField] private TMP_Text nextPercentText;
+		[SerializeField] private TMP_Text nameColText;
 
 		[Header("Tier Sprites")] 
 		[SerializeField] private List<Sprite> tierSprites = new(); // 8 entries: index 0 used for unknown and tier 1
@@ -405,34 +408,34 @@ namespace TimelessEchoes.UI
 			{
 				statsText.text =
 					$"<b>Totals</b>\n" +
-					$"• Tastings: {s.tastings}\n" +
-					$"• Cards Gained: {s.cardsGained}\n" +
+					$"• Tastings: {s.tastings:N0}\n" +
+					$"• Cards Gained: {s.cardsGained:N0}\n" +
 					$"<b>Roll Distribution</b>\n" +
-					$"• Gained Nothing: {s.gainedNothing}\n" +
-					$"• Alter-Echo: {s.alterEcho}\n" +
-					$"• Buffs: {s.buffs}\n" +
-					$"• Low Cards: {s.lowCards}\n" +
-					$"• Eva's Blessing: {s.evasBlessing}\n" +
-					$"• The Vast One's Surge: {s.vastSurge}";
+					$"• Gained Nothing: {s.gainedNothing:N0}\n" +
+					$"• Alter-Echo: {s.alterEcho:N0}\n" +
+					$"• Buffs: {s.buffs:N0}\n" +
+					$"• Low Cards: {s.lowCards:N0}\n" +
+					$"• Eva's Blessing: {s.evasBlessing:N0}\n" +
+					$"• The Vast One's Surge: {s.vastSurge:N0}";
 			}
 			else
 			{
 				statsText.text =
 					$"<b>Totals</b>\n" +
-					$"• Tastings: {s.tastings}\n" +
-					$"• Cards Gained: {s.cardsGained}\n" +
+					$"• Tastings: {s.tastings:N0}\n" +
+					$"• Cards Gained: {s.cardsGained:N0}\n" +
 					$"<b>Roll Distribution</b>\n" +
-					$"• Gained Nothing: {s.gainedNothing}\n" +
-					$"• AE - Farming: {s.aeFarming}\n" +
-					$"• AE - Fishing: {s.aeFishing}\n" +
-					$"• AE - Mining: {s.aeMining}\n" +
-					$"• AE - Woodcutting: {s.aeWoodcutting}\n" +
-					$"• AE - Looting: {s.aeLooting}\n" +
-					$"• AE - Combat: {s.aeCombat}\n" +
-					$"• Buffs: {s.buffs}\n" +
-					$"• Low Cards: {s.lowCards}\n" +
-					$"• Eva's Blessing: {s.evasBlessing}\n" +
-					$"• The Vast One's Surge: {s.vastSurge}";
+					$"• Gained Nothing: {s.gainedNothing:N0}\n" +
+					$"• AE - Farming: {s.aeFarming:N0}\n" +
+					$"• AE - Fishing: {s.aeFishing:N0}\n" +
+					$"• AE - Mining: {s.aeMining:N0}\n" +
+					$"• AE - Logging: {s.aeWoodcutting:N0}\n" +
+					$"• AE - Looting: {s.aeLooting:N0}\n" +
+					$"• AE - Combat: {s.aeCombat:N0}\n" +
+					$"• Buffs: {s.buffs:N0}\n" +
+					$"• Low Cards: {s.lowCards:N0}\n" +
+					$"• Eva's Blessing: {s.evasBlessing:N0}\n" +
+					$"• The Vast One's Surge: {s.vastSurge:N0}";
 			}
 		}
 
@@ -449,7 +452,7 @@ namespace TimelessEchoes.UI
 
 		private void RefreshWeightsText()
 		{
-			if (weightsText == null || config == null || cauldron == null) return;
+			if ((firstPercentText == null && spriteColText == null && nextPercentText == null && nameColText == null) || config == null || cauldron == null) return;
 			var lvl = Mathf.Max(1, cauldron.EvaLevel);
 			var next = lvl + 1;
 
@@ -466,7 +469,14 @@ namespace TimelessEchoes.UI
 			float wX10 = config.weightVastSurgeX10.Evaluate(lvl);
 
 			float tCurrent = wNothing + wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC + wBuff + wLow + wX2 + wX10;
-			if (tCurrent <= 0f) { weightsText.text = string.Empty; return; }
+			if (tCurrent <= 0f)
+			{
+				if (firstPercentText != null) firstPercentText.text = string.Empty;
+				if (spriteColText != null) spriteColText.text = string.Empty;
+				if (nextPercentText != null) nextPercentText.text = string.Empty;
+				if (nameColText != null) nameColText.text = string.Empty;
+				return;
+			}
 
 			float nNothing = config.weightNothing.Evaluate(next);
 			float nAEF = config.weightAEFarming.Evaluate(next);
@@ -483,37 +493,60 @@ namespace TimelessEchoes.UI
 			float tNext = nNothing + nAEF + nAEFi + nAEM + nAEW + nAEL + nAEC + nBuff + nLow + nX2 + nX10;
 			if (tNext <= 0f) tNext = 1f;
 
-			string Header() => "<b>Weights</b>\nCurrent<sprite=9 color=#4C4C4C>Next Level";
+			string HeaderFirst() => "<b>Current</b>\n";
+			string HeaderSprite() => "<sprite=9>\n";
+			string HeaderNext() => "<b>Next</b>\n";
+			string HeaderName() => "\n";
 			string ColorHex(Color c) => ColorUtility.ToHtmlStringRGB(c);
-			string Row(string label, float cur, float nxt, Color spriteColor)
-			{
-				var cp = Mathf.Clamp01(cur / tCurrent) * 100f;
-				var np = Mathf.Clamp01(nxt / tNext) * 100f;
-				var hex = ColorHex(spriteColor);
-				return $"\n{cp:0.##}%<sprite=9 color=#{hex}>{np:0.##}% • {label}";
-			}
+			string FormatPct(float val) => $"{val:F2}%"; // fixed 2 decimals for alignment
 
 			// Determine if AE subcategories are present
 			bool hasAE = (wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC) > 0f;
 
-			var sb = new System.Text.StringBuilder();
-			sb.Append(Header());
-			sb.Append(Row("Nothing", wNothing, nNothing, config.sliceNothing));
+			var rows = new List<(string label, float cur, float nxt, Color color)>();
+			rows.Add(("Nothing", wNothing, nNothing, config.sliceNothing));
 			if (hasAE)
 			{
-				sb.Append(Row("AE - Farming", wAEF, nAEF, config.sliceAEFarming));
-				sb.Append(Row("AE - Fishing", wAEFi, nAEFi, config.sliceAEFishing));
-				sb.Append(Row("AE - Mining", wAEM, nAEM, config.sliceAEMining));
-				sb.Append(Row("AE - Woodcutting", wAEW, nAEW, config.sliceAEWoodcutting));
-				sb.Append(Row("AE - Looting", wAEL, nAEL, config.sliceAELooting));
-				sb.Append(Row("AE - Combat", wAEC, nAEC, config.sliceAECombat));
+				rows.Add(("Farming", wAEF, nAEF, config.sliceAEFarming));
+				rows.Add(("Fishing", wAEFi, nAEFi, config.sliceAEFishing));
+				rows.Add(("Mining", wAEM, nAEM, config.sliceAEMining));
+				rows.Add(("Logging", wAEW, nAEW, config.sliceAEWoodcutting));
+				rows.Add(("Looting", wAEL, nAEL, config.sliceAELooting));
+				rows.Add(("Combat", wAEC, nAEC, config.sliceAECombat));
 			}
-			sb.Append(Row("Buffs", wBuff, nBuff, config.sliceBuff));
-			sb.Append(Row("Lowest", wLow, nLow, config.sliceLowest));
-			sb.Append(Row("Eva's Blessing x2", wX2, nX2, config.sliceEvas));
-			sb.Append(Row("Vast Surge x10", wX10, nX10, config.sliceVast));
+			rows.Add(("Buffs", wBuff, nBuff, config.sliceBuff));
+			rows.Add(("Lowest", wLow, nLow, config.sliceLowest));
+			rows.Add(("Blessing", wX2, nX2, config.sliceEvas));
+			rows.Add(("Surge", wX10, nX10, config.sliceVast));
 
-			weightsText.text = sb.ToString();
+			var colFirst = new System.Text.StringBuilder();
+			var colSprite = new System.Text.StringBuilder();
+			var colNext = new System.Text.StringBuilder();
+			var colName = new System.Text.StringBuilder();
+			colFirst.Append(HeaderFirst());
+			colSprite.Append(HeaderSprite());
+			colNext.Append(HeaderNext());
+			colName.Append(HeaderName());
+
+			for (int i = 0; i < rows.Count; i++)
+			{
+				var hex = ColorHex(rows[i].color);
+				var cp = Mathf.Clamp01(rows[i].cur / tCurrent) * 100f;
+				var np = Mathf.Clamp01(rows[i].nxt / tNext) * 100f;
+				colFirst.Append(i == 0 ? "" : "\n");
+				colFirst.Append($"<b>{FormatPct(cp)}</b>");
+				colSprite.Append(i == 0 ? "" : "\n");
+				colSprite.Append($"<sprite=9 color=#{hex}>");
+				colNext.Append(i == 0 ? "" : "\n");
+				colNext.Append(FormatPct(np));
+				colName.Append(i == 0 ? "" : "\n");
+				colName.Append($"• {rows[i].label}");
+			}
+
+			if (firstPercentText != null) firstPercentText.text = colFirst.ToString();
+			if (spriteColText != null) spriteColText.text = colSprite.ToString();
+			if (nextPercentText != null) nextPercentText.text = colNext.ToString();
+			if (nameColText != null) nameColText.text = colName.ToString();
 		}
 	}
 }

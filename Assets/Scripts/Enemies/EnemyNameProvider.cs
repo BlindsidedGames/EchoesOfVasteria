@@ -17,7 +17,8 @@ namespace TimelessEchoes.Enemies
             "Latimer Cross",
             "Kr4yon5",
             "Leroy Jenkins",
-            "Dragon slaying pope"
+            "Dragon slaying pope",
+            "HelFrost"
         };
 
         /// <summary>
