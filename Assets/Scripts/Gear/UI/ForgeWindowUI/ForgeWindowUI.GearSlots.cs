@@ -126,8 +126,10 @@ namespace TimelessEchoes.Gear.UI
 
             var lines = new List<string>();
 
-            // Display equipped stats (no +/- prefix);
-            foreach (var a in item.affixes)
+            // Display equipped stats (no +/- prefix) in standardized order
+            var sortedAffixes = new List<GearAffix>(item.affixes);
+            sortedAffixes.Sort((x, y) => StatSortOrder.Compare(x?.stat != null ? x.stat.heroMapping : default, y?.stat != null ? y.stat.heroMapping : default));
+            foreach (var a in sortedAffixes)
             {
                 if (a == null || a.stat == null) continue;
                 var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);

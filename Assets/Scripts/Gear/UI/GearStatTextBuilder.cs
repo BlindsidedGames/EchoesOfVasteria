@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Gear;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -19,7 +20,9 @@ namespace TimelessEchoes.Gear.UI
 
 			var craftedMappings = new HashSet<HeroStatMapping>();
 			var currentMappings = new HashSet<HeroStatMapping>(currentByMapping.Keys);
-			foreach (var a in item.affixes)
+			var sortedAffixes = new List<GearAffix>(item.affixes);
+			sortedAffixes.Sort((x, y) => StatSortOrder.Compare(x?.stat != null ? x.stat.heroMapping : default, y?.stat != null ? y.stat.heroMapping : default));
+			foreach (var a in sortedAffixes)
 			{
 				if (a == null || a.stat == null) continue;
 				var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
@@ -46,16 +49,21 @@ namespace TimelessEchoes.Gear.UI
 				craftedMappings.Add(a.stat.heroMapping);
 			}
 
+			var remaining = new List<HeroStatMapping>();
 			foreach (var kv in currentByMapping)
 			{
 				var mapping = kv.Key;
-				if (craftedMappings.Contains(mapping)) continue;
-
+				if (!craftedMappings.Contains(mapping)) remaining.Add(mapping);
+			}
+			remaining.Sort((a, b) => StatSortOrder.Compare(a, b));
+			foreach (var mapping in remaining)
+			{
 				var minus = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
 				var prefix = string.IsNullOrEmpty(minus) ? string.Empty : minus + " ";
 				var iconTag = StatIconLookup.GetIconTag(mapping);
-				var isPercent = kv.Value.isPercent;
-				var name = kv.Value.name;
+				var info = currentByMapping[mapping];
+				var isPercent = info.isPercent;
+				var name = info.name;
 				var valueText = $"{CalcUtils.FormatNumber(0)}{(isPercent ? "%" : "")}";
 				if (!string.IsNullOrEmpty(iconTag))
 					lines.Add($"{prefix}{iconTag} {valueText}");
@@ -72,7 +80,9 @@ namespace TimelessEchoes.Gear.UI
 				return StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
 
 			var lines = new List<string>();
-			foreach (var a in item.affixes)
+			var sortedAffixes = new List<GearAffix>(item.affixes);
+			sortedAffixes.Sort((x, y) => StatSortOrder.Compare(x?.stat != null ? x.stat.heroMapping : default, y?.stat != null ? y.stat.heroMapping : default));
+			foreach (var a in sortedAffixes)
 			{
 				if (a == null || a.stat == null) continue;
 				var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);

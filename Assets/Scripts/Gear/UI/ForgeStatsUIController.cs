@@ -200,17 +200,18 @@ namespace TimelessEchoes.Gear.UI
 
 			// Stat Rolls (highlights)
 			sb.AppendLine("<size=105%><b>Stat Rolls</b></size>");
-			AppendAll(sb, forge.CumulativeStatTotalsByStat, formatKey: k => GetIconForStatId(k), prefix: "• Totals:", valueFormat: v => Blindsided.Utilities.CalcUtils.FormatNumber(v, true));
+			AppendStatsInPreferredOrder(sb, forge.CumulativeStatTotalsByStat, formatKey: k => GetIconForStatId(k), prefix: "• Totals:", valueFormat: v => Blindsided.Utilities.CalcUtils.FormatNumber(v, true));
 			if (forge.HighestRollByStat != null && forge.HighestRollByStat.Count > 0)
 			{
 				sb.AppendLine("• Highest:");
 				var entries = new List<(string icon, string cur, string max)>();
 				int maxLen = 0;
-				foreach (var pair in forge.HighestRollByStat.OrderByDescending(p => p.Value))
+				foreach (var id in OrderStatIdsByPreferred(forge.HighestRollByStat.Keys))
 				{
-					var icon = GetIconForStatId(pair.Key);
-					float maxRoll = GetMaxRollForStat(pair.Key);
-					string curStr = pair.Value.ToString("0.000");
+					var icon = GetIconForStatId(id);
+					float maxRoll = GetMaxRollForStat(id);
+					float curVal = forge.HighestRollByStat.TryGetValue(id, out var v) ? v : 0f;
+					string curStr = curVal.ToString("0.000");
 					string maxStr = maxRoll.ToString("0.000");
 					entries.Add((icon, curStr, maxStr));
 					if (curStr.Length > maxLen) maxLen = curStr.Length;
@@ -223,7 +224,7 @@ namespace TimelessEchoes.Gear.UI
 			}
 			// Describe high rolls threshold dynamically from saved settings
 			var topPct = Mathf.Clamp01(1f - forge.HighRollTopPercentThreshold) * 100f;
-			AppendAll(sb, forge.HighRollsByStat, formatKey: k => GetIconForStatId(k), prefix: $"• High Rolls | Times rolled in top {topPct:0.#}% of stat:");
+			AppendStatsInPreferredOrder(sb, forge.HighRollsByStat, formatKey: k => GetIconForStatId(k), prefix: $"• High Rolls | Times rolled in top {topPct:0.#}% of stat:");
 
 			// Conversions moved to bottom
 			sb.AppendLine("<size=105%><b>Conversions</b></size>");
@@ -304,6 +305,20 @@ namespace TimelessEchoes.Gear.UI
 				sb.AppendLine($"  • {formatKey(key)}: {value:N0}");
 		}
 
+		private void AppendStatsInPreferredOrder(StringBuilder sb,
+			Dictionary<string, int> dict,
+			Func<string, string> formatKey,
+			string prefix = null)
+		{
+			if (dict == null || dict.Count == 0) return;
+			if (!string.IsNullOrEmpty(prefix)) sb.AppendLine(prefix);
+			foreach (var key in OrderStatIdsByPreferred(dict.Keys))
+			{
+				int value = dict.TryGetValue(key, out var v) ? v : 0;
+				sb.AppendLine($"  • {formatKey(key)}: {value:N0}");
+			}
+		}
+
 		private void AppendAll(StringBuilder sb,
 			Dictionary<string, double> dict,
 			Func<string, string> formatKey,
@@ -315,6 +330,22 @@ namespace TimelessEchoes.Gear.UI
 			if (!string.IsNullOrEmpty(prefix)) sb.AppendLine(prefix);
 			foreach (var (key, value) in ordered)
 			{
+				string vf = valueFormat != null ? valueFormat(value) : value.ToString("N0");
+				sb.AppendLine($"  • {formatKey(key)}: {vf}");
+			}
+		}
+
+		private void AppendStatsInPreferredOrder(StringBuilder sb,
+			Dictionary<string, double> dict,
+			Func<string, string> formatKey,
+			string prefix = null,
+			Func<double, string> valueFormat = null)
+		{
+			if (dict == null || dict.Count == 0) return;
+			if (!string.IsNullOrEmpty(prefix)) sb.AppendLine(prefix);
+			foreach (var key in OrderStatIdsByPreferred(dict.Keys))
+			{
+				double value = dict.TryGetValue(key, out var v) ? v : 0;
 				string vf = valueFormat != null ? valueFormat(value) : value.ToString("N0");
 				sb.AppendLine($"  • {formatKey(key)}: {vf}");
 			}
@@ -540,6 +571,29 @@ namespace TimelessEchoes.Gear.UI
 				if (!idToStat.ContainsKey(def.name)) idToStat[def.name] = def;
 				if (!string.IsNullOrWhiteSpace(def.displayName) && !idToStat.ContainsKey(def.displayName)) idToStat[def.displayName] = def;
 			}
+		}
+
+		private IEnumerable<string> OrderStatIdsByPreferred(IEnumerable<string> statIds)
+		{
+			EnsureStatLookup();
+			var list = new List<string>(statIds ?? Array.Empty<string>());
+			int MapIndex(string id)
+			{
+				if (string.IsNullOrWhiteSpace(id)) return int.MaxValue;
+				if (idToStat != null && idToStat.TryGetValue(id, out var def) && def != null)
+					return StatSortOrder.GetIndex(def.heroMapping);
+				// Fallback: try name-based mapping via StatIconLookup so unknowns end up after known
+				return int.MaxValue;
+			}
+			list.Sort((a, b) =>
+			{
+				int ia = MapIndex(a);
+				int ib = MapIndex(b);
+				int cmp = ia.CompareTo(ib);
+				if (cmp != 0) return cmp;
+				return string.Compare(a, b, StringComparison.OrdinalIgnoreCase);
+			});
+			return list;
 		}
 
 		private string GetIconForStatId(string statId)
