@@ -44,14 +44,14 @@ MonoBehaviour:
   - 25
   - 30
   weightNothing:
-    baseWeight: 500
-    weightPerLevel: -7.5
+    baseWeight: 1000
+    weightPerLevel: -5
   weightBuffCard:
-    baseWeight: 25
-    weightPerLevel: 1
+    baseWeight: 42
+    weightPerLevel: 0.42
   weightLowestCountCard:
     baseWeight: 10
-    weightPerLevel: 0.5
+    weightPerLevel: 0.4
   weightEvasBlessingX2:
     baseWeight: 10
     weightPerLevel: 0.2
@@ -60,22 +60,22 @@ MonoBehaviour:
     weightPerLevel: 0.05
   weightAEFarming:
     baseWeight: 360
-    weightPerLevel: 0
+    weightPerLevel: 0.036
   weightAEFishing:
     baseWeight: 160
-    weightPerLevel: 0
+    weightPerLevel: 0.016
   weightAEMining:
     baseWeight: 160
-    weightPerLevel: 0
+    weightPerLevel: 0.016
   weightAEWoodcutting:
     baseWeight: 60
-    weightPerLevel: 0
+    weightPerLevel: 0.006
   weightAECombat:
     baseWeight: 220
-    weightPerLevel: 0
+    weightPerLevel: 0.022
   weightAELooting:
     baseWeight: 180
-    weightPerLevel: 0
+    weightPerLevel: 0.018
   sliceNothing: {r: 0.3, g: 0.3, b: 0.3, a: 1}
   sliceBuff: {r: 0.9, g: 0.7, b: 0.2, a: 1}
   sliceLowest: {r: 0.6, g: 0.9, b: 0.3, a: 1}

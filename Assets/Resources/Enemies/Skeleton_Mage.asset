@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton_Mage
   m_EditorClassIdentifier: 
   enemyName: Skeleton Mage
-  displayOrder: 16
+  displayOrder: 17
   icon: {fileID: 7755512622975735135, guid: 7b3a664246d6a94499b2eaa4786e8cf9, type: 3}
   prefab: {fileID: 2377590028762114089, guid: b144e03d8801ec641899db6a352888ac, type: 3}
   weight: 2
@@ -88,13 +88,13 @@ MonoBehaviour:
   visionRange: 8
   assistRange: 6
   wanderDistance: 4
-  maxHealth: 300
-  damage: 30
-  defense: 1
+  maxHealth: 292
+  damage: 58.55
+  defense: 30
   attackSpeed: 1.5
   attackRange: 8
-  healthPerLevel: 20
-  damagePerLevel: 5
-  defensePerLevel: 0.15
+  healthPerLevel: 8
+  damagePerLevel: 1.5
+  defensePerLevel: 0.35
   distancePerLevel: 20
   projectilePrefab: {fileID: 4543230581087699070, guid: d2c6b79fa36a2ab498a54809cfd8f544, type: 3}

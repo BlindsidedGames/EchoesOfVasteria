@@ -63,9 +63,8 @@ namespace TimelessEchoes.Enemies
             var defense = enemy != null ? enemy.GetDefense() : 0f;
 
             float full = amount + bonusDamage;
-            // Enemies use a different scalar (N=60) via overload tuning
-            var tuning = new TimelessEchoes.DefenseTuning { N = 60f };
-            float total = TimelessEchoes.Combat.ApplyDefense(full, defense, tuning);
+            // Use the same defense scalar as the hero (Combat default)
+            float total = TimelessEchoes.Combat.ApplyDefense(full, defense);
 
             CurrentHealth -= total;
             UpdateBar();
