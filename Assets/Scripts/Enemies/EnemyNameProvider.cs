@@ -20,6 +20,9 @@ namespace TimelessEchoes.Enemies
             "Dragon slaying pope",
             "Hisuma",
             "HelFrost",
+            "Quackers",
+            "oswarlan",
+            "Invariel"
         };
 
         /// <summary>
