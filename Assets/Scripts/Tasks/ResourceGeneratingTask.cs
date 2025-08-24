@@ -42,28 +42,37 @@ namespace TimelessEchoes.Tasks
             var dropOrder = new List<Resource>();
 
             var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, worldX);
-            foreach (var res in results)
+            // Batch ResourceManager notifications to coalesce UI refreshes into a single update
+            resourceManager.BeginBatch();
+            try
             {
-                double final = res.count;
-                if (skillController)
+                foreach (var res in results)
                 {
-                    int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
-                    float resourceMult = skillController.GetResourceGainMultiplier();
-                    final = res.count * mult * resourceMult;
-                }
+                    double final = res.count;
+                    if (skillController)
+                    {
+                        int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                        float resourceMult = skillController.GetResourceGainMultiplier();
+                        final = res.count * mult * resourceMult;
+                    }
 
-                var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-                if (buff != null && buff.DoubleResourcesActive)
-                    final *= 2;
+                    var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                    if (buff != null && buff.DoubleResourcesActive)
+                        final *= 2;
 
-                resourceManager.Add(res.resource, final);
-                if (dropTotals.ContainsKey(res.resource))
-                    dropTotals[res.resource] += final;
-                else
-                {
-                    dropTotals[res.resource] = final;
-                    dropOrder.Add(res.resource);
+                    resourceManager.Add(res.resource, final);
+                    if (dropTotals.ContainsKey(res.resource))
+                        dropTotals[res.resource] += final;
+                    else
+                    {
+                        dropTotals[res.resource] = final;
+                        dropOrder.Add(res.resource);
+                    }
                 }
+            }
+            finally
+            {
+                resourceManager.EndBatch();
             }
 
             if (dropTotals.Count > 0)

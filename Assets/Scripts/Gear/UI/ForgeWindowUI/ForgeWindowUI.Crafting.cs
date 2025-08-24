@@ -130,7 +130,7 @@ namespace TimelessEchoes.Gear.UI
                 OnResourcesChanged();
                 ForceRefreshAllCoreSlots();
                 // Refresh the odds display after crafting
-                RefreshOdds();
+                ThrottledRefreshOdds();
                 try
                 {
                     Blindsided.EventHandler.SaveData();
@@ -150,7 +150,7 @@ namespace TimelessEchoes.Gear.UI
             ForceRefreshAllCoreSlots();
             RefreshActionButtons();
             // Refresh the odds display after crafting
-            RefreshOdds();
+            ThrottledRefreshOdds();
 
             // Persist resource spends and craft result to in-memory save (defer disk write)
             try
@@ -294,7 +294,7 @@ namespace TimelessEchoes.Gear.UI
         {
             // Validate core and required resources
             if (crafting == null || selectedCore == null) return false;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             if (rm == null) return false;
             var coreSlot = GetSlotForCore(selectedCore);
             var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
@@ -312,7 +312,7 @@ namespace TimelessEchoes.Gear.UI
         {
             if (selectedCore == null || selectedCore.requiredIngot == null)
                 return false;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             if (rm == null) return false;
             if (selectedCore.chunkResource != null &&
                 rm.GetAmount(selectedCore.chunkResource) < selectedCore.chunkCostPerIngot)
@@ -327,7 +327,7 @@ namespace TimelessEchoes.Gear.UI
         {
             if (selectedCore == null)
                 return false;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             if (rm == null) return false;
             if (selectedCore.chunkResource == null || slimeResource == null || selectedCore.crystalResource == null)
                 return false;
@@ -342,7 +342,7 @@ namespace TimelessEchoes.Gear.UI
         {
             if (selectedCore == null)
                 return false;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             if (rm == null) return false;
             if (selectedCore.crystalResource == null || stoneResource == null || selectedCore.chunkResource == null)
                 return false;
@@ -356,16 +356,25 @@ namespace TimelessEchoes.Gear.UI
         private void OnCraftIngotClicked()
         {
             if (!CanCraftIngot()) return;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
             var amount = GetCraftAmountForIngots(rm, core);
             if (amount <= 0) return;
-            if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                rm.Spend(core.chunkResource, core.chunkCostPerIngot * amount);
-            if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
-            rm.Add(core.requiredIngot, amount, trackStats: false);
+            // Batch spend/add to avoid multiple UI refreshes per click
+            rm.BeginBatch();
+            try
+            {
+                if (core.chunkResource != null && core.chunkCostPerIngot > 0)
+                    rm.Spend(core.chunkResource, core.chunkCostPerIngot * amount);
+                if (core.crystalResource != null && core.crystalCostPerIngot > 0)
+                    rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
+                rm.Add(core.requiredIngot, amount, trackStats: false);
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
             // Stats: conversion action and resource deltas
             var o = Blindsided.Oracle.oracle;
             if (o != null && o.saveData != null && o.saveData.Forge != null)
@@ -412,17 +421,26 @@ namespace TimelessEchoes.Gear.UI
         private void OnCraftCrystalClicked()
         {
             if (!CanCraftCrystal()) return;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
             var amount = GetCraftAmountForCrystals(rm, core);
             if (amount <= 0) return;
-            if (core.chunkResource != null)
-                rm.Spend(core.chunkResource, 2 * amount);
-            if (slimeResource != null)
-                rm.Spend(slimeResource, 1 * amount);
-            if (core.crystalResource != null)
-                rm.Add(core.crystalResource, amount, trackStats: false);
+            // Batch spend/add to avoid multiple UI refreshes per click
+            rm.BeginBatch();
+            try
+            {
+                if (core.chunkResource != null)
+                    rm.Spend(core.chunkResource, 2 * amount);
+                if (slimeResource != null)
+                    rm.Spend(slimeResource, 1 * amount);
+                if (core.crystalResource != null)
+                    rm.Add(core.crystalResource, amount, trackStats: false);
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
             // Refresh stats UI
             var statsUi2 = FindFirstObjectByType<ForgeStatsUIController>();
             if (statsUi2 != null) statsUi2.MarkDirty();
@@ -464,17 +482,26 @@ namespace TimelessEchoes.Gear.UI
         private void OnCraftChunkClicked()
         {
             if (!CanCraftChunk()) return;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
             var amount = GetCraftAmountForChunks(rm, core);
             if (amount <= 0) return;
-            if (core.crystalResource != null)
-                rm.Spend(core.crystalResource, 1 * amount);
-            if (stoneResource != null)
-                rm.Spend(stoneResource, 2 * amount);
-            if (core.chunkResource != null)
-                rm.Add(core.chunkResource, amount, trackStats: false);
+            // Batch spend/add to avoid multiple UI refreshes per click
+            rm.BeginBatch();
+            try
+            {
+                if (core.crystalResource != null)
+                    rm.Spend(core.crystalResource, 1 * amount);
+                if (stoneResource != null)
+                    rm.Spend(stoneResource, 2 * amount);
+                if (core.chunkResource != null)
+                    rm.Add(core.chunkResource, amount, trackStats: false);
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
             // Refresh stats UI
             var statsUi3 = FindFirstObjectByType<ForgeStatsUIController>();
             if (statsUi3 != null) statsUi3.MarkDirty();

@@ -120,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.4 Unstable 3
+    m_Localized: v1.2.4 Unstable 4
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,7 +195,9 @@ MonoBehaviour:
       can now bypass enemies defense to reap them correctly for you.\n\u2022 Vampirism
       has been changed. We no longer have lifesteal, instead its a percent regen
       buff. It has been renamed accordingly.\n\u2022 Buffs now have their cooldowns
-      cleared when a run is longer than their cooldown.\n\u2022 New enemy balance
+      cleared when a run is longer than their cooldown.\n\u2022 The Cauldron now
+      only accepts food items.\n\u2022 Fixed an issue causing multiple save events
+      to trigger in a single frame during AE collection.\n\u2022 New enemy balance
       standard damage scaling for Skelly Mage and Large Slimes 5 damage per level.\n\u2022
       New enemy balance standard damage scaling for Skelly Archer and Medium Slimes
       2.5 damage per level.\n\u2022 New enemy balance standard damage scaling for

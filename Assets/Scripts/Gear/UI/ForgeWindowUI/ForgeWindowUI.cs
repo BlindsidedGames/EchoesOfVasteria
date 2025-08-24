@@ -14,6 +14,9 @@ namespace TimelessEchoes.Gear.UI
     {
         private CraftingService crafting;
         private EquipmentController equipment;
+        private ResourceManager rm;
+        private float nextOddsRefreshTime;
+        private ResourceManager RM => rm ?? (rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>());
 
         private List<CoreSO> cores = new();
         private CoreSO selectedCore;
@@ -30,6 +33,7 @@ namespace TimelessEchoes.Gear.UI
         {
             crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
             equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+            rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             cores = AssetCache.GetAll<CoreSO>().Where(b => b != null).OrderBy(b => b.tierIndex).ToList();
 
             // Build Core selection UI using only pre-placed slots (no prefab route)
@@ -222,8 +226,7 @@ namespace TimelessEchoes.Gear.UI
             // Refresh Ivan XP display on open
             UpdateIvanXpUI();
             // Refresh selected previews when inventory changes (e.g., crafting spends ingots)
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            if (rm != null) rm.OnInventoryChanged += OnResourcesChanged;
+            if (RM != null) RM.OnInventoryChanged += OnResourcesChanged;
             // Subscribe to Ivan XP events if available
             var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
             if (svc != null)
@@ -245,8 +248,7 @@ namespace TimelessEchoes.Gear.UI
                 equipment.OnEquipmentChanged -= UpdateSelectedSlotStats;
             }
 
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            if (rm != null) rm.OnInventoryChanged -= OnResourcesChanged;
+            if (RM != null) RM.OnInventoryChanged -= OnResourcesChanged;
             var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
             if (svc != null)
             {

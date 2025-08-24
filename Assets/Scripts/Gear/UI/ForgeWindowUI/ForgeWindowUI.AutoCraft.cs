@@ -103,7 +103,7 @@ namespace TimelessEchoes.Gear.UI
                 UpdateResultPreview(lastCrafted);
                 OnResourcesChanged();
                 ForceRefreshAllCoreSlots();
-                RefreshOdds();
+                ThrottledRefreshOdds();
 
                 if (UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted,
                         eq))

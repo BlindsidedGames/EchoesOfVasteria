@@ -88,8 +88,12 @@ namespace TimelessEchoes.NpcGeneration
         private void CollectAll()
         {
             if (generationManager == null) return;
+            var rm = TimelessEchoes.Upgrades.ResourceManager.Instance;
+            rm?.BeginBatch();
             foreach (var gen in generationManager.Generators)
-                gen?.CollectResources();
+                gen?.CollectResources(false);
+            rm?.EndBatch();
+            Blindsided.EventHandler.SaveData();
             UpdateCollectAllButton();
         }
 

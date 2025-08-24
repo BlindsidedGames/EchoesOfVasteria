@@ -4,6 +4,7 @@ namespace Blindsided
 {
     public static class EventHandler
     {
+        private static int _lastSaveFrame = -1;
         public static event Action UpdateUiEvent;
         public static event Action<float> AwayFor;
         public static event Action OnUnlockNexusEvent;
@@ -16,6 +17,10 @@ namespace Blindsided
         
         public static void SaveData()
         {
+            // Debounce: invoke at most once per frame
+            var frame = UnityEngine.Time.frameCount;
+            if (frame == _lastSaveFrame) return;
+            _lastSaveFrame = frame;
             OnSaveData?.Invoke();
         }
         

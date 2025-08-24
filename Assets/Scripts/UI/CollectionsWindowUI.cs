@@ -22,9 +22,16 @@ namespace TimelessEchoes.UI
 
 		private readonly Dictionary<string, CollectionItemUIReferences> itemById = new();
 
+		private ResourceManager rm;
+		[SerializeField] [Min(0.25f)] private float unlockCheckIntervalSeconds = 0.75f;
+		private Coroutine unlockMonitorRoutine;
+		private bool unlocksDirty;
+		private int lastUnlocksHash;
+
 		private void Awake()
 		{
 			cauldron ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
 		}
 
 		private void OnEnable()
@@ -36,16 +43,28 @@ namespace TimelessEchoes.UI
 				cauldron.OnTasteSessionStarted += OnTasteSessionStarted;
 			}
 			EventHandler.OnLoadData += OnSaveOrLoad;
+			// Switch to throttled unlock monitoring; avoid full rebuild every inventory change
+			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedMark;
+			EventHandler.OnQuestHandin += OnQuestHandin;
+			if (unlockMonitorRoutine == null)
+				unlockMonitorRoutine = StartCoroutine(UnlockMonitorLoop());
 		}
 
 		private void OnDisable()
 		{
+			if (rm != null) rm.OnInventoryChanged -= OnInventoryChangedMark;
+			EventHandler.OnQuestHandin -= OnQuestHandin;
 			if (cauldron != null)
 			{
 				cauldron.OnCardGained -= OnCardGained;
 				cauldron.OnTasteSessionStarted -= OnTasteSessionStarted;
 			}
 			EventHandler.OnLoadData -= OnSaveOrLoad;
+			if (unlockMonitorRoutine != null)
+			{
+				StopCoroutine(unlockMonitorRoutine);
+				unlockMonitorRoutine = null;
+			}
 		}
 
 		private void Rebuild()
@@ -56,62 +75,59 @@ namespace TimelessEchoes.UI
 			UIUtils.ClearChildren(parent);
 			itemById.Clear();
 
-			// Buffs section first
-			var secB = Instantiate(sectionPrefab, parent);
-			if (secB.titleText != null) secB.titleText.text = "Buffs";
-			foreach (var buff in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>(""))
+			var qm = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
+
+			// Buffs section (only if any eligible)
+			var eligibleBuffs = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>("")
+				.Where(b => b != null && (b.requiredQuest == null || (qm != null && qm.IsQuestCompleted(b.requiredQuest))))
+				.ToList();
+			if (eligibleBuffs.Count > 0)
 			{
-				if (buff == null) continue;
-				var ui = Instantiate(itemPrefab, secB.contentTransform);
-				ui.nameText.text = buff.name;
-				ui.iconImage.sprite = buff.buffIcon;
-				var id = $"BUFF:{buff.name}";
-				itemById[id] = ui;
-				UpdateItemCount(id);
+				var secB = Instantiate(sectionPrefab, parent);
+				if (secB.titleText != null) secB.titleText.text = "Buffs";
+				foreach (var buff in eligibleBuffs)
+				{
+					var ui = Instantiate(itemPrefab, secB.contentTransform);
+					ui.nameText.text = buff.name;
+					ui.iconImage.sprite = buff.buffIcon;
+					var id = $"BUFF:{buff.name}";
+					itemById[id] = ui;
+					UpdateItemCount(id);
+				}
 			}
 
-			// Alter-Echoes split into subcategories
+			// Alter-Echoes split into subcategories (create sections lazily only if they have items)
 			var cm = CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
 			var sections = new Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences>();
-			// Create sections in desired order
-			var orderedGroups = new[]
-			{
-				CauldronManager.AEResourceGroup.Farming,
-				CauldronManager.AEResourceGroup.Fishing,
-				CauldronManager.AEResourceGroup.Mining,
-				CauldronManager.AEResourceGroup.Woodcutting,
-				CauldronManager.AEResourceGroup.Looting,
-				CauldronManager.AEResourceGroup.Combat
-			};
-			foreach (var g in orderedGroups)
-			{
-				var sec = Instantiate(sectionPrefab, parent);
-				if (sec.titleText != null)
-					sec.titleText.text = g switch
-					{
-						CauldronManager.AEResourceGroup.Farming => "Alter-Echoes — Farming",
-						CauldronManager.AEResourceGroup.Fishing => "Alter-Echoes — Fishing",
-						CauldronManager.AEResourceGroup.Mining => "Alter-Echoes — Mining",
-						CauldronManager.AEResourceGroup.Woodcutting => "Alter-Echoes — Logging",
-						CauldronManager.AEResourceGroup.Looting => "Alter-Echoes — Looting",
-						_ => "Alter-Echoes — Combat"
-					};
-				sections[g] = sec;
-			}
 
 			var allRes = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && !r.DisableAlterEcho)
+				.Where(r => r != null && !r.DisableAlterEcho && rm != null && rm.IsUnlocked(r))
 				.OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
 				.ThenBy(r => r.name)
 				.ToList();
 			foreach (var res in allRes)
 			{
 				var grp = cm != null ? cm.GetResourceGroup(res) : CauldronManager.AEResourceGroup.Combat;
-				if (!sections.TryGetValue(grp, out var sec) || sec == null) continue;
+				if (!sections.TryGetValue(grp, out var sec) || sec == null)
+				{
+					sec = Instantiate(sectionPrefab, parent);
+					if (sec.titleText != null)
+						sec.titleText.text = grp switch
+						{
+							CauldronManager.AEResourceGroup.Farming => "Alter-Echoes — Farming",
+							CauldronManager.AEResourceGroup.Fishing => "Alter-Echoes — Fishing",
+							CauldronManager.AEResourceGroup.Mining => "Alter-Echoes — Mining",
+							CauldronManager.AEResourceGroup.Woodcutting => "Alter-Echoes — Logging",
+							CauldronManager.AEResourceGroup.Looting => "Alter-Echoes — Looting",
+							_ => "Alter-Echoes — Combat"
+						};
+					sections[grp] = sec;
+				}
+
 				var ui = Instantiate(itemPrefab, sec.contentTransform);
 				// Show plain resource name only
 				ui.nameText.text = res.name;
-				ui.iconImage.sprite = res.UnknownIcon; // default to unknown
+				ui.iconImage.sprite = res.icon;
 				var key = $"RES:{res.name}";
 				itemById[key] = ui;
 				UpdateItemCount(key);
@@ -122,6 +138,11 @@ namespace TimelessEchoes.UI
 
 		private void OnCardGained(string id, int amt)
 		{
+			if (!itemById.ContainsKey(id))
+			{
+				Rebuild();
+				return;
+			}
 			UpdateItemCount(id);
 			if (itemById.TryGetValue(id, out var ui) && ui != null && ui.selectionImage != null)
 			{
@@ -141,6 +162,48 @@ namespace TimelessEchoes.UI
 			}
 		}
 
+		private void OnInventoryChangedMark()
+		{
+			// Mark dirty and let the monitor loop coalesce updates
+			unlocksDirty = true;
+		}
+
+		private System.Collections.IEnumerator UnlockMonitorLoop()
+		{
+			var wait = new WaitForSecondsRealtime(Mathf.Max(0.25f, unlockCheckIntervalSeconds));
+			lastUnlocksHash = ComputeUnlocksHash();
+			while (enabled && gameObject.activeInHierarchy)
+			{
+				if (unlocksDirty)
+				{
+					var h = ComputeUnlocksHash();
+					if (h != lastUnlocksHash)
+					{
+						Rebuild();
+						lastUnlocksHash = h;
+					}
+					unlocksDirty = false;
+				}
+				yield return wait;
+			}
+		}
+
+		private int ComputeUnlocksHash()
+		{
+			if (rm == null) return 0;
+			int hash = 17;
+			// Hash all unlocked resources that appear in the collection (non-DisableAlterEcho)
+			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+			{
+				if (r == null || r.DisableAlterEcho) continue;
+				if (rm.IsUnlocked(r))
+				{
+					hash = hash * 31 + r.name.GetHashCode();
+				}
+			}
+			return hash;
+		}
+
 		private void UpdateItemCount(string id)
 		{
 			if (!itemById.TryGetValue(id, out var ui) || ui == null) return;
@@ -149,19 +212,13 @@ namespace TimelessEchoes.UI
 			var count = dict.TryGetValue(id, out var c) ? c : 0;
 			if (ui.countText != null)
 				ui.countText.text = count.ToString();
-			// Icon shows Unknown sprite for resources with 0 copies
+			// Keep card name as plain resource name
 			if (id.StartsWith("RES:"))
 			{
 				var resName = id.Substring(4);
 				var res = Blindsided.Utilities.AssetCache.GetAll<Resource>("").FirstOrDefault(r => r != null && r.name == resName);
-				if (res != null)
-				{
-					if (ui.iconImage != null)
-						ui.iconImage.sprite = count > 0 ? res.icon : res.UnknownIcon;
-					// Keep card name as plain resource name (no AE percent here)
-					if (ui.nameText != null)
-						ui.nameText.text = res.name;
-				}
+				if (res != null && ui.nameText != null)
+					ui.nameText.text = res.name;
 			}
 			// Tier images (placeholder: compute tier index later when thresholds are available)
 			if (ui.tierImage != null || ui.borderTierImage != null)
@@ -238,6 +295,15 @@ namespace TimelessEchoes.UI
 		private void OnSaveOrLoad()
 		{
 			Rebuild();
+			unlocksDirty = false;
+			lastUnlocksHash = ComputeUnlocksHash();
+		}
+
+		private void OnQuestHandin(string questId)
+		{
+			Rebuild();
+			unlocksDirty = false;
+			lastUnlocksHash = ComputeUnlocksHash();
 		}
 	}
 }

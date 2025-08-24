@@ -32,24 +32,35 @@ namespace TimelessEchoes.Gear
 
             var results = DropResolver.RollDrops(drops, extraChances, 0f, ignoreQuest: true);
             int totalAwardedEntries = 0;
-            foreach (var res in results)
+            rm.BeginBatch();
+            try
             {
-                rm.Add(res.resource, res.count, trackStats: false);
-                totalAwardedEntries++;
-
-                // Record salvage yield per resource and total gained from salvage
-                var o = Blindsided.Oracle.oracle;
-                if (o != null && o.saveData != null && o.saveData.Forge != null && res.resource != null)
+                foreach (var res in results)
                 {
-                    var forge = o.saveData.Forge;
-                    var rname = res.resource.name;
-                    if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname)) forge.ResourcesGainedFromSalvage[rname] = 0;
-                    forge.ResourcesGainedFromSalvage[rname] += res.count;
-                    if (!forge.SalvageYieldPerResource.ContainsKey(rname)) forge.SalvageYieldPerResource[rname] = new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
-                    var agg = forge.SalvageYieldPerResource[rname];
-                    agg.count++;
-                    agg.sum += res.count;
+                    rm.Add(res.resource, res.count, trackStats: false);
+                    totalAwardedEntries++;
+
+                    // Record salvage yield per resource and total gained from salvage
+                    var o = Blindsided.Oracle.oracle;
+                    if (o != null && o.saveData != null && o.saveData.Forge != null && res.resource != null)
+                    {
+                        var forge = o.saveData.Forge;
+                        var rname = res.resource.name;
+                        if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname))
+                            forge.ResourcesGainedFromSalvage[rname] = 0;
+                        forge.ResourcesGainedFromSalvage[rname] += res.count;
+                        if (!forge.SalvageYieldPerResource.ContainsKey(rname))
+                            forge.SalvageYieldPerResource[rname] =
+                                new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
+                        var agg = forge.SalvageYieldPerResource[rname];
+                        agg.count++;
+                        agg.sum += res.count;
+                    }
                 }
+            }
+            finally
+            {
+                rm.EndBatch();
             }
 
             // Persist awarded salvage to in-memory save (defer disk write) when anything was given

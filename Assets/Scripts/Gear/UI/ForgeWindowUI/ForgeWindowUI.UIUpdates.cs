@@ -25,7 +25,7 @@ namespace TimelessEchoes.Gear.UI
                         CraftingService.Instance.Config.xpLevelMultiplier)
                     : 1f);
             // Odds depend on level scaling; refresh them when level changes
-            RefreshOdds();
+            ThrottledRefreshOdds();
         }
 
         private void OnResourcesChanged()
@@ -39,7 +39,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateMaxCraftsText();
             UpdateIvanXpUI();
             RefreshActionButtons();
-            RefreshOdds();
+            ThrottledRefreshOdds();
         }
 
         private void UpdateIvanXpUI()
@@ -76,7 +76,7 @@ namespace TimelessEchoes.Gear.UI
         private void UpdateSelectedCorePreview(CoreSlotUIReferences slot)
         {
             // Update selected core image and count based on the clicked slot
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var section = craftSection;
             if (section != null && section.cost1Image != null)
             {
@@ -117,7 +117,7 @@ namespace TimelessEchoes.Gear.UI
                 Sprite sprite = null;
                 if (ingot != null)
                 {
-                    var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+                    var rm = RM;
                     var discovered = rm != null && rm.IsUnlocked(ingot);
                     var have = rm != null && rm.GetAmount(ingot) >= (core != null ? core.ingotCost : 0);
                     sprite = discovered && have ? ingot.icon : ingot.UnknownIcon;
@@ -133,7 +133,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateIngotCraftPreview(CoreSO core)
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var section = ingotConversionSection;
             if (section == null) return;
 
@@ -216,7 +216,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateCrystalCraftPreview(CoreSO core)
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var section = crystalConversionSection;
             if (section == null) return;
 
@@ -294,7 +294,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateChunkCraftPreview(CoreSO core)
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var section = chunkConversionSection;
             if (section == null) return;
 
@@ -372,7 +372,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateMaxCraftsText()
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = RM;
             var text = craftSection != null ? craftSection.maxCraftsText : null;
             if (text == null)
                 return;

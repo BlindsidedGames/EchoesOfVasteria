@@ -66,7 +66,7 @@ namespace TimelessEchoes.Quests
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
 
             if (resourceManager != null)
-                resourceManager.OnInventoryChanged += UpdateAllProgress;
+                resourceManager.OnInventoryChanged += OnInventoryChangedDebounced;
             if (killTracker != null)
                 killTracker.OnKillRegistered += OnKill;
             if (statTracker != null)
@@ -84,7 +84,7 @@ namespace TimelessEchoes.Quests
         {
             base.OnDestroy();
             if (resourceManager != null)
-                resourceManager.OnInventoryChanged -= UpdateAllProgress;
+                resourceManager.OnInventoryChanged -= OnInventoryChangedDebounced;
             if (killTracker != null)
                 killTracker.OnKillRegistered -= OnKill;
             if (statTracker != null)
@@ -153,6 +153,17 @@ namespace TimelessEchoes.Quests
         {
             foreach (var inst in active.Values)
                 UpdateProgress(inst);
+        }
+
+        // Debounced variant to avoid recomputing quest progress many times in the same frame
+        private int _lastProgressUpdateFrame = -1;
+        private void OnInventoryChangedDebounced()
+        {
+            var frame = Time.frameCount;
+            if (frame == _lastProgressUpdateFrame)
+                return;
+            _lastProgressUpdateFrame = frame;
+            UpdateAllProgress();
         }
 
         private bool AreRequirementsMet(QuestData quest)

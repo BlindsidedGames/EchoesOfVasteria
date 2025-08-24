@@ -17,6 +17,8 @@ namespace TimelessEchoes.Upgrades
     public class ResourceManager : Singleton<ResourceManager>
     {
         private static Dictionary<string, Resource> lookup;
+        private int batchDepth;
+        private bool pendingInventoryChanged;
 
         /// <summary>
         ///     Invoked whenever the stored resource amounts or unlocked state changes.
@@ -40,6 +42,21 @@ namespace TimelessEchoes.Upgrades
         private void InvokeInventoryChanged()
         {
             OnInventoryChanged?.Invoke();
+        }
+
+        public void BeginBatch()
+        {
+            batchDepth++;
+        }
+
+        public void EndBatch()
+        {
+            batchDepth = Mathf.Max(0, batchDepth - 1);
+            if (batchDepth == 0 && pendingInventoryChanged)
+            {
+                pendingInventoryChanged = false;
+                InvokeInventoryChanged();
+            }
         }
 
         protected override void Awake()
@@ -100,7 +117,10 @@ namespace TimelessEchoes.Upgrades
                     tracker.AddResources(amount, bonus);
                 OnResourceAdded?.Invoke(resource, amount, bonus);
             }
-            InvokeInventoryChanged();
+            if (batchDepth > 0)
+                pendingInventoryChanged = true;
+            else
+                InvokeInventoryChanged();
             if (newlyUnlocked)
                 UpdateCompletionPercentage();
         }
@@ -112,7 +132,10 @@ namespace TimelessEchoes.Upgrades
             if (current < amount) return false;
             amounts[resource] = current - amount;
             resource.totalSpent += Mathf.RoundToInt((float)amount);
-            InvokeInventoryChanged();
+            if (batchDepth > 0)
+                pendingInventoryChanged = true;
+            else
+                InvokeInventoryChanged();
             return true;
         }
 
@@ -125,7 +148,10 @@ namespace TimelessEchoes.Upgrades
         {
             amounts.Clear();
             unlocked.Clear();
-            InvokeInventoryChanged();
+            if (batchDepth > 0)
+                pendingInventoryChanged = true;
+            else
+                InvokeInventoryChanged();
         }
 
         private void SaveState()

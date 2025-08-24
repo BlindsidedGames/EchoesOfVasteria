@@ -32,7 +32,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateCrystalCraftPreview(selectedCore);
             UpdateChunkCraftPreview(selectedCore);
             UpdateMaxCraftsText();
-            RefreshOdds();
+            ThrottledRefreshOdds();
             RefreshActionButtons();
         }
 
@@ -46,8 +46,6 @@ namespace TimelessEchoes.Gear.UI
 
         private void RefreshOdds()
         {
-            // Removed text odds UI; pie chart handles visualization now
-
             var core = selectedCore ?? (cores != null && cores.Count > 0 ? cores[0] : null);
             if (core == null)
             {
@@ -57,6 +55,15 @@ namespace TimelessEchoes.Gear.UI
 
             var info = RarityOddsCalculator.BuildRarityWeightInfo(core);
             RefreshOddsPieChart(info.weights);
+        }
+
+        private void ThrottledRefreshOdds()
+        {
+            // refresh at most 5 times per second
+            if (Time.unscaledTime < nextOddsRefreshTime)
+                return;
+            nextOddsRefreshTime = Time.unscaledTime + 0.2f;
+            RefreshOdds();
         }
 
         private void RefreshOddsPieChart(List<(RaritySO r, float w)> weights)

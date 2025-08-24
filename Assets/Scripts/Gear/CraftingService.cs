@@ -71,11 +71,19 @@ namespace TimelessEchoes.Gear
             if (!haveIngots || !haveCores)
                 return null;
 
-            // Spend both costs
-            if (!rm.Spend(core.requiredIngot, core.ingotCost))
-                return null;
-            if (!rm.Spend(coreResource, coreCost))
-                return null;
+            // Spend both costs in a single batch to coalesce inventory change notifications
+            rm.BeginBatch();
+            try
+            {
+                if (!rm.Spend(core.requiredIngot, core.ingotCost))
+                    return null;
+                if (!rm.Spend(coreResource, coreCost))
+                    return null;
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
 
             // Record resource spends per resource and per core
             if (oracle != null && oracle.saveData != null)

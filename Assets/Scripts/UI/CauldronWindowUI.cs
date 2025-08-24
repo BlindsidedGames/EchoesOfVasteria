@@ -82,7 +82,7 @@ namespace TimelessEchoes.UI
 					var slot = t.GetComponent<CauldronMixItemUIReferences>();
 					if (slot != null) mixSlots.Add(slot);
 				}
-			if (rm != null) rm.OnInventoryChanged += RefreshMixSlots;
+			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedUi;
 			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
 			if (drinking != null)
 			{
@@ -116,6 +116,7 @@ namespace TimelessEchoes.UI
 
 		private void OnDisable()
 		{
+			if (rm != null) rm.OnInventoryChanged -= OnInventoryChangedUi;
 			if (cauldron != null)
 			{
 				cauldron.OnStewChanged -= RefreshDrinkingTexts;
@@ -309,44 +310,52 @@ namespace TimelessEchoes.UI
 					?.Invoke(cauldron, null) as CauldronManager.TastingStats? ?? default : default);
 		}
 
+		private void OnInventoryChangedUi()
+		{
+			RefreshMixSlots();
+			RefreshPieChart();
+			RefreshWeightsText();
+		}
+
 		private void RefreshPieChart()
 		{
 			if (config == null || oddsPieSlices == null || oddsPieSlices.Count == 0) return;
 			var lvl = cauldron != null ? cauldron.EvaLevel : 1;
+			var eff = cauldron != null ? cauldron.GetEffectiveWeightsAtLevel(lvl) : default;
 			// Prefer subcategory slices if configured; otherwise fall back to legacy single Alter-Echo slice
-			var hasSub = (config.weightAEFarming.Evaluate(lvl)
-				       + config.weightAEFishing.Evaluate(lvl)
-				       + config.weightAEMining.Evaluate(lvl)
-				       + config.weightAEWoodcutting.Evaluate(lvl)
-				       + config.weightAELooting.Evaluate(lvl)
-				       + config.weightAECombat.Evaluate(lvl)) > 0f;
+			var hasSub = (eff.wAEFarming
+			       + eff.wAEFishing
+			       + eff.wAEMining
+			       + eff.wAEWoodcutting
+			       + eff.wAELooting
+			       + eff.wAECombat) > 0f;
 			(UnityEngine.Color c, float w)[] weights;
 			if (hasSub)
 			{
 				weights = new (Color c, float w)[]
 				{
-					(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
-					(config.sliceAEFarming, config.weightAEFarming.Evaluate(lvl)),
-					(config.sliceAEFishing, config.weightAEFishing.Evaluate(lvl)),
-					(config.sliceAEMining, config.weightAEMining.Evaluate(lvl)),
-					(config.sliceAEWoodcutting, config.weightAEWoodcutting.Evaluate(lvl)),
-					(config.sliceAELooting, config.weightAELooting.Evaluate(lvl)),
-					(config.sliceAECombat, config.weightAECombat.Evaluate(lvl)),
-					(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
-					(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
-					(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
-					(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
+					(config.sliceNothing, eff.wNothing),
+					(config.sliceAEFarming, eff.wAEFarming),
+					(config.sliceAEFishing, eff.wAEFishing),
+					(config.sliceAEMining, eff.wAEMining),
+					(config.sliceAEWoodcutting, eff.wAEWoodcutting),
+					(config.sliceAELooting, eff.wAELooting),
+					(config.sliceAECombat, eff.wAECombat),
+					(config.sliceBuff, eff.wBuff),
+					(config.sliceLowest, eff.wLow),
+					(config.sliceEvas, eff.wX2),
+					(config.sliceVast, eff.wX10),
 				};
 			}
 			else
 			{
 				weights = new (Color c, float w)[]
 				{
-					(config.sliceNothing, config.weightNothing.Evaluate(lvl)),
-					(config.sliceBuff, config.weightBuffCard.Evaluate(lvl)),
-					(config.sliceLowest, config.weightLowestCountCard.Evaluate(lvl)),
-					(config.sliceEvas, config.weightEvasBlessingX2.Evaluate(lvl)),
-					(config.sliceVast, config.weightVastSurgeX10.Evaluate(lvl)),
+					(config.sliceNothing, eff.wNothing),
+					(config.sliceBuff, eff.wBuff),
+					(config.sliceLowest, eff.wLow),
+					(config.sliceEvas, eff.wX2),
+					(config.sliceVast, eff.wX10),
 				};
 			}
 
@@ -480,17 +489,18 @@ namespace TimelessEchoes.UI
 			var lvl = Mathf.Max(1, cauldron.EvaLevel);
 			var next = lvl + 1;
 
-			float wNothing = config.weightNothing.Evaluate(lvl);
-			float wAEF = config.weightAEFarming.Evaluate(lvl);
-			float wAEFi = config.weightAEFishing.Evaluate(lvl);
-			float wAEM = config.weightAEMining.Evaluate(lvl);
-			float wAEW = config.weightAEWoodcutting.Evaluate(lvl);
-			float wAEL = config.weightAELooting.Evaluate(lvl);
-			float wAEC = config.weightAECombat.Evaluate(lvl);
-			float wBuff = config.weightBuffCard.Evaluate(lvl);
-			float wLow = config.weightLowestCountCard.Evaluate(lvl);
-			float wX2 = config.weightEvasBlessingX2.Evaluate(lvl);
-			float wX10 = config.weightVastSurgeX10.Evaluate(lvl);
+			var cur = cauldron.GetEffectiveWeightsAtLevel(lvl);
+			float wNothing = cur.wNothing;
+			float wAEF = cur.wAEFarming;
+			float wAEFi = cur.wAEFishing;
+			float wAEM = cur.wAEMining;
+			float wAEW = cur.wAEWoodcutting;
+			float wAEL = cur.wAELooting;
+			float wAEC = cur.wAECombat;
+			float wBuff = cur.wBuff;
+			float wLow = cur.wLow;
+			float wX2 = cur.wX2;
+			float wX10 = cur.wX10;
 
 			float tCurrent = wNothing + wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC + wBuff + wLow + wX2 + wX10;
 			if (tCurrent <= 0f)
@@ -502,17 +512,18 @@ namespace TimelessEchoes.UI
 				return;
 			}
 
-			float nNothing = config.weightNothing.Evaluate(next);
-			float nAEF = config.weightAEFarming.Evaluate(next);
-			float nAEFi = config.weightAEFishing.Evaluate(next);
-			float nAEM = config.weightAEMining.Evaluate(next);
-			float nAEW = config.weightAEWoodcutting.Evaluate(next);
-			float nAEL = config.weightAELooting.Evaluate(next);
-			float nAEC = config.weightAECombat.Evaluate(next);
-			float nBuff = config.weightBuffCard.Evaluate(next);
-			float nLow = config.weightLowestCountCard.Evaluate(next);
-			float nX2 = config.weightEvasBlessingX2.Evaluate(next);
-			float nX10 = config.weightVastSurgeX10.Evaluate(next);
+			var nxt = cauldron.GetEffectiveWeightsAtLevel(next);
+			float nNothing = nxt.wNothing;
+			float nAEF = nxt.wAEFarming;
+			float nAEFi = nxt.wAEFishing;
+			float nAEM = nxt.wAEMining;
+			float nAEW = nxt.wAEWoodcutting;
+			float nAEL = nxt.wAELooting;
+			float nAEC = nxt.wAECombat;
+			float nBuff = nxt.wBuff;
+			float nLow = nxt.wLow;
+			float nX2 = nxt.wX2;
+			float nX10 = nxt.wX10;
 
 			float tNext = nNothing + nAEF + nAEFi + nAEM + nAEW + nAEL + nAEC + nBuff + nLow + nX2 + nX10;
 			if (tNext <= 0f) tNext = 1f;

@@ -114,6 +114,11 @@ namespace TimelessEchoes.NpcGeneration
 
         public void CollectResources()
         {
+            CollectResources(true);
+        }
+
+        public void CollectResources(bool triggerSave)
+        {
             if (!setup || stored <= 0) return;
             resourceManager ??= ResourceManager.Instance;
             if (resourceManager == null)
@@ -128,13 +133,16 @@ namespace TimelessEchoes.NpcGeneration
             SaveState();
 
             // Persist collected resources to in-memory save (defer disk write)
-            try
+            if (triggerSave)
             {
-                Blindsided.EventHandler.SaveData();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"SaveData after disciple collect failed: {ex}");
+                try
+                {
+                    Blindsided.EventHandler.SaveData();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"SaveData after disciple collect failed: {ex}");
+                }
             }
         }
 

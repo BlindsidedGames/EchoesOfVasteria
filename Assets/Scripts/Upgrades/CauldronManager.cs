@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Quests;
 using TimelessEchoes.UI;
 using TimelessEchoes.Utilities;
 using UnityEngine;
@@ -217,12 +218,19 @@ namespace TimelessEchoes.Upgrades
                     1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f));
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
+            // Refresh weights when inventory or quests change
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged += OnInventoryChangedHandler;
+            EventHandler.OnQuestHandin += OnQuestHandinHandler;
         }
 
         private void OnDisable()
         {
             UITicker.Instance?.Unsubscribe(TasteTick);
             EventHandler.OnLoadData -= ResetSessionStats;
+            if (resourceManager != null)
+                resourceManager.OnInventoryChanged -= OnInventoryChangedHandler;
+            EventHandler.OnQuestHandin -= OnQuestHandinHandler;
         }
 
         // -------- Mixing --------
@@ -320,22 +328,22 @@ namespace TimelessEchoes.Upgrades
         private void ResolveTasteOutcome()
         {
             var lvl = EvaLevel;
-            var wNothing = config.weightNothing.Evaluate(lvl);
-            var wAE_Farm = config.weightAEFarming.Evaluate(lvl);
-            var wAE_Fish = config.weightAEFishing.Evaluate(lvl);
-            var wAE_Mine = config.weightAEMining.Evaluate(lvl);
-            var wAE_Wood = config.weightAEWoodcutting.Evaluate(lvl);
-            var wAE_Combat = config.weightAECombat.Evaluate(lvl);
-            var wAE_Loot = config.weightAELooting.Evaluate(lvl);
-            var wBuff = config.weightBuffCard.Evaluate(lvl);
-            var wLow = config.weightLowestCountCard.Evaluate(lvl);
-            var wX2 = config.weightEvasBlessingX2.Evaluate(lvl);
-            var wX10 = config.weightVastSurgeX10.Evaluate(lvl);
+            var eff = ComputeEffectiveWeights(lvl);
+            var wNothing = eff.wNothing;
+            var wAE_Farm = eff.wAEFarming;
+            var wAE_Fish = eff.wAEFishing;
+            var wAE_Mine = eff.wAEMining;
+            var wAE_Wood = eff.wAEWoodcutting;
+            var wAE_Combat = eff.wAECombat;
+            var wAE_Loot = eff.wAELooting;
+            var wBuff = eff.wBuff;
+            var wLow = eff.wLow;
+            var wX2 = eff.wX2;
+            var wX10 = eff.wX10;
 
             var subAEPresent = (wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat) > 0f;
-            float total = wNothing + wBuff + wLow + wX2 + wX10;
-            if (subAEPresent)
-                total += wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat;
+            float total = wNothing + wBuff + wLow + wX2 + wX10
+                          + (subAEPresent ? (wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat) : 0f);
             // No legacy AE weight
 
             if (total <= 0f) return;
@@ -517,14 +525,27 @@ namespace TimelessEchoes.Upgrades
             // RES:<ResourceName> for alter-echo cards (non-disabled)
             // BUFF:<BuffName> for buff cards
             var list = new List<string>();
+            var rm = resourceManager ?? ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
             if (!onlyBuffs)
+            {
                 foreach (var res in AssetCache.GetAll<Resource>())
-                    if (res != null && !res.DisableAlterEcho)
+                {
+                    if (res == null || res.DisableAlterEcho) continue;
+                    if (rm != null && rm.IsUnlocked(res))
                         list.Add($"RES:{res.name}");
+                }
+            }
             if (!onlyAlterEcho)
+            {
                 foreach (var buff in AssetCache.GetAll<BuffRecipe>())
-                    if (buff != null)
+                {
+                    if (buff == null) continue;
+                    var required = buff.requiredQuest;
+                    if (required == null || (qm != null && qm.IsQuestCompleted(required)))
                         list.Add($"BUFF:{buff.name}");
+                }
+            }
             return list;
         }
 
@@ -542,9 +563,11 @@ namespace TimelessEchoes.Upgrades
                 return cached;
 
             var list = new List<string>();
+            var rm = resourceManager ?? ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
             foreach (var res in AssetCache.GetAll<Resource>())
             {
                 if (res == null || res.DisableAlterEcho) continue;
+                if (rm != null && !rm.IsUnlocked(res)) continue;
                 if (GetResourceGroup(res) == group)
                     list.Add($"RES:{res.name}");
             }
@@ -665,6 +688,80 @@ namespace TimelessEchoes.Upgrades
             countAEWoodcutting = 0;
             // No separate session counter for Looting yet; AlterEcho total covers aggregate
             countAECombat = 0;
+        }
+
+        // ---------- Effective weights (eligibility-aware) ----------
+        public struct EffectiveWeightsSnapshot
+        {
+            public float wNothing;
+            public float wAEFarming;
+            public float wAEFishing;
+            public float wAEMining;
+            public float wAEWoodcutting;
+            public float wAELooting;
+            public float wAECombat;
+            public float wBuff;
+            public float wLow;
+            public float wX2;
+            public float wX10;
+        }
+
+        public EffectiveWeightsSnapshot GetEffectiveWeightsAtLevel(int evaLevel)
+        {
+            return ComputeEffectiveWeights(evaLevel);
+        }
+
+        private EffectiveWeightsSnapshot ComputeEffectiveWeights(int evaLevel)
+        {
+            var snap = new EffectiveWeightsSnapshot
+            {
+                wNothing = config != null ? config.weightNothing.Evaluate(evaLevel) : 0f,
+                wAEFarming = config != null ? config.weightAEFarming.Evaluate(evaLevel) : 0f,
+                wAEFishing = config != null ? config.weightAEFishing.Evaluate(evaLevel) : 0f,
+                wAEMining = config != null ? config.weightAEMining.Evaluate(evaLevel) : 0f,
+                wAEWoodcutting = config != null ? config.weightAEWoodcutting.Evaluate(evaLevel) : 0f,
+                wAECombat = config != null ? config.weightAECombat.Evaluate(evaLevel) : 0f,
+                wAELooting = config != null ? config.weightAELooting.Evaluate(evaLevel) : 0f,
+                wBuff = config != null ? config.weightBuffCard.Evaluate(evaLevel) : 0f,
+                wLow = config != null ? config.weightLowestCountCard.Evaluate(evaLevel) : 0f,
+                wX2 = config != null ? config.weightEvasBlessingX2.Evaluate(evaLevel) : 0f,
+                wX10 = config != null ? config.weightVastSurgeX10.Evaluate(evaLevel) : 0f
+            };
+
+            // Gate by eligibility
+            bool anyAllCards = BuildAllCardIds(false, false).Count > 0;
+            if (!anyAllCards)
+            {
+                snap.wLow = 0f;
+                snap.wX2 = 0f;
+                snap.wX10 = 0f;
+            }
+
+            // Buff pool eligibility
+            bool anyBuffs = BuildAllCardIds(false, true).Count > 0;
+            if (!anyBuffs)
+                snap.wBuff = 0f;
+
+            // AE subcategory eligibility
+            if (BuildResourceIdsForGroup(AEResourceGroup.Farming).Count == 0) snap.wAEFarming = 0f;
+            if (BuildResourceIdsForGroup(AEResourceGroup.Fishing).Count == 0) snap.wAEFishing = 0f;
+            if (BuildResourceIdsForGroup(AEResourceGroup.Mining).Count == 0) snap.wAEMining = 0f;
+            if (BuildResourceIdsForGroup(AEResourceGroup.Woodcutting).Count == 0) snap.wAEWoodcutting = 0f;
+            if (BuildResourceIdsForGroup(AEResourceGroup.Looting).Count == 0) snap.wAELooting = 0f;
+            if (BuildResourceIdsForGroup(AEResourceGroup.Combat).Count == 0) snap.wAECombat = 0f;
+
+            return snap;
+        }
+
+        private void OnInventoryChangedHandler()
+        {
+            cachedGroupPools.Clear();
+            OnWeightsChanged?.Invoke();
+        }
+
+        private void OnQuestHandinHandler(string questId)
+        {
+            OnWeightsChanged?.Invoke();
         }
     }
 }
