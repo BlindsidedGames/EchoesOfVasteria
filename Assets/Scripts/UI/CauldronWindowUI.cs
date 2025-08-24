@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using MPUIKIT;
 using static Blindsided.Oracle;
 using EventHandler = Blindsided.EventHandler;
+using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
@@ -22,7 +23,9 @@ namespace TimelessEchoes.UI
 		[SerializeField] private CauldronConfig config;
 
 		[Header("Mixing")]
-		[SerializeField] private Transform mixSlotsParent; // 6 children with CauldronMixItemUIReferences
+		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Drag up to 25 in Inspector
+		[SerializeField] private CauldronMixItemUIReferences slot1; // Selected A display (icon only)
+		[SerializeField] private CauldronMixItemUIReferences slot2; // Selected B display (icon only)
 		[SerializeField] private Button mixButton;
         [SerializeField] private TMP_Text predictedStewText;
         [SerializeField] private Image mixArrowImage;
@@ -64,24 +67,20 @@ namespace TimelessEchoes.UI
 			return borderTierSprites.Count > 0 ? borderTierSprites[idx] : null;
 		}
 
-		private readonly List<CauldronMixItemUIReferences> mixSlots = new();
+
 
 
 		private Resource selectedA;
 		private Resource selectedB;
 		private bool nextGreen = true;
-		private ResourceManager rm;
+		[SerializeField] private ResourceManager rm;
 
 		private void Awake()
 		{
-			cauldron ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
-			rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-			if (mixSlotsParent != null)
-				foreach (Transform t in mixSlotsParent)
-				{
-					var slot = t.GetComponent<CauldronMixItemUIReferences>();
-					if (slot != null) mixSlots.Add(slot);
-				}
+			cauldron ??= CauldronManager.Instance;
+			rm ??= ResourceManager.Instance;
+			if (mixSlots == null || mixSlots.Count == 0)
+				Log("Cauldron mix slot list is empty; assign up to 25 CauldronMixItemUIReferences in the Inspector.", TELogCategory.General, this);
 			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedUi;
 			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
 			if (drinking != null)
@@ -133,7 +132,7 @@ namespace TimelessEchoes.UI
 
 		private void RefreshMixSlots()
 		{
-			if (rm == null || mixSlots.Count == 0) return;
+			if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
 			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
 			var eligibleFromTasks = new HashSet<Resource>();
 			foreach (var t in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
@@ -152,17 +151,27 @@ namespace TimelessEchoes.UI
 			}
 
 			var eligibleFoods = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && rm.GetAmount(r) > 0 && eligibleFromTasks.Contains(r))
+				.Where(r => r != null && eligibleFromTasks.Contains(r) && (rm != null && rm.IsUnlocked(r)))
+				.OrderBy(r => r.resourceID)
+				.ThenBy(r => r.name)
 				.ToList();
 
 			// Clear any previous selections that are not foods
 			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
 			if (selectedB != null && !eligibleFoods.Contains(selectedB)) selectedB = null;
 
-			var all = eligibleFoods
-				.OrderByDescending(r => rm.GetAmount(r))
-				.Take(6)
-				.ToList();
+			// Clamp to first 25 and to available UI slots, with warnings
+			var maxByDesign = 25;
+			var capacity = mixSlots.Count;
+			if (eligibleFoods.Count > maxByDesign)
+				Log($"Eligible foods ({eligibleFoods.Count}) exceed 25; clamping to first 25.", TELogCategory.General, this);
+			var clamped = eligibleFoods.Take(Mathf.Min(maxByDesign, eligibleFoods.Count)).ToList();
+			if (clamped.Count > capacity)
+			{
+				Log($"Eligible foods ({clamped.Count}) exceed available mix slots ({capacity}); clamping to {capacity}.", TELogCategory.General, this);
+				clamped = clamped.Take(capacity).ToList();
+			}
+			var all = clamped;
 			for (int i = 0; i < mixSlots.Count; i++)
 			{
 				var ui = mixSlots[i];
@@ -196,6 +205,7 @@ namespace TimelessEchoes.UI
 				}
 			}
 			RefreshMixButton();
+			RefreshSelectedDisplaySlots();
 		}
 
 		private void ToggleSelection(Resource r, CauldronMixItemUIReferences ui)
@@ -233,6 +243,7 @@ namespace TimelessEchoes.UI
 					if (s.selectButton != null) s.selectButton.interactable = !(isA || isB);
 				}
 			}
+			RefreshSelectedDisplaySlots();
 		}
 
 		private void RefreshMixButton()
@@ -268,6 +279,35 @@ namespace TimelessEchoes.UI
 			nextGreen = true;
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
+			RefreshSelectedDisplaySlots();
+		}
+
+		private void RefreshSelectedDisplaySlots()
+		{
+			UpdateSelectedSlot(slot1, selectedA);
+			UpdateSelectedSlot(slot2, selectedB);
+		}
+
+		private void UpdateSelectedSlot(CauldronMixItemUIReferences slot, Resource r)
+		{
+			if (slot == null) return;
+			if (slot.iconImage != null)
+			{
+				if (r != null)
+				{
+					slot.iconImage.enabled = true;
+					slot.iconImage.sprite = r.icon;
+				}
+				else
+				{
+					slot.iconImage.sprite = null;
+					slot.iconImage.enabled = false;
+				}
+			}
+			if (slot.countText != null) slot.countText.text = string.Empty; // icon only
+			if (slot.selectionImageGreen != null) slot.selectionImageGreen.enabled = false;
+			if (slot.selectionImageWhite != null) slot.selectionImageWhite.enabled = false;
+			if (slot.selectButton != null) slot.selectButton.interactable = false;
 		}
 
 		private void RefreshDrinkingTexts()

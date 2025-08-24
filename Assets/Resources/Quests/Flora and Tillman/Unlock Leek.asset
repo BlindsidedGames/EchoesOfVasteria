@@ -42,16 +42,18 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: 
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 2395628c18784e2bab0b7af0b4bbc721, type: 2}
+  - {fileID: 11400000, guid: c3c28a1d79264acb8fe05e6880426a43, type: 2}
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: b5b12e283249229419b1a300192d8601, type: 2}
+    resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}
     amount: 1250
     enemies: []
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

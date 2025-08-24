@@ -57,7 +57,7 @@ namespace TimelessEchoes.Gear
                         agg.sum += res.count;
                     }
                 }
-            }
+            } 
             finally
             {
                 rm.EndBatch();
