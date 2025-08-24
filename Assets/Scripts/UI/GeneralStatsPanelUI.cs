@@ -36,7 +36,15 @@ namespace TimelessEchoes.UI
 
         private void RefreshTick()
         {
+            if (!IsPanelVisible()) return;
             UpdateTexts();
+        }
+
+        private bool IsPanelVisible()
+        {
+            if (references != null && references.distanceLongestTasksText != null)
+                return references.distanceLongestTasksText.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
         private void UpdateTexts()

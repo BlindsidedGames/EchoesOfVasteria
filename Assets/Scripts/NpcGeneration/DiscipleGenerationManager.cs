@@ -25,6 +25,8 @@ namespace TimelessEchoes.NpcGeneration
         private ResourceManager resourceManager;
         private GameplayStatTracker statTracker;
         private int lastUnlockedCount;
+        private bool ratesDirty;
+        private float nextRatesRefreshTime;
 
         public IReadOnlyList<DiscipleGenerator> Generators => generators;
 
@@ -165,12 +167,34 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
+        /// <summary>
+        /// Request disciple rate refresh; will be coalesced and processed with a short cooldown
+        /// to avoid excessive cost when many cards are granted rapidly.
+        /// </summary>
+        public void MarkRatesDirty()
+        {
+            ratesDirty = true;
+            // allow immediate refresh if cooldown has elapsed
+        }
+
         private void Update()
         {
             var dt = Time.deltaTime;
             foreach (var gen in generators)
                 if (gen != null)
                     gen.Tick(dt);
+
+            // Coalesce expensive rate recomputations
+            if (ratesDirty)
+            {
+                var now = Time.unscaledTime;
+                if (now >= nextRatesRefreshTime)
+                {
+                    ratesDirty = false;
+                    nextRatesRefreshTime = now + 0.25f; // refresh at most 4 Hz
+                    RefreshRates();
+                }
+            }
         }
     }
 }

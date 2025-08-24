@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using System.Linq;
 using Blindsided.Utilities;
 using References.UI;
@@ -10,6 +11,7 @@ using MPUIKIT;
 using static Blindsided.Oracle;
 using EventHandler = Blindsided.EventHandler;
 using static TimelessEchoes.TELogger;
+using UnityEngine.EventSystems;
 
 namespace TimelessEchoes.UI
 {
@@ -44,12 +46,18 @@ namespace TimelessEchoes.UI
 
 		[Header("Session Stats")]
 		[SerializeField] private TMP_Text statsText;
+		private readonly StringBuilder _statsSb = new StringBuilder(512);
+		private float[] _fractionsBuffer;
 
 		[Header("Weights Preview")]
 		[SerializeField] private TMP_Text firstPercentText;
 		[SerializeField] private TMP_Text spriteColText;
 		[SerializeField] private TMP_Text nextPercentText;
 		[SerializeField] private TMP_Text nameColText;
+
+		[Header("Weights Tooltip")]
+		[SerializeField] private Image weightsHoverImage;
+		[SerializeField] private GameObject weightsHoverObject;
 
 		[Header("Tier Sprites")] 
 		[SerializeField] private List<Sprite> tierSprites = new(); // 8 entries: index 0 used for unknown and tier 1
@@ -87,6 +95,20 @@ namespace TimelessEchoes.UI
 			{
 				if (drinking.tasteButton != null) drinking.tasteButton.onClick.AddListener(() => cauldron?.StartTasting());
 				if (drinking.stopButton != null) drinking.stopButton.onClick.AddListener(() => cauldron?.StopTasting());
+			}
+			// Weights tooltip wiring (mirror Forge behavior)
+			if (weightsHoverObject != null)
+				weightsHoverObject.SetActive(false);
+			if (weightsHoverImage != null)
+			{
+				var trigger = weightsHoverImage.GetComponent<EventTrigger>() ?? weightsHoverImage.gameObject.AddComponent<EventTrigger>();
+				trigger.triggers.Clear();
+				var enter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+				enter.callback.AddListener(_ => ShowWeightsTooltip());
+				trigger.triggers.Add(enter);
+				var exit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+				exit.callback.AddListener(_ => HideWeightsTooltip());
+				trigger.triggers.Add(exit);
 			}
 		}
 
@@ -128,6 +150,8 @@ namespace TimelessEchoes.UI
 				cauldron.OnStatsChanged -= OnStatsChanged;
 			}
 			EventHandler.OnLoadData -= OnSaveOrLoad;
+			if (weightsHoverObject != null)
+				weightsHoverObject.SetActive(false);
 		}
 
 		private void RefreshMixSlots()
@@ -359,6 +383,7 @@ namespace TimelessEchoes.UI
 
 		private void RefreshPieChart()
 		{
+			if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
 			if (config == null || oddsPieSlices == null || oddsPieSlices.Count == 0) return;
 			var lvl = cauldron != null ? cauldron.EvaLevel : 1;
 			var eff = cauldron != null ? cauldron.GetEffectiveWeightsAtLevel(lvl) : default;
@@ -418,7 +443,9 @@ namespace TimelessEchoes.UI
 				if (img != null) img.transform.SetSiblingIndex(i + 1);
 			}
 
-			var fractions = new float[sliceCount];
+			if (_fractionsBuffer == null || _fractionsBuffer.Length < sliceCount)
+				_fractionsBuffer = new float[Mathf.NextPowerOfTwo(sliceCount)];
+			var fractions = _fractionsBuffer;
 			for (var i = 0; i < sliceCount; i++)
 				fractions[i] = Mathf.Max(0f, weights[i].w) / total;
 
@@ -475,41 +502,31 @@ namespace TimelessEchoes.UI
 		private void OnStatsChanged(CauldronManager.TastingStats s)
 		{
 			if (statsText == null) return;
-			// Use <b> headers and bullet character
+			_statsSb.Clear();
+			_statsSb.Append("<b>Totals</b>\n");
+			_statsSb.Append("• Tastings: "); _statsSb.Append(s.tastings.ToString("N0")); _statsSb.Append('\n');
+			_statsSb.Append("• Cards Gained: "); _statsSb.Append(s.cardsGained.ToString("N0")); _statsSb.Append('\n');
+			_statsSb.Append("<b>Roll Distribution</b>\n");
+			_statsSb.Append("• Gained Nothing: "); _statsSb.Append(s.gainedNothing.ToString("N0")); _statsSb.Append('\n');
 			var hasSub = s.aeFarming + s.aeFishing + s.aeMining + s.aeWoodcutting + s.aeCombat > 0;
-			if (!hasSub)
+			if (hasSub)
 			{
-				statsText.text =
-					$"<b>Totals</b>\n" +
-					$"• Tastings: {s.tastings:N0}\n" +
-					$"• Cards Gained: {s.cardsGained:N0}\n" +
-					$"<b>Roll Distribution</b>\n" +
-					$"• Gained Nothing: {s.gainedNothing:N0}\n" +
-					$"• Alter-Echo: {s.alterEcho:N0}\n" +
-					$"• Buffs: {s.buffs:N0}\n" +
-					$"• Low Cards: {s.lowCards:N0}\n" +
-					$"• Eva's Blessing: {s.evasBlessing:N0}\n" +
-					$"• The Vast One's Surge: {s.vastSurge:N0}";
+				_statsSb.Append("• AE - Farming: "); _statsSb.Append(s.aeFarming.ToString("N0")); _statsSb.Append('\n');
+				_statsSb.Append("• AE - Fishing: "); _statsSb.Append(s.aeFishing.ToString("N0")); _statsSb.Append('\n');
+				_statsSb.Append("• AE - Mining: "); _statsSb.Append(s.aeMining.ToString("N0")); _statsSb.Append('\n');
+				_statsSb.Append("• AE - Logging: "); _statsSb.Append(s.aeWoodcutting.ToString("N0")); _statsSb.Append('\n');
+				_statsSb.Append("• AE - Looting: "); _statsSb.Append(s.aeLooting.ToString("N0")); _statsSb.Append('\n');
+				_statsSb.Append("• AE - Combat: "); _statsSb.Append(s.aeCombat.ToString("N0")); _statsSb.Append('\n');
 			}
 			else
 			{
-				statsText.text =
-					$"<b>Totals</b>\n" +
-					$"• Tastings: {s.tastings:N0}\n" +
-					$"• Cards Gained: {s.cardsGained:N0}\n" +
-					$"<b>Roll Distribution</b>\n" +
-					$"• Gained Nothing: {s.gainedNothing:N0}\n" +
-					$"• AE - Farming: {s.aeFarming:N0}\n" +
-					$"• AE - Fishing: {s.aeFishing:N0}\n" +
-					$"• AE - Mining: {s.aeMining:N0}\n" +
-					$"• AE - Logging: {s.aeWoodcutting:N0}\n" +
-					$"• AE - Looting: {s.aeLooting:N0}\n" +
-					$"• AE - Combat: {s.aeCombat:N0}\n" +
-					$"• Buffs: {s.buffs:N0}\n" +
-					$"• Low Cards: {s.lowCards:N0}\n" +
-					$"• Eva's Blessing: {s.evasBlessing:N0}\n" +
-					$"• The Vast One's Surge: {s.vastSurge:N0}";
+				_statsSb.Append("• Alter-Echo: "); _statsSb.Append(s.alterEcho.ToString("N0")); _statsSb.Append('\n');
 			}
+			_statsSb.Append("• Buffs: "); _statsSb.Append(s.buffs.ToString("N0")); _statsSb.Append('\n');
+			_statsSb.Append("• Low Cards: "); _statsSb.Append(s.lowCards.ToString("N0")); _statsSb.Append('\n');
+			_statsSb.Append("• Eva's Blessing: "); _statsSb.Append(s.evasBlessing.ToString("N0")); _statsSb.Append('\n');
+			_statsSb.Append("• The Vast One's Surge: "); _statsSb.Append(s.vastSurge.ToString("N0"));
+			statsText.SetText(_statsSb);
 		}
 
 		private void UpdateTasteStopButtons()
@@ -618,10 +635,23 @@ namespace TimelessEchoes.UI
 				colName.Append($"• {rows[i].label}");
 			}
 
-			if (firstPercentText != null) firstPercentText.text = colFirst.ToString();
-			if (spriteColText != null) spriteColText.text = colSprite.ToString();
-			if (nextPercentText != null) nextPercentText.text = colNext.ToString();
-			if (nameColText != null) nameColText.text = colName.ToString();
+			if (firstPercentText != null) firstPercentText.SetText(colFirst);
+			if (spriteColText != null) spriteColText.SetText(colSprite);
+			if (nextPercentText != null) nextPercentText.SetText(colNext);
+			if (nameColText != null) nameColText.SetText(colName);
+		}
+
+		private void ShowWeightsTooltip()
+		{
+			RefreshWeightsText();
+			if (weightsHoverObject != null)
+				weightsHoverObject.SetActive(true);
+		}
+
+		private void HideWeightsTooltip()
+		{
+			if (weightsHoverObject != null)
+				weightsHoverObject.SetActive(false);
 		}
 	}
 }

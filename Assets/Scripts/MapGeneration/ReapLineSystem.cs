@@ -5,8 +5,8 @@ using UnityEngine;
 namespace TimelessEchoes.MapGeneration
 {
     /// <summary>
-    /// Keeps the reap line positioned at the current reaping distance.
-    /// Attach to an always-present object (e.g. GameManager).
+    ///     Keeps the reap line positioned at the current reaping distance.
+    ///     Attach to an always-present object (e.g. GameManager).
     /// </summary>
     public class ReapLineSystem : MonoBehaviour
     {
@@ -16,7 +16,6 @@ namespace TimelessEchoes.MapGeneration
 
         private void Start()
         {
-            DontDestroyOnLoad(gameObject);
             cachedDistance = ComputeReapDistance();
             UpdateLine();
             InvokeRepeating(nameof(CheckReapDistance), CheckInterval, CheckInterval);
@@ -39,10 +38,7 @@ namespace TimelessEchoes.MapGeneration
 
             var buff = BuffManager.Instance;
             var baseDist = tracker.MaxRunDistance;
-            if (buff != null)
-            {
-                baseDist = baseDist * buff.MaxDistanceMultiplier + buff.MaxDistanceFlatBonus;
-            }
+            if (buff != null) baseDist = baseDist * buff.MaxDistanceMultiplier + buff.MaxDistanceFlatBonus;
             return baseDist;
         }
 

@@ -19,6 +19,8 @@ namespace TimelessEchoes.UI
         private float nextUpdateTime;
 
         private readonly Dictionary<EnemyData, EnemyStatEntryUIReferences> entries = new();
+        private readonly Dictionary<EnemyData, (double kills, int reveal, float bonus)> lastDisplayed = new();
+        private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private List<EnemyData> defaultOrder = new();
 
         public enum SortMode
@@ -56,8 +58,16 @@ namespace TimelessEchoes.UI
 
         private void RefreshTick()
         {
+            if (!IsPanelVisible()) return;
             UpdateEntries();
             SortEntries();
+        }
+
+        private bool IsPanelVisible()
+        {
+            if (references != null && references.enemyEntryParent != null)
+                return references.enemyEntryParent.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
         public void SetSortMode(SortMode mode)
@@ -105,6 +115,11 @@ namespace TimelessEchoes.UI
             int reveal = killTracker ? killTracker.GetRevealLevel(stats) : 0;
             float bonus = (killTracker ? killTracker.GetDamageMultiplier(stats) : 1f) - 1f;
 
+            if (lastDisplayed.TryGetValue(stats, out var last)
+                && last.kills == kills && last.reveal == reveal && Mathf.Approximately(last.bonus, bonus))
+                return;
+            lastDisplayed[stats] = (kills, reveal, bonus);
+
             if (ui.enemyIconImage != null)
             {
                 bool encountered = kills > 0;
@@ -128,11 +143,17 @@ namespace TimelessEchoes.UI
 
             string hp = reveal >= 2 ? CalcUtils.FormatNumber(stats.maxHealth, true, 400f, false) : "???";
             string dmg = reveal >= 1 ? CalcUtils.FormatNumber(stats.damage, true, 400f, false) : "???";
-            ui.hitpointsAndDamageText.text = $"Health: {hp}\nDamage: {dmg}";
+            _sb.Clear();
+            _sb.Append("Health: "); _sb.Append(hp); _sb.Append('\n');
+            _sb.Append("Damage: "); _sb.Append(dmg);
+            ui.hitpointsAndDamageText.SetText(_sb);
 
             string move = reveal >= 3 ? CalcUtils.FormatNumber(stats.moveSpeed, true, 400f, false) : "???";
             string atk = reveal >= 4 ? CalcUtils.FormatNumber(stats.attackSpeed, true, 400f, false) : "???";
-            ui.movementAndAttackRateText.text = $"Move Speed: {move}\nAttack Rate: {atk}";
+            _sb.Clear();
+            _sb.Append("Move Speed: "); _sb.Append(move); _sb.Append('\n');
+            _sb.Append("Attack Rate: "); _sb.Append(atk);
+            ui.movementAndAttackRateText.SetText(_sb);
 
             string killsText = CalcUtils.FormatNumber(kills, true, 400f, false);
             if (reveal < EnemyKillTracker.Thresholds.Length)
@@ -153,7 +174,12 @@ namespace TimelessEchoes.UI
             }
 
             if (ui.killsAndNextAndBonusText != null)
-                ui.killsAndNextAndBonusText.text = $"Kills: {killsText}\nBonus Damage: {(bonus * 100f):0}%";
+            {
+                _sb.Clear();
+                _sb.Append("Kills: "); _sb.Append(killsText); _sb.Append('\n');
+                _sb.Append("Bonus Damage: "); _sb.Append((bonus * 100f).ToString("0")); _sb.Append('%');
+                ui.killsAndNextAndBonusText.SetText(_sb);
+            }
         }
 
         private void SortEntries()

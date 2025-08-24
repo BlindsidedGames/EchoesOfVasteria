@@ -24,6 +24,7 @@ namespace TimelessEchoes.Upgrades
         [Header("Options")] [SerializeField] private bool showAllCards;
 
         private ResourceManager resourceManager;
+        private TimelessEchoes.Quests.QuestManager questManager;
         private bool tastingActive;
         private int sessionCardsGained;
         private int sessionTastings;
@@ -45,6 +46,17 @@ namespace TimelessEchoes.Upgrades
         public enum AEResourceGroup { Farming, Fishing, Mining, Woodcutting, Looting, Combat }
         private readonly Dictionary<Resource, AEResourceGroup> resourceGroupMap = new();
         private readonly Dictionary<AEResourceGroup, List<string>> cachedGroupPools = new(); // group -> RES:<name>
+        // Cached card pools to avoid rebuilding lists each tick
+        private readonly List<string> poolAlterEchoCards = new(); // RES:<name>
+        private readonly List<string> poolBuffCards = new(); // BUFF:<name>
+        private readonly List<string> poolAllCards = new(); // union of above
+        private bool cardPoolsDirty = true;
+        private float? _nextStatsEmitTime;
+        private float? _nextSessionCardsEmitTime;
+        [Header("Perf Throttling")] [SerializeField] [Min(0.05f)] private float cardPoolsRebuildMinInterval = 0.5f;
+        [SerializeField] [Min(0.05f)] private float weightsNotifyInterval = 0.25f;
+        private float nextCardPoolsRebuildAllowed;
+        private float nextWeightsNotifyTime;
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
@@ -207,6 +219,8 @@ namespace TimelessEchoes.Upgrades
         {
             base.Awake();
             resourceManager = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            // Resolve QuestManager once up-front to avoid per-tick object searches
+            questManager = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
             if (config == null)
                 Log("CauldronConfig missing", TELogCategory.General, this);
         }
@@ -263,7 +277,9 @@ namespace TimelessEchoes.Upgrades
             ResetSessionStats();
             OnTasteSessionStarted?.Invoke();
             OnSessionCardsChanged?.Invoke(sessionCardsGained);
-            OnStatsChanged?.Invoke(GetStatsSnapshot());
+            var statsHandler = OnStatsChanged;
+            if (statsHandler != null)
+                statsHandler(GetStatsSnapshot());
         }
 
         public void StopTasting()
@@ -289,7 +305,13 @@ namespace TimelessEchoes.Upgrades
             sessionTastings++;
             if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
             ResolveTasteOutcome();
-            OnStatsChanged?.Invoke(GetStatsSnapshot());
+            // Throttle stats UI updates to reduce canvas rebuilds
+            if (ShouldEmitStatsNow())
+            {
+                var statsHandler = OnStatsChanged;
+                if (statsHandler != null)
+                    statsHandler(GetStatsSnapshot());
+            }
         }
 
         private void GainEvaXp(double amount)
@@ -462,8 +484,12 @@ namespace TimelessEchoes.Upgrades
 
         private string PickRandomCardId(bool onlyAlterEcho, bool onlyBuffs)
         {
-            var pool = BuildAllCardIds(onlyAlterEcho, onlyBuffs);
-            if (pool.Count == 0) return null;
+            RebuildCardPoolsIfDirty();
+            IList<string> pool;
+            if (onlyBuffs) pool = poolBuffCards;
+            else if (onlyAlterEcho) pool = poolAlterEchoCards;
+            else pool = poolAllCards;
+            if (pool == null || pool.Count == 0) return null;
             var idx = Random.Range(0, pool.Count);
             return pool[idx];
         }
@@ -480,8 +506,9 @@ namespace TimelessEchoes.Upgrades
 
         private string GetLowestCountCardId()
         {
-            var all = BuildAllCardIds(false, false);
-            if (all.Count == 0) return null;
+            RebuildCardPoolsIfDirty();
+            var all = poolAllCards;
+            if (all == null || all.Count == 0) return null;
             var dict = oracle.saveData.CauldronCardCounts;
             var best = int.MaxValue;
             string chosen = null;
@@ -505,14 +532,20 @@ namespace TimelessEchoes.Upgrades
             dict[id] += delta;
             sessionCardsGained += delta;
             OnCardGained?.Invoke(id, delta);
-            OnSessionCardsChanged?.Invoke(sessionCardsGained);
+            if (ShouldEmitSessionCardsNow())
+                OnSessionCardsChanged?.Invoke(sessionCardsGained);
             if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += delta;
-            OnStatsChanged?.Invoke(GetStatsSnapshot());
+            if (ShouldEmitStatsNow())
+            {
+                var statsHandler = OnStatsChanged;
+                if (statsHandler != null)
+                    statsHandler(GetStatsSnapshot());
+            }
 
             // Update disciple generation rates when card counts change
             try
             {
-                TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.RefreshRates();
+                TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.MarkRatesDirty();
             }
             catch (Exception)
             {
@@ -525,8 +558,9 @@ namespace TimelessEchoes.Upgrades
             // RES:<ResourceName> for alter-echo cards (non-disabled)
             // BUFF:<BuffName> for buff cards
             var list = new List<string>();
-            var rm = resourceManager ?? ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+            // Use cached references; do not call Find* on hot paths
+            var rm = resourceManager ?? ResourceManager.Instance;
+            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
             if (!onlyBuffs)
             {
                 foreach (var res in AssetCache.GetAll<Resource>())
@@ -549,6 +583,45 @@ namespace TimelessEchoes.Upgrades
             return list;
         }
 
+        private void RebuildCardPoolsIfDirty()
+        {
+            if (!cardPoolsDirty) return;
+            var now = Time.unscaledTime;
+            if (now < nextCardPoolsRebuildAllowed) return; // defer rebuilds to avoid spamming
+            nextCardPoolsRebuildAllowed = now + Mathf.Max(0.05f, cardPoolsRebuildMinInterval);
+            cardPoolsDirty = false;
+
+            poolAlterEchoCards.Clear();
+            poolBuffCards.Clear();
+            poolAllCards.Clear();
+
+            var rm = resourceManager ?? ResourceManager.Instance;
+            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
+
+            foreach (var res in AssetCache.GetAll<Resource>())
+            {
+                if (res == null || res.DisableAlterEcho) continue;
+                if (rm != null && rm.IsUnlocked(res))
+                {
+                    var id = $"RES:{res.name}";
+                    poolAlterEchoCards.Add(id);
+                    poolAllCards.Add(id);
+                }
+            }
+
+            foreach (var buff in AssetCache.GetAll<BuffRecipe>())
+            {
+                if (buff == null) continue;
+                var required = buff.requiredQuest;
+                if (required == null || (qm != null && qm.IsQuestCompleted(required)))
+                {
+                    var id = $"BUFF:{buff.name}";
+                    poolBuffCards.Add(id);
+                    poolAllCards.Add(id);
+                }
+            }
+        }
+
         private string PickRandomResourceCardIdByGroup(AEResourceGroup group)
         {
             var pool = BuildResourceIdsForGroup(group);
@@ -563,7 +636,7 @@ namespace TimelessEchoes.Upgrades
                 return cached;
 
             var list = new List<string>();
-            var rm = resourceManager ?? ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = resourceManager ?? ResourceManager.Instance;
             foreach (var res in AssetCache.GetAll<Resource>())
             {
                 if (res == null || res.DisableAlterEcho) continue;
@@ -729,7 +802,8 @@ namespace TimelessEchoes.Upgrades
             };
 
             // Gate by eligibility
-            bool anyAllCards = BuildAllCardIds(false, false).Count > 0;
+            RebuildCardPoolsIfDirty();
+            bool anyAllCards = poolAllCards.Count > 0;
             if (!anyAllCards)
             {
                 snap.wLow = 0f;
@@ -738,7 +812,7 @@ namespace TimelessEchoes.Upgrades
             }
 
             // Buff pool eligibility
-            bool anyBuffs = BuildAllCardIds(false, true).Count > 0;
+            bool anyBuffs = poolBuffCards.Count > 0;
             if (!anyBuffs)
                 snap.wBuff = 0f;
 
@@ -756,12 +830,46 @@ namespace TimelessEchoes.Upgrades
         private void OnInventoryChangedHandler()
         {
             cachedGroupPools.Clear();
-            OnWeightsChanged?.Invoke();
+            cardPoolsDirty = true;
+            DebouncedWeightsChanged();
         }
 
         private void OnQuestHandinHandler(string questId)
         {
-            OnWeightsChanged?.Invoke();
+            cardPoolsDirty = true;
+            DebouncedWeightsChanged();
+        }
+
+        private void DebouncedWeightsChanged()
+        {
+            var now = Time.unscaledTime;
+            if (now >= nextWeightsNotifyTime)
+            {
+                nextWeightsNotifyTime = now + Mathf.Max(0.05f, weightsNotifyInterval);
+                OnWeightsChanged?.Invoke();
+            }
+        }
+
+        private bool ShouldEmitStatsNow()
+        {
+            var now = Time.unscaledTime;
+            if (_nextStatsEmitTime == null || now >= _nextStatsEmitTime.Value)
+            {
+                _nextStatsEmitTime = now + 0.2f; // 5 Hz
+                return true;
+            }
+            return false;
+        }
+
+        private bool ShouldEmitSessionCardsNow()
+        {
+            var now = Time.unscaledTime;
+            if (_nextSessionCardsEmitTime == null || now >= _nextSessionCardsEmitTime.Value)
+            {
+                _nextSessionCardsEmitTime = now + 0.2f; // 5 Hz
+                return true;
+            }
+            return false;
         }
     }
 }

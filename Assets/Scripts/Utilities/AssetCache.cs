@@ -12,6 +12,8 @@ namespace Blindsided.Utilities
     {
         private static readonly Dictionary<System.Type, object> allCache = new();
         private static readonly Dictionary<string, Object> oneCache = new();
+        // Track which Resources paths have been loaded per type so we don't repeatedly call LoadAll
+        private static readonly Dictionary<System.Type, HashSet<string>> loadedPathsPerType = new();
 
         /// <summary>
         /// Returns cached array of all assets of type T under an optional Resources path.
@@ -19,41 +21,85 @@ namespace Blindsided.Utilities
         /// </summary>
         public static T[] GetAll<T>(string resourcesPath = "") where T : Object
         {
-            // Compose a cache key based only on T. We cache the union of all paths for that type
-            // by loading with the provided path if unseen; subsequent calls with other paths will
-            // also be loaded once and merged.
-            // To keep this deterministic and simple, we cache per type and ignore path specificity,
-            // since this project often uses empty path or a single folder per type.
-            if (!allCache.TryGetValue(typeof(T), out var boxed))
+            var type = typeof(T);
+            // Avoid repeated string allocations on hot paths
+            if (resourcesPath == null) resourcesPath = string.Empty;
+            if (resourcesPath.Length == 0)
             {
-                var loaded = Resources.LoadAll<T>(resourcesPath);
-                allCache[typeof(T)] = loaded;
+                if (!allCache.TryGetValue(type, out var boxedAll))
+                {
+                    var loadedAll = Resources.LoadAll<T>(string.Empty);
+                    allCache[type] = loadedAll;
+                    if (!loadedPathsPerType.TryGetValue(type, out var setAll))
+                    {
+                        setAll = new HashSet<string>();
+                        loadedPathsPerType[type] = setAll;
+                    }
+                    setAll.Add(string.Empty);
+                    return loadedAll;
+                }
+                return (T[])boxedAll;
+            }
+            var pathKey = string.IsNullOrEmpty(resourcesPath) ? string.Empty : resourcesPath;
+
+            if (!allCache.TryGetValue(type, out var boxed))
+            {
+                var loaded = Resources.LoadAll<T>(pathKey);
+                allCache[type] = loaded;
+                if (!loadedPathsPerType.TryGetValue(type, out var set))
+                {
+                    set = new HashSet<string>();
+                    loadedPathsPerType[type] = set;
+                }
+                set.Add(pathKey);
                 return loaded;
             }
 
             var arr = (T[])boxed;
-            if (!string.IsNullOrEmpty(resourcesPath))
+
+            if (!loadedPathsPerType.TryGetValue(type, out var pathsLoaded))
             {
-                // If a non-empty path is supplied, ensure those assets are included at least once.
-                // Merge upon first request for that path.
-                var newlyLoaded = Resources.LoadAll<T>(resourcesPath);
+                pathsLoaded = new HashSet<string>();
+                loadedPathsPerType[type] = pathsLoaded;
+            }
+
+            // If we've already loaded the entire Resources for this type (empty path), nothing more to do
+            if (pathsLoaded.Contains(string.Empty))
+                return arr;
+
+            // If caller requests full scan now and we haven't done it yet, do it once
+            if (string.IsNullOrEmpty(pathKey) && !pathsLoaded.Contains(string.Empty))
+            {
+                var newlyLoadedAll = Resources.LoadAll<T>(string.Empty);
+                if (newlyLoadedAll != null && newlyLoadedAll.Length > 0)
+                {
+                    var set = new HashSet<T>(arr);
+                    foreach (var item in newlyLoadedAll)
+                        if (item != null) set.Add(item);
+                    var merged = new List<T>(set).ToArray();
+                    allCache[type] = merged;
+                    pathsLoaded.Add(string.Empty);
+                    return merged;
+                }
+                pathsLoaded.Add(string.Empty);
+                return arr;
+            }
+
+            // For non-empty paths: if this specific path hasn't been loaded yet, load and merge once
+            if (!string.IsNullOrEmpty(pathKey) && !pathsLoaded.Contains(pathKey))
+            {
+                var newlyLoaded = Resources.LoadAll<T>(pathKey);
                 if (newlyLoaded != null && newlyLoaded.Length > 0)
                 {
                     var set = new HashSet<T>(arr);
-                    var changed = false;
                     foreach (var item in newlyLoaded)
-                    {
-                        if (item == null) continue;
-                        if (set.Add(item)) changed = true;
-                    }
-                    if (changed)
-                    {
-                        var list = new List<T>(set);
-                        var merged = list.ToArray();
-                        allCache[typeof(T)] = merged;
-                        return merged;
-                    }
+                        if (item != null) set.Add(item);
+                    var merged = new List<T>(set).ToArray();
+                    allCache[type] = merged;
+                    pathsLoaded.Add(pathKey);
+                    return merged;
                 }
+                pathsLoaded.Add(pathKey);
             }
 
             return arr;
@@ -79,6 +125,7 @@ namespace Blindsided.Utilities
         {
             allCache.Clear();
             oneCache.Clear();
+            loadedPathsPerType.Clear();
         }
     }
 }

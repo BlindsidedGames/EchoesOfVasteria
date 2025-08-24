@@ -127,7 +127,14 @@ namespace TimelessEchoes.UI
 
         private void RefreshTick()
         {
+            if (!IsPanelVisible()) return;
             UpdateUI();
+        }
+
+        private bool IsPanelVisible()
+        {
+            // Graph is drawn into this GameObject; use its active state
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
         private void OnBarEnter(RunBarUI bar, PointerEventData eventData)

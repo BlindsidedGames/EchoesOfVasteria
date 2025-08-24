@@ -21,6 +21,9 @@ namespace TimelessEchoes.UI
 		[SerializeField] private Transform parent;
 
 		private readonly Dictionary<string, CollectionItemUIReferences> itemById = new();
+		private readonly Dictionary<string, Resource> resourceById = new();
+		private CauldronWindowUI cachedCauldronWindow;
+		private CauldronManager cachedCauldronManager;
 
 		private ResourceManager rm;
 		[SerializeField] [Min(0.25f)] private float unlockCheckIntervalSeconds = 0.75f;
@@ -32,6 +35,8 @@ namespace TimelessEchoes.UI
 		{
 			cauldron ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
 			rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+			cachedCauldronManager = cauldron ?? CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronWindow = FindFirstObjectByType<CauldronWindowUI>();
 		}
 
 		private void OnEnable()
@@ -74,6 +79,7 @@ namespace TimelessEchoes.UI
 			if (oracle == null || oracle.saveData == null) return;
 			UIUtils.ClearChildren(parent);
 			itemById.Clear();
+			resourceById.Clear();
 
 			var qm = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
 
@@ -130,6 +136,7 @@ namespace TimelessEchoes.UI
 				ui.iconImage.sprite = res.icon;
 				var key = $"RES:{res.name}";
 				itemById[key] = ui;
+				resourceById[key] = res;
 				UpdateItemCount(key);
 			}
 
@@ -215,9 +222,7 @@ namespace TimelessEchoes.UI
 			// Keep card name as plain resource name
 			if (id.StartsWith("RES:"))
 			{
-				var resName = id.Substring(4);
-				var res = Blindsided.Utilities.AssetCache.GetAll<Resource>("").FirstOrDefault(r => r != null && r.name == resName);
-				if (res != null && ui.nameText != null)
+				if (resourceById.TryGetValue(id, out var res) && res != null && ui.nameText != null)
 					ui.nameText.text = res.name;
 			}
 			// Tier images (placeholder: compute tier index later when thresholds are available)
@@ -242,54 +247,32 @@ namespace TimelessEchoes.UI
 
 		private int ComputeTierForCount(string id, int count)
 		{
-			var cfg = FindFirstObjectByType<CauldronWindowUI>() != null ? FindFirstObjectByType<CauldronWindowUI>().GetComponent<CauldronWindowUI>() : null;
-			var cm = CauldronManager.Instance;
-			var config = cm != null ? cm.GetComponent<CauldronManager>() : null;
-			// Use thresholds from CauldronConfig directly
-			var cauldron = CauldronManager.Instance;
-			var cc = cauldron != null ? cauldron.GetComponent<CauldronManager>() : null;
-			var configSO = CauldronManager.Instance != null ? CauldronManager.Instance.GetType() : null;
-			var cfgSO = CauldronManager.Instance != null ? CauldronManager.Instance : null;
-			var configAsset = CauldronManager.Instance != null ? (CauldronManager.Instance as CauldronManager).GetComponent<CauldronManager>() : null;
-			// Simpler: access via CauldronManager.Instance.config through a public helper
-			var thresholds = GetThresholdsForId(id);
-			if (thresholds == null || thresholds.Length == 0) return 1;
-			// Determine highest tier whose threshold <= count
-			var tier = 1;
-			for (var i = 0; i < thresholds.Length; i++)
-				if (count >= thresholds[i]) tier = i + 1;
-			return Mathf.Clamp(tier, 1, 8);
-		}
-
-		private int[] GetThresholdsForId(string id)
-		{
-			var cm = CauldronManager.Instance;
-			var cfg = cm != null ? cm.GetComponent<CauldronManager>() : null;
-			// Expose thresholds through CauldronWindowUI or CauldronManager config
-			var cw = FindFirstObjectByType<CauldronWindowUI>();
-			var manager = CauldronManager.Instance;
-			var config = manager != null ? manager.GetComponent<CauldronManager>() : null;
-			var cfgSO = manager != null ? (manager as CauldronManager) : null;
-			// Fallback: find CauldronConfig from any CauldronManager in scene
-			var m = CauldronManager.Instance;
-			var configSO2 = m != null ? m.GetType().GetField("config", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(m) as CauldronConfig : null;
-			if (configSO2 == null) return null;
-			var isResource = id.StartsWith("RES:");
-			return isResource ? configSO2.resourceTierThresholds : configSO2.buffTierThresholds;
+			// Use CauldronManager's public helpers to compute tiers; avoids reflection and extra lookups
+			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			if (cachedCauldronManager == null) return 1;
+			if (id.StartsWith("RES:"))
+			{
+				var name = id.Substring(4);
+				return Mathf.Max(1, cachedCauldronManager.GetResourceTier(name));
+			}
+			else if (id.StartsWith("BUFF:"))
+			{
+				var name = id.Substring(5);
+				return Mathf.Max(1, cachedCauldronManager.GetBuffTier(name));
+			}
+			return 1;
 		}
 
 		private Sprite GetTierSpriteFromCauldron(int tier)
 		{
-			var cw = FindFirstObjectByType<CauldronWindowUI>();
-			if (cw == null) return null;
-			return cw.GetTierSprite(tier);
+			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			return cachedCauldronWindow != null ? cachedCauldronWindow.GetTierSprite(tier) : null;
 		}
 
 		private Sprite GetBorderTierSpriteFromCauldron(int tier)
 		{
-			var cw = FindFirstObjectByType<CauldronWindowUI>();
-			if (cw == null) return null;
-			return cw.GetBorderTierSprite(tier);
+			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			return cachedCauldronWindow != null ? cachedCauldronWindow.GetBorderTierSprite(tier) : null;
 		}
 
 		private void OnSaveOrLoad()

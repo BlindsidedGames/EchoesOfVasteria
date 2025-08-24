@@ -8,6 +8,7 @@ namespace TimelessEchoes.Gear.UI
     {
         private void OnIvanXpChanged(int level, float current, float needed)
         {
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
             SetIvanLevelLabel(level);
             if (ivanXpText != null)
                 ivanXpText.text = $"{current:0}/{needed:0}";
@@ -30,6 +31,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void OnResourcesChanged()
         {
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
             var previewSlot = GetSlotForCore(selectedCore);
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);

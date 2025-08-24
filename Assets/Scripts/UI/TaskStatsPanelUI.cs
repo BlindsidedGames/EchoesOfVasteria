@@ -19,6 +19,8 @@ namespace TimelessEchoes.UI
         private float nextUpdateTime;
 
         private readonly Dictionary<TaskData, TaskStatEntryUIReferences> entries = new();
+        private readonly Dictionary<TaskData, (int completed, float time, float xp)> lastDisplayedByTask = new();
+        private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private List<TaskData> defaultOrder = new();
 
         public enum SortMode
@@ -67,8 +69,16 @@ namespace TimelessEchoes.UI
 
         private void RefreshTick()
         {
+            if (!IsPanelVisible()) return;
             UpdateEntries();
             SortEntries();
+        }
+
+        private bool IsPanelVisible()
+        {
+            if (references != null && references.taskEntryParent != null)
+                return references.taskEntryParent.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
         public void SetSortMode(SortMode mode)
@@ -118,6 +128,18 @@ namespace TimelessEchoes.UI
             var time = record?.TimeSpent ?? 0f;
             var xp = record?.XpGained ?? 0f;
 
+            // Early-out if values did not change (prevents string building & TMP updates)
+            if (lastDisplayedByTask.TryGetValue(data, out var last))
+            {
+                if (last.completed == completed && Mathf.Approximately(last.time, time) && Mathf.Approximately(last.xp, xp))
+                {
+                    // Still update icon/name only if earned state changed; otherwise skip entirely
+                    // Earned state changes only when completed crosses zero which would change 'completed'
+                    return;
+                }
+            }
+            lastDisplayedByTask[data] = (completed, time, xp);
+
             if (ui.entryIconImage != null)
             {
                 ui.entryIconImage.sprite = completed > 0 ? data.taskIcon : null;
@@ -134,11 +156,11 @@ namespace TimelessEchoes.UI
 
             if (ui.entryCompletionsTimeOnTaskExperienceText != null)
             {
-                var comp = CalcUtils.FormatNumber(completed, true);
-                var timeStr = CalcUtils.FormatTime(time);
-                var xpStr = CalcUtils.FormatNumber(xp, true);
-                ui.entryCompletionsTimeOnTaskExperienceText.text =
-                    $"Completions: {comp}\nTime on Task: {timeStr}\nXP Gained: {xpStr}";
+                _sb.Clear();
+                _sb.Append("Completions: "); _sb.Append(CalcUtils.FormatNumber(completed, true)); _sb.Append('\n');
+                _sb.Append("Time on Task: "); _sb.Append(CalcUtils.FormatTime(time)); _sb.Append('\n');
+                _sb.Append("XP Gained: "); _sb.Append(CalcUtils.FormatNumber(xp, true));
+                ui.entryCompletionsTimeOnTaskExperienceText.SetText(_sb);
             }
 
             if (ui.entrySpawnDistanceText != null)

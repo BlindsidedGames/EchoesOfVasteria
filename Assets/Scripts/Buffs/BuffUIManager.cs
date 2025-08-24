@@ -29,6 +29,9 @@ namespace TimelessEchoes.Buffs
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
 
+        private float nextUiRefresh;
+        [SerializeField] [Min(0.05f)] private float refreshInterval = 0.1f;
+
         private void RefreshSlots()
         {
             if (buffManager == null) return;
@@ -260,7 +263,12 @@ namespace TimelessEchoes.Buffs
                                (buffPurchaseWindow != null && buffPurchaseWindow.activeInHierarchy);
             if (!windowActive) return;
 
-            RefreshSlots();
+            // Throttle UI refresh to reduce UGUI rebuilds
+            if (Time.unscaledTime >= nextUiRefresh)
+            {
+                nextUiRefresh = Time.unscaledTime + Mathf.Max(0.05f, refreshInterval);
+                RefreshSlots();
+            }
 
             if (!Application.isMobilePlatform && buffManager != null && Keyboard.current != null)
                 for (var i = 0; i < 5; i++)
@@ -277,13 +285,7 @@ namespace TimelessEchoes.Buffs
                     }
                 }
 
-            foreach (var pair in recipeEntries)
-            {
-                var panel = pair.Value;
-                var recipe = pair.Key;
-                if (panel.descriptionText != null)
-                    panel.descriptionText.text = string.Join("\n", recipe.GetDescriptionLines());
-            }
+            // Descriptions are static; avoid updating every frame
         }
 
         private void BuildRecipeEntries()

@@ -21,6 +21,8 @@ namespace TimelessEchoes.UI
         private float nextUpdateTime;
 
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
+        private readonly Dictionary<Resource, (double amount, int totalReceived, int totalSpent)> lastDisplayed = new();
+        private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private readonly Dictionary<Resource, float> minDistanceLookup = new();
         private List<Resource> defaultOrder = new();
 
@@ -149,6 +151,16 @@ namespace TimelessEchoes.UI
             var spent = res.totalSpent;
             var earned = collected > 0;
 
+            if (lastDisplayed.TryGetValue(res, out var last))
+            {
+                if (Mathf.Approximately((float)last.amount, (float)amount) && last.totalReceived == collected && last.totalSpent == spent)
+                {
+                    // If earned state unchanged, skip.
+                    if (earned == (last.totalReceived > 0)) return;
+                }
+            }
+            lastDisplayed[res] = (amount, collected, spent);
+
             if (ui.entryIconImage != null)
             {
                 ui.entryIconImage.sprite = earned ? res.icon : null;
@@ -165,10 +177,11 @@ namespace TimelessEchoes.UI
 
             if (ui.entryHeldCollectedSpentText != null)
             {
-                var count = CalcUtils.FormatNumber(amount, true);
-                var col = CalcUtils.FormatNumber(collected, true);
-                var sp = CalcUtils.FormatNumber(spent, true);
-                ui.entryHeldCollectedSpentText.text = $"Count: {count}\nCollected: {col}\nSpent: {sp}";
+                _sb.Clear();
+                _sb.Append("Count: "); _sb.Append(CalcUtils.FormatNumber(amount, true)); _sb.Append('\n');
+                _sb.Append("Collected: "); _sb.Append(CalcUtils.FormatNumber(collected, true)); _sb.Append('\n');
+                _sb.Append("Spent: "); _sb.Append(CalcUtils.FormatNumber(spent, true));
+                ui.entryHeldCollectedSpentText.SetText(_sb);
             }
 
             if (ui.bestPerMinuteText != null)
