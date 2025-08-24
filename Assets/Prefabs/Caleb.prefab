@@ -541,7 +541,6 @@ GameObject:
   - component: {fileID: 1810452886069672335}
   - component: {fileID: 8560947185031467494}
   - component: {fileID: 3963385185172838639}
-  - component: {fileID: 8421911332518481540}
   m_Layer: 7
   m_Name: Caleb
   m_TagString: Hero
@@ -731,33 +730,6 @@ MonoBehaviour:
   version: 1073741824
   target: {fileID: 0}
   useRotation: 0
---- !u!114 &8421911332518481540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941723749653959437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1073741824
-  radiusBackingField: 0.5
-  heightBackingField: 2
-  centerBackingField: 1
-  locked: 0
-  lockWhenNotMoving: 0
-  agentTimeHorizon: 1.5
-  obstacleTimeHorizon: 1
-  maxNeighbours: 10
-  layer: 128
-  collidesWith: 128
-  wallAvoidForce: 1
-  wallAvoidFalloff: 1
-  priority: 0.223
-  debug: 0
 --- !u!1 &2031083198175086940
 GameObject:
   m_ObjectHideFlags: 0

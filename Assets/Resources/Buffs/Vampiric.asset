@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
   m_Name: Vampiric
   m_EditorClassIdentifier: 
-  title: Vampiric
+  title: Regeneration
   description: 
   buffIcon: {fileID: -2906203513720773286, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   durationType: 0
   baseDuration: 30
+  baseCooldown: 60
   baseEchoCount: 0
   echoConfig:
     capableSkills: []
@@ -24,5 +25,5 @@ MonoBehaviour:
   requiredQuest: {fileID: 11400000, guid: a04629c010952d741b32db280e62a8eb, type: 2}
   baseEffects:
   - type: 5
-    value: 15
+    value: 100
   upgrades: []

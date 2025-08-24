@@ -76,6 +76,15 @@ namespace TimelessEchoes
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
+        public void KillImmediately()
+        {
+            if (CurrentHealth <= 0f) return;
+            CurrentHealth = 0f;
+            UpdateBar();
+            RaiseHealthChanged();
+            OnZeroHealth();
+        }
+
         public SlicedFilledImage HealthBar
         {
             get => healthBar;

@@ -110,7 +110,7 @@ namespace TimelessEchoes.Buffs
             Instance = this;
 
             // Ensure no active buffs linger between sessions
-            ClearActiveBuffs();
+            ClearActiveBuffs(false);
 
             OnLoadData += LoadSlots;
         }
@@ -207,7 +207,8 @@ namespace TimelessEchoes.Buffs
             {
                 if (recipe.durationType == BuffDurationType.DistancePercent)
                 {
-                    var expireDist = tracker.LongestRun * recipe.GetDuration();
+                    var longest = Mathf.Max(1f, tracker.LongestRun);
+                    var expireDist = longest * recipe.GetDuration();
                     if (tracker.CurrentRunDistance >= expireDist)
                         return false;
                 }
@@ -231,7 +232,10 @@ namespace TimelessEchoes.Buffs
             if (tracker != null)
             {
                 if (recipe.durationType == BuffDurationType.DistancePercent)
-                    expireDist = tracker.LongestRun * recipe.GetDuration();
+                {
+                    var longest = Mathf.Max(1f, tracker.LongestRun);
+                    expireDist = longest * recipe.GetDuration();
+                }
             }
 
             var buff = new ActiveBuff
@@ -344,14 +348,14 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        public float LifestealPercent
+        public float HealthRegenPercent
         {
             get
             {
                 var percent = 0f;
                 foreach (var b in activeBuffs)
                     foreach (var eff in b.effects)
-                        if (eff.type == BuffEffectType.LifestealPercent)
+                        if (eff.type == BuffEffectType.HealthRegenPercent)
                             percent += eff.value;
                 return percent;
             }
@@ -506,10 +510,61 @@ namespace TimelessEchoes.Buffs
             return slot >= 0 && slot < slotAssignments.Count ? slotAssignments[slot] : null;
         }
 
-        public void ClearActiveBuffs()
+        public void ClearActiveBuffs(bool startCooldowns = false)
         {
             for (var i = activeBuffs.Count - 1; i >= 0; i--)
-                RemoveBuffAt(i);
+                RemoveBuffAt(i, startCooldowns);
+        }
+
+        /// <summary>
+        ///     Clears all active buffs when retreating/abandoning. Starts cooldowns only
+        ///     if the current run has not lasted as long as the buff's cooldown duration.
+        ///     This prevents cycling activations, while allowing long runs to return with
+        ///     all buffs available again.
+        /// </summary>
+        /// <param name="runDuration">Duration of the just-ended run, in seconds.</param>
+        public void ClearActiveBuffsForRetreat(float runDuration)
+        {
+            for (var i = activeBuffs.Count - 1; i >= 0; i--)
+            {
+                var buff = activeBuffs[i];
+                var startCooldown = true;
+                if (buff != null && buff.recipe != null)
+                {
+                    var cooldown = buff.recipe.GetCooldown();
+                    if (runDuration >= cooldown)
+                        startCooldown = false;
+                }
+                RemoveBuffAt(i, startCooldown);
+            }
+        }
+
+        /// <summary>
+        ///     Clears all cooldowns immediately. Use when a run ends by death/reap so the next
+        ///     run starts with all buffs available.
+        /// </summary>
+        public void ResetCooldowns()
+        {
+            cooldowns.Clear();
+        }
+
+        /// <summary>
+        ///     Clears any cooldown entries whose full cooldown duration is less than or equal to
+        ///     the provided run duration. Intended for retreat/abandon returns where the run
+        ///     lasted long enough that all cooldowns should reasonably be ready again.
+        /// </summary>
+        /// <param name="runDuration">Duration of the just-ended run, in seconds.</param>
+        public void ClearCooldownsIfRunLongerThan(float runDuration)
+        {
+            if (runDuration <= 0f || cooldowns.Count == 0) return;
+            var keys = new List<BuffRecipe>(cooldowns.Keys);
+            foreach (var recipe in keys)
+            {
+                if (recipe == null) continue;
+                var cd = recipe.GetCooldown();
+                if (runDuration >= cd)
+                    cooldowns.Remove(recipe);
+            }
         }
 
         public void UpdateDistance(float heroX)

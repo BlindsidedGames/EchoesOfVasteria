@@ -424,7 +424,8 @@ namespace TimelessEchoes
 
             if (deathWindow != null)
                 deathWindow.SetActive(false);
-            BuffManager.Instance?.ClearActiveBuffs();
+            // Starting a new run: no cooldowns from previous state
+            BuffManager.Instance?.ClearActiveBuffs(false);
             BuffManager.Instance?.UpdateDistance(0f);
             // If this is the first run of a session (tavern was active), reset session aggregates
             if (statTracker != null && (tavernUI != null && tavernUI.activeSelf))
@@ -517,6 +518,16 @@ namespace TimelessEchoes
             locationObjectStateController?.UpdateObjectStates();
 
             yield return StartCoroutine(FastForwardStart());
+
+            // Initialize distance and buff state immediately after restart to avoid 0% stalls
+            if (statTracker != null && hero != null)
+            {
+                statTracker.RecordHeroPosition(hero.transform.position);
+                BuffManager.Instance?.UpdateDistance(statTracker.CurrentRunDistance);
+#if !DISABLESTEAMWORKS
+                RichPresenceManager.Instance?.UpdateDistance(statTracker.CurrentRunDistance);
+#endif
+            }
 
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
@@ -629,7 +640,9 @@ namespace TimelessEchoes
             if (statTracker != null && !distanceReaper)
                 statTracker.AddDeath();
 
-            BuffManager.Instance?.ClearActiveBuffs();
+            // On hero death: clear buffs without starting cooldowns, and clear any existing cooldowns
+            BuffManager.Instance?.ClearActiveBuffs(false);
+            BuffManager.Instance?.ResetCooldowns();
 
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
@@ -808,7 +821,22 @@ namespace TimelessEchoes
                     statTracker.EndRun(false);
             }
 
-            BuffManager.Instance?.ClearActiveBuffs();
+            // Returning to town cooldown policy:
+            // - If run ended by death/reap: clear buffs without cooldowns and clear existing cooldowns.
+            // - If retreat/abandon: start cooldowns for active buffs unless the run lasted at least the buff's cooldown.
+            if (runEndedByDeath)
+            {
+                BuffManager.Instance?.ClearActiveBuffs(false);
+                BuffManager.Instance?.ResetCooldowns();
+            }
+            else
+            {
+                var duration = statTracker != null ? statTracker.LastRunDuration : 0f;
+                // Use special retreat clearing that compares run duration to each buff's cooldown
+                BuffManager.Instance?.ClearActiveBuffsForRetreat(duration);
+                // Also clear any existing cooldowns that would have fully elapsed during this run
+                BuffManager.Instance?.ClearCooldownsIfRunLongerThan(duration);
+            }
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
             {

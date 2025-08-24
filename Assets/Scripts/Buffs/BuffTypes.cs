@@ -11,7 +11,7 @@ namespace TimelessEchoes.Buffs
         DefensePercent,
         AttackSpeedPercent,
         TaskSpeedPercent,
-        LifestealPercent,
+        HealthRegenPercent,
         MaxDistancePercent,
         MaxDistanceIncrease,
         InstantTasks,

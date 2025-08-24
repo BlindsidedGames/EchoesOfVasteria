@@ -183,15 +183,6 @@ namespace TimelessEchoes.UI
                     }
                 }
 
-                var oracle = Oracle.oracle;
-                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-                for (var i = 0; i < saveSlots.Length; i++)
-                {
-                    var file = $"{prefix}Sd{i}.es3";
-                    if (ES3.FileExists(file))
-                        ES3.CacheFile(file);
-                }
-
                 RefreshAllSlots();
             }
 
@@ -485,62 +476,7 @@ namespace TimelessEchoes.UI
         {
             try
             {
-                var oracle = Oracle.oracle;
-                var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-
-                // Build list of base names to hard-delete: live and all Beta variants
-                var baseNames = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal)
-                {
-                    $"Sd{index}"
-                };
-                for (var b = 0; b <= 12; b++) baseNames.Add($"Beta{b}Sd{index}");
-                if (!string.IsNullOrEmpty(prefix)) baseNames.Add($"{prefix}Sd{index}");
-
-                // Resolve persistent directory (from any target)
-                string saveDir = null;
-                try
-                {
-                    var probe = new ES3Settings($"Sd{index}.es3", ES3.Location.File);
-                    saveDir = Path.GetDirectoryName(probe.FullPath);
-                }
-                catch { }
-
-                foreach (var baseName in baseNames)
-                {
-                    try
-                    {
-                        var relFile = baseName + ".es3";
-                        // ES3 deletion disabled; leave legacy files untouched
-
-                        // Remove Easy Save .bac backup
-                        try
-                        {
-                            var live = new ES3Settings(relFile, ES3.Location.File);
-                            var bacPath = live.FullPath + ".bac";
-                            if (!string.IsNullOrEmpty(bacPath) && File.Exists(bacPath))
-                                File.Delete(bacPath);
-                        }
-                        catch { }
-
-                        // Remove rotating backups under Backups/<baseName>
-                        try
-                        {
-                            if (!string.IsNullOrEmpty(saveDir))
-                            {
-                                var backupDir = Path.Combine(saveDir, "Backups", baseName);
-                                if (Directory.Exists(backupDir))
-                                    Directory.Delete(backupDir, true);
-                            }
-                        }
-                        catch { }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogWarning($"Failed to hard-delete artifacts for '{baseName}': {ex.Message}");
-                    }
-                }
-
-                // Mark this slot as intentionally deleted to suppress migration on next load
+                // Mark this slot as intentionally deleted to suppress any migration prompts in legacy builds
                 try
                 {
                     PlayerPrefs.SetInt($"Slot{index}_Deleted", 1);
@@ -553,7 +489,7 @@ namespace TimelessEchoes.UI
                 PlayerPrefs.DeleteKey(SlotKey(index, "Date"));
                 PlayerPrefs.Save();
 
-                // Also delete the new save system files for this slot (Saves/Save{N})
+                // Delete the new save system files for this slot (Saves/Save{N})
                 try
                 {
                     var slotName = $"Save{index + 1}";

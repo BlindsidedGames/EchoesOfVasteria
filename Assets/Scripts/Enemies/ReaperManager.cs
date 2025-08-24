@@ -85,29 +85,18 @@ namespace TimelessEchoes.Enemies
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
 
-            if (hp != null && dmg != null && hp.CurrentHealth > 0f)
+            if (hp != null && hp.CurrentHealth > 0f)
             {
-                var amount = hp.CurrentHealth;
-                var enemy = target.GetComponent<Enemy>();
-                if (enemy != null && enemy.Stats != null)
-                    amount += enemy.Stats.defense + 1f;
-                if (heroCtrl != null)
-                    amount += heroCtrl.Defense + 1f;
-                dmg.TakeDamage(amount);
+                // Bypass defense and any mitigation; force death immediately
+                var amount = hp.CurrentHealth; // capture pre-kill health for stats
+                var hb = target.GetComponent<TimelessEchoes.HealthBase>();
+                if (hb != null)
+                    hb.KillImmediately();
+                else if (dmg != null)
+                    dmg.TakeDamage(amount + 1000000f); // extreme overkill fallback
                 if (fromHero)
                 {
                     tracker?.AddDamageDealt(amount);
-                    var buff = BuffManager.Instance ??
-                               FindFirstObjectByType<BuffManager>();
-                    var hero = HeroController.Instance ??
-                               FindFirstObjectByType<HeroController>();
-                    var heroHealth = hero != null ? hero.GetComponent<HeroHealth>() : null;
-                    if (buff != null && heroHealth != null)
-                    {
-                        var ls = buff.LifestealPercent;
-                        if (ls > 0f)
-                            heroHealth.Heal(amount * ls / 100f);
-                    }
                 }
             }
 

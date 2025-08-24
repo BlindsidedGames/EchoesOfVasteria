@@ -111,7 +111,8 @@ namespace TimelessEchoes
 										 TimelessEchoes.GameManager.Instance.ReaperPrefab : null;
 						var offset = TimelessEchoes.GameManager.Instance != null ?
 										 (Vector3?)TimelessEchoes.GameManager.Instance.ReaperSpawnOffset : null;
-						if (Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true, null, offset) != null)
+						var spawned = Enemies.ReaperManager.Spawn(prefab, target.gameObject, null, true, null, offset);
+						if (spawned != null)
 						{
 							var sfx2 = GetComponent<ProjectileHitSfx>();
 							sfx2?.PlayHit();
@@ -119,8 +120,26 @@ namespace TimelessEchoes
 							PoolManager.Release(gameObject);
 							return;
 						}
-						if (targetHasHealth != null)
-							dmgAmount = Mathf.Max(dmgAmount, targetHasHealth.CurrentHealth);
+						// Force-kill immediately when reaper cannot spawn
+						float preHp = targetHasHealth != null ? targetHasHealth.CurrentHealth : 0f;
+						var hb = target.GetComponent<TimelessEchoes.HealthBase>();
+						if (hb != null)
+						{
+							hb.KillImmediately();
+						}
+						else if (targetDamageable != null)
+						{
+							targetDamageable.TakeDamage(1000000f, 0f, false);
+						}
+						// Apply hero stats updates in this fallback
+						var tracker2 = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
+										   FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+						tracker2?.AddDamageDealt(preHp);
+						var sfx2b = GetComponent<ProjectileHitSfx>();
+						sfx2b?.PlayHit();
+						SpawnEffect();
+						PoolManager.Release(gameObject);
+						return;
 					}
 				}
 
@@ -151,19 +170,8 @@ namespace TimelessEchoes
 				if (fromHero)
 				{
 					var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-									 FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+										 FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
 					tracker?.AddDamageDealt(dmgAmount);
-					var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ??
-									   FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
-					var hero = TimelessEchoes.Hero.HeroController.Instance ??
-								 FindFirstObjectByType<TimelessEchoes.Hero.HeroController>();
-					var heroHealth = hero != null ? hero.GetComponent<TimelessEchoes.Hero.HeroHealth>() : null;
-					if (buffManager != null && heroHealth != null)
-					{
-						float ls = buffManager.LifestealPercent;
-						if (ls > 0f)
-							heroHealth.Heal(dmgAmount * ls / 100f);
-					}
 				}
 				var sfx = GetComponent<ProjectileHitSfx>();
 				sfx?.PlayHit();

@@ -94,7 +94,8 @@ namespace TimelessEchoes.Buffs
                 {
                     if (recipe.durationType == BuffDurationType.DistancePercent)
                     {
-                        expireDist = tracker.LongestRun * recipe.GetDuration();
+                        var longest = Mathf.Max(1f, tracker.LongestRun);
+                        expireDist = longest * recipe.GetDuration();
                         distanceOk = tracker.CurrentRunDistance < expireDist;
                     }
                 }

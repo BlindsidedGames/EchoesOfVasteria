@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   isPercent: 0
   minRoll: 0.5
-  maxRoll: 10
+  maxRoll: 20
   rollCurve:
     serializedVersion: 2
     m_Curve:
@@ -42,6 +42,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  comparisonScale: 0.05
   rarityBands:
   - rarity: {fileID: 11400000, guid: f7417ae215ccd5e468d50a87118a46f7, type: 2}
     minQuantile: 0
@@ -260,7 +261,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   heroMapping: 0
-  comparisonScale: 0.1
   defaultOverlapPercent: 0.1
   topReservePercent: 0.02
   reserveTopForHighest: 1

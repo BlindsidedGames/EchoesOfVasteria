@@ -256,7 +256,7 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.DefensePercent => $"Defense +{eff.value}%",
                 BuffEffectType.AttackSpeedPercent => $"Attack Speed +{eff.value}%",
                 BuffEffectType.TaskSpeedPercent => $"Task Speed +{eff.value}%",
-                BuffEffectType.LifestealPercent => $"Lifesteal {eff.value}%",
+                BuffEffectType.HealthRegenPercent => $"Health Regen +{eff.value}%",
                 BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
                 BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
                 BuffEffectType.InstantTasks => "Tasks complete instantly",

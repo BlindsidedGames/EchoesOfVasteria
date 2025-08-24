@@ -165,7 +165,8 @@ namespace TimelessEchoes.UI
             float gearRegen = 0f;
             if (equip != null)
                 gearRegen = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.HealthRegen);
-            var regen = upgradeRegen + gearRegen;
+            float regenMultiplier = buffManager != null ? (1f + Mathf.Max(0f, buffManager.HealthRegenPercent) / 100f) : 1f;
+            var regen = (upgradeRegen + gearRegen) * regenMultiplier;
 
             if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
                 && Mathf.Approximately(attack, lastAttack) && Mathf.Approximately(critChance, lastCrit)
@@ -207,8 +208,6 @@ namespace TimelessEchoes.UI
                 var critTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.CritChance);
 
                 string dmgLine = $"{dmgTag} {totalDamage:0.##}";
-                if (bonusDamage > 0f)
-                    dmgLine += $" (+{bonusDamage:0.##})";
                 uiReferences.middleText.text =
                     dmgLine + "\n" +
                     $"{atkTag} {attack:0.###} /s\n" +

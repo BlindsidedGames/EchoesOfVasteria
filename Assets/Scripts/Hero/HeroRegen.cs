@@ -37,7 +37,9 @@ namespace TimelessEchoes.Hero
             if (equip != null)
                 gearRegen = equip.GetTotalForMapping(HeroStatMapping.HealthRegen);
 
-            float totalRegen = upgradeRegen + gearRegen;
+            var buff = TimelessEchoes.Buffs.BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+            float regenMultiplier = buff != null ? (1f + Mathf.Max(0f, buff.HealthRegenPercent) / 100f) : 1f;
+            float totalRegen = (upgradeRegen + gearRegen) * regenMultiplier;
             if (totalRegen > 0f && health.CurrentHealth < health.MaxHealth)
                 health.Heal(totalRegen * Time.deltaTime);
         }

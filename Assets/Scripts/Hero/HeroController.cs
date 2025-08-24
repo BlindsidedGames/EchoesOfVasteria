@@ -2,21 +2,17 @@
 #define DISABLESTEAMWORKS
 #endif
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Blindsided.Utilities;
 using Pathfinding;
-using Pathfinding.RVO;
-using Sirenix.OdinInspector;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Gear;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
-using TimelessEchoes.Upgrades;
-using Blindsided.Utilities;
-using Blindsided.Utilities.Pooling;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
@@ -28,7 +24,6 @@ namespace TimelessEchoes.Hero
 {
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
-    [RequireComponent(typeof(RVOController))]
     [RequireComponent(typeof(HeroHealth))]
     /// <summary>
     /// Controls the main hero and echo clones: movement (A*), combat targeting and attacks,
@@ -116,7 +111,9 @@ namespace TimelessEchoes.Hero
         private readonly List<Enemy> enemyRemovalBuffer = new();
 
         private AIPath ai;
+
         private float attackSpeedBonus;
+
         // Gear-derived additive bonuses
         private float gearAttackSpeedBonus;
         private float baseAttackSpeed;
@@ -152,7 +149,7 @@ namespace TimelessEchoes.Hero
         private float moveSpeedBonus;
         private AIDestinationSetter setter;
         private MapUI mapUI;
-        
+
 #if !DISABLESTEAMWORKS
         [SerializeField] private float richPresenceUpdateInterval = 2f;
         private float nextRichPresenceUpdate;
@@ -204,8 +201,8 @@ namespace TimelessEchoes.Hero
             ApplyStatUpgrades();
 
             // Subscribe to equipment changes and initialize gear bonuses
-            var equipInit = TimelessEchoes.Gear.EquipmentController.Instance ??
-                            FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            var equipInit = EquipmentController.Instance ??
+                            FindFirstObjectByType<EquipmentController>();
             if (equipInit != null)
                 equipInit.OnEquipmentChanged += RecalculateGearBonuses;
             RecalculateGearBonuses();
@@ -260,8 +257,8 @@ namespace TimelessEchoes.Hero
 #endif
                 if (!IsEcho && !ReaperSpawnedByDistance &&
                     transform.position.x >= tracker.MaxRunDistance *
-                        (buffController != null ? buffController.MaxDistanceMultiplier : 1f) +
-                        (buffController != null ? buffController.MaxDistanceFlatBonus : 0f))
+                    (buffController != null ? buffController.MaxDistanceMultiplier : 1f) +
+                    (buffController != null ? buffController.MaxDistanceFlatBonus : 0f))
                 {
                     var gm = GameManager.Instance;
                     var hp = health != null ? health : GetComponent<HeroHealth>();
@@ -401,8 +398,8 @@ namespace TimelessEchoes.Hero
             if (idleWalkTarget != null)
                 Destroy(idleWalkTarget.gameObject);
 
-            var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
-                        FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+            var equip = EquipmentController.Instance ??
+                        FindFirstObjectByType<EquipmentController>();
             if (equip != null)
                 equip.OnEquipmentChanged -= RecalculateGearBonuses;
         }
@@ -421,12 +418,10 @@ namespace TimelessEchoes.Hero
             var manager = BuffManager.Instance;
             var active = false;
             if (manager != null && !IsEcho)
-            {
                 active = manager.ActiveBuffs.Any(b =>
                     b.effects.Any(e =>
                         (e.type == BuffEffectType.MaxDistancePercent ||
                          e.type == BuffEffectType.MaxDistanceIncrease) && e.value > 0f));
-            }
             AutoBuffAnimator.gameObject.SetActive(active);
             if (animator != null && AutoBuffAnimator.isActiveAndEnabled)
             {
@@ -439,6 +434,5 @@ namespace TimelessEchoes.Hero
                 AutoBuffAnimator.Play(state.fullPathHash, 0, state.normalizedTime);
             }
         }
-
     }
 }
