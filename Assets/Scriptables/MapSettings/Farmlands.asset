@@ -27,7 +27,7 @@ MonoBehaviour:
   taskGeneratorSettings:
     minX: 15
     height: 18
-    enemyDensity: 0.1
+    enemyDensity: 0
     enemySpawnXOffset: 60
     topBuffer: 2
     bottomBuffer: 2
@@ -134,3 +134,4 @@ MonoBehaviour:
     segmentSize: {x: 64, y: 18}
   allowClouds: 1
   heroStartY: 12
+  allowMaxDistanceReapGain: 0

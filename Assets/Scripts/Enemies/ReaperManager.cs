@@ -105,9 +105,22 @@ namespace TimelessEchoes.Enemies
                 tracker?.AddTimesReaped();
 
             // If the hero was reaped for reaching the maximum distance,
-            // increase that maximum by 1% for future runs.
+            // increase that maximum by 1% for future runs if the current map allows it.
             if (heroCtrl != null && heroCtrl.ReaperSpawnedByDistance && tracker != null)
             {
+                var currentConfig = TimelessEchoes.GameManager.CurrentGenerationConfig;
+                if (currentConfig != null && !currentConfig.allowMaxDistanceReapGain)
+                {
+                    onKill?.Invoke();
+                    target = null;
+                    if (heroCtrl != null)
+                    {
+                        var gm = TimelessEchoes.GameManager.Instance;
+                        gm?.EnsureAutoReturnOnReapIfQueued();
+                        gm?.ForceHandleHeroDeath();
+                    }
+                    return;
+                }
                 var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
                 var buffedMax = tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
                                 (buff != null ? buff.MaxDistanceFlatBonus : 0f);

@@ -22,6 +22,8 @@ namespace TimelessEchoes.Quests
         ///     Automatically pin this quest when it becomes active.
         /// </summary>
         public bool autoPin;
+        [Tooltip("Pinned quest numbers use N0 locale formatting instead of CalcUtils abbreviations.")]
+        public bool useN0ForPinnedNumbers;
         public List<QuestData> requiredQuests = new();
         public List<Requirement> requirements = new();
         public List<Reward> rewards = new();

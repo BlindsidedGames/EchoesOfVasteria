@@ -133,8 +133,32 @@ namespace TimelessEchoes.UI
 		private void RefreshMixSlots()
 		{
 			if (rm == null || mixSlots.Count == 0) return;
-			var all = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && rm.GetAmount(r) > 0)
+			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
+			var eligibleFromTasks = new HashSet<Resource>();
+			foreach (var t in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
+			{
+				if (t == null) continue;
+				var skillName = t.associatedSkill != null ? t.associatedSkill.name : null;
+				if (string.IsNullOrEmpty(skillName)) continue;
+				var isFarming = skillName.IndexOf("farm", System.StringComparison.OrdinalIgnoreCase) >= 0;
+				var isFishing = skillName.IndexOf("fish", System.StringComparison.OrdinalIgnoreCase) >= 0;
+				if (!isFarming && !isFishing) continue;
+				foreach (var drop in t.resourceDrops)
+				{
+					if (drop == null || drop.resource == null) continue;
+					eligibleFromTasks.Add(drop.resource);
+				}
+			}
+
+			var eligibleFoods = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
+				.Where(r => r != null && rm.GetAmount(r) > 0 && eligibleFromTasks.Contains(r))
+				.ToList();
+
+			// Clear any previous selections that are not foods
+			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
+			if (selectedB != null && !eligibleFoods.Contains(selectedB)) selectedB = null;
+
+			var all = eligibleFoods
 				.OrderByDescending(r => rm.GetAmount(r))
 				.Take(6)
 				.ToList();

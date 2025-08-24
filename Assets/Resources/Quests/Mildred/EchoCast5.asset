@@ -42,6 +42,7 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: 
   autoPin: 0
+  useN0ForPinnedNumbers: 1
   requiredQuests:
   - {fileID: 11400000, guid: 830426961ecfd32428e89797578ef750, type: 2}
   - {fileID: 11400000, guid: 866f58c9710855b4ba7469ed3835c73d, type: 2}
@@ -53,6 +54,7 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 1
   maxDistanceIncrease: 0

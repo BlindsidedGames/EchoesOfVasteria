@@ -24,6 +24,9 @@ namespace TimelessEchoes.MapGeneration
         // Starting Y position for the hero when a run begins.
         public float heroStartY = 0f;
 
+        // Whether reaping at max distance grants a +1% increase to the max run distance.
+        public bool allowMaxDistanceReapGain = true;
+
         [Serializable]
         public class TilemapChunkSettings
         {

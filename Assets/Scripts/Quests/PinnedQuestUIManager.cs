@@ -222,27 +222,27 @@ namespace TimelessEchoes.Quests
 
                         if (target <= 0)
                             sb.AppendLine(
-                                $"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)}</size>");
+                                $"<size=90%>{label}{separator}{FormatForQuest(data, current)}</size>");
                         else
                             sb.AppendLine(
-                                $"<size=90%>{label}{separator}{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                                $"<size=90%>{label}{separator}{FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
                     }
                     else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
                     {
                         if (target <= 0)
                             sb.AppendLine(
-                                $"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)}</size>");
+                                $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)}</size>");
                         else
                             sb.AppendLine(
-                                $"<size=80%>Kill {req.killName}: {CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                                $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
                     }
                     else
                     {
                         if (target <= 0)
-                            sb.AppendLine($"<size=80%>{CalcUtils.FormatNumber(current, true)}</size>");
+                            sb.AppendLine($"<size=80%>{FormatForQuest(data, current)}</size>");
                         else
                             sb.AppendLine(
-                                $"<size=80%>{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(target, true)}</size>");
+                                $"<size=80%>{FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
                     }
                 }
 
@@ -293,6 +293,11 @@ namespace TimelessEchoes.Quests
         {
             if (stateImage != null)
                 stateImage.sprite = show ? closeSprite : openSprite;
+        }
+
+        private string FormatForQuest(QuestData data, double value)
+        {
+            return data != null && data.useN0ForPinnedNumbers ? value.ToString("N0") : CalcUtils.FormatNumber(value, true);
         }
     }
 }
