@@ -405,6 +405,7 @@ namespace TimelessEchoes.Stats
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
             RunInProgress = true;
+            CurrentRunDistance = 0f;
             CurrentRunSteps = 0f;
         }
 
