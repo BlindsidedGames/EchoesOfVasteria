@@ -292,7 +292,10 @@ namespace TimelessEchoes.Stats
         {
             if (lastHeroPos == Vector3.zero)
             {
+                // First sample of a run: set baseline and ensure current run distance starts here
                 lastHeroPos = position;
+                if (RunInProgress)
+                    CurrentRunDistance = position.x;
             }
             else
             {
