@@ -1,12 +1,14 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using Pathfinding;
 using References.UI;
+using Sirenix.OdinInspector;
 using TimelessEchoes.Audio;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
@@ -15,20 +17,18 @@ using TimelessEchoes.MapGeneration;
 using TimelessEchoes.NPC;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
-using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
-using TimelessEchoes.References.StatPanel;
+using TimelessEchoes.Upgrades;
 using TimelessEchoes.Utilities;
-using static TimelessEchoes.Quests.QuestUtils;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using static TimelessEchoes.Quests.QuestUtils;
 using static TimelessEchoes.TELogger;
-using static Blindsided.Oracle;
-using static Blindsided.SaveData.StaticReferences;
-using Sirenix.OdinInspector;
+using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes
 {
@@ -38,75 +38,95 @@ namespace TimelessEchoes
     public class GameManager : Singleton<GameManager>
     {
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
-        [TitleGroup("Prefabs")]
-        [SerializeField] private GameObject mapPrefab;
-        [TitleGroup("Prefabs")]
-        [SerializeField] private GameObject gravestonePrefab;
-        [TitleGroup("Prefabs")]
-        [SerializeField] private GameObject reaperPrefab;
-        [TitleGroup("Prefabs")]
-        [SerializeField] private Vector3 reaperSpawnOffset = Vector3.zero;
 
-        [TitleGroup("UI")]
-        [TitleGroup("UI/General")]
-        [SerializeField] private Button returnToTavernButton;
-        [TitleGroup("UI/General")]
-        [SerializeField] private TMP_Text returnToTavernText;
-        [TitleGroup("UI/General")]
-        [SerializeField] private TMP_Text retreatBonusText;
-        [TitleGroup("UI/General")]
-        [SerializeField] private Button returnOnDeathButton;
-        [TitleGroup("UI/General")]
-        [SerializeField] private TMP_Text returnOnDeathText;
-        [TitleGroup("UI/General")]
-        [TitleGroup("UI/General")]
-        [SerializeField] [Min(0f)] private float bonusPercentPerKill = 2f;
-        [TitleGroup("UI/General")]
-        [SerializeField] private GameObject tavernUI;
-        [TitleGroup("UI/General")]
-        [SerializeField] private GameObject mapUI;
-        [TitleGroup("UI/General")]
-        [SerializeField] private RunDropUI runDropUI;
-        [TitleGroup("UI/General")]
-        [SerializeField] private RunResourceTrackerUI runResourceTracker;
-        [TitleGroup("UI/General")]
-        [SerializeField] private RunCalebUIReferences runCalebUI;
-        [TitleGroup("UI/General")]
-        [SerializeField] private Transform meetingParent;
-        [TitleGroup("UI/General")]
-        [SerializeField] private GameObject savesObject;
+        [TitleGroup("Prefabs")] [SerializeField]
+        private GameObject mapPrefab;
 
-        [TitleGroup("UI/Death Window")]
-        [SerializeField] private GameObject deathWindow;
-        [TitleGroup("UI/Death Window")]
-        [SerializeField] private Button deathRunButton;
-        [TitleGroup("UI/Death Window")]
-        [SerializeField] private Button deathReturnButton;
-        [TitleGroup("UI/Death Window")]
-        [SerializeField] private SlicedFilledImage deathTimerImage;
-        [TitleGroup("UI/Death Window")]
-        [SerializeField] private float deathWindowDuration = 20f;
-        [TitleGroup("UI/General")]
-        [SerializeField] public string mildredQuestId;
+        [TitleGroup("Prefabs")] [SerializeField]
+        private GameObject gravestonePrefab;
+
+        [TitleGroup("Prefabs")] [SerializeField]
+        private GameObject reaperPrefab;
+
+        [TitleGroup("Prefabs")] [SerializeField]
+        private Vector3 reaperSpawnOffset = Vector3.zero;
+
+        [TitleGroup("UI")] [TitleGroup("UI/General")] [SerializeField]
+        private Button returnToTavernButton;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private TMP_Text returnToTavernText;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private TMP_Text retreatBonusText;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private Button returnOnDeathButton;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private TMP_Text returnOnDeathText;
+
+        [TitleGroup("UI/General")] [TitleGroup("UI/General")] [SerializeField] [Min(0f)]
+        private float bonusPercentPerKill = 2f;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private GameObject tavernUI;
+
+        [TitleGroup("UI/General")] public GameObject mapUI;
+        [TitleGroup("UI/General")] public MapUI mapUIInstance;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private RunDropUI runDropUI;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private RunResourceTrackerUI runResourceTracker;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private RunCalebUIReferences runCalebUI;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private Transform meetingParent;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        private GameObject savesObject;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
+        private GameObject deathWindow;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
+        private Button deathRunButton;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
+        private Button deathReturnButton;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
+        private SlicedFilledImage deathTimerImage;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
+        private float deathWindowDuration = 20f;
+
+        [TitleGroup("UI/General")] [SerializeField]
+        public string mildredQuestId;
 
         public GameObject ReaperPrefab => reaperPrefab;
         public GameObject GravestonePrefab => gravestonePrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
-        public GameObject CurrentMap => currentMap;
+        public GameObject CurrentMap { get; private set; }
+
         public float BonusPercentPerKill => bonusPercentPerKill;
 
-        public event System.Action HeroDied;
+        public event Action HeroDied;
 
-        [TitleGroup("Map Generation")]
-        [SerializeField] private List<MapGenerationButton> generationButtons = new();
+        [TitleGroup("Map Generation")] [SerializeField]
+        private List<MapGenerationButton> generationButtons = new();
+
         [SerializeField] private float fadeDuration = 1f;
 
         [Header("Cameras")] [SerializeField] private CinemachineCamera tavernCamera;
 
         private CloudSpawner cloudSpawner;
 
-        private GameObject currentMap;
         private bool runEndedByDeath;
         private bool runEndedByReaper;
         private bool heroDead;
@@ -117,12 +137,14 @@ namespace TimelessEchoes
         private NpcObjectStateController npcObjectStateController;
         private LocationObjectStateController locationObjectStateController;
         private GameplayStatTracker statTracker;
-        private System.Action<bool> runEndedAction;
+        private Action<bool> runEndedAction;
         private bool returnOnDeathQueued;
+
         private bool retreatQueued;
+
         // Track whether the run resource tracker should reset on the next run
         private bool resetRunResourceTracker = true;
-        private readonly Dictionary<Button, UnityEngine.Events.UnityAction> _buttonActions = new();
+        private readonly Dictionary<Button, UnityAction> _buttonActions = new();
 
         [SerializeField] private float statsUpdateInterval = 0.1f;
         private float nextStatsUpdateTime;
@@ -134,16 +156,22 @@ namespace TimelessEchoes
         // Auto-restart on stall settings
         [TitleGroup("Run Stall Monitor")] [SerializeField]
         private bool enableStallAutoRestart = true;
+
         [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(1f)]
         private float stallTimeoutSeconds = 60f;
+
         [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(0.1f)]
         private float stallCheckIntervalSeconds = 5f;
+
         [TitleGroup("Run Stall Monitor")] [SerializeField] [Min(0f)]
         private float stallDistanceEpsilon = 0.01f;
+
         private Coroutine stallMonitorCoroutine;
         private float lastObservedRunDistance;
         private float lastRunDistanceChangeTime;
+
         private bool pendingAutoRestartFromStall;
+
         // One-shot watchdog to ensure the death UI or auto-return engages after hero death.
         private float deathUiFailsafeCheckAt = -1f;
 
@@ -160,15 +188,18 @@ namespace TimelessEchoes
                     var longest = CalcUtils.FormatNumber(stats.LongestTrek, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
-                    entry.statsUI.distanceLongestTasksText.text = $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    entry.statsUI.distanceLongestTasksText.text =
+                        $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
                 }
+
                 if (entry.statsUI != null && entry.statsUI.killsDamageDeathsText != null)
                 {
                     var kills = CalcUtils.FormatNumber(stats.Kills, true);
                     var dealt = CalcUtils.FormatNumber(stats.DamageDealt, true);
                     var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
                     var taken = CalcUtils.FormatNumber(stats.DamageTaken, true);
-                    entry.statsUI.killsDamageDeathsText.text = $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                    entry.statsUI.killsDamageDeathsText.text =
+                        $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
                 }
             }
         }
@@ -183,7 +214,7 @@ namespace TimelessEchoes
                 if (entry?.button == null) continue;
                 var cfg = entry.config;
                 var track = entry.musicTrack;
-                UnityEngine.Events.UnityAction action = () =>
+                UnityAction action = () =>
                 {
                     AudioManager.Instance.PlayMusic(track, fadeDuration);
                     StartRun(cfg);
@@ -191,6 +222,7 @@ namespace TimelessEchoes
                 entry.button.onClick.AddListener(action);
                 _buttonActions.Add(entry.button, action);
             }
+
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(OnReturnToTavernButton);
             if (returnOnDeathButton != null)
@@ -207,7 +239,9 @@ namespace TimelessEchoes
                 Log("LocationObjectStateController missing", TELogCategory.General, this);
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
+            {
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
+            }
             else
             {
                 runEndedAction = _ => UpdateGenerationButtonStats();
@@ -227,10 +261,8 @@ namespace TimelessEchoes
             if (deathReturnButton != null)
                 deathReturnButton.onClick.RemoveListener(OnDeathReturnButton);
             foreach (var pair in _buttonActions)
-            {
                 if (pair.Key != null)
                     pair.Key.onClick.RemoveListener(pair.Value);
-            }
             _buttonActions.Clear();
             if (statTracker != null && runEndedAction != null)
             {
@@ -267,6 +299,7 @@ namespace TimelessEchoes
                 UpdateGenerationButtonStats();
                 nextStatsUpdateTime = Time.time + statsUpdateInterval;
             }
+
             if (returnToTavernButton != null)
             {
                 var active = hero != null && hero.gameObject.activeSelf && !heroDead;
@@ -322,8 +355,8 @@ namespace TimelessEchoes
             // tavern UI is visible after a short delay, re-trigger the expected flow.
             if (heroDead && deathUiFailsafeCheckAt > 0f && Time.time >= deathUiFailsafeCheckAt)
             {
-                bool deathWindowActive = deathWindow != null && deathWindow.activeInHierarchy;
-                bool tavernActive = tavernUI != null && tavernUI.activeInHierarchy;
+                var deathWindowActive = deathWindow != null && deathWindow.activeInHierarchy;
+                var tavernActive = tavernUI != null && tavernUI.activeInHierarchy;
                 if (!deathWindowActive && !tavernActive)
                 {
                     if (returnOnDeathQueued || retreatQueued)
@@ -337,6 +370,7 @@ namespace TimelessEchoes
                         if (deathWindowCoroutine == null)
                             deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
                     }
+
                     // Check again in case the first attempt is interrupted by ordering.
                     deathUiFailsafeCheckAt = Time.time + 2f;
                 }
@@ -425,10 +459,10 @@ namespace TimelessEchoes
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             // Starting a new run: no cooldowns from previous state
-            BuffManager.Instance?.ClearActiveBuffs(false);
+            BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.UpdateDistance(0f);
             // If this is the first run of a session (tavern was active), reset session aggregates
-            if (statTracker != null && (tavernUI != null && tavernUI.activeSelf))
+            if (statTracker != null && tavernUI != null && tavernUI.activeSelf)
                 statTracker.BeginSession();
             StartCoroutine(StartRunRoutine());
         }
@@ -451,8 +485,9 @@ namespace TimelessEchoes
                 runResourceTracker?.BeginRun();
                 resetRunResourceTracker = false;
             }
-            currentMap = Instantiate(mapPrefab);
-            taskController = currentMap.GetComponentInChildren<TaskController>();
+
+            CurrentMap = Instantiate(mapPrefab);
+            taskController = CurrentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
                 yield break;
 
@@ -535,6 +570,7 @@ namespace TimelessEchoes
                 StopCoroutine(stallMonitorCoroutine);
                 stallMonitorCoroutine = null;
             }
+
             if (enableStallAutoRestart)
                 stallMonitorCoroutine = StartCoroutine(MonitorRunStallRoutine());
         }
@@ -555,7 +591,7 @@ namespace TimelessEchoes
             if (warpDuration > 0f)
             {
                 var speed = Mathf.Abs(startingDistance - startPos.x) / warpDuration;
-                float elapsed = 0f;
+                var elapsed = 0f;
                 while (elapsed < warpDuration && !Mathf.Approximately(hero.transform.position.x, startingDistance))
                 {
                     var pos = hero.transform.position;
@@ -576,14 +612,12 @@ namespace TimelessEchoes
 
             var enemies = EnemyActivator.ActiveEnemies;
             if (enemies != null)
-            {
-                for (int i = enemies.Count - 1; i >= 0; i--)
+                for (var i = enemies.Count - 1; i >= 0; i--)
                 {
                     var enemy = enemies[i];
                     if (enemy != null && enemy.transform.position.x < hero.transform.position.x)
                         Destroy(enemy.gameObject);
                 }
-            }
 
             hero.SetActiveState(true);
             if (playerInput != null)
@@ -601,10 +635,10 @@ namespace TimelessEchoes
                 returnToTavernButton.interactable = false;
             if (returnOnDeathButton != null)
                 returnOnDeathButton.interactable = false;
-            bool distanceReaper = false;
+            var distanceReaper = false;
             if (hero != null)
             {
-                var controller = hero.GetComponent<Hero.HeroController>();
+                var controller = hero.GetComponent<HeroController>();
                 if (controller != null)
                     distanceReaper = controller.ReaperSpawnedByDistance;
 
@@ -619,9 +653,9 @@ namespace TimelessEchoes
                 if (!distanceReaper)
                 {
                     hero.gameObject.SetActive(false);
-                    if (gravestonePrefab != null && currentMap != null)
+                    if (gravestonePrefab != null && CurrentMap != null)
                         Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity,
-                            currentMap.transform);
+                            CurrentMap.transform);
                 }
             }
 
@@ -641,7 +675,7 @@ namespace TimelessEchoes
                 statTracker.AddDeath();
 
             // On hero death: clear buffs without starting cooldowns, and clear any existing cooldowns
-            BuffManager.Instance?.ClearActiveBuffs(false);
+            BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.ResetCooldowns();
 
             runEndedByDeath = true;
@@ -659,6 +693,7 @@ namespace TimelessEchoes
             {
                 deathWindowCoroutine = StartCoroutine(DeathWindowRoutine());
             }
+
             // Engage failsafe in case UI does not appear due to timing/ordering on some setups.
             deathUiFailsafeCheckAt = Time.time + 1f;
         }
@@ -705,6 +740,7 @@ namespace TimelessEchoes
                 StopCoroutine(deathWindowCoroutine);
                 deathWindowCoroutine = null;
             }
+
             if (deathWindow != null)
                 deathWindow.SetActive(false);
 
@@ -714,7 +750,7 @@ namespace TimelessEchoes
 
         /// <summary>
         ///     If, for any reason, the standard OnDeath event chain did not invoke
-        ///     <see cref="OnHeroDeath"/>, this method triggers it exactly once.
+        ///     <see cref="OnHeroDeath" />, this method triggers it exactly once.
         /// </summary>
         public void ForceHandleHeroDeath()
         {
@@ -767,6 +803,7 @@ namespace TimelessEchoes
                 StopCoroutine(deathWindowCoroutine);
                 deathWindowCoroutine = null;
             }
+
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             deathUiFailsafeCheckAt = -1f;
@@ -826,7 +863,7 @@ namespace TimelessEchoes
             // - If retreat/abandon: start cooldowns for active buffs unless the run lasted at least the buff's cooldown.
             if (runEndedByDeath)
             {
-                BuffManager.Instance?.ClearActiveBuffs(false);
+                BuffManager.Instance?.ClearActiveBuffs();
                 BuffManager.Instance?.ResetCooldowns();
             }
             else
@@ -837,6 +874,7 @@ namespace TimelessEchoes
                 // Also clear any existing cooldowns that would have fully elapsed during this run
                 BuffManager.Instance?.ClearCooldownsIfRunLongerThan(duration);
             }
+
             yield return StartCoroutine(CleanupMapRoutine());
             if (tavernCamera != null)
             {
@@ -872,9 +910,9 @@ namespace TimelessEchoes
             // the correct values instead of interim zeros.
             try
             {
-                Blindsided.EventHandler.SaveData();
+                EventHandler.SaveData();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"Immediate save after return failed: {ex}");
             }
@@ -892,6 +930,7 @@ namespace TimelessEchoes
                 StopCoroutine(stallMonitorCoroutine);
                 stallMonitorCoroutine = null;
             }
+
             if (mapCamera != null)
                 mapCamera.gameObject.SetActive(false);
 
@@ -908,16 +947,16 @@ namespace TimelessEchoes
 
             yield return null; // let AIBase.OnDisable remove the agent
 
-            if (currentMap != null)
+            if (CurrentMap != null)
             {
-                Destroy(currentMap); // safe to destroy AstarPath now
-                currentMap = null;
+                Destroy(CurrentMap); // safe to destroy AstarPath now
+                CurrentMap = null;
             }
         }
 
         /// <summary>
         ///     Periodically checks the hero's current run distance and, if it hasn't
-        ///     increased for more than <see cref="stallTimeoutSeconds"/>, abandons
+        ///     increased for more than <see cref="stallTimeoutSeconds" />, abandons
         ///     the run and starts a fresh one.
         /// </summary>
         private IEnumerator MonitorRunStallRoutine()
@@ -934,7 +973,7 @@ namespace TimelessEchoes
             while (true)
             {
                 // If the run ends or hero/map is gone, stop monitoring
-                if (statTracker == null || !statTracker.RunInProgress || hero == null || currentMap == null)
+                if (statTracker == null || !statTracker.RunInProgress || hero == null || CurrentMap == null)
                     yield break;
 
                 // Skip while the hero is dead
@@ -977,10 +1016,10 @@ namespace TimelessEchoes
 
         private void EnableMildred()
         {
-            if (currentMap == null)
+            if (CurrentMap == null)
                 return;
             var unlocked = QuestCompleted(mildredQuestId);
-            foreach (var t in currentMap.GetComponentsInChildren<Transform>(true))
+            foreach (var t in CurrentMap.GetComponentsInChildren<Transform>(true))
                 if (t.gameObject.name == "Mildred")
                 {
                     t.gameObject.SetActive(unlocked);

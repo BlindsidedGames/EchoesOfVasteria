@@ -303,7 +303,7 @@ namespace TimelessEchoes.Hero
             ReaperSpawnedByDistance = false;
 
             if (mapUI == null)
-                mapUI = FindFirstObjectByType<MapUI>();
+                mapUI = GameManager.Instance?.mapUIInstance;
 
             ApplyStatUpgrades();
             if (stats != null)
