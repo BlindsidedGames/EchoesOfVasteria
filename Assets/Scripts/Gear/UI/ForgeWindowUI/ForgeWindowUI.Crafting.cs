@@ -182,6 +182,7 @@ namespace TimelessEchoes.Gear.UI
             lastCrafted = null;
             // Clear result text and disable action buttons when no active craft
             if (resultText != null) resultText.text = string.Empty;
+            ClearResultTierText();
             if (replaceButton != null) replaceButton.interactable = false;
             // Clear result preview when result is equipped
             ClearResultPreview();
@@ -197,6 +198,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 img.enabled = false;
                 img.sprite = null;
+                ClearResultTierText();
                 return;
             }
 
@@ -207,6 +209,7 @@ namespace TimelessEchoes.Gear.UI
                 {
                     img.sprite = migratedHelmetSprite;
                     img.enabled = true;
+                    ClearResultTierText();
                     return;
                 }
             }
@@ -237,18 +240,22 @@ namespace TimelessEchoes.Gear.UI
                 {
                     img.sprite = sprite;
                     img.enabled = true;
+                    ClearResultTierText();
                     return;
                 }
             }
 
             img.sprite = sprite;
             img.enabled = sprite != null;
+            ApplyResultTierText(item);
         }
 
         private void ClearResultPreview()
         {
             // Show unknown gear sprite for the currently selected slot
             SetResultUnknownForSlot(selectedSlot);
+            // Ensure tier text clears as well
+            ClearResultTierText();
         }
 
         private void SetResultUnknownForSlot(string slot)
@@ -259,6 +266,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 img.enabled = false;
                 img.sprite = null;
+                ClearResultTierText();
                 return;
             }
 
@@ -288,6 +296,30 @@ namespace TimelessEchoes.Gear.UI
 
             img.sprite = sprite;
             img.enabled = sprite != null;
+            ClearResultTierText();
+        }
+
+        private void ApplyResultTierText(GearItem item)
+        {
+            if (resultTierText == null)
+                return;
+            if (item == null || item.rarity == null)
+            {
+                resultTierText.text = string.Empty;
+                resultTierText.enabled = false;
+                return;
+            }
+            var tierDisplay = Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8);
+            resultTierText.text = $"Tier {tierDisplay}";
+            resultTierText.enabled = true;
+        }
+
+        private void ClearResultTierText()
+        {
+            if (resultTierText == null)
+                return;
+            resultTierText.text = string.Empty;
+            resultTierText.enabled = false;
         }
 
         private bool CanCraft()

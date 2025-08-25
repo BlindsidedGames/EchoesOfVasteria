@@ -21,6 +21,7 @@ namespace TimelessEchoes.Gear.UI
 
             // When choosing a slot (but not crafting), show the unknown gear sprite for that slot in result
             SetResultUnknownForSlot(slot);
+            ClearResultTierText();
             // Update equipped stats display for the selected slot
             UpdateSelectedSlotStats();
             RefreshActionButtons();
@@ -75,6 +76,7 @@ namespace TimelessEchoes.Gear.UI
                         {
                             slotRef.GearImage.sprite = migratedHelmetSprite;
                             slotRef.GearImage.enabled = true;
+                            slotRef.ClearGearTierText();
                         }
                         else
                         {
@@ -95,6 +97,7 @@ namespace TimelessEchoes.Gear.UI
                     {
                         slotRef.GearImage.sprite = unknownGearSprites[idx];
                         slotRef.GearImage.enabled = true;
+                        slotRef.ClearGearTierText();
                     }
                     else
                     {

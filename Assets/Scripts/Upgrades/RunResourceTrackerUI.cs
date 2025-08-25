@@ -173,7 +173,7 @@ namespace TimelessEchoes.Upgrades
             {
                 var oldDist = FormatNumber(startingReapDistance, true);
                 var newDist = FormatNumber(tracker.MaxRunDistance, true);
-                lines.Add($"Reaping Distance: {oldDist} -> {newDist}");
+                lines.Add($"Reaping Distance: {oldDist}<sprite=9>{newDist}");
             }
 
             // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)

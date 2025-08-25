@@ -494,6 +494,9 @@ namespace TimelessEchoes
             hero = taskController.hero;
             if (hero != null)
             {
+                // Ensure the main hero is never misflagged as an echo due to any lingering echo arming
+                HeroController.DisarmEchoArming();
+                HeroController.ForceSetMainHero(hero);
                 hero.gameObject.SetActive(true);
                 var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)

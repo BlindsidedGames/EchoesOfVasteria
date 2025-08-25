@@ -14,6 +14,7 @@ namespace TimelessEchoes.Gear.UI
         private Button craftButton;
 
         [SerializeField] private TMP_Text resultText;
+        [SerializeField] private TMP_Text resultTierText;
         [SerializeField] private Button replaceButton;
         [SerializeField] private Button craftUntilUpgradeButton;
         [SerializeField] private TMP_Text craftUntilUpgradeButtonText;

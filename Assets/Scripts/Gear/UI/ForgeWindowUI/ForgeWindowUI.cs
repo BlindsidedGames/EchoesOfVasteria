@@ -148,6 +148,7 @@ namespace TimelessEchoes.Gear.UI
             // Assume result panel is always active; clear text and disable action buttons
             if (resultText != null)
                 resultText.text = string.Empty;
+            if (resultTierText != null) resultTierText.text = string.Empty;
             if (replaceButton != null) replaceButton.interactable = false;
 
             // Ensure TMP texts that use <sprite> tags render with the StatIcons sprite asset
@@ -156,6 +157,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 if (selectedSlotStatsText != null) selectedSlotStatsText.spriteAsset = statSpriteAsset;
                 if (resultText != null) resultText.spriteAsset = statSpriteAsset;
+                if (resultTierText != null) resultTierText.spriteAsset = statSpriteAsset;
             }
 
             // Initialize previews
@@ -198,6 +200,7 @@ namespace TimelessEchoes.Gear.UI
             // Clear any stale UI state after loading another save
             lastCrafted = null;
             if (resultText != null) resultText.text = string.Empty;
+            if (resultTierText != null) resultTierText.text = string.Empty;
             ClearResultPreview();
             RefreshActionButtons();
             UpdateAllGearSlots();

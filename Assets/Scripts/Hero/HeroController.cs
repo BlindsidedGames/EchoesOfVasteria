@@ -41,7 +41,27 @@ namespace TimelessEchoes.Hero
             nextIsEcho = true;
         }
 
-        [HideInInspector] public bool IsEcho;
+        /// <summary>
+        ///     Ensures that the next created HeroController is not armed as an echo.
+        ///     Call before spawning the main hero for a new run to avoid accidental echo flagging.
+        /// </summary>
+        public static void DisarmEchoArming()
+        {
+            nextIsEcho = false;
+        }
+
+        /// <summary>
+        ///     Force-claims a specific controller as the main hero instance and clears its echo flag.
+        ///     Use immediately after spawning the main hero to recover from any misflag.
+        /// </summary>
+        public static void ForceSetMainHero(HeroController controller)
+        {
+            if (controller == null) return;
+            controller.IsEcho = false;
+            Instance = controller;
+        }
+
+        public bool IsEcho;
         [SerializeField] private HeroStats stats;
         [SerializeField] private Animator animator;
 
