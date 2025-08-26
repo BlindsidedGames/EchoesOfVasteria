@@ -180,9 +180,11 @@ namespace TimelessEchoes.UI
 				.ThenBy(r => r.name)
 				.ToList();
 
-			// Clear any previous selections that are not foods
+			// Clear any previous selections that are not foods or have zero amount
 			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
 			if (selectedB != null && !eligibleFoods.Contains(selectedB)) selectedB = null;
+			if (selectedA != null && rm != null && rm.GetAmount(selectedA) <= 0) selectedA = null;
+			if (selectedB != null && rm != null && rm.GetAmount(selectedB) <= 0) selectedB = null;
 
 			// Clamp to first 25 and to available UI slots, with warnings
 			var maxByDesign = 25;
@@ -211,14 +213,17 @@ namespace TimelessEchoes.UI
 					continue;
 				}
 				if (ui.iconImage != null) { ui.iconImage.enabled = true; ui.iconImage.sprite = r.icon; }
-				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(rm.GetAmount(r), true);
+				var amount = rm != null ? rm.GetAmount(r) : 0;
+				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(amount, true);
 				if (ui.selectButton != null)
 				{
 					ui.selectButton.onClick.RemoveAllListeners();
 					var isSelA = selectedA == r;
 					var isSelB = selectedB == r;
-					ui.selectButton.interactable = !(isSelA || isSelB);
-					if (ui.selectButton.interactable)
+					var hasAny = amount > 0;
+					var canSelect = hasAny && !(isSelA || isSelB);
+					ui.selectButton.interactable = canSelect;
+					if (canSelect)
 						ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
 				}
 				{
@@ -254,33 +259,22 @@ namespace TimelessEchoes.UI
 					selectedB = r; nextGreen = true;
 				}
 			}
-			RefreshMixButton();
-			// Force visuals
-			foreach (var s in mixSlots)
-			{
-				var isA = s != null && rm != null && s.iconImage != null && selectedA != null && s.iconImage.sprite == selectedA.icon;
-				var isB = s != null && rm != null && s.iconImage != null && selectedB != null && s.iconImage.sprite == selectedB.icon;
-				if (s != null)
-				{
-					if (s.selectionImageGreen != null) s.selectionImageGreen.enabled = (isA && !nextGreen) || (isB && nextGreen);
-					if (s.selectionImageWhite != null) s.selectionImageWhite.enabled = (isA && nextGreen) || (isB && !nextGreen);
-					if (s.selectButton != null) s.selectButton.interactable = !(isA || isB);
-				}
-			}
-			RefreshSelectedDisplaySlots();
+			// Rebuild UI so zero-count items become non-selectable and visuals update consistently
+			RefreshMixSlots();
 		}
 
 		private void RefreshMixButton()
 		{
-			var canMix = selectedA != null && selectedB != null && selectedA != selectedB && cauldron != null && cauldron.CanMix(selectedA, selectedB);
+			double amountA = 0, amountB = 0;
+			if (rm != null && selectedA != null) amountA = rm.GetAmount(selectedA);
+			if (rm != null && selectedB != null) amountB = rm.GetAmount(selectedB);
+			var canMix = selectedA != null && selectedB != null && selectedA != selectedB && amountA > 0 && amountB > 0;
 			if (mixButton != null) mixButton.interactable = canMix;
 
 			// Update predicted stew text
 			double predicted = 0;
-			if (rm != null && selectedA != null && selectedB != null && selectedA != selectedB)
+			if (selectedA != null && selectedB != null && selectedA != selectedB)
 			{
-				var amountA = rm.GetAmount(selectedA);
-				var amountB = rm.GetAmount(selectedB);
 				double points = amountA * selectedA.baseValue * selectedA.valueMultiplier + amountB * selectedB.baseValue * selectedB.valueMultiplier;
 				predicted = points / 100.0;
 			}

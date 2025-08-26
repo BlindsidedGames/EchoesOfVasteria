@@ -45,6 +45,33 @@ namespace TimelessEchoes.Gear.UI
 
 			return score;
 		}
+
+		public static float ComputeAbsoluteScore(CraftingService crafting, GearItem item)
+		{
+			if (item == null) return 0f;
+			var totalsByMapping = new Dictionary<HeroStatMapping, float>();
+			if (item.affixes != null)
+			{
+				for (var i = 0; i < item.affixes.Count; i++)
+				{
+					var a = item.affixes[i];
+					if (a == null || a.stat == null) continue;
+					var map = a.stat.heroMapping;
+					if (!totalsByMapping.ContainsKey(map)) totalsByMapping[map] = 0f;
+					totalsByMapping[map] += a.value;
+				}
+			}
+
+			var score = 0f;
+			foreach (var kv in totalsByMapping)
+			{
+				var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
+				var scale = def != null ? UnityEngine.Mathf.Max(0f, def.comparisonScale) : 1f;
+				score += kv.Value * scale;
+			}
+
+			return score;
+		}
 	}
 }
 

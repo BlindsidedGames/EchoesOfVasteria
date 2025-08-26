@@ -30,6 +30,7 @@ namespace TimelessEchoes.EditorTools
 		}
 
 		public enum Mode { AffixValueTester, FullCraftSimulator }
+		private enum GridWeighting { EqualPerRarity, CoreOdds }
 		public enum RarityMode { UseCoreWeights, ForceSpecific }
 
 		[BoxGroup("General"), EnumToggleButtons]
@@ -60,6 +61,18 @@ namespace TimelessEchoes.EditorTools
 		public bool overlayFloor = true;
 		[ShowIf("@mode == Mode.AffixValueTester"), BoxGroup("Affix Value Tester"), LabelText("Ignore Jackpot Fields"), Tooltip("Fields removed from code; kept for legacy assets, always ignored."), ReadOnly]
 		public bool jackpotIgnored = true;
+
+		// Grid by rarity (small multiples)
+		[ShowIf("@mode == Mode.AffixValueTester"), BoxGroup("Grid by Rarity"), LabelText("Show Grid by Rarity")] public bool showGridByRarity = false;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity"), BoxGroup("Grid by Rarity"), LabelText("Weighting")] private GridWeighting gridWeighting = GridWeighting.EqualPerRarity;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity && gridWeighting == GridWeighting.CoreOdds"), BoxGroup("Grid by Rarity"), LabelText("Core for Odds")] public CoreSO gridCore;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity && gridWeighting == GridWeighting.CoreOdds"), BoxGroup("Grid by Rarity"), LabelText("Use Level Scaling")] public bool gridUseLevelScaling = false;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity && gridWeighting == GridWeighting.CoreOdds && gridUseLevelScaling"), BoxGroup("Grid by Rarity"), MinValue(0), MaxValue(100), LabelText("Level")] public int gridLevel = 0;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity && gridWeighting == GridWeighting.CoreOdds"), BoxGroup("Grid by Rarity"), LabelText("Apply Global Mult")] public bool gridApplyGlobalMultiplier = true;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity"), BoxGroup("Grid by Rarity"), LabelText("Normalize to PDF")] public bool gridNormalizePdf = true;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity"), BoxGroup("Grid by Rarity"), LabelText("Shared Y across tiles")] public bool gridSharedY = true;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity"), BoxGroup("Grid by Rarity"), LabelText("Show Overlap with Adjacent")] public bool gridShowAdjOverlap = true;
+		[ShowIf("@mode == Mode.AffixValueTester && showGridByRarity"), BoxGroup("Grid by Rarity"), LabelText("Samples per Rarity"), MinValue(10), MaxValue(200000)] public int gridSamplesPerRarity = 2000;
 
 		// Full craft simulator
 		[ShowIf("@mode == Mode.FullCraftSimulator"), BoxGroup("Craft Simulator"), LabelText("Core")]
@@ -95,6 +108,14 @@ namespace TimelessEchoes.EditorTools
 		private int lastClampedCount;
 		private string lastSummary = string.Empty;
 		private readonly Dictionary<RaritySO, int> rarityCounts = new Dictionary<RaritySO, int>();
+
+		// Grid state
+		private readonly Dictionary<RaritySO, float[]> gridHistByRarity = new Dictionary<RaritySO, float[]>();
+		private readonly Dictionary<RaritySO, float> gridPdfAreaCheck = new Dictionary<RaritySO, float>();
+		private readonly Dictionary<RaritySO, (float prevPct, float nextPct)> gridAdjOverlap = new Dictionary<RaritySO, (float, float)>();
+		private float gridMin;
+		private float gridMax;
+		private float gridSharedYMax;
 
 		protected override void OnEnable()
 		{
@@ -173,6 +194,25 @@ namespace TimelessEchoes.EditorTools
 			bins = EditorGUILayout.IntSlider("Bins", bins, 10, MaxBins);
 			overlayBands = EditorGUILayout.Toggle("Overlay Bands", overlayBands);
 
+			// Grid controls
+			showGridByRarity = EditorGUILayout.Toggle("Show Grid by Rarity", showGridByRarity);
+			if (showGridByRarity)
+			{
+				gridWeighting = (GridWeighting)EditorGUILayout.EnumPopup("Weighting", gridWeighting);
+				if (gridWeighting == GridWeighting.CoreOdds)
+				{
+					gridCore = (CoreSO)EditorGUILayout.ObjectField("Core for Odds", gridCore, typeof(CoreSO), false);
+					gridUseLevelScaling = EditorGUILayout.Toggle("Use Level Scaling", gridUseLevelScaling);
+					if (gridUseLevelScaling)
+						gridLevel = EditorGUILayout.IntSlider("Level", gridLevel, 0, 100);
+					gridApplyGlobalMultiplier = EditorGUILayout.Toggle("Apply Global Mult", gridApplyGlobalMultiplier);
+				}
+				gridNormalizePdf = EditorGUILayout.Toggle("Normalize to PDF", gridNormalizePdf);
+				gridSharedY = EditorGUILayout.Toggle("Shared Y across tiles", gridSharedY);
+				gridShowAdjOverlap = EditorGUILayout.Toggle("Show Overlap with Adjacent", gridShowAdjOverlap);
+				gridSamplesPerRarity = EditorGUILayout.IntSlider("Samples per Rarity", gridSamplesPerRarity, 10, 200000);
+			}
+
 			EditorGUILayout.Space(4);
 			using (new EditorGUILayout.HorizontalScope())
 			{
@@ -180,13 +220,192 @@ namespace TimelessEchoes.EditorTools
 				if (GUILayout.Button("Run", GUILayout.Width(120), GUILayout.Height(26)))
 				{
 					RunAffixSampling();
+					if (showGridByRarity)
+						RunGridSampling();
 				}
 			}
 
 			EditorGUILayout.Space(6);
 			DrawHistogram();
 			DrawSummaryBox();
+			if (showGridByRarity)
+			{
+				EditorGUILayout.Space(8);
+				DrawGridByRarity();
+			}
 			EditorGUILayout.EndVertical();
+		}
+
+		private void RunGridSampling()
+		{
+			gridHistByRarity.Clear();
+			gridPdfAreaCheck.Clear();
+			gridAdjOverlap.Clear();
+			if (stat == null || rarities.Count == 0) return;
+
+			// Global range across stat
+			gridMin = stat.minRoll;
+			gridMax = stat.maxRoll;
+			int usedBins = Mathf.Clamp(bins, 10, MaxBins);
+			float binWidth = Mathf.Max(0.000001f, (gridMax - gridMin) / usedBins);
+
+			// Sample per rarity
+			foreach (var r in rarities)
+			{
+				var values = new List<float>(gridSamplesPerRarity);
+				for (int i = 0; i < gridSamplesPerRarity; i++)
+				{
+					values.Add(RollAffixValue(stat, r));
+				}
+				values.Sort();
+				var hist = BuildHistogramFixed(values, usedBins, gridMin, gridMax);
+				if (gridNormalizePdf)
+				{
+					NormalizeToPdf(hist, binWidth);
+					gridPdfAreaCheck[r] = Sum(hist) * binWidth;
+				}
+				gridHistByRarity[r] = hist;
+			}
+
+			// Shared Y max
+			gridSharedYMax = 0f;
+			foreach (var kv in gridHistByRarity)
+			{
+				float localMax = kv.Value.Length > 0 ? kv.Value.Max() : 0f;
+				if (localMax > gridSharedYMax) gridSharedYMax = localMax;
+			}
+
+			// Overlap with adjacent tiers (by order)
+			for (int i = 0; i < rarities.Count; i++)
+			{
+				var r = rarities[i];
+				float prev = 0f, next = 0f;
+				if (i - 1 >= 0) prev = ComputeOverlap(gridHistByRarity[rarities[i - 1]], gridHistByRarity[r], binWidth);
+				if (i + 1 < rarities.Count) next = ComputeOverlap(gridHistByRarity[r], gridHistByRarity[rarities[i + 1]], binWidth);
+				gridAdjOverlap[r] = (prev * 100f, next * 100f);
+			}
+		}
+
+		private void DrawGridByRarity()
+		{
+			if (gridHistByRarity.Count == 0 || stat == null) return;
+			int usedBins = Mathf.Clamp(bins, 10, MaxBins);
+			float binWidth = Mathf.Max(0.000001f, (gridMax - gridMin) / usedBins);
+
+			var labelStyle = new GUIStyle(EditorStyles.miniLabel);
+			labelStyle.alignment = TextAnchor.MiddleCenter;
+			labelStyle.fontStyle = FontStyle.Bold;
+
+			for (int i = 0; i < rarities.Count; i++)
+			{
+				var r = rarities[i];
+				var hist = gridHistByRarity.TryGetValue(r, out var h) ? h : Array.Empty<float>();
+				Rect rect = GUILayoutUtility.GetRect(980, 160);
+				EditorGUI.DrawRect(rect, new Color(0.1f, 0.1f, 0.1f, 0.2f));
+				DrawGrid(rect);
+
+				// Draw histogram bars
+				float yMax = gridSharedY ? gridSharedYMax : (hist.Length > 0 ? hist.Max() : 1f);
+				float barW = (rect.width - 6) / Mathf.Max(1, hist.Length);
+				for (int b = 0; b < hist.Length; b++)
+				{
+					float x = Mathf.Lerp(rect.x + 3, rect.xMax - barW - 3, b / (float)Mathf.Max(1, hist.Length));
+					float hVal = yMax > 0f ? Mathf.Lerp(0, rect.height - 24, hist[b] / yMax) : 0f;
+					var br = new Rect(x, rect.yMax - 18 - hVal, barW * 0.95f, hVal);
+					var c = (r != null) ? r.color : new Color(0.3f, 0.8f, 0.4f, 1f);
+					c.a = 0.9f;
+					EditorGUI.DrawRect(br, c);
+				}
+
+				// band window for this rarity
+				var band = stat.GetBandForRarity(r);
+				if (band != null)
+				{
+					float minV = Mathf.Lerp(stat.minRoll, stat.maxRoll, band.GetClampedMin());
+					float maxV = Mathf.Lerp(stat.minRoll, stat.maxRoll, band.GetClampedMax());
+					float x0 = Mathf.Lerp(rect.x, rect.xMax, Mathf.InverseLerp(gridMin, gridMax, minV));
+					float x1 = Mathf.Lerp(rect.x, rect.xMax, Mathf.InverseLerp(gridMin, gridMax, maxV));
+					var overlay = new Rect(Mathf.Min(x0, x1), rect.y + 4, Mathf.Abs(x1 - x0), rect.height - 24);
+					EditorGUI.DrawRect(overlay, new Color(1f, 1f, 1f, 0.06f));
+					Handles.BeginGUI();
+					Handles.color = new Color(1f, 1f, 1f, 0.2f);
+					Handles.DrawAAPolyLine(2f, new Vector3(x0, rect.y + 4, 0), new Vector3(x0, rect.yMax - 20, 0));
+					Handles.DrawAAPolyLine(2f, new Vector3(x1, rect.y + 4, 0), new Vector3(x1, rect.yMax - 20, 0));
+					Handles.EndGUI();
+				}
+
+				// floor line
+				if (overlayFloor && r != null)
+				{
+					float floorV = Mathf.Lerp(stat.minRoll, stat.maxRoll, Mathf.Clamp01(r.floorPercent / 100f));
+					float xF = Mathf.Lerp(rect.x, rect.xMax, Mathf.InverseLerp(gridMin, gridMax, floorV));
+					Handles.BeginGUI();
+					Handles.color = new Color(1f, 0.4f, 0.2f, 0.7f);
+					Handles.DrawAAPolyLine(2f, new Vector3(xF, rect.y + 2, 0), new Vector3(xF, rect.yMax - 18, 0));
+					Handles.EndGUI();
+				}
+
+				// title and overlap
+				var title = r != null ? r.GetName() : "Rarity";
+				GUI.Label(new Rect(rect.x, rect.y + 2, rect.width, 18), title, labelStyle);
+				if (gridShowAdjOverlap && gridAdjOverlap.TryGetValue(r, out var ov))
+				{
+					var ovText = $"Overlap prev: {ov.prevPct:0.#}%  |  next: {ov.nextPct:0.#}%";
+					GUI.Label(new Rect(rect.x + 6, rect.yMax - 18, rect.width - 12, 16), ovText, EditorStyles.miniLabel);
+				}
+
+				// bottom ticks every ~10 bins
+				for (int b = 0; b < hist.Length; b++)
+				{
+					if (b % Mathf.Max(1, hist.Length / 10) != 0) continue;
+					float t = b / (float)Mathf.Max(1, hist.Length);
+					float vx = Mathf.Lerp(rect.x + 3, rect.xMax - barW - 3, t);
+					string label = Mathf.Lerp(gridMin, gridMax, t).ToString("0.###");
+					GUI.Label(new Rect(vx, rect.yMax - 16, barW + 4, 16), label, EditorStyles.miniLabel);
+				}
+			}
+		}
+
+		private static float[] BuildHistogramFixed(List<float> sortedValues, int binCount, float min, float max)
+		{
+			if (sortedValues == null || sortedValues.Count == 0) return Array.Empty<float>();
+			binCount = Mathf.Clamp(binCount, 1, MaxBins);
+			var binsArr = new float[binCount];
+			float range = Mathf.Max(0.000001f, max - min);
+			for (int i = 0; i < sortedValues.Count; i++)
+			{
+				int idx = Mathf.Clamp((int)((sortedValues[i] - min) / range * (binCount - 1)), 0, binCount - 1);
+				binsArr[idx] += 1f;
+			}
+			return binsArr;
+		}
+
+		private static void NormalizeToPdf(float[] binsArr, float binWidth)
+		{
+			if (binsArr == null || binsArr.Length == 0) return;
+			float sum = 0f;
+			for (int i = 0; i < binsArr.Length; i++) sum += binsArr[i];
+			if (sum <= 0f) return;
+			float inv = 1f / (sum * binWidth);
+			for (int i = 0; i < binsArr.Length; i++) binsArr[i] *= inv;
+		}
+
+		private static float Sum(float[] arr)
+		{
+			float s = 0f;
+			if (arr == null) return s;
+			for (int i = 0; i < arr.Length; i++) s += arr[i];
+			return s;
+		}
+
+		private static float ComputeOverlap(float[] a, float[] b, float binWidth)
+		{
+			if (a == null || b == null || a.Length == 0 || b.Length == 0) return 0f;
+			int n = Mathf.Min(a.Length, b.Length);
+			float sumMin = 0f;
+			for (int i = 0; i < n; i++)
+				sumMin += Mathf.Min(a[i], b[i]);
+			return sumMin * binWidth;
 		}
 
 		private void DrawCraftSimulator()
@@ -438,16 +657,42 @@ namespace TimelessEchoes.EditorTools
 		{
 			if (mode == Mode.AffixValueTester)
 			{
-				if (lastHistogram == null || lastHistogram.Length == 0 || stat == null || rarity == null) return;
-				var lines = new List<string> { "Value,Count" };
-				for (int i = 0; i < lastHistogram.Length; i++)
+				// Prefer grid export if enabled and available
+				if (showGridByRarity && gridHistByRarity.Count > 0 && stat != null)
 				{
-					float t = i / (float)lastHistogram.Length;
-					float v = Mathf.Lerp(lastMin, lastMax, t);
-					lines.Add($"{v:0.######},{lastHistogram[i]:0}");
+					int usedBins = Mathf.Clamp(bins, 10, MaxBins);
+					var header = new List<string> { "Value" };
+					foreach (var r in rarities) header.Add(r != null ? r.GetName() : "Rarity");
+					var lines = new List<string> { string.Join(",", header) };
+					for (int i = 0; i < usedBins; i++)
+					{
+						float t = i / (float)usedBins;
+						float v = Mathf.Lerp(gridMin, gridMax, t);
+						var row = new List<string> { v.ToString("0.######") };
+						foreach (var r in rarities)
+						{
+							var hist = gridHistByRarity.TryGetValue(r, out var h) ? h : Array.Empty<float>();
+							float val = (i < hist.Length) ? hist[i] : 0f;
+							row.Add(gridNormalizePdf ? val.ToString("0.########") : val.ToString("0"));
+						}
+						lines.Add(string.Join(",", row));
+					}
+					EditorGUIUtility.systemCopyBuffer = string.Join("\n", lines);
+					ShowNotification(new GUIContent("Grid CSV copied"));
 				}
-				EditorGUIUtility.systemCopyBuffer = string.Join("\n", lines);
-				ShowNotification(new GUIContent("Histogram CSV copied"));
+				else
+				{
+					if (lastHistogram == null || lastHistogram.Length == 0 || stat == null || rarity == null) return;
+					var lines = new List<string> { "Value,Count" };
+					for (int i = 0; i < lastHistogram.Length; i++)
+					{
+						float t = i / (float)lastHistogram.Length;
+						float v = Mathf.Lerp(lastMin, lastMax, t);
+						lines.Add($"{v:0.######},{lastHistogram[i]:0}");
+					}
+					EditorGUIUtility.systemCopyBuffer = string.Join("\n", lines);
+					ShowNotification(new GUIContent("Histogram CSV copied"));
+				}
 			}
 			else
 			{

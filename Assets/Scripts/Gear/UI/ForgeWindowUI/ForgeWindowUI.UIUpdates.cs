@@ -38,6 +38,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateIngotCraftPreview(selectedCore);
             UpdateCrystalCraftPreview(selectedCore);
             UpdateChunkCraftPreview(selectedCore);
+            UpdateCoreCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             UpdateIvanXpUI();
             RefreshActionButtons();
@@ -372,6 +373,89 @@ namespace TimelessEchoes.Gear.UI
             }
         }
 
+        private void UpdateCoreCraftPreview(CoreSO core)
+        {
+            var rm = RM;
+            var section = coreConversionSection;
+            if (section == null) return;
+
+            var (curRes, nextRes, isFinalTier) = ResolveCurrentAndNextCoreResources(core);
+            // If final tier, disable the entire section GameObject
+            if (section.gameObject != null) section.gameObject.SetActive(!isFinalTier);
+            if (isFinalTier)
+                return;
+
+            if (section.resultImage != null)
+            {
+                Sprite sprite = null;
+                var res = nextRes;
+                if (res != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(res);
+                    sprite = discovered ? res.icon : res.UnknownIcon;
+                }
+
+                section.resultImage.sprite = sprite;
+                section.resultImage.enabled = sprite != null;
+            }
+
+            if (section.resultText != null)
+            {
+                var res = nextRes;
+                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
+            }
+
+            if (section.maxCraftsText != null)
+            {
+                var max = 0;
+                if (rm != null && curRes != null && nextRes != null)
+                    max = Mathf.Min((int)(rm.GetAmount(curRes) / 5f), (int)(rm.GetAmount(nextRes) / 1f));
+                if (max < 0) max = 0;
+                section.maxCraftsText.text = max.ToString("0");
+            }
+
+            if (section.cost1Image != null)
+            {
+                Sprite sprite = null;
+                if (curRes != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(curRes);
+                    var have = rm != null && rm.GetAmount(curRes) >= 5;
+                    sprite = discovered && have ? curRes.icon : curRes.UnknownIcon;
+                }
+
+                section.cost1Image.sprite = sprite;
+                section.cost1Image.enabled = sprite != null;
+            }
+
+            if (section.cost1Text != null)
+                section.cost1Text.text = curRes != null ? "5" : string.Empty;
+
+            if (section.cost2Image != null)
+            {
+                Sprite sprite = null;
+                if (nextRes != null)
+                {
+                    var discovered = rm != null && rm.IsUnlocked(nextRes);
+                    var have = rm != null && rm.GetAmount(nextRes) >= 1;
+                    sprite = discovered && have ? nextRes.icon : nextRes.UnknownIcon;
+                }
+
+                section.cost2Image.sprite = sprite;
+                section.cost2Image.enabled = sprite != null;
+            }
+
+            if (section.cost2Text != null)
+                section.cost2Text.text = nextRes != null ? "1" : string.Empty;
+
+            if (section.craftArrow != null)
+            {
+                var arrowSprite = CanCraftCoreConversion() ? section.validArrow : section.invalidArrow;
+                section.craftArrow.sprite = arrowSprite;
+            }
+        }
+
         private void UpdateMaxCraftsText()
         {
             var rm = RM;
@@ -448,6 +532,20 @@ namespace TimelessEchoes.Gear.UI
                         ? chunkConversionSection.validArrow
                         : chunkConversionSection.invalidArrow;
                     chunkConversionSection.craftArrow.sprite = arrowSprite;
+                }
+            }
+
+            var canCraftCore = CanCraftCoreConversion();
+            if (coreConversionSection != null)
+            {
+                if (coreConversionSection.craftButton != null)
+                    coreConversionSection.craftButton.interactable = canCraftCore && !isAutoCrafting;
+                if (coreConversionSection.craftArrow != null)
+                {
+                    var arrowSprite = canCraftCore
+                        ? coreConversionSection.validArrow
+                        : coreConversionSection.invalidArrow;
+                    coreConversionSection.craftArrow.sprite = arrowSprite;
                 }
             }
 

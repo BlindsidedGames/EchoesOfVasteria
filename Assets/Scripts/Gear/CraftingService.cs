@@ -229,7 +229,7 @@ namespace TimelessEchoes.Gear
                     forge.CraftsSinceLastUpgrade = 0;
                 }
 
-                // Track best single-piece score by slot and core
+                // Track best single-piece score by slot and core (delta vs current)
                 float pieceScore = Mathf.Max(0f, delta);
                 if (!forge.BestPieceScoreBySlot.ContainsKey(slotKey) || pieceScore > forge.BestPieceScoreBySlot[slotKey])
                     forge.BestPieceScoreBySlot[slotKey] = pieceScore;
@@ -242,6 +242,31 @@ namespace TimelessEchoes.Gear
                 // Best by rarity
                 if (!forge.BestPieceScoreByRarity.ContainsKey(rarityKey) || pieceScore > forge.BestPieceScoreByRarity[rarityKey])
                     forge.BestPieceScoreByRarity[rarityKey] = pieceScore;
+
+                // Track best absolute score by slot/core/rarity (independent of the currently equipped item)
+                float absScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeAbsoluteScore(this, item);
+                if (forge.BestAbsolutePieceScoreBySlot == null)
+                    forge.BestAbsolutePieceScoreBySlot = new System.Collections.Generic.Dictionary<string, float>();
+                if (!forge.BestAbsolutePieceScoreBySlot.ContainsKey(slotKey) || absScore > forge.BestAbsolutePieceScoreBySlot[slotKey])
+                    forge.BestAbsolutePieceScoreBySlot[slotKey] = absScore;
+                if (forge.BestAbsolutePieceScoreByCore == null)
+                    forge.BestAbsolutePieceScoreByCore = new System.Collections.Generic.Dictionary<string, float>();
+                if (!forge.BestAbsolutePieceScoreByCore.ContainsKey(coreKey) || absScore > forge.BestAbsolutePieceScoreByCore[coreKey])
+                {
+                    forge.BestAbsolutePieceScoreByCore[coreKey] = absScore;
+                    if (forge.BestAbsolutePieceSlotByCore == null)
+                        forge.BestAbsolutePieceSlotByCore = new System.Collections.Generic.Dictionary<string, string>();
+                    forge.BestAbsolutePieceSlotByCore[coreKey] = slotKey;
+                }
+                if (forge.BestAbsolutePieceScoreByRarity == null)
+                    forge.BestAbsolutePieceScoreByRarity = new System.Collections.Generic.Dictionary<string, float>();
+                if (!forge.BestAbsolutePieceScoreByRarity.ContainsKey(rarityKey) || absScore > forge.BestAbsolutePieceScoreByRarity[rarityKey])
+                {
+                    forge.BestAbsolutePieceScoreByRarity[rarityKey] = absScore;
+                    if (forge.BestAbsolutePieceSlotByRarity == null)
+                        forge.BestAbsolutePieceSlotByRarity = new System.Collections.Generic.Dictionary<string, string>();
+                    forge.BestAbsolutePieceSlotByRarity[rarityKey] = slotKey;
+                }
             }
 
             return item;

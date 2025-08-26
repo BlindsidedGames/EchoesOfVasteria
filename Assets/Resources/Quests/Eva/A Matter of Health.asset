@@ -42,6 +42,7 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: 
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
   requirements:
@@ -52,13 +53,11 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: Barkley1
-  rewards:
-  - resource: {fileID: 11400000, guid: 416796f474e145744b71c52fa8da1e8a, type: 2}
-    amount: 100
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
-  disciplePercentReward: 0
+  disciplePercentReward: 0.005
   unlocksBuff: 0
   upgradesBuff: 0
   references:

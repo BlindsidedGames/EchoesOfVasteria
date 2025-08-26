@@ -359,12 +359,14 @@ namespace Blindsided.SaveData
 
             // Conversion actions (forge side-panels)
             public int IngotConversions; // actions performed
+            public int CoreConversions; // actions performed
             public double CrystalCrafted; // total units produced (legacy total)
             public double ChunksCrafted; // total units produced (legacy total)
             public Dictionary<string, double> ConversionSpentByResource = new();
             public Dictionary<string, double> CrystalsCraftedByResource = new();
             public Dictionary<string, double> ChunksCraftedByResource = new();
             public Dictionary<string, double> IngotsCraftedByResource = new();
+            public Dictionary<string, double> CoresCraftedByResource = new();
 
             // Best single-piece scores
             public Dictionary<string, float> BestPieceScoreBySlot = new(); // slot -> highest score (absolute)
@@ -372,6 +374,17 @@ namespace Blindsided.SaveData
             public Dictionary<string, float> MinPieceScoreByCore = new(); // coreName -> min observed piece score
             public Dictionary<string, float> MaxPieceScoreByCore = new(); // coreName -> max observed piece score
             public Dictionary<string, float> BestPieceScoreByRarity = new(); // rarityName -> highest score
+
+            // Best absolute piece score by slot (independent of currently equipped item)
+            public Dictionary<string, float> BestAbsolutePieceScoreBySlot = new(); // slot -> highest absolute score
+
+            // Best absolute piece scores by grouping
+            public Dictionary<string, float> BestAbsolutePieceScoreByCore = new(); // coreName -> highest absolute score
+            public Dictionary<string, float> BestAbsolutePieceScoreByRarity = new(); // rarityName -> highest absolute score
+
+            // Slot mapping for the best absolute scores above
+            public Dictionary<string, string> BestAbsolutePieceSlotByCore = new(); // coreName -> slot name of best
+            public Dictionary<string, string> BestAbsolutePieceSlotByRarity = new(); // rarityName -> slot name of best
 
             // Per-slot totals
             public Dictionary<string, int> EquipsBySlot = new();

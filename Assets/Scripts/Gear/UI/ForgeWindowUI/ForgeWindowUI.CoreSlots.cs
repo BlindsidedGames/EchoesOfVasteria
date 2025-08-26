@@ -31,6 +31,7 @@ namespace TimelessEchoes.Gear.UI
             UpdateIngotCraftPreview(selectedCore);
             UpdateCrystalCraftPreview(selectedCore);
             UpdateChunkCraftPreview(selectedCore);
+            UpdateCoreCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             ThrottledRefreshOdds();
             RefreshActionButtons();

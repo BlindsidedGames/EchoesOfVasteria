@@ -8,6 +8,8 @@ using TimelessEchoes.Utilities;
 using UnityEngine;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
+using static Blindsided.SaveData.StaticReferences;
+using static TimelessEchoes.Upgrades.CauldronManager;
 
 
 namespace TimelessEchoes.NpcGeneration
@@ -138,9 +140,9 @@ namespace TimelessEchoes.NpcGeneration
 
                 var gen = Instantiate(generatorPrefab, transform);
                 gen.name = res.name;
-                var baseRate = pair.Value.BestPerMinute * oracle.saveData.DisciplePercent;
-                var bonusMult = CauldronManager.Instance != null
-                    ? CauldronManager.Instance.GetResourceAlterEchoMultiplier(res.name)
+                var baseRate = pair.Value.BestPerMinute * DisciplePercent;
+                var bonusMult = Singleton<CauldronManager>.Instance != null
+                    ? Singleton<CauldronManager>.Instance.GetResourceAlterEchoMultiplier(res.name)
                     : 1f;
                 var rate = baseRate * bonusMult;
                 gen.Configure(res, rate);
@@ -158,9 +160,9 @@ namespace TimelessEchoes.NpcGeneration
                 if (gen == null || gen.Resource == null) continue;
                 if (oracle.saveData.Resources.TryGetValue(gen.Resource.name, out var entry))
                 {
-                    var baseRate = entry.BestPerMinute * oracle.saveData.DisciplePercent;
-                    var bonusMult = CauldronManager.Instance != null
-                        ? CauldronManager.Instance.GetResourceAlterEchoMultiplier(gen.Resource.name)
+                    var baseRate = entry.BestPerMinute * DisciplePercent;
+                    var bonusMult = Singleton<CauldronManager>.Instance != null
+                        ? Singleton<CauldronManager>.Instance.GetResourceAlterEchoMultiplier(gen.Resource.name)
                         : 1f;
                     gen.UpdateRate(baseRate * bonusMult);
                 }

@@ -153,7 +153,7 @@ namespace TimelessEchoes.Skills
             if (levelText != null)
                 levelText.text = $"{skill.skillName} | Lvl {lvl}";
             if (experienceText != null)
-                experienceText.text = $"{CalcUtils.FormatNumber(current)} / {CalcUtils.FormatNumber(needed)}";
+                experienceText.text = $"{current:N0} / {needed:N0}";
             if (experienceBar != null)
                 experienceBar.fillAmount = needed > 0 ? Mathf.Clamp01(current / needed) : 0f;
         }

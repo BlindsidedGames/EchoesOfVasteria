@@ -116,6 +116,23 @@ namespace TimelessEchoes.Gear.UI
                 }
             }
 
+            if (coreConversionSection != null)
+            {
+                if (coreConversionSection.craftButton != null)
+                {
+                    coreConversionSection.craftButton.onClick.AddListener(OnCraftCoreConversionClicked);
+                    var repeat = coreConversionSection.craftButton.GetComponent<RepeatButtonClick>() ??
+                                 coreConversionSection.craftButton.gameObject.AddComponent<RepeatButtonClick>();
+                    repeat.button = coreConversionSection.craftButton;
+                }
+                if (coreConversionSection.amountInput != null)
+                {
+                    coreConversionSection.amountInput.onValueChanged.RemoveAllListeners();
+                    coreConversionSection.amountInput.onValueChanged.AddListener(_ =>
+                        OnAmountInputChanged(coreConversionSection, ref coreCraftAmount));
+                }
+            }
+
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
             var slotNames = equipment != null
@@ -209,12 +226,15 @@ namespace TimelessEchoes.Gear.UI
             ingotCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("IngotCraftAmount", 1));
             crystalCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("CrystalCraftAmount", 1));
             chunkCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("ChunkCraftAmount", 1));
+            coreCraftAmount = Mathf.Max(1, PlayerPrefs.GetInt("CoreCraftAmount", 1));
             if (ingotConversionSection?.amountInput != null)
                 ingotConversionSection.amountInput.text = ingotCraftAmount.ToString();
             if (crystalConversionSection?.amountInput != null)
                 crystalConversionSection.amountInput.text = crystalCraftAmount.ToString();
             if (chunkConversionSection?.amountInput != null)
                 chunkConversionSection.amountInput.text = chunkCraftAmount.ToString();
+            if (coreConversionSection?.amountInput != null)
+                coreConversionSection.amountInput.text = coreCraftAmount.ToString();
             OnResourcesChanged();
         }
 

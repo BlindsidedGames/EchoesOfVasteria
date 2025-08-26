@@ -167,30 +167,31 @@ namespace TimelessEchoes.Gear.UI
 			sb.AppendLine($"<size=105%><b>Best Stat Scores</b></size>");
 			sb.AppendLine($"• {minBest:0.00} – {maxBest:0.00}  <size=90%>(affixes={affixes})</size>");
 
-			// Best single-piece scores
-			if (forge.BestPieceScoreBySlot != null && forge.BestPieceScoreBySlot.Count > 0)
+			// Quality (Equipped vs Best Rolled by slot)
+			AppendQualitySection(sb, forge);
+			// Best By Core (Quality)
+			if (forge.BestAbsolutePieceScoreByCore != null && forge.BestAbsolutePieceScoreByCore.Count > 0)
 			{
-				sb.AppendLine("• Best Piece Scores:");
-				foreach (var pair in forge.BestPieceScoreBySlot.OrderByDescending(p => p.Value))
-					sb.AppendLine($"  • slot {pair.Key}: {pair.Value:N2}");
-			}
-			if (forge.BestPieceScoreByCore != null && forge.BestPieceScoreByCore.Count > 0)
-			{
+				var (_, maxBestCore, _) = ComputeTheoreticalBestStatScoreRange();
 				sb.AppendLine("• Best By Core:");
-				var ordered = OrderCoresByPreferred(forge.BestPieceScoreByCore.Keys);
+				var ordered = OrderCoresByPreferred(forge.BestAbsolutePieceScoreByCore.Keys);
 				foreach (var core in ordered)
 				{
-					forge.BestPieceScoreByCore.TryGetValue(core, out var best);
-					sb.AppendLine($"  • core {core}: {best:N2}");
+					forge.BestAbsolutePieceScoreByCore.TryGetValue(core, out var bestAbs);
+					float pct = maxBestCore > 0f ? Mathf.Clamp01(bestAbs / maxBestCore) * 100f : 0f;
+					sb.AppendLine($"  • core {core}: {pct:0.#}%");
 				}
 			}
-			if (forge.BestPieceScoreByRarity != null && forge.BestPieceScoreByRarity.Count > 0)
+			// Best By Rarity (Quality)
+			if (forge.BestAbsolutePieceScoreByRarity != null && forge.BestAbsolutePieceScoreByRarity.Count > 0)
 			{
+				var (_, maxBestRarity, _) = ComputeTheoreticalBestStatScoreRange();
 				sb.AppendLine("• Best By Rarity:");
-				foreach (var r in OrderCoresByPreferred(forge.BestPieceScoreByRarity.Keys))
+				foreach (var r in OrderRaritiesByTier(forge.BestAbsolutePieceScoreByRarity.Keys))
 				{
-					forge.BestPieceScoreByRarity.TryGetValue(r, out var best);
-					sb.AppendLine($"  • {r}: {best:N2}");
+					forge.BestAbsolutePieceScoreByRarity.TryGetValue(r, out var bestAbs);
+					float pct = maxBestRarity > 0f ? Mathf.Clamp01(bestAbs / maxBestRarity) * 100f : 0f;
+					sb.AppendLine($"  • {r}: {pct:0.#}%");
 				}
 			}
 
@@ -229,15 +230,22 @@ namespace TimelessEchoes.Gear.UI
 			// Conversions moved to bottom
 			sb.AppendLine("<size=105%><b>Conversions</b></size>");
 			sb.AppendLine($"• Ingot Conversions: {forge.IngotConversions:N0}");
+			sb.AppendLine($"• Core Conversions: {forge.CoreConversions:N0}");
 			// Totals at top
-			double totalCrystals = forge.CrystalsCraftedByResource?.Values.Sum() ?? forge.CrystalCrafted;
-			double totalIngots = forge.IngotsCraftedByResource?.Values.Sum() ?? 0;
+			// Guard against null maps in old saves
+			if (forge.CrystalsCraftedByResource == null) forge.CrystalsCraftedByResource = new Dictionary<string, double>();
+			if (forge.IngotsCraftedByResource == null) forge.IngotsCraftedByResource = new Dictionary<string, double>();
+			if (forge.CoresCraftedByResource == null) forge.CoresCraftedByResource = new Dictionary<string, double>();
+			double totalCrystals = forge.CrystalsCraftedByResource.Values.Sum();
+			double totalIngots = forge.IngotsCraftedByResource.Values.Sum();
+			double totalCores = forge.CoresCraftedByResource.Values.Sum();
 			sb.AppendLine($"• Total Crystals: {Blindsided.Utilities.CalcUtils.FormatNumber(totalCrystals, true)}");
 			sb.AppendLine($"• Total Ingots: {Blindsided.Utilities.CalcUtils.FormatNumber(totalIngots, true)}");
+			sb.AppendLine($"• Total Cores: {Blindsided.Utilities.CalcUtils.FormatNumber(totalCores, true)}");
 
 			sb.AppendLine("Created:");
 			// Group created resources by core and add a 20% spacer between core groups, mirroring Consumed spacing
-			RenderCreatedByCore(sb, forge.CrystalsCraftedByResource, forge.ChunksCraftedByResource, null);
+			RenderCreatedByCore(sb, forge.CrystalsCraftedByResource, forge.ChunksCraftedByResource, forge.CoresCraftedByResource);
 			if (forge.ConversionSpentByResource != null && forge.ConversionSpentByResource.Count > 0)
 			{
 				sb.AppendLine("Consumed:");
@@ -558,6 +566,67 @@ namespace TimelessEchoes.Gear.UI
 			}
 
 			return (minSum, maxSum, n);
+		}
+
+		private void AppendQualitySection(StringBuilder sb, GameData.ForgeStats forge)
+		{
+			var equip = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+			var crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+			sb.AppendLine("<size=105%><b>Quality</b></size>");
+			sb.AppendLine("• Equipped:");
+			var slots = equip != null && equip.Slots != null && equip.Slots.Count > 0
+				? equip.Slots
+				: new System.Collections.Generic.List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+			foreach (var slot in slots)
+			{
+				var gi = equip != null ? equip.GetEquipped(slot) : null;
+				float eqAbs = gi != null ? UpgradeEvaluator.ComputeAbsoluteScore(crafting, gi) : 0f;
+				float maxSlot = ComputeTheoreticalMaxForSlot(slot);
+				float pct = maxSlot > 0f ? Mathf.Clamp01(eqAbs / maxSlot) * 100f : 0f;
+				sb.AppendLine($"  • {slot}: {pct:0.#}%");
+			}
+
+			sb.AppendLine("• Best Rolled:");
+			foreach (var slot in slots)
+			{
+				float best = 0f;
+				if (forge != null && forge.BestAbsolutePieceScoreBySlot != null)
+					forge.BestAbsolutePieceScoreBySlot.TryGetValue(slot, out best);
+				float maxSlot = ComputeTheoreticalMaxForSlot(slot);
+				float pct = maxSlot > 0f ? Mathf.Clamp01(best / maxSlot) * 100f : 0f;
+				sb.AppendLine($"  • {slot}: {pct:0.#}%");
+			}
+		}
+
+		private float ComputeTheoreticalMaxForSlot(string slot)
+		{
+			// Determine max affixes among all rarities
+			int maxAffixes = 1;
+			foreach (var r in AssetCache.GetAll<RaritySO>(string.Empty))
+				if (r != null && r.affixCount > maxAffixes) maxAffixes = r.affixCount;
+			var stats = AssetCache.GetAll<StatDefSO>(string.Empty);
+			if (stats == null || stats.Length == 0) return 0f;
+			bool IsAllowed(StatDefSO s)
+			{
+				if (s == null) return false;
+				// Move Speed can only appear on Boots
+				if (s.heroMapping == HeroStatMapping.MoveSpeed && !string.Equals(slot, "Boots", System.StringComparison.OrdinalIgnoreCase))
+					return false;
+				return true;
+			}
+			var contribs = new System.Collections.Generic.List<float>();
+			foreach (var s in stats)
+			{
+				if (!IsAllowed(s)) continue;
+				float scale = Mathf.Max(0f, s.comparisonScale);
+				contribs.Add(s.maxRoll * scale);
+			}
+			if (contribs.Count == 0) return 0f;
+			contribs.Sort((a,b) => b.CompareTo(a));
+			int n = Mathf.Clamp(maxAffixes, 1, contribs.Count);
+			float sum = 0f;
+			for (int i = 0; i < n; i++) sum += contribs[i];
+			return sum;
 		}
 
 		private void EnsureStatLookup()

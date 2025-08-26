@@ -11,6 +11,7 @@ namespace TimelessEchoes.Gear.UI
         private int ingotCraftAmount = 1;
         private int crystalCraftAmount = 1;
         private int chunkCraftAmount = 1;
+        private int coreCraftAmount = 1;
 
         private int GetCraftAmountForIngots(ResourceManager rm, CoreSO core)
         {
@@ -62,6 +63,19 @@ namespace TimelessEchoes.Gear.UI
                 backingField = 1;
                 section.amountInput.text = "1";
             }
+        }
+
+        private int GetCraftAmountForCores(ResourceManager rm, CoreSO core)
+        {
+            // Conversion rule: spend 5 of current tier core + 1 of next tier core to create 2 next tier cores
+            var (curRes, nextRes, isFinalTier) = ResolveCurrentAndNextCoreResources(core);
+            if (isFinalTier || curRes == null || nextRes == null) return 0;
+            var maxByCurrent = (int)(rm.GetAmount(curRes) / 5f);
+            var maxByNext = (int)(rm.GetAmount(nextRes) / 1f);
+            var max = Mathf.Min(maxByCurrent, maxByNext);
+            if (max <= 0) return 0;
+            var desired = Mathf.Max(1, coreCraftAmount);
+            return Mathf.Min(desired, max);
         }
 
         private void OnCraftClicked()
@@ -340,6 +354,17 @@ namespace TimelessEchoes.Gear.UI
             return haveIngots && haveCores;
         }
 
+        private bool CanCraftCoreConversion()
+        {
+            if (selectedCore == null) return false;
+            var rm = RM; if (rm == null) return false;
+            var (curRes, nextRes, isFinalTier) = ResolveCurrentAndNextCoreResources(selectedCore);
+            if (isFinalTier || curRes == null || nextRes == null) return false;
+            if (rm.GetAmount(curRes) < 5) return false;
+            if (rm.GetAmount(nextRes) < 1) return false;
+            return true;
+        }
+
         private bool CanCraftIngot()
         {
             if (selectedCore == null || selectedCore.requiredIngot == null)
@@ -570,6 +595,99 @@ namespace TimelessEchoes.Gear.UI
             {
                 Debug.LogError($"SaveData after chunk craft failed: {ex}");
             }
+        }
+
+        private void OnCraftCoreConversionClicked()
+        {
+            if (!CanCraftCoreConversion()) return;
+            var rm = RM; var core = selectedCore; if (rm == null || core == null) return;
+            var (curRes, nextRes, isFinalTier) = ResolveCurrentAndNextCoreResources(core);
+            if (isFinalTier || curRes == null || nextRes == null) return;
+            var amount = GetCraftAmountForCores(rm, core);
+            if (amount <= 0) return;
+
+            rm.BeginBatch();
+            try
+            {
+                rm.Spend(curRes, 5 * amount);
+                rm.Spend(nextRes, 1 * amount);
+                rm.Add(nextRes, 2 * amount, trackStats: false);
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
+
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+            {
+                var o = Blindsided.Oracle.oracle;
+                if (o != null && o.saveData != null && o.saveData.Forge != null)
+                {
+                    var forge = o.saveData.Forge;
+                    forge.CoreConversions++;
+                    if (forge.ConversionSpentByResource == null) forge.ConversionSpentByResource = new System.Collections.Generic.Dictionary<string, double>();
+                    if (forge.CoresCraftedByResource == null) forge.CoresCraftedByResource = new System.Collections.Generic.Dictionary<string, double>();
+                    if (curRes != null)
+                    {
+                        var k = curRes.name;
+                        if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0;
+                        forge.ConversionSpentByResource[k] += 5 * amount;
+                    }
+                    if (nextRes != null)
+                    {
+                        var k = nextRes.name;
+                        if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0;
+                        forge.ConversionSpentByResource[k] += 1 * amount;
+                        if (!forge.CoresCraftedByResource.ContainsKey(k)) forge.CoresCraftedByResource[k] = 0;
+                        forge.CoresCraftedByResource[k] += 2 * amount;
+                    }
+                }
+            }
+            coreCraftAmount = Mathf.Max(1, coreCraftAmount);
+            PlayerPrefs.SetInt("CoreCraftAmount", coreCraftAmount);
+            PlayerPrefs.Save();
+            OnResourcesChanged();
+
+            try
+            {
+                Blindsided.EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after core conversion failed: {ex}");
+            }
+        }
+
+        private (Resource currentTierCore, Resource nextTierCore, bool isFinalTier) ResolveCurrentAndNextCoreResources(CoreSO core)
+        {
+            // Try to resolve by selected core slot index in coreSlots list
+            if (core == null) return (null, null, true);
+            // Determine index of selected core among ordered cores/coreSlots
+            int idx = -1;
+            for (var i = 0; i < coreSlots.Count; i++)
+            {
+                var mapped = coreSlotCoreByRef.TryGetValue(coreSlots[i], out var mc) ? mc : coreSlots[i].Core;
+                if (mapped == core) { idx = i; break; }
+            }
+            if (idx < 0) idx = core.tierIndex; // fallback to tierIndex
+
+            // Prefer resources from the CoreSlotUIReferences if present; else fallback to serialized list
+            Resource cur = null, next = null;
+            if (idx >= 0 && idx < coreSlots.Count)
+            {
+                var slot = coreSlots[idx];
+                cur = slot != null ? slot.CoreResource : null;
+                var nextSlot = (idx + 1) < coreSlots.Count ? coreSlots[idx + 1] : null;
+                next = nextSlot != null ? nextSlot.CoreResource : null;
+            }
+            if (cur == null && coreResourcesInTierOrder != null && idx >= 0 && idx < coreResourcesInTierOrder.Count)
+                cur = coreResourcesInTierOrder[idx];
+            if (next == null && coreResourcesInTierOrder != null && (idx + 1) >= 0 && (idx + 1) < coreResourcesInTierOrder.Count)
+                next = coreResourcesInTierOrder[idx + 1];
+
+            bool finalTier = next == null; // if we cannot resolve next, consider this final tier
+            return (cur, next, finalTier);
         }
     }
 }

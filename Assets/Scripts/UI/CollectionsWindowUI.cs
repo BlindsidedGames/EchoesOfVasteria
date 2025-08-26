@@ -7,6 +7,7 @@ using TimelessEchoes.Utilities;
 using static Blindsided.Oracle;
 using EventHandler = Blindsided.EventHandler;
 using UnityEngine;
+using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.UI
 {
@@ -24,6 +25,10 @@ namespace TimelessEchoes.UI
 		private readonly Dictionary<string, Resource> resourceById = new();
 		private CauldronWindowUI cachedCauldronWindow;
 		private CauldronManager cachedCauldronManager;
+		// Track current AE sections and their member ids to compute section tier (min of items)
+		private readonly Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences> currentAESections = new();
+		private readonly Dictionary<CauldronManager.AEResourceGroup, List<string>> sectionItemIdsByGroup = new();
+		private static float lastAppliedDiscipleBonus; // retained for immediate session-only tracking; replaced by StaticReferences bonus field
 
 		private ResourceManager rm;
 		[SerializeField] [Min(0.25f)] private float unlockCheckIntervalSeconds = 0.75f;
@@ -46,6 +51,7 @@ namespace TimelessEchoes.UI
 			{
 				cauldron.OnCardGained += OnCardGained;
 				cauldron.OnTasteSessionStarted += OnTasteSessionStarted;
+				cauldron.OnTasteSessionStopped += OnTasteSessionStoppedForCollections;
 			}
 			EventHandler.OnLoadData += OnSaveOrLoad;
 			// Switch to throttled unlock monitoring; avoid full rebuild every inventory change
@@ -63,6 +69,7 @@ namespace TimelessEchoes.UI
 			{
 				cauldron.OnCardGained -= OnCardGained;
 				cauldron.OnTasteSessionStarted -= OnTasteSessionStarted;
+				cauldron.OnTasteSessionStopped -= OnTasteSessionStoppedForCollections;
 			}
 			EventHandler.OnLoadData -= OnSaveOrLoad;
 			if (unlockMonitorRoutine != null)
@@ -80,6 +87,8 @@ namespace TimelessEchoes.UI
 			UIUtils.ClearChildren(parent);
 			itemById.Clear();
 			resourceById.Clear();
+			currentAESections.Clear();
+			sectionItemIdsByGroup.Clear();
 
 			var qm = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
 
@@ -137,10 +146,21 @@ namespace TimelessEchoes.UI
 				var key = $"RES:{res.name}";
 				itemById[key] = ui;
 				resourceById[key] = res;
+				if (!sectionItemIdsByGroup.TryGetValue(grp, out var list) || list == null)
+				{
+					list = new List<string>();
+					sectionItemIdsByGroup[grp] = list;
+				}
+				list.Add(key);
 				UpdateItemCount(key);
 			}
 
 			// (Buffs were added first above)
+			// Persist current AE sections for later tier updates
+			currentAESections.Clear();
+			foreach (var kv in sections)
+				if (kv.Value != null)
+					currentAESections[kv.Key] = kv.Value;
 		}
 
 		private void OnCardGained(string id, int amt)
@@ -280,6 +300,8 @@ namespace TimelessEchoes.UI
 			Rebuild();
 			unlocksDirty = false;
 			lastUnlocksHash = ComputeUnlocksHash();
+			// Update section tier visuals and disciple percent only on load
+			UpdateSectionTiersAndDiscipleBonus();
 		}
 
 		private void OnQuestHandin(string questId)
@@ -287,6 +309,63 @@ namespace TimelessEchoes.UI
 			Rebuild();
 			unlocksDirty = false;
 			lastUnlocksHash = ComputeUnlocksHash();
+		}
+
+		private void OnTasteSessionStoppedForCollections()
+		{
+			// Recompute section tier visuals and disciple percent only when tasting stops
+			UpdateSectionTiersAndDiscipleBonus();
+		}
+
+		private void UpdateSectionTiersAndDiscipleBonus()
+		{
+			if (cachedCauldronManager == null)
+				cachedCauldronManager = CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			if (cachedCauldronWindow == null)
+				cachedCauldronWindow = FindFirstObjectByType<CauldronWindowUI>();
+
+			int totalCompletedTiers = 0;
+			foreach (var kv in currentAESections)
+			{
+				var group = kv.Key;
+				var section = kv.Value;
+				if (section == null) continue;
+				if (!sectionItemIdsByGroup.TryGetValue(group, out var ids) || ids == null || ids.Count == 0) continue;
+
+				int minTier = int.MaxValue;
+				foreach (var id in ids)
+				{
+					// Compute tier via CauldronManager helpers; 1+ guaranteed
+					var tier = ComputeTierForCount(id, 0);
+					if (tier < minTier) minTier = tier;
+				}
+				if (minTier == int.MaxValue) minTier = 1;
+				totalCompletedTiers += Mathf.Max(1, minTier);
+
+				// Update section sprites
+				var bg = section.backgroundTierImage;
+				var border = section.borderTierImage;
+				var bgSprite = GetTierSpriteFromCauldron(minTier);
+				var borderSprite = GetBorderTierSpriteFromCauldron(minTier);
+				if (bg != null)
+				{
+					bg.sprite = bgSprite;
+					bg.enabled = bgSprite != null;
+				}
+				if (border != null)
+				{
+					border.sprite = borderSprite;
+					border.enabled = borderSprite != null;
+				}
+			}
+
+			// AE-only sections contribute to disciple percent bonus
+			var newBonus = 0.001f * Mathf.Max(0, totalCompletedTiers);
+			// Update shared runtime-only bonus field (not persisted); do not set base DisciplePercent
+			DisciplePercentCollectionsBonus = newBonus;
+			lastAppliedDiscipleBonus = newBonus;
+			// Refresh generator rates to apply new percent immediately
+			TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.RefreshRates();
 		}
 	}
 }

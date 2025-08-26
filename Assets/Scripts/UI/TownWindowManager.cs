@@ -237,8 +237,9 @@ namespace TimelessEchoes.UI
         private void OpenOptions()
         {
             ToggleWindow(options);
+            var isOptionsOpen = options.window != null && options.window.activeSelf;
             if (discord != null)
-                discord.SetActive(true);
+                discord.SetActive(isOptionsOpen);
         }
 
         private void OpenForge()

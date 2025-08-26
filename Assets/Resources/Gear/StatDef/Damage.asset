@@ -154,7 +154,7 @@ MonoBehaviour:
       m_RotationOrder: 4
   - rarity: {fileID: 11400000, guid: 076b0d8237ac55d4a91995fd14c6f3ef, type: 2}
     minQuantile: 0.25
-    maxQuantile: 0.5
+    maxQuantile: 0.42
     withinTierCurve:
       serializedVersion: 2
       m_Curve:
@@ -181,7 +181,7 @@ MonoBehaviour:
       m_RotationOrder: 4
   - rarity: {fileID: 11400000, guid: 3f320d6697fcd354f8298510f42852af, type: 2}
     minQuantile: 0.4
-    maxQuantile: 0.7
+    maxQuantile: 0.58
     withinTierCurve:
       serializedVersion: 2
       m_Curve:
@@ -207,8 +207,8 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   - rarity: {fileID: 11400000, guid: 987edecbf67176c4e836540578e54c7f, type: 2}
-    minQuantile: 0.65
-    maxQuantile: 0.8
+    minQuantile: 0.54
+    maxQuantile: 0.73
     withinTierCurve:
       serializedVersion: 2
       m_Curve:
@@ -234,7 +234,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   - rarity: {fileID: 11400000, guid: 77bebf58137ed544a87f04c35b4cf973, type: 2}
-    minQuantile: 0.75
+    minQuantile: 0.68
     maxQuantile: 1
     withinTierCurve:
       serializedVersion: 2

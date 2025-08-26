@@ -50,10 +50,17 @@ namespace TimelessEchoes.Gear.UI
         [Header("Chunk Conversion UI")] [SerializeField]
         private CraftSection2x1UIReferences chunkConversionSection;
 
+        [Header("Core Conversion UI")] [SerializeField]
+        private CraftSection2x1UIReferences coreConversionSection;
+
         [Header("Additional Resource References")] [SerializeField]
         private Resource slimeResource;
 
         [SerializeField] private Resource stoneResource;
+
+        [Header("Core Conversion Logic Resources")]
+        [Tooltip("Reference to all Core resources in tier order for conversion calculations (optional; otherwise discovered via selected core slots).")]
+        [SerializeField] private List<Resource> coreResourcesInTierOrder = new();
 
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
