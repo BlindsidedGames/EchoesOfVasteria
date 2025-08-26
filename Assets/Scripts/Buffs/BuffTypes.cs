@@ -15,7 +15,7 @@ namespace TimelessEchoes.Buffs
         MaxDistancePercent,
         MaxDistanceIncrease,
         InstantTasks,
-        DoubleResources,
+        ResourceMultiplier,
         CritChancePercent
     }
 

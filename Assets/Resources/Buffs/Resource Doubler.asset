@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
   m_Name: Resource Doubler
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Buffs.BuffRecipe
-  title: 
+  title: Resource Multiplier
   description: 
   buffIcon: {fileID: 7039786379928897746, guid: 6eca58ce81dde1648bbe834da736d225, type: 3}
   durationType: 0
@@ -25,5 +25,5 @@ MonoBehaviour:
   requiredQuest: {fileID: 11400000, guid: 907a527d8f6a4a3f8ff78ba58fd4a59f, type: 2}
   baseEffects:
   - type: 9
-    value: 1
+    value: 50
   upgrades: []

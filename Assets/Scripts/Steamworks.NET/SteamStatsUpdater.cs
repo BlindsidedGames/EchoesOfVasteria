@@ -6,6 +6,7 @@ using UnityEngine;
 #if !DISABLESTEAMWORKS
 using Steamworks;
 #endif
+using static Blindsided.Oracle;
 
 namespace TimelessEchoes
 {
@@ -147,6 +148,43 @@ namespace TimelessEchoes
                 if (newBuffs > storedBuffs)
                 {
                     SteamUserStats.SetStat("BuffsCast", newBuffs);
+                    changed = true;
+                }
+            }
+
+            // New tracked stats: Deaths, IvanLevel, EvaLevel
+            if (SteamUserStats.GetStat("Deaths", out int storedDeaths))
+            {
+                int newDeaths = tracker.Deaths;
+                if (newDeaths > storedDeaths)
+                {
+                    SteamUserStats.SetStat("Deaths", newDeaths);
+                    changed = true;
+                }
+            }
+
+            // Ivan (Crafting Mastery) level from save data
+            if (SteamUserStats.GetStat("IvanLevel", out int storedIvan))
+            {
+                int newIvan = (oracle != null && oracle.saveData != null)
+                    ? Mathf.Max(1, oracle.saveData.CraftingMasteryLevel)
+                    : storedIvan;
+                if (newIvan > storedIvan)
+                {
+                    SteamUserStats.SetStat("IvanLevel", newIvan);
+                    changed = true;
+                }
+            }
+
+            // Eva level from cauldron save data
+            if (SteamUserStats.GetStat("EvaLevel", out int storedEva))
+            {
+                int newEva = (oracle != null && oracle.saveData != null)
+                    ? Mathf.Max(1, oracle.saveData.CauldronEvaLevel)
+                    : storedEva;
+                if (newEva > storedEva)
+                {
+                    SteamUserStats.SetStat("EvaLevel", newEva);
                     changed = true;
                 }
             }

@@ -57,8 +57,8 @@ namespace TimelessEchoes.Tasks
                     }
 
                     var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-                    if (buff != null && buff.DoubleResourcesActive)
-                        final *= 2;
+                    if (buff != null)
+                        final *= buff.ResourceGainMultiplier;
 
                     resourceManager.Add(res.resource, final);
                     if (dropTotals.ContainsKey(res.resource))

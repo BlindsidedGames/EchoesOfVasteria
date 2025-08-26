@@ -162,11 +162,6 @@ namespace TimelessEchoes.Gear.UI
 			AppendAll(sb, forge.UpgradesBySlot, formatKey: k => k);
 			sb.AppendLine($"• Avg Crafts / Upgrade: {forge.AverageCraftsPerUpgrade:N2}  • Longest Gap: {forge.MaxCraftsBetweenUpgrades:N0}");
 
-			// Best Stat Scores (theoretical min–max based on stat defs and max affixes)
-			var (minBest, maxBest, affixes) = ComputeTheoreticalBestStatScoreRange();
-			sb.AppendLine($"<size=105%><b>Best Stat Scores</b></size>");
-			sb.AppendLine($"• {minBest:0.00} – {maxBest:0.00}  <size=90%>(affixes={affixes})</size>");
-
 			// Quality (Equipped vs Best Rolled by slot)
 			AppendQualitySection(sb, forge);
 			// Best By Core (Quality)

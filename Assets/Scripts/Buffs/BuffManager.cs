@@ -77,15 +77,21 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        public bool DoubleResourcesActive
+        public float ResourceGainMultiplier
         {
             get
             {
+                var percent = 0f;
                 foreach (var b in activeBuffs)
                     foreach (var eff in b.effects)
-                        if (eff.type == BuffEffectType.DoubleResources && eff.value > 0f)
-                            return true;
-                return false;
+                    {
+                        if (eff.type == BuffEffectType.ResourceMultiplier && eff.value > 0f)
+                        {
+                            // Treat legacy value of 1 as 100% (double). Otherwise interpret as +X%.
+                            percent += Mathf.Approximately(eff.value, 1f) ? 100f : eff.value;
+                        }
+                    }
+                return 1f + percent / 100f;
             }
         }
 

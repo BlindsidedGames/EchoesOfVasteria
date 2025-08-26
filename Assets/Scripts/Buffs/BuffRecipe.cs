@@ -260,7 +260,8 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
                 BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
                 BuffEffectType.InstantTasks => "Tasks complete instantly",
-                BuffEffectType.DoubleResources => "Resources doubled",
+                // ResourceMultiplier represents percent gain: use +X% text
+                BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
                 _ => string.Empty
             };

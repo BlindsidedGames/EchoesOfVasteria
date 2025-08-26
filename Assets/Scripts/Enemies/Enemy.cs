@@ -362,8 +362,8 @@ namespace TimelessEchoes.Enemies
             {
                 double final = res.count * mult * gainMult;
                 var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-                if (buff != null && buff.DoubleResourcesActive)
-                    final *= 2;
+                if (buff != null)
+                    final *= buff.ResourceGainMultiplier;
                 resourceManager.Add(res.resource, final);
                 Log($"Dropped {final} {res.resource.name}", TELogCategory.Resource, this);
                 if (dropTotals.ContainsKey(res.resource))
