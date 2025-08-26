@@ -208,8 +208,10 @@ namespace TimelessEchoes.UI
             if (runStatUI.killsDamageDoneDamageTakenText != null)
             {
                 var kills = CalcUtils.FormatNumber(record.EnemiesKilled, true);
-                var dealt = CalcUtils.FormatNumber(record.DamageDealt, true);
-                var taken = CalcUtils.FormatNumber(record.DamageTaken, true);
+                var dealtVal = record.DamageDealtAsDouble;
+                var takenVal = record.DamageTakenAsDouble;
+                var dealt = CalcUtils.FormatNumber(dealtVal, true);
+                var taken = CalcUtils.FormatNumber(takenVal, true);
                 runStatUI.killsDamageDoneDamageTakenText.text =
                     $"Kills: {kills}\nDamage Dealt: {dealt}\nDamage Taken: {taken}";
             }

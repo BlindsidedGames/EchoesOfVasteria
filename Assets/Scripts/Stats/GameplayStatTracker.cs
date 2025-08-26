@@ -4,9 +4,10 @@
 using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
+using Blindsided.Utilities;
 using TimelessEchoes.Enemies;
-using TimelessEchoes.Tasks;
 using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.EventHandler;
@@ -28,13 +29,13 @@ namespace TimelessEchoes.Stats
         private float runStartTime;
         private int currentRunTasks;
         private double currentRunResources;
-        private float currentRunDamageDealt;
-        private float currentRunDamageTaken;
+        private double currentRunDamageDealt;
+        private double currentRunDamageTaken;
         private readonly Dictionary<string, GameData.MapStatistics> mapStats = new();
         private string currentMapKey;
         private readonly Dictionary<string, double> currentRunResourceAmounts = new();
 
-        public float DistanceTravelled { get; private set; }
+        public double DistanceTravelled { get; private set; }
 
         public float HighestDistance { get; private set; }
 
@@ -49,9 +50,9 @@ namespace TimelessEchoes.Stats
 
         public int Deaths { get; private set; }
 
-        public float DamageDealt { get; private set; }
+        public double DamageDealt { get; private set; }
 
-        public float DamageTaken { get; private set; }
+        public double DamageTaken { get; private set; }
 
         public int TimesReaped { get; private set; }
 
@@ -88,7 +89,9 @@ namespace TimelessEchoes.Stats
         private Vector3 lastHeroPos;
         public float CurrentRunSteps { get; private set; }
         public float LastRunSteps { get; private set; }
+
         public float LastRunDuration { get; private set; }
+
         // Aggregates across multiple runs until returning to town
         public int SessionDeaths { get; private set; }
         public int SessionReaps { get; private set; }
@@ -136,7 +139,7 @@ namespace TimelessEchoes.Stats
         {
             if (lookup != null) return;
             lookup = new Dictionary<string, Resource>();
-            foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+            foreach (var res in AssetCache.GetAll<Resource>())
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }
@@ -145,7 +148,7 @@ namespace TimelessEchoes.Stats
         {
             if (taskLookup != null) return;
             taskLookup = new Dictionary<int, TaskData>();
-            foreach (var data in Blindsided.Utilities.AssetCache.GetAll<TaskData>(""))
+            foreach (var data in AssetCache.GetAll<TaskData>())
                 if (data != null && !taskLookup.ContainsKey(data.taskID))
                     taskLookup[data.taskID] = data;
         }
@@ -161,14 +164,14 @@ namespace TimelessEchoes.Stats
             oracle.saveData.TaskRecords = t;
 
             var g = oracle.saveData.General ?? new GameData.GeneralStats();
-            g.DistanceTravelled = DistanceTravelled;
+            g.DistanceTravelledDouble = DistanceTravelled;
             g.HighestDistance = HighestDistance;
             g.TotalKills = TotalKills;
             g.SlimesKilled = SlimesKilled;
             g.TasksCompleted = TasksCompleted;
             g.Deaths = Deaths;
-            g.DamageDealt = DamageDealt;
-            g.DamageTaken = DamageTaken;
+            g.DamageDealtDouble = DamageDealt;
+            g.DamageTakenDouble = DamageTaken;
             g.TimesReaped = TimesReaped;
             g.BuffsCast = BuffsCast;
             g.CriticalHits = CriticalHits;
@@ -199,14 +202,15 @@ namespace TimelessEchoes.Stats
                     taskRecords[data] = pair.Value;
 
             var g = oracle.saveData.General;
-            DistanceTravelled = g.DistanceTravelled;
+            // Prefer doubles when available; fall back to legacy floats (seed only)
+            DistanceTravelled = g.DistanceTravelledAsDouble;
             HighestDistance = g.HighestDistance;
             TotalKills = g.TotalKills;
             SlimesKilled = g.SlimesKilled;
             TasksCompleted = g.TasksCompleted;
             Deaths = g.Deaths;
-            DamageDealt = g.DamageDealt;
-            DamageTaken = g.DamageTaken;
+            DamageDealt = g.DamageDealtAsDouble;
+            DamageTaken = g.DamageTakenAsDouble;
             TimesReaped = g.TimesReaped;
             BuffsCast = g.BuffsCast;
             CriticalHits = g.CriticalHits;
@@ -228,8 +232,18 @@ namespace TimelessEchoes.Stats
             oracle.saveData.MapStats ??= new Dictionary<string, GameData.MapStatistics>();
             mapStats.Clear();
             foreach (var pair in oracle.saveData.MapStats)
-                if (pair.Key != null && pair.Value != null)
-                    mapStats[pair.Key] = pair.Value;
+            {
+                if (pair.Key == null || pair.Value == null) continue;
+                var ms = pair.Value;
+                // Backfill doubles from legacy floats if doubles are default zero but floats have values
+#pragma warning disable 618
+                if (ms.StepsDouble == 0 && ms.Steps != 0) ms.StepsDouble = ms.Steps;
+                if (ms.LongestTrekDouble == 0 && ms.LongestTrek != 0) ms.LongestTrekDouble = ms.LongestTrek;
+                if (ms.DamageDealtDouble == 0 && ms.DamageDealt != 0) ms.DamageDealtDouble = ms.DamageDealt;
+                if (ms.DamageTakenDouble == 0 && ms.DamageTaken != 0) ms.DamageTakenDouble = ms.DamageTaken;
+#pragma warning restore 618
+                mapStats[pair.Key] = ms;
+            }
         }
 
         public void RegisterTaskComplete(TaskData data, float duration, float xp)
@@ -277,6 +291,7 @@ namespace TimelessEchoes.Stats
                 stats = new GameData.MapStatistics();
                 mapStats[currentMapKey] = stats;
             }
+
             return stats;
         }
 
@@ -292,7 +307,7 @@ namespace TimelessEchoes.Stats
                     SessionSteps += dist;
                     var map = GetOrCreateCurrentMapStats();
                     if (map != null)
-                        map.Steps += dist;
+                        map.StepsDouble += dist;
                 }
             }
         }
@@ -308,7 +323,9 @@ namespace TimelessEchoes.Stats
             }
             else
             {
-                AddDistance(Vector3.Distance(position, lastHeroPos));
+                var delta = Vector3.Distance(position, lastHeroPos);
+                if (delta > 0.0001f)
+                    AddDistance(delta);
                 lastHeroPos = position;
             }
 
@@ -355,7 +372,7 @@ namespace TimelessEchoes.Stats
                     currentRunDamageDealt += amount;
                     var map = GetOrCreateCurrentMapStats();
                     if (map != null)
-                        map.DamageDealt += amount;
+                        map.DamageDealtDouble += amount;
                 }
             }
         }
@@ -370,7 +387,7 @@ namespace TimelessEchoes.Stats
                     currentRunDamageTaken += amount;
                     var map = GetOrCreateCurrentMapStats();
                     if (map != null)
-                        map.DamageTaken += amount;
+                        map.DamageTakenDouble += amount;
                 }
             }
         }
@@ -483,8 +500,14 @@ namespace TimelessEchoes.Stats
                 ResourcesCollected = currentRunResources,
                 BonusResourcesCollected = CurrentRunBonusResources,
                 EnemiesKilled = CurrentRunKills,
-                DamageDealt = currentRunDamageDealt,
-                DamageTaken = currentRunDamageTaken,
+                DamageDealtDouble = currentRunDamageDealt,
+                DamageTakenDouble = currentRunDamageTaken,
+#pragma warning disable CS0618 // Type or member is obsolete
+                DamageDealt = (float)currentRunDamageDealt,
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+                DamageTaken = (float)currentRunDamageTaken,
+#pragma warning restore CS0618 // Type or member is obsolete
                 Died = died,
                 Reaped = reaped,
                 Abandoned = false
@@ -493,10 +516,8 @@ namespace TimelessEchoes.Stats
             LastRunSteps = CurrentRunSteps;
             var map = GetOrCreateCurrentMapStats();
             if (map != null)
-            {
-                if (CurrentRunDistance > map.LongestTrek)
-                    map.LongestTrek = CurrentRunDistance;
-            }
+                if (CurrentRunDistance > map.LongestTrekDouble)
+                    map.LongestTrekDouble = CurrentRunDistance;
             nextRunNumber++;
 
             OnRunEnded?.Invoke(died);
@@ -521,8 +542,14 @@ namespace TimelessEchoes.Stats
                 ResourcesCollected = currentRunResources,
                 BonusResourcesCollected = CurrentRunBonusResources,
                 EnemiesKilled = CurrentRunKills,
-                DamageDealt = currentRunDamageDealt,
-                DamageTaken = currentRunDamageTaken,
+                DamageDealtDouble = currentRunDamageDealt,
+                DamageTakenDouble = currentRunDamageTaken,
+#pragma warning disable CS0618 // Type or member is obsolete
+                DamageDealt = (float)currentRunDamageDealt,
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+                DamageTaken = (float)currentRunDamageTaken,
+#pragma warning restore CS0618 // Type or member is obsolete
                 Died = false,
                 Reaped = false,
                 Abandoned = true
@@ -531,10 +558,8 @@ namespace TimelessEchoes.Stats
             LastRunSteps = CurrentRunSteps;
             var map = GetOrCreateCurrentMapStats();
             if (map != null)
-            {
-                if (CurrentRunDistance > map.LongestTrek)
-                    map.LongestTrek = CurrentRunDistance;
-            }
+                if (CurrentRunDistance > map.LongestTrekDouble)
+                    map.LongestTrekDouble = CurrentRunDistance;
             nextRunNumber++;
             OnRunEnded?.Invoke(false);
             ResetCurrentRun();

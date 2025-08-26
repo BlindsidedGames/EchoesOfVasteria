@@ -22,8 +22,29 @@ MonoBehaviour:
   echoConfig:
     capableSkills: []
     echoType: 1
-  requiredQuest: {fileID: 11400000, guid: 426c7caff520fda45822765ddb29f677, type: 2}
+  requiredQuest: {fileID: 11400000, guid: 7ad5e41d365eed245b5e3b7921fcd5aa, type: 2}
   baseEffects:
   - type: 10
-    value: 25
-  upgrades: []
+    value: 10
+  upgrades:
+  - quest: {fileID: 11400000, guid: 4ea0b89d8b1f06a48930ab02ba66fa8f, type: 2}
+    additionalEffects:
+    - type: 10
+      value: 5
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: a6c33508229ddf041a75e8f2a8795bed, type: 2}
+    additionalEffects:
+    - type: 10
+      value: 5
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: 1b2924c54a4c5a24bbe86e3b6493d429, type: 2}
+    additionalEffects:
+    - type: 10
+      value: 5
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0

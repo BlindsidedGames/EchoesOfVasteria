@@ -35,6 +35,7 @@ namespace TimelessEchoes.Quests
         private List<QuestData> quests = new();
 
         private readonly Dictionary<string, QuestInstance> active = new();
+        private bool statEventsSubscribed;
 
         private class QuestInstance
         {
@@ -42,6 +43,7 @@ namespace TimelessEchoes.Quests
             public QuestEntryUI ui;
             public readonly Dictionary<EnemyData, double> killCounts = new();
             public readonly Dictionary<BuffRecipe, int> buffCastCounts = new();
+            public double anyKillCount;
             public bool ReadyForTurnIn;
         }
 
@@ -70,12 +72,7 @@ namespace TimelessEchoes.Quests
                 resourceManager.OnInventoryChanged += OnInventoryChangedDebounced;
             if (killTracker != null)
                 killTracker.OnKillRegistered += OnKill;
-            if (statTracker != null)
-            {
-                statTracker.OnDistanceAdded += OnDistanceAdded;
-                statTracker.OnRunEnded += OnRunEnded;
-                statTracker.OnTaskCompletedEvent += OnTaskCompleted;
-            }
+            EnsureStatTrackerSubscriptions();
             var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
             if (bm != null)
                 bm.OnBuffCast += OnBuffCast;
@@ -85,6 +82,7 @@ namespace TimelessEchoes.Quests
 
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
+            StartCoroutine(SubscribeStatTrackerWhenReady());
             OnLoadData += OnLoadDataHandler;
         }
 
@@ -95,11 +93,12 @@ namespace TimelessEchoes.Quests
                 resourceManager.OnInventoryChanged -= OnInventoryChangedDebounced;
             if (killTracker != null)
                 killTracker.OnKillRegistered -= OnKill;
-            if (statTracker != null)
+            if (statTracker != null && statEventsSubscribed)
             {
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
                 statTracker.OnTaskCompletedEvent -= OnTaskCompleted;
+                statEventsSubscribed = false;
             }
             var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
             if (bm != null)
@@ -126,20 +125,48 @@ namespace TimelessEchoes.Quests
             if (stats == null) return;
             foreach (var inst in active.Values)
             {
-                if (!ContainsEnemy(inst.data, stats))
-                    continue;
+                if (inst?.data?.requirements == null) continue;
 
-                if (!inst.killCounts.ContainsKey(stats))
-                    inst.killCounts[stats] = 0;
-                inst.killCounts[stats] += 1;
+                var updated = false;
 
-                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                // Any-kill requirements (no enemies listed)
+                var hasAnyKillReq = false;
+                foreach (var req in inst.data.requirements)
                 {
-                    rec.KillProgress ??= new Dictionary<string, double>();
-                    rec.KillProgress[stats.name] = inst.killCounts[stats];
+                    if (req != null && req.type == QuestData.RequirementType.Kill && (req.enemies == null || req.enemies.Count == 0))
+                    {
+                        hasAnyKillReq = true;
+                        break;
+                    }
+                }
+                if (hasAnyKillReq)
+                {
+                    inst.anyKillCount += 1;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var recAny))
+                    {
+                        recAny.KillProgress ??= new Dictionary<string, double>();
+                        recAny.KillProgress["ANY"] = inst.anyKillCount;
+                    }
+                    updated = true;
                 }
 
-                UpdateProgress(inst);
+                // Specific-enemy kill requirements
+                if (ContainsEnemy(inst.data, stats))
+                {
+                    if (!inst.killCounts.ContainsKey(stats))
+                        inst.killCounts[stats] = 0;
+                    inst.killCounts[stats] += 1;
+
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                    {
+                        rec.KillProgress ??= new Dictionary<string, double>();
+                        rec.KillProgress[stats.name] = inst.killCounts[stats];
+                    }
+                    updated = true;
+                }
+
+                if (updated)
+                    UpdateProgress(inst);
             }
         }
 
@@ -147,7 +174,23 @@ namespace TimelessEchoes.Quests
         {
             if (dist <= 0f) return;
             foreach (var inst in active.Values)
-                UpdateProgress(inst);
+            {
+                if (inst?.data?.requirements == null) continue;
+                var needsUpdate = false;
+                foreach (var req in inst.data.requirements)
+                {
+                    if (req == null) continue;
+                    if (req.type == QuestData.RequirementType.DistanceTravel)
+                    {
+                        // Accumulate exact travel delta at quest granularity to avoid float cancellation
+                        if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                            rec.DistanceTravelProgress += dist;
+                        needsUpdate = true;
+                    }
+                }
+                if (needsUpdate)
+                    UpdateProgress(inst);
+            }
         }
 
         private void OnRunEnded(bool died)
@@ -304,9 +347,16 @@ namespace TimelessEchoes.Quests
                 else if (req.type == QuestData.RequirementType.Kill)
                 {
                     double total = 0;
-                    foreach (var enemy in req.enemies)
-                        if (inst.killCounts.TryGetValue(enemy, out var c))
-                            total += c;
+                    if (req.enemies != null && req.enemies.Count > 0)
+                    {
+                        foreach (var enemy in req.enemies)
+                            if (inst.killCounts.TryGetValue(enemy, out var c))
+                                total += c;
+                    }
+                    else
+                    {
+                        total = inst.anyKillCount;
+                    }
 
                     if (req.amount > 0)
                         pct = (float)(total / req.amount);
@@ -320,12 +370,11 @@ namespace TimelessEchoes.Quests
                 }
                 else if (req.type == QuestData.RequirementType.DistanceTravel)
                 {
-                    var tracker = GameplayStatTracker.Instance;
-                    var travelled = tracker ? tracker.DistanceTravelled : 0f;
+                    double travelled = 0;
                     if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
-                        travelled -= rec.DistanceBaseline;
+                        travelled = rec.DistanceTravelProgress;
                     if (req.amount > 0)
-                        pct = travelled / req.amount;
+                        pct = (float)(travelled / req.amount);
                 }
                 else if (req.type == QuestData.RequirementType.BuffCast)
                 {
@@ -580,14 +629,16 @@ namespace TimelessEchoes.Quests
                 isNewQuest = true;
             }
 
-            if (!rec.DistanceBaselineSet)
+            // Initialize per-quest distance accumulator only for newly created quest records
+            if (isNewQuest)
+            {
                 foreach (var req in quest.requirements)
                     if (req.type == QuestData.RequirementType.DistanceTravel)
                     {
-                        rec.DistanceBaseline = statTracker ? statTracker.DistanceTravelled : 0f;
-                        rec.DistanceBaselineSet = true;
+                        rec.DistanceTravelProgress = 0;
                         break;
                     }
+            }
             if (!rec.BuffCastBaselineSet)
                 foreach (var req in quest.requirements)
                     if (req.type == QuestData.RequirementType.BuffCast)
@@ -624,11 +675,21 @@ namespace TimelessEchoes.Quests
             foreach (var req in quest.requirements)
             {
                 if (req.type != QuestData.RequirementType.Kill) continue;
-                foreach (var enemy in req.enemies)
+                if (req.enemies != null && req.enemies.Count > 0)
                 {
-                    if (!rec.KillProgress.TryGetValue(enemy.name, out var count))
-                        count = 0;
-                    inst.killCounts[enemy] = count;
+                    foreach (var enemy in req.enemies)
+                    {
+                        if (!rec.KillProgress.TryGetValue(enemy.name, out var count))
+                            count = 0;
+                        inst.killCounts[enemy] = count;
+                    }
+                }
+                else
+                {
+                    if (rec.KillProgress != null && rec.KillProgress.TryGetValue("ANY", out var anyCount))
+                        inst.anyKillCount = anyCount;
+                    else
+                        inst.anyKillCount = 0;
                 }
             }
 
@@ -705,12 +766,39 @@ namespace TimelessEchoes.Quests
         {
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
+            EnsureStatTrackerSubscriptions();
         }
 
         private IEnumerator DelayedProgressUpdate()
         {
             yield return null;
             UpdateAllProgress();
+        }
+
+        private void EnsureStatTrackerSubscriptions()
+        {
+            if (statEventsSubscribed)
+                return;
+            var st = statTracker ?? GameplayStatTracker.Instance ?? FindFirstObjectByType<GameplayStatTracker>();
+            if (st == null)
+                return;
+            statTracker = st;
+            statTracker.OnDistanceAdded += OnDistanceAdded;
+            statTracker.OnRunEnded += OnRunEnded;
+            statTracker.OnTaskCompletedEvent += OnTaskCompleted;
+            statEventsSubscribed = true;
+        }
+
+        private IEnumerator SubscribeStatTrackerWhenReady()
+        {
+            // Try for a short period in case initialization order delays stat tracker creation
+            for (var i = 0; i < 240 && !statEventsSubscribed; i++)
+            {
+                EnsureStatTrackerSubscriptions();
+                if (statEventsSubscribed)
+                    yield break;
+                yield return null;
+            }
         }
     }
 }

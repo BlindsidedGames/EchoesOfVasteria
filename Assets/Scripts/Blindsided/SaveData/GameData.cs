@@ -227,6 +227,7 @@ namespace Blindsided.SaveData
             public Dictionary<string, double> KillProgress = new();
             public float DistanceBaseline;
             public bool DistanceBaselineSet;
+            public double DistanceTravelProgress;
             public int BuffCastBaseline;
             public bool BuffCastBaselineSet;
             public Dictionary<string, int> BuffCastProgress = new(); // BuffRecipe.name -> count since quest start
@@ -249,24 +250,52 @@ namespace Blindsided.SaveData
             public double ResourcesCollected;
             public double BonusResourcesCollected;
             public int EnemiesKilled;
-            public float DamageDealt;
-            public float DamageTaken;
+            public double DamageDealtDouble; // migrated primary
+            public double DamageTakenDouble;  // migrated primary
+            [Obsolete("Use DamageDealtDouble")] public float DamageDealt; // legacy
+            [Obsolete("Use DamageTakenDouble")] public float DamageTaken; // legacy
             public bool Died;
             public bool Reaped;
             public bool Abandoned;
+
+            // Effective read-only accessors for migrated values with legacy fallback
+            public double DamageDealtAsDouble
+            {
+                get
+                {
+                    if (DamageDealtDouble != 0) return DamageDealtDouble;
+#pragma warning disable 618
+                    return DamageDealt != 0 ? DamageDealt : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double DamageTakenAsDouble
+            {
+                get
+                {
+                    if (DamageTakenDouble != 0) return DamageTakenDouble;
+#pragma warning disable 618
+                    return DamageTaken != 0 ? DamageTaken : 0;
+#pragma warning restore 618
+                }
+            }
         }
 
         [HideReferenceObjectPicker]
         public class GeneralStats
         {
-            public float DistanceTravelled;
+            public double DistanceTravelledDouble; // migrated primary
+            [Obsolete("Use DistanceTravelledDouble")] public float DistanceTravelled; // legacy
             public float HighestDistance;
             public int TotalKills;
             public int SlimesKilled;
             public int TasksCompleted;
             public int Deaths;
-            public float DamageDealt;
-            public float DamageTaken;
+            public double DamageDealtDouble; // migrated primary
+            public double DamageTakenDouble;  // migrated primary
+            [Obsolete("Use DamageDealtDouble")] public float DamageDealt; // legacy
+            [Obsolete("Use DamageTakenDouble")] public float DamageTaken; // legacy
             public int TimesReaped;
             public int BuffsCast;
             public int CriticalHits;
@@ -279,19 +308,102 @@ namespace Blindsided.SaveData
             public float AverageRun;
             public float MaxRunDistance = 50f;
             public int NextRunNumber = 1;
+
+            // Effective read-only accessors for migrated values with legacy fallback
+            public double DistanceTravelledAsDouble
+            {
+                get
+                {
+                    if (DistanceTravelledDouble != 0) return DistanceTravelledDouble;
+#pragma warning disable 618
+                    return DistanceTravelled != 0 ? DistanceTravelled : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double DamageDealtAsDouble
+            {
+                get
+                {
+                    if (DamageDealtDouble != 0) return DamageDealtDouble;
+#pragma warning disable 618
+                    return DamageDealt != 0 ? DamageDealt : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double DamageTakenAsDouble
+            {
+                get
+                {
+                    if (DamageTakenDouble != 0) return DamageTakenDouble;
+#pragma warning disable 618
+                    return DamageTaken != 0 ? DamageTaken : 0;
+#pragma warning restore 618
+                }
+            }
         }
 
         [HideReferenceObjectPicker]
         public class MapStatistics
         {
-            public float Steps;
-            public float LongestTrek;
+            public double StepsDouble;       // migrated primary
+            public double LongestTrekDouble; // migrated primary
+            [Obsolete("Use StepsDouble")] public float Steps;              // legacy
+            [Obsolete("Use LongestTrekDouble")] public float LongestTrek;        // legacy
             public int TasksCompleted;
             public double ResourcesGathered;
             public int Kills;
-            public float DamageDealt;
+            public double DamageDealtDouble; // migrated primary
             public int Deaths;
-            public float DamageTaken;
+            public double DamageTakenDouble; // migrated primary
+            [Obsolete("Use DamageDealtDouble")] public float DamageDealt;        // legacy
+            [Obsolete("Use DamageTakenDouble")] public float DamageTaken;        // legacy
+
+            // Effective read-only accessors for migrated values with legacy fallback
+            public double StepsAsDouble
+            {
+                get
+                {
+                    if (StepsDouble != 0) return StepsDouble;
+#pragma warning disable 618
+                    return Steps != 0 ? Steps : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double LongestTrekAsDouble
+            {
+                get
+                {
+                    if (LongestTrekDouble != 0) return LongestTrekDouble;
+#pragma warning disable 618
+                    return LongestTrek != 0 ? LongestTrek : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double DamageDealtAsDouble
+            {
+                get
+                {
+                    if (DamageDealtDouble != 0) return DamageDealtDouble;
+#pragma warning disable 618
+                    return DamageDealt != 0 ? DamageDealt : 0;
+#pragma warning restore 618
+                }
+            }
+
+            public double DamageTakenAsDouble
+            {
+                get
+                {
+                    if (DamageTakenDouble != 0) return DamageTakenDouble;
+#pragma warning disable 618
+                    return DamageTaken != 0 ? DamageTaken : 0;
+#pragma warning restore 618
+                }
+            }
         }
 
 

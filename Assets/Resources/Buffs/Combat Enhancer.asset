@@ -17,14 +17,31 @@ MonoBehaviour:
   buffIcon: {fileID: 2601603839896418933, guid: 61614b6dea4e6254e853eb57bbf5ef3b, type: 3}
   durationType: 0
   baseDuration: 60
+  baseCooldown: 60
   baseEchoCount: 0
   echoConfig:
     capableSkills: []
     echoType: 2
-  requiredQuest: {fileID: 11400000, guid: a04629c010952d741b32db280e62a8eb, type: 2}
+  requiredQuest: {fileID: 11400000, guid: 90d0b3d3ea7b453478ad33a3898e199e, type: 2}
   baseEffects:
   - type: 1
-    value: 50
-  - type: 2
-    value: 50
-  upgrades: []
+    value: 25
+  upgrades:
+  - quest: {fileID: 11400000, guid: 7aa78d7bc8d76a74a92ad9755a1e1827, type: 2}
+    additionalEffects:
+    - type: 1
+      value: 25
+    - type: 2
+      value: 25
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: a1a2915b0da62414589d658a8e00de89, type: 2}
+    additionalEffects:
+    - type: 1
+      value: 25
+    - type: 2
+      value: 25
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0

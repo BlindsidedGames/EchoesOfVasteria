@@ -93,7 +93,7 @@ namespace TimelessEchoes
 
             if (SteamUserStats.GetStat("TotalKilometers", out float storedKm))
             {
-                float newKm = tracker.DistanceTravelled / 1000f;
+                float newKm = (float)(tracker.DistanceTravelled / 1000.0);
                 newKm = Mathf.Round(newKm * 10000f) / 10000f;
                 if (newKm > storedKm)
                 {

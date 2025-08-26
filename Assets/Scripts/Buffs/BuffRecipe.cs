@@ -177,6 +177,26 @@ namespace TimelessEchoes.Buffs
                     if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                         duration += up.durationDelta;
                 }
+
+                // If this buff uses distance-percent duration, allow InstantTasks additional effects
+                // from completed upgrades to extend the distance fraction additively.
+                if (durationType == BuffDurationType.DistancePercent)
+                {
+                    var extra = 0f;
+                    foreach (var up in upgrades)
+                    {
+                        if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
+                            continue;
+                        if (up.additionalEffects == null)
+                            continue;
+                        foreach (var eff in up.additionalEffects)
+                        {
+                            if (eff.type == BuffEffectType.InstantTasks && eff.value > 0f)
+                                extra += eff.value;
+                        }
+                    }
+                    duration += extra;
+                }
             }
             // Apply power via policy
             var policy = ComputePowerPolicy();

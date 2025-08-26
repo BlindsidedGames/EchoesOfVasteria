@@ -158,7 +158,7 @@ namespace TimelessEchoes
             TryUpload(distance, Mathf.FloorToInt(tracker.HighestDistance));
 
             // DistanceTravelled reported as kilometers (int)
-            TryUpload(distanceTravelled, Mathf.FloorToInt(tracker.DistanceTravelled / 1000f));
+            TryUpload(distanceTravelled, Mathf.FloorToInt((float)(tracker.DistanceTravelled / 1000.0)));
 
             // Total kills
             TryUpload(kills, tracker.TotalKills);

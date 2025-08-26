@@ -184,8 +184,8 @@ namespace TimelessEchoes
                 var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStatistics();
                 if (entry.statsUI != null && entry.statsUI.distanceLongestTasksText != null)
                 {
-                    var dist = CalcUtils.FormatNumber(stats.Steps, true);
-                    var longest = CalcUtils.FormatNumber(stats.LongestTrek, true);
+                    var dist = CalcUtils.FormatNumber(stats.StepsAsDouble, true);
+                    var longest = CalcUtils.FormatNumber(stats.LongestTrekAsDouble, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
                     entry.statsUI.distanceLongestTasksText.text =
@@ -195,9 +195,9 @@ namespace TimelessEchoes
                 if (entry.statsUI != null && entry.statsUI.killsDamageDeathsText != null)
                 {
                     var kills = CalcUtils.FormatNumber(stats.Kills, true);
-                    var dealt = CalcUtils.FormatNumber(stats.DamageDealt, true);
+                    var dealt = CalcUtils.FormatNumber(stats.DamageDealtAsDouble, true);
                     var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
-                    var taken = CalcUtils.FormatNumber(stats.DamageTaken, true);
+                    var taken = CalcUtils.FormatNumber(stats.DamageTakenAsDouble, true);
                     entry.statsUI.killsDamageDeathsText.text =
                         $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
                 }

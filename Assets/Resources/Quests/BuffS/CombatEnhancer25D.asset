@@ -43,14 +43,26 @@ MonoBehaviour:
   npcId: 
   autoPin: 0
   useN0ForPinnedNumbers: 0
-  requiredQuests: []
-  requirements: []
+  requiredQuests:
+  - {fileID: 11400000, guid: 8e01f1880c5cdc54b9bf1bb1ba562de0, type: 2}
+  requirements:
+  - type: 1
+    resource: {fileID: 0}
+    amount: 500
+    enemies: []
+    killName: 
+    killIcon: {fileID: -869523807, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+    meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName: 
+    buffCastIcon: {fileID: 0}
   rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
   disciplePercentReward: 0
-  unlocksBuff: 0
+  unlocksBuff: 1
   upgradesBuff: 0
   references:
     version: 2

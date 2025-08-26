@@ -24,4 +24,14 @@ MonoBehaviour:
     echoType: 2
   requiredQuest: {fileID: 11400000, guid: 6290a22786cc71c4898ee37154292231, type: 2}
   baseEffects: []
-  upgrades: []
+  upgrades:
+  - quest: {fileID: 11400000, guid: 93ff96d6a9f731440a06d6066ce7047b, type: 2}
+    additionalEffects: []
+    durationDelta: 0
+    echoCountDelta: 1
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: eb3001eada574154397fe7d1e158bc4e, type: 2}
+    additionalEffects: []
+    durationDelta: 0
+    echoCountDelta: 1
+    cooldownDelta: 0

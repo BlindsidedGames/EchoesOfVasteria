@@ -268,7 +268,11 @@ namespace TimelessEchoes.Hero
             else
             {
                 if (!IsEcho)
+                {
+                    // Avoid excessive micro-updates: only record when moved a small threshold
+                    // to prevent floating point jitter from accumulating.
                     tracker.RecordHeroPosition(transform.position);
+                }
                 BuffManager.Instance?.UpdateDistance(tracker.CurrentRunDistance);
 #if !DISABLESTEAMWORKS
                 if (Time.unscaledTime >= nextRichPresenceUpdate)

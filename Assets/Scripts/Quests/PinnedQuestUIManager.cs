@@ -158,10 +158,20 @@ namespace TimelessEchoes.Quests
                                 pct = (float)(current / target);
                             break;
                         case QuestData.RequirementType.Kill:
-                            if (rec != null && req.enemies != null)
-                                foreach (var enemy in req.enemies)
-                                    if (rec.KillProgress.TryGetValue(enemy.name, out var c))
-                                        current += c;
+                            if (rec != null)
+                            {
+                                if (req.enemies != null && req.enemies.Count > 0)
+                                {
+                                    foreach (var enemy in req.enemies)
+                                        if (rec.KillProgress.TryGetValue(enemy.name, out var c))
+                                            current += c;
+                                }
+                                else
+                                {
+                                    if (rec.KillProgress.TryGetValue("ANY", out var any))
+                                        current = any;
+                                }
+                            }
 
                             if (target > 0)
                                 pct = (float)(current / target);
@@ -172,9 +182,7 @@ namespace TimelessEchoes.Quests
                                 pct = (float)current / (float)target;
                             break;
                         case QuestData.RequirementType.DistanceTravel:
-                            current = tracker ? tracker.DistanceTravelled : 0f;
-                            if (rec != null)
-                                current -= rec.DistanceBaseline;
+                            current = rec != null ? rec.DistanceTravelProgress : 0;
                             if (target > 0)
                                 pct = (float)current / (float)target;
                             break;
@@ -270,6 +278,13 @@ namespace TimelessEchoes.Quests
                         else
                             sb.AppendLine(
                                 $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.Kill && (req.enemies == null || req.enemies.Count == 0))
+                    {
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Kill enemies: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Kill enemies: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
                     }
                     else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0 && !req.includeAutoCasts)
                     {
