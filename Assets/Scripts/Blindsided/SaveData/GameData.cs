@@ -229,6 +229,13 @@ namespace Blindsided.SaveData
             public bool DistanceBaselineSet;
             public int BuffCastBaseline;
             public bool BuffCastBaselineSet;
+            public Dictionary<string, int> BuffCastProgress = new(); // BuffRecipe.name -> count since quest start
+            public int CriticalBaseline;
+            public bool CriticalBaselineSet;
+            public double ResourcesBaseline;
+            public bool ResourcesBaselineSet;
+            public int TasksBaseline;
+            public bool TasksBaselineSet;
         }
 
         [HideReferenceObjectPicker]
@@ -262,6 +269,7 @@ namespace Blindsided.SaveData
             public float DamageTaken;
             public int TimesReaped;
             public int BuffsCast;
+            public int CriticalHits;
             public double TotalResourcesGathered;
 
             // Records for the most recent runs. Limited to the last 50.

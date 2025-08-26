@@ -260,6 +260,12 @@ namespace TimelessEchoes.Quests
                     return "Information";
                 case QuestData.RequirementType.Meet:
                     return "Meet";
+                case QuestData.RequirementType.CriticalStrike:
+                    return "Critical Hits";
+                case QuestData.RequirementType.ResourcesGathered:
+                    return "Gather Resources";
+                case QuestData.RequirementType.TasksCompleted:
+                    return "Tasks Completed";
                 default:
                     return type.ToString();
             }

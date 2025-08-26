@@ -42,6 +42,7 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: 
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
   requirements:
@@ -53,6 +54,10 @@ MonoBehaviour:
     killName: Skeleton Swordsmen
     killIcon: {fileID: -2139014974517455860, guid: 49b3127dae34b4941993a9fad6fa4403, type: 3}
     meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName: 
+    buffCastIcon: {fileID: 0}
   rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0

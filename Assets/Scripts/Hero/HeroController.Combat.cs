@@ -3,12 +3,10 @@
 #endif
 using System;
 using System.Collections;
-using UnityEngine;
-using TimelessEchoes.Enemies;
-using TimelessEchoes.Skills;
-using TimelessEchoes.Stats;
-using Blindsided.Utilities;
 using Blindsided.Utilities.Pooling;
+using TimelessEchoes.Enemies;
+using TimelessEchoes.Stats;
+using UnityEngine;
 using static TimelessEchoes.TELogger;
 using Random = UnityEngine.Random;
 
@@ -89,7 +87,7 @@ namespace TimelessEchoes.Hero
                 Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
                 if (diceUnlocked && diceRoller != null && !isRolling)
                 {
-                    var rate = CurrentAttackRate;
+                    var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
                     var cooldown = rate > 0f ? 1f / rate : 0.5f;
                     StartCoroutine(RollForCombat(cooldown));
                 }
@@ -104,7 +102,7 @@ namespace TimelessEchoes.Hero
             var dist = Vector2.Distance(transform.position, enemy.position);
             if (dist <= stats.visionRange)
             {
-                var rate = CurrentAttackRate;
+                var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
                 var cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
                 if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
                 {
@@ -127,6 +125,10 @@ namespace TimelessEchoes.Hero
 
             combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
             isRolling = false;
+
+            // Mark centralized stats dirty to propagate changes to UI/listeners
+            HeroStatSystem.MarkDirty(DirtyMask.Damage, DirtyReason.DiceUsed);
+            HeroStatSystem.ForceRunStartRefresh();
         }
 
         private void OnEnemyEngage(Enemy enemy)
@@ -250,37 +252,21 @@ namespace TimelessEchoes.Hero
                     Log("EnemyKillTracker missing", TELogCategory.Combat, this);
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                var dmgBase = (baseDamage + damageBonus + gearDamageBonus) *
-                              (buffController != null ? buffController.DamageMultiplier : 1f) *
-                              combatDamageMultiplier;
+                var snap = HeroStatSystem.GetSnapshot();
+                var dmgBase = snap.damage;
                 var total = dmgBase * bonus;
 
-                // Gear crit chance (2x damage). Only from gear.
-                var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
-                            FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
-                float critChance = 0f;
-                if (equip != null)
-                {
-                    var crafting = TimelessEchoes.Gear.CraftingService.Instance ??
-                                   FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-                    var critDef = crafting != null ? crafting.GetStatByMapping(TimelessEchoes.Gear.HeroStatMapping.CritChance) : null;
-                    if (critDef != null)
-                    {
-                        var raw = equip.GetCritChance(critDef);
-                        critChance = critDef.isPercent ? raw / 100f : raw;
-                    }
-                }
+                // Crit chance (2x damage) from centralized snapshot
+                var critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
 
-                // Add crit chance from active buffs (percent value)
-                var buffMgr = buffController != null ? buffController : FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
-                if (buffMgr != null)
-                    critChance += Mathf.Max(0f, buffMgr.CritChancePercent) / 100f;
-
-                bool isCritical = false;
+                var isCritical = false;
                 if (critChance > 0f && Random.value < Mathf.Clamp01(critChance))
                 {
                     total *= 2f;
                     isCritical = true;
+                    var tracker = GameplayStatTracker.Instance ??
+                                  FindFirstObjectByType<GameplayStatTracker>();
+                    tracker?.AddCriticalHit();
                 }
 
                 var bonusDamage = total - dmgBase;

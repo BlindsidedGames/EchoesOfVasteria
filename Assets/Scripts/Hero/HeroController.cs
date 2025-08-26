@@ -147,6 +147,7 @@ namespace TimelessEchoes.Hero
         private float gearHealthBonus;
         private float gearMoveSpeedBonus;
         private float combatDamageMultiplier = 1f;
+        public float CombatDamageMultiplier => combatDamageMultiplier;
 
         private bool logicActive = true;
 
@@ -229,11 +230,13 @@ namespace TimelessEchoes.Hero
 
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
-                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
-                var hp = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
+                ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
+                var hp = Mathf.RoundToInt(HeroStatSystem.GetSnapshot().maxHealth);
                 health?.Init(hp);
             }
+
+            // Initialize centralized hero stat system on scene load
+            HeroStatSystem.Initialize(this);
 
             if (AutoBuffAnimator != null)
             {
@@ -251,8 +254,7 @@ namespace TimelessEchoes.Hero
             if (!logicActive)
                 return;
             if (stats != null)
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
-                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
+                ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
             UpdateAnimation();
             UpdateBehavior();
             if (!IsEcho && mapUI != null)
@@ -328,8 +330,13 @@ namespace TimelessEchoes.Hero
             ApplyStatUpgrades();
             if (stats != null)
             {
-                ai.maxSpeed = (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
-                              (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
+                ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
+                var hp = Mathf.RoundToInt(HeroStatSystem.GetSnapshot().maxHealth);
+                health?.Init(hp);
+            }
+            if (stats != null)
+            {
+                ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
                 var hp = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
                 health?.Init(hp);
             }

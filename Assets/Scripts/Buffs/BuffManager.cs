@@ -21,6 +21,7 @@ namespace TimelessEchoes.Buffs
     public class BuffManager : MonoBehaviour
     {
         public static BuffManager Instance { get; private set; }
+        public event Action<BuffRecipe, bool> OnBuffCast; // (recipe, isAuto)
 
         private BuffRecipe[] cachedRecipes;
 
@@ -178,7 +179,15 @@ namespace TimelessEchoes.Buffs
             {
                 var buff = activeBuffs[i];
                 buff.remaining -= delta;
-                if (buff.remaining <= 0f) RemoveBuffAt(i);
+                if (buff.remaining <= 0f)
+                {
+                    RemoveBuffAt(i);
+                    TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                        TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
+                        TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                        TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
+                        TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+                }
             }
         }
 
@@ -225,11 +234,17 @@ namespace TimelessEchoes.Buffs
 
         public bool PurchaseBuff(BuffRecipe recipe)
         {
+            return PurchaseBuff(recipe, false);
+        }
+
+        public bool PurchaseBuff(BuffRecipe recipe, bool isAuto)
+        {
             if (!CanActivate(recipe)) return false;
 
             var tracker = GameplayStatTracker.Instance ??
                           FindFirstObjectByType<GameplayStatTracker>();
             tracker?.AddBuffCast();
+            OnBuffCast?.Invoke(recipe, isAuto);
 
             if (activeBuffs.Exists(b => b.recipe == recipe))
                 return false;
@@ -254,6 +269,12 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+
+            TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
+                TimelessEchoes.Hero.DirtyReason.BuffsChanged);
 
             // Start cooldown immediately for recipes that modify max distance so the timer
             // runs concurrently with the buff's active state.
@@ -608,6 +629,11 @@ namespace TimelessEchoes.Buffs
                 Log($"Buff {buff.recipe.name} expired", TELogCategory.Buff, this);
             }
             NotifyAutoBuffChanged();
+            TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
+                TimelessEchoes.Hero.DirtyReason.BuffsChanged);
         }
 
         private void DestroyEchoes(ActiveBuff buff)
@@ -632,7 +658,7 @@ namespace TimelessEchoes.Buffs
                 var recipe = slotAssignments[i];
                 if (recipe == null) continue;
                 if (CanActivate(recipe))
-                    PurchaseBuff(recipe);
+                    PurchaseBuff(recipe, true);
             }
         }
 

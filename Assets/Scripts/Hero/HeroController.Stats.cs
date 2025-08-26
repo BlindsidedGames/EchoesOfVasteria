@@ -13,40 +13,31 @@ namespace TimelessEchoes.Hero
         /// <summary>
         ///     Current attack damage after upgrades, buffs and dice multipliers.
         /// </summary>
-        public float Damage =>
-            (baseDamage + damageBonus + gearDamageBonus) *
-            (buffController != null ? buffController.DamageMultiplier : 1f) *
-            combatDamageMultiplier;
+        public float Damage => HeroStatSystem.GetSnapshot().damage * combatDamageMultiplier;
 
         /// <summary>
         ///     Base attack damage after permanent upgrades and gear (before buffs and dice multipliers).
         /// </summary>
-        public float BaseDamage => baseDamage + damageBonus + gearDamageBonus;
+        public float BaseDamage => baseDamage + damageBonus + gearDamageBonus; // used by HeroStatSystem only
 
         /// <summary>
         ///     Current attacks per second after upgrades and buffs.
         /// </summary>
-        public float AttackRate => CurrentAttackRate;
+        public float AttackRate => HeroStatSystem.GetSnapshot().attacksPerSecond;
 
         /// <summary>
         ///     Current movement speed after upgrades and buffs.
         /// </summary>
-        public float MoveSpeed =>
-            (baseMoveSpeed + moveSpeedBonus + gearMoveSpeedBonus) *
-            (buffController != null ? buffController.MoveSpeedMultiplier : 1f);
+        public float MoveSpeed => HeroStatSystem.GetSnapshot().movementSpeed;
 
         /// <summary>
         ///     Maximum health after upgrades.
         /// </summary>
-        public float MaxHealthValue => baseHealth + healthBonus + gearHealthBonus;
+        public float MaxHealthValue => HeroStatSystem.GetSnapshot().maxHealth;
 
-        private float CurrentAttackRate =>
-            (baseAttackSpeed + attackSpeedBonus + gearAttackSpeedBonus) *
-            (buffController != null ? buffController.AttackSpeedMultiplier : 1f);
+        private float CurrentAttackRate => HeroStatSystem.GetSnapshot().attacksPerSecond;
 
-        public float Defense =>
-            (baseDefense + defenseBonus + gearDefenseBonus) *
-            (buffController != null ? buffController.DefenseMultiplier : 1f);
+        public float Defense => HeroStatSystem.GetSnapshot().defense;
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneBonus milestone)
         {
@@ -127,11 +118,17 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
+            // Populate gear bonuses for systems still reading these fields; primary calcs come from HeroStatSystem.
             gearDamageBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.Damage);
             gearAttackSpeedBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
             gearDefenseBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.Defense);
             gearHealthBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.MaxHealth);
             gearMoveSpeedBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
+
+            // Notify centralized stat system of equipment changes
+            HeroStatSystem.MarkDirty(
+                DirtyMask.Damage | DirtyMask.AttackRate | DirtyMask.Defense | DirtyMask.Move | DirtyMask.MaxHealth,
+                DirtyReason.EquipmentChanged);
 
             // If MaxHealth changes, re-init health so UI reflects new max
             if (health != null)

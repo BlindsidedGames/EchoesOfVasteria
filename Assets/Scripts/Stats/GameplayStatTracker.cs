@@ -20,6 +20,7 @@ namespace TimelessEchoes.Stats
         public static GameplayStatTracker Instance { get; private set; }
         public event Action<float> OnDistanceAdded;
         public event Action<bool> OnRunEnded;
+        public event Action OnTaskCompletedEvent;
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private readonly List<GameData.RunRecord> recentRuns = new();
@@ -58,6 +59,11 @@ namespace TimelessEchoes.Stats
         ///     Number of times a buff has been cast.
         /// </summary>
         public int BuffsCast { get; private set; }
+
+        /// <summary>
+        ///     Number of critical hits dealt by the hero.
+        /// </summary>
+        public int CriticalHits { get; private set; }
 
         public double TotalResourcesGathered { get; private set; }
 
@@ -165,6 +171,7 @@ namespace TimelessEchoes.Stats
             g.DamageTaken = DamageTaken;
             g.TimesReaped = TimesReaped;
             g.BuffsCast = BuffsCast;
+            g.CriticalHits = CriticalHits;
             g.TotalResourcesGathered = TotalResourcesGathered;
             g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
             g.LongestRun = LongestRun;
@@ -202,6 +209,7 @@ namespace TimelessEchoes.Stats
             DamageTaken = g.DamageTaken;
             TimesReaped = g.TimesReaped;
             BuffsCast = g.BuffsCast;
+            CriticalHits = g.CriticalHits;
             TotalResourcesGathered = g.TotalResourcesGathered;
             recentRuns.Clear();
             if (g.RecentRuns != null)
@@ -239,6 +247,7 @@ namespace TimelessEchoes.Stats
             record.XpGained += xp;
             TasksCompleted++;
             currentRunTasks++;
+            OnTaskCompletedEvent?.Invoke();
             var map = GetOrCreateCurrentMapStats();
             if (map != null)
                 map.TasksCompleted++;
@@ -376,6 +385,11 @@ namespace TimelessEchoes.Stats
         public void AddBuffCast()
         {
             BuffsCast++;
+        }
+
+        public void AddCriticalHit()
+        {
+            CriticalHits++;
         }
 
         public void AddResources(double amount, bool bonus = false)

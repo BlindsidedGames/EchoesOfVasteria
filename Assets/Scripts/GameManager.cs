@@ -515,6 +515,9 @@ namespace TimelessEchoes
                     heroPos.y = CurrentGenerationConfig.heroStartY;
                     hero.transform.position = heroPos;
                 }
+
+                // Force stat refresh at run start
+                TimelessEchoes.Hero.HeroStatSystem.ForceRunStartRefresh();
             }
 
             EnableMildred();

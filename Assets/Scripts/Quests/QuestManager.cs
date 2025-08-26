@@ -41,6 +41,7 @@ namespace TimelessEchoes.Quests
             public QuestData data;
             public QuestEntryUI ui;
             public readonly Dictionary<EnemyData, double> killCounts = new();
+            public readonly Dictionary<BuffRecipe, int> buffCastCounts = new();
             public bool ReadyForTurnIn;
         }
 
@@ -73,7 +74,14 @@ namespace TimelessEchoes.Quests
             {
                 statTracker.OnDistanceAdded += OnDistanceAdded;
                 statTracker.OnRunEnded += OnRunEnded;
+                statTracker.OnTaskCompletedEvent += OnTaskCompleted;
             }
+            var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            if (bm != null)
+                bm.OnBuffCast += OnBuffCast;
+            var rm = ResourceManager.Instance;
+            if (rm != null)
+                rm.OnResourceAdded += OnResourceAdded;
 
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
@@ -91,7 +99,14 @@ namespace TimelessEchoes.Quests
             {
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
+                statTracker.OnTaskCompletedEvent -= OnTaskCompleted;
             }
+            var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            if (bm != null)
+                bm.OnBuffCast -= OnBuffCast;
+            var rm = ResourceManager.Instance;
+            if (rm != null)
+                rm.OnResourceAdded -= OnResourceAdded;
 
             OnLoadData -= OnLoadDataHandler;
         }
@@ -141,6 +156,45 @@ namespace TimelessEchoes.Quests
                 UpdateProgress(inst);
         }
 
+        private void OnTaskCompleted()
+        {
+            foreach (var inst in active.Values)
+            {
+                if (inst?.data?.requirements == null) continue;
+                var has = false;
+                foreach (var req in inst.data.requirements)
+                {
+                    if (req != null && req.type == QuestData.RequirementType.TasksCompleted)
+                    {
+                        has = true;
+                        break;
+                    }
+                }
+                if (has)
+                    UpdateProgress(inst);
+            }
+        }
+
+        private void OnResourceAdded(Resource resource, double amount, bool bonus)
+        {
+            if (amount <= 0) return;
+            foreach (var inst in active.Values)
+            {
+                if (inst?.data?.requirements == null) continue;
+                var hasGatherReq = false;
+                foreach (var req in inst.data.requirements)
+                {
+                    if (req != null && req.type == QuestData.RequirementType.ResourcesGathered)
+                    {
+                        hasGatherReq = true;
+                        break;
+                    }
+                }
+                if (hasGatherReq)
+                    UpdateProgress(inst);
+            }
+        }
+
         private static bool ContainsEnemy(QuestData data, EnemyData stats)
         {
             foreach (var req in data.requirements)
@@ -153,6 +207,38 @@ namespace TimelessEchoes.Quests
         {
             foreach (var inst in active.Values)
                 UpdateProgress(inst);
+        }
+
+        private void OnBuffCast(BuffRecipe recipe, bool isAuto)
+        {
+            if (recipe == null) return;
+            foreach (var inst in active.Values)
+            {
+                if (inst?.data?.requirements == null) continue;
+                var dirty = false;
+                foreach (var req in inst.data.requirements)
+                {
+                    if (req == null || req.type != QuestData.RequirementType.BuffCast) continue;
+                    // If specific buffs configured, only track those; else rely on baseline via UpdateProgress
+                    if (req.buffs != null && req.buffs.Count > 0)
+                    {
+                        if (!req.buffs.Contains(recipe)) continue;
+                        if (!req.includeAutoCasts && isAuto) continue;
+                        if (!inst.buffCastCounts.ContainsKey(recipe))
+                            inst.buffCastCounts[recipe] = 0;
+                        inst.buffCastCounts[recipe] += 1;
+                        if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                        {
+                            rec.BuffCastProgress ??= new System.Collections.Generic.Dictionary<string, int>();
+                            var key = recipe.name;
+                            rec.BuffCastProgress[key] = inst.buffCastCounts[recipe];
+                        }
+                        dirty = true;
+                    }
+                }
+                if (dirty)
+                    UpdateProgress(inst);
+            }
         }
 
         // Debounced variant to avoid recomputing quest progress many times in the same frame
@@ -243,12 +329,54 @@ namespace TimelessEchoes.Quests
                 }
                 else if (req.type == QuestData.RequirementType.BuffCast)
                 {
+                    if (req.buffs == null || req.buffs.Count == 0)
+                    {
+                        // Generic any-buff requirement uses baseline
+                        var tracker = GameplayStatTracker.Instance;
+                        var casts = tracker ? tracker.BuffsCast : 0;
+                        if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec) && rec.BuffCastBaselineSet)
+                            casts -= rec.BuffCastBaseline;
+                        if (req.amount > 0)
+                            pct = (float)casts / req.amount;
+                    }
+                    else
+                    {
+                        // Specific buff(s) requirement uses per-quest counts
+                        double total = 0;
+                        foreach (var b in req.buffs)
+                        {
+                            if (b == null) continue;
+                            if (inst.buffCastCounts.TryGetValue(b, out var c))
+                                total += c;
+                        }
+                        if (req.amount > 0)
+                            pct = (float)(total / req.amount);
+                    }
+                }
+                else if (req.type == QuestData.RequirementType.CriticalStrike)
+                {
                     var tracker = GameplayStatTracker.Instance;
-                    var casts = tracker ? tracker.BuffsCast : 0;
-                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec) && rec.BuffCastBaselineSet)
-                        casts -= rec.BuffCastBaseline;
+                    var crits = tracker ? tracker.CriticalHits : 0;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec) && rec.CriticalBaselineSet)
+                        crits -= rec.CriticalBaseline;
                     if (req.amount > 0)
-                        pct = (float)casts / req.amount;
+                        pct = (float)crits / req.amount;
+                }
+                else if (req.type == QuestData.RequirementType.ResourcesGathered)
+                {
+                    var tracker = GameplayStatTracker.Instance;
+                    var total = tracker ? tracker.TotalResourcesGathered : 0;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec) && rec.ResourcesBaselineSet)
+                        total -= rec.ResourcesBaseline;
+                    if (req.amount > 0)
+                        pct = (float)(total / req.amount);
+                }
+                else if (req.type == QuestData.RequirementType.TasksCompleted)
+                {
+                    var tracker = GameplayStatTracker.Instance;
+                    var tasks = tracker ? tracker.TasksCompleted : 0;
+                    if (req.amount > 0)
+                        pct = (float)tasks / req.amount;
                 }
                 else if (req.type == QuestData.RequirementType.Instant)
                 {
@@ -468,6 +596,30 @@ namespace TimelessEchoes.Quests
                         rec.BuffCastBaselineSet = true;
                         break;
                     }
+            if (!rec.CriticalBaselineSet)
+                foreach (var req in quest.requirements)
+                    if (req.type == QuestData.RequirementType.CriticalStrike)
+                    {
+                        rec.CriticalBaseline = statTracker ? statTracker.CriticalHits : 0;
+                        rec.CriticalBaselineSet = true;
+                        break;
+                    }
+            if (!rec.ResourcesBaselineSet)
+                foreach (var req in quest.requirements)
+                    if (req.type == QuestData.RequirementType.ResourcesGathered)
+                    {
+                        rec.ResourcesBaseline = statTracker ? statTracker.TotalResourcesGathered : 0;
+                        rec.ResourcesBaselineSet = true;
+                        break;
+                    }
+            if (!rec.TasksBaselineSet)
+                foreach (var req in quest.requirements)
+                    if (req.type == QuestData.RequirementType.TasksCompleted)
+                    {
+                        rec.TasksBaseline = statTracker ? statTracker.TasksCompleted : 0;
+                        rec.TasksBaselineSet = true;
+                        break;
+                    }
 
             foreach (var req in quest.requirements)
             {
@@ -477,6 +629,22 @@ namespace TimelessEchoes.Quests
                     if (!rec.KillProgress.TryGetValue(enemy.name, out var count))
                         count = 0;
                     inst.killCounts[enemy] = count;
+                }
+            }
+
+            // Preload per-buff counts for specific-buff requirements
+            foreach (var req in quest.requirements)
+            {
+                if (req.type != QuestData.RequirementType.BuffCast) continue;
+                if (req.buffs == null || req.buffs.Count == 0) continue;
+                foreach (var b in req.buffs)
+                {
+                    if (b == null) continue;
+                    var key = b.name;
+                    var count = 0;
+                    if (rec.BuffCastProgress != null)
+                        rec.BuffCastProgress.TryGetValue(key, out count);
+                    inst.buffCastCounts[b] = count;
                 }
             }
 

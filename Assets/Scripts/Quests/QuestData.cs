@@ -6,6 +6,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using UnityEngine.Localization;
+using TimelessEchoes.Buffs;
 
 namespace TimelessEchoes.Quests
 {
@@ -49,6 +50,12 @@ namespace TimelessEchoes.Quests
             [ShowIf("type", RequirementType.Kill)] public string killName;
             [ShowIf("type", RequirementType.Kill)] public Sprite killIcon;
             [ShowIf("type", RequirementType.Meet)] public string meetNpcId;
+
+            // BuffCast-specific configuration
+            [ShowIf("type", RequirementType.BuffCast)] public List<BuffRecipe> buffs = new();
+            [ShowIf("type", RequirementType.BuffCast)] public bool includeAutoCasts = true;
+            [ShowIf("type", RequirementType.BuffCast)] public string buffCastName;
+            [ShowIf("type", RequirementType.BuffCast)] public Sprite buffCastIcon;
         }
 
         [Serializable]
@@ -66,7 +73,10 @@ namespace TimelessEchoes.Quests
             DistanceTravel,
             BuffCast,
             Instant,
-            Meet
+            Meet,
+            CriticalStrike,
+            ResourcesGathered,
+            TasksCompleted
         }
     }
 }

@@ -84,18 +84,21 @@ namespace TimelessEchoes.UI
                     heroHealth.HealthBar = uiReferences.healthBar;
             }
 
-            UpdateStats(true);
+            // Subscribe to centralized stat recalculation events and draw immediately
+            HeroStatSystem.OnStatsRecalculated += OnStatsRecalculated;
+            OnStatsRecalculated(HeroStatSystem.GetSnapshot());
         }
 
         private void OnDisable()
         {
             if (heroHealth != null)
                 heroHealth.OnHealthChanged -= OnHealthChanged;
+            HeroStatSystem.OnStatsRecalculated -= OnStatsRecalculated;
         }
 
         private void Update()
         {
-            UpdateStats();
+            // Only handle input/UI toggles; stat text updates are event-driven
             if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
             {
                 if (skillsWindow != null && skillsWindow.activeSelf)
@@ -132,55 +135,17 @@ namespace TimelessEchoes.UI
             }
         }
 
-        private void UpdateStats(bool force = false)
+        private void OnStatsRecalculated(HeroStatsSnapshot snap)
         {
             if (uiReferences == null || hero == null)
                 return;
 
-            var baseDamage = hero.BaseDamage;
-            var totalDamage = hero.Damage;
-            var bonusDamage = totalDamage - baseDamage;
-            var attack = hero.AttackRate;
-            var move = hero.MoveSpeed;
-            var defense = hero.Defense;
-            float critChance = 0f;
-            var equip = TimelessEchoes.Gear.EquipmentController.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
-            if (equip != null)
-            {
-                var crafting = TimelessEchoes.Gear.CraftingService.Instance ?? FindFirstObjectByType<TimelessEchoes.Gear.CraftingService>();
-                var critDef = crafting != null ? crafting.GetStatByMapping(TimelessEchoes.Gear.HeroStatMapping.CritChance) : null;
-                if (critDef != null)
-                {
-                    var raw = equip.GetCritChance(critDef);
-                    critChance = critDef.isPercent ? raw : raw * 100f;
-                }
-            }
-            // Add buff crit percent on top of gear
-            if (buffManager != null)
-                critChance += Mathf.Max(0f, buffManager.CritChancePercent);
-            var controller = StatUpgradeController.Instance;
-            var regenUpgrade = controller?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
-            float upgradeRegen = controller && regenUpgrade ? controller.GetTotalValue(regenUpgrade) : 0f;
-
-            float gearRegen = 0f;
-            if (equip != null)
-                gearRegen = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.HealthRegen);
-            float regenMultiplier = buffManager != null ? (1f + Mathf.Max(0f, buffManager.HealthRegenPercent) / 100f) : 1f;
-            var regen = (upgradeRegen + gearRegen) * regenMultiplier;
-
-            if (!force && Mathf.Approximately(baseDamage, lastBaseDamage) && Mathf.Approximately(bonusDamage, lastBonusDamage)
-                && Mathf.Approximately(attack, lastAttack) && Mathf.Approximately(critChance, lastCrit)
-                && Mathf.Approximately(move, lastMove) && Mathf.Approximately(defense, lastDefense)
-                && Mathf.Approximately(regen, lastRegen))
-                return;
-
-            lastBaseDamage = baseDamage;
-            lastBonusDamage = bonusDamage;
-            lastAttack = attack;
-            lastCrit = critChance;
-            lastMove = move;
-            lastDefense = defense;
-            lastRegen = regen;
+            var totalDamage = snap.damage;
+            var attack = snap.attacksPerSecond;
+            var move = snap.movementSpeed;
+            var defense = snap.defense;
+            var critChance = snap.critChancePercent;
+            var regen = snap.healthRegenPerSecond;
 
             if (uiReferences.leftText != null)
             {

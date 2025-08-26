@@ -179,9 +179,44 @@ namespace TimelessEchoes.Quests
                                 pct = (float)current / (float)target;
                             break;
                         case QuestData.RequirementType.BuffCast:
-                            current = tracker ? tracker.BuffsCast : 0;
+                            if (req.buffs == null || req.buffs.Count == 0)
+                            {
+                                current = tracker ? tracker.BuffsCast : 0;
+                                if (rec != null)
+                                    current -= rec.BuffCastBaseline;
+                            }
+                            else
+                            {
+                                current = 0;
+                                if (rec != null && rec.BuffCastProgress != null)
+                                {
+                                    foreach (var b in req.buffs)
+                                    {
+                                        if (b == null) continue;
+                                        if (rec.BuffCastProgress.TryGetValue(b.name, out var c))
+                                            current += c;
+                                    }
+                                }
+                            }
+                            if (target > 0)
+                                pct = (float)current / (float)target;
+                            break;
+                        case QuestData.RequirementType.CriticalStrike:
+                            current = tracker ? tracker.CriticalHits : 0;
                             if (rec != null)
-                                current -= rec.BuffCastBaseline;
+                                current -= rec.CriticalBaseline;
+                            if (target > 0)
+                                pct = (float)current / (float)target;
+                            break;
+                        case QuestData.RequirementType.ResourcesGathered:
+                            current = tracker ? tracker.TotalResourcesGathered : 0;
+                            if (rec != null)
+                                current -= rec.ResourcesBaseline;
+                            if (target > 0)
+                                pct = (float)current / (float)target;
+                            break;
+                        case QuestData.RequirementType.TasksCompleted:
+                            current = tracker ? tracker.TasksCompleted : 0;
                             if (target > 0)
                                 pct = (float)current / (float)target;
                             break;
@@ -235,6 +270,49 @@ namespace TimelessEchoes.Quests
                         else
                             sb.AppendLine(
                                 $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0 && !req.includeAutoCasts)
+                    {
+                        // Manual-only specific buff phrasing
+                        var label = !string.IsNullOrEmpty(req.buffCastName)
+                            ? req.buffCastName
+                            : string.Join(", ", req.buffs.FindAll(b => b != null).ConvertAll(b => b.GetDisplayName()));
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Manually cast {label}: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Manually cast {label}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.CriticalStrike)
+                    {
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Critical hits: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Critical hits: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.ResourcesGathered)
+                    {
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Gather resources: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Gather resources: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.TasksCompleted)
+                    {
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Tasks completed: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Tasks completed: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                    }
+                    else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0)
+                    {
+                        // Specific buff(s) any-cast phrasing
+                        var label = !string.IsNullOrEmpty(req.buffCastName)
+                            ? req.buffCastName
+                            : string.Join(", ", req.buffs.FindAll(b => b != null).ConvertAll(b => b.GetDisplayName()));
+                        if (target <= 0)
+                            sb.AppendLine($"<size=80%>Cast {label}: {FormatForQuest(data, current)}</size>");
+                        else
+                            sb.AppendLine($"<size=80%>Cast {label}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
                     }
                     else
                     {
