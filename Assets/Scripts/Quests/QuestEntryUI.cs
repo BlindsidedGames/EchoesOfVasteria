@@ -50,7 +50,28 @@ namespace TimelessEchoes.Quests
             if (rewardText != null)
                 rewardText.text = data != null ? $"Reward: {data.rewardDescription.GetLocalizedString()}" : string.Empty;
             if (typeText != null)
-                typeText.text = data != null ? $"Type | {GetQuestType(data)}" : string.Empty;
+            {
+                if (data != null)
+                {
+                    typeText.spriteAsset = ResourceIconLookup.SpriteAsset;
+                    if (completed)
+                    {
+                        typeText.text = "Complete";
+                    }
+                    else
+                    {
+                        Blindsided.SaveData.GameData.QuestRecord rec = null;
+                        var quests = Blindsided.Oracle.oracle?.saveData?.Quests;
+                        if (quests != null)
+                            quests.TryGetValue(data.questId, out rec);
+                        typeText.text = QuestTextFormatter.BuildGoalText(data, rec, includeTitleLine: false);
+                    }
+                }
+                else
+                {
+                    typeText.text = string.Empty;
+                }
+            }
 
             if (turnInButton != null)
             {
@@ -115,66 +136,6 @@ namespace TimelessEchoes.Quests
             if (costParent != null)
             {
                 UIUtils.ClearChildren(costParent);
-                if (data != null && costSlotPrefab != null && showRequirements)
-                {
-                    var inventoryUI = ResourceInventoryUI.Instance;
-                    var resourceManager = ResourceManager.Instance;
-                    foreach (var req in data.requirements)
-                    {
-                        if (req.type == QuestData.RequirementType.Instant ||
-                            req.type == QuestData.RequirementType.DistanceRun ||
-                            req.type == QuestData.RequirementType.DistanceTravel ||
-                            req.type == QuestData.RequirementType.Meet ||
-                            req.type == QuestData.RequirementType.BuffCast)
-                            continue;
-
-                        var slot = Instantiate(costSlotPrefab, costParent);
-                        slot.resource = req.type == QuestData.RequirementType.Resource
-                            ? req.resource
-                            : null;
-                        costSlots.Add((slot, req));
-
-                        if (slot.iconImage != null)
-                        {
-                            if (req.type == QuestData.RequirementType.Resource)
-                            {
-                                var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                                slot.iconImage.sprite =
-                                    unlocked ? (req.resource ? req.resource.icon : null) : (req.resource ? req.resource.UnknownIcon : null);
-                                slot.iconImage.color = Color.white;
-                            }
-                            else if (req.type == QuestData.RequirementType.Kill)
-                            {
-                                slot.iconImage.sprite = req.killIcon;
-                                slot.iconImage.color = Color.white;
-                            }
-                            else if (req.type == QuestData.RequirementType.DistanceRun ||
-                                     req.type == QuestData.RequirementType.DistanceTravel ||
-                                     req.type == QuestData.RequirementType.Meet ||
-                                     req.type == QuestData.RequirementType.BuffCast)
-                            {
-                                slot.iconImage.sprite = null;
-                                slot.iconImage.color = Color.white;
-                            }
-                            else if (req.type == QuestData.RequirementType.Instant)
-                            {
-                                slot.iconImage.sprite = null;
-                                slot.iconImage.color = Color.white;
-                            }
-                        }
-
-                        if (slot.countText != null)
-                            slot.countText.text = req.amount.ToString();
-
-                        if (inventoryUI != null &&
-                            req.type == QuestData.RequirementType.Resource)
-                            slot.PointerClick += (_, button) =>
-                            {
-                                if (button == PointerEventData.InputButton.Left)
-                                    inventoryUI.HighlightResource(req.resource);
-                            };
-                    }
-                }
             }
         }
 
@@ -226,6 +187,20 @@ namespace TimelessEchoes.Quests
             }
         }
 
+        public void UpdateGoalText(QuestData data)
+        {
+            if (typeText == null || data == null) return;
+            typeText.spriteAsset = ResourceIconLookup.SpriteAsset;
+            Blindsided.SaveData.GameData.QuestRecord rec = null;
+            var quests = Blindsided.Oracle.oracle?.saveData?.Quests;
+            if (quests != null)
+                quests.TryGetValue(data.questId, out rec);
+            if (rec != null && rec.Completed)
+                typeText.text = "Complete";
+            else
+                typeText.text = QuestTextFormatter.BuildGoalText(data, rec, includeTitleLine: false);
+        }
+
         private void UpdatePinVisual(bool pinned)
         {
             if (pinButton != null)
@@ -266,6 +241,8 @@ namespace TimelessEchoes.Quests
                     return "Gather Resources";
                 case QuestData.RequirementType.TasksCompleted:
                     return "Tasks Completed";
+                case QuestData.RequirementType.CauldronMix:
+                    return "Mix Resources";
                 default:
                     return type.ToString();
             }

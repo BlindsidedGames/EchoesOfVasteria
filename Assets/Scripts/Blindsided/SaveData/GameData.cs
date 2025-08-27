@@ -109,6 +109,7 @@ namespace Blindsided.SaveData
             public double Amount;
             public bool Earned;
             public double BestPerMinute;
+            public int Tier; // 1-based tier index; defaults to 1 when missing
         }
 
         [HideReferenceObjectPicker]
@@ -237,6 +238,7 @@ namespace Blindsided.SaveData
             public bool ResourcesBaselineSet;
             public int TasksBaseline;
             public bool TasksBaselineSet;
+            public double CauldronMixProgress;
         }
 
         [HideReferenceObjectPicker]

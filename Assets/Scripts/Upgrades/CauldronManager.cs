@@ -65,6 +65,10 @@ namespace TimelessEchoes.Upgrades
         public event Action OnTasteSessionStopped;
         public event Action<int> OnSessionCardsChanged;
         public event Action<TastingStats> OnStatsChanged;
+        /// <summary>
+        ///     Fired when mixing occurs. Amount is the total number of resource units consumed across both inputs.
+        /// </summary>
+        public event Action<int> OnResourcesMixed;
 
         public struct TastingStats
         {
@@ -265,6 +269,13 @@ namespace TimelessEchoes.Upgrades
             var points = amountA * a.baseValue * a.valueMultiplier + amountB * b.baseValue * b.valueMultiplier;
             var stewGained = points / 100.0;
             Stew += stewGained;
+            var totalUnits = (int)Mathf.RoundToInt((float)(amountA + amountB));
+            if (totalUnits > 0)
+            {
+                var handler = OnResourcesMixed;
+                if (handler != null)
+                    handler(totalUnits);
+            }
             TrySave();
             return stewGained;
         }

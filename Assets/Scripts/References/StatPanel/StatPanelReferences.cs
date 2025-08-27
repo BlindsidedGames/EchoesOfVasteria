@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TimelessEchoes.References.StatPanel
@@ -10,5 +11,6 @@ namespace TimelessEchoes.References.StatPanel
         public Transform taskEntryPrefab;
         public Transform itemEntryParent;
         public Transform itemEntryPrefab;
+        public List<Sprite> tierBackgroundSprites;
     }
 }

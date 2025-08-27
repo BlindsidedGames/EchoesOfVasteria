@@ -86,6 +86,8 @@ namespace TimelessEchoes.Hero
         [SerializeField] private GameObject lootingIndicator;
         [SerializeField] private GameObject echoDurationBar;
         [SerializeField] private SlicedFilledImage echoDurationFill;
+        [SerializeField] private Sprite echoDurationYellowSprite;
+        [SerializeField] private Sprite echoDurationRedSprite;
 
         public GameObject CombatIndicator => combatIndicator;
         public GameObject MiningIndicator => miningIndicator;
@@ -95,6 +97,8 @@ namespace TimelessEchoes.Hero
         public GameObject LootingIndicator => lootingIndicator;
         public GameObject EchoDurationBar => echoDurationBar;
         public SlicedFilledImage EchoDurationFill => echoDurationFill;
+        public Sprite EchoDurationYellowSprite => echoDurationYellowSprite;
+        public Sprite EchoDurationRedSprite => echoDurationRedSprite;
         private bool diceUnlocked;
         [SerializeField] private BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;

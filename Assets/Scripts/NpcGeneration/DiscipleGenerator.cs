@@ -127,7 +127,7 @@ namespace TimelessEchoes.NpcGeneration
                 return;
             }
 
-            resourceManager.Add(resource, stored, trackStats: false);
+            resourceManager.Add(resource, stored, trackStats: false, eligibleForTierRoll: false);
             totalCollected += stored;
             stored = 0;
             SaveState();

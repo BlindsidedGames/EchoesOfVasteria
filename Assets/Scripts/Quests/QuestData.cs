@@ -76,7 +76,8 @@ namespace TimelessEchoes.Quests
             Meet,
             CriticalStrike,
             ResourcesGathered,
-            TasksCompleted
+            TasksCompleted,
+            CauldronMix
         }
     }
 }

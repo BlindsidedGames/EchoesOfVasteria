@@ -22,6 +22,7 @@ namespace TimelessEchoes.Hero
         private static long _version;
         private static HeroController _hero;
         private static HeroStatsSnapshot _cache;
+        private const float BaseCritChancePercent = 1f; // Global baseline crit chance
 
         public static bool IsDirty { get; private set; } = true;
 
@@ -146,6 +147,8 @@ namespace TimelessEchoes.Hero
 
                 if (buffs != null)
                     critPercent += Mathf.Max(0f, buffs.CritChancePercent);
+                // Apply global baseline
+                critPercent += BaseCritChancePercent;
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
             }
 

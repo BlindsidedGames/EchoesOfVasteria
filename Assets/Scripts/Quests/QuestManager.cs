@@ -30,6 +30,7 @@ namespace TimelessEchoes.Quests
         private DiscipleGenerationManager generationManager;
         private QuestUIManager uiManager;
         private GameplayStatTracker statTracker;
+        private TimelessEchoes.Upgrades.CauldronManager cauldronManager;
 
         [SerializeField] private string questResourcePath = "Quests";
         private List<QuestData> quests = new();
@@ -79,6 +80,9 @@ namespace TimelessEchoes.Quests
             var rm = ResourceManager.Instance;
             if (rm != null)
                 rm.OnResourceAdded += OnResourceAdded;
+            cauldronManager = TimelessEchoes.Upgrades.CauldronManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.CauldronManager>();
+            if (cauldronManager != null)
+                cauldronManager.OnResourcesMixed += OnResourcesMixed;
 
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
@@ -106,6 +110,8 @@ namespace TimelessEchoes.Quests
             var rm = ResourceManager.Instance;
             if (rm != null)
                 rm.OnResourceAdded -= OnResourceAdded;
+            if (cauldronManager != null)
+                cauldronManager.OnResourcesMixed -= OnResourcesMixed;
 
             OnLoadData -= OnLoadDataHandler;
         }
@@ -215,6 +221,31 @@ namespace TimelessEchoes.Quests
                 }
                 if (has)
                     UpdateProgress(inst);
+            }
+        }
+
+        private void OnResourcesMixed(int amount)
+        {
+            if (amount <= 0) return;
+            foreach (var inst in active.Values)
+            {
+                if (inst?.data?.requirements == null) continue;
+                var has = false;
+                foreach (var req in inst.data.requirements)
+                {
+                    if (req != null && req.type == QuestData.RequirementType.CauldronMix)
+                    {
+                        has = true;
+                        break;
+                    }
+                }
+                if (!has) continue;
+
+                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                {
+                    rec.CauldronMixProgress += amount;
+                }
+                UpdateProgress(inst);
             }
         }
 
@@ -427,6 +458,14 @@ namespace TimelessEchoes.Quests
                     if (req.amount > 0)
                         pct = (float)tasks / req.amount;
                 }
+                else if (req.type == QuestData.RequirementType.CauldronMix)
+                {
+                    double mixed = 0;
+                    if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+                        mixed = rec.CauldronMixProgress;
+                    if (req.amount > 0)
+                        pct = (float)(mixed / req.amount);
+                }
                 else if (req.type == QuestData.RequirementType.Instant)
                 {
                     pct = 1f;
@@ -446,6 +485,7 @@ namespace TimelessEchoes.Quests
 
             inst.ui?.SetProgress(progress);
             inst.ui?.UpdateRequirementIcons();
+            inst.ui?.UpdateGoalText(inst.data);
 
             var wasReady = inst.ReadyForTurnIn;
             inst.ReadyForTurnIn = progress >= 1f;

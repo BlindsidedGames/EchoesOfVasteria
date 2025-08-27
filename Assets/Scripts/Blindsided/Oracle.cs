@@ -42,6 +42,7 @@ namespace Blindsided
             wipeInProgress = false;
         }
 
+        [TabGroup("SaveData")] public bool demo;
         [TabGroup("SaveData", "Beta")] public bool beta;
         [TabGroup("SaveData", "Beta")] public int betaSaveIteration;
 

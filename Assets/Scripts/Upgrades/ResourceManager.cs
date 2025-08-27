@@ -19,6 +19,7 @@ namespace TimelessEchoes.Upgrades
         private static Dictionary<string, Resource> lookup;
         private int batchDepth;
         private bool pendingInventoryChanged;
+        private readonly Dictionary<Resource, int> tiers = new();
 
         /// <summary>
         ///     Invoked whenever the stored resource amounts or unlocked state changes.
@@ -31,6 +32,14 @@ namespace TimelessEchoes.Upgrades
         ///     bonus (e.g. from retreating).
         /// </summary>
         public event Action<Resource, double, bool> OnResourceAdded;
+        public event Action<Resource, int> OnResourceTierUpgraded;
+
+        [Title("Tier Settings")]
+        [SerializeField]
+        private List<int> tierUpgradeDenominators = new() { 0, 1000, 5000, 10000, 0, 0, 0, 0 }; // index = current tier (1-based)
+
+        [SerializeField]
+        private List<float> tierBonusPercents = new() { 0f, 10f, 20f, 30f, 0f, 0f, 0f, 0f }; // index = tier-1
 
         [Title("Debug Controls")] [SerializeField]
         private Resource debugResource;
@@ -80,7 +89,7 @@ namespace TimelessEchoes.Upgrades
         [Button]
         private void AddDebugResource()
         {
-            Add(debugResource, debugAmount);
+            Add(debugResource, debugAmount, false, true, false);
             SaveState();
         }
 
@@ -99,23 +108,64 @@ namespace TimelessEchoes.Upgrades
             return amounts.TryGetValue(resource, out var value) ? value : 0;
         }
 
-        public void Add(Resource resource, double amount, bool bonus = false, bool trackStats = true)
+        public int GetTier(Resource resource)
+        {
+            if (resource == null) return 1;
+            return tiers.TryGetValue(resource, out var t) && t > 0 ? t : 1;
+        }
+
+        public float GetTierBonusPercent(int tier)
+        {
+            if (tier <= 0) tier = 1;
+            var idx = Mathf.Clamp(tier - 1, 0, tierBonusPercents.Count - 1);
+            return tierBonusPercents.Count > 0 ? tierBonusPercents[idx] : 0f;
+        }
+
+        private int GetUpgradeDenominatorForTier(int tier)
+        {
+            var idx = Mathf.Clamp(tier, 0, tierUpgradeDenominators.Count - 1);
+            return tierUpgradeDenominators.Count > 0 ? tierUpgradeDenominators[idx] : 0;
+        }
+
+        private void TryRollTierUpgrade(Resource resource)
+        {
+            if (resource == null) return;
+            var currentTier = GetTier(resource);
+            // Prevent upgrade if already at or beyond configured tiers
+            if (currentTier >= Mathf.Max(tierBonusPercents.Count, tierUpgradeDenominators.Count)) return;
+            var denom = GetUpgradeDenominatorForTier(currentTier);
+            if (denom <= 0) return;
+            // 1/denom chance
+            if (UnityEngine.Random.Range(0, denom) == 0)
+            {
+                var newTier = currentTier + 1;
+                tiers[resource] = newTier;
+                OnResourceTierUpgraded?.Invoke(resource, newTier);
+            }
+        }
+
+        public void Add(Resource resource, double amount, bool bonus = false, bool trackStats = true, bool eligibleForTierRoll = true)
         {
             if (resource == null || amount <= 0) return;
+            // Apply current tier bonus (do not include any upgrade that may roll this call)
+            var tier = GetTier(resource);
+            var bonusPercent = GetTierBonusPercent(tier);
+            var multiplier = 1.0 + (bonusPercent / 100.0);
+            var adjustedAmount = amount * multiplier;
             var newlyUnlocked = unlocked.Add(resource);
             if (amounts.ContainsKey(resource))
-                amounts[resource] += amount;
+                amounts[resource] += adjustedAmount;
             else
-                amounts[resource] = amount;
-            resource.totalReceived += Mathf.RoundToInt((float)amount);
+                amounts[resource] = adjustedAmount;
+            resource.totalReceived += Mathf.RoundToInt((float)adjustedAmount);
             if (trackStats)
             {
                 var tracker = GameplayStatTracker.Instance;
                 if (tracker == null)
                     Log("GameplayStatTracker missing", TELogCategory.Resource, this);
                 else
-                    tracker.AddResources(amount, bonus);
-                OnResourceAdded?.Invoke(resource, amount, bonus);
+                    tracker.AddResources(adjustedAmount, bonus);
+                OnResourceAdded?.Invoke(resource, adjustedAmount, bonus);
             }
             if (batchDepth > 0)
                 pendingInventoryChanged = true;
@@ -123,6 +173,9 @@ namespace TimelessEchoes.Upgrades
                 InvokeInventoryChanged();
             if (newlyUnlocked)
                 UpdateCompletionPercentage();
+
+            if (eligibleForTierRoll)
+                TryRollTierUpgrade(resource);
         }
 
         public bool Spend(Resource resource, double amount)
@@ -148,6 +201,7 @@ namespace TimelessEchoes.Upgrades
         {
             amounts.Clear();
             unlocked.Clear();
+            tiers.Clear();
             if (batchDepth > 0)
                 pendingInventoryChanged = true;
             else
@@ -167,7 +221,8 @@ namespace TimelessEchoes.Upgrades
                 {
                     Earned = unlocked.Contains(pair.Key),
                     Amount = pair.Value,
-                    BestPerMinute = oldEntry?.BestPerMinute ?? 0
+                    BestPerMinute = oldEntry?.BestPerMinute ?? 0,
+                    Tier = GetTier(pair.Key)
                 };
             }
 
@@ -181,7 +236,8 @@ namespace TimelessEchoes.Upgrades
                     {
                         Earned = true,
                         Amount = 0,
-                        BestPerMinute = oldEntry?.BestPerMinute ?? 0
+                        BestPerMinute = oldEntry?.BestPerMinute ?? 0,
+                        Tier = GetTier(res)
                     };
                 }
             }
@@ -231,6 +287,8 @@ namespace TimelessEchoes.Upgrades
                 {
                     amounts[res] = pair.Value.Amount;
                     if (pair.Value.Earned) unlocked.Add(res);
+                    var t = pair.Value.Tier > 0 ? pair.Value.Tier : 1;
+                    tiers[res] = t;
                 }
 
             foreach (var res in lookup.Values)

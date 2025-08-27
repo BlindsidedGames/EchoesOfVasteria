@@ -4,6 +4,8 @@ using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using UnityEngine;
+using Pathfinding;
+using TimelessEchoes.Enemies;
 
 namespace TimelessEchoes.Hero
 {
@@ -30,6 +32,17 @@ namespace TimelessEchoes.Hero
         private float defaultAggroRange;
         private GameObject durationBarParent;
         private SlicedFilledImage durationFill;
+        private Sprite durationBaseSprite;
+        private Sprite durationYellowSprite;
+        private Sprite durationRedSprite;
+        private Sprite durationLastAppliedSprite;
+
+        // Expiration deferral state: wait for current enemy kill or task completion
+        private bool expirationDeferred;
+        private Health deferredEnemyHealth;
+        private ITask deferredTask;
+        private float deferStartTime;
+        [SerializeField] private float maxLingerOnExpiry = 0f; // 0 = disabled
 
         /// <summary>
         ///     Returns true once <see cref="Init" /> has completed.
@@ -102,8 +115,16 @@ namespace TimelessEchoes.Hero
                 durationFill = hero.EchoDurationFill;
                 if (durationBarParent != null)
                     durationBarParent.SetActive(!float.IsPositiveInfinity(duration));
-                if (durationFill != null && !float.IsPositiveInfinity(duration))
-                    durationFill.fillAmount = 1f;
+                if (durationFill != null)
+                {
+                    // Cache sprite references for dynamic color changes
+                    durationBaseSprite = durationFill.sprite;
+                    durationYellowSprite = hero.EchoDurationYellowSprite;
+                    durationRedSprite = hero.EchoDurationRedSprite;
+                    durationLastAppliedSprite = durationBaseSprite;
+                    if (!float.IsPositiveInfinity(duration))
+                        durationFill.fillAmount = 1f;
+                }
             }
 
             Initialized = true;
@@ -119,17 +140,77 @@ namespace TimelessEchoes.Hero
 
         private void Update()
         {
-            remaining -= Time.deltaTime;
-            if (remaining <= 0f)
+            // Countdown until expiration unless already deferring
+            if (!expirationDeferred)
             {
+                remaining -= Time.deltaTime;
+                if (remaining <= 0f)
+                {
+                    if (!BeginExpirationDeferral())
+                    {
+                        Destroy(gameObject);
+                        return;
+                    }
+                }
+            }
+
+            // Update duration UI
+            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null &&
+                !float.IsPositiveInfinity(lifetime))
+            {
+                var pct = expirationDeferred ? 0f : Mathf.Clamp01(remaining / lifetime);
+                durationFill.fillAmount = pct;
+
+                // Swap sprite based on remaining percent thresholds
+                // Green (base) > 50%, Yellow <= 50% and > 10%, Red <= 10%
+                var targetSprite = durationBaseSprite;
+                if (pct <= 0.10f && durationRedSprite != null)
+                    targetSprite = durationRedSprite;
+                else if (pct <= 0.50f && durationYellowSprite != null)
+                    targetSprite = durationYellowSprite;
+
+                if (targetSprite != durationLastAppliedSprite && targetSprite != null)
+                {
+                    durationFill.sprite = targetSprite;
+                    durationLastAppliedSprite = targetSprite;
+                }
+            }
+
+            // Handle deferral waiting conditions
+            if (expirationDeferred)
+            {
+                if (maxLingerOnExpiry > 0f && Time.time - deferStartTime >= maxLingerOnExpiry)
+                {
+                    Destroy(gameObject);
+                    return;
+                }
+
+                if (deferredEnemyHealth != null)
+                {
+                    // Unity null-safe: destroyed objects compare equal to null
+                    if (deferredEnemyHealth == null || deferredEnemyHealth.CurrentHealth <= 0f)
+                    {
+                        Destroy(gameObject);
+                    }
+                    return; // keep waiting while enemy is alive
+                }
+
+                if (deferredTask != null)
+                {
+                    var taskMb = deferredTask as MonoBehaviour;
+                    if (taskMb == null || deferredTask.IsComplete())
+                    {
+                        Destroy(gameObject);
+                    }
+                    return; // keep waiting while task is incomplete
+                }
+
+                // Nothing to wait on anymore
                 Destroy(gameObject);
                 return;
             }
 
-            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null &&
-                !float.IsPositiveInfinity(lifetime))
-                durationFill.fillAmount = remaining / lifetime;
-
+            // Normal lifetime behavior (only when not deferring)
             if (!disableSkills && taskController != null)
             {
                 var hasTask = false;
@@ -159,6 +240,46 @@ namespace TimelessEchoes.Hero
                     return; // stay alive for combat
                 Destroy(gameObject);
             }
+        }
+
+        private bool BeginExpirationDeferral()
+        {
+            var captured = false;
+            // Prefer finishing the current enemy if in combat
+            if (hero != null && hero.InCombat)
+            {
+                var setter = hero.GetComponent<AIDestinationSetter>();
+                var target = setter != null ? setter.target : null;
+                var hp = target != null ? target.GetComponent<Health>() : null;
+                if (hp != null && hp.CurrentHealth > 0f)
+                {
+                    deferredEnemyHealth = hp;
+                    captured = true;
+                }
+            }
+
+            // Otherwise, finish the current task if any
+            if (!captured && hero != null && hero.CurrentTask != null && !hero.CurrentTask.IsComplete())
+            {
+                deferredTask = hero.CurrentTask;
+                captured = true;
+            }
+
+            if (captured)
+            {
+                expirationDeferred = true;
+                deferStartTime = Time.time;
+                // Prevent picking up new tasks during the deferral window
+                hero.ClearTaskController();
+            }
+
+            return captured;
+        }
+
+        public bool TryDeferExpiration()
+        {
+            if (expirationDeferred) return true;
+            return BeginExpirationDeferral();
         }
 
         private void OnDestroy()

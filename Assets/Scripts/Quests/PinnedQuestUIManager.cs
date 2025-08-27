@@ -139,204 +139,122 @@ namespace TimelessEchoes.Quests
                 var progress = 0f;
                 var reqCount = 0;
 
-                var sb = new StringBuilder();
-                sb.AppendLine(data.questName.GetLocalizedString());
+                var sb = new StringBuilder(QuestTextFormatter.BuildGoalText(data, rec, includeTitleLine: true));
 
                 foreach (var req in data.requirements)
                 {
-                    double current = 0;
-                    double target = req.amount;
                     var pct = 0f;
-
-                    reqCount++;
-
-                    switch (req.type)
-                    {
-                        case QuestData.RequirementType.Resource:
-                            current = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
-                            if (target > 0)
-                                pct = (float)(current / target);
-                            break;
-                        case QuestData.RequirementType.Kill:
-                            if (rec != null)
-                            {
-                                if (req.enemies != null && req.enemies.Count > 0)
-                                {
-                                    foreach (var enemy in req.enemies)
-                                        if (rec.KillProgress.TryGetValue(enemy.name, out var c))
-                                            current += c;
-                                }
-                                else
-                                {
-                                    if (rec.KillProgress.TryGetValue("ANY", out var any))
-                                        current = any;
-                                }
-                            }
-
-                            if (target > 0)
-                                pct = (float)(current / target);
-                            break;
-                        case QuestData.RequirementType.DistanceRun:
-                            current = tracker ? tracker.LongestRun : 0f;
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.DistanceTravel:
-                            current = rec != null ? rec.DistanceTravelProgress : 0;
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.BuffCast:
-                            if (req.buffs == null || req.buffs.Count == 0)
-                            {
-                                current = tracker ? tracker.BuffsCast : 0;
-                                if (rec != null)
-                                    current -= rec.BuffCastBaseline;
-                            }
-                            else
-                            {
-                                current = 0;
-                                if (rec != null && rec.BuffCastProgress != null)
-                                {
-                                    foreach (var b in req.buffs)
-                                    {
-                                        if (b == null) continue;
-                                        if (rec.BuffCastProgress.TryGetValue(b.name, out var c))
-                                            current += c;
-                                    }
-                                }
-                            }
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.CriticalStrike:
-                            current = tracker ? tracker.CriticalHits : 0;
-                            if (rec != null)
-                                current -= rec.CriticalBaseline;
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.ResourcesGathered:
-                            current = tracker ? tracker.TotalResourcesGathered : 0;
-                            if (rec != null)
-                                current -= rec.ResourcesBaseline;
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.TasksCompleted:
-                            current = tracker ? tracker.TasksCompleted : 0;
-                            if (target > 0)
-                                pct = (float)current / (float)target;
-                            break;
-                        case QuestData.RequirementType.Instant:
-                            current = target;
-                            pct = 1f;
-                            break;
-                        case QuestData.RequirementType.Meet:
-                            if (!string.IsNullOrEmpty(req.meetNpcId) && CompletedNpcTasks.Contains(req.meetNpcId))
-                            {
-                                current = target;
-                                pct = 1f;
-                            }
-                            else
-                            {
-                                current = 0;
-                            }
-
-                            break;
-                    }
-
-                    progress += Mathf.Clamp01(pct);
-
                     if (req.type == QuestData.RequirementType.Resource)
                     {
-                        var iconTag = string.Empty;
-                        if (req.resource)
+                        var current = resourceManager ? resourceManager.GetAmount(req.resource) : 0;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)(current / target);
+                    }
+                    else if (req.type == QuestData.RequirementType.Kill)
+                    {
+                        double current = 0;
+                        if (rec != null)
                         {
-                            var unlocked = resourceManager && resourceManager.IsUnlocked(req.resource);
-                            iconTag = unlocked
-                                ? ResourceIconLookup.GetIconTag(req.resource.resourceID)
-                                : ResourceIconLookup.GetUnknownIconTag(req.resource.resourceID);
+                            if (req.enemies != null && req.enemies.Count > 0)
+                            {
+                                foreach (var enemy in req.enemies)
+                                    if (rec.KillProgress.TryGetValue(enemy.name, out var c))
+                                        current += c;
+                            }
+                            else if (rec.KillProgress.TryGetValue("ANY", out var any))
+                            {
+                                current = any;
+                            }
                         }
-
-                        var fallbackName = req.resource ? req.resource.name : string.Empty;
-                        var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
-                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : " ";
-
-                        if (target <= 0)
-                            sb.AppendLine(
-                                $"<size=90%>{label}{separator}{FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine(
-                                $"<size=90%>{label}{separator}{FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)(current / target);
                     }
-                    else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
+                    else if (req.type == QuestData.RequirementType.DistanceRun)
                     {
-                        if (target <= 0)
-                            sb.AppendLine(
-                                $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine(
-                                $"<size=80%>Kill {req.killName}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var current = tracker ? tracker.LongestRun : 0f;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
-                    else if (req.type == QuestData.RequirementType.Kill && (req.enemies == null || req.enemies.Count == 0))
+                    else if (req.type == QuestData.RequirementType.DistanceTravel)
                     {
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Kill enemies: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine($"<size=80%>Kill enemies: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var current = rec != null ? rec.DistanceTravelProgress : 0;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
-                    else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0 && !req.includeAutoCasts)
+                    else if (req.type == QuestData.RequirementType.BuffCast)
                     {
-                        // Manual-only specific buff phrasing
-                        var label = !string.IsNullOrEmpty(req.buffCastName)
-                            ? req.buffCastName
-                            : string.Join(", ", req.buffs.FindAll(b => b != null).ConvertAll(b => b.GetDisplayName()));
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Manually cast {label}: {FormatForQuest(data, current)}</size>");
+                        double current;
+                        if (req.buffs == null || req.buffs.Count == 0)
+                        {
+                            current = tracker ? tracker.BuffsCast : 0;
+                            if (rec != null)
+                                current -= rec.BuffCastBaseline;
+                        }
                         else
-                            sb.AppendLine($"<size=80%>Manually cast {label}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        {
+                            current = 0;
+                            if (rec != null && rec.BuffCastProgress != null)
+                            {
+                                foreach (var b in req.buffs)
+                                {
+                                    if (b == null) continue;
+                                    if (rec.BuffCastProgress.TryGetValue(b.name, out var c))
+                                        current += c;
+                                }
+                            }
+                        }
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
                     else if (req.type == QuestData.RequirementType.CriticalStrike)
                     {
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Critical hits: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine($"<size=80%>Critical hits: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var current = tracker ? tracker.CriticalHits : 0;
+                        if (rec != null)
+                            current -= rec.CriticalBaseline;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
                     else if (req.type == QuestData.RequirementType.ResourcesGathered)
                     {
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Gather resources: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine($"<size=80%>Gather resources: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var current = tracker ? tracker.TotalResourcesGathered : 0;
+                        if (rec != null)
+                            current -= rec.ResourcesBaseline;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
                     else if (req.type == QuestData.RequirementType.TasksCompleted)
                     {
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Tasks completed: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine($"<size=80%>Tasks completed: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        var current = tracker ? tracker.TasksCompleted : 0;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
-                    else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0)
+                    else if (req.type == QuestData.RequirementType.CauldronMix)
                     {
-                        // Specific buff(s) any-cast phrasing
-                        var label = !string.IsNullOrEmpty(req.buffCastName)
-                            ? req.buffCastName
-                            : string.Join(", ", req.buffs.FindAll(b => b != null).ConvertAll(b => b.GetDisplayName()));
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>Cast {label}: {FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine($"<size=80%>Cast {label}: {FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        double current = rec != null ? rec.CauldronMixProgress : 0;
+                        var target = req.amount;
+                        if (target > 0)
+                            pct = (float)current / (float)target;
                     }
-                    else
+                    else if (req.type == QuestData.RequirementType.Instant)
                     {
-                        if (target <= 0)
-                            sb.AppendLine($"<size=80%>{FormatForQuest(data, current)}</size>");
-                        else
-                            sb.AppendLine(
-                                $"<size=80%>{FormatForQuest(data, current)} / {FormatForQuest(data, target)}</size>");
+                        pct = 1f;
                     }
+                    else if (req.type == QuestData.RequirementType.Meet)
+                    {
+                        if (!string.IsNullOrEmpty(req.meetNpcId) && CompletedNpcTasks.Contains(req.meetNpcId))
+                            pct = 1f;
+                    }
+
+                    progress += Mathf.Clamp01(pct);
+                    reqCount++;
                 }
 
                 if (reqCount > 0)

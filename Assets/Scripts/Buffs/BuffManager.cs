@@ -640,8 +640,13 @@ namespace TimelessEchoes.Buffs
         {
             if (buff == null || buff.echoes == null) return;
             foreach (var c in buff.echoes)
-                if (c != null)
-                    Destroy(c.gameObject);
+            {
+                if (c == null) continue;
+                var echo = c.GetComponent<EchoController>();
+                if (echo != null && echo.TryDeferExpiration())
+                    continue; // let the echo finish current enemy/task
+                Destroy(c.gameObject);
+            }
             buff.echoes.Clear();
         }
 

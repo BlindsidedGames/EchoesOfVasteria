@@ -76,7 +76,31 @@ namespace TimelessEchoes.Stats
 
         public float AverageRun { get; private set; }
 
-        public float MaxRunDistance { get; private set; } = 50f;
+        private float maxRunDistance = 50f;
+
+        public float MaxRunDistance
+        {
+            get
+            {
+                var isDemo = oracle != null && oracle.demo;
+                return isDemo ? Mathf.Min(maxRunDistance, 300f) : maxRunDistance;
+            }
+            private set
+            {
+                var isDemo = oracle != null && oracle.demo;
+                if (isDemo && value > 300f)
+                {
+                    // Enforce cap in demo without reducing an already higher saved value
+                    if (maxRunDistance <= 300f)
+                        maxRunDistance = 300f;
+                    // else: leave as-is to avoid breaking existing saves
+                }
+                else
+                {
+                    maxRunDistance = value;
+                }
+            }
+        }
 
         public int CurrentRunKills { get; private set; }
 
@@ -554,6 +578,7 @@ namespace TimelessEchoes.Stats
                 Reaped = false,
                 Abandoned = true
             };
+
             AddRunRecord(record);
             LastRunSteps = CurrentRunSteps;
             var map = GetOrCreateCurrentMapStats();

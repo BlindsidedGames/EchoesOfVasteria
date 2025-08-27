@@ -173,7 +173,20 @@ namespace TimelessEchoes.UI
                 ui.entryIDText.text = $"#{res.resourceID}";
 
             if (ui.entryNameText != null)
-                ui.entryNameText.text = earned ? res.name : "???";
+            {
+                if (earned)
+                {
+                    var tier = resourceManager != null ? resourceManager.GetTier(res) : 1;
+                    if (tier > 1)
+                        ui.entryNameText.text = $"{res.name} | T{tier}";
+                    else
+                        ui.entryNameText.text = res.name;
+                }
+                else
+                {
+                    ui.entryNameText.text = "???";
+                }
+            }
 
             if (ui.entryHeldCollectedSpentText != null)
             {
@@ -196,14 +209,33 @@ namespace TimelessEchoes.UI
 
                 if (earned)
                 {
+                    var tier = resourceManager != null ? resourceManager.GetTier(res) : 1;
+                    var bonusPercent = resourceManager != null ? resourceManager.GetTierBonusPercent(tier) : 0f;
                     var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
-                    ui.bestPerMinuteText.text =
-                        $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                    if (tier > 1)
+                        ui.bestPerMinuteText.text =
+                            $"Tier Bonus: {bonusPercent:0.#}%\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                    else
+                        ui.bestPerMinuteText.text =
+                            $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
                 }
                 else
                 {
                     ui.bestPerMinuteText.text =
                         $"Min Distance: ???\nAE Power: {aePower}";
+                }
+            }
+
+            // Tier background image: always show Tier 1 background for unknown/unearthed per spec
+            if (ui.tierBackgroundImage != null && references != null)
+            {
+                var tier = earned && resourceManager != null ? resourceManager.GetTier(res) : 1;
+                var sprites = references.tierBackgroundSprites;
+                if (sprites != null)
+                {
+                    var idx = Mathf.Clamp(tier - 1, 0, sprites.Count - 1);
+                    ui.tierBackgroundImage.sprite = (sprites != null && sprites.Count > 0 && idx < sprites.Count) ? sprites[idx] : null;
+                    ui.tierBackgroundImage.enabled = ui.tierBackgroundImage.sprite != null;
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace TimelessEchoes.Upgrades
 	/// </summary>
 	public static class StatIconLookup
 	{
-		private const string SpriteAssetPath = "Fonts/StatIcons";
+		private const string SpriteAssetPath = "Fonts/FloatingTextIcons";
 		private static TMP_SpriteAsset spriteAsset;
 
 		public enum StatKey
@@ -29,24 +29,26 @@ namespace TimelessEchoes.Upgrades
 			DownArrow,
 			RightArrow,
 			Minus,
-			Plus
+			Plus,
+			DoubleRightArrow
 		}
 
 		// Indices as provided by the user for the StatIcons atlas
 		private static readonly Dictionary<StatKey, int> statToIndex = new()
 		{
-			{ StatKey.Damage, 0 },
-			{ StatKey.CritChance, 1 },
-			{ StatKey.AttackRate, 2 },
-			{ StatKey.Defense, 3 },
-			{ StatKey.Health, 4 },
-			{ StatKey.Regen, 5 },
-			{ StatKey.MoveSpeed, 6 },
-			{ StatKey.UpArrow, 7 },
-			{ StatKey.DownArrow, 8 },
-			{ StatKey.RightArrow, 9 },
-			{ StatKey.Minus, 10 },
-			{ StatKey.Plus, 11 }
+			{ StatKey.Damage, 198 },
+			{ StatKey.CritChance, 199 },
+			{ StatKey.AttackRate, 200 },
+			{ StatKey.Defense, 201 },
+			{ StatKey.Health, 202 },
+			{ StatKey.Regen, 203 },
+			{ StatKey.MoveSpeed, 204 },
+			{ StatKey.UpArrow, 192 },
+			{ StatKey.DownArrow, 193 },
+			{ StatKey.RightArrow, 194 },
+			{ StatKey.Minus, 195 },
+			{ StatKey.Plus, 196 },
+			{ StatKey.DoubleRightArrow, 197 }
 		};
 
 		private static TMP_SpriteAsset SpriteAsset
