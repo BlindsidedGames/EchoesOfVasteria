@@ -662,6 +662,24 @@ namespace TimelessEchoes.Upgrades
         public AEResourceGroup GetResourceGroup(Resource res)
         {
             if (res == null) return AEResourceGroup.Combat;
+
+            // Explicit override on Resource takes precedence
+            if (res.cauldronCategory != Resource.CauldronCategory.Auto)
+            {
+                AEResourceGroup mapped = AEResourceGroup.Combat;
+                switch (res.cauldronCategory)
+                {
+                    case Resource.CauldronCategory.Farming: mapped = AEResourceGroup.Farming; break;
+                    case Resource.CauldronCategory.Fishing: mapped = AEResourceGroup.Fishing; break;
+                    case Resource.CauldronCategory.Mining: mapped = AEResourceGroup.Mining; break;
+                    case Resource.CauldronCategory.Woodcutting: mapped = AEResourceGroup.Woodcutting; break;
+                    case Resource.CauldronCategory.Looting: mapped = AEResourceGroup.Looting; break;
+                    case Resource.CauldronCategory.Combat: mapped = AEResourceGroup.Combat; break;
+                }
+                resourceGroupMap[res] = mapped;
+                return mapped;
+            }
+
             if (resourceGroupMap.TryGetValue(res, out var g)) return g;
 
             // Build counts per group using TaskData and EnemyData

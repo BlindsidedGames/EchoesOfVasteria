@@ -23,19 +23,7 @@ namespace TimelessEchoes
 
     public static class TELogger
     {
-        private static readonly HashSet<TELogCategory> _enabledCategories = new()
-        {
-            TELogCategory.General,
-            TELogCategory.Hero,
-            TELogCategory.Task,
-            TELogCategory.Combat,
-            TELogCategory.Map,
-            TELogCategory.Resource,
-            TELogCategory.Quest,
-            TELogCategory.Buff,
-            TELogCategory.Upgrade,
-            TELogCategory.Run
-        };
+        private static readonly HashSet<TELogCategory> _enabledCategories = new();
 
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]

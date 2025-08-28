@@ -7,9 +7,20 @@ using UnityEngine;
 namespace TimelessEchoes.Upgrades
 {
     [ManageableData]
-    [CreateAssetMenu(fileName = "Resource", menuName = "SO/Upgrade Resource")]
+    [CreateAssetMenu(fileName = "Resource", menuName = "SO/Resource Item")]
     public class Resource : ScriptableObject
     {
+        public enum CauldronCategory
+        {
+            Auto,
+            Farming,
+            Fishing,
+            Mining,
+            Woodcutting,
+            Looting,
+            Combat
+        }
+
         [Tooltip("Lower numbers appear first in the item stats panel")]
         public int resourceID;
 
@@ -24,6 +35,9 @@ namespace TimelessEchoes.Upgrades
 
         [Tooltip("If true, disciples will not generate this resource and Alter Echo data is ignored")]
         public bool DisableAlterEcho;
+
+        [Tooltip("Override how this resource is categorized for the Cauldron. Auto uses inferred grouping.")]
+        public CauldronCategory cauldronCategory = CauldronCategory.Auto;
 
         [HideInInspector] public int totalReceived;
         [HideInInspector] public int totalSpent;

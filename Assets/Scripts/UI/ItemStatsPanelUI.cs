@@ -210,9 +210,12 @@ namespace TimelessEchoes.UI
                 if (earned)
                 {
                     var tier = resourceManager != null ? resourceManager.GetTier(res) : 1;
-                    var bonusPercent = resourceManager != null ? resourceManager.GetTierBonusPercent(tier) : 0f;
+                    var bonusPercent = (resourceManager != null && !res.DisableAlterEcho) ? resourceManager.GetTierBonusPercent(tier) : 0f;
                     var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
-                    if (tier > 1)
+                    if (res.DisableAlterEcho)
+                        ui.bestPerMinuteText.text =
+                            $"Crafted\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                    else if (tier > 1)
                         ui.bestPerMinuteText.text =
                             $"Tier Bonus: {bonusPercent:0.#}%\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
                     else
@@ -230,6 +233,9 @@ namespace TimelessEchoes.UI
             if (ui.tierBackgroundImage != null && references != null)
             {
                 var tier = earned && resourceManager != null ? resourceManager.GetTier(res) : 1;
+                // For crafted-only resources (DisableAlterEcho), display max tier background
+                if (res.DisableAlterEcho && earned && references.tierBackgroundSprites != null && references.tierBackgroundSprites.Count > 0)
+                    tier = references.tierBackgroundSprites.Count; // clamp below
                 var sprites = references.tierBackgroundSprites;
                 if (sprites != null)
                 {

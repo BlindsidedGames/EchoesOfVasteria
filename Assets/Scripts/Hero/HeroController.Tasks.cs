@@ -52,6 +52,19 @@ namespace TimelessEchoes.Hero
         {
             if (stats == null) return;
 
+            // Apply task-speed buff to animator speed while performing tasks
+            var targetAnimSpeed = 1f;
+            if (state == State.PerformingTask)
+            {
+                var bm = buffController != null ? buffController : TimelessEchoes.Buffs.BuffManager.Instance;
+                if (bm != null)
+                    targetAnimSpeed *= bm.TaskSpeedMultiplier;
+            }
+            if (animator != null)
+                animator.speed = targetAnimSpeed;
+            if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled)
+                AutoBuffAnimator.speed = targetAnimSpeed;
+
             enemyRemovalBuffer.Clear();
             foreach (var enemy in engagedEnemies)
             {
@@ -180,6 +193,12 @@ namespace TimelessEchoes.Hero
                     state = State.PerformingTask;
                     ai.canMove = !CurrentTask.BlocksMovement;
                     CurrentTask.OnArrival(this);
+                    // Immediately sync animator speed when entering a task
+                    var bm = buffController != null ? buffController : TimelessEchoes.Buffs.BuffManager.Instance;
+                    var speed = 1f;
+                    if (bm != null) speed *= bm.TaskSpeedMultiplier;
+                    if (animator != null) animator.speed = speed;
+                    if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled) AutoBuffAnimator.speed = speed;
                 }
 
                 CurrentTask.Tick(this);

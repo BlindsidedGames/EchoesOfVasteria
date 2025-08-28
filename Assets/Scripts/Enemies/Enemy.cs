@@ -16,6 +16,7 @@ using static TimelessEchoes.TELogger;
 using Random = UnityEngine.Random;
 using static Blindsided.Oracle;
 using Blindsided.Utilities.Pooling;
+using UnityEngine.U2D.Animation;
 
 namespace TimelessEchoes.Enemies
 {
@@ -38,6 +39,9 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private float targetUpdateInterval = 1f;
         [SerializeField] private TMP_Text levelText;
+        [SerializeField] private bool randomizeSpriteLibraryOnSpawn = false;
+        [SerializeField] private List<SpriteLibraryAsset> spriteLibraryVariants = new List<SpriteLibraryAsset>();
+        [SerializeField] private SpriteLibrary targetSpriteLibrary;
 
         private ResourceManager resourceManager;
 
@@ -148,12 +152,34 @@ namespace TimelessEchoes.Enemies
                 var state = animator.GetCurrentAnimatorStateInfo(0);
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
+
+            ApplyRandomSpriteLibrary();
         }
 
         private void OnDisable()
         {
             EnemyActivator.Instance?.Unregister(this);
             OnEngage -= HandleAllyEngaged;
+        }
+
+        private void ApplyRandomSpriteLibrary()
+        {
+            if (!randomizeSpriteLibraryOnSpawn) return;
+            if (spriteLibraryVariants == null || spriteLibraryVariants.Count == 0) return;
+
+            if (targetSpriteLibrary == null)
+                targetSpriteLibrary = GetComponentInChildren<SpriteLibrary>(true);
+            if (targetSpriteLibrary == null) return;
+
+            var chosen = spriteLibraryVariants[Random.Range(0, spriteLibraryVariants.Count)];
+            if (chosen == null) return;
+
+            if (targetSpriteLibrary.spriteLibraryAsset != chosen)
+                targetSpriteLibrary.spriteLibraryAsset = chosen;
+
+            var resolvers = GetComponentsInChildren<SpriteResolver>(true);
+            for (int i = 0; i < resolvers.Length; i++)
+                resolvers[i].ResolveSpriteToSpriteRenderer();
         }
 
 

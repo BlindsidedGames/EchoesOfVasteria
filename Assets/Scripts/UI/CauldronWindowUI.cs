@@ -25,7 +25,7 @@ namespace TimelessEchoes.UI
 		[SerializeField] private CauldronConfig config;
 
 		[Header("Mixing")]
-		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Drag up to 25 in Inspector
+		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Drag up to 30 in Inspector
 		[SerializeField] private CauldronMixItemUIReferences slot1; // Selected A display (icon only)
 		[SerializeField] private CauldronMixItemUIReferences slot2; // Selected B display (icon only)
 		[SerializeField] private Button mixButton;
@@ -88,7 +88,7 @@ namespace TimelessEchoes.UI
 			cauldron ??= CauldronManager.Instance;
 			rm ??= ResourceManager.Instance;
 			if (mixSlots == null || mixSlots.Count == 0)
-				Log("Cauldron mix slot list is empty; assign up to 25 CauldronMixItemUIReferences in the Inspector.", TELogCategory.General, this);
+				Log("Cauldron mix slot list is empty; assign up to 30 CauldronMixItemUIReferences in the Inspector.", TELogCategory.General, this);
 			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedUi;
 			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
 			if (drinking != null)
@@ -174,8 +174,17 @@ namespace TimelessEchoes.UI
 				}
 			}
 
+			// Include manual overrides: any Resource categorized as Farming or Fishing
+			var eligible = new HashSet<Resource>(eligibleFromTasks);
+			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+			{
+				if (r == null) continue;
+				if (r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing)
+					eligible.Add(r);
+			}
+
 			var eligibleFoods = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && eligibleFromTasks.Contains(r) && (rm != null && rm.IsUnlocked(r)))
+				.Where(r => r != null && eligible.Contains(r) && (rm != null && rm.IsUnlocked(r)))
 				.OrderBy(r => r.resourceID)
 				.ThenBy(r => r.name)
 				.ToList();
@@ -186,11 +195,11 @@ namespace TimelessEchoes.UI
 			if (selectedA != null && rm != null && rm.GetAmount(selectedA) <= 0) selectedA = null;
 			if (selectedB != null && rm != null && rm.GetAmount(selectedB) <= 0) selectedB = null;
 
-			// Clamp to first 25 and to available UI slots, with warnings
-			var maxByDesign = 25;
+			// Clamp to first 30 and to available UI slots, with warnings
+			var maxByDesign = 30;
 			var capacity = mixSlots.Count;
 			if (eligibleFoods.Count > maxByDesign)
-				Log($"Eligible foods ({eligibleFoods.Count}) exceed 25; clamping to first 25.", TELogCategory.General, this);
+				Log($"Eligible foods ({eligibleFoods.Count}) exceed 30; clamping to first 30.", TELogCategory.General, this);
 			var clamped = eligibleFoods.Take(Mathf.Min(maxByDesign, eligibleFoods.Count)).ToList();
 			if (clamped.Count > capacity)
 			{

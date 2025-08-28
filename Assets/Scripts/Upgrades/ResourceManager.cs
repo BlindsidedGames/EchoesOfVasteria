@@ -149,7 +149,7 @@ namespace TimelessEchoes.Upgrades
             if (resource == null || amount <= 0) return;
             // Apply current tier bonus (do not include any upgrade that may roll this call)
             var tier = GetTier(resource);
-            var bonusPercent = GetTierBonusPercent(tier);
+            var bonusPercent = resource.DisableAlterEcho ? 0f : GetTierBonusPercent(tier);
             var multiplier = 1.0 + (bonusPercent / 100.0);
             var adjustedAmount = amount * multiplier;
             var newlyUnlocked = unlocked.Add(resource);

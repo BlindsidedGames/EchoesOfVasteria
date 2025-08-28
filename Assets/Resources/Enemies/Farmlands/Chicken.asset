@@ -21,8 +21,21 @@ MonoBehaviour:
   maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
-  resourceDrops: []
-  additionalLootChances: []
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: c01df43f8f8915e468176ef1249fa722, type: 2}
+    dropRange: {x: 1, y: 4}
+    weight: 50
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  - resource: {fileID: 11400000, guid: ab45f835bf64ff1418d8a391794e125a, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 1
+    minX: 0
+    maxX: Infinity
+    requiredQuest: {fileID: 0}
+  additionalLootChances:
+  - 0.2
   experience: 1
   moveSpeed: 5
   visionRange: 2
