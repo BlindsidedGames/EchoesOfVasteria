@@ -109,6 +109,8 @@ namespace TimelessEchoes.Hero
                 // Buff multiplier
                 var buffMult = buffs != null ? buffs.DamageMultiplier : 1f;
                 newSnapshot.damage = (baseDamage + gearDamage) * buffMult;
+
+                // Runtime dice multiplier is applied per HeroController when attacking/for UI
             }
 
             if ((_dirtyMask & DirtyMask.AttackRate) != 0)

@@ -14,6 +14,7 @@ namespace TimelessEchoes.Hero
 {
     public partial class HeroController
     {
+        public static event Action OnMainHeroDiceChanged;
         private Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;
@@ -126,9 +127,13 @@ namespace TimelessEchoes.Hero
             combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
             isRolling = false;
 
-            // Mark centralized stats dirty to propagate changes to UI/listeners
-            HeroStatSystem.MarkDirty(DirtyMask.Damage, DirtyReason.DiceUsed);
-            HeroStatSystem.ForceRunStartRefresh();
+            // Refresh UI only for the main hero; echoes keep their own local multiplier
+            if (!IsEcho)
+            {
+                HeroStatSystem.MarkDirty(DirtyMask.Damage, DirtyReason.DiceUsed);
+                HeroStatSystem.ForceRunStartRefresh();
+                OnMainHeroDiceChanged?.Invoke();
+            }
         }
 
         private void OnEnemyEngage(Enemy enemy)
@@ -253,7 +258,7 @@ namespace TimelessEchoes.Hero
                 var enemyStats = target.GetComponent<Enemy>()?.Stats;
                 var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
                 var snap = HeroStatSystem.GetSnapshot();
-                var dmgBase = snap.damage;
+                var dmgBase = snap.damage * combatDamageMultiplier;
                 var total = dmgBase * bonus;
 
                 // Crit chance (2x damage) from centralized snapshot

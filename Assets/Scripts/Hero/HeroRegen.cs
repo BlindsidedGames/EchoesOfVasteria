@@ -23,23 +23,9 @@ namespace TimelessEchoes.Hero
             if (health == null)
                 return;
 
-            float upgradeRegen = 0f;
-            var controller = StatUpgradeController.Instance ?? FindFirstObjectByType<StatUpgradeController>();
-            if (controller != null)
-            {
-                var regenUpgrade = controller.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration");
-                if (regenUpgrade != null)
-                    upgradeRegen = controller.GetTotalValue(regenUpgrade);
-            }
-
-            float gearRegen = 0f;
-            var equip = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
-            if (equip != null)
-                gearRegen = equip.GetTotalForMapping(HeroStatMapping.HealthRegen);
-
-            var buff = TimelessEchoes.Buffs.BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
-            float regenMultiplier = buff != null ? (1f + Mathf.Max(0f, buff.HealthRegenPercent) / 100f) : 1f;
-            float totalRegen = (upgradeRegen + gearRegen) * regenMultiplier;
+            // Use centralized stat snapshot for regen per second
+            var snap = HeroStatSystem.GetSnapshot();
+            float totalRegen = snap.healthRegenPerSecond;
             if (totalRegen > 0f && health.CurrentHealth < health.MaxHealth)
                 health.Heal(totalRegen * Time.deltaTime);
         }

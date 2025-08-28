@@ -33,6 +33,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private EnemyData stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private bool invertXFlip = false;
         [SerializeField] private bool fourDirectional = true;
         [SerializeField] private Transform projectileOrigin;
         [SerializeField] private float targetUpdateInterval = 1f;
@@ -183,7 +184,7 @@ namespace TimelessEchoes.Enemies
             animator.SetFloat("MoveMagnitude", vel.magnitude);
 
             if (spriteRenderer != null)
-                spriteRenderer.flipX = lastMoveDir.x < 0f;
+                spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
         }
 
         private void UpdateBehavior()
@@ -252,7 +253,7 @@ namespace TimelessEchoes.Enemies
             animator.SetFloat("MoveMagnitude", 0f);
 
             if (spriteRenderer != null)
-                spriteRenderer.flipX = lastMoveDir.x < 0f;
+                spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
         }
 
         private Transform ChooseTarget()

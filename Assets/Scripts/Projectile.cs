@@ -48,6 +48,12 @@ namespace TimelessEchoes
 
         private GameObject effectPrefab;
 
+        public float Damage
+        {
+            get => damage;
+            set => damage = value;
+        }
+
         public void Init(Transform target, float damage,
             bool fromHero = false,
             GameObject hitEffect = null,

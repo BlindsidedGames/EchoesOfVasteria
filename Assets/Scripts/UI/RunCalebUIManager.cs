@@ -86,6 +86,7 @@ namespace TimelessEchoes.UI
 
             // Subscribe to centralized stat recalculation events and draw immediately
             HeroStatSystem.OnStatsRecalculated += OnStatsRecalculated;
+            HeroController.OnMainHeroDiceChanged += HandleMainHeroDiceChanged;
             OnStatsRecalculated(HeroStatSystem.GetSnapshot());
         }
 
@@ -94,6 +95,7 @@ namespace TimelessEchoes.UI
             if (heroHealth != null)
                 heroHealth.OnHealthChanged -= OnHealthChanged;
             HeroStatSystem.OnStatsRecalculated -= OnStatsRecalculated;
+            HeroController.OnMainHeroDiceChanged -= HandleMainHeroDiceChanged;
         }
 
         private void Update()
@@ -140,7 +142,8 @@ namespace TimelessEchoes.UI
             if (uiReferences == null || hero == null)
                 return;
 
-            var totalDamage = snap.damage;
+            // Show the controller's effective damage (includes local dice multiplier for hero/echo)
+            var totalDamage = hero != null ? hero.Damage : snap.damage;
             var attack = snap.attacksPerSecond;
             var move = snap.movementSpeed;
             var defense = snap.defense;
@@ -184,6 +187,12 @@ namespace TimelessEchoes.UI
                 var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
                 uiReferences.rightText.text = $"{moveTag} {move:0.##}";
             }
+        }
+
+        private void HandleMainHeroDiceChanged()
+        {
+            // Force a HUD redraw to reflect the main hero's local dice multiplier
+            OnStatsRecalculated(HeroStatSystem.GetSnapshot());
         }
     }
 }

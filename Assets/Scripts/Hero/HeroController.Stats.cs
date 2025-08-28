@@ -11,7 +11,7 @@ namespace TimelessEchoes.Hero
     public partial class HeroController
     {
         /// <summary>
-        ///     Current attack damage after upgrades, buffs and dice multipliers.
+        ///     Current attack damage after upgrades, buffs and local dice multiplier.
         /// </summary>
         public float Damage => HeroStatSystem.GetSnapshot().damage * combatDamageMultiplier;
 
@@ -127,7 +127,7 @@ namespace TimelessEchoes.Hero
 
             // Notify centralized stat system of equipment changes
             HeroStatSystem.MarkDirty(
-                DirtyMask.Damage | DirtyMask.AttackRate | DirtyMask.Defense | DirtyMask.Move | DirtyMask.MaxHealth,
+                DirtyMask.Damage | DirtyMask.AttackRate | DirtyMask.Defense | DirtyMask.Move | DirtyMask.MaxHealth | DirtyMask.Regen,
                 DirtyReason.EquipmentChanged);
 
             // If MaxHealth changes, re-init health so UI reflects new max

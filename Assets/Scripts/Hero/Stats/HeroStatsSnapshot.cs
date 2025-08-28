@@ -10,6 +10,8 @@ namespace TimelessEchoes.Hero
         public float attacksPerSecond;
         public float critChancePercent; // 0..100
 
+        // (Runtime dice multiplier is maintained per HeroController; not centralized.)
+
         // Defense / survivability
         public float maxHealth;
         public float healthRegenPerSecond;
