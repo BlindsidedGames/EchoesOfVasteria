@@ -77,6 +77,7 @@ namespace TimelessEchoes.Stats
         public float AverageRun { get; private set; }
 
         private float maxRunDistance = 50f;
+        private bool bypassDemoCapOnNextSet;
 
         public float MaxRunDistance
         {
@@ -88,7 +89,7 @@ namespace TimelessEchoes.Stats
             private set
             {
                 var isDemo = oracle != null && oracle.demo;
-                if (isDemo && value > 300f)
+                if (isDemo && !bypassDemoCapOnNextSet && value > 300f)
                 {
                     // Enforce cap in demo without reducing an already higher saved value
                     if (maxRunDistance <= 300f)
@@ -99,6 +100,8 @@ namespace TimelessEchoes.Stats
                 {
                     maxRunDistance = value;
                 }
+                // One-shot bypass reset to avoid unintended future sets ignoring the cap
+                bypassDemoCapOnNextSet = false;
             }
         }
 
@@ -450,10 +453,14 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public void IncreaseMaxRunDistance(float amount)
+        public void IncreaseMaxRunDistance(float amount, bool bypassDemoCap = false)
         {
             if (amount <= 0f) return;
-            MaxRunDistance += amount;
+            // Compute from backing field to avoid getter clamping in demo and preserve prior >300 values
+            var newValue = maxRunDistance + amount;
+            if (bypassDemoCap)
+                bypassDemoCapOnNextSet = true;
+            MaxRunDistance = newValue;
             SaveState();
         }
 

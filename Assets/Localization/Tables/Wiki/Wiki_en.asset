@@ -120,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.5
+    m_Localized: v1.2.6
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -190,31 +190,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Chickens!\n\u2022 I forgot to mention, cauldron is now locked
-      behind some buff quests.\n\u2022 If you have save migration issues, switch
-      to the unstable branch on steam to import your old save.\n\u2022 Extended the
-      Cauldron window to be 6 slots wide.\n\u2022 Animations now speed up with task
-      speed!\n\u2022 Added the next 5 tiers of Resource Tiers.\n\u2022 Crafted items
-      have no bonus, are set to max tier background and listed as \"Crafted\" in
-      the items panel.\n\u2022 Fixed a bug where dice wasn't working properly.\n1.2.4\n\u2022
-      13 New Achievements.\n\u2022 34 New Quests.\n\u2022 New Tiers for resources,
-      low chance to tier up every time they're collected naturally.\n\u2022 Updated
-      the Quest window to be more clear.\n\u2022 Echoes no longer expire while on
-      task, instead they wait till their task is complete and then expire.\n\u2022
-      Echo bars now show as Green till 50% health, Yellow till 10%, and Red till
-      they expire.\n\u2022 A Matter of Health, and Tracking Twins now award: 0.5%
-      Increased Alter-Echo power. These are not retroactively granted, you will require
-      a new save if you want these rewards and have completed the quest.\n\u2022
-      The Resource Doubler buff is now a Resource Multiplier buff so that it can
-      scale with quests!\n\u2022 Added indicators to the pie charts to show that
-      you can hover over them or tap on mobile.\n\u2022 Major FPS performance improvements
-      across the whole UI.\n\u2022 The farmlands no longer have enemies or increase
-      your reap distance when being reaped.\n\u2022 Removed local avoidance from
-      Caleb, echoes can now pass through him.\n\u2022 The Vast One has given Carl
-      the secrets to defense, he can now bypass enemies defense to reap them correctly
-      for you.\n\u2022 Vampirism has been changed. We no longer have lifesteal, instead
-      its a percent regen buff. It has been renamed accordingly.\n\u2022 Buffs now
-      have their cooldowns cleared when a run is longer than their cooldown.\n\u2022
+    m_Localized: "\u2022 Feathers have been removed from trees and added to chickens.
+      The Vast One apologizes for the error in creation.\n\u2022 Reap distance no
+      longer has a formatted number, much easier to see the exact number at higher
+      values now.\n\u2022 Improved the wording on buff quest rewards.\n\u2022 Button
+      sounds.\n\u2022 You can now import/export your saves.\n1.2.5\n\u2022 Chickens!\n\u2022
+      I forgot to mention, cauldron is now locked behind some buff quests.\n\u2022
+      If you have save migration issues, switch to the unstable branch on steam to
+      import your old save.\n\u2022 Extended the Cauldron window to be 6 slots wide.\n\u2022
+      Animations now speed up with task speed!\n\u2022 Added the next 5 tiers of
+      Resource Tiers.\n\u2022 Crafted items have no bonus, are set to max tier background
+      and listed as \"Crafted\" in the items panel.\n\u2022 Fixed a bug where dice
+      wasn't working properly.\n1.2.4\n\u2022 13 New Achievements.\n\u2022 34 New
+      Quests.\n\u2022 New Tiers for resources, low chance to tier up every time they're
+      collected naturally.\n\u2022 Updated the Quest window to be more clear.\n\u2022
+      Echoes no longer expire while on task, instead they wait till their task is
+      complete and then expire.\n\u2022 Echo bars now show as Green till 50% health,
+      Yellow till 10%, and Red till they expire.\n\u2022 A Matter of Health, and
+      Tracking Twins now award: 0.5% Increased Alter-Echo power. These are not retroactively
+      granted, you will require a new save if you want these rewards and have completed
+      the quest.\n\u2022 The Resource Doubler buff is now a Resource Multiplier buff
+      so that it can scale with quests!\n\u2022 Added indicators to the pie charts
+      to show that you can hover over them or tap on mobile.\n\u2022 Major FPS performance
+      improvements across the whole UI.\n\u2022 The farmlands no longer have enemies
+      or increase your reap distance when being reaped.\n\u2022 Removed local avoidance
+      from Caleb, echoes can now pass through him.\n\u2022 The Vast One has given
+      Carl the secrets to defense, he can now bypass enemies defense to reap them
+      correctly for you.\n\u2022 Vampirism has been changed. We no longer have lifesteal,
+      instead its a percent regen buff. It has been renamed accordingly.\n\u2022
+      Buffs now have their cooldowns cleared when a run is longer than their cooldown.\n\u2022
       The Cauldron now only accepts food items.\n\u2022 The Cauldron now shows all
       available slots instead of only 6.\n\u2022 0 Count items are no longer selectable
       in the Cauldron.\n\u2022 Removed Onion.\n\u2022 Added collection completeion
@@ -232,28 +236,7 @@ MonoBehaviour:
       5 damage per level.\n\u2022 New enemy balance standard damage scaling for Skelly
       Archer and Medium Slimes 2.5 damage per level.\n\u2022 New enemy balance standard
       damage scaling for Skelly Swordsman and Small Slimes 1 damage per level.\n\u2022
-      Removed migration systems.\n1.2.3\n\u2022 Added animations for Eva's Cauldron/Eva,
-      and Ivan in the Cauldron and Forge UI respectively.\n\u2022 Fixed an issue
-      causing wiped saves to retain some data.\n\u2022 For now the Cauldron is locked
-      behind Which Which, however I am creating a quest line that powers up buffs
-      drastically and it will likely be a relatively early unlock in that chain.\n\u2022
-      Cauldron Nerfs\n<indent=3>\u2022 Resource Tiers\n<indent=5>\u2022 1 <sprite=194>
-      1\n\u2022 5 <sprite=194> 25\n\u2022 20 <sprite=194> 75\n\u2022 50 <sprite=194>
-      200\n\u2022 100 <sprite=194> 750\n\u2022 200 <sprite=194> 1500\n\u2022 350
-      <sprite=194> 3500\n\u2022 500 <sprite=194> 10000\n<indent=3>\u2022 Buff Tiers\n<indent=5>\u2022
-      1 <sprite=194> 1\n\u2022 3 <sprite=194> 5\n\u2022 10 <sprite=194> 25\n\u2022
-      25 <sprite=194> 75\n\u2022 50 <sprite=194> 200\n\u2022 100 <sprite=194> 750\n\u2022
-      200 <sprite=194> 1500\n\u2022 300 <sprite=194> 3000\n<indent=0>1.2.2\n\u2022
-      Fixed the forge width.\n\u2022 Rewrote the save system to get rid of ES3. This
-      migration build lets both systems work side by side but it will be removed
-      entirely in a future patch.\n1.2.1\n\u2022 Fixed a bug where deleting a save
-      wasn't deleting resources.\n\u2022 Adjusted the weights for the Cauldron.\n\u2022
-      Taste button is no longer active when you have no stew.\n1.2.0\n\u2022 New
-      Gear icons.\n\u2022 Windows can now be closed by pressing their window button
-      again.\n\u2022 Buffs more naturally display their timers and active states
-      to reduce confusion.\n\u2022 Removed Carl's Blessing\n\u2022 Added the Cauldron.\n\u2022
-      Chance for random enemy name 1% > 2%\n\u2022 New buffs, Critical Roll and Resource
-      Doubler."
+      Removed migration systems."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
@@ -267,10 +250,19 @@ MonoBehaviour:
       screen.\n\nEach card has a tier from 1-8 and levels up at the following thresholds.
       For now there are no additional bonuses for collecting beyond the cap of that
       tier but you can continue for as long as you like. Perhaps more power will
-      come from this in the future? The following thresholds are currently implemented.\n\nResource
-      Tiers\n\u2022 1\n\u2022 25\n\u2022 75\n\u2022 200\n\u2022 750\n\u2022 1500\n\u2022
-      3500\n\u2022 10000\nBuff Tiers\n\u2022 1\n\u2022 5\n\u2022 25\n\u2022 75\n\u2022
-      200\n\u2022 750\n\u2022 1500\n\u2022 3000"
+      come from this in the future? The following thresholds are currently implemented.\n\nEach
+      category except for the buff category will additionally tier up as you pass
+      the threshold with all cards in it. If all cards are Tier 2 or higher then
+      the category will be Tier 2. Each Tier you complete in this fashion will award
+      0.1% Alter Echo Power.\n\nResource Tiers\n\u2022 1 | Alter Echo Power for this
+      cards resource +10%\n\u2022 25 | 10%<sprite=194>25%\n\u2022 75 | 25%<sprite=194>50%\n\u2022
+      200 | 50%<sprite=194>75%\n\u2022 750 | 75%<sprite=194>120%\n\u2022 1500 | 120%<sprite=194>180%\n\u2022
+      3500 | 180%<sprite=194>250%\n\u2022 10000 | 250%<sprite=194>400%\nBuff Tiers\n\u2022
+      1 | Cooldown -5%, Buff Power: 0%\n\u2022 5 | Cooldown -10%, Buff Power: 0%\n\u2022
+      25 | Cooldown -15%, Buff Power: 5%\n\u2022 75 | Cooldown -25%, Buff Power:
+      10%\n\u2022 200 | Cooldown -40%, Buff Power: 15%\n\u2022 750 | Cooldown -60%,
+      Buff Power: 20%\n\u2022 1500 | Cooldown -80%, Buff Power: 25%\n\u2022 3000
+      | Cooldown -100%, Buff Power: 30%"
     m_Metadata:
       m_Items: []
   references:

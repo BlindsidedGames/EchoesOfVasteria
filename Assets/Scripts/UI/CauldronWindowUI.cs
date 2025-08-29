@@ -489,11 +489,15 @@ namespace TimelessEchoes.UI
 			if (drinking != null && drinking.cardsGainedThisSessionText != null)
 				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
 			UpdateTasteStopButtons();
+			// Ensure any previous flashes are cleared when tasting starts
+			FindFirstObjectByType<TaskbarFlasher>()?.StopFlashing();
 		}
 
 		private void OnTasteSessionStopped()
 		{
 			UpdateTasteStopButtons();
+			// Flash when cauldron tasting stops
+			FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
 		}
 
 		private void OnSessionCardsChanged(int total)

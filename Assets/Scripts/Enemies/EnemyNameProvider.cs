@@ -22,7 +22,8 @@ namespace TimelessEchoes.Enemies
             "HelFrost",
             "Quackers",
             "oswarlan",
-            "Invariel"
+            "Invariel",
+            "Borg"
         };
 
         /// <summary>

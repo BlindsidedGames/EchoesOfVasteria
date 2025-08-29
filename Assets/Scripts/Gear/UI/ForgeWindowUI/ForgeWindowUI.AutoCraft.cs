@@ -50,6 +50,9 @@ namespace TimelessEchoes.Gear.UI
                 autoCraftCoroutine = null;
             }
 
+            // Notify: forge autocrafting stopped
+            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+
             RefreshActionButtons();
         }
 
@@ -150,6 +153,9 @@ namespace TimelessEchoes.Gear.UI
             isAutoCrafting = false;
             autoCraftCoroutine = null;
             RefreshActionButtons();
+
+            // Notify: forge autocrafting stopped (due to upgrade/out-of-resources/vastium)
+            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
         }
     }
 }

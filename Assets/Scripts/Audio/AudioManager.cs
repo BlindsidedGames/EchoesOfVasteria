@@ -54,6 +54,9 @@ namespace TimelessEchoes.Audio
         [Header("Enemy Death Clips")] [SerializeField]
         private AudioClip[] skeletonDeathClips;
 
+        [Header("UI Clips")] [SerializeField]
+        private AudioClip uiButtonClickClip;
+
         public enum MusicTrack
         {
             Main,
@@ -203,6 +206,11 @@ namespace TimelessEchoes.Audio
         public void PlaySkeletonDeathClip()
         {
             PlaySfx(GetRandom(skeletonDeathClips));
+        }
+
+        public void PlayUIButtonClick()
+        {
+            SfxPlayer.PlaySfxFixedPitch(uiButtonClickClip);
         }
 
         private void PlaySfx(AudioClip clip)

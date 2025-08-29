@@ -94,6 +94,39 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private Button openSaveFolderButton;
 
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private Button openExportWindowButton;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private Button openImportWindowButton;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private GameObject exportPanel;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private GameObject importPanel;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private TMP_InputField exportInput;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private TMP_InputField importInput;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private Button copyExportButton;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private Button pasteImportClipboardButton;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private Button importConfirmButton;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private TMP_Text exportStatusText;
+
+        [TabGroup("Settings", "ExportImport")] [SerializeField]
+        private TMP_Text importStatusText;
+
         private SaveSlotReferences[] saveSlots;
 
         private const int Fps60 = 60;
@@ -112,6 +145,17 @@ namespace TimelessEchoes.UI
 
             if (openSaveFolderButton != null)
                 openSaveFolderButton.onClick.AddListener(OpenSaveLocation);
+
+            if (openExportWindowButton != null)
+                openExportWindowButton.onClick.AddListener(OnOpenExportWindow);
+            if (openImportWindowButton != null)
+                openImportWindowButton.onClick.AddListener(OnOpenImportWindow);
+            if (copyExportButton != null)
+                copyExportButton.onClick.AddListener(CopyExportToClipboard);
+            if (pasteImportClipboardButton != null)
+                pasteImportClipboardButton.onClick.AddListener(PasteClipboardToImportInput);
+            if (importConfirmButton != null)
+                importConfirmButton.onClick.AddListener(OnImportClick);
 
             if (fullscreenWindowButton != null)
                 fullscreenWindowButton.onClick.AddListener(SetFullscreenWindow);
@@ -538,6 +582,113 @@ namespace TimelessEchoes.UI
                 return;
             for (var i = 0; i < saveSlots.Length; i++)
                 RefreshSlot(i);
+        }
+
+        private void OnOpenExportWindow()
+        {
+            try
+            {
+                EventHandler.SaveData();
+                var text = SaveImportExport.ExportCurrentSlot(copyToClipboard: true);
+                if (exportInput != null)
+                    exportInput.text = text ?? string.Empty;
+                if (exportPanel != null)
+                    exportPanel.SetActive(true);
+                if (importPanel != null)
+                    importPanel.SetActive(false);
+                SetExportStatus("Exported to clipboard");
+            }
+            catch (Exception ex)
+            {
+                SetExportStatus($"Export failed: {ex.Message}");
+            }
+        }
+
+        private void OnImportClick()
+        {
+            try
+            {
+                string source = importInput != null && !string.IsNullOrWhiteSpace(importInput.text)
+                    ? importInput.text
+                    : GUIUtility.systemCopyBuffer;
+                if (string.IsNullOrWhiteSpace(source))
+                {
+                    SetImportStatus("Nothing to import");
+                    return;
+                }
+                if (SaveImportExport.TryImportToCurrentSlot(source, out var error))
+                {
+                    RefreshAllSlots();
+                    if (importPanel != null)
+                        importPanel.SetActive(false);
+                    SetImportStatus("Imported successfully");
+                }
+                else
+                {
+                    SetImportStatus($"Import failed: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                SetImportStatus($"Import exception: {ex.Message}");
+            }
+        }
+
+        private void CopyExportToClipboard()
+        {
+            try
+            {
+                if (exportInput != null)
+                {
+                    GUIUtility.systemCopyBuffer = exportInput.text ?? string.Empty;
+                    SetExportStatus("Copied export string");
+                }
+            }
+            catch (Exception ex)
+            {
+                SetExportStatus($"Copy failed: {ex.Message}");
+            }
+        }
+
+        private void OnOpenImportWindow()
+        {
+            try
+            {
+                if (importPanel != null)
+                    importPanel.SetActive(true);
+                if (exportPanel != null)
+                    exportPanel.SetActive(false);
+                SetImportStatus("");
+            }
+            catch (Exception ex)
+            {
+                SetImportStatus($"Open import window failed: {ex.Message}");
+            }
+        }
+
+        private void PasteClipboardToImportInput()
+        {
+            try
+            {
+                if (importInput != null)
+                    importInput.text = GUIUtility.systemCopyBuffer ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+                SetImportStatus($"Paste failed: {ex.Message}");
+            }
+        }
+
+        private void SetExportStatus(string message)
+        {
+            if (exportStatusText != null)
+                exportStatusText.text = message;
+        }
+
+        private void SetImportStatus(string message)
+        {
+            if (importStatusText != null)
+                importStatusText.text = message;
         }
 
         private void RefreshSlot(int index)

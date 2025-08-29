@@ -59,7 +59,7 @@ namespace TimelessEchoes.UI
                 var average = CalcUtils.FormatNumber(statTracker.AverageRun, true);
                 var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
-                var reapDist = CalcUtils.FormatNumber(statTracker.MaxRunDistance, true);
+                var reapDist = $"{statTracker.MaxRunDistance:N0}";
                 references.distanceLongestTasksText.text =
                     $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
             }

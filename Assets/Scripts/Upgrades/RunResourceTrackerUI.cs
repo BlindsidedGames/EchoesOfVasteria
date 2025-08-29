@@ -171,8 +171,8 @@ namespace TimelessEchoes.Upgrades
 
             if (startingReapDistance != 0f && !Mathf.Approximately(startingReapDistance, tracker.MaxRunDistance))
             {
-                var oldDist = FormatNumber(startingReapDistance, true);
-                var newDist = FormatNumber(tracker.MaxRunDistance, true);
+                var oldDist = $"{startingReapDistance:N0}";
+                var newDist = $"{tracker.MaxRunDistance:N0}";
                 lines.Add($"Reaping Distance: {oldDist}<sprite=9>{newDist}");
             }
 

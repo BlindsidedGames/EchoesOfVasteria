@@ -434,6 +434,8 @@ namespace TimelessEchoes
         {
             HideTooltip();
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
+            // Stop any ongoing taskbar flashing when a new run begins
+            FindFirstObjectByType<TaskbarFlasher>()?.StopFlashing();
             heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
@@ -637,6 +639,8 @@ namespace TimelessEchoes
             DestroyAllEchoes();
             heroDead = true;
             HeroDied?.Invoke();
+            // Flash taskbar to get player's attention on death
+            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
             if (returnToTavernButton != null)
                 returnToTavernButton.interactable = false;
             if (returnOnDeathButton != null)

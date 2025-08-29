@@ -57,6 +57,8 @@ namespace TimelessEchoes.UI
 
 			var oldTier = Mathf.Max(1, newTier - 1);
 			SetupPopup(resource, oldTier, newTier);
+			// Flash when a resource tiers up
+			FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
 		}
 
 		private void SetupPopup(Resource resource, int oldTier, int newTier)

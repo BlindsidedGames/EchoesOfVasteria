@@ -30,11 +30,10 @@ namespace TimelessEchoes.UI
             if (distanceText != null)
             {
                 var current = Mathf.FloorToInt(distance);
-                var text =
-                    $"{CalcUtils.FormatNumber(current, true)} / {CalcUtils.FormatNumber(reapDistance, true)}";
+                var text = $"{current:N0} / {reapDistance:N0}";
                 if (!Mathf.Approximately(reapDistance, baseReapDistance))
                 {
-                    text += $" ({CalcUtils.FormatNumber(baseReapDistance, true)})";
+                    text += $" ({baseReapDistance:N0})";
                 }
 
                 distanceText.text = text;

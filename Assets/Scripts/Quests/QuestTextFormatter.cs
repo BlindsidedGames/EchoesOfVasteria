@@ -172,6 +172,11 @@ namespace TimelessEchoes.Quests
 					else
 						sb.AppendLine($"<size=80%>Mix {FormatValue(data, current)} / {FormatValue(data, target)} Resources</size>");
 				}
+				else if (req.type == QuestData.RequirementType.Meet)
+				{
+					// Meeting quests should display a simple instruction without any counts
+					sb.AppendLine("<size=80%>Meet an NPC</size>");
+				}
 				else if (req.type == QuestData.RequirementType.DistanceTravel)
 				{
 					if (target <= 0)

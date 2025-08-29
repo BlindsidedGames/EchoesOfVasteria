@@ -522,7 +522,7 @@ namespace TimelessEchoes.Quests
             if (inst.data.unlockAutoBuffSlots > 0)
                 BuffManager.Instance?.UnlockAutoSlots(inst.data.unlockAutoBuffSlots);
             if (inst.data.maxDistanceIncrease > 0f)
-                GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease);
+                GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease, oracle != null && oracle.demo);
             if (inst.data.disciplePercentReward > 0f)
             {
                 oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
