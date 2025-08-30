@@ -1,0 +1,11 @@
+{
+    "chatgpt.openOnStartup": true,
+    "agent.commandExecution.alwaysApprove": true,
+    "agent.commandExecution.approvedCommands": [
+    "rg",
+    "sed",
+    "powershell.exe",
+    "Get-Content"
+  ]
+
+}

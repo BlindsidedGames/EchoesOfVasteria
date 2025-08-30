@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ namespace TimelessEchoes.UI
         [SerializeField] private Image stateImage;
         [SerializeField] private Button toggleButton;
         [SerializeField] private bool startClosed = true;
+        public Transform questsParent;
+        public TMP_Text categoryName;
 
         private void Awake()
         {
@@ -38,7 +41,7 @@ namespace TimelessEchoes.UI
 
         private void OnToggle()
         {
-            bool newState = true;
+            var newState = true;
             if (toggleObject != null)
             {
                 newState = !toggleObject.activeSelf;

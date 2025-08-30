@@ -95,10 +95,11 @@ namespace Blindsided.SaveData
             // Rotate backups and replace
             lock (fileLock)
             {
-                try { if (File.Exists(prev2Path)) File.Delete(prev2Path); } catch { }
+                // Preserve evidence: never hard-delete existing snapshots; archive with timestamped names instead.
+                try { if (File.Exists(prev2Path)) ArchiveFileIfExists(prev2Path, "rotate_prev2"); } catch { }
                 try { if (File.Exists(prev1Path)) File.Move(prev1Path, prev2Path); } catch { }
                 try { if (File.Exists(finalPath)) File.Move(finalPath, prev1Path); } catch { }
-                try { if (File.Exists(finalPath)) File.Delete(finalPath); } catch { }
+                try { if (File.Exists(finalPath)) ArchiveFileIfExists(finalPath, "stale_final"); } catch { }
                 File.Move(tmpPath, finalPath);
 
                 var meta = new SlotMeta
@@ -113,6 +114,34 @@ namespace Blindsided.SaveData
             }
 
             return Task.FromResult(true);
+        }
+
+        private static void ArchiveFileIfExists(string path, string reason)
+        {
+            try
+            {
+                if (!File.Exists(path)) return;
+                var dir = Path.GetDirectoryName(path);
+                var name = Path.GetFileNameWithoutExtension(path);
+                var ext = Path.GetExtension(path);
+                var stamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+                // Place archives under per-slot Archive/ subfolder
+                var archiveDir = Path.Combine(dir ?? string.Empty, "Archive");
+                Directory.CreateDirectory(archiveDir);
+                var baseName = $"{name}_{reason}_{stamp}";
+                var dest = Path.Combine(archiveDir, baseName + ext);
+                var i = 0;
+                while (File.Exists(dest))
+                {
+                    i++;
+                    dest = Path.Combine(archiveDir, baseName + $"_{i}" + ext);
+                }
+                File.Move(path, dest);
+            }
+            catch
+            {
+                // Swallow to avoid breaking save flow; rotation is best-effort
+            }
         }
 
         public Task<(bool ok, GameData data)> LoadAsync(CancellationToken ct = default)

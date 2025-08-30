@@ -159,10 +159,10 @@ namespace TimelessEchoes.Quests
                             if (req.enemies != null && req.enemies.Count > 0)
                             {
                                 foreach (var enemy in req.enemies)
-                                    if (rec.KillProgress.TryGetValue(enemy.name, out var c))
+                                    if (rec.KillProgress != null && rec.KillProgress.TryGetValue(enemy.name, out var c))
                                         current += c;
                             }
-                            else if (rec.KillProgress.TryGetValue("ANY", out var any))
+                            else if (rec.KillProgress != null && rec.KillProgress.TryGetValue("ANY", out var any))
                             {
                                 current = any;
                             }

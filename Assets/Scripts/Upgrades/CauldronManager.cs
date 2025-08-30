@@ -163,6 +163,40 @@ namespace TimelessEchoes.Upgrades
             return tier; // 0 when below first threshold
         }
 
+        /// <summary>
+        /// Returns normalized progress (0..1) toward the next tier for the given card id.
+        /// Id should be formatted as "RES:<name>" or "BUFF:<name>" as used in save data.
+        /// Returns 1 when already at max tier.
+        /// </summary>
+        public float GetTierFill01(string id)
+        {
+            if (string.IsNullOrEmpty(id) || config == null || oracle == null)
+                return 0f;
+
+            var dict = oracle.saveData.CauldronCardCounts;
+            var count = dict.TryGetValue(id, out var c) ? c : 0;
+
+            int[] thresholds = null;
+            if (id.StartsWith("RES:"))
+                thresholds = config.resourceTierThresholds;
+            else if (id.StartsWith("BUFF:"))
+                thresholds = config.buffTierThresholds;
+
+            if (thresholds == null || thresholds.Length == 0)
+                return 0f;
+
+            var tier = GetTierFromThresholds(count, thresholds); // 0..Length
+            if (tier >= thresholds.Length)
+                return 1f; // max tier => full
+
+            // Compute progress between previous threshold (or 0) and next threshold
+            var prev = tier <= 0 ? 0 : thresholds[Mathf.Clamp(tier - 1, 0, thresholds.Length - 1)];
+            var next = thresholds[Mathf.Clamp(tier, 0, thresholds.Length - 1)];
+            if (next <= prev)
+                return 0f;
+            return Mathf.InverseLerp(prev, next, count);
+        }
+
         public int GetResourceTier(string resourceName)
         {
             if (oracle == null || string.IsNullOrEmpty(resourceName)) return 0;
@@ -205,18 +239,55 @@ namespace TimelessEchoes.Upgrades
 
         public float GetBuffPowerPercent(string buffName)
         {
-            if (config == null) return 0f;
-            var tier = GetBuffTier(buffName);
-            if (tier <= 0 || config.buffPowerBonusPerTier == null || config.buffPowerBonusPerTier.Length == 0)
-                return 0f;
-            var idx = Mathf.Clamp(tier - 1, 0, config.buffPowerBonusPerTier.Length - 1);
-            return Mathf.Max(0f, config.buffPowerBonusPerTier[idx]);
+            var total = 0f;
+            // Per-buff bonus from its own tier
+            if (config != null)
+            {
+                var tier = GetBuffTier(buffName);
+                if (tier > 0 && config.buffPowerBonusPerTier != null && config.buffPowerBonusPerTier.Length > 0)
+                {
+                    var idx = Mathf.Clamp(tier - 1, 0, config.buffPowerBonusPerTier.Length - 1);
+                    total += Mathf.Max(0f, config.buffPowerBonusPerTier[idx]);
+                }
+            }
+
+            // Global Buffs group bonus: +2.5% per Buffs group tier (Option A)
+            var groupTier = GetBuffsGroupTier();
+            if (groupTier > 0)
+                total += 2.5f * groupTier;
+
+            return total;
         }
 
         public float GetBuffPowerMultiplier(string buffName)
         {
             var percent = GetBuffPowerPercent(buffName);
             return 1f + percent / 100f;
+        }
+
+        /// <summary>
+        /// Computes the Buffs collection group tier as the minimum tier among all currently-eligible/visible buffs.
+        /// Returns 0 when there are no eligible buffs.
+        /// </summary>
+        public int GetBuffsGroupTier()
+        {
+            RebuildCardPoolsIfDirty();
+            if (poolBuffCards == null || poolBuffCards.Count == 0)
+                return 0;
+
+            var minTier = int.MaxValue;
+            foreach (var id in poolBuffCards)
+            {
+                if (string.IsNullOrEmpty(id) || !id.StartsWith("BUFF:")) continue;
+                var name = id.Substring(5);
+                var t = GetBuffTier(name);
+                if (t > 0 && t < minTier)
+                    minTier = t;
+            }
+
+            if (minTier == int.MaxValue)
+                return 0;
+            return Mathf.Max(1, minTier);
         }
 
         protected override void Awake()

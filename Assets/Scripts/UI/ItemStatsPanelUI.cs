@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI
         public enum SortMode
         {
             Default,
+            Tier,
             Collected,
             Spent,
             Unknown
@@ -266,6 +267,18 @@ namespace TimelessEchoes.UI
                     .ToList();
                 var finalDefault = sortedKnownDefault.Concat(sortedUnknownDefault).ToList();
                 ApplyOrder(finalDefault);
+                return;
+            }
+
+            if (sortMode == SortMode.Tier)
+            {
+                var sortedKnownTier = known
+                    .OrderByDescending(r => resourceManager != null ? resourceManager.GetTier(r) : 1)
+                    .ThenBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
+                    .ThenBy(r => r.name)
+                    .ToList();
+                var finalTier = sortedKnownTier.Concat(unknown).ToList();
+                ApplyOrder(finalTier);
                 return;
             }
 

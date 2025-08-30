@@ -224,14 +224,11 @@ namespace Blindsided.SaveData
         public class QuestRecord
         {
             public bool Completed;
-            public Dictionary<string, double> KillBaseline = new();
-            public Dictionary<string, double> KillProgress = new();
-            public float DistanceBaseline;
-            public bool DistanceBaselineSet;
+            public Dictionary<string, double> KillProgress; // enemy name -> count; may be null until used
             public double DistanceTravelProgress;
             public int BuffCastBaseline;
             public bool BuffCastBaselineSet;
-            public Dictionary<string, int> BuffCastProgress = new(); // BuffRecipe.name -> count since quest start
+            public Dictionary<string, int> BuffCastProgress; // BuffRecipe.name -> count; may be null until used
             public int CriticalBaseline;
             public bool CriticalBaselineSet;
             public double ResourcesBaseline;
@@ -239,6 +236,7 @@ namespace Blindsided.SaveData
             public int TasksBaseline;
             public bool TasksBaselineSet;
             public double CauldronMixProgress;
+            public long CompletedTimestamp;
         }
 
         [HideReferenceObjectPicker]

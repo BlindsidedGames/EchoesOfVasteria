@@ -39,12 +39,12 @@ namespace TimelessEchoes.Quests
 							if (req.enemies != null && req.enemies.Count > 0)
 							{
 								foreach (var enemy in req.enemies)
-									if (enemy != null && rec.KillProgress.TryGetValue(enemy.name, out var c))
+									if (enemy != null && rec.KillProgress != null && rec.KillProgress.TryGetValue(enemy.name, out var c))
 										current += c;
 							}
 							else
 							{
-								if (rec.KillProgress.TryGetValue("ANY", out var any))
+								if (rec.KillProgress != null && rec.KillProgress.TryGetValue("ANY", out var any))
 									current = any;
 							}
 						}
@@ -113,26 +113,35 @@ namespace TimelessEchoes.Quests
 
 					var fallbackName = req.resource ? req.resource.name : string.Empty;
 					var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
-					var separator = string.IsNullOrEmpty(iconTag) ? ": " : " ";
+					var separator = string.IsNullOrEmpty(iconTag) ? ": " : string.Empty;
 
 					if (target <= 0)
 						sb.AppendLine($"<size=90%>{label}{separator}{FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=90%>{label}{separator}{FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=90%>{label}{separator}{FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.Kill && !string.IsNullOrEmpty(req.killName))
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Kill {req.killName}: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Kill {req.killName}: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Kill {req.killName}: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.Kill && (req.enemies == null || req.enemies.Count == 0))
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Kill enemies: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Kill enemies: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Kill enemies: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0 && !req.includeAutoCasts)
 				{
@@ -142,35 +151,50 @@ namespace TimelessEchoes.Quests
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Manually cast {label}: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Manually cast {label}: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Manually cast {label}: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.CriticalStrike)
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Critical hits: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Critical hits: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Critical hits: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.ResourcesGathered)
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Gather resources: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Gather resources: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Gather resources: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.TasksCompleted)
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Tasks completed: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Tasks completed: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Tasks completed: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.CauldronMix)
 				{
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Mix {FormatValue(data, current)} Resources</size>");
 					else
-						sb.AppendLine($"<size=80%>Mix {FormatValue(data, current)} / {FormatValue(data, target)} Resources</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Mix {FormatValue(data, shown)} / {FormatValue(data, target)} Resources</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.Meet)
 				{
@@ -182,7 +206,10 @@ namespace TimelessEchoes.Quests
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Steps Taken: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Steps Taken: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Steps Taken: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.BuffCast && req.buffs != null && req.buffs.Count > 0)
 				{
@@ -192,7 +219,10 @@ namespace TimelessEchoes.Quests
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>Cast {label}: {FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>Cast {label}: {FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>Cast {label}: {FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 				else if (req.type == QuestData.RequirementType.Instant)
 				{
@@ -203,7 +233,10 @@ namespace TimelessEchoes.Quests
 					if (target <= 0)
 						sb.AppendLine($"<size=80%>{FormatValue(data, current)}</size>");
 					else
-						sb.AppendLine($"<size=80%>{FormatValue(data, current)} / {FormatValue(data, target)}</size>");
+					{
+						var shown = current > target ? target : current;
+						sb.AppendLine($"<size=80%>{FormatValue(data, shown)} / {FormatValue(data, target)}</size>");
+					}
 				}
 			}
 

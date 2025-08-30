@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Blindsided.Utilities;
 
 namespace References.UI
 {
@@ -13,6 +14,7 @@ namespace References.UI
 		public Image selectionImage;
 		public Image tierImage;
 		public Image borderTierImage;
+		public SlicedFilledImage tierFillImage;
 	}
 }
 

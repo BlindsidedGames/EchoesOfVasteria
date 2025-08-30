@@ -149,7 +149,40 @@ namespace TimelessEchoes.Gear.UI
             }
 
             var info = RarityOddsCalculator.BuildRarityWeightInfo(core);
-            coreWeightHoverText.text = string.Join("\n", info.lines);
+
+            // Ensure TMP can render color tags
+            coreWeightHoverText.richText = true;
+
+            // Build colored lines: color the rarity name and trailing ':' using the rarity color
+            float total = 0f;
+            for (int i = 0; i < info.weights.Count; i++)
+                total += Mathf.Max(0f, info.weights[i].w);
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(info.weights.Count * 16);
+            for (int i = 0; i < info.weights.Count; i++)
+            {
+                var (r, wRaw) = info.weights[i];
+                float w = Mathf.Max(0f, wRaw);
+                float p = total > 0f ? w / total : 0f;
+                string name = r != null ? r.GetName() : "(null)";
+
+                if (r != null)
+                {
+                    string hex = ColorUtility.ToHtmlStringRGB(r.color);
+                    sb.Append("<color=#").Append(hex).Append(">").Append(name).Append(":</color> ");
+                }
+                else
+                {
+                    sb.Append(name).Append(": ");
+                }
+
+                sb.Append((p * 100f).ToString("0.000")).Append('%');
+
+                if (i < info.weights.Count - 1)
+                    sb.Append('\n');
+            }
+
+            coreWeightHoverText.text = sb.ToString();
         }
 
         private void ShowCoreWeightTooltip()

@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
+using System.IO;
 using Blindsided.SaveData;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -50,18 +49,12 @@ namespace Blindsided
 
 		[TabGroup("SaveData")] public GameData saveData = new();
 
-		[Header("Backups")] 
-		[Tooltip("How many timestamped session backups to keep per slot in PersistentDataPath/Backups/<FileNameWithoutExtension>.")]
-		[Range(1, 50)] public int backupsToKeepPerSlot = 10;
         private bool loaded;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
-        private const string BetaMigrationPrefKey = "BetaToLiveMigrationDone";
-        private const string GenericMigrationPrefKey = "GenericEs3MigrationDone";
+        
 
         // Defer showing load-failure notice until UI is ready
-        private bool _pendingLoadFailureNotice;
-        private string _pendingLoadFailureMessage;
 
         private void Start()
         {
@@ -133,8 +126,8 @@ namespace Blindsided
 
             while (true)
             {
-                // Skip autosave while wiping or when a load-failure notice is pending
-                if (!wipeInProgress && !_pendingLoadFailureNotice)
+                // Skip autosave only during explicit wipes
+                if (!wipeInProgress)
                 {
                     try
                     {
@@ -179,9 +172,7 @@ namespace Blindsided
             // New save system only
             try
             {
-                var slotName = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
-                SaveManager.Instance.SetCurrentSlot(slotName);
-                SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
+                SaveInternal(Mathf.Clamp(CurrentSlot, 0, 2));
             }
             catch (Exception ex)
             {
@@ -221,18 +212,23 @@ namespace Blindsided
                 if (result.ok && result.data != null)
                 {
                     saveData = result.data;
-                    NullCheckers();
-                    loaded = true;
-                    AwayForSeconds();
-                    if (saveData.SavedPreferences.OfflineTimeAutoDisable)
-                        saveData.SavedPreferences.OfflineTimeActive = false;
+                    ApplyPostLoadCommon();
                     PersistSlotMetadataToPlayerPrefs();
                     return;
+                }
+                else
+                {
+                    // Load failed (not an exception), back up existing files if present before creating a new game
+                    if (!wasIntentionallyDeleted)
+                        BackupSlotDirectoryIfExists(CurrentSlot, "load_fail");
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogWarning($"New save system load failed or missing. {ex.Message}");
+                // Exception trying to read the slot — back it up if it exists so we don't overwrite evidence
+                if (!wasIntentionallyDeleted)
+                    BackupSlotDirectoryIfExists(CurrentSlot, "load_exception");
             }
 
             // No legacy fallback: create a new game
@@ -248,17 +244,58 @@ namespace Blindsided
                 var message = BuildLoadFailureMessage();
                 if (string.IsNullOrEmpty(message))
                     message = $"Save data for File {CurrentSlot + 1} could not be loaded. A new game will be created.";
-                _pendingLoadFailureMessage = message;
-                _pendingLoadFailureNotice = true;
                 Debug.LogWarning(message);
             }
+            ApplyPostLoadCommon();
+        }
 
-            NullCheckers();
-            loaded = true;
-            AwayForSeconds();
+        private void BackupSlotDirectoryIfExists(int index, string reason = null)
+        {
+            try
+            {
+                var clamped = Mathf.Clamp(index, 0, 2);
+                var slotName = $"Save{clamped + 1}";
+                var savesDir = Path.Combine(Application.persistentDataPath, "Saves");
+                var slotDir = Path.Combine(savesDir, slotName);
+                if (!Directory.Exists(slotDir)) return;
 
-            if (saveData.SavedPreferences.OfflineTimeAutoDisable)
-                saveData.SavedPreferences.OfflineTimeActive = false;
+                var stamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                var suffix = string.IsNullOrWhiteSpace(reason) ? "backup" : reason;
+                // Place full-slot backups inside the slot's own Archive/ folder to keep things tidy
+                var archiveRoot = Path.Combine(slotDir, "Archive");
+                Directory.CreateDirectory(archiveRoot);
+                var backupBaseName = $"{suffix}_{stamp}";
+                var destDir = Path.Combine(archiveRoot, backupBaseName);
+                var attempt = 0;
+                while (Directory.Exists(destDir))
+                {
+                    attempt++;
+                    destDir = Path.Combine(archiveRoot, backupBaseName + "_" + attempt);
+                }
+                Directory.CreateDirectory(destDir);
+
+                // Move all top-level files and folders (except the Archive folder itself) into the backup subfolder
+                foreach (var file in Directory.GetFiles(slotDir))
+                {
+                    var name = Path.GetFileName(file);
+                    // Skip files already under Archive (shouldn't appear here) and skip temp file if it's currently in-use
+                    var target = Path.Combine(destDir, name);
+                    try { File.Move(file, target); } catch { }
+                }
+                foreach (var dir in Directory.GetDirectories(slotDir))
+                {
+                    var name = Path.GetFileName(dir);
+                    if (string.Equals(name, "Archive", StringComparison.OrdinalIgnoreCase)) continue;
+                    var target = Path.Combine(destDir, name);
+                    try { Directory.Move(dir, target); } catch { }
+                }
+
+                Debug.LogWarning($"Backed up save slot '{slotName}' to '{slotName}/Archive/{Path.GetFileName(destDir)}' due to {suffix}.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to back up slot directory: {ex.Message}");
+            }
         }
 
         private string BuildLoadFailureMessage()
@@ -282,12 +319,10 @@ namespace Blindsided
                 EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-            // New system write for the targeted slot (no ES3)
+            // New system write for the targeted slot
             try
             {
-                var slotName = $"Save{index + 1}";
-                SaveManager.Instance.SetCurrentSlot(slotName);
-                SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
+                SaveInternal(index);
             }
             catch (Exception ex)
             {
@@ -295,6 +330,22 @@ namespace Blindsided
             }
 
             PersistSlotMetadataToPlayerPrefs(index);
+        }
+
+        private void ApplyPostLoadCommon()
+        {
+            NullCheckers();
+            loaded = true;
+            AwayForSeconds();
+            if (saveData.SavedPreferences.OfflineTimeAutoDisable)
+                saveData.SavedPreferences.OfflineTimeActive = false;
+        }
+
+        private void SaveInternal(int index)
+        {
+            var slotName = $"Save{index + 1}";
+            SaveManager.Instance.SetCurrentSlot(slotName);
+            SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
         }
 
         private void NullCheckers()
@@ -324,6 +375,9 @@ namespace Blindsided
                 saveData.UnlockedAutoBuffSlots = 5;
             if (saveData.DisciplePercent <= 0f)
                 saveData.DisciplePercent = 0.1f;
+            // Cauldron system collections and totals
+            saveData.CauldronCardCounts ??= new Dictionary<string, int>();
+            saveData.CauldronTotals ??= new GameData.CauldronTotalsRecord();
             saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
         }
 
@@ -397,29 +451,11 @@ namespace Blindsided
             wipeInProgress = false;
         }
 
-        [TabGroup("SaveData", "Buttons")]
-        [Button]
-        public void LoadFromClipboard()
-        {
-            var bytes = beta
-                ? Encoding.ASCII.GetBytes(GUIUtility.systemCopyBuffer)
-                : Convert.FromBase64String(GUIUtility.systemCopyBuffer);
+        
 
-            saveData = SerializationUtility.DeserializeValue<GameData>(bytes, DataFormat.JSON);
-            SaveToFile();
-        }
-
-        [TabGroup("SaveData", "Buttons")]
-        [Button]
-        public void SaveToClipboard()
+        public void PersistSlotMetadataToPlayerPrefs(int? slotIndex = null)
         {
-            var bytes = SerializationUtility.SerializeValue(saveData, DataFormat.JSON);
-            GUIUtility.systemCopyBuffer = beta ? Encoding.UTF8.GetString(bytes) : Convert.ToBase64String(bytes);
-        }
-
-        public void PersistSlotMetadataToPlayerPrefs(int slotIndex)
-        {
-            var index = Mathf.Clamp(slotIndex, 0, 2);
+            var index = Mathf.Clamp(slotIndex ?? CurrentSlot, 0, 2);
             var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
             var completionKey = $"{prefix}Slot{index}_Completion";
             var playtimeKey = $"{prefix}Slot{index}_Playtime";
@@ -431,10 +467,7 @@ namespace Blindsided
             PlayerPrefs.Save();
         }
 
-        public void PersistSlotMetadataToPlayerPrefs()
-        {
-            PersistSlotMetadataToPlayerPrefs(CurrentSlot);
-        }
+        
 
     }
 }

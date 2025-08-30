@@ -28,6 +28,7 @@ namespace TimelessEchoes.UI
 		// Track current AE sections and their member ids to compute section tier (min of items)
 		private readonly Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences> currentAESections = new();
 		private readonly Dictionary<CauldronManager.AEResourceGroup, List<string>> sectionItemIdsByGroup = new();
+		private CollectionSectionUIReferences currentBuffsSection;
 		private static float lastAppliedDiscipleBonus; // retained for immediate session-only tracking; replaced by StaticReferences bonus field
 
 		private ResourceManager rm;
@@ -89,6 +90,7 @@ namespace TimelessEchoes.UI
 			resourceById.Clear();
 			currentAESections.Clear();
 			sectionItemIdsByGroup.Clear();
+			currentBuffsSection = null;
 
 			var qm = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
 
@@ -100,6 +102,7 @@ namespace TimelessEchoes.UI
 			{
 				var secB = Instantiate(sectionPrefab, parent);
 				if (secB.titleText != null) secB.titleText.text = "Buffs";
+				currentBuffsSection = secB;
 				foreach (var buff in eligibleBuffs)
 				{
 					var ui = Instantiate(itemPrefab, secB.contentTransform);
@@ -245,8 +248,8 @@ namespace TimelessEchoes.UI
 				if (resourceById.TryGetValue(id, out var res) && res != null && ui.nameText != null)
 					ui.nameText.text = res.name;
 			}
-			// Tier images (placeholder: compute tier index later when thresholds are available)
-			if (ui.tierImage != null || ui.borderTierImage != null)
+			// Tier visuals
+			if (ui.tierImage != null || ui.borderTierImage != null || ui.tierFillImage != null)
 			{
 				var tier = ComputeTierForCount(id, count); // 1-8 (0/unknown maps to 1)
 				var sprite = GetTierSpriteFromCauldron(tier);
@@ -260,6 +263,12 @@ namespace TimelessEchoes.UI
 				{
 					ui.borderTierImage.sprite = borderSprite;
 					ui.borderTierImage.enabled = borderSprite != null;
+				}
+				if (ui.tierFillImage != null)
+				{
+					cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+					var fill = cachedCauldronManager != null ? cachedCauldronManager.GetTierFill01(id) : 0f;
+					ui.tierFillImage.fillAmount = Mathf.Clamp01(fill);
 				}
 			}
 			// Tier text: you’ll wire thresholds in a later pass; for now show raw count
@@ -366,6 +375,34 @@ namespace TimelessEchoes.UI
 			lastAppliedDiscipleBonus = newBonus;
 			// Refresh generator rates to apply new percent immediately
 			TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.RefreshRates();
+
+			// Update Buffs section tier visuals (does not affect disciple bonus)
+			if (currentBuffsSection != null)
+			{
+				var grpTier = cachedCauldronManager != null ? cachedCauldronManager.GetBuffsGroupTier() : 0;
+				var bg = currentBuffsSection.backgroundTierImage;
+				var border = currentBuffsSection.borderTierImage;
+				if (grpTier > 0)
+				{
+					var bgSprite = GetTierSpriteFromCauldron(grpTier);
+					var borderSprite = GetBorderTierSpriteFromCauldron(grpTier);
+					if (bg != null)
+					{
+						bg.sprite = bgSprite;
+						bg.enabled = bgSprite != null;
+					}
+					if (border != null)
+					{
+						border.sprite = borderSprite;
+						border.enabled = borderSprite != null;
+					}
+				}
+				else
+				{
+					if (bg != null) bg.enabled = false;
+					if (border != null) border.enabled = false;
+				}
+			}
 		}
 	}
 }

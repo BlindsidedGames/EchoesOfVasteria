@@ -1,6 +1,7 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -517,6 +518,28 @@ namespace TimelessEchoes.Quests
                 ResourceManager.Instance.Add(reward.resource, reward.amount, trackStats: false);
 
             record.Completed = true;
+            record.CompletedTimestamp = DateTime.UtcNow.Ticks;
+            // Trim transient quest progress to reduce save size
+            if (record.KillProgress != null)
+            {
+                record.KillProgress.Clear();
+                record.KillProgress = null;
+            }
+            if (record.BuffCastProgress != null)
+            {
+                record.BuffCastProgress.Clear();
+                record.BuffCastProgress = null;
+            }
+            record.DistanceTravelProgress = 0;
+            record.CauldronMixProgress = 0;
+            record.BuffCastBaseline = 0;
+            record.BuffCastBaselineSet = false;
+            record.CriticalBaseline = 0;
+            record.CriticalBaselineSet = false;
+            record.ResourcesBaseline = 0;
+            record.ResourcesBaselineSet = false;
+            record.TasksBaseline = 0;
+            record.TasksBaselineSet = false;
             if (inst.data.unlockBuffSlots > 0)
                 BuffManager.Instance?.UnlockSlots(inst.data.unlockBuffSlots);
             if (inst.data.unlockAutoBuffSlots > 0)
@@ -646,6 +669,7 @@ namespace TimelessEchoes.Quests
                     pins.RemoveAt(pins.Count - 1);
             }
             PinnedQuestUIManager.Instance?.RefreshPins();
+            RefreshNoticeboard();
         }
 
         private void TryStartQuest(QuestData quest)
@@ -719,8 +743,9 @@ namespace TimelessEchoes.Quests
                 {
                     foreach (var enemy in req.enemies)
                     {
-                        if (!rec.KillProgress.TryGetValue(enemy.name, out var count))
-                            count = 0;
+                        var count = 0d;
+                        if (rec.KillProgress != null)
+                            rec.KillProgress.TryGetValue(enemy.name, out count);
                         inst.killCounts[enemy] = count;
                     }
                 }
@@ -776,29 +801,95 @@ namespace TimelessEchoes.Quests
             foreach (var inst in active.Values)
                 UpdateProgress(inst);
 
-            var ordered = active.Values.OrderByDescending(q => q.ReadyForTurnIn);
-            foreach (var inst in ordered)
+            var pins = oracle != null ? oracle.saveData?.PinnedQuests : null;
+
+            // Ready category (pinned first in pin order, then unpinned by name)
+            var readyCount = 0;
+            var pinnedCount = 0;
+            var activeCount = 0;
+            var completedCount = 0;
+            if (pins != null)
             {
-                inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst));
+                foreach (var pid in pins)
+                {
+                    if (string.IsNullOrEmpty(pid)) continue;
+                    if (!active.TryGetValue(pid, out var pinnedInst) || pinnedInst == null) continue;
+                    if (!pinnedInst.ReadyForTurnIn) continue;
+                    readyCount++;
+                    pinnedInst.ui = uiManager.CreateEntry(
+                        pinnedInst.data,
+                        () => CompleteQuest(pinnedInst),
+                        showRequirements: true,
+                        completed: false,
+                        QuestUIManager.QuestCategory.Ready);
+                    UpdateProgress(pinnedInst);
+                }
+            }
+
+            var readyUnpinned = active.Values
+                .Where(i => i != null && i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
+                .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty);
+            foreach (var inst in readyUnpinned)
+            {
+                readyCount++;
+                inst.ui = uiManager.CreateEntry(
+                    inst.data,
+                    () => CompleteQuest(inst),
+                    showRequirements: true,
+                    completed: false,
+                    QuestUIManager.QuestCategory.Ready);
                 UpdateProgress(inst);
             }
 
-            var hasCompleted = false;
-            foreach (var quest in quests)
+            // Pinned (not ready), in saved order
+            if (pins != null)
             {
-                if (quest == null) continue;
-                if (active.ContainsKey(quest.questId))
-                    continue;
-                if (!oracle.saveData.Quests.TryGetValue(quest.questId, out var rec) || !rec.Completed)
-                    continue;
-                if (!hasCompleted)
+                foreach (var pid in pins)
                 {
-                    uiManager.CreateDivider();
-                    hasCompleted = true;
+                    if (string.IsNullOrEmpty(pid)) continue;
+                    if (!active.TryGetValue(pid, out var pinnedInst) || pinnedInst == null) continue;
+                    if (pinnedInst.ReadyForTurnIn) continue; // already shown in Ready
+                    pinnedCount++;
+                    pinnedInst.ui = uiManager.CreateEntry(
+                        pinnedInst.data,
+                        () => CompleteQuest(pinnedInst),
+                        showRequirements: true,
+                        completed: false,
+                        QuestUIManager.QuestCategory.Pinned);
+                    UpdateProgress(pinnedInst);
                 }
-
-                uiManager.CreateEntry(quest, null, false, true);
             }
+
+            // Active (unpinned and not ready), order by name
+            var orderedUnpinned = active.Values
+                .Where(i => i != null && !i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
+                .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty);
+            foreach (var inst in orderedUnpinned)
+            {
+                activeCount++;
+                inst.ui = uiManager.CreateEntry(
+                    inst.data,
+                    () => CompleteQuest(inst),
+                    showRequirements: true,
+                    completed: false,
+                    QuestUIManager.QuestCategory.Active);
+                UpdateProgress(inst);
+            }
+
+            // Completed (most recent first)
+            var orderedCompleted = quests
+                .Where(q => q != null && !active.ContainsKey(q.questId))
+                .Select(q => new { data = q, rec = oracle.saveData.Quests.TryGetValue(q.questId, out var r) ? r : null })
+                .Where(x => x.rec != null && x.rec.Completed)
+                .OrderByDescending(x => x.rec.CompletedTimestamp)
+                .Select(x => x.data);
+            foreach (var q in orderedCompleted)
+            {
+                completedCount++;
+                uiManager.CreateEntry(q, null, false, true);
+            }
+
+            uiManager.UpdateCategoryVisibility(readyCount, pinnedCount, activeCount, completedCount);
         }
 
 
