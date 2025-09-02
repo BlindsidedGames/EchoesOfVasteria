@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a9ba1601d6cfc144aac0aa184f6ae33, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blindsided.Oracle
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -2112,7 +2112,7 @@ MonoBehaviour:
       Data: 0|Blindsided.SaveData.GameData, Assembly-CSharp
     - Name: SchemaVersion
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: SavedPreferences
       Entry: 7
       Data: 1|Blindsided.SaveData.GameData+Preferences, Assembly-CSharp
@@ -2183,7 +2183,7 @@ MonoBehaviour:
       Data: false
     - Name: ShowLevelText
       Entry: 5
-      Data: false
+      Data: true
     - Name: StatsFoldout
       Entry: 5
       Data: false
@@ -2195,16 +2195,16 @@ MonoBehaviour:
       Data: false
     - Name: AutoPinActiveQuests
       Entry: 5
-      Data: false
+      Data: true
     - Name: ShowPinnedQuests
       Entry: 5
-      Data: false
+      Data: true
     - Name: UseScaledTimeForValues
       Entry: 5
       Data: false
     - Name: TargetFps
       Entry: 3
-      Data: 0
+      Data: 60
     - Name: SafeAreaRatio
       Entry: 4
       Data: 0
@@ -2216,12 +2216,8 @@ MonoBehaviour:
       Data: 4|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+SkillProgress,
         Assembly-CSharp]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 5|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2233,7 +2229,7 @@ MonoBehaviour:
       Data: 
     - Name: UpgradeLevels
       Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+      Data: 5|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
         mscorlib]], mscorlib
     - Name: comparer
       Entry: 9
@@ -2273,18 +2269,14 @@ MonoBehaviour:
       Data: 0
     - Name: TimeScale
       Entry: 4
-      Data: 1
+      Data: 0
     - Name: Resources
       Entry: 7
-      Data: 7|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ResourceEntry,
+      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ResourceEntry,
         Assembly-CSharp]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 8|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2296,11 +2288,11 @@ MonoBehaviour:
       Data: 
     - Name: EnemyKills
       Entry: 7
-      Data: 9|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+      Data: 7|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
         mscorlib]], mscorlib
     - Name: comparer
       Entry: 9
-      Data: 8
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2312,10 +2304,25 @@ MonoBehaviour:
       Data: 
     - Name: BuffSlots
       Entry: 7
-      Data: 10|System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib
+      Data: 8|System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 5
+    - Name: 
+      Entry: 1
+      Data: Echo Tasks
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -2324,16 +2331,31 @@ MonoBehaviour:
       Data: 
     - Name: UnlockedBuffSlots
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: UnlockedAutoBuffSlots
       Entry: 3
       Data: 0
     - Name: AutoBuffSlots
       Entry: 7
-      Data: 11|System.Collections.Generic.List`1[[System.Boolean, mscorlib]], mscorlib
+      Data: 9|System.Collections.Generic.List`1[[System.Boolean, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 5
+    - Name: 
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 13
       Data: 
@@ -2342,7 +2364,7 @@ MonoBehaviour:
       Data: 
     - Name: CompletedNpcTasks
       Entry: 7
-      Data: 12|System.Collections.Generic.HashSet`1[[System.String, mscorlib]], System.Core
+      Data: 10|System.Collections.Generic.HashSet`1[[System.String, mscorlib]], System.Core
     - Name: 
       Entry: 12
       Data: 0
@@ -2354,15 +2376,11 @@ MonoBehaviour:
       Data: 
     - Name: Disciples
       Entry: 7
-      Data: 13|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+DiscipleGenerationRecord,
+      Data: 11|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+DiscipleGenerationRecord,
         Assembly-CSharp]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 14|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2374,11 +2392,241 @@ MonoBehaviour:
       Data: 
     - Name: Quests
       Entry: 7
-      Data: 15|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+QuestRecord,
+      Data: 12|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+QuestRecord,
         Assembly-CSharp]], mscorlib
     - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RetroQuestRewardsApplied
       Entry: 7
-      Data: 16|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      Data: 13|System.Collections.Generic.HashSet`1[[System.String, mscorlib]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RetroQuestRewardsPassRan
+      Entry: 5
+      Data: false
+    - Name: EquipmentBySlot
+      Entry: 7
+      Data: 14|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GearItemRecord,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftingMasteryLevel
+      Entry: 3
+      Data: 0
+    - Name: CraftingMasteryXP
+      Entry: 4
+      Data: 0
+    - Name: PinnedQuests
+      Entry: 7
+      Data: 15|System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Forge
+      Entry: 7
+      Data: 16|Blindsided.SaveData.GameData+ForgeStats, Assembly-CSharp
+    - Name: TotalCrafts
+      Entry: 3
+      Data: 0
+    - Name: TotalEquippedFromCraft
+      Entry: 3
+      Data: 0
+    - Name: TotalSalvaged
+      Entry: 3
+      Data: 0
+    - Name: TotalAutocraftSessions
+      Entry: 3
+      Data: 0
+    - Name: TotalCraftUntilUpgradeSessions
+      Entry: 3
+      Data: 0
+    - Name: TotalFailedCraftAttempts
+      Entry: 3
+      Data: 0
+    - Name: ResourcesSpent
+      Entry: 7
+      Data: 17|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ResourcesGainedFromSalvage
+      Entry: 7
+      Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CoresSpentByCore
+      Entry: 7
+      Data: 19|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IngotsSpentByCore
+      Entry: 7
+      Data: 20|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftsByCore
+      Entry: 7
+      Data: 21|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftsBySlot
+      Entry: 7
+      Data: 22|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftsByRarity
+      Entry: 7
+      Data: 23|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RarityCountsByCore
+      Entry: 7
+      Data: 24|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
+        mscorlib],[System.Int32, mscorlib]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SlotCountsByCore
+      Entry: 7
+      Data: 25|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
+        mscorlib],[System.Int32, mscorlib]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: AffixCountDistribution
+      Entry: 7
+      Data: 26|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 27|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
@@ -2392,38 +2640,613 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: RetroQuestRewardsApplied
-      Entry: 6
-      Data: 
-    - Name: RetroQuestRewardsPassRan
-      Entry: 5
-      Data: false
-    - Name: EquipmentBySlot
-      Entry: 6
-      Data: 
-    - Name: CraftingMasteryLevel
-      Entry: 3
-      Data: 0
-    - Name: CraftingMasteryXP
-      Entry: 4
-      Data: 0
-    - Name: PinnedQuests
-      Entry: 6
-      Data: 
-    - Name: Forge
-      Entry: 6
-      Data: 
-    - Name: TaskRecords
+    - Name: UpgradesBySlot
       Entry: 7
-      Data: 17|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[Blindsided.SaveData.GameData+TaskRecord,
-        Assembly-CSharp]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 18|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+      Data: 28|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
         mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: UpgradesByRarity
+      Entry: 7
+      Data: 29|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftsSinceLastUpgrade
+      Entry: 3
+      Data: 0
+    - Name: MaxCraftsBetweenUpgrades
+      Entry: 3
+      Data: 0
+    - Name: TotalUpgradeEvents
+      Entry: 3
+      Data: 0
+    - Name: CumulativeCraftsBetweenUpgrades
+      Entry: 3
+      Data: 0
+    - Name: AverageCraftsPerUpgrade
+      Entry: 4
+      Data: 0
+    - Name: UpgradeScoreDeltaBySlot
+      Entry: 7
+      Data: 30|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ForgeStats+FloatAgg,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: StatRolls
+      Entry: 7
+      Data: 31|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ForgeStats+StatAgg,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: StatRollsByRarity
+      Entry: 7
+      Data: 32|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
+        mscorlib],[Blindsided.SaveData.GameData+ForgeStats+StatAgg, Assembly-CSharp]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: StatRollsBySlot
+      Entry: 7
+      Data: 33|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
+        mscorlib],[Blindsided.SaveData.GameData+ForgeStats+StatAgg, Assembly-CSharp]],
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: HighRollsByStat
+      Entry: 7
+      Data: 34|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: HighRollTopPercentThreshold
+      Entry: 4
+      Data: 0.9
+    - Name: CumulativeStatTotalsByStat
+      Entry: 7
+      Data: 35|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: HighestRollByStat
+      Entry: 7
+      Data: 36|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IvanLevelAtCraft
+      Entry: 3
+      Data: 0
+    - Name: IvanXpAtCraft
+      Entry: 4
+      Data: 0
+    - Name: IvanXpGainedTotal
+      Entry: 4
+      Data: 0
+    - Name: IvanLevelUpsFromCrafts
+      Entry: 3
+      Data: 0
+    - Name: IvanXpByCore
+      Entry: 7
+      Data: 37|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IvanXpByRarity
+      Entry: 7
+      Data: 38|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: AutocraftCrafts
+      Entry: 3
+      Data: 0
+    - Name: AutocraftStopReasons
+      Entry: 7
+      Data: 39|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: AutocraftBestRarityTierBySlot
+      Entry: 7
+      Data: 40|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SalvagesByRarity
+      Entry: 7
+      Data: 41|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SalvagesByCore
+      Entry: 7
+      Data: 42|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SalvageItems
+      Entry: 3
+      Data: 0
+    - Name: SalvageEntries
+      Entry: 3
+      Data: 0
+    - Name: SalvageYieldPerResource
+      Entry: 7
+      Data: 43|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ForgeStats+ResourceAgg,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IngotConversions
+      Entry: 3
+      Data: 0
+    - Name: CoreConversions
+      Entry: 3
+      Data: 0
+    - Name: CrystalCrafted
+      Entry: 4
+      Data: 0
+    - Name: ChunksCrafted
+      Entry: 4
+      Data: 0
+    - Name: ConversionSpentByResource
+      Entry: 7
+      Data: 44|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CrystalsCraftedByResource
+      Entry: 7
+      Data: 45|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ChunksCraftedByResource
+      Entry: 7
+      Data: 46|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IngotsCraftedByResource
+      Entry: 7
+      Data: 47|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CoresCraftedByResource
+      Entry: 7
+      Data: 48|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Double,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestPieceScoreBySlot
+      Entry: 7
+      Data: 49|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestPieceScoreByCore
+      Entry: 7
+      Data: 50|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinPieceScoreByCore
+      Entry: 7
+      Data: 51|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MaxPieceScoreByCore
+      Entry: 7
+      Data: 52|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestPieceScoreByRarity
+      Entry: 7
+      Data: 53|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestAbsolutePieceScoreBySlot
+      Entry: 7
+      Data: 54|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestAbsolutePieceScoreByCore
+      Entry: 7
+      Data: 55|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestAbsolutePieceScoreByRarity
+      Entry: 7
+      Data: 56|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Single,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestAbsolutePieceSlotByCore
+      Entry: 7
+      Data: 57|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BestAbsolutePieceSlotByRarity
+      Entry: 7
+      Data: 58|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: EquipsBySlot
+      Entry: 7
+      Data: 59|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SalvagesBySlot
+      Entry: 7
+      Data: 60|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CraftsBySlotTotals
+      Entry: 7
+      Data: 61|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: TaskRecords
+      Entry: 7
+      Data: 62|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[Blindsided.SaveData.GameData+TaskRecord,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 27
     - Name: 
       Entry: 12
       Data: 0
@@ -2435,11 +3258,11 @@ MonoBehaviour:
       Data: 
     - Name: ResourceStats
       Entry: 7
-      Data: 19|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ResourceRecord,
+      Data: 63|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+ResourceRecord,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 9
-      Data: 16
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2451,15 +3274,11 @@ MonoBehaviour:
       Data: 
     - Name: MapStats
       Entry: 7
-      Data: 20|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+MapStatistics,
+      Data: 64|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Blindsided.SaveData.GameData+MapStatistics,
         Assembly-CSharp]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 21|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 3
     - Name: 
       Entry: 12
       Data: 0
@@ -2471,7 +3290,7 @@ MonoBehaviour:
       Data: 
     - Name: General
       Entry: 7
-      Data: 22|Blindsided.SaveData.GameData+GeneralStats, Assembly-CSharp
+      Data: 65|Blindsided.SaveData.GameData+GeneralStats, Assembly-CSharp
     - Name: DistanceTravelledDouble
       Entry: 4
       Data: 0
@@ -2519,7 +3338,7 @@ MonoBehaviour:
       Data: 0
     - Name: RecentRuns
       Entry: 7
-      Data: 23|System.Collections.Generic.List`1[[Blindsided.SaveData.GameData+RunRecord,
+      Data: 66|System.Collections.Generic.List`1[[Blindsided.SaveData.GameData+RunRecord,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -2541,10 +3360,10 @@ MonoBehaviour:
       Data: 0
     - Name: MaxRunDistance
       Entry: 4
-      Data: 0
+      Data: 50
     - Name: NextRunNumber
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -2553,32 +3372,89 @@ MonoBehaviour:
       Data: 0
     - Name: DisciplePercent
       Entry: 4
-      Data: 0
+      Data: 0.01
     - Name: CauldronStew
       Entry: 4
       Data: 0
     - Name: CauldronEvaLevel
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: CauldronEvaXp
       Entry: 4
       Data: 0
     - Name: CauldronCardCounts
-      Entry: 6
+      Entry: 7
+      Data: 67|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: CauldronShowAllCards
       Entry: 5
       Data: false
     - Name: CauldronTotals
-      Entry: 6
+      Entry: 7
+      Data: 68|Blindsided.SaveData.GameData+CauldronTotalsRecord, Assembly-CSharp
+    - Name: TotalTastings
+      Entry: 3
+      Data: 0
+    - Name: TotalCards
+      Entry: 3
+      Data: 0
+    - Name: GainedNothing
+      Entry: 3
+      Data: 0
+    - Name: AlterEcho
+      Entry: 3
+      Data: 0
+    - Name: Buffs
+      Entry: 3
+      Data: 0
+    - Name: LowCards
+      Entry: 3
+      Data: 0
+    - Name: EvasBlessing
+      Entry: 3
+      Data: 0
+    - Name: VastSurge
+      Entry: 3
+      Data: 0
+    - Name: AEFarming
+      Entry: 3
+      Data: 0
+    - Name: AEFishing
+      Entry: 3
+      Data: 0
+    - Name: AEMining
+      Entry: 3
+      Data: 0
+    - Name: AEWoodcutting
+      Entry: 3
+      Data: 0
+    - Name: AELooting
+      Entry: 3
+      Data: 0
+    - Name: AECombat
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  demo: 0
+  demo: 1
   beta: 0
-  betaSaveIteration: 5
-  backupsToKeepPerSlot: 10
+  betaSaveIteration: 0
 --- !u!4 &1159035180
 Transform:
   m_ObjectHideFlags: 0
