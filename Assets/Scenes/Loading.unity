@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2b13acd128b8045bb16dd0ff24123c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.SteamLeaderboardsReporter
-  updateInterval: 5
 --- !u!4 &159018876
 Transform:
   m_ObjectHideFlags: 0
@@ -3452,7 +3451,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  demo: 1
+  demo: 0
   beta: 0
   betaSaveIteration: 0
 --- !u!4 &1159035180
@@ -3500,7 +3499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70cfb57685972ea498b2adb5ff2b2e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateInterval: 5
 --- !u!4 &1170292370
 Transform:
   m_ObjectHideFlags: 0

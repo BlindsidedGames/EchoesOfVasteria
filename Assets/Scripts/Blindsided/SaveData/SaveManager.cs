@@ -14,13 +14,13 @@ namespace Blindsided.SaveData
         private static readonly Lazy<SaveManager> _instance = new Lazy<SaveManager>(() => new SaveManager());
         public static SaveManager Instance => _instance.Value;
 
-        private readonly byte[] hmacKey;
+        // HMAC removed: no secret required anymore
         private readonly object fileLock = new object();
         private static string rootPathOverride;
 
         private SaveManager()
         {
-            hmacKey = SaveSecretManager.GetOrCreateSecret();
+            // No-op: legacy HMAC secret is no longer used
         }
 
         public string CurrentSlotName { get; private set; } = "Save1";
@@ -60,7 +60,7 @@ namespace Blindsided.SaveData
             // Serialize with Odin Binary
             byte[] payload = SerializationUtility.SerializeValue(data, DataFormat.Binary);
 
-            // Build header and HMAC
+            // Build header (no HMAC)
             var header = new SaveHeader
             {
                 SchemaVersion = data.SchemaVersion,
@@ -68,10 +68,8 @@ namespace Blindsided.SaveData
                 BuildId = Application.version,
                 PayloadSize = payload.Length
             };
+            header.HmacBase64 = string.Empty; // write empty signature for compatibility
             var headerBytes = header.ToBytes();
-            var hmac = ComputeHmac(header.RawHeaderWithoutHmac, payload);
-            header.HmacBase64 = Convert.ToBase64String(hmac);
-            headerBytes = header.ToBytes();
 
             // Write to temp
             lock (fileLock)
@@ -92,14 +90,13 @@ namespace Blindsided.SaveData
                 return Task.FromResult(false);
             }
 
-            // Rotate backups and replace
+            // Rotate backups and replace (no archiving during normal saves)
             lock (fileLock)
             {
-                // Preserve evidence: never hard-delete existing snapshots; archive with timestamped names instead.
-                try { if (File.Exists(prev2Path)) ArchiveFileIfExists(prev2Path, "rotate_prev2"); } catch { }
+                // Keep only in-slot rotation: prev2 is discarded when a new save arrives
+                try { if (File.Exists(prev2Path)) File.Delete(prev2Path); } catch { }
                 try { if (File.Exists(prev1Path)) File.Move(prev1Path, prev2Path); } catch { }
                 try { if (File.Exists(finalPath)) File.Move(finalPath, prev1Path); } catch { }
-                try { if (File.Exists(finalPath)) ArchiveFileIfExists(finalPath, "stale_final"); } catch { }
                 File.Move(tmpPath, finalPath);
 
                 var meta = new SlotMeta
@@ -172,11 +169,7 @@ namespace Blindsided.SaveData
 
                 var payload = new byte[fileBytes.Length - headerSize];
                 Buffer.BlockCopy(fileBytes, headerSize, payload, 0, payload.Length);
-
-                var computed = ComputeHmac(header.RawHeaderWithoutHmac, payload);
-                if (!ConstantTimeEquals(computed, Convert.FromBase64String(header.HmacBase64)))
-                    return false;
-
+                // HMAC removed: ignore header.HmacBase64 and proceed to deserialize
                 data = SerializationUtility.DeserializeValue<GameData>(payload, DataFormat.Binary);
                 return data != null;
             }
@@ -186,15 +179,6 @@ namespace Blindsided.SaveData
             }
         }
 
-        private byte[] ComputeHmac(byte[] headerBytes, byte[] payload)
-        {
-            using (var hmac = new HMACSHA256(hmacKey))
-            {
-                hmac.TransformBlock(headerBytes, 0, headerBytes.Length, null, 0);
-                hmac.TransformFinalBlock(payload, 0, payload.Length);
-                return hmac.Hash;
-            }
-        }
 
         private static bool ConstantTimeEquals(byte[] a, byte[] b)
         {

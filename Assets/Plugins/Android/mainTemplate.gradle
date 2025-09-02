@@ -6,18 +6,13 @@ apply from: '../shared/common.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.appcompat:appcompat:1.5.0+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:18
-    implementation 'androidx.appcompat:appcompat-resources:1.5.0+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:20
-    implementation 'androidx.core:core:1.7.0+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:15
-    implementation 'com.google.android.gms:play-services-games-v2:21.0.0+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:6
-    implementation 'com.google.android.play:review:2.0.1+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:12
-    implementation 'com.google.firebase:firebase-messaging:23.1.1+' // Assets/Plugins/VoxelBusters/EssentialKit/Essentials/Editor/CrossPlatformEssentialKitDependencies.xml:9
+    implementation 'com.google.games:gpgs-plugin-support:2.1.0' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
 // Android Resolver Dependencies End
 **DEPS**}
 
 // Android Resolver Exclusions Start
 android {
-  packaging {
+  packagingOptions {
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/armeabi-v7a/*' + '*')
       exclude ('/lib/mips/*' + '*')
