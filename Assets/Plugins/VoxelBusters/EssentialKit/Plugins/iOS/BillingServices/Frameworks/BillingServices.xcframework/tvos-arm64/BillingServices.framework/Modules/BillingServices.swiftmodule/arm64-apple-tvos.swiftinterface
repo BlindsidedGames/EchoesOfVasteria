@@ -1,0 +1,560 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0.2 effective-5.10 (swiftlang-6.0.2.1.2 clang-1600.0.26.4)
+// swift-module-flags: -target arm64-apple-tvos18.1 -enable-objc-interop -cxx-interoperability-mode=default -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name BillingServices
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface
+import Foundation
+import StoreKit
+import Swift
+import VBCoreLibrary
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os
+extension BillingServices.BillingProductSubscriptionPriceIncreaseStatus {
+  public static func from(_ rawPriceIncreaseStatus: StoreKit.Product.SubscriptionInfo.RenewalInfo.PriceIncreaseStatus) -> BillingServices.BillingProductSubscriptionPriceIncreaseStatus
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProductOfferPricingPhase : ObjectiveC.NSObject {
+  @objc final public let paymentMode: BillingServices.BillingProductOfferPaymentMode
+  @objc final public let price: BillingServices.BillingPrice
+  @objc final public let period: BillingServices.BillingPeriod
+  @objc final public let repeatCount: Swift.Int
+  @objc deinit
+}
+@available(iOS 16.0, *)
+extension BillingServices.BillingServicesEnvironment {
+  public static func from(_ rawEnvironment: StoreKit.AppStore.Environment) -> BillingServices.BillingServicesEnvironment
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProduct : ObjectiveC.NSObject {
+  @objc public var identifier: Swift.String {
+    get
+  }
+  @objc public var localizedTitle: Swift.String {
+    get
+  }
+  @objc public var localizedDescription: Swift.String {
+    get
+  }
+  @objc public var price: BillingServices.BillingPrice {
+    get
+  }
+  @objc public var subscriptionInfo: BillingServices.BillingProductSubscriptionInfo? {
+    get
+  }
+  @objc public var offers: Swift.Array<BillingServices.BillingProductOffer> {
+    get
+  }
+  @objc deinit
+}
+@objc @objcMembers public class BillingServicesSettings : ObjectiveC.NSObject {
+  @objc public var autoFinishTransactions: Swift.Bool {
+    get
+  }
+  @objc public init(autoFinishTransactions: Swift.Bool)
+  @objc deinit
+}
+@objc public enum BillingServicesEnvironment : Swift.Int {
+  case unknown
+  case production
+  case sandbox
+  case local
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProduct {
+  public static func from(_ rawProduct: StoreKit.Product) async -> BillingServices.BillingProduct
+}
+@objc @objcMembers public class BillingProductOfferRedeemDetails : ObjectiveC.NSObject {
+  @objc public var offerId: Swift.String {
+    get
+  }
+  @objc public var keyId: Swift.String {
+    get
+  }
+  @objc public var nonce: Foundation.UUID {
+    get
+  }
+  @objc public var signature: Foundation.Data {
+    get
+  }
+  @objc public var timestamp: Swift.Int {
+    get
+  }
+  @objc public init(offerId: Swift.String, keyId: Swift.String, nonce: Foundation.UUID, signature: Foundation.Data, timestamp: Swift.Int)
+  @objc deinit
+}
+@objc public enum BillingProductSubscriptionPriceIncreaseStatus : Swift.Int {
+  case unknown
+  case noIncreasePending
+  case agreed
+  case pending
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum BillingProductSubscriptionExpirationReason : Swift.Int {
+  case none
+  case unknown
+  case autoRenewDisabled
+  case billingError
+  case didNotConsentToPriceIncrease
+  case productUnavailable
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class BillingServicesTransactionStateChangeResult : ObjectiveC.NSObject {
+  @objc public var transactions: [BillingServices.BillingTransaction] {
+    get
+  }
+  @objc public init(transactions: Swift.Array<BillingServices.BillingTransaction>)
+  @objc deinit
+}
+@objc public protocol BillingServicesDelegate : ObjectiveC.NSObjectProtocol {
+  @objc optional func didInitializeStoreComplete(result: BillingServices.BillingServicesInitializeStoreResult, error: Foundation.NSError?)
+  @objc optional func didTransactionStateChange(result: BillingServices.BillingServicesTransactionStateChangeResult)
+  @objc optional func didRestorePurchasesComplete(result: BillingServices.BillingServicesRestorePurchasesResult, error: Foundation.NSError?)
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProductSubscriptionInfo : ObjectiveC.NSObject {
+  @objc public var groupIdentifier: Swift.String {
+    get
+  }
+  @objc public var groupDisplayName: Swift.String {
+    get
+  }
+  @objc public var level: Swift.Int {
+    get
+  }
+  @objc public var period: BillingServices.BillingPeriod {
+    get
+  }
+  @objc public var isEligibleForIntroductoryOffer: Swift.Bool {
+    get
+  }
+  @objc deinit
+}
+extension BillingServices.BillingProductOfferCategory {
+  public static func from(_ rawOfferType: StoreKit.Product.SubscriptionOffer.OfferType) -> BillingServices.BillingProductOfferCategory
+  public static func from(_ optionalRawOfferType: StoreKit.Transaction.OfferType?) -> BillingServices.BillingProductOfferCategory
+}
+@objc public enum BillingProductType : Swift.Int {
+  case consumable
+  case nonConsumable
+  case nonRenewable
+  case autoRenewable
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum BillingProductRenewalState : Swift.Int {
+  case unknown
+  case subscribed
+  case expired
+  case inBillingRetryPeriod
+  case inGracePeriod
+  case revoked
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductOfferPaymentMode {
+  public static func from(_ rawPaymentMode: StoreKit.Product.SubscriptionOffer.PaymentMode) -> BillingServices.BillingProductOfferPaymentMode
+}
+@objc public enum BillingProductOfferCategory : Swift.Int {
+  case unknown
+  case introductory
+  case promotional
+  case code
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductSubscriptionRenewalInfo {
+  public static func from(_ id: Swift.String, _ purchaseDate: Foundation.Date, _ rawRenewalState: StoreKit.Product.SubscriptionInfo.RenewalState, _ rawRenewalInfo: StoreKit.Product.SubscriptionInfo.RenewalInfo) -> BillingServices.BillingProductSubscriptionRenewalInfo
+}
+@objc @objcMembers public class BuyProductOptions : ObjectiveC.NSObject {
+  @objc public var quantity: Swift.Int {
+    get
+  }
+  @objc public var tag: Foundation.UUID? {
+    get
+  }
+  @objc public var offerRedeemDetails: BillingServices.BillingProductOfferRedeemDetails? {
+    get
+  }
+  @objc public init(quantity: Swift.Int = 1, tag: Foundation.UUID? = nil, offerRedeemDetails: BillingServices.BillingProductOfferRedeemDetails? = nil)
+  @objc deinit
+}
+extension BillingServices.BuyProductOptions {
+  public func convert() -> Swift.Set<StoreKit.Product.PurchaseOption>
+}
+extension BillingServices.BillingProductOffer {
+  public static func from(_ optionalRawOffer: StoreKit.Product.SubscriptionOffer?, _ priceCurrencyCode: Swift.String) -> BillingServices.BillingProductOffer?
+  public static func from(_ rawOffers: [StoreKit.Product.SubscriptionOffer], _ priceCurrencyCode: Swift.String) -> [BillingServices.BillingProductOffer]
+}
+extension BillingServices.BillingServicesRestorePurchasesResult {
+  public static func from(with rawTransactions: StoreKit.Transaction.Transactions, for tag: Swift.String?) async -> BillingServices.BillingServicesRestorePurchasesResult
+}
+extension BillingServices.BillingProductRenewalState {
+  public static func from(_ rawRenewalState: StoreKit.Product.SubscriptionInfo.RenewalState) -> BillingServices.BillingProductRenewalState
+}
+@objc public enum BillingProductOfferPaymentMode : Swift.Int {
+  case unknown
+  case freeTrial
+  case payAsYouGo
+  case payUpFront
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductRevocationReason {
+  public static func from(_ rawRevocationReason: StoreKit.Transaction.RevocationReason?) -> BillingServices.BillingProductRevocationReason
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingPrice : ObjectiveC.NSObject {
+  @objc final public let value: Swift.Double
+  @objc final public let currencyCode: Swift.String
+  @objc final public let currencySymbol: Swift.String
+  @objc final public let localizedDisplay: Swift.String
+  @objc deinit
+}
+@objc @objcMembers public class BillingServicesStoreKitImplementation : ObjectiveC.NSObject, BillingServices.IBillingServices {
+  @objc public var settings: BillingServices.BillingServicesSettings
+  @objc public var delegate: (any BillingServices.BillingServicesDelegate)?
+  @objc public init(settings: BillingServices.BillingServicesSettings, delegate: (any BillingServices.BillingServicesDelegate)? = nil)
+  @objc deinit
+  @objc public func isAvailable() -> Swift.Bool
+  @objc public func canMakePayments() -> Swift.Bool
+  @objc public func isProductPurchased(_ productId: Swift.String) -> Swift.Bool
+  @objc public func initializeStore(_ productDefinitions: Swift.Array<BillingServices.BillingProductDefinition>)
+  @objc public func buyProduct(_ productId: Swift.String, _ options: BillingServices.BuyProductOptions?) -> Foundation.NSError?
+  @objc public func restorePurchases(_ forceRefresh: Swift.Bool, _ tag: Swift.String?)
+  @objc public func getUnfinishedTransactions() -> Swift.Array<BillingServices.BillingTransaction>
+  @objc public func tryClearingUnfinishedTransactions()
+  @objc public func finishTransactions(_ transactions: Swift.Array<BillingServices.BillingTransaction>)
+  @objc public func getProductWithId(_ id: Swift.String) -> BillingServices.BillingProduct?
+}
+@objc @objcMembers public class BillingServicesRestorePurchasesResult : ObjectiveC.NSObject {
+  @objc public var transactions: Swift.Array<BillingServices.BillingTransaction>? {
+    get
+  }
+  @objc public init(transactions: Swift.Array<BillingServices.BillingTransaction>?)
+  @objc deinit
+}
+extension BillingServices.BillingProductType {
+  public static func from(_ rawProductType: StoreKit.Product.ProductType) -> BillingServices.BillingProductType
+}
+extension BillingServices.BillingProductSubscriptionInfo {
+  public static func from(_ rawProduct: StoreKit.Product) async -> BillingServices.BillingProductSubscriptionInfo?
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingTransaction : ObjectiveC.NSObject {
+  @objc public var identifier: Swift.String {
+    get
+  }
+  @objc public var date: Foundation.Date {
+    get
+  }
+  @objc public var state: BillingServices.BillingTransactionState {
+    get
+  }
+  @objc public var environment: BillingServices.BillingServicesEnvironment {
+    get
+  }
+  @objc public var receipt: Swift.String? {
+    get
+  }
+  @objc public var applicationBundleIdentifier: Swift.String {
+    get
+  }
+  @objc public var productIdentifier: Swift.String {
+    get
+  }
+  @objc public var productType: BillingServices.BillingProductType {
+    get
+  }
+  @objc public var requestedQuantity: Swift.Int {
+    get
+  }
+  @objc public var purchasedQuantity: Swift.Int {
+    get
+  }
+  @objc public var ownershipType: BillingServices.BillingProductOwnershipType {
+    get
+  }
+  @objc public var revocationDate: Foundation.Date? {
+    get
+  }
+  @objc public var revocationReason: BillingServices.BillingProductRevocationReason {
+    get
+  }
+  @objc public var subscriptionStatus: BillingServices.BillingProductSubscriptionStatus? {
+    get
+  }
+  @objc public var purchaseTag: Swift.String? {
+    get
+  }
+  @objc public var rawData: Swift.String? {
+    get
+  }
+  @objc public var error: Foundation.NSError? {
+    get
+  }
+  @objc public func finish()
+  @objc deinit
+}
+extension BillingServices.BillingPeriod {
+  public static func from(_ rawPeriod: StoreKit.Product.SubscriptionPeriod) -> BillingServices.BillingPeriod
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProductSubscriptionRenewalInfo : ObjectiveC.NSObject {
+  @objc public var state: BillingServices.BillingProductRenewalState {
+    get
+  }
+  @objc public var applicableOfferIdentifier: Swift.String? {
+    get
+  }
+  @objc public var applicableOfferType: BillingServices.BillingProductOfferCategory {
+    get
+  }
+  @objc public var lastRenewedDate: Foundation.Date? {
+    get
+  }
+  @objc public var lastRenewalId: Swift.String? {
+    get
+  }
+  @objc public var isAutoRenewEnabled: Swift.Bool {
+    get
+  }
+  @objc public var expirationReason: BillingServices.BillingProductSubscriptionExpirationReason {
+    get
+  }
+  @objc public var renewalDate: Foundation.Date? {
+    get
+  }
+  @objc public var gracePeriodExpirationDate: Foundation.Date? {
+    get
+  }
+  @objc public var priceIncreaseStatus: BillingServices.BillingProductSubscriptionPriceIncreaseStatus {
+    get
+  }
+  @objc deinit
+}
+@objc public enum BillingPeriodUnit : Swift.Int {
+  case day = 0
+  case week = 1
+  case month = 2
+  case year = 3
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingPeriod : ObjectiveC.NSObject {
+  @objc public var duration: Swift.Double {
+    get
+  }
+  @objc public var unit: BillingServices.BillingPeriodUnit {
+    get
+  }
+  @objc deinit
+}
+extension BillingServices.BillingTransaction {
+  public static func from(_ rawTransaction: StoreKit.Transaction, _ jwsReceipt: Swift.String?) async -> BillingServices.BillingTransaction
+  public static func from(_ rawTransactions: StoreKit.Transaction.Transactions) async -> Swift.Array<BillingServices.BillingTransaction>
+  public static func fromError(_ product: StoreKit.Product, _ buyOptions: BillingServices.BuyProductOptions, _ error: Foundation.NSError) -> BillingServices.BillingTransaction
+}
+extension BillingServices.BillingPeriodUnit {
+  public static func from(rawUnit: StoreKit.Product.SubscriptionPeriod.Unit) -> BillingServices.BillingPeriodUnit
+}
+@objc @objcMembers public class BillingProductDefinition : ObjectiveC.NSObject {
+  @objc public var identifier: Swift.String {
+    get
+  }
+  @objc public init(identifier: Swift.String)
+  @objc deinit
+}
+@objc public enum BillingServicesErrorCode : Swift.Int {
+  case unknown
+  case networkError
+  case systemError
+  case billingNotAvailable
+  case storeNotInitialized
+  case storeIsBusy
+  case userCancelled
+  case offerNotApplicable
+  case offerNotValid
+  case quantityNotValid
+  case productNotAvailable
+  case productOwned
+  case featureNotAvailable
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductSubscriptionExpirationReason {
+  public static func from(_ optionalRawExpirationReason: StoreKit.Product.SubscriptionInfo.RenewalInfo.ExpirationReason?) -> BillingServices.BillingProductSubscriptionExpirationReason
+}
+extension BillingServices.BillingProductOwnershipType {
+  public static func from(_ rawOwnershipType: StoreKit.Transaction.OwnershipType) -> BillingServices.BillingProductOwnershipType
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProductOffer : ObjectiveC.NSObject {
+  @objc public var identifier: Swift.String {
+    get
+  }
+  @objc public var category: BillingServices.BillingProductOfferCategory {
+    get
+  }
+  @objc public var pricingPhases: Swift.Array<BillingServices.BillingProductOfferPricingPhase> {
+    get
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BillingProductSubscriptionStatus : ObjectiveC.NSObject {
+  @objc public var groupIdentifier: Swift.String {
+    get
+  }
+  @objc public var renewalInfo: BillingServices.BillingProductSubscriptionRenewalInfo? {
+    get
+  }
+  @objc public var expirationDate: Foundation.Date? {
+    get
+  }
+  @objc public var isUpgraded: Swift.Bool {
+    get
+  }
+  @objc public var appliedOfferIdentifier: Swift.String? {
+    get
+  }
+  @objc public var appliedOfferType: BillingServices.BillingProductOfferCategory {
+    get
+  }
+  @objc deinit
+}
+public protocol IBillingServices {
+  var delegate: (any BillingServices.BillingServicesDelegate)? { get }
+  var settings: BillingServices.BillingServicesSettings { get }
+  func isAvailable() -> Swift.Bool
+  func canMakePayments() -> Swift.Bool
+  func isProductPurchased(_ productId: Swift.String) -> Swift.Bool
+  func initializeStore(_ productDefinitions: Swift.Array<BillingServices.BillingProductDefinition>)
+  func buyProduct(_ productId: Swift.String, _ options: BillingServices.BuyProductOptions?) -> Foundation.NSError?
+  func restorePurchases(_ forceRefresh: Swift.Bool, _ tag: Swift.String?)
+  func getUnfinishedTransactions() -> Swift.Array<BillingServices.BillingTransaction>
+  func finishTransactions(_ transactions: Swift.Array<BillingServices.BillingTransaction>)
+  func tryClearingUnfinishedTransactions()
+  func getProductWithId(_ id: Swift.String) -> BillingServices.BillingProduct?
+}
+@objc @objcMembers public class BillingServicesInitializeStoreResult : ObjectiveC.NSObject {
+  @objc public var products: [BillingServices.BillingProduct] {
+    get
+  }
+  @objc public var invalidProductDefinitions: [BillingServices.BillingProductDefinition] {
+    get
+  }
+  @objc public init(products: Swift.Array<BillingServices.BillingProduct>, invalidProductDefinitions: Swift.Array<BillingServices.BillingProductDefinition>)
+  @objc deinit
+}
+public enum BillingServicesError : Foundation.CustomNSError, Swift.Error {
+  case initializeStoreFailed(code: BillingServices.BillingServicesErrorCode, reason: Swift.String)
+  case buyProductFailed(code: BillingServices.BillingServicesErrorCode, reason: Swift.String)
+  case restorePurchasesFailed(code: BillingServices.BillingServicesErrorCode, reason: Swift.String)
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+@objc public enum BillingTransactionState : Swift.Int {
+  case unknown
+  case purchasing
+  case purchased
+  case failed
+  @available(*, deprecated)
+  case restored
+  case deferred
+  case refunded
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductSubscriptionStatus {
+  public static func from(_ rawTransaction: StoreKit.Transaction) async -> BillingServices.BillingProductSubscriptionStatus?
+}
+@objc public enum BillingProductOwnershipType : Swift.Int {
+  case none
+  case unknown
+  case buyer
+  case familyShared
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum BillingProductRevocationReason : Swift.Int {
+  case none
+  case unknown
+  case developerIssue
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension BillingServices.BillingProductSubscriptionPriceIncreaseStatus : Swift.Equatable {}
+extension BillingServices.BillingProductSubscriptionPriceIncreaseStatus : Swift.Hashable {}
+extension BillingServices.BillingProductSubscriptionPriceIncreaseStatus : Swift.RawRepresentable {}
+extension BillingServices.BillingServicesEnvironment : Swift.Equatable {}
+extension BillingServices.BillingServicesEnvironment : Swift.Hashable {}
+extension BillingServices.BillingServicesEnvironment : Swift.RawRepresentable {}
+extension BillingServices.BillingProductSubscriptionExpirationReason : Swift.Equatable {}
+extension BillingServices.BillingProductSubscriptionExpirationReason : Swift.Hashable {}
+extension BillingServices.BillingProductSubscriptionExpirationReason : Swift.RawRepresentable {}
+extension BillingServices.BillingProductOfferCategory : Swift.Equatable {}
+extension BillingServices.BillingProductOfferCategory : Swift.Hashable {}
+extension BillingServices.BillingProductOfferCategory : Swift.RawRepresentable {}
+extension BillingServices.BillingProductType : Swift.Equatable {}
+extension BillingServices.BillingProductType : Swift.Hashable {}
+extension BillingServices.BillingProductType : Swift.RawRepresentable {}
+extension BillingServices.BillingProductRenewalState : Swift.Equatable {}
+extension BillingServices.BillingProductRenewalState : Swift.Hashable {}
+extension BillingServices.BillingProductRenewalState : Swift.RawRepresentable {}
+extension BillingServices.BillingProductOfferPaymentMode : Swift.Equatable {}
+extension BillingServices.BillingProductOfferPaymentMode : Swift.Hashable {}
+extension BillingServices.BillingProductOfferPaymentMode : Swift.RawRepresentable {}
+extension BillingServices.BillingProductRevocationReason : Swift.Equatable {}
+extension BillingServices.BillingProductRevocationReason : Swift.Hashable {}
+extension BillingServices.BillingProductRevocationReason : Swift.RawRepresentable {}
+extension BillingServices.BillingServicesErrorCode : Swift.Equatable {}
+extension BillingServices.BillingServicesErrorCode : Swift.Hashable {}
+extension BillingServices.BillingServicesErrorCode : Swift.RawRepresentable {}
+extension BillingServices.BillingPeriodUnit : Swift.Equatable {}
+extension BillingServices.BillingPeriodUnit : Swift.Hashable {}
+extension BillingServices.BillingPeriodUnit : Swift.RawRepresentable {}
+extension BillingServices.BillingProductOwnershipType : Swift.Equatable {}
+extension BillingServices.BillingProductOwnershipType : Swift.Hashable {}
+extension BillingServices.BillingProductOwnershipType : Swift.RawRepresentable {}
+extension BillingServices.BillingTransactionState : Swift.Equatable {}
+extension BillingServices.BillingTransactionState : Swift.Hashable {}
+extension BillingServices.BillingTransactionState : Swift.RawRepresentable {}

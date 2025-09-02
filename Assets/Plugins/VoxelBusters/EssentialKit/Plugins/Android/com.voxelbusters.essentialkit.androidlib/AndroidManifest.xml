@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:versionCode="1" android:versionName="1.0">
+  <queries>
+    <intent>
+      <action android:name="android.media.action.IMAGE_CAPTURE" />
+    </intent>
+  </queries>
+  <application>
+    <activity android:name="com.voxelbusters.essentialkit.deeplinkservices.DeepLinkRedirectActivity" android:label="Essential Kit" android:exported="true">
+      <intent-filter android:label="unity-scheme-link">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="essentialkit" android:host="demo" />
+      </intent-filter>
+    </activity>
+    <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\u003113386462231" tools:replace="android:value" />
+  </application>
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+  <uses-feature android:name="android.hardware.camera" />
+  <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+</manifest>
