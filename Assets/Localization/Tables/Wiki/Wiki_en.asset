@@ -120,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.8
+    m_Localized: v1.2.9
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -190,61 +190,32 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed an issue where every time the game saves the oldest
-      backup was moved to the archive causing a lot of save files to be backed up.
-      It now only archives a save file if it cannot load the file.\n\u2022 Removed
-      HMAC we don't need tamper protection for a single player game and it was just
-      adding another point of failure.\n1.2.6\n\u2022 Cauldron buff category now
-      provides 2.5% buff power per Tier.\n\u2022 Cauldron collection cards now have
-      a progress bar.\n\u2022 You can now sort items in the items tab of statistics
-      by Tier.\n\u2022 Reworked quest window.\n1.2.6\n\u2022 Feathers have been removed
-      from trees and added to chickens. The Vast One apologizes for the error in
-      creation.\n\u2022 Reap distance no longer has a formatted number, much easier
-      to see the exact number at higher values now.\n\u2022 Improved the wording
-      on buff quest rewards.\n\u2022 Button sounds.\n\u2022 You can now import/export
-      your saves.\n1.2.5\n\u2022 Chickens!\n\u2022 I forgot to mention, cauldron
-      is now locked behind some buff quests.\n\u2022 If you have save migration issues,
-      switch to the unstable branch on steam to import your old save.\n\u2022 Extended
-      the Cauldron window to be 6 slots wide.\n\u2022 Animations now speed up with
-      task speed!\n\u2022 Added the next 5 tiers of Resource Tiers.\n\u2022 Crafted
-      items have no bonus, are set to max tier background and listed as \"Crafted\"
-      in the items panel.\n\u2022 Fixed a bug where dice wasn't working properly.\n1.2.4\n\u2022
-      13 New Achievements.\n\u2022 34 New Quests.\n\u2022 New Tiers for resources,
-      low chance to tier up every time they're collected naturally.\n\u2022 Updated
-      the Quest window to be more clear.\n\u2022 Echoes no longer expire while on
-      task, instead they wait till their task is complete and then expire.\n\u2022
-      Echo bars now show as Green till 50% health, Yellow till 10%, and Red till
-      they expire.\n\u2022 A Matter of Health, and Tracking Twins now award: 0.5%
-      Increased Alter-Echo power. These are not retroactively granted, you will require
-      a new save if you want these rewards and have completed the quest.\n\u2022
-      The Resource Doubler buff is now a Resource Multiplier buff so that it can
-      scale with quests!\n\u2022 Added indicators to the pie charts to show that
-      you can hover over them or tap on mobile.\n\u2022 Major FPS performance improvements
-      across the whole UI.\n\u2022 The farmlands no longer have enemies or increase
-      your reap distance when being reaped.\n\u2022 Removed local avoidance from
-      Caleb, echoes can now pass through him.\n\u2022 The Vast One has given Carl
-      the secrets to defense, he can now bypass enemies defense to reap them correctly
-      for you.\n\u2022 Vampirism has been changed. We no longer have lifesteal, instead
-      its a percent regen buff. It has been renamed accordingly.\n\u2022 Buffs now
-      have their cooldowns cleared when a run is longer than their cooldown.\n\u2022
-      The Cauldron now only accepts food items.\n\u2022 The Cauldron now shows all
-      available slots instead of only 6.\n\u2022 0 Count items are no longer selectable
-      in the Cauldron.\n\u2022 Removed Onion.\n\u2022 Added collection completeion
-      bonus to AE categories buffs the Echo Power in the AE screen.\n\u2022 Adjusted
-      the overall curve of stat distribution on gear. It will now be much harder
-      to roll perfect Vastium gear. And we should see less of a jump in stats on
-      the earlier gear.\n\u2022 The forge now shows the tier of gear that you have
-      equipped and roll.\n\u2022 You can now upgrade cores in the forge.\n\u2022
-      Forge Stats now shows a Quality section which works properly unlike the old
-      score system which was comparing your best upgrade rather than the best it
-      could be.\n\u2022 The bonus damage from the dice now just shows on the value
-      itself, removed (+{bonusValue}) from the end.\n\u2022 Fixed an issue causing
-      multiple save events to trigger in a single frame during AE collection.\n\u2022
-      New enemy balance standard damage scaling for Skelly Mage and Large Slimes
-      5 damage per level.\n\u2022 New enemy balance standard damage scaling for Skelly
-      Archer and Medium Slimes 2.5 damage per level.\n\u2022 New enemy balance standard
-      damage scaling for Skelly Swordsman and Small Slimes 1 damage per level.\n\u2022
-      Removed migration systems."
+    m_Localized: "\u2022 Added Cows, Sheep, and Pigs to the farmlands.\n\u2022 Added
+      verbose logging to the save system.\n\u2022 Moved the Alter Echoes, Buffs,
+      and Skill buttons to a new dropdown and made them available everywhere.\n\u2022
+      Disabled taskbar flashing for now.\n\u2022 Highlights on earned cards during
+      tasting now go away after 1 second.\n\u2022 Various UI performance improvements.\n\u2022
+      New tooltips for the Cauldron.\n\u2022 Combat echoes will now target a different
+      enemy if combined DPS will kill the target in under 1.5 seconds.\n1.2.8\n\u2022
+      Fixed an issue where every time the game saves the oldest backup was moved
+      to the archive causing a lot of save files to be backed up. It now only archives
+      a save file if it cannot load the file.\n\u2022 Removed HMAC we don't need
+      tamper protection for a single player game and it was just adding another point
+      of failure.\n1.2.7\n\u2022 Cauldron buff category now provides 2.5% buff power
+      per Tier.\n\u2022 Cauldron collection cards now have a progress bar.\n\u2022
+      You can now sort items in the items tab of statistics by Tier.\n\u2022 Reworked
+      quest window.\n1.2.6\n\u2022 Feathers have been removed from trees and added
+      to chickens. The Vast One apologizes for the error in creation.\n\u2022 Reap
+      distance no longer has a formatted number, much easier to see the exact number
+      at higher values now.\n\u2022 Improved the wording on buff quest rewards.\n\u2022
+      Button sounds.\n\u2022 You can now import/export your saves.\n1.2.5\n\u2022
+      Chickens!\n\u2022 I forgot to mention, cauldron is now locked behind some buff
+      quests.\n\u2022 If you have save migration issues, switch to the unstable branch
+      on steam to import your old save.\n\u2022 Extended the Cauldron window to be
+      6 slots wide.\n\u2022 Animations now speed up with task speed!\n\u2022 Added
+      the next 5 tiers of Resource Tiers.\n\u2022 Crafted items have no bonus, are
+      set to max tier background and listed as \"Crafted\" in the items panel.\n\u2022
+      Fixed a bug where dice wasn't working properly.\n"
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
