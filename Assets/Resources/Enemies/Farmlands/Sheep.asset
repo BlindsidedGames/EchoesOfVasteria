@@ -10,36 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
-  m_Name: Chicken
+  m_Name: Sheep
   m_EditorClassIdentifier: 
-  enemyName: Chicken
-  displayOrder: 18
-  icon: {fileID: 2161211097934087789, guid: 13304088a2b997e459fe80cf973d1ecf, type: 3}
-  prefab: {fileID: 2377590028762114089, guid: 410fb99d6e6b170428a2418953b0ac89, type: 3}
-  weight: 6
+  enemyName: Sheep
+  displayOrder: 20
+  icon: {fileID: -6294243155114217349, guid: 0d0339619a0ed3043bf76eb794532a7d, type: 3}
+  prefab: {fileID: 4506237991738823879, guid: 41dbc97f72793e24d9a5c2537c1baf03, type: 3}
+  weight: 3
   minX: 0
   maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
-  resourceDrops:
-  - resource: {fileID: 11400000, guid: c01df43f8f8915e468176ef1249fa722, type: 2}
-    dropRange: {x: 1, y: 4}
-    weight: 50
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: ab45f835bf64ff1418d8a391794e125a, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 1
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
-    dropRange: {x: 1, y: 2}
-    weight: 5
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+  resourceDrops: []
   additionalLootChances:
   - 0.2
   experience: 1
