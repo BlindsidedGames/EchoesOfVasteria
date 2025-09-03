@@ -106,6 +106,28 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        /// <summary>
+        /// Recomputes effects for all active buffs (e.g., after Cauldron tiers change).
+        /// Durations and expire distances remain unchanged to keep behavior stable.
+        /// </summary>
+        public void RecomputeActiveBuffEffects()
+        {
+            for (var i = 0; i < activeBuffs.Count; i++)
+            {
+                var buff = activeBuffs[i];
+                if (buff == null || buff.recipe == null) continue;
+                // Refresh effects via recipe to pick up new power and cooldown policies
+                buff.effects = buff.recipe.GetAggregatedEffects();
+            }
+
+            // Notify hero systems that derived stats need updating
+            TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
+                TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)

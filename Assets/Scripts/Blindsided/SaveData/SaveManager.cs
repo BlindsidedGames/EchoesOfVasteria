@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +34,6 @@ namespace Blindsided.SaveData
         public static void SetRootPathForTests(string path)
         {
             rootPathOverride = path;
-            SaveSecretManager.SetRootPathForTests(path);
         }
 
         private static string GetRootPath()
@@ -86,6 +84,7 @@ namespace Blindsided.SaveData
             // Verify temp by re-reading
             if (!TryReadSnapshot(tmpPath, out var _))
             {
+                Debug.LogWarning($"Verification failed after writing temp snapshot for slot '{CurrentSlotName}' at '{tmpPath}'. Aborting save.");
                 TrySafeDelete(tmpPath);
                 return Task.FromResult(false);
             }
@@ -152,6 +151,7 @@ namespace Blindsided.SaveData
             if (TryReadSnapshot(finalPath, out var data)) return Task.FromResult((true, data));
             if (TryReadSnapshot(prev1Path, out data)) return Task.FromResult((true, data));
             if (TryReadSnapshot(prev2Path, out data)) return Task.FromResult((true, data));
+            Debug.LogWarning($"No valid save found for slot '{CurrentSlotName}'. Checked: '{finalPath}', '{prev1Path}', '{prev2Path}'.");
             return Task.FromResult((false, (GameData)null));
         }
 
@@ -160,33 +160,44 @@ namespace Blindsided.SaveData
             data = null;
             try
             {
-                if (!File.Exists(path)) return false;
+                if (!File.Exists(path))
+                {
+                    // Missing is expected sometimes (e.g., fresh slot); warn only for primary snapshot
+                    var fileName = Path.GetFileName(path);
+                    if (string.Equals(fileName, "snapshot.bin", StringComparison.OrdinalIgnoreCase))
+                        Debug.LogWarning($"Save snapshot not found at '{path}'.");
+                    return false;
+                }
                 byte[] fileBytes = File.ReadAllBytes(path);
-                if (fileBytes.Length < SaveHeader.MinimumSize) return false;
+                if (fileBytes.Length < SaveHeader.MinimumSize)
+                {
+                    Debug.LogWarning($"Save snapshot at '{path}' is too small (" + fileBytes.Length + $" bytes < minimum header size {SaveHeader.MinimumSize}).");
+                    return false;
+                }
 
-                var header = SaveHeader.FromBytes(fileBytes, out var headerSize);
-                if (header == null) return false;
+                var header = SaveHeader.FromBytes(fileBytes, out var headerSize, path);
+                if (header == null) return false; // Parse error already logged inside FromBytes
 
                 var payload = new byte[fileBytes.Length - headerSize];
                 Buffer.BlockCopy(fileBytes, headerSize, payload, 0, payload.Length);
                 // HMAC removed: ignore header.HmacBase64 and proceed to deserialize
                 data = SerializationUtility.DeserializeValue<GameData>(payload, DataFormat.Binary);
-                return data != null;
+                if (data == null)
+                {
+                    Debug.LogWarning($"Deserialization of snapshot at '{path}' returned null.");
+                    return false;
+                }
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.LogError($"Failed to read snapshot at '{path}'. Exception: {ex}");
                 return false;
             }
         }
 
 
-        private static bool ConstantTimeEquals(byte[] a, byte[] b)
-        {
-            if (a == null || b == null || a.Length != b.Length) return false;
-            var diff = 0;
-            for (var i = 0; i < a.Length; i++) diff |= a[i] ^ b[i];
-            return diff == 0;
-        }
+        // No integrity comparison required post-HMAC removal
 
         private static void TrySafeDelete(string path)
         {
@@ -250,7 +261,7 @@ namespace Blindsided.SaveData
             }
         }
 
-        public static SaveHeader FromBytes(byte[] buffer, out int headerSize)
+        public static SaveHeader FromBytes(byte[] buffer, out int headerSize, string sourcePath = null)
         {
             headerSize = 0;
             try
@@ -285,8 +296,12 @@ namespace Blindsided.SaveData
                     };
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                if (string.IsNullOrEmpty(sourcePath))
+                    Debug.LogError($"Failed to parse save header. Exception: {ex}");
+                else
+                    Debug.LogError($"Failed to parse save header for '{sourcePath}'. Exception: {ex}");
                 return null;
             }
         }

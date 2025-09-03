@@ -51,6 +51,8 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private Button closeButton;
         [SerializeField] [Space] private Button townsfolkButton;
         [SerializeField] [Space] private GameObject townsfolkDropdown;
+        [SerializeField] [Space] private Button calebButton; // Inspector name: Caleb
+        [SerializeField] [Space] private GameObject calebDropdown;
 
         private bool _rightMouseWasDown;
 
@@ -88,6 +90,8 @@ namespace TimelessEchoes.UI
                 closeButton.onClick.AddListener(CloseAllWindows);
             if (townsfolkButton != null)
                 townsfolkButton.onClick.AddListener(ToggleTownsfolkDropdown);
+            if (calebButton != null)
+                calebButton.onClick.AddListener(ToggleCalebDropdown);
         }
 
         private void OnEnable()
@@ -139,6 +143,8 @@ namespace TimelessEchoes.UI
                 closeButton.onClick.RemoveListener(CloseAllWindows);
             if (townsfolkButton != null)
                 townsfolkButton.onClick.RemoveListener(ToggleTownsfolkDropdown);
+            if (calebButton != null)
+                calebButton.onClick.RemoveListener(ToggleCalebDropdown);
             if (Instance == this)
                 Instance = null;
         }
@@ -293,6 +299,9 @@ namespace TimelessEchoes.UI
             if (townsfolkDropdown == null)
                 return;
 
+            // Ensure mutual exclusivity with Caleb dropdown
+            CloseCalebDropdown();
+
             var newActive = !townsfolkDropdown.activeSelf;
             townsfolkDropdown.SetActive(newActive);
         }
@@ -301,6 +310,24 @@ namespace TimelessEchoes.UI
         {
             if (townsfolkDropdown != null && townsfolkDropdown.activeSelf)
                 townsfolkDropdown.SetActive(false);
+        }
+
+        private void ToggleCalebDropdown()
+        {
+            if (calebDropdown == null)
+                return;
+
+            // Ensure mutual exclusivity with Townsfolk dropdown
+            CloseTownsfolkDropdown();
+
+            var newActive = !calebDropdown.activeSelf;
+            calebDropdown.SetActive(newActive);
+        }
+
+        private void CloseCalebDropdown()
+        {
+            if (calebDropdown != null && calebDropdown.activeSelf)
+                calebDropdown.SetActive(false);
         }
 
         public void CloseForgeInfo()
@@ -318,6 +345,8 @@ namespace TimelessEchoes.UI
 
             // Close the townsfolk dropdown when any other button is pressed
             CloseTownsfolkDropdown();
+            // Also close the Caleb dropdown when any other button is pressed
+            CloseCalebDropdown();
 
             CloseAllWindows();
 
@@ -368,6 +397,7 @@ namespace TimelessEchoes.UI
             if (stopOnVastium != null)
                 stopOnVastium.SetActive(false);
             CloseTownsfolkDropdown();
+            CloseCalebDropdown();
 
             EnableAllWindowButtons();
             UpdateTownButtonsVisibility();

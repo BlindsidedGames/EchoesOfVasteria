@@ -8,6 +8,7 @@ using UnityEngine;
 public class TaskbarFlasher : MonoBehaviour
 {
     private IntPtr unityHwnd = IntPtr.Zero;
+    private bool disabled = true;
 
     [StructLayout(LayoutKind.Sequential)]
     private struct FLASHWINFO
@@ -37,6 +38,7 @@ public class TaskbarFlasher : MonoBehaviour
     [Button]
     public void FlashNow()
     {
+        if (disabled) return; //disabled
         if (unityHwnd == IntPtr.Zero) return;
 
         var fw = new FLASHWINFO();
@@ -51,6 +53,7 @@ public class TaskbarFlasher : MonoBehaviour
 
     public void FlashAfterDelay(float delaySeconds)
     {
+        if (disabled) return; //disabled
         StartCoroutine(FlashCoroutine(delaySeconds));
     }
 

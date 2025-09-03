@@ -610,6 +610,19 @@ namespace TimelessEchoes.Upgrades
         private void AddCardCount(string id, int delta)
         {
             var dict = oracle.saveData.CauldronCardCounts;
+
+            // Detect pre-change tiers for buff updates
+            int oldBuffTier = -1;
+            int oldBuffsGroupTier = -1;
+            bool isBuff = !string.IsNullOrEmpty(id) && id.StartsWith("BUFF:");
+            string buffName = null;
+            if (isBuff)
+            {
+                buffName = id.Substring(5);
+                oldBuffTier = GetBuffTier(buffName);
+                oldBuffsGroupTier = GetBuffsGroupTier();
+            }
+
             if (!dict.ContainsKey(id)) dict[id] = 0;
             dict[id] += delta;
             sessionCardsGained += delta;
@@ -632,6 +645,24 @@ namespace TimelessEchoes.Upgrades
             catch (Exception)
             {
                 // ignore: manager may not be available in some scenes
+            }
+
+            // If a buff tier or the Buffs group min tier changed, refresh active buff effects immediately
+            if (isBuff)
+            {
+                int newBuffTier = GetBuffTier(buffName);
+                int newBuffsGroupTier = GetBuffsGroupTier();
+                if (newBuffTier != oldBuffTier || newBuffsGroupTier != oldBuffsGroupTier)
+                {
+                    try
+                    {
+                        TimelessEchoes.Buffs.BuffManager.Instance?.RecomputeActiveBuffEffects();
+                    }
+                    catch (Exception)
+                    {
+                        // ignore: buff manager may not be available in some scenes
+                    }
+                }
             }
         }
 
