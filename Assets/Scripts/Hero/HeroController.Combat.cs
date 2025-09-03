@@ -15,6 +15,159 @@ namespace TimelessEchoes.Hero
     public partial class HeroController
     {
         public static event Action OnMainHeroDiceChanged;
+        
+        private float EstimateDpsAgainst(Enemy enemy, HeroController attacker)
+        {
+            if (enemy == null || attacker == null)
+                return 0f;
+
+            // Must be allowed to attack and within attack range to contribute DPS
+            if (!attacker.AllowAttacks || attacker.stats == null)
+                return 0f;
+
+            // Removed distance/vision-range gating: as soon as an attacker has targeted
+            // the enemy, this system should account for their DPS contribution.
+            Transform et;
+            try { et = enemy.transform; } catch { et = null; }
+            if (et == null)
+                return 0f;
+
+            var snap = HeroStatSystem.GetSnapshot();
+            // Expected per-hit includes combat multiplier, kill bonus, crit expectation
+            var killTracker = EnemyKillTracker.Instance;
+            var enemyStats = enemy.Stats;
+            float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
+            float critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
+            float expectedCritFactor = 1f + critChance; // E[crit]: 1x with (1-c), 2x with c -> 1 + c
+            float perHitBeforeDefense = snap.damage * attacker.CombatDamageMultiplier * killMult * expectedCritFactor;
+            float defense = enemy.GetDefense();
+            float perHitAfterDefense = TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
+            float attacksPerSecond = Mathf.Max(0f, snap.attacksPerSecond);
+            return perHitAfterDefense * attacksPerSecond;
+        }
+
+        private float EstimateCombinedDps(Transform enemyTransform)
+        {
+            if (enemyTransform == null)
+                return 0f;
+
+            var enemy = enemyTransform.GetComponent<Enemy>();
+            if (enemy == null)
+                return 0f;
+
+            float dps = 0f;
+
+            // Main hero if targeting this enemy
+            var main = Instance;
+            if (main != null && main != this)
+            {
+                Transform t = null;
+                Transform st = null;
+                try { t = main.currentEnemy; } catch { t = null; }
+                try { st = main.setter != null ? main.setter.target : null; } catch { st = null; }
+                if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))
+                {
+                    var add = EstimateDpsAgainst(enemy, main);
+                    dps += add;
+                }
+            }
+
+            // Other combat-enabled echoes targeting this enemy
+            foreach (var echo in EchoController.CombatEchoes)
+            {
+                if (echo == null || !echo.isActiveAndEnabled) continue;
+                var hc = echo.GetComponent<HeroController>();
+                if (hc == null || hc == this) continue;
+
+                Transform t = null;
+                Transform st = null;
+                try { t = hc.currentEnemy; } catch { t = null; }
+                try { st = hc.setter != null ? hc.setter.target : null; } catch { st = null; }
+                if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))
+                {
+                    var add = EstimateDpsAgainst(enemy, hc);
+                    dps += add;
+                }
+            }
+
+            return dps;
+        }
+
+        private Transform FindNearestEnemyTimeAware(float range, float thresholdSec)
+        {
+            if (thresholdSec <= 0f)
+                return FindNearestEnemy(range);
+
+            Transform nearest = null;
+            var best = float.MaxValue;
+            var enemies = EnemyActivator.ActiveEnemies;
+            if (enemies == null)
+                return null;
+            Vector2 pos = transform.position;
+
+            var cam = EnemyActivator.Instance != null
+                ? EnemyActivator.Instance.GetComponent<Camera>()
+                : null;
+            Vector3 min = Vector3.zero, max = Vector3.zero;
+            var checkBounds = false;
+            if (cam != null)
+            {
+                const float padding = 2f;
+                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
+                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
+                checkBounds = true;
+            }
+
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null) continue;
+
+                Transform enemyTransform = null;
+                try
+                {
+                    enemyTransform = enemy.transform;
+                }
+                catch
+                {
+                    continue; // destroyed mid-iteration
+                }
+
+                if (enemyTransform == null) continue;
+
+                if (checkBounds)
+                {
+                    var p = enemyTransform.position;
+                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
+                        continue;
+                }
+
+                var hp = enemy.GetComponent<Health>();
+                if (hp == null || hp.CurrentHealth <= 0f) continue;
+                var d = Vector2.Distance(pos, enemyTransform.position);
+                if (d > range) continue;
+
+                var combinedDps = EstimateCombinedDps(enemyTransform);
+                if (combinedDps > 0f)
+                {
+                    var ttk = hp.CurrentHealth / combinedDps;
+                    if (ttk <= thresholdSec)
+                        continue; // another attacker should finish this target soon
+                }
+
+                if (d < best)
+                {
+                    best = d;
+                    nearest = enemyTransform;
+                }
+            }
+
+            // Fallback to default behavior if nothing qualifies
+            if (nearest == null)
+                return FindNearestEnemy(range);
+            return nearest;
+        }
+
+        
         private Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;

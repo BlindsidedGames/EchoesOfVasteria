@@ -41,6 +41,19 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private bool randomizeSpriteLibraryOnSpawn = false;
         [SerializeField] private List<SpriteLibraryAsset> spriteLibraryVariants = new List<SpriteLibraryAsset>();
+        [SerializeField, Tooltip("Weight of the regular (uniform) variants section when choosing between sections. If the weighted section has no valid entries, this is ignored.")]
+        private float regularSectionWeight = 1f;
+
+        [Serializable]
+        private class WeightedSpriteLibraryEntry
+        {
+            public SpriteLibraryAsset asset;
+            public float weight = 1f;
+        }
+
+        [SerializeField, Tooltip("Per-entry weighted sprite library variants. If empty or all invalid, the regular section is used (uniform selection).")]
+        private List<WeightedSpriteLibraryEntry> weightedSpriteLibraryVariants = new List<WeightedSpriteLibraryEntry>();
+
         [SerializeField] private SpriteLibrary targetSpriteLibrary;
 
         private ResourceManager resourceManager;
@@ -165,13 +178,94 @@ namespace TimelessEchoes.Enemies
         private void ApplyRandomSpriteLibrary()
         {
             if (!randomizeSpriteLibraryOnSpawn) return;
-            if (spriteLibraryVariants == null || spriteLibraryVariants.Count == 0) return;
 
             if (targetSpriteLibrary == null)
                 targetSpriteLibrary = GetComponentInChildren<SpriteLibrary>(true);
             if (targetSpriteLibrary == null) return;
 
-            var chosen = spriteLibraryVariants[Random.Range(0, spriteLibraryVariants.Count)];
+            // Build valid lists
+            var validRegular = spriteLibraryVariants != null
+                ? spriteLibraryVariants.Where(a => a != null).ToList()
+                : new List<SpriteLibraryAsset>();
+
+            var validWeighted = weightedSpriteLibraryVariants != null
+                ? weightedSpriteLibraryVariants.Where(e => e != null && e.asset != null && e.weight > 0f).ToList()
+                : new List<WeightedSpriteLibraryEntry>();
+
+            // If no valid weighted entries, ignore weights altogether and use existing uniform behavior
+            if (validWeighted.Count == 0)
+            {
+                if (validRegular.Count == 0) return;
+                var chosenUniform = validRegular[Random.Range(0, validRegular.Count)];
+                if (chosenUniform == null) return;
+
+                if (targetSpriteLibrary.spriteLibraryAsset != chosenUniform)
+                    targetSpriteLibrary.spriteLibraryAsset = chosenUniform;
+
+                var resolversUniform = GetComponentsInChildren<SpriteResolver>(true);
+                for (int i = 0; i < resolversUniform.Length; i++)
+                    resolversUniform[i].ResolveSpriteToSpriteRenderer();
+                return;
+            }
+
+            // Weighted section exists: choose between sections based on weights
+            float sectionRegular = Mathf.Max(0f, regularSectionWeight);
+            float sectionWeighted = 0f;
+            for (int i = 0; i < validWeighted.Count; i++)
+                sectionWeighted += Mathf.Max(0f, validWeighted[i].weight);
+
+            // If both sections are invalid, bail
+            if (sectionWeighted <= 0f && validRegular.Count == 0)
+                return;
+
+            SpriteLibraryAsset chosen = null;
+
+            // If no regular entries, force weighted; if section weights allow, roll between them
+            if (validRegular.Count == 0)
+            {
+                // pick weighted entry by weight
+                float rollW = Random.value * Mathf.Max(sectionWeighted, 0.0001f);
+                float acc = 0f;
+                for (int i = 0; i < validWeighted.Count; i++)
+                {
+                    acc += Mathf.Max(0f, validWeighted[i].weight);
+                    if (rollW <= acc)
+                    {
+                        chosen = validWeighted[i].asset;
+                        break;
+                    }
+                }
+                chosen ??= validWeighted[validWeighted.Count - 1].asset;
+            }
+            else
+            {
+                // Choose section by weights (regularSectionWeight vs sum of weighted entries)
+                float totalSection = sectionRegular + sectionWeighted;
+                float roll = Random.value * Mathf.Max(totalSection, 0.0001f);
+                bool chooseRegular = roll <= sectionRegular;
+
+                if (chooseRegular)
+                {
+                    chosen = validRegular[Random.Range(0, validRegular.Count)];
+                }
+                else
+                {
+                    float rollW = Random.value * Mathf.Max(sectionWeighted, 0.0001f);
+                    float acc = 0f;
+                    for (int i = 0; i < validWeighted.Count; i++)
+                    {
+                        acc += Mathf.Max(0f, validWeighted[i].weight);
+                        if (rollW <= acc)
+                        {
+                            chosen = validWeighted[i].asset;
+                            break;
+                        }
+                    }
+                    if (chosen == null)
+                        chosen = validWeighted[validWeighted.Count - 1].asset;
+                }
+            }
+
             if (chosen == null) return;
 
             if (targetSpriteLibrary.spriteLibraryAsset != chosen)

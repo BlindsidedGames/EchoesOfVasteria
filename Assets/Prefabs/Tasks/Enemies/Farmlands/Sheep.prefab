@@ -350,14 +350,23 @@ MonoBehaviour:
   randomizeSpriteLibraryOnSpawn: 1
   spriteLibraryVariants:
   - {fileID: 7108339969198208228, guid: 95c4de17764c4d72b0145b681da99591, type: 3}
-  - {fileID: 7108339969198208228, guid: f914d53a1bb04d4c9aafd3f5e6105f21, type: 3}
-  - {fileID: 7108339969198208228, guid: cdf4e27578ce4e649a038f170c0bf962, type: 3}
-  - {fileID: 7108339969198208228, guid: 7b701b9dbc7249c5857067bcc576df11, type: 3}
-  - {fileID: 7108339969198208228, guid: f4a11dc5b49e40798eb4560f08f859ea, type: 3}
-  - {fileID: 7108339969198208228, guid: 5f0eee023f6a4e229634cb0f776ce34c, type: 3}
-  - {fileID: 7108339969198208228, guid: 4837db3a1e9c4c5f958c66cc6123fc69, type: 3}
-  - {fileID: 7108339969198208228, guid: 812d8db57bf444a080d07660ae2a6c73, type: 3}
   - {fileID: 7108339969198208228, guid: e06ee7b361e540fdb7140273df87a4fc, type: 3}
+  regularSectionWeight: 100
+  weightedSpriteLibraryVariants:
+  - asset: {fileID: 7108339969198208228, guid: f914d53a1bb04d4c9aafd3f5e6105f21, type: 3}
+    weight: 4
+  - asset: {fileID: 7108339969198208228, guid: cdf4e27578ce4e649a038f170c0bf962, type: 3}
+    weight: 1
+  - asset: {fileID: 7108339969198208228, guid: 7b701b9dbc7249c5857067bcc576df11, type: 3}
+    weight: 1
+  - asset: {fileID: 7108339969198208228, guid: f4a11dc5b49e40798eb4560f08f859ea, type: 3}
+    weight: 5
+  - asset: {fileID: 7108339969198208228, guid: 5f0eee023f6a4e229634cb0f776ce34c, type: 3}
+    weight: 5
+  - asset: {fileID: 7108339969198208228, guid: 4837db3a1e9c4c5f958c66cc6123fc69, type: 3}
+    weight: 0.5
+  - asset: {fileID: 7108339969198208228, guid: 812d8db57bf444a080d07660ae2a6c73, type: 3}
+    weight: 0.16666667
   targetSpriteLibrary: {fileID: 7791446130320457616}
   combatSkill: {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
 --- !u!114 &3158919523156443542

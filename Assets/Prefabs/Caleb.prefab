@@ -607,7 +607,9 @@ MonoBehaviour:
   currentTaskName: 
   currentTaskObject: {fileID: 0}
   allowAttacks: 1
-  combatAggroRange: 20
+  echoAvoidIfTTKBelowSeconds: 1.5
+  debugEchoTargeting: 0
+  combatAggroRange: 50
   idleWalkStep: 5
   richPresenceUpdateInterval: 2
 --- !u!114 &559727629078150424

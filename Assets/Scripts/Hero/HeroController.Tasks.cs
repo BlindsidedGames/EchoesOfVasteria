@@ -130,7 +130,9 @@ namespace TimelessEchoes.Hero
                 else
                 {
                     var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
-                    nearest = FindNearestEnemy(range);
+                    nearest = IsEcho
+                        ? FindNearestEnemyTimeAware(range, EchoAvoidIfTTKBelowSeconds)
+                        : FindNearestEnemy(range);
                 }
             }
 

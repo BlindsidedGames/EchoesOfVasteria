@@ -105,12 +105,17 @@ namespace TimelessEchoes.Hero
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
         [SerializeField] private bool allowAttacks = true;
+        
+        [Header("Echo Targeting")]
+        [SerializeField] [Range(0f, 10f)] private float echoAvoidIfTTKBelowSeconds = 1.0f;
 
         public bool AllowAttacks
         {
             get => allowAttacks;
             set => allowAttacks = value;
         }
+
+        public float EchoAvoidIfTTKBelowSeconds => echoAvoidIfTTKBelowSeconds;
 
         public bool UnlimitedAggroRange { get; set; }
 
