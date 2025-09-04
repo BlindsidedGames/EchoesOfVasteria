@@ -997,3 +997,7 @@ body.wiki-page .changes .changes-content { background: transparent; border: none
     padding: var(--spacing-md);
   }
 }
+
+/* Removals: hide deprecated sections/stray elements */
+section.changes { display: none !important; }
+.features-grid > .feature-icon { display: none !important; }

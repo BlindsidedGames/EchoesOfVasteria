@@ -1,6 +1,6 @@
-# Timeless Echoes
+# Echoes of Vasteria
 
-Timeless Echoes is an incremental hero management game built with Unity **6000.1.6f1**.
+Echoes of Vasteria formerly known as Timeless Echoes is an incremental hero management game built with Unity **6000.2.1f1**.
 
 ## Overview
 In this game you choose a hero who automatically runs through maps. Each run spawns a `Map` prefab which procedurally generates terrain and tasks.

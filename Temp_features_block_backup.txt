@@ -1,0 +1,47 @@
+</html>
+<!DOCTYPE html>
+<html lang="en" class="dark-mode" data-lock-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Echoes of Vasteria - An incremental hero management game where your hero automatically ventures through procedurally generated maps. Collect gear, complete tasks and battle enemies as you progress.">
+    <meta name="keywords" content="Echoes of Vasteria, incremental game, hero management, procedurally generated, Steam game">
+    <title>Echoes of Vasteria - Incremental Hero Management Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/Icon2.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="homepage">
+    
+    
+    <nav class="center-nav">
+        <div class="container">
+            <a href="index.html" aria-current="page">Home</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Welcome to Echoes of Vasteria</h2>
+                    <p class="hero-description">
+                        Embark on an epic journey in Echoes of Vasteria, an incremental hero management game where your hero automatically ventures through procedurally generated maps. Complete tasks, take on quests, and battle formidable enemies as you progress through this captivating adventure.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="https://store.steampowered.com/app/2940000" target="_blank" rel="noopener" class="store-badge store-badge--steam" aria-label="Play on Steam">
+                            <img src="images/steam-store-badge.png" alt="Available on Steam" loading="lazy">
+                        </a>
+                        <div class="cta-note">Mobile is in testing.</div>
+                        <a href="https://play.google.com/apps/internaltest/4701434951654058452" target="_blank" rel="noopener" class="store-badge store-badge--google" aria-label="Get it on Google Play">
+                            <img src="images/google-play-badge-600x232.png" alt="Get it on Google Play" loading="lazy">
+                        </a>
+                        <a href="https://testflight.apple.com/join/15bpAkuh" target="_blank" rel="noopener" class="store-badge store-badge--apple" aria-label="Download on the App Store">
+                            <img src="images/app-store-badge-600x232.png" alt="Download on the App Store" loading="lazy">
+                        </a>
+                    </div>
+                </div>
+            </section>
