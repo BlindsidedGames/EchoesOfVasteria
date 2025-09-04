@@ -22,6 +22,7 @@ namespace Blindsided.SaveData
         private const string TargetFpsKey = "TargetFps";
         private const string VSyncEnabledKey = "VSyncEnabled";
         private const string SafeAreaRatioKey = "SafeAreaRatio";
+        private const string MuteWhenUnfocusedKey = "MuteWhenUnfocused";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -185,6 +186,16 @@ namespace Blindsided.SaveData
             set
             {
                 PlayerPrefs.SetFloat(SafeAreaRatioKey, Mathf.Clamp01(value));
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static bool MuteWhenUnfocused
+        {
+            get => PlayerPrefs.GetInt(MuteWhenUnfocusedKey, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(MuteWhenUnfocusedKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
         }

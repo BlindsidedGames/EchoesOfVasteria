@@ -290,16 +290,23 @@ namespace TimelessEchoes.Hero
                     nextRichPresenceUpdate = Time.unscaledTime + richPresenceUpdateInterval;
                 }
 #endif
-                if (!IsEcho && !ReaperSpawnedByDistance &&
-                    transform.position.x >= tracker.MaxRunDistance *
-                    (buffController != null ? buffController.MaxDistanceMultiplier : 1f) +
-                    (buffController != null ? buffController.MaxDistanceFlatBonus : 0f))
+                if (!IsEcho && !ReaperSpawnedByDistance)
                 {
-                    var gm = GameManager.Instance;
-                    var hp = health != null ? health : GetComponent<HeroHealth>();
-                    if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null &&
-                        gm.CurrentMap != null)
+                    var baseMax = tracker.MaxRunDistance;
+                    var mult = buffController != null ? buffController.MaxDistanceMultiplier : 1f;
+                    var flat = buffController != null ? buffController.MaxDistanceFlatBonus : 0f;
+                    var buffed = baseMax * mult + flat;
+                    var oc = Blindsided.Oracle.oracle;
+                    var isDemo = oc != null && oc.demo;
+                    var threshold = isDemo ? Mathf.Min(buffed, 300f) : buffed;
+
+                    if (transform.position.x >= threshold)
                     {
+                        var gm = GameManager.Instance;
+                        var hp = health != null ? health : GetComponent<HeroHealth>();
+                        if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null &&
+                            gm.CurrentMap != null)
+                        {
                         ReaperManager.Spawn(gm.ReaperPrefab, gameObject, gm.CurrentMap.transform, false,
                             () =>
                             {
@@ -312,6 +319,7 @@ namespace TimelessEchoes.Hero
                     }
                 }
             }
+        }
         }
 
         private void OnEnable()

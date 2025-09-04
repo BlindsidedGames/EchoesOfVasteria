@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
+using TimelessEchoes.Audio;
 
 namespace TimelessEchoes.UI
 {
@@ -35,6 +36,9 @@ namespace TimelessEchoes.UI
 
         [TabGroup("Settings", "Performance")] [SerializeField]
         private Button vSyncButton;
+
+        [TabGroup("Settings", "Performance")] [SerializeField]
+        private Button muteWhenUnfocusedButton;
 
         [TabGroup("Settings", "Floating Text")] [SerializeField]
         private Slider dropTextDurationSlider;
@@ -79,6 +83,7 @@ namespace TimelessEchoes.UI
         private Image enemyDamageImage;
         private Image dropTextImage;
         private Image vSyncImage;
+        private Image muteWhenUnfocusedImage;
         private Image autoPinImage;
         private Image stopVastiumImage;
 
@@ -173,6 +178,12 @@ namespace TimelessEchoes.UI
                 if (fpsButton != null)
                     fpsButton.interactable = !on;
             }
+            if (muteWhenUnfocusedButton != null)
+            {
+                muteWhenUnfocusedButton.onClick.AddListener(ToggleMuteWhenUnfocused);
+                muteWhenUnfocusedImage = muteWhenUnfocusedButton.GetComponent<Image>();
+                UpdateButtonVisual(muteWhenUnfocusedImage, StaticReferences.MuteWhenUnfocused);
+            }
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.AddListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -246,6 +257,8 @@ namespace TimelessEchoes.UI
                 fpsButton.onClick.RemoveListener(ToggleFps);
             if (vSyncButton != null)
                 vSyncButton.onClick.RemoveListener(ToggleVSync);
+            if (muteWhenUnfocusedButton != null)
+                muteWhenUnfocusedButton.onClick.RemoveListener(ToggleMuteWhenUnfocused);
             if (autoPinButton != null)
                 autoPinButton.onClick.RemoveListener(ToggleAutoPin);
             if (stopVastiumButton != null)
@@ -328,6 +341,14 @@ namespace TimelessEchoes.UI
                     fpsButton.interactable = !StaticReferences.VSyncEnabled;
             }
             UpdateFpsButtonText();
+        }
+
+        private void ToggleMuteWhenUnfocused()
+        {
+            StaticReferences.MuteWhenUnfocused = !StaticReferences.MuteWhenUnfocused;
+            UpdateButtonVisual(muteWhenUnfocusedImage, StaticReferences.MuteWhenUnfocused);
+            // Apply immediately for current focus state
+            AudioManager.Instance?.ApplyFocusMuteNow();
         }
 
         private void UpdateFpsButtonText()

@@ -38,8 +38,12 @@ namespace TimelessEchoes.MapGeneration
 
             var buff = BuffManager.Instance;
             var baseDist = tracker.MaxRunDistance;
-            if (buff != null) baseDist = baseDist * buff.MaxDistanceMultiplier + buff.MaxDistanceFlatBonus;
-            return baseDist;
+            var buffed = baseDist;
+            if (buff != null) buffed = baseDist * buff.MaxDistanceMultiplier + buff.MaxDistanceFlatBonus;
+
+            var oc = Blindsided.Oracle.oracle;
+            var isDemo = oc != null && oc.demo;
+            return isDemo ? Mathf.Min(buffed, 300f) : buffed;
         }
 
         private void UpdateLine()

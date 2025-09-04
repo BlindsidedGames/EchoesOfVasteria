@@ -104,6 +104,9 @@ namespace TimelessEchoes.Audio
 
             ApplyVolumes();
             OnLoadData += ApplyVolumes;
+
+            // Apply initial focus-based mute state according to preference
+            ApplyFocusMuteNow();
         }
 
         private void OnDestroy()
@@ -118,6 +121,30 @@ namespace TimelessEchoes.Audio
             mainMixer.SetFloat("MusicVolume", LinearToDecibel(StaticReferences.MusicVolume));
             mainMixer.SetFloat("SfxVolume", LinearToDecibel(StaticReferences.SfxVolume));
             audioSettingsUI.SetSliders();
+        }
+
+        /// <summary>
+        ///     Apply current focus-mute preference immediately based on the current focus state.
+        /// </summary>
+        public void ApplyFocusMuteNow()
+        {
+            AudioListener.pause = StaticReferences.MuteWhenUnfocused && !Application.isFocused;
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (StaticReferences.MuteWhenUnfocused)
+                AudioListener.pause = !focus;
+            else
+                AudioListener.pause = false;
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (StaticReferences.MuteWhenUnfocused)
+                AudioListener.pause = paused || !Application.isFocused;
+            else
+                AudioListener.pause = false;
         }
 
         public void SetMasterVolume(float value)

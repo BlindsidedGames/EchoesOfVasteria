@@ -11,7 +11,8 @@ namespace TimelessEchoes.Stats
     public class EnemyKillTracker : MonoBehaviour
     {
         public static EnemyKillTracker Instance { get; private set; }
-        public static readonly int[] Thresholds = { 10, 100, 1000, 10000 };
+        // Reveal thresholds in kills. First four grant +25% damage each; last two grant +50% each.
+        public static readonly int[] Thresholds = { 10, 100, 1000, 10000, 25000, 100000 };
 
         public event System.Action<EnemyData> OnKillRegistered;
 
@@ -61,7 +62,12 @@ namespace TimelessEchoes.Stats
 
         public float GetDamageMultiplier(EnemyData stats)
         {
-            return 1f + GetRevealLevel(stats) * 0.25f;
+            // First four reveals: +25% each; reveals 5-6: +50% each.
+            int reveals = GetRevealLevel(stats);
+            int firstFour = Mathf.Clamp(reveals, 0, 4);
+            int remaining = Mathf.Max(0, reveals - 4);
+            float bonus = firstFour * 0.25f + remaining * 0.50f;
+            return 1f + bonus;
         }
 
         private void SaveState()

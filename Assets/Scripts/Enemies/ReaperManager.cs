@@ -122,9 +122,15 @@ namespace TimelessEchoes.Enemies
                     return;
                 }
                 var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
-                var buffedMax = tracker.MaxRunDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
-                                (buff != null ? buff.MaxDistanceFlatBonus : 0f);
-                var increase = buffedMax * 0.01f;
+                var baseMax = tracker.MaxRunDistance;
+                var mult = buff != null ? buff.MaxDistanceMultiplier : 1f;
+                var flat = buff != null ? buff.MaxDistanceFlatBonus : 0f;
+                var buffedMax = baseMax * mult + flat;
+                var oc = Blindsided.Oracle.oracle;
+                var isDemo = oc != null && oc.demo;
+                // In demo, treat the effective cap as 300 to avoid implicit progression beyond the demo limit
+                var effectiveForIncrease = isDemo ? Mathf.Min(buffedMax, 300f) : buffedMax;
+                var increase = effectiveForIncrease * 0.01f;
                 tracker.IncreaseMaxRunDistance(increase);
             }
 

@@ -89,17 +89,12 @@ namespace TimelessEchoes.Stats
             private set
             {
                 var isDemo = oracle != null && oracle.demo;
+                // In demo, ignore any attempt to set above 300 unless explicitly bypassed.
+                // This avoids both clamping up or down and preserves existing higher saved values.
                 if (isDemo && !bypassDemoCapOnNextSet && value > 300f)
-                {
-                    // Enforce cap in demo without reducing an already higher saved value
-                    if (maxRunDistance <= 300f)
-                        maxRunDistance = 300f;
-                    // else: leave as-is to avoid breaking existing saves
-                }
-                else
-                {
-                    maxRunDistance = value;
-                }
+                    return; // do not change the backing value in demo if above cap
+
+                maxRunDistance = value;
                 // One-shot bypass reset to avoid unintended future sets ignoring the cap
                 bypassDemoCapOnNextSet = false;
             }

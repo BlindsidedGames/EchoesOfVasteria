@@ -26,6 +26,9 @@ namespace TimelessEchoes.UI
             var baseReapDistance = Oracle.oracle?.saveData?.General.MaxRunDistance ?? 1f;
             var reapDistance = baseReapDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
                                (buff != null ? buff.MaxDistanceFlatBonus : 0f);
+            // Clamp UI to demo cap so the slider/text reflect actual reachable distance in demo
+            var isDemo = Oracle.oracle != null && Oracle.oracle.demo;
+            if (isDemo) reapDistance = Mathf.Min(reapDistance, 300f);
 
             if (distanceText != null)
             {
@@ -33,7 +36,7 @@ namespace TimelessEchoes.UI
                 var text = $"{current:N0} / {reapDistance:N0}";
                 if (!Mathf.Approximately(reapDistance, baseReapDistance))
                 {
-                    text += $" ({baseReapDistance:N0})";
+                    text += $" ({Mathf.Min(baseReapDistance, isDemo ? 300f : baseReapDistance):N0})";
                 }
 
                 distanceText.text = text;

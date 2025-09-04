@@ -12,6 +12,8 @@ namespace TimelessEchoes.References.StatPanel
         public TMP_Text enemyNameText;
         public TMP_Text hitpointsAndDamageText;
         public TMP_Text movementAndAttackRateText;
+        // New optional field: Movement & Vision pair displayed in EnemyStatsPanel
+        public TMP_Text movementAndVisionText;
         public TMP_Text killsAndNextAndBonusText;
         public SlicedFilledImage nextRevealProgressBar;
         public GameObject progressBar;

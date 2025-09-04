@@ -552,6 +552,8 @@ namespace TimelessEchoes.Quests
             if (inst.data.unlockAutoBuffSlots > 0)
                 BuffManager.Instance?.UnlockAutoSlots(inst.data.unlockAutoBuffSlots);
             if (inst.data.maxDistanceIncrease > 0f)
+                // Quest rewards should bypass the demo cap and apply to the true backing value
+                // so players don't miss progression when moving to the main version.
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease, oracle != null && oracle.demo);
             if (inst.data.disciplePercentReward > 0f)
             {
