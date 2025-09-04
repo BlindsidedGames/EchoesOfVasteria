@@ -84,6 +84,10 @@ namespace Blindsided.SaveData
 			catch (Exception ex)
 			{
 				error = ex.Message;
+				Blindsided.Utilities.FeedbackForm.SubmitException(
+					"SaveImportExport.Import",
+					ex,
+					$"inputLength: {input?.Length ?? 0}");
 				return false;
 			}
 		}
@@ -126,5 +130,4 @@ namespace Blindsided.SaveData
 		}
 	}
 }
-
 

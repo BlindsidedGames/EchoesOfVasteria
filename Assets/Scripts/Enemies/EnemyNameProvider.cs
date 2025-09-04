@@ -23,7 +23,8 @@ namespace TimelessEchoes.Enemies
             "Quackers",
             "oswarlan",
             "Invariel",
-            "Borg"
+            "Borg",
+            "Madstone"
         };
 
         /// <summary>

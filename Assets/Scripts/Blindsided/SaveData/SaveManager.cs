@@ -192,6 +192,10 @@ namespace Blindsided.SaveData
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to read snapshot at '{path}'. Exception: {ex}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "Save.ReadSnapshot",
+                    ex,
+                    $"path: {path}\nslot: {CurrentSlotName}");
                 return false;
             }
         }
@@ -302,6 +306,10 @@ namespace Blindsided.SaveData
                     Debug.LogError($"Failed to parse save header. Exception: {ex}");
                 else
                     Debug.LogError($"Failed to parse save header for '{sourcePath}'. Exception: {ex}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "SaveHeader.Parse",
+                    ex,
+                    string.IsNullOrEmpty(sourcePath) ? null : $"sourcePath: {sourcePath}");
                 return null;
             }
         }

@@ -38,6 +38,9 @@ namespace TimelessEchoes.Quests
 
         private readonly Dictionary<string, QuestInstance> active = new();
         private bool statEventsSubscribed;
+        // Prevent re-entrant noticeboard rebuilds which can duplicate entries
+        private bool _isRefreshingNoticeboard;
+        private bool _pendingRefresh;
 
         private class QuestInstance
         {
@@ -493,7 +496,11 @@ namespace TimelessEchoes.Quests
             if (wasReady != inst.ReadyForTurnIn)
             {
                 // Rebuild and re-sort the noticeboard when readiness changes so ready quests float to the top.
-                RefreshNoticeboard();
+                // If already rebuilding, defer a single refresh to avoid re-entrancy and duplicates.
+                if (_isRefreshingNoticeboard)
+                    _pendingRefresh = true;
+                else
+                    RefreshNoticeboard();
             }
 
             PinnedQuestUIManager.Instance?.UpdateProgress();
@@ -603,8 +610,9 @@ namespace TimelessEchoes.Quests
             var achievementManager = AchievementManager.Instance;
             achievementManager?.NotifyNpcMet(id);
 #endif
-            RefreshNoticeboard();
+            // Update progress first so a single noticeboard refresh reflects final readiness states.
             UpdateAllProgress();
+            RefreshNoticeboard();
         }
 
         /// <summary>
@@ -797,6 +805,14 @@ namespace TimelessEchoes.Quests
         {
             if (uiManager == null)
                 return;
+            // Guard against re-entrant rebuilds from progress updates during a refresh cycle
+            if (_isRefreshingNoticeboard)
+            {
+                _pendingRefresh = true;
+                return;
+            }
+            _isRefreshingNoticeboard = true;
+
             uiManager.Clear();
             foreach (var inst in active.Values)
                 UpdateProgress(inst);
@@ -890,6 +906,14 @@ namespace TimelessEchoes.Quests
             }
 
             uiManager.UpdateCategoryVisibility(readyCount, pinnedCount, activeCount, completedCount);
+
+            // End of guarded section
+            _isRefreshingNoticeboard = false;
+            if (_pendingRefresh)
+            {
+                _pendingRefresh = false;
+                RefreshNoticeboard();
+            }
         }
 
 

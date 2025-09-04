@@ -136,6 +136,10 @@ namespace Blindsided
                     catch (Exception ex)
                     {
                         Debug.LogWarning($"Autosave failed: {ex}");
+                        Blindsided.Utilities.FeedbackForm.SubmitException(
+                            "Save.Autosave",
+                            ex,
+                            $"slot: {Mathf.Clamp(CurrentSlot, 0, 2) + 1}");
                     }
                 }
 
@@ -177,6 +181,10 @@ namespace Blindsided
             catch (Exception ex)
             {
                 Debug.LogError($"New save system Save failed: {ex}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "Save.SaveToFile",
+                    ex,
+                    $"slot: {Mathf.Clamp(CurrentSlot, 0, 2) + 1}");
             }
 
             // Keep PlayerPrefs metadata in sync for UI which still reads playtime/completion
@@ -226,6 +234,10 @@ namespace Blindsided
             catch (Exception ex)
             {
                 Debug.LogWarning($"New save system load failed or missing. {ex.Message}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "Save.Load",
+                    ex,
+                    $"slot: {Mathf.Clamp(CurrentSlot, 0, 2) + 1}");
                 // Exception trying to read the slot — back it up if it exists so we don't overwrite evidence
                 if (!wasIntentionallyDeleted)
                     BackupSlotDirectoryIfExists(CurrentSlot, "load_exception");
@@ -327,6 +339,10 @@ namespace Blindsided
             catch (Exception ex)
             {
                 Debug.LogWarning($"New save system SaveToSlot failed: {ex.Message}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "Save.SaveToSlot",
+                    ex,
+                    $"slot: {Mathf.Clamp(index, 0, 2) + 1}");
             }
 
             PersistSlotMetadataToPlayerPrefs(index);
@@ -409,6 +425,10 @@ namespace Blindsided
             catch (Exception ex)
             {
                 Debug.LogError($"Pre-switch backup failed: {ex}");
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "Save.PreSwitchBackup",
+                    ex,
+                    $"fromSlot: {Mathf.Clamp(CurrentSlot, 0, 2) + 1}");
             }
 
             // Stop autosave BEFORE switching slots so no autosave can write the old slot's data

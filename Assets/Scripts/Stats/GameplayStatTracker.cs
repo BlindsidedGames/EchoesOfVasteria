@@ -207,7 +207,8 @@ namespace TimelessEchoes.Stats
             g.LongestRun = LongestRun;
             g.ShortestRun = ShortestRun;
             g.AverageRun = AverageRun;
-            g.MaxRunDistance = MaxRunDistance;
+            // Persist the true backing value to avoid demo-mode getter clamping (300) overwriting higher saves
+            g.MaxRunDistance = maxRunDistance;
             g.NextRunNumber = nextRunNumber;
             oracle.saveData.General = g;
 
@@ -248,7 +249,8 @@ namespace TimelessEchoes.Stats
             LongestRun = g.LongestRun;
             ShortestRun = g.ShortestRun;
             AverageRun = g.AverageRun;
-            MaxRunDistance = g.MaxRunDistance > 0f ? g.MaxRunDistance : 50f;
+            // Load the exact saved value into the backing field to preserve values >300 even in demo
+            maxRunDistance = g.MaxRunDistance > 0f ? g.MaxRunDistance : 50f;
             if (g.NextRunNumber > 0)
                 nextRunNumber = g.NextRunNumber;
             else if (recentRuns.Count > 0)
@@ -472,6 +474,8 @@ namespace TimelessEchoes.Stats
             RunInProgress = true;
             CurrentRunDistance = 0f;
             CurrentRunSteps = 0f;
+            // Notify global listeners that a run has begun
+            RunStarted();
         }
 
         private void AddRunRecord(GameData.RunRecord record)
@@ -553,6 +557,8 @@ namespace TimelessEchoes.Stats
 
             OnRunEnded?.Invoke(died);
             ResetCurrentRun();
+            // After state resets, broadcast a global run-ended event
+            RunEnded();
         }
 
         public void AbandonRun()
@@ -595,6 +601,8 @@ namespace TimelessEchoes.Stats
             nextRunNumber++;
             OnRunEnded?.Invoke(false);
             ResetCurrentRun();
+            // After state resets, broadcast a global run-ended event
+            RunEnded();
         }
 
         private void ResetCurrentRun()

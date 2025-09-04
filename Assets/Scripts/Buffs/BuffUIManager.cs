@@ -4,6 +4,7 @@ using TimelessEchoes.Hero;
 using TimelessEchoes.Quests;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Blindsided.EventHandler;
@@ -26,6 +27,10 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private GameObject buffPurchaseWindow;
         private BuffRecipe selectedRecipe;
         private bool isAssigning;
+        [Header("Run State UI")]
+        [SerializeField] private TMP_Text runStateInfoText;
+        [SerializeField] private string inRunAssignDisabledMessage = "Cannot assign buffs during a run.";
+        private bool inRun;
 
         private readonly Dictionary<BuffRecipe, BuffRecipeUIReferences> recipeEntries = new();
 
@@ -221,6 +226,8 @@ namespace TimelessEchoes.Buffs
 
             OnLoadData += OnLoadDataHandler;
             OnQuestHandin += OnQuestHandinHandler;
+            OnRunStarted += HandleRunStarted;
+            OnRunEnded += HandleRunEnded;
 
             for (var i = 0; i < assignSlotButtons.Length; i++)
             {
@@ -240,6 +247,9 @@ namespace TimelessEchoes.Buffs
         private void OnEnable()
         {
             heroHealth = HeroHealth.Instance ?? FindFirstObjectByType<HeroHealth>();
+            var tracker = GameplayStatTracker.Instance;
+            inRun = tracker != null && tracker.RunInProgress;
+            ApplyRunStateToUI();
             RefreshSlots();
         }
 
@@ -247,6 +257,8 @@ namespace TimelessEchoes.Buffs
         {
             OnLoadData -= OnLoadDataHandler;
             OnQuestHandin -= OnQuestHandinHandler;
+            OnRunStarted -= HandleRunStarted;
+            OnRunEnded -= HandleRunEnded;
 
             for (var i = 0; i < assignSlotButtons.Length; i++)
                 if (assignSlotButtons[i] != null && assignSlotButtons[i].activateButton != null)
@@ -319,6 +331,7 @@ namespace TimelessEchoes.Buffs
                 {
                     var r = recipe;
                     panel.purchaseButton.onClick.AddListener(() => PurchaseBuff(r));
+                    panel.purchaseButton.interactable = !inRun;
                 }
 
                 recipeEntries[recipe] = panel;
@@ -345,6 +358,17 @@ namespace TimelessEchoes.Buffs
 
         private void PurchaseBuff(BuffRecipe recipe)
         {
+            if (inRun)
+            {
+                if (runStateInfoText != null)
+                {
+                    runStateInfoText.text = inRunAssignDisabledMessage;
+                    runStateInfoText.gameObject.SetActive(true);
+                }
+                ApplyRunStateToUI();
+                return;
+            }
+
             selectedRecipe = recipe;
             isAssigning = true;
             RefreshSlots();
@@ -352,13 +376,55 @@ namespace TimelessEchoes.Buffs
 
         private void OnAssignSlot(int slot)
         {
-            if (isAssigning && selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
+            if (!inRun && isAssigning && selectedRecipe != null && buffManager != null && buffManager.IsSlotUnlocked(slot))
                 buffManager.AssignBuff(slot, selectedRecipe);
             else
                 buffManager?.ToggleSlotAutoCast(slot);
             selectedRecipe = null;
             isAssigning = false;
             RefreshSlots();
+        }
+
+        private void HandleRunStarted()
+        {
+            inRun = true;
+            // Clear any pending assign state when a run starts
+            selectedRecipe = null;
+            isAssigning = false;
+            ApplyRunStateToUI();
+            RefreshSlots();
+        }
+
+        private void HandleRunEnded()
+        {
+            inRun = false;
+            ApplyRunStateToUI();
+            RefreshSlots();
+        }
+
+        private void ApplyRunStateToUI()
+        {
+            // Update recipe purchase buttons
+            foreach (var kv in recipeEntries)
+            {
+                var ui = kv.Value;
+                if (ui != null && ui.purchaseButton != null)
+                    ui.purchaseButton.interactable = !inRun;
+            }
+
+            // Show/hide info text
+            if (runStateInfoText != null)
+            {
+                if (inRun)
+                {
+                    runStateInfoText.text = inRunAssignDisabledMessage;
+                    runStateInfoText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    runStateInfoText.gameObject.SetActive(false);
+                }
+            }
         }
 
         private void OnRunSlot(int slot)

@@ -15,6 +15,10 @@ namespace Blindsided
         public static event Action OnResetData;
         public static event Action<string> OnQuestHandin;
         
+        // Global run lifecycle events for cross-system coordination
+        public static event Action OnRunStarted;
+        public static event Action OnRunEnded;
+        
         public static void SaveData()
         {
             // Debounce: invoke at most once per frame
@@ -60,6 +64,18 @@ namespace Blindsided
         public static void UpdateTextsForTimeScale()
         {
             UpdateTextsForTimeScaleEvent?.Invoke();
+        }
+
+        // Invoke when a new run begins (e.g., after GameplayStatTracker.BeginRun)
+        public static void RunStarted()
+        {
+            OnRunStarted?.Invoke();
+        }
+
+        // Invoke when a run ends (after stats are finalized and RunInProgress is false)
+        public static void RunEnded()
+        {
+            OnRunEnded?.Invoke();
         }
     }
 }
