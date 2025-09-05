@@ -169,6 +169,19 @@ namespace Blindsided
 
         private void SaveToFile()
         {
+            // Prevent overwriting an existing save with an uninitialized/blank file
+            // if the game has not completed a successful Load yet. Still allow
+            // saves during an intentional wipe operation.
+            if (!wipeInProgress && !loaded)
+            {
+                Debug.LogWarning("Skipping save: data has not been loaded yet.");
+                Blindsided.Utilities.FeedbackForm.Submit(
+                    "Save.SkipBeforeLoad",
+                    $"slot: {Mathf.Clamp(CurrentSlot, 0, 2) + 1}\n" +
+                    "Reason: Save attempted before any successful Load.\n" +
+                    $"AppVersion: {Application.version}\nPlatform: {Application.platform}\nUnity: {Application.unityVersion}");
+                return;
+            }
             if (!wipeInProgress)
                 EventHandler.SaveData();
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
@@ -326,6 +339,17 @@ namespace Blindsided
 
         public void SaveToSlot(int slotIndex)
         {
+            // Guard against saving before a successful load has occurred
+            if (!wipeInProgress && !loaded)
+            {
+                Debug.LogWarning("Skipping SaveToSlot: data has not been loaded yet.");
+                Blindsided.Utilities.FeedbackForm.Submit(
+                    "Save.SkipBeforeLoad.SaveToSlot",
+                    $"slot: {Mathf.Clamp(slotIndex, 0, 2) + 1}\n" +
+                    "Reason: SaveToSlot attempted before any successful Load.\n" +
+                    $"AppVersion: {Application.version}\nPlatform: {Application.platform}\nUnity: {Application.unityVersion}");
+                return;
+            }
             var index = Mathf.Clamp(slotIndex, 0, 2);
             if (!wipeInProgress)
                 EventHandler.SaveData();
