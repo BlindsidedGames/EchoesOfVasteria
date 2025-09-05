@@ -2,9 +2,11 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Globalization;
+using System.Threading.Tasks;
 using Blindsided;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
+using Blindsided.UGS;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -21,6 +23,19 @@ namespace TimelessEchoes.UI
     public class SettingsPanelUI : MonoBehaviour
     {
         [SerializeField] private GameObject VersionNumberObject;
+
+        // Account / UGS Username UI
+        [TabGroup("Settings", "Account")] [SerializeField]
+        private TMP_Text currentUsernameText;
+
+        [TabGroup("Settings", "Account")] [SerializeField]
+        private TMP_InputField newUsernameInput;
+
+        [TabGroup("Settings", "Account")] [SerializeField]
+        private Button applyUsernameButton;
+
+        [TabGroup("Settings", "Account")] [SerializeField]
+        private TMP_Text usernameStatusText;
 
         [TabGroup("Settings", "Window")] [SerializeField] [Space]
         private Button fullscreenWindowButton;
@@ -148,6 +163,17 @@ namespace TimelessEchoes.UI
         {
             saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
 
+            // Wire up Account/UGS username controls
+            if (newUsernameInput != null)
+            {
+                newUsernameInput.characterLimit = 50;
+                newUsernameInput.onValidateInput += FilterWhitespace;
+            }
+            if (applyUsernameButton != null)
+            {
+                applyUsernameButton.onClick.AddListener(OnApplyUsernameClicked);
+            }
+
             if (openSaveFolderButton != null)
                 openSaveFolderButton.onClick.AddListener(OpenSaveLocation);
 
@@ -245,6 +271,146 @@ namespace TimelessEchoes.UI
             EventHandler.OnLoadData += RefreshAllSlots;
             ApplyFps();
             StartCoroutine(DeferredInit());
+        }
+
+        private Coroutine usernameStatusRoutine;
+        private bool usernameStatusIsStickyError;
+
+        private char FilterWhitespace(string text, int charIndex, char addedChar)
+        {
+            // Reject any whitespace inserted into the input (space, tabs, newlines, etc.)
+            return char.IsWhiteSpace(addedChar) ? '\0' : addedChar;
+        }
+
+        private async void Start()
+        {
+            // Load and display current username from UGS (if section wired in inspector)
+            if (currentUsernameText != null)
+            {
+                try
+                {
+                    var currentName = await LocalProfile.GetMyDisplayNameAsync();
+                    currentUsernameText.text = string.IsNullOrWhiteSpace(currentName) ? string.Empty : currentName;
+                }
+                catch
+                {
+                    // Non-fatal; surface a brief info message if the status field exists
+                    if (usernameStatusText != null)
+                        ShowUsernameStatus("Unable to load username.", 5f, stickyError: false);
+                }
+            }
+        }
+
+        private void ShowUsernameStatus(string message, float seconds, bool stickyError)
+        {
+            if (usernameStatusText == null)
+                return;
+
+            // Cancel any prior routine
+            if (usernameStatusRoutine != null)
+            {
+                StopCoroutine(usernameStatusRoutine);
+                usernameStatusRoutine = null;
+            }
+
+            usernameStatusIsStickyError = stickyError;
+            usernameStatusText.text = message ?? string.Empty;
+
+            // Only auto-clear when not a sticky error
+            if (!stickyError)
+            {
+                usernameStatusRoutine = StartCoroutine(ClearUsernameStatusAfter(seconds));
+            }
+        }
+
+        private IEnumerator ClearUsernameStatusAfter(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            if (usernameStatusText != null)
+                usernameStatusText.text = string.Empty;
+            usernameStatusRoutine = null;
+        }
+
+        private void ClearStickyErrorIfAny()
+        {
+            if (usernameStatusIsStickyError && usernameStatusText != null)
+            {
+                usernameStatusText.text = string.Empty;
+                usernameStatusIsStickyError = false;
+            }
+        }
+
+        private async void OnApplyUsernameClicked()
+        {
+            if (newUsernameInput == null)
+                return;
+
+            // Clear any previous sticky error when the player attempts again
+            ClearStickyErrorIfAny();
+
+            var desired = newUsernameInput.text ?? string.Empty;
+            // Trim just in case input sneaks in via paste with leading/trailing whitespace; onValidate also blocks whitespace
+            desired = desired.Trim();
+
+            // Validate: 1–50 chars, no whitespace (enforced by onValidate, but verify defensively)
+            if (desired.Length == 0 || desired.Length > 50 || HasWhitespace(desired))
+            {
+                ShowUsernameStatus("Name must be 1–50 chars, no spaces.", seconds: 0f, stickyError: true);
+                return;
+            }
+
+            // Disable button to prevent duplicate submissions
+            if (applyUsernameButton != null) applyUsernameButton.interactable = false;
+
+            // Show transient progress info (auto-clears after 5s if something stalls)
+            ShowUsernameStatus("Updating name...", seconds: 5f, stickyError: false);
+
+            try
+            {
+                var (ok, msg) = await UniqueNameService.SetUniqueAsync(desired);
+                if (ok)
+                {
+                    // Update current display
+                    if (currentUsernameText != null)
+                        currentUsernameText.text = msg;
+
+                    // Refresh any visible Leaderboards panel so the new name shows immediately.
+                    try
+                    {
+                        var lb = UnityEngine.Object.FindAnyObjectByType<LeaderboardsPanelUI>(FindObjectsInactive.Exclude);
+                        if (lb != null)
+                        {
+                            lb.RefreshNow();
+                        }
+                    }
+                    catch { /* non-fatal if panel not present */ }
+
+                    // Confirm for 2 seconds, then clear
+                    ShowUsernameStatus("Name updated.", seconds: 2f, stickyError: false);
+                }
+                else
+                {
+                    // Show error until next attempt
+                    ShowUsernameStatus(string.IsNullOrWhiteSpace(msg) ? "Could not set name." : msg, seconds: 0f, stickyError: true);
+                }
+            }
+            catch
+            {
+                ShowUsernameStatus("Could not set name. Please try again.", seconds: 0f, stickyError: true);
+            }
+            finally
+            {
+                if (applyUsernameButton != null) applyUsernameButton.interactable = true;
+            }
+        }
+
+        private static bool HasWhitespace(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (char.IsWhiteSpace(s[i])) return true;
+            }
+            return false;
         }
 
         private void OnDestroy()

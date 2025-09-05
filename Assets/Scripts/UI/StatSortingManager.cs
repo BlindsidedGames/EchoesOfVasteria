@@ -139,13 +139,31 @@ namespace TimelessEchoes.UI
 
         private void BuildEnemyButtons()
         {
-            foreach (EnemyStatsPanelUI.SortMode mode in Enum.GetValues(typeof(EnemyStatsPanelUI.SortMode)))
+            // Order buttons by unlock order of stats
+            var order = new Dictionary<EnemyStatsPanelUI.SortMode, int>
+            {
+                { EnemyStatsPanelUI.SortMode.Default, 0 },
+                { EnemyStatsPanelUI.SortMode.Damage, 1 },
+                { EnemyStatsPanelUI.SortMode.Health, 2 },
+                { EnemyStatsPanelUI.SortMode.Defense, 3 },
+                { EnemyStatsPanelUI.SortMode.AttackRate, 4 },
+                { EnemyStatsPanelUI.SortMode.MoveSpeed, 5 },
+                { EnemyStatsPanelUI.SortMode.Vision, 6 },
+            };
+
+            var modes = (EnemyStatsPanelUI.SortMode[])Enum.GetValues(typeof(EnemyStatsPanelUI.SortMode));
+            Array.Sort(modes, (a, b) => order[a].CompareTo(order[b]));
+
+            foreach (var mode in modes)
+            {
+                var captured = mode;
                 CreateButton(mode, () =>
                 {
-                    enemyMode = mode;
-                    if (enemyPanel != null) enemyPanel.SetSortMode(mode);
+                    enemyMode = captured;
+                    if (enemyPanel != null) enemyPanel.SetSortMode(captured);
                     UpdateButtonStates();
                 });
+            }
             UpdateButtonStates();
         }
 
@@ -207,10 +225,28 @@ namespace TimelessEchoes.UI
             if (buttonParent == null || buttonPrefab == null) return;
 
             var btn = Instantiate(buttonPrefab, buttonParent);
-            btn.SetLabel(mode.ToString());
+            btn.SetLabel(PrettyLabel(mode));
             btn.Button.onClick.AddListener(action);
             buttons.Add(btn);
             buttonModes[btn] = mode;
+        }
+
+        private static string PrettyLabel(Enum mode)
+        {
+            // Insert spaces between PascalCase words, e.g., "AttackRate" -> "Attack Rate"
+            var name = mode.ToString();
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length + 4);
+            sb.Append(name[0]);
+            for (int i = 1; i < name.Length; i++)
+            {
+                char c = name[i];
+                char p = name[i - 1];
+                if (char.IsUpper(c) && !char.IsWhiteSpace(p))
+                    sb.Append(' ');
+                sb.Append(c);
+            }
+            return sb.ToString();
         }
 
         private void UpdateButtonStates()

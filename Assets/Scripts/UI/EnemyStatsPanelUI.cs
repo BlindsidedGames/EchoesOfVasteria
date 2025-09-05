@@ -33,8 +33,10 @@ namespace TimelessEchoes.UI
             Default,
             Damage,
             Health,
+            Defense,
             AttackRate,
-            MoveSpeed
+            MoveSpeed,
+            Vision
         }
 
         [SerializeField] private SortMode sortMode = SortMode.Default;
@@ -305,9 +307,11 @@ namespace TimelessEchoes.UI
             {
                 SortMode.Damage => 1,
                 SortMode.Health => 2,
+                SortMode.Defense => 3,
                 // Movement reveal now at threshold 5
                 SortMode.MoveSpeed => 5,
                 SortMode.AttackRate => 4,
+                SortMode.Vision => 6,
                 _ => 0
             };
 
@@ -315,8 +319,10 @@ namespace TimelessEchoes.UI
             {
                 SortMode.Damage => s.damage,
                 SortMode.Health => s.maxHealth,
+                SortMode.Defense => s.defense,
                 SortMode.MoveSpeed => s.moveSpeed,
                 SortMode.AttackRate => s.attackSpeed,
+                SortMode.Vision => s.visionRange,
                 _ => 0
             };
 

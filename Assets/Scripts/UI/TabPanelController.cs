@@ -5,13 +5,16 @@ using UnityEngine.UI;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    ///     Controls five tabs (General, Graphs, Enemies, Tasks and Items).
+    ///     Controls six tabs (General, Rank, Graphs, Enemies, Tasks and Items).
     ///     Selecting a tab enables its objects while disabling the others.
     /// </summary>
     public class TabPanelController : MonoBehaviour
     {
         [SerializeField] private Button generalButton;
         [SerializeField] private List<GameObject> generalObjects = new();
+
+        [SerializeField] private Button rankButton;
+        [SerializeField] private List<GameObject> rankObjects = new();
 
         [SerializeField] private Button graphsButton;
         [SerializeField] private List<GameObject> graphsObjects = new();
@@ -32,6 +35,7 @@ namespace TimelessEchoes.UI
             groups = new[]
             {
                 generalObjects,
+                rankObjects,
                 graphsObjects,
                 enemiesObjects,
                 tasksObjects,
@@ -40,6 +44,8 @@ namespace TimelessEchoes.UI
 
             if (generalButton != null)
                 generalButton.onClick.AddListener(ShowGeneral);
+            if (rankButton != null)
+                rankButton.onClick.AddListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.AddListener(ShowGraphs);
             if (enemiesButton != null)
@@ -54,6 +60,8 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.RemoveListener(ShowGeneral);
+            if (rankButton != null)
+                rankButton.onClick.RemoveListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.RemoveListener(ShowGraphs);
             if (enemiesButton != null)
@@ -65,10 +73,11 @@ namespace TimelessEchoes.UI
         }
 
         private void ShowGeneral() => ActivateGroup(0);
-        private void ShowGraphs() => ActivateGroup(1);
-        private void ShowEnemies() => ActivateGroup(2);
-        private void ShowTasks() => ActivateGroup(3);
-        private void ShowItems() => ActivateGroup(4);
+        private void ShowRank() => ActivateGroup(1);
+        private void ShowGraphs() => ActivateGroup(2);
+        private void ShowEnemies() => ActivateGroup(3);
+        private void ShowTasks() => ActivateGroup(4);
+        private void ShowItems() => ActivateGroup(5);
 
         private void ActivateGroup(int index)
         {

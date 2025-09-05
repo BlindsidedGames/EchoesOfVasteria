@@ -120,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.10
+    m_Localized: v1.2.11
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -190,22 +190,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Buffs can no longer be swapped out during a run.\n\u2022
-      Fixed a bug where meeting quests could duplicate when being ready to turn in.\n\u2022
-      Fixed a bug where going onto the demo version of the game would incorrectly
-      lower your maximum distance to the demo cap.\n\u2022 Fixed a bug where quests
-      couldn't set a higher cap than 300. Now quests can bypass this cap but the
-      maximum distance will remain 300 for when you transfer to the full game.\n\u2022
-      New background mute toggle, defaults to on.\n\u2022 Overhauled Enemy stats
-      tab to be far more informative.\n\u2022 Added two new enemy kill thresholds
-      each granting +50% damage for a total of +200% Thresholds are 25,000 and 100,000
-      kills respectively.\n\u2022 Added a google sheets error reporting system which
-      is completely anonymous.\n1.2.9\n\u2022 Added Cows, Sheep, and Pigs to the
-      farmlands.\n\u2022 Added verbose logging to the save system.\n\u2022 Moved
-      the Alter Echoes, Buffs, and Skill buttons to a new dropdown and made them
-      available everywhere.\n\u2022 Disabled taskbar flashing for now.\n\u2022 Highlights
-      on earned cards during tasting now go away after 1 second.\n\u2022 Various
-      UI performance improvements.\n\u2022 New tooltips for the Cauldron.\n\u2022
+    m_Localized: "\u2022 Added Leaderboards to the game. \n\u2022 You can now set
+      a username in settings.\n1.2.10\n\u2022 Buffs can no longer be swapped out
+      during a run.\n\u2022 Fixed a bug where meeting quests could duplicate when
+      being ready to turn in.\n\u2022 Fixed a bug where going onto the demo version
+      of the game would incorrectly lower your maximum distance to the demo cap.\n\u2022
+      Fixed a bug where quests couldn't set a higher cap than 300. Now quests can
+      bypass this cap but the maximum distance will remain 300 for when you transfer
+      to the full game.\n\u2022 New background mute toggle, defaults to on.\n\u2022
+      Overhauled Enemy stats tab to be far more informative.\n\u2022 Added two new
+      enemy kill thresholds each granting +50% damage for a total of +200% Thresholds
+      are 25,000 and 100,000 kills respectively.\n\u2022 Added a google sheets error
+      reporting system which is completely anonymous.\n1.2.9\n\u2022 Added Cows,
+      Sheep, and Pigs to the farmlands.\n\u2022 Added verbose logging to the save
+      system.\n\u2022 Moved the Alter Echoes, Buffs, and Skill buttons to a new dropdown
+      and made them available everywhere.\n\u2022 Disabled taskbar flashing for now.\n\u2022
+      Highlights on earned cards during tasting now go away after 1 second.\n\u2022
+      Various UI performance improvements.\n\u2022 New tooltips for the Cauldron.\n\u2022
       Combat echoes will now target a different enemy if combined DPS will kill the
       target in under 1.5 seconds.\n1.2.8\n\u2022 Fixed an issue where every time
       the game saves the oldest backup was moved to the archive causing a lot of
