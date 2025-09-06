@@ -1,12 +1,20 @@
 {
-    "chatgpt.openOnStartup": true,
-    "agent.commandExecution.alwaysApprove": true,
-    "agent.commandExecution.approvedCommands": [
+  "chatgpt.openOnStartup": true,
+
+  // Codex agent config
+  "codex.agent.alwaysApprove": true,
+  "codex.agent.reviewMode": "batch",
+  "agent.commandAndExecution.alwaysApprove": true,
+
+  // Approved commands for local mode
+  "agent.commandAndExecution.approvedCommands": [
     "rg",
     "sed",
     "powershell.exe",
     "Get-Content"
   ],
-  "dotnet.preferCSharpExtension": true
 
+  // Dotnet integration
+  "dotnet.preferCSharpExtension": true,
+  "dotnet.defaultSolution": "Echoes of Vasteria.sln"
 }

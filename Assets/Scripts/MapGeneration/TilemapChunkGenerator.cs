@@ -66,6 +66,9 @@ namespace TimelessEchoes.MapGeneration
         private BetterRuleTile TopTile => topTerrain != null ? topTerrain.tile : null;
         public Tilemap DecorMap => decorMap;
 
+        // Reusable buffer for SetTilesBlock per-column writes
+        private TileBase[] columnBuffer;
+
         private void Awake()
         {
             ApplyConfig(GameManager.CurrentGenerationConfig);
@@ -109,6 +112,83 @@ namespace TimelessEchoes.MapGeneration
 
             currentDecorParent = decorParent;
             GenerateInternal(offset, segmentSize, decorParent);
+        }
+
+        public System.Collections.IEnumerator GenerateSegmentAsync(Vector2Int offset, Vector2Int segmentSize, Transform decorParent = null, int columnsPerYield = 8)
+        {
+            rng = randomizeSeed ? new Random() : new Random(seed);
+            currentDecorParent = decorParent;
+
+            var sandDepths = new int[segmentSize.x];
+            var grassDepths = new int[segmentSize.x];
+
+            var currentSandDepth = prevSandDepth >= 0 ? prevSandDepth : RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
+            var currentGrassDepth = prevGrassDepth >= 0 ? prevGrassDepth : RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
+
+            for (var x = 0; x < segmentSize.x;)
+            {
+                for (var segX = 0; segX < minAreaWidth && x < segmentSize.x; segX++, x++)
+                {
+                    sandDepths[x] = currentSandDepth;
+                    grassDepths[x] = currentGrassDepth;
+                }
+
+                var sandDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
+                var grassDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
+
+                currentSandDepth = Mathf.Clamp(currentSandDepth + sandDelta, sandDepthRange.x, sandDepthRange.y);
+                currentGrassDepth = Mathf.Clamp(currentGrassDepth + grassDelta, grassDepthRange.x, grassDepthRange.y);
+
+                if (currentSandDepth + currentGrassDepth > segmentSize.y)
+                    currentGrassDepth = Mathf.Clamp(segmentSize.y - currentSandDepth, grassDepthRange.x, grassDepthRange.y);
+            }
+
+            if (columnBuffer == null || columnBuffer.Length != segmentSize.y)
+                columnBuffer = new TileBase[segmentSize.y];
+
+            var processed = 0;
+            for (var x = 0; x < segmentSize.x; x++)
+            {
+                var sandDepth = sandDepths[x];
+                var grassDepth = grassDepths[x];
+                var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
+
+                for (var y = 0; y < segmentSize.y; y++)
+                {
+                    TileBase t = null;
+                    if (y < waterDepth) t = BottomTile;
+                    else if (y < waterDepth + sandDepth) t = MiddleTile;
+                    else if (y < waterDepth + sandDepth + grassDepth) t = TopTile;
+                    columnBuffer[y] = t;
+                }
+
+                var bounds = new BoundsInt(offset.x + x, offset.y, 0, 1, segmentSize.y, 1);
+                terrainMap.SetTilesBlock(bounds, columnBuffer);
+
+                processed++;
+                if (processed % Mathf.Max(1, columnsPerYield) == 0)
+                    yield return null;
+            }
+
+            // Second pass: place decor after all tiles are written so adjacency checks are valid
+            processed = 0;
+            for (var x = 0; x < segmentSize.x; x++)
+            {
+                var sandDepth = sandDepths[x];
+                var grassDepth = grassDepths[x];
+                var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
+                PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth, decorParent);
+                processed++;
+                if (processed % Mathf.Max(1, columnsPerYield) == 0)
+                    yield return null;
+            }
+
+            if (segmentSize.x > 0)
+            {
+                var lastIndex = segmentSize.x - 1;
+                prevSandDepth = sandDepths[lastIndex];
+                prevGrassDepth = grassDepths[lastIndex];
+            }
         }
 
         public void ClearDecorAtPosition(Vector3 pos)
@@ -166,6 +246,8 @@ namespace TimelessEchoes.MapGeneration
                         grassDepthRange.y);
             }
 
+            // TODO(P3): Batch tile writes per column using Tilemap.SetTiles/SetTilesBlock to cut SetTile overhead
+            // TODO(P3): Consider yielding every N columns to spread work across frames
             for (var x = 0; x < segmentSize.x; x++)
             {
                 var sandDepth = sandDepths[x];
@@ -291,61 +373,90 @@ namespace TimelessEchoes.MapGeneration
                 var cell = new Vector3Int(worldX, offsetY + y, 0);
                 var worldPos = terrainMap.CellToWorld(cell).x;
 
-                var choices = new List<DecorEntry>();
-                if (settings != null)
+                if (settings == null)
+                    continue;
+
+                // Early density gate to avoid per-cell work when not placing
+                var density = settings.decor.density;
+                if (RandomRangeFloat(0f, 1f) > density)
+                    continue;
+
+                // Two-pass, non-alloc weighted pick over allowed entries
+                // Pass 1: compute total weight for allowed entries at this cell
+                var total = 0f;
+                if (settings.decor != null && settings.decor.decor != null)
                 {
                     foreach (var d in settings.decor.decor)
                     {
-                        if (d.GetWeight(worldPos) <= 0f)
-                            continue;
+                        if (d == null) continue;
+                        if (d.GetWeight(worldPos) <= 0f) continue;
 
                         var cfg = d.config;
                         var allowed = !cfg.borderOnly
                             ? !IsBufferedEdge(cell, baseTile, cfg.topBuffer, cfg.bottomBuffer, cfg.sideBuffer)
                             : IsBorderCell(cell, baseTile, cfg);
 
-                        if (allowed)
-                            choices.Add(d);
+                        if (!allowed) continue;
+
+                        var w = d.config != null ? d.config.weight : 0f;
+                        if (w > 0f) total += w;
                     }
                 }
-                var density = settings != null ? settings.decor.density : 0f;
-                if (choices.Count == 0 || RandomRangeFloat(0f, 1f) > density)
+
+                if (total <= 0f)
                     continue;
 
-                var total = 0f;
-                foreach (var d in choices) total += d.config.weight;
+                // Pass 2: roll and select
                 var r = RandomRangeFloat(0f, total);
-                foreach (var d in choices)
+                DecorEntry picked = null;
+                foreach (var d in settings.decor.decor)
                 {
-                    r -= d.config.weight;
+                    if (d == null) continue;
+                    if (d.GetWeight(worldPos) <= 0f) continue;
+
+                    var cfg = d.config;
+                    var allowed = !cfg.borderOnly
+                        ? !IsBufferedEdge(cell, baseTile, cfg.topBuffer, cfg.bottomBuffer, cfg.sideBuffer)
+                        : IsBorderCell(cell, baseTile, cfg);
+                    if (!allowed) continue;
+
+                    var w = d.config != null ? d.config.weight : 0f;
+                    if (w <= 0f) continue;
+
+                    r -= w;
                     if (r <= 0f)
                     {
-                        if (d.prefab != null)
-                        {
-                            var center = terrainMap.GetCellCenterWorld(cell);
-                            var instance = Instantiate(d.prefab, center, Quaternion.identity, decorParent);
-                            if (d.randomFlipX && RandomRangeFloat(0f, 1f) < 0.5f)
-                            {
-                                var renderer = instance.GetComponentInChildren<SpriteRenderer>();
-                                if (renderer != null)
-                                    renderer.flipX = true;
-                            }
-                        }
-
-                        if (decorMap != null && d.tile != null)
-                        {
-                            decorMap.SetTile(cell, d.tile);
-                            if (d.randomFlipX)
-                            {
-                                decorMap.SetTileFlags(cell, TileFlags.None);
-                                var matrix = RandomRangeFloat(0f, 1f) < 0.5f
-                                    ? Matrix4x4.Scale(new Vector3(-1, 1, 1))
-                                    : Matrix4x4.identity;
-                                decorMap.SetTransformMatrix(cell, matrix);
-                            }
-                        }
-
+                        picked = d;
                         break;
+                    }
+                }
+
+                if (picked == null)
+                    continue;
+
+                // Place prefab and/or tile for the picked entry
+                if (picked.prefab != null)
+                {
+                    var center = terrainMap.GetCellCenterWorld(cell);
+                    var instance = Instantiate(picked.prefab, center, Quaternion.identity, decorParent);
+                    if (picked.randomFlipX && RandomRangeFloat(0f, 1f) < 0.5f)
+                    {
+                        var renderer = instance.GetComponentInChildren<SpriteRenderer>();
+                        if (renderer != null)
+                            renderer.flipX = true;
+                    }
+                }
+
+                if (decorMap != null && picked.tile != null)
+                {
+                    decorMap.SetTile(cell, picked.tile);
+                    if (picked.randomFlipX)
+                    {
+                        decorMap.SetTileFlags(cell, TileFlags.None);
+                        var matrix = RandomRangeFloat(0f, 1f) < 0.5f
+                            ? Matrix4x4.Scale(new Vector3(-1, 1, 1))
+                            : Matrix4x4.identity;
+                        decorMap.SetTransformMatrix(cell, matrix);
                     }
                 }
             }

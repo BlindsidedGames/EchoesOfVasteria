@@ -6,6 +6,7 @@ using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Enemies;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 using static Blindsided.Oracle;
 using static TimelessEchoes.Quests.QuestUtils;
@@ -74,6 +75,14 @@ namespace TimelessEchoes.Tasks
 
         private readonly List<GameObject> generatedObjects = new();
 
+        [SerializeField] private int physicsBufferSize = 8;
+        private Collider2D[] physicsHits;
+
+        // Reusable scratch collections to avoid per-segment allocations at runtime
+        private readonly List<(Vector3 pos, MonoBehaviour obj)> scratchSpawnedTasks = new();
+        private readonly List<Vector3> scratchTaskPositions = new();
+        private readonly Dictionary<Vector3, MonoBehaviour> scratchTaskMap = new();
+
         /// <summary>
         ///     Optional parent for spawned task objects.
         /// </summary>
@@ -100,6 +109,8 @@ namespace TimelessEchoes.Tasks
             chunk?.AssignTilemaps(this);
 
             EnsureTilemaps();
+
+            physicsHits = new Collider2D[Mathf.Max(1, physicsBufferSize)];
         }
 
         private void ApplyConfig(MapGenerationConfig cfg)
@@ -270,9 +281,13 @@ namespace TimelessEchoes.Tasks
             if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
                 return;
 
-            var spawnedTasks = new List<(Vector3 pos, MonoBehaviour obj)>();
-            var taskPositions = new List<Vector3>();
-            var taskMap = new Dictionary<Vector3, MonoBehaviour>();
+            // Use scratch containers at runtime to avoid allocations each segment
+            var spawnedTasks = clearExisting ? new List<(Vector3 pos, MonoBehaviour obj)>() : scratchSpawnedTasks;
+            var taskPositions = clearExisting ? new List<Vector3>() : scratchTaskPositions;
+            var taskMap = clearExisting ? new Dictionary<Vector3, MonoBehaviour>() : scratchTaskMap;
+            spawnedTasks.Clear();
+            taskPositions.Clear();
+            taskMap.Clear();
             SpawnTasks(bottomCount, localMinX, localMaxX, parent, clearExisting, true, false, false, spawnedTasks,
                 taskPositions, taskMap);
             SpawnTasks(middleCount, localMinX, localMaxX, parent, clearExisting, false, true, false, spawnedTasks,
@@ -506,7 +521,7 @@ namespace TimelessEchoes.Tasks
                 terrainMap.cellBounds.yMin,
                 terrainMap.cellBounds.yMax);
 
-            var validYs = new List<int>();
+            var validYs = ListPool<int>.Get();
             for (var y = maxY; y >= minY; y--)
             {
                 var cell = new Vector3Int(baseCell.x, y, 0);
@@ -515,10 +530,14 @@ namespace TimelessEchoes.Tasks
             }
 
             if (validYs.Count == 0)
+            {
+                ListPool<int>.Release(validYs);
                 return false;
+            }
 
             var idx = Random.Range(0, validYs.Count);
             position = terrainMap.GetCellCenterWorld(new Vector3Int(baseCell.x, validYs[idx], 0));
+            ListPool<int>.Release(validYs);
             return true;
         }
 
@@ -531,15 +550,19 @@ namespace TimelessEchoes.Tasks
                 return true;
             }
 
-            var candidates = new List<Vector3>();
+            var candidates = ListPool<Vector3>.Get();
             foreach (var t in terrains)
                 if (TryGetTerrainSpot(localX, t, out var pos))
                     candidates.Add(pos);
 
             if (candidates.Count == 0)
+            {
+                ListPool<Vector3>.Release(candidates);
                 return false;
+            }
 
             position = candidates[Random.Range(0, candidates.Count)];
+            ListPool<Vector3>.Release(candidates);
             return true;
         }
 
@@ -556,6 +579,132 @@ namespace TimelessEchoes.Tasks
             return count;
         }
 
+        // Asynchronous generation variant to spread work over multiple frames
+        public System.Collections.IEnumerator GenerateSegmentAsync(float localMinX, float localMaxX, Transform parent, int batchSize = 8)
+        {
+            if (Controller == null)
+                Controller = GetComponent<TaskController>();
+            if (Controller == null)
+                yield break;
+
+            // Reuse scratch containers
+            scratchSpawnedTasks.Clear();
+            scratchTaskPositions.Clear();
+            scratchTaskMap.Clear();
+
+            var bottomCount = Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
+            var middleCount = Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
+            var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
+            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
+
+            var spawnedThisBatch = 0;
+            System.Func<bool> doYield = () =>
+            {
+                if (spawnedThisBatch >= batchSize)
+                {
+                    spawnedThisBatch = 0;
+                    return true;
+                }
+                return false;
+            };
+
+            // Tasks by terrain
+            for (var i = 0; i < bottomCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, true, false, false,
+                            scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
+                spawnedThisBatch++;
+                if (doYield()) { yield return null; }
+            }
+            for (var i = 0; i < middleCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, true, false,
+                            scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
+                spawnedThisBatch++;
+                if (doYield()) { yield return null; }
+            }
+            for (var i = 0; i < topCount; i++)
+            {
+                for (var a = 0; a < 10; a++)
+                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, false, true,
+                            scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
+                spawnedThisBatch++;
+                if (doYield()) { yield return null; }
+            }
+
+            // Enemies
+            for (var i = 0; i < enemyCount; i++)
+            {
+                var localX = UnityEngine.Random.Range(localMinX, localMaxX);
+                var worldX = transform.position.x + localX;
+                var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
+                if (entry == null || entry.data == null || entry.data.prefab == null) continue;
+                if (!TryGetTerrainSpot(localX, entry.spawnTerrains, out var pos)) continue;
+
+                var attempts = 0; var valid = false;
+                while (attempts < 5)
+                {
+                    var terrain = GetTerrainAt(pos);
+                    var allowed = terrain != null && (entry.spawnTerrains == null || entry.spawnTerrains.Count == 0 || entry.spawnTerrains.Contains(terrain));
+                    var cell = terrainMap.WorldToCell(pos);
+                    var obstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
+                    if (allowed && !obstructed && ValidateTerrainRules(terrain, cell)) { valid = true; break; }
+                    pos = RandomPositionAtX(localX); attempts++;
+                }
+                if (!valid) continue;
+                var parentTf = parent != null ? parent : (SpawnParent != null ? SpawnParent : transform);
+                var obj = Instantiate(entry.data.prefab, pos, Quaternion.identity, parentTf);
+                generatedObjects.Add(obj.gameObject);
+                spawnedThisBatch++;
+                if (doYield()) { yield return null; }
+            }
+
+            // NPCs
+            foreach (var npc in npcTasks)
+            {
+                if (npc == null || npc.prefab == null) continue;
+                if (npc.localX < localMinX || npc.localX >= localMaxX) continue;
+                if (npc.spawnOnlyOnce && StaticReferences.CompletedNpcTasks.Contains(npc.id)) continue;
+                if (!string.IsNullOrEmpty(npc.id) && StaticReferences.ActiveNpcMeetings.Contains(npc.id)) continue;
+
+                Vector3 pos; if (!TryGetTerrainSpot(npc.localX, npc.spawnTerrains, out pos)) pos = RandomPositionAtX(npc.localX);
+                var npcTerrain = GetTerrainAt(pos);
+                if (npcTerrain == null || (npc.spawnTerrains != null && npc.spawnTerrains.Count > 0 && !npc.spawnTerrains.Contains(npcTerrain)) || !ValidateTerrainRules(npcTerrain, terrainMap.WorldToCell(pos))) continue;
+
+                for (var i = scratchTaskPositions.Count - 1; i >= 0; i--)
+                {
+                    var existing = scratchTaskPositions[i];
+                    if (Vector3.Distance(existing, pos) < minTaskDistance)
+                    {
+                        if (scratchTaskMap.TryGetValue(existing, out var objToRemove))
+                        {
+                            Controller.RemoveTaskObject(objToRemove);
+                            generatedObjects.Remove(objToRemove.gameObject);
+                            Destroy(objToRemove.gameObject);
+                            scratchTaskMap.Remove(existing);
+                        }
+                        scratchTaskPositions.RemoveAt(i);
+                    }
+                }
+
+                var parentTf = parent != null ? parent : (SpawnParent != null ? SpawnParent : transform);
+                var obj2 = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
+                generatedObjects.Add(obj2);
+                var mono = obj2.GetComponent<MonoBehaviour>();
+                if (mono != null)
+                {
+                    Controller.AddRuntimeTaskObject(mono);
+                    scratchTaskPositions.Add(pos);
+                    scratchTaskMap[pos] = mono;
+                }
+
+                spawnedThisBatch++;
+                if (doYield()) { yield return null; }
+            }
+        }
+
         /// <summary>
         ///     Determine if the exact XY position contains a collider on the blocking mask.
         /// </summary>
@@ -570,10 +719,16 @@ namespace TimelessEchoes.Tasks
         private bool IsBlockedAhead(Vector3 pos)
         {
             const float checkRadius = 0.4f;
-            var hits = Physics2D.OverlapCircleAll(pos, checkRadius, blockingMask);
-            foreach (var h in hits)
-                if (h.bounds.min.y > pos.y - 0.1f)
+            var filter = new ContactFilter2D();
+            filter.SetLayerMask(blockingMask);
+            filter.useTriggers = Physics2D.queriesHitTriggers;
+            var count = Physics2D.OverlapCircle(pos, checkRadius, filter, physicsHits);
+            for (var i = 0; i < count; i++)
+            {
+                var h = physicsHits[i];
+                if (h != null && h.bounds.min.y > pos.y - 0.1f)
                     return true;
+            }
             return false;
         }
 
