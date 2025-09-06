@@ -207,8 +207,8 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class ResourceRecord
         {
-            public int TotalReceived;
-            public int TotalSpent;
+            public double TotalReceived;
+            public double TotalSpent;
         }
 
         [HideReferenceObjectPicker]

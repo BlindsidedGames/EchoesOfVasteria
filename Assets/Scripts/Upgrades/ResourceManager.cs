@@ -157,7 +157,8 @@ namespace TimelessEchoes.Upgrades
                 amounts[resource] += adjustedAmount;
             else
                 amounts[resource] = adjustedAmount;
-            resource.totalReceived += Mathf.RoundToInt((float)adjustedAmount);
+            // Accumulate exact double values to support very large totals without precision loss
+            resource.totalReceived += adjustedAmount;
             if (trackStats)
             {
                 var tracker = GameplayStatTracker.Instance;
@@ -184,7 +185,8 @@ namespace TimelessEchoes.Upgrades
             var current = GetAmount(resource);
             if (current < amount) return false;
             amounts[resource] = current - amount;
-            resource.totalSpent += Mathf.RoundToInt((float)amount);
+            // Accumulate exact double values to support very large totals without precision loss
+            resource.totalSpent += amount;
             if (batchDepth > 0)
                 pendingInventoryChanged = true;
             else

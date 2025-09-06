@@ -24,7 +24,8 @@ namespace TimelessEchoes.Enemies
             "oswarlan",
             "Invariel",
             "Borg",
-            "Madstone"
+            "Madstone",
+            "Kynji"
         };
 
         /// <summary>

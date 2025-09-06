@@ -21,7 +21,7 @@ namespace TimelessEchoes.UI
         private float nextUpdateTime;
 
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
-        private readonly Dictionary<Resource, (double amount, int totalReceived, int totalSpent)> lastDisplayed = new();
+        private readonly Dictionary<Resource, (double amount, double totalReceived, double totalSpent)> lastDisplayed = new();
         private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private readonly Dictionary<Resource, float> minDistanceLookup = new();
         private List<Resource> defaultOrder = new();
@@ -297,7 +297,8 @@ namespace TimelessEchoes.UI
                 return;
             }
 
-            int GetValue(Resource r)
+            // Use double to avoid overflow/clamping when values exceed Int32 range
+            double GetValue(Resource r)
             {
                 return sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
             }

@@ -539,8 +539,8 @@ namespace TimelessEchoes.Editor
                         if (kv.Value is Dictionary<string, object> rr)
                         {
                             var rec = new GameData.ResourceRecord();
-                            TryGetInt(rr, "TotalReceived", out rec.TotalReceived);
-                            TryGetInt(rr, "TotalSpent", out rec.TotalSpent);
+                            TryGetDouble(rr, "TotalReceived", out rec.TotalReceived);
+                            TryGetDouble(rr, "TotalSpent", out rec.TotalSpent);
                             gd.ResourceStats[kv.Key] = rec;
                         }
                     }

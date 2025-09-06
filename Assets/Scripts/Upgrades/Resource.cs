@@ -39,7 +39,7 @@ namespace TimelessEchoes.Upgrades
         [Tooltip("Override how this resource is categorized for the Cauldron. Auto uses inferred grouping.")]
         public CauldronCategory cauldronCategory = CauldronCategory.Auto;
 
-        [HideInInspector] public int totalReceived;
-        [HideInInspector] public int totalSpent;
+        [HideInInspector] public double totalReceived;
+        [HideInInspector] public double totalSpent;
     }
 }
