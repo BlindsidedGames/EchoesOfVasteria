@@ -221,46 +221,16 @@ namespace TimelessEchoes.MapGeneration
                 return;
             }
 
-            // Translate grid without full rescan using GridGraph API.
-            // Must run inside an A* work item (thread-safe window).
-            astar.AddWorkItem(() =>
+            // Option A: Full rescan after shifting segments to avoid stale node data.
+            using (astar.PausePathfinding())
             {
-                gg.RelocateNodes(
-                    center: newCenter,
-                    rotation: Quaternion.Euler(gg.rotation),
-                    nodeSize: gg.nodeSize,
-                    aspectRatio: gg.aspectRatio,
-                    isometricAngle: gg.isometricAngle);
+                gg.center = newCenter;
+                astar.Scan(gg);
+            }
 
-                // Update only the newly revealed slice (queue graph update after relocation)
-                var deltaTilesInner = left - lastLeftTile; // +ve when moving right
-                if (deltaTilesInner != 0)
-                {
-                    var addWidth = Mathf.Abs(deltaTilesInner);
-                    int updateLeft, updateRight;
-                    if (deltaTilesInner > 0)
-                    {
-                        updateLeft = right - addWidth;
-                        updateRight = right;
-                    }
-                    else
-                    {
-                        updateLeft = left;
-                        updateRight = left + addWidth;
-                    }
-
-                    var cx = (updateLeft + updateRight) * 0.5f;
-                    var w = Mathf.Max(0.001f, Mathf.Abs(updateRight - updateLeft));
-                    var bounds = new Bounds(new Vector3(cx, segmentSize.y * 0.5f, 0f), new Vector3(w, segmentSize.y, 1f));
-                    var guo = new Pathfinding.GraphUpdateObject(bounds);
-                    astar.UpdateGraphs(guo);
-                }
-
-                lastLeftTile = left;
-                lastRightTile = right;
-                lastGraphCenter = newCenter;
-            });
-            // Note: last* fields are updated inside the work item above
+            lastLeftTile = left;
+            lastRightTile = right;
+            lastGraphCenter = newCenter;
         }
     }
 }
