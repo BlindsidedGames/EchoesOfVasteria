@@ -43,6 +43,11 @@ namespace TimelessEchoes.Tasks
         private int currentIndex = -1;
         public List<ITask> tasks { get; } = new();
 
+        // Debounce sorting so multiple additions in the same frame only sort once
+        [SerializeField] private bool debounceSortPerFrame = true;
+        private bool pendingSort;
+        private int lastSortedFrame = -1;
+
         private void OnTaskCompleted(ITask task)
         {
             RemoveTask(task);
@@ -133,6 +138,33 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        private void LateUpdate()
+        {
+            if (!debounceSortPerFrame)
+                return;
+
+            if (pendingSort && lastSortedFrame != Time.frameCount)
+            {
+                SortTaskListsByProximity();
+                lastSortedFrame = Time.frameCount;
+                pendingSort = false;
+            }
+        }
+
+        private void RequestSort()
+        {
+            if (debounceSortPerFrame)
+            {
+                pendingSort = true;
+            }
+            else
+            {
+                SortTaskListsByProximity();
+                lastSortedFrame = Time.frameCount;
+                pendingSort = false;
+            }
+        }
+
         private void OnEnable()
         {
             AcquireHero();
@@ -192,7 +224,7 @@ namespace TimelessEchoes.Tasks
                 kill.TaskCompleted += OnTaskCompleted;
                 tasks.Add(kill);
                 taskMap[kill] = obj;
-                SortTaskListsByProximity();
+                RequestSort();
                 return;
             }
 
@@ -202,7 +234,7 @@ namespace TimelessEchoes.Tasks
                     baseTask.TaskCompleted += OnTaskCompleted;
                 tasks.Add(existing);
                 taskMap[existing] = obj;
-                SortTaskListsByProximity();
+                RequestSort();
                 return;
             }
 
@@ -215,7 +247,7 @@ namespace TimelessEchoes.Tasks
                 taskMap[compTask] = obj;
             }
 
-            SortTaskListsByProximity();
+            RequestSort();
         }
 
         /// <summary>
@@ -294,6 +326,8 @@ namespace TimelessEchoes.Tasks
             }
 
             SortTaskListsByProximity();
+            lastSortedFrame = Time.frameCount;
+            pendingSort = false;
 
             hero?.SetTask(null);
 

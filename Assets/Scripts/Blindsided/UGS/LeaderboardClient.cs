@@ -16,7 +16,7 @@ namespace Blindsided.UGS
             await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score);
         }
 
-        public static async Task<LeaderboardScoresPage> GetTopAsync(int limit = 20, string leaderboardId = DefaultId)
+        public static async Task<LeaderboardScoresPage> GetTopAsync(int limit = 50, string leaderboardId = DefaultId)
         {
             await UgsInitializer.EnsureInitializedAsync();
             return await LeaderboardsService.Instance.GetScoresAsync(
@@ -24,7 +24,7 @@ namespace Blindsided.UGS
                 new GetScoresOptions { Limit = limit });
         }
 
-        public static async Task<LeaderboardScores> GetAroundPlayerAsync(int range = 10, string leaderboardId = DefaultId)
+        public static async Task<LeaderboardScores> GetAroundPlayerAsync(int range = 50, string leaderboardId = DefaultId)
         {
             await UgsInitializer.EnsureInitializedAsync();
             return await LeaderboardsService.Instance.GetPlayerRangeAsync(
@@ -46,6 +46,28 @@ namespace Blindsided.UGS
             catch (RequestFailedException ex) when (ex.ErrorCode == 404)
             {
                 // Player has no score yet
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the total number of entries for a leaderboard.
+        /// Uses a lightweight page request (limit=1) to read the total count.
+        /// </summary>
+        public static async Task<int?> GetTotalCountAsync(string leaderboardId = DefaultId)
+        {
+            try
+            {
+                await UgsInitializer.EnsureInitializedAsync();
+                var page = await LeaderboardsService.Instance.GetScoresAsync(
+                    leaderboardId,
+                    new GetScoresOptions { Limit = 1 });
+
+                // LeaderboardScoresPage typically exposes Total (total number of scores)
+                return page?.Total;
+            }
+            catch
+            {
                 return null;
             }
         }

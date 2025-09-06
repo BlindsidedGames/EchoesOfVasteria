@@ -15,6 +15,8 @@ namespace Blindsided.UGS
     public class UgsLeaderboardsReporter : MonoBehaviour
     {
         private static UgsLeaderboardsReporter instance;
+        private bool dataLoaded;
+        private float readyAtTime;
 
         public static UgsLeaderboardsReporter Instance
         {
@@ -60,6 +62,12 @@ namespace Blindsided.UGS
 
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // Default small delay to allow systems to finish loading before first upload
+            readyAtTime = Time.unscaledTime + 2f;
+
+            // Consider the game fully loaded once save data is broadcast as loaded
+            Blindsided.EventHandler.OnLoadData += MarkDataLoaded;
         }
 
         private void Update()
@@ -81,6 +89,10 @@ namespace Blindsided.UGS
         {
             var tracker = GameplayStatTracker.Instance;
             if (tracker == null)
+                return;
+
+            // Avoid submitting at startup before systems and saves are ready
+            if (!IsReadyToUpload())
                 return;
 
             try
@@ -113,6 +125,10 @@ namespace Blindsided.UGS
 
         private async Task<int> TrySubmitAsync(string leaderboardId, int score, int lastUploaded)
         {
+            // Never submit an initial zero at boot; wait until we have a meaningful value
+            if (lastUploaded < 0 && score <= 0)
+                return lastUploaded;
+
             if (score <= lastUploaded)
                 return lastUploaded; // only submit improvements to reduce traffic; server policy still applies
 
@@ -121,6 +137,26 @@ namespace Blindsided.UGS
                 lastUploaded = (int)Math.Floor(res.Score);
 
             return lastUploaded;
+        }
+
+        private bool IsReadyToUpload()
+        {
+            if (dataLoaded)
+                return true;
+            // Fallback: small grace period to let systems initialize
+            return Time.unscaledTime >= readyAtTime;
+        }
+
+        private void MarkDataLoaded()
+        {
+            dataLoaded = true;
+        }
+
+        private void OnDestroy()
+        {
+            Blindsided.EventHandler.OnLoadData -= MarkDataLoaded;
+            if (instance == this)
+                instance = null;
         }
     }
 }

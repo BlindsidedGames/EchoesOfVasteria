@@ -19,6 +19,9 @@ namespace Blindsided.SaveData
         [TabGroup("GameDataTabs", "UpgradeSystem")]
         public bool StatUpgradesMigratedToGear;
 
+        // One-time guard to ensure duck helmet sanitation runs only once per save
+        [TabGroup("GameDataTabs", "Gear")] public bool DuckHelmetSanitized;
+
         [TabGroup("GameDataTabs", "Time")] public float CurrentTime;
         [TabGroup("GameDataTabs", "Time")] public string DateQuitString;
         [TabGroup("GameDataTabs", "Time")] public string DateStarted;
