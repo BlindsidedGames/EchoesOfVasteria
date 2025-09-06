@@ -110,11 +110,21 @@ namespace TimelessEchoes.MapGeneration
             }
             tmpRemovalList.Clear();
 
-            // TODO(P2): Replace Destroy with pooling for segment roots
+            // Release all children under the old roots back to pools, then release the roots
             if (old.tasks != null)
-                Destroy(old.tasks);
+            {
+                var t = old.tasks.transform;
+                for (int i = t.childCount - 1; i >= 0; i--)
+                    Blindsided.Utilities.Pooling.PoolManager.Release(t.GetChild(i).gameObject);
+                Blindsided.Utilities.Pooling.PoolManager.Release(old.tasks);
+            }
             if (old.decor != null)
-                Destroy(old.decor);
+            {
+                var d = old.decor.transform;
+                for (int i = d.childCount - 1; i >= 0; i--)
+                    Blindsided.Utilities.Pooling.PoolManager.Release(d.GetChild(i).gameObject);
+                Blindsided.Utilities.Pooling.PoolManager.Release(old.decor);
+            }
 
             yield return StartCoroutine(CreateSegment());
             MoveGraph();
@@ -124,8 +134,9 @@ namespace TimelessEchoes.MapGeneration
         private IEnumerator CreateSegment()
         {
             var offset = new Vector2Int(nextSegmentX, 0);
-            // TODO(P2): Pool decor/task roots and recycle instead of new GameObjects
-            var decorRoot = new GameObject($"SegmentDecor_{offset.x}");
+            // Pool decor/task roots and recycle instead of new GameObjects
+            var decorRoot = Blindsided.Utilities.Pooling.PoolManager.GetNamed("SegmentDecor");
+            decorRoot.name = $"SegmentDecor_{offset.x}";
             decorRoot.transform.SetParent(decorParent, false);
             // Async tile/decor generation to avoid long main-thread spikes
             if (chunkGenerator != null)
@@ -133,7 +144,8 @@ namespace TimelessEchoes.MapGeneration
             else
                 yield return null;
 
-            var tasksRoot = new GameObject($"SegmentTasks_{offset.x}");
+            var tasksRoot = Blindsided.Utilities.Pooling.PoolManager.GetNamed("SegmentTasks");
+            tasksRoot.name = $"SegmentTasks_{offset.x}";
             tasksRoot.transform.SetParent(segmentParent, false);
 
             var minX = Mathf.Max(taskGenerator.MinX, offset.x);
@@ -161,7 +173,14 @@ namespace TimelessEchoes.MapGeneration
             if (pathfinder == null)
                 return;
 
-            var gg = pathfinder.data.gridGraph;
+            if (pathfinder == null)
+                return;
+            if (!pathfinder.isActiveAndEnabled)
+                pathfinder.enabled = true;
+            var astar = AstarPath.active;
+            if (astar == null || !astar.isActiveAndEnabled)
+                return;
+            var gg = pathfinder.data != null ? pathfinder.data.gridGraph : null;
             if (gg == null)
                 return;
 
@@ -187,9 +206,13 @@ namespace TimelessEchoes.MapGeneration
             var newCenter = new Vector3(left - 1 + widthTiles * 0.5f, segmentSize.y * 0.5f, 0f);
             if (!gridInitialized)
             {
-                gg.SetDimensions(widthTiles * 2, segmentSize.y * 2, gg.nodeSize);
-                gg.center = newCenter;
-                pathfinder.Scan();
+                // Perform graph resize + scan while pathfinding threads are paused to avoid races
+                using (astar.PausePathfinding())
+                {
+                    gg.SetDimensions(Mathf.Max(2, widthTiles * 2), Mathf.Max(2, segmentSize.y * 2), gg.nodeSize);
+                    gg.center = newCenter;
+                    astar.Scan(gg);
+                }
 
                 lastLeftTile = left;
                 lastRightTile = right;
@@ -200,7 +223,7 @@ namespace TimelessEchoes.MapGeneration
 
             // Translate grid without full rescan using GridGraph API.
             // Must run inside an A* work item (thread-safe window).
-            AstarPath.active.AddWorkItem(() =>
+            astar.AddWorkItem(() =>
             {
                 gg.RelocateNodes(
                     center: newCenter,
@@ -230,7 +253,7 @@ namespace TimelessEchoes.MapGeneration
                     var w = Mathf.Max(0.001f, Mathf.Abs(updateRight - updateLeft));
                     var bounds = new Bounds(new Vector3(cx, segmentSize.y * 0.5f, 0f), new Vector3(w, segmentSize.y, 1f));
                     var guo = new Pathfinding.GraphUpdateObject(bounds);
-                    AstarPath.active.UpdateGraphs(guo);
+                    astar.UpdateGraphs(guo);
                 }
 
                 lastLeftTile = left;

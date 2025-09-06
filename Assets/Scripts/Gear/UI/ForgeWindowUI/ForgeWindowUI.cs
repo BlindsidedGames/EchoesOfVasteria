@@ -259,6 +259,9 @@ namespace TimelessEchoes.Gear.UI
             }
 
             // Clear UI on load (do not clear on save to avoid autosave side-effects)
+            // Also clear any forge attention indicator when the window is reopened
+            if (forgeAttentionObject != null)
+                forgeAttentionObject.SetActive(false);
             EventHandler.OnLoadData += OnPostLoad;
             OnResourcesChanged();
         }

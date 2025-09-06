@@ -29,6 +29,8 @@ namespace TimelessEchoes.Hero
         private HeroController hero;
         private TaskController taskController;
         private float remaining;
+        [SerializeField] private float taskAcquireGraceSeconds = 1.0f;
+        private float spawnTime;
         private float defaultAggroRange;
         private GameObject durationBarParent;
         private SlicedFilledImage durationFill;
@@ -54,6 +56,7 @@ namespace TimelessEchoes.Hero
             hero = GetComponent<HeroController>();
             taskController = GetComponentInParent<TaskController>();
             remaining = lifetime;
+            spawnTime = Time.time;
             if (!AllEchoes.Contains(this))
                 AllEchoes.Add(this);
             if (hero != null)
@@ -104,6 +107,7 @@ namespace TimelessEchoes.Hero
 
             if (hero != null)
             {
+                spawnTime = Time.time;
                 // When skills are not restricted, echoes should still focus on tasks
                 // rather than roaming across the map for combat. Treat an empty
                 // skill list as "all skills" instead of "combat only".
@@ -229,8 +233,16 @@ namespace TimelessEchoes.Hero
 
                 if (!hasTask)
                 {
+                    // Allow a short grace window at spawn so echoes don't immediately expire
+                    // while the map is still generating tasks.
+                    if (Time.time - spawnTime < taskAcquireGraceSeconds)
+                        return;
+                    // If no tasks anywhere but combat is allowed, stay for combat.
                     if (combatEnabled && hero != null && hero.AllowAttacks)
-                        return; // stay alive for combat
+                        return;
+                    // If the controller reports there are visible tasks for this echo, keep waiting
+                    if (taskController.HasVisibleTasksForHero(hero))
+                        return;
                     Destroy(gameObject);
                 }
             }

@@ -207,7 +207,7 @@ namespace TimelessEchoes.MapGeneration
             {
                 var child = currentDecorParent.GetChild(i);
                 if (Vector3.Distance(child.position, pos) < 0.1f)
-                    Destroy(child.gameObject);
+                    Blindsided.Utilities.Pooling.PoolManager.Release(child.gameObject);
             }
         }
 
@@ -438,7 +438,10 @@ namespace TimelessEchoes.MapGeneration
                 if (picked.prefab != null)
                 {
                     var center = terrainMap.GetCellCenterWorld(cell);
-                    var instance = Instantiate(picked.prefab, center, Quaternion.identity, decorParent);
+                    var instance = Blindsided.Utilities.Pooling.PoolManager.Get(picked.prefab);
+                    instance.transform.SetParent(decorParent, false);
+                    instance.transform.position = center;
+                    instance.transform.rotation = Quaternion.identity;
                     if (picked.randomFlipX && RandomRangeFloat(0f, 1f) < 0.5f)
                     {
                         var renderer = instance.GetComponentInChildren<SpriteRenderer>();

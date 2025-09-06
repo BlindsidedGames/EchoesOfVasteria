@@ -156,6 +156,12 @@ namespace TimelessEchoes.Gear.UI
 
             // Notify: forge autocrafting stopped (due to upgrade/out-of-resources/vastium)
             FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            // If the forge window is not open, enable the attention indicator(s)
+            if (!TimelessEchoes.UI.TownWindowManager.IsForgeOpen)
+            {
+                if (forgeAttentionObject != null) forgeAttentionObject.SetActive(true);
+                TimelessEchoes.UI.TownWindowManager.ShowForgeAttention();
+            }
         }
     }
 }

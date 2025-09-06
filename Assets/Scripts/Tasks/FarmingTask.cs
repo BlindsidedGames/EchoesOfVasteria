@@ -39,6 +39,17 @@ namespace TimelessEchoes.Tasks
                 spriteRenderer.enabled = true;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            // Reset for reuse from pool
+            if (spriteRenderer != null)
+                spriteRenderer.enabled = true;
+            if (wetSpriteRenderer != null)
+                wetSpriteRenderer.enabled = false;
+            IsExhausted = false;
+        }
+
         public override void OnArrival(HeroController hero)
         {
             // Ensure base handles instant-complete first; if it does, it will early-return
@@ -107,6 +118,7 @@ namespace TimelessEchoes.Tasks
                 spriteRenderer.enabled = false;
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = false;
+            IsExhausted = true;
         }
 
         // TaskDuration property from ContinuousTask provides the duration

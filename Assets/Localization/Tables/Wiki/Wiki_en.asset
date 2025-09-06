@@ -184,25 +184,38 @@ MonoBehaviour:
   - m_Id: 9824133185945600
     m_Localized: "Hey guys Dev here. \n\nIf you want your names in the enemy name
       random pool of names then please jump into discord and ask in the EoV Chat
-      :)\n\nThe plan now is to spend a few days updating existing content, quality
-      of life. Polish, and additional content for those systems. Would love your
-      input on discord!"
+      :)\n\n\u2022 Halloween Map\n\u2022 Desert Map\n\u2022 Improved Forge\n  \u2022
+      Weapon slot becomes Gloves\n  \u2022 New Tab for Wren the combat expert where
+      you can craft various weapon and tool types that will change up your gameplay.\n 
+      \u2022 Forge Config screen to refine the stats you're looking for. This unlocks
+      more preferences as you level Ivan. EG search for 1 specific stat, then 2 then
+      3 then 4 then 5 eventually as you progress past certain levels.\n\u2022 Legendary
+      cards for the Cauldron as well as Improved capping for cards."
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed an issue that could occur when the game crashes before
-      finished loading and it would save blank data over the existing save.\n1.2.11\n\u2022
-      Added Leaderboards to the game. \n\u2022 You can now set a username in settings.\n1.2.10\n\u2022
-      Buffs can no longer be swapped out during a run.\n\u2022 Fixed a bug where
-      meeting quests could duplicate when being ready to turn in.\n\u2022 Fixed a
-      bug where going onto the demo version of the game would incorrectly lower your
-      maximum distance to the demo cap.\n\u2022 Fixed a bug where quests couldn't
-      set a higher cap than 300. Now quests can bypass this cap but the maximum distance
-      will remain 300 for when you transfer to the full game.\n\u2022 New background
-      mute toggle, defaults to on.\n\u2022 Overhauled Enemy stats tab to be far more
-      informative.\n\u2022 Added two new enemy kill thresholds each granting +50%
-      damage for a total of +200% Thresholds are 25,000 and 100,000 kills respectively.\n\u2022
-      Added a google sheets error reporting system which is completely anonymous.\n1.2.9\n\u2022
+    m_Localized: "\u2022 Gear maximum Health 250<sprite=194>500.\n\u2022 Gear maximum
+      Crit 5<sprite=194>7.5.\n\u2022 Gear maximum Defense 25<sprite=194>33.\n\u2022
+      Duck Healms: Movement speed has been stripped and attack rate over 1.5 reduced
+      to 1.2.\n\u2022 Task sorting now debounces to avoid recalculating paths every
+      single time a task is added. Now only happens once per frame.\n\u2022 Began
+      pooling objects to substantially improve performance!\n\u2022 Improved leaderboards
+      to now show 50 entries.\n\u2022 Fixed an Integer overflow issue.\n\u2022 Added
+      Attention objects to the Townsfolk button for when the forge or cauldron stops
+      while the window is closed.\n1.2.12\n\u2022 Fixed an issue that could occur
+      when the game crashes before finished loading and it would save blank data
+      over the existing save.\n1.2.11\n\u2022 Added Leaderboards to the game. \n\u2022
+      You can now set a username in settings.\n1.2.10\n\u2022 Buffs can no longer
+      be swapped out during a run.\n\u2022 Fixed a bug where meeting quests could
+      duplicate when being ready to turn in.\n\u2022 Fixed a bug where going onto
+      the demo version of the game would incorrectly lower your maximum distance
+      to the demo cap.\n\u2022 Fixed a bug where quests couldn't set a higher cap
+      than 300. Now quests can bypass this cap but the maximum distance will remain
+      300 for when you transfer to the full game.\n\u2022 New background mute toggle,
+      defaults to on.\n\u2022 Overhauled Enemy stats tab to be far more informative.\n\u2022
+      Added two new enemy kill thresholds each granting +50% damage for a total of
+      +200% Thresholds are 25,000 and 100,000 kills respectively.\n\u2022 Added a
+      google sheets error reporting system which is completely anonymous.\n1.2.9\n\u2022
       Added Cows, Sheep, and Pigs to the farmlands.\n\u2022 Added verbose logging
       to the save system.\n\u2022 Moved the Alter Echoes, Buffs, and Skill buttons
       to a new dropdown and made them available everywhere.\n\u2022 Disabled taskbar

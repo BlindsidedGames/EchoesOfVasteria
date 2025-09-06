@@ -40,6 +40,9 @@ namespace TimelessEchoes.Tasks
         private TaskController cachedTaskController;
         private bool autoRemovalScheduled;
 
+        // When true, this task should no longer be considered for selection until reset (e.g., pooled & reused)
+        public virtual bool IsExhausted { get; protected set; }
+
         public bool Claim(HeroController hero)
         {
             if (hero == null) return false;
@@ -118,7 +121,7 @@ namespace TimelessEchoes.Tasks
             TaskCompleted?.Invoke(this);
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             // Schedule a light periodic check to self-remove when hero is far ahead.
             if (enableAutoRemovalWhenBehind && !autoRemovalScheduled)
@@ -128,6 +131,9 @@ namespace TimelessEchoes.Tasks
                 InvokeRepeating(nameof(CheckAutoRemovalBehindHero), initialDelay, Mathf.Max(0.1f, autoRemovalIntervalSeconds));
                 autoRemovalScheduled = true;
             }
+
+            // Reset per-spawn availability
+            IsExhausted = false;
         }
 
         private void OnDisable()

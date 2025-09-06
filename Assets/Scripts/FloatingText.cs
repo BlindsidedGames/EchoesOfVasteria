@@ -103,7 +103,8 @@ namespace TimelessEchoes
         {
             timer = 0f;
             speed = 0f;
-            transform.SetParent(null);
+            // PoolManager handles reparenting on release; avoid SetParent here to prevent
+            // "GameObject is already being activated or deactivated" errors during SetActive(false).
         }
     }
 }

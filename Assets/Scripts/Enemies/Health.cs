@@ -122,7 +122,7 @@ namespace TimelessEchoes.Enemies
             }
 
             if (GetComponent<Enemy>() != null)
-                Destroy(gameObject);
+                Blindsided.Utilities.Pooling.PoolManager.Release(gameObject);
         }
     }
 }

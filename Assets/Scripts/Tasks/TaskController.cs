@@ -308,8 +308,10 @@ namespace TimelessEchoes.Tasks
 
                 if (obj is ITask existing)
                 {
-                    if (existing is BaseTask baseTask)
-                        baseTask.TaskCompleted += OnTaskCompleted;
+                    if (existing is MonoBehaviour mbExisting && !mbExisting.isActiveAndEnabled)
+                        continue;
+                    if (existing is BaseTask baseTask2)
+                        baseTask2.TaskCompleted += OnTaskCompleted;
                     tasks.Add(existing);
                     taskMap[existing] = obj;
                     continue;
@@ -318,8 +320,10 @@ namespace TimelessEchoes.Tasks
                 var compTask = obj.GetComponent<ITask>();
                 if (compTask != null)
                 {
-                    if (compTask is BaseTask baseTask)
-                        baseTask.TaskCompleted += OnTaskCompleted;
+                    if (compTask is MonoBehaviour mbComp && !mbComp.isActiveAndEnabled)
+                        continue;
+                    if (compTask is BaseTask baseTask2)
+                        baseTask2.TaskCompleted += OnTaskCompleted;
                     tasks.Add(compTask);
                     taskMap[compTask] = obj;
                 }
@@ -603,30 +607,40 @@ namespace TimelessEchoes.Tasks
                 taskMap.Remove(task);
                 if (obj != null)
                 {
+                    // For tasks that persist visuals after completion, keep the GameObject intact but disable the task component
                     if (task is OpenChestTask)
-                        Destroy(obj.GetComponent<OpenChestTask>());
+                    {
+                        var c = obj.GetComponent<OpenChestTask>(); if (c != null) c.enabled = false;
+                    }
                     else if (task is WoodcuttingTask)
-                        Destroy(obj.GetComponent<WoodcuttingTask>());
+                    {
+                        var c = obj.GetComponent<WoodcuttingTask>(); if (c != null) c.enabled = false;
+                    }
                     else if (task is MiningTask)
-                        Destroy(obj.GetComponent<MiningTask>());
+                    {
+                        var c = obj.GetComponent<MiningTask>(); if (c != null) c.enabled = false;
+                    }
                     else if (task is FarmingTask)
-                        Destroy(obj.GetComponent<FarmingTask>());
+                    {
+                        var c = obj.GetComponent<FarmingTask>(); if (c != null) c.enabled = false;
+                    }
                     else
-                        Destroy(obj.gameObject);
+                    {
+                        Blindsided.Utilities.Pooling.PoolManager.Release(obj.gameObject);
+                    }
                 }
             }
             else if (task is MonoBehaviour mb)
             {
-                if (task is OpenChestTask)
-                    Destroy(mb);
-                else if (task is WoodcuttingTask)
-                    Destroy(mb);
-                else if (task is MiningTask)
-                    Destroy(mb);
-                else if (task is FarmingTask)
-                    Destroy(mb);
+                if (task is OpenChestTask || task is WoodcuttingTask || task is MiningTask || task is FarmingTask)
+                {
+                    // Disable the component and keep visuals
+                    var mbBehaviour = mb as Behaviour; if (mbBehaviour != null) mbBehaviour.enabled = false;
+                }
                 else
-                    Destroy(mb.gameObject);
+                {
+                    Blindsided.Utilities.Pooling.PoolManager.Release(mb.gameObject);
+                }
             }
 
             if (task != null && task.IsComplete())

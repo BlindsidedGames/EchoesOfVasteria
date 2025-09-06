@@ -96,12 +96,6 @@ namespace TimelessEchoes.Enemies
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
             spawnPos = transform.position;
-            float spawnOffset = GameManager.CurrentGenerationConfig != null
-                ? GameManager.CurrentGenerationConfig.taskGeneratorSettings.enemySpawnXOffset
-                : 0f;
-            level = stats != null
-                ? stats.GetLevel(spawnPos.x - spawnOffset - stats.minX)
-                : 1;
 
             var controller = GetComponentInParent<TaskController>();
             if (controller != null)
@@ -110,13 +104,12 @@ namespace TimelessEchoes.Enemies
             wanderTarget.hideFlags = HideFlags.HideInHierarchy;
             wanderTarget.position = transform.position;
             blockingMask = LayerMask.GetMask("Blocking");
-            if (stats != null)
+
+            if (stats != null && ai != null)
             {
                 ai.maxSpeed = stats.moveSpeed;
-                // Ensure ranged enemies stop moving when within attack range
                 ai.endReachedDistance = stats.attackRange;
                 ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
-                health.Init(stats.GetMaxHealthForLevel(level));
             }
 
             var displayName = stats != null ? stats.enemyName : null;
@@ -583,6 +576,44 @@ namespace TimelessEchoes.Enemies
             OnEngage -= HandleAllyEngaged;
             if (wanderTarget != null)
                 Destroy(wanderTarget.gameObject);
+        }
+
+        /// <summary>
+        /// Initialize stats and health for a fresh spawn at the current position.
+        /// Call this right after placing the enemy from a pool.
+        /// </summary>
+        public void InitForSpawn()
+        {
+            spawnPos = transform.position;
+            float spawnOffset = GameManager.CurrentGenerationConfig != null
+                ? GameManager.CurrentGenerationConfig.taskGeneratorSettings.enemySpawnXOffset
+                : 0f;
+            level = stats != null
+                ? stats.GetLevel(spawnPos.x - spawnOffset - stats.minX)
+                : 1;
+
+            if (stats != null)
+            {
+                if (ai != null)
+                {
+                    ai.maxSpeed = stats.moveSpeed;
+                    ai.endReachedDistance = stats.attackRange;
+                    ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
+                    // Reset any previous path and snap to the new spawn position
+                    ai.Teleport(transform.position);
+                }
+
+                if (health != null)
+                    health.Init(stats.GetMaxHealthForLevel(level));
+            }
+
+            // Reset wandering target and disengage any previous target assignment
+            if (wanderTarget != null)
+                wanderTarget.position = transform.position;
+            if (setter != null)
+                setter.target = wanderTarget;
+            nextWanderTime = Time.time;
+            nextTargetUpdate = Time.time;
         }
 
         public void SetActiveState(bool active)

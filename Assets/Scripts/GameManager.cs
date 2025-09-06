@@ -624,7 +624,7 @@ namespace TimelessEchoes
                 {
                     var enemy = enemies[i];
                     if (enemy != null && enemy.transform.position.x < hero.transform.position.x)
-                        Destroy(enemy.gameObject);
+                        Blindsided.Utilities.Pooling.PoolManager.Release(enemy.gameObject);
                 }
 
             hero.SetActiveState(true);
@@ -959,6 +959,17 @@ namespace TimelessEchoes
 
             if (CurrentMap != null)
             {
+                // Release all pooled objects under the map hierarchy back to pools before destroying the map
+                var pooled = CurrentMap.GetComponentsInChildren<Blindsided.Utilities.Pooling.PooledObject>(true);
+                for (int i = 0; i < pooled.Length; i++)
+                {
+                    var po = pooled[i];
+                    if (po != null && po.gameObject != null)
+                        Blindsided.Utilities.Pooling.PoolManager.Release(po.gameObject);
+                }
+
+                yield return null; // allow release reparenting to settle
+
                 Destroy(CurrentMap); // safe to destroy AstarPath now
                 CurrentMap = null;
             }

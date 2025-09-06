@@ -11,5 +11,6 @@ namespace Blindsided.Utilities.Pooling
     public class PooledObject : MonoBehaviour
     {
         internal IObjectPool<GameObject> pool;
+        internal bool inPool;
     }
 }

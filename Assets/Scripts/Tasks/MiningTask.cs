@@ -37,6 +37,18 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            // Reset visual state when reused from pool
+            isDepleted = false;
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null && originalSprite != null)
+                spriteRenderer.sprite = originalSprite;
+            IsExhausted = false;
+        }
+
         public override void Tick(HeroController hero)
         {
             base.Tick(hero);
@@ -67,6 +79,7 @@ namespace TimelessEchoes.Tasks
                 if (s != null)
                     spriteRenderer.sprite = s;
             }
+            IsExhausted = true;
         }
 
         private Sprite ChooseDepletedSprite()

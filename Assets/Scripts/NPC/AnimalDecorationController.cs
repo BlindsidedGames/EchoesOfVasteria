@@ -38,6 +38,23 @@ namespace TimelessEchoes.NPC
 
         protected virtual void OnEnable()
         {
+            // On pooled reuse or fresh spawn, reset spawn state from current position
+            ResetForSpawn(transform.position);
+        }
+
+        /// <summary>
+        /// Reset movement state for pooled reuse at a new position.
+        /// </summary>
+        public void ResetForSpawn(Vector3 position)
+        {
+            spawnPos = position;
+            if (ai != null)
+            {
+                // Clear any previous path and snap to the new position
+                ai.Teleport(position);
+                ai.canMove = true;
+            }
+            transform.position = position;
             nextWanderTime = Time.time;
             Wander();
         }

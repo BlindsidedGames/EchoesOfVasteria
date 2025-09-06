@@ -58,6 +58,10 @@ namespace TimelessEchoes.Gear.UI
 
         [SerializeField] private Resource stoneResource;
 
+        [Header("Attention Indicator")]
+        [Tooltip("Optional: object to enable when forge autocrafting naturally stops while the window is closed.")]
+        [SerializeField] private GameObject forgeAttentionObject;
+
         [Header("Core Conversion Logic Resources")]
         [Tooltip("Reference to all Core resources in tier order for conversion calculations (optional; otherwise discovered via selected core slots).")]
         [SerializeField] private List<Resource> coreResourcesInTierOrder = new();

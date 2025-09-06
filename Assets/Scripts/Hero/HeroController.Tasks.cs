@@ -29,10 +29,13 @@ namespace TimelessEchoes.Hero
             if (setter != null)
             {
                 setter.target = task?.Target;
-                if (ai != null)
-                    ai.Teleport(transform.position);
-                else
-                    ai?.SearchPath();
+                if (task != null)
+                {
+                    if (ai != null)
+                        ai.Teleport(transform.position);
+                    else
+                        ai?.SearchPath();
+                }
             }
 
             if (task is BaseTask newBase)

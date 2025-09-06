@@ -49,6 +49,10 @@ namespace TimelessEchoes.UI
 		private readonly StringBuilder _statsSb = new StringBuilder(512);
 		private float[] _fractionsBuffer;
 
+		[Header("Attention Indicator")]
+		[Tooltip("Optional: object to enable when tasting finishes while the cauldron window is closed.")]
+		[SerializeField] private GameObject cauldronAttentionObject;
+
 		[Header("Weights Preview")]
 		[SerializeField] private TMP_Text firstPercentText;
 		[SerializeField] private TMP_Text spriteColText;
@@ -118,6 +122,9 @@ namespace TimelessEchoes.UI
 			RefreshDrinkingTexts();
 			RefreshPieChart();
 			RefreshWeightsText();
+			// Clear any prior attention indicator when the window is reopened
+			if (cauldronAttentionObject != null)
+				cauldronAttentionObject.SetActive(false);
 			if (cauldron != null)
 			{
 				cauldron.OnStewChanged += RefreshDrinkingTexts;
@@ -148,6 +155,24 @@ namespace TimelessEchoes.UI
 				cauldron.OnTasteSessionStopped -= OnTasteSessionStopped;
 				cauldron.OnSessionCardsChanged -= OnSessionCardsChanged;
 				cauldron.OnStatsChanged -= OnStatsChanged;
+
+				// If window is closing while tasting is active, arm a one-shot listener
+				// to enable the attention indicator when tasting naturally stops.
+				if (cauldron.IsTasting)
+				{
+					void OneShotStopped()
+					{
+						cauldron.OnTasteSessionStopped -= OneShotStopped;
+						if (!TimelessEchoes.UI.TownWindowManager.IsCauldronOpen)
+						{
+							if (cauldronAttentionObject != null)
+								cauldronAttentionObject.SetActive(true);
+							TimelessEchoes.UI.TownWindowManager.ShowCauldronAttention();
+						}
+						FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+					}
+					cauldron.OnTasteSessionStopped += OneShotStopped;
+				}
 			}
 			EventHandler.OnLoadData -= OnSaveOrLoad;
 			if (weightsHoverObject != null)

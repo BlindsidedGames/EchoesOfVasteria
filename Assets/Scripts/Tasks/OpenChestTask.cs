@@ -51,6 +51,19 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            // Reset when reused from pool
+            currentFrameIndex = -1;
+            playedOpenSfx = false;
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null && initialClosedSprite != null)
+                spriteRenderer.sprite = initialClosedSprite;
+            IsExhausted = false;
+        }
+
         public override void OnArrival(HeroController hero)
         {
             // Base handles instant-complete path and hero animation/progress bar
@@ -135,6 +148,7 @@ namespace TimelessEchoes.Tasks
                 if (last != null)
                     spriteRenderer.sprite = last;
             }
+            IsExhausted = true;
         }
     }
 }

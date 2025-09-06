@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.UI
 {
@@ -18,6 +19,75 @@ namespace TimelessEchoes.UI
     public class TownWindowManager : MonoBehaviour
     {
         public static TownWindowManager Instance { get; private set; }
+        // Expose simple open-state checks for other systems
+        public static bool IsForgeOpen => Instance != null && Instance.forge.window != null && Instance.forge.window.activeSelf;
+        public static bool IsCauldronOpen => Instance != null && Instance.cauldron.window != null && Instance.cauldron.window.activeSelf;
+
+        [Title("Attention Indicators")]
+        [SerializeField] private GameObject cauldronAttentionObject;
+        [SerializeField] private GameObject forgeAttentionObject;
+
+        public static void ShowForgeAttention()
+        {
+            var inst = Instance;
+            if (inst == null) return;
+            if (IsForgeOpen) return;
+            if (inst.forgeAttentionObject != null)
+                inst.forgeAttentionObject.SetActive(true);
+        }
+
+        public static void ShowCauldronAttention()
+        {
+            var inst = Instance;
+            if (inst == null) return;
+            if (IsCauldronOpen) return;
+            if (inst.cauldronAttentionObject != null)
+                inst.cauldronAttentionObject.SetActive(true);
+        }
+
+        public static void ClearForgeAttention()
+        {
+            var inst = Instance;
+            if (inst?.forgeAttentionObject != null)
+                inst.forgeAttentionObject.SetActive(false);
+        }
+
+        public static void ClearCauldronAttention()
+        {
+            var inst = Instance;
+            if (inst?.cauldronAttentionObject != null)
+                inst.cauldronAttentionObject.SetActive(false);
+        }
+
+        private bool _cauldronStopHooked;
+        private void HookCauldronStop()
+        {
+            if (_cauldronStopHooked) return;
+            var mgr = CauldronManager.Instance;
+            if (mgr != null)
+            {
+                mgr.OnTasteSessionStopped += OnCauldronStoppedGlobal;
+                _cauldronStopHooked = true;
+            }
+        }
+
+        private void UnhookCauldronStop()
+        {
+            if (!_cauldronStopHooked) return;
+            var mgr = CauldronManager.Instance;
+            if (mgr != null)
+                mgr.OnTasteSessionStopped -= OnCauldronStoppedGlobal;
+            _cauldronStopHooked = false;
+        }
+
+        private void OnCauldronStoppedGlobal()
+        {
+            if (!IsCauldronOpen)
+            {
+                ShowCauldronAttention();
+                FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            }
+        }
 
         [Serializable]
         [InlineProperty]
@@ -98,12 +168,14 @@ namespace TimelessEchoes.UI
         {
             EventHandler.OnLoadData += HandleLoadData;
             UITicker.Instance?.Subscribe(PollCloseAllWindows, 0.05f);
+            HookCauldronStop();
         }
 
         private void OnDisable()
         {
             EventHandler.OnLoadData -= HandleLoadData;
             UITicker.Instance?.Unsubscribe(PollCloseAllWindows);
+            UnhookCauldronStop();
         }
 
         private void Start()
@@ -238,6 +310,9 @@ namespace TimelessEchoes.UI
         private void OpenCauldron()
         {
             ToggleWindow(cauldron);
+            var active = cauldron.window != null && cauldron.window.activeSelf;
+            if (active)
+                ClearCauldronAttention();
         }
 
         private void OpenOptions()
@@ -256,6 +331,7 @@ namespace TimelessEchoes.UI
 
             if (isActive)
             {
+                ClearForgeAttention();
                 if (stopOnVastium != null)
                     stopOnVastium.SetActive(true);
                 if (inventory.window != null) inventory.window.SetActive(false);

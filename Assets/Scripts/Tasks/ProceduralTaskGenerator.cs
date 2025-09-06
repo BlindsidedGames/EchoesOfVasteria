@@ -226,7 +226,7 @@ namespace TimelessEchoes.Tasks
                 else
 #endif
                 {
-                    Destroy(obj);
+                    Blindsided.Utilities.Pooling.PoolManager.Release(obj);
                 }
             }
 
@@ -333,7 +333,12 @@ namespace TimelessEchoes.Tasks
                     continue;
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-                var obj = Instantiate(entry.data.prefab, pos, Quaternion.identity, parentTf);
+                var obj = Blindsided.Utilities.Pooling.PoolManager.Get(entry.data.prefab);
+                obj.transform.SetParent(parentTf, false);
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.identity;
+                var enemyComp = obj.GetComponent<TimelessEchoes.Enemies.Enemy>();
+                enemyComp?.InitForSpawn();
                 if (clearExisting)
                     generatedObjects.Add(obj.gameObject);
             }
@@ -375,7 +380,7 @@ namespace TimelessEchoes.Tasks
                                 DestroyImmediate(objToRemove.gameObject);
                             else
 #endif
-                                Destroy(objToRemove.gameObject);
+                                Blindsided.Utilities.Pooling.PoolManager.Release(objToRemove.gameObject);
                             taskMap.Remove(existing);
                         }
 
@@ -384,7 +389,13 @@ namespace TimelessEchoes.Tasks
                 }
 
                 var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
-                var obj = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
+                var obj = Blindsided.Utilities.Pooling.PoolManager.Get(npc.prefab);
+                obj.transform.SetParent(parentTf, false);
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.identity;
+                var npcTaskComp = obj.GetComponent<BaseTask>();
+                if (npcTaskComp != null && !npcTaskComp.isActiveAndEnabled)
+                    npcTaskComp.enabled = true;
                 if (clearExisting)
                     generatedObjects.Add(obj);
                 var mono = obj.GetComponent<MonoBehaviour>();
@@ -473,7 +484,17 @@ namespace TimelessEchoes.Tasks
 
             var parentTf = parent != null ? parent : SpawnParent != null ? SpawnParent : transform;
 
-            GameObject spawned = Instantiate(data.taskPrefab.gameObject, pos, Quaternion.identity, parentTf);
+            GameObject spawned = Blindsided.Utilities.Pooling.PoolManager.Get(data.taskPrefab.gameObject);
+            spawned.transform.SetParent(parentTf, false);
+            spawned.transform.position = pos;
+            spawned.transform.rotation = Quaternion.identity;
+
+            // Ensure the task component is enabled when reused from pool
+            var spawnedTask = spawned.GetComponent<BaseTask>();
+            if (spawnedTask != null && !spawnedTask.isActiveAndEnabled)
+            {
+                spawnedTask.enabled = true;
+            }
 
             generatedObjects.Add(spawned);
 
@@ -655,7 +676,12 @@ namespace TimelessEchoes.Tasks
                 }
                 if (!valid) continue;
                 var parentTf = parent != null ? parent : (SpawnParent != null ? SpawnParent : transform);
-                var obj = Instantiate(entry.data.prefab, pos, Quaternion.identity, parentTf);
+                var obj = Blindsided.Utilities.Pooling.PoolManager.Get(entry.data.prefab);
+                obj.transform.SetParent(parentTf, false);
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.identity;
+                var enemyComp = obj.GetComponent<TimelessEchoes.Enemies.Enemy>();
+                enemyComp?.InitForSpawn();
                 generatedObjects.Add(obj.gameObject);
                 spawnedThisBatch++;
                 if (doYield()) { yield return null; }
@@ -682,7 +708,7 @@ namespace TimelessEchoes.Tasks
                         {
                             Controller.RemoveTaskObject(objToRemove);
                             generatedObjects.Remove(objToRemove.gameObject);
-                            Destroy(objToRemove.gameObject);
+                            Blindsided.Utilities.Pooling.PoolManager.Release(objToRemove.gameObject);
                             scratchTaskMap.Remove(existing);
                         }
                         scratchTaskPositions.RemoveAt(i);
@@ -690,7 +716,14 @@ namespace TimelessEchoes.Tasks
                 }
 
                 var parentTf = parent != null ? parent : (SpawnParent != null ? SpawnParent : transform);
-                var obj2 = Instantiate(npc.prefab, pos, Quaternion.identity, parentTf);
+                var obj2 = Blindsided.Utilities.Pooling.PoolManager.Get(npc.prefab);
+                obj2.transform.SetParent(parentTf, false);
+                obj2.transform.position = pos;
+                obj2.transform.rotation = Quaternion.identity;
+                // If NPC prefab also carries a task, ensure it is enabled on reuse
+                var npcTask = obj2.GetComponent<BaseTask>();
+                if (npcTask != null && !npcTask.isActiveAndEnabled)
+                    npcTask.enabled = true;
                 generatedObjects.Add(obj2);
                 var mono = obj2.GetComponent<MonoBehaviour>();
                 if (mono != null)
