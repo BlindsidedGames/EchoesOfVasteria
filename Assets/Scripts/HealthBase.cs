@@ -30,7 +30,8 @@ namespace TimelessEchoes
             if (CurrentHealth <= 0f) return;
 
             float total = CalculateDamage(amount + bonusDamage);
-            CurrentHealth -= total;
+            // Clamp to zero so we never go negative.
+            CurrentHealth = Mathf.Max(0f, CurrentHealth - total);
             UpdateBar();
             OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 

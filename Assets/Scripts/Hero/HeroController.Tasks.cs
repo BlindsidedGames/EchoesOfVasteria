@@ -188,7 +188,9 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
-            var dest = CurrentTask.Target;
+            // Cache task reference to avoid mid-frame changes (e.g., OnArrival could clear it)
+            var task = CurrentTask;
+            var dest = task.Target;
             if (setter.target != dest) setter.target = dest;
 
             if (IsAtDestination(dest))
@@ -196,8 +198,9 @@ namespace TimelessEchoes.Hero
                 if (state != State.PerformingTask)
                 {
                     state = State.PerformingTask;
-                    ai.canMove = !CurrentTask.BlocksMovement;
-                    CurrentTask.OnArrival(this);
+                    // Use cached task reference for consistent behavior
+                    ai.canMove = !task.BlocksMovement;
+                    task.OnArrival(this);
                     // Immediately sync animator speed when entering a task
                     var bm = buffController != null ? buffController : TimelessEchoes.Buffs.BuffManager.Instance;
                     var speed = 1f;
@@ -206,7 +209,11 @@ namespace TimelessEchoes.Hero
                     if (AutoBuffAnimator != null && AutoBuffAnimator.isActiveAndEnabled) AutoBuffAnimator.speed = speed;
                 }
 
-                CurrentTask.Tick(this);
+                // Task may complete or be swapped during OnArrival; re-validate before ticking
+                if (task != null && task == CurrentTask && !task.IsComplete())
+                {
+                    task.Tick(this);
+                }
             }
             else
             {

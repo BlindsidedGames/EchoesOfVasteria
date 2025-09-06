@@ -22,12 +22,20 @@ namespace TimelessEchoes.Enemies
 
         protected override void Awake()
         {
-            OnHealthChanged += HandleHealthChanged;
+            // Initialize base health values and bar first.
             base.Awake();
             if (healthBarParent != null)
                 healthBarParent.SetActive(false);
             else if (healthBar != null)
                 healthBar.gameObject.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            // Re-subscribe when reactivated from pool so UI updates resume.
+            OnHealthChanged += HandleHealthChanged;
+            // Ensure the displayed text matches the current values immediately on enable.
+            HandleHealthChanged(CurrentHealth, MaxHealth);
         }
 
         private void OnDisable()
@@ -66,7 +74,8 @@ namespace TimelessEchoes.Enemies
             // Use the same defense scalar as the hero (Combat default)
             float total = TimelessEchoes.Combat.ApplyDefense(full, defense);
 
-            CurrentHealth -= total;
+            // Clamp at zero to avoid negative health values being shown or propagated.
+            CurrentHealth = Mathf.Max(0f, CurrentHealth - total);
             UpdateBar();
             RaiseHealthChanged();
 

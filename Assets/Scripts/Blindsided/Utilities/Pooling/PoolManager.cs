@@ -124,6 +124,19 @@ namespace Blindsided.Utilities.Pooling
                             if (info.inactive > 0) info.inactive--;
                             var m = o.GetComponent<PooledObject>();
                             if (m != null) m.inPool = false;
+
+                            // Re-enable disabled task components when retrieved from pool so
+                            // TaskController can pick them up again on rebuild.
+                            // Include children because tasks may live on nested objects in prefabs
+                            var components = o.GetComponentsInChildren<MonoBehaviour>(true);
+                            for (int i = 0; i < components.Length; i++)
+                            {
+                                var mb = components[i];
+                                if (mb is TimelessEchoes.Tasks.ITask && mb is Behaviour beh && !beh.enabled)
+                                {
+                                    beh.enabled = true;
+                                }
+                            }
                         }
                     },
                     actionOnRelease: o =>
@@ -175,6 +188,17 @@ namespace Blindsided.Utilities.Pooling
                             if (info.inactive > 0) info.inactive--;
                             var m = o.GetComponent<PooledObject>();
                             if (m != null) m.inPool = false;
+
+                            // Re-enable disabled task components when retrieved from pool.
+                            var components = o.GetComponents<MonoBehaviour>();
+                            for (int i = 0; i < components.Length; i++)
+                            {
+                                var mb = components[i];
+                                if (mb is TimelessEchoes.Tasks.ITask && mb is Behaviour beh && !beh.enabled)
+                                {
+                                    beh.enabled = true;
+                                }
+                            }
                         }
                     },
                     actionOnRelease: o =>

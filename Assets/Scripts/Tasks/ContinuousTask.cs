@@ -31,6 +31,9 @@ namespace TimelessEchoes.Tasks
         protected override void OnEnable()
         {
             base.OnEnable();
+            // Reset progress and completion state on reuse (e.g., after pooling)
+            isComplete = false;
+            timer = 0f;
             HideProgressBar();
         }
 

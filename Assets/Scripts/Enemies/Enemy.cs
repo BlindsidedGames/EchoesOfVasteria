@@ -596,12 +596,20 @@ namespace TimelessEchoes.Enemies
             {
                 if (ai != null)
                 {
+                    // Ensure core behaviours are enabled when spawned from pool.
+                    ai.enabled = true;
                     ai.maxSpeed = stats.moveSpeed;
                     ai.endReachedDistance = stats.attackRange;
                     ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
                     // Reset any previous path and snap to the new spawn position
                     ai.Teleport(transform.position);
                 }
+
+                if (setter != null)
+                    setter.enabled = true;
+
+                // Make sure the enemy logic is active again after pooling.
+                logicActive = true;
 
                 if (health != null)
                     health.Init(stats.GetMaxHealthForLevel(level));
