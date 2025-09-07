@@ -230,22 +230,6 @@ namespace TimelessEchoes.Tasks
 
             if (obj is ITask existing)
             {
-                // Ensure task component is enabled if pulled from pool
-                if (existing is MonoBehaviour mb && !mb.isActiveAndEnabled)
-                {
-                    if (!existing.IsComplete())
-                    {
-                        if (mb is Behaviour beh) beh.enabled = true;
-                        if (!mb.gameObject.activeInHierarchy)
-                            mb.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        // Completed and disabled: don't add
-                        return;
-                    }
-                }
-
                 if (existing is BaseTask baseTask)
                     baseTask.TaskCompleted += OnTaskCompleted;
                 tasks.Add(existing);
@@ -257,22 +241,6 @@ namespace TimelessEchoes.Tasks
             var compTask = obj.GetComponent<ITask>();
             if (compTask != null)
             {
-                // Ensure task component is enabled if pulled from pool
-                if (compTask is MonoBehaviour mb && !mb.isActiveAndEnabled)
-                {
-                    if (!compTask.IsComplete())
-                    {
-                        if (mb is Behaviour beh) beh.enabled = true;
-                        if (!mb.gameObject.activeInHierarchy)
-                            mb.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        // Completed and disabled: don't add
-                        return;
-                    }
-                }
-
                 if (compTask is BaseTask baseTask)
                     baseTask.TaskCompleted += OnTaskCompleted;
                 tasks.Add(compTask);
@@ -340,26 +308,6 @@ namespace TimelessEchoes.Tasks
 
                 if (obj is ITask existing)
                 {
-                    // If the task component exists but is disabled due to pooling or prior state,
-                    // re-enable it unless it reports completion (keep completed visuals disabled).
-                    if (existing is MonoBehaviour mbExisting)
-                    {
-                        if (!mbExisting.isActiveAndEnabled)
-                        {
-                            if (!existing.IsComplete())
-                            {
-                                if (mbExisting is Behaviour beh) beh.enabled = true;
-                                if (!mbExisting.gameObject.activeInHierarchy)
-                                    mbExisting.gameObject.SetActive(true);
-                            }
-                            else
-                            {
-                                // Skip completed-and-disabled tasks
-                                continue;
-                            }
-                        }
-                    }
-
                     if (existing is BaseTask baseTask2)
                         baseTask2.TaskCompleted += OnTaskCompleted;
                     tasks.Add(existing);
@@ -370,24 +318,6 @@ namespace TimelessEchoes.Tasks
                 var compTask = obj.GetComponent<ITask>();
                 if (compTask != null)
                 {
-                    if (compTask is MonoBehaviour mbComp)
-                    {
-                        if (!mbComp.isActiveAndEnabled)
-                        {
-                            if (!compTask.IsComplete())
-                            {
-                                if (mbComp is Behaviour beh2) beh2.enabled = true;
-                                if (!mbComp.gameObject.activeInHierarchy)
-                                    mbComp.gameObject.SetActive(true);
-                            }
-                            else
-                            {
-                                // Skip completed-and-disabled tasks
-                                goto SkipAddCompTask;
-                            }
-                        }
-                    }
-
                     if (compTask is BaseTask baseTask2)
                         baseTask2.TaskCompleted += OnTaskCompleted;
                     tasks.Add(compTask);

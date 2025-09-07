@@ -133,6 +133,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -154,6 +156,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -2
@@ -182,11 +185,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   taskData: {fileID: 11400000, guid: 9bf4f670cbb2443baabc2867f46fe800, type: 2}
+  enableAutoRemovalWhenBehind: 1
+  autoRemovalDistanceX: 20
+  autoRemovalIntervalSeconds: 2
   progressBarObject: {fileID: 7625599681903135373}
   progressBar: {fileID: 6170718072525463737}
   spriteRenderer: {fileID: 2863051399734410759}
   wetSpriteRenderer: {fileID: 2235184025997787263}
   growthStages:
+  - {fileID: 568712722439862651, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   - {fileID: -9177457062998269095, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   - {fileID: 92264684534740810, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   - {fileID: -2584793599262434737, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
@@ -313,6 +320,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -334,6 +343,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
@@ -537,6 +547,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -558,6 +570,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -803,6 +816,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -824,6 +839,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0

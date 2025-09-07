@@ -112,18 +112,7 @@ namespace TimelessEchoes.Enemies
                 ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
             }
 
-            var displayName = stats != null ? stats.enemyName : null;
-            displayName = EnemyNameProvider.GetName(displayName);
-            if (!string.IsNullOrEmpty(displayName))
-                gameObject.name = displayName;
-
-            if (levelText != null)
-            {
-                if (!string.IsNullOrEmpty(displayName))
-                    levelText.text = $"{displayName} Lvl {level}";
-                else
-                    levelText.text = $"Lvl {level}";
-            }
+            UpdateDisplayNameAndLevelUI();
 
             startTarget = setter.target;
             resourceManager = ResourceManager.Instance;
@@ -160,6 +149,9 @@ namespace TimelessEchoes.Enemies
             }
 
             ApplyRandomSpriteLibrary();
+
+            // Ensure name/level text is refreshed on reuse from pool.
+            UpdateDisplayNameAndLevelUI();
         }
 
         private void OnDisable()
@@ -622,6 +614,9 @@ namespace TimelessEchoes.Enemies
                 setter.target = wanderTarget;
             nextWanderTime = Time.time;
             nextTargetUpdate = Time.time;
+
+            // After recomputing level/stats on spawn, refresh display.
+            UpdateDisplayNameAndLevelUI();
         }
 
         public void SetActiveState(bool active)
@@ -645,6 +640,22 @@ namespace TimelessEchoes.Enemies
                 var dist = Vector2.Distance(transform.position, other.transform.position);
                 if (dist <= stats.assistRange)
                     setter.target = hero;
+            }
+        }
+
+        private void UpdateDisplayNameAndLevelUI()
+        {
+            var displayName = stats != null ? stats.enemyName : null;
+            displayName = EnemyNameProvider.GetName(displayName);
+            if (!string.IsNullOrEmpty(displayName))
+                gameObject.name = displayName;
+
+            if (levelText != null)
+            {
+                if (!string.IsNullOrEmpty(displayName))
+                    levelText.text = $"{displayName} Lvl {level}";
+                else
+                    levelText.text = $"Lvl {level}";
             }
         }
 

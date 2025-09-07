@@ -15,7 +15,8 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private SpriteRenderer spriteRenderer;
         [Tooltip("Optional overlay sprite used to show watered soil")]
         [SerializeField] private SpriteRenderer wetSpriteRenderer;
-        [SerializeField] private Sprite[] growthStages = new Sprite[3];
+        [Tooltip("Growth sprites with index 0 as the starting sprite, and 1/2/3 as the growth stages.")]
+        [SerializeField] private Sprite[] growthStages = new Sprite[4];
         [SerializeField] private Transform wateringPoint;
 
         private float localTimer;
@@ -47,6 +48,14 @@ namespace TimelessEchoes.Tasks
                 spriteRenderer.enabled = true;
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = false;
+            // Set starting sprite (stage 0)
+            if (spriteRenderer != null && growthStages != null && growthStages.Length > 0)
+            {
+                var startSprite = growthStages[0];
+                if (startSprite != null)
+                    spriteRenderer.sprite = startSprite;
+            }
+            currentStage = 0;
             IsExhausted = false;
         }
 
@@ -73,7 +82,7 @@ namespace TimelessEchoes.Tasks
                 delta *= buffManager.TaskSpeedMultiplier;
             localTimer += delta;
 
-            if (spriteRenderer != null && growthStages.Length >= 3)
+            if (spriteRenderer != null && growthStages != null && growthStages.Length >= 4)
             {
                 float quarter = duration > 0f ? duration / 4f : 0f;
                 int newStage = 0;
@@ -87,9 +96,10 @@ namespace TimelessEchoes.Tasks
                 if (newStage != currentStage)
                 {
                     currentStage = newStage;
-                    if (newStage > 0 && newStage - 1 < growthStages.Length)
+                    // Map stages 1/2/3 directly to indices 1/2/3 (index 0 is the starting sprite)
+                    if (newStage > 0 && newStage < growthStages.Length)
                     {
-                        var s = growthStages[newStage - 1];
+                        var s = growthStages[newStage];
                         if (s != null)
                             spriteRenderer.sprite = s;
                     }
