@@ -496,7 +496,8 @@ namespace TimelessEchoes.Tasks
                 spawnedTask.enabled = true;
             }
 
-            generatedObjects.Add(spawned);
+            if (clearExisting)
+                generatedObjects.Add(spawned);
 
             var mono = spawned.GetComponent<BaseTask>();
             if (mono == null) return true;
@@ -682,7 +683,6 @@ namespace TimelessEchoes.Tasks
                 obj.transform.rotation = Quaternion.identity;
                 var enemyComp = obj.GetComponent<TimelessEchoes.Enemies.Enemy>();
                 enemyComp?.InitForSpawn();
-                generatedObjects.Add(obj.gameObject);
                 spawnedThisBatch++;
                 if (doYield()) { yield return null; }
             }
@@ -724,7 +724,6 @@ namespace TimelessEchoes.Tasks
                 var npcTask = obj2.GetComponent<BaseTask>();
                 if (npcTask != null && !npcTask.isActiveAndEnabled)
                     npcTask.enabled = true;
-                generatedObjects.Add(obj2);
                 var mono = obj2.GetComponent<MonoBehaviour>();
                 if (mono != null)
                 {

@@ -284,9 +284,12 @@ namespace TimelessEchoes.Enemies
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir;
 
-            animator.SetFloat("MoveX", lastMoveDir.x);
-            animator.SetFloat("MoveY", lastMoveDir.y);
-            animator.SetFloat("MoveMagnitude", vel.magnitude);
+            if (animator != null)
+            {
+                animator.SetFloat("MoveX", lastMoveDir.x);
+                animator.SetFloat("MoveY", lastMoveDir.y);
+                animator.SetFloat("MoveMagnitude", vel.magnitude);
+            }
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
@@ -322,7 +325,8 @@ namespace TimelessEchoes.Enemies
                 {
                     nextAttack = Time.time + 1f / Mathf.Max(stats.attackSpeed, 0.01f);
                     FaceTarget();
-                    animator.Play("Attack");
+                    if (animator != null)
+                        animator.Play("Attack");
                     FireProjectile();
                 }
             }
@@ -353,9 +357,12 @@ namespace TimelessEchoes.Enemies
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir;
 
-            animator.SetFloat("MoveX", lastMoveDir.x);
-            animator.SetFloat("MoveY", lastMoveDir.y);
-            animator.SetFloat("MoveMagnitude", 0f);
+            if (animator != null)
+            {
+                animator.SetFloat("MoveX", lastMoveDir.x);
+                animator.SetFloat("MoveY", lastMoveDir.y);
+                animator.SetFloat("MoveMagnitude", 0f);
+            }
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
@@ -402,6 +409,9 @@ namespace TimelessEchoes.Enemies
 
         private void Wander()
         {
+            // Guard against missing references during initialization/pooling edge cases.
+            if (stats == null || ai == null || setter == null)
+                return;
             if (setter.target != wanderTarget)
                 setter.target = wanderTarget;
             if (!ai.reachedEndOfPath) return;

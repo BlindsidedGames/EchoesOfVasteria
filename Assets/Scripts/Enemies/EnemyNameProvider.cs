@@ -25,7 +25,9 @@ namespace TimelessEchoes.Enemies
             "Invariel",
             "Borg",
             "Madstone",
-            "Kynji"
+            "Kynji",
+            "docwhat",
+            "labcavey",
         };
 
         /// <summary>

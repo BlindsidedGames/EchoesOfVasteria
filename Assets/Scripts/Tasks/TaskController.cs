@@ -323,7 +323,6 @@ namespace TimelessEchoes.Tasks
                     tasks.Add(compTask);
                     taskMap[compTask] = obj;
                 }
-                SkipAddCompTask: ;
             }
 
             SortTaskListsByProximity();

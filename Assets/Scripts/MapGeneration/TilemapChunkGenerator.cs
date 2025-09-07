@@ -68,6 +68,10 @@ namespace TimelessEchoes.MapGeneration
 
         // Reusable buffer for SetTilesBlock per-column writes
         private TileBase[] columnBuffer;
+        // Dedicated null buffer used only for clears to avoid residual data
+        private TileBase[] clearColumnBuffer;
+        // Per-segment lookup for decor prefabs by cell for O(1) clears
+        private readonly Dictionary<Vector3Int, Transform> decorLookup = new();
 
         private void Awake()
         {
@@ -111,13 +115,15 @@ namespace TimelessEchoes.MapGeneration
             rng = randomizeSeed ? new Random() : new Random(seed);
 
             currentDecorParent = decorParent;
+            decorLookup.Clear();
             GenerateInternal(offset, segmentSize, decorParent);
         }
 
-        public System.Collections.IEnumerator GenerateSegmentAsync(Vector2Int offset, Vector2Int segmentSize, Transform decorParent = null, int columnsPerYield = 8)
+        public System.Collections.IEnumerator GenerateSegmentAsync(Vector2Int offset, Vector2Int segmentSize, Transform decorParent = null, int columnsPerYield = 2)
         {
             rng = randomizeSeed ? new Random() : new Random(seed);
             currentDecorParent = decorParent;
+            decorLookup.Clear();
 
             var sandDepths = new int[segmentSize.x];
             var grassDepths = new int[segmentSize.x];
@@ -198,16 +204,22 @@ namespace TimelessEchoes.MapGeneration
                 var cell = decorMap.WorldToCell(pos);
                 decorMap.SetTile(cell, null);
                 decorMap.SetTransformMatrix(cell, Matrix4x4.identity);
+                if (decorLookup.TryGetValue(cell, out var tr) && tr != null)
+                {
+                    Blindsided.Utilities.Pooling.PoolManager.Release(tr.gameObject);
+                    decorLookup.Remove(cell);
+                }
             }
 
-            if (currentDecorParent == null)
-                return;
-
-            for (var i = currentDecorParent.childCount - 1; i >= 0; i--)
+            // If no tilemap, try parent scope lookup via approximate cell from terrain
+            else if (terrainMap != null)
             {
-                var child = currentDecorParent.GetChild(i);
-                if (Vector3.Distance(child.position, pos) < 0.1f)
-                    Blindsided.Utilities.Pooling.PoolManager.Release(child.gameObject);
+                var cell = terrainMap.WorldToCell(pos);
+                if (decorLookup.TryGetValue(cell, out var tr) && tr != null)
+                {
+                    Blindsided.Utilities.Pooling.PoolManager.Release(tr.gameObject);
+                    decorLookup.Remove(cell);
+                }
             }
         }
 
@@ -246,23 +258,28 @@ namespace TimelessEchoes.MapGeneration
                         grassDepthRange.y);
             }
 
-            // TODO(P3): Batch tile writes per column using Tilemap.SetTiles/SetTilesBlock to cut SetTile overhead
-            // TODO(P3): Consider yielding every N columns to spread work across frames
+            // Batch tile writes per column to reduce SetTile overhead
+            if (columnBuffer == null || columnBuffer.Length != segmentSize.y)
+                columnBuffer = new TileBase[segmentSize.y];
+
             for (var x = 0; x < segmentSize.x; x++)
             {
                 var sandDepth = sandDepths[x];
                 var grassDepth = grassDepths[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
-                for (var y = 0; y < waterDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), BottomTile);
+                // Fill column buffer once per column
+                for (var y = 0; y < segmentSize.y; y++)
+                {
+                    TileBase t = null;
+                    if (y < waterDepth) t = BottomTile;
+                    else if (y < waterDepth + sandDepth) t = MiddleTile;
+                    else if (y < waterDepth + sandDepth + grassDepth) t = TopTile;
+                    columnBuffer[y] = t;
+                }
 
-                for (var y = waterDepth; y < waterDepth + sandDepth; y++)
-                    terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), MiddleTile);
-
-                for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
-                    if (y < segmentSize.y)
-                        terrainMap.SetTile(new Vector3Int(offset.x + x, offset.y + y, 0), TopTile);
+                var bounds = new BoundsInt(offset.x + x, offset.y, 0, 1, segmentSize.y, 1);
+                terrainMap.SetTilesBlock(bounds, columnBuffer);
 
                 for (var y = 0; y < waterDepth; y++)
                 {
@@ -377,6 +394,8 @@ namespace TimelessEchoes.MapGeneration
                     continue;
 
                 // Early density gate to avoid per-cell work when not placing
+                if (settings.decor == null)
+                    continue;
                 var density = settings.decor.density;
                 if (RandomRangeFloat(0f, 1f) > density)
                     continue;
@@ -442,6 +461,8 @@ namespace TimelessEchoes.MapGeneration
                     instance.transform.SetParent(decorParent, false);
                     instance.transform.position = center;
                     instance.transform.rotation = Quaternion.identity;
+                    // Track for direct clears later in this segment
+                    decorLookup[cell] = instance.transform;
                     if (picked.randomFlipX && RandomRangeFloat(0f, 1f) < 0.5f)
                     {
                         var renderer = instance.GetComponentInChildren<SpriteRenderer>();
@@ -593,15 +614,32 @@ namespace TimelessEchoes.MapGeneration
 
         public void ClearSegment(Vector2Int offset, Vector2Int segmentSize)
         {
-            for (var x = 0; x < segmentSize.x; x++)
-            for (var y = 0; y < segmentSize.y; y++)
+            // Batch-clear tiles using SetTilesBlock for the terrain map
+            if (terrainMap != null)
             {
-                var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
-                terrainMap.SetTile(pos, null);
-                if (decorMap != null)
+                if (clearColumnBuffer == null || clearColumnBuffer.Length != segmentSize.y)
+                    clearColumnBuffer = new TileBase[segmentSize.y]; // default nulls
+                for (var x = 0; x < segmentSize.x; x++)
                 {
-                    decorMap.SetTile(pos, null);
-                    decorMap.SetTransformMatrix(pos, Matrix4x4.identity);
+                    var bounds = new BoundsInt(offset.x + x, offset.y, 0, 1, segmentSize.y, 1);
+                    terrainMap.SetTilesBlock(bounds, clearColumnBuffer);
+                }
+            }
+
+            // For decor map, also reset transform matrices to identity
+            if (decorMap != null)
+            {
+                if (clearColumnBuffer == null || clearColumnBuffer.Length != segmentSize.y)
+                    clearColumnBuffer = new TileBase[segmentSize.y];
+                for (var x = 0; x < segmentSize.x; x++)
+                {
+                    var bounds = new BoundsInt(offset.x + x, offset.y, 0, 1, segmentSize.y, 1);
+                    decorMap.SetTilesBlock(bounds, clearColumnBuffer);
+                    for (var y = 0; y < segmentSize.y; y++)
+                    {
+                        var pos = new Vector3Int(offset.x + x, offset.y + y, 0);
+                        decorMap.SetTransformMatrix(pos, Matrix4x4.identity);
+                    }
                 }
             }
         }

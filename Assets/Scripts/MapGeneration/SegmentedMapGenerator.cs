@@ -172,9 +172,6 @@ namespace TimelessEchoes.MapGeneration
         {
             if (pathfinder == null)
                 return;
-
-            if (pathfinder == null)
-                return;
             if (!pathfinder.isActiveAndEnabled)
                 pathfinder.enabled = true;
             var astar = AstarPath.active;
