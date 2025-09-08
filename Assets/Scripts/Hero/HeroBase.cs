@@ -13,6 +13,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
+using Blindsided.Utilities.Pooling;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static TimelessEchoes.TELogger;
@@ -781,6 +782,13 @@ namespace TimelessEchoes.Hero
         private void Attack(Transform target)
         {
             if (stats.projectilePrefab == null || target == null) return;
+            var go = target.gameObject;
+            // Do not attack targets that are inactive or already returned to the pool
+            if (go == null || !go.activeInHierarchy)
+                return;
+            var pooled = go.GetComponent<PooledObject>();
+            if (pooled != null && pooled.inPool)
+                return;
 
             var enemy = target.GetComponent<Health>();
             if (enemy == null || enemy.CurrentHealth <= 0f) return;
@@ -897,7 +905,13 @@ namespace TimelessEchoes.Hero
                     currentEnemyComp = enemyComp;
                 }
 
-                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || (!IsEchoActor && !engagedEnemies.Contains(enemyComp)))
+                // Clear stale targets if enemy is inactive or pooled
+                var enemyGo = currentEnemy != null ? currentEnemy.gameObject : null;
+                var isInactive = enemyGo == null || !enemyGo.activeInHierarchy || (enemyComp != null && !enemyComp.isActiveAndEnabled);
+                var pooledMarker = enemyGo != null ? enemyGo.GetComponent<PooledObject>() : null;
+                var isPooled = pooledMarker != null && pooledMarker.inPool;
+
+                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || (!IsEchoActor && !engagedEnemies.Contains(enemyComp)) || isInactive || isPooled)
                 {
                     currentEnemyHealth?.SetHealthBarVisible(false);
                     currentEnemy = null;

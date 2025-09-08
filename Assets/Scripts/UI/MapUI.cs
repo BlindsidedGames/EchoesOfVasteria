@@ -49,10 +49,16 @@ namespace TimelessEchoes.UI
                 if (currentInt != _lastDistanceInt || reapInt != _lastReapInt ||
                     showBase != _lastShowBase || (showBase && baseShown != _lastBaseInt))
                 {
+                    // Use standard numeric formatting, assign to text once per visible change
                     if (showBase)
-                        distanceText.SetText("{0:N0} / {1:N0} ({2:N0})", currentInt, reapInt, baseShown);
+                        distanceText.text = string.Format("{0} / {1} ({2})",
+                            currentInt.ToString("N0"),
+                            reapInt.ToString("N0"),
+                            baseShown.ToString("N0"));
                     else
-                        distanceText.SetText("{0:N0} / {1:N0}", currentInt, reapInt);
+                        distanceText.text = string.Format("{0} / {1}",
+                            currentInt.ToString("N0"),
+                            reapInt.ToString("N0"));
 
                     _lastDistanceInt = currentInt;
                     _lastReapInt = reapInt;

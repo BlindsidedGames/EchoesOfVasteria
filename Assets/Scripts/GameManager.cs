@@ -26,6 +26,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Blindsided.Utilities.Pooling;
 using static TimelessEchoes.Quests.QuestUtils;
 using static TimelessEchoes.TELogger;
 using EventHandler = Blindsided.EventHandler;
@@ -1047,7 +1048,7 @@ namespace TimelessEchoes
 #endif
             foreach (var echo in echoes)
                 if (echo != null)
-                    Destroy(echo.gameObject);
+                    PoolManager.Release(echo.gameObject);
         }
 
 

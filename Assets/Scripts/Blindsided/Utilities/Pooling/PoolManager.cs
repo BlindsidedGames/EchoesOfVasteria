@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Playables;
 
 namespace Blindsided.Utilities.Pooling
 {
@@ -17,6 +18,31 @@ namespace Blindsided.Utilities.Pooling
         private static void Initialize()
         {
             Application.quitting += OnApplicationQuitting;
+        }
+        
+        // Ensure any PlayableGraphs created by components like PlayableDirector
+        // are explicitly destroyed before destroying pooled objects to avoid
+        // "PlayableGraph was not destroyed" warnings during teardown.
+        private static void CleanupPlayables(GameObject o)
+        {
+            if (o == null) return;
+            // Clean up directors on this object and its children
+            var directors = o.GetComponentsInChildren<PlayableDirector>(true);
+            for (int i = 0; i < directors.Length; i++)
+            {
+                var d = directors[i];
+                // Guard against invalid or already-disposed graphs
+                if (d != null)
+                {
+                    var graph = d.playableGraph;
+                    if (graph.IsValid())
+                    {
+                        // Stop playback and destroy the graph
+                        d.Stop();
+                        graph.Destroy();
+                    }
+                }
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -196,6 +222,8 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
+                            // Proactively tear down playable graphs to prevent leak warnings
+                            CleanupPlayables(o);
                             Object.Destroy(o);
                             if (info.total > 0) info.total--;
                         }
@@ -259,6 +287,8 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
+                            // Proactively tear down playable graphs to prevent leak warnings
+                            CleanupPlayables(o);
                             Object.Destroy(o);
                             if (info.total > 0) info.total--;
                         }

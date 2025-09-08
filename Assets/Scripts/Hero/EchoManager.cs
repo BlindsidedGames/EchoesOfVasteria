@@ -4,6 +4,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes.Hero
 {
@@ -21,7 +22,13 @@ namespace TimelessEchoes.Hero
 
             var pos = HeroController.Instance.transform.position;
             var parent = HeroController.Instance.transform.parent;
-            var obj = Object.Instantiate(gm.EchoPrefab, pos, HeroController.Instance.transform.rotation, parent);
+            var obj = PoolManager.Get(gm.EchoPrefab);
+            // Ensure transform hierarchy and placement match the hero
+            if (obj != null)
+            {
+                obj.transform.SetParent(parent, false);
+                obj.transform.SetPositionAndRotation(pos, HeroController.Instance.transform.rotation);
+            }
 
             // Visual alpha tint (optional)
             foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())

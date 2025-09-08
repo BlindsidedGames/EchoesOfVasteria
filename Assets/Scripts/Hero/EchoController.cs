@@ -6,6 +6,7 @@ using TimelessEchoes.Tasks;
 using UnityEngine;
 using Pathfinding;
 using TimelessEchoes.Enemies;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes.Hero
 {
@@ -33,6 +34,8 @@ namespace TimelessEchoes.Hero
 
         [Header("Duration UI")] [SerializeField] private GameObject durationBarParent;
         [SerializeField] private SlicedFilledImage durationFill;
+        [Tooltip("Green/base sprite used for the echo duration bar when full. If not set, the current sprite is used as fallback.")]
+        [SerializeField] private Sprite durationGreenSprite;
         [SerializeField] private Sprite durationYellowSprite;
         [SerializeField] private Sprite durationRedSprite;
 
@@ -113,6 +116,12 @@ namespace TimelessEchoes.Hero
         /// </summary>
         public void Init(IEnumerable<Skill> skills, float duration, EchoType type)
         {
+            // Reset any deferred expiration state from prior pool use
+            expirationDeferred = false;
+            deferredEnemyHealth = null;
+            deferredTask = null;
+            deferStartTime = 0f;
+
             capableSkills = skills != null ? new List<Skill>(skills) : new List<Skill>();
             lifetime = duration;
             remaining = duration;
@@ -132,8 +141,9 @@ namespace TimelessEchoes.Hero
                 durationBarParent.SetActive(!float.IsPositiveInfinity(duration));
             if (durationFill != null)
             {
-                // Cache sprite references for dynamic color changes
-                durationBaseSprite = durationFill.sprite;
+                // Ensure we have a stable green/base sprite across pooled reuses
+                durationBaseSprite = durationGreenSprite != null ? durationGreenSprite : durationFill.sprite;
+                durationFill.sprite = durationBaseSprite;
                 durationLastAppliedSprite = durationBaseSprite;
                 if (!float.IsPositiveInfinity(duration))
                     durationFill.fillAmount = 1f;
@@ -142,6 +152,10 @@ namespace TimelessEchoes.Hero
             Initialized = true;
 
             UpdateIndicators();
+
+            // Ensure membership lists are updated when re-enabled from pool
+            if (isActiveAndEnabled && !AllEchoes.Contains(this))
+                AllEchoes.Add(this);
 
             if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
@@ -161,7 +175,7 @@ namespace TimelessEchoes.Hero
                 {
                     if (!BeginExpirationDeferral())
                     {
-                        Destroy(gameObject);
+                        PoolManager.Release(gameObject);
                         return;
                     }
                 }
@@ -194,7 +208,7 @@ namespace TimelessEchoes.Hero
             {
                 if (maxLingerOnExpiry > 0f && Time.time - deferStartTime >= maxLingerOnExpiry)
                 {
-                    Destroy(gameObject);
+                    PoolManager.Release(gameObject);
                     return;
                 }
 
@@ -203,7 +217,7 @@ namespace TimelessEchoes.Hero
                     // Unity null-safe: destroyed objects compare equal to null
                     if (deferredEnemyHealth == null || deferredEnemyHealth.CurrentHealth <= 0f)
                     {
-                        Destroy(gameObject);
+                        PoolManager.Release(gameObject);
                     }
                     return; // keep waiting while enemy is alive
                 }
@@ -213,13 +227,13 @@ namespace TimelessEchoes.Hero
                     var taskMb = deferredTask as MonoBehaviour;
                     if (taskMb == null || deferredTask.IsComplete())
                     {
-                        Destroy(gameObject);
+                        PoolManager.Release(gameObject);
                     }
                     return; // keep waiting while task is incomplete
                 }
 
                 // Nothing to wait on anymore
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
                 return;
             }
 
@@ -252,14 +266,14 @@ namespace TimelessEchoes.Hero
                     // If the controller reports there are visible tasks for this echo, keep waiting
                     if (taskCtrl.HasVisibleTasksForHero(this))
                         return;
-                    Destroy(gameObject);
+                    PoolManager.Release(gameObject);
                 }
             }
             else if (disableSkills)
             {
                 if (combatEnabled && AllowAttacks)
                     return; // stay alive for combat
-                Destroy(gameObject);
+                PoolManager.Release(gameObject);
             }
         }
 
