@@ -15,6 +15,13 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text distanceText;
         [SerializeField] private Slider distanceSlider;
 
+        // Caches to avoid redundant UI work per refresh
+        private int _lastDistanceInt = int.MinValue;
+        private int _lastReapInt = int.MinValue;
+        private int _lastBaseInt = int.MinValue;
+        private bool _lastShowBase;
+        private float _lastSliderValue = -1f;
+
 
         /// <summary>
         ///     Updates the UI with the distance the hero has reached.
@@ -30,21 +37,39 @@ namespace TimelessEchoes.UI
             var isDemo = Oracle.oracle != null && Oracle.oracle.demo;
             if (isDemo) reapDistance = Mathf.Min(reapDistance, 300f);
 
+            // Text update using TMP's SetText formatting (allocation-free)
             if (distanceText != null)
             {
-                var current = Mathf.FloorToInt(distance);
-                var text = $"{current:N0} / {reapDistance:N0}";
-                if (!Mathf.Approximately(reapDistance, baseReapDistance))
-                {
-                    text += $" ({Mathf.Min(baseReapDistance, isDemo ? 300f : baseReapDistance):N0})";
-                }
+                var currentInt = Mathf.FloorToInt(distance);
+                var reapInt = Mathf.FloorToInt(reapDistance);
+                var showBase = !Mathf.Approximately(reapDistance, baseReapDistance);
+                var baseShown = Mathf.FloorToInt(Mathf.Min(baseReapDistance, isDemo ? 300f : baseReapDistance));
 
-                distanceText.text = text;
+                // Only refresh the text when the displayed values actually change
+                if (currentInt != _lastDistanceInt || reapInt != _lastReapInt ||
+                    showBase != _lastShowBase || (showBase && baseShown != _lastBaseInt))
+                {
+                    if (showBase)
+                        distanceText.SetText("{0:N0} / {1:N0} ({2:N0})", currentInt, reapInt, baseShown);
+                    else
+                        distanceText.SetText("{0:N0} / {1:N0}", currentInt, reapInt);
+
+                    _lastDistanceInt = currentInt;
+                    _lastReapInt = reapInt;
+                    _lastBaseInt = baseShown;
+                    _lastShowBase = showBase;
+                }
             }
 
+            // Avoid redundant slider writes when unchanged
             if (distanceSlider != null)
             {
-                distanceSlider.value = Mathf.Clamp01(distance / reapDistance);
+                var normalized = reapDistance > 0f ? Mathf.Clamp01(distance / reapDistance) : 0f;
+                if (!Mathf.Approximately(normalized, _lastSliderValue))
+                {
+                    distanceSlider.value = normalized;
+                    _lastSliderValue = normalized;
+                }
             }
         }
     }

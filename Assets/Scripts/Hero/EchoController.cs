@@ -72,8 +72,9 @@ namespace TimelessEchoes.Hero
             defaultAggroRange = CombatAggroRange;
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             if (!Initialized)
                 return;
 
@@ -96,8 +97,9 @@ namespace TimelessEchoes.Hero
                 AssignTask();
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
             if (durationBarParent != null)
@@ -148,8 +150,9 @@ namespace TimelessEchoes.Hero
                 AssignTask();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             // Countdown until expiration unless already deferring
             if (!expirationDeferred)
             {

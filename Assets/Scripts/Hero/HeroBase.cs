@@ -194,7 +194,7 @@ namespace TimelessEchoes.Hero
         }
 
 
-        private void Update()
+        protected virtual void Update()
         {
             if (!logicActive)
                 return;
@@ -202,8 +202,6 @@ namespace TimelessEchoes.Hero
                 ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
             UpdateAnimation();
             UpdateBehavior();
-            if (!IsEchoActor && mapUI != null)
-                mapUI.UpdateDistance(transform.position.x);
 
             var tracker = GameplayStatTracker.Instance;
             if (tracker == null)
@@ -258,7 +256,7 @@ namespace TimelessEchoes.Hero
         }
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             if (taskCtrl == null)
             {
@@ -337,9 +335,17 @@ namespace TimelessEchoes.Hero
 
             if (!IsEchoActor)
                 Enemy.OnEngage += OnEnemyEngage;
+
+            // Throttle HUD distance updates via UITicker (5 Hz)
+            if (!IsEchoActor && mapUI != null)
+            {
+                TimelessEchoes.UI.UITicker.Instance?.Subscribe(HudDistanceTick, 0.2f);
+                // Push an immediate refresh on enable so HUD isn't stale
+                HudDistanceTick();
+            }
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
@@ -352,6 +358,10 @@ namespace TimelessEchoes.Hero
 
             if (!IsEchoActor)
                 Enemy.OnEngage -= OnEnemyEngage;
+
+            // Unsubscribe from UITicker to avoid leaks when disabled
+            if (!IsEchoActor)
+                TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(HudDistanceTick);
 
             foreach (var enemy in engagedEnemies)
             {
@@ -423,6 +433,12 @@ namespace TimelessEchoes.Hero
             float perHitAfterDefense = TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
             float attacksPerSecond = Mathf.Max(0f, snap.attacksPerSecond);
             return perHitAfterDefense * attacksPerSecond;
+        }
+
+        private void HudDistanceTick()
+        {
+            if (mapUI != null)
+                mapUI.UpdateDistance(transform.position.x);
         }
 
         private float EstimatePerHitAgainst(TimelessEchoes.Enemies.Enemy enemy, HeroBase attacker)

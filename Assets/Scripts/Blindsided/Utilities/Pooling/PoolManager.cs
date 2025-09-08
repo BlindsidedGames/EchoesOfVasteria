@@ -11,10 +11,38 @@ namespace Blindsided.Utilities.Pooling
     public static class PoolManager
     {
         private static Transform poolRoot;
+        private static bool isQuitting;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
+        {
+            Application.quitting += OnApplicationQuitting;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            // Ensure clean state after domain reloads in the Editor
+            poolRoot = null;
+            isQuitting = false;
+            poolsByPrefabId.Clear();
+            poolsByName.Clear();
+        }
+
+        private static void OnApplicationQuitting()
+        {
+            isQuitting = true;
+        }
         private static Transform PoolRoot
         {
             get
             {
+                // Never create or fetch the pool root while not playing or during application quit
+                if (!Application.isPlaying || isQuitting)
+                {
+                    return null;
+                }
+
                 if (poolRoot == null)
                 {
                     var existing = GameObject.Find("PooledObjectsRoot");
@@ -24,6 +52,7 @@ namespace Blindsided.Utilities.Pooling
                     }
                     // Ensure the root is not tied to the active scene to avoid cleanup warnings.
                     Object.DontDestroyOnLoad(existing);
+                    existing.hideFlags = HideFlags.HideInHierarchy | HideFlags.DontSave;
                     poolRoot = existing.transform;
                 }
                 return poolRoot;
@@ -88,6 +117,12 @@ namespace Blindsided.Utilities.Pooling
         public static void Release(GameObject obj)
         {
             if (obj == null) return;
+            // During teardown or when not playing, do not reparent or pool — just destroy.
+            if (!Application.isPlaying || isQuitting)
+            {
+                Object.Destroy(obj);
+                return;
+            }
             var marker = obj.GetComponent<PooledObject>();
             if (marker != null && marker.pool != null)
             {
@@ -144,8 +179,10 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
-                            // Reparent to a global pool root outside of runtime map
-                            o.transform.SetParent(PoolRoot, false);
+                            // Reparent to a global pool root outside of runtime map (if available)
+                            var root = PoolRoot;
+                            if (root != null)
+                                o.transform.SetParent(root, false);
                             o.SetActive(false);
                             info.inactive++;
                             if (info.active > 0) info.active--;
@@ -206,7 +243,9 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
-                            o.transform.SetParent(PoolRoot, false);
+                            var root = PoolRoot;
+                            if (root != null)
+                                o.transform.SetParent(root, false);
                             o.SetActive(false);
                             info.inactive++;
                             if (info.active > 0) info.active--;
