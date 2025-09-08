@@ -36,10 +36,34 @@ namespace TimelessEchoes.NPC
             blockingMask = LayerMask.GetMask("Blocking");
         }
 
+        private Coroutine deferredReset;
+
         protected virtual void OnEnable()
         {
-            // On pooled reuse or fresh spawn, reset spawn state from current position
+            // Defer reset one frame to allow pooling systems to reposition
+            if (deferredReset != null)
+            {
+                StopCoroutine(deferredReset);
+                deferredReset = null;
+            }
+            deferredReset = StartCoroutine(DeferredReset());
+        }
+
+        protected virtual void OnDisable()
+        {
+            if (deferredReset != null)
+            {
+                StopCoroutine(deferredReset);
+                deferredReset = null;
+            }
+        }
+
+        private System.Collections.IEnumerator DeferredReset()
+        {
+            // Wait a frame so any external repositioning takes effect
+            yield return null;
             ResetForSpawn(transform.position);
+            deferredReset = null;
         }
 
         /// <summary>
@@ -51,7 +75,8 @@ namespace TimelessEchoes.NPC
             if (ai != null)
             {
                 // Clear any previous path and snap to the new position
-                ai.Teleport(position);
+                ai.Teleport(position, true);
+                ai.destination = position; // ensure no lingering destination
                 ai.canMove = true;
             }
             transform.position = position;

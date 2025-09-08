@@ -416,7 +416,8 @@ namespace TimelessEchoes.Tasks
                 foreach (var pair in spawnedTasks)
                     Controller.AddTaskObject(pair.obj);
 
-                Controller.ResetTasks();
+                // Preserve the X-sorted order for the initial task selection
+                Controller.ResetTasks(preserveOrder: true);
             }
         }
 

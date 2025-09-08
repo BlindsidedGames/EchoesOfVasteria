@@ -55,6 +55,13 @@ namespace TimelessEchoes.Enemies
         [TitleGroup("Balance Data/Movement Stats")]
         public float wanderDistance = 2f;
 
+        /// <summary>
+        ///     Minimum distance for wander targets to avoid tiny, flickery moves.
+        ///     Clamped to not exceed wanderDistance.
+        /// </summary>
+        [TitleGroup("Balance Data/Movement Stats"), MinValue(0f)]
+        public float minWanderDistance = 0f;
+
         [PropertySpace(SpaceBefore = 5, SpaceAfter = 0)] [TitleGroup("Balance Data/Combat Stats")]
         public int maxHealth = 10;
 

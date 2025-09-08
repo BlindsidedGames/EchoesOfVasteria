@@ -129,12 +129,18 @@ namespace TimelessEchoes.Audio
         public void ApplyFocusMuteNow()
         {
             AudioListener.pause = StaticReferences.MuteWhenUnfocused && !Application.isFocused;
+            // Ensure no queued or lingering oneshots when toggling mute state
+            SfxPlayer.StopAllSfx();
         }
 
         private void OnApplicationFocus(bool focus)
         {
             if (StaticReferences.MuteWhenUnfocused)
+            {
                 AudioListener.pause = !focus;
+                // Clear any paused or queued oneshots when focus changes
+                SfxPlayer.StopAllSfx();
+            }
             else
                 AudioListener.pause = false;
         }
@@ -142,7 +148,11 @@ namespace TimelessEchoes.Audio
         private void OnApplicationPause(bool paused)
         {
             if (StaticReferences.MuteWhenUnfocused)
+            {
                 AudioListener.pause = paused || !Application.isFocused;
+                // Clear any paused or queued oneshots when pause state changes
+                SfxPlayer.StopAllSfx();
+            }
             else
                 AudioListener.pause = false;
         }

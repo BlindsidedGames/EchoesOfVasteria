@@ -187,6 +187,10 @@ namespace Blindsided
             }
             if (!wipeInProgress)
                 EventHandler.SaveData();
+            // Update version metadata on each save (creation is only set if absent)
+            if (string.IsNullOrEmpty(saveData.GameVersionCreated))
+                saveData.GameVersionCreated = Application.version;
+            saveData.LastGameVersion = Application.version;
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             // New save system only
@@ -356,6 +360,10 @@ namespace Blindsided
             var index = Mathf.Clamp(slotIndex, 0, 2);
             if (!wipeInProgress)
                 EventHandler.SaveData();
+            // Update version metadata on each save (creation is only set if absent)
+            if (string.IsNullOrEmpty(saveData.GameVersionCreated))
+                saveData.GameVersionCreated = Application.version;
+            saveData.LastGameVersion = Application.version;
             saveData.DateQuitString = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             // New system write for the targeted slot
@@ -378,6 +386,9 @@ namespace Blindsided
         private void ApplyPostLoadCommon()
         {
             NullCheckers();
+            // Backfill created version if missing (legacy saves or fresh new games)
+            if (string.IsNullOrEmpty(saveData.GameVersionCreated))
+                saveData.GameVersionCreated = Application.version;
             // Disable any legacy stat->gear migration and sanitize the migrated duck helmet once
             try { EnsureMigrationDisabledAndSanitizeDuckHelmet(); } catch { }
             loaded = true;

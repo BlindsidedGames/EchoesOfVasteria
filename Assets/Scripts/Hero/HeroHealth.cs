@@ -46,6 +46,28 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        /// <summary>
+        /// Refreshes the health UI/bar without generating floating text or altering health.
+        /// </summary>
+        public void RefreshUI()
+        {
+            UpdateBar();
+            RaiseHealthChanged();
+        }
+
+        /// <summary>
+        /// Sets the current health and updates UI without invoking damage/heal side effects
+        /// like floating text, crit flags, or death triggers.
+        /// </summary>
+        /// <param name="value">New current health value (clamped to [0, MaxHealth]).</param>
+        public void SetCurrentHealthSilently(float value)
+        {
+            var clamped = Mathf.Clamp(value, 0f, MaxHealth);
+            CurrentHealth = clamped;
+            UpdateBar();
+            RaiseHealthChanged();
+        }
+
         protected override float CalculateDamage(float fullDamage)
         {
             controller = controller != null ? controller : GetComponent<HeroController>();

@@ -51,6 +51,9 @@ namespace TimelessEchoes.Hero
         /// </summary>
         public bool Initialized { get; private set; }
 
+        // Expose whether this echo is currently allowed to attack without per-tick GetComponent from others
+        public bool AllowAttacks => hero != null && hero.AllowAttacks;
+
         private void Awake()
         {
             hero = GetComponent<HeroController>();

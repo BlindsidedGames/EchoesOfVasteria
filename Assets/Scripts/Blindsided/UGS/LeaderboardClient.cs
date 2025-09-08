@@ -13,7 +13,10 @@ namespace Blindsided.UGS
         public static async Task SubmitAsync(double score, string leaderboardId = DefaultId)
         {
             await UgsInitializer.EnsureInitializedAsync();
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score);
+            // Include version metadata as an object (UGS expects JSON object)
+            var metadata = LeaderboardMetadata.Build();
+            var options = new AddPlayerScoreOptions { Metadata = metadata };
+            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score, options);
         }
 
         public static async Task<LeaderboardScoresPage> GetTopAsync(int limit = 50, string leaderboardId = DefaultId)

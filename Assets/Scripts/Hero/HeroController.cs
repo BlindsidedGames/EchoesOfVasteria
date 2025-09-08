@@ -133,6 +133,7 @@ namespace TimelessEchoes.Hero
 
         private Transform currentEnemy;
         private Health currentEnemyHealth;
+        private Enemy currentEnemyComp;
 
         private readonly HashSet<Enemy> engagedEnemies = new();
         private readonly Dictionary<Enemy, Action> enemyDeathHandlers = new();

@@ -148,6 +148,7 @@ namespace TimelessEchoes.UI
         private TMP_Text importStatusText;
 
         private SaveSlotReferences[] saveSlots;
+        private string[] createdVersionBySlot = new string[3];
 
         private const int Fps60 = 60;
         private const int Fps120 = 120;
@@ -299,6 +300,7 @@ namespace TimelessEchoes.UI
                         ShowUsernameStatus("Unable to load username.", 5f, stickyError: false);
                 }
             }
+
         }
 
         private void ShowUsernameStatus(string message, float seconds, bool stickyError)
@@ -918,6 +920,8 @@ namespace TimelessEchoes.UI
                                 ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
                                 : "Playtime: None";
                         }
+                        // Cache created version for this slot if available
+                        createdVersionBySlot[index] = meta != null ? (meta.createdVersion ?? string.Empty) : string.Empty;
                         if (!string.IsNullOrEmpty(meta?.timestampUtc))
                         {
                             try { slot.lastPlayed = DateTime.Parse(meta.timestampUtc, null, DateTimeStyles.RoundtripKind); }
@@ -933,6 +937,7 @@ namespace TimelessEchoes.UI
                         // No meta found
                         completion = 0f;
                         slot.lastPlayed = null;
+                        createdVersionBySlot[index] = string.Empty;
                         if (slot.playtimeText != null) slot.playtimeText.text = "Playtime: None";
                     }
                 }
@@ -941,6 +946,7 @@ namespace TimelessEchoes.UI
                     if (slot.playtimeText != null)
                         slot.playtimeText.text = "Playtime: None";
                     slot.lastPlayed = null;
+                    createdVersionBySlot[index] = string.Empty;
                     Debug.LogError($"Failed to refresh slot {index}: {ex}");
                 }
             }
@@ -969,6 +975,8 @@ namespace TimelessEchoes.UI
             public string buildId;
             public int sizeBytes;
             public string integrity;
+            public string createdVersion;
+            public string lastVersion;
         }
 
         private void UpdateSlotDynamic(int index)
@@ -1038,6 +1046,18 @@ namespace TimelessEchoes.UI
                 {
                     slot.lastPlayedText.text = "Last Played: Never";
                 }
+            }
+
+            // Append created-with-version info under the last played/save line
+            if (slot.lastPlayedText != null)
+            {
+                var createdInfo = index == Oracle.oracle.CurrentSlot
+                    ? (Oracle.oracle.saveData != null && !string.IsNullOrEmpty(Oracle.oracle.saveData.GameVersionCreated)
+                        ? Oracle.oracle.saveData.GameVersionCreated
+                        : "Unknown")
+                    : (!string.IsNullOrEmpty(createdVersionBySlot[index]) ? createdVersionBySlot[index] : "Unknown");
+                slot.lastPlayedText.text = (slot.lastPlayedText.text ?? string.Empty) +
+                                            $"\n<size=80%>Created with version: {createdInfo}</size>";
             }
         }
     }

@@ -37,7 +37,7 @@ namespace TimelessEchoes
 
             lastHitWasCritical = isCritical;
 
-            if (Application.isPlaying && ShouldShowFloatingText())
+            if (Application.isPlaying && total > 0f && ShouldShowFloatingText())
                 ShowFloatingText(total, bonusDamage);
 
             AfterDamage(total);

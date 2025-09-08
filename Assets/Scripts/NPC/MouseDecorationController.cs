@@ -14,8 +14,9 @@ namespace TimelessEchoes.NPC
             routine = StartCoroutine(EatRoutine());
         }
 
-        protected void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             if (routine != null)
             {
                 StopCoroutine(routine);

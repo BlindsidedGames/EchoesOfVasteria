@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "Alter-Echoes are your main source of income while away. At the
+    m_Localized: "Alter Echoes are your main source of income while away. At the
       end of each run each resource you earned calculates its income per minute and
       stores your lifetime best. Alter Echoes use this value to generate resources.\n\nEcho
       Power is a value that determines the percentage of resources you receive. It
@@ -32,7 +32,7 @@ MonoBehaviour:
   - m_Id: 478381752320
     m_Localized: 'Buffs are short-term, timed powers that expire when they run out
       or if you return to town.  They can be autocast after completing the required
-      quest for the slot and the aucocasting defaults to on. You can toggle it off
+      quest for the slot and the autocasting defaults to on. You can toggle it off
       by clicking the slot in the buffs management window.
 
 
@@ -54,22 +54,22 @@ MonoBehaviour:
   - m_Id: 512217202688
     m_Localized: "Echoes are alternate versions of Caleb who will shift slightly
       into his reality to help out under various circumstances.\n\nEach echo can
-      have a combination of Calebs skillset. But most Echoes won't have them all.\n\nThe
+      have a combination of Caleb's skillset. But most Echoes won't have them all.\n\nThe
       main difference in Echo behaviour comes from whether or not they are combat
-      enabled.\nCombat enabled Echoes have two different styles depending on whether
-      or not they can also complete tasks. \n\nA combat enabled Echo that does NOT
-      have the ability to do tasks will seek out enemies specifically.\nA combat
-      enabled Echo that DOES have the ability to do tasks will prioritize tasks over
-      combat and only engage enemies that see them.\n\nEchoes that do not have combat
-      will not be targetted by or target enemies.\n\nDev Note | Right now there are
-      no echoes in the game that can do both combat and tasks. Echoes from Milestones
+      enabled.\nCombat-enabled Echoes have two different styles depending on whether
+      or not they can also complete tasks. \n\nA combat-enabled Echo that does NOT
+      have the ability to do tasks will seek out enemies specifically.\nA combat-enabled
+      Echo that DOES have the ability to do tasks will prioritize tasks over combat
+      and only engage enemies that see them.\n\nEchoes that do not have combat will
+      not be targeted by or target enemies.\n\nDev Note | Right now there are no
+      echoes in the game that can do both combat and tasks. Echoes from Milestones
       specifically seek out tasks for that skills milestone EG an echo spawned with
       woodcutting will only seek out woodcutting tasks."
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: 'For each kill you get on a run your resource bonus goes up by 2%
-      During combat this is temporarily set back to 0%
+    m_Localized: 'For each kill you get on a run, your resource bonus goes up by
+      2%. During combat, this is temporarily set to 0%
 
 
       Aim to retreat just
@@ -88,8 +88,8 @@ MonoBehaviour:
 
       Task spawns
       have a range from minimum to maximum distance, however after reaching maximum
-      distance their chance to spawn goes down by 90% With this considered once all
-      tasks are at their maximum the weight system will average out and all tasks
+      distance their chance to spawn goes down by 90%. With this considered once
+      all tasks are at their maximum the weight system will average out and all tasks
       will be equally available based on their weights.'
     m_Metadata:
       m_Items: []
@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.14b
+    m_Localized: v1.2.16
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,84 +195,37 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed a bug with the pooling system where completed tasks
-      stayed completed even when they were reused.\n\u2022 Updated Combat, and Reaping
-      library entries.\n\u2022 Fixed an issue with pathfinding.\n1.2.13\n\u2022 Gear
-      maximum Health 250<sprite=194>500.\n\u2022 Gear maximum Crit 5<sprite=194>7.5.\n\u2022
+    m_Localized: "\u2022 Fixed issues with Enemy targeting.\n\u2022 Added information
+      about which version of the game a save file was created with. This will be
+      wrong for versions before this one.\n\u2022 Fixed a bug where audio sfx stacked
+      up while mute in background was active and would try play all of them when
+      you returned to the game.\n\u2022 Fixed a bug where echoes would incorrectly
+      leave an enemy that wasn't fully killed.\n\u2022 Fixed a bug where damage numbers
+      would incorrectly be shown at the start of a map.\n1.2.15\n\u2022 Fixed a bug
+      where Enemy names/levels were not updating.\n\u2022 Fixed a bug where farming
+      task visuals could be wrong.\n\u2022 Removed some redundant code.\n\u2022 More
+      performance increases.\n1.2.14\n\u2022 Fixed a bug with the pooling system
+      where completed tasks stayed completed even when they were reused.\n\u2022
+      Updated Combat, and Reaping library entries.\n\u2022 Fixed an issue with pathfinding.\n1.2.13\n\u2022
+      Gear maximum Health 250<sprite=194>500.\n\u2022 Gear maximum Crit 5<sprite=194>7.5.\n\u2022
       Gear maximum Defense 25<sprite=194>33.\n\u2022 Duck Healms: Movement speed
       has been stripped and attack rate over 1.5 reduced to 1.2.\n\u2022 Task sorting
       now debounces to avoid recalculating paths every single time a task is added.
       Now only happens once per frame.\n\u2022 Began pooling objects to substantially
       improve performance!\n\u2022 Improved leaderboards to now show 50 entries.\n\u2022
       Fixed an Integer overflow issue.\n\u2022 Added Attention objects to the Townsfolk
-      button for when the forge or cauldron stops while the window is closed.\n1.2.12\n\u2022
-      Fixed an issue that could occur when the game crashes before finished loading
-      and it would save blank data over the existing save.\n1.2.11\n\u2022 Added
-      Leaderboards to the game. \n\u2022 You can now set a username in settings.\n1.2.10\n\u2022
-      Buffs can no longer be swapped out during a run.\n\u2022 Fixed a bug where
-      meeting quests could duplicate when being ready to turn in.\n\u2022 Fixed a
-      bug where going onto the demo version of the game would incorrectly lower your
-      maximum distance to the demo cap.\n\u2022 Fixed a bug where quests couldn't
-      set a higher cap than 300. Now quests can bypass this cap but the maximum distance
-      will remain 300 for when you transfer to the full game.\n\u2022 New background
-      mute toggle, defaults to on.\n\u2022 Overhauled Enemy stats tab to be far more
-      informative.\n\u2022 Added two new enemy kill thresholds each granting +50%
-      damage for a total of +200% Thresholds are 25,000 and 100,000 kills respectively.\n\u2022
-      Added a google sheets error reporting system which is completely anonymous.\n1.2.9\n\u2022
-      Added Cows, Sheep, and Pigs to the farmlands.\n\u2022 Added verbose logging
-      to the save system.\n\u2022 Moved the Alter Echoes, Buffs, and Skill buttons
-      to a new dropdown and made them available everywhere.\n\u2022 Disabled taskbar
-      flashing for now.\n\u2022 Highlights on earned cards during tasting now go
-      away after 1 second.\n\u2022 Various UI performance improvements.\n\u2022 New
-      tooltips for the Cauldron.\n\u2022 Combat echoes will now target a different
-      enemy if combined DPS will kill the target in under 1.5 seconds.\n1.2.8\n\u2022
-      Fixed an issue where every time the game saves the oldest backup was moved
-      to the archive causing a lot of save files to be backed up. It now only archives
-      a save file if it cannot load the file.\n\u2022 Removed HMAC we don't need
-      tamper protection for a single player game and it was just adding another point
-      of failure.\n1.2.7\n\u2022 Cauldron buff category now provides 2.5% buff power
-      per Tier.\n\u2022 Cauldron collection cards now have a progress bar.\n\u2022
-      You can now sort items in the items tab of statistics by Tier.\n\u2022 Reworked
-      quest window.\n1.2.6\n\u2022 Feathers have been removed from trees and added
-      to chickens. The Vast One apologizes for the error in creation.\n\u2022 Reap
-      distance no longer has a formatted number, much easier to see the exact number
-      at higher values now.\n\u2022 Improved the wording on buff quest rewards.\n\u2022
-      Button sounds.\n\u2022 You can now import/export your saves.\n1.2.5\n\u2022
-      Chickens!\n\u2022 I forgot to mention, cauldron is now locked behind some buff
-      quests.\n\u2022 If you have save migration issues, switch to the unstable branch
-      on steam to import your old save.\n\u2022 Extended the Cauldron window to be
-      6 slots wide.\n\u2022 Animations now speed up with task speed!\n\u2022 Added
-      the next 5 tiers of Resource Tiers.\n\u2022 Crafted items have no bonus, are
-      set to max tier background and listed as \"Crafted\" in the items panel.\n\u2022
-      Fixed a bug where dice wasn't working properly.\n"
+      button for when the forge or cauldron stops while the window is closed."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "The Cauldron is Evas connection to the Vast One.\n\nTossing ingredients
-      in summons the power of The Vast One. Pulling in your entire stockpile of that
-      resource! It does however require at least two types of resources, for flavour
-      reasons.\nOnce you toss ingredients in you will recieve a number of stew based
-      on the rarity and count of the resources tossed in. After which you can taste
-      the stew to draw from the well of the Vast One's power. You will receive cards
-      based on Eva's level which affects her weights as displayed on the Cauldron
-      screen.\n\nEach card has a tier from 1-8 and levels up at the following thresholds.
-      For now there are no additional bonuses for collecting beyond the cap of that
-      tier but you can continue for as long as you like. Perhaps more power will
-      come from this in the future? The following thresholds are currently implemented.\n\nEach
-      category except for the buff category will additionally tier up as you pass
-      the threshold with all cards in it. If all cards are Tier 2 or higher then
-      the category will be Tier 2. Each Tier you complete in this fashion will award
-      0.1% Alter Echo Power.\n\n<b>Resource Tiers</b> | Echo Power increases by 0.1%
-      per category Tier.\n\u2022 1 | Alter Echo Power for this cards resource +10%\n\u2022
-      25 | 10%<sprite=194>25%\n\u2022 75 | 25%<sprite=194>50%\n\u2022 200 | 50%<sprite=194>75%\n\u2022
-      750 | 75%<sprite=194>120%\n\u2022 1500 | 120%<sprite=194>180%\n\u2022 3500
-      | 180%<sprite=194>250%\n\u2022 10000 | 250%<sprite=194>400%\n<b>Buff Tiers</b>
-      | Buff Power increases by 2.5% per category Tier.\n\u2022 1 | Cooldown -5%,
-      Buff Power: 0%\n\u2022 5 | Cooldown -10%, Buff Power: 0%\n\u2022 25 | Cooldown
-      -15%, Buff Power: 5%\n\u2022 75 | Cooldown -25%, Buff Power: 10%\n\u2022 200
-      | Cooldown -40%, Buff Power: 15%\n\u2022 750 | Cooldown -60%, Buff Power: 20%\n\u2022
-      1500 | Cooldown -80%, Buff Power: 25%\n\u2022 3000 | Cooldown -100%, Buff Power:
-      30%"
+    m_Localized: "Alter Echoes are your main source of income while away. At the
+      end of each run each resource you earned calculates its income per minute and
+      stores your lifetime best. Alter Echoes use this value to generate resources.\n\nEcho
+      Power is a value that determines the percentage of resources you receive. It
+      is visible at the top right of the Alter Echoes screen.\n \nResources will
+      be gathered and brought to Eva for storage. When you return she will happily
+      give them to you, all you have to do is ask!\nThese will generate whether the
+      game is open or closed!"
     m_Metadata:
       m_Items: []
   references:

@@ -25,6 +25,8 @@ namespace Blindsided.SaveData
         [TabGroup("GameDataTabs", "Time")] public float CurrentTime;
         [TabGroup("GameDataTabs", "Time")] public string DateQuitString;
         [TabGroup("GameDataTabs", "Time")] public string DateStarted;
+        [TabGroup("GameDataTabs", "Time")] public string GameVersionCreated;
+        [TabGroup("GameDataTabs", "Time")] public string LastGameVersion;
         [TabGroup("GameDataTabs", "Time")] public double OfflineTime;
         [TabGroup("GameDataTabs", "Time")] public double OfflineTimeCap = 3600f;
         [TabGroup("GameDataTabs", "Time")] public double OfflineTimeScaleMultiplier = 2f;

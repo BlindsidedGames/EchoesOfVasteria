@@ -64,6 +64,11 @@ namespace TimelessEchoes.MapGeneration
             for (var i = 0; i < 3; i++)
                 yield return StartCoroutine(CreateSegment());
 
+            // Ensure TilemapCollider2D has rebuilt before first scan
+            yield return new WaitForEndOfFrame();
+            Physics2D.SyncTransforms();
+            yield return null; // extra frame for composite/tiles to finish updating
+
             MoveGraph();
         }
 
@@ -127,6 +132,13 @@ namespace TimelessEchoes.MapGeneration
             }
 
             yield return StartCoroutine(CreateSegment());
+
+            // Wait for tilemap/collider systems to update before rescanning A*
+            yield return new WaitForEndOfFrame();
+            Physics2D.SyncTransforms();
+            // One more frame helps when using CompositeCollider2D
+            yield return null;
+
             MoveGraph();
             generating = false;
         }

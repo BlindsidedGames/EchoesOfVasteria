@@ -81,13 +81,45 @@ namespace TimelessEchoes.Hero
 
             if (currentEnemy != null)
             {
-                var hp = currentEnemy.GetComponent<Health>();
-                var enemyComp = currentEnemy.GetComponent<Enemy>();
-                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || !engagedEnemies.Contains(enemyComp))
+                var hp = currentEnemyHealth;
+                if (hp == null)
+                {
+                    hp = currentEnemy.GetComponent<Health>();
+                    currentEnemyHealth = hp;
+                }
+                var enemyComp = currentEnemyComp;
+                if (enemyComp == null)
+                {
+                    enemyComp = currentEnemy.GetComponent<Enemy>();
+                    currentEnemyComp = enemyComp;
+                }
+
+                // For the main hero, drop target if it is no longer engaged.
+                // Echoes keep their target until death/one-hit threshold.
+                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || (!IsEcho && !engagedEnemies.Contains(enemyComp)))
                 {
                     currentEnemyHealth?.SetHealthBarVisible(false);
                     currentEnemy = null;
                     currentEnemyHealth = null;
+                    currentEnemyComp = null;
+                }
+                else if (IsEcho && allowAttacks)
+                {
+                    // Echo one-hit release: if another attacker is on this enemy and
+                    // this echo could finish it in one hit (non-crit), release and retarget.
+                    var otherDps = EstimateCombinedDps(currentEnemy);
+                    if (otherDps > 0f)
+                    {
+                        var enemy = currentEnemyComp;
+                        float perHit = EstimatePerHitAgainst(enemy, this);
+                        if (perHit > 0f && hp.CurrentHealth <= perHit)
+                        {
+                            currentEnemyHealth?.SetHealthBarVisible(false);
+                            currentEnemy = null;
+                            currentEnemyHealth = null;
+                            currentEnemyComp = null;
+                        }
+                    }
                 }
             }
 
@@ -147,11 +179,14 @@ namespace TimelessEchoes.Hero
                     currentEnemy = nearest;
                     currentEnemyHealth = nearest.GetComponent<Health>();
                     currentEnemyHealth?.SetHealthBarVisible(true);
+                    currentEnemyComp = nearest.GetComponent<Enemy>();
                 }
                 else if (currentEnemyHealth == null)
                 {
                     currentEnemyHealth = nearest.GetComponent<Health>();
                     currentEnemyHealth?.SetHealthBarVisible(true);
+                    if (currentEnemyComp == null)
+                        currentEnemyComp = nearest.GetComponent<Enemy>();
                 }
 
                 if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
@@ -167,6 +202,7 @@ namespace TimelessEchoes.Hero
                 diceRoller?.ResetRoll();
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemyHealth = null;
+                currentEnemyComp = null;
                 state = State.Idle;
                 taskController?.SelectEarliestTask(this);
             }

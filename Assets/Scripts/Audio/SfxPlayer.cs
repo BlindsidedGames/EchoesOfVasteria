@@ -38,6 +38,8 @@ namespace TimelessEchoes.Audio
         public static void PlaySfx(AudioClip clip)
         {
             if (clip == null || _source == null) return;
+            // Avoid scheduling SFX while audio is paused due to focus/background mute
+            if (AudioListener.pause) return;
             var t = Time.unscaledTime;
             if (clip == _lastClip && t - _lastPlay <= 0.05f)
                 return;
@@ -51,6 +53,8 @@ namespace TimelessEchoes.Audio
         public static void PlaySfxFixedPitch(AudioClip clip)
         {
             if (clip == null || _source == null) return;
+            // Avoid scheduling SFX while audio is paused due to focus/background mute
+            if (AudioListener.pause) return;
             var t = Time.unscaledTime;
             if (clip == _lastClip && t - _lastPlay <= 0.05f)
                 return;
@@ -58,6 +62,14 @@ namespace TimelessEchoes.Audio
             _lastPlay = t;
             _source.pitch = 1f;
             _source.PlayOneShot(clip, StaticReferences.SfxVolume);
+        }
+
+        public static void StopAllSfx()
+        {
+            if (_source == null) return;
+            _source.Stop();
+            _lastClip = null;
+            _lastPlay = 0f;
         }
     }
 }

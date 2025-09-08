@@ -98,20 +98,21 @@ namespace Blindsided.UGS
             try
             {
                 await UgsInitializer.EnsureInitializedAsync();
+                var metadata = LeaderboardMetadata.Build();
 
                 // Distance Reached (world units) -> int
                 var distanceReached = Mathf.FloorToInt(tracker.HighestDistance);
-                lastDistanceReached = await TrySubmitAsync(UgsLeaderboardIds.DistanceReached, distanceReached, lastDistanceReached);
+                lastDistanceReached = await TrySubmitAsync(UgsLeaderboardIds.DistanceReached, distanceReached, lastDistanceReached, metadata);
 
                 // Distance Travelled as kilometers (int)
                 var distanceKm = Mathf.FloorToInt((float)(tracker.DistanceTravelled / 1000.0));
-                lastDistanceTravelledKm = await TrySubmitAsync(UgsLeaderboardIds.DistanceTravelled, distanceKm, lastDistanceTravelledKm);
+                lastDistanceTravelledKm = await TrySubmitAsync(UgsLeaderboardIds.DistanceTravelled, distanceKm, lastDistanceTravelledKm, metadata);
 
                 // Total kills
-                lastKills = await TrySubmitAsync(UgsLeaderboardIds.Kills, tracker.TotalKills, lastKills);
+                lastKills = await TrySubmitAsync(UgsLeaderboardIds.Kills, tracker.TotalKills, lastKills, metadata);
 
                 // Total tasks
-                lastTasks = await TrySubmitAsync(UgsLeaderboardIds.Tasks, tracker.TasksCompleted, lastTasks);
+                lastTasks = await TrySubmitAsync(UgsLeaderboardIds.Tasks, tracker.TasksCompleted, lastTasks, metadata);
             }
             catch (RequestFailedException ex)
             {
@@ -123,7 +124,7 @@ namespace Blindsided.UGS
             }
         }
 
-        private async Task<int> TrySubmitAsync(string leaderboardId, int score, int lastUploaded)
+        private async Task<int> TrySubmitAsync(string leaderboardId, int score, int lastUploaded, object metadata)
         {
             // Never submit an initial zero at boot; wait until we have a meaningful value
             if (lastUploaded < 0 && score <= 0)
@@ -132,7 +133,8 @@ namespace Blindsided.UGS
             if (score <= lastUploaded)
                 return lastUploaded; // only submit improvements to reduce traffic; server policy still applies
 
-            var res = await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score);
+            var options = new AddPlayerScoreOptions { Metadata = metadata };
+            var res = await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score, options);
             if (res != null)
                 lastUploaded = (int)Math.Floor(res.Score);
 

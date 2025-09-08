@@ -46,6 +46,25 @@ namespace TimelessEchoes.Hero
             return perHitAfterDefense * attacksPerSecond;
         }
 
+        // Estimate non-crit single-hit damage after defense and bonuses.
+        private float EstimatePerHitAgainst(Enemy enemy, HeroController attacker)
+        {
+            if (enemy == null || attacker == null)
+                return 0f;
+            if (!attacker.AllowAttacks || attacker.stats == null)
+                return 0f;
+
+            var snap = HeroStatSystem.GetSnapshot();
+            var killTracker = EnemyKillTracker.Instance;
+            var enemyStats = enemy.Stats;
+            float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
+            // Do not include crit expectation here; we want a conservative single-hit estimate.
+            float perHitBeforeDefense = snap.damage * attacker.CombatDamageMultiplier * killMult;
+            float defense = enemy.GetDefense();
+            float perHitAfterDefense = TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
+            return perHitAfterDefense;
+        }
+
         private float EstimateCombinedDps(Transform enemyTransform)
         {
             if (enemyTransform == null)
@@ -149,9 +168,11 @@ namespace TimelessEchoes.Hero
                 var combinedDps = EstimateCombinedDps(enemyTransform);
                 if (combinedDps > 0f)
                 {
-                    var ttk = hp.CurrentHealth / combinedDps;
+                    // Use MaxHealth for TTK check to represent time from full health.
+                    var maxHp = Mathf.Max(0.0001f, hp.MaxHealth);
+                    var ttk = maxHp / combinedDps;
                     if (ttk <= thresholdSec)
-                        continue; // another attacker should finish this target soon
+                        continue; // others would kill from full under threshold; avoid stacking
                 }
 
                 if (d < best)
@@ -339,6 +360,11 @@ namespace TimelessEchoes.Hero
                 currentEnemy = enemy.transform;
                 currentEnemyHealth = hp;
                 currentEnemyHealth.SetHealthBarVisible(true);
+                // Cache Enemy component to avoid per-frame GetComponent calls
+                if (currentEnemyComp == null)
+                {
+                    try { currentEnemyComp = enemy; } catch { currentEnemyComp = null; }
+                }
             }
 
             if (state == State.PerformingTask && CurrentTask != null)
@@ -384,6 +410,7 @@ namespace TimelessEchoes.Hero
                 currentEnemyHealth?.SetHealthBarVisible(false);
                 currentEnemy = null;
                 currentEnemyHealth = null;
+                currentEnemyComp = null;
             }
         }
 

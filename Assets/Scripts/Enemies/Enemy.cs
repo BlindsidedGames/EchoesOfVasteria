@@ -69,13 +69,14 @@ namespace TimelessEchoes.Enemies
         private int level = 1;
         private Transform startTarget;
         private Transform hero;
+        private HeroController heroController;
         private Transform wanderTarget;
         private float nextWanderTime;
         private LayerMask blockingMask;
 
         [SerializeField] private Skill combatSkill;
 
-        public bool IsEngaged => setter != null && setter.target == hero;
+        public bool IsEngaged => setter != null && setter.target != null && setter.target != wanderTarget;
         public EnemyData Stats => stats;
         public int Level => level;
 
@@ -92,17 +93,24 @@ namespace TimelessEchoes.Enemies
 
         private void Awake()
         {
+            SetupInitialInstance();
+        }
+
+        /// <summary>
+        /// One-time setup for this instance. Cache components, create wander target,
+        /// subscribe events, and apply stat-derived static settings. Do not perform
+        /// any per-spawn logic here (position/level/hero acquisition).
+        /// </summary>
+        private void SetupInitialInstance()
+        {
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<Health>();
-            spawnPos = transform.position;
 
-            var controller = GetComponentInParent<TaskController>();
-            if (controller != null)
-                hero = controller.hero != null ? controller.hero.transform : null;
-            wanderTarget = new GameObject("WanderTarget").transform;
-            wanderTarget.hideFlags = HideFlags.HideInHierarchy;
-            wanderTarget.position = transform.position;
+            // Do not parent a wander target under the enemy. We acquire a pooled
+            // target object when needed (InitForSpawn/OnEnable) and release it when
+            // the enemy is returned to its pool.
+
             blockingMask = LayerMask.GetMask("Blocking");
 
             if (stats != null && ai != null)
@@ -112,14 +120,14 @@ namespace TimelessEchoes.Enemies
                 ai.slowdownDistance = Mathf.Max(ai.slowdownDistance, ai.endReachedDistance);
             }
 
-            UpdateDisplayNameAndLevelUI();
-
-            startTarget = setter.target;
+            startTarget = setter != null ? setter.target : null;
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);
             if (health != null)
                 health.OnDeath += OnDeath;
+
+            // Seed timers to now; per-spawn will reset them properly
             nextWanderTime = Time.time;
             nextTargetUpdate = Time.time;
         }
@@ -136,10 +144,6 @@ namespace TimelessEchoes.Enemies
             EnemyActivator.Instance?.Register(this);
             OnEngage += HandleAllyEngaged;
 
-            nextWanderTime = Time.time;
-            nextTargetUpdate = Time.time;
-            Wander();
-
             // Offset the animator's starting time so enemies don't animate
             // in perfect sync when spawned simultaneously.
             if (animator != null)
@@ -148,16 +152,25 @@ namespace TimelessEchoes.Enemies
                 animator.Play(state.fullPathHash, 0, Random.value);
             }
 
-            ApplyRandomSpriteLibrary();
-
-            // Ensure name/level text is refreshed on reuse from pool.
-            UpdateDisplayNameAndLevelUI();
+            // Ensure we have a wander target available early to avoid any null
+            // access before InitForSpawn is invoked (e.g., scene-placed enemies).
+            if (wanderTarget == null)
+            {
+                AcquireWanderTarget();
+                if (setter != null && wanderTarget != null)
+                    setter.target = wanderTarget;
+            }
         }
 
         private void OnDisable()
         {
             EnemyActivator.Instance?.Unregister(this);
             OnEngage -= HandleAllyEngaged;
+
+            // Release pooled wander destination when this enemy is deactivated.
+            ReleaseWanderTarget();
+            if (setter != null && setter.target == wanderTarget)
+                setter.target = null;
         }
 
         private void ApplyRandomSpriteLibrary()
@@ -373,18 +386,14 @@ namespace TimelessEchoes.Enemies
             Transform chosen = null;
             var bestDist = float.PositiveInfinity;
 
-            // check hero
-            if (hero != null && hero.gameObject.activeInHierarchy)
+            // check hero (use cached reference; no per-tick GetComponent)
+            if (heroController != null && heroController.isActiveAndEnabled && heroController.AllowAttacks)
             {
-                var heroCtrl = hero.GetComponent<HeroController>();
-                if (heroCtrl == null || heroCtrl.AllowAttacks)
+                var dist = Vector2.Distance(transform.position, heroController.transform.position);
+                if (dist <= stats.visionRange && dist < bestDist)
                 {
-                    var dist = Vector2.Distance(transform.position, hero.position);
-                    if (dist <= stats.visionRange && dist < bestDist)
-                    {
-                        chosen = hero;
-                        bestDist = dist;
-                    }
+                    chosen = heroController.transform;
+                    bestDist = dist;
                 }
             }
 
@@ -393,8 +402,8 @@ namespace TimelessEchoes.Enemies
             {
                 if (echo == null || !echo.isActiveAndEnabled)
                     continue;
-                var ecHero = echo.GetComponent<HeroController>();
-                if (ecHero == null || !ecHero.AllowAttacks)
+                // Avoid per-interval GetComponent by using EchoController API
+                if (!echo.AllowAttacks)
                     continue;
                 var dist = Vector2.Distance(transform.position, echo.transform.position);
                 if (dist <= stats.visionRange && dist < bestDist)
@@ -412,6 +421,12 @@ namespace TimelessEchoes.Enemies
             // Guard against missing references during initialization/pooling edge cases.
             if (stats == null || ai == null || setter == null)
                 return;
+            if (wanderTarget == null)
+            {
+                AcquireWanderTarget();
+                if (wanderTarget == null)
+                    return;
+            }
             if (setter.target != wanderTarget)
                 setter.target = wanderTarget;
             if (!ai.reachedEndOfPath) return;
@@ -419,9 +434,19 @@ namespace TimelessEchoes.Enemies
 
             const int maxAttempts = 5;
             var wander = (Vector2)transform.position;
+            float maxDist = Mathf.Max(0f, stats.wanderDistance);
+            float minDist = Mathf.Clamp(stats.minWanderDistance, 0f, maxDist);
             for (var i = 0; i < maxAttempts; i++)
             {
-                var candidate = (Vector2)spawnPos + Random.insideUnitCircle * stats.wanderDistance;
+                // Pick a direction and a radius within [minDist, maxDist]
+                var dir = Random.insideUnitCircle;
+                if (dir.sqrMagnitude < 1e-5f)
+                    dir = Vector2.right; // fallback direction
+                dir.Normalize();
+                float radius = (minDist >= maxDist)
+                    ? maxDist
+                    : Random.Range(minDist, maxDist);
+                var candidate = (Vector2)spawnPos + dir * radius;
                 if (Physics2D.OverlapCircle(candidate, 0.2f, blockingMask) == null)
                 {
                     wander = candidate;
@@ -576,8 +601,8 @@ namespace TimelessEchoes.Enemies
             if (health != null)
                 health.OnDeath -= OnDeath;
             OnEngage -= HandleAllyEngaged;
-            if (wanderTarget != null)
-                Destroy(wanderTarget.gameObject);
+            // Safety: release pooled target if still held when object is destroyed.
+            ReleaseWanderTarget();
         }
 
         /// <summary>
@@ -586,6 +611,16 @@ namespace TimelessEchoes.Enemies
         /// </summary>
         public void InitForSpawn()
         {
+            // Acquire primary hero from static instance to avoid lookups/parent dependency
+            heroController = HeroController.Instance;
+            if (heroController == null)
+            {
+                // Fallback: in unusual scenes where Instance is not yet set, try parent TaskController
+                var controller = GetComponentInParent<TaskController>();
+                heroController = controller != null ? controller.hero : null;
+            }
+            hero = heroController != null ? heroController.transform : null;
+
             spawnPos = transform.position;
             float spawnOffset = GameManager.CurrentGenerationConfig != null
                 ? GameManager.CurrentGenerationConfig.taskGeneratorSettings.enemySpawnXOffset
@@ -618,15 +653,44 @@ namespace TimelessEchoes.Enemies
             }
 
             // Reset wandering target and disengage any previous target assignment
+            if (wanderTarget == null)
+                AcquireWanderTarget();
             if (wanderTarget != null)
                 wanderTarget.position = transform.position;
             if (setter != null)
                 setter.target = wanderTarget;
+
+            // Reset timers and attack cadence on fresh spawn
             nextWanderTime = Time.time;
             nextTargetUpdate = Time.time;
+            nextAttack = 0f;
 
-            // After recomputing level/stats on spawn, refresh display.
+            // Visual randomization and UI refresh for pooled reuse
+            ApplyRandomSpriteLibrary();
             UpdateDisplayNameAndLevelUI();
+        }
+
+        private void AcquireWanderTarget()
+        {
+            // Get a pooled GameObject to act as the enemy's wander destination.
+            // Keep it outside the enemy hierarchy so movement doesn't drag it.
+            var go = PoolManager.GetNamed("EnemyWanderTarget");
+            if (go == null)
+                return;
+
+            go.hideFlags = HideFlags.HideInHierarchy;
+            var t = go.transform;
+            t.SetParent(null, false);
+            t.position = transform.position;
+            wanderTarget = t;
+        }
+
+        private void ReleaseWanderTarget()
+        {
+            if (wanderTarget == null)
+                return;
+            PoolManager.Release(wanderTarget.gameObject);
+            wanderTarget = null;
         }
 
         public void SetActiveState(bool active)
@@ -645,12 +709,20 @@ namespace TimelessEchoes.Enemies
 
         private void HandleAllyEngaged(Enemy other)
         {
-            if (other != this && other != null && hero != null && other.IsEngaged)
-            {
-                var dist = Vector2.Distance(transform.position, other.transform.position);
-                if (dist <= stats.assistRange)
-                    setter.target = hero;
-            }
+            if (other == null || other == this || setter == null || stats == null)
+                return;
+
+            if (!other.IsEngaged)
+                return;
+
+            var dist = Vector2.Distance(transform.position, other.transform.position);
+            if (dist > stats.assistRange)
+                return;
+
+            // Assist the ally's current target (hero or echo), not just the hero
+            var allyTarget = other.setter != null ? other.setter.target : null;
+            if (allyTarget != null && allyTarget != wanderTarget)
+                setter.target = allyTarget;
         }
 
         private void UpdateDisplayNameAndLevelUI()

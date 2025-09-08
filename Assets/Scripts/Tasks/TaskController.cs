@@ -269,7 +269,7 @@ namespace TimelessEchoes.Tasks
             taskObjects.Remove(obj);
         }
 
-        public void ResetTasks()
+        public void ResetTasks(bool preserveOrder = false)
         {
             AcquireHero();
             if (hero == null)
@@ -325,7 +325,8 @@ namespace TimelessEchoes.Tasks
                 }
             }
 
-            SortTaskListsByProximity();
+            if (!preserveOrder)
+                SortTaskListsByProximity();
             lastSortedFrame = Time.frameCount;
             pendingSort = false;
 

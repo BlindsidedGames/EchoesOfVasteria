@@ -104,7 +104,9 @@ namespace Blindsided.SaveData
                     timestampUtc = header.TimestampUtc.ToString("o"),
                     buildId = header.BuildId,
                     sizeBytes = header.PayloadSize,
-                    integrity = "ok"
+                    integrity = "ok",
+                    createdVersion = data.GameVersionCreated ?? string.Empty,
+                    lastVersion = data.LastGameVersion ?? string.Empty
                 };
                 TryWriteAllText(metaPath, JsonUtility.ToJson(meta));
             }
@@ -221,6 +223,8 @@ namespace Blindsided.SaveData
             public string buildId;
             public int sizeBytes;
             public string integrity;
+            public string createdVersion;
+            public string lastVersion;
         }
     }
 

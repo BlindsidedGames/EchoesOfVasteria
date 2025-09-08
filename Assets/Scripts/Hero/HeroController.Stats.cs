@@ -55,7 +55,7 @@ namespace TimelessEchoes.Hero
                         var newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
                         health?.Init(newMax);
                         if (newCurrent < newMax && health != null)
-                            health.TakeDamage(newMax - newCurrent);
+                            health.SetCurrentHealthSilently(newCurrent);
                     }
                 }
             }
@@ -141,7 +141,7 @@ namespace TimelessEchoes.Hero
                     var newCurrent = Mathf.Min(current + (newMax - oldMax), newMax);
                     health.Init(newMax);
                     if (newCurrent < newMax)
-                        health.TakeDamage(newMax - newCurrent);
+                        health.SetCurrentHealthSilently(newCurrent);
                 }
             }
         }
