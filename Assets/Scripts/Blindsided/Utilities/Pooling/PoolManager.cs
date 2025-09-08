@@ -21,8 +21,9 @@ namespace Blindsided.Utilities.Pooling
                     if (existing == null)
                     {
                         existing = new GameObject("PooledObjectsRoot");
-                        Object.DontDestroyOnLoad(existing);
                     }
+                    // Ensure the root is not tied to the active scene to avoid cleanup warnings.
+                    Object.DontDestroyOnLoad(existing);
                     poolRoot = existing.transform;
                 }
                 return poolRoot;
