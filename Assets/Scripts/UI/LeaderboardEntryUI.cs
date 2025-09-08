@@ -11,10 +11,12 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text rankText;
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text scoreText;
+        [SerializeField] private TMP_Text versionText;
 
         public TMP_Text RankText => rankText;
         public TMP_Text NameText => nameText;
         public TMP_Text ScoreText => scoreText;
+        public TMP_Text VersionText => versionText;
 
         private void Awake()
         {

@@ -130,6 +130,8 @@ namespace TimelessEchoes.Upgrades
         private void TryRollTierUpgrade(Resource resource)
         {
             if (resource == null) return;
+            // Crafted-only or Alter Echo-disabled resources must never tier up
+            if (resource.DisableAlterEcho) return;
             var currentTier = GetTier(resource);
             // Prevent upgrade if already at or beyond configured tiers
             if (currentTier >= Mathf.Max(tierBonusPercents.Count, tierUpgradeDenominators.Count)) return;
@@ -290,6 +292,8 @@ namespace TimelessEchoes.Upgrades
                     amounts[res] = pair.Value.Amount;
                     if (pair.Value.Earned) unlocked.Add(res);
                     var t = pair.Value.Tier > 0 ? pair.Value.Tier : 1;
+                    // Enforce no-tiering for crafted-only / Alter Echo-disabled resources
+                    if (res.DisableAlterEcho && t != 1) t = 1;
                     tiers[res] = t;
                 }
 

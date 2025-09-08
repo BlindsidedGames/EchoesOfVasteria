@@ -11,18 +11,12 @@ using UnityEngine.UI;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    /// Controls the Leaderboards UI: shows 17 entries and a separate colored player row.
-    /// Supports four leaderboards and a toggle for Top vs Around Player.
+    /// Controls the Leaderboards UI: shows up to 50 entries and a separate colored player row.
+    /// Supports Distance Reached with toggles for Top vs Around Player and Seasonal vs Global.
     /// </summary>
     public class LeaderboardsPanelUI : MonoBehaviour
     {
-        public enum Board
-        {
-            DistanceReached,
-            DistanceTravelled,
-            Kills,
-            Tasks
-        }
+        public enum Board { DistanceReached }
 
         [Header("Entry Rows")] 
         [SerializeField] private Transform entriesContainer; // Parent to hold pooled rows
@@ -31,15 +25,22 @@ namespace TimelessEchoes.UI
         [SerializeField] private LeaderboardEntryUI playerEntry; // separate player entry row
         private List<LeaderboardEntryUI> entrySlots = new List<LeaderboardEntryUI>(50); // runtime pool (not serialized)
 
-        [Header("Board Buttons")] [SerializeField] private Button distanceReachedButton;
-        [SerializeField] private Button distanceTravelledButton;
-        [SerializeField] private Button killsButton;
-        [SerializeField] private Button tasksButton;
+        [Header("Seasonal Gating")]
+        [SerializeField] private LeaderboardEntryUI seasonalInfoEntry; // Prefab/row configured to show info when seasonal is ineligible
+
+        [Header("Refresh")] 
+        [SerializeField] private Button refreshButton; // Manual refresh trigger
+        [SerializeField] private GameObject refreshButtonObject; // Enable/disable while loading
+        [SerializeField] private GameObject refreshAnimationObject; // Spinner shown while loading
 
         [Header("Toggle (Top vs Around)")] [SerializeField] private Button toggleButton;
         [SerializeField] private Image toggleImage;
         [SerializeField] private Sprite onSprite;
         [SerializeField] private Sprite offSprite;
+
+        [Header("Toggle (Seasonal)")]
+        [SerializeField] private Button seasonalToggleButton; // duplicated UI like ShowTop toggle
+        [SerializeField] private Image seasonalToggleImage;
 
         [Header("Scrolling")] [SerializeField] private ScrollRect scrollRect; // optional; if null, try to find in parent
 
@@ -47,17 +48,16 @@ namespace TimelessEchoes.UI
 
         [SerializeField] private Board currentBoard = Board.DistanceReached;
         [SerializeField] private bool showTop = false; // default OFF => around player
+        [SerializeField] private bool showSeasonal = false; // default OFF => global board
 
         private bool refreshing;
         private bool forceScrollTopNext;
 
         private void Awake()
         {
-            if (distanceReachedButton != null) distanceReachedButton.onClick.AddListener(() => OnBoardClicked(Board.DistanceReached));
-            if (distanceTravelledButton != null) distanceTravelledButton.onClick.AddListener(() => OnBoardClicked(Board.DistanceTravelled));
-            if (killsButton != null) killsButton.onClick.AddListener(() => OnBoardClicked(Board.Kills));
-            if (tasksButton != null) tasksButton.onClick.AddListener(() => OnBoardClicked(Board.Tasks));
+            if (refreshButton != null) refreshButton.onClick.AddListener(RefreshNow);
             if (toggleButton != null) toggleButton.onClick.AddListener(OnToggleClicked);
+            if (seasonalToggleButton != null) seasonalToggleButton.onClick.AddListener(OnSeasonalToggleClicked);
             BuildPoolIfNeeded();
 
             // Optional auto-wire for scroll rect
@@ -65,38 +65,37 @@ namespace TimelessEchoes.UI
             {
                 scrollRect = GetComponentInParent<ScrollRect>();
             }
+
+            // Ensure the seasonal info row starts hidden so it never appears as an entry by default
+            if (seasonalInfoEntry != null) seasonalInfoEntry.SetActive(false);
         }
 
         private void OnEnable()
         {
+            // Default the seasonal toggle based on eligibility (eligible -> seasonal on; else global)
+            var oc = Blindsided.Oracle.oracle;
+            var eligible = oc != null && oc.IsSeasonalEligible();
+            showSeasonal = eligible;
             UpdateBoardLabel();
             UpdateToggleVisual();
-            UpdateButtonStates();
+            UpdateSeasonalToggleVisual();
+            UpdateTopToggleLockState();
+            // On enable, make sure the seasonal info row is hidden unless the refresh path decides to show it
+            if (seasonalInfoEntry != null) seasonalInfoEntry.SetActive(false);
+            // Refresh whenever a save finishes loading
+            Blindsided.EventHandler.OnLoadData += RefreshNow;
             _ = RefreshAsync();
         }
 
         private void OnDestroy()
         {
-            if (distanceReachedButton != null) distanceReachedButton.onClick.RemoveAllListeners();
-            if (distanceTravelledButton != null) distanceTravelledButton.onClick.RemoveAllListeners();
-            if (killsButton != null) killsButton.onClick.RemoveAllListeners();
-            if (tasksButton != null) tasksButton.onClick.RemoveAllListeners();
+            if (refreshButton != null) refreshButton.onClick.RemoveAllListeners();
             if (toggleButton != null) toggleButton.onClick.RemoveAllListeners();
+            if (seasonalToggleButton != null) seasonalToggleButton.onClick.RemoveAllListeners();
+            Blindsided.EventHandler.OnLoadData -= RefreshNow;
         }
 
-        private void OnBoardClicked(Board board)
-        {
-            if (currentBoard == board) return;
-            currentBoard = board;
-            UpdateBoardLabel();
-            UpdateButtonStates();
-            if (showTop)
-            {
-                // When switching boards in Top mode, ensure the list jumps to the top
-                forceScrollTopNext = true;
-            }
-            _ = RefreshAsync();
-        }
+        // No board switching UI anymore (single stat; seasonal toggle handles board)
 
         private void OnToggleClicked()
         {
@@ -110,33 +109,78 @@ namespace TimelessEchoes.UI
             _ = RefreshAsync();
         }
 
+        private void OnSeasonalToggleClicked()
+        {
+            showSeasonal = !showSeasonal;
+            UpdateSeasonalToggleVisual();
+            UpdateTopToggleLockState();
+            UpdateBoardLabel();
+            // If ineligible seasonal is selected, force Top mode and lock it
+            if (showSeasonal && !IsSeasonalEligible())
+            {
+                if (!showTop)
+                {
+                    showTop = true;
+                    UpdateToggleVisual();
+                }
+            }
+            if (showTop)
+            {
+                // When switching boards in Top mode, ensure the list jumps to the top
+                forceScrollTopNext = true;
+            }
+            _ = RefreshAsync();
+        }
+
         private void UpdateToggleVisual()
         {
             if (toggleImage != null)
                 toggleImage.sprite = showTop ? onSprite : offSprite;
         }
 
+        private void UpdateSeasonalToggleVisual()
+        {
+            if (seasonalToggleImage != null)
+                seasonalToggleImage.sprite = showSeasonal ? onSprite : offSprite;
+        }
+
+        private void UpdateTopToggleLockState()
+        {
+            // Lock the Top toggle when seasonal is ON but the save is ineligible
+            bool lockTop = showSeasonal && !IsSeasonalEligible();
+            if (toggleButton != null)
+                toggleButton.interactable = !lockTop;
+        }
+
+        private bool IsSeasonalEligible()
+        {
+            var oc = Blindsided.Oracle.oracle;
+            return oc != null && oc.IsSeasonalEligible();
+        }
+
+        // Ensure the seasonal info row never appears as a ranked entry. If active, keep it at the top.
+        private void PlaceInfoRowAtTop()
+        {
+            try
+            {
+                if (seasonalInfoEntry == null || entriesContainer == null) return;
+                var tr = seasonalInfoEntry.transform;
+                if (tr.parent == entriesContainer)
+                {
+                    tr.SetSiblingIndex(0);
+                }
+            }
+            catch { }
+        }
+
         private void UpdateBoardLabel()
         {
             if (boardLabel == null) return;
-            var text = currentBoard switch
-            {
-                Board.DistanceReached => "Distance Reached",
-                Board.DistanceTravelled => "Distance Travelled",
-                Board.Kills => "Kills",
-                Board.Tasks => "Tasks",
-                _ => string.Empty
-            };
+            var text = showSeasonal ? "Seasonal Distance Reached" : "Global Distance Reached";
             boardLabel.text = text;
         }
 
-        private void UpdateButtonStates()
-        {
-            if (distanceReachedButton != null) distanceReachedButton.interactable = currentBoard != Board.DistanceReached;
-            if (distanceTravelledButton != null) distanceTravelledButton.interactable = currentBoard != Board.DistanceTravelled;
-            if (killsButton != null) killsButton.interactable = currentBoard != Board.Kills;
-            if (tasksButton != null) tasksButton.interactable = currentBoard != Board.Tasks;
-        }
+        
 
         public void RefreshNow()
         {
@@ -145,14 +189,10 @@ namespace TimelessEchoes.UI
 
         private string LeaderboardId(Board board)
         {
-            return board switch
-            {
-                Board.DistanceReached => UgsLeaderboardIds.DistanceReached,
-                Board.DistanceTravelled => UgsLeaderboardIds.DistanceTravelled,
-                Board.Kills => UgsLeaderboardIds.Kills,
-                Board.Tasks => UgsLeaderboardIds.Tasks,
-                _ => UgsLeaderboardIds.DistanceReached
-            };
+            // Only DistanceReached is supported now. Choose seasonal/global by toggle.
+            if (showSeasonal)
+                return UgsLeaderboardIds.DistanceReachedSeasonal;
+            return UgsLeaderboardIds.DistanceReached;
         }
 
         private async Task RefreshAsync()
@@ -161,8 +201,42 @@ namespace TimelessEchoes.UI
             refreshing = true;
             try
             {
+                // Show loading animation and hide refresh button while loading
+                if (refreshButtonObject != null) refreshButtonObject.SetActive(false);
+                if (refreshAnimationObject != null) refreshAnimationObject.SetActive(true);
+
                 // Ensure pool exists (no-op if already built)
                 BuildPoolIfNeeded();
+
+                // Seasonal gating: if seasonal is selected but save is ineligible,
+                // show info entry but still proceed to load the leaderboard (Top50 forced)
+                if (showSeasonal && !IsSeasonalEligible())
+                {
+                    if (seasonalInfoEntry != null)
+                    {
+                        seasonalInfoEntry.SetActive(true);
+                        var oc = Blindsided.Oracle.oracle;
+                        var required = oc != null ? oc.MinimumSeasonalGameVersion : "?";
+                        var created = oc != null && oc.saveData != null && !string.IsNullOrEmpty(oc.saveData.GameVersionCreated)
+                            ? oc.saveData.GameVersionCreated
+                            : "?";
+                        // Update the rank text with required/created versions and clear other fields
+                        seasonalInfoEntry.RankText?.SetText($"To submit seasonal leaderboard scores your save must be created on version {required} or later.\nYour save was created with version {created}");
+                        if (seasonalInfoEntry.NameText != null) seasonalInfoEntry.NameText.text = string.Empty;
+                        if (seasonalInfoEntry.ScoreText != null) seasonalInfoEntry.ScoreText.text = string.Empty;
+                        if (seasonalInfoEntry.VersionText != null) seasonalInfoEntry.VersionText.text = string.Empty;
+                    }
+                    // Force Top mode ON and lock (visual handled elsewhere)
+                    if (!showTop)
+                    {
+                        showTop = true;
+                        UpdateToggleVisual();
+                    }
+                }
+                else
+                {
+                    if (seasonalInfoEntry != null) seasonalInfoEntry.SetActive(false);
+                }
 
                 var id = LeaderboardId(currentBoard);
 
@@ -209,6 +283,9 @@ namespace TimelessEchoes.UI
             finally
             {
                 refreshing = false;
+                // Restore refresh button and hide animation
+                if (refreshButtonObject != null) refreshButtonObject.SetActive(true);
+                if (refreshAnimationObject != null) refreshAnimationObject.SetActive(false);
             }
         }
 
@@ -259,6 +336,7 @@ namespace TimelessEchoes.UI
                 string name = !string.IsNullOrWhiteSpace(my.PlayerName) ? my.PlayerName : await GetMyNameSafeAsync();
                 string scoreStr = FormatScore(my.Score, currentBoard);
                 playerEntry.Set(rankStr, name, scoreStr);
+                TrySetVersion(playerEntry, my);
                 playerEntry.SetActive(true);
             }
 
@@ -300,6 +378,8 @@ namespace TimelessEchoes.UI
             {
                 ScrollToPlayer(above.Count, below.Count);
             }
+            if (seasonalInfoEntry != null && seasonalInfoEntry.gameObject.activeSelf)
+                PlaceInfoRowAtTop();
         }
 
         // New overload that also accepts total count so we can format "Rank / Total"
@@ -316,6 +396,7 @@ namespace TimelessEchoes.UI
                     : await GetMyNameSafeAsync();
                 string scoreStr = my != null ? FormatScore(my.Score, currentBoard) : "-";
                 playerEntry.Set(rankStr, name ?? "Player", scoreStr);
+                TrySetVersion(playerEntry, my);
                 playerEntry.SetActive(true);
             }
 
@@ -362,6 +443,8 @@ namespace TimelessEchoes.UI
 
             ArrangeAroundPlayer(above.Count, below.Count);
             ScrollToPlayer(above.Count, below.Count);
+            if (seasonalInfoEntry != null && seasonalInfoEntry.gameObject.activeSelf)
+                PlaceInfoRowAtTop();
         }
 
         private void SetSlotSafe(LeaderboardEntryUI slot, LeaderboardEntry entry)
@@ -371,6 +454,90 @@ namespace TimelessEchoes.UI
             var name = string.IsNullOrWhiteSpace(entry.PlayerName) ? "-" : entry.PlayerName;
             var scoreStr = FormatScore(entry.Score, currentBoard);
             slot.Set(rankStr, name, scoreStr);
+            TrySetVersion(slot, entry);
+        }
+
+        private void TrySetVersion(LeaderboardEntryUI slot, LeaderboardEntry entry)
+        {
+            if (slot == null || entry == null) return;
+            try
+            {
+                // Handle both dictionary metadata and JSON string metadata
+                object mdObj = entry.Metadata;
+                if (mdObj is System.Collections.Generic.IDictionary<string, object> dict)
+                {
+                    dict.TryGetValue("GameVersionCreated", out var createdObj);
+                    dict.TryGetValue("LastGameVersion", out var lastObj);
+                    var created = createdObj?.ToString();
+                    var last = lastObj?.ToString();
+                    if (!string.IsNullOrEmpty(created) || !string.IsNullOrEmpty(last))
+                    {
+                        slot.VersionText?.SetText($"Save created with V{created}\nScore submitted with V{last}");
+                        return;
+                    }
+                }
+                else if (mdObj is string s && !string.IsNullOrEmpty(s))
+                {
+                    var created = ExtractJsonStringValue(s, "GameVersionCreated");
+                    var last = ExtractJsonStringValue(s, "LastGameVersion");
+                    if (!string.IsNullOrEmpty(created) || !string.IsNullOrEmpty(last))
+                    {
+                        slot.VersionText?.SetText($"Save created with V{created}\nScore submitted with V{last}");
+                        return;
+                    }
+                }
+                // No metadata found; clear if we have a field
+                if (slot.VersionText != null)
+                    slot.VersionText.text = string.Empty;
+            }
+            catch
+            {
+                if (slot?.VersionText != null)
+                    slot.VersionText.text = string.Empty;
+            }
+        }
+
+        private static string ExtractJsonStringValue(string json, string key)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key)) return null;
+                var token = "\"" + key + "\"";
+                int i = json.IndexOf(token, StringComparison.Ordinal);
+                if (i < 0) return null;
+                i = json.IndexOf(':', i);
+                if (i < 0) return null;
+                // skip whitespace
+                i++;
+                while (i < json.Length && char.IsWhiteSpace(json[i])) i++;
+                if (i >= json.Length) return null;
+                if (json[i] != '"')
+                {
+                    // not a quoted string; attempt to read until comma/brace
+                    int j = i;
+                    while (j < json.Length && json[j] != ',' && json[j] != '}' && json[j] != '\n' && json[j] != '\r') j++;
+                    var raw = json.Substring(i, Math.Max(0, j - i)).Trim();
+                    return string.IsNullOrEmpty(raw) ? null : raw;
+                }
+                // quoted string; read until next unescaped quote
+                i++; // move past opening quote
+                var start = i;
+                bool esc = false;
+                while (i < json.Length)
+                {
+                    var c = json[i];
+                    if (esc) { esc = false; i++; continue; }
+                    if (c == '\\') { esc = true; i++; continue; }
+                    if (c == '"') break;
+                    i++;
+                }
+                if (i >= json.Length) return null;
+                var val = json.Substring(start, i - start);
+                // unescape minimal JSON escapes
+                val = val.Replace("\\\"", "\"").Replace("\\n", "\n").Replace("\\r", "\r").Replace("\\t", "\t").Replace("\\\\", "\\");
+                return val;
+            }
+            catch { return null; }
         }
 
         private void BuildPoolIfNeeded()
@@ -416,7 +583,7 @@ namespace TimelessEchoes.UI
             {
                 var child = entriesContainer.GetChild(i);
                 var row = child.GetComponent<LeaderboardEntryUI>();
-                if (row != null && row != playerEntry)
+                if (row != null && row != playerEntry && row != seasonalInfoEntry)
                 {
                     entrySlots.Add(row);
                 }
@@ -444,20 +611,8 @@ namespace TimelessEchoes.UI
 
         private static string FormatScore(double score, Board board)
         {
-            switch (board)
-            {
-                case Board.DistanceTravelled:
-                    // UGS stores as kilometers (int). Convert back to steps.
-                    var steps = Math.Floor(score * 1000.0);
-                    return steps.ToString("N0") + " Steps";
-                case Board.Kills:
-                    return Math.Floor(score).ToString("N0") + " Kills";
-                case Board.Tasks:
-                    return Math.Floor(score).ToString("N0") + " Tasks";
-                case Board.DistanceReached:
-                default:
-                    return Math.Floor(score).ToString("N0");
-            }
+            // Only DistanceReached is supported; show as integer distance.
+            return Math.Floor(score).ToString("N0");
         }
 
         private void ArrangeAroundPlayer(int aboveCount, int belowCount)
@@ -581,4 +736,5 @@ namespace TimelessEchoes.UI
         }
     }
 }
+
 

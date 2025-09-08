@@ -243,6 +243,32 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -255,7 +281,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -272,12 +298,12 @@ TextureImporter:
       name: Loading_Icon_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 32
+        x: 16
+        y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,12 +320,12 @@ TextureImporter:
       name: Loading_Icon_2
       rect:
         serializedVersion: 2
-        x: 16
+        x: 32
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -316,12 +342,12 @@ TextureImporter:
       name: Loading_Icon_3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 32
+        x: 48
+        y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -338,12 +364,12 @@ TextureImporter:
       name: Loading_Icon_4
       rect:
         serializedVersion: 2
-        x: 32
+        x: 64
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -360,12 +386,12 @@ TextureImporter:
       name: Loading_Icon_5
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
+        x: 80
+        y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -382,12 +408,12 @@ TextureImporter:
       name: Loading_Icon_6
       rect:
         serializedVersion: 2
-        x: 48
+        x: 96
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -404,12 +430,12 @@ TextureImporter:
       name: Loading_Icon_7
       rect:
         serializedVersion: 2
-        x: 48
-        y: 28
+        x: 112
+        y: 48
         width: 16
-        height: 20
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -426,12 +452,12 @@ TextureImporter:
       name: Loading_Icon_8
       rect:
         serializedVersion: 2
-        x: 64
+        x: 128
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -448,12 +474,12 @@ TextureImporter:
       name: Loading_Icon_9
       rect:
         serializedVersion: 2
-        x: 64
-        y: 26
+        x: 144
+        y: 48
         width: 16
-        height: 22
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -470,12 +496,12 @@ TextureImporter:
       name: Loading_Icon_10
       rect:
         serializedVersion: 2
-        x: 80
+        x: 160
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -492,12 +518,12 @@ TextureImporter:
       name: Loading_Icon_11
       rect:
         serializedVersion: 2
-        x: 80
-        y: 32
+        x: 176
+        y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -514,12 +540,12 @@ TextureImporter:
       name: Loading_Icon_12
       rect:
         serializedVersion: 2
-        x: 96
+        x: 192
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -536,12 +562,12 @@ TextureImporter:
       name: Loading_Icon_13
       rect:
         serializedVersion: 2
-        x: 96
-        y: 32
+        x: 208
+        y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -558,12 +584,12 @@ TextureImporter:
       name: Loading_Icon_14
       rect:
         serializedVersion: 2
-        x: 112
+        x: 224
         y: 48
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -580,12 +606,12 @@ TextureImporter:
       name: Loading_Icon_15
       rect:
         serializedVersion: 2
-        x: 112
+        x: 0
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -602,12 +628,12 @@ TextureImporter:
       name: Loading_Icon_16
       rect:
         serializedVersion: 2
-        x: 128
-        y: 48
+        x: 16
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -624,12 +650,12 @@ TextureImporter:
       name: Loading_Icon_17
       rect:
         serializedVersion: 2
-        x: 128
+        x: 32
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -646,12 +672,12 @@ TextureImporter:
       name: Loading_Icon_18
       rect:
         serializedVersion: 2
-        x: 144
-        y: 48
+        x: 48
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -668,12 +694,12 @@ TextureImporter:
       name: Loading_Icon_19
       rect:
         serializedVersion: 2
-        x: 144
+        x: 64
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -690,12 +716,12 @@ TextureImporter:
       name: Loading_Icon_20
       rect:
         serializedVersion: 2
-        x: 160
-        y: 48
+        x: 80
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -712,12 +738,12 @@ TextureImporter:
       name: Loading_Icon_21
       rect:
         serializedVersion: 2
-        x: 160
+        x: 96
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -734,12 +760,12 @@ TextureImporter:
       name: Loading_Icon_22
       rect:
         serializedVersion: 2
-        x: 176
-        y: 48
+        x: 112
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -756,12 +782,12 @@ TextureImporter:
       name: Loading_Icon_23
       rect:
         serializedVersion: 2
-        x: 176
+        x: 128
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -778,12 +804,12 @@ TextureImporter:
       name: Loading_Icon_24
       rect:
         serializedVersion: 2
-        x: 192
-        y: 48
+        x: 144
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -800,12 +826,12 @@ TextureImporter:
       name: Loading_Icon_25
       rect:
         serializedVersion: 2
-        x: 192
+        x: 160
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -822,12 +848,12 @@ TextureImporter:
       name: Loading_Icon_26
       rect:
         serializedVersion: 2
-        x: 208
-        y: 48
+        x: 176
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -844,12 +870,12 @@ TextureImporter:
       name: Loading_Icon_27
       rect:
         serializedVersion: 2
-        x: 208
+        x: 192
         y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -866,12 +892,12 @@ TextureImporter:
       name: Loading_Icon_28
       rect:
         serializedVersion: 2
-        x: 224
-        y: 48
+        x: 208
+        y: 32
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -893,7 +919,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -910,12 +936,12 @@ TextureImporter:
       name: Loading_Icon_30
       rect:
         serializedVersion: 2
-        x: 1
-        y: 2
-        width: 10
-        height: 31
+        x: 0
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -932,12 +958,12 @@ TextureImporter:
       name: Loading_Icon_31
       rect:
         serializedVersion: 2
-        x: 18
-        y: 25
-        width: 11
-        height: 7
+        x: 16
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -954,12 +980,12 @@ TextureImporter:
       name: Loading_Icon_32
       rect:
         serializedVersion: 2
-        x: 18
-        y: 3
-        width: 29
-        height: 12
+        x: 32
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -976,12 +1002,12 @@ TextureImporter:
       name: Loading_Icon_33
       rect:
         serializedVersion: 2
-        x: 35
-        y: 25
-        width: 12
-        height: 7
+        x: 48
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -998,12 +1024,12 @@ TextureImporter:
       name: Loading_Icon_34
       rect:
         serializedVersion: 2
-        x: 51
-        y: 1
-        width: 27
-        height: 13
+        x: 64
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1020,12 +1046,12 @@ TextureImporter:
       name: Loading_Icon_35
       rect:
         serializedVersion: 2
-        x: 56
-        y: 23
-        width: 8
-        height: 8
+        x: 80
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1042,12 +1068,12 @@ TextureImporter:
       name: Loading_Icon_36
       rect:
         serializedVersion: 2
-        x: 75
-        y: 21
-        width: 6
-        height: 6
+        x: 96
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1064,12 +1090,12 @@ TextureImporter:
       name: Loading_Icon_37
       rect:
         serializedVersion: 2
-        x: 82
-        y: 1
-        width: 24
-        height: 12
+        x: 112
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1086,12 +1112,12 @@ TextureImporter:
       name: Loading_Icon_38
       rect:
         serializedVersion: 2
-        x: 89
-        y: 19
-        width: 7
-        height: 11
+        x: 128
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1108,12 +1134,12 @@ TextureImporter:
       name: Loading_Icon_39
       rect:
         serializedVersion: 2
-        x: 105
-        y: 17
-        width: 7
-        height: 12
+        x: 144
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1130,12 +1156,12 @@ TextureImporter:
       name: Loading_Icon_40
       rect:
         serializedVersion: 2
-        x: 106
-        y: 2
-        width: 19
-        height: 12
+        x: 160
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1152,12 +1178,12 @@ TextureImporter:
       name: Loading_Icon_41
       rect:
         serializedVersion: 2
-        x: 119
+        x: 176
         y: 16
-        width: 8
-        height: 11
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1174,12 +1200,12 @@ TextureImporter:
       name: Loading_Icon_42
       rect:
         serializedVersion: 2
-        x: 133
-        y: 15
-        width: 10
-        height: 10
+        x: 192
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1196,12 +1222,12 @@ TextureImporter:
       name: Loading_Icon_43
       rect:
         serializedVersion: 2
-        x: 147
+        x: 208
         y: 16
-        width: 11
-        height: 7
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1218,12 +1244,12 @@ TextureImporter:
       name: Loading_Icon_44
       rect:
         serializedVersion: 2
-        x: 161
+        x: 224
         y: 16
-        width: 12
-        height: 7
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1240,12 +1266,12 @@ TextureImporter:
       name: Loading_Icon_45
       rect:
         serializedVersion: 2
-        x: 176
-        y: 17
-        width: 11
-        height: 8
+        x: 240
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1262,12 +1288,12 @@ TextureImporter:
       name: Loading_Icon_46
       rect:
         serializedVersion: 2
-        x: 191
-        y: 17
-        width: 10
-        height: 10
+        x: 0
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1284,12 +1310,12 @@ TextureImporter:
       name: Loading_Icon_47
       rect:
         serializedVersion: 2
-        x: 208
-        y: 18
-        width: 7
-        height: 11
+        x: 16
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1306,12 +1332,12 @@ TextureImporter:
       name: Loading_Icon_48
       rect:
         serializedVersion: 2
-        x: 224
-        y: 19
-        width: 7
-        height: 12
+        x: 32
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1328,12 +1354,12 @@ TextureImporter:
       name: Loading_Icon_49
       rect:
         serializedVersion: 2
-        x: 241
-        y: 21
-        width: 8
-        height: 11
+        x: 48
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1346,11 +1372,99 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Loading_Icon_50
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f81012f06d48e949a1df13edb673e7a
+      internalID: -1794407074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Loading_Icon_51
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5929f09e6e811e14ead1a5ae8a0f5801
+      internalID: -159914935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Loading_Icon_52
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c1361b71a6e2f94993b7529a26556f2
+      internalID: -421503530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Loading_Icon_53
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86e4db91155bb4c47b393dd9d42a0122
+      internalID: -838490745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 149e7fa2f860ed044bfc3ac45cc4f9b9
     internalID: 0
     vertices: []
     indices: 
@@ -1358,7 +1472,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Loading_Icon_0: 95772594917493220
       Loading_Icon_1: -7027869672465087493
@@ -1406,6 +1522,10 @@ TextureImporter:
       Loading_Icon_48: -7507014552812890700
       Loading_Icon_49: 1173112373358744580
       Loading_Icon_5: -2676276451800721793
+      Loading_Icon_50: -1794407074
+      Loading_Icon_51: -159914935
+      Loading_Icon_52: -421503530
+      Loading_Icon_53: -838490745
       Loading_Icon_6: 9160376388404185752
       Loading_Icon_7: -5667177035447719802
       Loading_Icon_8: 5714666392502502163

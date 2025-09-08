@@ -48,9 +48,7 @@ namespace Blindsided.UGS
 
         // Track last values we've successfully sent to avoid redundant uploads.
         private int lastDistanceReached = -1;
-        private int lastDistanceTravelledKm = -1;
-        private int lastKills = -1;
-        private int lastTasks = -1;
+        private int lastDistanceReachedSeasonal = -1;
 
         private void Awake()
         {
@@ -103,16 +101,12 @@ namespace Blindsided.UGS
                 // Distance Reached (world units) -> int
                 var distanceReached = Mathf.FloorToInt(tracker.HighestDistance);
                 lastDistanceReached = await TrySubmitAsync(UgsLeaderboardIds.DistanceReached, distanceReached, lastDistanceReached, metadata);
-
-                // Distance Travelled as kilometers (int)
-                var distanceKm = Mathf.FloorToInt((float)(tracker.DistanceTravelled / 1000.0));
-                lastDistanceTravelledKm = await TrySubmitAsync(UgsLeaderboardIds.DistanceTravelled, distanceKm, lastDistanceTravelledKm, metadata);
-
-                // Total kills
-                lastKills = await TrySubmitAsync(UgsLeaderboardIds.Kills, tracker.TotalKills, lastKills, metadata);
-
-                // Total tasks
-                lastTasks = await TrySubmitAsync(UgsLeaderboardIds.Tasks, tracker.TasksCompleted, lastTasks, metadata);
+                // If eligible, also submit to the seasonal board
+                var oc = Blindsided.Oracle.oracle;
+                if (oc != null && oc.IsSeasonalEligible())
+                {
+                    lastDistanceReachedSeasonal = await TrySubmitAsync(UgsLeaderboardIds.DistanceReachedSeasonal, distanceReached, lastDistanceReachedSeasonal, metadata);
+                }
             }
             catch (RequestFailedException ex)
             {

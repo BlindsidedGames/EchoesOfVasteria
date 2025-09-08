@@ -158,7 +158,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 var ingotRes = core != null ? core.requiredIngot : null;
                 var amount = rm != null && ingotRes != null ? rm.GetAmount(ingotRes) : 0;
-                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
             if (section.maxCraftsText != null)
@@ -174,7 +174,7 @@ namespace TimelessEchoes.Gear.UI
                         max = Mathf.Min(max, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
                     if (max < 0) max = 0;
                 }
-                section.maxCraftsText.text = max.ToString("0");
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -241,7 +241,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 var res = core != null ? core.crystalResource : null;
                 var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
-                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
             if (section.maxCraftsText != null)
@@ -251,7 +251,7 @@ namespace TimelessEchoes.Gear.UI
                     max = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
                         (int)(rm.GetAmount(slimeResource) / 1f));
                 if (max < 0) max = 0;
-                section.maxCraftsText.text = max.ToString("0");
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -319,7 +319,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 var res = core != null ? core.chunkResource : null;
                 var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
-                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
             if (section.maxCraftsText != null)
@@ -329,7 +329,7 @@ namespace TimelessEchoes.Gear.UI
                     max = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
                         (int)(rm.GetAmount(stoneResource) / 2f));
                 if (max < 0) max = 0;
-                section.maxCraftsText.text = max.ToString("0");
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -403,7 +403,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 var res = nextRes;
                 var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
-                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount);
+                section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
             if (section.maxCraftsText != null)
@@ -412,7 +412,7 @@ namespace TimelessEchoes.Gear.UI
                 if (rm != null && curRes != null && nextRes != null)
                     max = Mathf.Min((int)(rm.GetAmount(curRes) / 5f), (int)(rm.GetAmount(nextRes) / 1f));
                 if (max < 0) max = 0;
-                section.maxCraftsText.text = max.ToString("0");
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -487,7 +487,8 @@ namespace TimelessEchoes.Gear.UI
             var maxByIngots = Mathf.FloorToInt((float)(ingotAmount / ingotCost));
             var maxByCores = Mathf.FloorToInt((float)coreAmount);
             var max = Mathf.Min(maxByIngots, maxByCores);
-            text.text = $"Max: {Mathf.Max(0, max)}";
+            var val = Mathf.Max(0, max);
+            text.text = $"Max: {Mathf.Max(0, max):N0}";
         }
 
         private void RefreshActionButtons()

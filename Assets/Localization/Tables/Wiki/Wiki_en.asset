@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.16
+    m_Localized: v1.2.17
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,26 +195,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed issues with Enemy targeting.\n\u2022 Added information
-      about which version of the game a save file was created with. This will be
-      wrong for versions before this one.\n\u2022 Fixed a bug where audio sfx stacked
-      up while mute in background was active and would try play all of them when
-      you returned to the game.\n\u2022 Fixed a bug where echoes would incorrectly
-      leave an enemy that wasn't fully killed.\n\u2022 Fixed a bug where damage numbers
-      would incorrectly be shown at the start of a map.\n1.2.15\n\u2022 Fixed a bug
-      where Enemy names/levels were not updating.\n\u2022 Fixed a bug where farming
-      task visuals could be wrong.\n\u2022 Removed some redundant code.\n\u2022 More
-      performance increases.\n1.2.14\n\u2022 Fixed a bug with the pooling system
-      where completed tasks stayed completed even when they were reused.\n\u2022
-      Updated Combat, and Reaping library entries.\n\u2022 Fixed an issue with pathfinding.\n1.2.13\n\u2022
-      Gear maximum Health 250<sprite=194>500.\n\u2022 Gear maximum Crit 5<sprite=194>7.5.\n\u2022
-      Gear maximum Defense 25<sprite=194>33.\n\u2022 Duck Healms: Movement speed
-      has been stripped and attack rate over 1.5 reduced to 1.2.\n\u2022 Task sorting
-      now debounces to avoid recalculating paths every single time a task is added.
-      Now only happens once per frame.\n\u2022 Began pooling objects to substantially
-      improve performance!\n\u2022 Improved leaderboards to now show 50 entries.\n\u2022
-      Fixed an Integer overflow issue.\n\u2022 Added Attention objects to the Townsfolk
-      button for when the forge or cauldron stops while the window is closed."
+    m_Localized: "<b>Changes</b>\n\u2022 Overhauled leaderboards.\n<b>Minor changes</b>\n\u2022
+      Resources no longer show partial values.\n\u2022 Forge numbers are now formatted
+      far more aesthetically.\n<b>Bugfixes</b>\n\u2022 Crafted resources can no longer
+      go up tiers.\n<b>Backend</b>\n\u2022 Split echo logic from the hero controller
+      and pooled echoes for performance reasons.\n\u2022 Widened and adjusted formatting
+      on the graph tooltip."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624

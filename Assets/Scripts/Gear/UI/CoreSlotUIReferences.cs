@@ -111,7 +111,10 @@ namespace TimelessEchoes.Gear.UI
             var coreAmount = hasCoreResource && rm != null ? rm.GetAmount(coreResource) : 0;
 
             if (coreCountText != null)
-                coreCountText.text = Math.Floor(coreAmount).ToString("0");
+            {
+                var v = Math.Floor(coreAmount);
+                coreCountText.text = Blindsided.Utilities.CalcUtils.FormatNumber(v, hideDecimal: Math.Abs(v) < 1000);
+            }
 
             if (craftCountText != null)
             {
@@ -124,7 +127,7 @@ namespace TimelessEchoes.Gear.UI
                         crafts = Math.Min(crafts, Math.Floor(ingotAmount) / cost);
                 }
 
-                craftCountText.text = crafts.ToString("0");
+                craftCountText.text = Blindsided.Utilities.CalcUtils.FormatNumber(crafts, hideDecimal: Math.Abs(crafts) < 1000);
             }
         }
     }
