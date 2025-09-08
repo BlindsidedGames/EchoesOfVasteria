@@ -49,7 +49,7 @@ namespace TimelessEchoes.Tasks
             IsExhausted = false;
         }
 
-        public override void Tick(HeroController hero)
+        public override void Tick(HeroBase hero)
         {
             base.Tick(hero);
             if (!isDepleted && IsComplete())
@@ -66,7 +66,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        protected override void OnTaskCompleted(HeroController hero)
+        protected override void OnTaskCompleted(HeroBase hero)
         {
             if (isDepleted)
                 return;

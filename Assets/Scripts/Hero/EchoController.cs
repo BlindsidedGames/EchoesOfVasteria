@@ -12,7 +12,7 @@ namespace TimelessEchoes.Hero
     /// <summary>
     ///     Controls Echo behaviour and lifetime.
     /// </summary>
-    public class EchoController : MonoBehaviour
+    public class EchoController : HeroBase
     {
         public static readonly List<EchoController> CombatEchoes = new();
         public static readonly List<EchoController> AllEchoes = new();
@@ -23,20 +23,25 @@ namespace TimelessEchoes.Hero
         public bool combatEnabled;
         public EchoType Type { get; private set; } = EchoType.All;
 
-        // Skill indicator references are stored on the hero controller
-        // so they can be configured on the main hero prefab.
+        // Echo-only indicators/UI
+        [Header("Indicators")] [SerializeField] private GameObject combatIndicator;
+        [SerializeField] private GameObject miningIndicator;
+        [SerializeField] private GameObject woodcuttingIndicator;
+        [SerializeField] private GameObject fishingIndicator;
+        [SerializeField] private GameObject farmingIndicator;
+        [SerializeField] private GameObject lootingIndicator;
 
-        private HeroController hero;
-        private TaskController taskController;
+        [Header("Duration UI")] [SerializeField] private GameObject durationBarParent;
+        [SerializeField] private SlicedFilledImage durationFill;
+        [SerializeField] private Sprite durationYellowSprite;
+        [SerializeField] private Sprite durationRedSprite;
+
+        // Uses protected taskController from HeroBase; do not redeclare here
         private float remaining;
         [SerializeField] private float taskAcquireGraceSeconds = 1.0f;
         private float spawnTime;
         private float defaultAggroRange;
-        private GameObject durationBarParent;
-        private SlicedFilledImage durationFill;
         private Sprite durationBaseSprite;
-        private Sprite durationYellowSprite;
-        private Sprite durationRedSprite;
         private Sprite durationLastAppliedSprite;
 
         // Expiration deferral state: wait for current enemy kill or task completion
@@ -51,19 +56,20 @@ namespace TimelessEchoes.Hero
         /// </summary>
         public bool Initialized { get; private set; }
 
-        // Expose whether this echo is currently allowed to attack without per-tick GetComponent from others
-        public bool AllowAttacks => hero != null && hero.AllowAttacks;
+        protected override bool IsEchoActor => true;
 
-        private void Awake()
+        protected override void Awake()
         {
-            hero = GetComponent<HeroController>();
-            taskController = GetComponentInParent<TaskController>();
+            base.Awake();
+            taskCtrl = TimelessEchoes.Tasks.TaskController.Instance
+                       ?? GetComponent<TimelessEchoes.Tasks.TaskController>()
+                       ?? GetComponentInParent<TimelessEchoes.Tasks.TaskController>()
+                       ?? FindFirstObjectByType<TimelessEchoes.Tasks.TaskController>();
             remaining = lifetime;
             spawnTime = Time.time;
             if (!AllEchoes.Contains(this))
                 AllEchoes.Add(this);
-            if (hero != null)
-                defaultAggroRange = hero.CombatAggroRange;
+            defaultAggroRange = CombatAggroRange;
         }
 
         private void OnEnable()
@@ -79,7 +85,14 @@ namespace TimelessEchoes.Hero
 
             UpdateIndicators();
 
-            if (hero != null && taskController != null && Type != EchoType.Combat)
+            if (taskCtrl == null && Type != EchoType.Combat)
+            {
+                var inst = TimelessEchoes.Tasks.TaskController.Instance;
+                if (inst != null)
+                    taskCtrl = inst;
+            }
+
+            if (taskCtrl != null && Type != EchoType.Combat)
                 AssignTask();
         }
 
@@ -89,11 +102,8 @@ namespace TimelessEchoes.Hero
             AllEchoes.Remove(this);
             if (durationBarParent != null)
                 durationBarParent.SetActive(false);
-            if (hero != null)
-            {
-                hero.UnlimitedAggroRange = false;
-                hero.CombatAggroRange = defaultAggroRange;
-            }
+            UnlimitedAggroRange = false;
+            CombatAggroRange = defaultAggroRange;
         }
 
         /// <summary>
@@ -108,30 +118,23 @@ namespace TimelessEchoes.Hero
             disableSkills = type == EchoType.Combat;
             combatEnabled = type == EchoType.Combat || type == EchoType.All;
 
-            if (hero != null)
+            spawnTime = Time.time;
+            // When skills are not restricted, echoes should still focus on tasks
+            // rather than roaming across the map for combat. Treat an empty
+            // skill list as "all skills" instead of "combat only".
+            var combatOnly = combatEnabled && disableSkills;
+            UnlimitedAggroRange = combatOnly;
+            if (combatOnly)
+                CombatAggroRange = defaultAggroRange;
+            if (durationBarParent != null)
+                durationBarParent.SetActive(!float.IsPositiveInfinity(duration));
+            if (durationFill != null)
             {
-                spawnTime = Time.time;
-                // When skills are not restricted, echoes should still focus on tasks
-                // rather than roaming across the map for combat. Treat an empty
-                // skill list as "all skills" instead of "combat only".
-                var combatOnly = combatEnabled && disableSkills;
-                hero.UnlimitedAggroRange = combatOnly;
-                if (combatOnly)
-                    hero.CombatAggroRange = defaultAggroRange;
-                durationBarParent = hero.EchoDurationBar;
-                durationFill = hero.EchoDurationFill;
-                if (durationBarParent != null)
-                    durationBarParent.SetActive(!float.IsPositiveInfinity(duration));
-                if (durationFill != null)
-                {
-                    // Cache sprite references for dynamic color changes
-                    durationBaseSprite = durationFill.sprite;
-                    durationYellowSprite = hero.EchoDurationYellowSprite;
-                    durationRedSprite = hero.EchoDurationRedSprite;
-                    durationLastAppliedSprite = durationBaseSprite;
-                    if (!float.IsPositiveInfinity(duration))
-                        durationFill.fillAmount = 1f;
-                }
+                // Cache sprite references for dynamic color changes
+                durationBaseSprite = durationFill.sprite;
+                durationLastAppliedSprite = durationBaseSprite;
+                if (!float.IsPositiveInfinity(duration))
+                    durationFill.fillAmount = 1f;
             }
 
             Initialized = true;
@@ -141,7 +144,7 @@ namespace TimelessEchoes.Hero
             if (combatEnabled && isActiveAndEnabled && !CombatEchoes.Contains(this))
                 CombatEchoes.Add(this);
 
-            if (!disableSkills && isActiveAndEnabled && hero != null && taskController != null)
+            if (!disableSkills && isActiveAndEnabled && taskCtrl != null)
                 AssignTask();
         }
 
@@ -218,16 +221,16 @@ namespace TimelessEchoes.Hero
             }
 
             // Normal lifetime behavior (only when not deferring)
-            if (!disableSkills && taskController != null)
+            if (!disableSkills && taskCtrl != null)
             {
                 var hasTask = false;
                 if (capableSkills == null || capableSkills.Count == 0)
-                    hasTask = taskController.tasks.Any(t => t is BaseTask b && !t.IsComplete());
+                    hasTask = taskCtrl.tasks.Any(t => t is BaseTask b && !t.IsComplete());
                 else
                     foreach (var s in capableSkills)
                     {
                         if (s == null) continue;
-                        if (taskController.tasks.Any(t => t is BaseTask b && b.associatedSkill == s && !t.IsComplete()))
+                        if (taskCtrl.tasks.Any(t => t is BaseTask b && b.associatedSkill == s && !t.IsComplete()))
                         {
                             hasTask = true;
                             break;
@@ -241,17 +244,17 @@ namespace TimelessEchoes.Hero
                     if (Time.time - spawnTime < taskAcquireGraceSeconds)
                         return;
                     // If no tasks anywhere but combat is allowed, stay for combat.
-                    if (combatEnabled && hero != null && hero.AllowAttacks)
+                    if (combatEnabled && AllowAttacks)
                         return;
                     // If the controller reports there are visible tasks for this echo, keep waiting
-                    if (taskController.HasVisibleTasksForHero(hero))
+                    if (taskCtrl.HasVisibleTasksForHero(this))
                         return;
                     Destroy(gameObject);
                 }
             }
             else if (disableSkills)
             {
-                if (combatEnabled && hero != null && hero.AllowAttacks)
+                if (combatEnabled && AllowAttacks)
                     return; // stay alive for combat
                 Destroy(gameObject);
             }
@@ -261,9 +264,9 @@ namespace TimelessEchoes.Hero
         {
             var captured = false;
             // Prefer finishing the current enemy if in combat
-            if (hero != null && hero.InCombat)
+            if (InCombat)
             {
-                var setter = hero.GetComponent<AIDestinationSetter>();
+                var setter = GetComponent<AIDestinationSetter>();
                 var target = setter != null ? setter.target : null;
                 var hp = target != null ? target.GetComponent<Health>() : null;
                 if (hp != null && hp.CurrentHealth > 0f)
@@ -274,9 +277,9 @@ namespace TimelessEchoes.Hero
             }
 
             // Otherwise, finish the current task if any
-            if (!captured && hero != null && hero.CurrentTask != null && !hero.CurrentTask.IsComplete())
+            if (!captured && CurrentTask != null && !CurrentTask.IsComplete())
             {
-                deferredTask = hero.CurrentTask;
+                deferredTask = CurrentTask;
                 captured = true;
             }
 
@@ -285,7 +288,7 @@ namespace TimelessEchoes.Hero
                 expirationDeferred = true;
                 deferStartTime = Time.time;
                 // Prevent picking up new tasks during the deferral window
-                hero.ClearTaskController();
+                ClearTaskController();
             }
 
             return captured;
@@ -297,46 +300,41 @@ namespace TimelessEchoes.Hero
             return BeginExpirationDeferral();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             CombatEchoes.Remove(this);
             AllEchoes.Remove(this);
             if (durationBarParent != null)
                 durationBarParent.SetActive(false);
-            if (hero != null)
-            {
-                hero.UnlimitedAggroRange = false;
-                hero.CombatAggroRange = defaultAggroRange;
-            }
+            UnlimitedAggroRange = false;
+            CombatAggroRange = defaultAggroRange;
         }
 
         private void UpdateIndicators()
         {
-            if (hero == null)
-                return;
-
             void SetActive(GameObject obj, bool state)
             {
                 if (obj != null)
                     obj.SetActive(state);
             }
 
-            SetActive(hero.CombatIndicator, Type == EchoType.Combat || Type == EchoType.All);
-            SetActive(hero.MiningIndicator, false);
-            SetActive(hero.WoodcuttingIndicator, false);
-            SetActive(hero.FishingIndicator, false);
-            SetActive(hero.FarmingIndicator, false);
-            SetActive(hero.LootingIndicator, false);
+            SetActive(combatIndicator, Type == EchoType.Combat || Type == EchoType.All);
+            SetActive(miningIndicator, false);
+            SetActive(woodcuttingIndicator, false);
+            SetActive(fishingIndicator, false);
+            SetActive(farmingIndicator, false);
+            SetActive(lootingIndicator, false);
 
             var hasSkills = capableSkills != null && capableSkills.Count > 0;
 
             if (!hasSkills && Type != EchoType.Combat && Type != EchoType.Selective)
             {
-                SetActive(hero.MiningIndicator, true);
-                SetActive(hero.WoodcuttingIndicator, true);
-                SetActive(hero.FishingIndicator, true);
-                SetActive(hero.FarmingIndicator, true);
-                SetActive(hero.LootingIndicator, true);
+                SetActive(miningIndicator, true);
+                SetActive(woodcuttingIndicator, true);
+                SetActive(fishingIndicator, true);
+                SetActive(farmingIndicator, true);
+                SetActive(lootingIndicator, true);
                 return;
             }
 
@@ -349,19 +347,19 @@ namespace TimelessEchoes.Hero
                 switch (s.skillName)
                 {
                     case "Mining":
-                        SetActive(hero.MiningIndicator, true);
+                        SetActive(miningIndicator, true);
                         break;
                     case "Woodcutting":
-                        SetActive(hero.WoodcuttingIndicator, true);
+                        SetActive(woodcuttingIndicator, true);
                         break;
                     case "Fishing":
-                        SetActive(hero.FishingIndicator, true);
+                        SetActive(fishingIndicator, true);
                         break;
                     case "Farming":
-                        SetActive(hero.FarmingIndicator, true);
+                        SetActive(farmingIndicator, true);
                         break;
                     case "Looting":
-                        SetActive(hero.LootingIndicator, true);
+                        SetActive(lootingIndicator, true);
                         break;
                 }
             }
@@ -369,7 +367,7 @@ namespace TimelessEchoes.Hero
 
         private void AssignTask()
         {
-            if (hero == null || taskController == null)
+            if (taskCtrl == null)
                 return;
 
             if (Type == EchoType.Combat)
@@ -377,7 +375,7 @@ namespace TimelessEchoes.Hero
 
             if (capableSkills == null || capableSkills.Count == 0)
             {
-                taskController.SelectEarliestTask(hero);
+                taskCtrl.SelectEarliestTask(this);
                 return;
             }
 
@@ -385,11 +383,11 @@ namespace TimelessEchoes.Hero
             {
                 var s = capableSkills[0];
                 if (s != null)
-                    taskController.SelectEarliestTask(hero, s);
+                    taskCtrl.SelectEarliestTask(this, s);
                 return;
             }
 
-            taskController.SelectEarliestTask(hero, capableSkills);
+            taskCtrl.SelectEarliestTask(this, capableSkills);
         }
     }
 }

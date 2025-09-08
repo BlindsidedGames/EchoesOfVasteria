@@ -1282,7 +1282,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   astarPath: {fileID: 3994575044794960044}
-  hero: {fileID: 2410021182923110199}
+  hero: {fileID: 3318735037776183947}
   maxBacktrackDistance: -7
   backtrackingAdditionalWeight: 2
   taskRemovalDistance: -8
@@ -1462,9 +1462,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
---- !u!114 &2410021182923110199 stripped
+--- !u!114 &3318735037776183947 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3675840428294226993, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4359392033752347021, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
   m_PrefabInstance: {fileID: 1328887465208132358}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -1472,7 +1472,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a25c4c5c3f3f494a889e69960928546, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Hero.HeroController
 --- !u!4 &5108663898531495662 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6094697013023591912, guid: 4aaa005aa28ce694a9be14612585d1da, type: 3}
@@ -1526,10 +1526,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4002481538927657160, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
-      propertyPath: hero
-      value: 
-      objectReference: {fileID: 2410021182923110199}
     - target: {fileID: 5229451111164685125, guid: c2c483c596cb9f848a5bba54c1de3f02, type: 3}
       propertyPath: m_Name
       value: Mildred

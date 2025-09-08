@@ -14,6 +14,7 @@ namespace TimelessEchoes.Tasks
     /// </summary>
     public class TaskController : MonoBehaviour
     {
+        public static TaskController Instance { get; private set; }
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
 
 
@@ -91,12 +92,12 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
-        public bool HasVisibleTasksForHero(HeroController hero)
+        public bool HasVisibleTasksForHero(HeroBase hero)
         {
             if (hero == null)
                 return HasVisibleTasks();
 
-            var echo = hero.GetComponent<EchoController>();
+            var echo = hero as EchoController ?? hero.GetComponent<EchoController>();
             IList<Skill> skills = echo != null ? echo.capableSkills : null;
 
             bool restrictToVisible = hero.IsEcho;
@@ -167,9 +168,27 @@ namespace TimelessEchoes.Tasks
 
         private void OnEnable()
         {
+            // Register singleton instance tied to the active map
+            if (Instance != null && Instance != this)
+            {
+                Log("Replacing existing TaskController singleton instance", TELogCategory.Task, this);
+            }
+            Instance = this;
             AcquireHero();
             ResetTasks();
             nextPruneTime = Time.time + pruneInterval;
+        }
+
+        private void OnDisable()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
 
         private void AcquireHero()
@@ -432,7 +451,7 @@ namespace TimelessEchoes.Tasks
             SelectEarliestTask(hero);
         }
 
-        public void SelectEarliestTask(HeroController targetHero)
+        public void SelectEarliestTask(HeroBase targetHero)
         {
             var echo = targetHero != null ? targetHero.GetComponent<EchoController>() : null;
             if (echo != null && echo.capableSkills != null && echo.capableSkills.Count > 0)
@@ -452,7 +471,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public void SelectEarliestTask(HeroController targetHero, Skill requiredSkill)
+        public void SelectEarliestTask(HeroBase targetHero, Skill requiredSkill)
         {
             if (targetHero == null)
             {
@@ -511,7 +530,7 @@ namespace TimelessEchoes.Tasks
             currentTaskObject = null;
         }
 
-        public void SelectEarliestTask(HeroController targetHero, IList<Skill> allowedSkills)
+        public void SelectEarliestTask(HeroBase targetHero, IList<Skill> allowedSkills)
         {
             if (targetHero == null)
             {

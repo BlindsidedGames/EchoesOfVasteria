@@ -59,7 +59,7 @@ namespace TimelessEchoes.Tasks
             IsExhausted = false;
         }
 
-        public override void OnArrival(HeroController hero)
+        public override void OnArrival(HeroBase hero)
         {
             // Ensure base handles instant-complete first; if it does, it will early-return
             base.OnArrival(hero);
@@ -69,7 +69,7 @@ namespace TimelessEchoes.Tasks
                 wetSpriteRenderer.enabled = true;
         }
 
-        public override void Tick(HeroController hero)
+        public override void Tick(HeroBase hero)
         {
             base.Tick(hero);
             var delta = Time.deltaTime;
@@ -114,14 +114,14 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public override void OnInterrupt(HeroController hero)
+        public override void OnInterrupt(HeroBase hero)
         {
             base.OnInterrupt(hero);
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = false;
         }
 
-        protected override void OnTaskCompleted(HeroController hero)
+        protected override void OnTaskCompleted(HeroBase hero)
         {
             // Mirror the visual cleanup that happens in Tick() when complete
             if (spriteRenderer != null && spriteRenderer.enabled)

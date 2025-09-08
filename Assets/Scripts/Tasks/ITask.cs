@@ -30,18 +30,18 @@ namespace TimelessEchoes.Tasks
         void StartTask();
 
         /// <summary>
-        ///     Called by the HeroController once it reaches the task's target destination.
+        ///     Called by the hero actor once it reaches the task's target destination.
         /// </summary>
-        void OnArrival(HeroController hero);
+        void OnArrival(HeroBase hero);
 
         /// <summary>
         ///     Called every frame while the hero is at the task location and performing the task.
         /// </summary>
-        void Tick(HeroController hero);
+        void Tick(HeroBase hero);
 
         /// <summary>
-        ///     Called by the HeroController when the task is interrupted (e.g., by combat).
+        ///     Called by the hero actor when the task is interrupted (e.g., by combat).
         /// </summary>
-        void OnInterrupt(HeroController hero);
+        void OnInterrupt(HeroBase hero);
     }
 }

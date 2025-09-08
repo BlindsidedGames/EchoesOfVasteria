@@ -12,61 +12,48 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
-        public static HeroController SpawnEcho(IEnumerable<Skill> skills, float duration,
+        public static EchoController SpawnEcho(IEnumerable<Skill> skills, float duration,
             EchoType type = EchoType.All)
         {
-            var hero = HeroController.Instance;
-            if (hero == null)
+            var gm = GameManager.Instance;
+            if (gm == null || gm.EchoPrefab == null || HeroController.Instance == null)
                 return null;
 
-            HeroController.PrepareForEcho();
-            var obj = Object.Instantiate(hero.gameObject, hero.transform.position, hero.transform.rotation,
-                hero.transform.parent);
+            var pos = HeroController.Instance.transform.position;
+            var parent = HeroController.Instance.transform.parent;
+            var obj = Object.Instantiate(gm.EchoPrefab, pos, HeroController.Instance.transform.rotation, parent);
 
-            var echoHero = obj.GetComponent<HeroController>();
-            if (echoHero != null)
+            // Visual alpha tint (optional)
+            foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())
             {
-                foreach (var r in obj.GetComponentsInChildren<SpriteRenderer>())
-                {
-                    var c = r.color;
-                    c.a = 0.7f;
-                    r.color = c;
-                }
-
-                // Echoes share the primary hero's health. Keep the existing
-                // HeroHealth component so required dependencies remain intact
-                // but flag it as an echo so damage is redirected.
-                var hp = echoHero.GetComponent<HeroHealth>();
-                if (hp != null)
-                    hp.Immortal = false; // ensure damage can be forwarded
-
-                // Refresh the main hero's health bar since the shared
-                // HeroHealth component on the echo skips UI updates.
-                HeroHealth.Instance?.RefreshUI();
-
-                var combat = type == EchoType.Combat || type == EchoType.All;
-                var disableSkills = type == EchoType.Combat;
-
-                echoHero.AllowAttacks = combat;
-
-                if (disableSkills)
-                {
-                    var tc = obj.GetComponent<TaskController>();
-                    if (tc != null)
-                        Object.Destroy(tc);
-
-                    echoHero.SetTask(null);
-                    echoHero.ClearTaskController();
-                }
-
-                var echo = obj.AddComponent<EchoController>();
-                echo.Init(skills, duration, type);
+                var c = r.color;
+                c.a = 0.7f;
+                r.color = c;
             }
 
-            return echoHero;
+            var echo = obj.GetComponent<EchoController>();
+            if (echo == null)
+                echo = obj.AddComponent<EchoController>();
+
+            var combat = type == EchoType.Combat || type == EchoType.All;
+            var disableSkills = type == EchoType.Combat;
+            echo.AllowAttacks = combat;
+
+            // Ensure echoes never carry their own TaskController; they should use the map singleton
+            var tc = obj.GetComponent<TaskController>();
+            if (tc != null && tc != TaskController.Instance)
+                Object.Destroy(tc);
+            if (disableSkills)
+            {
+                echo.SetTask(null);
+                echo.ClearTaskController();
+            }
+
+            echo.Init(skills, duration, type);
+            return echo;
         }
 
-        public static HeroController SpawnEcho(Skill skill, float duration, EchoType type = EchoType.All)
+        public static EchoController SpawnEcho(Skill skill, float duration, EchoType type = EchoType.All)
         {
             return SpawnEcho(new List<Skill> { skill }, duration, type);
         }
@@ -79,7 +66,7 @@ namespace TimelessEchoes.Hero
         /// <param name="fallbackSkills">Used when the config does not specify any skills.</param>
         /// <param name="applyLifetimeUpgrade">When true, applies the Echo Lifetime upgrade value.</param>
         /// <param name="count">Number of echoes to spawn.</param>
-        public static List<HeroController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
+        public static List<EchoController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
             IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int count = 1)
         {
             var duration = baseDuration;
@@ -104,7 +91,7 @@ namespace TimelessEchoes.Hero
             if (count <= 0)
                 count = 1;
 
-            var spawned = new List<HeroController>();
+            var spawned = new List<EchoController>();
             for (var i = 0; i < count; i++)
             {
                 var h = SpawnEcho(skills, duration, type);

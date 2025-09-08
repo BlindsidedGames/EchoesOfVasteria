@@ -664,7 +664,7 @@ namespace TimelessEchoes.Buffs
             foreach (var c in buff.echoes)
             {
                 if (c == null) continue;
-                var echo = c.GetComponent<EchoController>();
+                var echo = c;
                 if (echo != null && echo.TryDeferExpiration())
                     continue; // let the echo finish current enemy/task
                 Destroy(c.gameObject);
@@ -697,7 +697,7 @@ namespace TimelessEchoes.Buffs
             public List<BuffEffect> effects = new();
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
-            public List<HeroController> echoes = new();
+            public List<EchoController> echoes = new();
         }
     }
 }

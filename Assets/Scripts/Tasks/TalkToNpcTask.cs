@@ -40,7 +40,7 @@ namespace TimelessEchoes.Tasks
                 StaticReferences.ActiveNpcMeetings.Remove(npcId);
         }
 
-        public override void OnArrival(HeroController hero)
+        public override void OnArrival(HeroBase hero)
         {
             SpawnMeetingUI();
             talked = true;

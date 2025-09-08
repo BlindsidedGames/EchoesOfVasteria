@@ -7,7 +7,6 @@ namespace TimelessEchoes.Hero
     /// <summary>
     ///     Health component specifically for the hero. Handles defense and stat tracking.
     /// </summary>
-    [RequireComponent(typeof(HeroController))]
     public class HeroHealth : HealthBase
     {
         public static HeroHealth Instance { get; private set; }

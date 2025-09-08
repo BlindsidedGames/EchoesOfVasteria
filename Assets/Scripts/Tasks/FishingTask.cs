@@ -13,7 +13,7 @@ namespace TimelessEchoes.Tasks
         protected override string InterruptTriggerName => string.Empty;
         protected override string CompletionTriggerName => "CatchFish";
 
-        public override void OnInterrupt(HeroController hero)
+        public override void OnInterrupt(HeroBase hero)
         {
             // Hide progress bar via base (no trigger will be set because InterruptTriggerName is empty)
             base.OnInterrupt(hero);
@@ -22,9 +22,7 @@ namespace TimelessEchoes.Tasks
             {
                 if (hero.Animator != null)
                     hero.Animator.Play("Idle");
-
-                if (hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
-                    hero.AutoBuffAnimator.Play("Idle");
+                hero.PlaySecondaryAnimation("Idle");
             }
         }
     }

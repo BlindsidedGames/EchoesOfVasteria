@@ -64,7 +64,7 @@ namespace TimelessEchoes.Tasks
             IsExhausted = false;
         }
 
-        public override void OnArrival(HeroController hero)
+        public override void OnArrival(HeroBase hero)
         {
             // Base handles instant-complete path and hero animation/progress bar
             base.OnArrival(hero);
@@ -72,7 +72,7 @@ namespace TimelessEchoes.Tasks
                 heroAudio = hero.GetComponent<TimelessEchoes.Hero.HeroAudio>();
         }
 
-        public override void Tick(HeroController hero)
+        public override void Tick(HeroBase hero)
         {
             // Progress the base task (timer, progress bar, completion)
             base.Tick(hero);
@@ -131,7 +131,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public override void OnInterrupt(HeroController hero)
+        public override void OnInterrupt(HeroBase hero)
         {
             base.OnInterrupt(hero);
             // Revert visuals to closed if interrupted
@@ -139,7 +139,7 @@ namespace TimelessEchoes.Tasks
                 spriteRenderer.sprite = initialClosedSprite;
         }
 
-        protected override void OnTaskCompleted(HeroController hero)
+        protected override void OnTaskCompleted(HeroBase hero)
         {
             // Ensure final open sprite persists on completion, including instant-complete
             if (spriteRenderer != null && openStages != null && openStages.Length > 0)

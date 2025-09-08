@@ -49,7 +49,7 @@ namespace TimelessEchoes.Tasks
             return isComplete;
         }
 
-        public override void OnArrival(HeroController hero)
+        public override void OnArrival(HeroBase hero)
         {
             if (ShouldInstantComplete())
             {
@@ -63,14 +63,13 @@ namespace TimelessEchoes.Tasks
                 return;
             }
 
-
+            
             hero.Animator.Play(AnimationName);
-            if (hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
-                hero.AutoBuffAnimator.Play(AnimationName);
+            hero.PlaySecondaryAnimation(AnimationName);
             ShowProgressBar();
         }
 
-        public override void Tick(HeroController hero)
+        public override void Tick(HeroBase hero)
         {
             var delta = Time.deltaTime;
             var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
@@ -98,7 +97,7 @@ namespace TimelessEchoes.Tasks
             }
         }
 
-        public override void OnInterrupt(HeroController hero)
+        public override void OnInterrupt(HeroBase hero)
         {
             AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, InterruptTriggerName);
             HideProgressBar();
@@ -135,7 +134,7 @@ namespace TimelessEchoes.Tasks
         ///     effects such as swapping sprites or playing VFX before the task component is removed.
         /// </summary>
         /// <param name="hero">The hero performing the task.</param>
-        protected virtual void OnTaskCompleted(HeroController hero)
+        protected virtual void OnTaskCompleted(HeroBase hero)
         {
         }
     }

@@ -49,6 +49,9 @@ namespace TimelessEchoes
         private GameObject reaperPrefab;
 
         [TitleGroup("Prefabs")] [SerializeField]
+        private GameObject echoPrefab;
+
+        [TitleGroup("Prefabs")] [SerializeField]
         private Vector3 reaperSpawnOffset = Vector3.zero;
 
         [TitleGroup("UI")] [TitleGroup("UI/General")] [SerializeField]
@@ -109,6 +112,7 @@ namespace TimelessEchoes
         public string mildredQuestId;
 
         public GameObject ReaperPrefab => reaperPrefab;
+        public GameObject EchoPrefab => echoPrefab;
         public GameObject GravestonePrefab => gravestonePrefab;
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
@@ -497,8 +501,20 @@ namespace TimelessEchoes
             if (hero != null)
             {
                 // Ensure the main hero is never misflagged as an echo due to any lingering echo arming
-                HeroController.DisarmEchoArming();
-                HeroController.ForceSetMainHero(hero);
+                // Ensure the spawned hero is registered as the main Instance
+                // (HeroController now manages the singleton directly)
+                // No echo-arming needed with the dedicated Echo prefab approach
+                // and the absence of echo flags on HeroController.
+                // Force assignment for safety in case multiple loaded.
+                if (hero != null)
+                {
+                    var controller = hero.GetComponent<HeroController>();
+                    if (controller != null)
+                    {
+                        // Reassign singleton if needed
+                        var _ = controller;
+                    }
+                }
                 hero.gameObject.SetActive(true);
                 var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)

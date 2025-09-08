@@ -19,12 +19,10 @@ namespace TimelessEchoes.Utilities
             animator.SetTrigger(triggerName);
             runner.StartCoroutine(ResetNextFrame(animator, triggerName));
 
-            if (runner is TimelessEchoes.Hero.HeroController hero &&
-                hero.AutoBuffAnimator != null && hero.AutoBuffAnimator.isActiveAndEnabled)
+            if (runner is TimelessEchoes.Hero.HeroBase hb)
             {
-                var autoAnim = hero.AutoBuffAnimator;
-                autoAnim.SetTrigger(triggerName);
-                runner.StartCoroutine(ResetNextFrame(autoAnim, triggerName));
+                hb.SetSecondaryTrigger(triggerName);
+                runner.StartCoroutine(ResetNextFrameSecondary(hb, triggerName));
             }
         }
 
@@ -32,6 +30,12 @@ namespace TimelessEchoes.Utilities
         {
             yield return null;
             animator.ResetTrigger(triggerName);
+        }
+
+        private static IEnumerator ResetNextFrameSecondary(TimelessEchoes.Hero.HeroBase hero, string triggerName)
+        {
+            yield return null;
+            hero.ResetSecondaryTrigger(triggerName);
         }
     }
 }

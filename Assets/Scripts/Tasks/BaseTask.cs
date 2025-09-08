@@ -34,8 +34,8 @@ namespace TimelessEchoes.Tasks
 
         public float LastGrantedXp => lastGrantedXp;
 
-        private HeroController claimedBy;
-        public HeroController ClaimedBy => claimedBy;
+        private HeroBase claimedBy;
+        public HeroBase ClaimedBy => claimedBy;
 
         private TaskController cachedTaskController;
         private bool autoRemovalScheduled;
@@ -43,7 +43,7 @@ namespace TimelessEchoes.Tasks
         // When true, this task should no longer be considered for selection until reset (e.g., pooled & reused)
         public virtual bool IsExhausted { get; protected set; }
 
-        public bool Claim(HeroController hero)
+        public bool Claim(HeroBase hero)
         {
             if (hero == null) return false;
             if (claimedBy == null || claimedBy == hero)
@@ -55,7 +55,7 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
-        public void ReleaseClaim(HeroController hero)
+        public void ReleaseClaim(HeroBase hero)
         {
             if (claimedBy == hero || hero == null)
                 claimedBy = null;
@@ -91,21 +91,21 @@ namespace TimelessEchoes.Tasks
         /// <summary>
         ///     Called by the HeroController once it reaches the task's target destination.
         /// </summary>
-        public virtual void OnArrival(HeroController hero)
+        public virtual void OnArrival(HeroBase hero)
         {
         }
 
         /// <summary>
         ///     Called every frame while the hero is at the task location and performing the task.
         /// </summary>
-        public virtual void Tick(HeroController hero)
+        public virtual void Tick(HeroBase hero)
         {
         }
 
         /// <summary>
         ///     Called by the HeroController when the task is interrupted (e.g., by combat).
         /// </summary>
-        public virtual void OnInterrupt(HeroController hero)
+        public virtual void OnInterrupt(HeroBase hero)
         {
         }
 
@@ -167,7 +167,7 @@ namespace TimelessEchoes.Tasks
 
             // Remove from the active TaskController safely
             if (cachedTaskController == null)
-                cachedTaskController = hero.GetComponentInParent<TaskController>();
+                cachedTaskController = TaskController.Instance ?? hero.GetComponentInParent<TaskController>();
 
             cachedTaskController?.RemoveTask(this);
         }
