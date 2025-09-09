@@ -56,7 +56,7 @@ namespace TimelessEchoes.Gear.UI
                 var conf = svc != null ? svc.Config : null;
                 float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
                 var need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
-                ivanXpText.text = $"{o.saveData.CraftingMasteryXP:0}/{need:0}";
+                ivanXpText.text = $"{o.saveData.CraftingMasteryXP:N0}/{need:N0}";
             }
 
             if (ivanXpBar != null)
