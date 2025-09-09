@@ -14,7 +14,7 @@ namespace TimelessEchoes.Gear.UI
         public static (List<string> lines, List<(RaritySO r, float w)> weights) BuildRarityWeightInfo(CoreSO core)
         {
             var rarities = AssetCache.GetAll<RaritySO>().OrderBy(r => r.tierIndex).ToList();
-            var svc = CraftingService.Instance ?? Object.FindFirstObjectByType<CraftingService>();
+            var svc = CraftingService.Instance;
             var conf = svc != null ? svc.Config : null;
             var o = Oracle.oracle;
             var level = o != null && o.saveData != null ? Mathf.Max(0, o.saveData.CraftingMasteryLevel) : 0;

@@ -56,7 +56,7 @@ namespace TimelessEchoes.Tasks
                         final = res.count * mult * resourceMult;
                     }
 
-                    var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                    var buff = BuffManager.Instance;
                     if (buff != null)
                         final *= buff.ResourceGainMultiplier;
 

@@ -61,9 +61,9 @@ namespace TimelessEchoes.UI
 
 		private void Awake()
 		{
-			cauldron ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
-			rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
-			cachedCauldronManager = cauldron ?? CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cauldron ??= CauldronManager.Instance;
+			rm = ResourceManager.Instance;
+			cachedCauldronManager = cauldron ?? CauldronManager.Instance;
 			cachedCauldronWindow = FindFirstObjectByType<CauldronWindowUI>();
 			if (cardTooltipObject != null)
 				cardTooltipObject.SetActive(false);
@@ -127,7 +127,7 @@ namespace TimelessEchoes.UI
 			lastSectionTier.Clear();
 			lastBuffsGroupTier = 0;
 
-			var qm = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
+			var qm = TimelessEchoes.Quests.QuestManager.Instance;
 
 			// Buffs section (only if any eligible)
 			var eligibleBuffs = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>("")
@@ -152,7 +152,7 @@ namespace TimelessEchoes.UI
 			}
 
 			// Alter-Echoes split into subcategories (create sections lazily only if they have items)
-			var cm = CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			var cm = CauldronManager.Instance;
 			var sections = new Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences>();
 
 			var allRes = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
@@ -256,7 +256,7 @@ namespace TimelessEchoes.UI
 			{
 				if (resourceById.TryGetValue(id, out var res) && res != null)
 				{
-					cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+					cachedCauldronManager ??= CauldronManager.Instance;
 					if (cachedCauldronManager != null)
 					{
 						var grp = cachedCauldronManager.GetResourceGroup(res);
@@ -369,7 +369,7 @@ namespace TimelessEchoes.UI
 				}
 				if (ui.tierFillImage != null)
 				{
-					cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+					cachedCauldronManager ??= CauldronManager.Instance;
 					var fill = cachedCauldronManager != null ? cachedCauldronManager.GetTierFill01(id) : 0f;
 					ui.tierFillImage.fillAmount = Mathf.Clamp01(fill);
 					// If card is maxed (RES/BUFF), override count text to display "Max"
@@ -384,7 +384,7 @@ namespace TimelessEchoes.UI
 			// Progress bar label: show "Max" only when at max (RES/BUFF). Otherwise leave as-is.
 			if (ui.tierText != null && (id.StartsWith("RES:") || id.StartsWith("BUFF:")))
 			{
-				cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+				cachedCauldronManager ??= CauldronManager.Instance;
 				var fill = cachedCauldronManager != null ? cachedCauldronManager.GetTierFill01(id) : 0f;
 				ui.tierText.text = fill >= 0.9999f ? "Max" : string.Empty;
 			}
@@ -393,7 +393,7 @@ namespace TimelessEchoes.UI
 		private int ComputeTierForCount(string id, int count)
 		{
 			// Use CauldronManager's public helpers to compute tiers; avoids reflection and extra lookups
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			if (cachedCauldronManager == null) return 1;
 			if (id.StartsWith("RES:"))
 			{
@@ -452,7 +452,7 @@ namespace TimelessEchoes.UI
 
 		private void UpdateSectionTierVisuals()
 		{
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
 
 			foreach (var kv in currentAESections)
@@ -525,7 +525,7 @@ namespace TimelessEchoes.UI
 
 		private void ApplyCollectionsDiscipleBonus()
 		{
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			int totalCompletedTiers = 0;
 			foreach (var kv in currentAESections)
 			{
@@ -569,7 +569,7 @@ namespace TimelessEchoes.UI
 
 		private void FlushDirtySections()
 		{
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
 			// Update AE groups
 			foreach (var grp in dirtyGroups)
@@ -688,7 +688,7 @@ namespace TimelessEchoes.UI
 			if (string.IsNullOrEmpty(id) || cardTooltipObject == null || cardTooltipText == null)
 				return;
 
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
 
 			string sectionName;
@@ -844,7 +844,7 @@ namespace TimelessEchoes.UI
 				return;
 
 			// Duplicate of ShowCardTooltip logic minus event wiring and coroutine start
-			cachedCauldronManager ??= CauldronManager.Instance ?? FindFirstObjectByType<CauldronManager>();
+			cachedCauldronManager ??= CauldronManager.Instance;
 			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
 
 			string sectionName;

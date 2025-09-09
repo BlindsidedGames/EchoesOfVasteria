@@ -502,7 +502,7 @@ namespace TimelessEchoes.Enemies
             foreach (var res in results)
             {
                 double final = res.count * mult * gainMult;
-                var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            var buff = BuffManager.Instance;
                 if (buff != null)
                     final *= buff.ResourceGainMultiplier;
                 resourceManager.Add(res.resource, final);

@@ -464,95 +464,10 @@ namespace Blindsided
             // Backfill created version if missing (legacy saves or fresh new games)
             if (string.IsNullOrEmpty(saveData.GameVersionCreated))
                 saveData.GameVersionCreated = Application.version;
-            // Disable any legacy stat->gear migration and sanitize the migrated duck helmet once
-            try { EnsureMigrationDisabledAndSanitizeDuckHelmet(); } catch { }
             loaded = true;
             AwayForSeconds();
             if (saveData.SavedPreferences.OfflineTimeAutoDisable)
                 saveData.SavedPreferences.OfflineTimeActive = false;
-        }
-
-        private void EnsureMigrationDisabledAndSanitizeDuckHelmet()
-        {
-            if (saveData == null) return;
-            // Hard-disable any migration logic by marking it done
-            saveData.StatUpgradesMigratedToGear = true;
-
-            // One-time check; if already sanitized, do nothing further
-            if (saveData.DuckHelmetSanitized)
-                return;
-
-            try
-            {
-                var equipment = saveData.EquipmentBySlot;
-                if (equipment == null)
-                {
-                    saveData.DuckHelmetSanitized = true;
-                    return;
-                }
-
-                if (!equipment.TryGetValue("Helmet", out var helm) || helm == null)
-                {
-                    saveData.DuckHelmetSanitized = true;
-                    return;
-                }
-
-                // Only operate on the migrated duck helmet: rarity must be null/empty
-                if (!string.IsNullOrWhiteSpace(helm.rarity))
-                {
-                    saveData.DuckHelmetSanitized = true;
-                    return;
-                }
-
-                // Resolve stat definitions by hero mapping for robust ID/name matches
-                var allStats = AssetCache.GetAll<StatDefSO>(string.Empty) ?? System.Array.Empty<StatDefSO>();
-                var moveDef = allStats.FirstOrDefault(s => s != null && s.heroMapping == HeroStatMapping.MoveSpeed);
-                var atkDef = allStats.FirstOrDefault(s => s != null && s.heroMapping == HeroStatMapping.AttackRate);
-
-                bool Matches(string statId, StatDefSO def)
-                {
-                    if (def == null || string.IsNullOrWhiteSpace(statId)) return false;
-                    if (!string.IsNullOrWhiteSpace(def.id) && statId.Equals(def.id, System.StringComparison.OrdinalIgnoreCase))
-                        return true;
-                    return statId.Equals(def.name, System.StringComparison.OrdinalIgnoreCase);
-                }
-
-                // No affixes to inspect
-                if (helm.affixes == null)
-                {
-                    saveData.DuckHelmetSanitized = true;
-                    return;
-                }
-
-                // Remove Move Speed affix from the migrated helmet
-                if (moveDef != null)
-                {
-                    helm.affixes.RemoveAll(a => a != null && Matches(a.statId, moveDef));
-                }
-
-                // If Attack Rate value > 1.5, reduce to 1.2 (not a clamp). Apply to all matching affixes.
-                if (atkDef != null)
-                {
-                    for (int i = 0; i < helm.affixes.Count; i++)
-                    {
-                        var a = helm.affixes[i];
-                        if (a == null) continue;
-                        if (Matches(a.statId, atkDef) && a.value > 1.5f)
-                        {
-                            a.value = 1.2f;
-                            helm.affixes[i] = a;
-                        }
-                    }
-                }
-
-                // Persist sanitized record back (dictionary contains reference, but do it explicitly for clarity)
-                equipment["Helmet"] = helm;
-            }
-            finally
-            {
-                // Mark as sanitized regardless to keep it a one-time check
-                saveData.DuckHelmetSanitized = true;
-            }
         }
 
         private void SaveInternal(int index)

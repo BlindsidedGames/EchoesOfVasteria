@@ -10,9 +10,9 @@ namespace TimelessEchoes
     /// Enables or disables objects based on whether the player is in town or in a run.
     /// Entries may optionally require a quest to be completed before activation.
     /// </summary>
-    public class LocationObjectStateController : MonoBehaviour
+    public class LocationObjectStateController : TimelessEchoes.Utilities.Singleton<LocationObjectStateController>
     {
-        public static LocationObjectStateController Instance { get; private set; }
+        
 
         [System.Serializable]
         public class Entry
@@ -26,15 +26,14 @@ namespace TimelessEchoes
         [SerializeField]
         private List<Entry> enableInRun = new();
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
         }
 
         private void OnEnable()

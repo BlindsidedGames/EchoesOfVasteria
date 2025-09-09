@@ -125,6 +125,84 @@ namespace TimelessEchoes
 
         [TitleGroup("Map Generation")] [SerializeField]
         private List<MapGenerationButton> generationButtons = new();
+        
+        // Cached UI state to avoid per-frame string/flag updates
+        private bool _lastReturnToTavernInteractable;
+        private bool _lastReturnOnDeathInteractable;
+        private string _lastReturnToTavernText;
+        private string _lastRetreatBonusText;
+
+        private void RefreshRunButtonsUI()
+        {
+            // Compute shared state
+            var heroActive = hero != null && hero.gameObject.activeSelf && !heroDead;
+
+            if (returnToTavernButton != null)
+            {
+                if (_lastReturnToTavernInteractable != heroActive)
+                {
+                    returnToTavernButton.interactable = heroActive;
+                    _lastReturnToTavernInteractable = heroActive;
+                }
+
+                if (returnToTavernText != null)
+                {
+                    string desired;
+                    if (retreatQueued)
+                        desired = "Retreating...";
+                    else if (hero != null && hero.InCombat)
+                        desired = "In Combat...";
+                    else
+                        desired = "Return To Town";
+
+                    if (!string.Equals(_lastReturnToTavernText, desired))
+                    {
+                        returnToTavernText.text = desired;
+                        _lastReturnToTavernText = desired;
+                    }
+                }
+
+                if (retreatBonusText != null)
+                {
+                    string desired;
+                    if (heroActive && hero != null && !hero.InCombat)
+                    {
+                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        var percent = kills * bonusPercentPerKill;
+                        desired = $"+{percent:0}% Resources";
+                    }
+                    else if (retreatQueued && hero != null && hero.InCombat)
+                    {
+                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
+                        var percent = kills * bonusPercentPerKill;
+                        desired = $"Retreat Queued +{percent:0}%";
+                    }
+                    else if (hero != null && hero.InCombat)
+                    {
+                        desired = "Queue Retreat";
+                    }
+                    else
+                    {
+                        desired = "+0% Resources";
+                    }
+
+                    if (!string.Equals(_lastRetreatBonusText, desired))
+                    {
+                        retreatBonusText.text = desired;
+                        _lastRetreatBonusText = desired;
+                    }
+                }
+            }
+
+            if (returnOnDeathButton != null)
+            {
+                if (_lastReturnOnDeathInteractable != heroActive)
+                {
+                    returnOnDeathButton.interactable = heroActive;
+                    _lastReturnOnDeathInteractable = heroActive;
+                }
+            }
+        }
 
         [SerializeField] private float fadeDuration = 1f;
 
@@ -295,6 +373,19 @@ namespace TimelessEchoes
 
             UpdateGenerationButtonStats();
             nextStatsUpdateTime = Time.time + statsUpdateInterval;
+            // Initialize cached UI state immediately
+            RefreshRunButtonsUI();
+        }
+
+        private void OnEnable()
+        {
+            // Drive run-related UI via UITicker to avoid per-frame churn
+            TimelessEchoes.UI.UITicker.Instance?.Subscribe(RefreshRunButtonsUI, 0.1f);
+        }
+
+        private void OnDisable()
+        {
+            TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(RefreshRunButtonsUI);
         }
 
         private void Update()
@@ -305,50 +396,7 @@ namespace TimelessEchoes
                 nextStatsUpdateTime = Time.time + statsUpdateInterval;
             }
 
-            if (returnToTavernButton != null)
-            {
-                var active = hero != null && hero.gameObject.activeSelf && !heroDead;
-                returnToTavernButton.interactable = active;
-                if (returnToTavernText != null)
-                {
-                    if (retreatQueued)
-                        returnToTavernText.text = "Retreating...";
-                    else if (hero != null && hero.InCombat)
-                        returnToTavernText.text = "In Combat...";
-                    else
-                        returnToTavernText.text = "Return To Town";
-                }
-
-                if (retreatBonusText != null)
-                {
-                    if (active && hero != null && !hero.InCombat)
-                    {
-                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var percent = kills * bonusPercentPerKill;
-                        retreatBonusText.text = $"+{percent:0}% Resources";
-                    }
-                    else if (retreatQueued && hero != null && hero.InCombat)
-                    {
-                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var percent = kills * bonusPercentPerKill;
-                        retreatBonusText.text = $"Retreat Queued +{percent:0}%";
-                    }
-                    else if (hero != null && hero.InCombat)
-                    {
-                        retreatBonusText.text = "Queue Retreat";
-                    }
-                    else
-                    {
-                        retreatBonusText.text = "+0% Resources";
-                    }
-                }
-            }
-
-            if (returnOnDeathButton != null)
-            {
-                var active = hero != null && hero.gameObject.activeSelf && !heroDead;
-                returnOnDeathButton.interactable = active;
-            }
+            // UI refresh moved to RefreshRunButtonsUI via UITicker
 
             if (retreatQueued && hero != null && !hero.InCombat)
             {

@@ -1,3 +1,9 @@
+
+# Starting "New" chats
+- Look through relevant code, and derive as much information related to the topic as you can.
+- Present your plan and wait for me to approve the plan before you make any changes.
+- Ask clarifying questions.
+
 # Repository Instructions
 
 - Always use best practices and clean code when modifying or creating systems.

@@ -36,7 +36,7 @@ namespace TimelessEchoes.Gear
             };
             item.affixes.Add(new GearAffix { stat = damage, value = 1f });
 
-            var controller = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+            var controller = EquipmentController.Instance;
             controller?.Equip(item);
         }
     }

@@ -22,7 +22,7 @@ namespace TimelessEchoes.UI
                 return;
             if (eventData != null && eventData.button != PointerEventData.InputButton.Left)
                 return;
-            var audio = AudioManager.Instance ?? Object.FindFirstObjectByType<AudioManager>();
+            var audio = AudioManager.Instance;
             audio?.PlayUIButtonClick();
         }
 
@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI
         {
             if (button == null || !button.interactable)
                 return;
-            var audio = AudioManager.Instance ?? Object.FindFirstObjectByType<AudioManager>();
+            var audio = AudioManager.Instance;
             audio?.PlayUIButtonClick();
         }
     }

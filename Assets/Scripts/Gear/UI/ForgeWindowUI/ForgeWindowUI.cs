@@ -16,7 +16,7 @@ namespace TimelessEchoes.Gear.UI
         private EquipmentController equipment;
         private ResourceManager rm;
         private float nextOddsRefreshTime;
-        private ResourceManager RM => rm ?? (rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>());
+        private ResourceManager RM => rm ?? (rm = ResourceManager.Instance);
 
         private List<CoreSO> cores = new();
         private CoreSO selectedCore;
@@ -31,9 +31,9 @@ namespace TimelessEchoes.Gear.UI
 
         private void Awake()
         {
-            crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
-            equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
-            rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            crafting = CraftingService.Instance;
+            equipment = EquipmentController.Instance;
+            rm = ResourceManager.Instance;
             cores = AssetCache.GetAll<CoreSO>().Where(b => b != null).OrderBy(b => b.tierIndex).ToList();
 
             // Build Core selection UI using only pre-placed slots (no prefab route)
@@ -251,7 +251,7 @@ namespace TimelessEchoes.Gear.UI
             // Refresh selected previews when inventory changes (e.g., crafting spends ingots)
             if (RM != null) RM.OnInventoryChanged += OnResourcesChanged;
             // Subscribe to Ivan XP events if available
-            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+            var svc = CraftingService.Instance;
             if (svc != null)
             {
                 svc.OnIvanXpChanged += OnIvanXpChanged;
@@ -275,7 +275,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (RM != null) RM.OnInventoryChanged -= OnResourcesChanged;
-            var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+            var svc = CraftingService.Instance;
             if (svc != null)
             {
                 svc.OnIvanXpChanged -= OnIvanXpChanged;

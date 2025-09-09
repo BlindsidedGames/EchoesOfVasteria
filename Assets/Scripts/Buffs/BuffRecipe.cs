@@ -61,7 +61,7 @@ namespace TimelessEchoes.Buffs
         public int GetCurrentLevel()
         {
             var level = 0;
-            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             if (qm == null) return 0;
             foreach (var up in upgrades)
             {
@@ -120,7 +120,7 @@ namespace TimelessEchoes.Buffs
                     dict[eff.type] = eff.value;
             }
 
-            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             if (qm != null)
             {
                 foreach (var up in upgrades)
@@ -154,7 +154,7 @@ namespace TimelessEchoes.Buffs
         public int GetEchoCount()
         {
             var count = baseEchoCount;
-            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             if (qm != null)
             {
                 foreach (var up in upgrades)
@@ -169,7 +169,7 @@ namespace TimelessEchoes.Buffs
         public float GetDuration()
         {
             var duration = baseDuration;
-            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             if (qm != null)
             {
                 foreach (var up in upgrades)
@@ -210,7 +210,7 @@ namespace TimelessEchoes.Buffs
         public float GetCooldown()
         {
             var cooldown = baseCooldown;
-            var qm = QuestManager.Instance ?? UnityEngine.Object.FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             if (qm != null)
             {
                 foreach (var up in upgrades)

@@ -317,9 +317,9 @@ namespace TimelessEchoes.Upgrades
         protected override void Awake()
         {
             base.Awake();
-            resourceManager = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            resourceManager = ResourceManager.Instance;
             // Resolve QuestManager once up-front to avoid per-tick object searches
-            questManager = TimelessEchoes.Quests.QuestManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Quests.QuestManager>();
+            questManager = TimelessEchoes.Quests.QuestManager.Instance;
             if (config == null)
                 Log("CauldronConfig missing", TELogCategory.General, this);
         }

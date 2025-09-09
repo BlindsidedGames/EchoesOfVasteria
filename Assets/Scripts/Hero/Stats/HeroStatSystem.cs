@@ -28,7 +28,7 @@ namespace TimelessEchoes.Hero
 
         public static void Initialize(HeroController hero)
         {
-            _hero = hero != null ? hero : HeroController.Instance ?? Object.FindFirstObjectByType<HeroController>();
+            _hero = hero != null ? hero : HeroController.Instance;
             _initialized = _hero != null;
             MarkDirty(DirtyMask.All, DirtyReason.Load);
             ForceRecalculate();
@@ -72,21 +72,21 @@ namespace TimelessEchoes.Hero
             {
                 _hero = _hero != null
                     ? _hero
-                    : HeroController.Instance ?? Object.FindFirstObjectByType<HeroController>();
+                    : HeroController.Instance;
                 _initialized = _hero != null;
                 if (!_initialized)
                     return;
             }
 
             var hero = _hero;
-            var buffs = BuffManager.Instance ?? Object.FindFirstObjectByType<BuffManager>();
-            var equip = EquipmentController.Instance ?? Object.FindFirstObjectByType<EquipmentController>();
-            var crafting = CraftingService.Instance ?? Object.FindFirstObjectByType<CraftingService>();
-            var upgrades = StatUpgradeController.Instance ?? Object.FindFirstObjectByType<StatUpgradeController>();
-            var skills = SkillController.Instance ?? Object.FindFirstObjectByType<SkillController>();
+            var buffs = BuffManager.Instance;
+            var equip = EquipmentController.Instance;
+            var crafting = CraftingService.Instance;
+            var upgrades = StatUpgradeController.Instance;
+            var skills = SkillController.Instance;
 
             var newSnapshot = _cache; // start from previous and update only dirty fields
-            var cauldron = CauldronManager.Instance ?? Object.FindFirstObjectByType<CauldronManager>();
+            var cauldron = CauldronManager.Instance;
 
             if ((_dirtyMask & DirtyMask.Damage) != 0)
             {

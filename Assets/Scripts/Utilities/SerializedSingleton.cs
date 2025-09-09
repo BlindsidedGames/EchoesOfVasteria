@@ -3,20 +3,16 @@ using UnityEngine;
 namespace TimelessEchoes.Utilities
 {
     /// <summary>
-    /// Generic singleton base class for MonoBehaviours.
+    /// Odin-friendly singleton base for SerializedMonoBehaviour inheritors.
+    /// Matches Singleton<T> behavior, with optional persistence.
     /// </summary>
-    /// <typeparam name="T">Type deriving from MonoBehaviour.</typeparam>
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    /// <typeparam name="T">Type deriving from SerializedMonoBehaviour.</typeparam>
+    public class SerializedSingleton<T> : Sirenix.OdinInspector.SerializedMonoBehaviour where T : MonoBehaviour
     {
-        [SerializeField] private bool makePersistent = false;
-        /// <summary>
-        /// The current instance of <typeparamref name="T"/>.
-        /// </summary>
         public static T Instance { get; private set; }
 
-        /// <summary>
-        /// Assigns the singleton instance and destroys duplicates.
-        /// </summary>
+        [SerializeField] private bool makePersistent = false;
+
         protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
@@ -31,9 +27,6 @@ namespace TimelessEchoes.Utilities
             }
         }
 
-        /// <summary>
-        /// Clears the singleton instance when destroyed.
-        /// </summary>
         protected virtual void OnDestroy()
         {
             if (Instance == this)
@@ -43,3 +36,4 @@ namespace TimelessEchoes.Utilities
         }
     }
 }
+

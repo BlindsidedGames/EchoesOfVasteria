@@ -19,6 +19,7 @@ namespace Blindsided.SaveData
         private const string ItemDropFloatingTextKey = "ItemDropFloatingText";
         private const string AutoPinActiveQuestsKey = "AutoPinActiveQuests";
         private const string StopAutocraftOnVastiumKey = "StopAutocraftOnVastium";
+        private const string LockAutocraftStatSetKey = "LockAutocraftStatSet";
         private const string TargetFpsKey = "TargetFps";
         private const string VSyncEnabledKey = "VSyncEnabled";
         private const string SafeAreaRatioKey = "SafeAreaRatio";
@@ -265,6 +266,19 @@ namespace Blindsided.SaveData
             set
             {
                 PlayerPrefs.SetInt(StopAutocraftOnVastiumKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+        }
+
+        // When enabled, forge autocraft will only stop on an upgrade
+        // if the rolled item's affix stat set matches the currently equipped
+        // item's stat set for that slot (ignoring order and duplicates).
+        public static bool LockAutocraftStatSet
+        {
+            get => PlayerPrefs.GetInt(LockAutocraftStatSetKey, 0) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(LockAutocraftStatSetKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
         }

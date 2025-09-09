@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.SaveData;
+using TimelessEchoes.Gear;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -59,6 +61,14 @@ namespace TimelessEchoes.Gear.UI
         private IEnumerator CraftUntilUpgradeCoroutine()
         {
             var wait = new WaitForSecondsRealtime(0.1f); // ~10 crafts per second
+            // Capture baseline affix stat set at the start of the session if Lock Stats is enabled
+            HashSet<StatDefSO> baselineSet = null;
+            if (StaticReferences.LockAutocraftStatSet)
+            {
+                var baseline = equipment?.GetEquipped(selectedSlot);
+                if (baseline != null)
+                    baselineSet = BuildAffixStatSet(baseline);
+            }
             while (isAutoCrafting)
             {
                 if (!CanCraft())
@@ -108,26 +118,43 @@ namespace TimelessEchoes.Gear.UI
                 ForceRefreshAllCoreSlots();
                 ThrottledRefreshOdds();
 
-                if (UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted,
-                        eq))
+                if (UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq))
                 {
-                    // Stop reason: Upgraded
-                    var o = Blindsided.Oracle.oracle;
-                    if (o != null && o.saveData != null && o.saveData.Forge != null)
+                    bool passesLock = true;
+                    if (StaticReferences.LockAutocraftStatSet)
                     {
-                        var forge = o.saveData.Forge;
-                        if (!forge.AutocraftStopReasons.ContainsKey("Upgraded")) forge.AutocraftStopReasons["Upgraded"] = 0;
-                        forge.AutocraftStopReasons["Upgraded"]++;
-                        // Track best rarity reached by slot
-                        var slot = lastCrafted != null ? lastCrafted.slot : null;
-                        if (!string.IsNullOrWhiteSpace(slot) && lastCrafted != null && lastCrafted.rarity != null)
+                        if (baselineSet != null)
                         {
-                            var tier = lastCrafted.rarity.tierIndex;
-                            if (!forge.AutocraftBestRarityTierBySlot.ContainsKey(slot) || forge.AutocraftBestRarityTierBySlot[slot] < tier)
-                                forge.AutocraftBestRarityTierBySlot[slot] = tier;
+                            var rolledSet = BuildAffixStatSet(lastCrafted);
+                            passesLock = AffixSetsEqual(baselineSet, rolledSet);
+                        }
+                        else
+                        {
+                            // No baseline equipped; allow any upgrade to stop
+                            passesLock = true;
                         }
                     }
-                    break; // leave lastCrafted for player to review/replace/salvage
+
+                    if (passesLock)
+                    {
+                        // Stop reason: Upgraded
+                        var o = Blindsided.Oracle.oracle;
+                        if (o != null && o.saveData != null && o.saveData.Forge != null)
+                        {
+                            var forge = o.saveData.Forge;
+                            if (!forge.AutocraftStopReasons.ContainsKey("Upgraded")) forge.AutocraftStopReasons["Upgraded"] = 0;
+                            forge.AutocraftStopReasons["Upgraded"]++;
+                            // Track best rarity reached by slot
+                            var slot = lastCrafted != null ? lastCrafted.slot : null;
+                            if (!string.IsNullOrWhiteSpace(slot) && lastCrafted != null && lastCrafted.rarity != null)
+                            {
+                                var tier = lastCrafted.rarity.tierIndex;
+                                if (!forge.AutocraftBestRarityTierBySlot.ContainsKey(slot) || forge.AutocraftBestRarityTierBySlot[slot] < tier)
+                                    forge.AutocraftBestRarityTierBySlot[slot] = tier;
+                            }
+                        }
+                        break; // leave lastCrafted for player to review/replace/salvage
+                    }
                 }
 
                 if (StaticReferences.StopAutocraftOnVastium &&
@@ -162,6 +189,28 @@ namespace TimelessEchoes.Gear.UI
                 if (forgeAttentionObject != null) forgeAttentionObject.SetActive(true);
                 TimelessEchoes.UI.TownWindowManager.ShowForgeAttention();
             }
+        }
+
+        private static HashSet<StatDefSO> BuildAffixStatSet(GearItem item)
+        {
+            var set = new HashSet<StatDefSO>();
+            if (item?.affixes != null)
+            {
+                for (int i = 0; i < item.affixes.Count; i++)
+                {
+                    var a = item.affixes[i];
+                    if (a?.stat != null)
+                        set.Add(a.stat);
+                }
+            }
+            return set;
+        }
+
+        private static bool AffixSetsEqual(HashSet<StatDefSO> a, HashSet<StatDefSO> b)
+        {
+            if (a == null || b == null) return false;
+            if (a.Count != b.Count) return false;
+            return a.SetEquals(b);
         }
     }
 }

@@ -121,7 +121,7 @@ namespace TimelessEchoes.Enemies
                     }
                     return;
                 }
-                var buff = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                var buff = BuffManager.Instance;
                 var baseMax = tracker.MaxRunDistance;
                 var mult = buff != null ? buff.MaxDistanceMultiplier : 1f;
                 var flat = buff != null ? buff.MaxDistanceFlatBonus : 0f;

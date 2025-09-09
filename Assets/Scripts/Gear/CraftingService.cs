@@ -34,7 +34,7 @@ namespace TimelessEchoes.Gear
             }
             Instance = this;
             if (equipment == null)
-                equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+                equipment = EquipmentController.Instance;
 
             // Fallback to auto-load assets if not assigned in inspector
             if (rarities == null || rarities.Count == 0)
@@ -58,7 +58,7 @@ namespace TimelessEchoes.Gear
         {
             if (core == null || core.requiredIngot == null) return null;
 
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = ResourceManager.Instance;
             if (rm == null) return null;
 
             // Require a core resource and at least one core to craft

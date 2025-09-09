@@ -87,6 +87,8 @@ namespace TimelessEchoes.UI
 
         [TabGroup("Settings", "Forge")] [SerializeField]
         private Button stopVastiumButton;
+        [TabGroup("Settings", "Forge")] [SerializeField]
+        private Button lockStatsButton;
 
         [TabGroup("Settings", "Sprites")] [SerializeField]
         private Sprite onSprite;
@@ -101,6 +103,7 @@ namespace TimelessEchoes.UI
         private Image muteWhenUnfocusedImage;
         private Image autoPinImage;
         private Image stopVastiumImage;
+        private Image lockStatsImage;
 
         [TabGroup("Settings", "Save Files")] [SerializeField]
         private SaveSlotReferences saveSlot1;
@@ -235,6 +238,16 @@ namespace TimelessEchoes.UI
                 stopVastiumImage = stopVastiumButton.GetComponent<Image>();
                 UpdateButtonVisual(stopVastiumImage, StaticReferences.StopAutocraftOnVastium);
             }
+            if (lockStatsButton != null)
+            {
+                lockStatsButton.onClick.AddListener(ToggleLockStats);
+                lockStatsImage = lockStatsButton.GetComponent<Image>();
+                UpdateButtonVisual(lockStatsImage, StaticReferences.LockAutocraftStatSet);
+            }
+
+            // Enforce interactivity rules between Lock Stats and Stop on Vastium
+            if (stopVastiumButton != null)
+                stopVastiumButton.interactable = !StaticReferences.LockAutocraftStatSet;
 
             playerDamageImage = playerDamageButton != null ? playerDamageButton.GetComponent<Image>() : null;
             enemyDamageImage = enemyDamageButton != null ? enemyDamageButton.GetComponent<Image>() : null;
@@ -242,6 +255,7 @@ namespace TimelessEchoes.UI
             vSyncImage ??= vSyncButton != null ? vSyncButton.GetComponent<Image>() : null;
             autoPinImage ??= autoPinButton != null ? autoPinButton.GetComponent<Image>() : null;
             stopVastiumImage ??= stopVastiumButton != null ? stopVastiumButton.GetComponent<Image>() : null;
+            lockStatsImage ??= lockStatsButton != null ? lockStatsButton.GetComponent<Image>() : null;
 
             if (saveSlots != null)
             {
@@ -431,6 +445,8 @@ namespace TimelessEchoes.UI
                 autoPinButton.onClick.RemoveListener(ToggleAutoPin);
             if (stopVastiumButton != null)
                 stopVastiumButton.onClick.RemoveListener(ToggleStopOnVastium);
+            if (lockStatsButton != null)
+                lockStatsButton.onClick.RemoveListener(ToggleLockStats);
             if (dropTextDurationSlider != null)
                 dropTextDurationSlider.onValueChanged.RemoveListener(OnDropDurationChanged);
             if (playerDamageDurationSlider != null)
@@ -619,8 +635,32 @@ namespace TimelessEchoes.UI
 
         private void ToggleStopOnVastium()
         {
+            if (StaticReferences.LockAutocraftStatSet)
+                return; // Disabled while Lock Stats is active
             StaticReferences.StopAutocraftOnVastium = !StaticReferences.StopAutocraftOnVastium;
             UpdateButtonVisual(stopVastiumImage, StaticReferences.StopAutocraftOnVastium);
+        }
+
+        private void ToggleLockStats()
+        {
+            StaticReferences.LockAutocraftStatSet = !StaticReferences.LockAutocraftStatSet;
+            UpdateButtonVisual(lockStatsImage, StaticReferences.LockAutocraftStatSet);
+            // If enabling Lock Stats, force Stop on Vastium off and disable its button
+            if (StaticReferences.LockAutocraftStatSet)
+            {
+                if (StaticReferences.StopAutocraftOnVastium)
+                {
+                    StaticReferences.StopAutocraftOnVastium = false;
+                    UpdateButtonVisual(stopVastiumImage, false);
+                }
+                if (stopVastiumButton != null)
+                    stopVastiumButton.interactable = false;
+            }
+            else
+            {
+                if (stopVastiumButton != null)
+                    stopVastiumButton.interactable = true;
+            }
         }
 
         private void UpdateDurationTexts()

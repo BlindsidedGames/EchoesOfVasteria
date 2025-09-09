@@ -116,6 +116,7 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private GameObject discord;
         [SerializeField] [Space] private GameObject autoPin;
         [SerializeField] [Space] private GameObject stopOnVastium;
+        [SerializeField] [Space] private GameObject lockStats;
         [SerializeField] [Space] private GameObject townButtons;
         [SerializeField] [Space] private GameObject windowsOpenIndicator;
         [SerializeField] [Space] private Button closeButton;
@@ -334,6 +335,8 @@ namespace TimelessEchoes.UI
                 ClearForgeAttention();
                 if (stopOnVastium != null)
                     stopOnVastium.SetActive(true);
+                if (lockStats != null)
+                    lockStats.SetActive(true);
                 if (inventory.window != null) inventory.window.SetActive(false);
                 if (forgeInfo != null)
                     forgeInfo.SetActive(true);
@@ -472,6 +475,8 @@ namespace TimelessEchoes.UI
                 autoPin.SetActive(false);
             if (stopOnVastium != null)
                 stopOnVastium.SetActive(false);
+            if (lockStats != null)
+                lockStats.SetActive(false);
             CloseTownsfolkDropdown();
             CloseCalebDropdown();
 

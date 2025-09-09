@@ -246,7 +246,7 @@ namespace TimelessEchoes.Buffs
 
         private void OnEnable()
         {
-            heroHealth = HeroHealth.Instance ?? FindFirstObjectByType<HeroHealth>();
+            heroHealth = HeroHealth.Instance;
             var tracker = GameplayStatTracker.Instance;
             inRun = tracker != null && tracker.RunInProgress;
             ApplyRunStateToUI();
@@ -313,7 +313,7 @@ namespace TimelessEchoes.Buffs
                     Destroy(panel.gameObject);
             recipeEntries.Clear();
 
-            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
 
             foreach (var recipe in manager.Recipes)
             {

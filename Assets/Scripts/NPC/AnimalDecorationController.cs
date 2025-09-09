@@ -31,7 +31,7 @@ namespace TimelessEchoes.NPC
             if (spriteRenderer == null)
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             if (hero == null)
-                hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+                hero = HeroController.Instance;
             spawnPos = transform.position;
             blockingMask = LayerMask.GetMask("Blocking");
         }

@@ -8,7 +8,7 @@ namespace TimelessEchoes.Enemies
     /// Manages activation of enemies based on camera visibility.
     /// </summary>
     [RequireComponent(typeof(Camera))]
-    public class EnemyActivator : MonoBehaviour
+    public class EnemyActivator : TimelessEchoes.Utilities.Singleton<EnemyActivator>
     {
         [SerializeField] private float activationPadding = 2f;
 
@@ -18,12 +18,12 @@ namespace TimelessEchoes.Enemies
 
         public static IReadOnlyList<Enemy> ActiveEnemies => Instance?.activeEnemies;
 
-        public static EnemyActivator Instance { get; private set; }
+        
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             cam = GetComponent<Camera>();
-            Instance = this;
         }
 
         public void Register(Enemy enemy)

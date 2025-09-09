@@ -52,7 +52,7 @@ namespace TimelessEchoes.Gear.UI
             SetIvanLevelLabel(o.saveData.CraftingMasteryLevel);
             if (ivanXpText != null)
             {
-                var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+                var svc = CraftingService.Instance;
                 var conf = svc != null ? svc.Config : null;
                 float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
                 var need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;
@@ -61,7 +61,7 @@ namespace TimelessEchoes.Gear.UI
 
             if (ivanXpBar != null)
             {
-                var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+                var svc = CraftingService.Instance;
                 var conf = svc != null ? svc.Config : null;
                 float currentLevel = Mathf.Max(1, o.saveData.CraftingMasteryLevel);
                 var need = conf != null ? conf.xpForFirstLevel * Mathf.Pow(currentLevel, conf.xpLevelMultiplier) : 1f;

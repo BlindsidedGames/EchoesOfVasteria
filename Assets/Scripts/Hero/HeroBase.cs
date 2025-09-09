@@ -56,6 +56,10 @@ namespace TimelessEchoes.Hero
         
         [Header("Echo Targeting")]
         [SerializeField] [Range(0f, 10f)] private float echoAvoidIfTTKBelowSeconds = 1.0f;
+        
+        [Header("Assist Echo Combat")]
+        [SerializeField] private bool assistEchoWhileOnTask = true;
+        [SerializeField] private float assistEchoThreatRadius = 5f;
 
         public bool AllowAttacks
         {
@@ -87,6 +91,7 @@ namespace TimelessEchoes.Hero
         private readonly Dictionary<Enemy, Action> enemyDeathHandlers = new();
         private readonly Dictionary<Enemy, Action<Enemy>> enemyDisengageHandlers = new();
         private readonly List<Enemy> enemyRemovalBuffer = new();
+        private readonly Dictionary<Enemy, Transform> enemyTargets = new();
 
         [SerializeField] private AIPath ai;
 
@@ -631,6 +636,7 @@ namespace TimelessEchoes.Hero
         {
             ai.canMove = true;
 
+            var wasPerformingTask = state == State.PerformingTask;
             if (state != State.Combat)
             {
                 Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
@@ -641,6 +647,10 @@ namespace TimelessEchoes.Hero
                     StartCoroutine(RollForCombat(cooldown));
                 }
             }
+
+            // If we were performing a task, release our claim so echoes can take over
+            if (wasPerformingTask && CurrentTask is BaseTask baseTask)
+                baseTask.ReleaseClaim(this);
 
             state = State.Combat;
             setter.target = enemy;
@@ -695,11 +705,42 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
+            // Determine who the enemy is targeting at the time of engagement
+            Transform engagedTarget = null;
+            try
+            {
+                var dst = enemy.GetComponent<AIDestinationSetter>();
+                engagedTarget = dst != null ? dst.target : null;
+            }
+            catch { engagedTarget = null; }
+
+            bool targetingMainHero = engagedTarget == transform;
+
+            // While performing a task, only assist echo-targeted enemies if near
+            if (state == State.PerformingTask)
+            {
+                if (!targetingMainHero)
+                {
+                    if (!assistEchoWhileOnTask)
+                        return;
+
+                    Transform et = null;
+                    try { et = enemy.transform; } catch { et = null; }
+                    if (et == null)
+                        return;
+                    var dist = Vector2.Distance(transform.position, et.position);
+                    if (dist > assistEchoThreatRadius)
+                        return;
+                }
+            }
+
             if (enemy.IsEngaged)
             {
                 if (!engagedEnemies.Contains(enemy))
                 {
                     engagedEnemies.Add(enemy);
+                    // Track the target we saw at engagement time
+                    enemyTargets[enemy] = engagedTarget;
 
                     System.Action deathHandler = () => UnregisterEngagedEnemy(enemy);
                     hp.OnDeath += deathHandler;
@@ -713,6 +754,11 @@ namespace TimelessEchoes.Hero
                     };
                     TimelessEchoes.Enemies.Enemy.OnEngage += disengageHandler;
                     enemyDisengageHandlers[enemy] = disengageHandler;
+                }
+                else
+                {
+                    // Update the known target on re-engagement
+                    enemyTargets[enemy] = engagedTarget;
                 }
             }
             else
@@ -752,6 +798,8 @@ namespace TimelessEchoes.Hero
 
             if (engagedEnemies.Remove(enemy))
             {
+                if (enemyTargets.ContainsKey(enemy))
+                    enemyTargets.Remove(enemy);
                 if (enemyDeathHandlers.TryGetValue(enemy, out var death))
                 {
                     var hp = enemy.GetComponent<Health>();
@@ -949,6 +997,26 @@ namespace TimelessEchoes.Hero
                         Transform enemyTransform = null;
                         try { enemyTransform = enemy.transform; } catch { continue; }
                         if (enemyTransform == null) continue;
+                        // When performing a task, only consider enemies targeting the main hero
+                        // or those within the assist radius (if enabled)
+                        if (state == State.PerformingTask)
+                        {
+                            bool ok = false;
+                            Transform tgt = null;
+                            if (!enemyTargets.TryGetValue(enemy, out tgt))
+                                tgt = null;
+                            if (tgt == transform)
+                            {
+                                ok = true;
+                            }
+                            else if (assistEchoWhileOnTask)
+                            {
+                                var dcheck = Vector2.Distance(transform.position, enemyTransform.position);
+                                ok = dcheck <= assistEchoThreatRadius;
+                            }
+                            if (!ok)
+                                continue;
+                        }
                         var dist = Vector2.Distance(transform.position, enemyTransform.position);
                         if (dist < best)
                         {
@@ -1085,6 +1153,21 @@ namespace TimelessEchoes.Hero
                     }
                 }
             }
+        }
+
+        // Editor visualization for assist radius (main hero only)
+        private void OnDrawGizmosSelected()
+        {
+            // Only visualize for the main hero, and only when assisting echoes while on task is enabled
+            if (IsEchoActor)
+                return;
+
+            // If the field hasn't been serialized yet in edit mode, skip
+            if (assistEchoThreatRadius <= 0f)
+                return;
+
+            Gizmos.color = new Color(1f, 0.6f, 0f, 0.75f); // orange
+            Gizmos.DrawWireSphere(transform.position, assistEchoThreatRadius);
         }
 
         private void ApplyStatUpgrades()

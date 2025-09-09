@@ -107,7 +107,7 @@ namespace TimelessEchoes.Quests
                 UpdatePinVisual(pinned);
                 pinButton.onClick.AddListener(() =>
                 {
-                    var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+                    var qm = QuestManager.Instance;
                     qm?.TogglePinned(data.questId);
                     var nowPinned = Oracle.oracle != null &&
                                     Oracle.oracle.saveData != null &&

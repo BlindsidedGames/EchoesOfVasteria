@@ -46,7 +46,7 @@ namespace TimelessEchoes.UI
             if (uiReferences == null)
                 uiReferences = GetComponent<RunCalebUIReferences>();
             if (buffManager == null)
-                buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+                buffManager = BuffManager.Instance;
             if (uiReferences != null && uiReferences.skillsButton != null && skillsWindow != null)
                 uiReferences.skillsButton.onClick.AddListener(ToggleSkills);
         }
@@ -63,7 +63,7 @@ namespace TimelessEchoes.UI
 
         private void OnEnable()
         {
-            hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+            hero = HeroController.Instance;
             heroHealth = hero ? hero.GetComponent<HeroHealth>() : null;
             // Ensure HUD text fields use the StatIcons sprite asset so <sprite=..> tags render
             var spriteAsset = StatIconLookup.GetSpriteAsset();

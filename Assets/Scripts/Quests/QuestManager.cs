@@ -78,13 +78,13 @@ namespace TimelessEchoes.Quests
             if (killTracker != null)
                 killTracker.OnKillRegistered += OnKill;
             EnsureStatTrackerSubscriptions();
-            var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            var bm = BuffManager.Instance;
             if (bm != null)
                 bm.OnBuffCast += OnBuffCast;
             var rm = ResourceManager.Instance;
             if (rm != null)
                 rm.OnResourceAdded += OnResourceAdded;
-            cauldronManager = TimelessEchoes.Upgrades.CauldronManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Upgrades.CauldronManager>();
+            cauldronManager = TimelessEchoes.Upgrades.CauldronManager.Instance;
             if (cauldronManager != null)
                 cauldronManager.OnResourcesMixed += OnResourcesMixed;
 
@@ -108,7 +108,7 @@ namespace TimelessEchoes.Quests
                 statTracker.OnTaskCompletedEvent -= OnTaskCompleted;
                 statEventsSubscribed = false;
             }
-            var bm = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            var bm = BuffManager.Instance;
             if (bm != null)
                 bm.OnBuffCast -= OnBuffCast;
             var rm = ResourceManager.Instance;
@@ -936,7 +936,7 @@ namespace TimelessEchoes.Quests
         {
             if (statEventsSubscribed)
                 return;
-            var st = statTracker ?? GameplayStatTracker.Instance ?? FindFirstObjectByType<GameplayStatTracker>();
+            var st = statTracker ?? GameplayStatTracker.Instance;
             if (st == null)
                 return;
             statTracker = st;

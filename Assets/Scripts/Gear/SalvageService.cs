@@ -22,7 +22,7 @@ namespace TimelessEchoes.Gear
         {
             // Roll salvage drops using weights with optional extra slots from the core.
             if (item == null) return 0;
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = ResourceManager.Instance;
             if (rm == null) return 0;
 
             var drops = item.core != null ? item.core.salvageDrops : null;
@@ -87,8 +87,8 @@ namespace TimelessEchoes.Gear
                     }
 
                     // Also update best piece scores using the same scoring as upgrades
-                    var crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
-                    var equipment = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+                    var crafting = CraftingService.Instance;
+                    var equipment = EquipmentController.Instance;
                     if (crafting != null)
                     {
                         var current = equipment != null && !string.IsNullOrWhiteSpace(item.slot) ? equipment.GetEquipped(item.slot) : null;

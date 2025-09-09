@@ -117,7 +117,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             // Ensure we have an EquipmentController reference
-            equipment ??= EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
+            equipment ??= EquipmentController.Instance;
             var eq = equipment != null ? equipment.GetEquipped(lastCrafted.slot) : null;
             if (eq == null && equipment != null)
             {

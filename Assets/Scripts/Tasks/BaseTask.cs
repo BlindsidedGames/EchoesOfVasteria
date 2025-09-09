@@ -174,7 +174,7 @@ namespace TimelessEchoes.Tasks
 
         protected bool ShouldInstantComplete()
         {
-            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
+            var controller = SkillController.Instance;
             bool milestone = controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
             bool buff = TimelessEchoes.Buffs.BuffManager.Instance != null && TimelessEchoes.Buffs.BuffManager.Instance.InstantTaskBuffActive;
             return milestone || buff;
@@ -188,7 +188,7 @@ namespace TimelessEchoes.Tasks
             if (associatedSkill == null || taskData == null || taskData.xpForCompletion <= 0f)
                 return 0f;
 
-            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
+            var controller = SkillController.Instance;
             var amount = taskData.xpForCompletion;
             if (controller)
             {

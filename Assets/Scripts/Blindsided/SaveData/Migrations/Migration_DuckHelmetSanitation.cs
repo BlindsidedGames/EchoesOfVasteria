@@ -54,14 +54,6 @@ namespace Blindsided.SaveData.Migrations
                 var moveDef = allStats.FirstOrDefault(s => s != null && s.heroMapping == HeroStatMapping.MoveSpeed);
                 var atkDef = allStats.FirstOrDefault(s => s != null && s.heroMapping == HeroStatMapping.AttackRate);
 
-                bool Matches(string statId, StatDefSO def)
-                {
-                    if (def == null || string.IsNullOrWhiteSpace(statId)) return false;
-                    if (!string.IsNullOrWhiteSpace(def.id) && statId.Equals(def.id, System.StringComparison.OrdinalIgnoreCase))
-                        return true;
-                    return statId.Equals(def.name, System.StringComparison.OrdinalIgnoreCase);
-                }
-
                 if (helm.affixes == null)
                 {
                     data.DuckHelmetSanitized = true;
@@ -70,7 +62,7 @@ namespace Blindsided.SaveData.Migrations
 
                 // Remove Move Speed affix
                 if (moveDef != null)
-                    helm.affixes.RemoveAll(a => a != null && Matches(a.statId, moveDef));
+                    helm.affixes.RemoveAll(a => a != null && TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, moveDef));
 
                 // Reduce excessive Attack Rate
                 if (atkDef != null)
@@ -79,7 +71,7 @@ namespace Blindsided.SaveData.Migrations
                     {
                         var a = helm.affixes[i];
                         if (a == null) continue;
-                        if (Matches(a.statId, atkDef) && a.value > 1.5f)
+                        if (TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, atkDef) && a.value > 1.5f)
                         {
                             a.value = 1.2f;
                             helm.affixes[i] = a;

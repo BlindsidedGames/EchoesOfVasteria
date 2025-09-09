@@ -18,9 +18,9 @@ namespace TimelessEchoes.Buffs
     ///     Manages active buffs and persists them across scenes.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class BuffManager : MonoBehaviour
+    public class BuffManager : TimelessEchoes.Utilities.Singleton<BuffManager>
     {
-        public static BuffManager Instance { get; private set; }
+        
         public event Action<BuffRecipe, bool> OnBuffCast; // (recipe, isAuto)
 
         private BuffRecipe[] cachedRecipes;
@@ -128,19 +128,11 @@ namespace TimelessEchoes.Buffs
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-
+            base.Awake();
             // Ensure no active buffs linger between sessions
             ClearActiveBuffs(false);
-
             OnLoadData += LoadSlots;
         }
 
@@ -160,10 +152,9 @@ namespace TimelessEchoes.Buffs
             LoadSlots();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
             OnLoadData -= LoadSlots;
         }
 
@@ -233,7 +224,7 @@ namespace TimelessEchoes.Buffs
 
             if (recipe.requiredQuest != null)
             {
-                var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+                var qm = QuestManager.Instance;
                 if (qm == null || !qm.IsQuestCompleted(recipe.requiredQuest))
                     return false;
             }

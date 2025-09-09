@@ -79,11 +79,11 @@ namespace TimelessEchoes.Tasks
 
             // Mirror the same time scaling used by base to keep visuals in sync
             var delta = Time.deltaTime;
-            var controller = TimelessEchoes.Skills.SkillController.Instance ?? FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+            var controller = TimelessEchoes.Skills.SkillController.Instance;
             if (controller != null && associatedSkill != null)
                 delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
 
-            var buffManager = TimelessEchoes.Buffs.BuffManager.Instance ?? FindFirstObjectByType<TimelessEchoes.Buffs.BuffManager>();
+            var buffManager = TimelessEchoes.Buffs.BuffManager.Instance;
             if (buffManager != null)
                 delta *= buffManager.TaskSpeedMultiplier;
 

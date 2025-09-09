@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using TimelessEchoes.Utilities;
 
 // Cloud parallax manager
 // Execution order is set so this runs before most scripts
 [DefaultExecutionOrder(-1)]
-public class CloudSpawner : MonoBehaviour
+public class CloudSpawner : Singleton<CloudSpawner>
 {
-    public static CloudSpawner Instance { get; private set; }
+    
     [Header("Setup")] [SerializeField] private Sprite[] frames; // 4 cloud images
     [SerializeField] private int runCloudCount = 3; // number of clouds during runs
     private int TownCloudCount => runCloudCount * 2;
@@ -37,9 +38,9 @@ public class CloudSpawner : MonoBehaviour
     }
 #endif
 
-    private void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         cam = Camera.main;
         UpdateScreenDimensions();
         var maxCount = Mathf.Max(runCloudCount, TownCloudCount);
@@ -51,8 +52,6 @@ public class CloudSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Instance == null)
-            Instance = this;
         if (clouds != null)
             ResetClouds(true); // game starts in town
     }

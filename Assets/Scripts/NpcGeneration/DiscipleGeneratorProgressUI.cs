@@ -110,7 +110,7 @@ namespace TimelessEchoes.NpcGeneration
 
             if (collectionRateText != null && res != null)
             {
-                var cm = CauldronManager.Instance ?? Object.FindFirstObjectByType<CauldronManager>();
+                var cm = CauldronManager.Instance;
                 var mult = cm != null ? cm.GetResourceAlterEchoMultiplier(res.name) : 1f;
                 var cardPct = Mathf.Max(0f, (mult - 1f) * 100f);
                 if (generator.Interval > 0)

@@ -59,14 +59,14 @@ namespace TimelessEchoes.Gear.UI
 
 		private void Subscribe()
 		{
-			var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+			var svc = CraftingService.Instance;
 			if (svc != null)
 				svc.OnIvanXpChanged += OnIvanXpChanged;
 		}
 
 		private void Unsubscribe()
 		{
-			var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+			var svc = CraftingService.Instance;
 			if (svc != null)
 				svc.OnIvanXpChanged -= OnIvanXpChanged;
 		}
@@ -120,7 +120,7 @@ namespace TimelessEchoes.Gear.UI
 
 			// Ivan
 			sb.AppendLine("<size=105%><b>Ivan</b></size>");
-			var svc = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+			var svc = CraftingService.Instance;
 			int ivLevel; float ivCurrent; float ivNeeded;
 			if (svc != null)
 			{
@@ -565,8 +565,8 @@ namespace TimelessEchoes.Gear.UI
 
 		private void AppendQualitySection(StringBuilder sb, GameData.ForgeStats forge)
 		{
-			var equip = EquipmentController.Instance ?? FindFirstObjectByType<EquipmentController>();
-			var crafting = CraftingService.Instance ?? FindFirstObjectByType<CraftingService>();
+			var equip = EquipmentController.Instance;
+			var crafting = CraftingService.Instance;
 			sb.AppendLine("<size=105%><b>Quality</b></size>");
 			sb.AppendLine("• Equipped:");
 			var slots = equip != null && equip.Slots != null && equip.Slots.Count > 0

@@ -72,11 +72,11 @@ namespace TimelessEchoes.Tasks
         public override void Tick(HeroBase hero)
         {
             var delta = Time.deltaTime;
-            var controller = SkillController.Instance ?? FindFirstObjectByType<SkillController>();
+            var controller = SkillController.Instance;
             if (controller != null && associatedSkill != null)
                 delta *= controller.GetTaskSpeedMultiplier(associatedSkill);
 
-            var buffManager = BuffManager.Instance ?? FindFirstObjectByType<BuffManager>();
+            var buffManager = BuffManager.Instance;
             if (buffManager != null)
                 delta *= buffManager.TaskSpeedMultiplier;
             timer += delta;

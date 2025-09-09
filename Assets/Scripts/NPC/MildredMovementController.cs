@@ -21,7 +21,7 @@ namespace TimelessEchoes.NPC
         {
             ai = GetComponent<AIPath>();
             if (hero == null)
-                hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+                hero = HeroController.Instance;
             if (spriteRenderer == null)
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }

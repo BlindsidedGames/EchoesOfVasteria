@@ -93,11 +93,7 @@ namespace Blindsided.SaveData.Migrations
 
             StatDefSO ResolveStat(string id)
             {
-                if (string.IsNullOrWhiteSpace(id)) return null;
-                // Prefer id match, then asset name
-                var s = allStats.FirstOrDefault(x => x != null && !string.IsNullOrWhiteSpace(x.id) && string.Equals(x.id, id, StringComparison.OrdinalIgnoreCase));
-                if (s != null) return s;
-                return allStats.FirstOrDefault(x => x != null && string.Equals(x.name, id, StringComparison.OrdinalIgnoreCase));
+                return TimelessEchoes.Gear.StatDefUtils.ResolveStatByIdOrName(allStats, id);
             }
 
             RaritySO ResolveRarity(string name)

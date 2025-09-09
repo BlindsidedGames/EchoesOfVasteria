@@ -28,6 +28,8 @@ namespace TimelessEchoes.Enemies
             "Kynji",
             "docwhat",
             "labcavey",
+            "Yettum",
+            "Phoenixia",
         };
 
         /// <summary>

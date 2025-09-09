@@ -11,9 +11,8 @@ namespace TimelessEchoes.Quests
     ///     Manages quest UI entries.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class QuestUIManager : MonoBehaviour
+    public class QuestUIManager : TimelessEchoes.Utilities.Singleton<QuestUIManager>
     {
-        public static QuestUIManager Instance { get; private set; }
         [SerializeField] private QuestEntryUI questEntryPrefab;
         [SerializeField] private GameObject dividerPrefab;
         [SerializeField] private Transform questParent;
@@ -29,16 +28,15 @@ namespace TimelessEchoes.Quests
         private WikiUIToggle completedCategory;
         private GameObject topDivider;
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
             EnsureCategories();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
         }
 
         public enum QuestCategory
@@ -122,7 +120,7 @@ namespace TimelessEchoes.Quests
             // Ensure categories are present and in the desired expanded/collapsed state
             EnsureCategories();
             // Ensure the list is freshly built and sorted whenever the quest UI opens
-            var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+            var qm = QuestManager.Instance;
             qm?.RefreshNoticeboard();
             Canvas.ForceUpdateCanvases(); // ensure layout is valid
             if (questScroll != null)

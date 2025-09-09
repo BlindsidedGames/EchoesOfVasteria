@@ -65,14 +65,14 @@ namespace TimelessEchoes.Gear.UI
 
         private void OnEnable()
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = ResourceManager.Instance;
             if (rm != null) rm.OnInventoryChanged += Refresh;
             Refresh();
         }
 
         private void OnDisable()
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = ResourceManager.Instance;
             if (rm != null) rm.OnInventoryChanged -= Refresh;
         }
 
@@ -88,7 +88,7 @@ namespace TimelessEchoes.Gear.UI
         /// </summary>
         public void Refresh()
         {
-            var rm = ResourceManager.Instance ?? FindFirstObjectByType<ResourceManager>();
+            var rm = ResourceManager.Instance;
             var hasCoreResource = coreResource != null;
             var discovered = hasCoreResource && rm != null && rm.IsUnlocked(coreResource);
 

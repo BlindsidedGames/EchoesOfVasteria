@@ -8,9 +8,9 @@ namespace TimelessEchoes.NPC
     /// <summary>
     /// Enables or disables objects based on whether specific NPCs have been met.
     /// </summary>
-    public class NpcObjectStateController : MonoBehaviour
+    public class NpcObjectStateController : TimelessEchoes.Utilities.Singleton<NpcObjectStateController>
     {
-        public static NpcObjectStateController Instance { get; private set; }
+        
         [System.Serializable]
         public class Entry
         {
@@ -22,15 +22,14 @@ namespace TimelessEchoes.NPC
         [SerializeField]
         private List<Entry> entries = new();
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (Instance == this)
-                Instance = null;
+            base.OnDestroy();
         }
 
         private void OnEnable()

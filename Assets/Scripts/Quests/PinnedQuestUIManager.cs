@@ -79,7 +79,7 @@ namespace TimelessEchoes.Quests
             {
                 if (string.IsNullOrEmpty(id))
                     continue;
-                var qm = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+                var qm = QuestManager.Instance;
                 var data = qm != null ? qm.GetQuestData(id) : null;
                 var instant = false;
                 if (data != null && data.requirements != null)
@@ -113,7 +113,7 @@ namespace TimelessEchoes.Quests
             if (oracle == null)
                 return;
 
-            var manager = QuestManager.Instance ?? FindFirstObjectByType<QuestManager>();
+            var manager = QuestManager.Instance;
             var resourceManager = ResourceManager.Instance;
             var tracker = GameplayStatTracker.Instance;
 
