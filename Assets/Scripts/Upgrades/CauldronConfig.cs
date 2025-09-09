@@ -31,6 +31,8 @@ namespace TimelessEchoes.Upgrades
 		public WeightedValue weightLowestCountCard;
 		public WeightedValue weightEvasBlessingX2;
 		public WeightedValue weightVastSurgeX10;
+		[Tooltip("Weight for Infinity (Eternal Boons) rolls when all categories are maxed.")]
+		public WeightedValue weightInfinity;
 
 		// Alter-Echo subcategory weights
 		public WeightedValue weightAEFarming;
@@ -54,6 +56,9 @@ namespace TimelessEchoes.Upgrades
 		public Color sliceAECombat = new Color(0.05f, 0.20f, 0.65f);
 		public Color sliceAELooting = new Color(0.12f, 0.65f, 0.85f);
 
+		[Header("Infinity Slice Color")]
+		public Color sliceInfinity = new Color(0.95f, 0.95f, 0.95f);
+
 		public float GetTotalWeight(int evaLevel)
 		{
 			// Sum all categories including AE subcategories
@@ -67,7 +72,8 @@ namespace TimelessEchoes.Upgrades
 			       + weightBuffCard.Evaluate(evaLevel)
 			       + weightLowestCountCard.Evaluate(evaLevel)
 			       + weightEvasBlessingX2.Evaluate(evaLevel)
-			       + weightVastSurgeX10.Evaluate(evaLevel);
+			       + weightVastSurgeX10.Evaluate(evaLevel)
+			       + weightInfinity.Evaluate(evaLevel);
 		}
 	}
 }

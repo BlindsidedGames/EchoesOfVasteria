@@ -306,6 +306,15 @@ namespace Blindsided
                 if (result.ok && result.data != null)
                 {
                     saveData = result.data;
+                    // Run versioned/schema migrations before applying data to systems
+                    try
+                    {
+                        Blindsided.SaveData.Migrations.SaveMigrationRunner.Run(
+                            saveData,
+                            Application.version,
+                            SaveManager.Instance.CurrentSlotName);
+                    }
+                    catch { /* Migration runner logs internally; continue load */ }
                     ApplyPostLoadCommon();
                     PersistSlotMetadataToPlayerPrefs();
                     return;

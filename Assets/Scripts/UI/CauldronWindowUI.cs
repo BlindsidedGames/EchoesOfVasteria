@@ -438,6 +438,7 @@ namespace TimelessEchoes.UI
 					(config.sliceLowest, eff.wLow),
 					(config.sliceEvas, eff.wX2),
 					(config.sliceVast, eff.wX10),
+					(config.sliceInfinity, eff.wInfinity),
 				};
 			}
 			else
@@ -449,6 +450,7 @@ namespace TimelessEchoes.UI
 					(config.sliceLowest, eff.wLow),
 					(config.sliceEvas, eff.wX2),
 					(config.sliceVast, eff.wX10),
+					(config.sliceInfinity, eff.wInfinity),
 				};
 			}
 
@@ -590,8 +592,9 @@ namespace TimelessEchoes.UI
 			float wLow = cur.wLow;
 			float wX2 = cur.wX2;
 			float wX10 = cur.wX10;
+			float wInf = cur.wInfinity;
 
-			float tCurrent = wNothing + wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC + wBuff + wLow + wX2 + wX10;
+			float tCurrent = wNothing + wAEF + wAEFi + wAEM + wAEW + wAEL + wAEC + wBuff + wLow + wX2 + wX10 + wInf;
 			if (tCurrent <= 0f)
 			{
 				if (firstPercentText != null) firstPercentText.text = string.Empty;
@@ -613,8 +616,9 @@ namespace TimelessEchoes.UI
 			float nLow = nxt.wLow;
 			float nX2 = nxt.wX2;
 			float nX10 = nxt.wX10;
+			float nInf = nxt.wInfinity;
 
-			float tNext = nNothing + nAEF + nAEFi + nAEM + nAEW + nAEL + nAEC + nBuff + nLow + nX2 + nX10;
+			float tNext = nNothing + nAEF + nAEFi + nAEM + nAEW + nAEL + nAEC + nBuff + nLow + nX2 + nX10 + nInf;
 			if (tNext <= 0f) tNext = 1f;
 
 			string HeaderFirst() => "<b>Current</b>\n";
@@ -642,6 +646,7 @@ namespace TimelessEchoes.UI
 			rows.Add(("Lowest", wLow, nLow, config.sliceLowest));
 			rows.Add(("Blessing", wX2, nX2, config.sliceEvas));
 			rows.Add(("Surge", wX10, nX10, config.sliceVast));
+			rows.Add(("Eternal", wInf, nInf, config.sliceInfinity));
 
 			var colFirst = new System.Text.StringBuilder();
 			var colSprite = new System.Text.StringBuilder();

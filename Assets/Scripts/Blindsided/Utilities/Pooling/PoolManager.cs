@@ -58,6 +58,22 @@ namespace Blindsided.Utilities.Pooling
         private static void OnApplicationQuitting()
         {
             isQuitting = true;
+            // Ensure pooled inactive objects run their destroy callbacks so
+            // any PlayableGraphs are torn down before process exit.
+            if (poolsByPrefabId.Count > 0)
+            {
+                foreach (var kv in poolsByPrefabId)
+                {
+                    kv.Value.pool?.Clear();
+                }
+            }
+            if (poolsByName.Count > 0)
+            {
+                foreach (var kv in poolsByName)
+                {
+                    kv.Value.pool?.Clear();
+                }
+            }
         }
         private static Transform PoolRoot
         {
@@ -205,6 +221,8 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
+                            // Stop and destroy any playable graphs before pooling to prevent leaks
+                            CleanupPlayables(o);
                             // Reparent to a global pool root outside of runtime map (if available)
                             var root = PoolRoot;
                             if (root != null)
@@ -271,6 +289,8 @@ namespace Blindsided.Utilities.Pooling
                     {
                         if (o != null)
                         {
+                            // Stop and destroy any playable graphs before pooling to prevent leaks
+                            CleanupPlayables(o);
                             var root = PoolRoot;
                             if (root != null)
                                 o.transform.SetParent(root, false);

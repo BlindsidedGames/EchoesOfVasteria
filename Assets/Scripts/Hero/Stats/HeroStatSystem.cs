@@ -86,6 +86,7 @@ namespace TimelessEchoes.Hero
             var skills = SkillController.Instance ?? Object.FindFirstObjectByType<SkillController>();
 
             var newSnapshot = _cache; // start from previous and update only dirty fields
+            var cauldron = CauldronManager.Instance ?? Object.FindFirstObjectByType<CauldronManager>();
 
             if ((_dirtyMask & DirtyMask.Damage) != 0)
             {
@@ -106,9 +107,11 @@ namespace TimelessEchoes.Hero
 
                 // Gear
                 var gearDamage = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Damage) : 0f;
+                // Infinity flat bonus
+                float infDmg = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.Damage, out var _) : 0f;
                 // Buff multiplier
                 var buffMult = buffs != null ? buffs.DamageMultiplier : 1f;
-                newSnapshot.damage = (baseDamage + gearDamage) * buffMult;
+                newSnapshot.damage = (baseDamage + gearDamage + infDmg) * buffMult;
 
                 // Runtime dice multiplier is applied per HeroController when attacking/for UI
             }
@@ -130,8 +133,10 @@ namespace TimelessEchoes.Hero
                 }
 
                 var gearAttack = equip != null ? equip.GetTotalForMapping(HeroStatMapping.AttackRate) : 0f;
+                // Infinity flat APS bonus
+                float infAps = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.AttackRate, out var _) : 0f;
                 var buffMult = buffs != null ? buffs.AttackSpeedMultiplier : 1f;
-                newSnapshot.attacksPerSecond = (baseAttack + gearAttack) * buffMult;
+                newSnapshot.attacksPerSecond = (baseAttack + gearAttack + infAps) * buffMult;
             }
 
             if ((_dirtyMask & DirtyMask.CritChance) != 0)
@@ -149,6 +154,13 @@ namespace TimelessEchoes.Hero
 
                 if (buffs != null)
                     critPercent += Mathf.Max(0f, buffs.CritChancePercent);
+                // Infinity percent bonus
+                if (cauldron != null)
+                {
+                    float infCrit = cauldron.GetInfinityValueFor(HeroStatMapping.CritChance, out var isPct);
+                    if (isPct) critPercent += Mathf.Max(0f, infCrit);
+                    else critPercent += Mathf.Max(0f, infCrit * 100f); // safety if configured flat
+                }
                 // Apply global baseline
                 critPercent += BaseCritChancePercent;
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
@@ -156,7 +168,8 @@ namespace TimelessEchoes.Hero
 
             if ((_dirtyMask & DirtyMask.Move) != 0)
             {
-                var baseMove = 0f;
+                // Aggregate a movement rating from all sources (upgrades/skills + gear)
+                var ratingBase = 0f;
                 if (upgrades != null && upgrades.AllUpgrades != null)
                 {
                     var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Move Speed");
@@ -166,13 +179,33 @@ namespace TimelessEchoes.Hero
                         var levelIncrease = upgrades.GetIncrease(up);
                         var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
                         var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        baseMove = (baseVal + levelIncrease + flat) * (1f + percent);
+                        ratingBase = (baseVal + levelIncrease + flat) * (1f + percent);
                     }
                 }
 
-                var gearMove = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MoveSpeed) : 0f;
+                var gearRating = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MoveSpeed) : 0f;
                 var buffMult = buffs != null ? buffs.MoveSpeedMultiplier : 1f;
-                newSnapshot.movementSpeed = (baseMove + gearMove) * buffMult;
+
+                // Combine base rating and gear rating, then apply buff multiplier
+                var movementRating = (ratingBase + gearRating) * buffMult;
+
+                // Apply Cauldron Infinity to the rating: percent multiplies, flat adds
+                if (cauldron != null)
+                {
+                    float infMove = cauldron.GetInfinityValueFor(HeroStatMapping.MoveSpeed, out var isPct);
+                    if (isPct) movementRating *= (1f + Mathf.Max(0f, infMove) / 100f);
+                    else movementRating += Mathf.Max(0f, infMove);
+                }
+
+                // Map rating -> [0..1] using the same curve as Defense: x/(x+N)
+                const float BaseMoveSpeed = 3f;       // minimum speed shown as 100%
+                const float MoveBonusRange = 9f;      // 3 + 9 = 12 max (400%)
+                const float MovementScalarN = 25f;    // use same N as defense for now
+
+                var ratingClamped = Mathf.Max(0f, movementRating);
+                var scale01 = ratingClamped / (ratingClamped + MovementScalarN);
+                var finalSpeed = BaseMoveSpeed + MoveBonusRange * scale01;
+                newSnapshot.movementSpeed = Mathf.Clamp(finalSpeed, BaseMoveSpeed, BaseMoveSpeed + MoveBonusRange);
             }
 
             if ((_dirtyMask & DirtyMask.Defense) != 0)
@@ -193,7 +226,8 @@ namespace TimelessEchoes.Hero
 
                 var gearDef = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Defense) : 0f;
                 var buffMult = buffs != null ? buffs.DefenseMultiplier : 1f;
-                newSnapshot.defense = (baseDef + gearDef) * buffMult;
+                float infDef = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.Defense, out var _) : 0f;
+                newSnapshot.defense = (baseDef + gearDef + Mathf.Max(0f, infDef)) * buffMult;
             }
 
             if ((_dirtyMask & DirtyMask.MaxHealth) != 0)
@@ -213,7 +247,8 @@ namespace TimelessEchoes.Hero
                 }
 
                 var gearHp = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MaxHealth) : 0f;
-                newSnapshot.maxHealth = baseHp + gearHp;
+                float infHp = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.MaxHealth, out var _) : 0f;
+                newSnapshot.maxHealth = baseHp + gearHp + Mathf.Max(0f, infHp);
             }
 
             if ((_dirtyMask & DirtyMask.Regen) != 0)
@@ -229,7 +264,14 @@ namespace TimelessEchoes.Hero
                         : 0f;
                     var gearRegen = equip != null ? equip.GetTotalForMapping(HeroStatMapping.HealthRegen) : 0f;
                     var regenMultiplier = buffs != null ? 1f + Mathf.Max(0f, buffs.HealthRegenPercent) / 100f : 1f;
-                    regenPerSec = (upgradeRegen + gearRegen) * regenMultiplier;
+                    var baseRegen = upgradeRegen + gearRegen;
+                    if (cauldron != null)
+                    {
+                        float infRegen = cauldron.GetInfinityValueFor(HeroStatMapping.HealthRegen, out var isPct);
+                        if (isPct) baseRegen *= (1f + Mathf.Max(0f, infRegen) / 100f);
+                        else baseRegen += Mathf.Max(0f, infRegen);
+                    }
+                    regenPerSec = baseRegen * regenMultiplier;
                 }
 
                 newSnapshot.healthRegenPerSecond = regenPerSec;

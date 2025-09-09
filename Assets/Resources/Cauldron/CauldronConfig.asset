@@ -58,6 +58,9 @@ MonoBehaviour:
   weightVastSurgeX10:
     baseWeight: 1
     weightPerLevel: 0.05
+  weightInfinity:
+    baseWeight: 1000
+    weightPerLevel: 0
   weightAEFarming:
     baseWeight: 360
     weightPerLevel: 0.036
@@ -87,3 +90,4 @@ MonoBehaviour:
   sliceAEWoodcutting: {r: 0.1, g: 0.3, b: 0.75, a: 1}
   sliceAECombat: {r: 0.05, g: 0.2, b: 0.65, a: 1}
   sliceAELooting: {r: 0.12, g: 0.65, b: 0.85, a: 1}
+  sliceInfinity: {r: 0.95, g: 0.95, b: 0.95, a: 1}

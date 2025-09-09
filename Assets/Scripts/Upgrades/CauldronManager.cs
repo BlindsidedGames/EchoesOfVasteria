@@ -50,6 +50,7 @@ namespace TimelessEchoes.Upgrades
         private readonly List<string> poolAlterEchoCards = new(); // RES:<name>
         private readonly List<string> poolBuffCards = new(); // BUFF:<name>
         private readonly List<string> poolAllCards = new(); // union of above
+        private readonly List<string> poolInfinityCards = new(); // INF:<Stat>
         private bool cardPoolsDirty = true;
         private float? _nextStatsEmitTime;
         private float? _nextSessionCardsEmitTime;
@@ -265,29 +266,52 @@ namespace TimelessEchoes.Upgrades
             return 1f + percent / 100f;
         }
 
+        // -------- Max Tier Helpers --------
+        private bool IsResourceMaxed(string resourceName)
+        {
+            if (config == null) return false;
+            var maxTier = config.resourceTierThresholds != null ? config.resourceTierThresholds.Length : 0;
+            if (maxTier <= 0) return false;
+            return GetResourceTier(resourceName) >= maxTier;
+        }
+
+        private bool IsBuffMaxed(string buffName)
+        {
+            if (config == null) return false;
+            var maxTier = config.buffTierThresholds != null ? config.buffTierThresholds.Length : 0;
+            if (maxTier <= 0) return false;
+            return GetBuffTier(buffName) >= maxTier;
+        }
+
+        private bool IsIdMaxed(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            if (id.StartsWith("RES:")) return IsResourceMaxed(id.Substring(4));
+            if (id.StartsWith("BUFF:")) return IsBuffMaxed(id.Substring(5));
+            return false; // INF has no max
+        }
+
         /// <summary>
-        /// Computes the Buffs collection group tier as the minimum tier among all currently-eligible/visible buffs.
+        /// Computes the Buffs collection group tier as the minimum tier among all eligible buffs (including maxed).
         /// Returns 0 when there are no eligible buffs.
         /// </summary>
         public int GetBuffsGroupTier()
         {
-            RebuildCardPoolsIfDirty();
-            if (poolBuffCards == null || poolBuffCards.Count == 0)
-                return 0;
-
+            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
+            var any = false;
             var minTier = int.MaxValue;
-            foreach (var id in poolBuffCards)
+            foreach (var buff in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>())
             {
-                if (string.IsNullOrEmpty(id) || !id.StartsWith("BUFF:")) continue;
-                var name = id.Substring(5);
-                var t = GetBuffTier(name);
-                if (t > 0 && t < minTier)
-                    minTier = t;
+                if (buff == null) continue;
+                var required = buff.requiredQuest;
+                if (required != null && (qm == null || !qm.IsQuestCompleted(required)))
+                    continue;
+                any = true;
+                var t = GetBuffTier(buff.name);
+                if (t > 0 && t < minTier) minTier = t;
             }
-
-            if (minTier == int.MaxValue)
-                return 0;
-            return Mathf.Max(1, minTier);
+            if (!any) return 0;
+            return minTier == int.MaxValue ? 1 : Mathf.Max(1, minTier);
         }
 
         protected override void Awake()
@@ -426,7 +450,8 @@ namespace TimelessEchoes.Upgrades
             Buff,
             Lowest,
             EvasX2,
-            VastX10
+            VastX10,
+            Infinity
         }
 
         private void ResolveTasteOutcome()
@@ -444,9 +469,10 @@ namespace TimelessEchoes.Upgrades
             var wLow = eff.wLow;
             var wX2 = eff.wX2;
             var wX10 = eff.wX10;
+            var wInfinity = eff.wInfinity;
 
             var subAEPresent = (wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat) > 0f;
-            float total = wNothing + wBuff + wLow + wX2 + wX10
+            float total = wNothing + wBuff + wLow + wX2 + wX10 + wInfinity
                           + (subAEPresent ? (wAE_Farm + wAE_Fish + wAE_Mine + wAE_Wood + wAE_Loot + wAE_Combat) : 0f);
             // No legacy AE weight
 
@@ -463,6 +489,7 @@ namespace TimelessEchoes.Upgrades
                 else if ((r -= wAE_Wood) <= 0) pick = RollType.AEWoodcutting;
                 else if ((r -= wAE_Loot) <= 0) pick = RollType.AELooting;
                 else if ((r -= wAE_Combat) <= 0) pick = RollType.AECombat;
+                else if ((r -= wInfinity) <= 0) pick = RollType.Infinity;
                 else if ((r -= wBuff) <= 0) pick = RollType.Buff;
                 else if ((r -= wLow) <= 0) pick = RollType.Lowest;
                 else if ((r -= wX2) <= 0) pick = RollType.EvasX2;
@@ -471,7 +498,8 @@ namespace TimelessEchoes.Upgrades
             else
             {
                 // If subcategories are not configured with non-zero weights, treat AE as absent
-                if ((r -= wBuff) <= 0) pick = RollType.Buff;
+                if ((r -= wInfinity) <= 0) pick = RollType.Infinity;
+                else if ((r -= wBuff) <= 0) pick = RollType.Buff;
                 else if ((r -= wLow) <= 0) pick = RollType.Lowest;
                 else if ((r -= wX2) <= 0) pick = RollType.EvasX2;
                 else pick = RollType.VastX10;
@@ -533,12 +561,19 @@ namespace TimelessEchoes.Upgrades
                 case RollType.EvasX2:
                     countEvasBlessing++;
                     if (oracle != null) oracle.saveData.CauldronTotals.EvasBlessing++;
-                    GrantRandomCards(2);
+                    // Redirect to Infinity when all categories are maxed
+                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(2);
+                    else GrantRandomCards(2);
                     break;
                 case RollType.VastX10:
                     countVastSurge++;
                     if (oracle != null) oracle.saveData.CauldronTotals.VastSurge++;
-                    GrantRandomCards(10);
+                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(10);
+                    else GrantRandomCards(10);
+                    break;
+                case RollType.Infinity:
+                    // Single Infinity gain
+                    GrantRandomInfinityCards(1);
                     break;
             }
         }
@@ -549,6 +584,16 @@ namespace TimelessEchoes.Upgrades
             {
                 var id = PickRandomCardId(onlyAlterEcho, onlyBuffs);
                 if (id == null) continue;
+                AddCardCount(id, 1);
+            }
+        }
+
+        private void GrantRandomInfinityCards(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var id = PickRandomInfinityId();
+                if (id == null) return;
                 AddCardCount(id, 1);
             }
         }
@@ -574,6 +619,14 @@ namespace TimelessEchoes.Upgrades
             if (pool == null || pool.Count == 0) return null;
             var idx = Random.Range(0, pool.Count);
             return pool[idx];
+        }
+
+        private string PickRandomInfinityId()
+        {
+            RebuildCardPoolsIfDirty();
+            if (poolInfinityCards == null || poolInfinityCards.Count == 0) return null;
+            var idx = Random.Range(0, poolInfinityCards.Count);
+            return poolInfinityCards[idx];
         }
 
         private void GrantLowestCard(int count)
@@ -615,6 +668,8 @@ namespace TimelessEchoes.Upgrades
             int oldBuffTier = -1;
             int oldBuffsGroupTier = -1;
             bool isBuff = !string.IsNullOrEmpty(id) && id.StartsWith("BUFF:");
+            bool isRes = !string.IsNullOrEmpty(id) && id.StartsWith("RES:");
+            bool isInfinity = !string.IsNullOrEmpty(id) && id.StartsWith("INF:");
             string buffName = null;
             if (isBuff)
             {
@@ -623,18 +678,25 @@ namespace TimelessEchoes.Upgrades
                 oldBuffsGroupTier = GetBuffsGroupTier();
             }
 
+            // Clamp RES/BUFF at max tier; Infinity has no cap
+            if (!isInfinity && IsIdMaxed(id))
+                delta = 0;
+
             if (!dict.ContainsKey(id)) dict[id] = 0;
             dict[id] += delta;
-            sessionCardsGained += delta;
-            OnCardGained?.Invoke(id, delta);
-            if (ShouldEmitSessionCardsNow())
-                OnSessionCardsChanged?.Invoke(sessionCardsGained);
-            if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += delta;
-            if (ShouldEmitStatsNow())
+            if (delta > 0)
             {
-                var statsHandler = OnStatsChanged;
-                if (statsHandler != null)
-                    statsHandler(GetStatsSnapshot());
+                sessionCardsGained += delta;
+                OnCardGained?.Invoke(id, delta);
+                if (ShouldEmitSessionCardsNow())
+                    OnSessionCardsChanged?.Invoke(sessionCardsGained);
+                if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += delta;
+                if (ShouldEmitStatsNow())
+                {
+                    var statsHandler = OnStatsChanged;
+                    if (statsHandler != null)
+                        statsHandler(GetStatsSnapshot());
+                }
             }
 
             // Update disciple generation rates when card counts change
@@ -663,6 +725,31 @@ namespace TimelessEchoes.Upgrades
                         // ignore: buff manager may not be available in some scenes
                     }
                 }
+            }
+
+            // If a RES or BUFF newly reached max, mark pools dirty and notify
+            if (!isInfinity)
+            {
+                cardPoolsDirty = true;
+                DebouncedWeightsChanged();
+            }
+
+            // Infinity affects hero stats directly; mark hero stats dirty
+            try
+            {
+                TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                    TimelessEchoes.Hero.DirtyMask.Damage |
+                    TimelessEchoes.Hero.DirtyMask.AttackRate |
+                    TimelessEchoes.Hero.DirtyMask.CritChance |
+                    TimelessEchoes.Hero.DirtyMask.Move |
+                    TimelessEchoes.Hero.DirtyMask.Defense |
+                    TimelessEchoes.Hero.DirtyMask.Regen |
+                    TimelessEchoes.Hero.DirtyMask.MaxHealth,
+                    TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+            }
+            catch (Exception)
+            {
+                // ignore
             }
         }
 
@@ -707,6 +794,7 @@ namespace TimelessEchoes.Upgrades
             poolAlterEchoCards.Clear();
             poolBuffCards.Clear();
             poolAllCards.Clear();
+            poolInfinityCards.Clear();
 
             var rm = resourceManager ?? ResourceManager.Instance;
             var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
@@ -717,8 +805,12 @@ namespace TimelessEchoes.Upgrades
                 if (rm != null && rm.IsUnlocked(res))
                 {
                     var id = $"RES:{res.name}";
-                    poolAlterEchoCards.Add(id);
-                    poolAllCards.Add(id);
+                    // Skip maxed resources
+                    if (!IsIdMaxed(id))
+                    {
+                        poolAlterEchoCards.Add(id);
+                        poolAllCards.Add(id);
+                    }
                 }
             }
 
@@ -729,9 +821,21 @@ namespace TimelessEchoes.Upgrades
                 if (required == null || (qm != null && qm.IsQuestCompleted(required)))
                 {
                     var id = $"BUFF:{buff.name}";
-                    poolBuffCards.Add(id);
-                    poolAllCards.Add(id);
+                    // Skip maxed buffs
+                    if (!IsIdMaxed(id))
+                    {
+                        poolBuffCards.Add(id);
+                        poolAllCards.Add(id);
+                    }
                 }
+            }
+
+            // Build Infinity ids
+            foreach (var inf in Blindsided.Utilities.AssetCache.GetAll<InfinityCauldronStatSO>("Infinity"))
+            {
+                if (inf == null) continue;
+                var id = $"INF:{inf.Stat}";
+                poolInfinityCards.Add(id);
             }
         }
 
@@ -755,7 +859,11 @@ namespace TimelessEchoes.Upgrades
                 if (res == null || res.DisableAlterEcho) continue;
                 if (rm != null && !rm.IsUnlocked(res)) continue;
                 if (GetResourceGroup(res) == group)
-                    list.Add($"RES:{res.name}");
+                {
+                    var id = $"RES:{res.name}";
+                    if (!IsIdMaxed(id))
+                        list.Add(id);
+                }
             }
             cachedGroupPools[group] = list;
             return list;
@@ -908,6 +1016,7 @@ namespace TimelessEchoes.Upgrades
             public float wLow;
             public float wX2;
             public float wX10;
+            public float wInfinity;
         }
 
         public EffectiveWeightsSnapshot GetEffectiveWeightsAtLevel(int evaLevel)
@@ -929,17 +1038,28 @@ namespace TimelessEchoes.Upgrades
                 wBuff = config != null ? config.weightBuffCard.Evaluate(evaLevel) : 0f,
                 wLow = config != null ? config.weightLowestCountCard.Evaluate(evaLevel) : 0f,
                 wX2 = config != null ? config.weightEvasBlessingX2.Evaluate(evaLevel) : 0f,
-                wX10 = config != null ? config.weightVastSurgeX10.Evaluate(evaLevel) : 0f
+                wX10 = config != null ? config.weightVastSurgeX10.Evaluate(evaLevel) : 0f,
+                wInfinity = config != null ? config.weightInfinity.Evaluate(evaLevel) : 0f
             };
 
             // Gate by eligibility
             RebuildCardPoolsIfDirty();
             bool anyAllCards = poolAllCards.Count > 0;
-            if (!anyAllCards)
+            bool anyInfinity = poolInfinityCards.Count > 0;
+            if (!anyAllCards && !anyInfinity)
             {
                 snap.wLow = 0f;
                 snap.wX2 = 0f;
                 snap.wX10 = 0f;
+            }
+            // Lowest should always be disabled when no normal cards remain
+            if (!anyAllCards) snap.wLow = 0f;
+
+            // Infinity only when no other cards are available (all maxed) and at least one Infinity option exists
+            bool infinityActive = !anyAllCards && anyInfinity;
+            if (!infinityActive)
+            {
+                snap.wInfinity = 0f;
             }
 
             // Buff pool eligibility
@@ -979,6 +1099,48 @@ namespace TimelessEchoes.Upgrades
                 nextWeightsNotifyTime = now + Mathf.Max(0.05f, weightsNotifyInterval);
                 OnWeightsChanged?.Invoke();
             }
+        }
+
+        // ---------- Infinity (Eternal Boons) helpers ----------
+
+        public bool IsInfinityActive()
+        {
+            RebuildCardPoolsIfDirty();
+            return poolAllCards.Count == 0 && poolInfinityCards.Count > 0;
+        }
+
+        // Legacy helper kept for backward compatibility; no longer used for Infinity
+        private static float SafeLog(float value, float logBase)
+        {
+            value = Mathf.Max(0f, value);
+            logBase = Mathf.Max(1.0001f, logBase);
+            return Mathf.Log(1f + value, logBase);
+        }
+
+        private int GetCountForId(string id)
+        {
+            if (oracle == null || oracle.saveData == null) return 0;
+            var dict = oracle.saveData.CauldronCardCounts;
+            return dict.TryGetValue(id, out var c) ? c : 0;
+        }
+
+        public float GetInfinityValueFor(TimelessEchoes.Gear.HeroStatMapping mapping, out bool isPercent)
+        {
+            isPercent = false;
+            float total = 0f;
+            // Sum contributions for all matching Infinity SOs
+            foreach (var inf in Blindsided.Utilities.AssetCache.GetAll<InfinityCauldronStatSO>("Infinity"))
+            {
+                if (inf == null || inf.Stat != mapping) continue;
+                isPercent = inf.IsPercent || isPercent;
+                var key = $"INF:{inf.Stat}";
+                var count = GetCountForId(key);
+                if (count <= 0) continue;
+                // New formula: value = (CardCount) ^ (Exponent)
+                var v = Mathf.Pow(count, inf.Exponent);
+                total += v;
+            }
+            return total;
         }
 
         private bool ShouldEmitStatsNow()
