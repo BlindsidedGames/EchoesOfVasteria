@@ -42,8 +42,17 @@ namespace TimelessEchoes.Gear
 
         [Title("Comparison")]
         [Tooltip(
-            "How many comparison points per 1 unit of this stat. Example: 0.01 for AttackRate (per 1%), 1.0 for Damage per point.")]
-        public float comparisonScale = 1f;
+            "Set to override the default comparison scale of 1/maxRoll.")]
+        [LabelText("Override Comparison Scale")]
+        [SerializeField]
+        private bool overrideComparisonScale = false;
+
+        [Tooltip(
+            "How many comparison points per 1 unit if overriding. Example: 0.01 for AttackRate (per 1%), 1.0 for Damage per point.")]
+        [LabelText("Comparison Scale Override")]
+        [SerializeField]
+        [UnityEngine.Serialization.FormerlySerializedAs("comparisonScale")]
+        private float comparisonScaleOverride = 1f;
 
         [Serializable]
         public class RarityBand
@@ -82,6 +91,22 @@ namespace TimelessEchoes.Gear
         {
             var v = Mathf.Clamp01(rollCurve != null ? rollCurve.Evaluate(Mathf.Clamp01(t)) : t);
             return Mathf.Lerp(minRoll, maxRoll, v);
+        }
+
+        public float ComparisonScale
+        {
+            get
+            {
+                if (overrideComparisonScale)
+                {
+                    return comparisonScaleOverride;
+                }
+
+                if (maxRoll > 0f)
+                    return 1f / maxRoll;
+
+                return 0f;
+            }
         }
 
         public string GetName()

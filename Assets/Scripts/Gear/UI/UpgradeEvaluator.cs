@@ -39,7 +39,7 @@ namespace TimelessEchoes.Gear.UI
 			foreach (var kv in deltaByMapping)
 			{
 				var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
-				var scale = def != null ? UnityEngine.Mathf.Max(0f, def.comparisonScale) : 1f;
+				var scale = def != null ? UnityEngine.Mathf.Max(0f, def.ComparisonScale) : 1f;
 				score += kv.Value * scale;
 			}
 
@@ -66,7 +66,7 @@ namespace TimelessEchoes.Gear.UI
 			foreach (var kv in totalsByMapping)
 			{
 				var def = crafting != null ? crafting.GetStatByMapping(kv.Key) : null;
-				var scale = def != null ? UnityEngine.Mathf.Max(0f, def.comparisonScale) : 1f;
+				var scale = def != null ? UnityEngine.Mathf.Max(0f, def.ComparisonScale) : 1f;
 				score += kv.Value * scale;
 			}
 

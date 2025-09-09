@@ -381,7 +381,7 @@ namespace TimelessEchoes.UI
 				if (evaXpBar != null)
 					evaXpBar.fillAmount = needed > 0f ? Mathf.Clamp01((float)(current / needed)) : 0f;
 				if (evaXpText != null)
-					evaXpText.text = $"xp: {CalcUtils.FormatNumber(current)} / {CalcUtils.FormatNumber(needed)}";
+					evaXpText.text = $"xp: {current:N0} / {needed:N0}";
 			}
 			UpdateTasteStopButtons();
 		}

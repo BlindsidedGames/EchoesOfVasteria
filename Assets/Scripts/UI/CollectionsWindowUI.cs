@@ -688,131 +688,13 @@ namespace TimelessEchoes.UI
 			if (string.IsNullOrEmpty(id) || cardTooltipObject == null || cardTooltipText == null)
 				return;
 
-			cachedCauldronManager ??= CauldronManager.Instance;
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			int cardTier;
+			bool isInfinity;
+			var text = BuildTooltipText(id, out cardTier, out isInfinity);
 
-			string sectionName;
-			int sectionTier;
-			string cardName;
-			int cardTier = 1;
-			string sectionEffect;
-			string cardEffect;
-
-			if (id.StartsWith("RES:"))
-			{
-				cardName = id.Substring(4);
-				cardTier = Mathf.Max(1, cachedCauldronManager != null ? cachedCauldronManager.GetResourceTier(cardName) : 1);
-				var grp = CauldronManager.AEResourceGroup.Combat;
-				if (resourceById.TryGetValue(id, out var res) && res != null && cachedCauldronManager != null)
-					grp = cachedCauldronManager.GetResourceGroup(res);
-				sectionName = FormatGroupName(grp);
-				sectionTier = GetSectionTier(grp);
-				var sectPct = sectionTier * 0.1f;
-				sectionEffect = $"Collections Bonus: +{FormatPercentNoTrailingZero(sectPct)}% Disciple Rate";
-				var mult = cachedCauldronManager != null ? cachedCauldronManager.GetResourceAlterEchoMultiplier(cardName) : 1f;
-				var pct = Mathf.Max(0f, (mult - 1f) * 100f);
-				cardEffect = $"+{pct:N0}% Alter-Echo Power";
-			}
-			else if (id.StartsWith("BUFF:"))
-			{
-				var assetName = id.Substring(5);
-				cardName = assetName;
-				if (buffById.TryGetValue(id, out var buff) && buff != null)
-					cardName = buff.GetDisplayName();
-				cardTier = Mathf.Max(1, cachedCauldronManager != null ? cachedCauldronManager.GetBuffTier(assetName) : 1);
-				sectionName = "Buffs";
-				sectionTier = cachedCauldronManager != null ? Mathf.Max(0, cachedCauldronManager.GetBuffsGroupTier()) : 0;
-				var sectPct = sectionTier * 2.5f;
-				sectionEffect = $"Global Buff Power: +{FormatPercentNoTrailingZero(sectPct)}%";
-				var cdr = cachedCauldronManager != null ? Mathf.Max(0f, cachedCauldronManager.GetBuffCooldownReductionPercent(assetName)) : 0f;
-				var groupBonus = sectionTier * 2.5f;
-				var totalPower = cachedCauldronManager != null ? Mathf.Max(0f, cachedCauldronManager.GetBuffPowerPercent(assetName)) : 0f;
-				var perBuffOnly = Mathf.Max(0f, totalPower - groupBonus);
-				cardEffect = $"Cooldown: -{cdr:N0}% | Power: +{perBuffOnly:N0}%";
-			}
-			else if (id.StartsWith("INF:"))
-			{
-				var mappingStr = id.Substring(4);
-				sectionName = "Eternal Boon Formula";
-				sectionTier = 0;
-				sectionEffect = string.Empty;
-				cardName = mappingStr;
-				if (System.Enum.TryParse<TimelessEchoes.Gear.HeroStatMapping>(mappingStr, out var mapping))
-				{
-					bool isPct = false;
-					var val = cachedCauldronManager != null ? cachedCauldronManager.GetInfinityValueFor(mapping, out isPct) : 0f;
-					// Resolve SO for display name and decimal places
-					var so = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.InfinityCauldronStatSO>("Infinity")
-						?.FirstOrDefault(s => s != null && s.Stat == mapping);
-					var display = so != null ? so.DisplayName : mapping.ToString();
-					var dp = so != null ? Mathf.Clamp(so.DecimalPlaces, 0, 6) : 0;
-					string fmt = "N" + dp;
-					var valStr = val.ToString(fmt);
-					cardEffect = isPct ? $"+{valStr}% {display}" : $"+{valStr} {display}";
-					// Show formula details for Infinity on the section line
-					int n = 0;
-					var key = $"INF:{mapping}";
-					if (oracle != null && oracle.saveData != null && oracle.saveData.CauldronCardCounts != null)
-						oracle.saveData.CauldronCardCounts.TryGetValue(key, out n);
-					sectionEffect = $"{n} ^ {(so != null ? so.Exponent : 1f)} = {val.ToString(fmt)}";
-				}
-				else cardEffect = string.Empty;
-			}
-			else
-			{
-				return;
-			}
-
-			var sb = new System.Text.StringBuilder(128);
-			// Card block first
-			sb.Append("<b>"); sb.Append(cardName); sb.Append("</b>");
-			if (!id.StartsWith("INF:")) { sb.Append(" | Tier "); sb.Append(cardTier); } else { sb.Append(" | <sprite=194>"); }
-			sb.Append('\n');
-			sb.Append("Effect: "); sb.Append(cardEffect);
-			// Half-height spacer between parts
-			sb.Append("<line-height=50%>\n</line-height>\n");
-			// Section block below card
-            sb.Append("<b>"); sb.Append(sectionName); sb.Append("</b>");
-            if (!id.StartsWith("INF:")) { sb.Append(" | Tier "); sb.Append(sectionTier); }
-            sb.Append('\n');
-            if (id.StartsWith("INF:"))
-            {
-                // For Eternal Boon formula, recompute to show: {CardCount}^{exponent} = {value}
-                var mappingStr2 = id.Substring(4);
-                if (System.Enum.TryParse<TimelessEchoes.Gear.HeroStatMapping>(mappingStr2, out var mapping2))
-                {
-                    var so2 = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.InfinityCauldronStatSO>("Infinity")
-                        ?.FirstOrDefault(s => s != null && s.Stat == mapping2);
-                    var dp2 = so2 != null ? Mathf.Clamp(so2.DecimalPlaces, 0, 6) : 0;
-                    string fmt2 = "N" + dp2;
-                    bool pctDummy = false;
-                    var val2 = cachedCauldronManager != null ? cachedCauldronManager.GetInfinityValueFor(mapping2, out pctDummy) : 0f;
-                    int n2 = 0;
-                    var key2 = $"INF:{mapping2}";
-                    if (oracle != null && oracle.saveData != null && oracle.saveData.CauldronCardCounts != null)
-                        oracle.saveData.CauldronCardCounts.TryGetValue(key2, out n2);
-                    var exponent2 = so2 != null ? so2.Exponent : 1f;
-                    var eqValStr2 = val2.ToString(fmt2);
-                    sectionEffect = $"{n2} ^ {exponent2} = {eqValStr2}";
-                }
-                // Show only the formula without the "Effect:" prefix
-                sb.Append(sectionEffect);
-            }
-            else
-            {
-                sb.Append("Effect: "); sb.Append(sectionEffect);
-            }
-
-			// Normalize Infinity tier display to <sprite=194> if any stray placeholder slipped in
-			cardTooltipText.text = sb.ToString().Replace("�^z", "<sprite=194>");
-
-			if (cardTooltipBorderImage != null && cachedCauldronWindow != null)
-			{
-				var borderSprite = id.StartsWith("INF:") ? GetBorderTierSpriteFromCauldron(7) : GetBorderTierSpriteFromCauldron(cardTier);
-				cardTooltipBorderImage.sprite = borderSprite;
-				cardTooltipBorderImage.enabled = borderSprite != null;
-			}
-
+			// Apply immediately for instant feedback
+			cardTooltipText.text = text;
+			ApplyTooltipBorder(cardTier, isInfinity);
 			cardTooltipObject.SetActive(true);
 
 			// Start periodic tooltip updates while visible (5 Hz)
@@ -843,16 +725,26 @@ namespace TimelessEchoes.UI
 			if (string.IsNullOrEmpty(id) || cardTooltipObject == null || cardTooltipText == null)
 				return;
 
-			// Duplicate of ShowCardTooltip logic minus event wiring and coroutine start
+			int cardTier;
+			bool isInfinity;
+			var text = BuildTooltipText(id, out cardTier, out isInfinity);
+			cardTooltipText.text = text;
+			ApplyTooltipBorder(cardTier, isInfinity);
+		}
+
+		// Builds the tooltip text and returns cardTier and whether it's an Infinity card
+		private string BuildTooltipText(string id, out int cardTier, out bool isInfinity)
+		{
 			cachedCauldronManager ??= CauldronManager.Instance;
 			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
 
 			string sectionName;
 			int sectionTier;
 			string cardName;
-			int cardTier = 1;
+			cardTier = 1;
 			string sectionEffect;
 			string cardEffect;
+			isInfinity = false;
 
 			if (id.StartsWith("RES:"))
 			{
@@ -888,6 +780,7 @@ namespace TimelessEchoes.UI
 			}
 			else if (id.StartsWith("INF:"))
 			{
+				isInfinity = true;
 				var mappingStr = id.Substring(4);
 				sectionName = "Eternal Boon Formula";
 				sectionTier = 0;
@@ -901,6 +794,7 @@ namespace TimelessEchoes.UI
 					var so = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.InfinityCauldronStatSO>("Infinity")
 						?.FirstOrDefault(s => s != null && s.Stat == mapping);
 					var display = so != null ? so.DisplayName : mapping.ToString();
+					cardName = display;
 					var dp = so != null ? Mathf.Clamp(so.DecimalPlaces, 0, 6) : 0;
 					string fmt = "N" + dp;
 					var valStr = val.ToString(fmt);
@@ -910,64 +804,50 @@ namespace TimelessEchoes.UI
 					var key = $"INF:{mapping}";
 					if (oracle != null && oracle.saveData != null && oracle.saveData.CauldronCardCounts != null)
 						oracle.saveData.CauldronCardCounts.TryGetValue(key, out n);
-					sectionEffect = $"{n} ^ {(so != null ? so.Exponent : 1f)} = {val.ToString(fmt)}";
+					sectionEffect = $"{n:N0} ^ {(so != null ? so.Exponent : 1f)} = {val.ToString(fmt)}";
 				}
 				else cardEffect = string.Empty;
 			}
 			else
 			{
-				return;
+				// Unknown id format
+				isInfinity = false;
+				return string.Empty;
 			}
 
 			var sb = new System.Text.StringBuilder(128);
 			// Card block first
 			sb.Append("<b>"); sb.Append(cardName); sb.Append("</b>");
-			if (!id.StartsWith("INF:")) { sb.Append(" | Tier "); sb.Append(cardTier); } else { sb.Append(" | <sprite=194>"); }
+			if (!isInfinity) { sb.Append(" | Tier "); sb.Append(cardTier); }
 			sb.Append('\n');
 			sb.Append("Effect: "); sb.Append(cardEffect);
 			// Half-height spacer between parts
 			sb.Append("<line-height=50%>\n</line-height>\n");
 			// Section block below card
-            sb.Append("<b>"); sb.Append(sectionName); sb.Append("</b>");
-            if (!id.StartsWith("INF:")) { sb.Append(" | Tier "); sb.Append(sectionTier); }
-            sb.Append('\n');
-            if (id.StartsWith("INF:"))
-            {
-                // For Eternal Boon formula, recompute to show: {CardCount}^{exponent} = {value}
-                var mappingStr2 = id.Substring(4);
-                if (System.Enum.TryParse<TimelessEchoes.Gear.HeroStatMapping>(mappingStr2, out var mapping2))
-                {
-                    var so2 = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.InfinityCauldronStatSO>("Infinity")
-                        ?.FirstOrDefault(s => s != null && s.Stat == mapping2);
-                    var dp2 = so2 != null ? Mathf.Clamp(so2.DecimalPlaces, 0, 6) : 0;
-                    string fmt2 = "N" + dp2;
-                    bool pctDummy = false;
-                    var val2 = cachedCauldronManager != null ? cachedCauldronManager.GetInfinityValueFor(mapping2, out pctDummy) : 0f;
-                    int n2 = 0;
-                    var key2 = $"INF:{mapping2}";
-                    if (oracle != null && oracle.saveData != null && oracle.saveData.CauldronCardCounts != null)
-                        oracle.saveData.CauldronCardCounts.TryGetValue(key2, out n2);
-                    var exponent2 = so2 != null ? so2.Exponent : 1f;
-                    var eqValStr2 = val2.ToString(fmt2);
-                    sectionEffect = $"{n2} ^ {exponent2} = {eqValStr2}";
-                }
-                // Show only the formula without the "Effect:" prefix
-                sb.Append(sectionEffect);
-            }
-            else
-            {
-                sb.Append("Effect: "); sb.Append(sectionEffect);
-            }
-
-			// Normalize Infinity tier display to <sprite=194> if any stray placeholder slipped in
-			cardTooltipText.text = sb.ToString().Replace("���^z", "<sprite=194>");
-
-			if (cardTooltipBorderImage != null && cachedCauldronWindow != null)
+			sb.Append("<b>"); sb.Append(sectionName); sb.Append("</b>");
+			if (!isInfinity) { sb.Append(" | Tier "); sb.Append(sectionTier); }
+			sb.Append('\n');
+			if (isInfinity)
 			{
-				var borderSprite = id.StartsWith("INF:") ? GetBorderTierSpriteFromCauldron(7) : GetBorderTierSpriteFromCauldron(cardTier);
-				cardTooltipBorderImage.sprite = borderSprite;
-				cardTooltipBorderImage.enabled = borderSprite != null;
+				// Show only the formula without the "Effect:" prefix
+				sb.Append(sectionEffect);
 			}
+			else
+			{
+				sb.Append("Effect: "); sb.Append(sectionEffect);
+			}
+
+			return sb.ToString();
+		}
+
+		private void ApplyTooltipBorder(int cardTier, bool isInfinity)
+		{
+			if (cardTooltipBorderImage == null) return;
+			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			if (cachedCauldronWindow == null) return;
+			var borderSprite = isInfinity ? GetBorderTierSpriteFromCauldron(7) : GetBorderTierSpriteFromCauldron(cardTier);
+			cardTooltipBorderImage.sprite = borderSprite;
+			cardTooltipBorderImage.enabled = borderSprite != null;
 		}
 
 		private void HideCardTooltip()

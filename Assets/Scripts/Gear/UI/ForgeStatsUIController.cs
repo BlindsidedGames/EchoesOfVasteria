@@ -539,12 +539,12 @@ namespace TimelessEchoes.Gear.UI
 			var stats = AssetCache.GetAll<StatDefSO>(string.Empty).Where(s => s != null).ToList();
 			if (stats.Count == 0) return (0f, 0f, maxAffixes);
 
-			// Contribution per stat = roll * comparisonScale
+			// Contribution per stat = roll * ComparisonScale
 			var maxContribs = new List<float>();
 			var minContribs = new List<float>();
 			foreach (var s in stats)
 			{
-				float scale = Mathf.Max(0f, s.comparisonScale);
+				float scale = Mathf.Max(0f, s.ComparisonScale);
 				maxContribs.Add(s.maxRoll * scale);
 				minContribs.Add(Mathf.Max(0f, s.minRoll * scale));
 			}
@@ -613,7 +613,7 @@ namespace TimelessEchoes.Gear.UI
 			foreach (var s in stats)
 			{
 				if (!IsAllowed(s)) continue;
-				float scale = Mathf.Max(0f, s.comparisonScale);
+				float scale = Mathf.Max(0f, s.ComparisonScale);
 				contribs.Add(s.maxRoll * scale);
 			}
 			if (contribs.Count == 0) return 0f;
