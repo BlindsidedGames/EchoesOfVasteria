@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Sirenix.Serialization;
 using UnityEngine;
+using Blindsided.SaveData.Migrations;
 
 namespace Blindsided.SaveData
 {
@@ -68,12 +69,23 @@ namespace Blindsided.SaveData
 					return false;
 				}
 
-				// Assign and persist to current slot
-				oracle.saveData = data;
+				// Determine slot and ensure SaveManager is pointed at it
 				var index = Mathf.Clamp(oracle.CurrentSlot, 0, 2);
 				var slotName = $"Save{index + 1}";
 				SaveManager.Instance.SetCurrentSlot(slotName);
-				SaveManager.Instance.SaveAsync(oracle.saveData).GetAwaiter().GetResult();
+
+				// Run migrations if required (backs up previous snapshot and persists on success)
+				bool migrated = SaveMigrationRunner.Run(data, Application.version, slotName);
+
+				// Assign to runtime
+				oracle.saveData = data;
+
+				// If no migrations were applied (thus not persisted), save now
+				if (!migrated)
+				{
+					SaveManager.Instance.SaveAsync(oracle.saveData).GetAwaiter().GetResult();
+				}
+
 				oracle.PersistSlotMetadataToPlayerPrefs();
 
 				// Refresh runtime state
@@ -130,4 +142,3 @@ namespace Blindsided.SaveData
 		}
 	}
 }
-

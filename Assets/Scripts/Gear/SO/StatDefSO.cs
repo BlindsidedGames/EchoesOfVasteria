@@ -14,7 +14,8 @@ namespace TimelessEchoes.Gear
         MaxHealth,
         HealthRegen,
         MoveSpeed,
-        CritChance
+        CritChance,
+        
     }
 
     [CreateAssetMenu(fileName = "StatDef", menuName = "SO/Gear/Stat Definition")]

@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc890857d587d1e4f919763080551cfa, type: 3}
   m_Name: Move Speed
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Upgrades.InfinityCauldronStatSO
-  displayName: 
+  displayName: Move Speed
   icon: {fileID: -757387047, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
   stat: 5
-  baseAmount: 1
-  logBase: 10
-  isPercent: 1
+  isPercent: 0
+  exponent: 0.34
   decimalPlaces: 2

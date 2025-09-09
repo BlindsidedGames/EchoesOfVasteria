@@ -1,7 +1,7 @@
 using System.Linq;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
-using TimelessEchoes.Stats;
+using TimelessEchoes.Gear;
 
 namespace Blindsided.SaveData.Migrations
 {

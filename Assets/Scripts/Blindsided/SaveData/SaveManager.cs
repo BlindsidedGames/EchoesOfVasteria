@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sirenix.Serialization;
 using UnityEngine;
+using Blindsided.SaveData.Migrations;
 
 namespace Blindsided.SaveData
 {
@@ -150,9 +151,22 @@ namespace Blindsided.SaveData
             var prev1Path = Path.Combine(slotDir, "snapshot.prev1.bin");
             var prev2Path = Path.Combine(slotDir, "snapshot.prev2.bin");
 
-            if (TryReadSnapshot(finalPath, out var data)) return Task.FromResult((true, data));
-            if (TryReadSnapshot(prev1Path, out data)) return Task.FromResult((true, data));
-            if (TryReadSnapshot(prev2Path, out data)) return Task.FromResult((true, data));
+            if (TryReadSnapshot(finalPath, out var data))
+            {
+                // Migrate if needed; persists on success
+                SaveMigrationRunner.Run(data, Application.version, CurrentSlotName);
+                return Task.FromResult((true, data));
+            }
+            if (TryReadSnapshot(prev1Path, out data))
+            {
+                SaveMigrationRunner.Run(data, Application.version, CurrentSlotName);
+                return Task.FromResult((true, data));
+            }
+            if (TryReadSnapshot(prev2Path, out data))
+            {
+                SaveMigrationRunner.Run(data, Application.version, CurrentSlotName);
+                return Task.FromResult((true, data));
+            }
             Debug.LogWarning($"No valid save found for slot '{CurrentSlotName}'. Checked: '{finalPath}', '{prev1Path}', '{prev2Path}'.");
             return Task.FromResult((false, (GameData)null));
         }

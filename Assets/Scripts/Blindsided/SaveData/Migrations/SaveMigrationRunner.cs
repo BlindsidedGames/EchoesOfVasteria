@@ -29,6 +29,8 @@ namespace Blindsided.SaveData.Migrations
             defaultsRegistered = true;
             // Built-in migrations
             Register(new Migration_DuckHelmetSanitation());
+            Register(new Migration_CauldronOverflowRedistribution());
+            Register(new Migration_GearAffixQuality());
         }
 
         /// <summary>
@@ -182,4 +184,3 @@ namespace Blindsided.SaveData.Migrations
         }
     }
 }
-

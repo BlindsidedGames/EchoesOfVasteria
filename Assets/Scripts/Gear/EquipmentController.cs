@@ -133,10 +133,13 @@ namespace TimelessEchoes.Gear
                         foreach (var a in item.affixes)
                         {
                             if (a == null || a.stat == null) continue;
+                            // Compute quality (pre-floor normalized quantile t) from current saved value using linear normalization
+                            double q = TimelessEchoes.Gear.StatRollMath.ToNormalizedQuantileLinear(a.stat, a.value, item.rarity);
                             rec.affixes.Add(new Blindsided.SaveData.GearAffixRecord
                             {
                                 statId = a.stat.id ?? a.stat.name,
-                                value = a.value
+                                quality = q
+                                // Intentionally omit legacy 'value' to stop writing it from 1.2.18+
                             });
                         }
                         dict[slot] = rec;
@@ -198,10 +201,27 @@ namespace TimelessEchoes.Gear
                                 var stat = allStats.FirstOrDefault(s => s != null && (s.id == ar.statId || s.name == ar.statId));
                                 if (stat == null)
                                 {
-                                    Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources – affix skipped for slot '{resolvedSlot}'.");
+                                    Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources — affix skipped for slot '{resolvedSlot}'.");
                                     continue;
                                 }
-                                item.affixes.Add(new GearAffix { stat = stat, value = ar.value });
+                                // Prefer quality when present; fall back to legacy value
+                                float valueFromQuality;
+                                // Only use quality when present; treat default zero as missing if legacy value is meaningful
+                                if (ar.quality >= 0.0 && ar.quality <= 1.0 && !(ar.quality <= 1e-12 && ar.value > 0f))
+                                {
+                                    // Remap using current stat def and apply current rarity floor, ignore band clamps
+                                    var q = Mathf.Clamp01((float)ar.quality);
+                                    var raw = stat.RemapRoll(q);
+                                    float floorQ = item.rarity != null ? Mathf.Clamp01(item.rarity.floorPercent / 100f) : 0f;
+                                    float floorVal = Mathf.Lerp(stat.minRoll, stat.maxRoll, floorQ);
+                                    valueFromQuality = Mathf.Max(raw, floorVal);
+                                }
+                                else
+                                {
+                                    // Legacy fallback: use old absolute value
+                                    valueFromQuality = ar.value;
+                                }
+                                item.affixes.Add(new GearAffix { stat = stat, value = valueFromQuality });
                             }
                         }
                         if (!string.IsNullOrWhiteSpace(item.slot) && slots.Contains(item.slot))

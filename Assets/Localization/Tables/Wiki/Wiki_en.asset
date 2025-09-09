@@ -195,12 +195,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Changes</b>\n\u2022 Overhauled leaderboards.\n<b>Minor changes</b>\n\u2022
-      Resources no longer show partial values.\n\u2022 Forge numbers are now formatted
-      far more aesthetically.\n<b>Bugfixes</b>\n\u2022 Crafted resources can no longer
+    m_Localized: "<b>Changes</b>\n\u2022 Overhauled leaderboards.\n\u2022 New Eternal
+      cards in the Cauldron.\n\u2022 Movement speed has been adjusted to be % and
+      based on a similar formula to defense.\n<b>Minor changes</b>\n\u2022 Resources
+      no longer show partial values.\n\u2022 Forge numbers are now formatted far
+      more aesthetically.\n<b>Bugfixes</b>\n\u2022 Crafted resources can no longer
       go up tiers.\n<b>Backend</b>\n\u2022 Split echo logic from the hero controller
       and pooled echoes for performance reasons.\n\u2022 Widened and adjusted formatting
-      on the graph tooltip."
+      on the graph tooltip.\n\u2022 Forge now stores its values as quality directly
+      so that when stats are adjusted you keep your percentile in each stat."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
