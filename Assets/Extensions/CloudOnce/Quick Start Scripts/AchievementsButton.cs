@@ -14,7 +14,10 @@ namespace CloudOnce.QuickStart
     [AddComponentMenu("CloudOnce/Show Achievements Button", 3)]
     public class AchievementsButton : MonoBehaviour
     {
-        private Button button;
+        [SerializeField] private Button button;
+        private bool isShowingOverlay;
+
+        private const float iOSReenableDelaySeconds = 0.5f;
 
         private static void OnSignedInChanged(bool isSignedIn)
         {
@@ -31,25 +34,32 @@ namespace CloudOnce.QuickStart
             Cloud.OnSignedInChanged += OnSignedInChanged;
         }
 
-        private static void OnButtonClicked()
+        private void OnButtonClicked()
         {
-            if (Cloud.IsSignedIn)
-            {
-                Cloud.Achievements.ShowOverlay();
-            }
-            else
+            if (isShowingOverlay) return;
+
+            if (!Cloud.IsSignedIn)
             {
 #if CLOUDONCE_DEBUG
-                Debug.Log("Can't show achievements overlay, user is not signed in!");
+                Debug.Log("[AchievementsButton] User not signed in. Subscribing and initiating sign-in.");
 #endif
                 SubscribeEvent();
                 Cloud.SignIn();
+                return;
             }
+
+#if CLOUDONCE_DEBUG
+            Debug.Log("[AchievementsButton] Queuing achievements overlay (end of frame).");
+#endif
+            StartCoroutine(ShowOverlayDeferred());
         }
 
         private void Awake()
         {
-            button = GetComponent<Button>();
+            if (button == null)
+            {
+                button = GetComponent<Button>();
+            }
             if (button == null)
             {
                 Debug.LogError("Show Achievements Button script placed on GameObject that is not a button." +
@@ -59,13 +69,51 @@ namespace CloudOnce.QuickStart
 
         private void Start()
         {
-            button.onClick.AddListener(OnButtonClicked);
+            if (button != null)
+            {
+                button.onClick.AddListener(OnButtonClicked);
+            }
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(OnButtonClicked);
+            if (button != null)
+            {
+                button.onClick.RemoveListener(OnButtonClicked);
+            }
             Cloud.OnSignedInChanged -= OnSignedInChanged;
+        }
+
+        private System.Collections.IEnumerator ShowOverlayDeferred()
+        {
+            isShowingOverlay = true;
+            if (button != null) button.interactable = false;
+            // Defer to end of frame to avoid UI event conflicts.
+            yield return new UnityEngine.WaitForEndOfFrame();
+
+#if CLOUDONCE_DEBUG
+            UnityEngine.Debug.Log("[AchievementsButton] Showing achievements overlay now.");
+#endif
+            Cloud.Achievements.ShowOverlay();
+
+            // Platform-specific re-enable strategy.
+#if UNITY_ANDROID
+            // We don't have a direct callback here (handled inside CloudOnce/GPGS),
+            // so use a modest timeout to re-enable input even if overlay fails to appear.
+            yield return new UnityEngine.WaitForSecondsRealtime(0.25f);
+#elif UNITY_IOS || UNITY_TVOS
+            // Game Center UI has no callback in this wrapper; allow brief delay.
+            yield return new UnityEngine.WaitForSecondsRealtime(iOSReenableDelaySeconds);
+#else
+            yield return null;
+#endif
+
+            if (button != null) button.interactable = true;
+            isShowingOverlay = false;
+
+#if CLOUDONCE_DEBUG
+            UnityEngine.Debug.Log("[AchievementsButton] Overlay flow finished; button re-enabled.");
+#endif
         }
     }
 }
