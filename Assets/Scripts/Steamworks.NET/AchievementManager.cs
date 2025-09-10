@@ -1,4 +1,4 @@
-#if false // Temporarily disable original AchievementManager while swapping APIs
+// Steamworks guards
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
@@ -14,13 +14,13 @@ using static TimelessEchoes.Quests.QuestUtils;
 using Steamworks;
 #endif
 #if UNITY_ANDROID || UNITY_IOS
-using CloudOnce;
+using VoxelBusters.EssentialKit;
 #endif
 
 namespace TimelessEchoes
 {
     /// <summary>
-    ///     Handles unlocking Steam achievements.
+    /// Cross-platform achievement manager: Steam on PC; VoxelBusters GameServices on iOS/Android.
     /// </summary>
     public class AchievementManager : MonoBehaviour
     {
@@ -41,6 +41,13 @@ namespace TimelessEchoes
             }
         }
 
+        [SerializeField] private bool evaluateOnLoad = true;
+
+#if UNITY_ANDROID || UNITY_IOS
+        private readonly HashSet<string> pendingMobileUnlocks = new HashSet<string>();
+        private TimelessEchoes.Stats.GameplayStatTracker tracker;
+#endif
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -48,13 +55,171 @@ namespace TimelessEchoes
                 Destroy(gameObject);
                 return;
             }
-
             instance = this;
         }
 
+        private void OnEnable()
+        {
+            OnQuestHandin += OnQuestHandinHandler;
+            OnLoadData += OnLoadDataHandler;
+
 #if UNITY_ANDROID || UNITY_IOS
-        private readonly HashSet<string> pendingMobileUnlocks = new HashSet<string>();
-        private TimelessEchoes.Stats.GameplayStatTracker tracker;
+            tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker != null)
+            {
+                tracker.OnDistanceAdded += OnMobileDistanceAdded;
+                tracker.OnRunEnded += OnMobileRunEnded;
+                tracker.OnTaskCompletedEvent += OnMobileTaskCompleted;
+            }
+            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
+            if (bm != null)
+            {
+                bm.OnBuffCast += OnMobileBuffCast;
+            }
+            var gm = GameManager.Instance;
+            if (gm != null)
+            {
+                gm.HeroDied += OnMobileHeroDied;
+            }
+
+            // Subscribe to auth changes to flush queued unlocks
+            GameServices.OnAuthStatusChange -= OnAuthStatusChange;
+            GameServices.OnAuthStatusChange += OnAuthStatusChange;
+#endif
+        }
+
+        private void OnDisable()
+        {
+            OnQuestHandin -= OnQuestHandinHandler;
+            OnLoadData -= OnLoadDataHandler;
+
+#if UNITY_ANDROID || UNITY_IOS
+            GameServices.OnAuthStatusChange -= OnAuthStatusChange;
+            if (tracker != null)
+            {
+                tracker.OnDistanceAdded -= OnMobileDistanceAdded;
+                tracker.OnRunEnded -= OnMobileRunEnded;
+                tracker.OnTaskCompletedEvent -= OnMobileTaskCompleted;
+            }
+            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
+            if (bm != null)
+            {
+                bm.OnBuffCast -= OnMobileBuffCast;
+            }
+            var gm = GameManager.Instance;
+            if (gm != null)
+            {
+                gm.HeroDied -= OnMobileHeroDied;
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Called when an NPC is met.
+        /// </summary>
+        public void NotifyNpcMet(string npcId)
+        {
+            if (npcId == "Ivan1")
+                UnlockAchievement("MeetIvan");
+            else if (npcId == "Farmers1")
+                UnlockAchievement("MeetFarmers");
+            else if (npcId == "Barkley1")
+                UnlockAchievement("MeetBarkley");
+            else if (npcId == "OldTimer1")
+                UnlockAchievement("MeetOldTimer");
+        }
+
+        private void OnQuestHandinHandler(string questId)
+        {
+            if (questId == "The names Gill")
+                UnlockAchievement("MeetGill");
+
+            var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
+            if (!string.IsNullOrEmpty(mildredId) && questId == mildredId)
+                UnlockAchievement("Mildred");
+        }
+
+        private void OnLoadDataHandler()
+        {
+            if (!evaluateOnLoad) return;
+            StartCoroutine(DeferredCheck());
+        }
+
+        private IEnumerator DeferredCheck()
+        {
+            yield return null; // wait one frame after data loads
+            CheckExistingAchievements();
+#if UNITY_ANDROID || UNITY_IOS
+            EvaluateMobileStatMilestones();
+#endif
+        }
+
+        private void UnlockAchievement(string apiName)
+        {
+#if !DISABLESTEAMWORKS
+            if (SteamManager.Initialized)
+            {
+                if (SteamUserStats.SetAchievement(apiName)) SteamUserStats.StoreStats();
+            }
+#endif
+
+#if UNITY_ANDROID || UNITY_IOS
+            TryUnlockMobile(apiName);
+#endif
+        }
+
+        private void CheckExistingAchievements()
+        {
+#if !DISABLESTEAMWORKS
+            if (SteamManager.Initialized)
+            {
+                bool achieved;
+                if (StaticReferences.CompletedNpcTasks.Contains("Ivan1") &&
+                    SteamUserStats.GetAchievement("MeetIvan", out achieved) && !achieved)
+                    UnlockAchievement("MeetIvan");
+
+                if (StaticReferences.CompletedNpcTasks.Contains("Farmers1") &&
+                    SteamUserStats.GetAchievement("MeetFarmers", out achieved) && !achieved)
+                    UnlockAchievement("MeetFarmers");
+
+                if (StaticReferences.CompletedNpcTasks.Contains("Barkley1") &&
+                    SteamUserStats.GetAchievement("MeetBarkley", out achieved) && !achieved)
+                    UnlockAchievement("MeetBarkley");
+
+                if (StaticReferences.CompletedNpcTasks.Contains("OldTimer1") &&
+                    SteamUserStats.GetAchievement("MeetOldTimer", out achieved) && !achieved)
+                    UnlockAchievement("MeetOldTimer");
+
+                if (QuestCompleted("The names Gill") &&
+                    SteamUserStats.GetAchievement("MeetGill", out achieved) && !achieved)
+                    UnlockAchievement("MeetGill");
+
+                var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
+                if (!string.IsNullOrEmpty(mildredId) && QuestCompleted(mildredId) &&
+                    SteamUserStats.GetAchievement("Mildred", out achieved) && !achieved)
+                    UnlockAchievement("Mildred");
+            }
+#endif
+
+#if UNITY_ANDROID || UNITY_IOS
+            // On mobile, re-apply unlocks based on current game state (idempotent on server side).
+            if (StaticReferences.CompletedNpcTasks.Contains("Ivan1"))
+                UnlockAchievement("MeetIvan");
+            if (StaticReferences.CompletedNpcTasks.Contains("Farmers1"))
+                UnlockAchievement("MeetFarmers");
+            if (StaticReferences.CompletedNpcTasks.Contains("Barkley1"))
+                UnlockAchievement("MeetBarkley");
+            if (StaticReferences.CompletedNpcTasks.Contains("OldTimer1"))
+                UnlockAchievement("MeetOldTimer");
+            if (QuestCompleted("The names Gill"))
+                UnlockAchievement("MeetGill");
+            var mildredIdMobile = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
+            if (!string.IsNullOrEmpty(mildredIdMobile) && QuestCompleted(mildredIdMobile))
+                UnlockAchievement("Mildred");
+#endif
+        }
+
+#if UNITY_ANDROID || UNITY_IOS
         private void OnMobileDistanceAdded(float _)
         {
             EvaluateMobileStatMilestones();
@@ -76,134 +241,32 @@ namespace TimelessEchoes
             EvaluateMobileStatMilestones();
         }
 
-        private void OnMobileSignedInChanged(bool isSignedIn)
+        private void OnAuthStatusChange(GameServicesAuthStatusChangeResult result, VoxelBusters.CoreLibrary.Error error)
         {
-            if (!isSignedIn) return;
-            Cloud.OnSignedInChanged -= OnMobileSignedInChanged;
-            // Flush any queued unlocks
+            if (result.AuthStatus != LocalPlayerAuthStatus.Authenticated) return;
+
+            // Flush queued unlocks
             foreach (var apiName in pendingMobileUnlocks)
             {
-                MapAndUnlockMobile(apiName);
+                GameServices.ReportAchievementProgress(apiName, 100.0, null);
             }
             pendingMobileUnlocks.Clear();
 
-            // Evaluate stat-based milestones now that we're signed in
+            // Re-evaluate stat-based achievements now that we are signed in
             EvaluateMobileStatMilestones();
         }
 
         private void TryUnlockMobile(string apiName)
         {
-            if (Cloud.IsSignedIn)
+            if (GameServices.IsAuthenticated)
             {
-                MapAndUnlockMobile(apiName);
+                GameServices.ReportAchievementProgress(apiName, 100.0, null);
             }
             else
             {
-                // Defer until signed in
+                // Defer until signed in and trigger silent auth
                 pendingMobileUnlocks.Add(apiName);
-                Cloud.OnSignedInChanged -= OnMobileSignedInChanged;
-                Cloud.OnSignedInChanged += OnMobileSignedInChanged;
-                // Proactively attempt sign-in to flush queued unlocks
-                Cloud.SignIn();
-            }
-        }
-
-        private static void MapAndUnlockMobile(string apiName)
-        {
-            switch (apiName)
-            {
-                case "MeetIvan":
-                    Achievements.MeetIvan.Unlock();
-                    break;
-                case "MeetFarmers":
-                    Achievements.MeetFarmers.Unlock();
-                    break;
-                case "MeetBarkley":
-                    Achievements.MeetBarkley.Unlock();
-                    break;
-                case "MeetOldTimer":
-                    Achievements.MeetOldTimer.Unlock();
-                    break;
-                case "MeetGill":
-                    Achievements.MeetGill.Unlock();
-                    break;
-                case "Mildred":
-                    Achievements.Mildred.Unlock();
-                    break;
-                // Death milestones
-                case "Die10":
-                    Achievements.Die10.Unlock();
-                    break;
-                case "Die250":
-                    Achievements.Die250.Unlock();
-                    break;
-                case "Die1000":
-                    Achievements.Die1000.Unlock();
-                    break;
-                // Distance milestones
-                case "Reached100":
-                    Achievements.Reached100.Unlock();
-                    break;
-                case "Reached1000":
-                    Achievements.Reached1000.Unlock();
-                    break;
-                case "Reached10000":
-                    Achievements.Reached10000.Unlock();
-                    break;
-                // Total kilometers
-                case "Kilometers1":
-                    Achievements.Kilometers1.Unlock();
-                    break;
-                case "Kilometers100":
-                    Achievements.Kilometers100.Unlock();
-                    break;
-                case "Kilometers1000":
-                    Achievements.Kilometers1000.Unlock();
-                    break;
-                // Tasks completed
-                case "Tasks100":
-                    Achievements.Tasks100.Unlock();
-                    break;
-                case "Tasks5k":
-                    Achievements.Tasks5k.Unlock();
-                    break;
-                case "Tasks25k":
-                    Achievements.Tasks25k.Unlock();
-                    break;
-                // Eva level
-                case "EvaLevel10":
-                    Achievements.EvaLevel10.Unlock();
-                    break;
-                case "EvaLevel50":
-                    Achievements.EvaLevel50.Unlock();
-                    break;
-                case "EvaLevel100":
-                    Achievements.EvaLevel100.Unlock();
-                    break;
-                case "EvaLevel200":
-                    Achievements.EvaLevel200.Unlock();
-                    break;
-                case "EvaLevel500":
-                    Achievements.EvaLevel500.Unlock();
-                    break;
-                // Ivan level
-                case "IvanLevel10":
-                    Achievements.IvanLevel10.Unlock();
-                    break;
-                case "IvanLevel50":
-                    Achievements.IvanLevel50.Unlock();
-                    break;
-                case "IvanLevel100":
-                    Achievements.IvanLevel100.Unlock();
-                    break;
-                case "IvanLevel500":
-                    Achievements.IvanLevel500.Unlock();
-                    break;
-                case "IvanLevel1000":
-                    Achievements.IvanLevel1000.Unlock();
-                    break;
-                default:
-                    break;
+                GameServices.Authenticate(interactive: false);
             }
         }
 
@@ -266,205 +329,5 @@ namespace TimelessEchoes
             if (ivanLevel >= 1000) TryUnlockMobile("IvanLevel1000");
         }
 #endif
-
-        private void UnlockAchievement(string apiName)
-        {
-#if !DISABLESTEAMWORKS
-            if (SteamManager.Initialized)
-            {
-                if (SteamUserStats.SetAchievement(apiName)) SteamUserStats.StoreStats();
-            }
-#endif
-
-#if UNITY_ANDROID || UNITY_IOS
-            TryUnlockMobile(apiName);
-#endif
-        }
-
-        /// <summary>
-        ///     Called when an NPC is met.
-        /// </summary>
-        public void NotifyNpcMet(string npcId)
-        {
-            if (npcId == "Ivan1")
-                UnlockAchievement("MeetIvan");
-            else if (npcId == "Farmers1")
-                UnlockAchievement("MeetFarmers");
-            else if (npcId == "Barkley1")
-                UnlockAchievement("MeetBarkley");
-            else if (npcId == "OldTimer1")
-                UnlockAchievement("MeetOldTimer");
-        }
-
-        private void OnEnable()
-        {
-            OnQuestHandin += OnQuestHandinHandler;
-            OnLoadData += OnLoadDataHandler;
-#if UNITY_ANDROID || UNITY_IOS
-            tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            if (tracker != null)
-            {
-                tracker.OnDistanceAdded += OnMobileDistanceAdded;
-                tracker.OnRunEnded += OnMobileRunEnded;
-                tracker.OnTaskCompletedEvent += OnMobileTaskCompleted;
-            }
-            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
-            if (bm != null)
-            {
-                bm.OnBuffCast += OnMobileBuffCast;
-            }
-            var gm = GameManager.Instance;
-            if (gm != null)
-            {
-                gm.HeroDied += OnMobileHeroDied;
-            }
-#endif
-        }
-
-        private void OnDisable()
-        {
-            OnQuestHandin -= OnQuestHandinHandler;
-            OnLoadData -= OnLoadDataHandler;
-#if UNITY_ANDROID || UNITY_IOS
-            Cloud.OnSignedInChanged -= OnMobileSignedInChanged;
-            if (tracker != null)
-            {
-                tracker.OnDistanceAdded -= OnMobileDistanceAdded;
-                tracker.OnRunEnded -= OnMobileRunEnded;
-                tracker.OnTaskCompletedEvent -= OnMobileTaskCompleted;
-            }
-            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
-            if (bm != null)
-            {
-                bm.OnBuffCast -= OnMobileBuffCast;
-            }
-            var gm = GameManager.Instance;
-            if (gm != null)
-            {
-                gm.HeroDied -= OnMobileHeroDied;
-            }
-#endif
-        }
-
-        private void OnQuestHandinHandler(string questId)
-        {
-            if (questId == "The names Gill")
-                UnlockAchievement("MeetGill");
-
-            var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
-            if (!string.IsNullOrEmpty(mildredId) && questId == mildredId)
-                UnlockAchievement("Mildred");
-        }
-
-        private void OnLoadDataHandler()
-        {
-            StartCoroutine(DeferredCheck());
-        }
-
-        private IEnumerator DeferredCheck()
-        {
-            yield return null; // wait one frame after data loads
-            CheckExistingAchievements();
-#if UNITY_ANDROID || UNITY_IOS
-            EvaluateMobileStatMilestones();
-#endif
-        }
-
-        private void CheckExistingAchievements()
-        {
-#if !DISABLESTEAMWORKS
-            if (SteamManager.Initialized)
-            {
-                bool achieved;
-                if (StaticReferences.CompletedNpcTasks.Contains("Ivan1") &&
-                    SteamUserStats.GetAchievement("MeetIvan", out achieved) && !achieved)
-                    UnlockAchievement("MeetIvan");
-
-                if (StaticReferences.CompletedNpcTasks.Contains("Farmers1") &&
-                    SteamUserStats.GetAchievement("MeetFarmers", out achieved) && !achieved)
-                    UnlockAchievement("MeetFarmers");
-
-                if (StaticReferences.CompletedNpcTasks.Contains("Barkley1") &&
-                    SteamUserStats.GetAchievement("MeetBarkley", out achieved) && !achieved)
-                    UnlockAchievement("MeetBarkley");
-
-                if (StaticReferences.CompletedNpcTasks.Contains("OldTimer1") &&
-                    SteamUserStats.GetAchievement("MeetOldTimer", out achieved) && !achieved)
-                    UnlockAchievement("MeetOldTimer");
-
-                if (QuestCompleted("The names Gill") &&
-                    SteamUserStats.GetAchievement("MeetGill", out achieved) && !achieved)
-                    UnlockAchievement("MeetGill");
-
-                var mildredId = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
-                if (!string.IsNullOrEmpty(mildredId) && QuestCompleted(mildredId) &&
-                    SteamUserStats.GetAchievement("Mildred", out achieved) && !achieved)
-                    UnlockAchievement("Mildred");
-            }
-#endif
-
-#if UNITY_ANDROID || UNITY_IOS
-            // On mobile, we can't query native achievement states here in a unified way,
-            // so we re-apply unlocks based on current game state. CloudOnce handles duplicates.
-            if (StaticReferences.CompletedNpcTasks.Contains("Ivan1"))
-                UnlockAchievement("MeetIvan");
-            if (StaticReferences.CompletedNpcTasks.Contains("Farmers1"))
-                UnlockAchievement("MeetFarmers");
-            if (StaticReferences.CompletedNpcTasks.Contains("Barkley1"))
-                UnlockAchievement("MeetBarkley");
-            if (StaticReferences.CompletedNpcTasks.Contains("OldTimer1"))
-                UnlockAchievement("MeetOldTimer");
-            if (QuestCompleted("The names Gill"))
-                UnlockAchievement("MeetGill");
-            var mildredIdMobile = GameManager.Instance != null ? GameManager.Instance.mildredQuestId : null;
-            if (!string.IsNullOrEmpty(mildredIdMobile) && QuestCompleted(mildredIdMobile))
-                UnlockAchievement("Mildred");
-
-            // Evaluate stat-based achievements as well
-            EvaluateMobileStatMilestones();
-#endif
-        }
-    }
-}
-
-#endif // end disabled original AchievementManager
-
-using UnityEngine;
-
-namespace TimelessEchoes
-{
-    // Minimal no-op stub to keep references compiling while achievements API is being swapped.
-    public class AchievementManager : MonoBehaviour
-    {
-        private static AchievementManager instance;
-
-        public static AchievementManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindFirstObjectByType<AchievementManager>();
-                    if (instance == null)
-                        instance = new GameObject("AchievementManager").AddComponent<AchievementManager>();
-                }
-
-                return instance;
-            }
-        }
-
-        private void Awake()
-        {
-            if (instance != null && instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            instance = this;
-        }
-
-        // Kept for API compatibility; intentionally does nothing.
-        public void NotifyNpcMet(string npcId) { }
     }
 }

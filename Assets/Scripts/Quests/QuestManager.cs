@@ -608,10 +608,8 @@ namespace TimelessEchoes.Quests
         {
             if (string.IsNullOrEmpty(id)) return;
             StartAvailableQuests();
-#if !DISABLESTEAMWORKS
             var achievementManager = AchievementManager.Instance;
             achievementManager?.NotifyNpcMet(id);
-#endif
             // Update progress first so a single noticeboard refresh reflects final readiness states.
             UpdateAllProgress();
             RefreshNoticeboard();
