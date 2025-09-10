@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2b13acd128b8045bb16dd0ff24123c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.SteamLeaderboardsReporter
-  updateInterval: 5
 --- !u!4 &159018876
 Transform:
   m_ObjectHideFlags: 0
@@ -2069,53 +2068,6 @@ Canvas:
   m_SortingLayerID: 20878111
   m_SortingOrder: 10
   m_TargetDisplay: 0
---- !u!1 &1037158779
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1037158781}
-  - component: {fileID: 1037158780}
-  m_Layer: 0
-  m_Name: CloudOnce
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1037158780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037158779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f9cbee2052be1944a62dbcb0ced7aa0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CloudOnce.QuickStart.InitializeCloudOnce
-  cloudSaveEnabled: 0
-  autoSignIn: 1
-  autoCloudLoad: 0
---- !u!4 &1037158781
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037158779}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1159035178
 GameObject:
   m_ObjectHideFlags: 0
@@ -2127,6 +2079,7 @@ GameObject:
   - component: {fileID: 1159035180}
   - component: {fileID: 1159035179}
   - component: {fileID: 1159035181}
+  - component: {fileID: 1159035182}
   m_Layer: 0
   m_Name: Oracle
   m_TagString: Untagged
@@ -3543,6 +3496,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Blindsided.Utilities.FeedbackForm
   errorType: 
   error: 
+--- !u!114 &1159035182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159035178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f9cbee2052be1944a62dbcb0ced7aa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CloudOnce.QuickStart.InitializeCloudOnce
+  cloudSaveEnabled: 0
+  autoSignIn: 1
+  autoCloudLoad: 0
 --- !u!1 &1170292368
 GameObject:
   m_ObjectHideFlags: 0
@@ -3572,7 +3540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70cfb57685972ea498b2adb5ff2b2e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateInterval: 5
 --- !u!4 &1170292370
 Transform:
   m_ObjectHideFlags: 0
@@ -3945,4 +3912,3 @@ SceneRoots:
   - {fileID: 159018876}
   - {fileID: 1159035180}
   - {fileID: 894741052}
-  - {fileID: 1037158781}
