@@ -349,13 +349,17 @@ namespace TimelessEchoes.Upgrades
         // -------- Mixing --------
         public bool CanMix(Resource a, Resource b)
         {
-            if (a == null || b == null || a == b) return false;
+            // Lazy resolve ResourceManager in case Awake order caused null
+            if (resourceManager == null) resourceManager = ResourceManager.Instance;
             if (resourceManager == null) return false;
+            if (a == null || b == null || a == b) return false;
             return resourceManager.GetAmount(a) > 0 || resourceManager.GetAmount(b) > 0;
         }
 
         public double MixMax(Resource a, Resource b)
         {
+            // Lazy resolve ResourceManager in case Awake order caused null
+            if (resourceManager == null) resourceManager = ResourceManager.Instance;
             if (!CanMix(a, b)) return 0;
             var amountA = resourceManager.GetAmount(a);
             var amountB = resourceManager.GetAmount(b);

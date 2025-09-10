@@ -14,8 +14,40 @@ namespace CloudOnce
     /// </summary>
     public static class Achievements
     {
+        private static readonly UnifiedAchievement s_meetIvan = new UnifiedAchievement("meetIvan",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.meetivan"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQBw"
+#else
+            "meetIvan"
+#endif
+            );
+
+        public static UnifiedAchievement meetIvan
+        {
+            get { return s_meetIvan; }
+        }
+
+        private static readonly UnifiedAchievement s_mildred = new UnifiedAchievement("Mildred",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.mildred"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQDg"
+#else
+            "Mildred"
+#endif
+            );
+
+        public static UnifiedAchievement Mildred
+        {
+            get { return s_mildred; }
+        }
+
         public static readonly UnifiedAchievement[] All =
         {
+            s_meetIvan,
+            s_mildred,
         };
 
         public static string GetPlatformID(string internalId)
@@ -27,7 +59,8 @@ namespace CloudOnce
 
         private static readonly Dictionary<string, UnifiedAchievement> s_achievementDictionary = new Dictionary<string, UnifiedAchievement>
         {
-
+            { "meetIvan", s_meetIvan },
+            { "Mildred", s_mildred },
         };
     }
 }

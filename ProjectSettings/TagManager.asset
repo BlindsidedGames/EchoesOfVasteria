@@ -16,7 +16,7 @@ TagManager:
   - Enemy
   - Hero
   - Blocking
-  - 
+  - Backdrop
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Backdrop
+    uniqueID: 378964011
+    locked: 0
   - name: Background
     uniqueID: 934246347
     locked: 0

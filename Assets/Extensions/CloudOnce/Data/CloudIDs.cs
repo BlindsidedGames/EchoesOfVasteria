@@ -20,6 +20,45 @@ namespace CloudOnce
         /// </summary>
         public static class AchievementIDs
         {
+            public static string meetIvan
+            {
+                get
+                {
+#if UNITY_ANDROID && !UNITY_EDITOR
+#if CLOUDONCE_GOOGLE
+                    return "CgkI_5OEj6gREAIQBw";
+#else
+                    return string.Empty;
+#endif
+#elif (UNITY_IOS || UNITY_TVOS) && !UNITY_EDITOR
+                    return "eov.meetivan";
+#elif UNITY_EDITOR
+                    return "meetIvan";
+#else
+                    return string.Empty;
+#endif
+                }
+            }
+
+            public static string Mildred
+            {
+                get
+                {
+#if UNITY_ANDROID && !UNITY_EDITOR
+#if CLOUDONCE_GOOGLE
+                    return "CgkI_5OEj6gREAIQDg";
+#else
+                    return string.Empty;
+#endif
+#elif (UNITY_IOS || UNITY_TVOS) && !UNITY_EDITOR
+                    return "eov.mildred";
+#elif UNITY_EDITOR
+                    return "Mildred";
+#else
+                    return string.Empty;
+#endif
+                }
+            }
         }
 
         /// <summary>
