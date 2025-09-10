@@ -186,8 +186,8 @@ namespace TimelessEchoes.Hero
                 var gearRating = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MoveSpeed) : 0f;
                 var buffMult = buffs != null ? buffs.MoveSpeedMultiplier : 1f;
 
-                // Combine base rating and gear rating, then apply buff multiplier
-                var movementRating = (ratingBase + gearRating) * buffMult;
+                // Combine base rating and gear rating (pre-buff)
+                var movementRating = (ratingBase + gearRating);
 
                 // Apply Cauldron Infinity to the rating: percent multiplies, flat adds
                 if (cauldron != null)
@@ -199,13 +199,16 @@ namespace TimelessEchoes.Hero
 
                 // Map rating -> [0..1] using the same curve as Defense: x/(x+N)
                 const float BaseMoveSpeed = 3f;       // minimum speed shown as 100%
-                const float MoveBonusRange = 9f;      // 3 + 9 = 12 max (400%)
+                const float MoveBonusRange = 6f;      // 3 + 6 = 9 max before buffs
                 const float MovementScalarN = 25f;    // use same N as defense for now
 
                 var ratingClamped = Mathf.Max(0f, movementRating);
                 var scale01 = ratingClamped / (ratingClamped + MovementScalarN);
-                var finalSpeed = BaseMoveSpeed + MoveBonusRange * scale01;
-                newSnapshot.movementSpeed = Mathf.Clamp(finalSpeed, BaseMoveSpeed, BaseMoveSpeed + MoveBonusRange);
+                // Compute final speed with post-curve buff application
+                var preBuff = BaseMoveSpeed + MoveBonusRange * scale01;
+                var finalSpeed = preBuff * buffMult;
+                // Keep a floor at BaseMoveSpeed; allow exceeding the pre-buff cap (Option A)
+                newSnapshot.movementSpeed = Mathf.Max(BaseMoveSpeed, finalSpeed);
             }
 
             if ((_dirtyMask & DirtyMask.Defense) != 0)

@@ -156,8 +156,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.resultText != null)
             {
-                var ingotRes = core != null ? core.requiredIngot : null;
-                var amount = rm != null && ingotRes != null ? rm.GetAmount(ingotRes) : 0;
+                // Show selected craft amount (clamped by resources), not owned amount
+                var amount = GetCraftAmountForIngots(rm, core);
                 section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
@@ -239,8 +239,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.resultText != null)
             {
-                var res = core != null ? core.crystalResource : null;
-                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                // Show selected craft amount (clamped by resources), not owned amount
+                var amount = GetCraftAmountForCrystals(rm, core);
                 section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
@@ -317,8 +317,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.resultText != null)
             {
-                var res = core != null ? core.chunkResource : null;
-                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                // Show selected craft amount (clamped by resources), not owned amount
+                var amount = GetCraftAmountForChunks(rm, core);
                 section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 
@@ -401,8 +401,8 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.resultText != null)
             {
-                var res = nextRes;
-                var amount = rm != null && res != null ? rm.GetAmount(res) : 0;
+                // Show selected craft amount (clamped by resources), not owned amount
+                var amount = GetCraftAmountForCores(rm, core);
                 section.resultText.text = Blindsided.Utilities.CalcUtils.FormatNumber(amount, hideDecimal: true);
             }
 

@@ -515,16 +515,17 @@ MonoBehaviour:
   buffController: {fileID: 0}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 511
+    m_Bits: 64
   currentTaskName: 
   currentTaskObject: {fileID: 0}
   allowAttacks: 1
   echoAvoidIfTTKBelowSeconds: 1
+  assistEchoWhileOnTask: 1
+  assistEchoThreatRadius: 5
   combatAggroRange: 20
   ai: {fileID: 8560947185031467494}
   idleWalkStep: 5
   setter: {fileID: 3963385185172838639}
-  richPresenceUpdateInterval: 2
   autoBuffAnimator: {fileID: 8666374849889485386}
   autoBuffSpriteRenderer: {fileID: 3516590666455192206}
 --- !u!114 &559727629078150424

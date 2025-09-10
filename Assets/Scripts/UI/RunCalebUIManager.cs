@@ -184,15 +184,10 @@ namespace TimelessEchoes.UI
 
             if (uiReferences.rightText != null)
             {
-                // Display movement as 100%..400% based on final speed mapping [3..12]
+                // Display movement as an uncapped percentage where 100% = base speed (3)
                 var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
-                float percent;
-                {
-                    const float minSpeed = 3f;
-                    const float maxSpeed = 12f;
-                    var t = Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Clamp(move, minSpeed, maxSpeed));
-                    percent = 100f + 300f * t; // 3 => 100%, 12 => 400%
-                }
+                const float baseSpeed = 3f;
+                float percent = (move / baseSpeed) * 100f;
                 uiReferences.rightText.text = $"{moveTag} {percent:0.#}%";
             }
         }

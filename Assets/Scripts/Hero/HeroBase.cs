@@ -716,22 +716,23 @@ namespace TimelessEchoes.Hero
 
             bool targetingMainHero = engagedTarget == transform;
 
-            // While performing a task, only assist echo-targeted enemies if near
-            if (state == State.PerformingTask)
+            // Assist rule:
+            // - If the enemy targets the main hero: assist regardless of distance.
+            // - If the enemy targets an echo: only assist if the ENEMY is within
+            //   assistEchoThreatRadius of the hero. While on a task, also require
+            //   assistEchoWhileOnTask to be enabled.
+            if (!targetingMainHero)
             {
-                if (!targetingMainHero)
-                {
-                    if (!assistEchoWhileOnTask)
-                        return;
+                if (state == State.PerformingTask && !assistEchoWhileOnTask)
+                    return;
 
-                    Transform et = null;
-                    try { et = enemy.transform; } catch { et = null; }
-                    if (et == null)
-                        return;
-                    var dist = Vector2.Distance(transform.position, et.position);
-                    if (dist > assistEchoThreatRadius)
-                        return;
-                }
+                Transform et = null;
+                try { et = enemy.transform; } catch { et = null; }
+                if (et == null)
+                    return;
+                var dist = Vector2.Distance(transform.position, et.position);
+                if (dist > assistEchoThreatRadius)
+                    return;
             }
 
             if (enemy.IsEngaged)
@@ -999,21 +1000,29 @@ namespace TimelessEchoes.Hero
                         if (enemyTransform == null) continue;
                         // When performing a task, only consider enemies targeting the main hero
                         // or those within the assist radius (if enabled)
-                        if (state == State.PerformingTask)
+                        // Apply assist rule while choosing engaged enemies too:
+                        // - Hero-targeted enemies are always allowed.
+                        // - Echo-targeted enemies require enemy within assist radius.
+                        //   When performing a task, also require assistEchoWhileOnTask.
                         {
-                            bool ok = false;
+                            bool ok = true;
                             Transform tgt = null;
                             if (!enemyTargets.TryGetValue(enemy, out tgt))
                                 tgt = null;
-                            if (tgt == transform)
+
+                            if (tgt != transform)
                             {
-                                ok = true;
+                                if (state == State.PerformingTask && !assistEchoWhileOnTask)
+                                {
+                                    ok = false;
+                                }
+                                else
+                                {
+                                    var dcheck = Vector2.Distance(transform.position, enemyTransform.position);
+                                    ok = dcheck <= assistEchoThreatRadius;
+                                }
                             }
-                            else if (assistEchoWhileOnTask)
-                            {
-                                var dcheck = Vector2.Distance(transform.position, enemyTransform.position);
-                                ok = dcheck <= assistEchoThreatRadius;
-                            }
+
                             if (!ok)
                                 continue;
                         }

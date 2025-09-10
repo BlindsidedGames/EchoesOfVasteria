@@ -475,16 +475,17 @@ MonoBehaviour:
   buffController: {fileID: 0}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 511
+    m_Bits: 64
   currentTaskName: 
   currentTaskObject: {fileID: 0}
   allowAttacks: 1
   echoAvoidIfTTKBelowSeconds: 1
+  assistEchoWhileOnTask: 1
+  assistEchoThreatRadius: 5
   combatAggroRange: 20
   ai: {fileID: 8560947185031467494}
   idleWalkStep: 5
   setter: {fileID: 3963385185172838639}
-  richPresenceUpdateInterval: 2
   capableSkills: []
   lifetime: 10
   disableSkills: 0
@@ -663,7 +664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -813,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

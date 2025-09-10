@@ -1,0 +1,36 @@
+﻿<linker>
+  <assembly fullname="VoxelBusters.EssentialKit">
+    <type fullname="VoxelBusters.EssentialKit.AddressBookCore.NullAddressBookInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.AppShortcutsCore.NullAppShortcutsInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.AppUpdaterCore.NullAppUpdaterInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.BillingServicesCore.NullBillingServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.CloudServicesCore.NullCloudServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.MediaServicesCore.NullMediaServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.NetworkServicesCore.UnityNetworkServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.NotificationServicesCore.NullNotificationCenterInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.SharingServicesCore.NullSharingInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.TaskServicesCore.NullTaskServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.WebViewCore.NullNativeWebView" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.ExtrasCore.NullNativeUtilityInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.DeepLinkServicesCore.NullDeepLinkServicesInterface" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.RateMyAppCore.NullRateMyAppInterface" preserve="all" />
+  </assembly>
+  <assembly fullname="VoxelBusters.EssentialKit.AndroidModule">
+    <namespace fullname="VoxelBusters.EssentialKit.GameServicesCore.Android" preserve="all" />
+    <namespace fullname="VoxelBusters.EssentialKit.NativeUICore.Android" preserve="all" />
+    <type fullname="VoxelBusters.EssentialKit.AddressBookCore.Android.AddressBookInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.AppShortcutsCore.Android.AppShortcutsInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.AppUpdaterCore.Android.AppUpdaterInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.BillingServicesCore.Android.BillingServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.CloudServicesCore.Android.CloudServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.MediaServicesCore.Android.MediaServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.NetworkServicesCore.Android.NetworkServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.NotificationServicesCore.Android.NotificationCenterInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.SharingServicesCore.Android.SharingServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.TaskServicesCore.Android.TaskServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.WebViewCore.Android.WebView" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.ExtrasCore.Android.UtilityInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.DeepLinkServicesCore.Android.DeepLinkServicesInterface" preserve="nothing" />
+    <type fullname="VoxelBusters.EssentialKit.RateMyAppCore.Android.RateMyAppInterface" preserve="nothing" />
+  </assembly>
+</linker>

@@ -52,16 +52,31 @@ namespace TimelessEchoes.Gear.UI
             if (string.IsNullOrWhiteSpace(text))
             {
                 backingField = 1;
+                // Refresh preview to reflect clamped amount
+                if (ReferenceEquals(section, ingotConversionSection)) UpdateIngotCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, crystalConversionSection)) UpdateCrystalCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, chunkConversionSection)) UpdateChunkCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, coreConversionSection)) UpdateCoreCraftPreview(selectedCore);
                 return;
             }
             if (int.TryParse(text, out var value))
             {
                 backingField = Mathf.Max(1, value);
+                // Refresh preview to reflect new desired amount
+                if (ReferenceEquals(section, ingotConversionSection)) UpdateIngotCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, crystalConversionSection)) UpdateCrystalCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, chunkConversionSection)) UpdateChunkCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, coreConversionSection)) UpdateCoreCraftPreview(selectedCore);
             }
             else
             {
                 backingField = 1;
                 section.amountInput.text = "1";
+                // Refresh preview to reflect reset amount
+                if (ReferenceEquals(section, ingotConversionSection)) UpdateIngotCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, crystalConversionSection)) UpdateCrystalCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, chunkConversionSection)) UpdateChunkCraftPreview(selectedCore);
+                else if (ReferenceEquals(section, coreConversionSection)) UpdateCoreCraftPreview(selectedCore);
             }
         }
 
