@@ -76,8 +76,8 @@ namespace TimelessEchoes
                 hp.OnDeath += handler;
             }
 
-            if (engagedSlimes.Count >= 5)
-                AchievementManager.Instance?.UnlockSlimeSwarm();
+            // Previously unlocked a removed achievement (SlimeSwarm) when >=5 slimes engaged.
+            // No action required now.
         }
 
         private void UnregisterSlime(Enemy enemy)

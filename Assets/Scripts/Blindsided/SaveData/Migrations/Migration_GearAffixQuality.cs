@@ -16,8 +16,8 @@ namespace Blindsided.SaveData.Migrations
     internal sealed class Migration_GearAffixQuality : ISaveMigration
     {
         public int? TargetSchema => null;
-        public string TargetVersion => "1.2.18";
-        public string Id => "GearAffixQuality_v1_2_18";
+        public string TargetVersion => "1.2.17";
+        public string Id => "GearAffixQuality_v1_2_17";
 
         public void Apply(GameData data)
         {

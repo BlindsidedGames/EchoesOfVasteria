@@ -14,17 +14,17 @@ namespace CloudOnce
     /// </summary>
     public static class Achievements
     {
-        private static readonly UnifiedAchievement s_meetIvan = new UnifiedAchievement("meetIvan",
+        private static readonly UnifiedAchievement s_meetIvan = new UnifiedAchievement("MeetIvan",
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
             "eov.meetivan"
 #elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
             "CgkI_5OEj6gREAIQBw"
 #else
-            "meetIvan"
+            "MeetIvan"
 #endif
             );
 
-        public static UnifiedAchievement meetIvan
+        public static UnifiedAchievement MeetIvan
         {
             get { return s_meetIvan; }
         }
@@ -44,10 +44,586 @@ namespace CloudOnce
             get { return s_mildred; }
         }
 
+        private static readonly UnifiedAchievement s_reached100 = new UnifiedAchievement("Reached100",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.reached100"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQFg"
+#else
+            "Reached100"
+#endif
+            );
+
+        public static UnifiedAchievement Reached100
+        {
+            get { return s_reached100; }
+        }
+
+        private static readonly UnifiedAchievement s_reached1000 = new UnifiedAchievement("Reached1000",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.reached1000"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQCw"
+#else
+            "Reached1000"
+#endif
+            );
+
+        public static UnifiedAchievement Reached1000
+        {
+            get { return s_reached1000; }
+        }
+
+        private static readonly UnifiedAchievement s_reached10000 = new UnifiedAchievement("Reached10000",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.reached10000"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQHg"
+#else
+            "Reached10000"
+#endif
+            );
+
+        public static UnifiedAchievement Reached10000
+        {
+            get { return s_reached10000; }
+        }
+
+        private static readonly UnifiedAchievement s_kilometers1 = new UnifiedAchievement("Kilometers1",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.kilometers1"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQFw"
+#else
+            "Kilometers1"
+#endif
+            );
+
+        public static UnifiedAchievement Kilometers1
+        {
+            get { return s_kilometers1; }
+        }
+
+        private static readonly UnifiedAchievement s_kilometers100 = new UnifiedAchievement("Kilometers100",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.kilometers100"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQIA"
+#else
+            "Kilometers100"
+#endif
+            );
+
+        public static UnifiedAchievement Kilometers100
+        {
+            get { return s_kilometers100; }
+        }
+
+        private static readonly UnifiedAchievement s_kilometers1000 = new UnifiedAchievement("Kilometers1000",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.kilometers1000"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQGA"
+#else
+            "Kilometers1000"
+#endif
+            );
+
+        public static UnifiedAchievement Kilometers1000
+        {
+            get { return s_kilometers1000; }
+        }
+
+        private static readonly UnifiedAchievement s_tasks100 = new UnifiedAchievement("Tasks100",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.tasks100"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQCA"
+#else
+            "Tasks100"
+#endif
+            );
+
+        public static UnifiedAchievement Tasks100
+        {
+            get { return s_tasks100; }
+        }
+
+        private static readonly UnifiedAchievement s_tasks5k = new UnifiedAchievement("Tasks5k",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.tasks5k"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQJg"
+#else
+            "Tasks5k"
+#endif
+            );
+
+        public static UnifiedAchievement Tasks5k
+        {
+            get { return s_tasks5k; }
+        }
+
+        private static readonly UnifiedAchievement s_tasks25k = new UnifiedAchievement("Tasks25k",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.tasks25k"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQHw"
+#else
+            "Tasks25k"
+#endif
+            );
+
+        public static UnifiedAchievement Tasks25k
+        {
+            get { return s_tasks25k; }
+        }
+
+        private static readonly UnifiedAchievement s_meetBarkley = new UnifiedAchievement("MeetBarkley",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.meetbarkley"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQCQ"
+#else
+            "MeetBarkley"
+#endif
+            );
+
+        public static UnifiedAchievement MeetBarkley
+        {
+            get { return s_meetBarkley; }
+        }
+
+        private static readonly UnifiedAchievement s_buffs1 = new UnifiedAchievement("Buffs1",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.buffs1"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQIw"
+#else
+            "Buffs1"
+#endif
+            );
+
+        public static UnifiedAchievement Buffs1
+        {
+            get { return s_buffs1; }
+        }
+
+        private static readonly UnifiedAchievement s_buffs2 = new UnifiedAchievement("Buffs2",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.buffs2"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQGw"
+#else
+            "Buffs2"
+#endif
+            );
+
+        public static UnifiedAchievement Buffs2
+        {
+            get { return s_buffs2; }
+        }
+
+        private static readonly UnifiedAchievement s_buffs3 = new UnifiedAchievement("Buffs3",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.buffs3"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQIg"
+#else
+            "Buffs3"
+#endif
+            );
+
+        public static UnifiedAchievement Buffs3
+        {
+            get { return s_buffs3; }
+        }
+
+        private static readonly UnifiedAchievement s_buffs4 = new UnifiedAchievement("Buffs4",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.buffs4"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQIQ"
+#else
+            "Buffs4"
+#endif
+            );
+
+        public static UnifiedAchievement Buffs4
+        {
+            get { return s_buffs4; }
+        }
+
+        private static readonly UnifiedAchievement s_buffs5 = new UnifiedAchievement("Buffs5",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.buffs5"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQEg"
+#else
+            "Buffs5"
+#endif
+            );
+
+        public static UnifiedAchievement Buffs5
+        {
+            get { return s_buffs5; }
+        }
+
+        private static readonly UnifiedAchievement s_enemies1 = new UnifiedAchievement("Enemies1",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.enemies1"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQFA"
+#else
+            "Enemies1"
+#endif
+            );
+
+        public static UnifiedAchievement Enemies1
+        {
+            get { return s_enemies1; }
+        }
+
+        private static readonly UnifiedAchievement s_enemies2 = new UnifiedAchievement("Enemies2",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.enemies2"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQBA"
+#else
+            "Enemies2"
+#endif
+            );
+
+        public static UnifiedAchievement Enemies2
+        {
+            get { return s_enemies2; }
+        }
+
+        private static readonly UnifiedAchievement s_enemies3 = new UnifiedAchievement("Enemies3",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.enemies3"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQDQ"
+#else
+            "Enemies3"
+#endif
+            );
+
+        public static UnifiedAchievement Enemies3
+        {
+            get { return s_enemies3; }
+        }
+
+        private static readonly UnifiedAchievement s_enemies4 = new UnifiedAchievement("Enemies4",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.enemies4"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQHA"
+#else
+            "Enemies4"
+#endif
+            );
+
+        public static UnifiedAchievement Enemies4
+        {
+            get { return s_enemies4; }
+        }
+
+        private static readonly UnifiedAchievement s_enemies5 = new UnifiedAchievement("Enemies5",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.enemies5"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQKA"
+#else
+            "Enemies5"
+#endif
+            );
+
+        public static UnifiedAchievement Enemies5
+        {
+            get { return s_enemies5; }
+        }
+
+        private static readonly UnifiedAchievement s_meetGill = new UnifiedAchievement("MeetGill",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.meetgill"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQCg"
+#else
+            "MeetGill"
+#endif
+            );
+
+        public static UnifiedAchievement MeetGill
+        {
+            get { return s_meetGill; }
+        }
+
+        private static readonly UnifiedAchievement s_meetFarmers = new UnifiedAchievement("MeetFarmers",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.meetfarmers"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQGQ"
+#else
+            "MeetFarmers"
+#endif
+            );
+
+        public static UnifiedAchievement MeetFarmers
+        {
+            get { return s_meetFarmers; }
+        }
+
+        private static readonly UnifiedAchievement s_meetOldTimer = new UnifiedAchievement("MeetOldTimer",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.meetoldtimer"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQEA"
+#else
+            "MeetOldTimer"
+#endif
+            );
+
+        public static UnifiedAchievement MeetOldTimer
+        {
+            get { return s_meetOldTimer; }
+        }
+
+        private static readonly UnifiedAchievement s_evaLevel10 = new UnifiedAchievement("EvaLevel10",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.evalevel10"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQAw"
+#else
+            "EvaLevel10"
+#endif
+            );
+
+        public static UnifiedAchievement EvaLevel10
+        {
+            get { return s_evaLevel10; }
+        }
+
+        private static readonly UnifiedAchievement s_evaLevel50 = new UnifiedAchievement("EvaLevel50",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.evalevel50"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQEw"
+#else
+            "EvaLevel50"
+#endif
+            );
+
+        public static UnifiedAchievement EvaLevel50
+        {
+            get { return s_evaLevel50; }
+        }
+
+        private static readonly UnifiedAchievement s_evaLevel100 = new UnifiedAchievement("EvaLevel100",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.evalevel100"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQJQ"
+#else
+            "EvaLevel100"
+#endif
+            );
+
+        public static UnifiedAchievement EvaLevel100
+        {
+            get { return s_evaLevel100; }
+        }
+
+        private static readonly UnifiedAchievement s_evaLevel200 = new UnifiedAchievement("EvaLevel200",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.evalevel200"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQFQ"
+#else
+            "EvaLevel200"
+#endif
+            );
+
+        public static UnifiedAchievement EvaLevel200
+        {
+            get { return s_evaLevel200; }
+        }
+
+        private static readonly UnifiedAchievement s_evaLevel500 = new UnifiedAchievement("EvaLevel500",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.evalevel500"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQJw"
+#else
+            "EvaLevel500"
+#endif
+            );
+
+        public static UnifiedAchievement EvaLevel500
+        {
+            get { return s_evaLevel500; }
+        }
+
+        private static readonly UnifiedAchievement s_ivanLevel10 = new UnifiedAchievement("IvanLevel10",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.ivanlevel10"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQGg"
+#else
+            "IvanLevel10"
+#endif
+            );
+
+        public static UnifiedAchievement IvanLevel10
+        {
+            get { return s_ivanLevel10; }
+        }
+
+        private static readonly UnifiedAchievement s_ivanLevel50 = new UnifiedAchievement("IvanLevel50",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.ivanlevel50"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQEQ"
+#else
+            "IvanLevel50"
+#endif
+            );
+
+        public static UnifiedAchievement IvanLevel50
+        {
+            get { return s_ivanLevel50; }
+        }
+
+        private static readonly UnifiedAchievement s_ivanLevel100 = new UnifiedAchievement("IvanLevel100",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.ivanlevel100"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQBQ"
+#else
+            "IvanLevel100"
+#endif
+            );
+
+        public static UnifiedAchievement IvanLevel100
+        {
+            get { return s_ivanLevel100; }
+        }
+
+        private static readonly UnifiedAchievement s_ivanLevel500 = new UnifiedAchievement("IvanLevel500",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.ivanlevel500"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQDw"
+#else
+            "IvanLevel500"
+#endif
+            );
+
+        public static UnifiedAchievement IvanLevel500
+        {
+            get { return s_ivanLevel500; }
+        }
+
+        private static readonly UnifiedAchievement s_ivanLevel1000 = new UnifiedAchievement("IvanLevel1000",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.ivanlevel1000"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQDA"
+#else
+            "IvanLevel1000"
+#endif
+            );
+
+        public static UnifiedAchievement IvanLevel1000
+        {
+            get { return s_ivanLevel1000; }
+        }
+
+        private static readonly UnifiedAchievement s_die10 = new UnifiedAchievement("Die10",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.die10"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQHQ"
+#else
+            "Die10"
+#endif
+            );
+
+        public static UnifiedAchievement Die10
+        {
+            get { return s_die10; }
+        }
+
+        private static readonly UnifiedAchievement s_die250 = new UnifiedAchievement("Die250",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.die250"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQBg"
+#else
+            "Die250"
+#endif
+            );
+
+        public static UnifiedAchievement Die250
+        {
+            get { return s_die250; }
+        }
+
+        private static readonly UnifiedAchievement s_die1000 = new UnifiedAchievement("Die1000",
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_TVOS)
+            "eov.die1000"
+#elif !UNITY_EDITOR && UNITY_ANDROID && CLOUDONCE_GOOGLE
+            "CgkI_5OEj6gREAIQJA"
+#else
+            "Die1000"
+#endif
+            );
+
+        public static UnifiedAchievement Die1000
+        {
+            get { return s_die1000; }
+        }
+
         public static readonly UnifiedAchievement[] All =
         {
             s_meetIvan,
             s_mildred,
+            s_reached100,
+            s_reached1000,
+            s_reached10000,
+            s_kilometers1,
+            s_kilometers100,
+            s_kilometers1000,
+            s_tasks100,
+            s_tasks5k,
+            s_tasks25k,
+            s_meetBarkley,
+            s_buffs1,
+            s_buffs2,
+            s_buffs3,
+            s_buffs4,
+            s_buffs5,
+            s_enemies1,
+            s_enemies2,
+            s_enemies3,
+            s_enemies4,
+            s_enemies5,
+            s_meetGill,
+            s_meetFarmers,
+            s_meetOldTimer,
+            s_evaLevel10,
+            s_evaLevel50,
+            s_evaLevel100,
+            s_evaLevel200,
+            s_evaLevel500,
+            s_ivanLevel10,
+            s_ivanLevel50,
+            s_ivanLevel100,
+            s_ivanLevel500,
+            s_ivanLevel1000,
+            s_die10,
+            s_die250,
+            s_die1000,
         };
 
         public static string GetPlatformID(string internalId)
@@ -59,8 +635,44 @@ namespace CloudOnce
 
         private static readonly Dictionary<string, UnifiedAchievement> s_achievementDictionary = new Dictionary<string, UnifiedAchievement>
         {
-            { "meetIvan", s_meetIvan },
+            { "MeetIvan", s_meetIvan },
             { "Mildred", s_mildred },
+            { "Reached100", s_reached100 },
+            { "Reached1000", s_reached1000 },
+            { "Reached10000", s_reached10000 },
+            { "Kilometers1", s_kilometers1 },
+            { "Kilometers100", s_kilometers100 },
+            { "Kilometers1000", s_kilometers1000 },
+            { "Tasks100", s_tasks100 },
+            { "Tasks5k", s_tasks5k },
+            { "Tasks25k", s_tasks25k },
+            { "MeetBarkley", s_meetBarkley },
+            { "Buffs1", s_buffs1 },
+            { "Buffs2", s_buffs2 },
+            { "Buffs3", s_buffs3 },
+            { "Buffs4", s_buffs4 },
+            { "Buffs5", s_buffs5 },
+            { "Enemies1", s_enemies1 },
+            { "Enemies2", s_enemies2 },
+            { "Enemies3", s_enemies3 },
+            { "Enemies4", s_enemies4 },
+            { "Enemies5", s_enemies5 },
+            { "MeetGill", s_meetGill },
+            { "MeetFarmers", s_meetFarmers },
+            { "MeetOldTimer", s_meetOldTimer },
+            { "EvaLevel10", s_evaLevel10 },
+            { "EvaLevel50", s_evaLevel50 },
+            { "EvaLevel100", s_evaLevel100 },
+            { "EvaLevel200", s_evaLevel200 },
+            { "EvaLevel500", s_evaLevel500 },
+            { "IvanLevel10", s_ivanLevel10 },
+            { "IvanLevel50", s_ivanLevel50 },
+            { "IvanLevel100", s_ivanLevel100 },
+            { "IvanLevel500", s_ivanLevel500 },
+            { "IvanLevel1000", s_ivanLevel1000 },
+            { "Die10", s_die10 },
+            { "Die250", s_die250 },
+            { "Die1000", s_die1000 },
         };
     }
 }
