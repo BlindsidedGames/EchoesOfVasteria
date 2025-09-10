@@ -1,3 +1,4 @@
+#if false // Temporarily disable original AchievementManager while swapping APIs
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
@@ -423,5 +424,47 @@ namespace TimelessEchoes
             EvaluateMobileStatMilestones();
 #endif
         }
+    }
+}
+
+#endif // end disabled original AchievementManager
+
+using UnityEngine;
+
+namespace TimelessEchoes
+{
+    // Minimal no-op stub to keep references compiling while achievements API is being swapped.
+    public class AchievementManager : MonoBehaviour
+    {
+        private static AchievementManager instance;
+
+        public static AchievementManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = FindFirstObjectByType<AchievementManager>();
+                    if (instance == null)
+                        instance = new GameObject("AchievementManager").AddComponent<AchievementManager>();
+                }
+
+                return instance;
+            }
+        }
+
+        private void Awake()
+        {
+            if (instance != null && instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            instance = this;
+        }
+
+        // Kept for API compatibility; intentionally does nothing.
+        public void NotifyNpcMet(string npcId) { }
     }
 }
