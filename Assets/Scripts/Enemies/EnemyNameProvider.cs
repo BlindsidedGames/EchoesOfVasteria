@@ -30,6 +30,7 @@ namespace TimelessEchoes.Enemies
             "labcavey",
             "Yettum",
             "Phoenixia",
+            "Nuclearion",
         };
 
         /// <summary>

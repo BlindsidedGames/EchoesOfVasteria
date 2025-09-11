@@ -40,7 +40,15 @@ namespace TimelessEchoes.Platform
         private void OnClick()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            GameServices.ShowAchievements((result, error) => { /* no-op */ });
+            // Guard: only open UI if already authenticated; otherwise request auth (debounced)
+            if (GameServices.IsAuthenticated)
+            {
+                GameServices.ShowAchievements((result, error) => { /* no-op */ });
+            }
+            else
+            {
+                MobileAuthDebouncer.RequestAuth(interactive: true, reason: "ShowAchievements.Click");
+            }
 #else
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX
             if (SteamManager.Initialized)

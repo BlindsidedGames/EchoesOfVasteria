@@ -15,6 +15,7 @@ using Steamworks;
 #endif
 #if UNITY_ANDROID || UNITY_IOS
 using VoxelBusters.EssentialKit;
+using TimelessEchoes.Platform;
 #endif
 
 namespace TimelessEchoes
@@ -266,7 +267,7 @@ namespace TimelessEchoes
             {
                 // Defer until signed in and trigger silent auth
                 pendingMobileUnlocks.Add(apiName);
-                GameServices.Authenticate(interactive: false);
+                MobileAuthDebouncer.RequestSilentAuth("AchievementUnlock");
             }
         }
 

@@ -20,13 +20,13 @@ MonoBehaviour:
   m_TableData:
   - m_Id: 188400156672
     m_Localized: "Alter Echoes are your main source of income while away. At the
-      end of each run each resource you earned calculates its income per minute and
-      stores your lifetime best. Alter Echoes use this value to generate resources.\n\nEcho
-      Power is a value that determines the percentage of resources you receive. It
-      is visible at the top right of the Alter Echoes screen.\n \nResources will
-      be gathered and brought to eva for storage. When you return she will happily
-      give them to you, all you have to do is ask!\nThese will generate whether the
-      game is open or closed!"
+      end of each run each resource you earned calculates its income per minute including
+      any retreat bonus and stores your lifetime best. Alter Echoes use this value
+      to generate resources.\n\nEcho Power is a value that determines the percentage
+      of resources you receive. It is visible at the top right of the Alter Echoes
+      screen.\n \nResources will be gathered and brought to eva for storage. When
+      you return she will happily give them to you, all you have to do is ask!\nThese
+      will generate whether the game is open or closed!"
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.18
+    m_Localized: v1.2.19
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,15 +195,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Rank now properly shows the game version it was saved with.\n\u2022
-      Added Meats to the inventory\n\u2022 Item Tiers now show in the inventory and
-      have a library entry.\n\u2022 Last selected slot & core are now restored when
-      loading your game.\n\u2022 Introduced caps for rarity weight bands in the forge.
-      \n1.2.17\n<b>Changes</b>\n\u2022 Overhauled leaderboards.\n\u2022 New Eternal
-      cards in the Cauldron.\n\u2022 Movement speed has been adjusted to be % and
-      based on a similar formula to defense.\n<b>Minor changes</b>\n\u2022 Resources
-      no longer show partial values.\n\u2022 Forge numbers are now formatted far
-      more aesthetically.\n\u2022 Forge now has a 'Stat Matching' toggle.\n\u2022
+    m_Localized: "\u2022 Potential fix for mobile crashes.\n\u2022 Removed Portrait
+      on mobile.\n1.2.18\n\u2022 Rank now properly shows the game version it was
+      saved with.\n\u2022 Added Meats to the inventory\n\u2022 Item Tiers now show
+      in the inventory and have a library entry.\n\u2022 Last selected slot & core
+      are now restored when loading your game.\n\u2022 Introduced caps for rarity
+      weight bands in the forge. \n1.2.17\n<b>Changes</b>\n\u2022 Overhauled leaderboards.\n\u2022
+      New Eternal cards in the Cauldron.\n\u2022 Movement speed has been adjusted
+      to be % and based on a similar formula to defense.\n<b>Minor changes</b>\n\u2022
+      Resources no longer show partial values.\n\u2022 Forge numbers are now formatted
+      far more aesthetically.\n\u2022 Forge now has a 'Stat Matching' toggle.\n\u2022
       Stop for Vastium and Stat Matching are now under the craft until upgrade button.\n<b>Bugfixes</b>\n\u2022
       Caleb should no longer pingpong between distant enemies and his tasks.\n\u2022
       Crafted resources can no longer go up tiers.\n<b>Backend</b>\n\u2022 Split

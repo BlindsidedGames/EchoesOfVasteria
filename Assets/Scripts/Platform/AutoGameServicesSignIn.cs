@@ -28,8 +28,8 @@ namespace TimelessEchoes.Platform
 #if UNITY_ANDROID || UNITY_IOS
             if (!GameServices.IsAuthenticated)
             {
-                // Preferred silent auth
-                GameServices.Authenticate(interactive: false);
+                // Preferred silent auth (debounced)
+                MobileAuthDebouncer.RequestSilentAuth("AutoSignIn.Start");
             }
 #endif
         }
@@ -43,7 +43,8 @@ namespace TimelessEchoes.Platform
 #if UNITY_ANDROID || UNITY_IOS
             if (interactiveFallback && !GameServices.IsAuthenticated)
             {
-                GameServices.Authenticate(interactive: true);
+                // Interactive prompt (debounced)
+                MobileAuthDebouncer.RequestAuth(interactive: true, reason: "AutoSignIn.PromptLoginIfNeeded");
             }
 #endif
         }
