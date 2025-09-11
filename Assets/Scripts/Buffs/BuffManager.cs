@@ -11,6 +11,7 @@ using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
 using static Blindsided.SaveData.StaticReferences;
 using Resources = UnityEngine.Resources;
+using Blindsided.Utilities.Pooling;
 
 namespace TimelessEchoes.Buffs
 {
@@ -658,7 +659,9 @@ namespace TimelessEchoes.Buffs
                 var echo = c;
                 if (echo != null && echo.TryDeferExpiration())
                     continue; // let the echo finish current enemy/task
-                Destroy(c.gameObject);
+                // Return echoes to the pool to avoid leaving destroyed entries
+                // inside the ObjectPool stack.
+                PoolManager.Release(c.gameObject);
             }
             buff.echoes.Clear();
         }

@@ -133,6 +133,16 @@ namespace Blindsided.Utilities.Pooling
         {
             var info = GetOrCreatePrefabPool(prefab);
             var obj = info.pool.Get();
+            // Defensive: if a destroyed instance slipped into the pool (e.g.,
+            // someone called Destroy instead of PoolManager.Release), obj can be null.
+            // In that case, recreate an instance so callers don't NRE, and log a hint.
+            if (obj == null)
+            {
+                Debug.LogError($"Pool '{info.key}' returned a destroyed instance. " +
+                               "Ensure pooled objects are returned via PoolManager.Release, not Destroy().");
+                obj = Object.Instantiate(prefab);
+                info.total++;
+            }
             var marker = obj.GetComponent<PooledObject>() ?? obj.AddComponent<PooledObject>();
             marker.pool = info.pool;
             marker.inPool = false;

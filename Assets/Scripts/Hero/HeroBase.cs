@@ -300,12 +300,9 @@ namespace TimelessEchoes.Hero
                 var hp = Mathf.RoundToInt(HeroStatSystem.GetSnapshot().maxHealth);
                 health?.Init(hp);
             }
-            if (stats != null)
-            {
-                ai.maxSpeed = HeroStatSystem.GetSnapshot().movementSpeed;
-                var hp = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
-                health?.Init(hp);
-            }
+
+            // Keep HeroHealth synchronized with centralized stat snapshot updates
+            HeroStatSystem.OnStatsRecalculated += HandleHeroStatsRecalculated;
 
             // Hero no longer relocates to a task controller entry point
             if (animator != null)
@@ -368,6 +365,9 @@ namespace TimelessEchoes.Hero
             // Unsubscribe from UITicker to avoid leaks when disabled
             if (!IsEchoActor)
                 TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(HudDistanceTick);
+
+            // Unsubscribe to avoid leaks
+            HeroStatSystem.OnStatsRecalculated -= HandleHeroStatsRecalculated;
 
             foreach (var enemy in engagedEnemies)
             {
@@ -1244,10 +1244,25 @@ namespace TimelessEchoes.Hero
             if (health != null)
             {
                 var oldMax = Mathf.RoundToInt(health.MaxHealth);
-                var newMax = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
+                // Use the centralized stat snapshot so Infinity (cauldron) and all sources are included
+                var newMax = Mathf.RoundToInt(HeroStatSystem.GetSnapshot().maxHealth);
                 if (Mathf.Abs(newMax - oldMax) > 0.01f)
                     health.ApplyMaxHealthChange(newMax, true);
             }
+        }
+
+        // --- Stat synchronization --- ensure HeroHealth tracks HeroStatSystem max health
+        private void HandleHeroStatsRecalculated(HeroStatsSnapshot snap)
+        {
+            if (health == null)
+                health = GetComponent<HeroHealth>();
+            if (health == null)
+                return;
+
+            var target = Mathf.RoundToInt(snap.maxHealth);
+            var current = Mathf.RoundToInt(health.MaxHealth);
+            if (target != current)
+                health.ApplyMaxHealthChange(target, true);
         }
 
         // ==== Inlined from partials (Movement, Combat, Tasks, Stats) ====
