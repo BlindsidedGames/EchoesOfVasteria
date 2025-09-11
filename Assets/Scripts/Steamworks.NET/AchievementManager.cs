@@ -46,6 +46,8 @@ namespace TimelessEchoes
 
 #if UNITY_ANDROID || UNITY_IOS
         private readonly HashSet<string> pendingMobileUnlocks = new HashSet<string>();
+        // Per-session cache to avoid re-reporting the same achievement repeatedly during a play session
+        private readonly HashSet<string> unlockedMobileThisSession = new HashSet<string>();
         private TimelessEchoes.Stats.GameplayStatTracker tracker;
 #endif
 
@@ -259,14 +261,24 @@ namespace TimelessEchoes
 
         private void TryUnlockMobile(string apiName)
         {
+            // Per-session de-duplication: once an achievement has been unlocked (or queued) this session,
+            // avoid re-reporting.
+            if (unlockedMobileThisSession.Contains(apiName))
+            {
+                return;
+            }
+
             if (GameServices.IsAuthenticated)
             {
                 GameServices.ReportAchievementProgress(apiName, 100.0, null);
+                unlockedMobileThisSession.Add(apiName);
             }
             else
             {
                 // Defer until signed in and trigger silent auth
                 pendingMobileUnlocks.Add(apiName);
+                // Mark as handled for this session to prevent repeated queuing
+                unlockedMobileThisSession.Add(apiName);
                 MobileAuthDebouncer.RequestSilentAuth("AchievementUnlock");
             }
         }
