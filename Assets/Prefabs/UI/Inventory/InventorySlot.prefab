@@ -216,6 +216,8 @@ MonoBehaviour:
   countText: {fileID: 6218322219775775296}
   selectionImage: {fileID: 9003877405325738286}
   highlightButton: {fileID: 2278093216645303668}
+  tierBorderImage: {fileID: 8999158799507173458}
+  newTierBackgroundImage: {fileID: 3520921374865700523}
 --- !u!114 &8999158799507173458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +397,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1
+  m_fontSize: 4.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -505,6 +507,8 @@ MonoBehaviour:
   countText: {fileID: 0}
   selectionImage: {fileID: 0}
   highlightButton: {fileID: 0}
+  tierBorderImage: {fileID: 0}
+  newTierBackgroundImage: {fileID: 0}
 --- !u!114 &3520921374865700523
 MonoBehaviour:
   m_ObjectHideFlags: 0

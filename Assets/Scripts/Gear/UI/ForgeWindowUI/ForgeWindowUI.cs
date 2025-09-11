@@ -181,18 +181,7 @@ namespace TimelessEchoes.Gear.UI
             ClearResultPreview();
             UpdateAllGearSlots();
 
-            // Default selection on start: first core and Weapon slot
-            if (coreSlots != null && coreSlots.Count > 0)
-            {
-                var firstCore = coreSlotCoreByRef.TryGetValue(coreSlots[0], out var c0) ? c0 : coreSlots[0].Core;
-                if (firstCore != null)
-                    SelectCore(firstCore);
-            }
-
-            // Select Weapon by default if present
-            var defaultSlotName = equipment != null && equipment.Slots.Count > 0 ? equipment.Slots[0] : "Weapon";
-            OnGearSlotClicked(defaultSlotName);
-
+            // Do not force default core/slot here — restored later
             // Initialize button states based on current selections/resources
             RefreshActionButtons();
 
@@ -235,6 +224,8 @@ namespace TimelessEchoes.Gear.UI
                 chunkConversionSection.amountInput.text = chunkCraftAmount.ToString();
             if (coreConversionSection?.amountInput != null)
                 coreConversionSection.amountInput.text = coreCraftAmount.ToString();
+            // Restore last selected core/slot from save if available
+            TryRestoreSavedSelections();
             OnResourcesChanged();
         }
 
@@ -248,6 +239,8 @@ namespace TimelessEchoes.Gear.UI
 
             // Refresh Ivan XP display on open
             UpdateIvanXpUI();
+            // Attempt to restore saved selections when window opens
+            TryRestoreSavedSelections();
             // Refresh selected previews when inventory changes (e.g., crafting spends ingots)
             if (RM != null) RM.OnInventoryChanged += OnResourcesChanged;
             // Subscribe to Ivan XP events if available
@@ -264,6 +257,46 @@ namespace TimelessEchoes.Gear.UI
                 forgeAttentionObject.SetActive(false);
             EventHandler.OnLoadData += OnPostLoad;
             OnResourcesChanged();
+        }
+
+        private void TryRestoreSavedSelections()
+        {
+            var o = Oracle.oracle;
+            if (o == null || o.saveData == null || o.saveData.SavedPreferences == null)
+                return;
+
+            // Restore Core selection
+            var coreName = o.saveData.SavedPreferences.LastSelectedForgeCore;
+            if (!string.IsNullOrWhiteSpace(coreName))
+            {
+                var core = cores != null ? cores.FirstOrDefault(c => c != null && c.name == coreName) : null;
+                if (core != null)
+                    SelectCore(core);
+            }
+
+            // Restore Gear slot selection
+            var slotName = o.saveData.SavedPreferences.LastSelectedForgeSlot;
+            if (!string.IsNullOrWhiteSpace(slotName))
+            {
+                OnGearSlotClicked(slotName);
+            }
+
+            // Fallbacks only if nothing was restored
+            if (selectedCore == null)
+            {
+                if (coreSlots != null && coreSlots.Count > 0)
+                {
+                    var firstCore = coreSlotCoreByRef.TryGetValue(coreSlots[0], out var c0) ? c0 : coreSlots[0].Core;
+                    if (firstCore != null)
+                        SelectCore(firstCore);
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(selectedSlot))
+            {
+                var defaultSlotName = equipment != null && equipment.Slots.Count > 0 ? equipment.Slots[0] : "Weapon";
+                OnGearSlotClicked(defaultSlotName);
+            }
         }
 
         private void OnDisable()

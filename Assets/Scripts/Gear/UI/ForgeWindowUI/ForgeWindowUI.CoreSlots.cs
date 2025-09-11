@@ -5,6 +5,7 @@ using TimelessEchoes.Upgrades;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Blindsided;
 
 namespace TimelessEchoes.Gear.UI
 {
@@ -16,6 +17,10 @@ namespace TimelessEchoes.Gear.UI
             if (isAutoCrafting && core != selectedCore)
                 StopAutoCrafting();
             selectedCore = core;
+            // Persist last selected core per save
+            var o = Oracle.oracle;
+            if (o != null && o.saveData != null && o.saveData.SavedPreferences != null)
+                o.saveData.SavedPreferences.LastSelectedForgeCore = selectedCore != null ? selectedCore.name : null;
             // update visual selections using mapped cores
             foreach (var slot in coreSlots)
             {

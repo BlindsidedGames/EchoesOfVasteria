@@ -281,7 +281,9 @@ namespace TimelessEchoes.Gear
                         {
                                 float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
                                 float bonus = (r != null && config != null && config.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
-                                var w = Mathf.Max(0f, baseW + bonus);
+                                var raw = Mathf.Max(0f, baseW + bonus);
+                                var range = r != null ? core.GetRarityWeightRange(r) : new Vector2(0f, float.PositiveInfinity);
+                                var w = Mathf.Clamp(raw, range.x, range.y);
                                 weights.Add((r, w));
                         }
 

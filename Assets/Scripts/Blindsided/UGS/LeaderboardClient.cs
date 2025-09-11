@@ -38,7 +38,7 @@ namespace Blindsided.UGS
             await UgsInitializer.EnsureInitializedAsync();
             return await LeaderboardsService.Instance.GetScoresAsync(
                 leaderboardId,
-                new GetScoresOptions { Limit = limit });
+                new GetScoresOptions { Limit = limit, IncludeMetadata = true });
         }
 
         public static async Task<LeaderboardScores> GetAroundPlayerAsync(int range = 50, string leaderboardId = DefaultId)
@@ -46,7 +46,7 @@ namespace Blindsided.UGS
             await UgsInitializer.EnsureInitializedAsync();
             return await LeaderboardsService.Instance.GetPlayerRangeAsync(
                 leaderboardId,
-                new GetPlayerRangeOptions { RangeLimit = range });
+                new GetPlayerRangeOptions { RangeLimit = range, IncludeMetadata = true });
         }
 
         /// <summary>
@@ -58,7 +58,9 @@ namespace Blindsided.UGS
             try
             {
                 await UgsInitializer.EnsureInitializedAsync();
-                return await LeaderboardsService.Instance.GetPlayerScoreAsync(leaderboardId);
+                return await LeaderboardsService.Instance.GetPlayerScoreAsync(
+                    leaderboardId,
+                    new GetPlayerScoreOptions { IncludeMetadata = true });
             }
             catch (RequestFailedException ex) when (ex.ErrorCode == 404)
             {

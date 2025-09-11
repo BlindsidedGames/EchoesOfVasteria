@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Blindsided.Utilities;
+using Blindsided;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 
@@ -42,6 +43,10 @@ namespace TimelessEchoes.Gear.UI
             if (isAutoCrafting && !string.Equals(selectedSlot, slot))
                 StopAutoCrafting();
             selectedSlot = slot;
+            // Persist last selected gear slot per save
+            var o = Oracle.oracle;
+            if (o != null && o.saveData != null && o.saveData.SavedPreferences != null)
+                o.saveData.SavedPreferences.LastSelectedForgeSlot = selectedSlot;
         }
 
         private void UpdateAllGearSlots()

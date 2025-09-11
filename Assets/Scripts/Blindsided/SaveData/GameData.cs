@@ -166,6 +166,10 @@ namespace Blindsided.SaveData
             public bool TransparentUi;
             public bool Tutorial;
 
+            // Forge UI: remember last selections per save
+            public string LastSelectedForgeCore;
+            public string LastSelectedForgeSlot;
+
             /// <summary>
             ///     Automatically pin new quests when they become active.
             /// </summary>

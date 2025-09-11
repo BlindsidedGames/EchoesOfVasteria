@@ -1153,13 +1153,8 @@ namespace TimelessEchoes.Hero
                 if (health != null)
                 {
                     var newMax = Mathf.RoundToInt(baseHealth + healthBonus);
-                    if (newMax > 0 && Mathf.Abs(newMax - oldMax) > 0.01f)
-                    {
-                        var newCurrent = Mathf.Min(oldCurrent + (newMax - oldMax), newMax);
-                        health?.Init(newMax);
-                        if (newCurrent < newMax && health != null)
-                            health.SetCurrentHealthSilently(newCurrent);
-                    }
+                    if (Mathf.Abs(newMax - oldMax) > 0.01f)
+                        health.ApplyMaxHealthChange(newMax, true);
                 }
             }
         }
@@ -1249,15 +1244,9 @@ namespace TimelessEchoes.Hero
             if (health != null)
             {
                 var oldMax = Mathf.RoundToInt(health.MaxHealth);
-                var current = Mathf.RoundToInt(health.CurrentHealth);
                 var newMax = Mathf.RoundToInt(baseHealth + healthBonus + gearHealthBonus);
-                if (Mathf.Abs(newMax - oldMax) > 0.01f && newMax > 0)
-                {
-                    var newCurrent = Mathf.Min(current + (newMax - oldMax), newMax);
-                    health.Init(newMax);
-                    if (newCurrent < newMax)
-                        health.SetCurrentHealthSilently(newCurrent);
-                }
+                if (Mathf.Abs(newMax - oldMax) > 0.01f)
+                    health.ApplyMaxHealthChange(newMax, true);
             }
         }
 

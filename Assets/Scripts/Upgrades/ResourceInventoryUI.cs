@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
 using static Blindsided.Utilities.CalcUtils;
+using TimelessEchoes.References.StatPanel;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -24,6 +25,9 @@ namespace TimelessEchoes.Upgrades
         public Sprite UnknownSprite;
         [SerializeField] private float highlightDuration = 3f;
         [SerializeField] private TMP_Text selectedResourceNameText;
+        [SerializeField] private StatPanelReferences statPanelReferences;
+        [SerializeField] private bool showTierBorder = true;
+        [SerializeField] private bool showTierBackground = false;
 
         private readonly List<ResourceUIReferences> slots = new();
 
@@ -36,6 +40,10 @@ namespace TimelessEchoes.Upgrades
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
                 Log("ResourceManager missing", TELogCategory.Resource, this);
+
+            // Cache StatPanelReferences if not assigned in Inspector
+            if (statPanelReferences == null)
+                statPanelReferences = FindFirstObjectByType<StatPanelReferences>();
 
             if (slotParent == null)
                 slotParent = transform;
@@ -132,6 +140,57 @@ namespace TimelessEchoes.Upgrades
                 slot.countText.text = FormatNumber(amount, true);
                 slot.countText.gameObject.SetActive(true);
             }
+
+            // Compute tier once for both visuals (treat Tier 0 as Tier 1)
+            int resolvedTier = 1;
+            if (unlocked)
+            {
+                if (resource != null && resource.DisableAlterEcho && statPanelReferences != null && statPanelReferences.tierBackgroundSprites != null)
+                {
+                    // Crafted-only: display max tier visuals
+                    resolvedTier = Mathf.Max(1, statPanelReferences.tierBackgroundSprites.Count);
+                }
+                else
+                {
+                    resolvedTier = resourceManager != null ? resourceManager.GetTier(resource) : 1;
+                }
+            }
+            // Ensure Tier 0 is treated as Tier 1 for visuals
+            if (resolvedTier < 1) resolvedTier = 1;
+
+            // Tier border image
+            if (slot.tierBorderImage != null)
+            {
+                var borderSprites = statPanelReferences != null ? statPanelReferences.tierBorderSprites : null;
+                if (borderSprites != null && borderSprites.Count > 0)
+                {
+                    // If unchecked, default to Tier 1 (index 0)
+                    var bIdx = showTierBorder ? Mathf.Clamp(resolvedTier - 1, 0, borderSprites.Count - 1) : 0;
+                    slot.tierBorderImage.sprite = (bIdx >= 0 && bIdx < borderSprites.Count) ? borderSprites[bIdx] : null;
+                    slot.tierBorderImage.enabled = slot.tierBorderImage.sprite != null;
+                }
+                else
+                {
+                    slot.tierBorderImage.enabled = false;
+                }
+            }
+
+            // Tier background image (new field on slot)
+            if (slot.newTierBackgroundImage != null)
+            {
+                var bgSprites = statPanelReferences != null ? statPanelReferences.tierBackgroundSprites : null;
+                if (bgSprites != null && bgSprites.Count > 0)
+                {
+                    // If unchecked, default to Tier 1 (index 0)
+                    var gIdx = showTierBackground ? Mathf.Clamp(resolvedTier - 1, 0, bgSprites.Count - 1) : 0;
+                    slot.newTierBackgroundImage.sprite = (gIdx >= 0 && gIdx < bgSprites.Count) ? bgSprites[gIdx] : null;
+                    slot.newTierBackgroundImage.enabled = slot.newTierBackgroundImage.sprite != null;
+                }
+                else
+                {
+                    slot.newTierBackgroundImage.enabled = false;
+                }
+            }
         }
 
         public void SelectSlot(int index, bool scrollToSlot = true)
@@ -147,7 +206,27 @@ namespace TimelessEchoes.Upgrades
                 if (res)
                 {
                     var unlocked = resourceManager && resourceManager.IsUnlocked(res);
-                    selectedResourceNameText.text = unlocked ? res.name : "???";
+                    if (unlocked)
+                    {
+                        // Mirror visual tier logic used in UpdateSlot
+                        int resolvedTier = 1;
+                        if (res.DisableAlterEcho && statPanelReferences != null && statPanelReferences.tierBackgroundSprites != null)
+                        {
+                            // Crafted-only: display max configured visual tier
+                            resolvedTier = Mathf.Max(1, statPanelReferences.tierBackgroundSprites.Count);
+                        }
+                        else
+                        {
+                            resolvedTier = resourceManager != null ? resourceManager.GetTier(res) : 1;
+                        }
+                        if (resolvedTier < 1) resolvedTier = 1; // force to 1 if zero or less
+
+                        selectedResourceNameText.text = $"{res.name} - Tier {resolvedTier}";
+                    }
+                    else
+                    {
+                        selectedResourceNameText.text = "???";
+                    }
                 }
                 else
                 {

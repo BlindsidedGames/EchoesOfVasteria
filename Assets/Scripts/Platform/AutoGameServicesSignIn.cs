@@ -11,7 +11,10 @@ namespace TimelessEchoes.Platform
     /// </summary>
     public class AutoGameServicesSignIn : MonoBehaviour
     {
+        // Only relevant when Game Services is available on mobile
+#if UNITY_ANDROID || UNITY_IOS
         [SerializeField] private bool interactiveFallback = false;
+#endif
         [SerializeField] private bool dontDestroyOnLoad = true;
 
         private void Awake()
@@ -46,4 +49,3 @@ namespace TimelessEchoes.Platform
         }
     }
 }
-

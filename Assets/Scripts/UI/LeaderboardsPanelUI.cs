@@ -249,28 +249,52 @@ namespace TimelessEchoes.UI
                 }
                 else
                 {
-                    var around = await LeaderboardClient.GetAroundPlayerAsync(range: poolSize, leaderboardId: id);
-                    var results = around?.Results ?? new List<LeaderboardEntry>();
+                    // Around-player mode
+                    // If the player has no score yet, show Top with an info row at the top.
                     var my = await LeaderboardClient.GetMyScoreAsync(id);
-
-                    int? total = null;
-                    try
+                    if (my == null)
                     {
-                        var aroundType = around?.GetType();
-                        var totalProp = aroundType?.GetProperty("Total");
-                        if (totalProp != null)
+                        // Repurpose the seasonal info row to display guidance
+                        if (seasonalInfoEntry != null)
                         {
-                            var val = totalProp.GetValue(around);
-                            if (val is int ti) total = ti;
+                            seasonalInfoEntry.SetActive(true);
+                            seasonalInfoEntry.RankText?.SetText("You need to submit a score to see your rank");
+                            if (seasonalInfoEntry.NameText != null) seasonalInfoEntry.NameText.text = string.Empty;
+                            if (seasonalInfoEntry.ScoreText != null) seasonalInfoEntry.ScoreText.text = string.Empty;
+                            if (seasonalInfoEntry.VersionText != null) seasonalInfoEntry.VersionText.text = string.Empty;
                         }
-                    }
-                    catch { }
-                    if (total == null)
-                    {
-                        total = await LeaderboardClient.GetTotalCountAsync(id);
-                    }
 
-                    await PopulateAroundAsync(results, my, total);
+                        var page = await LeaderboardClient.GetTopAsync(limit: poolSize, leaderboardId: id);
+                        var topResults = page?.Results ?? new List<LeaderboardEntry>();
+                        await PopulateTopAsync(topResults, null);
+                        // Ensure the info row stays at the top of the list
+                        if (seasonalInfoEntry != null && seasonalInfoEntry.gameObject.activeSelf)
+                            PlaceInfoRowAtTop();
+                    }
+                    else
+                    {
+                        var around = await LeaderboardClient.GetAroundPlayerAsync(range: poolSize, leaderboardId: id);
+                        var results = around?.Results ?? new List<LeaderboardEntry>();
+
+                        int? total = null;
+                        try
+                        {
+                            var aroundType = around?.GetType();
+                            var totalProp = aroundType?.GetProperty("Total");
+                            if (totalProp != null)
+                            {
+                                var val = totalProp.GetValue(around);
+                                if (val is int ti) total = ti;
+                            }
+                        }
+                        catch { }
+                        if (total == null)
+                        {
+                            total = await LeaderboardClient.GetTotalCountAsync(id);
+                        }
+
+                        await PopulateAroundAsync(results, my, total);
+                    }
                 }
             }
             catch (Exception)
@@ -736,5 +760,4 @@ namespace TimelessEchoes.UI
         }
     }
 }
-
 

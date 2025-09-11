@@ -67,6 +67,38 @@ namespace TimelessEchoes.Hero
             RaiseHealthChanged();
         }
 
+        /// <summary>
+        /// Applies a change to MaxHealth while adjusting CurrentHealth according to rules:
+        /// - If new max is higher, increase current by the delta (up to new max).
+        /// - If new max is lower, do not reduce current unless it exceeds the new max
+        ///   (i.e., clamp down only if above new max). Optionally enforces a minimum max of 1.
+        /// This does not trigger damage/death side effects.
+        /// </summary>
+        /// <param name="newMax">New maximum health value.</param>
+        /// <param name="enforceFloor">If true, enforce a minimum MaxHealth of 1.</param>
+        public void ApplyMaxHealthChange(int newMax, bool enforceFloor = true)
+        {
+            var targetMax = enforceFloor ? Mathf.Max(1, newMax) : Mathf.Max(0, newMax);
+            var oldMax = Mathf.RoundToInt(MaxHealth);
+            var current = CurrentHealth;
+
+            float newCurrent;
+            if (targetMax > oldMax)
+            {
+                var delta = targetMax - oldMax;
+                newCurrent = Mathf.Min(current + delta, targetMax);
+            }
+            else
+            {
+                newCurrent = Mathf.Min(current, targetMax);
+            }
+
+            maxHealth = targetMax;
+            CurrentHealth = Mathf.Clamp(newCurrent, 0f, targetMax);
+            UpdateBar();
+            RaiseHealthChanged();
+        }
+
         protected override float CalculateDamage(float fullDamage)
         {
             controller = controller != null ? controller : GetComponent<HeroController>();

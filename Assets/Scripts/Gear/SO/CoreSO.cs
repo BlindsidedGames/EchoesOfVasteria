@@ -13,6 +13,15 @@ namespace TimelessEchoes.Gear
         [MinValue(0f)] public float weight = 0f;
         [Tooltip("Additive weight per Ivan level (can be negative).")]
         public float weightPerLevel = 0f;
+
+        [SerializeField, Tooltip("Clamp for the final computed weight (after multipliers and level scaling).")]
+        private Vector2 weightRange = new Vector2(0f, float.PositiveInfinity);
+
+        public Vector2 WeightRange
+        {
+            get => weightRange;
+            set => weightRange = value;
+        }
     }
 
     [CreateAssetMenu(fileName = "Core", menuName = "SO/Gear/Core")]
@@ -60,6 +69,21 @@ namespace TimelessEchoes.Gear
                 if (rw != null && rw.rarity == rarity)
                     return rw.weightPerLevel;
             return 0f;
+        }
+
+        public Vector2 GetRarityWeightRange(RaritySO rarity)
+        {
+            if (rarity == null) return new Vector2(0f, float.PositiveInfinity);
+            foreach (var rw in rarityWeights)
+                if (rw != null && rw.rarity == rarity)
+                {
+                    var range = rw.WeightRange;
+                    float min = Mathf.Max(0f, range.x);
+                    float max = float.IsNaN(range.y) ? float.PositiveInfinity : range.y;
+                    if (max < min) max = min;
+                    return new Vector2(min, max);
+                }
+            return new Vector2(0f, float.PositiveInfinity);
         }
     }
 }

@@ -158,10 +158,12 @@ namespace TimelessEchoes.EditorTools
 
 			bool copyBase = true;
 			bool copyPerLevel = true;
+			bool copyRange = true;
 			bool overwriteOnlyMissing = false;
 
 			copyBase = GUILayout.Toggle(copyBase, new GUIContent("Base Weights"), "Button", GUILayout.Width(110));
 			copyPerLevel = GUILayout.Toggle(copyPerLevel, new GUIContent("Weight/Level"), "Button", GUILayout.Width(110));
+			copyRange = GUILayout.Toggle(copyRange, new GUIContent("Min/Max Range"), "Button", GUILayout.Width(130));
 			overwriteOnlyMissing = GUILayout.Toggle(overwriteOnlyMissing, new GUIContent("Overwrite Missing Only"), "Button", GUILayout.Width(170));
 
 			using (new EditorGUILayout.HorizontalScope())
@@ -169,7 +171,7 @@ namespace TimelessEchoes.EditorTools
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("Apply", GUILayout.Width(90)))
 				{
-					ApplyPropagation(source, targets, targetFlags, copyBase, copyPerLevel, overwriteOnlyMissing);
+					ApplyPropagation(source, targets, targetFlags, copyBase, copyPerLevel, overwriteOnlyMissing, copyRange);
 					showPropagate = false;
 				}
 				if (GUILayout.Button("Cancel", GUILayout.Width(90))) showPropagate = false;
@@ -178,7 +180,7 @@ namespace TimelessEchoes.EditorTools
 			EditorGUILayout.EndVertical();
 		}
 
-		private void ApplyPropagation(CoreSO source, CoreSO[] targets, bool[] targetFlags, bool copyBase, bool copyPerLevel, bool overwriteOnlyMissing)
+private void ApplyPropagation(CoreSO source, CoreSO[] targets, bool[] targetFlags, bool copyBase, bool copyPerLevel, bool overwriteOnlyMissing, bool copyRange)
 		{
 			if (source == null) return;
 			Undo.SetCurrentGroupName("Propagate Rarity Weights");
@@ -203,6 +205,7 @@ namespace TimelessEchoes.EditorTools
 
 					if (copyBase) tgtRW.weight = srcRW.weight;
 					if (copyPerLevel) tgtRW.weightPerLevel = srcRW.weightPerLevel;
+					if (copyRange) tgtRW.WeightRange = srcRW.WeightRange;
 				}
 				EditorUtility.SetDirty(target);
 			}
@@ -237,11 +240,13 @@ namespace TimelessEchoes.EditorTools
 		private void DrawWeightsTable(CoreSO core)
 		{
 			// Header
-			using (new EditorGUILayout.HorizontalScope())
-			{
+            using (new EditorGUILayout.HorizontalScope())
+            {
                                GUILayout.Label("Rarity", GUILayout.Width(150));
                                GUILayout.Label("Base", GUILayout.Width(70));
                                GUILayout.Label("/Level", GUILayout.Width(70));
+                               GUILayout.Label("Min", GUILayout.Width(70));
+                               GUILayout.Label("Max", GUILayout.Width(70));
                                GUILayout.Label("Global", GUILayout.Width(70));
                                GUILayout.Label("Eff@100", GUILayout.Width(80));
                                GUILayout.Label("Eff@1000", GUILayout.Width(80));
@@ -280,6 +285,7 @@ namespace TimelessEchoes.EditorTools
 
 				float baseW = GetWeight(core, rarity);
 				float perLvl = GetWeightPerLevel(core, rarity);
+				var range = GetRange(core, rarity);
 				float mult = rarity != null ? rarity.globalWeightMultiplier : 1f;
                                float effLevel = effByRarity[rarity];
                                float eff100 = effAt100ByRarity[rarity];
@@ -299,10 +305,18 @@ namespace TimelessEchoes.EditorTools
 					EditorGUI.BeginChangeCheck();
 					float newBase = EditorGUILayout.FloatField(baseW, GUILayout.Width(70));
 					float newPer = EditorGUILayout.FloatField(perLvl, GUILayout.Width(70));
+					float newMin = EditorGUILayout.FloatField(range.x, GUILayout.Width(70));
+					float newMax = EditorGUILayout.FloatField(range.y, GUILayout.Width(70));
 					if (EditorGUI.EndChangeCheck() && core != null)
 					{
 						Undo.RecordObject(core, "Edit Rarity Weight");
 						SetWeight(core, rarity, newBase, newPer);
+						// sanitize range
+						if (float.IsNaN(newMin)) newMin = 0f;
+						if (float.IsNaN(newMax)) newMax = float.PositiveInfinity;
+						newMin = Mathf.Max(0f, newMin);
+						if (newMax < newMin) newMax = newMin;
+						SetRange(core, rarity, newMin, newMax);
 						EditorUtility.SetDirty(core);
 						if (autoSave) AssetDatabase.SaveAssets();
 					}
@@ -549,24 +563,38 @@ namespace TimelessEchoes.EditorTools
 			return eff;
 		}
 
-		private float ComputeEffective(CoreSO core, RaritySO rarity, int lv)
-		{
-			if (core == null || rarity == null) return 0f;
-			float baseW = GetWeight(core, rarity);
-			float perLvl = GetWeightPerLevel(core, rarity);
-			float mult = applyGlobalMultiplier && rarity != null ? rarity.globalWeightMultiplier : 1f;
-			return Mathf.Max(0f, baseW * mult + perLvl * lv);
-		}
+        private float ComputeEffective(CoreSO core, RaritySO rarity, int lv)
+        {
+            if (core == null || rarity == null) return 0f;
+            float baseW = GetWeight(core, rarity);
+            float perLvl = GetWeightPerLevel(core, rarity);
+            float mult = applyGlobalMultiplier && rarity != null ? rarity.globalWeightMultiplier : 1f;
+            var raw = Mathf.Max(0f, baseW * mult + perLvl * lv);
+            var range = GetRange(core, rarity);
+            return Mathf.Clamp(raw, range.x, range.y);
+        }
 
 		private float GetWeight(CoreSO core, RaritySO rarity)
 		{
 			return core != null && rarity != null ? core.GetRarityWeight(rarity) : 0f;
 		}
 
-		private float GetWeightPerLevel(CoreSO core, RaritySO rarity)
-		{
-			return core != null && rarity != null ? core.GetRarityWeightPerLevel(rarity) : 0f;
-		}
+        private float GetWeightPerLevel(CoreSO core, RaritySO rarity)
+        {
+            return core != null && rarity != null ? core.GetRarityWeightPerLevel(rarity) : 0f;
+        }
+
+        private Vector2 GetRange(CoreSO core, RaritySO rarity)
+        {
+            return core != null && rarity != null ? core.GetRarityWeightRange(rarity) : new Vector2(0f, float.PositiveInfinity);
+        }
+
+        private void SetRange(CoreSO core, RaritySO rarity, float min, float max)
+        {
+            var rw = GetOrCreateWeight(core, rarity, createIfMissing: true);
+            if (rw == null) return;
+            rw.WeightRange = new Vector2(min, max);
+        }
 
 		private CoreSO[] AddMissingRarities(CoreSO core)
 		{

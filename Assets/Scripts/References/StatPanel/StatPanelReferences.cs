@@ -12,5 +12,6 @@ namespace TimelessEchoes.References.StatPanel
         public Transform itemEntryParent;
         public Transform itemEntryPrefab;
         public List<Sprite> tierBackgroundSprites;
+        public List<Sprite> tierBorderSprites;
     }
 }

@@ -4,6 +4,7 @@ using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using static Blindsided.Oracle;
+using EventHandler = Blindsided.EventHandler;
 
 namespace TimelessEchoes.Quests
 {
@@ -125,6 +126,21 @@ namespace TimelessEchoes.Quests
             Canvas.ForceUpdateCanvases(); // ensure layout is valid
             if (questScroll != null)
                 questScroll.verticalNormalizedPosition = 1f; // top
+
+            // Ensure "Complete" section is expanded after load events
+            EventHandler.OnLoadData += OnLoadDataHandler;
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.OnLoadData -= OnLoadDataHandler;
+        }
+
+        private void OnLoadDataHandler()
+        {
+            // Re-open the "Complete" category when save data is loaded
+            EnsureCategories();
+            SetCategoryExpanded(readyCategory, true);
         }
 
         private void EnsureCategories()
@@ -162,15 +178,15 @@ namespace TimelessEchoes.Quests
                     activeCategory.categoryName.text = "Active";
             }
 
-            // Create Completed category
+            // Create Quest History category (formerly "Completed")
             if (completedCategory == null)
             {
                 completedCategory = Instantiate(questCategoryPrefab, questParent);
                 if (completedCategory.categoryName != null)
-                    completedCategory.categoryName.text = "Completed";
+                    completedCategory.categoryName.text = "Quest History";
             }
 
-            // Desired default states: Complete + Pinned + Active expanded, Completed closed
+            // Desired default states: Complete + Pinned + Active expanded, Quest History closed
             SetCategoryExpanded(readyCategory, true);
             SetCategoryExpanded(pinnedCategory, true);
             SetCategoryExpanded(activeCategory, true);
@@ -225,7 +241,7 @@ namespace TimelessEchoes.Quests
             if (completedCategory != null)
             {
                 if (completedCategory.categoryName != null)
-                    completedCategory.categoryName.text = $"Completed | {completedCount}";
+                    completedCategory.categoryName.text = $"Quest History | {completedCount}";
                 var show = completedCount > 0;
                 completedCategory.gameObject.SetActive(show);
                 if (show) SetCategoryExpanded(completedCategory, false);

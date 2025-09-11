@@ -195,7 +195,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Changes</b>\n\u2022 Overhauled leaderboards.\n\u2022 New Eternal
+    m_Localized: "\u2022 Rank now properly shows the game version it was saved with.\n\u2022
+      Added Meats to the inventory\n\u2022 Item Tiers now show in the inventory and
+      have a library entry.\n\u2022 Last selected slot & core are now restored when
+      loading your game.\n\u2022 Introduced caps for rarity weight bands in the forge.
+      \n1.2.17\n<b>Changes</b>\n\u2022 Overhauled leaderboards.\n\u2022 New Eternal
       cards in the Cauldron.\n\u2022 Movement speed has been adjusted to be % and
       based on a similar formula to defense.\n<b>Minor changes</b>\n\u2022 Resources
       no longer show partial values.\n\u2022 Forge numbers are now formatted far
@@ -210,14 +214,67 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "Alter Echoes are your main source of income while away. At the
-      end of each run each resource you earned calculates its income per minute and
-      stores your lifetime best. Alter Echoes use this value to generate resources.\n\nEcho
-      Power is a value that determines the percentage of resources you receive. It
-      is visible at the top right of the Alter Echoes screen.\n \nResources will
-      be gathered and brought to Eva for storage. When you return she will happily
-      give them to you, all you have to do is ask!\nThese will generate whether the
-      game is open or closed!"
+    m_Localized: "The Cauldron is Eva's connection to The Vast One.\n\nTossing incredients
+      in summons the power of The Vast One pulling in your entire stockpile of that
+      resource! It does however require at least two types of resources, for flavour
+      reasons.\n\nOnce you toss ingredients in you will recieve a number of stew
+      based on the rarity and count of the resources you selected. You can then taste
+      the stew to draw from the well of The Vast One's power. You will receive cards
+      based on Eva's level which affects her weights as displayed on the Cauldron
+      screen.\n\nEach card has a tier from 1-8 and levels up at the following thresholds.
+      For now there are no additional bonuses for collecting beyond the cap of that
+      tier but you can continue for as long as you like. Perhaps more power will
+      come from this in the future? The following thresholds are currently implemented.\n\nEach
+      category except for the buff category will additionally tier up as you pass
+      the threshold with all cards in it. If all cards are Tier 2 or higher then
+      the category will be Tier 2. Each Tier you complete in this fashion will award
+      0.1% Alter Echo Power.\n\n<b>Resource Tiers</b> | Echo power increases by 0.1%
+      per category tier.\n\u2022 1 | Alter Echo Power for this cards resource +10%\n\u2022
+      25 | 10%<sprite=194>25%\n\u2022 75 | 25%<sprite=194>50%\n\u2022 200 | 50%<sprite=194>75%\n\u2022
+      750 | 75%<sprite=194>120%\n\u2022 1500 | 120%<sprite=194>180%\n\u2022 3500
+      | 180%<sprite=194>250%\n\u2022 10000 | 250%<sprite=194>400%\n\n<b>Buff Tiers</b>
+      | Buff power increases by 2.5% per category tier.\n\u2022 1 | Cooldown -5%,
+      Buff Power: 0%\n\u2022 5 | Cooldown -10%, Buff Power: 0%\n\u2022 25 | Cooldown
+      -15%, Buff Power: 5%\n\u2022 75 | Cooldown -25%, Buff Power: 10%\n\u2022 200
+      | Cooldown -40%, Buff Power: 15%\n\u2022 750 | Cooldown -60%, Buff Power: 20%\n\u2022
+      1500 | Cooldown -80%, Buff Power: 25%\n\u2022 3000 | Cooldown -100%, Buff Power:
+      30%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18915029441462272
+    m_Localized: 'Items have a low chance of tiering up each time you collect them.
+      The only source that cannot tier them up is Alter Echoes.
+
+      Each tier
+      above the first grants you bonus resources each time you collect it in the
+      future.
+
+
+      I''m a bit loathe to share this information with you but here
+      you go - The Vast One...
+
+
+      Tier | Bonus | Chance
+
+      <b>Tier 1</b>
+      - 0%\tBase
+
+      <b>Tier 2</b> - 10%\t1 /1,000
+
+      <b>Tier 3</b> - 20%</b>\t1
+      / 5,000
+
+      <b>Tier 4</b> - 30%</b>\t1 / 10,000
+
+      <b>Tier 5</b> - 50%</b>\t1
+      / 50,000
+
+      <b>Tier 6</b> - 75%</b>\t1 / 100,000
+
+      <b>Tier 7</b> -
+      100%</b>\t1 / 250,000
+
+      <b>Tier 8</b> - 150%</b>\t1 / 1,000,000'
     m_Metadata:
       m_Items: []
   references:

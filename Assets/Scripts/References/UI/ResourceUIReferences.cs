@@ -12,6 +12,8 @@ namespace References.UI
         public TMP_Text countText;
         public Image selectionImage;
         public Button highlightButton;
+        public Image tierBorderImage;
+        public Image newTierBackgroundImage;
 
         private void Awake()
         {

@@ -6,6 +6,30 @@ namespace TimelessEchoes.Gear.UI
 {
     public partial class ForgeWindowUI
     {
+        // Helpers for conversion sections
+        private int GetSelectedAmountForSection(CraftSection2x1UIReferences section, ResourceManager rm, CoreSO core)
+        {
+            if (ReferenceEquals(section, ingotConversionSection)) return GetCraftAmountForIngots(rm, core);
+            if (ReferenceEquals(section, crystalConversionSection)) return GetCraftAmountForCrystals(rm, core);
+            if (ReferenceEquals(section, chunkConversionSection)) return GetCraftAmountForChunks(rm, core);
+            if (ReferenceEquals(section, coreConversionSection)) return GetCraftAmountForCores(rm, core);
+            return 0;
+        }
+
+        private int GetDesiredAmountForSection(CraftSection2x1UIReferences section)
+        {
+            if (ReferenceEquals(section, ingotConversionSection)) return Mathf.Max(1, ingotCraftAmount);
+            if (ReferenceEquals(section, crystalConversionSection)) return Mathf.Max(1, crystalCraftAmount);
+            if (ReferenceEquals(section, chunkConversionSection)) return Mathf.Max(1, chunkCraftAmount);
+            if (ReferenceEquals(section, coreConversionSection)) return Mathf.Max(1, coreCraftAmount);
+            return 1;
+        }
+
+        private static string FormatScaledCost(int perUnitCost, int selectedAmount)
+        {
+            var total = Mathf.Max(0, perUnitCost) * Mathf.Max(0, selectedAmount);
+            return Blindsided.Utilities.CalcUtils.FormatNumber(total, hideDecimal: true);
+        }
         private void OnIvanXpChanged(int level, float current, float needed)
         {
             if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
@@ -163,18 +187,23 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.maxCraftsText != null)
             {
-                // Show the max possible crafts (not the selected amount)
-                var max = 0;
+                // Show how many batches of the chosen size we can craft
+                var maxSingle = 0;
                 if (core != null && rm != null)
                 {
-                    max = int.MaxValue;
+                    maxSingle = int.MaxValue;
                     if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                        max = Mathf.Min(max, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
+                        maxSingle = Mathf.Min(maxSingle, (int)(rm.GetAmount(core.chunkResource) / core.chunkCostPerIngot));
                     if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                        max = Mathf.Min(max, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
-                    if (max < 0) max = 0;
+                        maxSingle = Mathf.Min(maxSingle, (int)(rm.GetAmount(core.crystalResource) / core.crystalCostPerIngot));
+                    if (maxSingle < 0) maxSingle = 0;
                 }
-                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
+                var desired = GetDesiredAmountForSection(section);
+                int maxBatches;
+                if (maxSingle <= 0) maxBatches = 0; // cannot craft at all (missing costs)
+                else if (desired > maxSingle) maxBatches = 1; // input above max -> defaults to maxSingle, show 1
+                else maxBatches = desired > 0 ? maxSingle / desired : 0;
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(maxBatches, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -192,7 +221,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost1Text != null)
-                section.cost1Text.text = core != null ? Mathf.Max(0, core.chunkCostPerIngot).ToString("0") : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost1Text.text = core != null
+                    ? FormatScaledCost(Mathf.Max(0, core.chunkCostPerIngot), selected)
+                    : string.Empty;
+            }
             if (section.cost2Image != null)
             {
                 Sprite sprite = null;
@@ -208,7 +242,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost2Text != null)
-                section.cost2Text.text = core != null ? Mathf.Max(0, core.crystalCostPerIngot).ToString("0") : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost2Text.text = core != null
+                    ? FormatScaledCost(Mathf.Max(0, core.crystalCostPerIngot), selected)
+                    : string.Empty;
+            }
 
             if (section.craftArrow != null)
             {
@@ -246,12 +285,17 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.maxCraftsText != null)
             {
-                var max = 0;
+                var maxSingle = 0;
                 if (core != null && rm != null)
-                    max = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
+                    maxSingle = Mathf.Min((int)(rm.GetAmount(core.chunkResource) / 2f),
                         (int)(rm.GetAmount(slimeResource) / 1f));
-                if (max < 0) max = 0;
-                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
+                if (maxSingle < 0) maxSingle = 0;
+                var desired = GetDesiredAmountForSection(section);
+                int maxBatches;
+                if (maxSingle <= 0) maxBatches = 0;
+                else if (desired > maxSingle) maxBatches = 1;
+                else maxBatches = desired > 0 ? maxSingle / desired : 0;
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(maxBatches, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -269,7 +313,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost1Text != null)
-                section.cost1Text.text = core != null ? "2" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost1Text.text = core != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(2 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.cost2Image != null)
             {
@@ -286,7 +335,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost2Text != null)
-                section.cost2Text.text = slimeResource != null ? "1" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost2Text.text = slimeResource != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(1 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.craftArrow != null)
             {
@@ -324,12 +378,17 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.maxCraftsText != null)
             {
-                var max = 0;
+                var maxSingle = 0;
                 if (core != null && rm != null)
-                    max = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
+                    maxSingle = Mathf.Min((int)(rm.GetAmount(core.crystalResource) / 1f),
                         (int)(rm.GetAmount(stoneResource) / 2f));
-                if (max < 0) max = 0;
-                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
+                if (maxSingle < 0) maxSingle = 0;
+                var desired = GetDesiredAmountForSection(section);
+                int maxBatches;
+                if (maxSingle <= 0) maxBatches = 0;
+                else if (desired > maxSingle) maxBatches = 1;
+                else maxBatches = desired > 0 ? maxSingle / desired : 0;
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(maxBatches, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -347,7 +406,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost1Text != null)
-                section.cost1Text.text = core != null ? "1" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost1Text.text = core != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(1 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.cost2Image != null)
             {
@@ -364,7 +428,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost2Text != null)
-                section.cost2Text.text = stoneResource != null ? "2" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost2Text.text = stoneResource != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(2 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.craftArrow != null)
             {
@@ -408,11 +477,16 @@ namespace TimelessEchoes.Gear.UI
 
             if (section.maxCraftsText != null)
             {
-                var max = 0;
+                var maxSingle = 0;
                 if (rm != null && curRes != null && nextRes != null)
-                    max = Mathf.Min((int)(rm.GetAmount(curRes) / 5f), (int)(rm.GetAmount(nextRes) / 1f));
-                if (max < 0) max = 0;
-                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(max, hideDecimal: true);
+                    maxSingle = Mathf.Min((int)(rm.GetAmount(curRes) / 5f), (int)(rm.GetAmount(nextRes) / 1f));
+                if (maxSingle < 0) maxSingle = 0;
+                var desired = GetDesiredAmountForSection(section);
+                int maxBatches;
+                if (maxSingle <= 0) maxBatches = 0;
+                else if (desired > maxSingle) maxBatches = 1;
+                else maxBatches = desired > 0 ? maxSingle / desired : 0;
+                section.maxCraftsText.text = Blindsided.Utilities.CalcUtils.FormatNumber(maxBatches, hideDecimal: true);
             }
 
             if (section.cost1Image != null)
@@ -430,7 +504,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost1Text != null)
-                section.cost1Text.text = curRes != null ? "5" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost1Text.text = curRes != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(5 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.cost2Image != null)
             {
@@ -447,7 +526,12 @@ namespace TimelessEchoes.Gear.UI
             }
 
             if (section.cost2Text != null)
-                section.cost2Text.text = nextRes != null ? "1" : string.Empty;
+            {
+                var selected = GetSelectedAmountForSection(section, rm, core);
+                section.cost2Text.text = nextRes != null
+                    ? Blindsided.Utilities.CalcUtils.FormatNumber(1 * Mathf.Max(0, selected), hideDecimal: true)
+                    : string.Empty;
+            }
 
             if (section.craftArrow != null)
             {
