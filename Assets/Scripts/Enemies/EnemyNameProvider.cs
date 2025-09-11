@@ -31,6 +31,7 @@ namespace TimelessEchoes.Enemies
             "Yettum",
             "Phoenixia",
             "Nuclearion",
+            "octoforpe",
         };
 
         /// <summary>

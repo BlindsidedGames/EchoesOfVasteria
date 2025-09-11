@@ -153,6 +153,7 @@ namespace TimelessEchoes.UI
         private SaveSlotReferences[] saveSlots;
         private string[] createdVersionBySlot = new string[3];
 
+        private const int Fps30 = 30;
         private const int Fps60 = 60;
         private const int Fps120 = 120;
 
@@ -490,7 +491,17 @@ namespace TimelessEchoes.UI
 
         private void ToggleFps()
         {
-            StaticReferences.TargetFps = StaticReferences.TargetFps == Fps60 ? Fps120 : Fps60;
+            // Cycle through 30 -> 60 -> 120 -> 30
+            var current = StaticReferences.TargetFps;
+            int next;
+            if (current == Fps30)
+                next = Fps60;
+            else if (current == Fps60)
+                next = Fps120;
+            else
+                next = Fps30;
+
+            StaticReferences.TargetFps = next;
             ApplyFps();
         }
 
@@ -538,7 +549,12 @@ namespace TimelessEchoes.UI
         private void UpdateFpsButtonText()
         {
             if (fpsButtonText != null)
-                fpsButtonText.text = $"FPS: {StaticReferences.TargetFps}";
+            {
+                if (StaticReferences.VSyncEnabled)
+                    fpsButtonText.text = "FPS: VSync";
+                else
+                    fpsButtonText.text = $"FPS: {StaticReferences.TargetFps}";
+            }
         }
 
         [SerializeField] private float slotInfoUpdateInterval = 1f;
