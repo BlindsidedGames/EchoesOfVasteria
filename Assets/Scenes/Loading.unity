@@ -2194,6 +2194,12 @@ MonoBehaviour:
     - Name: Tutorial
       Entry: 5
       Data: false
+    - Name: LastSelectedForgeCore
+      Entry: 6
+      Data: 
+    - Name: LastSelectedForgeSlot
+      Entry: 6
+      Data: 
     - Name: AutoPinActiveQuests
       Entry: 5
       Data: true
@@ -3465,7 +3471,7 @@ MonoBehaviour:
   demo: 0
   beta: 0
   betaSaveIteration: 0
-  minimumSeasonalGameVersion: 1.2.17
+  minimumSeasonalGameVersion: 1.2.18
 --- !u!4 &1159035180
 Transform:
   m_ObjectHideFlags: 0

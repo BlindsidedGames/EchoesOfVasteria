@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.20
+    m_Localized: v1.2.22
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,25 +195,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "\u2022 Fixed an issue with echoes.\n\u2022 Fixed an issue with
-      health calculations.\n1.2.19\n\u2022 Potential fix for mobile crashes.\n\u2022
-      Removed Portrait on mobile.\n1.2.18\n\u2022 Rank now properly shows the game
-      version it was saved with.\n\u2022 Added Meats to the inventory\n\u2022 Item
-      Tiers now show in the inventory and have a library entry.\n\u2022 Last selected
-      slot & core are now restored when loading your game.\n\u2022 Introduced caps
-      for rarity weight bands in the forge. \n1.2.17\n<b>Changes</b>\n\u2022 Overhauled
-      leaderboards.\n\u2022 New Eternal cards in the Cauldron.\n\u2022 Movement speed
-      has been adjusted to be % and based on a similar formula to defense.\n<b>Minor
-      changes</b>\n\u2022 Resources no longer show partial values.\n\u2022 Forge
-      numbers are now formatted far more aesthetically.\n\u2022 Forge now has a 'Stat
-      Matching' toggle.\n\u2022 Stop for Vastium and Stat Matching are now under
-      the craft until upgrade button.\n<b>Bugfixes</b>\n\u2022 Caleb should no longer
-      pingpong between distant enemies and his tasks.\n\u2022 Crafted resources can
-      no longer go up tiers.\n<b>Backend</b>\n\u2022 Split echo logic from the hero
-      controller and pooled echoes for performance reasons.\n\u2022 Widened and adjusted
-      formatting on the graph tooltip.\n\u2022 Forge now stores its values as quality
-      directly so that when stats are adjusted you keep your percentile in each stat.\n\u2022
-      Cleaned up a lot more code."
+    m_Localized: "\u2022 Fixed an issue with fonts.\n\u2022 Fixed a resizing issue
+      in the forge.\n\u2022 Sime Time Trial quest now properly requires slimes to
+      be killed.\n\u2022 Fixed Alter Echoes not generating progress while the app
+      is in the background.\n1.2.20-1.2.21\n\u2022 Fixed an issue with echoes.\n\u2022
+      Fixed an issue with health calculations.\n1.2.19\n\u2022 Potential fix for
+      mobile crashes.\n\u2022 Removed Portrait on mobile.\n1.2.18\n\u2022 Rank now
+      properly shows the game version it was saved with.\n\u2022 Added Meats to the
+      inventory\n\u2022 Item Tiers now show in the inventory and have a library entry.\n\u2022
+      Last selected slot & core are now restored when loading your game.\n\u2022
+      Introduced caps for rarity weight bands in the forge. \n1.2.17\n<b>Changes</b>\n\u2022
+      Overhauled leaderboards.\n\u2022 New Eternal cards in the Cauldron.\n\u2022
+      Movement speed has been adjusted to be % and based on a similar formula to
+      defense.\n<b>Minor changes</b>\n\u2022 Resources no longer show partial values.\n\u2022
+      Forge numbers are now formatted far more aesthetically.\n\u2022 Forge now has
+      a 'Stat Matching' toggle.\n\u2022 Stop for Vastium and Stat Matching are now
+      under the craft until upgrade button.\n<b>Bugfixes</b>\n\u2022 Caleb should
+      no longer pingpong between distant enemies and his tasks.\n\u2022 Crafted resources
+      can no longer go up tiers.\n<b>Backend</b>\n\u2022 Split echo logic from the
+      hero controller and pooled echoes for performance reasons.\n\u2022 Widened
+      and adjusted formatting on the graph tooltip.\n\u2022 Forge now stores its
+      values as quality directly so that when stats are adjusted you keep your percentile
+      in each stat.\n\u2022 Cleaned up a lot more code."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624

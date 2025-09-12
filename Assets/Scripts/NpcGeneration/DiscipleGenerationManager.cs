@@ -29,6 +29,8 @@ namespace TimelessEchoes.NpcGeneration
         private int lastUnlockedCount;
         private bool ratesDirty;
         private float nextRatesRefreshTime;
+        [SerializeField] private float resumeApplyDebounceSeconds = 0.5f;
+        private float lastResumeApplyRealtime;
 
         public IReadOnlyList<DiscipleGenerator> Generators => generators;
 
@@ -166,6 +168,47 @@ namespace TimelessEchoes.NpcGeneration
                         : 1f;
                     gen.UpdateRate(baseRate * bonusMult);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Apply offline progress for all generators using the saved LastGenerationTime.
+        /// Intended to be called on app resume/focus gain. Respects OfflineTimeActive
+        /// and does not force a disk save; it updates in-memory save data timestamps.
+        /// </summary>
+        public void ApplyOfflineOnResume()
+        {
+            if (oracle == null) return;
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
+
+            // Coalesce multiple rapid resume signals (focus + unpause etc.)
+            var nowRt = Time.realtimeSinceStartup;
+            if (nowRt - lastResumeApplyRealtime < Mathf.Max(0.05f, resumeApplyDebounceSeconds))
+                return;
+            lastResumeApplyRealtime = nowRt;
+
+            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            var now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+
+            foreach (var gen in generators)
+            {
+                if (gen == null || gen.Resource == null) continue;
+                if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
+                    continue;
+
+                var seconds = now - rec.LastGenerationTime;
+                if (seconds <= 0) continue;
+
+                // Apply to live generator state (stored/progress).
+                gen.ApplyOfflineProgress(seconds);
+
+                // Update in-memory save to reflect new baseline without forcing a save.
+                rec.LastGenerationTime = now;
+                rec.Progress = gen.Progress;
+                rec.StoredResources ??= new Dictionary<string, double>();
+                rec.TotalCollected ??= new Dictionary<string, double>();
+                rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
+                rec.TotalCollected[gen.Resource.name] = gen.GetTotalCollected(gen.Resource);
             }
         }
 
