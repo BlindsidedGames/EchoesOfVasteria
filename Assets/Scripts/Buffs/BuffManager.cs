@@ -169,9 +169,9 @@ namespace TimelessEchoes.Buffs
             {
                 TickBuffs(delta);
                 TickCooldowns(delta);
+                // Only attempt auto-casting while ticking is enabled
+                AutoCastBuffs();
             }
-
-            AutoCastBuffs();
         }
 
         /// <summary>Pauses ticking of buff timers.</summary>

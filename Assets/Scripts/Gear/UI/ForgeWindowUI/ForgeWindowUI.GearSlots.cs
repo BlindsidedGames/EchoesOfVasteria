@@ -31,6 +31,7 @@ namespace TimelessEchoes.Gear.UI
         // Called by UI slot buttons (e.g., Weapon/Helmet/Chest/Boots)
         public void SelectSlot(string slot)
         {
+            var changed = !string.Equals(selectedSlot, slot);
             if (lastCrafted != null && !string.Equals(lastCrafted.slot, slot))
             {
                 SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
@@ -43,6 +44,12 @@ namespace TimelessEchoes.Gear.UI
             if (isAutoCrafting && !string.Equals(selectedSlot, slot))
                 StopAutoCrafting();
             selectedSlot = slot;
+            // Clear any pending result text when the player changes slot
+            if (changed)
+            {
+                if (resultText != null) resultText.text = string.Empty;
+                ClearResultTierText();
+            }
             // Persist last selected gear slot per save
             var o = Oracle.oracle;
             if (o != null && o.saveData != null && o.saveData.SavedPreferences != null)

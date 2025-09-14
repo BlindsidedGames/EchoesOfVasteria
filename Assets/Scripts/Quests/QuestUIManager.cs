@@ -120,6 +120,9 @@ namespace TimelessEchoes.Quests
         {
             // Ensure categories are present and in the desired expanded/collapsed state
             EnsureCategories();
+            // Force default-open state for Complete and Pinned at panel open
+            SetCategoryExpanded(readyCategory, true);
+            SetCategoryExpanded(pinnedCategory, true);
             // Ensure the list is freshly built and sorted whenever the quest UI opens
             var qm = QuestManager.Instance;
             qm?.RefreshNoticeboard();
@@ -127,8 +130,11 @@ namespace TimelessEchoes.Quests
             if (questScroll != null)
                 questScroll.verticalNormalizedPosition = 1f; // top
 
-            // Ensure "Complete" section is expanded after load events
+            // Ensure sections are expanded after load events
             EventHandler.OnLoadData += OnLoadDataHandler;
+
+            // Re-assert expansion at end of frame to win any order-of-operations races
+            StartCoroutine(ReopenCategoriesEndOfFrame());
         }
 
         private void OnDisable()
@@ -138,9 +144,18 @@ namespace TimelessEchoes.Quests
 
         private void OnLoadDataHandler()
         {
-            // Re-open the "Complete" category when save data is loaded
+            // Re-open the desired categories when save data is loaded
             EnsureCategories();
             SetCategoryExpanded(readyCategory, true);
+            SetCategoryExpanded(pinnedCategory, true);
+        }
+
+        private System.Collections.IEnumerator ReopenCategoriesEndOfFrame()
+        {
+            yield return null;
+            EnsureCategories();
+            SetCategoryExpanded(readyCategory, true);
+            SetCategoryExpanded(pinnedCategory, true);
         }
 
         private void EnsureCategories()
@@ -158,16 +173,22 @@ namespace TimelessEchoes.Quests
             if (readyCategory == null)
             {
                 readyCategory = Instantiate(questCategoryPrefab, questParent);
+                readyCategory.startClosed = false;
                 if (readyCategory.categoryName != null)
                     readyCategory.categoryName.text = "Complete";
+                // Explicitly set open on creation to override prefab startClosed
+                SetCategoryExpanded(readyCategory, true);
             }
 
             // Create Pinned category
             if (pinnedCategory == null)
             {
                 pinnedCategory = Instantiate(questCategoryPrefab, questParent);
+                pinnedCategory.startClosed = false;
                 if (pinnedCategory.categoryName != null)
                     pinnedCategory.categoryName.text = "Pinned";
+                // Explicitly set open on creation to override prefab startClosed
+                SetCategoryExpanded(pinnedCategory, true);
             }
 
             // Create Active category
@@ -176,6 +197,8 @@ namespace TimelessEchoes.Quests
                 activeCategory = Instantiate(questCategoryPrefab, questParent);
                 if (activeCategory.categoryName != null)
                     activeCategory.categoryName.text = "Active";
+                // Explicitly set open on creation to override prefab startClosed
+                SetCategoryExpanded(activeCategory, true);
             }
 
             // Create Quest History category (formerly "Completed")
@@ -184,6 +207,8 @@ namespace TimelessEchoes.Quests
                 completedCategory = Instantiate(questCategoryPrefab, questParent);
                 if (completedCategory.categoryName != null)
                     completedCategory.categoryName.text = "Quest History";
+                // Explicitly set closed on creation to override prefab startClosed
+                SetCategoryExpanded(completedCategory, false);
             }
 
             // Desired default states: Complete + Pinned + Active expanded, Quest History closed
@@ -197,18 +222,8 @@ namespace TimelessEchoes.Quests
         {
             if (toggle == null)
                 return;
-            // Use questsParent active state as a proxy for toggle expand/collapse
-            var content = toggle.questsParent != null ? toggle.questsParent.gameObject : null;
-            if (content == null)
-                return;
-
-            var isOpen = content.activeInHierarchy;
-            if (expanded != isOpen)
-            {
-                var btn = toggle.GetComponent<Button>();
-                if (btn != null)
-                    btn.onClick.Invoke();
-            }
+            // Prefer the explicit API to avoid fragile click-simulation
+            toggle.SetExpanded(expanded);
         }
 
         public void UpdateCategoryVisibility(int readyCount, int pinnedCount, int activeCount, int completedCount)

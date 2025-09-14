@@ -6,6 +6,12 @@ namespace TimelessEchoes.Gear.UI
 {
     public partial class ForgeWindowUI
     {
+        // Determine if there is any visible pending text (result summary)
+        private bool HasPendingText()
+        {
+            return resultText != null && !string.IsNullOrWhiteSpace(resultText.text);
+        }
+
         // Helpers for conversion sections
         private int GetSelectedAmountForSection(CraftSection2x1UIReferences section, ResourceManager rm, CoreSO core)
         {
@@ -634,9 +640,9 @@ namespace TimelessEchoes.Gear.UI
                 }
             }
 
-            // Replace depends only on having a pending result; do not gate on craftability
-            var hasResult = lastCrafted != null;
-            if (replaceButton != null) replaceButton.interactable = hasResult && !isAutoCrafting;
+            // Replace depends only on having pending text; do not gate on craftability
+            var hasPending = HasPendingText();
+            if (replaceButton != null) replaceButton.interactable = hasPending && !isAutoCrafting;
             // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
             if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
             if (craftUntilUpgradeButtonText != null)

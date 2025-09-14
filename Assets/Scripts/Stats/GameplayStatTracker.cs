@@ -19,6 +19,7 @@ namespace TimelessEchoes.Stats
     public class GameplayStatTracker : MonoBehaviour
     {
         public static GameplayStatTracker Instance { get; private set; }
+        public event Action<float> OnMaxRunDistanceChanged;
         public event Action<float> OnDistanceAdded;
         public event Action<bool> OnRunEnded;
         public event Action OnTaskCompletedEvent;
@@ -459,6 +460,7 @@ namespace TimelessEchoes.Stats
                 bypassDemoCapOnNextSet = true;
             MaxRunDistance = newValue;
             SaveState();
+            OnMaxRunDistanceChanged?.Invoke(MaxRunDistance);
         }
 
         public void BeginRun(MapGenerationConfig config)

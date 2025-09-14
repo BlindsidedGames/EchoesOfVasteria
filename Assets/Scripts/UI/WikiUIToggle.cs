@@ -15,7 +15,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private Sprite closeSprite;
         [SerializeField] private Image stateImage;
         [SerializeField] private Button toggleButton;
-        [SerializeField] private bool startClosed = true;
+        public bool startClosed = true;
         public Transform questsParent;
         public TMP_Text categoryName;
 
@@ -49,6 +49,30 @@ namespace TimelessEchoes.UI
             }
 
             UpdateImage(newState);
+        }
+
+        // Explicitly set expanded/collapsed without relying on button click.
+        public void SetExpanded(bool expanded)
+        {
+            if (toggleObject != null)
+                toggleObject.SetActive(expanded);
+
+            // Keep questsParent visibility in sync if provided separately.
+            var content = questsParent != null ? questsParent.gameObject : null;
+            if (content != null && content.activeSelf != expanded)
+                content.SetActive(expanded);
+
+            UpdateImage(expanded);
+        }
+
+        public bool IsExpanded
+        {
+            get
+            {
+                if (toggleObject != null) return toggleObject.activeSelf;
+                if (questsParent != null) return questsParent.gameObject.activeSelf;
+                return true;
+            }
         }
 
         private void UpdateImage(bool active)

@@ -88,6 +88,8 @@ namespace TimelessEchoes.UI
         [TabGroup("Settings", "Forge")] [SerializeField]
         private Button stopVastiumButton;
         [TabGroup("Settings", "Forge")] [SerializeField]
+        // Note: This feature is now called "Stat Matching" in the UI.
+        // Default state should be OFF (see StaticReferences.LockAutocraftStatSet default).
         private Button lockStatsButton;
 
         [TabGroup("Settings", "Sprites")] [SerializeField]
@@ -241,6 +243,8 @@ namespace TimelessEchoes.UI
             }
             if (lockStatsButton != null)
             {
+                // "Stat Matching" toggle (formerly "Lock Stats").
+                // Default is OFF for new players via StaticReferences (PlayerPrefs default = 0).
                 lockStatsButton.onClick.AddListener(ToggleLockStats);
                 lockStatsImage = lockStatsButton.GetComponent<Image>();
                 UpdateButtonVisual(lockStatsImage, StaticReferences.LockAutocraftStatSet);
@@ -657,6 +661,7 @@ namespace TimelessEchoes.UI
             UpdateButtonVisual(stopVastiumImage, StaticReferences.StopAutocraftOnVastium);
         }
 
+        // Stat Matching toggle handler (formerly "Lock Stats")
         private void ToggleLockStats()
         {
             StaticReferences.LockAutocraftStatSet = !StaticReferences.LockAutocraftStatSet;

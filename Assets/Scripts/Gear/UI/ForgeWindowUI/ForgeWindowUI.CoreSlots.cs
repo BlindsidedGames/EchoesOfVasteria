@@ -13,8 +13,9 @@ namespace TimelessEchoes.Gear.UI
     {
         private void SelectCore(CoreSO core)
         {
+            var changed = core != selectedCore;
             // Stop auto-crafting if the player changes the selected core
-            if (isAutoCrafting && core != selectedCore)
+            if (isAutoCrafting && changed)
                 StopAutoCrafting();
             selectedCore = core;
             // Persist last selected core per save
@@ -39,6 +40,12 @@ namespace TimelessEchoes.Gear.UI
             UpdateCoreCraftPreview(selectedCore);
             UpdateMaxCraftsText();
             ThrottledRefreshOdds();
+            // Clear any pending result text when the player changes core
+            if (changed)
+            {
+                if (resultText != null) resultText.text = string.Empty;
+                ClearResultTierText();
+            }
             RefreshActionButtons();
         }
 

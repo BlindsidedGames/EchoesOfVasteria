@@ -170,6 +170,10 @@ namespace Blindsided.SaveData
             public string LastSelectedForgeCore;
             public string LastSelectedForgeSlot;
 
+            // Stat Matching (formerly "Lock Stats"): when enabled, autocraft only stops
+            // on upgrades that match the equipped affix stat set. Default: OFF.
+            public bool LockAutocraftStatSet = false;
+
             /// <summary>
             ///     Automatically pin new quests when they become active.
             /// </summary>

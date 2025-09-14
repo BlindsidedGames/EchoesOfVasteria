@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private Slider distanceSlider;
         [SerializeField] private TMP_Text distanceText;
         private EnemyKillTracker killTracker;
+        private float lastKnownMaxDistance;
 
         [SerializeField] private float updateInterval = 0.1f;
         private float nextUpdateTime;
@@ -57,6 +58,9 @@ namespace TimelessEchoes.UI
             SortEntries();
             UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
             SetupDistanceSlider();
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker != null)
+                tracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
         }
 
         private void OnDisable()
@@ -64,6 +68,9 @@ namespace TimelessEchoes.UI
             UITicker.Instance?.Unsubscribe(RefreshTick);
             if (distanceSlider != null)
                 distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (tracker != null)
+                tracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
         }
 
         private void RefreshTick()
@@ -77,6 +84,7 @@ namespace TimelessEchoes.UI
         {
             var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
             float max = tracker != null ? tracker.MaxRunDistance : 0f;
+            lastKnownMaxDistance = max;
             if (distanceSlider != null)
             {
                 distanceSlider.minValue = 0f;
@@ -86,6 +94,21 @@ namespace TimelessEchoes.UI
                 distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
                 distanceSlider.onValueChanged.AddListener(OnDistanceSliderChanged);
             }
+            UpdateDistanceLabel();
+            UpdateEntries();
+        }
+
+        private void OnMaxRunDistanceChanged(float newMax)
+        {
+            // Update slider bounds and value without jumping unless the user was at max
+            if (distanceSlider != null)
+            {
+                bool wasAtMax = Mathf.Approximately(distanceSlider.value, lastKnownMaxDistance);
+                distanceSlider.maxValue = newMax;
+                if (wasAtMax || distanceSlider.value > newMax)
+                    distanceSlider.SetValueWithoutNotify(newMax);
+            }
+            lastKnownMaxDistance = newMax;
             UpdateDistanceLabel();
             UpdateEntries();
         }

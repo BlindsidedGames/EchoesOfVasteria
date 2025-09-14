@@ -270,17 +270,13 @@ namespace Blindsided.SaveData
             }
         }
 
-        // When enabled, forge autocraft will only stop on an upgrade
-        // if the rolled item's affix stat set matches the currently equipped
-        // item's stat set for that slot (ignoring order and duplicates).
+        // Stat Matching (formerly "Lock Stats"): when enabled, forge autocraft only stops
+        // on upgrades that match the equipped item's affix stat set for that slot.
+        // Now stored in SavedPreferences instead of PlayerPrefs. Default OFF for new saves.
         public static bool LockAutocraftStatSet
         {
-            get => PlayerPrefs.GetInt(LockAutocraftStatSetKey, 0) == 1;
-            set
-            {
-                PlayerPrefs.SetInt(LockAutocraftStatSetKey, value ? 1 : 0);
-                PlayerPrefs.Save();
-            }
+            get => oracle.saveData.SavedPreferences.LockAutocraftStatSet;
+            set => oracle.saveData.SavedPreferences.LockAutocraftStatSet = value;
         }
 
         public static bool ShowPinnedQuests

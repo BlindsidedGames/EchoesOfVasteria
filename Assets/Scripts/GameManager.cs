@@ -516,6 +516,8 @@ namespace TimelessEchoes
             // Starting a new run: no cooldowns from previous state
             BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.UpdateDistance(0f);
+            // Re-enable buff ticking and auto-cast now that a new run is starting
+            BuffManager.Instance?.Resume();
             // If this is the first run of a session (tavern was active), reset session aggregates
             if (statTracker != null && tavernUI != null && tavernUI.activeSelf)
                 statTracker.BeginSession();
@@ -752,6 +754,8 @@ namespace TimelessEchoes
             // On hero death: clear buffs without starting cooldowns, and clear any existing cooldowns
             BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.ResetCooldowns();
+            // Prevent auto-buffing (and echo respawns) during the death window
+            BuffManager.Instance?.Pause();
 
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;

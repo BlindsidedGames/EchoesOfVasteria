@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Buffs;
@@ -58,6 +59,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] [Min(0.05f)] private float weightsNotifyInterval = 0.25f;
         private float nextCardPoolsRebuildAllowed;
         private float nextWeightsNotifyTime;
+        private Coroutine resourceSubscribeRoutine;
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
@@ -332,8 +334,11 @@ namespace TimelessEchoes.Upgrades
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
             // Refresh weights when inventory or quests change
+            resourceManager ??= ResourceManager.Instance;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged += OnInventoryChangedHandler;
+            else
+                resourceSubscribeRoutine = StartCoroutine(WaitAndSubscribeResourceManager());
             EventHandler.OnQuestHandin += OnQuestHandinHandler;
         }
 
@@ -343,6 +348,11 @@ namespace TimelessEchoes.Upgrades
             EventHandler.OnLoadData -= ResetSessionStats;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChangedHandler;
+            if (resourceSubscribeRoutine != null)
+            {
+                StopCoroutine(resourceSubscribeRoutine);
+                resourceSubscribeRoutine = null;
+            }
             EventHandler.OnQuestHandin -= OnQuestHandinHandler;
         }
 
@@ -1091,6 +1101,7 @@ namespace TimelessEchoes.Upgrades
 
         private void OnQuestHandinHandler(string questId)
         {
+            cachedGroupPools.Clear();
             cardPoolsDirty = true;
             DebouncedWeightsChanged();
         }
@@ -1103,6 +1114,23 @@ namespace TimelessEchoes.Upgrades
                 nextWeightsNotifyTime = now + Mathf.Max(0.05f, weightsNotifyInterval);
                 OnWeightsChanged?.Invoke();
             }
+        }
+
+        private IEnumerator WaitAndSubscribeResourceManager()
+        {
+            // Wait until ResourceManager.Instance is available, then subscribe and invalidate caches
+            while (resourceManager == null)
+            {
+                resourceManager = ResourceManager.Instance;
+                if (resourceManager == null)
+                {
+                    yield return null;
+                }
+            }
+            resourceManager.OnInventoryChanged += OnInventoryChangedHandler;
+            // Invalidate caches immediately in case unlocks occurred before subscription
+            OnInventoryChangedHandler();
+            resourceSubscribeRoutine = null;
         }
 
         // ---------- Infinity (Eternal Boons) helpers ----------
