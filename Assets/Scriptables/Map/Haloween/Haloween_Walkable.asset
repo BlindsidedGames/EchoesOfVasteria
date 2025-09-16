@@ -16,12 +16,332 @@ MonoBehaviour:
   taskSettings:
     taskDensity: 0.1
     borderOnly: 0
-    topBorderOffset: 0
+    topBorderOffset: 1
     bottomBorderOffset: 0
     leftBorderOffset: 0
     rightBorderOffset: 0
     addToTaskList: 1
   decor:
-    density: 1
-    decor: []
+    density: 0.015
+    decor:
+    - Name: Decorations_2
+      tile: {fileID: 0}
+      prefab: {fileID: 3852728372860651178, guid: 2bf593fe2e7214f46ad031e099133735, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_3
+      tile: {fileID: 0}
+      prefab: {fileID: 1971148016275637470, guid: eac113734cdc42646bf2166c9d8bb5da, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_4
+      tile: {fileID: 0}
+      prefab: {fileID: 6306758282201643759, guid: a90e3d9144ea72b4f846e8902d49e341, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_5
+      tile: {fileID: 0}
+      prefab: {fileID: 3195453493542627548, guid: 464638b0a92f4b54e9acd5fa2207edb6, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_6
+      tile: {fileID: 0}
+      prefab: {fileID: 2026074335892494232, guid: 2668b7652e142724d8711fd998edada2, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_7
+      tile: {fileID: 0}
+      prefab: {fileID: 5909568921778648272, guid: cdc3782bd3a67734bb64c48e1032300d, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_8
+      tile: {fileID: 0}
+      prefab: {fileID: 3009806101826583837, guid: f487e160947d41a449717386e2070ba7, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_9
+      tile: {fileID: 0}
+      prefab: {fileID: 5220190588238706445, guid: 8896801491a25f14b9fc86acdb6b8a67, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_10
+      tile: {fileID: 0}
+      prefab: {fileID: 1994821708658014629, guid: b78b5595043d8ec44afff6c2738ae577, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_13
+      tile: {fileID: 0}
+      prefab: {fileID: 5961257142145046479, guid: 40b0bd2a6c7f23c4793847731bbc2d64, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.05
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_20
+      tile: {fileID: 0}
+      prefab: {fileID: 7751259411583314466, guid: fef29f4e7815ae64e8fbd58ce35526e6, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_21
+      tile: {fileID: 0}
+      prefab: {fileID: 8180723352568528710, guid: ccd5833e8805d40438a99b77ae08dc87, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_29
+      tile: {fileID: 0}
+      prefab: {fileID: 8509855601207342811, guid: edc911ed35fd5ac4bad73dc30cdc740a, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_30
+      tile: {fileID: 0}
+      prefab: {fileID: 2574675005716748472, guid: e9c38f379a815274bb0351ec7a57d9ce, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_31
+      tile: {fileID: 0}
+      prefab: {fileID: 3225885518548987136, guid: e2fb3f9d7b3eb1642bd4fdd8bd914475, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.05
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Decorations_54
+      tile: {fileID: 0}
+      prefab: {fileID: 8459096105223617260, guid: 5c51f64e1a0c04d4f905d0095825b838, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Pumpkin_1_Anim_0
+      tile: {fileID: 0}
+      prefab: {fileID: 7083997291918722367, guid: a4d96a3f310cccb49bb34101a7a0a047, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Pumpkin_2_Anim_0
+      tile: {fileID: 0}
+      prefab: {fileID: 1689242538576197284, guid: 9682d1182e0990f4ab1548d72a2aca79, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.2
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Scarecrow_2_Anim_0
+      tile: {fileID: 0}
+      prefab: {fileID: 5047013316419929521, guid: 46c69653a301ece44881863d93f495fc, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
+    - Name: Scarecrow_3_Anim_0
+      tile: {fileID: 0}
+      prefab: {fileID: 3049282604687132745, guid: a644feb8dc97bae41b4cc51383912d19, type: 3}
+      randomFlipX: 0
+      config:
+        weight: 0.1
+        minX: 0
+        maxX: Infinity
+        topBuffer: 1
+        bottomBuffer: 0
+        sideBuffer: 1
+        borderOnly: 0
+        topBorderOffset: 0
+        bottomBorderOffset: 0
+        leftBorderOffset: 0
+        rightBorderOffset: 0
   showValidationGizmos: 0
