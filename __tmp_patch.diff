@@ -1,0 +1,15 @@
+--- a/Assets/Scripts/Audio/AudioManager.cs
++++ b/Assets/Scripts/Audio/AudioManager.cs
+@@
+-        public enum MusicTrack
+-        {
+-            Main,
+-            Mines
+-        }
++        public enum MusicTrack
++        {
++            Main,
++            Mines,
++            Town
++        }
+

@@ -57,10 +57,12 @@ namespace TimelessEchoes.Audio
         [Header("UI Clips")] [SerializeField]
         private AudioClip uiButtonClickClip;
 
+        
         public enum MusicTrack
         {
             Main,
-            Mines
+            Mines,
+            DefaultMap
         }
 
         public enum TaskType
@@ -314,3 +316,7 @@ namespace TimelessEchoes.Audio
         }
     }
 }
+
+
+
+

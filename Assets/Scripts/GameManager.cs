@@ -971,6 +971,9 @@ namespace TimelessEchoes
             resetRunResourceTracker = true;
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
+            var audioManager = AudioManager.Instance;
+            if (audioManager != null)
+                audioManager.PlayMusic(AudioManager.MusicTrack.Main, fadeDuration);
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
 #endif
@@ -1118,3 +1121,4 @@ namespace TimelessEchoes
         }
     }
 }
+

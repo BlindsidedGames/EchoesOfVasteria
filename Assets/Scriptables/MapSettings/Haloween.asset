@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7024b925fb721449cb612a187ddd1a, type: 3}
+  m_Name: Haloween
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.MapGeneration.MapGenerationConfig
+  tilemapChunkSettings:
+    terrainMap: {fileID: 0}
+    decorMap: {fileID: 0}
+    bottomTerrain: {fileID: 11400000, guid: f63a5bdd826db1a4d81ca2a02c4a05da, type: 2}
+    middleTerrain: {fileID: 11400000, guid: 313e18bada8b57844807667ac6791ce4, type: 2}
+    topTerrain: {fileID: 11400000, guid: 8a0fecde35efd7543953ddaad4e93834, type: 2}
+    minAreaWidth: 2
+    edgeWaviness: 1
+    middleDepthRange: {x: 2, y: 6}
+    topDepthRange: {x: 2, y: 6}
+    seed: 0
+    randomizeSeed: 1
+  taskGeneratorSettings:
+    minX: 0
+    height: 18
+    enemyDensity: 0.1
+    enemySpawnXOffset: 0
+    topBuffer: 0
+    bottomBuffer: 0
+    blockingMask:
+      serializedVersion: 2
+      m_Bits: 0
+    otherTaskEdgeOffset: 1
+    enemies: []
+    woodcutting:
+      weight: 1
+      tasks: []
+    mining:
+      weight: 1
+      tasks: []
+    farming:
+      weight: 1
+      tasks: []
+    fishing:
+      weight: 1
+      tasks: []
+    looting:
+      weight: 1
+      tasks: []
+    npcTasks: []
+    minTaskDistance: 1.5
+  segmentedMapSettings:
+    segmentSize: {x: 64, y: 18}
+  allowClouds: 1
+  heroStartY: 0
+  allowMaxDistanceReapGain: 1
