@@ -32,6 +32,9 @@ namespace TimelessEchoes.Enemies
             "Phoenixia",
             "Nuclearion",
             "octoforpe",
+            "dqssq",
+            "Poseidon",
+            "Taco",
         };
 
         /// <summary>
