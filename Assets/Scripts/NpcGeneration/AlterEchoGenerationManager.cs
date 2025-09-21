@@ -18,11 +18,11 @@ namespace TimelessEchoes.NpcGeneration
     ///     Central manager that updates all NPC resource generators and applies offline progress.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class DiscipleGenerationManager : Singleton<DiscipleGenerationManager>
+    public class AlterEchoGenerationManager : Singleton<AlterEchoGenerationManager>
     {
-        [SerializeField] private DiscipleGenerator generatorPrefab;
+        [SerializeField] private AlterEchoGenerator generatorPrefab;
 
-        private readonly List<DiscipleGenerator> generators = new();
+        private readonly List<AlterEchoGenerator> generators = new();
 
         private ResourceManager resourceManager;
         private GameplayStatTracker statTracker;
@@ -32,7 +32,7 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private float resumeApplyDebounceSeconds = 0.5f;
         private float lastResumeApplyRealtime;
 
-        public IReadOnlyList<DiscipleGenerator> Generators => generators;
+        public IReadOnlyList<AlterEchoGenerator> Generators => generators;
 
         public event Action OnGeneratorsRebuilt;
 
@@ -183,7 +183,9 @@ namespace TimelessEchoes.NpcGeneration
 
             // Coalesce multiple rapid resume signals (focus + unpause etc.)
             var nowRt = Time.realtimeSinceStartup;
-            if (nowRt - lastResumeApplyRealtime < Mathf.Max(0.05f, resumeApplyDebounceSeconds))
+            var deltaRt = nowRt - lastResumeApplyRealtime;
+            var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
+            if (deltaRt > 0f && deltaRt < minInterval)
                 return;
             lastResumeApplyRealtime = nowRt;
 
@@ -213,7 +215,7 @@ namespace TimelessEchoes.NpcGeneration
         }
 
         /// <summary>
-        /// Request disciple rate refresh; will be coalesced and processed with a short cooldown
+        /// Request alter-echo rate refresh; will be coalesced and processed with a short cooldown
         /// to avoid excessive cost when many cards are granted rapidly.
         /// </summary>
         public void MarkRatesDirty()
@@ -243,3 +245,5 @@ namespace TimelessEchoes.NpcGeneration
         }
     }
 }
+
+

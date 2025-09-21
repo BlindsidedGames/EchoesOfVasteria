@@ -169,6 +169,10 @@ namespace Blindsided.SaveData
             // Forge UI: remember last selections per save
             public string LastSelectedForgeCore;
             public string LastSelectedForgeSlot;
+            public double IngotCraftAmount = 1;
+            public double CrystalCraftAmount = 1;
+            public double ChunkCraftAmount = 1;
+            public double CoreCraftAmount = 1;
 
             // Stat Matching (formerly "Lock Stats"): when enabled, autocraft only stops
             // on upgrades that match the equipped affix stat set. Default: OFF.
@@ -642,3 +646,4 @@ namespace Blindsided.SaveData
         public List<GearAffixRecord> affixes = new();
     }
 }
+

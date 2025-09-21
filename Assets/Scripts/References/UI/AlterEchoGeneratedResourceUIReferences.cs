@@ -5,9 +5,9 @@ using UnityEngine.UI;
 namespace References.UI
 {
     /// <summary>
-    /// Holds references for a generated resource entry on a disciple generator UI.
+    /// Holds references for a generated resource entry on an alter-echo generator UI.
     /// </summary>
-    public class DiscipleGeneratedResourceUIReferences : MonoBehaviour
+    public class AlterEchoGeneratedResourceUIReferences : MonoBehaviour
     {
         public Image iconImage;
         public Button selectButton;

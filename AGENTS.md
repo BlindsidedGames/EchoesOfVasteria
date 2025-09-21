@@ -25,3 +25,76 @@ When making changes to this **2D** Unity project:
 - Default to proposing a single task that accomplishes the user's goal.
 - When identifying bugs, refactorings, or performance issues, provide a separate task for each distinct item.
 - If the user explicitly asks for a suggested task, limit the response to one task.
+## Project Structure Map
+
+### Root
+- `Assets/` – Gameplay assets, prefabs, art, runtime scripts; see breakdown below.
+- `Packages/` – Unity package manifest and embedded packages.
+- `ProjectSettings/` – Engine-level settings (input, graphics, addressables).
+- `UserSettings/` – Per-seat editor preferences (not shared).
+- `Library/`, `Logs/`, `Temp/`, `obj/` – Generated caches and build outputs; regenerate as needed.
+- `docs/` – Project wiki content and supporting images.
+- `Documentation/` – Legacy design docs and references.
+- `GeneratedAssets/`, `GeneratedAssets_deleted/` – Auto-generated content from procedural tools.
+- `SteamAssets/` – Steam integration data and configuration.
+- `Recordings/`, `Screenshots/`, `Timeless Error Logs/` – Captured media and diagnostics.
+- `Mobile/` – Platform-specific build artifacts.
+- `.github/`, `.vscode/`, `.idea/` – Repo automation and workspace configuration.
+
+### Assets
+- `AddressableAssetsData/` – Addressables catalog, groups, and build settings.
+- `Art/` – 2D sprites, tiles, and visual source assets.
+- `Audio/` – Audio clips, mixers, and music assets.
+- `Backup/` – Archived versions of critical assets.
+- `BetterRuleTiles/` – Custom rule tile assets and supporting scripts.
+- `Editor/` & `Editor Default Resources/` – Custom editor tooling and required resources.
+- `ExternalDependencyManager/` – Google EDM4U and dependency resolution plugins.
+- `Localization/` – Unity localization tables and string assets.
+- `MPUIKit/` – UI Toolkit extension package content.
+- `Plugins/` – Third-party and native plugins (Cinemachine, Odin, etc.).
+- `Prefabs/` – Prefab library for gameplay objects, UI, and environments.
+- `Resources/` & `Resources_moved/` – Assets loaded at runtime via the `Resources` API.
+- `Scenes/` – Game scenes (`Loading.unity`, `Main.unity`).
+- `Screenshots/` – Reference imagery captured in-editor.
+- `Scriptables/` – ScriptableObject data (map configs, skills, gear definitions).
+- `Scripts/` – Runtime and editor C# code; see module map below.
+- `Settings/` – Input System, URP, Addressables, and other project settings assets.
+- `Tests/` – Placeholder for Unity PlayMode/EditMode tests.
+- `TextMesh Pro/` – TMP essential resources.
+- `Tilemaps/` – Tile assets and palettes for procedural map layouts.
+
+### Assets/Scripts Modules
+- `Audio/` – Audio systems (mixers, SFX helpers, focus muting).
+- `Blindsided/` – Shared framework pieces (components, save data, UGS hooks, utilities).
+  - `Components/`, `SaveData/`, `UGS/`, `Utilities/` – Modularized subsystems supporting the rest of the project.
+- `Buffs/` – Buff/debuff definitions and runtime handlers.
+- `Combat/` – Combat flow, damage processing, and encounter helpers.
+- `Editor/` – Custom inspectors and tooling scripts.
+- `Enemies/` – Enemy behaviours, data containers, kill tracking, and naming utilities.
+- `Gear/` – Gear crafting logic and UI.
+  - `SO/` – Gear-related ScriptableObjects (rarities, crafting configs, stat definitions).
+  - `UI/ForgeWindowUI/` – Partial classes powering the forge window interface.
+- `Hero/` – Hero controllers, health, audio, echoes, and hero-specific stats.
+  - `Stats/` – Hero stat blocks and modifiers.
+- `MapGeneration/` – Procedural map/layout generation and navmesh setup.
+- `Migration/` – Save data migration helpers for backward compatibility.
+- `NPC/` – Runtime NPC behaviours and interactions.
+- `NpcGeneration/` – Procedural NPC roster construction.
+- `Platform/` – Platform-specific integration wrappers (Steam, focus, etc.).
+- `Quests/` – Quest tracking, utilities, and quest-related data.
+- `References/` – Scriptable reference registries for UI and stat panels.
+- `Skills/` – Skill definitions, effects, and execution logic.
+- `Stats/` – Core stat architecture shared across hero, enemies, and gear.
+- `Steamworks.NET/` – Steamworks bindings and helper utilities.
+- `Tasks/` – Overworld task system (gathering, NPC interactions, procedural generation).
+- `Tools/` – Developer tooling, debugging helpers, and editor utilities.
+- `UI/` – Global UI windows, HUD components, and settings panels.
+- `Upgrades/` – Player progression and upgrade management systems.
+- `Utilities/` – General-purpose helpers, math utilities, and extension methods.
+
+### Notable Entry Points
+- `Assets/Scripts/GameManager.cs` – Central runtime orchestrator for map generation, hero lifecycle, and UI state.
+- `Assets/Scripts/Audio/AudioManager.cs` – Global audio bootstrapper handling mixers, saved volumes, and SFX helpers.
+- `Assets/Scripts/Gear/UI/ForgeWindowUI/*` – Partial classes composing the forge window crafting workflow.
+- `Assets/Scenes/Main.unity` – Primary gameplay scene (avoid editing without explicit instruction).
+- `Assets/Scenes/Loading.unity` – Loading/interstitial scene used during transitions.

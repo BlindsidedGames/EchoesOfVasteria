@@ -4,12 +4,12 @@ using TimelessEchoes.Upgrades;
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    /// Updates a town crop sprite based on its disciple generator progress.
+    /// Updates a town crop sprite based on its alter-echo generator progress.
     /// </summary>
-    public class DiscipleCropGrowth : MonoBehaviour
+    public class AlterEchoCropGrowth : MonoBehaviour
     {
         [SerializeField] private Resource resource;
-        [SerializeField] private DiscipleGenerator generator;
+        [SerializeField] private AlterEchoGenerator generator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite[] growthStages = new Sprite[4];
 
@@ -25,7 +25,7 @@ namespace TimelessEchoes.NpcGeneration
         {
             if (generator == null)
                 FindGenerator();
-            var manager = DiscipleGenerationManager.Instance;
+            var manager = AlterEchoGenerationManager.Instance;
             if (manager != null)
                 manager.OnGeneratorsRebuilt += OnGeneratorsRebuilt;
         }
@@ -58,7 +58,7 @@ namespace TimelessEchoes.NpcGeneration
             if (resource == null)
                 return;
 
-            var manager = DiscipleGenerationManager.Instance;
+            var manager = AlterEchoGenerationManager.Instance;
             if (manager == null)
                 return;
 
@@ -74,7 +74,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnDestroy()
         {
-            var manager = DiscipleGenerationManager.Instance;
+            var manager = AlterEchoGenerationManager.Instance;
             if (manager != null)
                 manager.OnGeneratorsRebuilt -= OnGeneratorsRebuilt;
         }

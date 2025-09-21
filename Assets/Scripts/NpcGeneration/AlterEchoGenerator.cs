@@ -12,7 +12,7 @@ namespace TimelessEchoes.NpcGeneration
     /// <summary>
     ///     Generates a single resource over time based on the player's best collection rate.
     /// </summary>
-    public class DiscipleGenerator : MonoBehaviour
+    public class AlterEchoGenerator : MonoBehaviour
     {
         [SerializeField] private Resource resource;
 
@@ -141,7 +141,7 @@ namespace TimelessEchoes.NpcGeneration
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError($"SaveData after disciple collect failed: {ex}");
+                    Debug.LogError($"SaveData after alter-echo collect failed: {ex}");
                 }
             }
         }

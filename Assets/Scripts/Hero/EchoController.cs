@@ -151,6 +151,14 @@ namespace TimelessEchoes.Hero
 
             Initialized = true;
 
+            if (!disableSkills && taskCtrl == null)
+            {
+                taskCtrl = TaskController.Instance
+                           ?? GetComponent<TaskController>()
+                           ?? GetComponentInParent<TaskController>()
+                           ?? FindFirstObjectByType<TaskController>();
+            }
+
             UpdateIndicators();
 
             // Ensure membership lists are updated when re-enabled from pool
@@ -408,3 +416,4 @@ namespace TimelessEchoes.Hero
         }
     }
 }
+

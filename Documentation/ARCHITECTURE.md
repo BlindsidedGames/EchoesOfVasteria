@@ -38,7 +38,7 @@
 
 ### Quests (`Assets/Scripts/Quests/*`)
 - `QuestManager`: Loads quests, tracks progress (resources, kills, distance, casts, meets), manages UI entries, completion, and rewards (e.g., unlocking buff slots, increasing max distance).
-- Integrations: `ResourceManager` (resource goals), `EnemyKillTracker` (kill goals), `GameplayStatTracker` (distance goals), `DiscipleGenerationManager` (NPC generation rates), and Steam achievements.
+- Integrations: `ResourceManager` (resource goals), `EnemyKillTracker` (kill goals), `GameplayStatTracker` (distance goals), `AlterEchoGenerationManager` (NPC generation rates), and Steam achievements.
 
 ### Upgrades & Resources (`Assets/Scripts/Upgrades/*`)
 - `ResourceManager`: Central wallet for all resources, used by tasks, enemy drops, quests, and UI. UI references under `Assets/Scripts/References/UI/*` display spendable resources and costs.

@@ -28,7 +28,7 @@ namespace TimelessEchoes.Quests
     {
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
-        private DiscipleGenerationManager generationManager;
+        private AlterEchoGenerationManager generationManager;
         private QuestUIManager uiManager;
         private GameplayStatTracker statTracker;
         private TimelessEchoes.Upgrades.CauldronManager cauldronManager;
@@ -63,9 +63,9 @@ namespace TimelessEchoes.Quests
             killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
                 Log("EnemyKillTracker missing", TELogCategory.Combat, this);
-            generationManager = DiscipleGenerationManager.Instance;
+            generationManager = AlterEchoGenerationManager.Instance;
             if (generationManager == null)
-                Log("DiscipleGenerationManager missing", TELogCategory.General, this);
+                Log("AlterEchoGenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
             if (uiManager == null)
                 Log("QuestUIManager missing", TELogCategory.Quest, this);
@@ -558,7 +558,7 @@ namespace TimelessEchoes.Quests
             if (inst.data.disciplePercentReward > 0f)
             {
                 oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
-                DiscipleGenerationManager.Instance?.RefreshRates();
+                AlterEchoGenerationManager.Instance?.RefreshRates();
             }
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 CompletedNpcTasks.Add(inst.data.npcId);

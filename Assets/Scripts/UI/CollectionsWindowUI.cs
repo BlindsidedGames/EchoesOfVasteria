@@ -544,7 +544,7 @@ namespace TimelessEchoes.UI
 			var newBonus = 0.001f * Mathf.Max(0, totalCompletedTiers);
 			DisciplePercentCollectionsBonus = newBonus;
 			lastAppliedDiscipleBonus = newBonus;
-			TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.RefreshRates();
+			TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.RefreshRates();
 		}
 
 		private void MarkGroupDirty(CauldronManager.AEResourceGroup grp)
@@ -756,7 +756,7 @@ namespace TimelessEchoes.UI
 				sectionName = FormatGroupName(grp);
 				sectionTier = GetSectionTier(grp);
 				var sectPct = sectionTier * 0.1f;
-				sectionEffect = $"Collections Bonus: +{FormatPercentNoTrailingZero(sectPct)}% Disciple Rate";
+				sectionEffect = $"Collections Bonus: +{FormatPercentNoTrailingZero(sectPct)}% Echo Power";
 				var mult = cachedCauldronManager != null ? cachedCauldronManager.GetResourceAlterEchoMultiplier(cardName) : 1f;
 				var pct = Mathf.Max(0f, (mult - 1f) * 100f);
 				cardEffect = $"+{pct:N0}% Alter-Echo Power";

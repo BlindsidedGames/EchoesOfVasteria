@@ -14,7 +14,7 @@
 - `Enemies/` — `Enemy`, `EnemyData`, activation, balance window
 - `Hero/` — `HeroController`, health, stats, echoes
 - `MapGeneration/` — `SegmentedMapGenerator`, `TilemapChunkGenerator`, decor config, terrain settings
-- `NpcGeneration/` — Disciple generation systems and UI
+- `NpcGeneration/` — Alter-echo generation systems and UI
 - `Quests/` — `QuestManager`, UI, quest data
 - `References/` — UI reference holders to wire scenes to presenters
 - `Scripts/` (root) — glue classes like `GameManager`, `HealthBase`, etc.

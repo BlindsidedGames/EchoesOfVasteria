@@ -220,7 +220,7 @@ namespace TimelessEchoes.Upgrades
 
         public float GetResourceAlterEchoMultiplier(string resourceName)
         {
-            // Multiplier applied to per-resource disciple generation rate
+            // Multiplier applied to per-resource alter-echo generation rate
             if (config == null) return 1f;
             var tier = GetResourceTier(resourceName);
             if (tier <= 0 || config.resourcePowerBonusPerTier == null || config.resourcePowerBonusPerTier.Length == 0)
@@ -713,10 +713,10 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            // Update disciple generation rates when card counts change
+            // Update alter-echo generation rates when card counts change
             try
             {
-                TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance?.MarkRatesDirty();
+                TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty();
             }
             catch (Exception)
             {

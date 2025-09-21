@@ -12,22 +12,22 @@ namespace TimelessEchoes.NpcGeneration
     /// <summary>
     ///     Updates a slider or image to reflect the progress of an NPC generator.
     /// </summary>
-    public class DiscipleGeneratorProgressUI : MonoBehaviour
+    public class AlterEchoGeneratorProgressUI : MonoBehaviour
     {
-        [SerializeField, HideInInspector] private DiscipleGenerator generator;
+        [SerializeField, HideInInspector] private AlterEchoGenerator generator;
         [SerializeField] private Transform generatedParent;
-        [SerializeField] private DiscipleGeneratedResourceUIReferences generatedPrefab;
+        [SerializeField] private AlterEchoGeneratedResourceUIReferences generatedPrefab;
         [SerializeField] private SlicedFilledImage image;
         [SerializeField] private TMP_Text resourceNameText;
         [SerializeField] private TMP_Text totalCollectedText;
         [SerializeField] private TMP_Text collectionRateText;
         [SerializeField] private Button collectButton;
 
-        private DiscipleGeneratedResourceUIReferences resourceUI;
+        private AlterEchoGeneratedResourceUIReferences resourceUI;
         private ResourceInventoryUI inventoryUI;
         private ResourceManager resourceManager;
 
-        public void SetData(DiscipleGenerator gen)
+        public void SetData(AlterEchoGenerator gen)
         {
             generator = gen;
 

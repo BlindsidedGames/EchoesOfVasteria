@@ -218,4 +218,61 @@ namespace TimelessEchoes.Tasks
 
             return amount;
         }
-    }}
+
+#if UNITY_EDITOR
+        private static readonly Color unclaimedGizmoColor = new Color(0.65f, 0.72f, 0.82f, 0.85f);
+        private static readonly Color claimedGizmoColor = new Color(0.45f, 0.85f, 0.5f, 1f);
+        private static readonly Color claimLineColor = new Color(0.62f, 0.16f, 0.85f, 1f);
+
+        private void OnDrawGizmos()
+        {
+            DrawClaimGizmos(false);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            DrawClaimGizmos(true);
+        }
+
+        private void DrawClaimGizmos(bool emphasize)
+        {
+            var anchor = Target != null ? Target : transform;
+            if (anchor == null)
+                return;
+
+            var originalColor = Gizmos.color;
+            var originalMatrix = Gizmos.matrix;
+
+            Gizmos.matrix = Matrix4x4.identity;
+            var position = anchor.position;
+
+            bool isClaimed = claimedBy != null;
+            Gizmos.color = isClaimed ? claimedGizmoColor : unclaimedGizmoColor;
+
+            float radius = emphasize ? 0.45f : 0.35f;
+            Gizmos.DrawWireSphere(position, radius);
+
+            if (isClaimed)
+            {
+                var hero = claimedBy;
+                if (hero != null)
+                {
+                    var heroTransform = hero.transform;
+                    if (heroTransform != null)
+                    {
+                        Gizmos.color = claimLineColor;
+                        Gizmos.DrawLine(position, heroTransform.position);
+
+                        float markerRadius = emphasize ? 0.18f : 0.12f;
+                        Gizmos.DrawSphere(position, markerRadius);
+                        Gizmos.DrawSphere(heroTransform.position, markerRadius * 0.75f);
+                    }
+                }
+            }
+
+            Gizmos.matrix = originalMatrix;
+            Gizmos.color = originalColor;
+        }
+#endif
+    }
+}

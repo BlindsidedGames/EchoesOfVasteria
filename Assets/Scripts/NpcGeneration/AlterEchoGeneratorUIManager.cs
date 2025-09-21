@@ -11,24 +11,24 @@ using static Blindsided.SaveData.StaticReferences;
 namespace TimelessEchoes.NpcGeneration
 {
     /// <summary>
-    ///     Builds UI entries for all disciple generators and handles collecting resources.
+    ///     Builds UI entries for all alter-echo generators and handles collecting resources.
     /// </summary>
-    public class DiscipleGeneratorUIManager : Singleton<DiscipleGeneratorUIManager>
+    public class AlterEchoGeneratorUIManager : Singleton<AlterEchoGeneratorUIManager>
     {
-        [SerializeField] private DiscipleGeneratorProgressUI progressUIPrefab;
+        [SerializeField] private AlterEchoGeneratorProgressUI progressUIPrefab;
         [SerializeField] private Transform progressUIParent;
         [SerializeField] private Button collectAllButton;
         [SerializeField] private TMP_Text availableResourcesText;
         [SerializeField] private TMP_Text disciplePercentText;
 
-        private DiscipleGenerationManager generationManager;
-        private readonly Dictionary<DiscipleGenerator, DiscipleGeneratorProgressUI> entries = new();
+        private AlterEchoGenerationManager generationManager;
+        private readonly Dictionary<AlterEchoGenerator, AlterEchoGeneratorProgressUI> entries = new();
 
         protected override void Awake()
         {
             base.Awake();
             if (Instance != this) return;
-            generationManager = DiscipleGenerationManager.Instance;
+            generationManager = AlterEchoGenerationManager.Instance;
             if (collectAllButton != null)
                 collectAllButton.onClick.AddListener(CollectAll);
             if (generationManager != null)

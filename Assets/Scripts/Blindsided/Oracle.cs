@@ -181,7 +181,7 @@ namespace Blindsided
             else
             {
                 // On resume/focus gain, apply offline Alter Echo progress without forcing a save
-                var mgr = TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance;
+                var mgr = TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance;
                 if (mgr != null)
                 {
                     // Defer a frame to ensure generators are ready if resume occurs mid-load
@@ -198,7 +198,7 @@ namespace Blindsided
             else
             {
                 // On resume from pause, apply offline Alter Echo progress without forcing a save
-                var mgr = TimelessEchoes.NpcGeneration.DiscipleGenerationManager.Instance;
+                var mgr = TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance;
                 if (mgr != null)
                 {
                     // Defer a frame to ensure generators are ready if resume occurs mid-load
@@ -242,7 +242,7 @@ namespace Blindsided
             _autosaveRoutine = StartCoroutine(AutosaveRoutine(initialDelaySeconds, AutosaveIntervalSeconds));
         }
 
-        private IEnumerator InvokeNextFrame(TimelessEchoes.NpcGeneration.DiscipleGenerationManager mgr)
+        private IEnumerator InvokeNextFrame(TimelessEchoes.NpcGeneration.AlterEchoGenerationManager mgr)
         {
             yield return null;
             try { mgr.ApplyOfflineOnResume(); }

@@ -267,8 +267,7 @@ namespace TimelessEchoes.Hero
             if (taskCtrl == null)
             {
                 var echo = GetComponent<EchoController>();
-                var skip = IsEchoActor && echo != null &&
-                           (echo.Type == EchoType.Combat || echo.Type == EchoType.TaskOnly);
+                var skip = IsEchoActor && echo != null && echo.Type == EchoType.Combat;
                 if (!skip)
                 {
                     taskCtrl = TimelessEchoes.Tasks.TaskController.Instance
@@ -1402,3 +1401,4 @@ namespace TimelessEchoes.Hero
         protected virtual void OnResetSecondaryTrigger(string triggerName) {}
     }
 }
+

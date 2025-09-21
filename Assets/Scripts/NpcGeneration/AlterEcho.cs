@@ -8,8 +8,8 @@ using UnityEngine;
 namespace TimelessEchoes.NpcGeneration
 {
     [ManageableData]
-    [CreateAssetMenu(fileName = "Disciple", menuName = "SO/Disciple")]
-    public class Disciple : ScriptableObject
+    [CreateAssetMenu(fileName = "AlterEcho", menuName = "SO/AlterEcho")]
+    public class AlterEcho : ScriptableObject
     {
         [Serializable]
         public class ResourceEntry
