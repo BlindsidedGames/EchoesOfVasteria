@@ -13,20 +13,15 @@ MonoBehaviour:
   m_Name: NotificationServices
   m_EditorClassIdentifier: 
   m_group: {fileID: 11400000, guid: 52aa1427fb2704a9cbecc9c6eca2c82c, type: 2}
-  m_isEnabled: 1
+  m_isEnabled: 0
   m_compileFlags: []
   m_headerPaths: []
   m_frameworks:
   - m_name: UserNotifications.framework
     m_target: 4
     m_isOptional: 0
-  m_capabilities:
-  - m_type: 4
-    m_associatedDomainsEntitlement:
-      m_domains: []
+  m_capabilities: []
   m_macros:
   - m_key: NATIVE_PLUGINS_USES_NOTIFICATION
-    m_value: 1
-  - m_key: NATIVE_PLUGINS_USES_PUSH_NOTIFICATION
     m_value: 1
   m_buildProperties: []
