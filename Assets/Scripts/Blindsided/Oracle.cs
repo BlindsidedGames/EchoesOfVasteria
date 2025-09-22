@@ -174,6 +174,7 @@ namespace Blindsided
 #if !UNITY_EDITOR
         private void OnApplicationFocus(bool focus)
         {
+#if UNITY_ANDROID || UNITY_IOS
             if (!focus)
             {
                 EventHandler.ApplicationBackground();
@@ -184,6 +185,12 @@ namespace Blindsided
                 AwayForSeconds();
                 EventHandler.ApplicationForeground();
             }
+#else
+            if (!focus)
+            {
+                SaveToFile();
+            }
+#endif
         }
 #endif
 
@@ -607,4 +614,7 @@ namespace Blindsided
 
     }
 }
+
+
+
 
