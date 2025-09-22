@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
@@ -31,6 +32,7 @@ namespace TimelessEchoes.NpcGeneration
         private float nextRatesRefreshTime;
         [SerializeField] private float resumeApplyDebounceSeconds = 0.5f;
         private float lastResumeApplyRealtime;
+        private Coroutine applyOfflineRoutine;
 
         public IReadOnlyList<AlterEchoGenerator> Generators => generators;
 
@@ -171,6 +173,89 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
+        private void CaptureOfflineSnapshot(double timestamp)
+        {
+            if (oracle == null) return;
+            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+
+            foreach (var gen in generators)
+            {
+                if (gen == null || gen.Resource == null) continue;
+
+                if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
+                {
+                    rec = new GameData.DiscipleGenerationRecord
+                    {
+                        StoredResources = new Dictionary<string, double>(),
+                        TotalCollected = new Dictionary<string, double>()
+                    };
+                    oracle.saveData.Disciples[gen.Resource.name] = rec;
+                }
+
+                rec.StoredResources ??= new Dictionary<string, double>();
+                rec.TotalCollected ??= new Dictionary<string, double>();
+                rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
+                rec.TotalCollected[gen.Resource.name] = gen.GetTotalCollected(gen.Resource);
+                rec.Progress = gen.Progress;
+                rec.LastGenerationTime = timestamp;
+            }
+        }
+
+        private void RecordFocusLoss()
+        {
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
+            if (oracle == null) return;
+
+            if (applyOfflineRoutine != null)
+            {
+                StopCoroutine(applyOfflineRoutine);
+                applyOfflineRoutine = null;
+            }
+
+            var timestamp = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+            CaptureOfflineSnapshot(timestamp);
+            lastResumeApplyRealtime = Time.realtimeSinceStartup;
+        }
+
+        private void QueueOfflineApply()
+        {
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
+            if (!isActiveAndEnabled) return;
+            if (applyOfflineRoutine != null) return;
+
+            applyOfflineRoutine = StartCoroutine(ApplyOfflineNextFrame());
+        }
+
+        private IEnumerator ApplyOfflineNextFrame()
+        {
+            yield return null;
+            try
+            {
+                ApplyOfflineOnResume();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"ApplyOfflineOnResume failed: {ex.Message}");
+            }
+            applyOfflineRoutine = null;
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus)
+                QueueOfflineApply();
+            else
+                RecordFocusLoss();
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused)
+                RecordFocusLoss();
+            else
+                QueueOfflineApply();
+        }
+
         /// <summary>
         /// Apply offline progress for all generators using the saved LastGenerationTime.
         /// Intended to be called on app resume/focus gain. Respects OfflineTimeActive
@@ -184,9 +269,18 @@ namespace TimelessEchoes.NpcGeneration
             // Coalesce multiple rapid resume signals (focus + unpause etc.)
             var nowRt = Time.realtimeSinceStartup;
             var deltaRt = nowRt - lastResumeApplyRealtime;
-            var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
-            if (deltaRt > 0f && deltaRt < minInterval)
+            if (Application.runInBackground && deltaRt > 0f)
+            {
+                lastResumeApplyRealtime = nowRt;
                 return;
+            }
+
+            var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
+            if (deltaRt > minInterval)
+            {
+                lastResumeApplyRealtime = nowRt;
+                return;
+            }
             lastResumeApplyRealtime = nowRt;
 
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
@@ -245,5 +339,3 @@ namespace TimelessEchoes.NpcGeneration
         }
     }
 }
-
-

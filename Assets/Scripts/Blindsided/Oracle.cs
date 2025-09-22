@@ -59,7 +59,7 @@ namespace Blindsided
         private bool loaded;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
-        
+
 
         // Defer showing load-failure notice until UI is ready
 
@@ -178,32 +178,13 @@ namespace Blindsided
             {
                 SaveToFile();
             }
-            else
-            {
-                // On resume/focus gain, apply offline Alter Echo progress without forcing a save
-                var mgr = TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance;
-                if (mgr != null)
-                {
-                    // Defer a frame to ensure generators are ready if resume occurs mid-load
-                    StartCoroutine(InvokeNextFrame(mgr));
-                }
-            }
         }
+
         private void OnApplicationPause(bool paused)
         {
             if (paused)
             {
                 SaveToFile();
-            }
-            else
-            {
-                // On resume from pause, apply offline Alter Echo progress without forcing a save
-                var mgr = TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance;
-                if (mgr != null)
-                {
-                    // Defer a frame to ensure generators are ready if resume occurs mid-load
-                    StartCoroutine(InvokeNextFrame(mgr));
-                }
             }
         }
 #endif
@@ -242,15 +223,6 @@ namespace Blindsided
             _autosaveRoutine = StartCoroutine(AutosaveRoutine(initialDelaySeconds, AutosaveIntervalSeconds));
         }
 
-        private IEnumerator InvokeNextFrame(TimelessEchoes.NpcGeneration.AlterEchoGenerationManager mgr)
-        {
-            yield return null;
-            try { mgr.ApplyOfflineOnResume(); }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"ApplyOfflineOnResume failed: {ex.Message}");
-            }
-        }
 
         private void StopAutosaveLoop()
         {
@@ -614,7 +586,7 @@ namespace Blindsided
             wipeInProgress = false;
         }
 
-        
+
 
         public void PersistSlotMetadataToPlayerPrefs(int? slotIndex = null)
         {
@@ -630,7 +602,7 @@ namespace Blindsided
             PlayerPrefs.Save();
         }
 
-        
+
 
     }
 }
