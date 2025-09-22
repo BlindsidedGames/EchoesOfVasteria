@@ -33,6 +33,31 @@ namespace TimelessEchoes.NpcGeneration
         [SerializeField] private float resumeApplyDebounceSeconds = 0.5f;
         private float lastResumeApplyRealtime;
         private Coroutine applyOfflineRoutine;
+        private const string OfflineLogPrefix = "[AlterEchoOffline]";
+
+        private static void LogOffline(string message)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"{OfflineLogPrefix} {message}");
+#else
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log($"{OfflineLogPrefix} {message}");
+            }
+#endif
+        }
+
+        private static void LogOfflineWarning(string message)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"{OfflineLogPrefix} {message}");
+#else
+            if (Debug.isDebugBuild)
+            {
+                Debug.LogWarning($"{OfflineLogPrefix} {message}");
+            }
+#endif
+        }
 
         public IReadOnlyList<AlterEchoGenerator> Generators => generators;
 
@@ -175,12 +200,24 @@ namespace TimelessEchoes.NpcGeneration
 
         private void CaptureOfflineSnapshot(double timestamp)
         {
-            if (oracle == null) return;
+            if (oracle == null)
+            {
+                LogOfflineWarning("CaptureOfflineSnapshot skipped because oracle is null.");
+                return;
+            }
+
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+
+            var trackedGenerators = 0;
+            var skippedGenerators = 0;
 
             foreach (var gen in generators)
             {
-                if (gen == null || gen.Resource == null) continue;
+                if (gen == null || gen.Resource == null)
+                {
+                    skippedGenerators++;
+                    continue;
+                }
 
                 if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
                 {
@@ -190,21 +227,36 @@ namespace TimelessEchoes.NpcGeneration
                         TotalCollected = new Dictionary<string, double>()
                     };
                     oracle.saveData.Disciples[gen.Resource.name] = rec;
+                    LogOffline($"CaptureOfflineSnapshot created new record for {gen.Resource.name}.");
                 }
 
                 rec.StoredResources ??= new Dictionary<string, double>();
                 rec.TotalCollected ??= new Dictionary<string, double>();
-                rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
-                rec.TotalCollected[gen.Resource.name] = gen.GetTotalCollected(gen.Resource);
+                var storedAmount = gen.GetStoredAmount(gen.Resource);
+                var totalCollected = gen.GetTotalCollected(gen.Resource);
+                rec.StoredResources[gen.Resource.name] = storedAmount;
+                rec.TotalCollected[gen.Resource.name] = totalCollected;
                 rec.Progress = gen.Progress;
                 rec.LastGenerationTime = timestamp;
+                trackedGenerators++;
             }
+
+            LogOffline($"CaptureOfflineSnapshot complete at {timestamp:F0}: trackedGenerators={trackedGenerators}, skippedGenerators={skippedGenerators}.");
         }
 
-        private void RecordFocusLoss()
+        private void RecordFocusLoss(string reason)
         {
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
-            if (oracle == null) return;
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
+            {
+                LogOffline($"RecordFocusLoss skipped ({reason}) because offline time is inactive.");
+                return;
+            }
+
+            if (oracle == null)
+            {
+                LogOfflineWarning($"RecordFocusLoss skipped ({reason}) because oracle is null.");
+                return;
+            }
 
             if (applyOfflineRoutine != null)
             {
@@ -213,29 +265,46 @@ namespace TimelessEchoes.NpcGeneration
             }
 
             var timestamp = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+            LogOffline($"RecordFocusLoss capturing snapshot ({reason}) at {timestamp:F0} (generators={generators.Count}).");
             CaptureOfflineSnapshot(timestamp);
             lastResumeApplyRealtime = Time.realtimeSinceStartup;
         }
 
-        private void QueueOfflineApply()
+        private void QueueOfflineApply(string reason)
         {
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
-            if (!isActiveAndEnabled) return;
-            if (applyOfflineRoutine != null) return;
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
+            {
+                LogOffline($"QueueOfflineApply skipped ({reason}) because offline time is inactive.");
+                return;
+            }
 
-            applyOfflineRoutine = StartCoroutine(ApplyOfflineNextFrame());
+            if (!isActiveAndEnabled)
+            {
+                LogOffline($"QueueOfflineApply skipped ({reason}) because manager is inactive.");
+                return;
+            }
+
+            if (applyOfflineRoutine != null)
+            {
+                LogOffline($"QueueOfflineApply skipped ({reason}) because apply routine is already running.");
+                return;
+            }
+
+            LogOffline($"QueueOfflineApply scheduled ({reason}).");
+            applyOfflineRoutine = StartCoroutine(ApplyOfflineNextFrame(reason));
         }
 
-        private IEnumerator ApplyOfflineNextFrame()
+        private IEnumerator ApplyOfflineNextFrame(string reason)
         {
             yield return null;
             try
             {
-                ApplyOfflineOnResume();
+                LogOffline($"ApplyOfflineNextFrame executing ({reason}).");
+                ApplyOfflineOnResume(reason);
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"ApplyOfflineOnResume failed: {ex.Message}");
+                LogOfflineWarning($"ApplyOfflineOnResume failed ({reason}): {ex.Message}");
             }
             applyOfflineRoutine = null;
         }
@@ -243,17 +312,17 @@ namespace TimelessEchoes.NpcGeneration
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
-                QueueOfflineApply();
+                QueueOfflineApply("focus gained");
             else
-                RecordFocusLoss();
+                RecordFocusLoss("focus lost");
         }
 
         private void OnApplicationPause(bool paused)
         {
             if (paused)
-                RecordFocusLoss();
+                RecordFocusLoss("application paused");
             else
-                QueueOfflineApply();
+                QueueOfflineApply("application resumed");
         }
 
         /// <summary>
@@ -261,51 +330,82 @@ namespace TimelessEchoes.NpcGeneration
         /// Intended to be called on app resume/focus gain. Respects OfflineTimeActive
         /// and does not force a disk save; it updates in-memory save data timestamps.
         /// </summary>
-        public void ApplyOfflineOnResume()
+        public void ApplyOfflineOnResume(string reason = "manual")
         {
-            if (oracle == null) return;
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive) return;
+            if (oracle == null)
+            {
+                LogOfflineWarning($"ApplyOfflineOnResume skipped ({reason}) because oracle is null.");
+                return;
+            }
 
-            // Coalesce multiple rapid resume signals (focus + unpause etc.)
+            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
+            {
+                LogOffline($"ApplyOfflineOnResume skipped ({reason}) because offline time is inactive.");
+                return;
+            }
+
             var nowRt = Time.realtimeSinceStartup;
             var deltaRt = nowRt - lastResumeApplyRealtime;
+            var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
+            LogOffline($"ApplyOfflineOnResume start ({reason}): deltaRt={deltaRt:F3}s, minInterval={minInterval:F3}s, runInBackground={Application.runInBackground}.");
+
             if (Application.runInBackground && deltaRt > 0f)
             {
                 lastResumeApplyRealtime = nowRt;
+                LogOffline($"ApplyOfflineOnResume aborted ({reason}) because application runs in background (deltaRt={deltaRt:F3}s).");
                 return;
             }
 
-            var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
             if (deltaRt > minInterval)
             {
                 lastResumeApplyRealtime = nowRt;
+                LogOffline($"ApplyOfflineOnResume debounced ({reason}) because deltaRt={deltaRt:F3}s exceeded minInterval={minInterval:F3}s.");
                 return;
             }
+
             lastResumeApplyRealtime = nowRt;
 
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
             var now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
 
+            var appliedGenerators = 0;
+            var missingRecords = 0;
+            var totalSecondsApplied = 0d;
+
             foreach (var gen in generators)
             {
                 if (gen == null || gen.Resource == null) continue;
                 if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
+                {
+                    missingRecords++;
+                    LogOffline($"ApplyOfflineOnResume skipped generator {gen.Resource.name} ({reason}) due to missing record.");
                     continue;
+                }
 
                 var seconds = now - rec.LastGenerationTime;
                 if (seconds <= 0) continue;
 
-                // Apply to live generator state (stored/progress).
                 gen.ApplyOfflineProgress(seconds);
 
-                // Update in-memory save to reflect new baseline without forcing a save.
-                rec.LastGenerationTime = now;
-                rec.Progress = gen.Progress;
                 rec.StoredResources ??= new Dictionary<string, double>();
                 rec.TotalCollected ??= new Dictionary<string, double>();
-                rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
-                rec.TotalCollected[gen.Resource.name] = gen.GetTotalCollected(gen.Resource);
+
+                rec.LastGenerationTime = now;
+                rec.Progress = gen.Progress;
+
+                var storedAmount = gen.GetStoredAmount(gen.Resource);
+                var totalCollected = gen.GetTotalCollected(gen.Resource);
+
+                rec.StoredResources[gen.Resource.name] = storedAmount;
+                rec.TotalCollected[gen.Resource.name] = totalCollected;
+
+                appliedGenerators++;
+                totalSecondsApplied += seconds;
+
+                LogOffline($"ApplyOfflineOnResume applied {seconds:F1}s to {gen.Resource.name} ({reason}); stored={storedAmount:F2}, progress={gen.Progress:F3}.");
             }
+
+            LogOffline($"ApplyOfflineOnResume complete ({reason}): appliedGenerators={appliedGenerators}, totalSeconds={totalSecondsApplied:F1}, missingRecords={missingRecords}, totalGenerators={generators.Count}.");
         }
 
         /// <summary>

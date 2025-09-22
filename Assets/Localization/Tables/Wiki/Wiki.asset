@@ -21,6 +21,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 871633940640694384
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: D
+        m_LocaleIdentifier:
+          m_Code: ru
+        m_IncludeComments: 0
     - rid: 6305373772456657009
       type: {class: GoogleSheetsExtension, ns: UnityEditor.Localization.Plugins.Google, asm: Unity.Localization.Editor}
       data:
@@ -32,6 +39,7 @@ MonoBehaviour:
         - rid: 6305373772456657013
         - rid: 6305373772456657043
         - rid: 6305373772456657021
+        - rid: 871633940640694384
         m_RemoveMissingPulledKeys: 1
     - rid: 6305373772456657013
       type: {class: KeyColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
