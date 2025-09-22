@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Blindsided
 {
@@ -9,6 +9,8 @@ namespace Blindsided
         public static event Action<float> AwayFor;
         public static event Action OnUnlockNexusEvent;
         public static event Action UpdateTextsForTimeScaleEvent;
+        public static event Action ApplicationBackgrounded;
+        public static event Action ApplicationForegrounded;
         
         public static event Action OnSaveData;
         public static event Action OnLoadData;
@@ -59,6 +61,16 @@ namespace Blindsided
         public static void AwayForTime(float time)
         {
             AwayFor?.Invoke(time);
+        }
+
+        public static void ApplicationBackground()
+        {
+            ApplicationBackgrounded?.Invoke();
+        }
+
+        public static void ApplicationForeground()
+        {
+            ApplicationForegrounded?.Invoke();
         }
 
         public static void UpdateTextsForTimeScale()

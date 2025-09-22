@@ -176,15 +176,13 @@ namespace Blindsided
         {
             if (!focus)
             {
+                EventHandler.ApplicationBackground();
                 SaveToFile();
             }
-        }
-
-        private void OnApplicationPause(bool paused)
-        {
-            if (paused)
+            else
             {
-                SaveToFile();
+                AwayForSeconds();
+                EventHandler.ApplicationForeground();
             }
         }
 #endif
@@ -609,3 +607,4 @@ namespace Blindsided
 
     }
 }
+

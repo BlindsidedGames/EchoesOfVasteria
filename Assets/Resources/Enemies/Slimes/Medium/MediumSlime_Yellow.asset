@@ -18,7 +18,7 @@ MonoBehaviour:
   prefab: {fileID: 8193780003442596315, guid: 9f3c73382fc94fee81c78d04471ff46e, type: 3}
   weight: 0.75
   minX: 500
-  maxX: 2000
+  maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
@@ -97,7 +97,7 @@ MonoBehaviour:
   maxHealth: 126
   damage: 28.9
   defense: 5
-  attackSpeed: 1.5
+  attackSpeed: 1.25
   attackRange: 1
   healthPerLevel: 6
   damagePerLevel: 1.1
