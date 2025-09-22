@@ -369,8 +369,9 @@ namespace TimelessEchoes.Editor
                     TryGetBool(prefs, "Music", out gd.SavedPreferences.Music);
                     TryGetInt(prefs, "Notation", out int notation);
                     if (notation >= 0) gd.SavedPreferences.Notation = (GameData.NumberTypes)Math.Min((int)GameData.NumberTypes.Engineering, notation);
-                    TryGetBool(prefs, "OfflineTimeActive", out gd.SavedPreferences.OfflineTimeActive);
-                    TryGetBool(prefs, "OfflineTimeAutoDisable", out gd.SavedPreferences.OfflineTimeAutoDisable);
+                    // Offline time is always enabled in Timeless Echoes; ignore legacy toggles.
+                    gd.SavedPreferences.OfflineTimeActive = true;
+                    gd.SavedPreferences.OfflineTimeAutoDisable = false;
                     TryGetBool(prefs, "RoundedBulkBuy", out gd.SavedPreferences.RoundedBulkBuy);
                     TryGetBool(prefs, "SettingsFoldout", out gd.SavedPreferences.SettingsFoldout);
                     TryGetBool(prefs, "ShopFoldout", out gd.SavedPreferences.ShopFoldout);

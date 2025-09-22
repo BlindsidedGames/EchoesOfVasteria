@@ -246,12 +246,6 @@ namespace TimelessEchoes.NpcGeneration
 
         private void RecordFocusLoss(string reason)
         {
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
-            {
-                LogOffline($"RecordFocusLoss skipped ({reason}) because offline time is inactive.");
-                return;
-            }
-
             if (oracle == null)
             {
                 LogOfflineWarning($"RecordFocusLoss skipped ({reason}) because oracle is null.");
@@ -272,12 +266,6 @@ namespace TimelessEchoes.NpcGeneration
 
         private void QueueOfflineApply(string reason)
         {
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
-            {
-                LogOffline($"QueueOfflineApply skipped ({reason}) because offline time is inactive.");
-                return;
-            }
-
             if (!isActiveAndEnabled)
             {
                 LogOffline($"QueueOfflineApply skipped ({reason}) because manager is inactive.");
@@ -327,20 +315,14 @@ namespace TimelessEchoes.NpcGeneration
 
         /// <summary>
         /// Apply offline progress for all generators using the saved LastGenerationTime.
-        /// Intended to be called on app resume/focus gain. Respects OfflineTimeActive
-        /// and does not force a disk save; it updates in-memory save data timestamps.
+        /// Intended to be called on app resume or focus gain. It does not force a disk save;
+        /// it updates in-memory save data timestamps.
         /// </summary>
         public void ApplyOfflineOnResume(string reason = "manual")
         {
             if (oracle == null)
             {
                 LogOfflineWarning($"ApplyOfflineOnResume skipped ({reason}) because oracle is null.");
-                return;
-            }
-
-            if (!Blindsided.SaveData.StaticReferences.OfflineTimeActive)
-            {
-                LogOffline($"ApplyOfflineOnResume skipped ({reason}) because offline time is inactive.");
                 return;
             }
 

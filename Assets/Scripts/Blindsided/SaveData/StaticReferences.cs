@@ -126,14 +126,32 @@ namespace Blindsided.SaveData
 
         public static bool OfflineTimeActive
         {
-            get => oracle.saveData.SavedPreferences.OfflineTimeActive;
-            set => oracle.saveData.SavedPreferences.OfflineTimeActive = value;
+            get
+            {
+                if (oracle?.saveData?.SavedPreferences != null)
+                    oracle.saveData.SavedPreferences.OfflineTimeActive = true;
+                return true;
+            }
+            set
+            {
+                if (oracle?.saveData?.SavedPreferences != null)
+                    oracle.saveData.SavedPreferences.OfflineTimeActive = true;
+            }
         }
 
         public static bool OfflineTimeAutoDisable
         {
-            get => oracle.saveData.SavedPreferences.OfflineTimeAutoDisable;
-            set => oracle.saveData.SavedPreferences.OfflineTimeAutoDisable = value;
+            get
+            {
+                if (oracle?.saveData?.SavedPreferences != null)
+                    oracle.saveData.SavedPreferences.OfflineTimeAutoDisable = false;
+                return false;
+            }
+            set
+            {
+                if (oracle?.saveData?.SavedPreferences != null)
+                    oracle.saveData.SavedPreferences.OfflineTimeAutoDisable = false;
+            }
         }
 
         public static bool UseScaledTimeForValues

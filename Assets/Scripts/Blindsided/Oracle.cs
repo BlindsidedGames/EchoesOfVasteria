@@ -468,8 +468,11 @@ namespace Blindsided
                 saveData.GameVersionCreated = Application.version;
             loaded = true;
             AwayForSeconds();
-            if (saveData.SavedPreferences.OfflineTimeAutoDisable)
-                saveData.SavedPreferences.OfflineTimeActive = false;
+            if (saveData?.SavedPreferences != null)
+            {
+                saveData.SavedPreferences.OfflineTimeAutoDisable = false;
+                saveData.SavedPreferences.OfflineTimeActive = true;
+            }
         }
 
         private void SaveInternal(int index)

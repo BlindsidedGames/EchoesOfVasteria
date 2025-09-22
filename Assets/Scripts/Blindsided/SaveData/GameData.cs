@@ -147,8 +147,8 @@ namespace Blindsided.SaveData
             public Tab LayerTab = Tab.Zero;
             public bool Music = true;
             public NumberTypes Notation;
-            public bool OfflineTimeActive;
-            public bool OfflineTimeAutoDisable;
+            public bool OfflineTimeActive = true;
+            public bool OfflineTimeAutoDisable = false;
 
             public bool RoundedBulkBuy = true;
 
