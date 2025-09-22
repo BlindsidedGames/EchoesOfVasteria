@@ -76,6 +76,30 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.ChunkCraftMode = Mathf.Clamp(value, 0, 2);
         }
 
+        public static double ForgeIngotCraftAmount
+        {
+            get => ClampForgeCraftAmount(ref oracle.saveData.SavedPreferences.IngotCraftAmount);
+            set => oracle.saveData.SavedPreferences.IngotCraftAmount = ClampForgeCraftAmount(value);
+        }
+
+        public static double ForgeCrystalCraftAmount
+        {
+            get => ClampForgeCraftAmount(ref oracle.saveData.SavedPreferences.CrystalCraftAmount);
+            set => oracle.saveData.SavedPreferences.CrystalCraftAmount = ClampForgeCraftAmount(value);
+        }
+
+        public static double ForgeChunkCraftAmount
+        {
+            get => ClampForgeCraftAmount(ref oracle.saveData.SavedPreferences.ChunkCraftAmount);
+            set => oracle.saveData.SavedPreferences.ChunkCraftAmount = ClampForgeCraftAmount(value);
+        }
+
+        public static double ForgeCoreCraftAmount
+        {
+            get => ClampForgeCraftAmount(ref oracle.saveData.SavedPreferences.CoreCraftAmount);
+            set => oracle.saveData.SavedPreferences.CoreCraftAmount = ClampForgeCraftAmount(value);
+        }
+
         public static bool RoundedBulkBuy
         {
             get => oracle.saveData.SavedPreferences.RoundedBulkBuy;
@@ -324,6 +348,20 @@ namespace Blindsided.SaveData
             }
         }
 
+
+        private static double ClampForgeCraftAmount(ref double value)
+        {
+            var clamped = ClampForgeCraftAmount(value);
+            value = clamped;
+            return clamped;
+        }
+
+        private static double ClampForgeCraftAmount(double value)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value)) return 1d;
+            var clamped = Math.Floor(value);
+            return clamped < 1d ? 1d : clamped;
+        }
 
         public static Preferences SavedPreferences => oracle.saveData.SavedPreferences;
         public static Dictionary<string, bool> Foldouts => oracle.saveData.SavedPreferences.Foldouts;

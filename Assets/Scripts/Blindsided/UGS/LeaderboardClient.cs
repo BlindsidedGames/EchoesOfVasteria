@@ -12,6 +12,10 @@ namespace Blindsided.UGS
 
         public static async Task SubmitAsync(double score, string leaderboardId = DefaultId)
         {
+#if UNITY_EDITOR
+            if (!UgsLeaderboardSettings.IsSubmissionEnabled)
+                return;
+#endif
             await UgsInitializer.EnsureInitializedAsync();
             // Include version metadata as an object (UGS expects JSON object)
             var metadata = LeaderboardMetadata.Build();

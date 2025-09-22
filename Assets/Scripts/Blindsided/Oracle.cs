@@ -33,6 +33,9 @@ namespace Blindsided
             {
                 oracle = this;
                 DontDestroyOnLoad(gameObject);
+#if UNITY_ANDROID || UNITY_IOS
+                ConfigureMobileSleepTimeout();
+#endif
             }
             else
             {
@@ -59,6 +62,11 @@ namespace Blindsided
         private bool loaded;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
+#if UNITY_ANDROID || UNITY_IOS
+        [SerializeField] private bool preventMobileSleep = true;
+        private int _originalSleepTimeout;
+        private bool _sleepTimeoutOverridden;
+#endif
 
 
         // Defer showing load-failure notice until UI is ready
@@ -158,7 +166,23 @@ namespace Blindsided
                           FindFirstObjectByType<GameplayStatTracker>();
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
+#if UNITY_ANDROID || UNITY_IOS
+            if (oracle == this)
+                RestoreMobileSleepTimeout();
+#endif
             SaveToFile();
+        }
+
+        private void OnDestroy()
+        {
+            if (oracle != this)
+                return;
+
+#if UNITY_ANDROID || UNITY_IOS
+            RestoreMobileSleepTimeout();
+#endif
+
+            oracle = null;
         }
 
         private void OnDisable()
@@ -170,6 +194,30 @@ namespace Blindsided
                 StopAutosaveLoop();
             }
         }
+
+#if UNITY_ANDROID || UNITY_IOS
+        private void ConfigureMobileSleepTimeout()
+        {
+            if (!preventMobileSleep)
+                return;
+
+            _originalSleepTimeout = Screen.sleepTimeout;
+            if (_originalSleepTimeout == SleepTimeout.NeverSleep)
+                return;
+
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            _sleepTimeoutOverridden = true;
+        }
+
+        private void RestoreMobileSleepTimeout()
+        {
+            if (!_sleepTimeoutOverridden)
+                return;
+
+            Screen.sleepTimeout = _originalSleepTimeout;
+            _sleepTimeoutOverridden = false;
+        }
+#endif
 
 #if !UNITY_EDITOR
         private void OnApplicationFocus(bool focus)

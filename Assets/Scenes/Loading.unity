@@ -2200,6 +2200,21 @@ MonoBehaviour:
     - Name: LastSelectedForgeSlot
       Entry: 6
       Data: 
+    - Name: IngotCraftAmount
+      Entry: 4
+      Data: 0
+    - Name: CrystalCraftAmount
+      Entry: 4
+      Data: 0
+    - Name: ChunkCraftAmount
+      Entry: 4
+      Data: 0
+    - Name: CoreCraftAmount
+      Entry: 4
+      Data: 0
+    - Name: LockAutocraftStatSet
+      Entry: 5
+      Data: false
     - Name: AutoPinActiveQuests
       Entry: 5
       Data: true
@@ -3468,7 +3483,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  demo: 0
+  demo: 1
   beta: 0
   betaSaveIteration: 0
   minimumSeasonalGameVersion: 1.2.18

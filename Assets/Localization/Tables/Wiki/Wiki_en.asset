@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.23
+    m_Localized: v1.2.24
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -195,13 +195,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Minor changes</b>\n\u2022 Stat matching is now off by default.\n\u2022
-      New chest sfx.\n\u2022 Quests are now indente\n<b>Bugfixes</b>\n\u2022 Movement
-      no longer starts above 100%\n\u2022 Enemy stats level slider now correctly
-      updates its maximum value when your reap distance increases.\n\u2022 Echoes
-      should no longer persist after the hero dies.\n\u2022 The replace button in
-      the forge should no longer be greyed out when a pending craft is available.\n\u2022
-      Cauldron now properly updates available cards without a full app restart."
+    m_Localized: "<b>Balance</b>\n\u2022 Skelly Swordsmen, and small slimes now share
+      a base Attack Rate of 1.\n\u2022 Skelly Archers, and medium slimes now share
+      a base Attack Rate of 1.25.\n\u2022 Skelly Mages and Large slimes now share
+      a base Attack Rate of 1.6\n\u2022 Small and Medium Slimes now have infinite
+      spawn distances.\n<b>Minor changes</b>\n\u2022 Nori now has a low of 250 on
+      Vastium.\n\u2022 The game will no longer sleep on mobile.\n<b>Bugfixes</b>\n\u2022
+      Fixed recipe display in the forge.\n\u2022 Cualdron cards now properly display
+      Echo Power instead of Disciple Power.\n\u2022 Offline time now properly functions
+      on mobile even when the app is in the background."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624

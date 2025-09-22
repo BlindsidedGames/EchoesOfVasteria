@@ -85,6 +85,10 @@ namespace Blindsided.UGS
 
         private async Task TryUploadAllAsync()
         {
+#if UNITY_EDITOR
+            if (!UgsLeaderboardSettings.IsSubmissionEnabled)
+                return;
+#endif
             var tracker = GameplayStatTracker.Instance;
             if (tracker == null)
                 return;
