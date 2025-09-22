@@ -299,18 +299,22 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnApplicationFocus(bool focus)
         {
+#if UNITY_ANDROID || UNITY_IOS
             if (focus)
                 QueueOfflineApply("focus gained");
             else
                 RecordFocusLoss("focus lost");
+#endif
         }
 
         private void OnApplicationPause(bool paused)
         {
+#if UNITY_ANDROID || UNITY_IOS
             if (paused)
                 RecordFocusLoss("application paused");
             else
                 QueueOfflineApply("application resumed");
+#endif
         }
 
         /// <summary>
@@ -331,6 +335,7 @@ namespace TimelessEchoes.NpcGeneration
             var minInterval = Mathf.Max(0.05f, resumeApplyDebounceSeconds);
             LogOffline($"ApplyOfflineOnResume start ({reason}): deltaRt={deltaRt:F3}s, minInterval={minInterval:F3}s, runInBackground={Application.runInBackground}.");
 
+#if !(UNITY_ANDROID || UNITY_IOS)
             if (Application.runInBackground && deltaRt > 0f)
             {
                 lastResumeApplyRealtime = nowRt;
@@ -344,7 +349,9 @@ namespace TimelessEchoes.NpcGeneration
                 LogOffline($"ApplyOfflineOnResume debounced ({reason}) because deltaRt={deltaRt:F3}s exceeded minInterval={minInterval:F3}s.");
                 return;
             }
-
+#else
+            LogOffline($"ApplyOfflineOnResume bypassed debounce ({reason}) on mobile build.");
+#endif
             lastResumeApplyRealtime = nowRt;
 
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
@@ -421,3 +428,4 @@ namespace TimelessEchoes.NpcGeneration
         }
     }
 }
+
