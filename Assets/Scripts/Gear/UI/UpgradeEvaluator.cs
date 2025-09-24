@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Gear.UI
@@ -71,6 +73,61 @@ namespace TimelessEchoes.Gear.UI
 			}
 
 			return score;
+		}
+
+		public static float ComputeQualityPercent(CraftingService crafting, GearItem item, string slot)
+		{
+			if (item == null)
+				return 0f;
+
+			var absoluteScore = ComputeAbsoluteScore(crafting, item);
+			var maxForSlot = ComputeTheoreticalMaxForSlot(slot);
+			if (maxForSlot <= 0f)
+				return 0f;
+
+			return UnityEngine.Mathf.Clamp01(absoluteScore / maxForSlot) * 100f;
+		}
+
+		public static float ComputeTheoreticalMaxForSlot(string slot)
+		{
+			var maxAffixes = 1;
+			foreach (var rarity in AssetCache.GetAll<RaritySO>(string.Empty))
+				if (rarity != null && rarity.affixCount > maxAffixes)
+					maxAffixes = rarity.affixCount;
+
+			var stats = AssetCache.GetAll<StatDefSO>(string.Empty);
+			if (stats == null || stats.Length == 0)
+				return 0f;
+
+			bool IsAllowed(StatDefSO stat)
+			{
+				if (stat == null)
+					return false;
+				if (stat.heroMapping == HeroStatMapping.MoveSpeed &&
+					!string.Equals(slot, "Boots", StringComparison.OrdinalIgnoreCase))
+					return false;
+				return true;
+			}
+
+			var contributions = new List<float>();
+			foreach (var stat in stats)
+			{
+				if (!IsAllowed(stat))
+					continue;
+				var scale = UnityEngine.Mathf.Max(0f, stat.ComparisonScale);
+				contributions.Add(stat.maxRoll * scale);
+			}
+
+			if (contributions.Count == 0)
+				return 0f;
+
+			contributions.Sort((a, b) => b.CompareTo(a));
+			var count = UnityEngine.Mathf.Clamp(maxAffixes, 1, contributions.Count);
+			float sum = 0f;
+			for (var i = 0; i < count; i++)
+				sum += contributions[i];
+
+			return sum;
 		}
 	}
 }

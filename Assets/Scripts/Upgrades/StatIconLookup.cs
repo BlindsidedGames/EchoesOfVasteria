@@ -30,7 +30,9 @@ namespace TimelessEchoes.Upgrades
 			RightArrow,
 			Minus,
 			Plus,
-			DoubleRightArrow
+			DoubleRightArrow,
+			CritDamage,
+			Quality
 		}
 
 		// Indices as provided by the user for the StatIcons atlas
@@ -48,7 +50,9 @@ namespace TimelessEchoes.Upgrades
 			{ StatKey.RightArrow, 194 },
 			{ StatKey.Minus, 195 },
 			{ StatKey.Plus, 196 },
-			{ StatKey.DoubleRightArrow, 197 }
+			{ StatKey.DoubleRightArrow, 197 },
+			{ StatKey.CritDamage, 205 },
+			{ StatKey.Quality, 206 }
 		};
 
 		private static TMP_SpriteAsset SpriteAsset
@@ -159,6 +163,11 @@ namespace TimelessEchoes.Upgrades
 				case "crit":
 				case "critical chance":
 					key = StatKey.CritChance; return true;
+				case "crit damage":
+				case "critical damage":
+				case "crit dmg":
+				case "critical dmg":
+					key = StatKey.CritDamage; return true;
 				case "attack speed":
 				case "attack rate":
 					key = StatKey.AttackRate; return true;
@@ -179,11 +188,12 @@ namespace TimelessEchoes.Upgrades
 				case "move speed":
 				case "movement":
 					key = StatKey.MoveSpeed; return true;
+				case "quality":
+				case "gear quality":
+					key = StatKey.Quality; return true;
 				default:
 					return false;
 			}
 		}
 	}
 }
-
-

@@ -18,6 +18,34 @@ namespace TimelessEchoes.Gear.UI
 					currentByMapping[ca.stat.heroMapping] = (ca.value, ca.stat.isPercent, ca.stat.GetName());
 				}
 
+			var crafting = CraftingService.Instance;
+			var slot = item != null && !string.IsNullOrWhiteSpace(item.slot)
+				? item.slot
+				: current != null && !string.IsNullOrWhiteSpace(current.slot)
+					? current.slot
+					: string.Empty;
+			var craftedQuality = item != null ? UpgradeEvaluator.ComputeQualityPercent(crafting, item, slot) : 0f;
+			var currentQuality = current != null ? UpgradeEvaluator.ComputeQualityPercent(crafting, current, slot) : 0f;
+			var qualityIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Quality);
+			var qualityValue = $"{craftedQuality:0.#}%";
+			var qualityText = !string.IsNullOrEmpty(qualityIcon)
+				? $"{qualityIcon} {qualityValue}"
+				: $"Quality {qualityValue}";
+			string qualityArrow;
+			if (current == null)
+				qualityArrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus);
+			else
+			{
+				var qualityDelta = craftedQuality - currentQuality;
+				qualityArrow = qualityDelta > 0.0001f
+					? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
+					: qualityDelta < -0.0001f
+						? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
+						: StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+			}
+			var qualityPrefix = string.IsNullOrEmpty(qualityArrow) ? string.Empty : qualityArrow + " ";
+			lines.Add($"{qualityPrefix}{qualityText}");
+
 			var craftedMappings = new HashSet<HeroStatMapping>();
 			var currentMappings = new HashSet<HeroStatMapping>(currentByMapping.Keys);
 			var sortedAffixes = new List<GearAffix>(item.affixes);
@@ -80,6 +108,16 @@ namespace TimelessEchoes.Gear.UI
 				return StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
 
 			var lines = new List<string>();
+			var crafting = CraftingService.Instance;
+			var resolvedSlot = !string.IsNullOrWhiteSpace(slotName) ? slotName : item.slot ?? string.Empty;
+			var equippedQuality = UpgradeEvaluator.ComputeQualityPercent(crafting, item, resolvedSlot);
+			var equippedIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Quality);
+			var equippedValue = string.Format("{0:0.#}%", equippedQuality);
+			if (!string.IsNullOrEmpty(equippedIcon))
+				lines.Add(string.Format("{0} {1}", equippedIcon, equippedValue));
+			else
+				lines.Add(string.Format("Quality {0}", equippedValue));
+
 			var sortedAffixes = new List<GearAffix>(item.affixes);
 			sortedAffixes.Sort((x, y) => StatSortOrder.Compare(x?.stat != null ? x.stat.heroMapping : default, y?.stat != null ? y.stat.heroMapping : default));
 			foreach (var a in sortedAffixes)
@@ -98,5 +136,3 @@ namespace TimelessEchoes.Gear.UI
 		}
 	}
 }
-
-

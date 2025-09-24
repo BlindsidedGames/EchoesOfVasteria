@@ -140,28 +140,6 @@ namespace TimelessEchoes.Gear.UI
 			sb.AppendLine($"• Sessions: {forge.TotalAutocraftSessions:N0}, Crafts: {forge.AutocraftCrafts:N0}");
 			AppendAll(sb, forge.AutocraftStopReasons, formatKey: k => FormatStopReason(k), prefix: "• Stop Reasons:");
 
-			// Salvage
-			sb.AppendLine("<size=105%><b>Salvage</b></size>");
-			sb.AppendLine($"• Items: {forge.SalvageItems:N0}  • Entries: {forge.SalvageEntries:N0}  • Avg/Item: {SafeDiv(forge.SalvageEntries, forge.SalvageItems):N2}");
-			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => $"rarity {k}");
-			AppendAll(sb, forge.SalvagesByCore, formatKey: k => $"core {k}");
-			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => $"gained {k}");
-
-			// Distributions
-			sb.AppendLine("<size=105%><b>Distributions</b></size>");
-			// Overall (rarity)
-			sb.AppendLine("• Overall:");
-			if (forge.CraftsByRarity != null && forge.CraftsByRarity.Count > 0)
-				AppendTopK(sb, forge.CraftsByRarity, forge.CraftsByRarity.Count, formatKey: k => k, total: forge.TotalCrafts);
-			// Per-core rarity distributions
-			sb.AppendLine("• Cores:");
-			AppendCoreRarityDistributions(sb, forge);
-
-			// Upgrades
-			sb.AppendLine("<size=105%><b>Upgrades</b></size>");
-			AppendAll(sb, forge.UpgradesBySlot, formatKey: k => k);
-			sb.AppendLine($"• Avg Crafts / Upgrade: {forge.AverageCraftsPerUpgrade:N2}  • Longest Gap: {forge.MaxCraftsBetweenUpgrades:N0}");
-
 			// Quality (Equipped vs Best Rolled by slot)
 			AppendQualitySection(sb, forge);
 			// Best By Core (Quality)
@@ -189,6 +167,28 @@ namespace TimelessEchoes.Gear.UI
 					sb.AppendLine($"  • {r}: {pct:0.#}%");
 				}
 			}
+
+			// Salvage
+			sb.AppendLine("<size=105%><b>Salvage</b></size>");
+			sb.AppendLine($"• Items: {forge.SalvageItems:N0}  • Entries: {forge.SalvageEntries:N0}  • Avg/Item: {SafeDiv(forge.SalvageEntries, forge.SalvageItems):N2}");
+			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => $"rarity {k}");
+			AppendAll(sb, forge.SalvagesByCore, formatKey: k => $"core {k}");
+			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => $"gained {k}");
+
+			// Distributions
+			sb.AppendLine("<size=105%><b>Distributions</b></size>");
+			// Overall (rarity)
+			sb.AppendLine("• Overall:");
+			if (forge.CraftsByRarity != null && forge.CraftsByRarity.Count > 0)
+				AppendTopK(sb, forge.CraftsByRarity, forge.CraftsByRarity.Count, formatKey: k => k, total: forge.TotalCrafts);
+			// Per-core rarity distributions
+			sb.AppendLine("• Cores:");
+			AppendCoreRarityDistributions(sb, forge);
+
+			// Upgrades
+			sb.AppendLine("<size=105%><b>Upgrades</b></size>");
+			AppendAll(sb, forge.UpgradesBySlot, formatKey: k => k);
+			sb.AppendLine($"• Avg Crafts / Upgrade: {forge.AverageCraftsPerUpgrade:N2}  • Longest Gap: {forge.MaxCraftsBetweenUpgrades:N0}");
 
 			// Per-Slot Totals (sorted by slot name)
 			sb.AppendLine("<size=105%><b>Per-Slot Totals</b></size>");
@@ -568,61 +568,29 @@ namespace TimelessEchoes.Gear.UI
 			var equip = EquipmentController.Instance;
 			var crafting = CraftingService.Instance;
 			sb.AppendLine("<size=105%><b>Quality</b></size>");
-			sb.AppendLine("• Equipped:");
+			sb.AppendLine(" Equipped:");
 			var slots = equip != null && equip.Slots != null && equip.Slots.Count > 0
 				? equip.Slots
 				: new System.Collections.Generic.List<string> { "Weapon", "Helmet", "Chest", "Boots" };
 			foreach (var slot in slots)
 			{
 				var gi = equip != null ? equip.GetEquipped(slot) : null;
-				float eqAbs = gi != null ? UpgradeEvaluator.ComputeAbsoluteScore(crafting, gi) : 0f;
-				float maxSlot = ComputeTheoreticalMaxForSlot(slot);
-				float pct = maxSlot > 0f ? Mathf.Clamp01(eqAbs / maxSlot) * 100f : 0f;
-				sb.AppendLine($"  • {slot}: {pct:0.#}%");
+				var pct = UpgradeEvaluator.ComputeQualityPercent(crafting, gi, slot);
+				sb.AppendLine($"   {slot}: {pct:0.#}%");
 			}
 
-			sb.AppendLine("• Best Rolled:");
+			sb.AppendLine(" Best Rolled:");
 			foreach (var slot in slots)
 			{
 				float best = 0f;
 				if (forge != null && forge.BestAbsolutePieceScoreBySlot != null)
 					forge.BestAbsolutePieceScoreBySlot.TryGetValue(slot, out best);
-				float maxSlot = ComputeTheoreticalMaxForSlot(slot);
+				var maxSlot = UpgradeEvaluator.ComputeTheoreticalMaxForSlot(slot);
 				float pct = maxSlot > 0f ? Mathf.Clamp01(best / maxSlot) * 100f : 0f;
-				sb.AppendLine($"  • {slot}: {pct:0.#}%");
+				sb.AppendLine($"   {slot}: {pct:0.#}%");
 			}
 		}
 
-		private float ComputeTheoreticalMaxForSlot(string slot)
-		{
-			// Determine max affixes among all rarities
-			int maxAffixes = 1;
-			foreach (var r in AssetCache.GetAll<RaritySO>(string.Empty))
-				if (r != null && r.affixCount > maxAffixes) maxAffixes = r.affixCount;
-			var stats = AssetCache.GetAll<StatDefSO>(string.Empty);
-			if (stats == null || stats.Length == 0) return 0f;
-			bool IsAllowed(StatDefSO s)
-			{
-				if (s == null) return false;
-				// Move Speed can only appear on Boots
-				if (s.heroMapping == HeroStatMapping.MoveSpeed && !string.Equals(slot, "Boots", System.StringComparison.OrdinalIgnoreCase))
-					return false;
-				return true;
-			}
-			var contribs = new System.Collections.Generic.List<float>();
-			foreach (var s in stats)
-			{
-				if (!IsAllowed(s)) continue;
-				float scale = Mathf.Max(0f, s.ComparisonScale);
-				contribs.Add(s.maxRoll * scale);
-			}
-			if (contribs.Count == 0) return 0f;
-			contribs.Sort((a,b) => b.CompareTo(a));
-			int n = Mathf.Clamp(maxAffixes, 1, contribs.Count);
-			float sum = 0f;
-			for (int i = 0; i < n; i++) sum += contribs[i];
-			return sum;
-		}
 
 		private void EnsureStatLookup()
 		{
@@ -733,5 +701,4 @@ namespace TimelessEchoes.Gear.UI
 		}
 	}
 }
-
 
