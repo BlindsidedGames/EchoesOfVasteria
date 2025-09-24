@@ -490,7 +490,7 @@ namespace TimelessEchoes.Enemies
             var combatSkill = skillController != null ? skillController.CombatSkill : null;
             if (skillController != null && combatSkill != null)
             {
-                mult = skillController.GetEffectMultiplier(combatSkill, MilestoneType.DoubleResources);
+                mult = skillController.GetStackingMultiplier(combatSkill, MilestoneProcType.DoubleResources);
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
@@ -582,18 +582,25 @@ namespace TimelessEchoes.Enemies
             if (skill != null)
             {
                 controller?.AddExperience(skill, stats.experience);
-                var progress = controller?.GetProgress(skill);
-                if (progress != null)
-                    foreach (var id in progress.Milestones)
+
+                if (controller != null)
+                {
+                    var spawnEntries = controller.GetSpawnEntries(skill);
+                    if (spawnEntries != null)
                     {
-                        var ms = skill.milestones.Find(m => m.bonusID == id);
-                        if (ms != null && ms.type == MilestoneType.SpawnEcho && Random.value <= ms.chance)
+                        foreach (var entry in spawnEntries)
                         {
-                            EchoManager.SpawnEchoes(ms.echoSpawnConfig, ms.echoDuration,
-                                new List<Skill> { skill }, true);
+                            if (Random.value <= entry.Chance)
+                            {
+                                EchoManager.SpawnEchoes(entry.Config, entry.Duration,
+                                    new List<Skill> { skill }, true);
+                            }
                         }
                     }
+                }
             }
+
+
         }
 
         private void OnDestroy()
@@ -743,3 +750,5 @@ namespace TimelessEchoes.Enemies
 
     }
 }
+
+

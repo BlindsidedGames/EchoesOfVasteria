@@ -406,7 +406,26 @@ namespace TimelessEchoes.Editor
                             TryGetInt(sd, "Level", out sp.Level);
                             if (sd.TryGetValue("Milestones", out var milestonesObj) && milestonesObj is List<object> milestones)
                             {
-                                foreach (var m in milestones) if (m is string sm) sp.Milestones.Add(sm);
+                                foreach (var m in milestones)
+                                {
+                                    if (m is Dictionary<string, object> milestoneDict)
+                                    {
+                                        var record = new GameData.MilestoneProgressRecord();
+                                        TryGetString(milestoneDict, "Id", out record.Id);
+                                        TryGetBool(milestoneDict, "IsActive", out record.IsActive);
+                                        TryGetInt(milestoneDict, "TierIndex", out record.TierIndex);
+                                        sp.Milestones.Add(record);
+                                    }
+                                    else if (m is string legacyId)
+                                    {
+                                        sp.Milestones.Add(new GameData.MilestoneProgressRecord
+                                        {
+                                            Id = legacyId,
+                                            TierIndex = 0,
+                                            IsActive = false
+                                        });
+                                    }
+                                }
                             }
                             gd.SkillData[sk.Key] = sp;
                         }
@@ -665,5 +684,6 @@ namespace TimelessEchoes.Editor
     }
 }
 #endif
+
 
 

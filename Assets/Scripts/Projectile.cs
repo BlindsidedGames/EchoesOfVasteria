@@ -1,3 +1,4 @@
+using TimelessEchoes.Skills;
 using System.Collections.Generic;
 using UnityEngine;
 using Blindsided.Utilities.Pooling;
@@ -111,7 +112,7 @@ namespace TimelessEchoes
 				{
 					var controller = TimelessEchoes.Skills.SkillController.Instance ??
 									   FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
-					if (controller != null && controller.RollForEffect(combatSkill, TimelessEchoes.Skills.MilestoneType.InstantKill))
+					if (controller != null && controller.RollForProc(combatSkill, MilestoneProcType.InstantKill))
 					{
 						var prefab = TimelessEchoes.GameManager.Instance != null ?
 										 TimelessEchoes.GameManager.Instance.ReaperPrefab : null;

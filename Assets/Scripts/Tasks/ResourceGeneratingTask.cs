@@ -1,3 +1,4 @@
+using TimelessEchoes.Skills;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using TimelessEchoes.Upgrades;
@@ -51,7 +52,7 @@ namespace TimelessEchoes.Tasks
                     double final = res.count;
                     if (skillController)
                     {
-                        int mult = skillController.GetEffectMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneType.DoubleResources);
+                        int mult = skillController.GetStackingMultiplier(associatedSkill, TimelessEchoes.Skills.MilestoneProcType.DoubleResources);
                         float resourceMult = skillController.GetResourceGainMultiplier();
                         final = res.count * mult * resourceMult;
                     }

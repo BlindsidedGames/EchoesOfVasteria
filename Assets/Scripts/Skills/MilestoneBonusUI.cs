@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using References.UI;
-using TimelessEchoes;
 using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.Skills
@@ -12,12 +13,16 @@ namespace TimelessEchoes.Skills
         [SerializeField] private Transform entryParent;
         [SerializeField] private GameObject entryPrefab;
         [SerializeField] private SkillController controller;
+        [SerializeField] private Color lockedColor = new Color(1f, 1f, 1f, 0.35f);
+        [SerializeField] private Color unlockedColor = Color.white;
+        [SerializeField] private Sprite activeToggleSprite;
+        [SerializeField] private Sprite inactiveToggleSprite;
 
-        public void SetEntryParent(Transform parent)
-        {
-            entryParent = parent;
-        }
-        
+        private Sprite overrideActiveToggleSprite;
+        private Sprite overrideInactiveToggleSprite;
+
+        private readonly List<EntryBinding> bindings = new();
+        private Skill currentSkill;
 
         private void Awake()
         {
@@ -25,9 +30,38 @@ namespace TimelessEchoes.Skills
                 controller = FindFirstObjectByType<SkillController>();
         }
 
+        private void OnEnable()
+        {
+            if (controller == null)
+                controller = FindFirstObjectByType<SkillController>();
+
+            if (controller != null)
+                controller.OnMilestoneDataChanged += HandleMilestoneDataChanged;
+        }
+
+        private void OnDisable()
+        {
+            if (controller != null)
+                controller.OnMilestoneDataChanged -= HandleMilestoneDataChanged;
+        }
+
+        public void SetEntryParent(Transform parent)
+        {
+            entryParent = parent;
+        }
+
+        public void SetToggleSprites(Sprite activeSprite, Sprite inactiveSprite)
+        {
+            overrideActiveToggleSprite = activeSprite;
+            overrideInactiveToggleSprite = inactiveSprite;
+            HandleMilestoneDataChanged();
+        }
+
         public void PopulateMilestones(Skill skill)
         {
-            if (skill == null || entryPrefab == null)
+            currentSkill = skill;
+
+            if (entryPrefab == null)
                 return;
 
             if (entryParent == null)
@@ -41,31 +75,169 @@ namespace TimelessEchoes.Skills
                 return;
 
             UIUtils.ClearChildren(entryParent);
+            bindings.Clear();
 
+            if (skill == null)
+                return;
 
-            foreach (var milestone in skill.milestones)
+            if (controller == null)
+                controller = FindFirstObjectByType<SkillController>();
+
+            var ordered = skill.milestones.Where(m => m != null).OrderBy(m => m.UnlockLevel);
+
+            foreach (var definition in ordered)
             {
                 var entry = Instantiate(entryPrefab, entryParent);
                 var refs = entry.GetComponent<MilestoneEntryUIReferences>();
+                if (refs == null)
+                    continue;
 
-                if (refs != null)
+                var binding = new EntryBinding(skill, definition, refs, entry.GetComponent<Image>() ?? refs.ToggleImage);
+                bindings.Add(binding);
+                ConfigureEntry(binding);
+            }
+        }
+
+        private void HandleMilestoneDataChanged()
+        {
+            if (currentSkill == null)
+                return;
+
+            foreach (var binding in bindings)
+                ConfigureEntry(binding);
+        }
+
+        private void ConfigureEntry(EntryBinding binding)
+        {
+            if (binding == null || binding.References == null)
+                return;
+
+            var refs = binding.References;
+            var definition = binding.Definition;
+            var skill = binding.Skill;
+            var state = controller != null ? controller.GetMilestoneState(skill, definition) : null;
+            var progress = controller != null ? controller.GetProgress(skill) : null;
+            int currentLevel = progress != null ? progress.Level : 1;
+            int tierIndex = state != null ? state.TierIndex : -1;
+            bool unlocked = tierIndex >= 0;
+            bool active = state != null && state.IsActive;
+
+            string title = definition.DisplayName;
+            int nextTierLevel = definition.GetNextTierLevel(currentLevel);
+            if (unlocked)
+            {
+                if (nextTierLevel > 0)
+                    title += $" | Improves at level {nextTierLevel}";
+            }
+            else if (definition.UnlockLevel < int.MaxValue)
+            {
+                title += $" | Unlocks at level {definition.UnlockLevel}";
+            }
+
+            refs.NameText?.SetText(title);
+
+            int displayTier = unlocked ? tierIndex : 0;
+            if (definition.TierCount > 0)
+                displayTier = Mathf.Clamp(displayTier, 0, definition.TierCount - 1);
+
+            string passiveDesc = definition.GetPassiveDescriptionForTier(displayTier, skill?.skillName);
+            if (refs.PassiveText != null)
+                refs.PassiveText.text = string.IsNullOrEmpty(passiveDesc) ? string.Empty : $"Passive: {passiveDesc}";
+
+            if (refs.ActiveText != null)
+            {
+                if (definition.HasActiveEffect)
                 {
-                    if (refs.nameText != null)
-                        refs.nameText.text = $"Lv {milestone.levelRequirement}";
-
-                    string desc = milestone.GetDescription(skill.skillName);
-                    if (refs.passiveText != null)
-                        refs.passiveText.text = desc;
-
+                    string activeDesc = definition.GetActiveDescriptionForTier(displayTier, skill?.skillName);
+                    refs.ActiveText.gameObject.SetActive(true);
+                    refs.ActiveText.text = string.IsNullOrEmpty(activeDesc) ? string.Empty : $"Active: {activeDesc}";
                 }
-
-                var img = entry.GetComponentInChildren<Image>();
-                if (img != null)
+                else
                 {
-                    bool unlocked = controller && controller.IsMilestoneUnlocked(skill, milestone);
-                    img.color = unlocked ? Color.white : new Color(1f, 1f, 1f, 0.3f);
+                    refs.ActiveText.gameObject.SetActive(false);
                 }
             }
+
+            if (refs.SetText != null)
+            {
+                if (definition.Set != MilestoneSet.None)
+                {
+                    var setDef = controller?.GetSetDefinition(definition.Set);
+                    string setName = setDef != null ? setDef.DisplayName : definition.Set.ToString();
+                    refs.SetText.text = $"Set: {setName}";
+                    if (refs.SetIcon != null)
+                    {
+                        var sprite = definition.SetIcon != null ? definition.SetIcon : setDef?.Icon;
+                        refs.SetIcon.sprite = sprite;
+                        refs.SetIcon.enabled = sprite != null;
+                    }
+                }
+                else
+                {
+                    refs.SetText.text = string.Empty;
+                    if (refs.SetIcon != null)
+                        refs.SetIcon.enabled = false;
+                }
+            }
+
+            if (refs.ToggleButton != null)
+            {
+                refs.ToggleButton.onClick.RemoveAllListeners();
+                bool canToggle = unlocked && definition.CanActivate && controller != null;
+                refs.ToggleButton.interactable = canToggle;
+                if (canToggle)
+                    refs.ToggleButton.onClick.AddListener(() => HandleToggle(binding));
+            }
+
+            if (refs.ToggleImage != null)
+            {
+                Sprite activeSprite = overrideActiveToggleSprite ?? activeToggleSprite;
+                Sprite inactiveSprite = overrideInactiveToggleSprite ?? inactiveToggleSprite;
+                Sprite selectedSprite = active ? activeSprite : inactiveSprite;
+
+                if (selectedSprite != null)
+                {
+                    refs.ToggleImage.sprite = selectedSprite;
+                    refs.ToggleImage.color = Color.white;
+                }
+                else
+                {
+                    refs.ToggleImage.color = active ? unlockedColor : lockedColor;
+                }
+
+                refs.ToggleImage.gameObject.SetActive(definition.CanActivate);
+            }
+
+            if (binding.RootImage != null)
+                binding.RootImage.color = unlocked ? unlockedColor : lockedColor;
+        }
+
+        private void HandleToggle(EntryBinding binding)
+        {
+            if (controller == null || binding == null)
+                return;
+
+            var state = controller.GetMilestoneState(binding.Skill, binding.Definition);
+            bool current = state != null && state.IsActive;
+            bool target = !current;
+            controller.TrySetMilestoneActive(binding.Skill, binding.Definition, target);
+            ConfigureEntry(binding);
+        }
+
+        private class EntryBinding
+        {
+            public EntryBinding(Skill skill, MilestoneDefinition definition, MilestoneEntryUIReferences references, Image rootImage)
+            {
+                Skill = skill;
+                Definition = definition;
+                References = references;
+                RootImage = rootImage;
+            }
+
+            public Skill Skill { get; }
+            public MilestoneDefinition Definition { get; }
+            public MilestoneEntryUIReferences References { get; }
+            public Image RootImage { get; }
         }
     }
 }

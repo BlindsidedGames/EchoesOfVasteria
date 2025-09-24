@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 
@@ -15,20 +16,19 @@ namespace TimelessEchoes.Skills
             if (skill == null || skill.milestones == null)
                 return;
 
-            bool changed = false;
-            foreach (var milestone in skill.milestones)
-            {
-                if (milestone == null) continue;
-                string expected = $"{skill.skillName.ToLowerInvariant().Replace(" ", string.Empty)}{milestone.levelRequirement}";
-                if (milestone.bonusID != expected)
-                {
-                    milestone.bonusID = expected;
-                    changed = true;
-                }
-            }
+            var ordered = skill.milestones.Where(m => m != null)
+                .OrderBy(m => m.UnlockLevel)
+                .ToList();
 
-            if (changed)
+            bool sequenceDiffers = ordered.Count != skill.milestones.Count ||
+                                   skill.milestones.Where(m => m != null)
+                                                   .Where((m, index) => index < ordered.Count && !ReferenceEquals(m, ordered[index]))
+                                                   .Any();
+
+            if (sequenceDiffers)
             {
+                skill.milestones.Clear();
+                skill.milestones.AddRange(ordered);
                 EditorUtility.SetDirty(skill);
             }
         }

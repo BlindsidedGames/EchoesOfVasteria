@@ -14,5 +14,5 @@ namespace TimelessEchoes.Skills
         public float xpForFirstLevel = 10f;
         public float xpLevelMultiplier = 1.5f;
         public float taskSpeedPerLevel = 0.01f;
-        public List<MilestoneBonus> milestones = new();
+        public List<MilestoneDefinition> milestones = new();
     }}

@@ -330,7 +330,7 @@ namespace TimelessEchoes.Hero
 
             var skillController = SkillController.Instance;
             if (!IsEchoActor && skillController != null)
-                skillController.OnMilestoneUnlocked += OnMilestoneUnlocked;
+                skillController.OnMilestoneDataChanged += OnMilestoneDataChangedHandler;
 
             AutoBuffChanged += OnAutoBuffChanged;
             OnAutoBuffChanged();
@@ -354,7 +354,7 @@ namespace TimelessEchoes.Hero
 
             var skillController = SkillController.Instance;
             if (!IsEchoActor && skillController != null)
-                skillController.OnMilestoneUnlocked -= OnMilestoneUnlocked;
+                skillController.OnMilestoneDataChanged -= OnMilestoneDataChangedHandler;
 
             AutoBuffChanged -= OnAutoBuffChanged;
 
@@ -1211,22 +1211,28 @@ namespace TimelessEchoes.Hero
         private float CurrentAttackRate => HeroStatSystem.GetSnapshot().attacksPerSecond;
         public float Defense => HeroStatSystem.GetSnapshot().defense;
 
-        private void OnMilestoneUnlocked(TimelessEchoes.Skills.Skill skill, TimelessEchoes.Skills.MilestoneBonus milestone)
+        private void OnMilestoneDataChangedHandler()
         {
-            if (milestone != null && milestone.type == TimelessEchoes.Skills.MilestoneType.StatIncrease)
-            {
-                var oldMax = health != null ? health.MaxHealth : 0f;
-                var oldCurrent = health != null ? health.CurrentHealth : 0f;
-                ApplyStatUpgrades();
+            if (IsEchoActor)
+                return;
 
-                if (health != null)
-                {
-                    var newMax = Mathf.RoundToInt(baseHealth + healthBonus);
-                    if (Mathf.Abs(newMax - oldMax) > 0.01f)
-                        health.ApplyMaxHealthChange(newMax, true);
-                }
+            var skillController = SkillController.Instance;
+            if (skillController == null)
+                return;
+
+            var oldMax = health != null ? health.MaxHealth : 0f;
+            var oldCurrent = health != null ? health.CurrentHealth : 0f;
+            ApplyStatUpgrades();
+
+            if (health != null)
+            {
+                var newMax = Mathf.RoundToInt(baseHealth + healthBonus);
+                if (Mathf.Abs(newMax - oldMax) > 0.01f)
+                    health.ApplyMaxHealthChange(newMax, true);
             }
+
         }
+
 
         // Editor visualization for assist radius (main hero only)
         private void OnDrawGizmosSelected()
@@ -1526,4 +1532,6 @@ namespace TimelessEchoes.Hero
         protected virtual void OnResetSecondaryTrigger(string triggerName) {}
     }
 }
+
+
 

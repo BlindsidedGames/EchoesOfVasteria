@@ -210,7 +210,15 @@ namespace Blindsided.SaveData
         {
             public float CurrentXP;
             public int Level;
-            public List<string> Milestones = new();
+            public List<MilestoneProgressRecord> Milestones = new();
+        }
+
+        [HideReferenceObjectPicker]
+        public class MilestoneProgressRecord
+        {
+            public string Id;
+            public bool IsActive;
+            public int TierIndex;
         }
 
         [HideReferenceObjectPicker]

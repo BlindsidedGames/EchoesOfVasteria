@@ -175,7 +175,7 @@ namespace TimelessEchoes.Tasks
         protected bool ShouldInstantComplete()
         {
             var controller = SkillController.Instance;
-            bool milestone = controller && controller.RollForEffect(associatedSkill, MilestoneType.InstantTask);
+            bool milestone = controller && controller.RollForProc(associatedSkill, MilestoneProcType.InstantTask);
             bool buff = TimelessEchoes.Buffs.BuffManager.Instance != null && TimelessEchoes.Buffs.BuffManager.Instance.InstantTaskBuffActive;
             return milestone || buff;
         }
@@ -192,7 +192,7 @@ namespace TimelessEchoes.Tasks
             var amount = taskData.xpForCompletion;
             if (controller)
             {
-                int mult = controller.GetEffectMultiplier(associatedSkill, MilestoneType.DoubleXP);
+                int mult = controller.GetStackingMultiplier(associatedSkill, MilestoneProcType.DoubleXP);
                 amount *= mult;
             }
 
@@ -201,15 +201,14 @@ namespace TimelessEchoes.Tasks
 
             if (controller != null && associatedSkill != null)
             {
-                var progress = controller.GetProgress(associatedSkill);
-                if (progress != null)
+                var spawnEntries = controller.GetSpawnEntries(associatedSkill);
+                if (spawnEntries != null)
                 {
-                    foreach (var id in progress.Milestones)
+                    foreach (var entry in spawnEntries)
                     {
-                        var ms = associatedSkill.milestones.Find(m => m.bonusID == id);
-                        if (ms != null && ms.type == MilestoneType.SpawnEcho && UnityEngine.Random.value <= ms.chance)
+                        if (UnityEngine.Random.value <= entry.Chance)
                         {
-                            EchoManager.SpawnEchoes(ms.echoSpawnConfig, ms.echoDuration,
+                            EchoManager.SpawnEchoes(entry.Config, entry.Duration,
                                 new List<Skill> { associatedSkill }, true);
                         }
                     }
@@ -276,3 +275,5 @@ namespace TimelessEchoes.Tasks
 #endif
     }
 }
+
+
