@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 1066592917532723564}
   - component: {fileID: 1677867008891681479}
   m_Layer: 5
-  m_Name: Image
+  m_Name: SetIcon_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 3502313268923496530}
   - component: {fileID: 8960330914771394386}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: Active_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -510,7 +510,7 @@ GameObject:
   - component: {fileID: 1656701183355549580}
   - component: {fileID: 7022094568320277965}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Passive_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -793,7 +793,7 @@ GameObject:
   - component: {fileID: 3936717281089389392}
   - component: {fileID: 4618223495141896177}
   m_Layer: 5
-  m_Name: Text (TMP) (3)
+  m_Name: Set_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1084,7 +1084,7 @@ GameObject:
   - component: {fileID: 7694062883860016462}
   - component: {fileID: 2778911107278701923}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Name_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1322,8 +1322,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef79a5093017a647967e720d4eccd75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelText: {fileID: 2778911107278701923}
-  descriptionText: {fileID: 1656701183355549580}
+  nameText: {fileID: 2778911107278701923}
+  passiveText: {fileID: 1656701183355549580}
+  activeText: {fileID: 8960330914771394386}
+  setText: {fileID: 4618223495141896177}
+  setIcon: {fileID: 1066592917532723564}
+  toggleImage: {fileID: 7721586676677455544}
+  toggleButton: {fileID: 4943630229401362885}
 --- !u!114 &3133856091929292609
 MonoBehaviour:
   m_ObjectHideFlags: 0
