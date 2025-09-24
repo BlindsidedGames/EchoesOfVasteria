@@ -592,8 +592,10 @@ namespace TimelessEchoes.Enemies
                         {
                             if (Random.value <= entry.Chance)
                             {
-                                EchoManager.SpawnEchoes(entry.Config, entry.Duration,
-                                    new List<Skill> { skill }, true);
+                                var fallback = entry.UseAssociatedSkillFallback && skill != null
+                                    ? new List<Skill> { skill }
+                                    : null;
+                                EchoManager.SpawnEchoes(entry.Config, entry.Duration, fallback, true, entry.Count);
                             }
                         }
                     }

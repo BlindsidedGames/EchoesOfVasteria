@@ -127,7 +127,7 @@ namespace TimelessEchoes.Skills
             if (unlocked)
             {
                 if (nextTierLevel > 0)
-                    title += $" | Improves at level {nextTierLevel}";
+                    title += $" | <size=5>Improves at level {nextTierLevel}</size>";
             }
             else if (definition.UnlockLevel < int.MaxValue)
             {

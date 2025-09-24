@@ -24,11 +24,10 @@ namespace TimelessEchoes.Skills
         [SerializeField] private MilestoneBonusUI bonusUI;
 
         [Header("Set Bonus Panel")]
-        [SerializeField] private TMP_Text setNameText;
-        [SerializeField] private TMP_Text setBonusPrimaryText;
-        [SerializeField] private TMP_Text setBonusSecondaryText;
-        [SerializeField] private TMP_Text alternateSetBonusPrimaryText;
-        [SerializeField] private TMP_Text alternateSetBonusSecondaryText;
+        [SerializeField] private TMP_Text primarySetNameText;
+        [SerializeField] private TMP_Text primarySetEffectText;
+        [SerializeField] private TMP_Text secondarySetNameText;
+        [SerializeField] private TMP_Text secondarySetEffectText;
 
         [Header("Active Slots Panel")]
         [SerializeField] private TMP_Text activeSlotsText;
@@ -270,42 +269,54 @@ namespace TimelessEchoes.Skills
 
         private void UpdateSetPanel()
         {
-            if (setNameText != null) setNameText.text = string.Empty;
-            if (setBonusPrimaryText != null) setBonusPrimaryText.text = string.Empty;
-            if (setBonusSecondaryText != null) setBonusSecondaryText.text = string.Empty;
-            if (alternateSetBonusPrimaryText != null) alternateSetBonusPrimaryText.text = string.Empty;
-            if (alternateSetBonusSecondaryText != null) alternateSetBonusSecondaryText.text = string.Empty;
+            if (primarySetNameText != null) primarySetNameText.text = string.Empty;
+            if (primarySetEffectText != null) primarySetEffectText.text = string.Empty;
+            if (secondarySetNameText != null) secondarySetNameText.text = string.Empty;
+            if (secondarySetEffectText != null) secondarySetEffectText.text = string.Empty;
 
             if (controller == null)
                 return;
 
             var summaries = controller.EnumerateActiveSets()
+                .Where(s => s.Definition != null)
                 .OrderByDescending(s => s.ActiveCount)
                 .ToList();
 
-            if (summaries.Count > 0)
+            if (summaries.Count == 0)
+                return;
+
+            var primary = summaries[0];
+            if (primary.Definition != null)
             {
-                var primary = summaries[0];
-                if (primary.Definition != null)
+                if (primarySetNameText != null)
+                    primarySetNameText.text = primary.Definition.DisplayName;
+
+                if (primarySetEffectText != null)
                 {
-                    if (setNameText != null)
-                        setNameText.text = primary.Definition.DisplayName;
-                    if (setBonusPrimaryText != null)
-                        setBonusPrimaryText.text = primary.ThreePieceActive ? primary.Definition.ThreePieceDescription : string.Empty;
-                    if (setBonusSecondaryText != null)
-                        setBonusSecondaryText.text = primary.SixPieceActive ? primary.Definition.SixPieceDescription : string.Empty;
+                    var effects = new List<string>();
+                    if (primary.ThreePieceActive && !string.IsNullOrEmpty(primary.Definition.ThreePieceDescription))
+                        effects.Add(primary.Definition.ThreePieceDescription);
+                    if (primary.SixPieceActive && !string.IsNullOrEmpty(primary.Definition.SixPieceDescription))
+                        effects.Add(primary.Definition.SixPieceDescription);
+                    primarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
                 }
             }
 
-            if (summaries.Count > 1)
+            var secondary = summaries.Skip(1).FirstOrDefault(s => s.Definition != null && s.Definition != primary.Definition && s.ThreePieceActive);
+
+            if (secondary.Definition != null)
             {
-                var secondary = summaries[1];
-                if (secondary.Definition != null)
+                if (secondarySetNameText != null)
+                    secondarySetNameText.text = secondary.Definition.DisplayName;
+
+                if (secondarySetEffectText != null)
                 {
-                    if (alternateSetBonusPrimaryText != null)
-                        alternateSetBonusPrimaryText.text = secondary.ThreePieceActive ? secondary.Definition.ThreePieceDescription : string.Empty;
-                    if (alternateSetBonusSecondaryText != null)
-                        alternateSetBonusSecondaryText.text = secondary.SixPieceActive ? secondary.Definition.SixPieceDescription : string.Empty;
+                    var effects = new List<string>();
+                    if (secondary.ThreePieceActive && !string.IsNullOrEmpty(secondary.Definition.ThreePieceDescription))
+                        effects.Add(secondary.Definition.ThreePieceDescription);
+                    if (secondary.SixPieceActive && !string.IsNullOrEmpty(secondary.Definition.SixPieceDescription))
+                        effects.Add(secondary.Definition.SixPieceDescription);
+                    secondarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
                 }
             }
         }
@@ -339,11 +350,31 @@ namespace TimelessEchoes.Skills
             if (spawnEntries != null && spawnEntries.Count > 0)
             {
                 float spawnChance = 0f;
+                int maxCount = 0;
+                bool mixedCounts = false;
+                int? lastCount = null;
+
                 foreach (var entry in spawnEntries)
+                {
                     spawnChance += entry.Chance;
+                    if (entry.Count > maxCount)
+                        maxCount = entry.Count;
+                    if (lastCount.HasValue && lastCount.Value != entry.Count)
+                        mixedCounts = true;
+                    lastCount = entry.Count;
+                }
 
                 if (spawnChance > 0f)
-                    lines.Add($"{spawnChance * 100f:0.#}% Echo Spawn Chance");
+                {
+                    string label = $"{spawnChance * 100f:0.#}% Echo Spawn Chance";
+                    if (maxCount > 1)
+                    {
+                        label += mixedCounts
+                            ? $" (spawns up to {maxCount} Echoes)"
+                            : $" (spawns {maxCount} {(maxCount == 1 ? "Echo" : "Echoes")})";
+                    }
+                    lines.Add(label);
+                }
             }
 
             totalSkillIncreasesText.text = lines.Count > 0 ? string.Join("\n", lines) : string.Empty;
@@ -380,3 +411,4 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+

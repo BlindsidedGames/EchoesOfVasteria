@@ -1,7 +1,7 @@
-using System;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using TimelessEchoes.Hero;
 
 namespace TimelessEchoes.Skills
 {
@@ -10,28 +10,50 @@ namespace TimelessEchoes.Skills
     {
         [SerializeField] private TimelessEchoes.EchoSpawnConfig echoSpawnConfig;
         [SerializeField] [Min(0f)] private float echoDuration = 10f;
-        [SerializeField] [Tooltip("Optional explicit skill label override used in generated descriptions.")]
-        private string fallbackSkillLabel = "various";
+        [SerializeField] [Min(1)] private int echoCount = 1;
+        [SerializeField] [Tooltip("Optional explicit label used when no capable skills are specified on the config.")]
+        private string fallbackSkillLabel = "all available";
+        [SerializeField] [Tooltip("When enabled and the config has no explicit skills, restrict spawned echoes to the milestone's skill instead of all skills.")]
+        private bool restrictToSourceSkillWhenConfigEmpty = false;
 
         public override void Apply(MilestoneEffectContext context, float magnitude)
         {
-            var targetSkill = context.Skill;
-            context.Aggregator.AddSpawnEntry(targetSkill, echoSpawnConfig, Mathf.Max(0f, magnitude), echoDuration);
+            var configInstance = echoSpawnConfig ?? new TimelessEchoes.EchoSpawnConfig();
+            bool hasSpecificSkills = configInstance.capableSkills != null && configInstance.capableSkills.Count > 0;
+            bool useAssociatedFallback = !hasSpecificSkills && restrictToSourceSkillWhenConfigEmpty;
+
+            int count = Mathf.Max(1, echoCount);
+            context.Aggregator.AddSpawnEntry(
+                context.Skill,
+                configInstance,
+                Mathf.Max(0f, magnitude),
+                echoDuration,
+                count,
+                useAssociatedFallback);
         }
 
         public override string GetDescription(float magnitude, string skillName, bool isActive)
         {
-            string skillText = skillName;
-            if (echoSpawnConfig != null && echoSpawnConfig.capableSkills != null && echoSpawnConfig.capableSkills.Count > 0)
+            var configInstance = echoSpawnConfig;
+            bool hasSpecificSkills = configInstance != null && configInstance.capableSkills != null && configInstance.capableSkills.Count > 0;
+
+            string skillText;
+            if (hasSpecificSkills)
             {
-                if (echoSpawnConfig.capableSkills.Count == 1)
-                    skillText = echoSpawnConfig.capableSkills[0]?.skillName ?? skillName;
+                if (configInstance.capableSkills.Count == 1)
+                    skillText = configInstance.capableSkills[0]?.skillName;
                 else
-                    skillText = "various";
+                    skillText = fallbackSkillLabel;
+            }
+            else
+            {
+                skillText = fallbackSkillLabel;
             }
 
+            if (string.IsNullOrWhiteSpace(skillText) && !string.IsNullOrWhiteSpace(skillName))
+                skillText = skillName;
             if (string.IsNullOrWhiteSpace(skillText))
-                skillText = fallbackSkillLabel;
+                skillText = "various";
 
             var controller = TimelessEchoes.Upgrades.StatUpgradeController.Instance;
             float bonus = 0f;
@@ -44,7 +66,17 @@ namespace TimelessEchoes.Skills
 
             float totalDuration = echoDuration + bonus;
             string percent = (Mathf.Max(0f, magnitude) * 100f).ToString("0.#", CultureInfo.InvariantCulture);
-            return $"Provides a {percent}% chance to summon an Echo that performs {skillText} tasks for {totalDuration:0.#} seconds.";
+            int count = Mathf.Max(1, echoCount);
+            string echoLabel = count == 1 ? "an Echo" : $"{count} Echoes";
+
+            string actionPhrase = configInstance?.echoType switch
+            {
+                EchoType.Combat => "assist in combat",
+                EchoType.TaskOnly => $"perform {skillText} tasks",
+                _ => $"perform {skillText} tasks"
+            };
+
+            return $"Provides a {percent}% chance to summon {echoLabel} that {actionPhrase} for {totalDuration:0.#} seconds.";
         }
     }
 }

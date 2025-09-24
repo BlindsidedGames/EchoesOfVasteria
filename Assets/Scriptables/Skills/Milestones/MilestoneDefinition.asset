@@ -13,13 +13,24 @@ MonoBehaviour:
   m_Name: MilestoneDefinition
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneDefinition
   milestoneId: 795943dca80743ec940b03d59a127eea
-  displayName: Farming Echo
+  displayName: Echo Farming
   set: 0
   setIcon: {fileID: 0}
   canActivate: 1
   passiveEffect: {fileID: 11400000, guid: 3ca35ee20c29b1b42a982c05c345e252, type: 2}
   activeEffect: {fileID: 11400000, guid: 01ac21a46b3780e4a89709dffba6d2c3, type: 2}
+  tierMode: 1
   tiers:
   - requiredLevel: 1
-    passiveValue: 1
-    activeValue: 2
+    passiveValue: 0.05
+    activeValue: 0.1
+  - requiredLevel: 200
+    passiveValue: 0.1
+    activeValue: 0.2
+  infiniteTier:
+    requiredLevel: 10
+    levelsPerIncrease: 10
+    passiveBaseValue: 0.005
+    passiveIncrement: 0.005
+    activeBaseValue: 0.02
+    activeIncrement: 0.02

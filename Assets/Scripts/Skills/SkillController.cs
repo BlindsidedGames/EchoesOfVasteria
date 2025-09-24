@@ -520,7 +520,9 @@ namespace TimelessEchoes.Skills
                                 continue;
 
                             var state = EnsureState(skill, definition);
-                            state.TierIndex = Mathf.Clamp(saved.TierIndex, -1, definition.Tiers.Count - 1);
+                            state.TierIndex = definition.TierMode == MilestoneTierMode.Manual
+                                ? Mathf.Clamp(saved.TierIndex, -1, definition.ManualTiers.Count - 1)
+                                : Mathf.Max(-1, saved.TierIndex);
                             state.IsActive = saved.IsActive && definition.CanActivate;
                         }
                     }

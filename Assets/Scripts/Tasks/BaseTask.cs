@@ -208,13 +208,14 @@ namespace TimelessEchoes.Tasks
                     {
                         if (UnityEngine.Random.value <= entry.Chance)
                         {
-                            EchoManager.SpawnEchoes(entry.Config, entry.Duration,
-                                new List<Skill> { associatedSkill }, true);
+                            var fallback = entry.UseAssociatedSkillFallback && associatedSkill != null
+                                ? new List<Skill> { associatedSkill }
+                                : null;
+                            EchoManager.SpawnEchoes(entry.Config, entry.Duration, fallback, true, entry.Count);
                         }
                     }
                 }
             }
-
             return amount;
         }
 

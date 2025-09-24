@@ -79,13 +79,16 @@ namespace TimelessEchoes.Skills
             };
         }
 
-        public void AddSpawnEntry(Skill skill, TimelessEchoes.EchoSpawnConfig config, float chance, float duration)
+        public void AddSpawnEntry(Skill skill, TimelessEchoes.EchoSpawnConfig config, float chance, float duration, int count, bool useAssociatedSkillFallback)
         {
             if (skill == null || config == null || chance <= 0f || duration <= 0f)
                 return;
 
+            if (count <= 0)
+                count = 1;
+
             var summary = GetOrCreateSummary(skill);
-            summary.SpawnEchoes.Add(new SpawnEchoEntry(config, chance, duration));
+            summary.SpawnEchoes.Add(new SpawnEchoEntry(config, chance, duration, count, useAssociatedSkillFallback));
         }
 
         public IReadOnlyList<SpawnEchoEntry> GetSpawnEntries(Skill skill)
@@ -93,7 +96,7 @@ namespace TimelessEchoes.Skills
             if (skill != null && _skillSummaries.TryGetValue(skill, out var summary))
                 return summary.SpawnEchoes;
 
-            return System.Array.Empty<SpawnEchoEntry>();
+            return Array.Empty<SpawnEchoEntry>();
         }
 
         public void AddFlatStatBonus(StatUpgrade upgrade, float amount)
@@ -137,8 +140,6 @@ namespace TimelessEchoes.Skills
 
     public sealed class SkillMilestoneSummary
     {
-        internal static readonly System.ReadOnlyMemory<SpawnEchoEntry> EmptySpawnList = System.ReadOnlyMemory<SpawnEchoEntry>.Empty;
-
         public float InstantTaskChance;
         public float InstantKillChance;
         public float DoubleResourceChance;
@@ -161,12 +162,16 @@ namespace TimelessEchoes.Skills
         public readonly TimelessEchoes.EchoSpawnConfig Config;
         public readonly float Chance;
         public readonly float Duration;
+        public readonly int Count;
+        public readonly bool UseAssociatedSkillFallback;
 
-        public SpawnEchoEntry(TimelessEchoes.EchoSpawnConfig config, float chance, float duration)
+        public SpawnEchoEntry(TimelessEchoes.EchoSpawnConfig config, float chance, float duration, int count, bool useAssociatedSkillFallback)
         {
             Config = config;
             Chance = chance;
             Duration = duration;
+            Count = count;
+            UseAssociatedSkillFallback = useAssociatedSkillFallback;
         }
     }
 }
