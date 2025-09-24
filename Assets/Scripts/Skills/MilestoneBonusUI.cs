@@ -50,12 +50,12 @@ namespace TimelessEchoes.Skills
 
                 if (refs != null)
                 {
-                    if (refs.levelText != null)
-                        refs.levelText.text = $"Lv {milestone.levelRequirement}";
+                    if (refs.nameText != null)
+                        refs.nameText.text = $"Lv {milestone.levelRequirement}";
 
                     string desc = milestone.GetDescription(skill.skillName);
-                    if (refs.descriptionText != null)
-                        refs.descriptionText.text = desc;
+                    if (refs.passiveText != null)
+                        refs.passiveText.text = desc;
 
                 }
 

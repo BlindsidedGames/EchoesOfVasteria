@@ -984,94 +984,10 @@ namespace TimelessEchoes.Hero
                 }
             }
 
-            Transform nearest = currentEnemy;
-            if (allowAttacks && nearest == null)
-            {
-                if (engagedEnemies.Count > 0)
-                {
-                    var best = float.PositiveInfinity;
-                    TimelessEchoes.Enemies.Enemy chosen = null;
-                    foreach (var enemy in engagedEnemies)
-                    {
-                        if (enemy == null) continue;
-                        Transform enemyTransform = null;
-                        try { enemyTransform = enemy.transform; } catch { continue; }
-                        if (enemyTransform == null) continue;
-                        // When performing a task, only consider enemies targeting the main hero
-                        // or those within the assist radius (if enabled)
-                        // Apply assist rule while choosing engaged enemies too:
-                        // - Hero-targeted enemies are always allowed.
-                        // - Echo-targeted enemies require enemy within assist radius.
-                        //   When performing a task, also require assistEchoWhileOnTask.
-                        {
-                            bool ok = true;
-                            Transform tgt = null;
-                            if (!enemyTargets.TryGetValue(enemy, out tgt))
-                                tgt = null;
+            var nearest = ResolveNearestEnemyTarget();
 
-                            if (tgt != transform)
-                            {
-                                if (state == State.PerformingTask && !assistEchoWhileOnTask)
-                                {
-                                    ok = false;
-                                }
-                                else
-                                {
-                                    var dcheck = Vector2.Distance(transform.position, enemyTransform.position);
-                                    ok = dcheck <= assistEchoThreatRadius;
-                                }
-                            }
-
-                            if (!ok)
-                                continue;
-                        }
-                        var dist = Vector2.Distance(transform.position, enemyTransform.position);
-                        if (dist < best)
-                        {
-                            best = dist;
-                            chosen = enemy;
-                        }
-                    }
-
-                    Transform chosenTransform = null;
-                    if (chosen != null)
-                    {
-                        try { chosenTransform = chosen.transform; } catch { chosenTransform = null; }
-                    }
-                    nearest = chosenTransform;
-                }
-                else
-                {
-                    var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
-                    nearest = IsEchoActor
-                        ? FindNearestEnemyTimeAware(range, EchoAvoidIfTTKBelowSeconds)
-                        : FindNearestEnemy(range);
-                }
-            }
-
-            if (allowAttacks && nearest != null)
-            {
-                if (currentEnemy != nearest)
-                {
-                    currentEnemyHealth?.SetHealthBarVisible(false);
-                    currentEnemy = nearest;
-                    currentEnemyHealth = nearest.GetComponent<Health>();
-                    currentEnemyHealth?.SetHealthBarVisible(true);
-                    currentEnemyComp = nearest.GetComponent<TimelessEchoes.Enemies.Enemy>();
-                }
-                else if (currentEnemyHealth == null)
-                {
-                    currentEnemyHealth = nearest.GetComponent<Health>();
-                    currentEnemyHealth?.SetHealthBarVisible(true);
-                    if (currentEnemyComp == null)
-                        currentEnemyComp = nearest.GetComponent<TimelessEchoes.Enemies.Enemy>();
-                }
-
-                if (state == State.PerformingTask && CurrentTask != null) CurrentTask.OnInterrupt(this);
-                HandleCombat(nearest);
+            if (allowAttacks && nearest != null && TryEngageEnemy(nearest))
                 return;
-            }
-
             if (state == State.Combat && engagedEnemies.Count == 0)
             {
                 Log("Hero exiting combat", TELogCategory.Combat, this);
@@ -1132,6 +1048,160 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        private Transform ResolveNearestEnemyTarget()
+        {
+            var nearest = currentEnemy;
+
+            if (!allowAttacks || stats == null)
+                return nearest;
+
+            if (nearest != null)
+                return nearest;
+
+            if (engagedEnemies.Count > 0)
+            {
+                var best = float.PositiveInfinity;
+                TimelessEchoes.Enemies.Enemy chosen = null;
+                foreach (var enemy in engagedEnemies)
+                {
+                    if (enemy == null) continue;
+                    Transform enemyTransform = null;
+                    try { enemyTransform = enemy.transform; } catch { continue; }
+                    if (enemyTransform == null) continue;
+
+                    var ok = true;
+                    if (!enemyTargets.TryGetValue(enemy, out var target))
+                        target = null;
+
+                    if (target != transform)
+                    {
+                        if (state == State.PerformingTask && !assistEchoWhileOnTask)
+                        {
+                            ok = false;
+                        }
+                        else
+                        {
+                            var distance = Vector2.Distance(transform.position, enemyTransform.position);
+                            ok = distance <= assistEchoThreatRadius;
+                        }
+                    }
+
+                    if (!ok)
+                        continue;
+
+                    var dist = Vector2.Distance(transform.position, enemyTransform.position);
+                    if (dist < best)
+                    {
+                        best = dist;
+                        chosen = enemy;
+                    }
+                }
+
+                if (chosen != null)
+                {
+                    try { nearest = chosen.transform; }
+                    catch { nearest = null; }
+                }
+                else
+                {
+                    nearest = null;
+                }
+            }
+            else
+            {
+                var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
+                nearest = IsEchoActor
+                    ? FindNearestEnemyTimeAware(range, EchoAvoidIfTTKBelowSeconds)
+                    : FindNearestEnemy(range);
+            }
+
+            return nearest;
+        }
+
+        private bool TryEngageEnemy(Transform enemy)
+        {
+            if (!allowAttacks || stats == null || enemy == null)
+                return false;
+
+            if (setter == null)
+                setter = GetComponent<AIDestinationSetter>();
+            if (ai == null)
+                ai = GetComponent<AIPath>();
+
+            if (setter == null || ai == null)
+                return false;
+
+            if (currentEnemy != enemy)
+            {
+                currentEnemyHealth?.SetHealthBarVisible(false);
+                currentEnemy = enemy;
+                currentEnemyHealth = enemy.GetComponent<Health>();
+                currentEnemyComp = enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
+            }
+            else if (currentEnemyHealth == null)
+            {
+                currentEnemyHealth = enemy.GetComponent<Health>();
+                if (currentEnemyComp == null)
+                    currentEnemyComp = enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
+            }
+
+            setter.target = enemy;
+            ai.canMove = true;
+
+            var enemyComp = currentEnemyComp != null
+                ? currentEnemyComp
+                : enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
+
+            var enemyEngaged = enemyComp != null && engagedEnemies.Contains(enemyComp);
+            var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
+            var delta = (Vector2)(enemy.position - transform.position);
+            var withinRange = delta.sqrMagnitude <= range * range;
+
+            if (!enemyEngaged && !withinRange)
+                return true;
+
+            if (currentEnemyHealth != null)
+                currentEnemyHealth.SetHealthBarVisible(true);
+
+            if (state == State.PerformingTask && CurrentTask != null)
+                CurrentTask.OnInterrupt(this);
+
+            HandleCombat(enemy);
+            return true;
+        }
+
+        private Transform FindFallbackEnemyTarget()
+        {
+            var enemies = TimelessEchoes.Enemies.EnemyActivator.ActiveEnemies;
+            if (enemies == null)
+                return null;
+
+            var origin = (Vector2)transform.position;
+            Transform nearest = null;
+            var bestSqr = float.PositiveInfinity;
+
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null) continue;
+
+                Transform enemyTransform = null;
+                try { enemyTransform = enemy.transform; } catch { continue; }
+                if (enemyTransform == null) continue;
+
+                var hp = enemy.GetComponent<Health>();
+                if (hp == null || hp.CurrentHealth <= 0f) continue;
+
+                var offset = (Vector2)enemyTransform.position - origin;
+                var sqr = offset.sqrMagnitude;
+                if (sqr < bestSqr)
+                {
+                    bestSqr = sqr;
+                    nearest = enemyTransform;
+                }
+            }
+
+            return nearest;
+        }
         // Stats accessors and updates
         public float Damage => HeroStatSystem.GetSnapshot().damage * combatDamageMultiplier;
         public float BaseDamage => baseDamage + damageBonus + gearDamageBonus;
@@ -1364,6 +1434,12 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
+            if (!IsEchoActor && allowAttacks)
+            {
+                var fallbackEnemy = FindFallbackEnemyTarget();
+                if (fallbackEnemy != null && TryEngageEnemy(fallbackEnemy))
+                    return;
+            }
             if (idleWalkTarget == null)
             {
                 idleWalkTarget = new GameObject("IdleWalkTarget").transform;
@@ -1372,7 +1448,10 @@ namespace TimelessEchoes.Hero
 
             var pos = transform.position;
             if (idleWalkTarget.position.x - pos.x < 1f)
-                idleWalkTarget.position = new Vector3(pos.x + idleWalkStep, pos.y, pos.z);
+            {
+                var nextIdle = ResolveIdleAdvanceTarget(pos);
+                idleWalkTarget.position = nextIdle;
+            }
 
             if (setter.target != idleWalkTarget)
             {
@@ -1383,6 +1462,52 @@ namespace TimelessEchoes.Hero
             ai.canMove = true;
         }
 
+        private Vector3 ResolveIdleAdvanceTarget(Vector3 currentPosition)
+        {
+            var fallback = new Vector3(currentPosition.x + idleWalkStep, currentPosition.y, currentPosition.z);
+            var pathfinder = AstarPath.active;
+            if (pathfinder == null)
+                return fallback;
+
+            var constraint = NNConstraint.Walkable;
+            constraint.constrainTags = false;
+
+            var startInfo = pathfinder.GetNearest(currentPosition, constraint);
+            var startNode = startInfo.node;
+            if (startNode == null || !startNode.Walkable)
+                return fallback;
+
+            var verticalStep = Mathf.Max(0.5f, Mathf.Abs(idleWalkStep) * 0.5f);
+            var candidates = new[]
+            {
+                new Vector3(currentPosition.x + idleWalkStep, currentPosition.y, currentPosition.z),
+                new Vector3(currentPosition.x + idleWalkStep, currentPosition.y + verticalStep, currentPosition.z),
+                new Vector3(currentPosition.x + idleWalkStep, currentPosition.y - verticalStep, currentPosition.z),
+                new Vector3(currentPosition.x + idleWalkStep, currentPosition.y + verticalStep * 2f, currentPosition.z),
+                new Vector3(currentPosition.x + idleWalkStep, currentPosition.y - verticalStep * 2f, currentPosition.z)
+            };
+
+            foreach (var candidate in candidates)
+            {
+                var goalInfo = pathfinder.GetNearest(candidate, constraint);
+                var node = goalInfo.node;
+                if (node == null || !node.Walkable)
+                    continue;
+
+                if (!PathUtilities.IsPathPossible(startNode, node))
+                    continue;
+
+                var resolved = goalInfo.position;
+                resolved.z = currentPosition.z;
+
+                if (resolved.x < currentPosition.x)
+                    continue;
+
+                return resolved;
+            }
+
+            return fallback;
+        }
         // Public API for main-hero-only secondary animator/visuals
         public void PlaySecondaryAnimation(string stateName) => OnPlaySecondaryAnimation(stateName);
         public void SetSecondaryTrigger(string triggerName) => OnSetSecondaryTrigger(triggerName);
