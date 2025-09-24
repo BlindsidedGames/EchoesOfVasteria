@@ -80,6 +80,15 @@ namespace TimelessEchoes.Gear.UI
         [Header("Selected Slot UI")]
         [Tooltip("Text to display the stats of the currently equipped gear in the selected slot.")]
         [SerializeField] private TMP_Text selectedSlotStatsText;
+        [Header("Aggregate Stats UI")]
+        [Tooltip("Text to display overall totals.")]
+        [SerializeField] private TMP_Text aggregateTotalsChestText;
+
+        [Tooltip("Text to display weapon and chest breakdown.")]
+        [SerializeField] private TMP_Text aggregateWeaponBootsText;
+
+        [Tooltip("Text to display helmet and boots breakdown.")]
+        [SerializeField] private TMP_Text aggregateHelmetText;
 
         [Header("Unknown Gear Sprites (by slot order)")]
         [Tooltip("Fallback unknown sprites for each gear slot: Weapon, Helmet, Chest, Boots")]
@@ -260,6 +269,9 @@ namespace TimelessEchoes.Gear.UI
             if (statSpriteAsset != null)
             {
                 if (selectedSlotStatsText != null) selectedSlotStatsText.spriteAsset = statSpriteAsset;
+                if (aggregateTotalsChestText != null) aggregateTotalsChestText.spriteAsset = statSpriteAsset;
+                if (aggregateWeaponBootsText != null) aggregateWeaponBootsText.spriteAsset = statSpriteAsset;
+                if (aggregateHelmetText != null) aggregateHelmetText.spriteAsset = statSpriteAsset;
                 if (resultText != null) resultText.spriteAsset = statSpriteAsset;
                 if (resultTierText != null) resultTierText.spriteAsset = statSpriteAsset;
             }
@@ -267,8 +279,9 @@ namespace TimelessEchoes.Gear.UI
             // Initialize previews
             ClearResultPreview();
             UpdateAllGearSlots();
+            UpdateAggregateStatsText();
 
-            // Do not force default core/slot here — restored later
+            // Do not force default core/slot here - restored later
             // Initialize button states based on current selections/resources
             RefreshActionButtons();
 
@@ -298,6 +311,7 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
             UpdateAllGearSlots();
             UpdateSelectedSlotStats();
+            UpdateAggregateStatsText();
             // Restore saved craft amounts and refresh previews
             ingotCraftAmount = ForgeIngotCraftAmount;
             crystalCraftAmount = ForgeCrystalCraftAmount;
@@ -313,6 +327,7 @@ namespace TimelessEchoes.Gear.UI
                 coreConversionSection.amountInput.text = coreCraftAmount.ToString("0");
             // Restore last selected core/slot from save if available
             TryRestoreSavedSelections();
+            UpdateAggregateStatsText();
             OnResourcesChanged();
         }
 
@@ -322,12 +337,14 @@ namespace TimelessEchoes.Gear.UI
             {
                 equipment.OnEquipmentChanged += UpdateAllGearSlots;
                 equipment.OnEquipmentChanged += UpdateSelectedSlotStats;
+                equipment.OnEquipmentChanged += UpdateAggregateStatsText;
             }
 
             // Refresh Ivan XP display on open
             UpdateIvanXpUI();
             // Attempt to restore saved selections when window opens
             TryRestoreSavedSelections();
+            UpdateAggregateStatsText();
             // Refresh selected previews when inventory changes (e.g., crafting spends ingots)
             if (RM != null) RM.OnInventoryChanged += OnResourcesChanged;
             // Subscribe to Ivan XP events if available
@@ -392,6 +409,7 @@ namespace TimelessEchoes.Gear.UI
             {
                 equipment.OnEquipmentChanged -= UpdateAllGearSlots;
                 equipment.OnEquipmentChanged -= UpdateSelectedSlotStats;
+                equipment.OnEquipmentChanged -= UpdateAggregateStatsText;
             }
 
             if (RM != null) RM.OnInventoryChanged -= OnResourcesChanged;
@@ -625,6 +643,7 @@ namespace TimelessEchoes.Gear.UI
             // Clear result preview when result is equipped
             ClearResultPreview();
             UpdateAllGearSlots();
+            UpdateAggregateStatsText();
             RefreshActionButtons();
         }
 
@@ -1665,6 +1684,64 @@ namespace TimelessEchoes.Gear.UI
 
             var equipped = equipment != null ? equipment.GetEquipped(selectedSlot) : null;
             selectedSlotStatsText.text = GearStatTextBuilder.BuildEquippedStatsText(equipped, selectedSlot);
+        }
+
+        private void UpdateAggregateStatsText()
+        {
+            if (aggregateTotalsChestText == null && aggregateWeaponBootsText == null && aggregateHelmetText == null)
+                return;
+
+            equipment ??= EquipmentController.Instance;
+            var minusIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
+            var minusFallback = string.IsNullOrEmpty(minusIcon) ? string.Empty : minusIcon;
+
+            void ApplyText(TMP_Text target, string value)
+            {
+                if (target == null) return;
+                target.text = string.IsNullOrWhiteSpace(value) ? minusFallback : value;
+            }
+
+            void ApplyFallback()
+            {
+                ApplyText(aggregateTotalsChestText, string.Empty);
+                ApplyText(aggregateWeaponBootsText, string.Empty);
+                ApplyText(aggregateHelmetText, string.Empty);
+            }
+
+            if (equipment == null)
+            {
+                ApplyFallback();
+                return;
+            }
+
+            var slots = equipment.Slots;
+            if (slots == null || slots.Count == 0)
+            {
+                ApplyFallback();
+                return;
+            }
+
+            var entries = new List<(string slot, GearItem item)>(slots.Count);
+            for (var i = 0; i < slots.Count; i++)
+            {
+                var slotName = slots[i];
+                if (string.IsNullOrWhiteSpace(slotName))
+                    continue;
+
+                var item = equipment.GetEquipped(slotName);
+                entries.Add((slotName, item));
+            }
+
+            if (entries.Count == 0)
+            {
+                ApplyFallback();
+                return;
+            }
+
+            var sections = GearStatTextBuilder.BuildAggregateStatsTextSections(entries);
+            ApplyText(aggregateTotalsChestText, sections.Totals);
+            ApplyText(aggregateWeaponBootsText, sections.WeaponAndChest);
+            ApplyText(aggregateHelmetText, sections.HelmetAndBoots);
         }
 
         private string BuildEquippedStatsText(GearItem item, string slotName)

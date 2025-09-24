@@ -102,7 +102,7 @@ MonoBehaviour:
       either for story, or to guide you through the intro.
 
       <b>Gathering</b>
-      | Thse quests require you to gather resources and hand them in to complete.
+      | These quests require you to gather resources and hand them in to complete.
 
       <b>Kills</b>
       | Kill enemies and report back to complete these.
@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.2.24
+    m_Localized: v1.3.1
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -167,19 +167,24 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9824133160779776
     m_Localized: "Ivan's forge is a magical place. Whether you're chilling in town
-      or out on the road, you can help guide him as he improves his smithing skills.\n\nThis
-      is where you craft gear and choose the best stats for your build. \nRight now
-      there are 7 stats that can be rolled on gear with each piece guaranteeing a
-      specific one.\n\n<sprite=198> = Damage.\n<sprite=200> = Attack Speed.\n<sprite=199>
-      = Crit Chance.  \n\n<sprite=202> = Health.\n<sprite=203> = Regen.\n<sprite=201>
-      = Defense.\n<sprite=204> = Movement.\n\n<sprite=192> = Upgrade.\n<sprite=193>
-      = Downgrade. \n<sprite=194> = No change.\n<sprite=195> Stat is not on new item.\n<sprite=196>
-      Stat is not on old item.\n\n<b>Weapon</b> | Guarantees <sprite=198>\n<b>Helmet</b>
-      | Guarantees <sprite=202>\n<b>Chest</b> | Guarantees <sprite=201>\n<b>Boots</b>
-      | Guarantees <sprite=204> which is exclusive to this slot.\n\nGear is automatically
-      salvaged when you craft a new piece, select a different slot, or close the
-      game.\n\nDepending on rarity you can receive up to 5 stats on a piece of gear.
-      There are plans to add additional stats to gear in the future!"
+      or out on the road, you can help guide him as he improves his smithing skills.\n\nYou
+      have access to two toggles while forging:\n\n<b>Stop for Vastium:</b> Always
+      stops if you roll a Vastium piece, even if it is a downgrade.\n\n<b>Stat Matching:</b>
+      With this enabled, the forge will continue to work until an upgrade has the
+      exact same stat types as your equipped piece of gear.\n\nQuality is represented
+      by this icon: <sprite=206>\n\nThis is where you craft gear and choose the best
+      stats for your build. \nRight now there are 8 stats that can be rolled on gear
+      with each piece guaranteeing a specific one.\n\n<sprite=198> = Damage.\n<sprite=200>
+      = Attack Speed.\n<sprite=199> = Crit Chance.\n<sprite=205> = Crit Damage. 
+      \n\n<sprite=202> = Health.\n<sprite=203> = Regen.\n<sprite=201> = Defense.\n<sprite=204>
+      = Movement.\n\n<sprite=192> = Upgrade.\n<sprite=193> = Downgrade. \n<sprite=194>
+      = No change.\n<sprite=195> Stat is not on new item.\n<sprite=196> Stat is not
+      on old item.\n\n<b>Weapon</b> | Guarantees <sprite=198>\n<b>Helmet</b> | Guarantees
+      <sprite=202>\n<b>Chest</b> | Guarantees <sprite=201>\n<b>Boots</b> | Guarantees
+      <sprite=204> which is exclusive to this slot.\n\nGear is automatically salvaged
+      when you craft a new piece, select a different slot, or close the game.\n\nDepending
+      on rarity you can receive up to 5 stats on a piece of gear. There are plans
+      to add additional stats to gear in the future!"
     m_Metadata:
       m_Items: []
   - m_Id: 9824133185945600
@@ -195,22 +200,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Balance</b>\n\u2022 Skelly Swordsmen, and small slimes now share
-      a base Attack Rate of 1.\n\u2022 Skelly Archers, and medium slimes now share
-      a base Attack Rate of 1.25.\n\u2022 Skelly Mages and Large slimes now share
-      a base Attack Rate of 1.6\n\u2022 Small and Medium Slimes now have infinite
-      spawn distances.\n<b>Minor changes</b>\n\u2022 Nori now has a low of 250 on
-      Vastium.\n\u2022 The game will no longer sleep on mobile.\n<b>Bugfixes</b>\n\u2022
-      Fixed recipe display in the forge.\n\u2022 Cualdron cards now properly display
-      Echo Power instead of Disciple Power.\n\u2022 Offline time now properly functions
-      on mobile even when the app is in the background."
+    m_Localized: "<b>Changes</b>\n\u2022 Cauldron no longer has taste/stop tasting
+      buttons. Tasting will begin immediately on pressing Mix and will resume when
+      restarting the game automatically untill you run out of tastes.\n\u2022 Skills
+      have been overhauled along with Milestones.\n\u2022 Crit damage has been added
+      to stat pool for gear, added as a new buff, and in milestones.\n\u2022 New
+      map: Spooky!\n\u2022 You can now tap and hold, or right click a buff slot during
+      a run to enable/disable echo casting.\n<b>Minor changes</b>\n\u2022 The forge
+      now shows Quality with a new icon in the first line of pending/equipped.\n\u2022
+      In forge stats the Quality section has been moved above the Salvage section.\n<b>Bugfixes</b>\n\u2022"
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "The Cauldron is Eva's connection to The Vast One.\n\nTossing incredients
+    m_Localized: "The Cauldron is Eva's connection to The Vast One.\n\nTossing ingrediants
       in summons the power of The Vast One pulling in your entire stockpile of that
       resource! It does however require at least two types of resources, for flavour
-      reasons.\n\nOnce you toss ingredients in you will recieve a number of stew
+      reasons.\n\nOnce you toss ingredients in you will recieve an amount of stew
       based on the rarity and count of the resources you selected. You can then taste
       the stew to draw from the well of The Vast One's power. You will receive cards
       based on Eva's level which affects her weights as displayed on the Cauldron

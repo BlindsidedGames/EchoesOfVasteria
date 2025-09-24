@@ -58,7 +58,11 @@ namespace TimelessEchoes.Hero
         public static float GetDamage(bool isCrit = false)
         {
             var s = GetSnapshot();
-            return isCrit ? s.damage * 2f : s.damage;
+            if (!isCrit)
+                return s.damage;
+
+            var critMultiplier = 1f + Mathf.Max(0f, s.critDamagePercent) / 100f;
+            return s.damage * critMultiplier;
         }
 
         private static void ForceRecalculate()
@@ -164,6 +168,33 @@ namespace TimelessEchoes.Hero
                 // Apply global baseline
                 critPercent += BaseCritChancePercent;
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
+            }
+
+
+            if ((_dirtyMask & DirtyMask.CritDamage) != 0)
+            {
+                var critDamagePercent = 0f;
+                if (equip != null && crafting != null)
+                {
+                    var critDamageDef = crafting.GetStatByMapping(HeroStatMapping.CritDamage);
+                    if (critDamageDef != null)
+                    {
+                        var raw = equip.GetTotalForMapping(HeroStatMapping.CritDamage);
+                        critDamagePercent = critDamageDef.isPercent ? raw : raw * 100f;
+                    }
+                }
+
+                if (buffs != null)
+                    critDamagePercent += Mathf.Max(0f, buffs.CritDamagePercent);
+
+                if (cauldron != null)
+                {
+                    float infCritDamage = cauldron.GetInfinityValueFor(HeroStatMapping.CritDamage, out var isPct);
+                    if (isPct) critDamagePercent += Mathf.Max(0f, infCritDamage);
+                    else critDamagePercent += Mathf.Max(0f, infCritDamage * 100f);
+                }
+
+                newSnapshot.critDamagePercent = Mathf.Max(0f, critDamagePercent);
             }
 
             if ((_dirtyMask & DirtyMask.Move) != 0)
@@ -290,6 +321,7 @@ namespace TimelessEchoes.Hero
                           !Mathf.Approximately(_cache.damage, newSnapshot.damage) ||
                           !Mathf.Approximately(_cache.attacksPerSecond, newSnapshot.attacksPerSecond) ||
                           !Mathf.Approximately(_cache.critChancePercent, newSnapshot.critChancePercent) ||
+                          !Mathf.Approximately(_cache.critDamagePercent, newSnapshot.critDamagePercent) ||
                           !Mathf.Approximately(_cache.maxHealth, newSnapshot.maxHealth) ||
                           !Mathf.Approximately(_cache.healthRegenPerSecond, newSnapshot.healthRegenPerSecond) ||
                           !Mathf.Approximately(_cache.movementSpeed, newSnapshot.movementSpeed) ||

@@ -283,8 +283,10 @@ namespace TimelessEchoes.Buffs
                 // ResourceMultiplier represents percent gain: use +X% text
                 BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
+                BuffEffectType.CritDamagePercent => $"Crit Damage +{eff.value}%",
                 _ => string.Empty
             };
         }
     }
 }
+

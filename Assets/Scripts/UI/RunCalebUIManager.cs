@@ -146,6 +146,7 @@ namespace TimelessEchoes.UI
             var totalDamage = hero != null ? hero.Damage : snap.damage;
             var attack = snap.attacksPerSecond;
             var move = snap.movementSpeed;
+            var critDamage = snap.critDamagePercent;
             var defense = snap.defense;
             var critChance = snap.critChancePercent;
             var regen = snap.healthRegenPerSecond;
@@ -185,10 +186,11 @@ namespace TimelessEchoes.UI
             if (uiReferences.rightText != null)
             {
                 // Display movement as an uncapped percentage where 100% = base speed (3)
+                var critDamageTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.CritDamage);
                 var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
                 const float baseSpeed = 3f;
                 float percent = (move / baseSpeed) * 100f;
-                uiReferences.rightText.text = $"{moveTag} {percent:0.#}%";
+                uiReferences.rightText.text = $"{critDamageTag} {critDamage:0.#}%\n{moveTag} {percent:0.#}%";
             }
         }
 

@@ -146,6 +146,7 @@ namespace TimelessEchoes.Upgrades
 				HeroStatMapping.HealthRegen => StatKey.Regen,
 				HeroStatMapping.MoveSpeed => StatKey.MoveSpeed,
 				HeroStatMapping.CritChance => StatKey.CritChance,
+				HeroStatMapping.CritDamage => StatKey.CritDamage,
 				_ => StatKey.Damage
 			};
 		}

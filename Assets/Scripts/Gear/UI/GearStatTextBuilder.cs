@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
@@ -102,6 +103,212 @@ namespace TimelessEchoes.Gear.UI
 			return string.Join("\n", lines);
 		}
 
+		public readonly struct AggregateStatsTextSections
+		{
+			public AggregateStatsTextSections(string totals, string weaponAndChest, string helmetAndBoots)
+			{
+				Totals = totals;
+				WeaponAndChest = weaponAndChest;
+				HelmetAndBoots = helmetAndBoots;
+			}
+
+			public string Totals { get; }
+			public string WeaponAndChest { get; }
+			public string HelmetAndBoots { get; }
+		}
+
+		public static AggregateStatsTextSections BuildAggregateStatsTextSections(IEnumerable<(string slot, GearItem item)> gearBySlot)
+		{
+			if (gearBySlot == null)
+				return new AggregateStatsTextSections(string.Empty, string.Empty, string.Empty);
+
+			var entries = new List<(string slot, GearItem item)>();
+			foreach (var entry in gearBySlot)
+			{
+				if (string.IsNullOrWhiteSpace(entry.slot))
+					continue;
+
+				entries.Add(entry);
+			}
+
+			if (entries.Count == 0)
+				return new AggregateStatsTextSections(string.Empty, string.Empty, string.Empty);
+
+			var crafting = CraftingService.Instance;
+			var totalsByMapping = new Dictionary<HeroStatMapping, float>();
+			var percentByMapping = new Dictionary<HeroStatMapping, bool>();
+			var statDefByMapping = new Dictionary<HeroStatMapping, StatDefSO>();
+			float totalQuality = 0f;
+			var hasAnyItem = false;
+
+			foreach (var entry in entries)
+			{
+				var item = entry.item;
+				if (item == null)
+					continue;
+
+				hasAnyItem = true;
+				totalQuality += UpgradeEvaluator.ComputeQualityPercent(crafting, item, entry.slot);
+
+				if (item.affixes == null)
+					continue;
+
+				foreach (var affix in item.affixes)
+				{
+					if (affix == null || affix.stat == null)
+						continue;
+
+					var mapping = affix.stat.heroMapping;
+					if (totalsByMapping.TryGetValue(mapping, out var existing))
+						totalsByMapping[mapping] = existing + affix.value;
+					else
+						totalsByMapping[mapping] = affix.value;
+
+					if (!percentByMapping.ContainsKey(mapping))
+						percentByMapping[mapping] = affix.stat.isPercent;
+					if (!statDefByMapping.ContainsKey(mapping))
+						statDefByMapping[mapping] = affix.stat;
+				}
+			}
+
+			var totalsLines = new List<string> { "<b>Totals</b>" };
+
+			var qualityIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Quality);
+			var qualityValue = $"{totalQuality:0.#}%";
+			totalsLines.Add(!string.IsNullOrEmpty(qualityIcon)
+				? $"{qualityIcon} {qualityValue}"
+				: $"Quality {qualityValue}");
+
+			var mappings = new List<HeroStatMapping>(totalsByMapping.Keys);
+			mappings.Sort(StatSortOrder.Compare);
+			foreach (var mapping in mappings)
+			{
+				if (!totalsByMapping.TryGetValue(mapping, out var totalValue))
+					continue;
+
+				if (Math.Abs(totalValue) <= 0.0001f)
+					continue;
+
+				var iconTag = StatIconLookup.GetIconTag(mapping);
+				var isPercent = percentByMapping.TryGetValue(mapping, out var percent) && percent;
+				var valueText = $"{CalcUtils.FormatNumber(totalValue)}{(isPercent ? "%" : string.Empty)}";
+				if (!string.IsNullOrEmpty(iconTag))
+				{
+					totalsLines.Add($"{iconTag} {valueText}");
+				}
+				else
+				{
+					statDefByMapping.TryGetValue(mapping, out var statDef);
+					var name = statDef != null ? statDef.GetName() : mapping.ToString();
+					totalsLines.Add($"{name} {valueText}");
+				}
+			}
+
+			var minusIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Minus);
+			if (!hasAnyItem)
+				totalsLines.Add(string.IsNullOrEmpty(minusIcon) ? "-" : minusIcon);
+
+			string NormalizeSlot(string slot)
+			{
+				return string.IsNullOrWhiteSpace(slot) ? string.Empty : slot.Trim().ToLowerInvariant();
+			}
+
+			var entriesBySlot = new Dictionary<string, (string slot, GearItem item)>(StringComparer.OrdinalIgnoreCase);
+			foreach (var entry in entries)
+			{
+				var normalized = NormalizeSlot(entry.slot);
+				if (string.IsNullOrEmpty(normalized))
+					continue;
+
+				entriesBySlot[normalized] = entry;
+			}
+
+			(string slot, GearItem item)? ResolveSlot(params string[] keys)
+			{
+				foreach (var key in keys)
+				{
+					if (entriesBySlot.TryGetValue(key, out var value))
+						return value;
+				}
+
+				return null;
+			}
+
+			List<string> BuildSlotSection(string slotName, GearItem item, string fallbackLabel)
+			{
+				var lines = new List<string>();
+				var label = !string.IsNullOrWhiteSpace(slotName) ? slotName : fallbackLabel;
+				if (string.IsNullOrWhiteSpace(label))
+					label = "Slot";
+
+				lines.Add($"<b>{label}</b>");
+
+				if (item == null)
+				{
+					lines.Add(string.IsNullOrEmpty(minusIcon) ? "-" : minusIcon);
+					return lines;
+				}
+
+				var sectionText = BuildEquippedStatsText(item, slotName);
+				if (string.IsNullOrWhiteSpace(sectionText))
+				{
+					lines.Add(string.IsNullOrEmpty(minusIcon) ? "-" : minusIcon);
+					return lines;
+				}
+
+				var parts = sectionText.Split('\n');
+				foreach (var part in parts)
+					lines.Add(part);
+
+				return lines;
+			}
+
+			void AppendSection(List<string> destination, List<string> source)
+			{
+				if (source == null || source.Count == 0)
+					return;
+
+				if (destination.Count > 0)
+					destination.Add(string.Empty);
+
+				destination.AddRange(source);
+			}
+
+			var weaponEntry = ResolveSlot("weapon");
+			var chestEntry = ResolveSlot("chest");
+			var helmetEntry = ResolveSlot("helmet", "helm");
+			var bootsEntry = ResolveSlot("boots");
+
+			var weaponLines = BuildSlotSection(weaponEntry.HasValue ? weaponEntry.Value.slot : null, weaponEntry.HasValue ? weaponEntry.Value.item : null, "Weapon");
+			var chestLines = BuildSlotSection(chestEntry.HasValue ? chestEntry.Value.slot : null, chestEntry.HasValue ? chestEntry.Value.item : null, "Chest");
+			var helmetLines = BuildSlotSection(helmetEntry.HasValue ? helmetEntry.Value.slot : null, helmetEntry.HasValue ? helmetEntry.Value.item : null, "Helmet");
+			var bootsLines = BuildSlotSection(bootsEntry.HasValue ? bootsEntry.Value.slot : null, bootsEntry.HasValue ? bootsEntry.Value.item : null, "Boots");
+
+			var weaponAndChestLines = new List<string>();
+			AppendSection(weaponAndChestLines, weaponLines);
+			AppendSection(weaponAndChestLines, chestLines);
+
+			var helmetAndBootsLines = new List<string>();
+			AppendSection(helmetAndBootsLines, helmetLines);
+			AppendSection(helmetAndBootsLines, bootsLines);
+
+			foreach (var entry in entries)
+			{
+				var normalized = NormalizeSlot(entry.slot);
+				if (string.IsNullOrEmpty(normalized))
+					continue;
+
+				if (normalized == "weapon" || normalized == "chest" || normalized == "helmet" || normalized == "helm" || normalized == "boots")
+					continue;
+
+				AppendSection(totalsLines, BuildSlotSection(entry.slot, entry.item, entry.slot));
+			}
+
+			return new AggregateStatsTextSections(
+				string.Join("\n", totalsLines),
+				string.Join("\n", weaponAndChestLines),
+				string.Join("\n", helmetAndBootsLines));
+		}
 		public static string BuildEquippedStatsText(GearItem item, string slotName)
 		{
 			if (item == null)

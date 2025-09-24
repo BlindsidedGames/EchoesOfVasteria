@@ -60,6 +60,7 @@ namespace TimelessEchoes.Upgrades
         private float nextCardPoolsRebuildAllowed;
         private float nextWeightsNotifyTime;
         private Coroutine resourceSubscribeRoutine;
+        private Coroutine autoStartRoutine;
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
@@ -333,6 +334,7 @@ namespace TimelessEchoes.Upgrades
                     1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f));
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
+            EventHandler.OnLoadData += HandleSaveDataLoaded;
             // Refresh weights when inventory or quests change
             resourceManager ??= ResourceManager.Instance;
             if (resourceManager != null)
@@ -340,18 +342,25 @@ namespace TimelessEchoes.Upgrades
             else
                 resourceSubscribeRoutine = StartCoroutine(WaitAndSubscribeResourceManager());
             EventHandler.OnQuestHandin += OnQuestHandinHandler;
+            TryAutoStartTasting();
         }
 
         private void OnDisable()
         {
             UITicker.Instance?.Unsubscribe(TasteTick);
             EventHandler.OnLoadData -= ResetSessionStats;
+            EventHandler.OnLoadData -= HandleSaveDataLoaded;
             if (resourceManager != null)
                 resourceManager.OnInventoryChanged -= OnInventoryChangedHandler;
             if (resourceSubscribeRoutine != null)
             {
                 StopCoroutine(resourceSubscribeRoutine);
                 resourceSubscribeRoutine = null;
+            }
+            if (autoStartRoutine != null)
+            {
+                StopCoroutine(autoStartRoutine);
+                autoStartRoutine = null;
             }
             EventHandler.OnQuestHandin -= OnQuestHandinHandler;
         }
@@ -386,7 +395,52 @@ namespace TimelessEchoes.Upgrades
                     handler(totalUnits);
             }
             TrySave();
+            TryAutoStartTasting();
             return stewGained;
+        }
+
+        private double GetStewCostPerRoll()
+        {
+            var baseCost = config != null ? (double)config.stewPerRoll : 1d;
+            return Math.Max(0.0001d, baseCost);
+        }
+
+        private bool HasStewForNextRoll()
+        {
+            return Stew >= GetStewCostPerRoll();
+        }
+
+        private void TryAutoStartTasting()
+        {
+            if (tastingActive) return;
+            if (!HasStewForNextRoll()) return;
+            if (UITicker.Instance == null)
+            {
+                if (autoStartRoutine == null)
+                    autoStartRoutine = StartCoroutine(WaitForTickerAndAutoStart());
+                return;
+            }
+
+            if (autoStartRoutine != null)
+            {
+                StopCoroutine(autoStartRoutine);
+                autoStartRoutine = null;
+            }
+
+            StartTasting();
+        }
+
+        private IEnumerator WaitForTickerAndAutoStart()
+        {
+            while (UITicker.Instance == null)
+                yield return null;
+            autoStartRoutine = null;
+            TryAutoStartTasting();
+        }
+
+        private void HandleSaveDataLoaded()
+        {
+            TryAutoStartTasting();
         }
 
         // -------- Tasting --------
@@ -413,7 +467,7 @@ namespace TimelessEchoes.Upgrades
         private void TasteTick()
         {
             if (!tastingActive || config == null) return;
-            var cost = Math.Max(0.0001f, config.stewPerRoll);
+            var cost = GetStewCostPerRoll();
             if (Stew < cost)
             {
                 StopTasting();
@@ -1198,3 +1252,4 @@ namespace TimelessEchoes.Upgrades
         }
     }
 }
+

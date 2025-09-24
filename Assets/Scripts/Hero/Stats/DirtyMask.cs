@@ -13,6 +13,7 @@ namespace TimelessEchoes.Hero
         Regen = 1 << 4,
         Move = 1 << 5,
         Defense = 1 << 6,
+        CritDamage = 1 << 7,
         All = ~0
     }
 }

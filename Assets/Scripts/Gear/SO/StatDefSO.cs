@@ -15,7 +15,7 @@ namespace TimelessEchoes.Gear
         HealthRegen,
         MoveSpeed,
         CritChance,
-        
+        CritDamage
     }
 
     [CreateAssetMenu(fileName = "StatDef", menuName = "SO/Gear/Stat Definition")]
@@ -195,3 +195,4 @@ namespace TimelessEchoes.Gear
 #endif
     }
 }
+

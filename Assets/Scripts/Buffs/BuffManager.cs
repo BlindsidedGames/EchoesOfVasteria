@@ -124,7 +124,7 @@ namespace TimelessEchoes.Buffs
             // Notify hero systems that derived stats need updating
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                 TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
-                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
         }
@@ -198,7 +198,7 @@ namespace TimelessEchoes.Buffs
                     RemoveBuffAt(i);
                     TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                         TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
-                        TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                        TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                         TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                         TimelessEchoes.Hero.DirtyReason.BuffsChanged);
                 }
@@ -286,7 +286,7 @@ namespace TimelessEchoes.Buffs
 
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                 TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
-                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
 
@@ -414,6 +414,19 @@ namespace TimelessEchoes.Buffs
                 return percent;
             }
         }
+        public float CritDamagePercent
+        {
+            get
+            {
+                var percent = 0f;
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.CritDamagePercent)
+                            percent += eff.value;
+                return percent;
+            }
+        }
+
 
         public float MaxDistanceMultiplier
         {
@@ -645,7 +658,7 @@ namespace TimelessEchoes.Buffs
             NotifyAutoBuffChanged();
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                 TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
-                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.Move |
+                TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
         }
@@ -695,3 +708,4 @@ namespace TimelessEchoes.Buffs
         }
     }
 }
+

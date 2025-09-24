@@ -432,7 +432,8 @@ namespace TimelessEchoes.Hero
             var enemyStats = enemy.Stats;
             float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
             float critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
-            float expectedCritFactor = 1f + critChance;
+            float critDamageMultiplier = 1f + Mathf.Max(0f, snap.critDamagePercent) / 100f;
+            float expectedCritFactor = 1f + critChance * (critDamageMultiplier - 1f);
             float perHitBeforeDefense = snap.damage * attacker.CombatDamageMultiplier * killMult * expectedCritFactor;
             float defense = enemy.GetDefense();
             float perHitAfterDefense = TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
@@ -647,9 +648,21 @@ namespace TimelessEchoes.Hero
                 }
             }
 
-            // If we were performing a task, release our claim so echoes can take over
-            if (wasPerformingTask && CurrentTask is BaseTask baseTask)
-                baseTask.ReleaseClaim(this);
+            // If the main hero already had a task, release it so echoes can keep working during combat
+            if (!IsEchoActor && CurrentTask != null)
+            {
+                var releasedTask = CurrentTask;
+
+                if (!wasPerformingTask)
+                    releasedTask.OnInterrupt(this);
+
+                if (releasedTask is BaseTask baseTask)
+                    baseTask.ReleaseClaim(this);
+
+                CurrentTask = null;
+                currentTaskName = "None";
+                currentTaskObject = null;
+            }
 
             state = State.Combat;
             setter.target = enemy;
@@ -858,13 +871,14 @@ namespace TimelessEchoes.Hero
                 var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
                 var snap = HeroStatSystem.GetSnapshot();
                 var dmgBase = snap.damage * combatDamageMultiplier;
+                var critDamageMultiplier = 1f + Mathf.Max(0f, snap.critDamagePercent) / 100f;
                 var total = dmgBase * bonus;
 
                 var critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
                 var isCritical = false;
                 if (critChance > 0f && UnityEngine.Random.value < Mathf.Clamp01(critChance))
                 {
-                    total *= 2f;
+                    total *= critDamageMultiplier;
                     isCritical = true;
                     var tracker = GameplayStatTracker.Instance ??
                                   FindFirstObjectByType<GameplayStatTracker>();
@@ -1313,7 +1327,7 @@ namespace TimelessEchoes.Hero
             gearMoveSpeedBonus = equip.GetTotalForMapping(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
 
             HeroStatSystem.MarkDirty(
-                DirtyMask.Damage | DirtyMask.AttackRate | DirtyMask.Defense | DirtyMask.Move | DirtyMask.MaxHealth | DirtyMask.Regen,
+                DirtyMask.Damage | DirtyMask.AttackRate | DirtyMask.CritChance | DirtyMask.CritDamage | DirtyMask.Defense | DirtyMask.Move | DirtyMask.MaxHealth | DirtyMask.Regen,
                 DirtyReason.EquipmentChanged);
 
             if (health != null)

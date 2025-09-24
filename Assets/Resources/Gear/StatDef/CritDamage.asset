@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc86b142e8ee75e41a393a4496fe5f55, type: 3}
   m_Name: CritDamage
   m_EditorClassIdentifier: 
-  id: 7
-  displayName: Regen
+  id: 8
+  displayName: Crit Damage
   icon: {fileID: 0}
-  isPercent: 0
-  minRoll: 0.1
-  maxRoll: 10
+  isPercent: 1
+  minRoll: 1
+  maxRoll: 100
   rollCurve:
     serializedVersion: 2
     m_Curve:
@@ -42,7 +42,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  comparisonScale: 0.1
+  overrideComparisonScale: 0
+  comparisonScaleOverride: 0.1
   rarityBands:
   - rarity: {fileID: 11400000, guid: f7417ae215ccd5e468d50a87118a46f7, type: 2}
     minQuantile: 0
@@ -260,7 +261,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  heroMapping: 4
+  heroMapping: 7
   defaultOverlapPercent: 0.1
   topReservePercent: 0.02
   reserveTopForHighest: 1

@@ -4,7 +4,7 @@ namespace TimelessEchoes.Gear
 {
     /// <summary>
     /// Defines a consistent display order for hero-related stats across the UI.
-    /// Desired order: Attack, Attack Speed, Crit Chance, Health, Regeneration, Defense, Movement.
+    /// Desired order: Attack, Attack Speed, Crit Chance, Crit Damage, Health, Regeneration, Defense, Movement.
     /// </summary>
     public static class StatSortOrder
     {
@@ -13,10 +13,11 @@ namespace TimelessEchoes.Gear
             { HeroStatMapping.Damage, 0 },
             { HeroStatMapping.AttackRate, 1 },
             { HeroStatMapping.CritChance, 2 },
-            { HeroStatMapping.MaxHealth, 3 },
-            { HeroStatMapping.HealthRegen, 4 },
-            { HeroStatMapping.Defense, 5 },
-            { HeroStatMapping.MoveSpeed, 6 }
+            { HeroStatMapping.CritDamage, 3 },
+            { HeroStatMapping.MaxHealth, 4 },
+            { HeroStatMapping.HealthRegen, 5 },
+            { HeroStatMapping.Defense, 6 },
+            { HeroStatMapping.MoveSpeed, 7 }
         };
 
         public static int GetIndex(HeroStatMapping mapping)
@@ -30,5 +31,6 @@ namespace TimelessEchoes.Gear
         }
     }
 }
+
 
 
