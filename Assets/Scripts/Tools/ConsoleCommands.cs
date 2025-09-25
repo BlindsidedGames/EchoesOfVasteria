@@ -70,16 +70,13 @@ namespace TimelessEchoes
         }
 
         [Command("set-stat-level", "Set the level of a stat upgrade")]
-        public static void SetStatLevel(string upgradeName, int level)
+        public static void SetStatLevel(string statName, int level)
         {
             ConsoleAuth.EnsureAuthenticated();
-            var upgrade = Resources.FindObjectsOfTypeAll<StatUpgrade>().FirstOrDefault(u => u.name == upgradeName);
-            if (upgrade == null) return;
-            var oracle = Blindsided.Oracle.oracle;
-            if (oracle == null) return;
-            oracle.saveData.UpgradeLevels ??= new Dictionary<string, int>();
-            oracle.saveData.UpgradeLevels[upgrade.name] = level;
-            Blindsided.EventHandler.LoadData();
+            var stat = Resources.FindObjectsOfTypeAll<BaseStat>().FirstOrDefault(s => s.name == statName);
+            if (stat == null) return;
+
+            TELogger.Log($"Base stats are static and cannot be leveled manually (requested {statName} -> {level}).", TELogCategory.Upgrade);
         }
 
         [Command("set-skill-level", "Set the level of a skill")]

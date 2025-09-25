@@ -8,7 +8,7 @@ namespace TimelessEchoes.Skills
     [CreateAssetMenu(fileName = "StatEffect", menuName = "SO/Milestones/Effects/Stat Bonus")]
     public class MilestoneStatEffectDefinition : MilestoneEffectDefinition
     {
-        [SerializeField] private StatUpgrade statUpgrade;
+        [SerializeField] private BaseStat baseStat;
         [SerializeField] private bool percentBonus;
         [SerializeField] [Tooltip("String.Format template. {0} => formatted amount, {1} => stat name.")]
         private string descriptionTemplate = "Increases {1} by {0}.";
@@ -17,14 +17,14 @@ namespace TimelessEchoes.Skills
         public override void Apply(MilestoneEffectContext context, float magnitude)
         {
             if (percentBonus)
-                context.Aggregator.AddPercentStatBonus(statUpgrade, magnitude);
+                context.Aggregator.AddPercentStatBonus(baseStat, magnitude);
             else
-                context.Aggregator.AddFlatStatBonus(statUpgrade, magnitude);
+                context.Aggregator.AddFlatStatBonus(baseStat, magnitude);
         }
 
         public override string GetDescription(float magnitude, string skillName, bool isActive)
         {
-            var statName = statUpgrade != null ? statUpgrade.name : "stat";
+            var statName = baseStat != null ? baseStat.name : "stat";
             string formatted = percentBonus
                 ? (magnitude * 100f).ToString(amountFormat, CultureInfo.InvariantCulture) + "%"
                 : magnitude.ToString(amountFormat, CultureInfo.InvariantCulture);

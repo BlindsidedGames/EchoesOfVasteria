@@ -12,6 +12,7 @@ using TimelessEchoes.Gear;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
+using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
 using Blindsided.Utilities.Pooling;
 using UnityEngine;
@@ -230,7 +231,9 @@ namespace TimelessEchoes.Hero
                     nextRichPresenceUpdate = Time.unscaledTime + richPresenceUpdateInterval;
                 }
 #endif
-                if (!IsEchoActor && !ReaperSpawnedByDistance)
+                var gmInstance = GameManager.Instance;
+                var killScalingActive = gmInstance != null && gmInstance.IsKillScalingMode;
+                if (!IsEchoActor && !ReaperSpawnedByDistance && !killScalingActive)
                 {
                     var baseMax = tracker.MaxRunDistance;
                     var mult = buffController != null ? buffController.MaxDistanceMultiplier : 1f;
@@ -242,7 +245,7 @@ namespace TimelessEchoes.Hero
 
                     if (transform.position.x >= threshold)
                     {
-                        var gm = GameManager.Instance;
+                        var gm = gmInstance;
                         var hp = health != null ? health : GetComponent<HeroHealth>();
                         if (gm != null && hp != null && hp.CurrentHealth > 0f && gm.ReaperPrefab != null &&
                             gm.CurrentMap != null)
@@ -1265,46 +1268,36 @@ namespace TimelessEchoes.Hero
 
         private void ApplyStatUpgrades()
         {
-            var controller = TimelessEchoes.Upgrades.StatUpgradeController.Instance;
-            if (controller == null)
-                Log("StatUpgradeController missing", TELogCategory.Upgrade, this);
-            var skillController = TimelessEchoes.Skills.SkillController.Instance;
-            if (skillController == null)
-                Log("SkillController missing", TELogCategory.Upgrade, this);
-            if (controller == null) return;
-
-            foreach (var upgrade in controller.AllUpgrades)
+            foreach (var stat in BaseStatService.AllStats)
             {
-                if (upgrade == null) continue;
-                var baseVal = controller.GetBaseValue(upgrade);
-                var levelIncrease = TimelessEchoes.Upgrades.UpgradeFeatureToggle.DisableStatUpgrades ? 0f : controller.GetIncrease(upgrade);
-                var flatBonus = skillController ? skillController.GetFlatStatBonus(upgrade) : 0f;
-                var percentBonus = skillController ? skillController.GetPercentStatBonus(upgrade) : 0f;
+                if (stat == null)
+                    continue;
 
-                var totalBeforePercent = baseVal + levelIncrease + flatBonus;
-                var finalValue = totalBeforePercent * (1f + percentBonus);
-                var increase = finalValue - baseVal;
-                switch (upgrade.name)
+                var baseValue = BaseStatService.GetBaseValue(stat);
+                var totalValue = BaseStatService.GetTotalValue(stat);
+                var bonus = totalValue - baseValue;
+
+                switch (stat.name)
                 {
                     case "Health":
-                        baseHealth = baseVal;
-                        healthBonus = increase;
+                        baseHealth = baseValue;
+                        healthBonus = bonus;
                         break;
                     case "Damage":
-                        baseDamage = baseVal;
-                        damageBonus = increase;
+                        baseDamage = baseValue;
+                        damageBonus = bonus;
                         break;
                     case "Attack Rate":
-                        baseAttackSpeed = baseVal;
-                        attackSpeedBonus = increase;
+                        baseAttackSpeed = baseValue;
+                        attackSpeedBonus = bonus;
                         break;
                     case "Move Speed":
-                        baseMoveSpeed = baseVal;
-                        moveSpeedBonus = increase;
+                        baseMoveSpeed = baseValue;
+                        moveSpeedBonus = bonus;
                         break;
                     case "Defense":
-                        baseDefense = baseVal;
-                        defenseBonus = increase;
+                        baseDefense = baseValue;
+                        defenseBonus = bonus;
                         break;
                 }
             }
@@ -1546,6 +1539,3 @@ namespace TimelessEchoes.Hero
         protected virtual void OnResetSecondaryTrigger(string triggerName) {}
     }
 }
-
-
-

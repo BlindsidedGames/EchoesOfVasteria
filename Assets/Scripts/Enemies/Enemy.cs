@@ -638,6 +638,18 @@ namespace TimelessEchoes.Enemies
                 ? stats.GetLevel(spawnPos.x - spawnOffset - stats.minX)
                 : 1;
 
+            var gmInstance = TimelessEchoes.GameManager.Instance;
+            if (gmInstance != null && gmInstance.IsKillScalingMode)
+            {
+                var trackerInstance = GameplayStatTracker.Instance;
+                var killsPerLevel = gmInstance.CurrentKillsPerLevel;
+                if (trackerInstance != null && killsPerLevel > 0)
+                {
+                    var extraLevels = trackerInstance.CurrentRunKills / killsPerLevel;
+                    if (extraLevels > 0)
+                        level += extraLevels;
+                }
+            }
             if (stats != null)
             {
                 if (ai != null)
@@ -752,5 +764,3 @@ namespace TimelessEchoes.Enemies
 
     }
 }
-
-

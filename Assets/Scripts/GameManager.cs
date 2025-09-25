@@ -125,7 +125,40 @@ namespace TimelessEchoes
 
         [TitleGroup("Map Generation")] [SerializeField]
         private List<MapGenerationButton> generationButtons = new();
+
+        public enum MapScalingMode
+        {
+            DistanceBased,
+            KillBased
+        }
+
+        private MapScalingMode currentScalingMode = MapScalingMode.DistanceBased;
+        private int currentKillsPerLevel = 25;
+
+        public MapScalingMode CurrentScalingMode => currentScalingMode;
+        public bool IsKillScalingMode => currentScalingMode == MapScalingMode.KillBased;
+        public int CurrentKillsPerLevel => currentKillsPerLevel;
+
         
+        public bool TryGetKillProgress(out int totalKills, out int killsRequiredForNextLevel, out int currentKillLevel)
+        {
+            totalKills = 0;
+            killsRequiredForNextLevel = 0;
+            currentKillLevel = 1;
+
+            if (!IsKillScalingMode || currentKillsPerLevel <= 0)
+                return false;
+
+            var trackerInstance = statTracker != null ? statTracker : GameplayStatTracker.Instance;
+            if (trackerInstance == null)
+                return false;
+
+            totalKills = trackerInstance.CurrentRunKills;
+            killsRequiredForNextLevel = Mathf.Max(1, currentKillsPerLevel);
+            currentKillLevel = totalKills / killsRequiredForNextLevel + 1;
+            return true;
+        }
+
         // Cached UI state to avoid per-frame string/flag updates
         private bool _lastReturnToTavernInteractable;
         private bool _lastReturnOnDeathInteractable;
@@ -263,25 +296,25 @@ namespace TimelessEchoes
             if (statTracker == null) return;
             foreach (var entry in generationButtons)
             {
-                if (entry?.config == null) continue;
-                var stats = statTracker.GetMapStats(entry.config) ?? new GameData.MapStatistics();
-                if (entry.statsUI != null && entry.statsUI.distanceLongestTasksText != null)
+                if (entry?.Config == null) continue;
+                var stats = statTracker.GetMapStats(entry.Config) ?? new GameData.MapStatistics();
+                if (entry.StatsUI != null && entry.StatsUI.distanceLongestTasksText != null)
                 {
                     var dist = CalcUtils.FormatNumber(stats.StepsAsDouble, true);
                     var longest = CalcUtils.FormatNumber(stats.LongestTrekAsDouble, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
-                    entry.statsUI.distanceLongestTasksText.text =
+                    entry.StatsUI.distanceLongestTasksText.text =
                         $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
                 }
 
-                if (entry.statsUI != null && entry.statsUI.killsDamageDeathsText != null)
+                if (entry.StatsUI != null && entry.StatsUI.killsDamageDeathsText != null)
                 {
                     var kills = CalcUtils.FormatNumber(stats.Kills, true);
                     var dealt = CalcUtils.FormatNumber(stats.DamageDealtAsDouble, true);
                     var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
                     var taken = CalcUtils.FormatNumber(stats.DamageTakenAsDouble, true);
-                    entry.statsUI.killsDamageDeathsText.text =
+                    entry.StatsUI.killsDamageDeathsText.text =
                         $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
                 }
             }
@@ -294,16 +327,20 @@ namespace TimelessEchoes
             cloudSpawner = CloudSpawner.Instance;
             foreach (var entry in generationButtons)
             {
-                if (entry?.button == null) continue;
-                var cfg = entry.config;
-                var track = entry.musicTrack;
+                if (entry?.Button == null) continue;
+                var cfg = entry.Config;
+                var track = entry.MusicTrack;
+                var scaling = entry.ScalingMode;
+                var killsPerLevel = Mathf.Max(1, entry.KillsPerLevel);
                 UnityAction action = () =>
                 {
+                    currentScalingMode = scaling;
+                    currentKillsPerLevel = killsPerLevel;
                     AudioManager.Instance.PlayMusic(track, fadeDuration);
                     StartRun(cfg);
                 };
-                entry.button.onClick.AddListener(action);
-                _buttonActions.Add(entry.button, action);
+                entry.Button.onClick.AddListener(action);
+                _buttonActions.Add(entry.Button, action);
             }
 
             if (returnToTavernButton != null)
@@ -1121,4 +1158,3 @@ namespace TimelessEchoes
         }
     }
 }
-

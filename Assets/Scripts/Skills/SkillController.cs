@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TimelessEchoes.Upgrades;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
 
@@ -212,14 +213,14 @@ namespace TimelessEchoes.Skills
             return multiplier;
         }
 
-        public float GetFlatStatBonus(TimelessEchoes.Upgrades.StatUpgrade upgrade)
+        public float GetFlatStatBonus(BaseStat stat)
         {
-            return effectAggregator.GetFlatStatBonus(upgrade);
+            return effectAggregator.GetFlatStatBonus(stat);
         }
 
-        public float GetPercentStatBonus(TimelessEchoes.Upgrades.StatUpgrade upgrade)
+        public float GetPercentStatBonus(BaseStat stat)
         {
-            return effectAggregator.GetPercentStatBonus(upgrade);
+            return effectAggregator.GetPercentStatBonus(stat);
         }
 
         public IReadOnlyList<SpawnEchoEntry> GetSpawnEntries(Skill skill)
@@ -620,4 +621,3 @@ namespace TimelessEchoes.Skills
         }
     }
 }
-

@@ -79,11 +79,9 @@ namespace TimelessEchoes.Hero
             var duration = baseDuration;
             if (applyLifetimeUpgrade)
             {
-                var upgradeController = StatUpgradeController.Instance;
-                var echoUpgrade =
-                    upgradeController?.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
-                if (echoUpgrade != null)
-                    duration += upgradeController.GetTotalValue(echoUpgrade);
+                var echoStat = BaseStatService.GetStat("Echo Lifetime");
+                if (echoStat != null)
+                    duration += BaseStatService.GetTotalValue(echoStat);
             }
 
             var skills = fallbackSkills;

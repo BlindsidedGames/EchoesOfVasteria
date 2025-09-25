@@ -1,7 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Skills
 {
@@ -55,14 +56,8 @@ namespace TimelessEchoes.Skills
             if (string.IsNullOrWhiteSpace(skillText))
                 skillText = "various";
 
-            var controller = TimelessEchoes.Upgrades.StatUpgradeController.Instance;
-            float bonus = 0f;
-            if (controller != null)
-            {
-                var echoUpgrade = controller.AllUpgrades?.FirstOrDefault(u => u != null && u.name == "Echo Lifetime");
-                if (echoUpgrade != null)
-                    bonus = controller.GetTotalValue(echoUpgrade);
-            }
+            var echoStat = BaseStatService.GetStat("Echo Lifetime");
+            float bonus = echoStat != null ? BaseStatService.GetTotalValue(echoStat) : 0f;
 
             float totalDuration = echoDuration + bonus;
             string percent = (Mathf.Max(0f, magnitude) * 100f).ToString("0.#", CultureInfo.InvariantCulture);

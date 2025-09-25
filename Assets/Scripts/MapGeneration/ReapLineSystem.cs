@@ -1,5 +1,6 @@
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Stats;
+using TimelessEchoes;
 using UnityEngine;
 
 namespace TimelessEchoes.MapGeneration
@@ -16,19 +17,36 @@ namespace TimelessEchoes.MapGeneration
 
         private void Start()
         {
-            cachedDistance = ComputeReapDistance();
-            UpdateLine();
+            UpdateReapLineState(true);
             InvokeRepeating(nameof(CheckReapDistance), CheckInterval, CheckInterval);
         }
 
         private void CheckReapDistance()
         {
+            UpdateReapLineState();
+        }
+
+        private void UpdateReapLineState(bool forceUpdate = false)
+        {
+            var killModeActive = IsKillScalingActive();
+            if (reapLine != null)
+                reapLine.gameObject.SetActive(!killModeActive);
+
+            if (killModeActive)
+                return;
+
             var current = ComputeReapDistance();
-            if (!Mathf.Approximately(current, cachedDistance))
+            if (forceUpdate || !Mathf.Approximately(current, cachedDistance))
             {
                 cachedDistance = current;
                 UpdateLine();
             }
+        }
+
+        private static bool IsKillScalingActive()
+        {
+            var manager = GameManager.Instance;
+            return manager != null && manager.IsKillScalingMode;
         }
 
         private float ComputeReapDistance()

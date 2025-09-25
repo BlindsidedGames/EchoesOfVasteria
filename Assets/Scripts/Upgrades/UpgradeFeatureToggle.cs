@@ -10,10 +10,8 @@ namespace TimelessEchoes.Upgrades
 	{
                 /// <summary>
                 /// When true, stat upgrades (levels and costs) are ignored and upgrade UI is disabled.
-                /// Base values defined on <see cref="StatUpgrade"/> assets and bonuses from skills/gear remain.
+                /// Base values defined on <see cref="BaseStat"/> assets and bonuses from skills/gear remain.
                 /// </summary>
                 public static bool DisableStatUpgrades = true;
         }
 }
-
-

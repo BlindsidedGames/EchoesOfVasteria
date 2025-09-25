@@ -1,5 +1,6 @@
 using Blindsided;
 using Blindsided.Utilities;
+using TimelessEchoes;
 using TimelessEchoes.Buffs;
 using TMPro;
 using UnityEngine;
@@ -21,7 +22,10 @@ namespace TimelessEchoes.UI
         private int _lastBaseInt = int.MinValue;
         private bool _lastShowBase;
         private float _lastSliderValue = -1f;
-
+        private bool _lastKillMode;
+        private int _lastKillTotal = int.MinValue;
+        private int _lastKillThreshold = int.MinValue;
+        private int _lastKillLevel = int.MinValue;
 
         /// <summary>
         ///     Updates the UI with the distance the hero has reached.
@@ -29,15 +33,75 @@ namespace TimelessEchoes.UI
         /// <param name="distance">The hero's X position.</param>
         public void UpdateDistance(float distance)
         {
+            var manager = GameManager.Instance;
+            int totalKills = 0;
+            int killsPerLevel = 0;
+            int currentKillLevel = 1;
+            var hasKillProgress = manager != null &&
+                                  manager.TryGetKillProgress(out totalKills, out killsPerLevel, out currentKillLevel) &&
+                                  killsPerLevel > 0;
+
+            if (hasKillProgress)
+            {
+                int perLevel = Mathf.Max(1, killsPerLevel);
+
+                if (!_lastKillMode)
+                {
+                    _lastKillMode = true;
+                    _lastKillTotal = int.MinValue;
+                    _lastKillThreshold = int.MinValue;
+                    _lastKillLevel = int.MinValue;
+                    _lastSliderValue = -1f;
+                }
+
+                int threshold = perLevel * currentKillLevel;
+                if (distanceText != null)
+                {
+                    if (totalKills != _lastKillTotal || threshold != _lastKillThreshold || currentKillLevel != _lastKillLevel || Mathf.FloorToInt(distance) != _lastDistanceInt)
+                    {
+                        var killsText = CalcUtils.FormatNumber(totalKills, true);
+                        var thresholdText = CalcUtils.FormatNumber(threshold, true);
+                        var distanceInt = Mathf.FloorToInt(distance);
+                        var distanceFormatted = distanceInt.ToString("N0");
+                        var effectiveLevel = Mathf.Max(0, currentKillLevel - 1);
+                        distanceText.text = $"{killsText} / {thresholdText} | +{effectiveLevel} Enemy levels\n{distanceFormatted} Distance";
+                        _lastKillTotal = totalKills;
+                        _lastKillThreshold = threshold;
+                        _lastKillLevel = currentKillLevel;
+                        _lastDistanceInt = distanceInt;
+                    }
+                }
+
+                if (distanceSlider != null)
+                {
+                    var killsIntoLevel = totalKills % perLevel;
+                    var normalized = Mathf.Clamp01((float)killsIntoLevel / perLevel);
+                    if (!Mathf.Approximately(normalized, _lastSliderValue))
+                    {
+                        distanceSlider.value = normalized;
+                        _lastSliderValue = normalized;
+                    }
+                }
+
+                return;
+            }
+
+            if (_lastKillMode)
+            {
+                _lastKillMode = false;
+                _lastKillTotal = int.MinValue;
+                _lastKillThreshold = int.MinValue;
+                _lastKillLevel = int.MinValue;
+                _lastSliderValue = -1f;
+            }
+
             var buff = BuffManager.Instance;
             var baseReapDistance = Oracle.oracle?.saveData?.General.MaxRunDistance ?? 1f;
             var reapDistance = baseReapDistance * (buff != null ? buff.MaxDistanceMultiplier : 1f) +
                                (buff != null ? buff.MaxDistanceFlatBonus : 0f);
-            // Clamp UI to demo cap so the slider/text reflect actual reachable distance in demo
             var isDemo = Oracle.oracle != null && Oracle.oracle.demo;
             if (isDemo) reapDistance = Mathf.Min(reapDistance, 300f);
 
-            // Text update using TMP's SetText formatting (allocation-free)
             if (distanceText != null)
             {
                 var currentInt = Mathf.FloorToInt(distance);
@@ -45,11 +109,9 @@ namespace TimelessEchoes.UI
                 var showBase = !Mathf.Approximately(reapDistance, baseReapDistance);
                 var baseShown = Mathf.FloorToInt(Mathf.Min(baseReapDistance, isDemo ? 300f : baseReapDistance));
 
-                // Only refresh the text when the displayed values actually change
                 if (currentInt != _lastDistanceInt || reapInt != _lastReapInt ||
                     showBase != _lastShowBase || (showBase && baseShown != _lastBaseInt))
                 {
-                    // Use standard numeric formatting, assign to text once per visible change
                     if (showBase)
                         distanceText.text = string.Format("{0} / {1} ({2})",
                             currentInt.ToString("N0"),
@@ -67,7 +129,6 @@ namespace TimelessEchoes.UI
                 }
             }
 
-            // Avoid redundant slider writes when unchanged
             if (distanceSlider != null)
             {
                 var normalized = reapDistance > 0f ? Mathf.Clamp01(distance / reapDistance) : 0f;
@@ -80,3 +141,6 @@ namespace TimelessEchoes.UI
         }
     }
 }
+
+
+

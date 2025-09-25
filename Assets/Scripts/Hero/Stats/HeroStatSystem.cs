@@ -70,13 +70,11 @@ namespace TimelessEchoes.Hero
             Recalculate();
         }
 
-        private static void Recalculate()
+                private static void Recalculate()
         {
             if (!_initialized)
             {
-                _hero = _hero != null
-                    ? _hero
-                    : HeroController.Instance;
+                _hero = _hero != null ? _hero : HeroController.Instance;
                 _initialized = _hero != null;
                 if (!_initialized)
                     return;
@@ -86,58 +84,30 @@ namespace TimelessEchoes.Hero
             var buffs = BuffManager.Instance;
             var equip = EquipmentController.Instance;
             var crafting = CraftingService.Instance;
-            var upgrades = StatUpgradeController.Instance;
-            var skills = SkillController.Instance;
+
+            var damageStat = BaseStatService.GetStat("Damage");
+            var attackRateStat = BaseStatService.GetStat("Attack Rate");
+            var moveSpeedStat = BaseStatService.GetStat("Move Speed");
+            var defenseStat = BaseStatService.GetStat("Defense");
+            var healthStat = BaseStatService.GetStat("Health");
+            var regenStat = BaseStatService.GetStat("Regeneration");
 
             var newSnapshot = _cache; // start from previous and update only dirty fields
             var cauldron = CauldronManager.Instance;
 
             if ((_dirtyMask & DirtyMask.Damage) != 0)
             {
-                // Base from upgrades/skills
-                var baseDamage = 0f;
-                if (upgrades != null && upgrades.AllUpgrades != null)
-                {
-                    var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Damage");
-                    if (up != null)
-                    {
-                        var baseVal = upgrades.GetBaseValue(up);
-                        var levelIncrease = upgrades.GetIncrease(up);
-                        var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
-                        var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        baseDamage = (baseVal + levelIncrease + flat) * (1f + percent);
-                    }
-                }
-
-                // Gear
+                var baseDamage = damageStat != null ? BaseStatService.GetTotalValue(damageStat) : 0f;
                 var gearDamage = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Damage) : 0f;
-                // Infinity flat bonus
                 float infDmg = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.Damage, out var _) : 0f;
-                // Buff multiplier
                 var buffMult = buffs != null ? buffs.DamageMultiplier : 1f;
                 newSnapshot.damage = (baseDamage + gearDamage + infDmg) * buffMult;
-
-                // Runtime dice multiplier is applied per HeroController when attacking/for UI
             }
 
             if ((_dirtyMask & DirtyMask.AttackRate) != 0)
             {
-                var baseAttack = 0f;
-                if (upgrades != null && upgrades.AllUpgrades != null)
-                {
-                    var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Attack Rate");
-                    if (up != null)
-                    {
-                        var baseVal = upgrades.GetBaseValue(up);
-                        var levelIncrease = upgrades.GetIncrease(up);
-                        var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
-                        var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        baseAttack = (baseVal + levelIncrease + flat) * (1f + percent);
-                    }
-                }
-
+                var baseAttack = attackRateStat != null ? BaseStatService.GetTotalValue(attackRateStat) : 0f;
                 var gearAttack = equip != null ? equip.GetTotalForMapping(HeroStatMapping.AttackRate) : 0f;
-                // Infinity flat APS bonus
                 float infAps = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.AttackRate, out var _) : 0f;
                 var buffMult = buffs != null ? buffs.AttackSpeedMultiplier : 1f;
                 newSnapshot.attacksPerSecond = (baseAttack + gearAttack + infAps) * buffMult;
@@ -158,18 +128,16 @@ namespace TimelessEchoes.Hero
 
                 if (buffs != null)
                     critPercent += Mathf.Max(0f, buffs.CritChancePercent);
-                // Infinity percent bonus
                 if (cauldron != null)
                 {
                     float infCrit = cauldron.GetInfinityValueFor(HeroStatMapping.CritChance, out var isPct);
                     if (isPct) critPercent += Mathf.Max(0f, infCrit);
-                    else critPercent += Mathf.Max(0f, infCrit * 100f); // safety if configured flat
+                    else critPercent += Mathf.Max(0f, infCrit * 100f);
                 }
-                // Apply global baseline
+
                 critPercent += BaseCritChancePercent;
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
             }
-
 
             if ((_dirtyMask & DirtyMask.CritDamage) != 0)
             {
@@ -199,28 +167,11 @@ namespace TimelessEchoes.Hero
 
             if ((_dirtyMask & DirtyMask.Move) != 0)
             {
-                // Aggregate a movement rating from all sources (upgrades/skills + gear)
-                var ratingBase = 0f;
-                if (upgrades != null && upgrades.AllUpgrades != null)
-                {
-                    var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Move Speed");
-                    if (up != null)
-                    {
-                        var baseVal = upgrades.GetBaseValue(up);
-                        var levelIncrease = upgrades.GetIncrease(up);
-                        var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
-                        var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        ratingBase = (baseVal + levelIncrease + flat) * (1f + percent);
-                    }
-                }
-
+                var ratingBase = moveSpeedStat != null ? BaseStatService.GetTotalValue(moveSpeedStat) : 0f;
                 var gearRating = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MoveSpeed) : 0f;
-                var buffMult = buffs != null ? buffs.MoveSpeedMultiplier : 1f;
+                var craftingBonus = 0f;
+                var movementRating = ratingBase + gearRating + craftingBonus;
 
-                // Combine base rating and gear rating (pre-buff)
-                var movementRating = (ratingBase + gearRating);
-
-                // Apply Cauldron Infinity to the rating: percent multiplies, flat adds
                 if (cauldron != null)
                 {
                     float infMove = cauldron.GetInfinityValueFor(HeroStatMapping.MoveSpeed, out var isPct);
@@ -228,36 +179,21 @@ namespace TimelessEchoes.Hero
                     else movementRating += Mathf.Max(0f, infMove);
                 }
 
-                // Map rating -> [0..1] using the same curve as Defense: x/(x+N)
-                const float BaseMoveSpeed = 3f;       // minimum speed shown as 100%
-                const float MoveBonusRange = 6f;      // 3 + 6 = 9 max before buffs
-                const float MovementScalarN = 25f;    // use same N as defense for now
+                const float BaseMoveSpeed = 3f;
+                const float MoveBonusRange = 6f;
+                const float MovementScalarN = 25f;
 
                 var ratingClamped = Mathf.Max(0f, movementRating);
                 var scale01 = ratingClamped / (ratingClamped + MovementScalarN);
-                // Compute final speed with post-curve buff application
                 var preBuff = BaseMoveSpeed + MoveBonusRange * scale01;
+                var buffMult = buffs != null ? buffs.MoveSpeedMultiplier : 1f;
                 var finalSpeed = preBuff * buffMult;
-                // Keep a floor at BaseMoveSpeed; allow exceeding the pre-buff cap (Option A)
                 newSnapshot.movementSpeed = Mathf.Max(BaseMoveSpeed, finalSpeed);
             }
 
             if ((_dirtyMask & DirtyMask.Defense) != 0)
             {
-                var baseDef = 0f;
-                if (upgrades != null && upgrades.AllUpgrades != null)
-                {
-                    var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Defense");
-                    if (up != null)
-                    {
-                        var baseVal = upgrades.GetBaseValue(up);
-                        var levelIncrease = upgrades.GetIncrease(up);
-                        var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
-                        var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        baseDef = (baseVal + levelIncrease + flat) * (1f + percent);
-                    }
-                }
-
+                var baseDef = defenseStat != null ? BaseStatService.GetTotalValue(defenseStat) : 0f;
                 var gearDef = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Defense) : 0f;
                 var buffMult = buffs != null ? buffs.DefenseMultiplier : 1f;
                 float infDef = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.Defense, out var _) : 0f;
@@ -266,20 +202,7 @@ namespace TimelessEchoes.Hero
 
             if ((_dirtyMask & DirtyMask.MaxHealth) != 0)
             {
-                var baseHp = 0f;
-                if (upgrades != null && upgrades.AllUpgrades != null)
-                {
-                    var up = upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Health");
-                    if (up != null)
-                    {
-                        var baseVal = upgrades.GetBaseValue(up);
-                        var levelIncrease = upgrades.GetIncrease(up);
-                        var flat = skills != null ? skills.GetFlatStatBonus(up) : 0f;
-                        var percent = skills != null ? skills.GetPercentStatBonus(up) : 0f;
-                        baseHp = (baseVal + levelIncrease + flat) * (1f + percent);
-                    }
-                }
-
+                var baseHp = healthStat != null ? BaseStatService.GetTotalValue(healthStat) : 0f;
                 var gearHp = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MaxHealth) : 0f;
                 float infHp = cauldron != null ? cauldron.GetInfinityValueFor(HeroStatMapping.MaxHealth, out var _) : 0f;
                 newSnapshot.maxHealth = baseHp + gearHp + Mathf.Max(0f, infHp);
@@ -287,36 +210,22 @@ namespace TimelessEchoes.Hero
 
             if ((_dirtyMask & DirtyMask.Regen) != 0)
             {
-                var regenPerSec = 0f;
-                if (upgrades != null)
+                var upgradeRegen = regenStat != null ? BaseStatService.GetTotalValue(regenStat) : 0f;
+                var gearRegen = equip != null ? equip.GetTotalForMapping(HeroStatMapping.HealthRegen) : 0f;
+                var regenMultiplier = buffs != null ? 1f + Mathf.Max(0f, buffs.HealthRegenPercent) / 100f : 1f;
+                var baseRegen = upgradeRegen + gearRegen;
+                if (cauldron != null)
                 {
-                    var regenUpgrade = upgrades.AllUpgrades != null
-                        ? upgrades.AllUpgrades.FirstOrDefault(u => u != null && u.name == "Regeneration")
-                        : null;
-                    var upgradeRegen = upgrades != null && regenUpgrade != null
-                        ? upgrades.GetTotalValue(regenUpgrade)
-                        : 0f;
-                    var gearRegen = equip != null ? equip.GetTotalForMapping(HeroStatMapping.HealthRegen) : 0f;
-                    var regenMultiplier = buffs != null ? 1f + Mathf.Max(0f, buffs.HealthRegenPercent) / 100f : 1f;
-                    var baseRegen = upgradeRegen + gearRegen;
-                    if (cauldron != null)
-                    {
-                        float infRegen = cauldron.GetInfinityValueFor(HeroStatMapping.HealthRegen, out var isPct);
-                        if (isPct) baseRegen *= (1f + Mathf.Max(0f, infRegen) / 100f);
-                        else baseRegen += Mathf.Max(0f, infRegen);
-                    }
-                    regenPerSec = baseRegen * regenMultiplier;
+                    float infRegen = cauldron.GetInfinityValueFor(HeroStatMapping.HealthRegen, out var isPct);
+                    if (isPct) baseRegen *= (1f + Mathf.Max(0f, infRegen) / 100f);
+                    else baseRegen += Mathf.Max(0f, infRegen);
                 }
 
-                newSnapshot.healthRegenPerSecond = regenPerSec;
+                newSnapshot.healthRegenPerSecond = baseRegen * regenMultiplier;
             }
 
             newSnapshot.version = _version + 1;
 
-            // Health max/current adjustment is handled where max health changes are applied
-            // (e.g., in upgrade/equipment flows) to avoid double-applying deltas.
-
-            // Suppress event if values didn't change
             var changed = !_initialized ||
                           !Mathf.Approximately(_cache.damage, newSnapshot.damage) ||
                           !Mathf.Approximately(_cache.attacksPerSecond, newSnapshot.attacksPerSecond) ||
@@ -337,6 +246,7 @@ namespace TimelessEchoes.Hero
         }
 
 #if UNITY_EDITOR
+
         private static DirtyReason _lastDirtyReason;
 #endif
     }

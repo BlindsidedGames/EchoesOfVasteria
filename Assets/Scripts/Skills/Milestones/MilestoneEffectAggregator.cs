@@ -10,8 +10,8 @@ namespace TimelessEchoes.Skills
     public sealed class MilestoneEffectAggregator
     {
         private readonly Dictionary<Skill, SkillMilestoneSummary> _skillSummaries = new();
-        private readonly Dictionary<StatUpgrade, float> _flatStatBonuses = new();
-        private readonly Dictionary<StatUpgrade, float> _percentStatBonuses = new();
+        private readonly Dictionary<BaseStat, float> _flatStatBonuses = new();
+        private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
 
@@ -99,7 +99,7 @@ namespace TimelessEchoes.Skills
             return Array.Empty<SpawnEchoEntry>();
         }
 
-        public void AddFlatStatBonus(StatUpgrade upgrade, float amount)
+        public void AddFlatStatBonus(BaseStat upgrade, float amount)
         {
             if (upgrade == null || amount == 0f)
                 return;
@@ -110,7 +110,7 @@ namespace TimelessEchoes.Skills
                 _flatStatBonuses.Add(upgrade, amount);
         }
 
-        public void AddPercentStatBonus(StatUpgrade upgrade, float amount)
+        public void AddPercentStatBonus(BaseStat upgrade, float amount)
         {
             if (upgrade == null || amount == 0f)
                 return;
@@ -121,7 +121,7 @@ namespace TimelessEchoes.Skills
                 _percentStatBonuses.Add(upgrade, amount);
         }
 
-        public float GetFlatStatBonus(StatUpgrade upgrade)
+        public float GetFlatStatBonus(BaseStat upgrade)
         {
             if (upgrade == null)
                 return 0f;
@@ -129,7 +129,7 @@ namespace TimelessEchoes.Skills
             return _flatStatBonuses.TryGetValue(upgrade, out var total) ? total : 0f;
         }
 
-        public float GetPercentStatBonus(StatUpgrade upgrade)
+        public float GetPercentStatBonus(BaseStat upgrade)
         {
             if (upgrade == null)
                 return 0f;

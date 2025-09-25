@@ -21,7 +21,7 @@ namespace TimelessEchoes.Editor
         {
             var tree = new OdinMenuTree();
             tree.AddAllAssetsAtPath("Skills", "Assets", typeof(Skill), true);
-            tree.AddAllAssetsAtPath("Stat Upgrades", "Assets", typeof(StatUpgrade), true);
+            tree.AddAllAssetsAtPath("Base Stats", "Assets", typeof(BaseStat), true);
             tree.AddAllAssetsAtPath("Resources", "Assets", typeof(Resource), true);
             tree.AddAllAssetsAtPath("Buff Recipes", "Assets", typeof(BuffRecipe), true);
             tree.AddAllAssetsAtPath("Hero Stats", "Assets", typeof(HeroStats), true);
@@ -35,3 +35,4 @@ namespace TimelessEchoes.Editor
     }
 }
 #endif
+
