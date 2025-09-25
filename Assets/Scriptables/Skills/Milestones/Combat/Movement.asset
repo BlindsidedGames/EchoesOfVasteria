@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c62c1a716d4ef94aba155a619445a08, type: 3}
-  m_Name: Damage
+  m_Name: Movement
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneDefinition
   milestoneId: c0a973f266264e1b92f188be36cd543a
-  displayName: Damage
+  displayName: Movement
   set: 0
   setIcon: {fileID: 0}
   canActivate: 1
-  passiveEffect: {fileID: 11400000, guid: a5b265d0302bf1642bb85b29147aad0c, type: 2}
-  activeEffect: {fileID: 11400000, guid: a5b265d0302bf1642bb85b29147aad0c, type: 2}
+  passiveEffect: {fileID: 11400000, guid: e69dc48a3ea95e848b69500f720bb312, type: 2}
+  activeEffect: {fileID: 11400000, guid: e69dc48a3ea95e848b69500f720bb312, type: 2}
   tierMode: 1
   tiers: []
   infiniteTier:
-    requiredLevel: 5
-    levelsPerIncrease: 5
-    passiveBaseValue: 1
-    passiveIncrement: 0.5
+    requiredLevel: 15
+    levelsPerIncrease: 6
+    passiveBaseValue: 2
+    passiveIncrement: 1
     activeBaseValue: 5
-    activeIncrement: 2
+    activeIncrement: 5

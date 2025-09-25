@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2518d80d468a8de47925f68b4113f34c, type: 3}
   m_Name: Defense
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneStatEffectDefinition
-  statUpgrade: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
+  baseStat: {fileID: 11400000, guid: 63665106227b9814ea58f2b77d5a7bb5, type: 2}
   percentBonus: 0
   descriptionTemplate: Increases {1} by {0}.
   amountFormat: 0.#

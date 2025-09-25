@@ -16,10 +16,11 @@ namespace TimelessEchoes.Skills
 
         public override void Apply(MilestoneEffectContext context, float magnitude)
         {
+            var targetSkill = context.Skill;
             if (percentBonus)
-                context.Aggregator.AddPercentStatBonus(baseStat, magnitude);
+                context.Aggregator.AddPercentStatBonus(targetSkill, baseStat, magnitude);
             else
-                context.Aggregator.AddFlatStatBonus(baseStat, magnitude);
+                context.Aggregator.AddFlatStatBonus(targetSkill, baseStat, magnitude);
         }
 
         public override string GetDescription(float magnitude, string skillName, bool isActive)

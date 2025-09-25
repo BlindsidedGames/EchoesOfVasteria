@@ -126,6 +126,8 @@ namespace TimelessEchoes.Skills
             int nextTierLevel = definition.GetNextTierLevel(currentLevel);
             if (unlocked)
             {
+                int tierDisplay = Mathf.Max(1, tierIndex + 1);
+                title = $"{title} {tierDisplay}";
                 if (nextTierLevel > 0)
                     title += $" | <size=5>Improves at level {nextTierLevel}</size>";
             }
@@ -142,11 +144,22 @@ namespace TimelessEchoes.Skills
 
             string passiveDesc = definition.GetPassiveDescriptionForTier(displayTier, skill?.skillName);
             if (refs.PassiveText != null)
-                refs.PassiveText.text = string.IsNullOrEmpty(passiveDesc) ? string.Empty : $"Passive: {passiveDesc}";
+            {
+                if (string.IsNullOrEmpty(passiveDesc))
+                {
+                    refs.PassiveText.text = string.Empty;
+                }
+                else
+                {
+                    bool showPassivePrefix = controller != null && controller.TotalActiveSlots > 0;
+                    refs.PassiveText.text = showPassivePrefix ? $"Passive: {passiveDesc}" : passiveDesc;
+                }
+            }
 
             if (refs.ActiveText != null)
             {
-                if (definition.HasActiveEffect)
+                bool canShowActive = unlocked && definition.HasActiveEffect;
+                if (canShowActive)
                 {
                     string activeDesc = definition.GetActiveDescriptionForTier(displayTier, skill?.skillName);
                     refs.ActiveText.gameObject.SetActive(true);
@@ -154,10 +167,10 @@ namespace TimelessEchoes.Skills
                 }
                 else
                 {
+                    refs.ActiveText.text = string.Empty;
                     refs.ActiveText.gameObject.SetActive(false);
                 }
             }
-
             if (refs.SetText != null)
             {
                 if (definition.Set != MilestoneSet.None)
@@ -191,23 +204,32 @@ namespace TimelessEchoes.Skills
 
             if (refs.ToggleImage != null)
             {
-                Sprite activeSprite = overrideActiveToggleSprite ?? activeToggleSprite;
-                Sprite inactiveSprite = overrideInactiveToggleSprite ?? inactiveToggleSprite;
-                Sprite selectedSprite = active ? activeSprite : inactiveSprite;
-
-                if (selectedSprite != null)
+                if (!unlocked || !definition.CanActivate)
                 {
-                    refs.ToggleImage.sprite = selectedSprite;
-                    refs.ToggleImage.color = Color.white;
+                    refs.ToggleImage.sprite = null;
+                    refs.ToggleImage.color = unlocked ? unlockedColor : lockedColor;
+                    refs.ToggleImage.gameObject.SetActive(false);
                 }
                 else
                 {
-                    refs.ToggleImage.color = active ? unlockedColor : lockedColor;
+                    Sprite activeSprite = overrideActiveToggleSprite ?? activeToggleSprite;
+                    Sprite inactiveSprite = overrideInactiveToggleSprite ?? inactiveToggleSprite;
+                    Sprite selectedSprite = active ? activeSprite : inactiveSprite;
+
+                    if (selectedSprite != null)
+                    {
+                        refs.ToggleImage.sprite = selectedSprite;
+                        refs.ToggleImage.color = Color.white;
+                    }
+                    else
+                    {
+                        refs.ToggleImage.sprite = null;
+                        refs.ToggleImage.color = active ? unlockedColor : lockedColor;
+                    }
+
+                    refs.ToggleImage.gameObject.SetActive(true);
                 }
-
-                refs.ToggleImage.gameObject.SetActive(definition.CanActivate);
             }
-
             if (binding.RootImage != null)
                 binding.RootImage.color = unlocked ? unlockedColor : lockedColor;
         }
@@ -241,3 +263,5 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+
+

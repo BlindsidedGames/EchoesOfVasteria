@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Blindsided.Utilities;
+using TimelessEchoes.Upgrades;
 using UnityEngine.EventSystems;
 using static Blindsided.SaveData.StaticReferences;
 using static Blindsided.EventHandler;
@@ -28,6 +29,7 @@ namespace TimelessEchoes.Skills
         [SerializeField] private TMP_Text primarySetEffectText;
         [SerializeField] private TMP_Text secondarySetNameText;
         [SerializeField] private TMP_Text secondarySetEffectText;
+        [SerializeField] private GameObject setBonusPanel;
 
         [Header("Active Slots Panel")]
         [SerializeField] private TMP_Text activeSlotsText;
@@ -246,7 +248,11 @@ namespace TimelessEchoes.Skills
             }
 
             if (activeSlotsText != null)
-                activeSlotsText.text = $"Active Slots: {controller.ActiveSlotsUsed}({controller.TotalActiveSlots})";
+            {
+                activeSlotsText.text = controller.TotalActiveSlots > 0
+                    ? string.Format("Active Slots: {0}({1})", controller.ActiveSlotsUsed, controller.TotalActiveSlots)
+                    : string.Empty;
+            }
 
             if (activeSlotListText != null)
             {
@@ -274,87 +280,157 @@ namespace TimelessEchoes.Skills
             if (secondarySetNameText != null) secondarySetNameText.text = string.Empty;
             if (secondarySetEffectText != null) secondarySetEffectText.text = string.Empty;
 
-            if (controller == null)
-                return;
+            bool hasActiveSet = false;
 
-            var summaries = controller.EnumerateActiveSets()
-                .Where(s => s.Definition != null)
-                .OrderByDescending(s => s.ActiveCount)
-                .ToList();
-
-            if (summaries.Count == 0)
-                return;
-
-            var primary = summaries[0];
-            if (primary.Definition != null)
+            if (controller != null)
             {
-                if (primarySetNameText != null)
-                    primarySetNameText.text = primary.Definition.DisplayName;
+                var summaries = controller.EnumerateActiveSets()
+                    .Where(s => s.Definition != null)
+                    .OrderByDescending(s => s.ActiveCount)
+                    .ToList();
 
-                if (primarySetEffectText != null)
+                if (summaries.Count > 0)
                 {
-                    var effects = new List<string>();
-                    if (primary.ThreePieceActive && !string.IsNullOrEmpty(primary.Definition.ThreePieceDescription))
-                        effects.Add(primary.Definition.ThreePieceDescription);
-                    if (primary.SixPieceActive && !string.IsNullOrEmpty(primary.Definition.SixPieceDescription))
-                        effects.Add(primary.Definition.SixPieceDescription);
-                    primarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
+                    hasActiveSet = true;
+
+                    var primary = summaries[0];
+                    if (primary.Definition != null)
+                    {
+                        if (primarySetNameText != null)
+                            primarySetNameText.text = primary.Definition.DisplayName;
+
+                        if (primarySetEffectText != null)
+                        {
+                            var effects = new List<string>();
+                            if (primary.ThreePieceActive && !string.IsNullOrEmpty(primary.Definition.ThreePieceDescription))
+                                effects.Add(primary.Definition.ThreePieceDescription);
+                            if (primary.SixPieceActive && !string.IsNullOrEmpty(primary.Definition.SixPieceDescription))
+                                effects.Add(primary.Definition.SixPieceDescription);
+                            primarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
+                        }
+                    }
+
+                    var secondary = summaries.Skip(1).FirstOrDefault(s => s.Definition != null && s.Definition != primary.Definition && s.ThreePieceActive);
+
+                    if (secondary.Definition != null)
+                    {
+                        if (secondarySetNameText != null)
+                            secondarySetNameText.text = secondary.Definition.DisplayName;
+
+                        if (secondarySetEffectText != null)
+                        {
+                            var effects = new List<string>();
+                            if (secondary.ThreePieceActive && !string.IsNullOrEmpty(secondary.Definition.ThreePieceDescription))
+                                effects.Add(secondary.Definition.ThreePieceDescription);
+                            if (secondary.SixPieceActive && !string.IsNullOrEmpty(secondary.Definition.SixPieceDescription))
+                                effects.Add(secondary.Definition.SixPieceDescription);
+                            secondarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
+                        }
+                    }
                 }
             }
 
-            var secondary = summaries.Skip(1).FirstOrDefault(s => s.Definition != null && s.Definition != primary.Definition && s.ThreePieceActive);
-
-            if (secondary.Definition != null)
-            {
-                if (secondarySetNameText != null)
-                    secondarySetNameText.text = secondary.Definition.DisplayName;
-
-                if (secondarySetEffectText != null)
-                {
-                    var effects = new List<string>();
-                    if (secondary.ThreePieceActive && !string.IsNullOrEmpty(secondary.Definition.ThreePieceDescription))
-                        effects.Add(secondary.Definition.ThreePieceDescription);
-                    if (secondary.SixPieceActive && !string.IsNullOrEmpty(secondary.Definition.SixPieceDescription))
-                        effects.Add(secondary.Definition.SixPieceDescription);
-                    secondarySetEffectText.text = effects.Count > 0 ? string.Join("\n", effects) : string.Empty;
-                }
-            }
+            if (setBonusPanel != null)
+                setBonusPanel.SetActive(hasActiveSet);
         }
+
 
         private void UpdateTotalsPanel()
         {
             if (totalSkillIncreasesText == null)
                 return;
 
-            if (controller == null || CurrentSkill == null)
+            if (controller == null)
             {
                 totalSkillIncreasesText.text = string.Empty;
                 return;
             }
 
+            var aggregator = controller.Aggregator;
+            if (aggregator == null)
+            {
+                totalSkillIncreasesText.text = string.Empty;
+                return;
+            }
+
+            var sections = new List<string>();
+
+            var totalContributions = new Dictionary<BaseStat, StatContribution>();
+            foreach (var kvp in aggregator.EnumerateTotalFlatBonuses())
+                AccumulateStatContribution(totalContributions, kvp.Key, kvp.Value, 0f);
+            foreach (var kvp in aggregator.EnumerateTotalPercentBonuses())
+                AccumulateStatContribution(totalContributions, kvp.Key, 0f, kvp.Value);
+
+            var totalLines = BuildStatLines(totalContributions);
+            if (totalLines.Count > 0)
+                sections.Add($"<b>Totals</b>{System.Environment.NewLine}{string.Join(System.Environment.NewLine, totalLines)}");
+
+            var orderedSkills = new List<Skill>();
+            foreach (var skill in skills)
+                if (skill != null && !orderedSkills.Contains(skill))
+                    orderedSkills.Add(skill);
+
+            foreach (var pair in aggregator.EnumerateSkillSummaries())
+                if (pair.Key != null && !orderedSkills.Contains(pair.Key))
+                    orderedSkills.Add(pair.Key);
+
+            foreach (var skill in orderedSkills)
+            {
+                var summary = aggregator.GetSummary(skill);
+                var lines = BuildSkillSectionLines(skill, summary);
+                if (lines.Count == 0)
+                    continue;
+
+                string label = !string.IsNullOrWhiteSpace(skill.skillName) ? skill.skillName : skill.name;
+                sections.Add($"<b>{label}</b>{System.Environment.NewLine}{string.Join(System.Environment.NewLine, lines)}");
+            }
+
+            totalSkillIncreasesText.text = sections.Count > 0 ? string.Join(System.Environment.NewLine + System.Environment.NewLine, sections) : string.Empty;
+        }
+
+        private List<string> BuildSkillSectionLines(Skill skill, SkillMilestoneSummary summary)
+        {
             var lines = new List<string>();
+            if (summary == null)
+                return lines;
 
-            float instantTaskChance = controller.Aggregator.GetProcChance(CurrentSkill, MilestoneProcType.InstantTask) * 100f;
-            if (instantTaskChance > 0f)
-                lines.Add($"{instantTaskChance:0.#}% Chance to Instantly Complete Tasks");
+            var contributions = new Dictionary<BaseStat, StatContribution>();
+            if (summary.FlatStatBonuses != null && summary.FlatStatBonuses.Count > 0)
+            {
+                foreach (var kvp in summary.FlatStatBonuses)
+                    AccumulateStatContribution(contributions, kvp.Key, kvp.Value, 0f);
+            }
 
-            float doubleResourceChance = controller.Aggregator.GetProcChance(CurrentSkill, MilestoneProcType.DoubleResources) * 100f;
-            if (doubleResourceChance > 0f)
-                lines.Add($"{doubleResourceChance:0.#}% Chance to Double Resources");
+            if (summary.PercentStatBonuses != null && summary.PercentStatBonuses.Count > 0)
+            {
+                foreach (var kvp in summary.PercentStatBonuses)
+                    AccumulateStatContribution(contributions, kvp.Key, 0f, kvp.Value);
+            }
 
-            float doubleXpChance = controller.Aggregator.GetProcChance(CurrentSkill, MilestoneProcType.DoubleXP) * 100f;
-            if (doubleXpChance > 0f)
-                lines.Add($"{doubleXpChance:0.#}% Chance to Double XP");
+            var statLines = BuildStatLines(contributions);
+            if (statLines.Count > 0)
+                lines.AddRange(statLines);
 
-            var spawnEntries = controller.GetSpawnEntries(CurrentSkill);
-            if (spawnEntries != null && spawnEntries.Count > 0)
+            if (summary.InstantTaskChance > 0f)
+                lines.Add($"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks");
+
+            if (summary.DoubleResourceChance > 0f)
+                lines.Add($"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources");
+
+            if (summary.DoubleXpChance > 0f)
+                lines.Add($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP");
+
+            if (summary.InstantKillChance > 0f)
+                lines.Add($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill");
+
+            if (summary.SpawnEchoes.Count > 0)
             {
                 float spawnChance = 0f;
                 int maxCount = 0;
                 bool mixedCounts = false;
                 int? lastCount = null;
 
-                foreach (var entry in spawnEntries)
+                foreach (var entry in summary.SpawnEchoes)
                 {
                     spawnChance += entry.Chance;
                     if (entry.Count > maxCount)
@@ -369,15 +445,109 @@ namespace TimelessEchoes.Skills
                     string label = $"{spawnChance * 100f:0.#}% Echo Spawn Chance";
                     if (maxCount > 1)
                     {
-                        label += mixedCounts
-                            ? $" (spawns up to {maxCount} Echoes)"
-                            : $" (spawns {maxCount} {(maxCount == 1 ? "Echo" : "Echoes")})";
+                        label += mixedCounts ? $" (spawns up to {maxCount} Echoes)" : " (spawns " + maxCount + " " + (maxCount == 1 ? "Echo" : "Echoes") + ")";
                     }
                     lines.Add(label);
                 }
             }
 
-            totalSkillIncreasesText.text = lines.Count > 0 ? string.Join("\n", lines) : string.Empty;
+            return lines;
+        }
+
+        private static List<string> BuildStatLines(Dictionary<BaseStat, StatContribution> source)
+        {
+            var lines = new List<string>();
+            if (source == null || source.Count == 0)
+                return lines;
+
+            foreach (var pair in source.OrderBy(p => p.Key != null ? p.Key.name : string.Empty))
+            {
+                string formatted = FormatStatLine(pair.Key, pair.Value);
+                if (!string.IsNullOrEmpty(formatted))
+                    lines.Add(formatted);
+            }
+
+            return lines;
+        }
+
+        private static string ResolveStatDisplayName(BaseStat stat)
+        {
+            if (stat == null)
+                return "Stat";
+
+            var def = stat.AssociatedStat;
+            if (def != null && !string.IsNullOrWhiteSpace(def.displayName))
+                return def.displayName;
+
+            return !string.IsNullOrWhiteSpace(stat.name) ? stat.name : "Stat";
+        }
+
+        private static string GetIconTagFor(BaseStat stat)
+        {
+            if (stat == null)
+                return string.Empty;
+
+            var def = stat.AssociatedStat;
+            if (def != null)
+            {
+                var iconFromMapping = StatIconLookup.GetIconTag(def.heroMapping);
+                if (!string.IsNullOrEmpty(iconFromMapping))
+                    return iconFromMapping;
+
+                if (!string.IsNullOrWhiteSpace(def.displayName))
+                {
+                    var iconFromDisplay = StatIconLookup.GetIconTag(def.displayName);
+                    if (!string.IsNullOrEmpty(iconFromDisplay))
+                        return iconFromDisplay;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(stat.name))
+            {
+                var iconFromName = StatIconLookup.GetIconTag(stat.name);
+                if (!string.IsNullOrEmpty(iconFromName))
+                    return iconFromName;
+            }
+
+            return string.Empty;
+        }
+
+        private static string FormatStatLine(BaseStat stat, StatContribution contribution)
+        {
+            bool hasFlat = !Mathf.Approximately(contribution.Flat, 0f);
+            bool hasPercent = !Mathf.Approximately(contribution.Percent, 0f);
+
+            if (!hasFlat && !hasPercent)
+                return string.Empty;
+
+            var parts = new List<string>();
+            if (hasFlat)
+                parts.Add($"{(contribution.Flat >= 0f ? "+" : string.Empty)}{contribution.Flat:0.##}");
+            if (hasPercent)
+                parts.Add($"{(contribution.Percent >= 0f ? "+" : string.Empty)}{(contribution.Percent * 100f):0.##}%");
+
+            string iconTag = GetIconTagFor(stat);
+            if (!string.IsNullOrEmpty(iconTag))
+                return $"{iconTag} {string.Join(" ", parts)}";
+
+            string label = ResolveStatDisplayName(stat);
+            return $"{label}: {string.Join(" ", parts)}";
+        }
+
+        private static void AccumulateStatContribution(Dictionary<BaseStat, StatContribution> map, BaseStat stat, float flatDelta, float percentDelta)
+        {
+            if (!map.TryGetValue(stat, out var contribution))
+                contribution = default;
+
+            contribution.Flat += flatDelta;
+            contribution.Percent += percentDelta;
+            map[stat] = contribution;
+        }
+
+        private struct StatContribution
+        {
+            public float Flat;
+            public float Percent;
         }
 
         private void OnShowLevelTextChanged()
@@ -411,4 +581,6 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+
+
 

@@ -14,6 +14,7 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
+        private static readonly System.Collections.Generic.IReadOnlyDictionary<TimelessEchoes.Upgrades.BaseStat, float> EmptyStatBonusMap = new System.Collections.Generic.Dictionary<TimelessEchoes.Upgrades.BaseStat, float>();
 
         public void Reset()
         {
@@ -99,7 +100,7 @@ namespace TimelessEchoes.Skills
             return Array.Empty<SpawnEchoEntry>();
         }
 
-        public void AddFlatStatBonus(BaseStat upgrade, float amount)
+        public void AddFlatStatBonus(Skill skill, BaseStat upgrade, float amount)
         {
             if (upgrade == null || amount == 0f)
                 return;
@@ -108,9 +109,18 @@ namespace TimelessEchoes.Skills
                 _flatStatBonuses[upgrade] += amount;
             else
                 _flatStatBonuses.Add(upgrade, amount);
+
+            if (skill == null)
+                return;
+
+            var summary = GetOrCreateSummary(skill);
+            if (summary.FlatStatBonuses.ContainsKey(upgrade))
+                summary.FlatStatBonuses[upgrade] += amount;
+            else
+                summary.FlatStatBonuses.Add(upgrade, amount);
         }
 
-        public void AddPercentStatBonus(BaseStat upgrade, float amount)
+        public void AddPercentStatBonus(Skill skill, BaseStat upgrade, float amount)
         {
             if (upgrade == null || amount == 0f)
                 return;
@@ -119,6 +129,15 @@ namespace TimelessEchoes.Skills
                 _percentStatBonuses[upgrade] += amount;
             else
                 _percentStatBonuses.Add(upgrade, amount);
+
+            if (skill == null)
+                return;
+
+            var summary = GetOrCreateSummary(skill);
+            if (summary.PercentStatBonuses.ContainsKey(upgrade))
+                summary.PercentStatBonuses[upgrade] += amount;
+            else
+                summary.PercentStatBonuses.Add(upgrade, amount);
         }
 
         public float GetFlatStatBonus(BaseStat upgrade)
@@ -136,6 +155,42 @@ namespace TimelessEchoes.Skills
 
             return _percentStatBonuses.TryGetValue(upgrade, out var total) ? total : 0f;
         }
+        public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<BaseStat, float>> EnumerateTotalFlatBonuses() => _flatStatBonuses;
+
+        public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<BaseStat, float>> EnumerateTotalPercentBonuses() => _percentStatBonuses;
+
+        public SkillMilestoneSummary GetSummary(Skill skill)
+        {
+            if (skill == null)
+                return EmptySummary;
+
+            return _skillSummaries.TryGetValue(skill, out var summary) ? summary : EmptySummary;
+        }
+
+        public System.Collections.Generic.IReadOnlyDictionary<BaseStat, float> GetFlatStatBonusesForSkill(Skill skill)
+        {
+            if (skill == null)
+                return EmptyStatBonusMap;
+
+            if (_skillSummaries.TryGetValue(skill, out var summary) && summary.FlatStatBonuses.Count > 0)
+                return summary.FlatStatBonuses;
+
+            return EmptyStatBonusMap;
+        }
+
+        public System.Collections.Generic.IReadOnlyDictionary<BaseStat, float> GetPercentStatBonusesForSkill(Skill skill)
+        {
+            if (skill == null)
+                return EmptyStatBonusMap;
+
+            if (_skillSummaries.TryGetValue(skill, out var summary) && summary.PercentStatBonuses.Count > 0)
+                return summary.PercentStatBonuses;
+
+            return EmptyStatBonusMap;
+        }
+
+        public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Skill, SkillMilestoneSummary>> EnumerateSkillSummaries() => _skillSummaries;
+
     }
 
     public sealed class SkillMilestoneSummary
@@ -144,6 +199,8 @@ namespace TimelessEchoes.Skills
         public float InstantKillChance;
         public float DoubleResourceChance;
         public float DoubleXpChance;
+        public System.Collections.Generic.Dictionary<BaseStat, float> FlatStatBonuses = new();
+        public System.Collections.Generic.Dictionary<BaseStat, float> PercentStatBonuses = new();
         public List<SpawnEchoEntry> SpawnEchoes = new();
 
         internal void Reset()
@@ -152,6 +209,10 @@ namespace TimelessEchoes.Skills
             InstantKillChance = 0f;
             DoubleResourceChance = 0f;
             DoubleXpChance = 0f;
+            if (FlatStatBonuses.Count > 0)
+                FlatStatBonuses.Clear();
+            if (PercentStatBonuses.Count > 0)
+                PercentStatBonuses.Clear();
             if (SpawnEchoes.Count > 0)
                 SpawnEchoes.Clear();
         }

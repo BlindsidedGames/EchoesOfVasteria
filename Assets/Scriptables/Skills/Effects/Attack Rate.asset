@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2518d80d468a8de47925f68b4113f34c, type: 3}
   m_Name: Attack Rate
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneStatEffectDefinition
-  statUpgrade: {fileID: 11400000, guid: 0769912c1a6980346a1bbc479ddd8034, type: 2}
+  baseStat: {fileID: 11400000, guid: 0769912c1a6980346a1bbc479ddd8034, type: 2}
   percentBonus: 0
   descriptionTemplate: Increases {1} by {0}.
   amountFormat: 0.#
