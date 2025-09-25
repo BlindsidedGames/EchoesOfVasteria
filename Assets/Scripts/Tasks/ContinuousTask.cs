@@ -56,8 +56,8 @@ namespace TimelessEchoes.Tasks
                 AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
                 HideProgressBar();
-                GenerateDrops();
-                GrantCompletionXP();
+                var xpGranted = GrantCompletionXP();
+                GenerateDrops(xpGranted);
                 OnTaskCompleted(hero);
                 NotifyCompleted();
                 return;
@@ -89,8 +89,8 @@ namespace TimelessEchoes.Tasks
                 AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
                 HideProgressBar();
-                GenerateDrops();
-                GrantCompletionXP();
+                var xpGranted = GrantCompletionXP();
+                GenerateDrops(xpGranted);
                 OnTaskCompleted(hero);
                 NotifyCompleted();
                 // The hero will get a new task automatically now

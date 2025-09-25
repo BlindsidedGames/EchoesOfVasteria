@@ -353,41 +353,45 @@ namespace TimelessEchoes.Skills
                 return;
             }
 
-            var sections = new List<string>();
-
             var totalContributions = new Dictionary<BaseStat, StatContribution>();
             foreach (var kvp in aggregator.EnumerateTotalFlatBonuses())
                 AccumulateStatContribution(totalContributions, kvp.Key, kvp.Value, 0f);
             foreach (var kvp in aggregator.EnumerateTotalPercentBonuses())
                 AccumulateStatContribution(totalContributions, kvp.Key, 0f, kvp.Value);
 
-            var totalLines = BuildStatLines(totalContributions);
-            if (totalLines.Count > 0)
-                sections.Add($"<b>Totals</b>{System.Environment.NewLine}{string.Join(System.Environment.NewLine, totalLines)}");
-
-            var orderedSkills = new List<Skill>();
-            foreach (var skill in skills)
-                if (skill != null && !orderedSkills.Contains(skill))
-                    orderedSkills.Add(skill);
+            var lines = BuildStatLines(totalContributions);
 
             foreach (var pair in aggregator.EnumerateSkillSummaries())
-                if (pair.Key != null && !orderedSkills.Contains(pair.Key))
-                    orderedSkills.Add(pair.Key);
-
-            foreach (var skill in orderedSkills)
             {
-                var summary = aggregator.GetSummary(skill);
-                var lines = BuildSkillSectionLines(skill, summary);
-                if (lines.Count == 0)
+                var summary = pair.Value;
+                if (summary == null)
                     continue;
 
-                string label = !string.IsNullOrWhiteSpace(skill.skillName) ? skill.skillName : skill.name;
-                sections.Add($"<b>{label}</b>{System.Environment.NewLine}{string.Join(System.Environment.NewLine, lines)}");
+                if (summary.InstantTaskChance > 0f)
+                    lines.Add($"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks");
+
+                if (summary.DoubleResourceChance > 0f)
+                    lines.Add($"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources");
+
+                if (summary.DoubleXpChance > 0f)
+                    lines.Add($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP");
+
+                if (summary.InstantKillChance > 0f)
+                    lines.Add($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill");
+
+                foreach (var entry in summary.SpawnEchoes)
+                {
+                    if (entry.Chance <= 0f)
+                        continue;
+
+                    string label = BuildEchoSpawnLine(entry, pair.Key);
+                    if (!string.IsNullOrEmpty(label))
+                        lines.Add(label);
+                }
             }
 
-            totalSkillIncreasesText.text = sections.Count > 0 ? string.Join(System.Environment.NewLine + System.Environment.NewLine, sections) : string.Empty;
+            totalSkillIncreasesText.text = lines.Count > 0 ? string.Join(System.Environment.NewLine, lines) : string.Empty;
         }
-
         private List<string> BuildSkillSectionLines(Skill skill, SkillMilestoneSummary summary)
         {
             var lines = new List<string>();
@@ -411,49 +415,18 @@ namespace TimelessEchoes.Skills
             if (statLines.Count > 0)
                 lines.AddRange(statLines);
 
-            if (summary.InstantTaskChance > 0f)
-                lines.Add($"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks");
-
-            if (summary.DoubleResourceChance > 0f)
-                lines.Add($"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources");
-
-            if (summary.DoubleXpChance > 0f)
-                lines.Add($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP");
-
-            if (summary.InstantKillChance > 0f)
-                lines.Add($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill");
-
-            if (summary.SpawnEchoes.Count > 0)
+            foreach (var entry in summary.SpawnEchoes)
             {
-                float spawnChance = 0f;
-                int maxCount = 0;
-                bool mixedCounts = false;
-                int? lastCount = null;
+                if (entry.Chance <= 0f)
+                    continue;
 
-                foreach (var entry in summary.SpawnEchoes)
-                {
-                    spawnChance += entry.Chance;
-                    if (entry.Count > maxCount)
-                        maxCount = entry.Count;
-                    if (lastCount.HasValue && lastCount.Value != entry.Count)
-                        mixedCounts = true;
-                    lastCount = entry.Count;
-                }
-
-                if (spawnChance > 0f)
-                {
-                    string label = $"{spawnChance * 100f:0.#}% Echo Spawn Chance";
-                    if (maxCount > 1)
-                    {
-                        label += mixedCounts ? $" (spawns up to {maxCount} Echoes)" : " (spawns " + maxCount + " " + (maxCount == 1 ? "Echo" : "Echoes") + ")";
-                    }
+                string label = BuildEchoSpawnLine(entry, skill);
+                if (!string.IsNullOrEmpty(label))
                     lines.Add(label);
-                }
             }
 
             return lines;
         }
-
         private static List<string> BuildStatLines(Dictionary<BaseStat, StatContribution> source)
         {
             var lines = new List<string>();
@@ -510,6 +483,92 @@ namespace TimelessEchoes.Skills
             }
 
             return string.Empty;
+        }
+
+        private static string ResolveSkillName(Skill skill)
+        {
+            if (skill == null)
+                return string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(skill.skillName))
+                return skill.skillName;
+
+            return !string.IsNullOrWhiteSpace(skill.name) ? skill.name : string.Empty;
+        }
+
+        private static string BuildEchoSpawnLine(SpawnEchoEntry entry, Skill sourceSkill)
+        {
+            if (entry.Chance <= 0f)
+                return string.Empty;
+
+            int count = entry.Count > 0 ? entry.Count : 1;
+            string target = GetEchoSpawnTargetLabel(entry, sourceSkill);
+            string noun = count == 1 ? "Echo" : "Echoes";
+            string descriptor = string.IsNullOrEmpty(target) ? noun : $"{target} {noun}";
+            string subject = count > 1 ? $"{count} {descriptor}" : FormatSingleEchoDescriptor(descriptor);
+
+            return $"{entry.Chance * 100f:0.#}% Chance to spawn {subject}";
+        }
+
+        private static string FormatSingleEchoDescriptor(string descriptor)
+        {
+            if (string.IsNullOrWhiteSpace(descriptor))
+                return "an Echo";
+
+            string trimmed = descriptor.Trim();
+            if (trimmed.Length == 0)
+                return "an Echo";
+
+            char first = char.ToLowerInvariant(trimmed[0]);
+            bool useAn = first == 'a' || first == 'e' || first == 'i' || first == 'o' || first == 'u';
+            string article = useAn ? "an" : "a";
+            return $"{article} {trimmed}";
+        }
+
+        private static string GetEchoSpawnTargetLabel(SpawnEchoEntry entry, Skill sourceSkill)
+        {
+            var config = entry.Config;
+
+            if (config != null && config.capableSkills != null && config.capableSkills.Count > 0)
+            {
+                var names = new List<string>();
+                foreach (var skill in config.capableSkills)
+                {
+                    var name = ResolveSkillName(skill);
+                    if (!string.IsNullOrWhiteSpace(name) && !names.Contains(name))
+                        names.Add(name);
+                }
+
+                if (names.Count == 1)
+                    return names[0];
+                if (names.Count > 1)
+                    return "Selective";
+            }
+
+            if (entry.UseAssociatedSkillFallback)
+            {
+                var fallback = ResolveSkillName(sourceSkill);
+                if (!string.IsNullOrEmpty(fallback))
+                    return fallback;
+            }
+
+            if (config != null)
+            {
+                switch (config.echoType)
+                {
+                    case TimelessEchoes.Hero.EchoType.Combat:
+                        return "Combat";
+                    case TimelessEchoes.Hero.EchoType.TaskOnly:
+                        return "Task";
+                    case TimelessEchoes.Hero.EchoType.All:
+                        return string.Empty;
+                    case TimelessEchoes.Hero.EchoType.Selective:
+                        return "Selective";
+                }
+            }
+
+            var defaultName = ResolveSkillName(sourceSkill);
+            return !string.IsNullOrEmpty(defaultName) ? defaultName : string.Empty;
         }
 
         private static string FormatStatLine(BaseStat stat, StatContribution contribution)

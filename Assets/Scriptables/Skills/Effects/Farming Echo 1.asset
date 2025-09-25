@@ -15,6 +15,8 @@ MonoBehaviour:
   echoSpawnConfig:
     capableSkills:
     - {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
-    echoType: 1
+    echoType: 2
   echoDuration: 10
+  echoCount: 1
   fallbackSkillLabel: various
+  restrictToSourceSkillWhenConfigEmpty: 0

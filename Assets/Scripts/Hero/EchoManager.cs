@@ -13,8 +13,50 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public static class EchoManager
     {
+        private const int DefaultEchoCap = 10;
+        private static readonly Dictionary<EchoType, int> CustomEchoCaps = new();
+
+        public static void SetEchoCap(EchoType type, int cap)
+        {
+            CustomEchoCaps[type] = Mathf.Max(0, cap);
+        }
+
+        public static int GetEchoCap(EchoType type)
+        {
+            return ResolveEchoCap(type);
+        }
+
+        private static int ResolveEchoCap(EchoType type)
+        {
+            return CustomEchoCaps.TryGetValue(type, out var cap) ? cap : DefaultEchoCap;
+        }
+
+        private static void EnforceTypeCap(EchoController newest)
+        {
+            if (newest == null || newest.ExcludedFromCap)
+                return;
+
+            var cap = ResolveEchoCap(newest.Type);
+            if (cap < 1)
+                return;
+
+            var eligible = EchoController.AllEchoes
+                .Where(e => e != null && !e.ExcludedFromCap && e.Type == newest.Type)
+                .OrderBy(e => e.SpawnTimestamp)
+                .ToList();
+
+            var overflow = eligible.Count - cap;
+            for (var i = 0; i < overflow; i++)
+            {
+                var toCull = eligible[i];
+                if (toCull == null)
+                    continue;
+                toCull.ForceExpireSoon();
+            }
+        }
+
         public static EchoController SpawnEcho(IEnumerable<Skill> skills, float duration,
-            EchoType type = EchoType.All)
+            EchoType type = EchoType.All, bool excludeFromCap = false)
         {
             var gm = GameManager.Instance;
             if (gm == null || gm.EchoPrefab == null || HeroController.Instance == null)
@@ -56,13 +98,14 @@ namespace TimelessEchoes.Hero
                 echo.ClearTaskController();
             }
 
-            echo.Init(skills, duration, type);
+            echo.Init(skills, duration, type, excludeFromCap);
+            EnforceTypeCap(echo);
             return echo;
         }
 
-        public static EchoController SpawnEcho(Skill skill, float duration, EchoType type = EchoType.All)
+        public static EchoController SpawnEcho(Skill skill, float duration, EchoType type = EchoType.All, bool excludeFromCap = false)
         {
-            return SpawnEcho(new List<Skill> { skill }, duration, type);
+            return SpawnEcho(new List<Skill> { skill }, duration, type, excludeFromCap);
         }
 
         /// <summary>
@@ -74,7 +117,7 @@ namespace TimelessEchoes.Hero
         /// <param name="applyLifetimeUpgrade">When true, applies the Echo Lifetime upgrade value.</param>
         /// <param name="count">Number of echoes to spawn.</param>
         public static List<EchoController> SpawnEchoes(EchoSpawnConfig config, float baseDuration,
-            IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int count = 1)
+            IEnumerable<Skill> fallbackSkills = null, bool applyLifetimeUpgrade = false, int count = 1, bool excludeFromCap = false)
         {
             var duration = baseDuration;
             if (applyLifetimeUpgrade)
@@ -99,7 +142,7 @@ namespace TimelessEchoes.Hero
             var spawned = new List<EchoController>();
             for (var i = 0; i < count; i++)
             {
-                var h = SpawnEcho(skills, duration, type);
+                var h = SpawnEcho(skills, duration, type, excludeFromCap);
                 if (h != null)
                     spawned.Add(h);
             }
@@ -108,3 +151,4 @@ namespace TimelessEchoes.Hero
         }
     }
 }
+

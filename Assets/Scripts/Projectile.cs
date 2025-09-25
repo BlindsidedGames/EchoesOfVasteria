@@ -30,6 +30,7 @@ namespace TimelessEchoes
         private float damage;
         private float bonusDamage;
         private bool fromHero;
+        private bool attackerIsEcho;
         private TimelessEchoes.Skills.Skill combatSkill;
         private bool isCritical;
         private int attackerLevel = -1;
@@ -61,12 +62,13 @@ namespace TimelessEchoes
             TimelessEchoes.Skills.Skill combatSkill = null,
             float bonusDamage = 0f,
             bool isCritical = false,
-            int attackerLevel = -1)
+            int attackerLevel = -1, bool attackerIsEcho = false)
         {
             this.target = target;
             this.damage = damage;
             this.bonusDamage = bonusDamage;
             this.fromHero = fromHero;
+            this.attackerIsEcho = attackerIsEcho;
             this.combatSkill = combatSkill;
             this.isCritical = isCritical;
             this.attackerLevel = attackerLevel;
@@ -172,6 +174,11 @@ namespace TimelessEchoes
 					}
 				}
 
+				if (fromHero)
+				{
+					var enemyComponent = target.GetComponent<TimelessEchoes.Enemies.Enemy>();
+					enemyComponent?.RegisterDamageSource(attackerIsEcho);
+				}
 				if (!appliedCustom)
 					targetDamageable?.TakeDamage(baseAmount, bonusDamage, isCritical);
 				if (fromHero)

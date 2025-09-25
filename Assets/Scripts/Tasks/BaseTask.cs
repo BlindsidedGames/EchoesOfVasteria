@@ -39,6 +39,7 @@ namespace TimelessEchoes.Tasks
 
         private TaskController cachedTaskController;
         private bool autoRemovalScheduled;
+        private const float EchoXpFraction = 0.25f;
 
         // When true, this task should no longer be considered for selection until reset (e.g., pooled & reused)
         public virtual bool IsExhausted { get; protected set; }
@@ -183,8 +184,7 @@ namespace TimelessEchoes.Tasks
         protected float GrantCompletionXP()
         {
             lastGrantedXp = 0f;
-            if (claimedBy != null && claimedBy.IsEcho)
-                return 0f;
+            bool echoPerformer = claimedBy != null && claimedBy.IsEcho;
             if (associatedSkill == null || taskData == null || taskData.xpForCompletion <= 0f)
                 return 0f;
 
@@ -195,6 +195,9 @@ namespace TimelessEchoes.Tasks
                 int mult = controller.GetStackingMultiplier(associatedSkill, MilestoneProcType.DoubleXP);
                 amount *= mult;
             }
+
+            if (echoPerformer)
+                amount *= EchoXpFraction;
 
             controller?.AddExperience(associatedSkill, amount);
             lastGrantedXp = amount;
@@ -276,5 +279,4 @@ namespace TimelessEchoes.Tasks
 #endif
     }
 }
-
 

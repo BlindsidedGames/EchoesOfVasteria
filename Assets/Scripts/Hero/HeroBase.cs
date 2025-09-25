@@ -889,7 +889,7 @@ namespace TimelessEchoes.Hero
                 }
 
                 var bonusDamage = total - dmgBase;
-                proj.Init(target, total, true, null, combatSkill, bonusDamage, isCritical);
+                proj.Init(target, total, true, null, combatSkill, bonusDamage, isCritical, -1, IsEchoActor);
             }
         }
 

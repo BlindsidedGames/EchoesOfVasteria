@@ -24,6 +24,9 @@ namespace TimelessEchoes.Hero
         public bool combatEnabled;
         public EchoType Type { get; private set; } = EchoType.All;
 
+        internal bool ExcludedFromCap { get; private set; }
+        internal float SpawnTimestamp => spawnTime;
+
         // Echo-only indicators/UI
         [Header("Indicators")] [SerializeField] private GameObject combatIndicator;
         [SerializeField] private GameObject miningIndicator;
@@ -114,7 +117,7 @@ namespace TimelessEchoes.Hero
         /// <summary>
         ///     Configure the echo after it is spawned.
         /// </summary>
-        public void Init(IEnumerable<Skill> skills, float duration, EchoType type)
+        public void Init(IEnumerable<Skill> skills, float duration, EchoType type, bool excludeFromCap = false)
         {
             // Reset any deferred expiration state from prior pool use
             expirationDeferred = false;
@@ -126,6 +129,7 @@ namespace TimelessEchoes.Hero
             lifetime = duration;
             remaining = duration;
             Type = type;
+            ExcludedFromCap = excludeFromCap;
             disableSkills = type == EchoType.Combat;
             combatEnabled = type == EchoType.Combat || type == EchoType.All;
 
@@ -323,6 +327,14 @@ namespace TimelessEchoes.Hero
         {
             if (expirationDeferred) return true;
             return BeginExpirationDeferral();
+        }
+
+        internal void ForceExpireSoon()
+        {
+            ExcludedFromCap = true;
+            if (expirationDeferred)
+                return;
+            remaining = 0f;
         }
 
         protected override void OnDestroy()

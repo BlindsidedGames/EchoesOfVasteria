@@ -31,6 +31,7 @@ namespace TimelessEchoes.Enemies
     /// </summary>
     public class Enemy : MonoBehaviour
     {
+        private const float EchoXpFraction = 0.25f;
         [SerializeField] private EnemyData stats;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -57,6 +58,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private SpriteLibrary targetSpriteLibrary;
 
         private ResourceManager resourceManager;
+        private bool lastDamageFromEcho;
 
         private AIPath ai;
         private Health health;
@@ -130,6 +132,7 @@ namespace TimelessEchoes.Enemies
             // Seed timers to now; per-spawn will reset them properly
             nextWanderTime = Time.time;
             nextTargetUpdate = Time.time;
+            lastDamageFromEcho = false;
         }
 
         private void Update()
@@ -471,6 +474,11 @@ namespace TimelessEchoes.Enemies
                 proj.Init(setter.target, stats.GetDamageForLevel(level), false, null, null, 0f, false, level);
         }
 
+        public void RegisterDamageSource(bool fromEcho)
+        {
+            lastDamageFromEcho = fromEcho;
+        }
+
         private void OnDeath()
         {
             if (resourceManager == null)
@@ -480,17 +488,21 @@ namespace TimelessEchoes.Enemies
                     Log("ResourceManager missing", TELogCategory.Resource, this);
             }
 
-            if (resourceManager == null) return;
+            if (resourceManager == null)
+                return;
 
             Log($"Enemy {name} died", TELogCategory.Combat, this);
 
             var skillController = SkillController.Instance;
+            var xpSkill = skillController != null ? skillController.CombatSkill : combatSkill;
+            var xpAwarded = GrantCombatExperience(skillController, xpSkill, lastDamageFromEcho);
+
             var mult = 1;
             var gainMult = 1f;
-            var combatSkill = skillController != null ? skillController.CombatSkill : null;
-            if (skillController != null && combatSkill != null)
+            var controllerCombatSkill = skillController != null ? skillController.CombatSkill : null;
+            if (skillController != null && controllerCombatSkill != null)
             {
-                mult = skillController.GetStackingMultiplier(combatSkill, MilestoneProcType.DoubleResources);
+                mult = skillController.GetStackingMultiplier(controllerCombatSkill, MilestoneProcType.DoubleResources);
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
@@ -502,7 +514,7 @@ namespace TimelessEchoes.Enemies
             foreach (var res in results)
             {
                 double final = res.count * mult * gainMult;
-            var buff = BuffManager.Instance;
+                var buff = BuffManager.Instance;
                 if (buff != null)
                     final *= buff.ResourceGainMultiplier;
                 resourceManager.Add(res.resource, final);
@@ -541,13 +553,25 @@ namespace TimelessEchoes.Enemies
                 }
                 if (line.Length > 0)
                     lines.Add(line);
+                const float floatingTextFontSize = 8f;
 
-                if (Blindsided.SaveData.StaticReferences.ItemDropFloatingText)
-                    FloatingText.SpawnResourceText(string.Join("\n", lines), transform.position + Vector3.up,
-                        FloatingText.DefaultColor, 8f, null,
-                        Blindsided.SaveData.StaticReferences.DropFloatingTextDuration);
+                if (lines.Count > 0)
+                {
+                    var xpLine = SkillIconLookup.FormatXpLine(xpSkill, xpAwarded, floatingTextFontSize);
+                    if (!string.IsNullOrEmpty(xpLine))
+                    {
+                        int lastIndex = lines.Count - 1;
+                        lines[lastIndex] = $"{lines[lastIndex]} {xpLine}";
+                    }
+
+                    if (Blindsided.SaveData.StaticReferences.ItemDropFloatingText)
+                        FloatingText.SpawnResourceText(string.Join("\n", lines), transform.position + Vector3.up,
+                            FloatingText.DefaultColor, floatingTextFontSize, null,
+                            Blindsided.SaveData.StaticReferences.DropFloatingTextDuration);
+                }
             }
 
+            lastDamageFromEcho = false;
             var tracker = EnemyKillTracker.Instance;
             if (tracker == null)
                 Log("EnemyKillTracker missing", TELogCategory.Combat, this);
@@ -558,51 +582,57 @@ namespace TimelessEchoes.Enemies
                 Log("GameplayStatTracker missing", TELogCategory.Combat, this);
             else
                 statsTracker.AddKill(stats);
-
-            GrantCombatExperience();
         }
 
-        private void GrantCombatExperience()
+        private float GrantCombatExperience(SkillController controller, Skill skill, bool fromEcho)
         {
-            if (stats == null) return;
-            var controller = SkillController.Instance;
-            var skill = controller != null ? controller.CombatSkill : combatSkill;
+            if (stats == null)
+                return 0f;
+
             if (controller == null && skill == null)
             {
                 Log("Missing SkillController and combat skill", TELogCategory.Combat, this);
-                return;
+                return 0f;
             }
 
             if (controller != null && skill == null)
             {
                 Log("Combat skill not set on SkillController", TELogCategory.Combat, this);
-                return;
+                return 0f;
             }
 
-            if (skill != null)
-            {
-                controller?.AddExperience(skill, stats.experience);
+            if (skill == null)
+                return 0f;
 
-                if (controller != null)
+            float amount = stats.experience;
+            if (amount <= 0f)
+                return 0f;
+
+            if (fromEcho)
+                amount *= EchoXpFraction;
+
+            controller?.AddExperience(skill, amount);
+
+            if (controller != null && !fromEcho)
+            {
+                // Only hero-triggered kills can spawn additional echoes.
+                var spawnEntries = controller.GetSpawnEntries(skill);
+                if (spawnEntries != null)
                 {
-                    var spawnEntries = controller.GetSpawnEntries(skill);
-                    if (spawnEntries != null)
+                    foreach (var entry in spawnEntries)
                     {
-                        foreach (var entry in spawnEntries)
+                        if (Random.value <= entry.Chance)
                         {
-                            if (Random.value <= entry.Chance)
-                            {
-                                var fallback = entry.UseAssociatedSkillFallback && skill != null
-                                    ? new List<Skill> { skill }
-                                    : null;
-                                EchoManager.SpawnEchoes(entry.Config, entry.Duration, fallback, true, entry.Count);
-                            }
+                            var fallback = entry.UseAssociatedSkillFallback && skill != null
+                                ? new List<Skill> { skill }
+                                : null;
+                            EchoManager.SpawnEchoes(entry.Config, entry.Duration, fallback, true, entry.Count);
                         }
                     }
                 }
             }
 
-
+            return amount;
         }
 
         private void OnDestroy()
@@ -620,6 +650,7 @@ namespace TimelessEchoes.Enemies
         /// </summary>
         public void InitForSpawn()
         {
+            lastDamageFromEcho = false;
             // Acquire primary hero from static instance to avoid lookups/parent dependency
             heroController = HeroController.Instance;
             if (heroController == null)
@@ -764,3 +795,6 @@ namespace TimelessEchoes.Enemies
 
     }
 }
+
+
+
