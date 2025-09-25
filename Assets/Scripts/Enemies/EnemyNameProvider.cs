@@ -35,7 +35,8 @@ namespace TimelessEchoes.Enemies
             "dqssq",
             "Poseidon",
             "Taco",
-            "Eggy"
+            "Eggy",
+            "Orion",
         };
 
         /// <summary>
