@@ -1237,17 +1237,21 @@ namespace TimelessEchoes.Hero
             if (skillController == null)
                 return;
 
-            var oldMax = health != null ? health.MaxHealth : 0f;
-            var oldCurrent = health != null ? health.CurrentHealth : 0f;
             ApplyStatUpgrades();
+
+            if (health == null)
+                health = GetComponent<HeroHealth>();
+
+            HeroStatSystem.MarkDirty(DirtyMask.All, DirtyReason.PerksChanged);
+            var snapshot = HeroStatSystem.GetSnapshot();
 
             if (health != null)
             {
-                var newMax = Mathf.RoundToInt(baseHealth + healthBonus);
-                if (Mathf.Abs(newMax - oldMax) > 0.01f)
-                    health.ApplyMaxHealthChange(newMax, true);
+                var targetMax = Mathf.RoundToInt(snapshot.maxHealth);
+                var currentMax = Mathf.RoundToInt(health.MaxHealth);
+                if (targetMax != currentMax)
+                    health.ApplyMaxHealthChange(targetMax, true);
             }
-
         }
 
 

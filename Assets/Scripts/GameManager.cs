@@ -123,6 +123,9 @@ namespace TimelessEchoes
 
         public event Action HeroDied;
 
+        [TitleGroup("Map Generation")] [SerializeField] [Min(1)]
+        private int killLevelIncreasePerTier = 10;
+
         [TitleGroup("Map Generation")] [SerializeField]
         private List<MapGenerationButton> generationButtons = new();
 
@@ -138,6 +141,7 @@ namespace TimelessEchoes
         public MapScalingMode CurrentScalingMode => currentScalingMode;
         public bool IsKillScalingMode => currentScalingMode == MapScalingMode.KillBased;
         public int CurrentKillsPerLevel => currentKillsPerLevel;
+        public int KillLevelIncreasePerTier => Mathf.Max(1, killLevelIncreasePerTier);
 
         
         public bool TryGetKillProgress(out int totalKills, out int killsRequiredForNextLevel, out int currentKillLevel)
@@ -1158,3 +1162,4 @@ namespace TimelessEchoes
         }
     }
 }
+

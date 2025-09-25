@@ -676,9 +676,12 @@ namespace TimelessEchoes.Enemies
                 var killsPerLevel = gmInstance.CurrentKillsPerLevel;
                 if (trackerInstance != null && killsPerLevel > 0)
                 {
-                    var extraLevels = trackerInstance.CurrentRunKills / killsPerLevel;
-                    if (extraLevels > 0)
-                        level += extraLevels;
+                    var extraLevelTiers = trackerInstance.CurrentRunKills / killsPerLevel;
+                    if (extraLevelTiers > 0)
+                    {
+                        var levelsPerTier = Mathf.Max(1, gmInstance.KillLevelIncreasePerTier);
+                        level += extraLevelTiers * levelsPerTier;
+                    }
                 }
             }
             if (stats != null)
@@ -795,6 +798,5 @@ namespace TimelessEchoes.Enemies
 
     }
 }
-
 
 

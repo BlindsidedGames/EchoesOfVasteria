@@ -26,6 +26,7 @@ namespace TimelessEchoes.UI
         private int _lastKillTotal = int.MinValue;
         private int _lastKillThreshold = int.MinValue;
         private int _lastKillLevel = int.MinValue;
+        private int _lastKillLevelsPerTier = int.MinValue;
 
         /// <summary>
         ///     Updates the UI with the distance the hero has reached.
@@ -51,23 +52,28 @@ namespace TimelessEchoes.UI
                     _lastKillTotal = int.MinValue;
                     _lastKillThreshold = int.MinValue;
                     _lastKillLevel = int.MinValue;
+                    _lastKillLevelsPerTier = int.MinValue;
                     _lastSliderValue = -1f;
                 }
 
                 int threshold = perLevel * currentKillLevel;
+                var levelsPerTier = Mathf.Max(1, manager.KillLevelIncreasePerTier);
                 if (distanceText != null)
                 {
-                    if (totalKills != _lastKillTotal || threshold != _lastKillThreshold || currentKillLevel != _lastKillLevel || Mathf.FloorToInt(distance) != _lastDistanceInt)
+                    if (totalKills != _lastKillTotal || threshold != _lastKillThreshold || currentKillLevel != _lastKillLevel || levelsPerTier != _lastKillLevelsPerTier || Mathf.FloorToInt(distance) != _lastDistanceInt)
                     {
                         var killsText = CalcUtils.FormatNumber(totalKills, true);
                         var thresholdText = CalcUtils.FormatNumber(threshold, true);
                         var distanceInt = Mathf.FloorToInt(distance);
                         var distanceFormatted = distanceInt.ToString("N0");
-                        var effectiveLevel = Mathf.Max(0, currentKillLevel - 1);
-                        distanceText.text = $"{killsText} / {thresholdText} | +{effectiveLevel} Enemy levels\n{distanceFormatted} Distance";
+                        var effectiveLevelTiers = Mathf.Max(0, currentKillLevel - 1);
+                        var effectiveLevels = effectiveLevelTiers * levelsPerTier;
+                        var effectiveLevelsText = CalcUtils.FormatNumber(effectiveLevels, true);
+                        distanceText.text = $"{killsText} / {thresholdText} | +{effectiveLevelsText} Enemy levels\n{distanceFormatted} Distance";
                         _lastKillTotal = totalKills;
                         _lastKillThreshold = threshold;
                         _lastKillLevel = currentKillLevel;
+                        _lastKillLevelsPerTier = levelsPerTier;
                         _lastDistanceInt = distanceInt;
                     }
                 }
@@ -92,6 +98,7 @@ namespace TimelessEchoes.UI
                 _lastKillTotal = int.MinValue;
                 _lastKillThreshold = int.MinValue;
                 _lastKillLevel = int.MinValue;
+                _lastKillLevelsPerTier = int.MinValue;
                 _lastSliderValue = -1f;
             }
 
@@ -141,6 +148,5 @@ namespace TimelessEchoes.UI
         }
     }
 }
-
 
 

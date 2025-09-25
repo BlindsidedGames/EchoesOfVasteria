@@ -15,6 +15,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatSortButton buttonPrefab;
 
         [SerializeField] private Button generalButton;
+        [SerializeField] private Button rankButton;
         [SerializeField] private Button graphsButton;
         [SerializeField] private Button enemiesButton;
         [SerializeField] private Button tasksButton;
@@ -39,6 +40,8 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.AddListener(ShowGeneral);
+            if (rankButton != null)
+                rankButton.onClick.AddListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.AddListener(ShowGraphs);
             if (enemiesButton != null)
@@ -60,6 +63,8 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.RemoveListener(ShowGeneral);
+            if (rankButton != null)
+                rankButton.onClick.RemoveListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.RemoveListener(ShowGraphs);
             if (enemiesButton != null)
@@ -75,24 +80,29 @@ namespace TimelessEchoes.UI
             SetTab(0);
         }
 
-        private void ShowGraphs()
+        private void ShowRank()
         {
             SetTab(1);
         }
 
-        private void ShowEnemies()
+        private void ShowGraphs()
         {
             SetTab(2);
         }
 
-        private void ShowTasks()
+        private void ShowEnemies()
         {
             SetTab(3);
         }
 
-        private void ShowItems()
+        private void ShowTasks()
         {
             SetTab(4);
+        }
+
+        private void ShowItems()
+        {
+            SetTab(5);
         }
 
         private void SetTab(int tab)
@@ -102,7 +112,7 @@ namespace TimelessEchoes.UI
             BuildButtons();
             // Toggle the distance slider controls based on active tab
             if (enemyDistanceControls != null)
-                enemyDistanceControls.SetActive(currentTab == 2);
+                enemyDistanceControls.SetActive(currentTab == 3);
         }
 
         private void BuildButtons()
@@ -114,15 +124,18 @@ namespace TimelessEchoes.UI
                     // General tab has no sorting buttons
                     break;
                 case 1:
-                    BuildGraphButtons();
+                    // Rank tab has no sorting buttons
                     break;
                 case 2:
-                    BuildEnemyButtons();
+                    BuildGraphButtons();
                     break;
                 case 3:
-                    BuildTaskButtons();
+                    BuildEnemyButtons();
                     break;
                 case 4:
+                    BuildTaskButtons();
+                    break;
+                case 5:
                     BuildItemButtons();
                     break;
             }
@@ -256,16 +269,16 @@ namespace TimelessEchoes.UI
             Enum selected = null;
             switch (currentTab)
             {
-                case 1:
+                case 2:
                     selected = runMode;
                     break;
-                case 2:
+                case 3:
                     selected = enemyMode;
                     break;
-                case 3:
+                case 4:
                     selected = taskMode;
                     break;
-                case 4:
+                case 5:
                     selected = itemMode;
                     break;
             }
@@ -277,3 +290,5 @@ namespace TimelessEchoes.UI
         }
     }
 }
+
+

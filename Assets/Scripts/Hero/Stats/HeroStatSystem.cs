@@ -22,8 +22,6 @@ namespace TimelessEchoes.Hero
         private static long _version;
         private static HeroController _hero;
         private static HeroStatsSnapshot _cache;
-        private const float BaseCritChancePercent = 1f; // Global baseline crit chance
-
         public static bool IsDirty { get; private set; } = true;
 
         public static void Initialize(HeroController hero)
@@ -91,7 +89,8 @@ namespace TimelessEchoes.Hero
             var defenseStat = BaseStatService.GetStat("Defense");
             var healthStat = BaseStatService.GetStat("Health");
             var regenStat = BaseStatService.GetStat("Regeneration");
-
+            var critChanceStat = BaseStatService.GetStat("Crit Chance");
+            var critDamageStat = BaseStatService.GetStat("Crit Damage");
             var newSnapshot = _cache; // start from previous and update only dirty fields
             var cauldron = CauldronManager.Instance;
 
@@ -115,14 +114,14 @@ namespace TimelessEchoes.Hero
 
             if ((_dirtyMask & DirtyMask.CritChance) != 0)
             {
-                var critPercent = 0f;
+                var critPercent = critChanceStat != null ? BaseStatService.GetTotalValue(critChanceStat) : 0f;
                 if (equip != null && crafting != null)
                 {
                     var critDef = crafting.GetStatByMapping(HeroStatMapping.CritChance);
                     if (critDef != null)
                     {
                         var raw = equip.GetCritChance(critDef);
-                        critPercent = critDef.isPercent ? raw : raw * 100f;
+                        critPercent += critDef.isPercent ? raw : raw * 100f;
                     }
                 }
 
@@ -135,20 +134,19 @@ namespace TimelessEchoes.Hero
                     else critPercent += Mathf.Max(0f, infCrit * 100f);
                 }
 
-                critPercent += BaseCritChancePercent;
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
             }
 
             if ((_dirtyMask & DirtyMask.CritDamage) != 0)
             {
-                var critDamagePercent = 0f;
+                var critDamagePercent = critDamageStat != null ? BaseStatService.GetTotalValue(critDamageStat) : 0f;
                 if (equip != null && crafting != null)
                 {
                     var critDamageDef = crafting.GetStatByMapping(HeroStatMapping.CritDamage);
                     if (critDamageDef != null)
                     {
                         var raw = equip.GetTotalForMapping(HeroStatMapping.CritDamage);
-                        critDamagePercent = critDamageDef.isPercent ? raw : raw * 100f;
+                        critDamagePercent += critDamageDef.isPercent ? raw : raw * 100f;
                     }
                 }
 
@@ -251,3 +249,4 @@ namespace TimelessEchoes.Hero
 #endif
     }
 }
+
