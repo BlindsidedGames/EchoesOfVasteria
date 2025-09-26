@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimelessEchoes.Skills;
@@ -60,7 +60,15 @@ namespace TimelessEchoes.Upgrades
             var flat = skillController ? skillController.GetFlatStatBonus(stat) : 0f;
             var percent = skillController ? skillController.GetPercentStatBonus(stat) : 0f;
 
-            return (baseValue + flat) * (1f + percent);
+            var totalFlat = baseValue + flat;
+            if (Mathf.Approximately(percent, 0f))
+                return totalFlat;
+
+            var associated = stat.AssociatedStat;
+            if (associated != null && associated.isPercent)
+                return totalFlat + percent * 100f;
+
+            return totalFlat * (1f + percent);
         }
 
 #if UNITY_EDITOR
@@ -86,3 +94,4 @@ namespace TimelessEchoes.Upgrades
         }
     }
 }
+

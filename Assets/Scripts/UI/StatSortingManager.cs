@@ -26,6 +26,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private ItemStatsPanelUI itemPanel;
         [SerializeField] private RunStatsPanelUI runStatsPanel;
         [SerializeField] private GameObject enemyDistanceControls; // Slider GameObject to toggle with Enemies tab
+        [SerializeField] private GameObject rankNameObject;
 
         private readonly List<StatSortButton> buttons = new();
         private readonly Dictionary<StatSortButton, Enum> buttonModes = new();
@@ -110,7 +111,9 @@ namespace TimelessEchoes.UI
             if (currentTab == tab) return;
             currentTab = tab;
             BuildButtons();
-            // Toggle the distance slider controls based on active tab
+            // Toggle tab-specific controls based on active tab
+            if (rankNameObject != null)
+                rankNameObject.SetActive(currentTab == 1);
             if (enemyDistanceControls != null)
                 enemyDistanceControls.SetActive(currentTab == 3);
         }
