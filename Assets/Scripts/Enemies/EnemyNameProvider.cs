@@ -37,6 +37,7 @@ namespace TimelessEchoes.Enemies
             "Taco",
             "Eggy",
             "Orion",
+            "ConSidus",
         };
 
         /// <summary>
