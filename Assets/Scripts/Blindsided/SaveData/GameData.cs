@@ -331,6 +331,7 @@ namespace Blindsided.SaveData
             public float LongestRun;
             public float ShortestRun;
             public float AverageRun;
+            public int MostKillsSingleRun;
             public float MaxRunDistance = 50f;
             public int NextRunNumber = 1;
 
@@ -379,6 +380,7 @@ namespace Blindsided.SaveData
             public int TasksCompleted;
             public double ResourcesGathered;
             public int Kills;
+            public int MostKillsSingleRun;
             public double DamageDealtDouble; // migrated primary
             public int Deaths;
             public double DamageTakenDouble; // migrated primary

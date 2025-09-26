@@ -77,7 +77,11 @@ namespace TimelessEchoes.Stats
 
         public float AverageRun { get; private set; }
 
+        public int MostKillsSingleRun { get; private set; }
+
         private float maxRunDistance = 50f;
+        private TimelessEchoes.GameManager.MapScalingMode currentRunScalingMode = TimelessEchoes.GameManager.MapScalingMode.DistanceBased;
+        private const string HalloweenMapKey = "Haloween";
         private bool bypassDemoCapOnNextSet;
 
         public float MaxRunDistance
@@ -203,6 +207,7 @@ namespace TimelessEchoes.Stats
             g.LongestRun = LongestRun;
             g.ShortestRun = ShortestRun;
             g.AverageRun = AverageRun;
+            g.MostKillsSingleRun = MostKillsSingleRun;
             // Persist the true backing value to avoid demo-mode getter clamping (300) overwriting higher saves
             g.MaxRunDistance = maxRunDistance;
             g.NextRunNumber = nextRunNumber;
@@ -245,6 +250,7 @@ namespace TimelessEchoes.Stats
             LongestRun = g.LongestRun;
             ShortestRun = g.ShortestRun;
             AverageRun = g.AverageRun;
+            MostKillsSingleRun = g.MostKillsSingleRun;
             // Load the exact saved value into the backing field to preserve values >300 even in demo
             maxRunDistance = g.MaxRunDistance > 0f ? g.MaxRunDistance : 50f;
             if (g.NextRunNumber > 0)
@@ -463,8 +469,9 @@ namespace TimelessEchoes.Stats
             OnMaxRunDistanceChanged?.Invoke(MaxRunDistance);
         }
 
-        public void BeginRun(MapGenerationConfig config)
+        public void BeginRun(MapGenerationConfig config, TimelessEchoes.GameManager.MapScalingMode scalingMode)
         {
+            currentRunScalingMode = scalingMode;
             currentMapKey = config != null ? config.name : null;
             runStartTime = Time.time;
             lastHeroPos = Vector3.zero;
@@ -553,6 +560,7 @@ namespace TimelessEchoes.Stats
             nextRunNumber++;
 
             OnRunEnded?.Invoke(died);
+            UpdateMostKillsStats();
             ResetCurrentRun();
             // After state resets, broadcast a global run-ended event
             RunEnded();
@@ -597,9 +605,37 @@ namespace TimelessEchoes.Stats
                     map.LongestTrekDouble = CurrentRunDistance;
             nextRunNumber++;
             OnRunEnded?.Invoke(false);
+            UpdateMostKillsStats();
             ResetCurrentRun();
             // After state resets, broadcast a global run-ended event
             RunEnded();
+        }
+
+        private static bool IsHalloweenMap(string mapKey)
+        {
+            return !string.IsNullOrEmpty(mapKey) && string.Equals(mapKey, HalloweenMapKey, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void UpdateMostKillsStats()
+        {
+            if (CurrentRunKills <= 0) return;
+
+            var map = GetOrCreateCurrentMapStats();
+            var updated = false;
+            if (map != null && CurrentRunKills > map.MostKillsSingleRun)
+            {
+                map.MostKillsSingleRun = CurrentRunKills;
+                updated = true;
+            }
+
+            if (currentRunScalingMode == TimelessEchoes.GameManager.MapScalingMode.KillBased && IsHalloweenMap(currentMapKey) && CurrentRunKills > MostKillsSingleRun)
+            {
+                MostKillsSingleRun = CurrentRunKills;
+                updated = true;
+            }
+
+            if (updated)
+                SaveState();
         }
 
         private void ResetCurrentRun()
@@ -615,6 +651,7 @@ namespace TimelessEchoes.Stats
             runStartTime = Time.time;
             RunInProgress = false;
             currentMapKey = null;
+            currentRunScalingMode = TimelessEchoes.GameManager.MapScalingMode.DistanceBased;
             currentRunResourceAmounts.Clear();
             CurrentRunSteps = 0f;
 #if !DISABLESTEAMWORKS

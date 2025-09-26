@@ -6,8 +6,8 @@ namespace Blindsided.UGS
     /// </summary>
     public static class UgsLeaderboardIds
     {
-        public const string DistanceReached = "Distance_Reached";
-        public const string DistanceReachedSeasonal = "Distance_Reached_Seasonal"; // New seasonal board
+        public const string SpookyKills = "SpookyKills";
+        public const string SpookyKillsSeasonal = "Spooky_Kills_Seasonal";
         public const string DistanceTravelled = "Distance_Travelled";
         public const string Kills = "Kills";
         public const string Tasks = "Tasks";

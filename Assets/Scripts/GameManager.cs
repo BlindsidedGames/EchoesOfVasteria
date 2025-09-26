@@ -308,8 +308,11 @@ namespace TimelessEchoes
                     var longest = CalcUtils.FormatNumber(stats.LongestTrekAsDouble, true);
                     var tasks = CalcUtils.FormatNumber(stats.TasksCompleted, true);
                     var resources = CalcUtils.FormatNumber(stats.ResourcesGathered, true);
-                    entry.StatsUI.distanceLongestTasksText.text =
-                        $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                    var mostKills = CalcUtils.FormatNumber(stats.MostKillsSingleRun, true);
+                    var isKillScaling = entry.ScalingMode == MapScalingMode.KillBased;
+                    entry.StatsUI.distanceLongestTasksText.text = isKillScaling
+                        ? $"Steps Taken: {dist}\nMost Kills: {mostKills}\nTasks Completed: {tasks}\nResources Gathered: {resources}"
+                        : $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
                 }
 
                 if (entry.StatsUI != null && entry.StatsUI.killsDamageDeathsText != null)
@@ -576,7 +579,7 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            statTracker?.BeginRun(CurrentGenerationConfig);
+            statTracker?.BeginRun(CurrentGenerationConfig, currentScalingMode);
             runDropUI?.ResetDrops();
             if (resetRunResourceTracker)
             {

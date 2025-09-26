@@ -12,11 +12,11 @@ namespace TimelessEchoes.UI
 {
     /// <summary>
     /// Controls the Leaderboards UI: shows up to 50 entries and a separate colored player row.
-    /// Supports Distance Reached with toggles for Top vs Around Player and Seasonal vs Global.
+    /// Supports Most Kills with toggles for Top vs Around Player and Seasonal vs Global.
     /// </summary>
     public class LeaderboardsPanelUI : MonoBehaviour
     {
-        public enum Board { DistanceReached }
+        public enum Board { SpookyKills }
 
         [Header("Entry Rows")] 
         [SerializeField] private Transform entriesContainer; // Parent to hold pooled rows
@@ -46,7 +46,7 @@ namespace TimelessEchoes.UI
 
         [Header("Optional Header Text")] [SerializeField] private TMP_Text boardLabel;
 
-        [SerializeField] private Board currentBoard = Board.DistanceReached;
+        [SerializeField] private Board currentBoard = Board.SpookyKills;
         [SerializeField] private bool showTop = false; // default OFF => around player
         [SerializeField] private bool showSeasonal = false; // default OFF => global board
 
@@ -176,7 +176,7 @@ namespace TimelessEchoes.UI
         private void UpdateBoardLabel()
         {
             if (boardLabel == null) return;
-            var text = showSeasonal ? "Seasonal Distance Reached" : "Global Distance Reached";
+            var text = showSeasonal ? "Seasonal Most Kills" : "Global Most Kills";
             boardLabel.text = text;
         }
 
@@ -189,10 +189,10 @@ namespace TimelessEchoes.UI
 
         private string LeaderboardId(Board board)
         {
-            // Only DistanceReached is supported now. Choose seasonal/global by toggle.
+            // Only SpookyKills is supported now. Choose seasonal/global by toggle.
             if (showSeasonal)
-                return UgsLeaderboardIds.DistanceReachedSeasonal;
-            return UgsLeaderboardIds.DistanceReached;
+                return UgsLeaderboardIds.SpookyKillsSeasonal;
+            return UgsLeaderboardIds.SpookyKills;
         }
 
         private async Task RefreshAsync()
@@ -635,7 +635,7 @@ namespace TimelessEchoes.UI
 
         private static string FormatScore(double score, Board board)
         {
-            // Only DistanceReached is supported; show as integer distance.
+            // Only SpookyKills is supported; show as integer value.
             return Math.Floor(score).ToString("N0");
         }
 

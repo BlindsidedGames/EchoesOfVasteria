@@ -8,7 +8,7 @@ namespace Blindsided.UGS
 {
     public static class LeaderboardClient
     {
-        private const string DefaultId = UgsLeaderboardIds.DistanceReached;
+        private const string DefaultId = UgsLeaderboardIds.SpookyKills;
 
         public static async Task SubmitAsync(double score, string leaderboardId = DefaultId)
         {
@@ -22,15 +22,15 @@ namespace Blindsided.UGS
             var options = new AddPlayerScoreOptions { Metadata = metadata };
             await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score, options);
 
-            // If submitting DistanceReached and the save is eligible, also submit to Seasonal
-            if (leaderboardId == UgsLeaderboardIds.DistanceReached)
+            // If submitting SpookyKills and the save is eligible, also submit to Seasonal
+            if (leaderboardId == UgsLeaderboardIds.SpookyKills)
             {
                 var oc = Blindsided.Oracle.oracle;
                 if (oc != null && oc.IsSeasonalEligible())
                 {
                     try
                     {
-                        await LeaderboardsService.Instance.AddPlayerScoreAsync(UgsLeaderboardIds.DistanceReachedSeasonal, score, options);
+                        await LeaderboardsService.Instance.AddPlayerScoreAsync(UgsLeaderboardIds.SpookyKillsSeasonal, score, options);
                     }
                     catch { /* ignore secondary failure */ }
                 }

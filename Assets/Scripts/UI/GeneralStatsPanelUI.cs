@@ -60,8 +60,11 @@ namespace TimelessEchoes.UI
                 var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
                 var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
                 var reapDist = $"{statTracker.MaxRunDistance:N0}";
-                references.distanceLongestTasksText.text =
-                    $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
+                var mostKills = CalcUtils.FormatNumber(statTracker.MostKillsSingleRun, true);
+                var isKillScaling = GameManager.Instance != null && GameManager.Instance.IsKillScalingMode;
+                references.distanceLongestTasksText.text = isKillScaling
+                    ? $"Steps Taken: {dist}\nMost Kills: {mostKills}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}"
+                    : $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
             }
 
             if (references.killsDamageDeathsText != null)

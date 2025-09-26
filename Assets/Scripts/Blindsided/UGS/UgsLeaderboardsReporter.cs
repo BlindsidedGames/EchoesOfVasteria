@@ -47,8 +47,8 @@ namespace Blindsided.UGS
         private bool forceUpload;
 
         // Track last values we've successfully sent to avoid redundant uploads.
-        private int lastDistanceReached = -1;
-        private int lastDistanceReachedSeasonal = -1;
+        private int lastSpookyKills = -1;
+        private int lastSpookyKillsSeasonal = -1;
 
         private void Awake()
         {
@@ -102,14 +102,14 @@ namespace Blindsided.UGS
                 await UgsInitializer.EnsureInitializedAsync();
                 var metadata = LeaderboardMetadata.Build();
 
-                // Distance Reached (world units) -> int
-                var distanceReached = Mathf.FloorToInt(tracker.HighestDistance);
-                lastDistanceReached = await TrySubmitAsync(UgsLeaderboardIds.DistanceReached, distanceReached, lastDistanceReached, metadata);
+                // Spooky Halloween map: submit most kills achieved in a single run.
+                var spookyKills = tracker.MostKillsSingleRun;
+                lastSpookyKills = await TrySubmitAsync(UgsLeaderboardIds.SpookyKills, spookyKills, lastSpookyKills, metadata);
                 // If eligible, also submit to the seasonal board
                 var oc = Blindsided.Oracle.oracle;
                 if (oc != null && oc.IsSeasonalEligible())
                 {
-                    lastDistanceReachedSeasonal = await TrySubmitAsync(UgsLeaderboardIds.DistanceReachedSeasonal, distanceReached, lastDistanceReachedSeasonal, metadata);
+                    lastSpookyKillsSeasonal = await TrySubmitAsync(UgsLeaderboardIds.SpookyKillsSeasonal, spookyKills, lastSpookyKillsSeasonal, metadata);
                 }
             }
             catch (RequestFailedException ex)
