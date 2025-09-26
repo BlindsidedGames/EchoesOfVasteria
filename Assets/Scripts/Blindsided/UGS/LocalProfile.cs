@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models; // <-- Make sure this is imported
+using Unity.Services.Authentication;
 
 namespace Blindsided.UGS
 {
@@ -25,5 +26,25 @@ namespace Blindsided.UGS
 
             return null;
         }
+
+        public static async Task<string> GetDisplayNameOrGeneratedAsync()
+        {
+            var storedName = await GetMyDisplayNameAsync();
+            if (!string.IsNullOrWhiteSpace(storedName))
+            {
+                return storedName;
+            }
+
+            try
+            {
+                var generated = AuthenticationService.Instance.PlayerName;
+                return string.IsNullOrWhiteSpace(generated) ? null : generated;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
+

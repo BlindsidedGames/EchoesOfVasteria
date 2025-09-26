@@ -618,7 +618,7 @@ namespace TimelessEchoes.UI
         {
             try
             {
-                var n = await LocalProfile.GetMyDisplayNameAsync();
+                var n = await LocalProfile.GetDisplayNameOrGeneratedAsync();
                 return string.IsNullOrWhiteSpace(n) ? "Player" : n;
             }
             catch
@@ -760,4 +760,5 @@ namespace TimelessEchoes.UI
         }
     }
 }
+
 

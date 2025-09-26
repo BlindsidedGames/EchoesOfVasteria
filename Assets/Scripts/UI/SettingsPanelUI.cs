@@ -309,7 +309,7 @@ namespace TimelessEchoes.UI
             {
                 try
                 {
-                    var currentName = await LocalProfile.GetMyDisplayNameAsync();
+                    var currentName = await LocalProfile.GetDisplayNameOrGeneratedAsync();
                     currentUsernameText.text = string.IsNullOrWhiteSpace(currentName) ? string.Empty : currentName;
                 }
                 catch
@@ -1123,3 +1123,4 @@ namespace TimelessEchoes.UI
         }
     }
 }
+
