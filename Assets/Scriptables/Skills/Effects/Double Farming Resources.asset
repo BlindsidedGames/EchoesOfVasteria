@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 199127633cafa904dba57e6b5f75093e, type: 3}
+  m_Name: Double Farming Resources
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneChanceEffectDefinition
+  procType: 2
+  overrideSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+  descriptionTemplate: Provides a {0}% chance to trigger.
+  percentageFormat: 0.#
