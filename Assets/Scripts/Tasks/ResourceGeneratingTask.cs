@@ -52,7 +52,8 @@ namespace TimelessEchoes.Tasks
                     {
                         int mult = skillController.GetStackingMultiplier(associatedSkill, MilestoneProcType.DoubleResources);
                         float resourceMult = skillController.GetResourceGainMultiplier();
-                        final = res.count * mult * resourceMult;
+                        float milestoneMult = skillController.GetResourceBonusMultiplier(associatedSkill);
+                        final = res.count * mult * resourceMult * milestoneMult;
                     }
 
                     var buff = BuffManager.Instance;

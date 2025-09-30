@@ -506,6 +506,8 @@ namespace TimelessEchoes.Enemies
                 gainMult = skillController.GetResourceGainMultiplier();
             }
 
+            float milestoneMult = skillController != null ? skillController.GetResourceBonusMultiplier(controllerCombatSkill) : 1f;
+
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
             var worldX = transform.position.x;
@@ -513,7 +515,7 @@ namespace TimelessEchoes.Enemies
             var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances, worldX);
             foreach (var res in results)
             {
-                double final = res.count * mult * gainMult;
+                double final = res.count * mult * gainMult * milestoneMult;
                 var buff = BuffManager.Instance;
                 if (buff != null)
                     final *= buff.ResourceGainMultiplier;
@@ -798,5 +800,3 @@ namespace TimelessEchoes.Enemies
 
     }
 }
-
-

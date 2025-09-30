@@ -361,6 +361,10 @@ namespace TimelessEchoes.Skills
 
             var lines = BuildStatLines(totalContributions);
 
+            float globalResourceBonus = aggregator.GetGlobalResourceBonus();
+            if (globalResourceBonus > 0f)
+                lines.Add($"{globalResourceBonus * 100f:0.#}% Bonus Resources (All Tasks)");
+
             foreach (var pair in aggregator.EnumerateSkillSummaries())
             {
                 var summary = pair.Value;
@@ -375,6 +379,14 @@ namespace TimelessEchoes.Skills
 
                 if (summary.DoubleXpChance > 0f)
                     lines.Add($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP");
+                if (summary.ResourceBonusPercent > 0f)
+                {
+                    float totalPercent = summary.ResourceBonusPercent + globalResourceBonus;
+                    string skillLabel = pair.Key != null && !string.IsNullOrWhiteSpace(pair.Key.skillName)
+                        ? pair.Key.skillName
+                        : "Associated Skill";
+                    lines.Add($"{totalPercent * 100f:0.#}% Bonus Resources ({skillLabel})");
+                }
 
                 if (summary.InstantKillChance > 0f)
                     lines.Add($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill");
@@ -414,6 +426,14 @@ namespace TimelessEchoes.Skills
             var statLines = BuildStatLines(contributions);
             if (statLines.Count > 0)
                 lines.AddRange(statLines);
+
+            if (summary.ResourceBonusPercent > 0f)
+            {
+                float totalPercent = summary.ResourceBonusPercent;
+                if (controller != null && controller.Aggregator != null)
+                    totalPercent += controller.Aggregator.GetGlobalResourceBonus();
+                lines.Add($"{totalPercent * 100f:0.#}% Bonus Resources");
+            }
 
             foreach (var entry in summary.SpawnEchoes)
             {

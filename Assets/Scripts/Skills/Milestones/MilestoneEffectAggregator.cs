@@ -12,6 +12,8 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<Skill, SkillMilestoneSummary> _skillSummaries = new();
         private readonly Dictionary<BaseStat, float> _flatStatBonuses = new();
         private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
+        private readonly Dictionary<Skill, float> _taskResourceBonuses = new();
+        private float _globalResourceBonus;
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
         private static readonly System.Collections.Generic.IReadOnlyDictionary<TimelessEchoes.Upgrades.BaseStat, float> EmptyStatBonusMap = new System.Collections.Generic.Dictionary<TimelessEchoes.Upgrades.BaseStat, float>();
@@ -23,6 +25,8 @@ namespace TimelessEchoes.Skills
 
             _flatStatBonuses.Clear();
             _percentStatBonuses.Clear();
+            _taskResourceBonuses.Clear();
+            _globalResourceBonus = 0f;
         }
 
         private SkillMilestoneSummary GetOrCreateSummary(Skill skill)
@@ -140,6 +144,34 @@ namespace TimelessEchoes.Skills
                 summary.PercentStatBonuses.Add(upgrade, amount);
         }
 
+        public void AddResourceBonus(Skill skill, float percent)
+        {
+            if (percent == 0f)
+                return;
+
+            if (skill == null)
+            {
+                AddGlobalResourceBonus(percent);
+                return;
+            }
+
+            if (_taskResourceBonuses.ContainsKey(skill))
+                _taskResourceBonuses[skill] += percent;
+            else
+                _taskResourceBonuses.Add(skill, percent);
+
+            var summary = GetOrCreateSummary(skill);
+            summary.ResourceBonusPercent += percent;
+        }
+
+        public void AddGlobalResourceBonus(float percent)
+        {
+            if (percent == 0f)
+                return;
+
+            _globalResourceBonus += percent;
+        }
+
         public float GetFlatStatBonus(BaseStat upgrade)
         {
             if (upgrade == null)
@@ -155,6 +187,17 @@ namespace TimelessEchoes.Skills
 
             return _percentStatBonuses.TryGetValue(upgrade, out var total) ? total : 0f;
         }
+
+        public float GetResourceBonus(Skill skill)
+        {
+            float total = _globalResourceBonus;
+            if (skill != null && _taskResourceBonuses.TryGetValue(skill, out var bonus))
+                total += bonus;
+            return total;
+        }
+
+        public float GetGlobalResourceBonus() => _globalResourceBonus;
+
         public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<BaseStat, float>> EnumerateTotalFlatBonuses() => _flatStatBonuses;
 
         public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<BaseStat, float>> EnumerateTotalPercentBonuses() => _percentStatBonuses;
@@ -199,6 +242,7 @@ namespace TimelessEchoes.Skills
         public float InstantKillChance;
         public float DoubleResourceChance;
         public float DoubleXpChance;
+        public float ResourceBonusPercent;
         public System.Collections.Generic.Dictionary<BaseStat, float> FlatStatBonuses = new();
         public System.Collections.Generic.Dictionary<BaseStat, float> PercentStatBonuses = new();
         public List<SpawnEchoEntry> SpawnEchoes = new();
@@ -209,6 +253,7 @@ namespace TimelessEchoes.Skills
             InstantKillChance = 0f;
             DoubleResourceChance = 0f;
             DoubleXpChance = 0f;
+            ResourceBonusPercent = 0f;
             if (FlatStatBonuses.Count > 0)
                 FlatStatBonuses.Clear();
             if (PercentStatBonuses.Count > 0)
@@ -236,3 +281,4 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+

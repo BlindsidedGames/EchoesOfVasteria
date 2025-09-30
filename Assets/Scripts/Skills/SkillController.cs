@@ -248,6 +248,19 @@ namespace TimelessEchoes.Skills
             return 1f + prog.Level * combatSkill.taskSpeedPerLevel;
         }
 
+        public float GetResourceBonusMultiplier(Skill skill)
+        {
+            if (skill == null)
+            {
+                float globalOnly = 1f + effectAggregator.GetResourceBonus(null);
+                return globalOnly < 0f ? 0f : globalOnly;
+            }
+
+            float bonus = effectAggregator.GetResourceBonus(skill);
+            float multiplier = 1f + bonus;
+            return multiplier < 0f ? 0f : multiplier;
+        }
+
         public MilestoneSetDefinition GetSetDefinition(MilestoneSet set)
         {
             if (set == MilestoneSet.None)
@@ -621,3 +634,4 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+
