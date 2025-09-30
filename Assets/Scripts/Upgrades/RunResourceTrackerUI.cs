@@ -92,6 +92,23 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
+
+        public List<KeyValuePair<Resource, double>> GetBaseResourceTotals()
+        {
+            var results = new List<KeyValuePair<Resource, double>>();
+            foreach (var pair in amounts)
+            {
+                var baseAmount = pair.Value;
+                if (bonusAmounts.TryGetValue(pair.Key, out var bonus))
+                    baseAmount -= bonus;
+                if (baseAmount <= 0d)
+                    continue;
+                results.Add(new KeyValuePair<Resource, double>(pair.Key, baseAmount));
+            }
+
+            return results;
+        }
+
         /// <summary>
         ///     Displays the recorded resources and amounts.
         /// </summary>

@@ -1,3 +1,4 @@
+- Rerouted retreat bonus payouts to the RunResourceTracker data so early returns grant and display bonus resources without RunDropUI.
 - Grouped milestone totals by category, appended spawning skill context to echo entries, and renamed combat triggers to "when Killing".
 ### Added
 - Run breakdown entry and manager scripts for pooled per-resource run summaries with retreat projections and runtime tracking.

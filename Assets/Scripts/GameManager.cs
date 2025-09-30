@@ -956,13 +956,9 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            if (!runEndedByDeath && runDropUI != null)
+            if (!runEndedByDeath)
             {
-                if (abandon)
-                {
-                    runDropUI.ResetDrops();
-                }
-                else
+                if (!abandon)
                 {
                     var manager = ResourceManager.Instance;
                     if (manager == null)
@@ -971,15 +967,30 @@ namespace TimelessEchoes
                     }
                     else
                     {
-                        var drops = new List<KeyValuePair<Resource, double>>(runDropUI.Amounts);
                         var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var bonusPercent = kills * bonusPercentPerKill * 0.01f;
-                        foreach (var pair in drops)
-                            manager.Add(pair.Key, pair.Value * bonusPercent, true);
-                    }
+                        var bonusPercent = kills * bonusPercentPerKill * 0.01d;
+                        if (bonusPercent > 0d)
+                        {
+                            var baseDrops = CollectBaseRunDrops();
+                            if (baseDrops.Count > 0)
+                            {
+                                foreach (var pair in baseDrops)
+                                {
+                                    if (pair.Key == null)
+                                        continue;
 
-                    runDropUI.ResetDrops();
+                                    var bonusAmount = pair.Value * bonusPercent;
+                                    if (bonusAmount <= 0d)
+                                        continue;
+
+                                    manager.Add(pair.Key, bonusAmount, true);
+                                }
+                            }
+                        }
+                    }
                 }
+
+                runDropUI?.ResetDrops();
             }
 
             if (statTracker != null)
@@ -1055,6 +1066,24 @@ namespace TimelessEchoes
             }
         }
 
+        private List<KeyValuePair<Resource, double>> CollectBaseRunDrops()
+        {
+            if (runResourceTracker != null)
+            {
+                var totals = runResourceTracker.GetBaseResourceTotals();
+                if (totals != null && totals.Count > 0)
+                    return totals;
+            }
+
+            if (runDropUI != null)
+            {
+                var source = runDropUI.Amounts;
+                if (source != null && source.Count > 0)
+                    return new List<KeyValuePair<Resource, double>>(source);
+            }
+
+            return new List<KeyValuePair<Resource, double>>();
+        }
         private void CleanupMap()
         {
             StartCoroutine(CleanupMapRoutine());
