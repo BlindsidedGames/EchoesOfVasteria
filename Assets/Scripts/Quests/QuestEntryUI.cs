@@ -10,6 +10,7 @@ using TimelessEchoes.Utilities;
 using TimelessEchoes.Stats;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace TimelessEchoes.Quests
@@ -22,6 +23,9 @@ namespace TimelessEchoes.Quests
         public TMP_Text nameText;
         public TMP_Text descriptionText;
         public TMP_Text rewardText;
+        [SerializeField] private LocalizeStringEvent nameStringEvent;
+        [SerializeField] private LocalizeStringEvent descriptionStringEvent;
+        [SerializeField] private LocalizeStringEvent rewardStringEvent;
         public Button turnInButton;
         public TMP_Text turnInText;
         // Aggregated type/progress removed in favor of per-requirement rows
@@ -32,25 +36,37 @@ namespace TimelessEchoes.Quests
         // Legacy cost UI removed
 
         private Action onTurnIn;
+        private bool entryCompleted;
+        private bool pinnedState;
+        private bool rewardHasQuestData;
         private string baseNameText = string.Empty;
         private readonly List<(QuestRequirementUIReferences ui, QuestData.Requirement req)> requirementRows = new();
 
         public void Setup(QuestData data, Action turnIn, bool showRequirements = true, bool completed = false)
         {
             onTurnIn = turnIn;
-            if (nameText != null)
-            {
-                baseNameText = data != null
-                    ? data.questName.GetLocalizedString() + (completed ? " | Completed" : string.Empty)
-                    : string.Empty;
-                nameText.text = baseNameText;
-            }
+            entryCompleted = completed;
+            pinnedState = false;
 
-            if (descriptionText != null)
+            var localizedName = data != null ? data.questName.GetLocalizedString() : string.Empty;
+            baseNameText = BuildBaseName(localizedName);
+
+            ConfigureLocalizationEvents(data);
+
+            if (nameText != null)
+                nameText.text = baseNameText;
+
+            if (descriptionStringEvent == null && descriptionText != null)
                 descriptionText.text = data != null ? data.description.GetLocalizedString() : string.Empty;
-            if (rewardText != null)
-                rewardText.text =
-                    data != null ? $"Reward: {data.rewardDescription.GetLocalizedString()}" : string.Empty;
+            else if (data == null && descriptionText != null)
+                descriptionText.text = string.Empty;
+
+            if (rewardStringEvent == null && rewardText != null)
+                rewardText.text = data != null
+                    ? $"Reward: {data.rewardDescription.GetLocalizedString()}"
+                    : string.Empty;
+            else if (data == null && rewardText != null)
+                rewardText.text = string.Empty;
             // Build per-requirement rows (skip for completed entries or if disabled)
             if (requirementParent != null)
             {
@@ -212,8 +228,94 @@ namespace TimelessEchoes.Quests
             }
         }
 
+        private void ConfigureLocalizationEvents(QuestData data)
+        {
+            rewardHasQuestData = data != null;
+            ConfigureNameLocalization(data);
+            ConfigureDescriptionLocalization(data);
+            ConfigureRewardLocalization(data);
+        }
+
+        private void ConfigureNameLocalization(QuestData data)
+        {
+            if (nameStringEvent == null)
+                return;
+
+            nameStringEvent.OnUpdateString.RemoveListener(OnNameLocalized);
+            nameStringEvent.StringReference = data != null ? data.questName : default;
+            if (data != null)
+            {
+                nameStringEvent.OnUpdateString.AddListener(OnNameLocalized);
+                nameStringEvent.RefreshString();
+            }
+            else
+            {
+                nameStringEvent.RefreshString();
+                if (nameText != null)
+                {
+                    baseNameText = string.Empty;
+                    nameText.text = string.Empty;
+                }
+            }
+        }
+
+        private void ConfigureDescriptionLocalization(QuestData data)
+        {
+            if (descriptionStringEvent == null)
+                return;
+
+            descriptionStringEvent.StringReference = data != null ? data.description : default;
+            descriptionStringEvent.RefreshString();
+            if (data == null && descriptionText != null)
+                descriptionText.text = string.Empty;
+        }
+
+        private void ConfigureRewardLocalization(QuestData data)
+        {
+            if (rewardStringEvent == null)
+                return;
+
+            rewardStringEvent.OnUpdateString.RemoveListener(OnRewardLocalized);
+            rewardStringEvent.StringReference = data != null ? data.rewardDescription : default;
+            rewardStringEvent.OnUpdateString.AddListener(OnRewardLocalized);
+            rewardStringEvent.RefreshString();
+            if (!rewardHasQuestData && rewardText != null)
+                rewardText.text = string.Empty;
+        }
+
+        private string BuildBaseName(string localizedName)
+        {
+            localizedName ??= string.Empty;
+            return entryCompleted ? localizedName + " | Completed" : localizedName;
+        }
+
+        private void OnNameLocalized(string localizedValue)
+        {
+            baseNameText = BuildBaseName(localizedValue);
+            UpdatePinVisual(pinnedState);
+        }
+
+        private void OnRewardLocalized(string localizedValue)
+        {
+            if (rewardText == null)
+                return;
+
+            if (!rewardHasQuestData)
+            {
+                rewardText.text = string.Empty;
+                return;
+            }
+
+            rewardText.text = localizedValue != null
+                ? $"Reward: {localizedValue}"
+                : "Reward: ";
+
+        }
+
         private void UpdatePinVisual(bool pinned)
         {
+            pinnedState = pinned;
+
             if (pinButton != null)
             {
                 var txt = pinButton.GetComponentInChildren<TMP_Text>();
@@ -411,6 +513,15 @@ namespace TimelessEchoes.Quests
                     appendSpace = true;
                     break;
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (nameStringEvent != null)
+                nameStringEvent.OnUpdateString.RemoveListener(OnNameLocalized);
+
+            if (rewardStringEvent != null)
+                rewardStringEvent.OnUpdateString.RemoveListener(OnRewardLocalized);
         }
 
         private static string FormatValue(QuestData data, double value)

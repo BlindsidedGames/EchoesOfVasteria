@@ -3,6 +3,10 @@
 - Look through relevant code, and derive as much information related to the topic as you can.
 - Present your plan and wait for me to approve the plan before you make any changes.
 - Ask clarifying questions.
+- Take performance into account when making suggestions, if there is a more performant way to do something that will achieve the same result then that is preferred.
+
+# Doing a task
+- Attempt to keep code as clean and performnant as possible.
 
 # Finishing a task
 - Add a brief entry to Changes.md describing what you changed, always put it at the top of the file.

@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 2578508994350943411}
   - component: {fileID: 8421520278384072395}
   - component: {fileID: 1393924150881400301}
+  - component: {fileID: 4567279107317243821}
   m_Layer: 5
   m_Name: Name_Text
   m_TagString: Untagged
@@ -441,6 +442,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4567279107317243821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625703246363919040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1393924150881400301}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3243035983985247528
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,17 +548,15 @@ MonoBehaviour:
   nameText: {fileID: 1393924150881400301}
   descriptionText: {fileID: 7222369568943532855}
   rewardText: {fileID: 6522647304009456842}
+  nameStringEvent: {fileID: 4567279107317243821}
+  descriptionStringEvent: {fileID: 6893230427560919404}
+  rewardStringEvent: {fileID: 8733608860500225971}
   turnInButton: {fileID: 8950382192853892662}
   turnInText: {fileID: 1960547979965173984}
-  typeText: {fileID: 0}
-  progressImage: {fileID: 0}
   requirementSlotPrefab: {fileID: 4206251582308726761, guid: 176737b3ac4e2214a9c870677bb12beb, type: 3}
   requirementParent: {fileID: 3092551484347053063}
   questImage: {fileID: 2894457934127420967}
-  progressBar: {fileID: 0}
   pinButton: {fileID: 5223791248799528948}
-  costSlotPrefab: {fileID: 7379128548144887482, guid: f4078cac67e544749bfe0a41bdd7efef, type: 3}
-  costParent: {fileID: 6274911227562582775}
 --- !u!114 &2894457934127420967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,6 +1146,7 @@ GameObject:
   - component: {fileID: 5674684722396853080}
   - component: {fileID: 5235559772329930157}
   - component: {fileID: 7222369568943532855}
+  - component: {fileID: 6893230427560919404}
   m_Layer: 5
   m_Name: Description_Text
   m_TagString: Untagged
@@ -1234,6 +1274,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6893230427560919404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5750729539294549936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7222369568943532855}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6039596833356070004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,6 +1758,7 @@ GameObject:
   - component: {fileID: 1111474669661139803}
   - component: {fileID: 7578600567820394840}
   - component: {fileID: 6522647304009456842}
+  - component: {fileID: 8733608860500225971}
   m_Layer: 5
   m_Name: Reward_Text
   m_TagString: Untagged
@@ -1803,3 +1884,43 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8733608860500225971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815174285023584556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6522647304009456842}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []

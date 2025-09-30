@@ -107,6 +107,9 @@ namespace TimelessEchoes
         private SlicedFilledImage deathTimerImage;
 
         [TitleGroup("UI/Death Window")] [SerializeField]
+        private TMP_Text deathText;
+
+        [TitleGroup("UI/Death Window")] [SerializeField]
         private float deathWindowDuration = 20f;
 
         [TitleGroup("UI/General")] [SerializeField]
@@ -803,6 +806,8 @@ namespace TimelessEchoes
 
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
+            if (deathText != null)
+                deathText.text = distanceReaper ? "You were reaped..." : "You have Died...";
             if (runDropUI != null)
                 runDropUI.ResetDrops();
 
@@ -827,6 +832,8 @@ namespace TimelessEchoes
                 StopCoroutine(deathWindowCoroutine);
             if (deathWindow != null)
                 deathWindow.SetActive(false);
+            if (deathText != null)
+                deathText.text = string.Empty;
             StartRun();
             deathUiFailsafeCheckAt = -1f;
         }
@@ -837,6 +844,8 @@ namespace TimelessEchoes
                 StopCoroutine(deathWindowCoroutine);
             if (deathWindow != null)
                 deathWindow.SetActive(false);
+            if (deathText != null)
+                deathText.text = string.Empty;
             StartCoroutine(ReturnToTavernRoutine());
             deathUiFailsafeCheckAt = -1f;
         }
@@ -938,6 +947,8 @@ namespace TimelessEchoes
                 returnOnDeathText.text = "Return On Death";
             if (returnToTavernText != null)
                 returnToTavernText.text = "Return To Town";
+            if (deathText != null)
+                deathText.text = string.Empty;
             if (statTracker == null)
             {
                 statTracker = GameplayStatTracker.Instance;

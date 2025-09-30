@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c62c1a716d4ef94aba155a619445a08, type: 3}
-  m_Name: Echo Farming
+  m_Name: Echo Fishing
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneDefinition
   milestoneId: 795943dca80743ec940b03d59a127eea
-  displayName: Echo Farming
+  displayName: Echo Fishing
   set: 0
   setIcon: {fileID: 0}
   canActivate: 1
-  passiveEffect: {fileID: 11400000, guid: 3ca35ee20c29b1b42a982c05c345e252, type: 2}
+  passiveEffect: {fileID: 11400000, guid: e7b4124a979f71f4586956f92c32c7c7, type: 2}
   activeEffect: {fileID: 11400000, guid: 01ac21a46b3780e4a89709dffba6d2c3, type: 2}
   tierMode: 1
   tiers:
