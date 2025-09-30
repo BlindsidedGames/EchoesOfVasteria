@@ -359,11 +359,17 @@ namespace TimelessEchoes.Skills
             foreach (var kvp in aggregator.EnumerateTotalPercentBonuses())
                 AccumulateStatContribution(totalContributions, kvp.Key, 0f, kvp.Value);
 
-            var lines = BuildStatLines(totalContributions);
+            var statLines = BuildStatLines(totalContributions);
 
             float globalResourceBonus = aggregator.GetGlobalResourceBonus();
+
+            var resourceLines = new List<string>();
             if (globalResourceBonus > 0f)
-                lines.Add($"{globalResourceBonus * 100f:0.#}% Bonus Resources (All Tasks)");
+                resourceLines.Add($"{globalResourceBonus * 100f:0.#}% Bonus Resources (All Tasks)");
+
+            var perSkillResourceEntries = new List<(string SkillName, string Line)>();
+            var procEntries = new List<(int Order, string SkillName, string Line)>();
+            var echoEntries = new List<(string SkillName, string Line)>();
 
             foreach (var pair in aggregator.EnumerateSkillSummaries())
             {
@@ -371,25 +377,26 @@ namespace TimelessEchoes.Skills
                 if (summary == null)
                     continue;
 
+                string skillName = ResolveSkillName(pair.Key);
+
                 if (summary.InstantTaskChance > 0f)
-                    lines.Add($"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks");
+                    procEntries.Add((0, skillName, $"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks"));
+
+                if (summary.InstantKillChance > 0f)
+                    procEntries.Add((1, skillName, $"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill"));
 
                 if (summary.DoubleResourceChance > 0f)
-                    lines.Add($"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources");
+                    procEntries.Add((2, skillName, $"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources"));
 
                 if (summary.DoubleXpChance > 0f)
-                    lines.Add($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP");
+                    procEntries.Add((3, skillName, $"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP"));
+
                 if (summary.ResourceBonusPercent > 0f)
                 {
                     float totalPercent = summary.ResourceBonusPercent + globalResourceBonus;
-                    string skillLabel = pair.Key != null && !string.IsNullOrWhiteSpace(pair.Key.skillName)
-                        ? pair.Key.skillName
-                        : "Associated Skill";
-                    lines.Add($"{totalPercent * 100f:0.#}% Bonus Resources ({skillLabel})");
+                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : "Associated Skill";
+                    perSkillResourceEntries.Add((skillLabel, $"{totalPercent * 100f:0.#}% Bonus Resources ({skillLabel})"));
                 }
-
-                if (summary.InstantKillChance > 0f)
-                    lines.Add($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill");
 
                 foreach (var entry in summary.SpawnEchoes)
                 {
@@ -398,11 +405,47 @@ namespace TimelessEchoes.Skills
 
                     string label = BuildEchoSpawnLine(entry, pair.Key);
                     if (!string.IsNullOrEmpty(label))
-                        lines.Add(label);
+                        echoEntries.Add((skillName, label));
                 }
             }
 
-            totalSkillIncreasesText.text = lines.Count > 0 ? string.Join(System.Environment.NewLine, lines) : string.Empty;
+            perSkillResourceEntries.Sort((left, right) => string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase));
+            foreach (var entry in perSkillResourceEntries)
+                resourceLines.Add(entry.Line);
+
+            procEntries.Sort((left, right) =>
+            {
+                int orderCompare = left.Order.CompareTo(right.Order);
+                if (orderCompare != 0)
+                    return orderCompare;
+
+                return string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase);
+            });
+
+            var procLines = procEntries.Select(entry => entry.Line).ToList();
+
+            echoEntries.Sort((left, right) =>
+            {
+                int skillCompare = string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase);
+                if (skillCompare != 0)
+                    return skillCompare;
+
+                return string.Compare(left.Line, right.Line, System.StringComparison.OrdinalIgnoreCase);
+            });
+
+            var echoLines = echoEntries.Select(entry => entry.Line).ToList();
+
+            var allLines = new List<string>();
+            if (statLines.Count > 0)
+                allLines.AddRange(statLines);
+            if (resourceLines.Count > 0)
+                allLines.AddRange(resourceLines);
+            if (procLines.Count > 0)
+                allLines.AddRange(procLines);
+            if (echoLines.Count > 0)
+                allLines.AddRange(echoLines);
+
+            totalSkillIncreasesText.text = allLines.Count > 0 ? string.Join(System.Environment.NewLine, allLines) : string.Empty;
         }
         private List<string> BuildSkillSectionLines(Skill skill, SkillMilestoneSummary summary)
         {
@@ -527,7 +570,46 @@ namespace TimelessEchoes.Skills
             string descriptor = string.IsNullOrEmpty(target) ? noun : $"{target} {noun}";
             string subject = count > 1 ? $"{count} {descriptor}" : FormatSingleEchoDescriptor(descriptor);
 
-            return $"{entry.Chance * 100f:0.#}% Chance to spawn {subject}";
+            string triggerSkill = GetEchoSpawnTriggerSkillLabel(entry, sourceSkill);
+            string triggerSuffix = string.IsNullOrEmpty(triggerSkill) ? string.Empty : $" when {triggerSkill}";
+
+            return $"{entry.Chance * 100f:0.#}% Chance to spawn {subject}{triggerSuffix}";
+        }
+
+        private static string GetEchoSpawnTriggerSkillLabel(SpawnEchoEntry entry, Skill sourceSkill)
+        {
+            var config = entry.Config;
+
+            if (config != null && config.capableSkills != null && config.capableSkills.Count > 0)
+            {
+                var names = new List<string>();
+                foreach (var skill in config.capableSkills)
+                {
+                    var name = NormalizeTriggerLabel(ResolveSkillName(skill));
+                    if (!string.IsNullOrWhiteSpace(name) && !names.Contains(name))
+                        names.Add(name);
+                }
+
+                if (names.Count == 1)
+                    return names[0];
+
+                if (names.Count > 1)
+                    return string.Join("/", names);
+            }
+
+            var fallback = NormalizeTriggerLabel(ResolveSkillName(sourceSkill));
+            return !string.IsNullOrEmpty(fallback) ? fallback : string.Empty;
+        }
+
+        private static string NormalizeTriggerLabel(string label)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+                return string.Empty;
+
+            if (string.Equals(label, "Combat", System.StringComparison.OrdinalIgnoreCase))
+                return "Killing";
+
+            return label;
         }
 
         private static string FormatSingleEchoDescriptor(string descriptor)

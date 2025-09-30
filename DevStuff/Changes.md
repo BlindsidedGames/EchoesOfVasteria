@@ -1,3 +1,4 @@
+- Grouped milestone totals by category, appended spawning skill context to echo entries, and renamed combat triggers to "when Killing".
 ### Added
 - Run breakdown entry and manager scripts for pooled per-resource run summaries with retreat projections and runtime tracking.
 - Localization manager that loads the player's saved locale, defaults to English, and exposes UI-facing APIs for manual language swaps.

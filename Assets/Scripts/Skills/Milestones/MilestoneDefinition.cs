@@ -228,6 +228,14 @@ namespace TimelessEchoes.Skills
         public bool HasActiveEffect => activeEffect != null;
 
 #if UNITY_EDITOR
+        [Button(ButtonSizes.Medium)]
+        private void GenerateNewMilestoneId()
+        {
+            Undo.RecordObject(this, "Generate Milestone ID");
+            milestoneId = Guid.NewGuid().ToString("N");
+            EditorUtility.SetDirty(this);
+        }
+
         private void OnValidate()
         {
             if (string.IsNullOrWhiteSpace(milestoneId))
@@ -267,3 +275,4 @@ namespace TimelessEchoes.Skills
         public float activeIncrement = 0f;
     }
 }
+
