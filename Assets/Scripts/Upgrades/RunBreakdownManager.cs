@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using TimelessEchoes;
 using TimelessEchoes.Stats;
 
@@ -50,7 +51,7 @@ namespace TimelessEchoes.Upgrades
         private void OnEnable()
         {
             Subscribe();
-            UpdateSummaryLabels(0f);
+            SyncActiveRunState();
         }
 
         private void Start()
@@ -62,7 +63,7 @@ namespace TimelessEchoes.Upgrades
         {
             AttemptAttachStatTracker();
 
-            if (Input.GetMouseButtonDown(1))
+            if (WasRightClickPressed())
                 TryCloseOnRightClick();
 
             if (!runActive)
@@ -133,27 +134,52 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
+        private void SyncActiveRunState()
+        {
+            var elapsed = 0f;
+            if (statTracker != null && statTracker.RunInProgress)
+            {
+                runActive = true;
+                elapsed = statTracker.CurrentRunElapsedSeconds;
+                runStartTime = Time.time - elapsed;
+            }
+            else
+            {
+                runActive = false;
+            }
+
+            updateTimer = 0f;
+            UpdateRuntimeLabel(elapsed);
+            UpdateSummaryLabels(elapsed);
+
+            if (runActive && orderedEntries.Count > 0)
+                RefreshEntries(elapsed);
+        }
         private void AttemptAttachStatTracker()
         {
             var tracker = GameplayStatTracker.Instance;
-            if (tracker == null || statTracker == tracker)
+            if (tracker == null)
                 return;
+
+            if (statTracker == tracker)
+            {
+                if (runActive != tracker.RunInProgress)
+                    SyncActiveRunState();
+                return;
+            }
 
             if (statTracker != null)
                 statTracker.OnRunEnded -= HandleRunEnded;
 
             statTracker = tracker;
             statTracker.OnRunEnded += HandleRunEnded;
+            SyncActiveRunState();
         }
 
         private void HandleRunStarted()
         {
-            runActive = true;
-            runStartTime = Time.time;
-            updateTimer = 0f;
             ClearEntries();
-            UpdateRuntimeLabel(0f);
-            UpdateSummaryLabels(0f);
+            SyncActiveRunState();
         }
 
         private void HandleRunEnded(bool died)
@@ -323,6 +349,12 @@ namespace TimelessEchoes.Upgrades
         {
             if (windowRoot != null && windowRoot.activeSelf)
                 CloseWindow();
+        }
+
+        private bool WasRightClickPressed()
+        {
+            var mouse = Mouse.current;
+            return mouse != null && mouse.rightButton.wasPressedThisFrame;
         }
 
         private void UpdateSummaryLabels(double elapsedSeconds)

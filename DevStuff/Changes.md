@@ -1,3 +1,5 @@
+- Removed legacy Input Manager fallbacks from RunBreakdownManager so right-click detection always uses the new Input System without throwing InvalidOperationException.
+- Synced RunBreakdownManager with in-progress runs and exposed current run elapsed time so map UI toggles stay accurate when reactivated.
 - Normalized RunBreakdownManager formatting so Start/Update use proper newlines.
 - Removed RunDropUI and its GameManager hooks in favor of the run breakdown tracker so Map UI stays active on run start.
 - Added right-click shortcut to close the run breakdown window instantly.

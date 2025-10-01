@@ -114,6 +114,8 @@ namespace TimelessEchoes.Stats
         public double CurrentRunDamageDealt => currentRunDamageDealt;
         public double CurrentRunDamageTaken => currentRunDamageTaken;
 
+        public float CurrentRunElapsedSeconds => RunInProgress ? Time.time - runStartTime : 0f;
+
         public bool RunInProgress { get; private set; }
 
         private Vector3 lastHeroPos;
