@@ -76,11 +76,10 @@ namespace TimelessEchoes
         [TitleGroup("UI/General")] [SerializeField]
         private GameObject tavernUI;
 
-        [TitleGroup("UI/General")] public GameObject mapUI;
-        [TitleGroup("UI/General")] public MapUI mapUIInstance;
-
         [TitleGroup("UI/General")] [SerializeField]
-        private RunDropUI runDropUI;
+        private GameObject mapUI;
+
+        [TitleGroup("UI/General")] public MapUI mapUIInstance;
 
         [TitleGroup("UI/General")] [SerializeField]
         private RunResourceTrackerUI runResourceTracker;
@@ -583,7 +582,6 @@ namespace TimelessEchoes
             }
 
             statTracker?.BeginRun(CurrentGenerationConfig, currentScalingMode);
-            runDropUI?.ResetDrops();
             if (resetRunResourceTracker)
             {
                 runResourceTracker?.BeginRun();
@@ -808,8 +806,6 @@ namespace TimelessEchoes
             runEndedByReaper = distanceReaper;
             if (deathText != null)
                 deathText.text = distanceReaper ? "You were reaped..." : "You have Died...";
-            if (runDropUI != null)
-                runDropUI.ResetDrops();
 
             if (returnOnDeathQueued || retreatQueued)
             {
@@ -989,8 +985,6 @@ namespace TimelessEchoes
                         }
                     }
                 }
-
-                runDropUI?.ResetDrops();
             }
 
             if (statTracker != null)
@@ -1074,14 +1068,6 @@ namespace TimelessEchoes
                 if (totals != null && totals.Count > 0)
                     return totals;
             }
-
-            if (runDropUI != null)
-            {
-                var source = runDropUI.Amounts;
-                if (source != null && source.Count > 0)
-                    return new List<KeyValuePair<Resource, double>>(source);
-            }
-
             return new List<KeyValuePair<Resource, double>>();
         }
         private void CleanupMap()

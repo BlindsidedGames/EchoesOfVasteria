@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using TimelessEchoes;
@@ -17,6 +18,8 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private RunBreakdownEntryUI entryPrefab;
         [SerializeField] private Transform entryParent;
         [SerializeField] private TMP_Text runtimeText;
+        [SerializeField] private TMP_Text closeHintText;
+        [SerializeField] private TMP_Text performanceText;
         [SerializeField] private GameObject windowRoot;
 
         private readonly Dictionary<Resource, EntryData> entriesByResource = new();
@@ -47,6 +50,7 @@ namespace TimelessEchoes.Upgrades
         private void OnEnable()
         {
             Subscribe();
+            UpdateSummaryLabels(0f);
         }
 
         private void Start()
@@ -58,11 +62,15 @@ namespace TimelessEchoes.Upgrades
         {
             AttemptAttachStatTracker();
 
+            if (Input.GetMouseButtonDown(1))
+                TryCloseOnRightClick();
+
             if (!runActive)
                 return;
 
             var elapsed = Time.time - runStartTime;
             UpdateRuntimeLabel(elapsed);
+            UpdateSummaryLabels(elapsed);
 
             updateTimer += Time.deltaTime;
             if (updateTimer >= UpdateIntervalSeconds)
@@ -145,12 +153,14 @@ namespace TimelessEchoes.Upgrades
             updateTimer = 0f;
             ClearEntries();
             UpdateRuntimeLabel(0f);
+            UpdateSummaryLabels(0f);
         }
 
         private void HandleRunEnded(bool died)
         {
             var duration = statTracker != null ? statTracker.LastRunDuration : Time.time - runStartTime;
             RefreshEntries(duration);
+            UpdateSummaryLabels(duration);
             runActive = false;
             updateTimer = 0f;
 
@@ -178,11 +188,52 @@ namespace TimelessEchoes.Upgrades
                 view.Initialize(resource);
                 entry = new EntryData(resource, view);
                 entriesByResource[resource] = entry;
-                orderedEntries.Add(entry);
+
+                var insertIndex = FindInsertIndex(resource.resourceID);
+                orderedEntries.Insert(insertIndex, entry);
+                ApplyEntrySiblingIndex(entry, insertIndex);
             }
 
             entry.Amount += amount;
             RefreshEntry(entry, Math.Max(Time.time - runStartTime, 0.0001f));
+        }
+
+        private int FindInsertIndex(int resourceId)
+        {
+            var low = 0;
+            var high = orderedEntries.Count;
+            while (low < high)
+            {
+                var mid = (low + high) / 2;
+                var midEntry = orderedEntries[mid];
+                var midResource = midEntry?.Resource;
+                var midId = midResource != null ? midResource.resourceID : int.MaxValue;
+
+                if (midId < resourceId)
+                {
+                    low = mid + 1;
+                }
+                else
+                {
+                    high = mid;
+                }
+            }
+
+            return low;
+        }
+
+        private void ApplyEntrySiblingIndex(EntryData entry, int insertIndex)
+        {
+            if (entry?.View == null)
+                return;
+
+            var parent = entryParent != null ? entryParent : transform;
+            var childCount = parent.childCount;
+            if (childCount == 0)
+                return;
+
+            var clampedIndex = Mathf.Clamp(insertIndex, 0, childCount - 1);
+            entry.View.transform.SetSiblingIndex(clampedIndex);
         }
 
         private RunBreakdownEntryUI GetEntryView()
@@ -266,6 +317,48 @@ namespace TimelessEchoes.Upgrades
                 return 0d;
 
             return kills * gameManager.BonusPercentPerKill * 0.01d;
+        }
+
+        private void TryCloseOnRightClick()
+        {
+            if (windowRoot != null && windowRoot.activeSelf)
+                CloseWindow();
+        }
+
+        private void UpdateSummaryLabels(double elapsedSeconds)
+        {
+            var safeElapsed = Math.Max(elapsedSeconds, 0.0001d);
+            var distancePerMinute = 0d;
+            var damagePerSecond = 0d;
+            var killsPerMinute = 0d;
+
+            if (statTracker != null)
+            {
+                var runDistance = Math.Max(statTracker.CurrentRunDistance, 0f);
+                var runDamage = Math.Max(statTracker.CurrentRunDamageDealt, 0d);
+                var runKills = Mathf.Max(statTracker.CurrentRunKills, 0);
+                distancePerMinute = runDistance * 60d / safeElapsed;
+                damagePerSecond = runDamage / safeElapsed;
+                killsPerMinute = runKills * 60d / safeElapsed;
+            }
+
+            if (closeHintText != null)
+            {
+                closeHintText.text =
+                    $"Tap anywhere outside this window to close it.{Environment.NewLine}Distance per minute: {FormatWholeNumber(distancePerMinute)}";
+            }
+
+            if (performanceText != null)
+            {
+                performanceText.text =
+                    $"Damage per second: {FormatWholeNumber(damagePerSecond)}{Environment.NewLine}Kills per minute: {FormatWholeNumber(killsPerMinute)}";
+            }
+        }
+
+        private static string FormatWholeNumber(double value)
+        {
+            var rounded = Math.Round(value);
+            return rounded.ToString("N0", CultureInfo.InvariantCulture);
         }
 
         private void UpdateRuntimeLabel(double elapsedSeconds)

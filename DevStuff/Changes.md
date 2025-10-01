@@ -1,3 +1,8 @@
+- Normalized RunBreakdownManager formatting so Start/Update use proper newlines.
+- Removed RunDropUI and its GameManager hooks in favor of the run breakdown tracker so Map UI stays active on run start.
+- Added right-click shortcut to close the run breakdown window instantly.
+- Added run summary labels for distance per minute, damage per second, and kills per minute in the breakdown window.
+- Sorted run breakdown resource entries by resourceID and synced UI insertion to match the sorted order.
 - Rerouted retreat bonus payouts to the RunResourceTracker data so early returns grant and display bonus resources without RunDropUI.
 - Grouped milestone totals by category, appended spawning skill context to echo entries, and renamed combat triggers to "when Killing".
 ### Added
@@ -16,3 +21,4 @@
 
 ### Removed
 - ForceEnglishLocale bootstrap script that enforced an English locale before scenes loaded.
+
