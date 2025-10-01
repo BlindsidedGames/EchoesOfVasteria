@@ -14,6 +14,7 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
         private readonly Dictionary<Skill, float> _taskResourceBonuses = new();
         private float _globalResourceBonus;
+        private float _cauldronTasteBonus;
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
         private static readonly System.Collections.Generic.IReadOnlyDictionary<TimelessEchoes.Upgrades.BaseStat, float> EmptyStatBonusMap = new System.Collections.Generic.Dictionary<TimelessEchoes.Upgrades.BaseStat, float>();
@@ -27,6 +28,7 @@ namespace TimelessEchoes.Skills
             _percentStatBonuses.Clear();
             _taskResourceBonuses.Clear();
             _globalResourceBonus = 0f;
+            _cauldronTasteBonus = 0f;
         }
 
         private SkillMilestoneSummary GetOrCreateSummary(Skill skill)
@@ -171,6 +173,16 @@ namespace TimelessEchoes.Skills
 
             _globalResourceBonus += percent;
         }
+
+        public void AddCauldronTasteBonus(float amount)
+        {
+            if (amount <= 0f)
+                return;
+
+            _cauldronTasteBonus += amount;
+        }
+
+        public float GetCauldronTasteBonus() => _cauldronTasteBonus;
 
         public float GetFlatStatBonus(BaseStat upgrade)
         {

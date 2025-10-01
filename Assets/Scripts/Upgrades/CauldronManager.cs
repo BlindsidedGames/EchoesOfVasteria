@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Quests;
+using TimelessEchoes.Skills;
 using TimelessEchoes.UI;
 using TimelessEchoes.Utilities;
 using UnityEngine;
@@ -402,7 +403,40 @@ namespace TimelessEchoes.Upgrades
         private double GetStewCostPerRoll()
         {
             var baseCost = config != null ? (double)config.stewPerRoll : 1d;
-            return Math.Max(0.0001d, baseCost);
+            var extra = GetCauldronExtraStewPerTaste();
+            return Math.Max(0.0001d, baseCost + extra);
+        }
+
+        private double GetCauldronExtraStewPerTaste()
+        {
+            var controller = SkillController.Instance;
+            if (controller == null)
+                return 0d;
+
+            var bonus = controller.Aggregator.GetCauldronTasteBonus();
+            return Math.Max(0d, (double)bonus);
+        }
+
+        private float GetTasteCardMultiplier()
+        {
+            var controller = SkillController.Instance;
+            if (controller == null)
+                return 1f;
+
+            var bonus = controller.Aggregator.GetCauldronTasteBonus();
+            return bonus > 0f ? 1f + bonus : 1f;
+        }
+
+        private static int ScaleCardCount(int baseCount, float cardMultiplier)
+        {
+            if (baseCount <= 0)
+                return 0;
+
+            if (cardMultiplier <= 1f)
+                return baseCount;
+
+            var scaled = Mathf.RoundToInt(baseCount * cardMultiplier);
+            return Math.Max(baseCount, scaled);
         }
 
         private bool HasStewForNextRoll()
@@ -475,10 +509,11 @@ namespace TimelessEchoes.Upgrades
             }
 
             Stew -= cost;
-            GainEvaXp(1); // 1 XP per roll (1 stew)
+            GainEvaXp(cost); // XP matches stew spent per taste
             sessionTastings++;
             if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
-            ResolveTasteOutcome();
+            var cardMultiplier = GetTasteCardMultiplier();
+            ResolveTasteOutcome(cardMultiplier);
             // Throttle stats UI updates to reduce canvas rebuilds
             if (ShouldEmitStatsNow())
             {
@@ -522,7 +557,7 @@ namespace TimelessEchoes.Upgrades
             Infinity
         }
 
-        private void ResolveTasteOutcome()
+        private void ResolveTasteOutcome(float cardMultiplier)
         {
             var lvl = EvaLevel;
             var eff = ComputeEffectiveWeights(lvl);
@@ -584,71 +619,72 @@ namespace TimelessEchoes.Upgrades
                     countAEFarming++;
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AEFarming++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Farming);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Farming, cardMultiplier);
                     break;
                 case RollType.AEFishing:
                     countAEFishing++;
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AEFishing++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Fishing);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Fishing, cardMultiplier);
                     break;
                 case RollType.AEMining:
                     countAEMining++;
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AEMining++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Mining);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Mining, cardMultiplier);
                     break;
                 case RollType.AEWoodcutting:
                     countAEWoodcutting++;
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AEWoodcutting++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Woodcutting);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Woodcutting, cardMultiplier);
                     break;
                 case RollType.AELooting:
                     countAECombat++; // session total remains under legacy AE; per-sub has its own counter below
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AELooting++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Looting);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Looting, cardMultiplier);
                     break;
                 case RollType.AECombat:
                     countAECombat++;
                     countAlterEcho++;
                     if (oracle != null) { oracle.saveData.CauldronTotals.AECombat++; oracle.saveData.CauldronTotals.AlterEcho++; }
-                    GrantRandomResourceCardFromGroup(AEResourceGroup.Combat);
+                    GrantRandomResourceCardFromGroup(AEResourceGroup.Combat, cardMultiplier);
                     break;
                 case RollType.Buff:
                     countBuffs++;
                     if (oracle != null) oracle.saveData.CauldronTotals.Buffs++;
-                    GrantRandomCards(1, onlyBuffs: true);
+                    GrantRandomCards(1, cardMultiplier, onlyBuffs: true);
                     break;
                 case RollType.Lowest:
                     countLowCards++;
                     if (oracle != null) oracle.saveData.CauldronTotals.LowCards++;
-                    GrantLowestCard(1);
+                    GrantLowestCard(1, cardMultiplier);
                     break;
                 case RollType.EvasX2:
                     countEvasBlessing++;
                     if (oracle != null) oracle.saveData.CauldronTotals.EvasBlessing++;
                     // Redirect to Infinity when all categories are maxed
-                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(2);
-                    else GrantRandomCards(2);
+                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(2, cardMultiplier);
+                    else GrantRandomCards(2, cardMultiplier);
                     break;
                 case RollType.VastX10:
                     countVastSurge++;
                     if (oracle != null) oracle.saveData.CauldronTotals.VastSurge++;
-                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(10);
-                    else GrantRandomCards(10);
+                    if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(10, cardMultiplier);
+                    else GrantRandomCards(10, cardMultiplier);
                     break;
                 case RollType.Infinity:
                     // Single Infinity gain
-                    GrantRandomInfinityCards(1);
+                    GrantRandomInfinityCards(1, cardMultiplier);
                     break;
             }
         }
 
-        private void GrantRandomCards(int count, bool onlyAlterEcho = false, bool onlyBuffs = false)
+        private void GrantRandomCards(int count, float cardMultiplier, bool onlyAlterEcho = false, bool onlyBuffs = false)
         {
-            for (var i = 0; i < count; i++)
+            int draws = ScaleCardCount(count, cardMultiplier);
+            for (var i = 0; i < draws; i++)
             {
                 var id = PickRandomCardId(onlyAlterEcho, onlyBuffs);
                 if (id == null) continue;
@@ -656,9 +692,10 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private void GrantRandomInfinityCards(int count)
+        private void GrantRandomInfinityCards(int count, float cardMultiplier)
         {
-            for (var i = 0; i < count; i++)
+            int draws = ScaleCardCount(count, cardMultiplier);
+            for (var i = 0; i < draws; i++)
             {
                 var id = PickRandomInfinityId();
                 if (id == null) return;
@@ -666,15 +703,20 @@ namespace TimelessEchoes.Upgrades
             }
         }
 
-        private void GrantRandomResourceCardFromGroup(AEResourceGroup group)
+        private void GrantRandomResourceCardFromGroup(AEResourceGroup group, float cardMultiplier)
         {
-            var id = PickRandomResourceCardIdByGroup(group);
-            if (id == null)
+            int draws = ScaleCardCount(1, cardMultiplier);
+            for (var i = 0; i < draws; i++)
             {
-                // Fallback to any resource
-                id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
+                var id = PickRandomResourceCardIdByGroup(group);
+                if (id == null)
+                {
+                    // Fallback to any resource
+                    id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
+                }
+                if (id != null)
+                    AddCardCount(id, 1);
             }
-            if (id != null) AddCardCount(id, 1);
         }
 
         private string PickRandomCardId(bool onlyAlterEcho, bool onlyBuffs)
@@ -697,9 +739,10 @@ namespace TimelessEchoes.Upgrades
             return poolInfinityCards[idx];
         }
 
-        private void GrantLowestCard(int count)
+        private void GrantLowestCard(int count, float cardMultiplier)
         {
-            for (var i = 0; i < count; i++)
+            int draws = ScaleCardCount(count, cardMultiplier);
+            for (var i = 0; i < draws; i++)
             {
                 var id = GetLowestCountCardId();
                 if (id == null) return;
