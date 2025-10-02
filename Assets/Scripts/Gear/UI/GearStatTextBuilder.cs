@@ -34,21 +34,30 @@ namespace TimelessEchoes.Gear.UI
 				: $"Quality {qualityValue}";
 			string qualityArrow;
 			if (current == null)
+			{
 				qualityArrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus);
+			}
 			else
 			{
-				var qualityDelta = craftedQuality - currentQuality;
-				qualityArrow = qualityDelta > 0.0001f
-					? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
-					: qualityDelta < -0.0001f
-						? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
-						: StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+				var currentQualityText = $"{currentQuality:0.#}%";
+				if (string.Equals(qualityValue, currentQualityText, StringComparison.Ordinal))
+				{
+					qualityArrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+				}
+				else
+				{
+					var qualityDelta = craftedQuality - currentQuality;
+					qualityArrow = qualityDelta > 0.0001f
+						? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
+						: qualityDelta < -0.0001f
+							? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
+							: StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+				}
 			}
 			var qualityPrefix = string.IsNullOrEmpty(qualityArrow) ? string.Empty : qualityArrow + " ";
 			lines.Add($"{qualityPrefix}{qualityText}");
 
 			var craftedMappings = new HashSet<HeroStatMapping>();
-			var currentMappings = new HashSet<HeroStatMapping>(currentByMapping.Keys);
 			var sortedAffixes = new List<GearAffix>(item.affixes);
 			sortedAffixes.Sort((x, y) => StatSortOrder.Compare(x?.stat != null ? x.stat.heroMapping : default, y?.stat != null ? y.stat.heroMapping : default));
 			foreach (var a in sortedAffixes)
@@ -58,17 +67,30 @@ namespace TimelessEchoes.Gear.UI
 				var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
 				var nameText = a.stat.GetName();
 
-				var cv = currentByMapping.TryGetValue(a.stat.heroMapping, out var cur) ? cur.value : 0f;
-				var diff = a.value - cv;
-				var arrow = diff > 0.0001f
-					? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
-					: diff < -0.0001f
-						? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
-						: StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+				var hasCurrent = currentByMapping.TryGetValue(a.stat.heroMapping, out var cur);
+				string arrow;
+				if (!hasCurrent)
+				{
+					arrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus);
+				}
+				else
+				{
+					var currentValueText = $"{CalcUtils.FormatNumber(cur.value)}{(cur.isPercent ? "%" : "")}";
+					if (string.Equals(valueText, currentValueText, StringComparison.Ordinal))
+					{
+						arrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+					}
+					else
+					{
+						var diff = a.value - cur.value;
+						arrow = diff > 0.0001f
+							? StatIconLookup.GetIconTag(StatIconLookup.StatKey.UpArrow)
+							: diff < -0.0001f
+								? StatIconLookup.GetIconTag(StatIconLookup.StatKey.DownArrow)
+								: StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
+					}
+				}
 				var arrowPrefix = string.IsNullOrEmpty(arrow) ? string.Empty : arrow + " ";
-
-				if (!currentMappings.Contains(a.stat.heroMapping))
-					arrowPrefix = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Plus) + " ";
 
 				if (!string.IsNullOrEmpty(iconTag))
 					lines.Add($"{arrowPrefix}{iconTag} {valueText}");
