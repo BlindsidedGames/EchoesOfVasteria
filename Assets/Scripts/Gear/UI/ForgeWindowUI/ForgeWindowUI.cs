@@ -24,6 +24,8 @@ namespace TimelessEchoes.Gear.UI
         [Header("UI References")] [SerializeField]
         private Button craftButton;
 
+        [SerializeField] private TMP_Text craftButtonText;
+
         [SerializeField] private TMP_Text resultText;
         [SerializeField] private TMP_Text resultTierText;
         [SerializeField] private Button replaceButton;
@@ -522,6 +524,12 @@ namespace TimelessEchoes.Gear.UI
 
         private void OnCraftClicked()
         {
+            if (isAutoCrafting)
+            {
+                StopAutoCrafting();
+                return;
+            }
+
             if (!CanCraft())
             {
                 var o = Blindsided.Oracle.oracle;
@@ -1192,8 +1200,18 @@ namespace TimelessEchoes.Gear.UI
                 if (baseline != null)
                     baselineSet = BuildAffixStatSet(baseline);
             }
+
+            var pendingAutoSalvage = lastCrafted != null;
             while (isAutoCrafting)
             {
+                // Auto-salvage the previous craft only if we are continuing the loop
+                if (pendingAutoSalvage && lastCrafted != null)
+                {
+                    SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
+                    lastCrafted = null;
+                    pendingAutoSalvage = false;
+                }
+
                 if (!CanCraft())
                 {
                     // Out of resources stop reason
@@ -1207,24 +1225,19 @@ namespace TimelessEchoes.Gear.UI
                     break;
                 }
 
-                // Auto-salvage previous craft before rolling a new one
-                if (lastCrafted != null)
-                {
-                    SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
-                    lastCrafted = null;
-                }
-
                 if (selectedCore == null || crafting == null)
                     break;
 
                 var coreSlot = GetSlotForCore(selectedCore);
                 var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-                lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
-                if (lastCrafted == null)
+                var craftedItem = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
+                if (craftedItem == null)
                 {
                     RefreshActionButtons();
                     break;
                 }
+
+                lastCrafted = craftedItem;
 
                 // Count autocraft craft
                 {
@@ -1293,9 +1306,7 @@ namespace TimelessEchoes.Gear.UI
                     break;
                 }
 
-                // Not an upgrade, salvage and continue
-                SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
-                lastCrafted = null;
+                pendingAutoSalvage = true;
                 RefreshActionButtons();
                 yield return wait;
             }
@@ -2361,7 +2372,8 @@ namespace TimelessEchoes.Gear.UI
         private void RefreshActionButtons()
         {
             var canCraft = CanCraft();
-            if (craftButton != null) craftButton.interactable = canCraft && !isAutoCrafting;
+            if (craftButton != null) craftButton.interactable = isAutoCrafting || canCraft;
+            if (craftButtonText != null) craftButtonText.text = isAutoCrafting ? "Stop" : "Craft";
             if (craftSection != null && craftSection.craftArrow != null)
             {
                 var arrowSprite = canCraft ? craftSection.validArrow : craftSection.invalidArrow;
@@ -2421,9 +2433,9 @@ namespace TimelessEchoes.Gear.UI
             var hasPending = HasPendingText();
             if (replaceButton != null) replaceButton.interactable = hasPending && !isAutoCrafting;
             // Auto-craft button toggles; interactable if we can craft or we are currently auto-crafting (to allow stopping)
-            if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = isAutoCrafting || canCraft;
+            if (craftUntilUpgradeButton != null) craftUntilUpgradeButton.interactable = !isAutoCrafting && canCraft;
             if (craftUntilUpgradeButtonText != null)
-                craftUntilUpgradeButtonText.text = isAutoCrafting ? "Stop" : "Craft Until Upgrade";
+                craftUntilUpgradeButtonText.text = "Craft Until Upgrade";
         }
         #endregion
     }

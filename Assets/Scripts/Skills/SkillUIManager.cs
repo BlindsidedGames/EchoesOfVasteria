@@ -353,6 +353,32 @@ namespace TimelessEchoes.Skills
                 return;
             }
 
+            var taskSpeedEntries = new List<(string SkillName, string Line)>();
+            var combatSkill = controller.CombatSkill;
+            foreach (var skill in skills)
+            {
+                if (skill == null || skill == combatSkill)
+                    continue;
+
+                float multiplier = controller.GetTaskSpeedMultiplier(skill);
+                float bonusPercent = (multiplier - 1f) * 100f;
+                if (bonusPercent <= 0.0001f)
+                    continue;
+
+                string skillLabel = ResolveSkillName(skill);
+                if (string.IsNullOrWhiteSpace(skillLabel))
+                {
+                    skillLabel = skill.name;
+                    if (string.IsNullOrWhiteSpace(skillLabel))
+                        skillLabel = "Skill";
+                }
+
+                taskSpeedEntries.Add((skillLabel, $"+{bonusPercent:0.#}% {skillLabel} Task Speed (From {skillLabel} lvl)"));
+            }
+
+            taskSpeedEntries.Sort((left, right) => string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase));
+            var taskSpeedLines = taskSpeedEntries.Select(entry => entry.Line).ToList();
+
             var totalContributions = new Dictionary<BaseStat, StatContribution>();
             foreach (var kvp in aggregator.EnumerateTotalFlatBonuses())
                 AccumulateStatContribution(totalContributions, kvp.Key, kvp.Value, 0f);
@@ -440,6 +466,8 @@ namespace TimelessEchoes.Skills
                 allLines.AddRange(statLines);
             if (resourceLines.Count > 0)
                 allLines.AddRange(resourceLines);
+            if (taskSpeedLines.Count > 0)
+                allLines.AddRange(taskSpeedLines);
             if (procLines.Count > 0)
                 allLines.AddRange(procLines);
             if (echoLines.Count > 0)
@@ -742,6 +770,7 @@ namespace TimelessEchoes.Skills
         }
     }
 }
+
 
 
 

@@ -1,3 +1,6 @@
+- Added per-skill task speed lines to the skills totals panel, excluding the combat skill bonus.
+- Added a first-run intro screen controller that gates closing for 10 seconds, toggles prompts, and persists completion via PlayerPrefs.
+- Reworked forge actions so the craft button becomes Stop during auto-crafting, pauses the auto-run button, and keeps the latest craft available for Replace after cancelling.
 - Ensured forge pending vs equipped arrows compare formatted values so identical stats display as equals.
 - Added a cauldron taste milestone bonus that spends extra stew each roll and multiplies card rewards accordingly.
 - Removed legacy Input Manager fallbacks from RunBreakdownManager so right-click detection always uses the new Input System without throwing InvalidOperationException.
@@ -25,4 +28,6 @@
 
 ### Removed
 - ForceEnglishLocale bootstrap script that enforced an English locale before scenes loaded.
+
+
 

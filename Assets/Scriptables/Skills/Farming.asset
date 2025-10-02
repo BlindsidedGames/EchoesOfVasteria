@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Farming
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -27,6 +27,6 @@ MonoBehaviour:
   xpLevelMultiplier: 1.5
   taskSpeedPerLevel: 0.01
   milestones:
-  - {fileID: 11400000, guid: d4a2fceeab9407d44b188ea2db0fff39, type: 2}
   - {fileID: 11400000, guid: d0b89c072df04d148bc06e1455c4ad01, type: 2}
   - {fileID: 11400000, guid: 44139a7ee8eb0ac49841d6c66ea8b876, type: 2}
+  - {fileID: 11400000, guid: d4a2fceeab9407d44b188ea2db0fff39, type: 2}
