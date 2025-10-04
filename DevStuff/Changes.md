@@ -1,3 +1,4 @@
+- Hid milestone activation toggles and active descriptions until the player unlocks active slots for a skill.
 - Added per-skill task speed lines to the skills totals panel, excluding the combat skill bonus.
 - Added a first-run intro screen controller that gates closing for 10 seconds, toggles prompts, and persists completion via PlayerPrefs.
 - Reworked forge actions so the craft button becomes Stop during auto-crafting, pauses the auto-run button, and keeps the latest craft available for Replace after cancelling.

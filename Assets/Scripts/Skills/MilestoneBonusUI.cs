@@ -121,6 +121,7 @@ namespace TimelessEchoes.Skills
             int tierIndex = state != null ? state.TierIndex : -1;
             bool unlocked = tierIndex >= 0;
             bool active = state != null && state.IsActive;
+            bool hasActiveSlots = controller != null && controller.TotalActiveSlots > 0;
 
             string title = definition.DisplayName;
             int nextTierLevel = definition.GetNextTierLevel(currentLevel);
@@ -151,14 +152,14 @@ namespace TimelessEchoes.Skills
                 }
                 else
                 {
-                    bool showPassivePrefix = controller != null && controller.TotalActiveSlots > 0;
+                    bool showPassivePrefix = hasActiveSlots && definition.HasActiveEffect;
                     refs.PassiveText.text = showPassivePrefix ? $"Passive: {passiveDesc}" : passiveDesc;
                 }
             }
 
             if (refs.ActiveText != null)
             {
-                bool canShowActive = unlocked && definition.HasActiveEffect;
+                bool canShowActive = unlocked && definition.HasActiveEffect && hasActiveSlots;
                 if (canShowActive)
                 {
                     string activeDesc = definition.GetActiveDescriptionForTier(displayTier, skill?.skillName);
@@ -196,7 +197,8 @@ namespace TimelessEchoes.Skills
             if (refs.ToggleButton != null)
             {
                 refs.ToggleButton.onClick.RemoveAllListeners();
-                bool canToggle = unlocked && definition.CanActivate && controller != null;
+                bool canToggle = unlocked && definition.CanActivate && controller != null && hasActiveSlots;
+                refs.ToggleButton.gameObject.SetActive(hasActiveSlots && unlocked && definition.CanActivate);
                 refs.ToggleButton.interactable = canToggle;
                 if (canToggle)
                     refs.ToggleButton.onClick.AddListener(() => HandleToggle(binding));
@@ -204,10 +206,11 @@ namespace TimelessEchoes.Skills
 
             if (refs.ToggleImage != null)
             {
-                if (!unlocked || !definition.CanActivate)
+                bool canDisplayToggle = hasActiveSlots && unlocked && definition.CanActivate;
+                if (!canDisplayToggle)
                 {
                     refs.ToggleImage.sprite = null;
-                    refs.ToggleImage.color = unlocked ? unlockedColor : lockedColor;
+                    refs.ToggleImage.color = unlocked && hasActiveSlots ? unlockedColor : lockedColor;
                     refs.ToggleImage.gameObject.SetActive(false);
                 }
                 else
