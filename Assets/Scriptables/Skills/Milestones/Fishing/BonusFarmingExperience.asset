@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c62c1a716d4ef94aba155a619445a08, type: 3}
+  m_Name: BonusFarmingExperience
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneDefinition
+  milestoneId: 8bf047c8022140c7bc8f895bf4b59e84
+  displayName: Bonus Farming XP
+  set: 0
+  setIcon: {fileID: 0}
+  canActivate: 1
+  passiveEffect: {fileID: 11400000, guid: e15d4a4d80d880a42b7497383a9d0346, type: 2}
+  activeEffect: {fileID: 11400000, guid: e15d4a4d80d880a42b7497383a9d0346, type: 2}
+  tierMode: 1
+  tiers: []
+  infiniteTier:
+    requiredLevel: 10
+    levelsPerIncrease: 10
+    passiveBaseValue: 0.1
+    passiveIncrement: 0.1
+    activeBaseValue: 0.25
+    activeIncrement: 0.25

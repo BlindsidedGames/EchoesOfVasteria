@@ -1,3 +1,7 @@
+- Added Android AAB build support to Build All and menu action to increment Android/iOS bundle versions.
+- Floating XP popups now reflect milestone experience bonuses by returning the applied XP from SkillController.
+- Added configurable milestone experience bonuses with aggregator/controller support, a reusable effect asset, and UI lines for global and per-skill XP.
+- Prevented the cauldron attention indicator and taskbar flash from firing before an auto-started session has actually run.
 - Hid milestone activation toggles and active descriptions until the player unlocks active slots for a skill.
 - Added per-skill task speed lines to the skills totals panel, excluding the combat skill bonus.
 - Added a first-run intro screen controller that gates closing for 10 seconds, toggles prompts, and persists completion via PlayerPrefs.
@@ -29,6 +33,7 @@
 
 ### Removed
 - ForceEnglishLocale bootstrap script that enforced an English locale before scenes loaded.
+
 
 
 

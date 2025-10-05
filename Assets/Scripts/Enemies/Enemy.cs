@@ -613,7 +613,7 @@ namespace TimelessEchoes.Enemies
             if (fromEcho)
                 amount *= EchoXpFraction;
 
-            controller?.AddExperience(skill, amount);
+            float appliedXp = controller != null ? controller.AddExperience(skill, amount) : amount;
 
             if (controller != null && !fromEcho)
             {
@@ -634,7 +634,7 @@ namespace TimelessEchoes.Enemies
                 }
             }
 
-            return amount;
+            return appliedXp;
         }
 
         private void OnDestroy()

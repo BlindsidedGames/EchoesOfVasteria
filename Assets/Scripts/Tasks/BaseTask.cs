@@ -199,8 +199,8 @@ namespace TimelessEchoes.Tasks
             if (echoPerformer)
                 amount *= EchoXpFraction;
 
-            controller?.AddExperience(associatedSkill, amount);
-            lastGrantedXp = amount;
+            float appliedXp = controller != null ? controller.AddExperience(associatedSkill, amount) : amount;
+            lastGrantedXp = appliedXp;
 
             if (controller != null && associatedSkill != null)
             {
@@ -219,7 +219,7 @@ namespace TimelessEchoes.Tasks
                     }
                 }
             }
-            return amount;
+            return appliedXp;
         }
 
 #if UNITY_EDITOR

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb19193380cf534392bb20245e28698, type: 3}
+  m_Name: ExperienceBonusEffectLogging
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneExperienceBonusEffectDefinition
+  applyToAllSkills: 0
+  overrideSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
+  skillDescriptionTemplate: Increases {0} experience gained by {1}.
+  globalDescriptionTemplate: Increases all skills experience gained by {0}.
+  percentageFormat: 0.#
+  fallbackSkillLabel: this skill

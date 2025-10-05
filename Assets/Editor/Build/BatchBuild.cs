@@ -18,18 +18,19 @@ namespace BuildTools
         // -buildPathLinux="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Linux"
         // -buildPathWindows="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Windows"
         // -buildPathMac="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Mac"
-        private const string DefaultLinuxDir = @"C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Linux";
-        private const string DefaultWindowsDir = @"C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Windows";
-        private const string DefaultMacDir = @"C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Mac";
+        private const string DefaultLinuxDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Linux";
+        private const string DefaultWindowsDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Windows";
+        private const string DefaultMacDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Mac";
+        private const string DefaultAndroidDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Android";
 
-        [MenuItem("Build/Build All (Linux+Windows IL2CPP, then Mac Mono)")]
+        [MenuItem("Build/Build All (Linux+Windows IL2CPP, Android AAB, then Mac Mono)")]
         public static void BuildAllFromMenu()
         {
             var productName = PlayerSettings.productName;
             var scenes = GetEnabledScenes();
 
             // Linux (IL2CPP)
-            if (IsTargetSupported(BuildTarget.StandaloneLinux64))
+            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
             {
                 var linuxAppPath = Path.Combine(GetBuildPath("buildPathLinux", DefaultLinuxDir), productName + ".x86_64");
                 EnsureDirectoryForLocation(linuxAppPath);
@@ -47,7 +48,7 @@ namespace BuildTools
             }
 
             // Windows (IL2CPP)
-            if (IsTargetSupported(BuildTarget.StandaloneWindows64))
+            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
             {
                 var windowsAppPath = Path.Combine(GetBuildPath("buildPathWindows", DefaultWindowsDir), productName + ".exe");
                 EnsureDirectoryForLocation(windowsAppPath);
@@ -64,6 +65,19 @@ namespace BuildTools
                 Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
             }
 
+            // Android (AAB, IL2CPP)
+            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
+                EnsureDirectoryForLocation(androidAppPath);
+                var androidReport = BuildAndroid(androidAppPath, scenes);
+                LogReport("Android (AAB IL2CPP)", androidReport);
+            }
+            else
+            {
+                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
+            }
+
             // macOS (Mono)
             TryBuildMacMono(productName, scenes);
         }
@@ -76,7 +90,7 @@ namespace BuildTools
             var scenes = GetEnabledScenes();
 
             // Linux (IL2CPP)
-            if (IsTargetSupported(BuildTarget.StandaloneLinux64))
+            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
             {
                 var linuxAppPath = Path.Combine(GetBuildPath("buildPathLinux", DefaultLinuxDir), productName + ".x86_64");
                 EnsureDirectoryForLocation(linuxAppPath);
@@ -93,7 +107,7 @@ namespace BuildTools
             }
 
             // Windows (IL2CPP)
-            if (IsTargetSupported(BuildTarget.StandaloneWindows64))
+            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
             {
                 var windowsAppPath = Path.Combine(GetBuildPath("buildPathWindows", DefaultWindowsDir), productName + ".exe");
                 EnsureDirectoryForLocation(windowsAppPath);
@@ -109,6 +123,18 @@ namespace BuildTools
                 Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
             }
 
+            // Android (AAB, IL2CPP)
+            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
+                EnsureDirectoryForLocation(androidAppPath);
+                success &= BuildAndroid(androidAppPath, scenes).summary.result == BuildResult.Succeeded;
+            }
+            else
+            {
+                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
+            }
+
             // macOS (Mono)
             success &= TryBuildMacMono(productName, scenes);
 
@@ -118,7 +144,7 @@ namespace BuildTools
         private static bool TryBuildMacMono(string productName, string[] scenes)
         {
             // Build macOS app with Mono if the target is supported in this Editor installation.
-            if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneOSX))
+            if (!IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneOSX))
             {
                 Debug.LogWarning("Skipping macOS build: Build target StandaloneOSX is not supported in this Editor installation.");
                 return true; // Not a failure; just skipped.
@@ -175,6 +201,39 @@ namespace BuildTools
             {
                 // Restore previous backend to leave the Editor in a stable state
                 PlayerSettings.SetScriptingBackend(namedTarget, previousBackend);
+            }
+        }
+
+        private static BuildReport BuildAndroid(string locationPathName, string[] scenes)
+        {
+            var target = BuildTarget.Android;
+            var group = BuildTargetGroup.Android;
+            var namedTarget = NamedBuildTarget.Android;
+
+            var previousBackend = PlayerSettings.GetScriptingBackend(namedTarget);
+            PlayerSettings.SetScriptingBackend(namedTarget, ScriptingImplementation.IL2CPP);
+
+            var previousAppBundle = EditorUserBuildSettings.buildAppBundle;
+            EditorUserBuildSettings.buildAppBundle = true;
+
+            EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
+
+            var buildPlayerOptions = new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = locationPathName,
+                target = target,
+                options = BuildOptions.None
+            };
+
+            try
+            {
+                return BuildPipeline.BuildPlayer(buildPlayerOptions);
+            }
+            finally
+            {
+                PlayerSettings.SetScriptingBackend(namedTarget, previousBackend);
+                EditorUserBuildSettings.buildAppBundle = previousAppBundle;
             }
         }
 
@@ -239,11 +298,10 @@ namespace BuildTools
             }
         }
 
-        private static bool IsTargetSupported(BuildTarget target)
+        private static bool IsTargetSupported(BuildTargetGroup group, BuildTarget target)
         {
-            return BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, target);
+            return BuildPipeline.IsBuildTargetSupported(group, target);
         }
     }
 }
-
 

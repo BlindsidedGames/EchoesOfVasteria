@@ -60,12 +60,15 @@ namespace TimelessEchoes.UI
         }
 
         private bool _cauldronStopHooked;
+        private bool _cauldronTastingStartedThisSession;
         private void HookCauldronStop()
         {
             if (_cauldronStopHooked) return;
             var mgr = CauldronManager.Instance;
             if (mgr != null)
             {
+                _cauldronTastingStartedThisSession = mgr.IsTasting;
+                mgr.OnTasteSessionStarted += OnCauldronStartedGlobal;
                 mgr.OnTasteSessionStopped += OnCauldronStoppedGlobal;
                 _cauldronStopHooked = true;
             }
@@ -76,16 +79,33 @@ namespace TimelessEchoes.UI
             if (!_cauldronStopHooked) return;
             var mgr = CauldronManager.Instance;
             if (mgr != null)
+            {
+                mgr.OnTasteSessionStarted -= OnCauldronStartedGlobal;
                 mgr.OnTasteSessionStopped -= OnCauldronStoppedGlobal;
+            }
             _cauldronStopHooked = false;
+        }
+
+        private void OnCauldronStartedGlobal()
+        {
+            _cauldronTastingStartedThisSession = true;
+            ClearCauldronAttention();
         }
 
         private void OnCauldronStoppedGlobal()
         {
+            if (!_cauldronTastingStartedThisSession) return;
+
+            _cauldronTastingStartedThisSession = false;
+
             if (!IsCauldronOpen)
             {
                 ShowCauldronAttention();
                 FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            }
+            else
+            {
+                ClearCauldronAttention();
             }
         }
 
@@ -167,6 +187,7 @@ namespace TimelessEchoes.UI
 
         private void OnEnable()
         {
+            _cauldronTastingStartedThisSession = false;
             EventHandler.OnLoadData += HandleLoadData;
             UITicker.Instance?.Subscribe(PollCloseAllWindows, 0.05f);
             HookCauldronStop();
@@ -177,6 +198,7 @@ namespace TimelessEchoes.UI
             EventHandler.OnLoadData -= HandleLoadData;
             UITicker.Instance?.Unsubscribe(PollCloseAllWindows);
             UnhookCauldronStop();
+            _cauldronTastingStartedThisSession = false;
         }
 
         private void Start()
@@ -548,3 +570,4 @@ namespace TimelessEchoes.UI
         }
     }
 }
+

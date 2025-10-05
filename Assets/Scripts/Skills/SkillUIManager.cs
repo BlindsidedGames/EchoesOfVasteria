@@ -388,12 +388,18 @@ namespace TimelessEchoes.Skills
             var statLines = BuildStatLines(totalContributions);
 
             float globalResourceBonus = aggregator.GetGlobalResourceBonus();
+            float globalExperienceBonus = aggregator.GetGlobalExperienceBonus();
 
             var resourceLines = new List<string>();
             if (globalResourceBonus > 0f)
                 resourceLines.Add($"{globalResourceBonus * 100f:0.#}% Bonus Resources (All Tasks)");
 
+            var experienceLines = new List<string>();
+            if (globalExperienceBonus > 0f)
+                experienceLines.Add($"{globalExperienceBonus * 100f:0.#}% Bonus Experience (All Skills)");
+
             var perSkillResourceEntries = new List<(string SkillName, string Line)>();
+            var perSkillExperienceEntries = new List<(string SkillName, string Line)>();
             var procEntries = new List<(int Order, string SkillName, string Line)>();
             var echoEntries = new List<(string SkillName, string Line)>();
 
@@ -424,6 +430,13 @@ namespace TimelessEchoes.Skills
                     perSkillResourceEntries.Add((skillLabel, $"{totalPercent * 100f:0.#}% Bonus Resources ({skillLabel})"));
                 }
 
+                if (summary.ExperienceBonusPercent > 0f)
+                {
+                    float totalPercent = summary.ExperienceBonusPercent + globalExperienceBonus;
+                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : "Associated Skill";
+                    perSkillExperienceEntries.Add((skillLabel, $"{totalPercent * 100f:0.#}% Bonus Experience ({skillLabel})"));
+                }
+
                 foreach (var entry in summary.SpawnEchoes)
                 {
                     if (entry.Chance <= 0f)
@@ -438,6 +451,10 @@ namespace TimelessEchoes.Skills
             perSkillResourceEntries.Sort((left, right) => string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase));
             foreach (var entry in perSkillResourceEntries)
                 resourceLines.Add(entry.Line);
+
+            perSkillExperienceEntries.Sort((left, right) => string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase));
+            foreach (var entry in perSkillExperienceEntries)
+                experienceLines.Add(entry.Line);
 
             procEntries.Sort((left, right) =>
             {
@@ -466,6 +483,8 @@ namespace TimelessEchoes.Skills
                 allLines.AddRange(statLines);
             if (resourceLines.Count > 0)
                 allLines.AddRange(resourceLines);
+            if (experienceLines.Count > 0)
+                allLines.AddRange(experienceLines);
             if (taskSpeedLines.Count > 0)
                 allLines.AddRange(taskSpeedLines);
             if (procLines.Count > 0)
@@ -504,6 +523,14 @@ namespace TimelessEchoes.Skills
                 if (controller != null && controller.Aggregator != null)
                     totalPercent += controller.Aggregator.GetGlobalResourceBonus();
                 lines.Add($"{totalPercent * 100f:0.#}% Bonus Resources");
+            }
+
+            if (summary.ExperienceBonusPercent > 0f)
+            {
+                float totalPercent = summary.ExperienceBonusPercent;
+                if (controller != null && controller.Aggregator != null)
+                    totalPercent += controller.Aggregator.GetGlobalExperienceBonus();
+                lines.Add($"{totalPercent * 100f:0.#}% Bonus Experience");
             }
 
             foreach (var entry in summary.SpawnEchoes)

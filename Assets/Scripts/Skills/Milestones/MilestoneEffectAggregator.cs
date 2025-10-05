@@ -13,7 +13,9 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<BaseStat, float> _flatStatBonuses = new();
         private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
         private readonly Dictionary<Skill, float> _taskResourceBonuses = new();
+        private readonly Dictionary<Skill, float> _skillExperienceBonuses = new();
         private float _globalResourceBonus;
+        private float _globalExperienceBonus;
         private float _cauldronTasteBonus;
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
@@ -27,7 +29,9 @@ namespace TimelessEchoes.Skills
             _flatStatBonuses.Clear();
             _percentStatBonuses.Clear();
             _taskResourceBonuses.Clear();
+            _skillExperienceBonuses.Clear();
             _globalResourceBonus = 0f;
+            _globalExperienceBonus = 0f;
             _cauldronTasteBonus = 0f;
         }
 
@@ -174,6 +178,34 @@ namespace TimelessEchoes.Skills
             _globalResourceBonus += percent;
         }
 
+        public void AddExperienceBonus(Skill skill, float percent)
+        {
+            if (percent == 0f)
+                return;
+
+            if (skill == null)
+            {
+                AddGlobalExperienceBonus(percent);
+                return;
+            }
+
+            if (_skillExperienceBonuses.ContainsKey(skill))
+                _skillExperienceBonuses[skill] += percent;
+            else
+                _skillExperienceBonuses.Add(skill, percent);
+
+            var summary = GetOrCreateSummary(skill);
+            summary.ExperienceBonusPercent += percent;
+        }
+
+        public void AddGlobalExperienceBonus(float percent)
+        {
+            if (percent == 0f)
+                return;
+
+            _globalExperienceBonus += percent;
+        }
+
         public void AddCauldronTasteBonus(float amount)
         {
             if (amount <= 0f)
@@ -209,6 +241,16 @@ namespace TimelessEchoes.Skills
         }
 
         public float GetGlobalResourceBonus() => _globalResourceBonus;
+
+        public float GetExperienceBonus(Skill skill)
+        {
+            float total = _globalExperienceBonus;
+            if (skill != null && _skillExperienceBonuses.TryGetValue(skill, out var bonus))
+                total += bonus;
+            return total;
+        }
+
+        public float GetGlobalExperienceBonus() => _globalExperienceBonus;
 
         public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<BaseStat, float>> EnumerateTotalFlatBonuses() => _flatStatBonuses;
 
@@ -255,6 +297,7 @@ namespace TimelessEchoes.Skills
         public float DoubleResourceChance;
         public float DoubleXpChance;
         public float ResourceBonusPercent;
+        public float ExperienceBonusPercent;
         public System.Collections.Generic.Dictionary<BaseStat, float> FlatStatBonuses = new();
         public System.Collections.Generic.Dictionary<BaseStat, float> PercentStatBonuses = new();
         public List<SpawnEchoEntry> SpawnEchoes = new();
@@ -266,6 +309,7 @@ namespace TimelessEchoes.Skills
             DoubleResourceChance = 0f;
             DoubleXpChance = 0f;
             ResourceBonusPercent = 0f;
+            ExperienceBonusPercent = 0f;
             if (FlatStatBonuses.Count > 0)
                 FlatStatBonuses.Clear();
             if (PercentStatBonuses.Count > 0)

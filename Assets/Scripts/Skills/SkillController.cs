@@ -131,10 +131,15 @@ namespace TimelessEchoes.Skills
             return true;
         }
 
-        public void AddExperience(Skill skill, float xpAmount)
+        public float AddExperience(Skill skill, float xpAmount)
         {
             if (skill == null || xpAmount <= 0f)
-                return;
+                return 0f;
+
+            float xpMultiplier = 1f + effectAggregator.GetExperienceBonus(skill);
+            if (xpMultiplier < 0f)
+                xpMultiplier = 0f;
+            var appliedXp = xpAmount * xpMultiplier;
 
             if (!progress.TryGetValue(skill, out var prog))
             {
@@ -142,7 +147,7 @@ namespace TimelessEchoes.Skills
                 progress[skill] = prog;
             }
 
-            prog.CurrentXP += xpAmount;
+            prog.CurrentXP += appliedXp;
 
             var currentLevel = prog.Level;
             float xpNeeded = GetXpForLevel(skill, currentLevel);
@@ -175,6 +180,7 @@ namespace TimelessEchoes.Skills
             }
 
             OnExperienceGained?.Invoke(skill, prog.CurrentXP, xpNeeded);
+            return appliedXp;
         }
 
         public bool IsMilestoneUnlocked(Skill skill, MilestoneDefinition definition)
@@ -257,6 +263,19 @@ namespace TimelessEchoes.Skills
             }
 
             float bonus = effectAggregator.GetResourceBonus(skill);
+            float multiplier = 1f + bonus;
+            return multiplier < 0f ? 0f : multiplier;
+        }
+
+        public float GetExperienceBonusMultiplier(Skill skill)
+        {
+            if (skill == null)
+            {
+                float globalOnly = 1f + effectAggregator.GetExperienceBonus(null);
+                return globalOnly < 0f ? 0f : globalOnly;
+            }
+
+            float bonus = effectAggregator.GetExperienceBonus(skill);
             float multiplier = 1f + bonus;
             return multiplier < 0f ? 0f : multiplier;
         }

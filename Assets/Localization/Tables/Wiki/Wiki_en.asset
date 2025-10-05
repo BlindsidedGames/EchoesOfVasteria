@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.3.1
+    m_Localized: v1.3.2
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -190,32 +190,31 @@ MonoBehaviour:
   - m_Id: 9824133185945600
     m_Localized: "Hey guys Dev here. \n\nIf you want your names in the enemy name
       random pool of names then please jump into discord and ask in the EoV Chat
-      :)\n\n\u2022 Halloween Map\n\u2022 Desert Map\n\u2022 Improved Forge\n  \u2022
-      Weapon slot becomes Gloves\n  \u2022 New Tab for Wren the combat expert where
-      you can craft various weapon and tool types that will change up your gameplay.\n 
-      \u2022 Forge Config screen to refine the stats you're looking for. This unlocks
-      more preferences as you level Ivan. EG search for 1 specific stat, then 2 then
-      3 then 4 then 5 eventually as you progress past certain levels.\n\u2022 Legendary
-      cards for the Cauldron as well as Improved capping for cards."
+      :)\n\n\u2022 I am considering moving task unlocks to the milestone system.
+      Quests would then provide skill xp instead of task unlocks! Let me know your
+      thoughts."
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Balance</b>\n\u2022 Slipstream upgrades have been nerfed. \n
-      \u2022 Base distance 20%<sprite=194>10%\n \u2022 Slipstream Quest 1 30%<sprite=194>20%\n
-      \u2022 Slipstream Quest 2 45%<sprite=194>25%\n \u2022 Slipstream Quest 3 60%<sprite=194>30%\n\u2022
-      Slipstream quest requirements are now easier.\n \u2022 Slipstream manual casts
-      25<sprite=194>10\n \u2022 Slipstream casts 100<sprite=194>50\n \u2022 Slipstream
-      casts 500<sprite=194>100\n<b>Changes</b>\n\u2022 Cauldron no longer has taste/stop
-      tasting buttons. Tasting will begin immediately on pressing Mix and will resume
-      when restarting the game automatically untill you run out of tastes.\n\u2022
-      Skills have been overhauled along with Milestones.\n\u2022 Crit damage has
-      been added to stat pool for gear, added as a new buff, and in milestones.\n\u2022
-      New map: Spooky!\n\u2022 You can now tap and hold, or right click a buff slot
-      during a run to enable/disable echo casting.\n\u2022 New seciton in the forge
-      stats that shows your total gear stats.\n\u2022 New run breakdown replaces
-      the old way of showing drops.\n<b>Minor changes</b>\n\u2022 The forge now shows
-      Quality with a new icon in the first line of pending/equipped.\n\u2022 In forge
-      stats the Quality section has been moved above the Salvage section.\n\u2022
+    m_Localized: "<b>Changes</b>\n\u2022 6 new experience milestones that should
+      help levelling all around.\n<b>Bugfixes</b>\n\u2022 Activate for milestones
+      no longer shows up before you've earned a slot.\n\u2022 The cauldron icon no
+      longer incorrectly shows on the townsfolk button.\n1.3.1\n<b>Balance</b>\n\u2022
+      Slipstream upgrades have been nerfed. \n \u2022 Base distance 20%<sprite=194>10%\n
+      \u2022 Slipstream Quest 1 30%<sprite=194>20%\n \u2022 Slipstream Quest 2 45%<sprite=194>25%\n
+      \u2022 Slipstream Quest 3 60%<sprite=194>30%\n\u2022 Slipstream quest requirements
+      are now easier.\n \u2022 Slipstream manual casts 25<sprite=194>10\n \u2022
+      Slipstream casts 100<sprite=194>50\n \u2022 Slipstream casts 500<sprite=194>100\n<b>Changes</b>\n\u2022
+      Cauldron no longer has taste/stop tasting buttons. Tasting will begin immediately
+      on pressing Mix and will resume when restarting the game automatically untill
+      you run out of tastes.\n\u2022 Skills have been overhauled along with Milestones.\n\u2022
+      Crit damage has been added to stat pool for gear, added as a new buff, and
+      in milestones.\n\u2022 New map: Spooky!\n\u2022 You can now tap and hold, or
+      right click a buff slot during a run to enable/disable echo casting.\n\u2022
+      New seciton in the forge stats that shows your total gear stats.\n\u2022 New
+      run breakdown replaces the old way of showing drops.\n<b>Minor changes</b>\n\u2022
+      The forge now shows Quality with a new icon in the first line of pending/equipped.\n\u2022
+      In forge stats the Quality section has been moved above the Salvage section.\n\u2022
       Name moved to the Rank tab in statistics.\n\u2022 Partial Russian Translation.\n\u2022
       New game introduction, placeholder till a proper tutorial can be designed.\n<b>Bugfixes</b>\n\u2022
       Caleb now properly relinquishes tasks when he engages enemies.\n\u2022 Fixed
@@ -227,7 +226,7 @@ MonoBehaviour:
       in summons the power of The Vast One pulling in your entire stockpile of that
       resource! It does however require at least two types of resources, for flavour
       reasons.\n\nOnce you toss ingredients in you will recieve an amount of stew
-      based on the rarity and count of the resources you selected. You can then taste
+      based on the rarity and count of the resources you selected. You then taste
       the stew to draw from the well of The Vast One's power. You will receive cards
       based on Eva's level which affects her weights as displayed on the Cauldron
       screen.\n\nEach card has a tier from 1-8 and levels up at the following thresholds.

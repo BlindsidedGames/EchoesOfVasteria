@@ -85,6 +85,7 @@ namespace TimelessEchoes.UI
 		private Resource selectedA;
 		private Resource selectedB;
 		private bool nextGreen = true;
+		private bool _tastingOccurredThisSession;
 		[SerializeField] private ResourceManager rm;
 
 		private void Awake()
@@ -122,6 +123,7 @@ namespace TimelessEchoes.UI
 			RefreshDrinkingTexts();
 			RefreshPieChart();
 			RefreshWeightsText();
+			_tastingOccurredThisSession = cauldron != null && cauldron.IsTasting;
 			// Clear any prior attention indicator when the window is reopened
 			if (cauldronAttentionObject != null)
 				cauldronAttentionObject.SetActive(false);
@@ -177,6 +179,7 @@ namespace TimelessEchoes.UI
 			EventHandler.OnLoadData -= OnSaveOrLoad;
 			if (weightsHoverObject != null)
 				weightsHoverObject.SetActive(false);
+			_tastingOccurredThisSession = false;
 		}
 
 		private void RefreshMixSlots()
@@ -512,6 +515,7 @@ namespace TimelessEchoes.UI
 
 		private void OnTasteSessionStarted()
 		{
+			_tastingOccurredThisSession = true;
 			// Reset cards gained counter in UI
 			if (drinking != null && drinking.cardsGainedThisSessionText != null)
 				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
@@ -523,6 +527,8 @@ namespace TimelessEchoes.UI
 		private void OnTasteSessionStopped()
 		{
 			UpdateTasteStopButtons();
+			if (!_tastingOccurredThisSession) return;
+			_tastingOccurredThisSession = false;
 			// Flash when cauldron tasting stops
 			FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
 		}
@@ -692,5 +698,6 @@ namespace TimelessEchoes.UI
 		}
 	}
 }
+
 
 
