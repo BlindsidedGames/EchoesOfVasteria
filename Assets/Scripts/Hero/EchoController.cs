@@ -15,16 +15,57 @@ namespace TimelessEchoes.Hero
     /// </summary>
     public class EchoController : HeroBase
     {
+        /// <summary>
+        ///     All active echoes that are allowed to participate in combat. Maintained automatically by
+        ///     <see cref="OnEnable" />/<see cref="OnDisable" /> and used by gameplay systems that need to iterate the
+        ///     currently available combat helpers.
+        /// </summary>
         public static readonly List<EchoController> CombatEchoes = new();
+
+        /// <summary>
+        ///     Master list of every active echo instance. This is primarily used by <see cref="EchoManager" /> to enforce
+        ///     spawn caps and by debugging helpers to inspect currently pooled echoes.
+        /// </summary>
         public static readonly List<EchoController> AllEchoes = new();
 
+        /// <summary>
+        ///     Skills the echo is allowed to execute. When empty the echo behaves like an "all purpose" helper and will pick
+        ///     from any available non-combat task.
+        /// </summary>
         public List<Skill> capableSkills = new();
+
+        /// <summary>
+        ///     Desired lifetime in seconds for the echo. See <see cref="remaining" /> for the runtime countdown state.
+        /// </summary>
         public float lifetime = 10f;
+
+        /// <summary>
+        ///     When true the echo focuses exclusively on combat behaviour and will not request tasks from the
+        ///     <see cref="TaskController" />.
+        /// </summary>
         public bool disableSkills;
+
+        /// <summary>
+        ///     Indicates whether the echo is allowed to engage in combat behaviour. This can be true even when
+        ///     <see cref="disableSkills" /> is true so that all-purpose echoes may both gather and fight.
+        /// </summary>
         public bool combatEnabled;
+
+        /// <summary>
+        ///     The classification supplied at spawn time. Determines which indicator set is active and is used for cap
+        ///     enforcement in <see cref="EchoManager" />.
+        /// </summary>
         public EchoType Type { get; private set; } = EchoType.All;
 
+        /// <summary>
+        ///     When true this instance is ignored by <see cref="EchoManager" /> cap enforcement until it expires naturally.
+        /// </summary>
         internal bool ExcludedFromCap { get; private set; }
+
+        /// <summary>
+        ///     Timestamp (Unity <see cref="Time.time" />) recorded when the echo was spawned. Used to identify the oldest
+        ///     echoes when trimming to cap.
+        /// </summary>
         internal float SpawnTimestamp => spawnTime;
 
         // Echo-only indicators/UI
@@ -44,7 +85,9 @@ namespace TimelessEchoes.Hero
 
         // Uses protected taskController from HeroBase; do not redeclare here
         private float remaining;
-        [SerializeField] private float taskAcquireGraceSeconds = 1.0f;
+        [SerializeField]
+        [Tooltip("Grace period after spawn where the echo will wait for tasks before expiring.")]
+        private float taskAcquireGraceSeconds = 1.0f;
         private float spawnTime;
         private float defaultAggroRange;
         private Sprite durationBaseSprite;
@@ -55,7 +98,10 @@ namespace TimelessEchoes.Hero
         private Health deferredEnemyHealth;
         private ITask deferredTask;
         private float deferStartTime;
-        [SerializeField] private float maxLingerOnExpiry = 0f; // 0 = disabled
+
+        [SerializeField]
+        [Tooltip("Optional maximum linger time (seconds) when the echo defers its expiration.")]
+        private float maxLingerOnExpiry = 0f; // 0 = disabled
 
         /// <summary>
         ///     Returns true once <see cref="Init" /> has completed.
@@ -64,6 +110,7 @@ namespace TimelessEchoes.Hero
 
         protected override bool IsEchoActor => true;
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
@@ -78,6 +125,7 @@ namespace TimelessEchoes.Hero
             defaultAggroRange = CombatAggroRange;
         }
 
+        /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -103,6 +151,7 @@ namespace TimelessEchoes.Hero
                 AssignTask();
         }
 
+        /// <inheritdoc />
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -115,8 +164,13 @@ namespace TimelessEchoes.Hero
         }
 
         /// <summary>
-        ///     Configure the echo after it is spawned.
+        ///     Fully configure the echo after being retrieved from the pool. This method is intentionally idempotent so that
+        ///     pooled instances can be re-used without leaving state behind.
         /// </summary>
+        /// <param name="skills">The collection of skills the echo should support. Null means unrestricted.</param>
+        /// <param name="duration">Desired lifetime in seconds. <see cref="float.PositiveInfinity" /> keeps the bar hidden.</param>
+        /// <param name="type">Behaviour archetype that determines UI, combat permissions, and caps.</param>
+        /// <param name="excludeFromCap">When true the echo will not count toward cap enforcement.</param>
         public void Init(IEnumerable<Skill> skills, float duration, EchoType type, bool excludeFromCap = false)
         {
             // Reset any deferred expiration state from prior pool use
@@ -176,6 +230,7 @@ namespace TimelessEchoes.Hero
                 AssignTask();
         }
 
+        /// <inheritdoc />
         protected override void Update()
         {
             base.Update();
@@ -289,6 +344,10 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        /// <summary>
+        ///     Try to extend the echo lifetime long enough to finish an in-progress action. Returns true when the echo should
+        ///     stay alive for a little longer.
+        /// </summary>
         private bool BeginExpirationDeferral()
         {
             var captured = false;
@@ -323,12 +382,20 @@ namespace TimelessEchoes.Hero
             return captured;
         }
 
+        /// <summary>
+        ///     Public wrapper so external systems can attempt to extend this echo's lifespan (e.g. when summoned by quests).
+        /// </summary>
+        /// <returns>True if the echo is already deferring or the deferral began successfully.</returns>
         public bool TryDeferExpiration()
         {
             if (expirationDeferred) return true;
             return BeginExpirationDeferral();
         }
 
+        /// <summary>
+        ///     Force the echo to expire on the next update tick. This still allows deferral logic to run so we avoid popping
+        ///     the echo mid-combat when possible.
+        /// </summary>
         internal void ForceExpireSoon()
         {
             ExcludedFromCap = true;
@@ -337,6 +404,7 @@ namespace TimelessEchoes.Hero
             remaining = 0f;
         }
 
+        /// <inheritdoc />
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -348,6 +416,9 @@ namespace TimelessEchoes.Hero
             CombatAggroRange = defaultAggroRange;
         }
 
+        /// <summary>
+        ///     Toggle indicator objects so that the player understands what role the echo will fulfil.
+        /// </summary>
         private void UpdateIndicators()
         {
             void SetActive(GameObject obj, bool state)
@@ -402,6 +473,9 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        /// <summary>
+        ///     Request work for the echo from the global <see cref="TaskController" /> based on the configured skills.
+        /// </summary>
         private void AssignTask()
         {
             if (taskCtrl == null)

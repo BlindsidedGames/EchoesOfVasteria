@@ -1,3 +1,4 @@
+- Documented hero echo scripts with XML summaries, parameter notes, and tooltips to clarify behaviour, pooling, and cap logic.
 - Added Android AAB build support to Build All and menu action to increment Android/iOS bundle versions.
 - Floating XP popups now reflect milestone experience bonuses by returning the applied XP from SkillController.
 - Added configurable milestone experience bonuses with aggregator/controller support, a reusable effect asset, and UI lines for global and per-skill XP.
