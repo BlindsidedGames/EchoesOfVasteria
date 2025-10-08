@@ -1,7 +1,7 @@
 
 # Starting "New" chats
 - Look through relevant code, and derive as much information related to the topic as you can.
-- Present your plan and wait for me to approve the plan before you make any changes.
+- Present your plan and wait for me to approve the plan before you make any changes, except where asked to add documentation.
 - Ask clarifying questions.
 - Take performance into account when making suggestions, if there is a more performant way to do something that will achieve the same result then that is preferred.
 
@@ -33,6 +33,15 @@ When making changes to this **2D** Unity project:
 - Default to proposing a single task that accomplishes the user's goal.
 - When identifying bugs, refactorings, or performance issues, provide a separate task for each distinct item.
 - If the user explicitly asks for a suggested task, limit the response to one task.
+
+## Documentation Standards
+
+- When documenting new scripts or refreshing existing documentation, match the concise, present-tense tone used in the README's system overviews.
+- Begin with a one-sentence overview that states what the script or system accomplishes in practice (e.g., "The HeroController uses the A* Pathfinding Project to navigate between tasks.").
+- Call out automation loops, cooldown toggles, and configuration points so future readers understand how the feature supports the broader gameplay lifecycle.
+- Whenever a script coordinates companion entities or AI-controlled allies, explain how they engage, follow, or defer to the player's actions.
+- Summarize public methods and properties with professional descriptions that clarify responsibilities, side effects, and notable dependencies.
+- Prefer short paragraphs and optional subheadings instead of long bullet lists, unless you are enumerating discrete configuration toggles or stat hooks.
 ## Project Structure Map
 
 ### Root
