@@ -48,13 +48,13 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 200
-    minX: 50
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
     dropRange: {x: 1, y: 2}
     weight: 150
-    minX: 150
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
   additionalLootChances:
