@@ -16,6 +16,8 @@ namespace References.UI
         [SerializeField] private Image setIcon;
         [SerializeField] private Image toggleImage;
         [SerializeField] private Button toggleButton;
+        [SerializeField] private GameObject taskImageObject;
+        [SerializeField] private Image taskImage;
 
         public TMP_Text NameText => nameText;
         public TMP_Text PassiveText => passiveText;
@@ -24,5 +26,7 @@ namespace References.UI
         public Image SetIcon => setIcon;
         public Image ToggleImage => toggleImage;
         public Button ToggleButton => toggleButton;
+        public GameObject TaskImageObject => taskImageObject;
+        public Image TaskImage => taskImage;
     }
 }
