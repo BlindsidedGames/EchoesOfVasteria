@@ -100,36 +100,7 @@ namespace TimelessEchoes.MapGeneration
         {
             generating = true;
             var old = segments.Dequeue();
-            chunkGenerator.ClearSegment(new Vector2Int(old.startX, 0), segmentSize);
-
-            // Reuse a cached list to avoid per-shift allocations
-            tmpRemovalList.Clear();
-            tmpRemovalList.AddRange(controller.TaskObjects);
-            for (var idx = 0; idx < tmpRemovalList.Count; idx++)
-            {
-                var obj = tmpRemovalList[idx];
-                if (obj == null) continue;
-                var t = obj.transform;
-                if (t != null && old.tasks != null && t.IsChildOf(old.tasks.transform))
-                    controller.RemoveTaskObject(obj);
-            }
-            tmpRemovalList.Clear();
-
-            // Release all children under the old roots back to pools, then release the roots
-            if (old.tasks != null)
-            {
-                var t = old.tasks.transform;
-                for (int i = t.childCount - 1; i >= 0; i--)
-                    Blindsided.Utilities.Pooling.PoolManager.Release(t.GetChild(i).gameObject);
-                Blindsided.Utilities.Pooling.PoolManager.Release(old.tasks);
-            }
-            if (old.decor != null)
-            {
-                var d = old.decor.transform;
-                for (int i = d.childCount - 1; i >= 0; i--)
-                    Blindsided.Utilities.Pooling.PoolManager.Release(d.GetChild(i).gameObject);
-                Blindsided.Utilities.Pooling.PoolManager.Release(old.decor);
-            }
+            ReleaseSegment(old);
 
             yield return StartCoroutine(CreateSegment());
 
@@ -178,6 +149,119 @@ namespace TimelessEchoes.MapGeneration
 
             segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot, decor = decorRoot });
             nextSegmentX += segmentSize.x;
+        }
+
+        private void ReleaseSegment(Segment seg)
+        {
+            if (seg == null)
+                return;
+
+            if (chunkGenerator != null)
+                chunkGenerator.ClearSegment(new Vector2Int(seg.startX, 0), segmentSize);
+
+            if (controller != null && seg.tasks != null)
+            {
+                tmpRemovalList.Clear();
+                tmpRemovalList.AddRange(controller.TaskObjects);
+                for (var idx = 0; idx < tmpRemovalList.Count; idx++)
+                {
+                    var obj = tmpRemovalList[idx];
+                    if (obj == null) continue;
+                    var t = obj.transform;
+                    if (t != null && t.IsChildOf(seg.tasks.transform))
+                        controller.RemoveTaskObject(obj);
+                }
+                tmpRemovalList.Clear();
+            }
+
+            if (seg.tasks != null)
+            {
+                var t = seg.tasks.transform;
+                for (int i = t.childCount - 1; i >= 0; i--)
+                    Blindsided.Utilities.Pooling.PoolManager.Release(t.GetChild(i).gameObject);
+                Blindsided.Utilities.Pooling.PoolManager.Release(seg.tasks);
+            }
+
+            if (seg.decor != null)
+            {
+                var d = seg.decor.transform;
+                for (int i = d.childCount - 1; i >= 0; i--)
+                    Blindsided.Utilities.Pooling.PoolManager.Release(d.GetChild(i).gameObject);
+                Blindsided.Utilities.Pooling.PoolManager.Release(seg.decor);
+            }
+        }
+
+        private void CreateSegmentImmediate(int startX)
+        {
+            var offset = new Vector2Int(startX, 0);
+            var decorRoot = Blindsided.Utilities.Pooling.PoolManager.GetNamed("SegmentDecor");
+            decorRoot.name = $"SegmentDecor_{offset.x}";
+            decorRoot.transform.SetParent(decorParent, false);
+            if (chunkGenerator != null)
+                chunkGenerator.GenerateSegment(offset, segmentSize, decorRoot.transform);
+
+            var tasksRoot = Blindsided.Utilities.Pooling.PoolManager.GetNamed("SegmentTasks");
+            tasksRoot.name = $"SegmentTasks_{offset.x}";
+            tasksRoot.transform.SetParent(segmentParent, false);
+
+            var minX = Mathf.Max(taskGenerator.MinX, offset.x);
+            var maxX = offset.x + segmentSize.x;
+            if (maxX > minX && taskGenerator != null)
+            {
+                taskGenerator.GenerateSegment(minX, maxX, tasksRoot.transform);
+                foreach (var task in taskGenerator.Controller.TaskObjects)
+                {
+                    if (task != null && task.transform.IsChildOf(tasksRoot.transform))
+                        chunkGenerator?.ClearDecorAtPosition(task.transform.position);
+                }
+            }
+
+            segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot, decor = decorRoot });
+        }
+
+        public void RebuildAround(float targetX)
+        {
+            if (controller == null || chunkGenerator == null || taskGenerator == null)
+                return;
+
+            StopAllCoroutines();
+            generating = true;
+
+            while (segments.Count > 0)
+            {
+                var seg = segments.Dequeue();
+                ReleaseSegment(seg);
+            }
+
+            controller.ResetTasks(preserveOrder: true);
+
+            var width = segmentSize.x;
+            if (width <= 0)
+            {
+                generating = false;
+                return;
+            }
+
+            var segmentIndex = Mathf.FloorToInt(targetX / width);
+            var firstStart = segmentIndex * width - width;
+            if (firstStart < 0)
+                firstStart = 0;
+
+            segments.Clear();
+            nextSegmentX = firstStart;
+
+            for (var i = 0; i < 3; i++)
+            {
+                CreateSegmentImmediate(nextSegmentX);
+                nextSegmentX += width;
+            }
+
+            controller.SelectEarliestTask();
+
+            gridInitialized = false;
+            MoveGraph();
+
+            generating = false;
         }
 
         private void MoveGraph()

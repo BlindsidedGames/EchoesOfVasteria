@@ -256,6 +256,7 @@ namespace TimelessEchoes
         private HeroController hero;
         private CinemachineCamera mapCamera;
         private TaskController taskController;
+        private SegmentedMapGenerator segmentedMapGenerator;
         private NpcObjectStateController npcObjectStateController;
         private LocationObjectStateController locationObjectStateController;
         private GameplayStatTracker statTracker;
@@ -272,8 +273,6 @@ namespace TimelessEchoes
         private float nextStatsUpdateTime;
 
         [SerializeField] private float startingDistance;
-        [SerializeField] private GameObject loadingOverlay;
-        [SerializeField] private float warpDuration = 1f;
 
         // Auto-restart on stall settings
         [TitleGroup("Run Stall Monitor")] [SerializeField]
@@ -592,6 +591,7 @@ namespace TimelessEchoes
             taskController = CurrentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
                 yield break;
+            segmentedMapGenerator = taskController.GetComponent<SegmentedMapGenerator>();
 
             hero = taskController.hero;
             if (hero != null)
@@ -672,8 +672,6 @@ namespace TimelessEchoes
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
-            yield return StartCoroutine(FastForwardStart());
-
             // Initialize distance and buff state immediately after restart to avoid 0% stalls
             if (statTracker != null && hero != null)
             {
@@ -695,55 +693,53 @@ namespace TimelessEchoes
                 stallMonitorCoroutine = StartCoroutine(MonitorRunStallRoutine());
         }
 
-        private IEnumerator FastForwardStart()
+        public float FastForwardHeroTo(float targetX, bool rebuildMap = true)
         {
             if (hero == null)
-                yield break;
+                return targetX;
 
             var playerInput = hero.GetComponent<PlayerInput>();
             if (playerInput != null)
                 playerInput.enabled = false;
             hero.SetActiveState(false);
-            if (loadingOverlay != null)
-                loadingOverlay.SetActive(true);
 
-            var startPos = hero.transform.position;
-            if (warpDuration > 0f)
+            if (rebuildMap)
             {
-                var speed = Mathf.Abs(startingDistance - startPos.x) / warpDuration;
-                var elapsed = 0f;
-                while (elapsed < warpDuration && !Mathf.Approximately(hero.transform.position.x, startingDistance))
-                {
-                    var pos = hero.transform.position;
-                    pos.x = Mathf.MoveTowards(pos.x, startingDistance, speed * Time.deltaTime);
-                    hero.transform.position = pos;
-                    elapsed += Time.deltaTime;
-                    yield return null;
-                }
+                if (segmentedMapGenerator == null && taskController != null)
+                    segmentedMapGenerator = taskController.GetComponent<SegmentedMapGenerator>();
+                segmentedMapGenerator?.RebuildAround(targetX);
             }
 
-            var finalPos = hero.transform.position;
-            finalPos.x = startingDistance;
-            hero.transform.position = finalPos;
+            var pos = hero.transform.position;
+            pos.x = targetX;
+            hero.transform.position = pos;
 
-            yield return null;
-
-            taskController?.RemoveTasksLeftOf(hero.transform.position.x);
-
-            var enemies = EnemyActivator.ActiveEnemies;
-            if (enemies != null)
-                for (var i = enemies.Count - 1; i >= 0; i--)
-                {
-                    var enemy = enemies[i];
-                    if (enemy != null && enemy.transform.position.x < hero.transform.position.x)
-                        Blindsided.Utilities.Pooling.PoolManager.Release(enemy.gameObject);
-                }
+            Physics2D.SyncTransforms();
 
             hero.SetActiveState(true);
             if (playerInput != null)
                 playerInput.enabled = true;
-            if (loadingOverlay != null)
-                loadingOverlay.SetActive(false);
+
+            if (mapCamera != null)
+            {
+                var camPos = hero.transform.position;
+                camPos += mapCamera.transform.rotation * Vector3.forward * -10f;
+                mapCamera.ForceCameraPosition(camPos, mapCamera.transform.rotation);
+            }
+
+            taskController?.SelectEarliestTask();
+
+            var tracker = statTracker != null ? statTracker :
+                GameplayStatTracker.Instance ?? FindFirstObjectByType<GameplayStatTracker>();
+            if (tracker != null)
+                tracker.RecordHeroPosition(hero.transform.position);
+
+            BuffManager.Instance?.UpdateDistance(tracker != null ? tracker.CurrentRunDistance : hero.transform.position.x);
+#if !DISABLESTEAMWORKS
+            RichPresenceManager.Instance?.UpdateDistance(tracker != null ? tracker.CurrentRunDistance : hero.transform.position.x);
+#endif
+
+            return hero.transform.position.x;
         }
 
         private void OnHeroDeath()
@@ -1114,6 +1110,8 @@ namespace TimelessEchoes
 
                 Destroy(CurrentMap); // safe to destroy AstarPath now
                 CurrentMap = null;
+                segmentedMapGenerator = null;
+                taskController = null;
             }
         }
 

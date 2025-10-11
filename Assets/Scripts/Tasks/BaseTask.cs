@@ -176,9 +176,7 @@ namespace TimelessEchoes.Tasks
         protected bool ShouldInstantComplete()
         {
             var controller = SkillController.Instance;
-            bool milestone = controller && controller.RollForProc(associatedSkill, MilestoneProcType.InstantTask);
-            bool buff = TimelessEchoes.Buffs.BuffManager.Instance != null && TimelessEchoes.Buffs.BuffManager.Instance.InstantTaskBuffActive;
-            return milestone || buff;
+            return controller && controller.RollForProc(associatedSkill, MilestoneProcType.InstantTask);
         }
 
         protected float GrantCompletionXP()

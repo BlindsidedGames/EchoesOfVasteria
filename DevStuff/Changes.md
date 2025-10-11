@@ -1,3 +1,4 @@
+- Reworked Slipstream to instantly rebuild the map at the destination, teleport the hero, and removed the run-start warp in favour of manual travel control.
 - Scoped the save-slot deletion PlayerPrefs keys to beta folders so removing a beta file no longer flags live saves.
 - Taught the save system to route beta builds through `BetaSave1-3` directories via Oracle so live and beta slots stay isolated.
 - Removed Android from the Build All editor tool so it now targets only Linux, Windows, and macOS desktop builds.

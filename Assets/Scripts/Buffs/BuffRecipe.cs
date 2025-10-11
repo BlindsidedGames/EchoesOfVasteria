@@ -178,7 +178,7 @@ namespace TimelessEchoes.Buffs
                         duration += up.durationDelta;
                 }
 
-                // If this buff uses distance-percent duration, allow InstantTasks additional effects
+                // If this buff uses distance-percent duration, allow fast-forward additional effects
                 // from completed upgrades to extend the distance fraction additively.
                 if (durationType == BuffDurationType.DistancePercent)
                 {
@@ -191,7 +191,7 @@ namespace TimelessEchoes.Buffs
                             continue;
                         foreach (var eff in up.additionalEffects)
                         {
-                            if (eff.type == BuffEffectType.InstantTasks && eff.value > 0f)
+                            if (eff.type == BuffEffectType.FastForwardPercent && eff.value > 0f)
                                 extra += eff.value;
                         }
                     }
@@ -279,7 +279,7 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.HealthRegenPercent => $"Health Regen +{eff.value}%",
                 BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
                 BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
-                BuffEffectType.InstantTasks => "Tasks complete instantly",
+                BuffEffectType.FastForwardPercent => $"Fast forward to {Mathf.RoundToInt(eff.value * 100f)}% of longest run",
                 // ResourceMultiplier represents percent gain: use +X% text
                 BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",

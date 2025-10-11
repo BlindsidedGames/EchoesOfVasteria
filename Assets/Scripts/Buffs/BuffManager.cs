@@ -67,18 +67,6 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        public bool InstantTaskBuffActive
-        {
-            get
-            {
-                foreach (var b in activeBuffs)
-                    foreach (var eff in b.effects)
-                        if (eff.type == BuffEffectType.InstantTasks && eff.value > 0f)
-                            return true;
-                return false;
-            }
-        }
-
         public float ResourceGainMultiplier
         {
             get
@@ -283,6 +271,17 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+
+            var hasFastForwardEffect = buff.effects.Exists(e =>
+                e.type == BuffEffectType.FastForwardPercent && e.value > 0f);
+            if (hasFastForwardEffect)
+            {
+                var targetDistance = buff.expireAtDistance;
+                if (float.IsNaN(targetDistance) || float.IsInfinity(targetDistance) || targetDistance <= 0f)
+                    targetDistance = tracker != null ? tracker.CurrentRunDistance : 0f;
+
+                StartCoroutine(ExecuteFastForward(buff, targetDistance));
+            }
 
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                 TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
@@ -661,6 +660,67 @@ namespace TimelessEchoes.Buffs
                 TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+        }
+
+        private IEnumerator ExecuteFastForward(ActiveBuff buff, float targetDistance)
+        {
+            if (buff == null || buff.recipe == null)
+                yield break;
+
+            var gameManager = TimelessEchoes.GameManager.Instance;
+            if (gameManager == null)
+            {
+                ExpireFastForwardBuff(buff, targetDistance);
+                yield break;
+            }
+
+            var tracker = GameplayStatTracker.Instance ??
+                          FindFirstObjectByType<GameplayStatTracker>();
+            if (tracker != null)
+            {
+                var maxRunDistance = tracker.MaxRunDistance;
+                if (maxRunDistance > 0f && !float.IsInfinity(maxRunDistance))
+                    targetDistance = Mathf.Min(targetDistance, maxRunDistance);
+            }
+
+            var hero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+            if (hero != null)
+            {
+                var heroX = hero.transform.position.x;
+                if (targetDistance <= heroX + 0.01f)
+                {
+                    tracker?.RecordHeroPosition(hero.transform.position);
+                    ExpireFastForwardBuff(buff, heroX);
+                    yield break;
+                }
+            }
+
+            if (targetDistance <= 0f || float.IsInfinity(targetDistance))
+            {
+                var currentHero = HeroController.Instance ?? FindFirstObjectByType<HeroController>();
+                var heroX = currentHero != null ? currentHero.transform.position.x : targetDistance;
+                ExpireFastForwardBuff(buff, heroX);
+                yield break;
+            }
+
+            var finalDistance = gameManager.FastForwardHeroTo(targetDistance);
+            yield return null;
+            ExpireFastForwardBuff(buff, finalDistance);
+        }
+
+        private void ExpireFastForwardBuff(ActiveBuff buff, float heroX)
+        {
+            if (buff == null)
+                return;
+
+            buff.remaining = 0f;
+
+            var index = activeBuffs.IndexOf(buff);
+            if (index >= 0)
+                RemoveBuffAt(index, true);
+
+            if (!float.IsNaN(heroX) && !float.IsInfinity(heroX))
+                UpdateDistance(heroX);
         }
 
         private void DestroyEchoes(ActiveBuff buff)

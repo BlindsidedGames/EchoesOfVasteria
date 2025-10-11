@@ -147,7 +147,7 @@ namespace TimelessEchoes.Buffs
                         {
                             if (!distanceOk)
                             {
-                                ui.DurationText.text = "Too Far";
+                                ui.DurationText.text = "Jumped";
                                 if (ui.RadialFillImage != null)
                                     ui.RadialFillImage.fillAmount = 0f;
                             }
@@ -183,7 +183,7 @@ namespace TimelessEchoes.Buffs
                         // Removed ExtraDistancePercent UI handling
                         else if (!distanceOk)
                         {
-                            ui.DurationText.text = "Too Far";
+                            ui.DurationText.text = "Jumped";
                             if (ui.RadialFillImage != null)
                                 ui.RadialFillImage.fillAmount = 0f;
                         }

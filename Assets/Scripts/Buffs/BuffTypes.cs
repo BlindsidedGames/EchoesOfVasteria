@@ -14,7 +14,7 @@ namespace TimelessEchoes.Buffs
         HealthRegenPercent,
         MaxDistancePercent,
         MaxDistanceIncrease,
-        InstantTasks,
+        FastForwardPercent,
         ResourceMultiplier,
         CritChancePercent,
         CritDamagePercent
