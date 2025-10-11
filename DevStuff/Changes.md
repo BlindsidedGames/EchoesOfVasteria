@@ -1,3 +1,4 @@
+- Removed Android from the Build All editor tool so it now targets only Linux, Windows, and macOS desktop builds.
 - Added fishing, logging, looting, and mining milestone unlock assets plus task unlock effects so every gathering task follows the infinite-tier unlock model.
 - Migrated task unlocks to milestone-controlled weights with a dedicated task unlock effect, aggregator support, and milestone UI icons.
 - Updated AGENTS guidelines with a documentation exception for plan approvals and refreshed the documentation standards to emphasise concise, professional summaries without referencing specific subsystems.
