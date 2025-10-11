@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c62c1a716d4ef94aba155a619445a08, type: 3}
+  m_Name: Unlock Idle Ore
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneDefinition
+  milestoneId: d795b57955fa4f96b9667d0432fe3176
+  displayName: Idle Ore
+  set: 0
+  setIcon: {fileID: 0}
+  canActivate: 1
+  passiveEffect: {fileID: 11400000, guid: 32a0999e7a93d924c89146064428956e, type: 2}
+  activeEffect: {fileID: 11400000, guid: 32a0999e7a93d924c89146064428956e, type: 2}
+  tierMode: 1
+  tiers:
+  - requiredLevel: 1
+    passiveValue: 1
+    activeValue: 2
+  infiniteTier:
+    requiredLevel: 400
+    levelsPerIncrease: 5
+    passiveBaseValue: 1
+    passiveIncrement: 0
+    activeBaseValue: 1
+    activeIncrement: 1

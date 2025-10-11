@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Golden Chest
   m_EditorClassIdentifier: 
-  taskName: Golden Chest
+  taskName: Dlog Chest
   taskID: 48
   taskIcon: {fileID: -2238842246251146030, guid: 337426889e46c764cb0e793986b7ef37, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 7
+  unlockSkill: {fileID: 0}
+  unlockSkillLevel: 1
   minX: 0
   maxX: Infinity
-  requiredQuest: {fileID: 0}
   taskDuration: 1.7
   sfxInterval: 0
   taskPrefab: {fileID: 2897011531704098943, guid: 589ff2ff6c171fa4f887283021d778ad, type: 3}
@@ -54,36 +55,6 @@ MonoBehaviour:
     dropRange: {x: 1, y: 2}
     weight: 150
     minX: 150
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 100
-    minX: 250
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 50
-    minX: 300
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 25
-    minX: 500
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 10
-    minX: 600
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 4
-    minX: 750
     maxX: Infinity
     requiredQuest: {fileID: 0}
   additionalLootChances:
