@@ -17,9 +17,10 @@ MonoBehaviour:
   taskIcon: {fileID: -6043950617988251759, guid: c79f924a676f900408ab47fe98ae9935, type: 3}
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   xpForCompletion: 10
-  minX: 100
-  maxX: 2500
-  requiredQuest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+  unlockSkill: {fileID: 0}
+  unlockSkillLevel: 1
+  minX: 0
+  maxX: Infinity
   taskDuration: 6
   sfxInterval: 0.7
   taskPrefab: {fileID: 5366876333383290996, guid: 5e3f2a6261612014fb003c6fe90050e5, type: 3}
