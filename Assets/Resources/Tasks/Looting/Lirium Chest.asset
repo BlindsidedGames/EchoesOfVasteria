@@ -17,9 +17,10 @@ MonoBehaviour:
   taskIcon: {fileID: 931018621, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 15
+  unlockSkill: {fileID: 0}
+  unlockSkillLevel: 1
   minX: 250
   maxX: Infinity
-  requiredQuest: {fileID: 0}
   taskDuration: 2.4
   sfxInterval: 0
   taskPrefab: {fileID: 2897011531704098943, guid: dd69f86be50ea0f418c512ff54de5060, type: 3}
@@ -66,24 +67,6 @@ MonoBehaviour:
     dropRange: {x: 1, y: 2}
     weight: 100
     minX: 300
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 70
-    minX: 500
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 30
-    minX: 600
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
-  - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
-    dropRange: {x: 1, y: 1}
-    weight: 12
-    minX: 750
     maxX: Infinity
     requiredQuest: {fileID: 0}
   additionalLootChances:

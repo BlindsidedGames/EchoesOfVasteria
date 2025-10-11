@@ -21,9 +21,8 @@ namespace BuildTools
         private const string DefaultLinuxDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Linux";
         private const string DefaultWindowsDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Windows";
         private const string DefaultMacDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Mac";
-        private const string DefaultAndroidDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Android";
 
-        [MenuItem("Build/Build All (Linux+Windows IL2CPP, Android AAB, then Mac Mono)")]
+        [MenuItem("Build/Build All (Linux+Windows IL2CPP, then Mac Mono)")]
         public static void BuildAllFromMenu()
         {
             var productName = PlayerSettings.productName;
@@ -63,19 +62,6 @@ namespace BuildTools
             else
             {
                 Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
-            }
-
-            // Android (AAB, IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
-            {
-                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
-                EnsureDirectoryForLocation(androidAppPath);
-                var androidReport = BuildAndroid(androidAppPath, scenes);
-                LogReport("Android (AAB IL2CPP)", androidReport);
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
             }
 
             // macOS (Mono)
@@ -121,18 +107,6 @@ namespace BuildTools
             else
             {
                 Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
-            }
-
-            // Android (AAB, IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
-            {
-                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
-                EnsureDirectoryForLocation(androidAppPath);
-                success &= BuildAndroid(androidAppPath, scenes).summary.result == BuildResult.Succeeded;
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
             }
 
             // macOS (Mono)
@@ -204,39 +178,6 @@ namespace BuildTools
             }
         }
 
-        private static BuildReport BuildAndroid(string locationPathName, string[] scenes)
-        {
-            var target = BuildTarget.Android;
-            var group = BuildTargetGroup.Android;
-            var namedTarget = NamedBuildTarget.Android;
-
-            var previousBackend = PlayerSettings.GetScriptingBackend(namedTarget);
-            PlayerSettings.SetScriptingBackend(namedTarget, ScriptingImplementation.IL2CPP);
-
-            var previousAppBundle = EditorUserBuildSettings.buildAppBundle;
-            EditorUserBuildSettings.buildAppBundle = true;
-
-            EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
-
-            var buildPlayerOptions = new BuildPlayerOptions
-            {
-                scenes = scenes,
-                locationPathName = locationPathName,
-                target = target,
-                options = BuildOptions.None
-            };
-
-            try
-            {
-                return BuildPipeline.BuildPlayer(buildPlayerOptions);
-            }
-            finally
-            {
-                PlayerSettings.SetScriptingBackend(namedTarget, previousBackend);
-                EditorUserBuildSettings.buildAppBundle = previousAppBundle;
-            }
-        }
-
         private static string[] GetEnabledScenes()
         {
             var enabledScenes = EditorBuildSettings.scenes
@@ -304,4 +245,3 @@ namespace BuildTools
         }
     }
 }
-
