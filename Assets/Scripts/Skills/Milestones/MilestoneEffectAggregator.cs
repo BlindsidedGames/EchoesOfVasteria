@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
+using UnityEngine;
 
 namespace TimelessEchoes.Skills
 {
@@ -14,6 +16,7 @@ namespace TimelessEchoes.Skills
         private readonly Dictionary<BaseStat, float> _percentStatBonuses = new();
         private readonly Dictionary<Skill, float> _taskResourceBonuses = new();
         private readonly Dictionary<Skill, float> _skillExperienceBonuses = new();
+        private readonly Dictionary<TaskData, TaskUnlockSummary> _taskUnlocks = new();
         private float _globalResourceBonus;
         private float _globalExperienceBonus;
         private float _cauldronTasteBonus;
@@ -33,6 +36,7 @@ namespace TimelessEchoes.Skills
             _globalResourceBonus = 0f;
             _globalExperienceBonus = 0f;
             _cauldronTasteBonus = 0f;
+            _taskUnlocks.Clear();
         }
 
         private SkillMilestoneSummary GetOrCreateSummary(Skill skill)
@@ -288,6 +292,73 @@ namespace TimelessEchoes.Skills
 
         public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Skill, SkillMilestoneSummary>> EnumerateSkillSummaries() => _skillSummaries;
 
+        public void RegisterTaskUnlock(TaskData task, float weight, MilestoneEffectSource source)
+        {
+            if (task == null || weight <= 0f)
+                return;
+
+            if (!_taskUnlocks.TryGetValue(task, out var summary))
+            {
+                summary = new TaskUnlockSummary();
+                _taskUnlocks.Add(task, summary);
+            }
+
+            summary.Register(source, weight);
+        }
+
+        public bool IsTaskUnlocked(TaskData task)
+        {
+            if (task == null)
+                return false;
+
+            return _taskUnlocks.TryGetValue(task, out var summary) && summary.IsUnlocked;
+        }
+
+        public float GetTaskWeight(TaskData task)
+        {
+            if (task == null)
+                return 0f;
+
+            return _taskUnlocks.TryGetValue(task, out var summary) ? Mathf.Max(0f, summary.GetEffectiveWeight()) : 0f;
+        }
+
+        public System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TaskData, TaskUnlockSummary>> EnumerateTaskUnlocks() => _taskUnlocks;
+
+    }
+
+    public sealed class TaskUnlockSummary
+    {
+        public bool HasPassive { get; private set; }
+        public bool HasActive { get; private set; }
+        public float PassiveWeight { get; private set; }
+        public float ActiveWeight { get; private set; }
+
+        internal void Register(MilestoneEffectSource source, float weight)
+        {
+            if (weight <= 0f)
+                return;
+
+            switch (source)
+            {
+                case MilestoneEffectSource.Active:
+                    HasActive = true;
+                    ActiveWeight = Mathf.Max(ActiveWeight, weight);
+                    break;
+                case MilestoneEffectSource.Passive:
+                case MilestoneEffectSource.SetThreePiece:
+                case MilestoneEffectSource.SetSixPiece:
+                    HasPassive = true;
+                    PassiveWeight = Mathf.Max(PassiveWeight, weight);
+                    break;
+            }
+        }
+
+        public bool IsUnlocked => HasPassive || HasActive;
+
+        public float GetEffectiveWeight()
+        {
+            return Mathf.Max(ActiveWeight, PassiveWeight);
+        }
     }
 
     public sealed class SkillMilestoneSummary

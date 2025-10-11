@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260f69b669e946740abc6798e32029af, type: 3}
+  m_Name: Pepper
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Skills.MilestoneTaskUnlockEffectDefinition
+  tasks:
+  - task: {fileID: 11400000, guid: 62658544c0614a5490f65bb405af7397, type: 2}
+    weightMultiplier: 1
+  passiveDescriptionTemplate: Unlocks {0} tasks (weight {1}).
+  activeDescriptionTemplate: Sets spawn weight for {0} tasks to {1} while active.
+  weightFormat: 0.##

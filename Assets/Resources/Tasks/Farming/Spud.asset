@@ -17,9 +17,10 @@ MonoBehaviour:
   taskIcon: {fileID: 166006926289291715, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
   associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
   xpForCompletion: 5
-  minX: 150
-  maxX: 1200
-  requiredQuest: {fileID: 11400000, guid: ba841e2bed264c8bb9226481219ced25, type: 2}
+  unlockSkill: {fileID: 0}
+  unlockSkillLevel: 1
+  minX: 0
+  maxX: 0
   taskDuration: 3.94
   sfxInterval: 0
   taskPrefab: {fileID: 313524833436730888, guid: 411e47e548724af586805834b38f028a, type: 3}
@@ -32,10 +33,11 @@ MonoBehaviour:
   resourceDrops:
   - resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}
     dropRange: {x: 1, y: 5}
-    dropChance: 1
-    minX: 150
+    weight: 1
+    minX: 0
     maxX: Infinity
     requiredQuest: {fileID: 0}
+  additionalLootChances: []
   resetProgressOnInterrupt: 0
   persistent:
     totalTimesCompleted: 0

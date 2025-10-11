@@ -1,3 +1,4 @@
+- Migrated task unlocks to milestone-controlled weights with a dedicated task unlock effect, aggregator support, and milestone UI icons.
 - Updated AGENTS guidelines with a documentation exception for plan approvals and refreshed the documentation standards to emphasise concise, professional summaries without referencing specific subsystems.
 - Documented hero echo scripts with XML summaries, parameter notes, and tooltips to clarify behaviour, pooling, and cap logic.
 - Added Android AAB build support to Build All and menu action to increment Android/iOS bundle versions.

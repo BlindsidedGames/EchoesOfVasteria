@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Blindsided.Utilities;
-using TimelessEchoes.Skills;
-using TimelessEchoes.Upgrades;
-using TimelessEchoes.Quests;
-using TimelessEchoes.MapGeneration;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Blindsided.Utilities;
+using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Upgrades;
 
 namespace TimelessEchoes.Tasks
 {
@@ -24,14 +23,19 @@ namespace TimelessEchoes.Tasks
         public Skill associatedSkill;
         [TitleGroup("General")]
         public float xpForCompletion;
+        [TitleGroup("General")]
+        [Tooltip("Skill progression that unlocks this task. Falls back to Associated Skill when unset.")]
+        [SerializeField] private Skill unlockSkill;
+        [TitleGroup("General")]
+        [MinValue(1)]
+        [Tooltip("Required level in the unlock skill before any milestone can grant this task.")]
+        [SerializeField] private int unlockSkillLevel = 1;
         [TitleGroup("Spawn Range")]
         [LabelWidth(70)]
         [MinValue(0f)]
         public float minX;
         [TitleGroup("Spawn Range")]
         public float maxX = float.PositiveInfinity;
-        [TitleGroup("General")]
-        public QuestData requiredQuest;
         [TitleGroup("General")]
         public float taskDuration;
         [TitleGroup("General")]
@@ -44,7 +48,7 @@ namespace TimelessEchoes.Tasks
 
         [TitleGroup("General")]
         [MinValue(0)]
-        public float weight = 1f;
+        [SerializeField] private float weight = 1f;
 
         // Terrains this task may spawn on.
         [TitleGroup("General")]
@@ -72,14 +76,26 @@ namespace TimelessEchoes.Tasks
         [HideInInspector]
         public Persistent persistent = new();
 
+        public Skill UnlockSkill => unlockSkill != null ? unlockSkill : associatedSkill;
+        public int UnlockSkillLevel => Mathf.Max(1, unlockSkillLevel);
+        public float BaseWeight => Mathf.Max(0f, weight);
+
         public float GetWeight(float worldX)
         {
-            var baseWeight = Mathf.Max(0f, weight);
+            var controller = SkillController.Instance;
+            var aggregator = controller?.Aggregator;
+            if (aggregator == null)
+                return 0f;
+
+            var unlockWeight = aggregator.GetTaskWeight(this);
+            if (unlockWeight <= 0f)
+                return 0f;
+
             if (worldX < minX)
                 return 0f;
             if (worldX > maxX)
-                return baseWeight * 0.1f;
-            return baseWeight;
+                return unlockWeight * 0.1f;
+            return unlockWeight;
         }
     }
 }

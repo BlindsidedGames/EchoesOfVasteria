@@ -888,15 +888,7 @@ namespace TimelessEchoes.Tasks
 
         private TaskData PickTaskFromCategory(WeightedTaskCategory category, float worldX)
         {
-            return PickEntry(category.tasks, worldX, t =>
-            {
-                if (!TaskAllowed(t, true, true, true))
-                    return false;
-                if (t != null)
-                    if (t.requiredQuest != null && !QuestCompleted(t.requiredQuest.questId))
-                        return false;
-                return true;
-            });
+            return PickEntry(category.tasks, worldX, t => TaskAllowed(t, true, true, true));
         }
 
         private TaskData PickTaskEntry(float worldX)

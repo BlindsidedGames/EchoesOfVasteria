@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -278,6 +279,22 @@ namespace TimelessEchoes.Skills
             float bonus = effectAggregator.GetExperienceBonus(skill);
             float multiplier = 1f + bonus;
             return multiplier < 0f ? 0f : multiplier;
+        }
+
+        public bool IsTaskUnlocked(TaskData task)
+        {
+            if (task == null)
+                return false;
+
+            return effectAggregator.IsTaskUnlocked(task);
+        }
+
+        public float GetTaskSpawnWeight(TaskData task)
+        {
+            if (task == null)
+                return 0f;
+
+            return effectAggregator.GetTaskWeight(task);
         }
 
         public MilestoneSetDefinition GetSetDefinition(MilestoneSet set)

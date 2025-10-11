@@ -138,6 +138,8 @@ namespace TimelessEchoes.Skills
             }
 
             refs.NameText?.SetText(title);
+            var unlockEffect = GetTaskUnlockEffect(definition);
+            ConfigureTaskIcon(refs, unlockEffect);
 
             int displayTier = unlocked ? tierIndex : 0;
             if (definition.TierCount > 0)
@@ -247,6 +249,61 @@ namespace TimelessEchoes.Skills
             bool target = !current;
             controller.TrySetMilestoneActive(binding.Skill, binding.Definition, target);
             ConfigureEntry(binding);
+        }
+
+        private static MilestoneTaskUnlockEffectDefinition GetTaskUnlockEffect(MilestoneDefinition definition)
+        {
+            if (definition == null)
+                return null;
+
+            if (definition.PassiveEffect is MilestoneTaskUnlockEffectDefinition passive && passive != null)
+                return passive;
+
+            if (definition.ActiveEffect is MilestoneTaskUnlockEffectDefinition active && active != null)
+                return active;
+
+            return null;
+        }
+
+        private static void ConfigureTaskIcon(MilestoneEntryUIReferences refs, MilestoneTaskUnlockEffectDefinition effect)
+        {
+            if (refs == null)
+                return;
+
+            var iconObject = refs.TaskImageObject;
+            var iconImage = refs.TaskImage;
+            if (iconObject == null || iconImage == null)
+                return;
+
+            if (effect == null)
+            {
+                iconImage.sprite = null;
+                iconImage.enabled = false;
+                iconObject.SetActive(false);
+                return;
+            }
+
+            Sprite sprite = null;
+            foreach (var task in effect.EnumerateTasks())
+            {
+                if (task?.taskIcon == null)
+                    continue;
+                sprite = task.taskIcon;
+                break;
+            }
+
+            if (sprite == null)
+            {
+                iconImage.sprite = null;
+                iconImage.enabled = false;
+                iconObject.SetActive(false);
+                return;
+            }
+
+            iconImage.sprite = sprite;
+            iconImage.enabled = true;
+            iconImage.SetNativeSize();
+            iconObject.SetActive(true);
         }
 
         private class EntryBinding
