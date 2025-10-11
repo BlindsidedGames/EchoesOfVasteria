@@ -27,9 +27,21 @@ namespace Blindsided.SaveData
 
         public void SetCurrentSlot(string slotName)
         {
-            if (slotName != "Save1" && slotName != "Save2" && slotName != "Save3")
-                throw new ArgumentOutOfRangeException(nameof(slotName), "Slot must be Save1, Save2, or Save3");
+            if (!IsValidSlotName(slotName))
+                throw new ArgumentOutOfRangeException(nameof(slotName), "Slot must be Save1, Save2, Save3, or their Beta equivalents.");
             CurrentSlotName = slotName;
+        }
+
+        private static bool IsValidSlotName(string slotName)
+        {
+            if (string.IsNullOrEmpty(slotName))
+                return false;
+
+            const string betaPrefix = "Beta";
+            if (slotName.StartsWith(betaPrefix, StringComparison.Ordinal))
+                slotName = slotName.Substring(betaPrefix.Length);
+
+            return slotName == "Save1" || slotName == "Save2" || slotName == "Save3";
         }
 
         public static void SetRootPathForTests(string path)

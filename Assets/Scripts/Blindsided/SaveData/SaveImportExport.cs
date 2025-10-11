@@ -71,7 +71,7 @@ namespace Blindsided.SaveData
 
 				// Determine slot and ensure SaveManager is pointed at it
 				var index = Mathf.Clamp(oracle.CurrentSlot, 0, 2);
-				var slotName = $"Save{index + 1}";
+				var slotName = Blindsided.Oracle.GetSlotDirectoryName(index);
 				SaveManager.Instance.SetCurrentSlot(slotName);
 
 				// Run migrations if required (backs up previous snapshot and persists on success)

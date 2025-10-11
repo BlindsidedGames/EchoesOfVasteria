@@ -1,3 +1,4 @@
+- Taught the save system to route beta builds through `BetaSave1-3` directories via Oracle so live and beta slots stay isolated.
 - Removed Android from the Build All editor tool so it now targets only Linux, Windows, and macOS desktop builds.
 - Added fishing, logging, looting, and mining milestone unlock assets plus task unlock effects so every gathering task follows the infinite-tier unlock model.
 - Migrated task unlocks to milestone-controlled weights with a dedicated task unlock effect, aggregator support, and milestone UI icons.

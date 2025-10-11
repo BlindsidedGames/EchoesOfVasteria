@@ -786,7 +786,7 @@ namespace TimelessEchoes.UI
                 // Delete the new save system files for this slot (Saves/Save{N})
                 try
                 {
-                    var slotName = $"Save{index + 1}";
+                    var slotName = Oracle.GetSlotDirectoryName(index);
                     var slotDir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
                     if (Directory.Exists(slotDir))
                         Directory.Delete(slotDir, true);
@@ -965,7 +965,7 @@ namespace TimelessEchoes.UI
                 // Read from meta.json of the target slot
                 try
                 {
-                    var slotName = $"Save{index + 1}";
+                    var slotName = Oracle.GetSlotDirectoryName(index);
                     var dir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
                     var metaPath = Path.Combine(dir, "meta.json");
                     if (File.Exists(metaPath))
