@@ -48,16 +48,24 @@ namespace Blindsided
         }
 
         [TabGroup("SaveData")] public bool demo;
-        [TabGroup("SaveData", "Beta")] public bool beta;
+        [TabGroup("SaveData")] public bool beta;
         [TabGroup("SaveData", "Beta")] public int betaSaveIteration;
 
 		[TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
+        [TabGroup("SaveData")] [ShowInInspector] public string CurrentSlotName => GetSlotDirectoryName(CurrentSlot);
 
         [TabGroup("SaveData")] public GameData saveData = new();
 
         [Header("Seasonal Leaderboard")]
         [SerializeField] private string minimumSeasonalGameVersion = "0.0.0"; // configurable threshold
         public string MinimumSeasonalGameVersion => minimumSeasonalGameVersion;
+
+        public static string GetSlotDirectoryName(int slotIndex, bool? useBetaOverride = null)
+        {
+            var clamped = Mathf.Clamp(slotIndex, 0, 2);
+            var useBeta = useBetaOverride ?? (oracle != null && oracle.beta);
+            return $"{(useBeta ? "Beta" : string.Empty)}Save{clamped + 1}";
+        }
 
         private bool loaded;
         private bool wipeInProgress;
@@ -355,7 +363,7 @@ namespace Blindsided
             // Prefer new save system first
             try
             {
-                var slotName = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
+                var slotName = GetSlotDirectoryName(CurrentSlot);
                 SaveManager.Instance.SetCurrentSlot(slotName);
                 var result = SaveManager.Instance.LoadAsync().GetAwaiter().GetResult();
                 if (result.ok && result.data != null)
@@ -416,7 +424,7 @@ namespace Blindsided
             try
             {
                 var clamped = Mathf.Clamp(index, 0, 2);
-                var slotName = $"Save{clamped + 1}";
+                var slotName = GetSlotDirectoryName(clamped);
                 var savesDir = Path.Combine(Application.persistentDataPath, "Saves");
                 var slotDir = Path.Combine(savesDir, slotName);
                 if (!Directory.Exists(slotDir)) return;
@@ -530,7 +538,7 @@ namespace Blindsided
 
         private void SaveInternal(int index)
         {
-            var slotName = $"Save{index + 1}";
+            var slotName = GetSlotDirectoryName(index);
             SaveManager.Instance.SetCurrentSlot(slotName);
             SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
         }
