@@ -67,6 +67,15 @@ namespace Blindsided
             return $"{(useBeta ? "Beta" : string.Empty)}Save{clamped + 1}";
         }
 
+        public static string GetDeletedMarkerKey(int slotIndex, bool? useBetaOverride = null, int? betaIterationOverride = null)
+        {
+            var clamped = Mathf.Clamp(slotIndex, 0, 2);
+            var useBeta = useBetaOverride ?? (oracle != null && oracle.beta);
+            var iteration = betaIterationOverride ?? (oracle != null ? oracle.betaSaveIteration : 0);
+            var prefix = useBeta ? $"Beta{iteration}" : string.Empty;
+            return $"{prefix}Slot{clamped}_Deleted";
+        }
+
         private bool loaded;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
@@ -342,7 +351,7 @@ namespace Blindsided
             // Clear deleted marker after first successful save
             try
             {
-                var deletedKey = $"Slot{CurrentSlot}_Deleted";
+                var deletedKey = GetDeletedMarkerKey(CurrentSlot);
                 if (PlayerPrefs.GetInt(deletedKey, 0) == 1)
                 {
                     PlayerPrefs.DeleteKey(deletedKey);
@@ -356,7 +365,7 @@ namespace Blindsided
         {
             loaded = false;
             saveData = new GameData();
-            var deletedMarkerKey = $"Slot{Mathf.Clamp(CurrentSlot, 0, 2)}_Deleted";
+            var deletedMarkerKey = GetDeletedMarkerKey(CurrentSlot);
             var wasIntentionallyDeleted = false;
             try { wasIntentionallyDeleted = PlayerPrefs.GetInt(deletedMarkerKey, 0) == 1; } catch { wasIntentionallyDeleted = false; }
 
