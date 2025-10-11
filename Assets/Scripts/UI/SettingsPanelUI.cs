@@ -773,7 +773,7 @@ namespace TimelessEchoes.UI
                 // Mark this slot as intentionally deleted to suppress any migration prompts in legacy builds
                 try
                 {
-                    PlayerPrefs.SetInt($"Slot{index}_Deleted", 1);
+                    PlayerPrefs.SetInt(Oracle.GetDeletedMarkerKey(index), 1);
                     PlayerPrefs.Save();
                 }
                 catch { }
