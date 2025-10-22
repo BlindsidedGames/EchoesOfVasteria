@@ -162,8 +162,9 @@ namespace TimelessEchoes.UI
         private static string SlotKey(int index, string field)
         {
             var oracle = Oracle.oracle;
-            var prefix = oracle.beta ? $"Beta{oracle.betaSaveIteration}" : "";
-            return $"{prefix}Slot{index}_{field}";
+            if (oracle == null)
+                return $"Slot{index}_{field}";
+            return oracle.GetSlotPlayerPrefsKey(index, field);
         }
 
         private void Awake()
@@ -770,10 +771,12 @@ namespace TimelessEchoes.UI
         {
             try
             {
+                var oracle = Oracle.oracle;
                 // Mark this slot as intentionally deleted to suppress any migration prompts in legacy builds
                 try
                 {
-                    PlayerPrefs.SetInt($"Slot{index}_Deleted", 1);
+                    var deletedKey = oracle != null ? oracle.GetSlotDeletedKey(index) : $"Slot{index}_Deleted";
+                    PlayerPrefs.SetInt(deletedKey, 1);
                     PlayerPrefs.Save();
                 }
                 catch { }
@@ -786,7 +789,7 @@ namespace TimelessEchoes.UI
                 // Delete the new save system files for this slot (Saves/Save{N})
                 try
                 {
-                    var slotName = $"Save{index + 1}";
+                    var slotName = oracle != null ? oracle.GetSlotDirectoryName(index) : $"Save{index + 1}";
                     var slotDir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
                     if (Directory.Exists(slotDir))
                         Directory.Delete(slotDir, true);
@@ -965,7 +968,7 @@ namespace TimelessEchoes.UI
                 // Read from meta.json of the target slot
                 try
                 {
-                    var slotName = $"Save{index + 1}";
+                    var slotName = oracle != null ? oracle.GetSlotDirectoryName(index) : $"Save{index + 1}";
                     var dir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
                     var metaPath = Path.Combine(dir, "meta.json");
                     if (File.Exists(metaPath))

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Sirenix.Serialization;
@@ -13,6 +14,8 @@ namespace Blindsided.SaveData
     {
         private static readonly Lazy<SaveManager> _instance = new Lazy<SaveManager>(() => new SaveManager());
         public static SaveManager Instance => _instance.Value;
+
+        private static readonly Regex SlotNamePattern = new Regex(@"^(?:Beta\d+)?Save[1-3]$", RegexOptions.Compiled);
 
         // HMAC removed: no secret required anymore
         private readonly object fileLock = new object();
@@ -27,8 +30,10 @@ namespace Blindsided.SaveData
 
         public void SetCurrentSlot(string slotName)
         {
-            if (slotName != "Save1" && slotName != "Save2" && slotName != "Save3")
-                throw new ArgumentOutOfRangeException(nameof(slotName), "Slot must be Save1, Save2, or Save3");
+            if (string.IsNullOrWhiteSpace(slotName) || !SlotNamePattern.IsMatch(slotName))
+                throw new ArgumentOutOfRangeException(
+                    nameof(slotName),
+                    "Slot must be Save1-3 or a Beta iteration variant such as Beta1Save2");
             CurrentSlotName = slotName;
         }
 

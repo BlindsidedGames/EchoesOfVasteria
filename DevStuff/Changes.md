@@ -1,3 +1,5 @@
+- Isolated beta save slots by letting Oracle use `Beta{iteration}Save#` directories, clamping the iteration toggle beside the new Beta flag, and covering the naming helpers with edit-mode tests.
+- Documented MCP tool capabilities in `Agents.md`, removed the Unity test warning, added guidance to avoid editing scripts through MCP, and noted that relevant Editor tests should be preferred over PlayMode tests.
 - Updated AGENTS guidelines with a documentation exception for plan approvals and refreshed the documentation standards to emphasise concise, professional summaries without referencing specific subsystems.
 - Documented hero echo scripts with XML summaries, parameter notes, and tooltips to clarify behaviour, pooling, and cap logic.
 - Added Android AAB build support to Build All and menu action to increment Android/iOS bundle versions.

@@ -43,15 +43,16 @@ namespace Blindsided
                 return;
             }
 
-            CurrentSlot = Mathf.Clamp(PlayerPrefs.GetInt(SlotPrefKey, 0), 0, 2);
+            betaSaveIteration = Mathf.Max(MinBetaIteration, betaSaveIteration);
+            CurrentSlot = Mathf.Clamp(PlayerPrefs.GetInt(GetCurrentSlotPrefKey(), 0), 0, 2);
             wipeInProgress = false;
         }
 
         [TabGroup("SaveData")] public bool demo;
-        [TabGroup("SaveData", "Beta")] public bool beta;
-        [TabGroup("SaveData", "Beta")] public int betaSaveIteration;
+        [TabGroup("SaveData")] [HorizontalGroup("SaveData/BetaRow")] [LabelText("Beta")] public bool beta;
+        [TabGroup("SaveData")] [HorizontalGroup("SaveData/BetaRow")] [LabelText("Iteration")] [MinValue(1)] [EnableIf(nameof(beta))] public int betaSaveIteration = 1;
 
-		[TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
+        [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
 
         [TabGroup("SaveData")] public GameData saveData = new();
 
@@ -62,12 +63,61 @@ namespace Blindsided
         private bool loaded;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
+        private const int MinBetaIteration = 1;
 #if UNITY_ANDROID || UNITY_IOS
         [SerializeField] private bool preventMobileSleep = true;
         private int _originalSleepTimeout;
         private bool _sleepTimeoutOverridden;
 #endif
 
+        private int GetSafeBetaIteration()
+        {
+            return Mathf.Max(MinBetaIteration, betaSaveIteration);
+        }
+
+        private string GetBetaPrefix()
+        {
+            if (!beta) return string.Empty;
+            return $"Beta{GetSafeBetaIteration()}";
+        }
+
+        private string GetCurrentSlotPrefKey()
+        {
+            var prefix = GetBetaPrefix();
+            return string.IsNullOrEmpty(prefix) ? SlotPrefKey : $"{prefix}_{SlotPrefKey}";
+        }
+
+        public string GetSlotDirectoryName(int slotIndex)
+        {
+            var clamped = Mathf.Clamp(slotIndex, 0, 2);
+            var baseName = $"Save{clamped + 1}";
+            var prefix = GetBetaPrefix();
+            return string.IsNullOrEmpty(prefix) ? baseName : $"{prefix}{baseName}";
+        }
+
+        public string GetSlotPlayerPrefsPrefix(int slotIndex)
+        {
+            var clamped = Mathf.Clamp(slotIndex, 0, 2);
+            var prefix = GetBetaPrefix();
+            return string.IsNullOrEmpty(prefix) ? $"Slot{clamped}" : $"{prefix}Slot{clamped}";
+        }
+
+        public string GetSlotPlayerPrefsKey(int slotIndex, string suffix)
+        {
+            return $"{GetSlotPlayerPrefsPrefix(slotIndex)}_{suffix}";
+        }
+
+        public string GetSlotDeletedKey(int slotIndex)
+        {
+            return GetSlotPlayerPrefsKey(slotIndex, "Deleted");
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            betaSaveIteration = Mathf.Max(MinBetaIteration, betaSaveIteration);
+        }
+#endif
 
         // Defer showing load-failure notice until UI is ready
 
@@ -334,7 +384,7 @@ namespace Blindsided
             // Clear deleted marker after first successful save
             try
             {
-                var deletedKey = $"Slot{CurrentSlot}_Deleted";
+                var deletedKey = GetSlotDeletedKey(CurrentSlot);
                 if (PlayerPrefs.GetInt(deletedKey, 0) == 1)
                 {
                     PlayerPrefs.DeleteKey(deletedKey);
@@ -348,14 +398,14 @@ namespace Blindsided
         {
             loaded = false;
             saveData = new GameData();
-            var deletedMarkerKey = $"Slot{Mathf.Clamp(CurrentSlot, 0, 2)}_Deleted";
+            var deletedMarkerKey = GetSlotDeletedKey(CurrentSlot);
             var wasIntentionallyDeleted = false;
             try { wasIntentionallyDeleted = PlayerPrefs.GetInt(deletedMarkerKey, 0) == 1; } catch { wasIntentionallyDeleted = false; }
 
             // Prefer new save system first
             try
             {
-                var slotName = $"Save{Mathf.Clamp(CurrentSlot, 0, 2) + 1}";
+                var slotName = GetSlotDirectoryName(CurrentSlot);
                 SaveManager.Instance.SetCurrentSlot(slotName);
                 var result = SaveManager.Instance.LoadAsync().GetAwaiter().GetResult();
                 if (result.ok && result.data != null)
@@ -416,7 +466,7 @@ namespace Blindsided
             try
             {
                 var clamped = Mathf.Clamp(index, 0, 2);
-                var slotName = $"Save{clamped + 1}";
+                var slotName = GetSlotDirectoryName(clamped);
                 var savesDir = Path.Combine(Application.persistentDataPath, "Saves");
                 var slotDir = Path.Combine(savesDir, slotName);
                 if (!Directory.Exists(slotDir)) return;
@@ -530,7 +580,7 @@ namespace Blindsided
 
         private void SaveInternal(int index)
         {
-            var slotName = $"Save{index + 1}";
+            var slotName = GetSlotDirectoryName(index);
             SaveManager.Instance.SetCurrentSlot(slotName);
             SaveManager.Instance.SaveAsync(saveData).GetAwaiter().GetResult();
         }
@@ -607,7 +657,7 @@ namespace Blindsided
             StopAutosaveLoop();
 
             CurrentSlot = clamped;
-            PlayerPrefs.SetInt(SlotPrefKey, CurrentSlot);
+            PlayerPrefs.SetInt(GetCurrentSlotPrefKey(), CurrentSlot);
             PlayerPrefs.Save();
             EventHandler.ResetData();
             // Clear transient runtime meeting flags to avoid cross-file bleed
@@ -647,10 +697,9 @@ namespace Blindsided
         public void PersistSlotMetadataToPlayerPrefs(int? slotIndex = null)
         {
             var index = Mathf.Clamp(slotIndex ?? CurrentSlot, 0, 2);
-            var prefix = beta ? $"Beta{betaSaveIteration}" : string.Empty;
-            var completionKey = $"{prefix}Slot{index}_Completion";
-            var playtimeKey = $"{prefix}Slot{index}_Playtime";
-            var dateKey = $"{prefix}Slot{index}_Date";
+            var completionKey = GetSlotPlayerPrefsKey(index, "Completion");
+            var playtimeKey = GetSlotPlayerPrefsKey(index, "Playtime");
+            var dateKey = GetSlotPlayerPrefsKey(index, "Date");
 
             PlayerPrefs.SetFloat(completionKey, saveData.CompletionPercentage);
             PlayerPrefs.SetFloat(playtimeKey, (float)saveData.PlayTime);
