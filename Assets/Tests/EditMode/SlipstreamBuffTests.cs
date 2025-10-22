@@ -58,6 +58,16 @@ namespace TimelessEchoes.Tests.Buffs
                 Assert.AreEqual(1.5f, Time.timeScale, 1e-4f);
                 Assert.AreEqual(0.02f * 1.5f, Time.fixedDeltaTime, 1e-4f);
 
+                manager.SetBaseTimeScale(0.5f);
+                Assert.AreEqual(0.5f, manager.BaseTimeScale, 1e-4f);
+                Assert.AreEqual(1f, Time.timeScale, 1e-4f);
+                Assert.AreEqual(0.02f, Time.fixedDeltaTime, 1e-4f);
+
+                manager.SetBaseTimeScale(1f);
+                Assert.AreEqual(1f, manager.BaseTimeScale, 1e-4f);
+                Assert.AreEqual(1.5f, Time.timeScale, 1e-4f);
+                Assert.AreEqual(0.02f * 1.5f, Time.fixedDeltaTime, 1e-4f);
+
                 manager.ClearActiveBuffs(false);
                 Assert.AreEqual(1f, Time.timeScale, 1e-4f);
                 Assert.AreEqual(0.02f, Time.fixedDeltaTime, 1e-4f);

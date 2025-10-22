@@ -284,6 +284,7 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.InstantTasks => "Tasks complete instantly",
                 // ResourceMultiplier represents percent gain: use +X% text
                 BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
+                BuffEffectType.ExperienceBonusFraction => $"{eff.value * 100f:0.#}% Bonus Experience",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
                 BuffEffectType.CritDamagePercent => $"Crit Damage +{eff.value}%",
                 BuffEffectType.TimeScalePercent => $"Game Speed +{eff.value}",

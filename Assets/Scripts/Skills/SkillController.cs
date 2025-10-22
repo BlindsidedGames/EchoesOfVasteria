@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TimelessEchoes.Buffs;
 using TimelessEchoes.Upgrades;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -139,7 +140,12 @@ namespace TimelessEchoes.Skills
             float xpMultiplier = 1f + effectAggregator.GetExperienceBonus(skill);
             if (xpMultiplier < 0f)
                 xpMultiplier = 0f;
-            var appliedXp = xpAmount * xpMultiplier;
+
+            var buffMultiplier = BuffManager.Instance != null ? BuffManager.Instance.ExperienceGainMultiplier : 1f;
+            if (buffMultiplier < 0f)
+                buffMultiplier = 0f;
+
+            var appliedXp = xpAmount * xpMultiplier * buffMultiplier;
 
             if (!progress.TryGetValue(skill, out var prog))
             {
@@ -269,15 +275,23 @@ namespace TimelessEchoes.Skills
 
         public float GetExperienceBonusMultiplier(Skill skill)
         {
+            float multiplier;
             if (skill == null)
             {
-                float globalOnly = 1f + effectAggregator.GetExperienceBonus(null);
-                return globalOnly < 0f ? 0f : globalOnly;
+                multiplier = 1f + effectAggregator.GetExperienceBonus(null);
+            }
+            else
+            {
+                float bonus = effectAggregator.GetExperienceBonus(skill);
+                multiplier = 1f + bonus;
             }
 
-            float bonus = effectAggregator.GetExperienceBonus(skill);
-            float multiplier = 1f + bonus;
-            return multiplier < 0f ? 0f : multiplier;
+            if (multiplier < 0f)
+                multiplier = 0f;
+
+            var buffManager = BuffManager.Instance;
+            var final = multiplier * (buffManager != null ? buffManager.ExperienceGainMultiplier : 1f);
+            return final < 0f ? 0f : final;
         }
 
         public MilestoneSetDefinition GetSetDefinition(MilestoneSet set)

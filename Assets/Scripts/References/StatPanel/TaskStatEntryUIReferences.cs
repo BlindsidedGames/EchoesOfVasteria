@@ -11,5 +11,7 @@ namespace TimelessEchoes.References.StatPanel
         public TMP_Text entryNameText;
         public TMP_Text entryCompletionsTimeOnTaskExperienceText;
         public TMP_Text entrySpawnDistanceText;
+        public Image toggleImage;
+        public Button toggleButton;
     }
 }

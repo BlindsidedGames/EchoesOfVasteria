@@ -7,6 +7,8 @@
 # Doing a task
 - Attempt to keep code as clean and performnant as possible.
 - Create and run relevant tests; prefer Editor tests over PlayMode tests when both cover the scenario.
+- Run Unity tests exclusively through the MCP tooling rather than directly in the editor.
+- When authoring new tests, wrap the script contents in `#if UNITY_INCLUDE_TESTS` / `#endif` so they compile only in the Editor (see existing files under `Assets/Tests` for the pattern).
 
 # Finishing a task
 - Add a brief entry to Changes.md describing what you changed, always put it at the top of the file.

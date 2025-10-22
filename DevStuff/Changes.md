@@ -1,3 +1,7 @@
+- Noted in `Agents.md` that Unity tests must be run through MCP tooling.
+- Added a Bonus Experience buff effect with SkillController integration, editor coverage, and a new BuffRecipe unlocked alongside task/combat echoes.
+- Documented `Agents.md` test guidance so new Unity test scripts stay inside `#if UNITY_INCLUDE_TESTS` editor-only guards.
+- Added a developer console command to override BuffManager's base timescale, recalibrated baseline physics scaling, and expanded Slipstream tests to cover the override.
 - Excluded test assemblies from player builds by gating their asmdefs behind UNITY_INCLUDE_TESTS, wrapping the test scripts in the same define, and keeping them Editor-only.
 - Removed Android AAB support from the Build All editor menu and cleaned out the unused command-line batching code.
 - Reworked Slipstream to use configurable time-scale and distance effects, added supporting buff logic/tests, reset timescale handling in BuffManager, and trimmed duplicate distance text from the buff tooltip.

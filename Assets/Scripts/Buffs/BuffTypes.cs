@@ -19,7 +19,8 @@ namespace TimelessEchoes.Buffs
         CritChancePercent,
         CritDamagePercent,
         TimeScalePercent,
-        DistanceDurationPercent
+        DistanceDurationPercent,
+        ExperienceBonusFraction
     }
 
     public enum BuffDurationType

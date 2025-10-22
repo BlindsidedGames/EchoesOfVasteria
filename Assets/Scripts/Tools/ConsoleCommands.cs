@@ -13,6 +13,7 @@ using TimelessEchoes.Quests;
 using Blindsided.SaveData;
 using Blindsided;
 using static TimelessEchoes.TELogger;
+using TimelessEchoes.Buffs;
 
 #if !DISABLESTEAMWORKS
 using Steamworks;
@@ -238,6 +239,26 @@ namespace TimelessEchoes
         {
             ConsoleAuth.EnsureAuthenticated();
             GameManager.Instance?.AbandonRun();
+        }
+
+        [Command("set-base-timescale", "Override the baseline timescale used by buffs")]
+        public static void SetBaseTimeScale(float timeScale)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            var manager = BuffManager.Instance;
+            if (manager == null)
+            {
+                Log("BuffManager not available; cannot adjust base timescale.", TELogCategory.Buff);
+                return;
+            }
+
+            manager.SetBaseTimeScale(timeScale);
+            var console = QuantumConsole.Instance;
+            if (console != null)
+            {
+                console.LogToConsole(
+                    $"Base timescale set to {manager.BaseTimeScale:0.###}. Effective Time.timeScale = {Time.timeScale:0.###}");
+            }
         }
 
     }

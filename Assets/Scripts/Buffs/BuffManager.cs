@@ -31,8 +31,12 @@ namespace TimelessEchoes.Buffs
         private readonly List<bool> autoCastSlots = new(new bool[5]);
         private readonly Dictionary<BuffRecipe, float> cooldowns = new();
 
+        private const float MinTimeScale = 0.001f;
+        private const float MinFixedDelta = 1e-6f;
+
         private float baseTimeScale = 1f;
         private float baseFixedDeltaTime = 0.02f;
+        private float fixedDeltaPerScale = 0.02f;
 
 
         public int UnlockedSlots
@@ -58,6 +62,8 @@ namespace TimelessEchoes.Buffs
         private bool ticking = true;
 
         public IReadOnlyList<ActiveBuff> ActiveBuffs => activeBuffs;
+
+        public float BaseTimeScale => baseTimeScale;
 
         public bool AnySlotAutoBuffing
         {
@@ -100,6 +106,20 @@ namespace TimelessEchoes.Buffs
             }
         }
 
+        public float ExperienceGainMultiplier
+        {
+            get
+            {
+                var additive = 0f;
+                foreach (var b in activeBuffs)
+                    foreach (var eff in b.effects)
+                        if (eff.type == BuffEffectType.ExperienceBonusFraction)
+                            additive += eff.value;
+                var multiplier = 1f + additive;
+                return multiplier < 0f ? 0f : multiplier;
+            }
+        }
+
         public IEnumerable<BuffRecipe> Recipes
         {
             get
@@ -136,8 +156,10 @@ namespace TimelessEchoes.Buffs
         protected override void Awake()
         {
             base.Awake();
-            baseTimeScale = Time.timeScale;
-            baseFixedDeltaTime = Time.fixedDeltaTime;
+            var currentScale = Mathf.Max(MinTimeScale, Time.timeScale);
+            baseTimeScale = currentScale;
+            fixedDeltaPerScale = Mathf.Max(MinFixedDelta, Time.fixedDeltaTime / currentScale);
+            baseFixedDeltaTime = Mathf.Max(MinFixedDelta, currentScale * fixedDeltaPerScale);
             // Ensure no active buffs linger between sessions
             ClearActiveBuffs(false);
             OnLoadData += LoadSlots;
@@ -191,6 +213,14 @@ namespace TimelessEchoes.Buffs
         public void Resume()
         {
             ticking = true;
+        }
+
+        public void SetBaseTimeScale(float newScale)
+        {
+            var clampedScale = Mathf.Max(MinTimeScale, newScale);
+            baseTimeScale = clampedScale;
+            baseFixedDeltaTime = Mathf.Max(MinFixedDelta, clampedScale * fixedDeltaPerScale);
+            ApplyTimeScaleModifier();
         }
 
         private void TickBuffs(float delta)
@@ -729,7 +759,7 @@ namespace TimelessEchoes.Buffs
                 }
             }
 
-            var targetScale = Mathf.Max(0.001f, baseTimeScale + additive);
+            var targetScale = Mathf.Max(MinTimeScale, baseTimeScale + additive);
             Time.timeScale = targetScale;
 
             if (baseTimeScale > 0f)
