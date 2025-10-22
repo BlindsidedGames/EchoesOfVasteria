@@ -1,3 +1,6 @@
+- Excluded test assemblies from player builds by gating their asmdefs behind UNITY_INCLUDE_TESTS, wrapping the test scripts in the same define, and keeping them Editor-only.
+- Removed Android AAB support from the Build All editor menu and cleaned out the unused command-line batching code.
+- Reworked Slipstream to use configurable time-scale and distance effects, added supporting buff logic/tests, reset timescale handling in BuffManager, and trimmed duplicate distance text from the buff tooltip.
 - Isolated beta save slots by letting Oracle use `Beta{iteration}Save#` directories, clamping the iteration toggle beside the new Beta flag, and covering the naming helpers with edit-mode tests.
 - Documented MCP tool capabilities in `Agents.md`, removed the Unity test warning, added guidance to avoid editing scripts through MCP, and noted that relevant Editor tests should be preferred over PlayMode tests.
 - Updated AGENTS guidelines with a documentation exception for plan approvals and refreshed the documentation standards to emphasise concise, professional summaries without referencing specific subsystems.
@@ -37,6 +40,7 @@
 
 ### Removed
 - ForceEnglishLocale bootstrap script that enforced an English locale before scenes loaded.
+
 
 
 

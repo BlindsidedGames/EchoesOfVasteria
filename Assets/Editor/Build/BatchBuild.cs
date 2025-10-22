@@ -1,5 +1,5 @@
-// This file provides batch build functions for Linux and Windows (IL2CPP)
-// and macOS (Mono). It supports both menu-driven and command-line usage.
+// This file provides menu-driven batch build functions for Linux and Windows (IL2CPP)
+// and macOS (Mono).
 
 using System;
 using System.IO;
@@ -13,17 +13,12 @@ namespace BuildTools
 {
     public static class BatchBuild
     {
-        // Defaults requested by the user. Can be overridden by CLI args.
-        // Example CLI overrides:
-        // -buildPathLinux="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Linux"
-        // -buildPathWindows="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Windows"
-        // -buildPathMac="C:\\Users\\mattr\\Documents\\Unity\\Builds\\Echoes of Vasteria\\Mac"
+        // Defaults requested by the user when building from the editor.
         private const string DefaultLinuxDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Linux";
         private const string DefaultWindowsDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Windows";
         private const string DefaultMacDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Mac";
-        private const string DefaultAndroidDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Android";
 
-        [MenuItem("Build/Build All (Linux+Windows IL2CPP, Android AAB, then Mac Mono)")]
+        [MenuItem("Build/Build All (Linux+Windows IL2CPP then Mac Mono)")]
         public static void BuildAllFromMenu()
         {
             var productName = PlayerSettings.productName;
@@ -32,7 +27,7 @@ namespace BuildTools
             // Linux (IL2CPP)
             if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
             {
-                var linuxAppPath = Path.Combine(GetBuildPath("buildPathLinux", DefaultLinuxDir), productName + ".x86_64");
+                var linuxAppPath = Path.Combine(DefaultLinuxDir, productName + ".x86_64");
                 EnsureDirectoryForLocation(linuxAppPath);
                 var linuxReport = BuildStandalone(
                     BuildTarget.StandaloneLinux64,
@@ -50,7 +45,7 @@ namespace BuildTools
             // Windows (IL2CPP)
             if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
             {
-                var windowsAppPath = Path.Combine(GetBuildPath("buildPathWindows", DefaultWindowsDir), productName + ".exe");
+                var windowsAppPath = Path.Combine(DefaultWindowsDir, productName + ".exe");
                 EnsureDirectoryForLocation(windowsAppPath);
                 var windowsReport = BuildStandalone(
                     BuildTarget.StandaloneWindows64,
@@ -65,80 +60,8 @@ namespace BuildTools
                 Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
             }
 
-            // Android (AAB, IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
-            {
-                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
-                EnsureDirectoryForLocation(androidAppPath);
-                var androidReport = BuildAndroid(androidAppPath, scenes);
-                LogReport("Android (AAB IL2CPP)", androidReport);
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
-            }
-
             // macOS (Mono)
             TryBuildMacMono(productName, scenes);
-        }
-
-        // Command line entrypoint: use with -batchmode -quit -nographics -executeMethod BuildTools.BatchBuild.BuildAllCI
-        public static void BuildAllCI()
-        {
-            bool success = true;
-            var productName = PlayerSettings.productName;
-            var scenes = GetEnabledScenes();
-
-            // Linux (IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
-            {
-                var linuxAppPath = Path.Combine(GetBuildPath("buildPathLinux", DefaultLinuxDir), productName + ".x86_64");
-                EnsureDirectoryForLocation(linuxAppPath);
-                success &= BuildStandalone(
-                    BuildTarget.StandaloneLinux64,
-                    ScriptingImplementation.IL2CPP,
-                    linuxAppPath,
-                    scenes
-                ).summary.result == BuildResult.Succeeded;
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Linux build: target StandaloneLinux64 is not supported (module not installed?).");
-            }
-
-            // Windows (IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
-            {
-                var windowsAppPath = Path.Combine(GetBuildPath("buildPathWindows", DefaultWindowsDir), productName + ".exe");
-                EnsureDirectoryForLocation(windowsAppPath);
-                success &= BuildStandalone(
-                    BuildTarget.StandaloneWindows64,
-                    ScriptingImplementation.IL2CPP,
-                    windowsAppPath,
-                    scenes
-                ).summary.result == BuildResult.Succeeded;
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
-            }
-
-            // Android (AAB, IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
-            {
-                var androidAppPath = Path.Combine(GetBuildPath("buildPathAndroid", DefaultAndroidDir), productName + ".aab");
-                EnsureDirectoryForLocation(androidAppPath);
-                success &= BuildAndroid(androidAppPath, scenes).summary.result == BuildResult.Succeeded;
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Android build: target Android is not supported (module not installed?).");
-            }
-
-            // macOS (Mono)
-            success &= TryBuildMacMono(productName, scenes);
-
-            EditorApplication.Exit(success ? 0 : 1);
         }
 
         private static bool TryBuildMacMono(string productName, string[] scenes)
@@ -150,7 +73,7 @@ namespace BuildTools
                 return true; // Not a failure; just skipped.
             }
 
-            var macAppPath = Path.Combine(GetBuildPath("buildPathMac", DefaultMacDir), productName + ".app");
+            var macAppPath = Path.Combine(DefaultMacDir, productName + ".app");
             EnsureDirectoryForLocation(macAppPath);
 
             var macReport = BuildStandalone(
@@ -204,39 +127,6 @@ namespace BuildTools
             }
         }
 
-        private static BuildReport BuildAndroid(string locationPathName, string[] scenes)
-        {
-            var target = BuildTarget.Android;
-            var group = BuildTargetGroup.Android;
-            var namedTarget = NamedBuildTarget.Android;
-
-            var previousBackend = PlayerSettings.GetScriptingBackend(namedTarget);
-            PlayerSettings.SetScriptingBackend(namedTarget, ScriptingImplementation.IL2CPP);
-
-            var previousAppBundle = EditorUserBuildSettings.buildAppBundle;
-            EditorUserBuildSettings.buildAppBundle = true;
-
-            EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
-
-            var buildPlayerOptions = new BuildPlayerOptions
-            {
-                scenes = scenes,
-                locationPathName = locationPathName,
-                target = target,
-                options = BuildOptions.None
-            };
-
-            try
-            {
-                return BuildPipeline.BuildPlayer(buildPlayerOptions);
-            }
-            finally
-            {
-                PlayerSettings.SetScriptingBackend(namedTarget, previousBackend);
-                EditorUserBuildSettings.buildAppBundle = previousAppBundle;
-            }
-        }
-
         private static string[] GetEnabledScenes()
         {
             var enabledScenes = EditorBuildSettings.scenes
@@ -249,36 +139,6 @@ namespace BuildTools
                 throw new Exception("No scenes are enabled in Build Settings.");
             }
             return enabledScenes;
-        }
-
-        private static string GetBuildPath(string cliKey, string defaultPath)
-        {
-            // Allows overriding via -key=value style args.
-            string value = TryGetArgValue(cliKey);
-            if (!string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-            return defaultPath;
-        }
-
-        private static string TryGetArgValue(string key)
-        {
-            // Accepts both -key=value and -key value
-            var args = Environment.GetCommandLineArgs();
-            for (int i = 0; i < args.Length; i++)
-            {
-                string a = args[i];
-                if (a.StartsWith("-" + key + "="))
-                {
-                    return a.Substring(key.Length + 2); // - + key + =
-                }
-                if (a == "-" + key && i + 1 < args.Length)
-                {
-                    return args[i + 1];
-                }
-            }
-            return null;
         }
 
         private static void EnsureDirectoryForLocation(string locationPathName)

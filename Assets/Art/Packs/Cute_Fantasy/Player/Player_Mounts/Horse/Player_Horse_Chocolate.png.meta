@@ -1,0 +1,767 @@
+fileFormatVersion: 2
+guid: fd4c6c6b81c584b428c7bb2d91d3192d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1321006637763544
+    second: Player_Horse_Chocolate_0
+  - first:
+      213: -5911366744789390343
+    second: Player_Horse_Chocolate_1
+  - first:
+      213: 7302078213811299580
+    second: Player_Horse_Chocolate_2
+  - first:
+      213: 6205656115636169535
+    second: Player_Horse_Chocolate_3
+  - first:
+      213: -1354802527166201037
+    second: Player_Horse_Chocolate_4
+  - first:
+      213: 3113669847065053928
+    second: Player_Horse_Chocolate_5
+  - first:
+      213: 8686613111265765352
+    second: Player_Horse_Chocolate_6
+  - first:
+      213: -1533984240720845950
+    second: Player_Horse_Chocolate_7
+  - first:
+      213: -3972165126466697825
+    second: Player_Horse_Chocolate_8
+  - first:
+      213: -4537793496743933833
+    second: Player_Horse_Chocolate_9
+  - first:
+      213: 483675180695745453
+    second: Player_Horse_Chocolate_10
+  - first:
+      213: 6482481925842525839
+    second: Player_Horse_Chocolate_11
+  - first:
+      213: 4328637318114896290
+    second: Player_Horse_Chocolate_12
+  - first:
+      213: 26833212977805270
+    second: Player_Horse_Chocolate_13
+  - first:
+      213: -3745521237284387347
+    second: Player_Horse_Chocolate_14
+  - first:
+      213: -2538525968762552769
+    second: Player_Horse_Chocolate_15
+  - first:
+      213: 7901444506462268544
+    second: Player_Horse_Chocolate_16
+  - first:
+      213: 4460253251310853851
+    second: Player_Horse_Chocolate_17
+  - first:
+      213: 4115456192961380361
+    second: Player_Horse_Chocolate_18
+  - first:
+      213: 6943170190598485654
+    second: Player_Horse_Chocolate_19
+  - first:
+      213: -2814348929911024814
+    second: Player_Horse_Chocolate_20
+  - first:
+      213: -8552914370021208079
+    second: Player_Horse_Chocolate_21
+  - first:
+      213: 6634958180958319022
+    second: Player_Horse_Chocolate_22
+  - first:
+      213: -57050556137178960
+    second: Player_Horse_Chocolate_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_0
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 336
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dbc363d271b40000800000000000000
+      internalID: 1321006637763544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_1
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 336
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb65cfe34b96fda0800000000000000
+      internalID: -5911366744789390343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 272
+        width: 32
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf467588271365560800000000000000
+      internalID: 7302078213811299580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_3
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 272
+        width: 32
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3b69b2bb5bee1650800000000000000
+      internalID: 6205656115636169535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_4
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 208
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33305739746c23de0800000000000000
+      internalID: -1354802527166201037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_5
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 208
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ea482e9a3af53b20800000000000000
+      internalID: 3113669847065053928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_6
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 144
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e72f3ed99c0d8870800000000000000
+      internalID: 8686613111265765352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_7
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 144
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28369c0e57136bae0800000000000000
+      internalID: -1533984240720845950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_8
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 144
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9502c7ecd800e8c0800000000000000
+      internalID: -3972165126466697825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_9
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 144
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77800826bd48601c0800000000000000
+      internalID: -4537793496743933833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_10
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 144
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da3fa04a30c56b600800000000000000
+      internalID: 483675180695745453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_11
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 144
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8edbb447f666f950800000000000000
+      internalID: 6482481925842525839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_12
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 80
+        width: 33
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a9ecbbe4b8621c30800000000000000
+      internalID: 4328637318114896290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_13
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 80
+        width: 33
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d779bf3aa45f5000800000000000000
+      internalID: 26833212977805270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_14
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 80
+        width: 32
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de58bf0874c350cc0800000000000000
+      internalID: -3745521237284387347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_15
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 80
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3ebdc2c41855ccd0800000000000000
+      internalID: -2538525968762552769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_16
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 80
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c252c3ae197ad60800000000000000
+      internalID: 7901444506462268544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_17
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 80
+        width: 33
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bde1aac53b006ed30800000000000000
+      internalID: 4460253251310853851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_18
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 16
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90005265a990d1930800000000000000
+      internalID: 4115456192961380361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_19
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 16
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69634b970881b5060800000000000000
+      internalID: 6943170190598485654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_20
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 16
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25317ae2f8c61f8d0800000000000000
+      internalID: -2814348929911024814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_21
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 16
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ff4d8c12b1fd4980800000000000000
+      internalID: -8552914370021208079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_22
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 16
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea1b793ef4b141c50800000000000000
+      internalID: 6634958180958319022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Horse_Chocolate_23
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 16
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b8743b42d0553ff0800000000000000
+      internalID: -57050556137178960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Player_Horse_Chocolate_0: 1321006637763544
+      Player_Horse_Chocolate_1: -5911366744789390343
+      Player_Horse_Chocolate_10: 483675180695745453
+      Player_Horse_Chocolate_11: 6482481925842525839
+      Player_Horse_Chocolate_12: 4328637318114896290
+      Player_Horse_Chocolate_13: 26833212977805270
+      Player_Horse_Chocolate_14: -3745521237284387347
+      Player_Horse_Chocolate_15: -2538525968762552769
+      Player_Horse_Chocolate_16: 7901444506462268544
+      Player_Horse_Chocolate_17: 4460253251310853851
+      Player_Horse_Chocolate_18: 4115456192961380361
+      Player_Horse_Chocolate_19: 6943170190598485654
+      Player_Horse_Chocolate_2: 7302078213811299580
+      Player_Horse_Chocolate_20: -2814348929911024814
+      Player_Horse_Chocolate_21: -8552914370021208079
+      Player_Horse_Chocolate_22: 6634958180958319022
+      Player_Horse_Chocolate_23: -57050556137178960
+      Player_Horse_Chocolate_3: 6205656115636169535
+      Player_Horse_Chocolate_4: -1354802527166201037
+      Player_Horse_Chocolate_5: 3113669847065053928
+      Player_Horse_Chocolate_6: 8686613111265765352
+      Player_Horse_Chocolate_7: -1533984240720845950
+      Player_Horse_Chocolate_8: -3972165126466697825
+      Player_Horse_Chocolate_9: -4537793496743933833
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

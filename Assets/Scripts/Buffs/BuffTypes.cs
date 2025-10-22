@@ -17,7 +17,9 @@ namespace TimelessEchoes.Buffs
         InstantTasks,
         ResourceMultiplier,
         CritChancePercent,
-        CritDamagePercent
+        CritDamagePercent,
+        TimeScalePercent,
+        DistanceDurationPercent
     }
 
     public enum BuffDurationType
@@ -43,4 +45,3 @@ namespace TimelessEchoes.Buffs
         public float cooldownDelta = 0f;
     }
 }
-

@@ -17,13 +17,13 @@ MonoBehaviour:
   taskIcon: {fileID: 1740307149, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 50
-  minX: 250
+  minX: 1000
   maxX: Infinity
   requiredQuest: {fileID: 0}
   taskDuration: 3.5
   sfxInterval: 0
   taskPrefab: {fileID: 2897011531704098943, guid: 3f4f308ebf45d8548843ccd941f18695, type: 3}
-  weight: 10
+  weight: 50
   spawnTerrains:
   - {fileID: 11400000, guid: 74130e1b76c3f024790fecb3125da387, type: 2}
   - {fileID: 11400000, guid: 1a20e4b5c68ff4e4f9347e6a9f252914, type: 2}

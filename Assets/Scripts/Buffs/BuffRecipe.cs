@@ -74,8 +74,7 @@ namespace TimelessEchoes.Buffs
         private struct BuffPower
         {
             public float durationMultiplier;          // Multiplier for time-based durations
-            public float distanceFractionAdd;         // Additive fraction for DistancePercent (e.g., +0.3)
-            public float effectValueMultiplier;       // Multiplier for non-distance effect values
+            public float effectValueMultiplier;       // Multiplier applied to effect values
         }
 
         private BuffPower ComputePowerPolicy()
@@ -88,22 +87,14 @@ namespace TimelessEchoes.Buffs
             var policy = new BuffPower
             {
                 durationMultiplier = 1f,
-                distanceFractionAdd = 0f,
                 effectValueMultiplier = 1f
             };
 
-            if (power <= 0f)
-                return policy;
-
-            if (durationType == BuffDurationType.DistancePercent)
+            if (power > 0f)
             {
-                policy.distanceFractionAdd = power / 100f; // add absolute percent points to fraction
-                policy.effectValueMultiplier = 1f + power / 100f;
-            }
-            else
-            {
-                policy.durationMultiplier = 1f + power / 100f; // extend time-based duration
-                policy.effectValueMultiplier = 1f + power / 100f;
+                var multiplier = 1f + power / 100f;
+                policy.durationMultiplier = multiplier;
+                policy.effectValueMultiplier = multiplier;
             }
 
             return policy;
@@ -136,14 +127,15 @@ namespace TimelessEchoes.Buffs
                     }
                 }
             }
-            // Apply power policy: multiply only non-distance effects
+            // Apply power policy: multiply only non-distance distance-duration effects
             var policy = ComputePowerPolicy();
             var list = new List<BuffEffect>();
             foreach (var pair in dict)
             {
                 var val = pair.Value;
                 var isDistanceEffect = pair.Key == BuffEffectType.MaxDistancePercent ||
-                                       pair.Key == BuffEffectType.MaxDistanceIncrease;
+                                       pair.Key == BuffEffectType.MaxDistanceIncrease ||
+                                       pair.Key == BuffEffectType.DistanceDurationPercent;
                 if (!isDistanceEffect)
                     val *= policy.effectValueMultiplier;
                 list.Add(new BuffEffect { type = pair.Key, value = val });
@@ -177,12 +169,19 @@ namespace TimelessEchoes.Buffs
                     if (up?.quest != null && qm.IsQuestCompleted(up.quest))
                         duration += up.durationDelta;
                 }
+            }
 
-                // If this buff uses distance-percent duration, allow InstantTasks additional effects
-                // from completed upgrades to extend the distance fraction additively.
-                if (durationType == BuffDurationType.DistancePercent)
+            if (durationType == BuffDurationType.DistancePercent)
+            {
+                var fraction = 0f;
+                foreach (var eff in baseEffects)
                 {
-                    var extra = 0f;
+                    if (eff.type == BuffEffectType.DistanceDurationPercent)
+                        fraction += eff.value;
+                }
+
+                if (qm != null)
+                {
                     foreach (var up in upgrades)
                     {
                         if (up?.quest == null || !qm.IsQuestCompleted(up.quest))
@@ -191,19 +190,22 @@ namespace TimelessEchoes.Buffs
                             continue;
                         foreach (var eff in up.additionalEffects)
                         {
-                            if (eff.type == BuffEffectType.InstantTasks && eff.value > 0f)
-                                extra += eff.value;
+                            if (eff.type == BuffEffectType.DistanceDurationPercent)
+                                fraction += eff.value;
                         }
                     }
-                    duration += extra;
                 }
+
+                if (fraction > 0f)
+                    duration = fraction;
+
+                duration = Mathf.Clamp01(duration);
             }
-            // Apply power via policy
-            var policy = ComputePowerPolicy();
-            if (durationType == BuffDurationType.DistancePercent)
-                duration = Mathf.Clamp01(duration + policy.distanceFractionAdd);
             else
+            {
+                var policy = ComputePowerPolicy();
                 duration *= policy.durationMultiplier;
+            }
             return duration;
         }
 
@@ -284,6 +286,8 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
                 BuffEffectType.CritDamagePercent => $"Crit Damage +{eff.value}%",
+                BuffEffectType.TimeScalePercent => $"Game Speed +{eff.value}",
+                BuffEffectType.DistanceDurationPercent => string.Empty,
                 _ => string.Empty
             };
         }

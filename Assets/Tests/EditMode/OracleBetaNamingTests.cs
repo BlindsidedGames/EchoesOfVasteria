@@ -1,3 +1,4 @@
+#if UNITY_INCLUDE_TESTS
 using Blindsided;
 using NUnit.Framework;
 using UnityEngine;
@@ -54,3 +55,4 @@ namespace Tests.EditMode
         }
     }
 }
+#endif

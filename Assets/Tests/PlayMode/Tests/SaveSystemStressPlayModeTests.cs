@@ -1,3 +1,4 @@
+#if UNITY_INCLUDE_TESTS
 using System;
 using System.Collections;
 using System.IO;
@@ -193,5 +194,4 @@ namespace Tests.PlayMode
         }
     }
 }
-
-
+#endif

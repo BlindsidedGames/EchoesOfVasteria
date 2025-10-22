@@ -31,6 +31,9 @@ namespace TimelessEchoes.Buffs
         private readonly List<bool> autoCastSlots = new(new bool[5]);
         private readonly Dictionary<BuffRecipe, float> cooldowns = new();
 
+        private float baseTimeScale = 1f;
+        private float baseFixedDeltaTime = 0.02f;
+
 
         public int UnlockedSlots
         {
@@ -127,11 +130,14 @@ namespace TimelessEchoes.Buffs
                 TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+            ApplyTimeScaleModifier();
         }
 
         protected override void Awake()
         {
             base.Awake();
+            baseTimeScale = Time.timeScale;
+            baseFixedDeltaTime = Time.fixedDeltaTime;
             // Ensure no active buffs linger between sessions
             ClearActiveBuffs(false);
             OnLoadData += LoadSlots;
@@ -155,6 +161,7 @@ namespace TimelessEchoes.Buffs
 
         protected override void OnDestroy()
         {
+            RestoreTimeScale();
             base.OnDestroy();
             OnLoadData -= LoadSlots;
         }
@@ -283,6 +290,7 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+            ApplyTimeScaleModifier();
 
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
                 TimelessEchoes.Hero.DirtyMask.Damage | TimelessEchoes.Hero.DirtyMask.AttackRate |
@@ -661,6 +669,7 @@ namespace TimelessEchoes.Buffs
                 TimelessEchoes.Hero.DirtyMask.CritChance | TimelessEchoes.Hero.DirtyMask.CritDamage | TimelessEchoes.Hero.DirtyMask.Move |
                 TimelessEchoes.Hero.DirtyMask.Defense | TimelessEchoes.Hero.DirtyMask.Regen,
                 TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+            ApplyTimeScaleModifier();
         }
 
         private void DestroyEchoes(ActiveBuff buff)
@@ -705,6 +714,32 @@ namespace TimelessEchoes.Buffs
             public float remaining;
             public float expireAtDistance = float.PositiveInfinity;
             public List<EchoController> echoes = new();
+        }
+
+        private void ApplyTimeScaleModifier()
+        {
+            var additive = 0f;
+            foreach (var buff in activeBuffs)
+            {
+                if (buff?.effects == null) continue;
+                foreach (var eff in buff.effects)
+                {
+                    if (eff.type == BuffEffectType.TimeScalePercent)
+                        additive += eff.value;
+                }
+            }
+
+            var targetScale = Mathf.Max(0.001f, baseTimeScale + additive);
+            Time.timeScale = targetScale;
+
+            if (baseTimeScale > 0f)
+                Time.fixedDeltaTime = baseFixedDeltaTime * (targetScale / baseTimeScale);
+        }
+
+        private void RestoreTimeScale()
+        {
+            Time.timeScale = baseTimeScale;
+            Time.fixedDeltaTime = baseFixedDeltaTime;
         }
     }
 }
