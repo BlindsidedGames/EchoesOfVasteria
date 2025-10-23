@@ -36,7 +36,8 @@ namespace TimelessEchoes.Tasks
             var multiplier = GetProgressMultiplier(task);
             var weight = baseWeight * multiplier;
 
-            if (worldX > task.maxX)
+            var effectiveMax = task.GetEffectiveMaxX();
+            if (worldX > effectiveMax)
                 weight *= OutOfRangeMultiplier;
 
             return weight;
@@ -106,9 +107,13 @@ namespace TimelessEchoes.Tasks
 
         public static float GetProgressMultiplier(TaskData task)
         {
-            var multiplier = 1f + TierBonusPerThreshold * GetCompletedTierCount(task);
-            if (IsToggleEnabled(task))
+            var toggleEnabled = IsToggleEnabled(task);
+            var multiplier = 1f;
+            if (toggleEnabled)
+            {
+                multiplier += TierBonusPerThreshold * GetCompletedTierCount(task);
                 multiplier *= ToggleMultiplier;
+            }
             return multiplier;
         }
 

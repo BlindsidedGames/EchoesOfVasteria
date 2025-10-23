@@ -19,11 +19,12 @@ MonoBehaviour:
   xpForCompletion: 5
   minX: 150
   maxX: 500
+  enforceMaxDistance: 0
   requiredQuest: {fileID: 11400000, guid: 2f2ff992f4de15a4bb5263366f3fe554, type: 2}
   taskDuration: 4
   sfxInterval: 0
   taskPrefab: {fileID: 3960746967130773130, guid: e1e855e4d748a394786b664c58282b8a, type: 3}
-  weight: 1
+  weight: 700
   spawnTerrains:
   - {fileID: 11400000, guid: b7b19e18e3940684a9272aa363ba1503, type: 2}
   - {fileID: 11400000, guid: f2194a486371c5541bd9b70b3d3f84ed, type: 2}

@@ -383,7 +383,7 @@ namespace TimelessEchoes.EditorTools
 
 			// Per-task: map [minX, maxX] to [0,1]. If maxX is Infinity or <= minX, fallback to [minX, End X]
 			float min = t != null ? t.minX : startDistance;
-			float max = t != null ? t.maxX : endDistance;
+			float max = t != null ? t.GetEffectiveMaxX() : endDistance;
 			if (float.IsInfinity(max) || max <= min) max = Mathf.Max(min + 1f, endDistance);
 			return Mathf.InverseLerp(min, max, worldX);
 		}

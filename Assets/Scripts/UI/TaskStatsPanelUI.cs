@@ -493,6 +493,15 @@ namespace TimelessEchoes.UI
             if (ui.entrySpawnDistanceText != null)
             {
                 var weightText = CalcUtils.FormatNumber(Mathf.Max(0f, effectiveWeight), true);
+                string minStr = CalcUtils.FormatNumber(data.minX, true);
+                bool showMaxDistance = data != null && data.enforceMaxDistance;
+                string maxStr = float.IsInfinity(data.maxX)
+                    ? "Infinity"
+                    : CalcUtils.FormatNumber(data.maxX, true);
+                string distanceLine = showMaxDistance
+                    ? $"Min Distance: {minStr}, Max Distance: {maxStr}"
+                    : $"Min Distance: {minStr}";
+
                 if (!hasCompletions)
                 {
                     ui.entrySpawnDistanceText.text = string.Empty;
@@ -503,21 +512,13 @@ namespace TimelessEchoes.UI
                     string nextLine = nextImprovement > 0
                         ? $"Next improvement: {CalcUtils.FormatNumber(nextImprovement, true)} Tasks"
                         : "Next improvement: Maxed";
-                    string minStr = CalcUtils.FormatNumber(data.minX, true);
-                    string maxStr = float.IsInfinity(data.maxX)
-                        ? "Infinity"
-                        : CalcUtils.FormatNumber(data.maxX, true);
                     ui.entrySpawnDistanceText.text =
-                        $"Spawn chance: {chancePercent}% ({weightText})\n{nextLine}\nMin Distance: {minStr}, Max Distance: {maxStr}";
+                        $"Spawn chance: {chancePercent}% ({weightText})\n{nextLine}\n{distanceLine}";
                 }
                 else
                 {
-                    string minStr = CalcUtils.FormatNumber(data.minX, true);
-                    string maxStr = float.IsInfinity(data.maxX)
-                        ? "Infinity"
-                        : CalcUtils.FormatNumber(data.maxX, true);
                     ui.entrySpawnDistanceText.text =
-                        $"Spawn chance: -- ({weightText})\nNext improvement: --\nMin Distance: {minStr}, Max Distance: {maxStr}";
+                        $"Spawn chance: -- ({weightText})\nNext improvement: --\n{distanceLine}";
                 }
             }
 

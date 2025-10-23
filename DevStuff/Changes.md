@@ -1,3 +1,4 @@
+- Added a max-distance toggle to TaskData so disabled entries act infinite and the Task stats panel hides max distance details.
 - Added task stat weight multipliers with persistent double toggles, category-based spawn chance previews (skill-only in town, map-weighted during runs), distance slider integration, per-task weight display, and min/max distance readouts for the Tasks tab UI.
 - Noted in `Agents.md` that Unity tests must be run through MCP tooling.
 - Added a Bonus Experience buff effect with SkillController integration, editor coverage, and a new BuffRecipe unlocked alongside task/combat echoes.
@@ -50,3 +51,4 @@
 
 
 
+- Gated task completion weight bonuses behind the task toggle so disabled tasks stay at base weight while enabled tasks get the tier bonus before the 2x multiplier.

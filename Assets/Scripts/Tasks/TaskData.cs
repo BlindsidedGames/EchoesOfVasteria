@@ -30,6 +30,9 @@ namespace TimelessEchoes.Tasks
         public float minX;
         [TitleGroup("Spawn Range")]
         public float maxX = float.PositiveInfinity;
+        [TitleGroup("Spawn Range")]
+        [LabelText("Enforce Max Distance")]
+        public bool enforceMaxDistance;
         [TitleGroup("General")]
         public QuestData requiredQuest;
         [TitleGroup("General")]
@@ -75,6 +78,11 @@ namespace TimelessEchoes.Tasks
         public float GetWeight(float worldX)
         {
             return TaskWeightService.GetEffectiveWeight(this, worldX);
+        }
+
+        public float GetEffectiveMaxX()
+        {
+            return enforceMaxDistance ? maxX : float.PositiveInfinity;
         }
     }
 }
