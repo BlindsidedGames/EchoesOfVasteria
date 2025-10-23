@@ -115,7 +115,7 @@ namespace TimelessEchoes.UI
             if (rankNameObject != null)
                 rankNameObject.SetActive(currentTab == 1);
             if (enemyDistanceControls != null)
-                enemyDistanceControls.SetActive(currentTab == 3);
+                enemyDistanceControls.SetActive(currentTab == 3 || currentTab == 4);
         }
 
         private void BuildButtons()

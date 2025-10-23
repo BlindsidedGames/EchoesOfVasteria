@@ -13,5 +13,7 @@ namespace TimelessEchoes.References.StatPanel
         public TMP_Text entrySpawnDistanceText;
         public Image toggleImage;
         public Button toggleButton;
+        public Sprite toggleOnSprite;
+        public Sprite toggleOffSprite;
     }
 }

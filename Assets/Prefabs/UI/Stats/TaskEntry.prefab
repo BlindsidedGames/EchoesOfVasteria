@@ -132,6 +132,8 @@ MonoBehaviour:
   entrySpawnDistanceText: {fileID: 8405256825568168057}
   toggleImage: {fileID: 74787290653756992}
   toggleButton: {fileID: 2154931390074655964}
+  toggleOnSprite: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  toggleOffSprite: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
 --- !u!114 &6383340080225041462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,7 +377,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
+  m_fontSize: 1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -434,7 +436,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
+  m_PreferredWidth: 99999
   m_PreferredHeight: -1
   m_FlexibleWidth: 999999
   m_FlexibleHeight: -1
@@ -832,7 +834,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
+  m_fontSize: 4.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2028,7 +2030,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
+  m_fontSize: 4.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2167,7 +2169,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
+  m_fontSize: 1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2226,7 +2228,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
+  m_PreferredWidth: 99999
   m_PreferredHeight: -1
   m_FlexibleWidth: 999999
   m_FlexibleHeight: -1

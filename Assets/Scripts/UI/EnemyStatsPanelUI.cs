@@ -127,6 +127,9 @@ namespace TimelessEchoes.UI
             return tracker != null ? tracker.MaxRunDistance : 0f;
         }
 
+        public Slider DistanceSlider => distanceSlider;
+        public TMP_Text DistanceText => distanceText;
+
         private void UpdateDistanceLabel()
         {
             if (distanceText != null)

@@ -25,7 +25,8 @@ MonoBehaviour:
   - m_Id: 689627873280
     m_Localized: "You wake as if from a dream, gentle words fade into the distance
       drifting away on the winds of time. \n\"Begin this journey, see it through
-      and I shall release you from this realm\" - The Vast One"
+      and I shall release you from this realm\" - The Vast One\n\n<b>You can start
+      by completing this quest, closing this window, and clicking \"Begin Farming\"</b>"
     m_Metadata:
       m_Items: []
   - m_Id: 723614318592
@@ -52,7 +53,11 @@ MonoBehaviour:
   - m_Id: 4508550053888
     m_Localized: '"Carl the Reaper will ensure you don''t stray too far from the
       town. As you assist the townsfolk he will gradually loosen the leash" - The
-      Vast One'
+      Vast One
+
+
+      <b>Reaping distance is the max distance you can travel. It
+      can be improved via quests or increases by 1% when you are reaped.</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 4510643011584
@@ -68,7 +73,12 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4642964914176
     m_Localized: '"Collect resources for me and I will cook you up a hearty treat!"
-      - Eva'
+      - Eva
+
+
+      <b>Whether you are online or offline, Alter-Echoes will produce
+      a portion of your best per minute resource count you can also find this in
+      the hub menu.</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 4644424531968
@@ -92,11 +102,17 @@ MonoBehaviour:
   - m_Id: 4904353939456
     m_Localized: '"In this realm Ivan is your brother. He will assist you in upgrading
       your various stats, but you will need to gather the resources he needs" - The
-      Vast One'
+      Vast One
+
+
+      <b>This unlocks a new menu for you. The forge which can be
+      found under the "Townsfolk" Menu.</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 4905721282560
-    m_Localized: Reap distance increased by 25.
+    m_Localized: 'Forge, and a neat Sword!
+
+      Reap distance increased by 25.'
     m_Metadata:
       m_Items: []
   - m_Id: 4902881738752
@@ -259,9 +275,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7521440251904
-    m_Localized: '"There''s no way we can get that many radishes in time for Eva...
-      Oh! I see you have her magic watering can! If you gather me 100 Radishes I''d
-      happily get Tillman to teach you a thing or two about Corn" - Flora'
+    m_Localized: '<b>Task weights can be adjusted slightly if you go into the tasks
+      tab of the stats panel.</b>
+
+      "There''s no way we can get that many radishes
+      in time for Eva... Oh! I see you have her magic watering can! If you gather
+      me 100 Radishes I''d happily get Tillman to teach you a thing or two about
+      Corn" - Flora'
     m_Metadata:
       m_Items: []
   - m_Id: 7522576908288
@@ -318,7 +338,11 @@ MonoBehaviour:
   - m_Id: 7955959563392
     m_Localized: '"It looks like Mildred has taken a liking to you! I bet if you
       give her some of your Flippy Floppys she will happily help you out on your
-      travels!" - Eva'
+      travels!" - Eva
+
+
+      <b>Buffs have their own tab which you can find under
+      the hub!</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 7955960563392
@@ -361,7 +385,12 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7955986563392
     m_Localized: '"As you use these buffs more often, my power will feel more natural
-      to you and echoes from your past will cast them for you" - The Vast One'
+      to you and echoes from your past will cast them for you" - The Vast One
+
+
+      <b>Echo
+      Casting = Auto Casting, toggle it on by holding down the button or clicking
+      while not assigning in the buff tab.</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 7955987563392
@@ -1153,7 +1182,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904173
-    m_Localized: '"That''s how you say it right?" - The Vast One'
+    m_Localized: '"That''s how you say it right?" - The Vast One
+
+
+      <b>This
+      is another Townsfolk feature. You will gather a lot of power here.</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904175

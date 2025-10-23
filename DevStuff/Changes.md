@@ -1,3 +1,4 @@
+- Added task stat weight multipliers with persistent double toggles, category-based spawn chance previews (skill-only in town, map-weighted during runs), distance slider integration, per-task weight display, and min/max distance readouts for the Tasks tab UI.
 - Noted in `Agents.md` that Unity tests must be run through MCP tooling.
 - Added a Bonus Experience buff effect with SkillController integration, editor coverage, and a new BuffRecipe unlocked alongside task/combat echoes.
 - Documented `Agents.md` test guidance so new Unity test scripts stay inside `#if UNITY_INCLUDE_TESTS` editor-only guards.
