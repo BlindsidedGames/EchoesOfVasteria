@@ -73,7 +73,7 @@ namespace TimelessEchoes.Upgrades
             UpdateRuntimeLabel(elapsed);
             UpdateSummaryLabels(elapsed);
 
-            updateTimer += Time.deltaTime;
+            updateTimer += Time.unscaledDeltaTime;
             if (updateTimer >= UpdateIntervalSeconds)
             {
                 updateTimer = 0f;

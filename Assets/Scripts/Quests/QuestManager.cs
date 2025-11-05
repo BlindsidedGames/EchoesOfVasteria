@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
@@ -41,6 +42,10 @@ namespace TimelessEchoes.Quests
         // Prevent re-entrant noticeboard rebuilds which can duplicate entries
         private bool _isRefreshingNoticeboard;
         private bool _pendingRefresh;
+        private int cachedTotalQuestCount;
+        private bool cachedAllQuestsComplete;
+        private double cachedCompletionSeconds;
+        private long cachedCompletionTicks;
 
         private class QuestInstance
         {
@@ -92,6 +97,7 @@ namespace TimelessEchoes.Quests
             StartCoroutine(DelayedProgressUpdate());
             StartCoroutine(SubscribeStatTrackerWhenReady());
             OnLoadData += OnLoadDataHandler;
+            AuditQuestCompletionState();
         }
 
         protected override void OnDestroy()
@@ -585,6 +591,7 @@ namespace TimelessEchoes.Quests
             Log($"Quest {id} completed", TELogCategory.Quest, this);
             QuestHandin(id);
             UpdateCompletionPercentage();
+            AuditQuestCompletionState();
             if (oracle.saveData.PinnedQuests.Remove(id))
                 PinnedQuestUIManager.Instance?.RefreshPins();
             else
@@ -922,6 +929,7 @@ namespace TimelessEchoes.Quests
             LoadState();
             StartCoroutine(DelayedProgressUpdate());
             EnsureStatTrackerSubscriptions();
+            AuditQuestCompletionState();
         }
 
         private IEnumerator DelayedProgressUpdate()
@@ -929,6 +937,102 @@ namespace TimelessEchoes.Quests
             yield return null;
             UpdateAllProgress();
         }
+
+        private void AuditQuestCompletionState()
+        {
+            if (oracle == null || quests == null)
+                return;
+
+            var total = 0;
+            for (int i = 0; i < quests.Count; i++)
+            {
+                if (quests[i] != null)
+                    total++;
+            }
+            cachedTotalQuestCount = total;
+
+            var completed = 0;
+            long latestTicks = 0;
+            if (oracle.saveData.Quests != null)
+            {
+                foreach (var pair in oracle.saveData.Quests)
+                {
+                    var record = pair.Value;
+                    if (record != null && record.Completed)
+                    {
+                        completed++;
+                        if (record.CompletedTimestamp > latestTicks)
+                            latestTicks = record.CompletedTimestamp;
+                    }
+                }
+            }
+
+            var g = oracle.saveData.General ??= new GameData.GeneralStats();
+            g.LastQuestTotal = total;
+
+            var allComplete = total > 0 && completed >= total;
+
+            if (!allComplete)
+            {
+                cachedAllQuestsComplete = false;
+                cachedCompletionSeconds = 0;
+                cachedCompletionTicks = 0;
+                g.FinalQuestCompletionTicks = 0;
+                g.FinalQuestCompletionSeconds = 0;
+                g.LastUploadedCompletionSeconds = 0;
+                g.LastUploadedCompletionCheaterSeconds = 0;
+                oracle.saveData.General = g;
+                return;
+            }
+
+            if (latestTicks <= 0)
+            {
+                latestTicks = g.FinalQuestCompletionTicks > 0 ? g.FinalQuestCompletionTicks : DateTime.UtcNow.Ticks;
+            }
+
+            // Persist the first completion moment unless a new quest invalidated it (g field reset above).
+            if (g.FinalQuestCompletionTicks <= 0)
+                g.FinalQuestCompletionTicks = latestTicks;
+            else
+                g.FinalQuestCompletionTicks = Math.Max(g.FinalQuestCompletionTicks, latestTicks);
+
+            cachedCompletionTicks = g.FinalQuestCompletionTicks;
+            cachedCompletionSeconds = ResolveCompletionSeconds(cachedCompletionTicks);
+            g.FinalQuestCompletionSeconds = cachedCompletionSeconds;
+
+            cachedAllQuestsComplete = true;
+            oracle.saveData.General = g;
+        }
+
+        private double ResolveCompletionSeconds(long completionTicks)
+        {
+            if (completionTicks <= 0 || oracle?.saveData == null)
+                return Math.Max(0d, oracle?.saveData?.PlayTime ?? 0d);
+
+            DateTime startTime;
+            if (!DateTime.TryParse(oracle.saveData.DateStarted, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out startTime))
+            {
+                startTime = DateTime.UtcNow;
+            }
+
+            var completionTime = new DateTime(completionTicks, DateTimeKind.Utc);
+            var spanSeconds = Math.Max(0d, (completionTime - startTime).TotalSeconds);
+            var playtime = Math.Max(0d, oracle.saveData.PlayTime);
+
+            if (spanSeconds <= 0d && playtime > 0d)
+                return playtime;
+
+            if (playtime > 0d)
+                return Math.Max(spanSeconds, playtime);
+
+            return spanSeconds;
+        }
+
+        public bool AllQuestsComplete => cachedAllQuestsComplete;
+
+        public double FinalQuestCompletionSeconds => cachedCompletionSeconds;
+
+        public int TotalQuestCount => cachedTotalQuestCount;
 
         private void EnsureStatTrackerSubscriptions()
         {

@@ -1,3 +1,6 @@
+- Added `savesHiddenObject` handling in `GameManager` so the companion UI enables when saves are hidden during runs.
+- Reworked UGS leaderboards around completion time and total tasks, backfilled quest completion data for existing saves, flagged console/fraudulent scores to a cheater board while still tracking distance reached, and added editor tests around the new fraud heuristics.
+- Preserved real-time systems under Slipstream by moving Oracle playtime, Alter-Echo ticking, GameplayStatTracker run timing, death window countdowns, tier-up toast timers, and run breakdown refreshes to unscaled seconds with new edit-mode coverage for playtime and Alter-Echo generation.
 - Added a max-distance toggle to TaskData so disabled entries act infinite and the Task stats panel hides max distance details.
 - Added task stat weight multipliers with persistent double toggles, category-based spawn chance previews (skill-only in town, map-weighted during runs), distance slider integration, per-task weight display, and min/max distance readouts for the Tasks tab UI.
 - Noted in `Agents.md` that Unity tests must be run through MCP tooling.

@@ -234,20 +234,27 @@ namespace TimelessEchoes.NpcGeneration
         }
         private void Update()
         {
-            var dt = Time.deltaTime;
-            foreach (var gen in generators)
-                if (gen != null)
-                    gen.Tick(dt);
-            // Coalesce expensive rate recomputations
-            if (ratesDirty)
+            TickGenerators(Time.unscaledDeltaTime);
+
+            if (!ratesDirty) return;
+
+            var now = Time.unscaledTime;
+            if (now >= nextRatesRefreshTime)
             {
-                var now = Time.unscaledTime;
-                if (now >= nextRatesRefreshTime)
-                {
-                    ratesDirty = false;
-                    nextRatesRefreshTime = now + 0.25f; // refresh at most 4 Hz
-                    RefreshRates();
-                }
+                ratesDirty = false;
+                nextRatesRefreshTime = now + 0.25f; // refresh at most 4 Hz
+                RefreshRates();
+            }
+        }
+
+        internal void TickGenerators(float deltaSeconds)
+        {
+            if (deltaSeconds <= 0f) return;
+
+            foreach (var gen in generators)
+            {
+                if (gen != null)
+                    gen.Tick(deltaSeconds);
             }
         }
     }

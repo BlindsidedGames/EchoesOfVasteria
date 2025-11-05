@@ -1,5 +1,6 @@
 using QFSW.QC;
 using UnityEngine;
+using Blindsided;
 
 namespace TimelessEchoes
 {
@@ -22,6 +23,7 @@ namespace TimelessEchoes
             if (password == DevPassword)
             {
                 _isAuthenticated = true;
+                MarkConsoleUsed();
                 if (QuantumConsole.Instance != null)
                 {
                     QuantumConsole.Instance.LogToConsole("Developer commands unlocked.");
@@ -55,6 +57,16 @@ namespace TimelessEchoes
             if (!_isAuthenticated)
             {
                 throw new System.Exception("Developer commands are locked. Use: login <password>");
+            }
+            MarkConsoleUsed();
+        }
+
+        private static void MarkConsoleUsed()
+        {
+            var oracle = Oracle.oracle;
+            if (oracle?.saveData?.General != null)
+            {
+                oracle.saveData.General.ConsoleUsed = true;
             }
         }
     }

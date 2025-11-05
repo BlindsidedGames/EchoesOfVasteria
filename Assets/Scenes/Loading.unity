@@ -3367,6 +3367,30 @@ MonoBehaviour:
     - Name: TotalResourcesGathered
       Entry: 4
       Data: 0
+    - Name: FinalQuestCompletionTicks
+      Entry: 3
+      Data: 0
+    - Name: FinalQuestCompletionSeconds
+      Entry: 4
+      Data: 0
+    - Name: ConsoleUsed
+      Entry: 5
+      Data: false
+    - Name: LastQuestTotal
+      Entry: 3
+      Data: 0
+    - Name: LastUploadedCompletionSeconds
+      Entry: 4
+      Data: 0
+    - Name: LastUploadedCompletionCheaterSeconds
+      Entry: 4
+      Data: 0
+    - Name: LastUploadedDistanceReached
+      Entry: 4
+      Data: 0
+    - Name: LastUploadedTasks
+      Entry: 3
+      Data: 0
     - Name: RecentRuns
       Entry: 7
       Data: 66|System.Collections.Generic.List`1[[Blindsided.SaveData.GameData+RunRecord,
@@ -3487,9 +3511,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
   demo: 0
-  beta: 1
+  beta: 0
   betaSaveIteration: 2
-  minimumSeasonalGameVersion: 1.3.1
 --- !u!4 &1159035180
 Transform:
   m_ObjectHideFlags: 0

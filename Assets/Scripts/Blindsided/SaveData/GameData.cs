@@ -325,6 +325,14 @@ namespace Blindsided.SaveData
             public int BuffsCast;
             public int CriticalHits;
             public double TotalResourcesGathered;
+            public long FinalQuestCompletionTicks;
+            public double FinalQuestCompletionSeconds;
+            public bool ConsoleUsed;
+            public int LastQuestTotal;
+            public double LastUploadedCompletionSeconds;
+            public double LastUploadedCompletionCheaterSeconds;
+            public double LastUploadedDistanceReached;
+            public int LastUploadedTasks;
 
             // Records for the most recent runs. Limited to the last 50.
             public List<RunRecord> RecentRuns = new();

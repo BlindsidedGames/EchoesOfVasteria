@@ -8,7 +8,7 @@ namespace Blindsided.UGS
 {
     public static class LeaderboardClient
     {
-        private const string DefaultId = UgsLeaderboardIds.SpookyKills;
+        private const string DefaultId = UgsLeaderboardIds.CompletionTime;
 
         public static async Task SubmitAsync(double score, string leaderboardId = DefaultId)
         {
@@ -21,20 +21,6 @@ namespace Blindsided.UGS
             var metadata = LeaderboardMetadata.Build();
             var options = new AddPlayerScoreOptions { Metadata = metadata };
             await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, score, options);
-
-            // If submitting SpookyKills and the save is eligible, also submit to Seasonal
-            if (leaderboardId == UgsLeaderboardIds.SpookyKills)
-            {
-                var oc = Blindsided.Oracle.oracle;
-                if (oc != null && oc.IsSeasonalEligible())
-                {
-                    try
-                    {
-                        await LeaderboardsService.Instance.AddPlayerScoreAsync(UgsLeaderboardIds.SpookyKillsSeasonal, score, options);
-                    }
-                    catch { /* ignore secondary failure */ }
-                }
-            }
         }
 
         public static async Task<LeaderboardScoresPage> GetTopAsync(int limit = 50, string leaderboardId = DefaultId)

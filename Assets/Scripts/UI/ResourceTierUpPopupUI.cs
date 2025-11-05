@@ -241,7 +241,7 @@ namespace TimelessEchoes.UI
 
             while (timeLeft > 0f)
             {
-                timeLeft -= Time.deltaTime;
+                timeLeft -= Time.unscaledDeltaTime;
 
                 if (countdownBar != null)
                     countdownBar.fillAmount = Mathf.Clamp01(timeLeft / seconds);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Buffs;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
@@ -114,7 +115,7 @@ namespace TimelessEchoes.Stats
         public double CurrentRunDamageDealt => currentRunDamageDealt;
         public double CurrentRunDamageTaken => currentRunDamageTaken;
 
-        public float CurrentRunElapsedSeconds => RunInProgress ? Time.time - runStartTime : 0f;
+        public float CurrentRunElapsedSeconds => RunInProgress ? Time.unscaledTime - runStartTime : 0f;
 
         public bool RunInProgress { get; private set; }
 
@@ -131,6 +132,7 @@ namespace TimelessEchoes.Stats
         public float SessionDuration { get; private set; }
         private static Dictionary<string, Resource> lookup;
         private static Dictionary<int, TaskData> taskLookup;
+        private float runScaledDuration;
 
         private void Awake()
         {
@@ -478,7 +480,8 @@ namespace TimelessEchoes.Stats
         {
             currentRunScalingMode = scalingMode;
             currentMapKey = config != null ? config.name : null;
-            runStartTime = Time.time;
+            runStartTime = Time.unscaledTime;
+            runScaledDuration = 0f;
             lastHeroPos = Vector3.zero;
             RunInProgress = true;
             CurrentRunDistance = 0f;
@@ -530,10 +533,11 @@ namespace TimelessEchoes.Stats
         {
             if (!RunInProgress)
                 return;
-            var duration = Time.time - runStartTime;
+            var duration = Time.unscaledTime - runStartTime;
             LastRunDuration = duration;
             SessionDuration += duration;
-            UpdateBestResourcePerMinute(duration);
+            var durationForRates = runScaledDuration > 0f ? runScaledDuration : duration;
+            UpdateBestResourcePerMinute(durationForRates);
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
@@ -575,10 +579,11 @@ namespace TimelessEchoes.Stats
         {
             if (!RunInProgress)
                 return;
-            var duration = Time.time - runStartTime;
+            var duration = Time.unscaledTime - runStartTime;
             LastRunDuration = duration;
             SessionDuration += duration;
-            UpdateBestResourcePerMinute(duration);
+            var durationForRates = runScaledDuration > 0f ? runScaledDuration : duration;
+            UpdateBestResourcePerMinute(durationForRates);
             var record = new GameData.RunRecord
             {
                 RunNumber = nextRunNumber,
@@ -621,6 +626,24 @@ namespace TimelessEchoes.Stats
             return !string.IsNullOrEmpty(mapKey) && string.Equals(mapKey, HalloweenMapKey, StringComparison.OrdinalIgnoreCase);
         }
 
+        private void Update()
+        {
+            if (!RunInProgress) return;
+
+            var delta = Time.unscaledDeltaTime;
+            if (delta <= 0f) return;
+
+            runScaledDuration += delta * GetNormalizedTimeScale();
+        }
+
+        private static float GetNormalizedTimeScale()
+        {
+            var manager = BuffManager.Instance;
+            var baseScale = manager != null ? Mathf.Max(0.0001f, manager.BaseTimeScale) : 1f;
+            var effectiveScale = Mathf.Max(0f, Time.timeScale);
+            return baseScale > 0f ? effectiveScale / baseScale : 1f;
+        }
+
         private void UpdateMostKillsStats()
         {
             if (CurrentRunKills <= 0) return;
@@ -653,7 +676,8 @@ namespace TimelessEchoes.Stats
             currentRunDamageDealt = 0f;
             currentRunDamageTaken = 0f;
             lastHeroPos = Vector3.zero;
-            runStartTime = Time.time;
+            runScaledDuration = 0f;
+            runStartTime = Time.unscaledTime;
             RunInProgress = false;
             currentMapKey = null;
             currentRunScalingMode = TimelessEchoes.GameManager.MapScalingMode.DistanceBased;

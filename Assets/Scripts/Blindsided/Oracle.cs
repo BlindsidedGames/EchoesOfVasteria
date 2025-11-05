@@ -57,8 +57,6 @@ namespace Blindsided
         [TabGroup("SaveData")] public GameData saveData = new();
 
         [Header("Seasonal Leaderboard")]
-        [SerializeField] private string minimumSeasonalGameVersion = "0.0.0"; // configurable threshold
-        public string MinimumSeasonalGameVersion => minimumSeasonalGameVersion;
 
         private bool loaded;
         private bool wipeInProgress;
@@ -145,69 +143,15 @@ namespace Blindsided
 
         private void Update()
         {
-            if (loaded) saveData.PlayTime += Time.deltaTime;
+            if (!loaded) return;
+
+            AccumulatePlayTime(Time.unscaledDeltaTime);
         }
 
-        /// <summary>
-        /// Returns true if this save qualifies for the Seasonal leaderboard based on GameVersionCreated.
-        /// </summary>
-        public bool IsSeasonalEligible()
+        internal void AccumulatePlayTime(float unscaledDeltaSeconds)
         {
-            try
-            {
-                var created = saveData != null ? saveData.GameVersionCreated : null;
-                if (string.IsNullOrEmpty(created) || string.IsNullOrEmpty(minimumSeasonalGameVersion))
-                    return false;
-                return CompareVersionStrings(created, minimumSeasonalGameVersion) >= 0;
-            }
-            catch { return false; }
-        }
-
-        /// <summary>
-        /// Compares two version strings in the form of dotted numeric segments, ignoring non-numeric suffixes.
-        /// Returns -1, 0, 1 for a &lt; b, ==, &gt;.
-        /// </summary>
-        private static int CompareVersionStrings(string a, string b)
-        {
-            if (a == b) return 0;
-            if (string.IsNullOrEmpty(a)) return -1;
-            if (string.IsNullOrEmpty(b)) return 1;
-
-            int[] pa = ParseVersionToIntArray(a);
-            int[] pb = ParseVersionToIntArray(b);
-            int len = Math.Max(pa.Length, pb.Length);
-            for (int i = 0; i < len; i++)
-            {
-                int ai = i < pa.Length ? pa[i] : 0;
-                int bi = i < pb.Length ? pb[i] : 0;
-                if (ai < bi) return -1;
-                if (ai > bi) return 1;
-            }
-            return 0;
-        }
-
-        private static int[] ParseVersionToIntArray(string v)
-        {
-            // Split by dots; for each segment, parse leading digits (ignore letters like 'f1')
-            var parts = v.Split('.');
-            var list = new System.Collections.Generic.List<int>(parts.Length);
-            foreach (var p in parts)
-            {
-                int val = 0;
-                bool any = false;
-                // parse from start; stop at first non-digit
-                for (int i = 0; i < p.Length; i++)
-                {
-                    if (char.IsDigit(p[i]))
-                    {
-                        any = true;
-                        val = val * 10 + (p[i] - '0');
-                    }
-                    else break;
-                }
-                list.Add(any ? val : 0);
-            }
-            return list.ToArray();
+            if (unscaledDeltaSeconds <= 0f || saveData == null) return;
+            saveData.PlayTime += unscaledDeltaSeconds;
         }
 
         private void OnApplicationQuit()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blindsided.UGS;
+using Blindsided.Utilities;
 using TMPro;
 using Unity.Services.Leaderboards.Models;
 using UnityEngine;
@@ -12,11 +13,11 @@ namespace TimelessEchoes.UI
 {
     /// <summary>
     /// Controls the Leaderboards UI: shows up to 50 entries and a separate colored player row.
-    /// Supports Most Kills with toggles for Top vs Around Player and Seasonal vs Global.
+    /// Supports Completion Time with toggles for Top vs Around Player and Completion vs Tasks.
     /// </summary>
     public class LeaderboardsPanelUI : MonoBehaviour
     {
-        public enum Board { SpookyKills }
+        public enum Board { CompletionTime, Tasks }
 
         [Header("Entry Rows")] 
         [SerializeField] private Transform entriesContainer; // Parent to hold pooled rows
@@ -46,7 +47,7 @@ namespace TimelessEchoes.UI
 
         [Header("Optional Header Text")] [SerializeField] private TMP_Text boardLabel;
 
-        [SerializeField] private Board currentBoard = Board.SpookyKills;
+        [SerializeField] private Board currentBoard = Board.CompletionTime;
         [SerializeField] private bool showTop = false; // default OFF => around player
         [SerializeField] private bool showSeasonal = false; // default OFF => global board
 
@@ -72,10 +73,7 @@ namespace TimelessEchoes.UI
 
         private void OnEnable()
         {
-            // Default the seasonal toggle based on eligibility (eligible -> seasonal on; else global)
-            var oc = Blindsided.Oracle.oracle;
-            var eligible = oc != null && oc.IsSeasonalEligible();
-            showSeasonal = eligible;
+            showSeasonal = false;
             UpdateBoardLabel();
             UpdateToggleVisual();
             UpdateSeasonalToggleVisual();
@@ -115,15 +113,6 @@ namespace TimelessEchoes.UI
             UpdateSeasonalToggleVisual();
             UpdateTopToggleLockState();
             UpdateBoardLabel();
-            // If ineligible seasonal is selected, force Top mode and lock it
-            if (showSeasonal && !IsSeasonalEligible())
-            {
-                if (!showTop)
-                {
-                    showTop = true;
-                    UpdateToggleVisual();
-                }
-            }
             if (showTop)
             {
                 // When switching boards in Top mode, ensure the list jumps to the top
@@ -146,16 +135,8 @@ namespace TimelessEchoes.UI
 
         private void UpdateTopToggleLockState()
         {
-            // Lock the Top toggle when seasonal is ON but the save is ineligible
-            bool lockTop = showSeasonal && !IsSeasonalEligible();
             if (toggleButton != null)
-                toggleButton.interactable = !lockTop;
-        }
-
-        private bool IsSeasonalEligible()
-        {
-            var oc = Blindsided.Oracle.oracle;
-            return oc != null && oc.IsSeasonalEligible();
+                toggleButton.interactable = true;
         }
 
         // Ensure the seasonal info row never appears as a ranked entry. If active, keep it at the top.
@@ -176,7 +157,8 @@ namespace TimelessEchoes.UI
         private void UpdateBoardLabel()
         {
             if (boardLabel == null) return;
-            var text = showSeasonal ? "Seasonal Most Kills" : "Global Most Kills";
+            currentBoard = showSeasonal ? Board.Tasks : Board.CompletionTime;
+            var text = showSeasonal ? "Total Tasks Completed" : "Completion Time";
             boardLabel.text = text;
         }
 
@@ -189,10 +171,9 @@ namespace TimelessEchoes.UI
 
         private string LeaderboardId(Board board)
         {
-            // Only SpookyKills is supported now. Choose seasonal/global by toggle.
             if (showSeasonal)
-                return UgsLeaderboardIds.SpookyKillsSeasonal;
-            return UgsLeaderboardIds.SpookyKills;
+                return UgsLeaderboardIds.Tasks;
+            return UgsLeaderboardIds.CompletionTime;
         }
 
         private async Task RefreshAsync()
@@ -208,35 +189,7 @@ namespace TimelessEchoes.UI
                 // Ensure pool exists (no-op if already built)
                 BuildPoolIfNeeded();
 
-                // Seasonal gating: if seasonal is selected but save is ineligible,
-                // show info entry but still proceed to load the leaderboard (Top50 forced)
-                if (showSeasonal && !IsSeasonalEligible())
-                {
-                    if (seasonalInfoEntry != null)
-                    {
-                        seasonalInfoEntry.SetActive(true);
-                        var oc = Blindsided.Oracle.oracle;
-                        var required = oc != null ? oc.MinimumSeasonalGameVersion : "?";
-                        var created = oc != null && oc.saveData != null && !string.IsNullOrEmpty(oc.saveData.GameVersionCreated)
-                            ? oc.saveData.GameVersionCreated
-                            : "?";
-                        // Update the rank text with required/created versions and clear other fields
-                        seasonalInfoEntry.RankText?.SetText($"To submit seasonal leaderboard scores your save must be created on version {required} or later.\nYour save was created with version {created}");
-                        if (seasonalInfoEntry.NameText != null) seasonalInfoEntry.NameText.text = string.Empty;
-                        if (seasonalInfoEntry.ScoreText != null) seasonalInfoEntry.ScoreText.text = string.Empty;
-                        if (seasonalInfoEntry.VersionText != null) seasonalInfoEntry.VersionText.text = string.Empty;
-                    }
-                    // Force Top mode ON and lock (visual handled elsewhere)
-                    if (!showTop)
-                    {
-                        showTop = true;
-                        UpdateToggleVisual();
-                    }
-                }
-                else
-                {
-                    if (seasonalInfoEntry != null) seasonalInfoEntry.SetActive(false);
-                }
+                if (seasonalInfoEntry != null) seasonalInfoEntry.SetActive(false);
 
                 var id = LeaderboardId(currentBoard);
 
@@ -635,8 +588,16 @@ namespace TimelessEchoes.UI
 
         private static string FormatScore(double score, Board board)
         {
-            // Only SpookyKills is supported; show as integer value.
+            if (board == Board.CompletionTime)
+                return FormatDuration(score);
             return Math.Floor(score).ToString("N0");
+        }
+
+        private static string FormatDuration(double seconds)
+        {
+            if (seconds < 0d)
+                seconds = 0d;
+            return CalcUtils.FormatTime(seconds, shortForm: true);
         }
 
         private void ArrangeAroundPlayer(int aboveCount, int belowCount)
