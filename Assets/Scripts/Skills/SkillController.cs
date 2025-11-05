@@ -134,18 +134,32 @@ namespace TimelessEchoes.Skills
 
         public float AddExperience(Skill skill, float xpAmount)
         {
+            return ApplyExperience(skill, xpAmount, true);
+        }
+
+        public float GrantQuestExperience(Skill skill, float xpAmount)
+        {
+            return ApplyExperience(skill, xpAmount, false);
+        }
+
+        private float ApplyExperience(Skill skill, float xpAmount, bool applyMultipliers)
+        {
             if (skill == null || xpAmount <= 0f)
                 return 0f;
 
-            float xpMultiplier = 1f + effectAggregator.GetExperienceBonus(skill);
-            if (xpMultiplier < 0f)
-                xpMultiplier = 0f;
+            float appliedXp = xpAmount;
+            if (applyMultipliers)
+            {
+                float xpMultiplier = 1f + effectAggregator.GetExperienceBonus(skill);
+                if (xpMultiplier < 0f)
+                    xpMultiplier = 0f;
 
-            var buffMultiplier = BuffManager.Instance != null ? BuffManager.Instance.ExperienceGainMultiplier : 1f;
-            if (buffMultiplier < 0f)
-                buffMultiplier = 0f;
+                var buffMultiplier = BuffManager.Instance != null ? BuffManager.Instance.ExperienceGainMultiplier : 1f;
+                if (buffMultiplier < 0f)
+                    buffMultiplier = 0f;
 
-            var appliedXp = xpAmount * xpMultiplier * buffMultiplier;
+                appliedXp = xpAmount * xpMultiplier * buffMultiplier;
+            }
 
             if (!progress.TryGetValue(skill, out var prog))
             {

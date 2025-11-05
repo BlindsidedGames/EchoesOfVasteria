@@ -53,6 +53,51 @@ namespace TimelessEchoes.Tests.Buffs
                 ScriptableObject.DestroyImmediate(skill);
             }
         }
+
+        [Test]
+        public void QuestExperienceBypassesMultipliers()
+        {
+            var managerObject = new GameObject("BuffManager_QuestXP");
+            var controllerObject = new GameObject("SkillController_QuestXP");
+            var recipe = ScriptableObject.CreateInstance<BuffRecipe>();
+            var skill = ScriptableObject.CreateInstance<Skill>();
+
+            try
+            {
+                var manager = managerObject.AddComponent<BuffManager>();
+                recipe.durationType = BuffDurationType.Time;
+                recipe.baseDuration = 5f;
+                recipe.baseEffects = new List<BuffEffect>
+                {
+                    new BuffEffect { type = BuffEffectType.ExperienceBonusFraction, value = 1f }
+                };
+
+                Assert.IsTrue(manager.PurchaseBuff(recipe), "Buff should activate successfully.");
+                Assert.Greater(manager.ExperienceGainMultiplier, 1f, "Buff multiplier should exceed 1.");
+
+                var controller = controllerObject.AddComponent<SkillController>();
+
+                skill.skillName = "Quest Skill";
+
+                var skillsField = typeof(SkillController).GetField("skills", BindingFlags.NonPublic | BindingFlags.Instance);
+                Assert.IsNotNull(skillsField, "Failed to access SkillController.skills field.");
+                skillsField.SetValue(controller, new List<Skill> { skill });
+
+                var appliedXp = controller.GrantQuestExperience(skill, 20f);
+                Assert.AreEqual(20f, appliedXp, 1e-4f, "Quest experience should bypass buffs and apply the raw value.");
+
+                var progress = controller.GetProgress(skill);
+                Assert.IsNotNull(progress, "GrantQuestExperience should create progress for the skill.");
+                Assert.AreEqual(20f, progress.CurrentXP, 1e-4f, "Stored experience should match the raw quest reward.");
+            }
+            finally
+            {
+                Object.DestroyImmediate(managerObject);
+                Object.DestroyImmediate(controllerObject);
+                ScriptableObject.DestroyImmediate(recipe);
+                ScriptableObject.DestroyImmediate(skill);
+            }
+        }
     }
 }
 #endif

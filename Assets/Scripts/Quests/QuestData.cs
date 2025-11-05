@@ -4,6 +4,7 @@ using Blindsided.Utilities;
 using Sirenix.OdinInspector;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Skills;
 using UnityEngine;
 using UnityEngine.Localization;
 using TimelessEchoes.Buffs;
@@ -61,8 +62,19 @@ namespace TimelessEchoes.Quests
         [Serializable]
         public struct Reward
         {
+            public RewardType type;
+
+            [ShowIf("@type == RewardType.Resource")]
             public Resource resource;
+
+            [ShowIf("@type == RewardType.Resource")]
             public int amount;
+
+            [ShowIf("@type == RewardType.SkillExperience")]
+            public Skill skill;
+
+            [ShowIf("@type == RewardType.SkillExperience")]
+            public float experience;
         }
 
         public enum RequirementType
@@ -78,6 +90,12 @@ namespace TimelessEchoes.Quests
             ResourcesGathered,
             TasksCompleted,
             CauldronMix
+        }
+
+        public enum RewardType
+        {
+            Resource,
+            SkillExperience
         }
     }
 }

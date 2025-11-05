@@ -11,6 +11,7 @@ using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 using static Blindsided.Oracle;
@@ -528,7 +529,19 @@ namespace TimelessEchoes.Quests
                         resourceManager.Spend(req.resource, req.amount);
 
             foreach (var reward in inst.data.rewards)
-                ResourceManager.Instance.Add(reward.resource, reward.amount, trackStats: false);
+            {
+                switch (reward.type)
+                {
+                    case QuestData.RewardType.Resource:
+                        if (reward.resource != null)
+                            ResourceManager.Instance.Add(reward.resource, reward.amount, trackStats: false);
+                        break;
+                    case QuestData.RewardType.SkillExperience:
+                        if (reward.skill != null)
+                            SkillController.Instance?.GrantQuestExperience(reward.skill, reward.experience);
+                        break;
+                }
+            }
 
             record.Completed = true;
             record.CompletedTimestamp = DateTime.UtcNow.Ticks;
