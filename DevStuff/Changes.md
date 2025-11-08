@@ -1,3 +1,5 @@
+- Corrected skill level-up toasts to show the full level range during multi-level gains, added synchronous edit-mode coverage, and wired EditMode.Tests to the test runner/TextMeshPro assemblies.
+- Added raw XP developer console commands for each skill (and all skills) plus the developer login password update to "Matt", tightening console lookups to avoid ambiguous reference compile errors.
 - Added quest skill experience rewards with raw XP application and edit-mode coverage for the quest grant path.
 - Added `savesHiddenObject` handling in `GameManager` so the companion UI enables when saves are hidden during runs.
 - Reworked UGS leaderboards around completion time and total tasks, backfilled quest completion data for existing saves, flagged console/fraudulent scores to a cheater board while still tracking distance reached, and added editor tests around the new fraud heuristics.

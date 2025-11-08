@@ -9,7 +9,7 @@ namespace TimelessEchoes
     /// </summary>
     public static class ConsoleAuth
     {
-        private const string DevPassword = "MattsTheBest";
+        private const string DevPassword = "Matt";
         private static bool _isAuthenticated;
 
         /// <summary>

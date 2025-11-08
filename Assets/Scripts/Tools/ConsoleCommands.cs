@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using QFSW.QC;
 using UnityEngine;
+using static UnityEngine.Object;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Skills;
 using TimelessEchoes.NPC;
@@ -97,6 +98,104 @@ namespace TimelessEchoes
             Blindsided.EventHandler.LoadData();
         }
 
+        [Command("add-combat-xp", "Grant raw experience to the Combat skill")]
+        public static void AddCombatExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Combat", xpAmount);
+        }
+
+        [Command("add-farming-xp", "Grant raw experience to the Farming skill")]
+        public static void AddFarmingExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Farming", xpAmount);
+        }
+
+        [Command("add-fishing-xp", "Grant raw experience to the Fishing skill")]
+        public static void AddFishingExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Fishing", xpAmount);
+        }
+
+        [Command("add-looting-xp", "Grant raw experience to the Looting skill")]
+        public static void AddLootingExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Looting", xpAmount);
+        }
+
+        [Command("add-mining-xp", "Grant raw experience to the Mining skill")]
+        public static void AddMiningExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Mining", xpAmount);
+        }
+
+        [Command("add-woodcutting-xp", "Grant raw experience to the Woodcutting skill (Logging)")]
+        public static void AddWoodcuttingExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            GrantSkillExperience("Woodcutting", xpAmount);
+        }
+
+        [Command("add-all-skills-xp", "Grant raw experience to every registered skill")]
+        public static void AddAllSkillsExperience(float xpAmount)
+        {
+            ConsoleAuth.EnsureAuthenticated();
+            if (xpAmount <= 0f)
+            {
+                QuantumConsole.Instance?.LogToConsole("XP amount must be greater than zero.");
+                return;
+            }
+
+            var controller = SkillController.Instance;
+            if (controller == null)
+            {
+                QuantumConsole.Instance?.LogToConsole("SkillController is not available.");
+                return;
+            }
+
+            int affected = 0;
+            foreach (var skill in controller.EnumerateSkills())
+            {
+                if (skill == null)
+                    continue;
+                controller.GrantQuestExperience(skill, xpAmount);
+                affected++;
+            }
+
+            QuantumConsole.Instance?.LogToConsole($"Granted {xpAmount:0.##} raw XP to {affected} skills.");
+        }
+
+        private static void GrantSkillExperience(string skillIdentifier, float xpAmount)
+        {
+            if (xpAmount <= 0f)
+            {
+                QuantumConsole.Instance?.LogToConsole("XP amount must be greater than zero.");
+                return;
+            }
+
+            var controller = SkillController.Instance;
+            if (controller == null)
+            {
+                QuantumConsole.Instance?.LogToConsole("SkillController is not available.");
+                return;
+            }
+
+            var skill = controller.FindSkillByIdentifier(skillIdentifier);
+            if (skill == null)
+            {
+                QuantumConsole.Instance?.LogToConsole($"Skill '{skillIdentifier}' was not found.");
+                return;
+            }
+
+            var appliedXp = controller.GrantQuestExperience(skill, xpAmount);
+            var label = !string.IsNullOrWhiteSpace(skill.skillName) ? skill.skillName : skill.name;
+            QuantumConsole.Instance?.LogToConsole($"Granted {appliedXp:0.##} raw XP to {label}.");
+        }
+
         [Command("unlock-witch", "Unlock the witch NPC")]
         public static void UnlockWitch()
         {
@@ -107,7 +206,7 @@ namespace TimelessEchoes
             if (!oracle.saveData.CompletedNpcTasks.Contains("Witch1"))
                 oracle.saveData.CompletedNpcTasks.Add("Witch1");
 
-            var qm = Object.FindFirstObjectByType<QuestManager>();
+            var qm = FindFirstObjectByType<QuestManager>();
             qm?.OnNpcMet("Witch1");
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }
@@ -124,7 +223,7 @@ namespace TimelessEchoes
             rec.Completed = true;
             oracle.saveData.Quests["Mildred"] = rec;
 
-            EventHandler.QuestHandin("Mildred");
+            Blindsided.EventHandler.QuestHandin("Mildred");
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }
 

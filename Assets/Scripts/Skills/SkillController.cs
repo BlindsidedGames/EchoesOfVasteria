@@ -35,6 +35,7 @@ namespace TimelessEchoes.Skills
         private int activeSlotsUsed;
 
         public Skill CombatSkill => combatSkill;
+        public IReadOnlyList<Skill> RegisteredSkills => skills;
         public int TotalActiveSlots => totalActiveSlots;
         public int ActiveSlotsUsed => activeSlotsUsed;
         public MilestoneEffectAggregator Aggregator => effectAggregator;
@@ -75,6 +76,42 @@ namespace TimelessEchoes.Skills
 
                 setLookup[set.Set] = set;
             }
+        }
+
+        public IEnumerable<Skill> EnumerateSkills(bool includeCombatSkill = true)
+        {
+            if (includeCombatSkill && combatSkill != null)
+                yield return combatSkill;
+
+            foreach (var skill in skills)
+            {
+                if (skill != null)
+                    yield return skill;
+            }
+        }
+
+        public Skill FindSkillByIdentifier(string skillIdentifier, bool includeCombatSkill = true)
+        {
+            if (string.IsNullOrWhiteSpace(skillIdentifier))
+                return null;
+
+            foreach (var skill in EnumerateSkills(includeCombatSkill))
+            {
+                if (skill == null)
+                    continue;
+
+                if (SkillMatchesIdentifier(skill, skillIdentifier))
+                    return skill;
+            }
+
+            return null;
+        }
+
+        private static bool SkillMatchesIdentifier(Skill skill, string identifier)
+        {
+            return string.Equals(skill.name, identifier, StringComparison.OrdinalIgnoreCase) ||
+                   (!string.IsNullOrWhiteSpace(skill.skillName) &&
+                    string.Equals(skill.skillName, identifier, StringComparison.OrdinalIgnoreCase));
         }
 
         public SkillProgress GetProgress(Skill skill)

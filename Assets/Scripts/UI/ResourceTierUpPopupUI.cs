@@ -25,6 +25,7 @@ namespace TimelessEchoes.UI
 
         private readonly Dictionary<Skill, List<string>> pendingMilestoneMessages = new();
         private readonly Dictionary<Skill, Dictionary<MilestoneDefinition, int>> milestoneTierCache = new();
+        private readonly Dictionary<Skill, PendingLevelRange> pendingLevelRanges = new();
 
         private ResourceManager resourceManager;
         private SkillController skillController;
@@ -65,6 +66,13 @@ namespace TimelessEchoes.UI
                 skillController.OnMilestoneTierChanged -= OnMilestoneTierChanged;
             }
 
+            foreach (var pending in pendingLevelRanges.Values)
+            {
+                if (pending.Routine != null)
+                    StopCoroutine(pending.Routine);
+            }
+            pendingLevelRanges.Clear();
+
             if (countdownRoutine != null)
             {
                 StopCoroutine(countdownRoutine);
@@ -76,6 +84,7 @@ namespace TimelessEchoes.UI
         {
             pendingMilestoneMessages.Clear();
             milestoneTierCache.Clear();
+            pendingLevelRanges.Clear();
         }
 
         private void CacheManagers()
@@ -101,19 +110,44 @@ namespace TimelessEchoes.UI
             if (skill == null || newLevel <= 1)
                 return;
 
-            var oldLevel = Mathf.Max(1, newLevel - 1);
-            StartCoroutine(HandleSkillLevelUp(skill, oldLevel, newLevel));
+            var previousLevel = Mathf.Max(1, newLevel - 1);
+            if (!pendingLevelRanges.TryGetValue(skill, out var range))
+            {
+                range = new PendingLevelRange
+                {
+                    StartLevel = previousLevel,
+                    EndLevel = newLevel
+                };
+                pendingLevelRanges[skill] = range;
+                range.Routine = StartCoroutine(HandleSkillLevelUp(skill));
+            }
+            else
+            {
+                range.StartLevel = Mathf.Min(range.StartLevel, previousLevel);
+                range.EndLevel = Mathf.Max(range.EndLevel, newLevel);
+            }
         }
 
-        private IEnumerator HandleSkillLevelUp(Skill skill, int oldLevel, int newLevel)
+        private IEnumerator HandleSkillLevelUp(Skill skill)
         {
             yield return null; // wait a frame so milestone events populate
+            ProcessPendingLevelRange(skill);
+        }
+
+        private void ProcessPendingLevelRange(Skill skill)
+        {
+            if (!pendingLevelRanges.TryGetValue(skill, out var range))
+                return;
+
+            var startLevel = Mathf.Max(1, range.StartLevel);
+            var endLevel = Mathf.Max(startLevel, range.EndLevel);
+            pendingLevelRanges.Remove(skill);
 
             var name = string.IsNullOrWhiteSpace(skill.skillName) ? "Skill" : skill.skillName;
             var backgroundSprite = GetBackgroundSprite(0);
 
             var builder = new StringBuilder();
-            builder.Append($"{name} Lv {oldLevel}<sprite=194>{newLevel}");
+            builder.Append($"{name} Lv {startLevel}<sprite=194>{endLevel}");
 
             if (pendingMilestoneMessages.TryGetValue(skill, out var messages) && messages.Count > 0)
             {
@@ -267,6 +301,13 @@ namespace TimelessEchoes.UI
             public Sprite Icon { get; }
             public string Text { get; }
             public Sprite Background { get; }
+        }
+
+        private sealed class PendingLevelRange
+        {
+            public int StartLevel;
+            public int EndLevel;
+            public Coroutine Routine;
         }
     }
 }
