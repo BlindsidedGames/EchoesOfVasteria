@@ -39,23 +39,9 @@ namespace Pathfinding.ECS.RVO {
 		/// This is a weak GCHandle to allow it to be stored in an ISystem.
 		/// </summary>
 		GCHandle lastSimulator;
-		EntityQuery withAgentIndex;
-		EntityQuery shouldBeAddedToSimulation;
-		EntityQuery shouldBeRemovedFromSimulation;
 		ComponentLookup<AgentOffMeshLinkTraversal> agentOffMeshLinkTraversalLookup;
 
 		public void OnCreate (ref SystemState state) {
-			withAgentIndex = state.GetEntityQuery(
-				ComponentType.ReadWrite<AgentIndex>()
-				);
-			shouldBeAddedToSimulation = state.GetEntityQuery(
-				ComponentType.ReadOnly<RVOAgent>(),
-				ComponentType.Exclude<AgentIndex>()
-				);
-			shouldBeRemovedFromSimulation = state.GetEntityQuery(
-				ComponentType.ReadOnly<AgentIndex>(),
-				ComponentType.Exclude<RVOAgent>()
-				);
 			lastSimulator = GCHandle.Alloc(null, System.Runtime.InteropServices.GCHandleType.Weak);
 			agentOffMeshLinkTraversalLookup = state.GetComponentLookup<AgentOffMeshLinkTraversal>(true);
 		}
@@ -96,27 +82,50 @@ namespace Pathfinding.ECS.RVO {
 
 		void RemoveAllAgentsFromSimulation (ref SystemState systemState) {
 			var buffer = new EntityCommandBuffer(Allocator.Temp);
-			var entities = withAgentIndex.ToEntityArray(systemState.WorldUpdateAllocator);
+			var entities = SystemAPI.QueryBuilder().WithAllRW<AgentIndex>().Build().ToEntityArray(systemState.WorldUpdateAllocator);
 			buffer.RemoveComponent<AgentIndex>(entities);
 			buffer.Playback(systemState.EntityManager);
 			buffer.Dispose();
 		}
 
 		void AddAndRemoveAgentsFromSimulation (ref SystemState systemState, SimulatorBurst simulator) {
+			var shouldBeRemovedFromSimulation = SystemAPI.QueryBuilder()
+												.WithAll<AgentIndex>()
+												.WithNone<RVOAgent>()
+												.WithOptions(EntityQueryOptions.IncludeDisabledEntities)
+												.Build();
+
+			var shouldBeRemovedFromSimulation2 = SystemAPI.QueryBuilder()
+												 .WithAll<AgentIndex, AgentOffMeshLinkLocalAvoidanceDisabled>()
+												 .WithOptions(EntityQueryOptions.IncludeDisabledEntities)
+												 .Build();
+
+			var shouldBeAddedToSimulation = SystemAPI.QueryBuilder()
+											.WithAll<RVOAgent>()
+											.WithNone<AgentIndex, AgentOffMeshLinkLocalAvoidanceDisabled>()
+											.Build();
+
 			// Remove all agents from the simulation that do not have an RVOAgent component, but have an AgentIndex
 			var indicesToRemove = shouldBeRemovedFromSimulation.ToComponentDataArray<AgentIndex>(systemState.WorldUpdateAllocator);
+			var indicesToRemove2 = shouldBeRemovedFromSimulation2.ToComponentDataArray<AgentIndex>(systemState.WorldUpdateAllocator);
 			// Add all agents to the simulation that have an RVOAgent component, but not AgentIndex component
 			var entitiesToAdd = shouldBeAddedToSimulation.ToEntityArray(systemState.WorldUpdateAllocator);
 			// Avoid a sync point in the common case
-			if (indicesToRemove.Length > 0 || entitiesToAdd.Length > 0) {
+			if (indicesToRemove.Length > 0 || indicesToRemove2.Length > 0 || entitiesToAdd.Length > 0) {
 				var buffer = new EntityCommandBuffer(Allocator.Temp);
 #if MODULE_ENTITIES_1_0_8_OR_NEWER
 				buffer.RemoveComponent<AgentIndex>(shouldBeRemovedFromSimulation, EntityQueryCaptureMode.AtPlayback);
+				buffer.RemoveComponent<AgentIndex>(shouldBeRemovedFromSimulation2, EntityQueryCaptureMode.AtPlayback);
 #else
 				buffer.RemoveComponent<AgentIndex>(shouldBeRemovedFromSimulation);
+				buffer.RemoveComponent<AgentIndex>(shouldBeRemovedFromSimulation2);
 #endif
 				for (int i = 0; i < indicesToRemove.Length; i++) {
 					simulator.RemoveAgent(indicesToRemove[i]);
+				}
+				for (int i = 0; i < indicesToRemove2.Length; i++) {
+					// Note: In very rare cases, we might have already removed the agent in the first loop.
+					simulator.RemoveAgent(indicesToRemove2[i], true);
 				}
 				for (int i = 0; i < entitiesToAdd.Length; i++) {
 					buffer.AddComponent<AgentIndex>(entitiesToAdd[i], simulator.AddAgentBurst(UnityEngine.Vector3.zero));

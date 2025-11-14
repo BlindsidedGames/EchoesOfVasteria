@@ -188,7 +188,7 @@ namespace Pathfinding {
 #endif
 		}
 
-		public override void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter) {
+		public override void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter) {
 			if ((connectionFilter & (Connection.IncomingConnection | Connection.OutgoingConnection)) == 0) return;
 
 			GridGraph gg = GetGridGraph(GraphIndex);
@@ -319,41 +319,29 @@ namespace Pathfinding {
 			}
 		}
 
-		public override void Open (Path path, uint pathNodeIndex, uint gScore) {
-			GridGraph gg = GetGridGraph(GraphIndex);
+		public override void Open (ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore) {
+			var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
 
+			GridGraph gg = GetGridGraph(GraphIndex);
 			int[] neighbourOffsets = gg.neighbourOffsets;
-			uint[] neighbourCosts = gg.neighbourCosts;
 			var nodes = gg.nodes;
 			var index = NodeInGridIndex;
-
 			// Bitmask of the 8 connections out of this node
 			// Each bit represents one connection.
 			var conns = gridFlags & GridFlagsConnectionMask;
 
 			// Loop over all connections, first the 4 axis aligned ones and then the 4 diagonal ones.
-			for (int dir = 0; dir < 8; dir++) {
-				// dir=4 is the first diagonal connection.
-				// At this point we know exactly which orthogonal (not diagonal) connections are actually traversable.
-				// So we do some filtering to determine which diagonals should be traversable.
-				//
-				// We do this dynamically because each path may use different tags or different
-				// ITraversalProviders that affect the result.
-				//
-				// When the grid graph is scanned this exact method is also run to pre-filter connections
-				// based on their walkability values.
-				// Doing pre-filtering is good because it allows users to use `HasConnectionInDirection`
-				// and it will return accurate values even for diagonals (even though it will of course not
-				// take into account any additional constraints such as tags or ITraversalProviders).
-				if (dir == 4 && (path.traversalProvider == null || path.traversalProvider.filterDiagonalGridConnections)) {
-					conns = FilterDiagonalConnections(conns, gg.neighbours, gg.cutCorners);
-				}
-
+			var straightCost = gg.neighbourCosts[0];
+			for (int dir = 0; dir < 4; dir++) {
 				// Check if we have a connection in this direction
 				if (((conns >> dir) & GridFlagsConnectionBit0) != 0) {
 					var other = nodes[index + neighbourOffsets[dir]];
-					if (path.CanTraverse(this, other)) {
-						path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, neighbourCosts[dir], 0, other.position);
+					if (ctx.traversalConstraint.CanTraverse(this, other)) {
+						if (ctx.ShouldConsiderPathNode(other.NodeIndex)) {
+							var connectionCost = ctx.traversalCosts.GetConnectionCost(this, other);
+							connectionCost += (uint)Mathf.Round((ourTraversalCostFactor + ctx.traversalCosts.GetTraversalCostMultiplier(other)) * (0.5f * straightCost));
+							ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
+						}
 					} else {
 						// Mark that connection as not valid
 						conns &= ~(GridFlagsConnectionBit0 << dir);
@@ -361,7 +349,37 @@ namespace Pathfinding {
 				}
 			}
 
-			base.Open(path, pathNodeIndex, gScore);
+			// dir=4 is the first diagonal connection.
+			// At this point we know exactly which orthogonal (not diagonal) connections are actually traversable.
+			// So we do some filtering to determine which diagonals should be traversable.
+			//
+			// We do this dynamically because each path may use different tags or different
+			// ITraversalProviders that affect the result.
+			//
+			// When the grid graph is scanned this exact method is also run to pre-filter connections
+			// based on their walkability values.
+			// Doing pre-filtering is good because it allows users to use `HasConnectionInDirection`
+			// and it will return accurate values even for diagonals (even though it will of course not
+			// take into account any additional constraints such as tags or ITraversalProviders).
+			if (ctx.traversalConstraint.filterDiagonalGridConnections) {
+				conns = FilterDiagonalConnections(conns, gg.neighbours, gg.cutCorners);
+			}
+
+			// Loop over the diagonal connections
+			var diagonalCost = gg.neighbourCosts[4];
+			for (int dir = 4; dir < 8; dir++) {
+				// Check if we have a connection in this direction
+				if (((conns >> dir) & GridFlagsConnectionBit0) != 0) {
+					var other = nodes[index + neighbourOffsets[dir]];
+					if (ctx.ShouldConsiderPathNode(other.NodeIndex) && ctx.traversalConstraint.CanTraverse(this, other)) {
+						var connectionCost = ctx.traversalCosts.GetConnectionCost(this, other);
+						connectionCost += (uint)Mathf.Round((ourTraversalCostFactor + ctx.traversalCosts.GetTraversalCostMultiplier(other)) * (0.5f * diagonalCost));
+						ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
+					}
+				}
+			}
+
+			base.Open(ref ctx, pathNodeIndex, gScore);
 		}
 
 		public override void SerializeNode (GraphSerializationContext ctx) {
@@ -422,7 +440,7 @@ namespace Pathfinding {
 			throw new System.NotImplementedException();
 		}
 
-		public override void Open (Path path, PathNode pathNode, PathHandler handler) {
+		public override void Open (ref Path.SearchContext ctx, PathNode pathNode, PathHandler handler) {
 			throw new System.NotImplementedException();
 		}
 

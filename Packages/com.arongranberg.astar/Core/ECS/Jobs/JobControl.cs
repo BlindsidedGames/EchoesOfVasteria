@@ -31,10 +31,13 @@ namespace Pathfinding.ECS {
 
 		public static float3 ClampToNavmesh (float3 position, float3 closestOnNavmesh, in AgentCylinderShape shape, in AgentMovementPlane movementPlane) {
 			// Don't clamp the elevation except to make sure it's not too far below the navmesh.
-			var clamped2D = movementPlane.value.ToPlane(closestOnNavmesh, out float clampedElevation);
-			movementPlane.value.ToPlane(position, out float currentElevation);
-			currentElevation = math.max(currentElevation, clampedElevation - shape.height * 0.4f);
-			position = movementPlane.value.ToWorld(clamped2D, currentElevation);
+			// One *could* do the same calculation by using movementPlane.ToPlane(closestOnNavmesh) and movementPlane.ToPlane(position, out elevation),
+			// and then creating a new world position with the elevation from the position and in-plane coordinates from closestOnNavmesh.
+			// However, this seems to lead to more floating point errors than the approach below (the approach below is also faster).
+			var up = movementPlane.value.up;
+			var elevationDifferenceToNavmesh = math.dot(position - closestOnNavmesh, up);
+			elevationDifferenceToNavmesh = math.max(elevationDifferenceToNavmesh, -shape.height * 0.4f);
+			position = closestOnNavmesh + elevationDifferenceToNavmesh * up;
 			return position;
 		}
 
@@ -51,7 +54,6 @@ namespace Pathfinding.ECS {
 			var position = ClampToNavmesh(transform.Position, state.closestOnNavmesh, in shape, in movementPlane);
 
 			edgesScratch.Clear();
-			indicesScratch.Clear();
 
 			var scale = math.abs(transform.Scale);
 			var settingsTemp = settings.follower;
@@ -61,7 +63,7 @@ namespace Pathfinding.ECS {
 
 			if (state.isOnValidNode) {
 				MarkerConvertObstacles.Begin();
-				var localBounds = PIDMovement.InterestingEdgeBounds(ref settingsTemp, position, state.nextCorner, shape.height, movementPlane.value);
+				var localBounds = PIDMovement.InterestingEdgeBounds(ref settingsTemp, state.closestOnNavmesh, state.nextCorner, shape.height, movementPlane.value);
 				navmeshEdgeData.GetEdgesInRange(state.hierarchicalNodeIndex, localBounds, edgesScratch, indicesScratch, movementPlane.value);
 				MarkerConvertObstacles.End();
 			}
@@ -92,7 +94,7 @@ namespace Pathfinding.ECS {
 						rotationSpeed = settings.follower.maxRotationSpeed,
 						targetRotationOffset = state.rotationOffset, // May be modified by other systems
 					};
-				} else if (settings.isStopped) {
+				} else if (settings.isStopped || !state.hasValidEndPoint) {
 					// The user has requested that the agent slow down as quickly as possible.
 					// TODO: If the agent is not clamped to the navmesh, it should still move towards the navmesh if it is outside it.
 					controlOutput = new MovementControl {

@@ -166,6 +166,22 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        /// <summary>
+        ///     Immediately sorts the internal task collections and selects the next task for the hero.
+        /// </summary>
+        public void ForceResortNow()
+        {
+            SortTaskListsByProximity();
+            lastSortedFrame = Time.frameCount;
+            pendingSort = false;
+
+            if (hero != null)
+            {
+                hero.SetTask(null);
+                SelectEarliestTask(hero);
+            }
+        }
+
         private void OnEnable()
         {
             // Register singleton instance tied to the active map

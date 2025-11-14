@@ -637,7 +637,7 @@ namespace TimelessEchoes.Hero
 
         private void HandleCombat(Transform enemy)
         {
-            ai.canMove = true;
+            ai.simulateMovement = true;
 
             var wasPerformingTask = state == State.PerformingTask;
             if (state != State.Combat)
@@ -1044,7 +1044,7 @@ namespace TimelessEchoes.Hero
                 if (state != State.PerformingTask)
                 {
                     state = State.PerformingTask;
-                    ai.canMove = !task.BlocksMovement;
+                    ai.simulateMovement = !task.BlocksMovement;
                     task.OnArrival(this);
                     var bm = buffController != null ? buffController : TimelessEchoes.Buffs.BuffManager.Instance;
                     var speed = 1f;
@@ -1061,7 +1061,7 @@ namespace TimelessEchoes.Hero
             else
             {
                 state = State.MovingToTask;
-                ai.canMove = true;
+                ai.simulateMovement = true;
             }
         }
 
@@ -1163,7 +1163,7 @@ namespace TimelessEchoes.Hero
             }
 
             setter.target = enemy;
-            ai.canMove = true;
+            ai.simulateMovement = true;
 
             var enemyComp = currentEnemyComp != null
                 ? currentEnemyComp
@@ -1447,7 +1447,7 @@ namespace TimelessEchoes.Hero
                     ai?.SearchPath();
                 }
 
-                ai.canMove = true;
+                ai.simulateMovement = true;
                 return;
             }
 
@@ -1476,7 +1476,7 @@ namespace TimelessEchoes.Hero
                 ai?.SearchPath();
             }
 
-            ai.canMove = true;
+            ai.simulateMovement = true;
         }
 
         private Vector3 ResolveIdleAdvanceTarget(Vector3 currentPosition)
@@ -1486,8 +1486,8 @@ namespace TimelessEchoes.Hero
             if (pathfinder == null)
                 return fallback;
 
-            var constraint = NNConstraint.Walkable;
-            constraint.constrainTags = false;
+            var constraint = NearestNodeConstraint.Walkable;
+            constraint.tags = ~0; // allow all tags like the previous constrainTags=false
 
             var startInfo = pathfinder.GetNearest(currentPosition, constraint);
             var startNode = startInfo.node;

@@ -83,13 +83,18 @@ namespace Pathfinding.RVO {
 	[System.Flags]
 	public enum AgentDebugFlags : byte {
 		Nothing = 0,
-		ObstacleVOs = 1 << 0,
-		AgentVOs = 1 << 1,
+		ObstacleVelocityObstacles = 1 << 0,
+		AgentVelocityObstacles = 1 << 1,
 		ReachedState = 1 << 2,
 		DesiredVelocity = 1 << 3,
 		ChosenVelocity = 1 << 4,
 		Obstacles = 1 << 5,
 		ForwardClearance = 1 << 6,
+
+		[System.Obsolete("Renamed to ObstacleVelocityObstacles")]
+		ObstacleVOs = ObstacleVelocityObstacles,
+		[System.Obsolete("Renamed to AgentVelocityObstacles")]
+		AgentVOs = AgentVelocityObstacles,
 	}
 
 	/// <summary>
@@ -1003,10 +1008,13 @@ namespace Pathfinding.RVO {
 			RemoveAgent(realAgent.agentIndex);
 		}
 
-		public void RemoveAgent (AgentIndex agent) {
+		public void RemoveAgent (AgentIndex agent, bool okIfMissing = false) {
 			BlockUntilSimulationStepDone();
 
-			if (!agent.TryGetIndex(ref simulationData, out var index)) throw new System.InvalidOperationException("Trying to remove agent which does not exist");
+			if (!agent.TryGetIndex(ref simulationData, out var index)) {
+				if (okIfMissing) return;
+				else throw new System.InvalidOperationException("Trying to remove agent which does not exist");
+			}
 
 			// Increment version and set deleted bit
 			simulationData.version[index] = simulationData.version[index].WithIncrementedVersion().WithDeleted();
@@ -1156,15 +1164,19 @@ namespace Pathfinding.RVO {
 
 			var combinedJob = JobHandle.CombineDependencies(preprocessJob, neighboursJob);
 
+#if UNITY_EDITOR
 			debugDrawingScope.Rewind();
 			var draw = DrawingManager.GetBuilder(debugDrawingScope);
+#endif
 
 			var horizonJob1 = new JobHorizonAvoidancePhase1<T> {
 				agentData = simulationData,
 				neighbours = temporaryAgentData.neighbours,
 				desiredTargetPointInVelocitySpace = temporaryAgentData.desiredTargetPointInVelocitySpace,
 				horizonAgentData = horizonAgentData,
+#if UNITY_EDITOR
 				draw = draw,
+#endif
 			}.ScheduleBatch(numAgents, batchSize, combinedJob);
 
 			var horizonJob2 = new JobHorizonAvoidancePhase2<T> {
@@ -1200,7 +1212,9 @@ namespace Pathfinding.RVO {
 				output = outputData,
 				deltaTime = deltaTime,
 				symmetryBreakingBias = Mathf.Max(0, SymmetryBreakingBias),
+#if UNITY_EDITOR
 				draw = draw,
+#endif
 				useNavmeshAsObstacle = UseNavmeshAsObstacle,
 				priorityMultiplier = 1f,
 				// priorityMultiplier = 0.1f,
@@ -1239,7 +1253,9 @@ namespace Pathfinding.RVO {
 				agentData = simulationData,
 				temporaryAgentData = temporaryAgentData,
 				output = outputData,
+#if UNITY_EDITOR
 				draw = draw,
+#endif
 				numAgents = numAgents,
 			}.Schedule(rvoJob);
 
@@ -1251,6 +1267,7 @@ namespace Pathfinding.RVO {
 			dependency = JobHandle.CombineDependencies(reachedJob, clearJob, clearJob2);
 			dependency = JobHandle.CombineDependencies(dependency, clearJob3);
 
+#if UNITY_EDITOR
 			if (drawQuadtree && drawGizmos) {
 				dependency = JobHandle.CombineDependencies(dependency, new RVOQuadtreeBurst.DebugDrawJob {
 					draw = draw,
@@ -1259,6 +1276,7 @@ namespace Pathfinding.RVO {
 			}
 
 			draw.DisposeAfter(dependency);
+#endif
 
 			writeLock.UnlockAfter(dependency);
 			return dependency;

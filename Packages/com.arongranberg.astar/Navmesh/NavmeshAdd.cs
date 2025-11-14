@@ -162,31 +162,40 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Bounds in XZ space after transforming using the *inverse* transform of the inverseTransform parameter.
+		/// Bounds after transforming using the *inverse* transform of the inverseTransform parameter.
 		/// The transformation will typically transform the vertices to graph space and this is used to
 		/// figure out which tiles the add intersects.
 		/// </summary>
-		public override Rect GetBounds (Pathfinding.Util.GraphTransform inverseTransform, float radiusMargin) {
+		public override Bounds GetBounds (Pathfinding.Util.GraphTransform inverseTransform, float radiusMargin) {
 			if (this.verts == null) RebuildMesh();
 			var verts = Pathfinding.Pooling.ArrayPool<Int3>.Claim(this.verts != null? this.verts.Length : 0);
 			int[] tris;
-			GetMesh(ref verts, out tris, out var _, inverseTransform);
+			GetMesh(ref verts, out tris, out var vertexCount, inverseTransform);
 
-			Rect r = new Rect();
-			for (int i = 0; i < tris.Length; i++) {
-				var p = (Vector3)verts[tris[i]];
-				if (i == 0) {
-					r = new Rect(p.x, p.z, 0, 0);
-				} else {
-					r.xMax = System.Math.Max(r.xMax, p.x);
-					r.yMax = System.Math.Max(r.yMax, p.z);
-					r.xMin = System.Math.Min(r.xMin, p.x);
-					r.yMin = System.Math.Min(r.yMin, p.z);
-				}
+			if (vertexCount == 0) {
+				Pathfinding.Pooling.ArrayPool<Int3>.Release(ref verts);
+				return new Bounds();
+			}
+
+			var xmin = float.MaxValue;
+			var xmax = float.MinValue;
+			var ymin = float.MaxValue;
+			var ymax = float.MinValue;
+			var zmin = float.MaxValue;
+			var zmax = float.MinValue;
+
+			for (int i = 0; i < vertexCount; i++) {
+				var p = (Vector3)verts[i];
+				xmax = System.Math.Max(xmax, p.x);
+				xmin = System.Math.Min(xmin, p.x);
+				ymax = System.Math.Max(ymax, p.y);
+				ymin = System.Math.Min(ymin, p.y);
+				zmax = System.Math.Max(zmax, p.z);
+				zmin = System.Math.Min(zmin, p.z);
 			}
 
 			Pathfinding.Pooling.ArrayPool<Int3>.Release(ref verts);
-			return r;
+			return new Bounds(new Vector3((xmin+xmax)*0.5f, (ymin+ymax)*0.5f, (zmin+zmax)*0.5f), new Vector3(xmax-xmin, ymax-ymin, zmax-zmin));
 		}
 
 		/// <summary>Copy the mesh to the vertex and triangle buffers after the vertices have been transformed using the inverse of the inverseTransform parameter.</summary>

@@ -15,10 +15,17 @@ namespace Pathfinding {
 	/// target moved since the last Update. There is also some complexity to reduce the performance impact, by using the <see cref="BatchedEvents"/> system to
 	/// process all AIDestinationSetter components in a single batch.
 	///
-	/// When using ECS, this component is instead added as a managed component to the entity.
+	/// When using ECS, outside a subscene, this component is instead added as a managed component to the entity.
 	/// The destination syncing is then handled by the <see cref="SyncDestinationTransformSystem"/> for better performance.
 	///
 	/// See: <see cref="Pathfinding.IAstarAI.destination"/>
+	///
+	/// \section aidestinationsetter-subscenes Usage in ECS subscenes
+	/// This component can be used in subscenes and it will automatically be baked into a <see cref="DestinationEntity"/> component.
+	///
+	/// Every frame, the <see cref="DestinationEntitySystem"/> will copy the position of the target entity to the <see cref="DestinationPoint.destination"/> field (and optionally the facing direction as well).
+	///
+	/// See: Read more in the subscenes section on <see cref="FollowerEntity"/>: followerentity-subscenes (view in online documentation for working links)
 	/// </summary>
 	[UniqueComponent(tag = "ai.destination")]
 	[AddComponentMenu("Pathfinding/AI/Behaviors/AIDestinationSetter")]
@@ -91,6 +98,21 @@ namespace Pathfinding {
 			this.world = world;
 			world.EntityManager.AddComponentObject(entity, this);
 		}
+
+#if UNITY_EDITOR
+		public class AIDestinationSetterBaker : Baker<AIDestinationSetter> {
+			public override void Bake (AIDestinationSetter authoring) {
+				var entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
+				if (authoring.target != null) {
+					var targetEntity = GetEntity(authoring.target.gameObject, TransformUsageFlags.Dynamic);
+					AddComponent(entity, new Pathfinding.ECS.DestinationEntity {
+						destination = targetEntity,
+						useRotation = authoring.useRotation
+					});
+				}
+			}
+		}
+#endif
 #endif
 
 		/// <summary>Updates the AI's destination every frame</summary>

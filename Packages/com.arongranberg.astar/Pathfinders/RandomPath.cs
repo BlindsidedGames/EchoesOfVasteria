@@ -140,8 +140,8 @@ namespace Pathfinding {
 			}
 		}
 
-		protected override void Prepare () {
-			var startNNInfo  = GetNearest(startPoint);
+		protected override void Prepare (ref SearchContext ctx) {
+			var startNNInfo  = AstarPath.active.GetNearest(startPoint, nearestNodeConstraint);
 
 			startPoint = startNNInfo.position;
 			endPoint = startPoint;
@@ -155,50 +155,49 @@ namespace Pathfinding {
 				return;
 			}
 
-			if (!CanTraverse(startNNInfo.node)) {
-				FailWithError("The node closest to the start point could not be traversed");
-				return;
-			}
+			UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(startNNInfo.node));
 
 			heuristicScale = aimStrength;
 
-			pathHandler.AddTemporaryNode(new TemporaryNode {
+			ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 				type = TemporaryNodeType.Start,
 				position = (Int3)startNNInfo.position,
 				associatedNode = startNNInfo.node.NodeIndex,
 			});
-			heuristicObjective = new HeuristicObjective((int3)(Int3)aim, heuristic, heuristicScale);
-			AddStartNodesToHeap();
+			ctx.heuristicObjective = new HeuristicObjective((int3)(Int3)aim, heuristic, heuristicScale);
+			ctx.traversalConstraint = traversalConstraint;
+			ctx.traversalCosts = traversalCosts;
+			ctx.AddStartNodesToHeap();
 		}
 
-		protected override void OnHeapExhausted () {
+		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			if (chosenPathNodeIndex == uint.MaxValue && maxGScorePathNodeIndex != uint.MaxValue) {
 				chosenPathNodeIndex = maxGScorePathNodeIndex;
 				chosenPathNodeGScore = maxGScore;
 			}
 
 			if (chosenPathNodeIndex != uint.MaxValue) {
-				OnFoundEndNode(chosenPathNodeIndex, 0, chosenPathNodeGScore);
+				OnFoundEndNode(ref ctx, chosenPathNodeIndex, 0, chosenPathNodeGScore);
 			} else {
 				FailWithError("Not a single node found to search");
 			}
 		}
 
-		protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
-			if (pathHandler.IsTemporaryNode(pathNode)) {
-				base.OnFoundEndNode(pathNode, hScore, gScore);
+		protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
+			if (ctx.pathHandler.IsTemporaryNode(pathNode)) {
+				base.OnFoundEndNode(ref ctx, pathNode, hScore, gScore);
 			} else {
 				// The target node is a normal node.
-				var node = pathHandler.GetNode(pathNode);
+				var node = ctx.pathHandler.GetNode(pathNode);
 				endPoint = node.RandomPointOnSurface();
 
 				cost = gScore;
 				CompleteState = PathCompleteState.Complete;
-				Trace(pathNode);
+				Trace(ref ctx, pathNode);
 			}
 		}
 
-		public override void OnVisitNode (uint pathNode, uint hScore, uint gScore) {
+		public override void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 			// This method may be called multiple times without checking if the path is complete yet.
 			if (CompleteState != PathCompleteState.NotCalculated) return;
 
@@ -218,7 +217,7 @@ namespace Pathfinding {
 						chosenPathNodeGScore = gScore;
 					}
 
-					OnFoundEndNode(chosenPathNodeIndex, 0, chosenPathNodeGScore);
+					OnFoundEndNode(ref ctx, chosenPathNodeIndex, 0, chosenPathNodeGScore);
 				}
 			} else if (gScore > maxGScore) {
 				maxGScore = gScore;

@@ -21,7 +21,7 @@ namespace Pathfinding {
 			var legacyMode = FindProperty("legacyMode");
 
 			// Get a list of inspected components
-			scripts = new GraphUpdateScene[targets.Length];
+			if (scripts == null || scripts.Length != targets.Length) scripts = new GraphUpdateScene[targets.Length];
 			targets.CopyTo(scripts, 0);
 
 			EditorGUI.BeginChangeCheck();
@@ -92,7 +92,7 @@ namespace Pathfinding {
 
 			if (GUILayout.Button("Clear all points")) {
 				for (int i = 0; i < scripts.Length; i++) {
-					Undo.RecordObject(scripts[i], "Clear points");
+					Undo.RegisterFullObjectHierarchyUndo(scripts[i], "Clear points");
 					scripts[i].points = new Vector3[0];
 					scripts[i].RecalcConvex();
 				}
@@ -186,20 +186,20 @@ namespace Pathfinding {
 				EditorUtility.SetDirty(script);
 			}
 
-			List<Vector3> points = Pathfinding.Pooling.ListPool<Vector3>.Claim();
-			points.AddRange(script.points);
+			List<Vector3> pointsInWorldSpace = Pathfinding.Pooling.ListPool<Vector3>.Claim();
+			pointsInWorldSpace.AddRange(script.points);
 
 			Matrix4x4 invMatrix = script.transform.worldToLocalMatrix;
 
 			Matrix4x4 matrix = script.transform.localToWorldMatrix;
-			for (int i = 0; i < points.Count; i++) points[i] = matrix.MultiplyPoint3x4(points[i]);
+			for (int i = 0; i < pointsInWorldSpace.Count; i++) pointsInWorldSpace[i] = matrix.MultiplyPoint3x4(pointsInWorldSpace[i]);
 
 
 			float minScreenDist = float.PositiveInfinity;
 			if (Tools.current != Tool.View && (Event.current.type == EventType.Layout || Event.current.type == EventType.MouseMove)) {
 				for (int i = 0; i < script.points.Length; i++) {
-					float dist = HandleUtility.DistanceToLine(points[i], (points[i] + points[(i+1) % script.points.Length])*0.5f);
-					dist = Mathf.Min(dist, HandleUtility.DistanceToLine(points[i], (points[i] + points[(i-1 + script.points.Length) % script.points.Length])*0.5f));
+					float dist = HandleUtility.DistanceToLine(pointsInWorldSpace[i], (pointsInWorldSpace[i] + pointsInWorldSpace[(i+1) % script.points.Length])*0.5f);
+					dist = Mathf.Min(dist, HandleUtility.DistanceToLine(pointsInWorldSpace[i], (pointsInWorldSpace[i] + pointsInWorldSpace[(i-1 + script.points.Length) % script.points.Length])*0.5f));
 					HandleUtility.AddControl(-i - 1, dist);
 					minScreenDist = Mathf.Min(dist, minScreenDist);
 				}
@@ -213,20 +213,20 @@ namespace Pathfinding {
 			if (Tools.current != Tool.View && (minScreenDist < 50 || Event.current.shift))
 				HandleUtility.AddDefaultControl(0);
 
-			for (int i = 0; i < points.Count; i++) {
+			for (int i = 0; i < pointsInWorldSpace.Count; i++) {
 				if (i == selectedPoint && Tools.current == Tool.Move) {
 					Handles.color = PointSelectedColor;
-					SphereCap(-i-1, points[i], Quaternion.identity, HandleUtility.GetHandleSize(points[i])*pointGizmosRadius*2);
+					SphereCap(-i-1, pointsInWorldSpace[i], Quaternion.identity, HandleUtility.GetHandleSize(pointsInWorldSpace[i])*pointGizmosRadius*2);
 
-					Vector3 pre = points[i];
-					Vector3 post = Handles.PositionHandle(points[i], Quaternion.identity);
+					Vector3 pre = pointsInWorldSpace[i];
+					Vector3 post = Handles.PositionHandle(pointsInWorldSpace[i], Quaternion.identity);
 					if (pre != post) {
-						Undo.RecordObject(script, "Moved Point");
+						Undo.RegisterFullObjectHierarchyUndo(script, "Moved Point");
 						script.points[i] = invMatrix.MultiplyPoint3x4(post);
 					}
 				} else {
 					Handles.color = PointColor;
-					SphereCap(-i-1, points[i], Quaternion.identity, HandleUtility.GetHandleSize(points[i])*pointGizmosRadius);
+					SphereCap(-i-1, pointsInWorldSpace[i], Quaternion.identity, HandleUtility.GetHandleSize(pointsInWorldSpace[i])*pointGizmosRadius);
 				}
 			}
 
@@ -257,11 +257,11 @@ namespace Pathfinding {
 				Handles.EndGUI();
 			}
 
-			if (Tools.current == Tool.Move && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Backspace && selectedPoint >= 0 && selectedPoint < points.Count) {
-				Undo.RecordObject(script, "Removed Point");
+			if (Tools.current == Tool.Move && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Backspace && selectedPoint >= 0 && selectedPoint < pointsInWorldSpace.Count) {
+				Undo.RegisterCompleteObjectUndo(script, "Removed Point");
 				var arr = new List<Vector3>(script.points);
 				arr.RemoveAt(selectedPoint);
-				points.RemoveAt(selectedPoint);
+				pointsInWorldSpace.RemoveAt(selectedPoint);
 				script.points = arr.ToArray();
 				GUI.changed = true;
 			}
@@ -270,10 +270,10 @@ namespace Pathfinding {
 				HandleUtility.Repaint();
 
 				// Find the closest segment
-				int insertionIndex = points.Count;
+				int insertionIndex = pointsInWorldSpace.Count;
 				float minDist = float.PositiveInfinity;
-				for (int i = 0; i < points.Count; i++) {
-					float dist = HandleUtility.DistanceToLine(points[i], points[(i+1)%points.Count]);
+				for (int i = 0; i < pointsInWorldSpace.Count; i++) {
+					float dist = HandleUtility.DistanceToLine(pointsInWorldSpace[i], pointsInWorldSpace[(i+1)%pointsInWorldSpace.Count]);
 					if (dist < minDist) {
 						insertionIndex = i + 1;
 						minDist = dist;
@@ -306,18 +306,18 @@ namespace Pathfinding {
 
 				if (didHit) {
 					if (Event.current.type == EventType.MouseDown) {
-						points.Insert(insertionIndex, rayhit);
-
-						Undo.RecordObject(script, "Added Point");
+						pointsInWorldSpace.Insert(insertionIndex, rayhit);
+						// For some reason, using Undo.RecordObject doesn't always work properly here. I guess Unity is bad at diffing arrays?
+						Undo.RegisterCompleteObjectUndo(script, "Added Point");
 						var arr = new List<Vector3>(script.points);
 						arr.Insert(insertionIndex, invMatrix.MultiplyPoint3x4(rayhit));
 						script.points = arr.ToArray();
 						GUI.changed = true;
 					} else {
 						Handles.color = Color.green;
-						if (points.Count > 0) {
-							Handles.DrawDottedLine(points[(insertionIndex-1 + points.Count) % points.Count], rayhit, 8);
-							Handles.DrawDottedLine(points[insertionIndex % points.Count], rayhit, 8);
+						if (pointsInWorldSpace.Count > 0) {
+							Handles.DrawDottedLine(pointsInWorldSpace[(insertionIndex-1 + pointsInWorldSpace.Count) % pointsInWorldSpace.Count], rayhit, 8);
+							Handles.DrawDottedLine(pointsInWorldSpace[insertionIndex % pointsInWorldSpace.Count], rayhit, 8);
 						}
 						SphereCap(0, rayhit, Quaternion.identity, HandleUtility.GetHandleSize(rayhit)*pointGizmosRadius);
 						// Project point down onto a plane
@@ -335,7 +335,7 @@ namespace Pathfinding {
 
 			// Make sure the convex hull stays up to date
 			script.RecalcConvex();
-			Pathfinding.Pooling.ListPool<Vector3>.Release(ref points);
+			Pathfinding.Pooling.ListPool<Vector3>.Release(ref pointsInWorldSpace);
 
 			if (GUI.changed) HandleUtility.Repaint();
 		}

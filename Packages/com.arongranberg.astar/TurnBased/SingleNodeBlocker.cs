@@ -37,7 +37,7 @@ namespace Pathfinding {
 		/// </summary>
 		public void BlockAt (Vector3 position) {
 			Unblock();
-			var node = AstarPath.active.GetNearest(position, NNConstraint.None).node;
+			var node = AstarPath.active.GetNearest(position).node;
 			if (node != null) {
 				Block(node);
 			}

@@ -14,7 +14,7 @@ namespace Pathfinding.ECS {
 	///
 	/// See: <see cref="FollowerEntity.movementOverrides"/>
 	/// </summary>
-	public ref struct ManagedMovementOverrides {
+	public struct ManagedMovementOverrides {
 		Entity entity;
 		World world;
 
@@ -23,23 +23,89 @@ namespace Pathfinding.ECS {
 			this.world = world;
 		}
 
+		/// <summary>
+		/// Registers a callback that runs before the agent calculates how it wants to move, but after it has repaired its path.
+		///
+		/// You can use this to tweak the agent's movement slightly.
+		///
+		/// See: <see cref="FollowerEntity.movementOverrides"/> for example code.
+		/// </summary>
 		public void AddBeforeControlCallback (BeforeControlDelegate value) {
 			AddCallback<ManagedMovementOverrideBeforeControl, BeforeControlDelegate>(value);
 		}
+
+		/// <summary>Removes a callback previously added with <see cref="AddBeforeControlCallback"/></summary>
 		public void RemoveBeforeControlCallback (BeforeControlDelegate value) {
 			RemoveCallback<ManagedMovementOverrideBeforeControl, BeforeControlDelegate>(value);
 		}
 
+		/// <summary>Registers a callback that runs after the agent has calculated how it wants to move, except for local avoidance.</summary>
 		public void AddAfterControlCallback (AfterControlDelegate value) {
 			AddCallback<ManagedMovementOverrideAfterControl, AfterControlDelegate>(value);
 		}
+
+		/// <summary>Removes a callback previously added with <see cref="AddAfterControlCallback"/></summary>
 		public void RemoveAfterControlCallback (AfterControlDelegate value) {
 			RemoveCallback<ManagedMovementOverrideAfterControl, AfterControlDelegate>(value);
 		}
 
+		/// <summary>
+		/// Registers a callback that will be called before the agent is moved, but after it has calculated how it wants to move.
+		///
+		/// You can use this to tweak the agent's desired movement slightly (<see cref="ResolvedMovement"/>), or by also removing the <see cref="SimulateMovementFinalize"/> component, you can take over the actual movement completely.
+		///
+		/// This snippet replicates most of the built-in movement:
+		/// <code>
+		/// var ai = GetComponent<FollowerEntity>();
+		///
+		/// // Prevent the agent from moving itself, so that we can override it.
+		/// ai.world.EntityManager.RemoveComponent<SimulateMovementFinalize>(ai.entity);
+		///
+		/// // This will run once or more per frame, and allows you to hook into the movement logic
+		/// ai.movementOverrides.AddBeforeMovementCallback((Unity.Entities.Entity entity, float dt, ref Unity.Transforms.LocalTransform localTransform, ref AgentCylinderShape shape, ref AgentMovementPlane movementPlane, ref DestinationPoint destination, ref MovementState movementState, ref MovementSettings movementSettings, ref MovementControl movementControl, ref ResolvedMovement resolvedMovement) => {
+		///     // Just replicate the normal movement as an example, except for gravity and ground collision
+		///     localTransform.Rotation = JobMoveAgent.ResolveRotation(localTransform.Rotation, ref movementState, in resolvedMovement, in movementSettings, in movementPlane, dt);
+		///     localTransform.Position += JobMoveAgent.MoveWithoutGravity(localTransform.Position, in resolvedMovement, in movementPlane, dt);
+		/// });
+		/// </code>
+		///
+		/// Or if you prefer to handle more things yourself:
+		/// <code>
+		/// void Start () {
+		///     var ai = GetComponent<FollowerEntity>();
+		///
+		///     // Prevent the agent from moving itself, so that we can override it.
+		///     ai.world.EntityManager.RemoveComponent<SimulateMovementFinalize>(ai.entity);
+		/// }
+		///
+		/// void Update () {
+		///     var ai = GetComponent<FollowerEntity>();
+		///
+		///     // Read how the agent wants to move
+		///     var resolved = ai.world.EntityManager.GetComponentData<ResolvedMovement>(ai.entity);
+		///     var movementPlane = ai.world.EntityManager.GetComponentData<AgentMovementPlane>(ai.entity);
+		///     var movementState = ai.world.EntityManager.GetComponentData<MovementState>(ai.entity);
+		///     var targetRot = movementPlane.value.ToWorldRotation(resolved.targetRotation + resolved.targetRotationOffset);
+		///     var movementSettings = ai.world.EntityManager.GetComponentData<MovementSettings>(ai.entity);
+		///     var dt = Time.deltaTime;
+		///
+		///     // Move the agent.
+		///     // This is a very simplified movement logic which has some limitations (it won't work well with local avoidance for example, and since it always runs exactly once per frame, it cannot handle higher time scales),
+		///     // but it demonstrates the basic idea. Check out the source code for JobMoveAgent for more inspiration.
+		///     ai.transform.rotation = Quaternion.RotateTowards(ai.transform.rotation, targetRot, resolved.rotationSpeed * dt * Mathf.Rad2Deg);
+		///     ai.transform.position += Vector3.ClampMagnitude((Vector3)resolved.targetPoint - ai.transform.position, resolved.speed * dt);
+		///
+		///     // Write back the movement state if we have made any changes
+		///     // In this example we don't, but it's common to want to do this.
+		///     ai.world.EntityManager.SetComponentData(ai.entity, movementState);
+		/// }
+		/// </code>
+		/// </summary>
 		public void AddBeforeMovementCallback (BeforeMovementDelegate value) {
 			AddCallback<ManagedMovementOverrideBeforeMovement, BeforeMovementDelegate>(value);
 		}
+
+		/// <summary>Removes a callback previously added with <see cref="AddBeforeMovementCallback"/></summary>
 		public void RemoveBeforeMovementCallback (BeforeMovementDelegate value) {
 			RemoveCallback<ManagedMovementOverrideBeforeMovement, BeforeMovementDelegate>(value);
 		}
@@ -64,7 +130,7 @@ namespace Pathfinding.ECS {
 	}
 
 	/// <summary>
-	/// Stores a delegate that can be used to override movement control and movement settings for a specific entity.
+	/// Component that stores a delegate that can be used to override movement control and movement settings for a specific entity.
 	/// This is used by the FollowerEntity to allow other systems to override the movement of the entity.
 	///
 	/// See: <see cref="FollowerEntity.movementOverrides"/>

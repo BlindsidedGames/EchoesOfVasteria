@@ -93,7 +93,7 @@ namespace Pathfinding.Graphs.Navmesh {
 			return coll.GetShapes(group);
 		}
 
-		public static int GenerateMeshesFromColliders (Collider2D[] colliders, int numColliders, float maxError, out NativeArray<float3> outputVertices, out NativeArray<int> outputIndices, out NativeArray<ShapeMesh> outputShapeMeshes) {
+		public static int GenerateMeshesFromColliders (Collider2D[] colliders, int numColliders, float maxError, out UnsafeSpan<float3> outputVertices, out UnsafeSpan<int> outputIndices, out UnsafeSpan<ShapeMesh> outputShapeMeshes) {
 			var group = new PhysicsShapeGroup2D();
 			var shapeList = new NativeList<PhysicsShape2D>(numColliders, Allocator.Temp);
 			var verticesList = new NativeList<Vector2>(numColliders*4, Allocator.Temp);
@@ -150,8 +150,7 @@ namespace Pathfinding.Graphs.Navmesh {
 			var verticesSpan = verticesList.AsUnsafeSpan().Reinterpret<float2>();
 			var matricesSpan = matricesList.AsUnsafeSpan();
 			var indexSpan = colliderIndexList.AsUnsafeSpan();
-			outputShapeMeshes = new NativeArray<ShapeMesh>(shapeList.Length, Allocator.Persistent);
-			var outputShapeMeshesSpan = outputShapeMeshes.AsUnsafeSpan();
+			outputShapeMeshes = new UnsafeSpan<ShapeMesh>(Allocator.Persistent, shapeList.Length);
 			int outputMeshCount;
 			unsafe {
 				outputMeshCount = GenerateMeshesFromShapes(
@@ -161,15 +160,15 @@ namespace Pathfinding.Graphs.Navmesh {
 					ref indexSpan,
 					ref UnsafeUtility.AsRef<UnsafeList<float3> >(vertexBuffer.GetUnsafeList()),
 					ref UnsafeUtility.AsRef<UnsafeList<int3> >(indexBuffer.GetUnsafeList()),
-					ref outputShapeMeshesSpan,
+					ref outputShapeMeshes,
 					maxError
 					);
 			}
 
 			Profiler.EndSample();
 			Profiler.BeginSample("Copy");
-			outputVertices = vertexBuffer.ToArray(Allocator.Persistent);
-			outputIndices = new NativeArray<int>(indexBuffer.AsArray().Reinterpret<int>(12), Allocator.Persistent);
+			outputVertices = vertexBuffer.AsUnsafeSpan().Clone(Allocator.Persistent);
+			outputIndices = indexBuffer.AsArray().Reinterpret<int>(12).AsUnsafeSpan().Clone(Allocator.Persistent);
 			Profiler.EndSample();
 			return outputMeshCount;
 		}

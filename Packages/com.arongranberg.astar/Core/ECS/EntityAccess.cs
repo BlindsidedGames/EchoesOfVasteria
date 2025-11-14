@@ -47,9 +47,11 @@ namespace Pathfinding.ECS {
 		// Inlining makes this method about 20% faster. It's hot when accessing properties on the FollowerEntity component.
 		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 		public bool Update (World world, Entity entity, out EntityManager entityManager, out EntityStorageInfo storage) {
-			entityManager = default;
 			storage = this.storage;
-			if (world == null) return false;
+			if (world == null || !world.IsCreated) {
+				entityManager = default;
+				return false;
+			}
 			entityManager = world.EntityManager;
 			// We must use entityManager.EntityOrderVersion here, not GlobalSystemVersion, because
 			// the GlobalSystemVersion does not necessarily update when structural changes happen.
@@ -73,12 +75,14 @@ namespace Pathfinding.ECS {
 		///
 		/// Warning: You must not store the returned reference past a structural change in the ECS world.
 		///
+		/// Warning: Assumes that if the entity exists, it has the given component.
+		///
 		/// Returns: True if the entity exists, and false if it does not.
 		/// Throws: An exception if the entity does not have the given component.
 		/// </summary>
 		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-		public bool GetComponentData<A>(Entity entity, ref EntityAccess<A> access, out ComponentRef<A> value) where A : unmanaged, IComponentData {
-			if (Update(World.DefaultGameObjectInjectionWorld, entity, out var entityManager, out var storage)) {
+		public bool GetComponentData<A>(World world, Entity entity, ref EntityAccess<A> access, out ComponentRef<A> value) where A : unmanaged, IComponentData {
+			if (Update(world, entity, out var entityManager, out var storage)) {
 				access.Update(entityManager);
 				unsafe {
 					value = new ComponentRef<A>((byte*)UnsafeUtility.AddressOf(ref access[storage]));
@@ -86,6 +90,29 @@ namespace Pathfinding.ECS {
 				return true;
 			} else {
 				value = default;
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Retrieves a component for a given entity.
+		///
+		/// This is a convenience method to call <see cref="Update"/> on this object and update on the access object, and then retrieve the component data.
+		///
+		/// This method is very fast if the entity is the same as the last call to this method.
+		/// If the entity is different, it will be slower.
+		///
+		/// Returns: True if the entity exists, and false if it does not.
+		/// Throws: An exception if the entity does not have the given component.
+		/// </summary>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public bool GetComponentData<A>(World world, Entity entity, ref ManagedEntityAccess<A> access, out A value) where A : class, IComponentData {
+			if (Update(world, entity, out var entityManager, out var storage)) {
+				access.Update(entityManager);
+				value = access[storage];
+				return true;
+			} else {
+				value = null;
 				return false;
 			}
 		}
@@ -139,7 +166,6 @@ namespace Pathfinding.ECS {
 				if (lastSystemVersion == 0 || worldSequenceNumber != sequenceNumber) {
 					handle = entityManager.GetComponentTypeHandle<T>(readOnly);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
-					entityManager.WorldUnmanaged.IsSystemValid(systemHandle);
 					systemHandle = entityManager.WorldUnmanaged.GetExistingUnmanagedSystem<AIMoveSystem>();
 #endif
 				}

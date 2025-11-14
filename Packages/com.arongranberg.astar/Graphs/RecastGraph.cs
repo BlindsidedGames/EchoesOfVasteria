@@ -30,44 +30,45 @@ namespace Pathfinding {
 	/// [Open online documentation to see images]
 	///
 	/// <b>Shape</b>
-	/// \inspectorField{Dimensions, dimensionMode}
-	/// \inspectorField{Center, forcedBoundsCenter}
-	/// \inspectorField{Size, forcedBoundsSize}
-	/// \inspectorField{Rotation, rotation}
-	/// \inspectorField{Snap bounds to scene, SnapBoundsToScene}
+	/// \inspectorField{dimensionMode; Dimensions}
+	/// \inspectorField{forcedBoundsCenter; Center}
+	/// \inspectorField{forcedBoundsSize; Size}
+	/// \inspectorField{rotation; Rotation}
+	/// \inspectorField{SnapBoundsToScene; Snap bounds to scene}
 	///
 	/// <b>Input Filtering</b>
-	/// \inspectorField{Filter Objects By, collectionSettings.collectionMode}
-	/// \inspectorField{Layer Mask, collectionSettings.layerMask}
-	/// \inspectorField{Tag Mask, collectionSettings.tagMask}
-	/// \inspectorField{Rasterize Terrains, collectionSettings.rasterizeTerrain}
-	/// \inspectorField{Rasterize Trees, collectionSettings.rasterizeTrees}
-	/// \inspectorField{Heightmap Downsampling, collectionSettings.terrainHeightmapDownsamplingFactor}
-	/// \inspectorField{Rasterize Meshes, collectionSettings.rasterizeMeshes}
-	/// \inspectorField{Rasterize Colliders, collectionSettings.rasterizeColliders}
+	/// \inspectorField{collectionSettings.collectionMode; Filter Objects By}
+	/// \inspectorField{collectionSettings.layerMask; Layer Mask}
+	/// \inspectorField{collectionSettings.tagMask; Tag Mask}
+	/// \inspectorField{collectionSettings.rasterizeTerrain; Rasterize Terrains}
+	/// \inspectorField{perTerrainLayerModifications; Rasterize Terrains → Per Terrain Layer Modifications}
+	/// \inspectorField{collectionSettings.rasterizeTrees; Rasterize Terrains → Rasterize Trees}
+	/// \inspectorField{collectionSettings.terrainHeightmapDownsamplingFactor; Rasterize Terrains → Heightmap Downsampling}
+	/// \inspectorField{collectionSettings.rasterizeMeshes; Rasterize Meshes}
+	/// \inspectorField{collectionSettings.rasterizeColliders; Rasterize Colliders}
 	///
 	/// <b>Agent Characteristics</b>
-	/// \inspectorField{Character Radius, characterRadius}
-	/// \inspectorField{Character Height, walkableHeight}
-	/// \inspectorField{Max Step Height, walkableClimb}
-	/// \inspectorField{Max Slope, maxSlope}
-	/// \inspectorField{Per Layer Modifications, perLayerModifications}
+	/// \inspectorField{characterRadius; Character Radius}
+	/// \inspectorField{walkableHeight; Character Height}
+	/// \inspectorField{walkableClimb; Max Step Height}
+	/// \inspectorField{maxSlope; Max Slope}
+	/// \inspectorField{perLayerModifications; Per Layer Modifications}
 	///
 	/// <b>Rasterization</b>
-	/// \inspectorField{Voxel Size, cellSize}
-	/// \inspectorField{Use Tiles, useTiles}
-	/// \inspectorField{Tile Size, editorTileSize}
-	/// \inspectorField{Max Border Edge Length, maxEdgeLength}
-	/// \inspectorField{Edge Simplification, contourMaxError}
-	/// \inspectorField{Min Region Size, minRegionSize}
-	/// \inspectorField{Round Collider Detail, collectionSettings.colliderRasterizeDetail}
+	/// \inspectorField{cellSize; Voxel Size}
+	/// \inspectorField{useTiles; Use Tiles}
+	/// \inspectorField{editorTileSize; Tile Size}
+	/// \inspectorField{maxEdgeLength; Max Border Edge Length}
+	/// \inspectorField{contourMaxError; Edge Simplification}
+	/// \inspectorField{minRegionSize; Min Region Size}
+	/// \inspectorField{collectionSettings.colliderRasterizeDetail; Round Collider Detail}
 	///
 	/// <b>Runtime Settings</b>
-	/// \inspectorField{Affected By Navmesh Cuts, enableNavmeshCutting}
+	/// \inspectorField{enableNavmeshCutting; Affected By Navmesh Cuts}
 	///
 	/// <b>Advanced</b>
-	/// \inspectorField{Relevant Graph Surface Mode, relevantGraphSurfaceMode}
-	/// \inspectorField{Initial Penalty, initialPenalty}
+	/// \inspectorField{relevantGraphSurfaceMode; Relevant Graph Surface Mode}
+	/// \inspectorField{initialPenalty; Initial Penalty}
 	///
 	/// \section howitworks How a recast graph works
 	/// When generating a recast graph what happens is that the world is voxelized.
@@ -350,6 +351,38 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>
+		/// Per terrain layer modification settings.
+		///
+		/// This can be used to make all surfaces with a specific terrain layer get a specific pathfinding tag for example.
+		/// Or make all surfaces with a specific terrain layer unwalkable.
+		/// </summary>
+		[System.Serializable]
+		public struct PerTerrainLayerModification {
+			/// <summary>Unity terrain layer that this modification applies to</summary>
+			public int layer;
+			/// <summary>\copydocref{RecastNavmeshModifier.mode}</summary>
+			public RecastNavmeshModifier.Mode mode;
+			/// <summary>\copydocref{RecastNavmeshModifier.surfaceID}</summary>
+			public int surfaceID;
+			/// <summary>
+			/// Threshold for which alpha the terrain layer needs to have for this rule to be applied.
+			///
+			/// In transitions between textures, the most applicable rule will be used.
+			/// Given a layer alpha of A, and a threshold of T, the rule with the highest value of A - T will be used.
+			///
+			/// If there's no rule for a given terrain layer, it is treated as having a threshold of 0.5.
+			/// </summary>
+			public float threshold;
+
+			public static PerTerrainLayerModification Default => new PerTerrainLayerModification {
+				layer = 0,
+				mode = RecastNavmeshModifier.Mode.WalkableSurface,
+				surfaceID = 1,
+				threshold = 0.5f,
+			};
+		}
+
 		/// <summary>Settings for which meshes/colliders and other objects to include in the graph</summary>
 		[System.Serializable]
 		public class CollectionSettings {
@@ -524,6 +557,7 @@ namespace Pathfinding {
 			///     // Register the mesh for rasterization
 			///     gatherer.AddMesh(new RecastMeshGatherer.GatheredMesh {
 			///         meshDataIndex = meshDataIndex,
+			///         tagDataIndex = -1,
 			///         area = 0,
 			///         indexStart = 0,
 			///         indexEnd = -1,
@@ -557,6 +591,35 @@ namespace Pathfinding {
 		/// </summary>
 		[JsonMember]
 		public List<PerLayerModification> perLayerModifications = new List<PerLayerModification>();
+
+		/// <summary>
+		/// List of rules that modify the graph based on the painted textures on terrains.
+		///
+		/// [Open online documentation to see images]
+		///
+		/// By default, all terrain layers are treated as walkable surfaces.
+		/// But by adding rules to this list, one can for example make all surfaces with a specific terrain layer get a specific pathfinding tag.
+		///
+		/// In the following image and video, a dirt road has been painted on the terrain and tagged with a custom tag.
+		/// The agent has been configured to prefer that tag, and so it will try to walk on the road instead of the grass.
+		///
+		/// [Open online documentation to see images]
+		///
+		/// [Open online documentation to see videos]
+		///
+		/// Each terrain layer should be modified at most once in this list.
+		///
+		/// If the terrain has a <see cref="RecastNavmeshModifier"/> component attached, it will be ignored, and these rules will be used instead.
+		///
+		/// The <see cref="collectionSettings.terrainHeightmapDownsamplingFactor"/> is very important when these adjustments are used.
+		/// If the terrain heightmap is downsampled too much, the accuracy of the generated navmesh will be reduced.
+		/// It will also be the most accurate when <see cref="collectionSettings.terrainHeightmapDownsamplingFactor;terrainHeightmapDownsamplingFactor"/> is a factor or two, i.e. 1, 2, 4, 8, etc.
+		///
+		/// See: <see cref="PerTerrainLayerModification"/>
+		/// See: tags (view in online documentation for working links)
+		/// </summary>
+		[JsonMember]
+		public List<PerTerrainLayerModification> perTerrainLayerModifications = new List<PerTerrainLayerModification>();
 
 		/// <summary>
 		/// Whether to use 3D or 2D mode.
@@ -1500,6 +1563,7 @@ namespace Pathfinding {
 			}
 			EndBatchTileUpdate();
 
+			// TODO: Call after ReplaceTile too? Make sure it's not called after navmesh cut updates
 			if (OnRecalculatedTiles != null) OnRecalculatedTiles(updatedTiles);
 		}
 

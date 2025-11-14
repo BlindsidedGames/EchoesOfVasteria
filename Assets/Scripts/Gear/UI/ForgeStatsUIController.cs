@@ -566,18 +566,10 @@ namespace TimelessEchoes.Gear.UI
 		private void AppendQualitySection(StringBuilder sb, GameData.ForgeStats forge)
 		{
 			var equip = EquipmentController.Instance;
-			var crafting = CraftingService.Instance;
 			sb.AppendLine("<size=105%><b>Quality</b></size>");
-			sb.AppendLine(" Equipped:");
 			var slots = equip != null && equip.Slots != null && equip.Slots.Count > 0
 				? equip.Slots
 				: new System.Collections.Generic.List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-			foreach (var slot in slots)
-			{
-				var gi = equip != null ? equip.GetEquipped(slot) : null;
-				var pct = UpgradeEvaluator.ComputeQualityPercent(crafting, gi, slot);
-				sb.AppendLine($"   {slot}: {pct:0.#}%");
-			}
 
 			sb.AppendLine(" Best Rolled:");
 			foreach (var slot in slots)

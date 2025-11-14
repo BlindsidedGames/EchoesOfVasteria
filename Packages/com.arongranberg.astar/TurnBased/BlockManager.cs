@@ -55,31 +55,12 @@ namespace Pathfinding {
 
 			#region ITraversalProvider implementation
 
-			public bool CanTraverse (Path path, GraphNode node) {
-				// This first IF is the default implementation that is used when no traversal provider is used
-				if (!node.Walkable || (path != null && (path.enabledTags >> (int)node.Tag & 0x1) == 0)) {
-					return false;
-				} else if (mode == BlockMode.OnlySelector) {
+			public bool CanTraverse (ref TraversalConstraint traversalConstraint, GraphNode node) {
+				if (mode == BlockMode.OnlySelector) {
 					return !blockManager.NodeContainsAnyOf(node, selector);
 				} else {
 					// assume mode == BlockMode.AllExceptSelector
 					return !blockManager.NodeContainsAnyExcept(node, selector);
-				}
-			}
-
-			public bool CanTraverse (Path path, GraphNode from, GraphNode to) {
-				return CanTraverse(path, to);
-			}
-
-			public uint GetTraversalCost (Path path, GraphNode node) {
-				// Same as default implementation
-				return path.GetTagPenalty((int)node.Tag) + node.Penalty;
-			}
-
-			// This can be omitted in Unity 2021.3 and newer because a default implementation (returning true) can be used there.
-			public bool filterDiagonalGridConnections {
-				get {
-					return true;
 				}
 			}
 

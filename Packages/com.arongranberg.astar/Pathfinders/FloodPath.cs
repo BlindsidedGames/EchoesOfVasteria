@@ -39,9 +39,6 @@ namespace Pathfinding {
 	/// </code>
 	/// Where OnPathComplete is your callback function.
 	///
-	/// Another thing to note is that if you are using an NNConstraint on the FloodPathTracer, they must always inherit from <see cref="FloodPathConstraint"/>.
-	/// The easiest is to just modify the instance of FloodPathConstraint which is created as the default one.
-	///
 	/// \section flood-path-builtin-movement Integration with the built-in movement scripts
 	/// The built-in movement scripts cannot calculate a FloodPathTracer path themselves, but you can use the SetPath method to assign such a path to them:
 	/// <code>
@@ -139,9 +136,9 @@ namespace Pathfinding {
 			validationHash = 0;
 		}
 
-		protected override void Prepare () {
+		protected override void Prepare (ref SearchContext ctx) {
 			if (startNode == null) {
-				var startNNInfo  = GetNearest(originalStartPoint);
+				var startNNInfo = AstarPath.active.GetNearest(originalStartPoint, nearestNodeConstraint);
 
 				startPoint = startNNInfo.position;
 				startNode = startNNInfo.node;
@@ -161,36 +158,35 @@ namespace Pathfinding {
 				return;
 			}
 
-			if (!CanTraverse(startNode)) {
-				FailWithError("The node closest to the start point could not be traversed");
-				return;
-			}
+			UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(startNode));
 
-			pathHandler.AddTemporaryNode(new TemporaryNode {
+			ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 				type = TemporaryNodeType.Start,
 				position = (Int3)startPoint,
 				associatedNode = startNode.NodeIndex,
 			});
-			heuristicObjective = new HeuristicObjective(int3.zero, Heuristic.None, 0.0f);
-			AddStartNodesToHeap();
-			validationHash = pathHandler.nodeStorage.destroyedNodesVersion;
+			ctx.heuristicObjective = new HeuristicObjective(int3.zero, Heuristic.None, 0.0f);
+			ctx.traversalConstraint = traversalConstraint;
+			ctx.traversalCosts = traversalCosts;
+			ctx.AddStartNodesToHeap();
+			validationHash = ctx.pathHandler.nodeStorage.destroyedNodesVersion;
 		}
 
-		protected override void OnHeapExhausted () {
+		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			CompleteState = PathCompleteState.Complete;
 		}
 
-		protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
+		protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 			throw new System.InvalidOperationException("FloodPaths do not have any end nodes");
 		}
 
 		public const uint TemporaryNodeBit = 1u << 31;
 
-		public override void OnVisitNode (uint pathNode, uint hScore, uint gScore) {
+		public override void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 			// Insert into internal search tree
 			if (saveParents) {
-				var parentIndex = pathHandler.pathNodes[pathNode].parentIndex;
-				parents[pathNode] = parentIndex | (pathHandler.IsTemporaryNode(parentIndex) ? TemporaryNodeBit : 0); // != 0 ? (pathHandler.IsTemporaryNode(parentIndex) ? pathHandler.GetTemporaryNode(parentIndex).associatedNode : parentIndex) : 0;
+				var parentIndex = ctx.pathHandler.pathNodes[pathNode].parentIndex;
+				parents[pathNode] = parentIndex | (ctx.pathHandler.IsTemporaryNode(parentIndex) ? TemporaryNodeBit : 0); // != 0 ? (pathHandler.IsTemporaryNode(parentIndex) ? pathHandler.GetTemporaryNode(parentIndex).associatedNode : parentIndex) : 0;
 			}
 		}
 	}

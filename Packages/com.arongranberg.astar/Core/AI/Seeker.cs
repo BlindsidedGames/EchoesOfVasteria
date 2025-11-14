@@ -12,6 +12,18 @@ namespace Pathfinding {
 	/// This is a component which is meant to be attached to a single unit (AI, Robot, Player, whatever) to handle its pathfinding calls.
 	/// It also handles post-processing of paths using modifiers.
 	///
+	/// \section seeker-inspector Inspector
+	///
+	/// \inspectorField{drawGizmos; Draw Gizmos}
+	/// \inspectorField{detailedGizmos; Detailed Gizmos}
+	/// \inspectorField{startEndModifier.exactStartPoint; Start End Modifier → Start Point Snapping}
+	/// \inspectorField{startEndModifier.exactEndPoint; Start End Modifier → End Point Snapping}
+	/// \inspectorField{startEndModifier.addPoints; Start End Modifier → Add Points}
+	/// \inspectorField{graphMask; Traversable Graphs}
+	/// \inspectorField{traversableTags; Tags → Traversable}
+	/// \inspectorField{tagCostMultipliers; Tags → Cost per world unit}
+	/// \inspectorField{tagEntryCosts; Tags → Cost per node}
+	///
 	/// See: calling-pathfinding (view in online documentation for working links)
 	/// See: modifiers (view in online documentation for working links)
 	/// </summary>
@@ -41,16 +53,32 @@ namespace Pathfinding {
 		public bool detailedGizmos;
 
 		/// <summary>Path modifier which tweaks the start and end points of a path</summary>
-		[HideInInspector]
 		public StartEndModifier startEndModifier = new StartEndModifier();
 
 		/// <summary>
 		/// The tags which the Seeker can traverse.
 		///
-		/// Note: This field is a bitmask.
+		/// This is a bitmask, i.e bit 0 indicates that tag 0 is traversable, bit 3 indicates tag 3 is traversable etc.
+		///
+		/// By default all tags are traversable, which corresponds to the value -1.
+		///
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// // Allows the first and third tags to be searched, but not the rest
+		/// seeker.traversableTags = (1 << 0) | (1 << 2);
+		///
+		/// // Allows the two named tags to be searched, but not the rest
+		/// seeker.traversableTags = PathfindingTag.FromName("Grass").ToMask() | PathfindingTag.FromName("Lava").ToMask();
+		/// </code>
+		///
+		/// See: <see cref="graphMask"/>
+		/// See: tags (view in online documentation for working links)
 		/// See: bitmasks (view in online documentation for working links)
+		/// See: <see cref="PathfindingTag.ToMask"/>
+		/// See: <see cref="TraversalConstraint.tags"/>
+		/// See: <see cref="NearestNodeConstraint.tags"/>
 		/// </summary>
-		[HideInInspector]
 		public int traversableTags = -1;
 
 		/// <summary>
@@ -60,30 +88,43 @@ namespace Pathfinding {
 		///
 		/// The length of this array should be exactly 32, one for each tag.
 		///
-		/// See: Pathfinding.Path.tagPenalties
+		/// See: Pathfinding.Path.tagCostMultipliers
+		/// Deprecated: Use <see cref="tagEntryCosts"/> or <see cref="tagCostMultipliers"/> instead.
 		/// </summary>
-		[HideInInspector]
-		public int[] tagPenalties = new int[32];
+		[System.Obsolete("Use tagEntryCosts or tagCostMultipliers instead", false)]
+		public uint[] tagPenalties {
+			get => tagEntryCosts;
+			set {
+				tagEntryCosts = value;
+			}
+		}
+
+		/// <summary>\copydocref{TraversalCosts.tagCostMultipliers}</summary>
+		public float[] tagCostMultipliers;
+
+		/// <summary>\copydocref{TraversalCosts.tagEntryCosts}</summary>
+		[UnityEngine.Serialization.FormerlySerializedAs("tagPenalties")]
+		public uint[] tagEntryCosts = new uint[32];
 
 		/// <summary>
-		/// Graphs that this Seeker can use.
+		/// %Graphs that this Seeker can use.
 		/// This field determines which graphs will be considered when searching for the start and end nodes of a path.
 		/// It is useful in numerous situations, for example if you want to make one graph for small units and one graph for large units.
 		///
 		/// This is a bitmask so if you for example want to make the agent only use graph index 3 then you can set this to:
-		/// <code> seeker.graphMask = 1 << 3; </code>
+		/// <code> seeker.graphMask = GraphMask.FromGraphIndex(3); </code>
 		///
 		/// See: bitmasks (view in online documentation for working links)
 		///
 		/// Note that this field only stores which graph indices that are allowed. This means that if the graphs change their ordering
 		/// then this mask may no longer be correct.
 		///
-		/// If you know the name of the graph you can use the <see cref="Pathfinding.GraphMask.FromGraphName"/> method:
+		/// If you know the name of the graph you can use the <see cref="GraphMask.FromGraphName"/> method:
 		/// <code>
 		/// GraphMask mask1 = GraphMask.FromGraphName("My Grid Graph");
 		/// GraphMask mask2 = GraphMask.FromGraphName("My Other Grid Graph");
 		///
-		/// NNConstraint nn = NNConstraint.Walkable;
+		/// NearestNodeConstraint nn = NearestNodeConstraint.Walkable;
 		///
 		/// nn.graphMask = mask1 | mask2;
 		///
@@ -98,7 +139,6 @@ namespace Pathfinding {
 		///
 		/// See: multiple-agent-types (view in online documentation for working links)
 		/// </summary>
-		[HideInInspector]
 		public GraphMask graphMask = GraphMask.everything;
 
 		/// <summary>
@@ -110,6 +150,7 @@ namespace Pathfinding {
 		/// seeker.traversalProvider = new MyCustomTraversalProvider();
 		/// </code>
 		///
+		/// See: <see cref="ITraversalProvider"/>
 		/// See: traversal_provider (view in online documentation for working links)
 		/// </summary>
 		public ITraversalProvider traversalProvider;
@@ -189,6 +230,10 @@ namespace Pathfinding {
 		public Seeker () {
 			onPathDelegate = OnPathComplete;
 			onPartialPathDelegate = OnPartialPathComplete;
+			tagCostMultipliers = new float[32];
+			for (int i = 0; i < tagCostMultipliers.Length; i++) {
+				tagCostMultipliers[i] = 1;
+			}
 		}
 
 		/// <summary>Initializes a few variables</summary>
@@ -500,13 +545,13 @@ namespace Pathfinding {
 		///
 		/// <code>
 		/// // Schedule a path search that will only start searching the graphs with index 0 and 3
-		/// seeker.StartPath(startPoint, endPoint, null, 1 << 0 | 1 << 3);
+		/// seeker.StartPath(startPoint, endPoint, null, GraphMask.FromGraphIndex(0) | GraphMask.FromGraphIndex(3));
 		/// </code>
 		/// </summary>
 		/// <param name="start">The start point of the path</param>
 		/// <param name="end">The end point of the path</param>
 		/// <param name="callback">The function to call when the path has been calculated. If you don't want a callback (e.g. if you instead poll path.IsDone or use a similar method) you can set this to null.</param>
-		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See #Pathfinding.NNConstraint.graphMask. This will override the #graphMask on this Seeker.</param>
+		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See \reflink{TraversalConstraint.graphMask}. This will override the #graphMask on this Seeker.</param>
 		public Path StartPath (Vector3 start, Vector3 end, OnPathDelegate callback, GraphMask graphMask) {
 			return StartPath(ABPath.Construct(start, end, null), callback, graphMask);
 		}
@@ -543,7 +588,7 @@ namespace Pathfinding {
 			// however it is the best detection that I can do.
 			// The non-default check is primarily for compatibility reasons to avoid breaking peoples existing code.
 			// The StartPath overloads with an explicit graphMask field should be used instead to set the graphMask.
-			if (p.nnConstraint.graphMask == -1) p.nnConstraint.graphMask = graphMask;
+			if (p.traversalConstraint.graphMask.containsAllGraphs) p.traversalConstraint.graphMask = graphMask;
 			StartPathInternal(p, callback);
 			return p;
 		}
@@ -558,7 +603,7 @@ namespace Pathfinding {
 		/// <param name="callback">The function to call when the path has been calculated. If you don't want a callback (e.g. if you instead poll path.IsDone or use a similar method) you can set this to null.</param>
 		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See \reflink{GraphMask}.  This will override the #graphMask on this Seeker.</param>
 		public Path StartPath (Path p, OnPathDelegate callback, GraphMask graphMask) {
-			p.nnConstraint.graphMask = graphMask;
+			p.traversalConstraint.graphMask = graphMask;
 			StartPathInternal(p, callback);
 			return p;
 		}
@@ -580,9 +625,13 @@ namespace Pathfinding {
 				p.callback += onPathDelegate;
 			}
 
-			p.enabledTags = traversableTags;
-			p.tagPenalties = tagPenalties;
-			if (traversalProvider != null) p.traversalProvider = traversalProvider;
+			p.traversalConstraint.tags = traversableTags;
+
+			// Unless the user has already set these fields, we will set them to the values on this Seeker.
+			if (p.traversalCosts.tagCostMultipliers == null) p.traversalCosts.tagCostMultipliers = tagCostMultipliers;
+			if (p.traversalCosts.tagEntryCosts == null) p.traversalCosts.tagEntryCosts = tagEntryCosts;
+			if (p.traversalConstraint.traversalProvider == null) p.traversalConstraint.traversalProvider = traversalProvider;
+			if (p.traversalCosts.traversalProvider == null) p.traversalCosts.traversalProvider = traversalProvider;
 
 			// Cancel a previously requested path is it has not been processed yet and also make sure that it has not been recycled and used somewhere else
 			if (path != null && path.PipelineState <= PathState.Processing && path.CompleteState != PathCompleteState.Error && lastPathID == path.pathID) {
@@ -653,7 +702,7 @@ namespace Pathfinding {
 		/// <param name="endPoints">The end points of the path</param>
 		/// <param name="pathsForAll">Indicates whether or not a path to all end points should be searched for or only to the closest one</param>
 		/// <param name="callback">The function to call when the path has been calculated. If you don't want a callback (e.g. if you instead poll path.IsDone or use a similar method) you can set this to null.</param>
-		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See Pathfinding.NNConstraint.graphMask. This will override the #graphMask on this Seeker.</param>
+		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See \reflink{TraversalConstraint.graphMask}. This will override the #graphMask on this Seeker.</param>
 		public MultiTargetPath StartMultiTargetPath (Vector3 start, Vector3[] endPoints, bool pathsForAll, OnPathDelegate callback, GraphMask graphMask) {
 			MultiTargetPath p = MultiTargetPath.Construct(start, endPoints, null, null);
 
@@ -722,7 +771,7 @@ namespace Pathfinding {
 		/// <param name="end">The end point of the path</param>
 		/// <param name="pathsForAll">Indicates whether or not a path from all start points should be searched for or only to the closest one</param>
 		/// <param name="callback">The function to call when the path has been calculated. If you don't want a callback (e.g. if you instead poll path.IsDone or use a similar method) you can set this to null.</param>
-		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See Pathfinding.NNConstraint.graphMask. This will override the #graphMask on this Seeker.</param>
+		/// <param name="graphMask">Mask used to specify which graphs should be searched for close nodes. See \reflink{TraversalConstraint.graphMask}. This will override the #graphMask on this Seeker.</param>
 		public MultiTargetPath StartMultiTargetPath (Vector3[] startPoints, Vector3 end, bool pathsForAll, OnPathDelegate callback, GraphMask graphMask) {
 			MultiTargetPath p = MultiTargetPath.Construct(startPoints, end, null, null);
 
@@ -773,7 +822,7 @@ namespace Pathfinding {
 
 		protected override void OnUpgradeSerializedData (ref Serialization.Migrations migrations, bool unityThread) {
 			if (graphMaskCompatibility != -1) {
-				graphMask = graphMaskCompatibility;
+				graphMask = new GraphMask((uint)graphMaskCompatibility);
 				graphMaskCompatibility = -1;
 			}
 			base.OnUpgradeSerializedData(ref migrations, unityThread);

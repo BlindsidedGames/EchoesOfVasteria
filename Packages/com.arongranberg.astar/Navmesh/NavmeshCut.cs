@@ -359,34 +359,41 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Bounds in XZ space after transforming using the *inverse* transform of the inverseTransform parameter.
+		/// Bounds of the cut after transforming using the *inverse* transform of the inverseTransform parameter.
 		/// The transformation will typically transform the vertices to graph space and this is used to
 		/// figure out which tiles the cut intersects.
 		/// </summary>
-		public override Rect GetBounds (GraphTransform inverseTransform, float radiusMargin) {
-			var buffers = ListPool<Contour>.Claim();
+		public override Bounds GetBounds (GraphTransform inverseTransform, float radiusMargin) {
+			var outputVertices = new UnsafeList<float2>(0, Allocator.Temp);
+			var outputContours = new UnsafeList<ContourBurst>(1, Allocator.Temp);
 
-			GetContour(buffers, inverseTransform.inverseMatrix, radiusMargin);
-
-			Rect r = new Rect();
-			for (int i = 0; i < buffers.Count; i++) {
-				var buffer = buffers[i].contour;
-				for (int k = 0; k < buffer.Count; k++) {
-					var p = buffer[k];
-					if (k == 0 && i == 0) {
-						r = new Rect(p.x, p.y, 0, 0);
-					} else {
-						r.xMax = System.Math.Max(r.xMax, p.x);
-						r.yMax = System.Math.Max(r.yMax, p.y);
-						r.xMin = System.Math.Min(r.xMin, p.x);
-						r.yMin = System.Math.Min(r.yMin, p.y);
-					}
-				}
-				ListPool<Vector2>.Release(ref buffer);
+			unsafe {
+				GetContourBurst(&outputVertices, &outputContours, inverseTransform.inverseMatrix, radiusMargin);
 			}
 
-			ListPool<Contour>.Release(ref buffers);
-			return r;
+			UnityEngine.Assertions.Assert.IsTrue(outputVertices.Length > 0);
+			var xmin = float.MaxValue;
+			var xmax = float.MinValue;
+			var ymin = float.MaxValue;
+			var ymax = float.MinValue;
+			var zmin = float.MaxValue;
+			var zmax = float.MinValue;
+			for (int i = 0; i < outputVertices.Length; i++) {
+				var p = outputVertices[i];
+				xmin = System.Math.Min(xmin, p.x);
+				xmax = System.Math.Max(xmax, p.x);
+				zmin = System.Math.Min(zmin, p.y);
+				zmax = System.Math.Max(zmax, p.y);
+			}
+			for (int i = 0; i < outputContours.Length; i++) {
+				var c = outputContours[i];
+				ymin = System.Math.Min(ymin, c.ymin);
+				ymax = System.Math.Max(ymax, c.ymax);
+			}
+
+			outputVertices.Dispose();
+			outputContours.Dispose();
+			return new Bounds(new Vector3((xmin + xmax) * 0.5f, (ymin + ymax) * 0.5f, (zmin + zmax) * 0.5f), new Vector3(xmax - xmin, ymax - ymin, zmax - zmin));
 		}
 
 		public struct Contour {
@@ -476,8 +483,8 @@ namespace Pathfinding {
 				rectangleSize = rectangleSize,
 				height = height,
 				meshType = type,
-				meshContours = (UnsafeList<ContourBurst>*) this.meshContours.GetUnsafeList(),
-				meshContourVertices = (UnsafeList<float3>*) this.meshContourVertices.GetUnsafeList(),
+				meshContours = (UnsafeList<ContourBurst>*)this.meshContours.GetUnsafeList(),
+				meshContourVertices = (UnsafeList<float3>*)this.meshContourVertices.GetUnsafeList(),
 				meshScale = meshScale,
 			};
 

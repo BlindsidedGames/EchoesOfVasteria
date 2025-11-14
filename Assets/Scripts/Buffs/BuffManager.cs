@@ -725,6 +725,10 @@ namespace TimelessEchoes.Buffs
             if (tracker == null || !tracker.RunInProgress)
                 return;
 
+            var manager = TimelessEchoes.GameManager.Instance;
+            if (manager != null && manager.RunLoadingActive)
+                return;
+
             for (var i = 0; i < slotAssignments.Count && i < UnlockedSlots && i < autoCastSlots.Count && i < UnlockedAutoSlots; i++)
             {
                 if (!autoCastSlots[i]) continue;

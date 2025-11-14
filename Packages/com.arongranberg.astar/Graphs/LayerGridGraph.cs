@@ -19,49 +19,49 @@ namespace Pathfinding {
 	/// \section layergridgraph-inspector Inspector
 	/// [Open online documentation to see images]
 	///
-	/// \inspectorField{Shape, inspectorGridMode}
-	/// \inspectorField{2D, is2D}
-	/// \inspectorField{Align  to tilemap, AlignToTilemap}
-	/// \inspectorField{Width, width}
-	/// \inspectorField{Depth, depth}
-	/// \inspectorField{Node size, nodeSize}
-	/// \inspectorField{Aspect ratio (isometric/advanced shape), aspectRatio}
-	/// \inspectorField{Isometric angle (isometric/advanced shape), isometricAngle}
-	/// \inspectorField{Center, center}
-	/// \inspectorField{Rotation, rotation}
-	/// \inspectorField{Connections, neighbours}
-	/// \inspectorField{Cut corners, cutCorners}
-	/// \inspectorField{Max step height, maxStepHeight}
-	/// \inspectorField{Account for slopes, maxStepUsesSlope}
-	/// \inspectorField{Max slope, maxSlope}
-	/// \inspectorField{Erosion iterations, erodeIterations}
-	/// \inspectorField{Erosion → Erosion Uses Tags, erosionUseTags}
-	/// \inspectorField{Use 2D physics, collision.use2D}
+	/// \inspectorField{inspectorGridMode; Shape}
+	/// \inspectorField{is2D; 2D}
+	/// \inspectorField{AlignToTilemap; Align  to tilemap}
+	/// \inspectorField{width; Width}
+	/// \inspectorField{depth; Depth}
+	/// \inspectorField{nodeSize; Node size}
+	/// \inspectorField{aspectRatio; Aspect ratio (isometric/advanced shape)}
+	/// \inspectorField{isometricAngle; Isometric angle (isometric/advanced shape)}
+	/// \inspectorField{center; Center}
+	/// \inspectorField{rotation; Rotation}
+	/// \inspectorField{neighbours; Connections}
+	/// \inspectorField{cutCorners; Cut corners}
+	/// \inspectorField{maxStepHeight; Max step height}
+	/// \inspectorField{maxStepUsesSlope; Account for slopes}
+	/// \inspectorField{maxSlope; Max slope}
+	/// \inspectorField{erodeIterations; Erosion iterations}
+	/// \inspectorField{erosionUseTags; Erosion → Erosion Uses Tags}
+	/// \inspectorField{collision.use2D; Use 2D physics}
 	///
 	/// <b>Collision testing</b>
-	/// \inspectorField{Enable Collision Testing, collision.collisionCheck}
-	/// \inspectorField{Collider type, collision.type}
-	/// \inspectorField{Diameter, collision.diameter}
-	/// \inspectorField{Height/length, collision.height}
-	/// \inspectorField{Offset, collision.collisionOffset}
-	/// \inspectorField{Obstacle layer mask, collision.mask}
-	/// \inspectorField{Preview, GridGraphEditor.collisionPreviewOpen}
+	/// \inspectorField{collision.collisionCheck; Enable Collision Testing}
+	/// \inspectorField{collision.type; Collider type}
+	/// \inspectorField{collision.diameter; Diameter}
+	/// \inspectorField{collision.height; Height/length}
+	/// \inspectorField{collision.collisionOffset; Offset}
+	/// \inspectorField{collision.mask; Obstacle layer mask}
+	/// \inspectorField{GridGraphEditor.collisionPreviewOpen; Preview}
 	///
 	/// <b>Height testing</b>
-	/// \inspectorField{Enable Height Testing, collision.heightCheck}
-	/// \inspectorField{Ray length, collision.fromHeight}
-	/// \inspectorField{Mask, collision.heightMask}
-	/// \inspectorField{Thick raycast, collision.thickRaycast}
-	/// \inspectorField{Unwalkable when no ground, collision.unwalkableWhenNoGround}
+	/// \inspectorField{collision.heightCheck; Enable Height Testing}
+	/// \inspectorField{collision.fromHeight; Ray length}
+	/// \inspectorField{collision.heightMask; Mask}
+	/// \inspectorField{collision.thickRaycast; Thick raycast}
+	/// \inspectorField{collision.unwalkableWhenNoGround; Unwalkable when no ground}
 	///
 	/// <b>Rules</b>
 	/// Take a look at grid-rules (view in online documentation for working links) for a list of available rules.
 	///
 	/// <b>Other settings</b>
-	/// \inspectorField{Show surface, showMeshSurface}
-	/// \inspectorField{Show outline, showMeshOutline}
-	/// \inspectorField{Show connections, showNodeConnections}
-	/// \inspectorField{Initial penalty, NavGraph.initialPenalty}
+	/// \inspectorField{showMeshSurface; Show surface}
+	/// \inspectorField{showMeshOutline; Show outline}
+	/// \inspectorField{showNodeConnections; Show connections}
+	/// \inspectorField{NavGraph.initialPenalty; Initial penalty}
 	///
 	/// Note: The graph supports 16 layers by default, but it can be increased to 256 by enabling the ASTAR_LEVELGRIDNODE_MORE_LAYERS option in the A* Inspector → Settings → Optimizations tab.
 	///
@@ -117,14 +117,6 @@ namespace Pathfinding {
 				if (nodes[i] != null) counter++;
 			}
 			return counter;
-		}
-
-		public override void GetNodes (System.Action<GraphNode> action) {
-			if (nodes == null) return;
-
-			for (int i = 0; i < nodes.Length; i++) {
-				if (nodes[i] != null) action(nodes[i]);
-			}
 		}
 
 		/// <summary>
@@ -196,10 +188,10 @@ namespace Pathfinding {
 			int x = Mathf.Clamp((int)xf, 0, width-1);
 			int z = Mathf.Clamp((int)zf, 0, depth-1);
 			var worldPos = transform.Transform(positionGraphSpace);
-			return GetNearestNode(worldPos, x, z, null);
+			return GetNearestNode(worldPos, x, z);
 		}
 
-		private GridNodeBase GetNearestNode (Vector3 position, int x, int z, NNConstraint constraint) {
+		private GridNodeBase GetNearestNode (Vector3 position, int x, int z) {
 			int index = width*z+x;
 			float minDist = float.PositiveInfinity;
 			GridNodeBase minNode = null;
@@ -208,7 +200,7 @@ namespace Pathfinding {
 				var node = nodes[index + width*depth*i];
 				if (node != null) {
 					float dist =  ((Vector3)node.position - position).sqrMagnitude;
-					if (dist < minDist && (constraint == null || constraint.Suitable(node))) {
+					if (dist < minDist) {
 						minDist = dist;
 						minNode = node;
 					}

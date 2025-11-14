@@ -7,21 +7,22 @@ using Unity.Mathematics;
 using System.Runtime.CompilerServices;
 using Pathfinding.Collections;
 using Pathfinding.Pooling;
+using Unity.Burst;
 
 namespace Pathfinding {
 	/// <summary>Base class for all path types</summary>
-	[Unity.Burst.BurstCompile]
+	[BurstCompile]
 	public abstract class Path : IPathInternals {
 #if ASTAR_POOL_DEBUG
 		private string pathTraceInfo = "";
-		private List<string> claimInfo = new List<string>();
+		private string[] claimInfo = new string[2];
 		~Path() {
 			Debug.Log("Destroying " + GetType().Name + " instance");
-			if (claimed.Count > 0) {
+			if (claimCount > 0) {
 				Debug.LogWarning("Pool Is Leaking. See list of claims:\n" +
 					"Each message below will list what objects are currently claiming the path." +
 					" These objects have removed their reference to the path object but has not called .Release on it (which is bad).\n" + pathTraceInfo+"\n");
-				for (int i = 0; i < claimed.Count; i++) {
+				for (int i = 0; i < claimCount; i++) {
 					Debug.LogWarning("- Claim "+ (i+1) + " is by a " + claimed[i].GetType().Name + "\n"+claimInfo[i]);
 				}
 			} else {
@@ -29,9 +30,6 @@ namespace Pathfinding {
 			}
 		}
 #endif
-
-		/// <summary>Data for the thread calculating this path</summary>
-		protected PathHandler pathHandler;
 
 		/// <summary>
 		/// Callback to call when the path is complete.
@@ -53,8 +51,16 @@ namespace Pathfinding {
 		/// <summary>
 		/// Provides additional traversal information to a path request.
 		/// See: traversal_provider (view in online documentation for working links)
+		/// Deprecated: Set path.traversalConstraint.traversalProvider and path.traversalCosts.traversalProvider instead
 		/// </summary>
-		public ITraversalProvider traversalProvider;
+		[System.Obsolete("Use path.traversalConstraint.traversalProvider and path.traversalCosts.traversalProvider instead")]
+		public ITraversalProvider traversalProvider {
+			get => traversalConstraint.traversalProvider;
+			set {
+				traversalConstraint.traversalProvider = value;
+				traversalCosts.traversalProvider = value;
+			}
+		}
 
 
 		/// <summary>Backing field for <see cref="CompleteState"/></summary>
@@ -92,7 +98,7 @@ namespace Pathfinding {
 		/// See: error-messages (view in online documentation for working links)
 		/// See: This is equivalent to checking path.CompleteState == PathCompleteState.Error
 		/// </summary>
-		public bool error { get { return CompleteState == PathCompleteState.Error; } }
+		public bool error => CompleteState == PathCompleteState.Error;
 
 		/// <summary>
 		/// Additional info on why a path failed.
@@ -122,7 +128,7 @@ namespace Pathfinding {
 		public List<Vector3> vectorPath;
 
 		/// <summary>How long it took to calculate this path in milliseconds</summary>
-		public float duration;
+		public float duration { get; internal set; }
 
 		/// <summary>Number of nodes this path has searched</summary>
 		public int searchedNodes { get; protected set; }
@@ -141,8 +147,46 @@ namespace Pathfinding {
 		/// </summary>
 		protected bool hasBeenReset;
 
-		/// <summary>Constraint for how to search for nodes</summary>
-		public NNConstraint nnConstraint = PathNNConstraint.Walkable;
+		/// <summary>
+		/// Constraint for how to search for nodes.
+		/// Deprecated: Use <see cref="traversalConstraint"/> instead.
+		/// </summary>
+		[System.Obsolete("Use the traversalConstraint field instead. Check the migration guide for version 5.4 for more information.")]
+		public NNConstraintPathProxy nnConstraint => new NNConstraintPathProxy(this);
+
+		/// <summary>
+		/// Specifies the cost of traversing different nodes.
+		///
+		/// By default, nodes have no special costs associated with them.
+		/// But you can modify this to, for example, make nodes with a certain tag more expensive to traverse, or supply completely custom rules by using an <see cref="ITraversalProvider"/>.
+		///
+		/// See: <see cref="TraversalCosts"/>
+		/// See: <see cref="ITraversalProvider"/>
+		/// </summary>
+		public TraversalCosts traversalCosts;
+
+		/// <summary>
+		/// Constrains which nodes the path can traverse.
+		///
+		/// By default, all walkable nodes are traversable.
+		/// But you can modify this to, for example, only allow nodes with a certain tag to be traversed, or supply completely custom rules by using an <see cref="ITraversalProvider"/>.
+		///
+		/// See: <see cref="TraversalConstraint"/>
+		/// See: <see cref="ITraversalProvider"/>
+		/// </summary>
+		public TraversalConstraint traversalConstraint = TraversalConstraint.None;
+
+		/// <summary>
+		/// Distance metric to use when searching for the start and end nodes in the graph.
+		///
+		/// By default, the euclidean distance metric is used. This allows the path to, for example, find the closest start node to the start point, as measured using "normal" distance.
+		/// However, you can change this to instead measure distance by ignoring the Y coordinate. This is quite useful for characters, as it will find the node right below the agents feet,
+		/// even if the agent is slightly above the ground on a slope.
+		///
+		/// See: <see cref="DistanceMetric"/>
+		/// See: <see cref="NearestNodeConstraint.distanceMetric"/>
+		/// </summary>
+		public DistanceMetric nearestNodeDistanceMetric;
 
 		/// <summary>Determines which heuristic to use</summary>
 		public Heuristic heuristic;
@@ -155,17 +199,6 @@ namespace Pathfinding {
 
 		/// <summary>ID of this path. Used to distinguish between different paths</summary>
 		public ushort pathID { get; private set; }
-
-		/// <summary>Target to use for H score calculation.</summary>
-		protected GraphNode hTargetNode;
-
-		/// <summary>
-		/// Target to use for H score calculations.
-		/// See: https://en.wikipedia.org/wiki/Admissible_heuristic
-		/// </summary>
-		protected HeuristicObjective heuristicObjective;
-
-		internal ref HeuristicObjective heuristicObjectiveInternal => ref heuristicObjective;
 
 		/// <summary>
 		/// Which graph tags are traversable.
@@ -181,17 +214,13 @@ namespace Pathfinding {
 		///
 		/// See: <see cref="CanTraverse"/>
 		/// See: bitmasks (view in online documentation for working links)
+		/// Deprecated: Use traversalConstraint.tags instead
 		/// </summary>
-		public int enabledTags = -1;
-
-		/// <summary>List of zeroes to use as default tag penalties</summary>
-		internal static readonly int[] ZeroTagPenalties = new int[32];
-
-		/// <summary>
-		/// The tag penalties that are actually used.
-		/// See: <see cref="tagPenalties"/>
-		/// </summary>
-		protected int[] internalTagPenalties;
+		[System.Obsolete("Use traversalConstraint.tags instead")]
+		public int enabledTags {
+			get => traversalConstraint.tags;
+			set => traversalConstraint.tags = value;
+		}
 
 		/// <summary>
 		/// Penalties for each tag.
@@ -205,29 +234,38 @@ namespace Pathfinding {
 		/// Note: If you are using a Seeker. The Seeker will set this value to what is set in the inspector field when you call seeker.StartPath.
 		/// So you need to change the Seeker's value via script, not set this value.
 		///
-		/// See: <see cref="Seeker.tagPenalties"/>
+		/// See: <see cref="Seeker.tagEntryCosts"/>
+		/// Deprecated: Use <see cref="traversalCosts.tagEntryCosts"/> instead
 		/// </summary>
-		public int[] tagPenalties {
-			get {
-				return internalTagPenalties == ZeroTagPenalties ? null : internalTagPenalties;
-			}
-			set {
-				if (value == null) {
-					internalTagPenalties = ZeroTagPenalties;
-				} else {
-					if (value.Length != 32) throw new System.ArgumentException("tagPenalties must have a length of 32");
+		[System.Obsolete("Use traversalCosts.tagEntryCosts instead")]
+		public uint[] tagPenalties {
+			get => traversalCosts.tagEntryCosts;
+			set => traversalCosts.tagEntryCosts = value;
+		}
 
-					internalTagPenalties = value;
-				}
+		/// <summary>
+		/// Constraint for how to search for nodes that are traversable by this path.
+		///
+		/// This constraint is what the path uses to search for closest nodes to the start and end points.
+		///
+		/// This is derived from the <see cref="traversalConstraint"/> and the <see cref="nearestNodeDistanceMetric"/>.
+		///
+		/// See: <see cref="AstarPath.GetNearest"/>
+		/// See: <see cref="TraversalConstraint"/>
+		/// See: <see cref="nearestNodeDistanceMetric"/>
+		/// </summary>
+		public NearestNodeConstraint nearestNodeConstraint {
+			get {
+				var nn = traversalConstraint.ToNearestNodeConstraint();
+				nn.distanceMetric = nearestNodeDistanceMetric;
+				return nn;
 			}
 		}
 
 		/// <summary>Copies the given settings into this path</summary>
 		public void UseSettings (PathRequestSettings settings) {
-			nnConstraint.graphMask = settings.graphMask;
-			traversalProvider = settings.traversalProvider;
-			enabledTags = settings.traversableTags;
-			tagPenalties = settings.tagPenalties;
+			traversalConstraint = settings.ToTraversalConstraint();
+			traversalCosts = settings.ToTraversalCosts();
 		}
 
 		/// <summary>
@@ -306,192 +344,262 @@ namespace Pathfinding {
 			AstarPath.BlockUntilCalculated(this);
 		}
 
-		/// <summary>
-		/// True if this path node might be worth exploring.
-		///
-		/// This is used during a search to filter out nodes which have already been fully searched.
-		/// </summary>
-		public bool ShouldConsiderPathNode (uint pathNodeIndex) {
-			var node = pathHandler.pathNodes[pathNodeIndex];
-			return node.pathID != pathID || node.heapIndex != BinaryHeap.NotInHeap;
-		}
-
 		public static readonly Unity.Profiling.ProfilerMarker MarkerOpenCandidateConnectionsToEnd = new Unity.Profiling.ProfilerMarker("OpenCandidateConnectionsToEnd");
 		public static readonly Unity.Profiling.ProfilerMarker MarkerTrace = new Unity.Profiling.ProfilerMarker("Trace");
 
 		/// <summary>
-		/// Paths use this to skip adding nodes to the search heap.
+		/// Temporary data for a single path used during the pathfinding process.
+		/// It is used internally by the pathfinding algorithm to keep track of the current state of the pathfinding process, and provides various helper functions.
 		///
-		/// This is used by triangle nodes if they find an edge which is identical (but reversed) to an edge in an adjacent node.
-		/// This means that it cannot be better to visit the adjacent node's edge from any other way than what we are currently considering.
-		/// Therefore, instead of adding the node to the heap, only to pop it in the next iteration, we can skip that step and save some processing time.
-		///
-		/// After calling this function, the skipped node should be immediately opened, so that it can be searched.
+		/// See: <see cref="PathHandler"/>
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void SkipOverNode (uint pathNodeIndex, uint parentNodeIndex, uint fractionAlongEdge, uint hScore, uint gScore) {
-			ref var otherPathNode = ref pathHandler.pathNodes[pathNodeIndex];
-			otherPathNode.pathID = pathID;
-			otherPathNode.heapIndex = BinaryHeap.NotInHeap;
-			otherPathNode.parentIndex = parentNodeIndex;
-			otherPathNode.fractionAlongEdge = fractionAlongEdge;
-			// Make sure the path gets information about us having visited this in-between node,
-			// even if we never add it to the heap
-			OnVisitNode(pathNodeIndex, hScore, gScore);
-			pathHandler.LogVisitedNode(pathNodeIndex, hScore, gScore);
-		}
+		[BurstCompile]
+		public struct SearchContext {
+			public Path path;
+			public PathHandler pathHandler;
+			/// <summary>
+			/// Target to use for H score calculations.
+			/// See: https://en.wikipedia.org/wiki/Admissible_heuristic
+			/// </summary>
+			public HeuristicObjective heuristicObjective;
+			public TraversalConstraint traversalConstraint;
+			public TraversalCosts traversalCosts;
+			public ushort pathID;
 
-		/// <summary>
-		/// Open a connection to the temporary end node if necessary.
-		///
-		/// The start and end nodes are temporary nodes and are not included in the graph itself.
-		/// This means that we need to handle connections to and from those nodes as a special case.
-		/// This function will open a connection from the given node to the end node, if such a connection exists.
-		///
-		/// It is called from the <see cref="GraphNode.Open"/> function.
-		/// </summary>
-		/// <param name="position">Position of the path node that is being opened. This may be different from the node's position if \reflink{PathNode.fractionAlongEdge} is being used.</param>
-		/// <param name="parentPathNode">Index of the path node that is being opened. This is often the same as parentNodeIndex, but may be different if the node has multiple path node variants.</param>
-		/// <param name="parentNodeIndex">Index of the node that is being opened.</param>
-		/// <param name="parentG">G score of the parent node. The cost to reach the parent node from the start of the path.</param>
-		public void OpenCandidateConnectionsToEndNode (Int3 position, uint parentPathNode, uint parentNodeIndex, uint parentG) {
-			// True iff this node has a connection to one or more temporary nodes
-			if (pathHandler.pathNodes[parentNodeIndex].flag1) {
-				MarkerOpenCandidateConnectionsToEnd.Begin();
+			/// <summary>
+			/// True if this path node might be worth exploring.
+			///
+			/// This is used during a search to filter out nodes which have already been fully searched.
+			/// </summary>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public bool ShouldConsiderPathNode (uint pathNodeIndex) {
+				var node = pathHandler.pathNodes[pathNodeIndex];
+				return node.pathID != pathID || node.heapIndex != BinaryHeap.NotInHeap;
+			}
+
+			/// <summary>
+			/// Paths use this to skip adding nodes to the search heap.
+			///
+			/// This is used by triangle nodes if they find an edge which is identical (but reversed) to an edge in an adjacent node.
+			/// This means that it cannot be better to visit the adjacent node's edge from any other way than what we are currently considering.
+			/// Therefore, instead of adding the node to the heap, only to pop it in the next iteration, we can skip that step and save some processing time.
+			///
+			/// After calling this function, the skipped node should be immediately opened, so that it can be searched.
+			/// </summary>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public void SkipOverNode (ref SearchContext ctx, uint pathNodeIndex, uint parentNodeIndex, uint fractionAlongEdge, uint hScore, uint gScore) {
+				ref var otherPathNode = ref pathHandler.pathNodes[pathNodeIndex];
+				otherPathNode.pathID = pathID;
+				otherPathNode.heapIndex = BinaryHeap.NotInHeap;
+				otherPathNode.parentIndex = parentNodeIndex;
+				otherPathNode.fractionAlongEdge = fractionAlongEdge;
+				// Make sure the path gets information about us having visited this in-between node,
+				// even if we never add it to the heap
+				path.OnVisitNode(ref ctx, pathNodeIndex, hScore, gScore);
+				pathHandler.LogVisitedNode(pathNodeIndex, hScore, gScore);
+			}
+
+			/// <summary>
+			/// Open a connection to the temporary end node if necessary.
+			///
+			/// The start and end nodes are temporary nodes and are not included in the graph itself.
+			/// This means that we need to handle connections to and from those nodes as a special case.
+			/// This function will open a connection from the given node to the end node, if such a connection exists.
+			///
+			/// It is called from the <see cref="GraphNode.Open"/> function.
+			/// </summary>
+			/// <param name="position">Position of the path node that is being opened. This may be different from the node's position if \reflink{PathNode.fractionAlongEdge} is being used.</param>
+			/// <param name="parentPathNode">Index of the path node that is being opened. This is often the same as parentNodeIndex, but may be different if the node has multiple path node variants.</param>
+			/// <param name="parentNodeIndex">Index of the node that is being opened.</param>
+			/// <param name="parentG">G score of the parent node. The cost to reach the parent node from the start of the path.</param>
+			/// <param name="traversalCostFactor">Factor to multiply the cost of traversing the distance to the end node. This is used to account for different traversal costs for different nodes.</param>
+			public void OpenCandidateConnectionsToEndNode (Int3 position, uint parentPathNode, uint parentNodeIndex, uint parentG, float traversalCostFactor) {
+				// True iff this node has a connection to one or more temporary nodes
+				if (pathHandler.pathNodes[parentNodeIndex].flag1) {
+					MarkerOpenCandidateConnectionsToEnd.Begin();
+					for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
+						var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
+						ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
+						if (node.type == TemporaryNodeType.End && node.associatedNode == parentNodeIndex) {
+							var cost = (uint)System.Math.Round((position - node.position).magnitude * traversalCostFactor);
+							OpenCandidateConnection(parentPathNode, nodeIndex, parentG + cost, 0, node.position);
+						}
+					}
+					MarkerOpenCandidateConnectionsToEnd.End();
+				}
+			}
+
+			/// <summary>
+			/// Opens a connection between two nodes during the A* search.
+			///
+			/// When a node is "opened" (i.e. searched by the A* algorithm), it will open connections to all its neighbours.
+			/// This function checks those connections to see if passing through the node to its neighbour is the best way to reach the neighbour that we have seen so far,
+			/// and if so, it will push the neighbour onto the search heap.
+			/// </summary>
+			/// <param name="parentPathNode">The node that is being opened.</param>
+			/// <param name="targetPathNode">A neighbour of the parent that is being considered.</param>
+			/// <param name="targetG">The G value of the target node. This is the cost to reach the target node from the start of the path. Typically the parent's G score plus the cost to traverse the edge between the parent and target node.</param>
+			/// <param name="fractionAlongEdge">Internal value used by the TriangleMeshNode to store where on the shared edge between the nodes we say we cross over.</param>
+			/// <param name="targetNodePosition">The position of the target node. This is used by the heuristic to estimate the cost to reach the end node.</param>
+			public void OpenCandidateConnection (uint parentPathNode, uint targetPathNode, uint targetG, uint fractionAlongEdge, Int3 targetNodePosition) {
+				if (!ShouldConsiderPathNode(targetPathNode)) {
+					// We have seen this node before, but it is not in the heap.
+					// This means we have already processed it and it must have had a better F score than this node (or the heuristic was not admissable).
+					// We can safely discard this connection.
+					return;
+				}
+
+				var pars = new OpenCandidateParams {
+					pathID = pathID,
+					parentPathNode = parentPathNode,
+					targetPathNode = targetPathNode,
+					targetNodeIndex = pathHandler.IsTemporaryNode(targetPathNode) ? 0 : pathHandler.GetNode(targetPathNode).NodeIndex,
+					targetG = targetG,
+					fractionAlongEdge = fractionAlongEdge,
+					targetNodePosition = (int3)targetNodePosition,
+					pathNodes = pathHandler.pathNodes,
+				};
+				OpenCandidateConnectionBurst(ref pars,
+					ref pathHandler.heap, ref heuristicObjective
+					);
+			}
+
+			/// <summary>
+			/// Parameters to OpenCandidateConnectionBurst.
+			/// Using a struct instead of passing the parameters as separate arguments is significantly faster.
+			/// </summary>
+			public struct OpenCandidateParams {
+				public UnsafeSpan<PathNode> pathNodes;
+				public uint parentPathNode;
+				public uint targetPathNode;
+				public uint targetNodeIndex;
+				public uint targetG;
+				public uint fractionAlongEdge;
+				public int3 targetNodePosition;
+				public ushort pathID;
+			}
+
+			/// <summary>
+			/// Burst-compiled internal implementation of OpenCandidateConnection.
+			/// Compiling it using burst provides a decent 25% speedup.
+			/// The function itself is much faster, but the overhead of calling it from C# is quite significant.
+			/// </summary>
+			[BurstCompile]
+			public static void OpenCandidateConnectionBurst (ref OpenCandidateParams pars, ref BinaryHeap heap, ref HeuristicObjective heuristicObjective) {
+				var pathID = pars.pathID;
+				var parentPathNode = pars.parentPathNode;
+				var targetPathNode = pars.targetPathNode;
+				var targetG = pars.targetG;
+				var fractionAlongEdge = pars.fractionAlongEdge;
+				var targetNodePosition = pars.targetNodePosition;
+				var pathNodes = pars.pathNodes;
+				ref var target = ref pathNodes[targetPathNode];
+				if (target.pathID != pathID) {
+					// This is the first time we have seen this node. This connection must be optimal.
+					target.fractionAlongEdge = fractionAlongEdge;
+					target.pathID = pathID;
+					target.parentIndex = parentPathNode;
+					var candidateH = (uint)heuristicObjective.Calculate(targetNodePosition, pars.targetNodeIndex);
+					heap.Add(pathNodes, targetPathNode, targetG, candidateH);
+				} else {
+					// Note: Before this method is called, a check is done for the case target.pathID==pathID && heapIndex == NotInHeap,
+					// so we know target.heapIndex != NotInHeap here.
+
+					// We have seen this node before and it is in the heap.
+					// Now we check if this path to the target node is better than the previous one.
+					// The previous F score of the node
+					var previousF = heap.GetF(target.heapIndex);
+					var previousH = heap.GetH(target.heapIndex);
+					uint targetH;
+
+					if (target.fractionAlongEdge != fractionAlongEdge) {
+						// Different fractionAlongEdge, this means that targetNodePosition may have changed
+						// and therefore the heuristic may also have changed.
+						targetH = (uint)heuristicObjective.Calculate(targetNodePosition, pars.targetNodeIndex);
+					} else {
+						// If fractionAlongEdge has not changed, then we assume the heuristic is also the same.
+						// This saves us from having to calculate it again.
+						targetH = previousH;
+					}
+
+					var targetF = targetG + targetH;
+					if (targetF < previousF) {
+						// This connection is better than the previous one.
+						target.fractionAlongEdge = fractionAlongEdge;
+						target.parentIndex = parentPathNode;
+						heap.Add(pathNodes, targetPathNode, targetG, targetH);
+					} else {
+						// This connection is not better than the previous one.
+						// We can safely discard this connection.
+					}
+				}
+			}
+
+			public readonly int3 FirstTemporaryEndNode () {
 				for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
 					var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
 					ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
-					if (node.type == TemporaryNodeType.End && node.associatedNode == parentNodeIndex) {
-						var cost = (uint)(position - node.position).costMagnitude;
-						OpenCandidateConnection(parentPathNode, nodeIndex, parentG, cost, 0, node.position);
+					if (node.type == TemporaryNodeType.End) {
+						return (int3)node.position;
 					}
 				}
-				MarkerOpenCandidateConnectionsToEnd.End();
-			}
-		}
-
-		/// <summary>
-		/// Opens a connection between two nodes during the A* search.
-		///
-		/// When a node is "opened" (i.e. searched by the A* algorithm), it will open connections to all its neighbours.
-		/// This function checks those connections to see if passing through the node to its neighbour is the best way to reach the neighbour that we have seen so far,
-		/// and if so, it will push the neighbour onto the search heap.
-		/// </summary>
-		/// <param name="parentPathNode">The node that is being opened.</param>
-		/// <param name="targetPathNode">A neighbour of the parent that is being considered.</param>
-		/// <param name="parentG">The G value of the parent node. This is the cost to reach the parent node from the start of the path.</param>
-		/// <param name="connectionCost">The cost of moving from the parent node to the target node.</param>
-		/// <param name="fractionAlongEdge">Internal value used by the TriangleMeshNode to store where on the shared edge between the nodes we say we cross over.</param>
-		/// <param name="targetNodePosition">The position of the target node. This is used by the heuristic to estimate the cost to reach the end node.</param>
-		public void OpenCandidateConnection (uint parentPathNode, uint targetPathNode, uint parentG, uint connectionCost, uint fractionAlongEdge, Int3 targetNodePosition) {
-			if (!ShouldConsiderPathNode(targetPathNode)) {
-				// We have seen this node before, but it is not in the heap.
-				// This means we have already processed it and it must have had a better F score than this node (or the heuristic was not admissable).
-				// We can safely discard this connection.
-				return;
+				throw new System.InvalidOperationException("There are no end nodes in the path");
 			}
 
-			uint candidateEnteringCost;
-			uint targetNodeIndex;
-			if (pathHandler.IsTemporaryNode(targetPathNode)) {
-				candidateEnteringCost = 0;
-				targetNodeIndex = 0;
-			} else {
-				var targetNode = pathHandler.GetNode(targetPathNode);
-				candidateEnteringCost = GetTraversalCost(targetNode);
-				targetNodeIndex = targetNode.NodeIndex;
-			}
-			var candidateG = parentG + connectionCost + candidateEnteringCost;
-			var pars = new OpenCandidateParams {
-				pathID = pathID,
-				parentPathNode = parentPathNode,
-				targetPathNode = targetPathNode,
-				targetNodeIndex = targetNodeIndex,
-				candidateG = candidateG,
-				fractionAlongEdge = fractionAlongEdge,
-				targetNodePosition = (int3)targetNodePosition,
-				pathNodes = pathHandler.pathNodes,
-			};
-			OpenCandidateConnectionBurst(ref pars,
-				ref pathHandler.heap, ref heuristicObjective
-				);
-		}
+			public readonly void TemporaryEndNodesBoundingBox (out int3 mn, out int3 mx) {
+				// These represent a bounding box containing all valid end points.
+				// Typically there's only one end point, but in some cases there can be more.
+				mn = (int3)int.MaxValue;
+				mx = (int3)int.MinValue;
 
-		/// <summary>
-		/// Parameters to OpenCandidateConnectionBurst.
-		/// Using a struct instead of passing the parameters as separate arguments is significantly faster.
-		/// </summary>
-		public struct OpenCandidateParams {
-			public UnsafeSpan<PathNode> pathNodes;
-			public uint parentPathNode;
-			public uint targetPathNode;
-			public uint targetNodeIndex;
-			public uint candidateG;
-			public uint fractionAlongEdge;
-			public int3 targetNodePosition;
-			public ushort pathID;
-		}
-
-		/// <summary>
-		/// Burst-compiled internal implementation of OpenCandidateConnection.
-		/// Compiling it using burst provides a decent 25% speedup.
-		/// The function itself is much faster, but the overhead of calling it from C# is quite significant.
-		/// </summary>
-		[Unity.Burst.BurstCompile]
-		public static void OpenCandidateConnectionBurst (ref OpenCandidateParams pars, ref BinaryHeap heap, ref HeuristicObjective heuristicObjective) {
-			var pathID = pars.pathID;
-			var parentPathNode = pars.parentPathNode;
-			var targetPathNode = pars.targetPathNode;
-			var candidateG = pars.candidateG;
-			var fractionAlongEdge = pars.fractionAlongEdge;
-			var targetNodePosition = pars.targetNodePosition;
-			var pathNodes = pars.pathNodes;
-			ref var target = ref pathNodes[targetPathNode];
-			if (target.pathID != pathID) {
-				// This is the first time we have seen this node. This connection must be optimal.
-				target.fractionAlongEdge = fractionAlongEdge;
-				target.pathID = pathID;
-				target.parentIndex = parentPathNode;
-				var candidateH = (uint)heuristicObjective.Calculate(targetNodePosition, pars.targetNodeIndex);
-				heap.Add(pathNodes, targetPathNode, candidateG, candidateH);
-			} else {
-				// Note: Before this method is called, a check is done for the case target.pathID==pathID && heapIndex == NotInHeap,
-				// so we know target.heapIndex != NotInHeap here.
-
-				// We have seen this node before and it is in the heap.
-				// Now we check if this path to the target node is better than the previous one.
-				// The previous F score of the node
-				var targetF = heap.GetF(target.heapIndex);
-				var targetH = heap.GetH(target.heapIndex);
-				uint candidateH;
-
-				if (target.fractionAlongEdge != fractionAlongEdge) {
-					// Different fractionAlongEdge, this means that targetNodePosition may have changed
-					// and therefore the heuristic may also have changed.
-					candidateH = (uint)heuristicObjective.Calculate(targetNodePosition, pars.targetNodeIndex);
-				} else {
-					// If fractionAlongEdge has not changed, then we assume the heuristic is also the same.
-					// This saves us from having to calculate it again.
-					candidateH = targetH;
+				for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
+					var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
+					ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
+					if (node.type == TemporaryNodeType.End) {
+						mn = math.min(mn, (int3)node.position);
+						mx = math.max(mx, (int3)node.position);
+					}
 				}
+			}
 
-				var candidateF = candidateG + candidateH;
-				if (candidateF < targetF) {
-					// This connection is better than the previous one.
-					target.fractionAlongEdge = fractionAlongEdge;
-					target.parentIndex = parentPathNode;
-					heap.Add(pathNodes, targetPathNode, candidateG, candidateH);
-				} else {
-					// This connection is not better than the previous one.
-					// We can safely discard this connection.
+			public void MarkNodesAdjacentToTemporaryEndNodes () {
+				var pathNodes = pathHandler.pathNodes;
+
+				for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
+					var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
+					ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
+					if (node.type == TemporaryNodeType.End) {
+						// Mark node with flag1 to mark it as a node connected to an end node
+						var associatedNode = pathHandler.GetNode(node.associatedNode);
+						for (uint v = 0; v < associatedNode.PathNodeVariants; v++) {
+							pathNodes[node.associatedNode + v].flag1 = true;
+						}
+					}
+				}
+			}
+
+			public void AddStartNodesToHeap () {
+				var pathNodes = pathHandler.pathNodes;
+				for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
+					var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
+					ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
+					if (node.type == TemporaryNodeType.Start) {
+						// Note: Setting F score to 0 is technically incorrect, but it doesn't
+						// matter since we will open the start nodes first anyway.
+						pathHandler.heap.Add(pathNodes, nodeIndex, 0, 0);
+					}
 				}
 			}
 		}
 
-		/// <summary>Returns penalty for the given tag.</summary>
+		/// <summary>
+		/// Returns penalty for the given tag.
+		/// Deprecated: Use <see cref="traversalCosts.GetTagEntryCost"/> instead.
+		/// </summary>
 		/// <param name="tag">A value between 0 (inclusive) and 32 (exclusive).</param>
+		[System.Obsolete("Use traversalCosts instead")]
 		public uint GetTagPenalty (int tag) {
-			return (uint)internalTagPenalties[tag];
+			return traversalCosts.GetTagEntryCost((uint)tag);
 		}
 
 		/// <summary>
@@ -499,17 +607,11 @@ namespace Pathfinding {
 		/// This by default equals to if the node is walkable and if the node's tag is included in <see cref="enabledTags"/>.
 		///
 		/// See: <see cref="traversalProvider"/>
+		/// Deprecated: Use <see cref="traversalConstraint.CanTraverse"/> instead.
 		/// </summary>
+		[System.Obsolete("Use traversalConstraint.CanTraverse instead")]
 		public bool CanTraverse (GraphNode node) {
-			// Use traversal provider if set, otherwise fall back on default behaviour
-			// This method is hot, but this branch is extremely well predicted so it
-			// doesn't affect performance much (profiling indicates it is just above
-			// the noise level, somewhere around 0%-0.3%)
-			if (traversalProvider != null)
-				return traversalProvider.CanTraverse(this, node);
-
-			// Manually inlined code from DefaultITraversalProvider
-			unchecked { return node.Walkable && (enabledTags >> (int)node.Tag & 0x1) != 0; }
+			return traversalConstraint.CanTraverse(node);
 		}
 
 
@@ -518,30 +620,21 @@ namespace Pathfinding {
 		/// This by default equals to if the to is walkable and if the to's tag is included in <see cref="enabledTags"/>.
 		///
 		/// See: <see cref="traversalProvider"/>
+		/// Deprecated: Use <see cref="traversalConstraint.CanTraverse"/> instead.
 		/// </summary>
+		[System.Obsolete("Use traversalConstraint.CanTraverse instead")]
 		public bool CanTraverse (GraphNode from, GraphNode to) {
-			// Use traversal provider if set, otherwise fall back on default behaviour
-			// This method is hot, but this branch is extremely well predicted so it
-			// doesn't affect performance much (profiling indicates it is just above
-			// the noise level, somewhere around 0%-0.3%)
-			if (traversalProvider != null)
-				return traversalProvider.CanTraverse(this, from, to);
-
-			// Manually inlined code from DefaultITraversalProvider
-			unchecked { return to.Walkable && (enabledTags >> (int)to.Tag & 0x1) != 0; }
+			return traversalConstraint.CanTraverse(from, to);
 		}
 
-		/// <summary>Returns the cost of traversing the given node</summary>
+		/// <summary>
+		/// Returns the cost of traversing the given node.
+		///
+		/// Deprecated: Use <see cref="traversalCosts"/> instead.
+		/// </summary>
+		[System.Obsolete("Use traversalCosts instead", true)]
 		public uint GetTraversalCost (GraphNode node) {
-#if ASTAR_NO_TRAVERSAL_COST
 			return 0;
-#else
-			// Use traversal provider if set, otherwise fall back on default behaviour
-			if (traversalProvider != null)
-				return traversalProvider.GetTraversalCost(this, node);
-
-			unchecked { return GetTagPenalty((int)node.Tag) + node.Penalty; }
-#endif
 		}
 
 		/// <summary>
@@ -588,8 +681,65 @@ namespace Pathfinding {
 		private void ErrorCheck () {
 			if (!hasBeenReset) FailWithError("Please use the static Construct function for creating paths, do not use the normal constructors.");
 			if (((IPathInternals)this).Pooled) FailWithError("The path is currently in a path pool. Are you sending the path for calculation twice?");
-			if (pathHandler == null) FailWithError("Field pathHandler is not set. Please report this bug.");
 			if (PipelineState > PathState.Processing) FailWithError("This path has already been processed. Do not request a path with the same path object twice.");
+			CheckTraversalProviderCompatibility();
+		}
+
+#if UNITY_EDITOR
+		static HashSet<System.Type> checkedTraversalProviders = new HashSet<System.Type>();
+#endif
+
+		/// <summary>
+		/// Checks the traversal provider for compatibility with the current version of the A* Pathfinding Project.
+		///
+		/// This is only done in the editor, and only once per traversal provider type.
+		/// If the traversal provider does not implement the latest version of the ITraversalProvider interface, an error will be logged.
+		///
+		/// Note: This is not called in builds, so it will not affect performance in production.
+		/// </summary>
+		void CheckTraversalProviderCompatibility () {
+#if UNITY_EDITOR
+			var tp = traversalConstraint.traversalProvider;
+			if (tp != null && checkedTraversalProviders.Add(tp.GetType())) {
+				#pragma warning disable CS0618
+				bool fail = false;
+
+				try {
+					tp.CanTraverse(null, null);
+					fail = true;
+				} catch (System.NotImplementedException) {
+					// Ok
+				}
+				catch {
+					fail = true;
+				}
+
+				try {
+					tp.CanTraverse(null, null, null);
+					fail = true;
+				} catch (System.NotImplementedException) {
+					// Ok
+				}
+				catch {
+					fail = true;
+				}
+
+				try {
+					tp.GetTraversalCost(null, null);
+					fail = true;
+				} catch (System.NotImplementedException) {
+					// Ok
+				}
+				catch {
+					fail = true;
+				}
+
+				if (fail) {
+					FailWithError("The traversal provider " + tp.GetType().Name + " implements an old version of the ITraversalProvider interface. Please check the migration guide for version 5.4 for how to upgrade it.");
+				}
+				#pragma warning restore CS0618
+			}
+#endif
 		}
 
 		/// <summary>
@@ -606,8 +756,9 @@ namespace Pathfinding {
 			// while the path is in the pool (which it could be for a long time).
 			callback = null;
 			immediateCallback = null;
-			traversalProvider = null;
-			pathHandler = null;
+			traversalConstraint = TraversalConstraint.None;
+			traversalCosts = default;
+			UnityEngine.Assertions.Assert.IsTrue(claimCount == 0);
 		}
 
 		/// <summary>
@@ -633,7 +784,6 @@ namespace Pathfinding {
 			PipelineState = (int)PathState.Created;
 			releasedNotSilent = false;
 
-			pathHandler = null;
 			callback = null;
 			immediateCallback = null;
 			errorLog = "";
@@ -645,23 +795,22 @@ namespace Pathfinding {
 			duration = 0;
 			searchedNodes = 0;
 
-			nnConstraint = PathNNConstraint.Walkable;
-
 			heuristic = AstarPath.active.heuristic;
 			heuristicScale = AstarPath.active.heuristicScale;
 
-			enabledTags = -1;
-			tagPenalties = null;
-
 			pathID = AstarPath.active.GetNextPathID();
 
-			hTargetNode = null;
-
-			traversalProvider = null;
+			traversalConstraint = TraversalConstraint.None;
+			traversalCosts = new TraversalCosts();
+			nearestNodeDistanceMetric = DistanceMetric.Euclidean;
 		}
 
-		/// <summary>List of claims on this path with reference objects</summary>
-		private List<System.Object> claimed = new List<System.Object>();
+		/// <summary>
+		/// List of claims on this path with reference objects.
+		/// We use an array instead of List<T> to avoid an indirection and reduce memory usage a bit (actually has a measureable impact).
+		/// </summary>
+		private System.Object[] claimed = new System.Object[2];
+		private int claimCount = 0;
 
 		/// <summary>
 		/// True if the path has been released with a non-silent call yet.
@@ -693,16 +842,24 @@ namespace Pathfinding {
 		public void Claim (System.Object o) {
 			if (System.Object.ReferenceEquals(o, null)) throw new System.ArgumentNullException("o");
 
-			for (int i = 0; i < claimed.Count; i++) {
+			for (int i = 0; i < claimCount; i++) {
 				// Need to use ReferenceEquals because it might be called from another thread
 				if (System.Object.ReferenceEquals(claimed[i], o))
 					throw new System.ArgumentException("You have already claimed the path with that object ("+o+"). Are you claiming the path with the same object twice?");
 			}
 
-			claimed.Add(o);
+			if (claimCount == claimed.Length) {
+				Util.Memory.Realloc(ref claimed, claimCount*2);
 #if ASTAR_POOL_DEBUG
-			claimInfo.Add(o.ToString() + "\n\nClaimed from:\n" + System.Environment.StackTrace);
+				Util.Memory.Realloc(ref claimInfo, claimCount*2);
 #endif
+			}
+
+			claimed[claimCount] = o;
+#if ASTAR_POOL_DEBUG
+			claimInfo[claimCount] = o.ToString() + "\n\nClaimed from:\n" + System.Environment.StackTrace;
+#endif
+			claimCount++;
 		}
 
 		/// <summary>
@@ -721,26 +878,30 @@ namespace Pathfinding {
 		/// See: PathPool
 		/// </summary>
 		public void Release (System.Object o, bool silent = false) {
-			if (o == null) throw new System.ArgumentNullException("o");
-
-			for (int i = 0; i < claimed.Count; i++) {
+			for (int i = 0; i < claimCount; i++) {
 				// Need to use ReferenceEquals because it might be called from another thread
 				if (System.Object.ReferenceEquals(claimed[i], o)) {
-					claimed.RemoveAt(i);
+					claimCount--;
+					claimed[i] = claimed[claimCount];
+					claimed[claimCount] = null;
 #if ASTAR_POOL_DEBUG
-					claimInfo.RemoveAt(i);
+					claimInfo[i] = claimInfo[claimCount];
+					claimInfo[claimCount] = null;
 #endif
 					if (!silent) {
 						releasedNotSilent = true;
 					}
 
-					if (claimed.Count == 0 && releasedNotSilent) {
+					if (claimCount == 0 && releasedNotSilent) {
 						PathPool.Pool(this);
 					}
 					return;
 				}
 			}
-			if (claimed.Count == 0) {
+
+			if (o == null) throw new System.ArgumentNullException("o");
+
+			if (claimCount == 0) {
 				throw new System.ArgumentException("You are releasing a path which is not claimed at all (most likely it has been pooled already). " +
 					"Are you releasing the path with the same object ("+o+") twice?" +
 					"\nCheck out the documentation on path pooling for help.");
@@ -755,15 +916,16 @@ namespace Pathfinding {
 		/// This will build an array (<see cref="path)"/> of the nodes this path will pass through and also set the <see cref="vectorPath"/> array to the <see cref="path"/> arrays positions.
 		/// Assumes the <see cref="vectorPath"/> and <see cref="path"/> are empty and not null (which will be the case for a correctly initialized path).
 		/// </summary>
-		protected virtual void Trace (uint fromPathNodeIndex) {
-			Trace(fromPathNodeIndex, true);
+		protected virtual void Trace (ref SearchContext ctx, uint fromPathNodeIndex) {
+			Trace(ref ctx, fromPathNodeIndex, true);
 		}
 
-		protected void Trace (uint fromPathNodeIndex, bool reverse) {
+		protected void Trace (ref SearchContext ctx, uint fromPathNodeIndex, bool reverse) {
 			MarkerTrace.Begin();
 			// Current node we are processing
 			var c = fromPathNodeIndex;
 			int count = 0;
+			var pathHandler = ctx.pathHandler;
 			var pathNodes = pathHandler.pathNodes;
 
 			while (c != 0) {
@@ -846,7 +1008,7 @@ namespace Pathfinding {
 				else text.AppendLine("NULL");
 			}
 
-			text.Append("\nPath Number ").Append(pathID).Append(" (unique id)");
+			text.Append("\nUnique Path ID: ").Append(pathID);
 		}
 
 		/// <summary>
@@ -855,19 +1017,13 @@ namespace Pathfinding {
 		/// An empty string is returned if logMode == None
 		/// or logMode == OnlyErrors and this path did not fail.
 		/// </summary>
-		protected virtual string DebugString (PathLog logMode) {
+		protected virtual void DebugString (System.Text.StringBuilder builder, PathLog logMode) {
 			if (logMode == PathLog.None || (!error && logMode == PathLog.OnlyErrors)) {
-				return "";
+				return;
 			}
 
-			// Get a cached string builder for this thread
-			System.Text.StringBuilder text = pathHandler.DebugStringBuilder;
-			text.Length = 0;
-
-			DebugStringPrefix(logMode, text);
-			DebugStringSuffix(logMode, text);
-
-			return text.ToString();
+			DebugStringPrefix(logMode, builder);
+			DebugStringSuffix(logMode, builder);
 		}
 
 		/// <summary>Calls callback to return the calculated path. See: <see cref="callback"/></summary>
@@ -877,45 +1033,14 @@ namespace Pathfinding {
 			}
 		}
 
-		void InitializeNNConstraint () {
-			// Initialize the NNConstraint
-			nnConstraint.tags = enabledTags;
-
-			// If we are using a traversal provider, we wrap the original NNConstraint in one
-			// that takes both the constraint and the traversal provider into account.
-			// This is slightly convoluted since we want to avoid allocating an NNConstraint object.
-			if (traversalProvider != null) {
-				this.pathHandler.constraintWrapper.Set(this, nnConstraint, traversalProvider);
-			} else {
-				// Reset the wrapper to ensure it throws an exception if we accidentally use it
-				this.pathHandler.constraintWrapper.Reset();
-			}
-		}
-
-		/// <summary>
-		/// Closest point and node which is traversable by this path.
-		///
-		/// This takes both the NNConstraint and the ITraversalProvider into account.
-		/// </summary>
-		protected NNInfo GetNearest (Vector3 point) {
-			return AstarPath.active.GetNearest(point, pathHandler.constraintWrapper.isSet ? pathHandler.constraintWrapper : nnConstraint);
-		}
-
 		/// <summary>
 		/// Prepares low level path variables for calculation.
 		/// Called before a path search will take place.
 		/// Always called before the Prepare, Initialize and CalculateStep functions
 		/// </summary>
 		protected void PrepareBase (PathHandler pathHandler) {
-			//Make sure the path has a reference to the pathHandler
-			this.pathHandler = pathHandler;
-			//Assign relevant path data to the pathHandler
+			// Assign relevant path data to the pathHandler
 			pathHandler.InitializeForPath(this);
-			InitializeNNConstraint();
-
-			// Make sure that internalTagPenalties is an array which has the length 32
-			if (internalTagPenalties == null || internalTagPenalties.Length != 32)
-				internalTagPenalties = ZeroTagPenalties;
 
 			try {
 				ErrorCheck();
@@ -928,7 +1053,7 @@ namespace Pathfinding {
 		/// Called before the path is started.
 		/// Called right before Initialize
 		/// </summary>
-		protected abstract void Prepare();
+		protected abstract void Prepare(ref SearchContext ctx);
 
 		/// <summary>
 		/// Always called after the path has been calculated.
@@ -936,8 +1061,9 @@ namespace Pathfinding {
 		/// the same thread.
 		/// Use for cleaning up things like node tagging and similar.
 		/// </summary>
-		protected virtual void Cleanup () {
+		protected virtual void Cleanup (ref SearchContext ctx) {
 			// Cleanup any flags set by temporary nodes
+			var pathHandler = ctx.pathHandler;
 			var pathNodes = pathHandler.pathNodes;
 			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
 				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
@@ -951,69 +1077,12 @@ namespace Pathfinding {
 			}
 		}
 
-		protected int3 FirstTemporaryEndNode () {
-			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-				ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
-				if (node.type == TemporaryNodeType.End) {
-					return (int3)node.position;
-				}
-			}
-			throw new System.InvalidOperationException("There are no end nodes in the path");
-		}
-
-
-		protected void TemporaryEndNodesBoundingBox (out int3 mn, out int3 mx) {
-			// These represent a bounding box containing all valid end points.
-			// Typically there's only one end point, but in some cases there can be more.
-			mn = (int3)int.MaxValue;
-			mx = (int3)int.MinValue;
-
-			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-				ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
-				if (node.type == TemporaryNodeType.End) {
-					mn = math.min(mn, (int3)node.position);
-					mx = math.max(mx, (int3)node.position);
-				}
-			}
-		}
-
-		protected void MarkNodesAdjacentToTemporaryEndNodes () {
-			var pathNodes = pathHandler.pathNodes;
-
-			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-				ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
-				if (node.type == TemporaryNodeType.End) {
-					// Mark node with flag1 to mark it as a node connected to an end node
-					var associatedNode = pathHandler.GetNode(node.associatedNode);
-					for (uint v = 0; v < associatedNode.PathNodeVariants; v++) {
-						pathNodes[node.associatedNode + v].flag1 = true;
-					}
-				}
-			}
-		}
-
-		protected void AddStartNodesToHeap () {
-			var pathNodes = pathHandler.pathNodes;
-			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-				ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
-				if (node.type == TemporaryNodeType.Start) {
-					// Note: Setting F score to 0 is technically incorrect, but it doesn't
-					// matter since we will open the start nodes first anyway.
-					pathHandler.heap.Add(pathNodes, nodeIndex, 0, 0);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Called when there are no more nodes to search.
 		///
 		/// This may be used to calculate a partial path as a fallback.
 		/// </summary>
-		protected abstract void OnHeapExhausted();
+		protected abstract void OnHeapExhausted(ref SearchContext ctx);
 
 		/// <summary>
 		/// Called when a valid node has been found for the end of the path.
@@ -1021,14 +1090,14 @@ namespace Pathfinding {
 		/// This function should trace the path back to the start node, and set CompleteState to Complete.
 		/// If CompleteState is unchanged, the search will continue.
 		/// </summary>
-		protected abstract void OnFoundEndNode(uint pathNode, uint hScore, uint gScore);
+		protected abstract void OnFoundEndNode(ref SearchContext ctx, uint pathNode, uint hScore, uint gScore);
 
 		/// <summary>
 		/// Called for every node that the path visits.
 		///
 		/// This is used by path types to check if the target node has been reached, to log debug data, etc.
 		/// </summary>
-		public virtual void OnVisitNode (uint pathNode, uint hScore, uint gScore) {}
+		public virtual void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {}
 
 		/// <summary>
 		/// Calculates the path until completed or until the time has passed targetTick.
@@ -1051,17 +1120,18 @@ namespace Pathfinding {
 		/// if so, return and wait for the function to get called again
 		/// </code>
 		/// </summary>
-		protected virtual void CalculateStep (long targetTick) {
+		protected virtual void CalculateStep (ref Path.SearchContext ctx, long targetTick) {
 			int counter = 0;
-			var temporaryNodeStartIndex = pathHandler.temporaryNodeStartIndex;
+			var temporaryNodeStartIndex = ctx.pathHandler.temporaryNodeStartIndex;
 
+			var pathHandler = ctx.pathHandler;
 			// Continue to search as long as we haven't encountered an error and we haven't found the target
 			while (CompleteState == PathCompleteState.NotCalculated) {
 				searchedNodes++;
 
 				// Any nodes left to search?
 				if (pathHandler.heap.isEmpty) {
-					OnHeapExhausted();
+					OnHeapExhausted(ref ctx);
 					return;
 				}
 
@@ -1073,7 +1143,7 @@ namespace Pathfinding {
 					var node = pathHandler.GetTemporaryNode(currentPathNodeIndex);
 					if (node.type == TemporaryNodeType.Start) {
 						// A start node. We should open the associated node at this point
-						pathHandler.GetNode(node.associatedNode).OpenAtPoint(this, currentPathNodeIndex, node.position, currentNodeG);
+						pathHandler.GetNode(node.associatedNode).OpenAtPoint(ref ctx, currentPathNodeIndex, node.position, currentNodeG);
 					} else if (node.type == TemporaryNodeType.End) {
 						// An end node. Yay! We found the path we wanted.
 						// Now we can just trace the path back to the start and return that.
@@ -1087,7 +1157,7 @@ namespace Pathfinding {
 							// This would lead to us never actually calling LogVisitedNode for the triangle node, if we didn't have this code.
 							pathHandler.LogVisitedNode(node.associatedNode, currentNodeH, currentNodeG);
 						}
-						OnFoundEndNode(currentPathNodeIndex, currentNodeH, currentNodeG);
+						OnFoundEndNode(ref ctx, currentPathNodeIndex, currentNodeH, currentNodeG);
 						if (CompleteState == PathCompleteState.Complete) {
 							return;
 						}
@@ -1095,11 +1165,11 @@ namespace Pathfinding {
 				} else {
 					pathHandler.LogVisitedNode(currentPathNodeIndex, currentNodeH, currentNodeG);
 
-					OnVisitNode(currentPathNodeIndex, currentNodeH, currentNodeG);
+					OnVisitNode(ref ctx, currentPathNodeIndex, currentNodeH, currentNodeG);
 
 					// Loop through all walkable neighbours of the node and add them to the open list.
 					var node = pathHandler.GetNode(currentPathNodeIndex);
-					node.Open(this, currentPathNodeIndex, currentNodeG);
+					node.Open(ref ctx, currentPathNodeIndex, currentNodeG);
 				}
 
 				// Check for time every 500 nodes, roughly every 0.5 ms usually
@@ -1120,29 +1190,27 @@ namespace Pathfinding {
 			}
 		}
 
-		PathHandler IPathInternals.PathHandler { get { return pathHandler; } }
 		void IPathInternals.OnEnterPool () { OnEnterPool(); }
 		void IPathInternals.Reset () { Reset(); }
 		void IPathInternals.ReturnPath () { ReturnPath(); }
 		void IPathInternals.PrepareBase (PathHandler handler) { PrepareBase(handler); }
-		void IPathInternals.Prepare () { Prepare(); }
-		void IPathInternals.Cleanup () { Cleanup(); }
-		void IPathInternals.CalculateStep (long targetTick) { CalculateStep(targetTick); }
-		string IPathInternals.DebugString (PathLog logMode) { return DebugString(logMode); }
+		void IPathInternals.Prepare (ref Path.SearchContext ctx) { Prepare(ref ctx); }
+		void IPathInternals.Cleanup (ref Path.SearchContext ctx) { Cleanup(ref ctx); }
+		void IPathInternals.CalculateStep (ref Path.SearchContext ctx, long targetTick) { CalculateStep(ref ctx, targetTick); }
+		void IPathInternals.DebugString (System.Text.StringBuilder builder, PathLog logMode) { DebugString(builder, logMode); }
 	}
 
 	/// <summary>Used for hiding internal methods of the Path class</summary>
 	internal interface IPathInternals {
-		PathHandler PathHandler { get; }
 		bool Pooled { get; set; }
 		void AdvanceState(PathState s);
 		void OnEnterPool();
 		void Reset();
 		void ReturnPath();
 		void PrepareBase(PathHandler handler);
-		void Prepare();
-		void Cleanup();
-		void CalculateStep(long targetTick);
-		string DebugString(PathLog logMode);
+		void Prepare(ref Path.SearchContext ctx);
+		void Cleanup(ref Path.SearchContext ctx);
+		void CalculateStep(ref Path.SearchContext ctx, long targetTick);
+		void DebugString(System.Text.StringBuilder builder, PathLog logMode);
 	}
 }

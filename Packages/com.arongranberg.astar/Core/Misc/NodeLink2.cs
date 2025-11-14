@@ -102,11 +102,11 @@ namespace Pathfinding {
 	/// The link corresponding to one of those intermediate nodes can be retrieved using the <see cref="GetNodeLink"/> method
 	/// which can be of great use if you want to, for example, play a link specific animation when reaching the link.
 	///
-	/// \inspectorField{End, NodeLink2.end}
-	/// \inspectorField{Cost Factor, NodeLink2.costFactor}
-	/// \inspectorField{One Way, NodeLink2.oneWay}
-	/// \inspectorField{Pathfinding Tag, NodeLink2.pathfindingTag}
-	/// \inspectorField{Graph Mask, NodeLink2.graphMask}
+	/// \inspectorField{NodeLink2.end; End}
+	/// \inspectorField{NodeLink2.costFactor; Cost Factor}
+	/// \inspectorField{NodeLink2.oneWay; One Way}
+	/// \inspectorField{NodeLink2.pathfindingTag; Pathfinding Tag}
+	/// \inspectorField{NodeLink2.graphMask; Graph Mask}
 	///
 	/// See: offmeshlinks (view in online documentation for working links)
 	/// See: The example scene RecastExample2 contains a few links which you can take a look at to see how they are used.
@@ -151,7 +151,7 @@ namespace Pathfinding {
 		///
 		/// The link will always connect the nodes closest to the start and end points on the graphs that it is allowed to connect.
 		/// </summary>
-		public GraphMask graphMask = -1;
+		public GraphMask graphMask = GraphMask.everything;
 
 		public Transform StartTransform => transform;
 

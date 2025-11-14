@@ -108,7 +108,7 @@ namespace Pathfinding.Util {
 		/// </summary>
 		public readonly quaternion rotation;
 
-		/// <summary>Normal of the plane</summary>
+		/// <summary>Normalized normal of the plane</summary>
 		// TODO: Check constructor for float3x3(quaternion), seems smarter, at least in burst
 		public float3 up => 2 * new float3(rotation.value.x * rotation.value.y - rotation.value.w * rotation.value.z, 0.5f - rotation.value.x * rotation.value.x - rotation.value.z * rotation.value.z, rotation.value.w * rotation.value.x + rotation.value.y * rotation.value.z); // math.mul(rotation, Vector3.up);
 
@@ -205,6 +205,19 @@ namespace Pathfinding.Util {
 		/// The Y coordinate of the bounding box is the elevation coordinate.
 		/// </summary>
 		public Bounds ToWorld(Bounds bounds) => AsPlaneToWorldMatrix().ToWorld(bounds);
+	}
+
+	static class MathExtensions {
+		public static Bounds BoundsOfTransformedBounds (float4x4 matrix, Bounds bounds) {
+			Bounds result = default;
+			result.center = math.transform(matrix, (float3)bounds.center);
+			result.extents = math.mul(new float3x3(
+				math.abs(matrix.c0.xyz),
+				math.abs(matrix.c1.xyz),
+				math.abs(matrix.c2.xyz)
+				), (float3)bounds.extents);
+			return result;
+		}
 	}
 
 	/// <summary>

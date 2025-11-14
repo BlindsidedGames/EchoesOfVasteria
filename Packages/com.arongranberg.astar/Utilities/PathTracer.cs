@@ -87,7 +87,7 @@ namespace Pathfinding {
 	///             var parts = Funnel.SplitIntoParts(path);
 	///
 	///             // Assign the path to the PathTracer
-	///             tracer.SetPath(parts, path.path, path.originalStartPoint, path.originalEndPoint, movementPlane, pathRequestSettings, path);
+	///             tracer.SetPath(parts, path.path, path.originalStartPoint, path.originalEndPoint, movementPlane, path.traversalConstraint, path.traversalCosts);
 	///             lastCalculatedPath = path;
 	///         });
 	///         path.UseSettings(pathRequestSettings);
@@ -99,12 +99,12 @@ namespace Pathfinding {
 	///
 	///         // Repair the path to start from the transform's position
 	///         // If you move the transform around in the scene view, you'll see the path update in real time
-	///         tracer.UpdateStart(transform.position, PathTracer.RepairQuality.High, movementPlane, lastCalculatedPath.traversalProvider, lastCalculatedPath);
+	///         tracer.UpdateStart(transform.position, PathTracer.RepairQuality.High, movementPlane);
 	///
 	///         // Get up to the next 10 corners of the path
 	///         var buffer = new NativeList<float3>(Allocator.Temp);
 	///         NativeArray<int> scratchArray = default;
-	///         tracer.GetNextCorners(buffer, 10, ref scratchArray, Allocator.Temp, lastCalculatedPath.traversalProvider, lastCalculatedPath);
+	///         tracer.GetNextCorners(buffer, 10, ref scratchArray, Allocator.Temp);
 	///
 	///         // Draw the next 10 corners of the path in the scene view
 	///         using (Draw.WithLineWidth(2)) {
@@ -151,11 +151,22 @@ namespace Pathfinding {
 		Vector3 unclampedStartPoint;
 		GraphNode startNodeInternal;
 
-		NNConstraint nnConstraint;
+		TraversalConstraint traversalConstraint;
+		TraversalCosts traversalCosts;
 
 		int firstPartIndex;
 		bool startIsUpToDate;
 		bool endIsUpToDate;
+		bool pathEmptyAndUnrepairableBacking;
+
+		bool pathEmptyAndUnrepairable {
+			readonly get => pathEmptyAndUnrepairableBacking;
+			set {
+				pathEmptyAndUnrepairableBacking = value;
+				if (value) RemoveAllButFirstNode();
+				version++;
+			}
+		}
 
 		/// <summary>
 		/// If true, the first part contains destroyed nodes.
@@ -224,7 +235,7 @@ namespace Pathfinding {
 		public readonly bool isStale {
 			[IgnoredByDeepProfiler]
 			get {
-				return !endIsUpToDate || !startIsUpToDate || firstPartContainsDestroyedNodes;
+				return !endIsUpToDate || !startIsUpToDate || firstPartContainsDestroyedNodes || pathEmptyAndUnrepairableBacking;
 			}
 		}
 
@@ -236,6 +247,20 @@ namespace Pathfinding {
 
 		/// <summary>True if there is a path to follow</summary>
 		public readonly bool hasPath => partCount > 0;
+
+		/// <summary>
+		/// True if the end point has been set to a valid value.
+		///
+		/// The agent may be on the navmesh, but without a known destination.
+		/// This can happen both in the obvious case where no destintion is set,
+		/// but also if the agent was following a path, and suddenly it can no longer find a
+		/// path to its destination. Then the agent will stay on the navmesh, but should no longer try to follow its previous path.
+		///
+		/// More directly, this happens when calling UpdateEnd with the position argument set to infinity.
+		///
+		/// This value being false implies <see cref="isStale"/> being true.
+		/// </summary>
+		public readonly bool hasValidEndPoint => float.IsFinite(unclampedEndPoint.x) && !pathEmptyAndUnrepairable;
 
 		/// <summary>Start point of the path</summary>
 		public readonly Vector3 startPoint => this.parts[this.firstPartIndex].startPoint;
@@ -284,8 +309,10 @@ namespace Pathfinding {
 			firstPartContainsDestroyedNodes = false;
 			startNodeInternal = null;
 			version = 1;
-			nnConstraint = NNConstraint.Walkable;
+			traversalConstraint = TraversalConstraint.None;
+			traversalCosts = new TraversalCosts();
 			partGraphType = PartGraphType.Navmesh;
+			pathEmptyAndUnrepairableBacking = false;
 			Clear();
 		}
 
@@ -301,6 +328,25 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
+		/// Marks the current path's end point as being unrepairable, and clears the whole path except the first node.
+		///
+		/// This is used when the agent should stay attached to the navmesh, but stop following whatever path it was following.
+		/// For example when a path request was just completed, but it completed with an error.
+		///
+		/// Some effects:
+		/// - EstimateRemainingPath will return zero.
+		/// - The CalculateNextCorners will just return the current position,
+		/// - <see cref="isStale"/> will be true.
+		/// - RepairEnd will do nothing.
+		/// - RepairStart will still function as normal, but the path will always consist of at most a single node which contains the start point.
+		///
+		/// Whenever a new path is set on this instance, the unrepairable state will be cleared.
+		/// </summary>
+		public void SetEmptyAndUnrepairable () {
+			pathEmptyAndUnrepairable = true;
+		}
+
+		/// <summary>
 		/// Update the start point of the path, clamping it to the graph, and repairing the path if necessary.
 		///
 		/// This may cause <see cref="isStale"/> to become true, if the path could not be repaired successfully.
@@ -309,8 +355,8 @@ namespace Pathfinding {
 		///
 		/// See: <see cref="UpdateEnd"/>
 		/// </summary>
-		public Vector3 UpdateStart (Vector3 position, RepairQuality quality, NativeMovementPlane movementPlane, ITraversalProvider traversalProvider, Path path) {
-			Repair(position, true, quality, movementPlane, traversalProvider, path);
+		public Vector3 UpdateStart (Vector3 position, RepairQuality quality, NativeMovementPlane movementPlane) {
+			Repair(position, true, quality, movementPlane);
 			return parts[firstPartIndex].startPoint;
 		}
 
@@ -323,8 +369,8 @@ namespace Pathfinding {
 		///
 		/// See: <see cref="UpdateEnd"/>
 		/// </summary>
-		public Vector3 UpdateEnd (Vector3 position, RepairQuality quality, NativeMovementPlane movementPlane, ITraversalProvider traversalProvider, Path path) {
-			Repair(position, false, quality, movementPlane, traversalProvider, path);
+		public Vector3 UpdateEnd (Vector3 position, RepairQuality quality, NativeMovementPlane movementPlane) {
+			Repair(position, false, quality, movementPlane);
 			return parts[parts.Length-1].endPoint;
 		}
 
@@ -493,8 +539,6 @@ namespace Pathfinding {
 				parts[j].endIndex += nodesInserted;
 			}
 
-			var tmpLeft = ListPool<float3>.Claim();
-			var tmpRight = ListPool<float3>.Claim();
 			var endIndex = startIndex + numToInsert - 1;
 
 			// If we have a path A B C D E
@@ -502,14 +546,13 @@ namespace Pathfinding {
 			// then all portals between B|X and Z|E need to be recalculated
 			var affectedPortalsStart2 = math.max(startIndex - 1, part.startIndex);
 			var affectedPortalsEnd2 = math.min(endIndex + 1, part.endIndex);
+			GetTemporaryPortalLists(out var tmpLeft, out var tmpRight);
 			CalculateFunnelPortals(affectedPortalsStart2, affectedPortalsEnd2, tmpLeft, tmpRight);
 
 			funnelState.Splice(affectedPortalsStart2 - part.startIndex, portalsToRemove, tmpLeft, tmpRight);
 			portalIsNotInnerCorner.SpliceUninitialized(affectedPortalsStart2 - part.startIndex, portalsToRemove, tmpLeft.Count);
 			for (int i = 0; i < tmpLeft.Count; i++) portalIsNotInnerCorner[affectedPortalsStart2 - part.startIndex + i] = 0;
 
-			ListPool<float3>.Release(ref tmpLeft);
-			ListPool<float3>.Release(ref tmpRight);
 			CheckInvariants();
 			return true;
 		}
@@ -565,7 +608,7 @@ namespace Pathfinding {
 			}
 		}
 
-		void Repair (Vector3 point, bool isStart, RepairQuality quality, NativeMovementPlane movementPlane, ITraversalProvider traversalProvider, Path path, bool allowCache = true) {
+		void Repair (Vector3 point, bool isStart, RepairQuality quality, NativeMovementPlane movementPlane, bool allowCache = true) {
 			int partIndex;
 			GraphNode currentNode;
 			bool samePoint;
@@ -580,6 +623,8 @@ namespace Pathfinding {
 				currentIndexInPath = parts[partIndex].endIndex;
 				currentNode = nodes.GetAbsolute(currentIndexInPath);
 				samePoint = unclampedEndPoint == point;
+
+				if (pathEmptyAndUnrepairable) return;
 			}
 
 			// Early return in case nothing has changed since last time
@@ -643,6 +688,8 @@ namespace Pathfinding {
 						// Setting startIsUpToDate may have made the path non-stale, and thus we may have to update the startNode
 						// to preserve our invariants (see CheckInvariants).
 						startNode = currentNode;
+
+						if (pathEmptyAndUnrepairable) part.endPoint = part.startPoint;
 					} else {
 						part.endPoint = newClampedPoint;
 						unclampedEndPoint = point;
@@ -656,7 +703,7 @@ namespace Pathfinding {
 
 			// Split out into a separate call because otherwise the lambda inside that function
 			// will cause an allocation even if we make an early return before we even use it.
-			RepairFull(point, isStart, quality, movementPlane, traversalProvider, path);
+			RepairFull(point, isStart, quality, movementPlane);
 			version++;
 			CheckInvariants();
 		}
@@ -664,6 +711,9 @@ namespace Pathfinding {
 		private static readonly ProfilerMarker MarkerContains = new ProfilerMarker("ContainsNode");
 		private static readonly ProfilerMarker MarkerClosest = new ProfilerMarker("ClosestPointOnNode");
 		private static readonly ProfilerMarker MarkerGetNearest = new ProfilerMarker("GetNearest");
+		private static readonly ProfilerMarker MarkerSetFunnelState = new ProfilerMarker("SetFunnelState");
+		private static readonly ProfilerMarker MarkerCalculatePortals = new ProfilerMarker("CalculatePortals");
+
 		const int NODES_TO_CHECK_FOR_DESTRUCTION = 5;
 
 		/// <summary>
@@ -739,20 +789,21 @@ namespace Pathfinding {
 		/// See: <see cref="nodeHashes"/>
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[IgnoredByDeepProfiler]
 		static int HashNode (GraphNode node) {
 			// Note: The node index will change if the node is destroyed
 			int h = (int)node.NodeIndex;
 			h ^= node.Walkable ? 100663319 : 0;
 			if (node is GridNodeBase gnode) {
-				// TODO: We should hash the position of the node instead.
-				// The NodeInGridIndex will change for all nodes if a grid mover moves the graph,
-				// but we only want to invalidate the nodes which actually changed.
-				h ^= gnode.NodeInGridIndex * 25165843;
+				// We should hash the position of the node to catch changes by a ProceduralGraphMover
+				// The NodeInGridIndex will change for all nodes if a ProceduralGraphMover moves the graph,
+				// but we only want to invalidate the nodes which actually changed, so the position is a better choice.
+				h ^= gnode.position.GetHashCode();
 			}
 			return h;
 		}
 
-		void RepairFull (Vector3 point, bool isStart, RepairQuality quality, NativeMovementPlane movementPlane, ITraversalProvider traversalProvider, Path path) {
+		void RepairFull (Vector3 point, bool isStart, RepairQuality quality, NativeMovementPlane movementPlane) {
 			// TODO: Rewrite to use Int3 coordinates everywhere
 			var maxNodesToSearch = quality == RepairQuality.High ? 16 : 9;
 			var partIndex = isStart ? this.firstPartIndex : this.parts.Length - 1;
@@ -796,13 +847,9 @@ namespace Pathfinding {
 					unclampedStartPoint = point;
 					startIsUpToDate = false;
 
-					var nn = this.nnConstraint;
-					nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.ToWorld(float2.zero, 1));
+					var nn = traversalConstraint.ToNearestNodeConstraint();
+					nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.up);
 					var globallyClosestNode = AstarPath.active != null? AstarPath.active.GetNearest(point, nn).node : null;
-
-					// Filter using the traveral provider.
-					// TODO: We need to change the APIs to allow the GetNearest method to use the traversal provider
-					if (traversalProvider != null && globallyClosestNode != null && !traversalProvider.CanTraverse(path, globallyClosestNode)) globallyClosestNode = null;
 
 					startNode = globallyClosestNode;
 					if (startNode != null) {
@@ -849,7 +896,7 @@ namespace Pathfinding {
 				}
 				CheckInvariants();
 			} else {
-				var repairPath = LocalSearch(nodes.GetAbsolute(currentIndexInPath), point, maxNodesToSearch, movementPlane, isStart, traversalProvider, path);
+				var repairPath = LocalSearch(nodes.GetAbsolute(currentIndexInPath), point, maxNodesToSearch, movementPlane, isStart);
 
 				{
 					// When we repair the path we may have multiple different cases:
@@ -875,13 +922,12 @@ namespace Pathfinding {
 					bool upToDate;
 					Vector3 newClampedPoint;
 
-					var nn = this.nnConstraint;
-					nn.constrainArea = true;
+					var nn = this.traversalConstraint.ToNearestNodeConstraint();
 					nn.area = (int)closestNode.Area;
+					nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.up);
 
 					MarkerGetNearest.Begin();
 					var globallyClosestNode = AstarPath.active.GetNearest(point, nn);
-					nn.constrainArea = false;
 
 
 					MarkerGetNearest.End();
@@ -951,6 +997,12 @@ namespace Pathfinding {
 					}
 				}
 			}
+
+			if (pathEmptyAndUnrepairable) {
+				RemoveAllButFirstNode();
+				Assert.IsTrue(nodes.Length <= 1);
+				Assert.IsFalse(hasValidEndPoint);
+			}
 		}
 
 		/// <summary>Calculates the squared distance from a point to the closest point on the node.</summary>
@@ -1019,10 +1071,7 @@ namespace Pathfinding {
 		/// The return value is a list of nodes that start with currentNode and ends with the node that contains the given point, if it could be found.
 		/// Otherwise, the return value will be an empty list.
 		/// </summary>
-		CircularBuffer<GraphNode> LocalSearch (GraphNode currentNode, Vector3 point, int maxNodesToSearch, NativeMovementPlane movementPlane, bool reverse, ITraversalProvider traversalProvider, Path path) {
-			var nn = this.nnConstraint;
-			nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.up);
-
+		CircularBuffer<GraphNode> LocalSearch (GraphNode currentNode, Vector3 point, int maxNodesToSearch, NativeMovementPlane movementPlane, bool reverse) {
 			// Grab a temporary queue and list to use for this thread
 			// To improve performance, we don't want to allocate these every time this method is called,
 			// and even the ArrayPool<T> and ListPool<T> classes add some overhead.
@@ -1035,8 +1084,9 @@ namespace Pathfinding {
 			BBTree.ProjectionParams projectionParams;
 			Vector3 pointInGraphSpace;
 			if (partGraphType == PartGraphType.Navmesh) {
+				var distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.up);
 				var navmeshGraph = graph as NavmeshBase;
-				projectionParams = new BBTree.ProjectionParams(nn, navmeshGraph.transform);
+				projectionParams = new BBTree.ProjectionParams(ref distanceMetric, navmeshGraph.transform);
 				// Convert the point to graph space
 				pointInGraphSpace = navmeshGraph.transform.InverseTransform(point);
 			} else if (partGraphType == PartGraphType.Grid) {
@@ -1083,7 +1133,7 @@ namespace Pathfinding {
 
 					for (int i = 0; i < connections.Count; i++) {
 						var neighbour = connections[i];
-						if (queueTail < maxNodesToSearch && neighbour.GraphIndex == node.GraphIndex && nn.Suitable(neighbour) && (traversalProvider == null || (reverse ? traversalProvider.CanTraverse(path, neighbour) && traversalProvider.CanTraverse(path, neighbour, node) : traversalProvider.CanTraverse(path, node, neighbour)))) {
+						if (queueTail < maxNodesToSearch && neighbour.GraphIndex == node.GraphIndex && (reverse ? traversalConstraint.CanTraverse(neighbour) && traversalConstraint.CanTraverse(neighbour, node) : traversalConstraint.CanTraverse(node, neighbour))) {
 							MarkerClosest.Begin();
 							float distanceToNeighbourSqr = SquaredDistanceToNode(neighbour, pointInGraphSpace, ref projectionParams);
 							MarkerClosest.End();
@@ -1111,7 +1161,7 @@ namespace Pathfinding {
 			if (partGraphType == PartGraphType.Grid) {
 				// To make the path easier to handle, we replace all diagonals by two axis-aligned connections
 				var hashes = new CircularBuffer<int>();
-				RemoveGridPathDiagonals(null, 0, ref repairPath, ref hashes, nnConstraint, traversalProvider, path);
+				RemoveGridPathDiagonals(null, 0, ref repairPath, ref hashes, ref traversalConstraint);
 			}
 			return repairPath;
 		}
@@ -1173,11 +1223,11 @@ namespace Pathfinding {
 			return p;
 		}
 
-		static bool IsInnerVertex (CircularBuffer<GraphNode> nodes, Funnel.PathPart part, int portalIndex, bool rightSide, List<GraphNode> alternativeNodes, NNConstraint nnConstraint, out int startIndex, out int endIndex, ITraversalProvider traversalProvider, Path path) {
+		static bool IsInnerVertex (CircularBuffer<GraphNode> nodes, Funnel.PathPart part, int portalIndex, bool rightSide, List<GraphNode> alternativeNodes, ref TraversalConstraint traversalConstraint, ref TraversalCosts traversalCosts, out int startIndex, out int endIndex) {
 			Assert.IsTrue(portalIndex >= part.startIndex && portalIndex < part.endIndex);
 			var startNode = nodes.GetAbsolute(portalIndex);
 			if (startNode is TriangleMeshNode) {
-				return IsInnerVertexTriangleMesh(nodes, part, portalIndex, rightSide, alternativeNodes, nnConstraint, out startIndex, out endIndex, traversalProvider, path);
+				return IsInnerVertexTriangleMesh(nodes, part, portalIndex, rightSide, alternativeNodes, ref traversalConstraint, ref traversalCosts, out startIndex, out endIndex);
 			} else if (startNode is GridNodeBase) {
 				// Note: Code for this was removed right after #97f311079
 				throw new System.InvalidOperationException("Grid nodes are not supported. Should have been handled by the SimplifyGridInnerVertex method");
@@ -1188,7 +1238,7 @@ namespace Pathfinding {
 			}
 		}
 
-		static bool IsInnerVertexTriangleMesh (CircularBuffer<GraphNode> nodes, Funnel.PathPart part, int portalIndex, bool rightSide, List<GraphNode> alternativeNodes, NNConstraint nnConstraint, out int startIndex, out int endIndex, ITraversalProvider traversalProvider, Path path) {
+		static bool IsInnerVertexTriangleMesh (CircularBuffer<GraphNode> nodes, Funnel.PathPart part, int portalIndex, bool rightSide, List<GraphNode> alternativeNodes, ref TraversalConstraint traversalConstraint, ref TraversalCosts traversalCosts, out int startIndex, out int endIndex) {
 			startIndex = portalIndex;
 			endIndex = portalIndex+1;
 
@@ -1271,7 +1321,7 @@ namespace Pathfinding {
 			while (!foundAlternativePath) {
 				bool found = false;
 				for (int j = 0; j < currentNode.connections.Length; j++) {
-					if (currentNode.connections[j].node is TriangleMeshNode neighbour && (traversalProvider != null ? traversalProvider.CanTraverse(path, currentNode, neighbour) : nnConstraint.Suitable(neighbour)) && currentNode.connections[j].isOutgoing) {
+					if (currentNode.connections[j].node is TriangleMeshNode neighbour && currentNode.connections[j].isOutgoing && traversalConstraint.CanTraverse(currentNode, neighbour)) {
 						if (!currentNode.GetPortalInGraphSpace(neighbour, out var left2, out var right2, out _, out _)) continue;
 						var candidateVertex = MaybeSetYZero(rightSide ? left2 : right2, allowVertexYDifferences);
 
@@ -1293,21 +1343,42 @@ namespace Pathfinding {
 				if (!found) return false;
 			}
 
-			var costDerivate = 0;
-			for (int i = 0; i < alternativeNodes.Count; i++) {
-				costDerivate += traversalProvider != null ? (int)traversalProvider.GetTraversalCost(path, alternativeNodes[i]) : (int)DefaultITraversalProvider.GetTraversalCost(path, alternativeNodes[i]);
+			// Check connection costs first, as those will affect the cost of the path even as we tweak it an infinetesimal amount.
+			var costChange = 0;
+			for (int i = 0; i < alternativeNodes.Count - 1; i++) {
+				costChange += (int)traversalCosts.GetConnectionCost(alternativeNodes[i], alternativeNodes[i+1]);
 			}
 			for (int i = startIndex; i < endIndex; i++) {
-				costDerivate -= traversalProvider != null ? (int)traversalProvider.GetTraversalCost(path, nodes.GetAbsolute(i)) : (int)DefaultITraversalProvider.GetTraversalCost(path, nodes.GetAbsolute(i));
+				costChange -= (int)traversalCosts.GetConnectionCost(nodes.GetAbsolute(i), nodes.GetAbsolute(i+1));
 			}
 
-			// If the alternative path is cheaper than the current path, we should use it.
-			// Making the path shorter does not necessarily make it less costly if penalties are involved.
+			// If the alternative path is more expensive than the current path, we should not use it.
+			// Making the path shorter does not necessarily make it less costly if connection costs are involved.
+			if (costChange > 0) return false;
+
+			// Check traversal cost multipliers next.
 			// TODO: Should estimate the derivative properly when changing to use length-based penalties.
-			return costDerivate <= 0;
+
+			var costDerivative = 0f;
+			costDerivative -= 0.5f * traversalCosts.GetTraversalCostMultiplier(startNode);
+			costDerivative -= 0.5f * traversalCosts.GetTraversalCostMultiplier(endNode);
+
+			var maxTraversalCostMultiplier = 0f;
+			for (int i = 1; i < alternativeNodes.Count; i++) {
+				maxTraversalCostMultiplier = math.max(maxTraversalCostMultiplier, traversalCosts.GetTraversalCostMultiplier(alternativeNodes[i]));
+			}
+			costDerivative += maxTraversalCostMultiplier;
+
+			// We use a simple, but conservative check here.
+			// We assume that the amount of path inside the start and end nodes will be reduced equally, as the path moves to take the alternative path instead.
+			// (in reality, the path inside the start and end nodes can be reduced by different amounts, or in rare cases even be increased)
+			// We also assume that for each units of path removed from the start and end nodes, we will add 1 unit of path to the node in the alternative path
+			// with the highest traversal cost multiplier.
+			// This is a pretty conservative estimate, but it is also very simple to calculate, and covers most cases.
+			return costDerivative <= 0f;
 		}
 
-		bool FirstInnerVertex (NativeArray<int> indices, int numCorners, List<GraphNode> alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, ITraversalProvider traversalProvider, Path path) {
+		bool FirstInnerVertex (NativeArray<int> indices, int numCorners, List<GraphNode> alternativePath, out int alternativeStartIndex, out int alternativeEndIndex) {
 			var part = parts[firstPartIndex];
 			Assert.AreEqual(funnelState.leftFunnel.Length, portalIsNotInnerCorner.Length);
 
@@ -1321,7 +1392,7 @@ namespace Pathfinding {
 				}
 
 				alternativePath.Clear();
-				if (IsInnerVertex(nodes, part, part.startIndex + portalIndex, rightSide, alternativePath, nnConstraint, out alternativeStartIndex, out alternativeEndIndex, traversalProvider, path)) {
+				if (IsInnerVertex(nodes, part, part.startIndex + portalIndex, rightSide, alternativePath, ref traversalConstraint, ref traversalCosts, out alternativeStartIndex, out alternativeEndIndex)) {
 					return true;
 				} else {
 					// Mark this corner as already tested
@@ -1359,9 +1430,6 @@ namespace Pathfinding {
 			return RemainingDistanceLowerBound(in nativeBufferSpan, in endOfPart, in movementPlane);
 		}
 
-		[System.ThreadStatic]
-		private static List<GraphNode> scratchList;
-
 		/// <summary>
 		/// Calculate the next corners in the path.
 		///
@@ -1376,10 +1444,9 @@ namespace Pathfinding {
 		/// <param name="maxCorners">The maximum number of corners to store in the buffer. At least 2 corners will always be stored.</param>
 		/// <param name="scratchArray">A temporary array to use for calculations. This array will be resized if it is too small or uninitialized.</param>
 		/// <param name="allocator">The allocator to use for the scratchArray, if it needs to be reallocated.</param>
-		/// <param name="traversalProvider">The traversal provider to use for the path. Or null to use the default traversal provider.</param>
-		/// <param name="path">The path to pass to the traversal provider. Or null.</param>
-		public void GetNextCorners (NativeList<float3> buffer, int maxCorners, ref NativeArray<int> scratchArray, Allocator allocator, ITraversalProvider traversalProvider, Path path) {
-			var numCorners = GetNextCornerIndices(ref scratchArray, maxCorners, allocator, out var lastCorner, traversalProvider, path);
+		/// <param name="allowSimplify">If true, the path will be iteratively simplified if possible.</param>
+		public void GetNextCorners (NativeList<float3> buffer, int maxCorners, ref NativeArray<int> scratchArray, Allocator allocator, bool allowSimplify = true) {
+			var numCorners = GetNextCornerIndices(ref scratchArray, maxCorners, allocator, allowSimplify, out var lastCorner);
 			var part = parts[firstPartIndex];
 			funnelState.ConvertCornerIndicesToPath(scratchArray, numCorners, false, part.startPoint, part.endPoint, lastCorner, buffer);
 		}
@@ -1390,9 +1457,14 @@ namespace Pathfinding {
 		/// This is like <see cref="GetNextCorners"/>, except that it returns indices referring to the internal <see cref="funnelState"/>.
 		/// You can use <see cref="ConvertCornerIndicesToPathProjected"/> or <see cref="funnelState.ConvertCornerIndicesToPath"/> to convert the indices to world space positions.
 		/// </summary>
-		public int GetNextCornerIndices (ref NativeArray<int> buffer, int maxCorners, Allocator allocator, out bool lastCorner, ITraversalProvider traversalProvider, Path path) {
+		public int GetNextCornerIndices (ref NativeArray<int> buffer, int maxCorners, Allocator allocator, bool allowSimplify, out bool lastCorner) {
+			if (pathEmptyAndUnrepairable) {
+				lastCorner = true;
+				return 0;
+			}
+
 			const int MaxSimplifications = 3;
-			int allowedSimplifications = MaxSimplifications;
+			int allowedSimplifications = allowSimplify ? MaxSimplifications : 0;
 
 			// Treat start point as a corner
 			maxCorners -= 1;
@@ -1415,7 +1487,7 @@ namespace Pathfinding {
 				if (allowedSimplifications > 0) {
 					if (partGraphType == PartGraphType.Grid) {
 						MarkerSimplify.Begin();
-						bool isInnerCorner = SimplifyGridInnerVertex(ref this.nodes, cornerIndices.AsUnsafeSpan().Slice(0, numCorners), part, ref portalIsNotInnerCorner, alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, nnConstraint, traversalProvider, path, lastCorner);
+						bool isInnerCorner = SimplifyGridInnerVertex(ref this.nodes, cornerIndices.AsUnsafeSpan().Slice(0, numCorners), part, ref portalIsNotInnerCorner, alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, ref traversalConstraint, ref traversalCosts, lastCorner);
 						MarkerSimplify.End();
 						if (isInnerCorner) {
 							Profiler.BeginSample("Splice");
@@ -1431,7 +1503,7 @@ namespace Pathfinding {
 							Profiler.EndSample();
 						}
 					} else {
-						if (FirstInnerVertex(cornerIndices, numCorners, alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, traversalProvider, path)) {
+						if (FirstInnerVertex(cornerIndices, numCorners, alternativePath, out int alternativeStartIndex, out int alternativeEndIndex)) {
 							if (SplicePath(alternativeStartIndex, alternativeEndIndex - alternativeStartIndex + 1, alternativePath)) {
 								allowedSimplifications--;
 								version++;
@@ -1491,9 +1563,7 @@ namespace Pathfinding {
 		/// This is used when an agent has traversed an off-mesh-link, and we want to start following the path after the off-mesh-link.
 		/// </summary>
 		/// <param name="count">The number of parts to remove.</param>
-		/// <param name="traversalProvider">The traversal provider to use for the path. Or null to use the default traversal provider.</param>
-		/// <param name="path">The path to pass to the traversal provider. Or null.</param>
-		public void PopParts (int count, ITraversalProvider traversalProvider, Path path) {
+		public void PopParts (int count) {
 			if (firstPartIndex + count >= parts.Length) throw new System.InvalidOperationException("Cannot pop the last part of a path");
 			firstPartIndex += count;
 			version++;
@@ -1563,7 +1633,7 @@ namespace Pathfinding {
 			}
 
 			if (partGraphType == PartGraphType.Grid) {
-				RemoveGridPathDiagonals(this.parts, firstPartIndex, ref this.nodes, ref this.nodeHashes, nnConstraint, traversalProvider, path);
+				RemoveGridPathDiagonals(this.parts, firstPartIndex, ref this.nodes, ref this.nodeHashes, ref traversalConstraint);
 				part = parts[firstPartIndex];
 			}
 
@@ -1571,14 +1641,20 @@ namespace Pathfinding {
 			CheckInvariants();
 		}
 
-		public void RemoveAllButFirstNode (NativeMovementPlane movementPlane, ITraversalProvider traversalProvider) {
-			var pathfindingSettings = new PathRequestSettings {
-				graphMask = nnConstraint.graphMask,
-				traversableTags = nnConstraint.tags,
-				tagPenalties = null,
-				traversalProvider = traversalProvider,
-			};
-			SetFromSingleNode(startNode, startPoint, movementPlane, pathfindingSettings);
+		public void RemoveAllButFirstNode () {
+			if (hasPath) {
+				RemoveAllPartsExceptFirst();
+				ref var part = ref parts[firstPartIndex];
+				while (nodes.AbsoluteEndIndex > part.startIndex) {
+					nodes.PopEnd();
+					nodeHashes.PopEnd();
+				}
+				part.endIndex = part.startIndex;
+				part.endPoint = part.startPoint;
+				SetFunnelState(part);
+				CheckInvariants();
+				version++;
+			}
 		}
 
 		void RemoveAllPartsExceptFirst () {
@@ -1633,8 +1709,29 @@ namespace Pathfinding {
 			return new OffMeshLinks.OffMeshLinkTracer(startNode.linkConcrete, isReverse);
 		}
 
+		// TODO: Use an array of lists indexed by job thread index instead
+		[System.ThreadStatic]
+		private static List<float3> tmpLeftPortals, tmpRightPortals;
+
+		[System.ThreadStatic]
+		private static List<GraphNode> scratchList;
+
+		static void GetTemporaryPortalLists (out List<float3> left, out List<float3> right) {
+			// Use thread-static temporary lists as scratch space.
+			// Since this code may be running in parallel, it is significantly faster to use
+			// thread static lists compared to using e.g. ListPool<float3>, which uses locking (easily 10x faster),
+			// and thus causes a bunch of lock contention.
+			if (tmpLeftPortals == null) tmpLeftPortals = new List<float3>();
+			if (tmpRightPortals == null) tmpRightPortals = new List<float3>();
+			// Clear the lists to avoid carrying over old data
+			tmpLeftPortals.Clear();
+			tmpRightPortals.Clear();
+			left = tmpLeftPortals;
+			right = tmpRightPortals;
+		}
+
 		void SetFunnelState (Funnel.PathPart part) {
-			Profiler.BeginSample("SetFunnelState");
+			MarkerSetFunnelState.Begin();
 			this.funnelState.Clear();
 			this.portalIsNotInnerCorner.Clear();
 
@@ -1644,22 +1741,24 @@ namespace Pathfinding {
 					funnelState.projectionAxis = gridGraph.transform.WorldUpAtGraphPosition(Vector3.zero);
 				}
 
-				var tmpLeft = ListPool<float3>.Claim(part.endIndex - part.startIndex);
-				var tmpRight = ListPool<float3>.Claim(part.endIndex - part.startIndex);
-				CalculateFunnelPortals(part.startIndex, part.endIndex, tmpLeft, tmpRight);
-				this.funnelState.Splice(0, 0, tmpLeft, tmpRight);
-				for (int i = 0; i < tmpLeft.Count; i++) {
-					this.portalIsNotInnerCorner.PushEnd(0);
+				if (part.endIndex - part.startIndex > 0) {
+					GetTemporaryPortalLists(out var tmpLeft, out var tmpRight);
+					tmpLeft.Capacity = Mathf.Max(tmpLeft.Capacity, part.endIndex - part.startIndex);
+					tmpRight.Capacity = Mathf.Max(tmpRight.Capacity, part.endIndex - part.startIndex);
+
+					CalculateFunnelPortals(part.startIndex, part.endIndex, tmpLeft, tmpRight);
+					this.funnelState.Splice(0, 0, tmpLeft, tmpRight);
+					for (int i = 0; i < tmpLeft.Count; i++) {
+						this.portalIsNotInnerCorner.PushEnd(0);
+					}
 				}
-				ListPool<float3>.Release(ref tmpLeft);
-				ListPool<float3>.Release(ref tmpRight);
 			}
-			Profiler.EndSample();
+			MarkerSetFunnelState.End();
 			version++;
 		}
 
 		void CalculateFunnelPortals (int startNodeIndex, int endNodeIndex, List<float3> outLeftPortals, List<float3> outRightPortals) {
-			Profiler.BeginSample("CalculatePortals");
+			MarkerCalculatePortals.Begin();
 			var prevNode = this.nodes.GetAbsolute(startNodeIndex);
 			AssertValidInPath(startNodeIndex);
 
@@ -1674,11 +1773,11 @@ namespace Pathfinding {
 				}
 				prevNode = node;
 			}
-			Profiler.EndSample();
+			MarkerCalculatePortals.End();
 		}
 
 		/// <summary>Replaces the current path with a single node</summary>
-		public void SetFromSingleNode (GraphNode node, Vector3 position, NativeMovementPlane movementPlane, PathRequestSettings pathfindingSettings) {
+		public void SetFromSingleNode (GraphNode node, Vector3 position, NativeMovementPlane movementPlane, TraversalConstraint traversalConstraint, TraversalCosts traversalCosts) {
 			SetPath(
 				new List<Funnel.PathPart> {
 				new Funnel.PathPart { startIndex = 0, endIndex = 0, startPoint = position, endPoint = position }
@@ -1687,8 +1786,8 @@ namespace Pathfinding {
 				position,
 				position,
 				movementPlane,
-				pathfindingSettings,
-				null
+				traversalConstraint,
+				traversalCosts
 				);
 		}
 
@@ -1706,6 +1805,7 @@ namespace Pathfinding {
 			firstPartContainsDestroyedNodes = false;
 			startNodeInternal = null;
 			partGraphType = PartGraphType.Navmesh;
+			pathEmptyAndUnrepairable = false;
 			CheckInvariants();
 		}
 
@@ -1757,7 +1857,7 @@ namespace Pathfinding {
 
 		private static readonly ProfilerMarker MarkerSimplify = new ProfilerMarker("Simplify");
 
-		static bool SimplifyGridInnerVertex (ref CircularBuffer<GraphNode> nodes, UnsafeSpan<int> cornerIndices, Funnel.PathPart part, ref CircularBuffer<byte> portalIsNotInnerCorner, List<GraphNode> alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, NNConstraint nnConstraint, ITraversalProvider traversalProvider, Path path, bool lastCorner) {
+		static bool SimplifyGridInnerVertex (ref CircularBuffer<GraphNode> nodes, UnsafeSpan<int> cornerIndices, Funnel.PathPart part, ref CircularBuffer<byte> portalIsNotInnerCorner, List<GraphNode> alternativePath, out int alternativeStartIndex, out int alternativeEndIndex, ref TraversalConstraint traversalConstraint, ref TraversalCosts traversalCosts, bool lastCorner) {
 			var corners = lastCorner ? cornerIndices.Length : cornerIndices.Length - 1;
 			alternativeStartIndex = -1;
 			alternativeEndIndex = -1;
@@ -1834,37 +1934,51 @@ namespace Pathfinding {
 			}
 
 			alternativePath.Clear();
-			var obstructed = grid.Linecast(startNode, normalizedPointStart, endNode, normalizedPointEnd, out var _, alternativePath, null, false);
+			var obstructed = grid.Linecast(startNode, normalizedPointStart, endNode, normalizedPointEnd, out var _, ref traversalConstraint, alternativePath, false);
 			if (!obstructed) {
 				Assert.AreEqual(startNode, alternativePath[0]);
 				Assert.AreEqual(endNode, alternativePath[alternativePath.Count-1]);
 
-				// The linecast was unobstructed. But the new path may still be more costly than the old path, if any penalties are used.
-				// The traversal provider or the NNConstraint may also disallow the new path.
-				for (int j = 1; j < alternativePath.Count; j++) {
-					if (traversalProvider != null ? !traversalProvider.CanTraverse(path, alternativePath[j-1], alternativePath[j]) : !nnConstraint.Suitable(alternativePath[j])) {
-						return false;
-					}
+				// We also need to check if the straight path has a lower cost than the original path.
+
+				// Calculate connection costs first
+				uint alternativeConnectionCost = 0;
+				for (int j = 0; j < alternativePath.Count - 1; j++) {
+					alternativeConnectionCost += traversalCosts.GetConnectionCost(alternativePath[j], alternativePath[j + 1]);
 				}
-				uint alternativeCost = 0;
+
+				// Calculate the cost of the old path.
+				uint oldConnectionCost = 0;
+				for (int j = startNodeIndex; j < endNodeIndex; j++) {
+					oldConnectionCost += traversalCosts.GetConnectionCost(nodes.GetAbsolute(j), nodes.GetAbsolute(j + 1));
+				}
+
+				// Then check traversal cost multipliers. Here we use the average traversal cost multiplier, instead of
+				// actually checking how much of the line is covered by each node.
+				// This is an approximation, but usually good enough.
+				var alternativeCostMultiplier = 0f;
 				for (int j = 0; j < alternativePath.Count; j++) {
-					alternativeCost += traversalProvider != null? traversalProvider.GetTraversalCost(path, alternativePath[j]) : DefaultITraversalProvider.GetTraversalCost(path, alternativePath[j]);
+					alternativeCostMultiplier += traversalCosts.GetTraversalCostMultiplier(alternativePath[j]);
 				}
+				alternativeCostMultiplier /= alternativePath.Count;
 
-				if (alternativeCost > 0) {
-					// The new path *may* be more costly than the old one.
-					// We have to do a thorough check to see if the new path is better.
-
-					// Calculate the cost of the old path.
-					uint oldCost = 0;
-					for (int j = startNodeIndex; j <= endNodeIndex; j++) {
-						oldCost += traversalProvider != null? traversalProvider.GetTraversalCost(path, nodes.GetAbsolute(j)) : DefaultITraversalProvider.GetTraversalCost(path, nodes.GetAbsolute(j));
-					}
-
-					if (alternativeCost > oldCost) {
-						return false;
-					}
+				var oldCostMultiplier = 0f;
+				for (int j = startNodeIndex; j <= endNodeIndex; j++) {
+					oldCostMultiplier += traversalCosts.GetTraversalCostMultiplier(nodes.GetAbsolute(j));
 				}
+				oldCostMultiplier /= endNodeIndex - startNodeIndex + 1;
+
+				var startPoint = startNode.UnNormalizePoint((float2)normalizedPointStart / GridGraph.FixedPrecisionScale);
+				var midPoint = midNode.UnNormalizePoint((float2)normalizedPointEnd / GridGraph.FixedPrecisionScale);
+				var endPoint = endNode.UnNormalizePoint((float2)normalizedPointEnd / GridGraph.FixedPrecisionScale);
+				var alternativeLength = Int3.Precision * (startPoint - endPoint).magnitude;
+				var oldLength = Int3.Precision * ((startPoint - midPoint).magnitude + (midPoint - endPoint).magnitude);
+
+				var alternativeCost = alternativeConnectionCost + alternativeLength * alternativeCostMultiplier;
+				var oldCost = oldConnectionCost + oldLength * oldCostMultiplier;
+
+				if (alternativeCost > oldCost) return false;
+
 				alternativeStartIndex = startNodeIndex;
 				alternativeEndIndex = endNodeIndex;
 				return true;
@@ -1878,7 +1992,7 @@ namespace Pathfinding {
 		///
 		/// This is done to make the funnel algorithm work better on grid graphs.
 		/// </summary>
-		static void RemoveGridPathDiagonals (Funnel.PathPart[] parts, int partIndex, ref CircularBuffer<GraphNode> path, ref CircularBuffer<int> pathNodeHashes, NNConstraint nnConstraint, ITraversalProvider traversalProvider, Path pathObject) {
+		static void RemoveGridPathDiagonals (Funnel.PathPart[] parts, int partIndex, ref CircularBuffer<GraphNode> path, ref CircularBuffer<int> pathNodeHashes, ref TraversalConstraint traversalConstraint) {
 			int inserted = 0;
 			var part = parts != null ? parts[partIndex] : new Funnel.PathPart { startIndex = path.AbsoluteStartIndex, endIndex = path.AbsoluteEndIndex };
 			for (int i = part.endIndex - 1; i >= part.startIndex; i--) {
@@ -1891,17 +2005,17 @@ namespace Pathfinding {
 					var d1 = dir - 4;
 					var d2 = (dir - 4 + 1) % 4;
 					var n1 = node.GetNeighbourAlongDirection(d1);
-					if (n1 != null && (traversalProvider != null ? !traversalProvider.CanTraverse(pathObject, node, n1) : !nnConstraint.Suitable(n1))) n1 = null;
+					if (n1 != null && !traversalConstraint.CanTraverse(node, n1)) n1 = null;
 
-					if (n1 != null && n1.GetNeighbourAlongDirection(d2) == node2 && (traversalProvider == null || traversalProvider.CanTraverse(pathObject, n1, node2))) {
+					if (n1 != null && n1.GetNeighbourAlongDirection(d2) == node2 && traversalConstraint.CanTraverse(n1, node2)) {
 						path.InsertAbsolute(i+1, n1);
 						if (pathNodeHashes.Length > 0) pathNodeHashes.InsertAbsolute(i+1, HashNode(n1));
 						inserted++;
 					} else {
 						var n2 = node.GetNeighbourAlongDirection(d2);
-						if (n2 != null && (traversalProvider != null ? !traversalProvider.CanTraverse(pathObject, node, n2) : !nnConstraint.Suitable(n2))) n2 = null;
+						if (n2 != null && !traversalConstraint.CanTraverse(node, n2)) n2 = null;
 
-						if (n2 != null && n2.GetNeighbourAlongDirection(d1) == node2 && (traversalProvider == null || traversalProvider.CanTraverse(pathObject, n2, node2))) {
+						if (n2 != null && n2.GetNeighbourAlongDirection(d1) == node2 && traversalConstraint.CanTraverse(n2, node2)) {
 							path.InsertAbsolute(i+1, n2);
 							if (pathNodeHashes.Length > 0) pathNodeHashes.InsertAbsolute(i+1, HashNode(n2));
 							inserted++;
@@ -1938,14 +2052,8 @@ namespace Pathfinding {
 		/// <param name="movementPlane">The movement plane of the agent.</param>
 		public void SetPath (ABPath path, NativeMovementPlane movementPlane) {
 			var parts = Funnel.SplitIntoParts(path);
-			var pathfindingSettings = new PathRequestSettings {
-				graphMask = path.nnConstraint.graphMask,
-				traversableTags = path.nnConstraint.tags,
-				tagPenalties = null,
-				traversalProvider = path.traversalProvider,
-			};
 
-			SetPath(parts, path.path, path.originalStartPoint, path.originalEndPoint, movementPlane, pathfindingSettings, path);
+			SetPath(parts, path.path, path.originalStartPoint, path.originalEndPoint, movementPlane, path.traversalConstraint, path.traversalCosts);
 			Pathfinding.Pooling.ListPool<Funnel.PathPart>.Release(ref parts);
 		}
 
@@ -1955,10 +2063,11 @@ namespace Pathfinding {
 		/// <param name="unclampedStartPoint">The start point of the path. This is typically the start point that was passed to the path request, or the agent's current position.</param>
 		/// <param name="unclampedEndPoint">The end point of the path. This is typically the destination point that was passed to the path request.</param>
 		/// <param name="movementPlane">The movement plane of the agent.</param>
-		/// <param name="pathfindingSettings">Pathfinding settings that the path was calculated with. You may pass PathRequestSettings.Default if you don't use tags, traversal providers, or multiple graphs.</param>
-		/// <param name="path">The path to pass to the traversal provider. Or null.</param>
-		public void SetPath (List<Funnel.PathPart> parts, List<GraphNode> nodes, Vector3 unclampedStartPoint, Vector3 unclampedEndPoint, NativeMovementPlane movementPlane, PathRequestSettings pathfindingSettings, Path path) {
-			this.nnConstraint.UseSettings(pathfindingSettings);
+		/// <param name="traversalConstraint">Traversal settings that the path was calculated with. This may be used when repairing or simplifying the path.</param>
+		/// <param name="traversalCosts">The traversal costs for the path. This may be used when simplifying the path further.</param>
+		public void SetPath (List<Funnel.PathPart> parts, List<GraphNode> nodes, Vector3 unclampedStartPoint, Vector3 unclampedEndPoint, NativeMovementPlane movementPlane, TraversalConstraint traversalConstraint, TraversalCosts traversalCosts) {
+			this.traversalConstraint = traversalConstraint;
+			this.traversalCosts = traversalCosts;
 			this.startNode = nodes.Count > 0 ? nodes[0] : null;
 			partGraphType = PartGraphTypeFromNode(this.startNode);
 			this.unclampedEndPoint = unclampedEndPoint;
@@ -1970,6 +2079,7 @@ namespace Pathfinding {
 			this.nodes.Clear();
 			this.nodes.AddRange(nodes);
 			this.nodeHashes.Clear();
+			this.pathEmptyAndUnrepairable = false;
 			for (int i = 0; i < nodes.Count; i++) {
 				this.nodeHashes.PushEnd(HashNode(nodes[i]));
 			}
@@ -1977,7 +2087,7 @@ namespace Pathfinding {
 
 			if (partGraphType == PartGraphType.Grid) {
 				// SimplifyGridPath(this.parts, 0, ref this.nodes, int.MaxValue);
-				RemoveGridPathDiagonals(this.parts, 0, ref this.nodes, ref this.nodeHashes, nnConstraint, pathfindingSettings.traversalProvider, path);
+				RemoveGridPathDiagonals(this.parts, 0, ref this.nodes, ref this.nodeHashes, ref traversalConstraint);
 			}
 
 			SetFunnelState(this.parts[firstPartIndex]);
@@ -1985,8 +2095,8 @@ namespace Pathfinding {
 			CheckInvariants();
 			// This is necessary because the path may not have used the same distance metric that the path tracer uses.
 			// And if we don't do this, then the start/end points of the funnel may be slightly incorrect.
-			Repair(unclampedStartPoint, true, RepairQuality.Low, movementPlane, pathfindingSettings.traversalProvider, path, false);
-			Repair(unclampedEndPoint, false, RepairQuality.Low, movementPlane, pathfindingSettings.traversalProvider, path, false);
+			Repair(unclampedStartPoint, true, RepairQuality.Low, movementPlane, false);
+			Repair(unclampedEndPoint, false, RepairQuality.Low, movementPlane, false);
 		}
 
 		/// <summary>Returns a deep clone of this object</summary>
@@ -2001,12 +2111,14 @@ namespace Pathfinding {
 					   unclampedStartPoint = unclampedStartPoint,
 					   startNodeInternal = startNodeInternal,
 
+					   pathEmptyAndUnrepairableBacking = pathEmptyAndUnrepairableBacking,
 					   firstPartIndex = firstPartIndex,
 					   startIsUpToDate = startIsUpToDate,
 					   endIsUpToDate = endIsUpToDate,
 					   firstPartContainsDestroyedNodes = firstPartContainsDestroyedNodes,
 					   version = version,
-					   nnConstraint = NNConstraint.Walkable,
+					   traversalConstraint = traversalConstraint,
+					   traversalCosts = traversalCosts, // TODO: Clone penalty array
 					   partGraphType = partGraphType,
 			};
 		}

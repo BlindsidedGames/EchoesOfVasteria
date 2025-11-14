@@ -49,7 +49,11 @@ namespace Pathfinding.ECS {
 
 		/// <summary>
 		/// The desired rotation of the agent, in radians, relative to the current movement plane.
+		///
+		/// When rotating the agent visually, the <see cref="targetRotationOffset"/> should also be added to this value.
+		///
 		/// See: <see cref="NativeMovementPlane.ToWorldRotation"/>
+		/// See: <see cref="AgentMovementPlane"/>
 		/// </summary>
 		public float targetRotation;
 
@@ -63,6 +67,7 @@ namespace Pathfinding.ECS {
 		/// If no better hint is available, this should be set to the same value as <see cref="targetRotation"/>.
 		///
 		/// See: <see cref="NativeMovementPlane.ToWorldRotation"/>
+		/// See: <see cref="AgentMovementPlane"/>
 		/// </summary>
 		public float targetRotationHint;
 
@@ -71,6 +76,8 @@ namespace Pathfinding.ECS {
 		/// This is used by the local avoidance system to rotate the agent, without this causing a feedback loop.
 		/// This extra rotation will be ignored by the control system which decides how the agent *wants* to move.
 		/// It will instead be directly applied to the agent.
+		///
+		/// See: <see cref="MovementState.rotationOffset"/>, which must be updated after rotating the agent using this value.
 		/// </summary>
 		public float targetRotationOffset;
 

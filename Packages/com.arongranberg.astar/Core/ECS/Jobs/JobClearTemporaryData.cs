@@ -1,8 +1,6 @@
 #if MODULE_ENTITIES
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Mathematics;
-using UnityEngine;
 
 namespace Pathfinding.ECS {
 	[BurstCompile]

@@ -238,10 +238,26 @@ namespace Pathfinding {
 		///
 		/// Note that this only disables automatic path recalculations. If you call the <see cref="SearchPath()"/> method a path will still be calculated.
 		///
-		/// See: <see cref="canMove"/>
+		/// See: <see cref="simulateMovement"/>
 		/// See: <see cref="isStopped"/>
 		/// </summary>
 		bool canSearch { get; set; }
+
+		/// <summary>
+		/// Enables or disables movement simulations completely.
+		///
+		/// This is primarily useful if you want to override the default movement behavior.
+		/// If disabled, the agent will stop all its movement calculations and may not update many other properties either (e.g. <see cref="reachedDestination)"/>.
+		/// Depending on the movement script, you can then call the internal movement methods manually to control the agent's movement.
+		///
+		/// If you want the agent to smoothly come to a stand still, but still react to local avoidance and use gravity: use <see cref="isStopped"/> instead.
+		/// If you want to make the agent stop immediately, disable the whole component instead.
+		///
+		/// See: <see cref="MovementUpdate"/>
+		/// See: <see cref="canSearch"/>
+		/// See: <see cref="isStopped"/>
+		/// </summary>
+		bool simulateMovement { get; set; }
 
 		/// <summary>
 		/// Enables or disables movement completely.
@@ -252,8 +268,15 @@ namespace Pathfinding {
 		///
 		/// See: <see cref="canSearch"/>
 		/// See: <see cref="isStopped"/>
+		/// Deprecated: Renamed to <see cref="simulateMovement"/> to avoid confusion with the <see cref="isStopped"/> property.
 		/// </summary>
-		bool canMove { get; set; }
+		[System.Obsolete("Renamed to simulateMovement")]
+		bool canMove {
+			get => simulateMovement;
+			set {
+				simulateMovement = value;
+			}
+		}
 
 		/// <summary>True if this agent currently has a path that it follows</summary>
 		bool hasPath { get; }
@@ -269,7 +292,7 @@ namespace Pathfinding {
 		/// This is useful if you want to control the movement of the character using some other means, such
 		/// as root motion, but still want the AI to move freely.
 		///
-		/// See: <see cref="canMove"/> which in contrast to this field will disable all movement calculations.
+		/// See: <see cref="simulateMovement"/> which in contrast to this field will disable all movement calculations.
 		/// See: <see cref="updateRotation"/>
 		/// </summary>
 		bool updatePosition { get; set; }
@@ -301,12 +324,16 @@ namespace Pathfinding {
 		/// If this property is set to true while the agent is traversing an off-mesh link (RichAI script only), then the agent will
 		/// continue traversing the link and stop once it has completed it.
 		///
-		/// Note: This is not the same as the <see cref="canMove"/> setting which some movement scripts have. The <see cref="canMove"/> setting
+		/// Note: This is not the same as the <see cref="simulateMovement"/> setting which some movement scripts have. The <see cref="simulateMovement"/> setting
 		/// disables movement calculations completely (which among other things makes it not be affected by local avoidance or gravity).
 		/// For the AILerp movement script which doesn't use gravity or local avoidance anyway changing this property is very similar to
-		/// changing <see cref="canMove"/>.
+		/// changing <see cref="simulateMovement"/>.
 		///
 		/// The <see cref="steeringTarget"/> property will continue to indicate the point which the agent would move towards if it would not be stopped.
+		///
+		/// For most movement scripts, this will make the agent slow down quickly, but not instantly stop.
+		/// If you want to instantly stop the agent, you could either disable the whole component instead (but then it will not react to local avoidance, of course, and it will clear its current path),
+		/// or you could set <see cref="desiredVelocityWithoutLocalAvoidance"/> to Vector3.zero, which will stop it immediately.
 		/// </summary>
 		bool isStopped { get; set; }
 
@@ -405,6 +432,9 @@ namespace Pathfinding {
 		///
 		/// If you pass null as a parameter then the current path will be cleared and the agent will stop moving.
 		/// Note than unless you have also disabled <see cref="canSearch"/> then the agent will soon recalculate its path and start moving again.
+		/// It is not recommended to use this as a way of stopping the agent, since it will also cause it to loose its connection to the navmesh and will thus no longer be able
+		/// to clamp itself to the surface of the navmesh (important for the <see cref="RichAI"/> and <see cref="FollowerEntity"/> movement scripts).
+		/// Instead use <see cref="isStopped"/>.
 		///
 		/// You can disable the automatic path recalculation by setting the <see cref="canSearch"/> field to false.
 		///
@@ -465,14 +495,14 @@ namespace Pathfinding {
 		/// Calculate how the character wants to move during this frame.
 		///
 		/// Note that this does not actually move the character. You need to call <see cref="FinalizeMovement"/> for that.
-		/// This is called automatically unless <see cref="canMove"/> is false.
+		/// This is called automatically unless <see cref="simulateMovement"/> is false.
 		///
-		/// To handle movement yourself you can disable <see cref="canMove"/> and call this method manually.
+		/// To handle movement yourself you can disable <see cref="simulateMovement"/> and call this method manually.
 		/// This code will replicate the normal behavior of the component:
 		/// <code>
 		/// void Update () {
 		///     // Disable the AIs own movement code
-		///     ai.canMove = false;
+		///     ai.simulateMovement = false;
 		///     Vector3 nextPosition;
 		///     Quaternion nextRotation;
 		///     // Calculate how the AI wants to move

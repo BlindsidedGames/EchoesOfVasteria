@@ -1388,8 +1388,12 @@ namespace Pathfinding.Drawing {
 			}
 		}
 
-		public void TickFramePreRender () {
+		public void DisposeCommandBuildersWithJobDependencies () {
 			data.DisposeCommandBuildersWithJobDependencies(this);
+		}
+
+		public void TickFramePreRender () {
+			DisposeCommandBuildersWithJobDependencies();
 			// Remove persistent commands that have timed out.
 			// When not playing then persistent commands are never drawn twice
 			processedData.FilterOldPersistentCommands(version, lastTickVersion, CurrentTime, adjustedSceneModeVersion);

@@ -225,13 +225,10 @@ namespace Pathfinding.Drawing {
 			}
 			set {
 				if (uniqueID.isBuiltInCommandBuilder) throw new System.Exception("You cannot set the camera targets for a built-in command builder. Create a custom command builder instead.");
-				if (gizmos.IsAllocated && gizmos.Target != null) {
-					var target = gizmos.Target as DrawingData;
-					if (!target.data.StillExists(uniqueID)) {
-						throw new System.Exception("Cannot set cameraTargets because the command builder has already been disposed or does not exist.");
-					}
-					target.data.Get(uniqueID).meta.cameraTargets = value;
-				}
+				if (!gizmos.IsAllocated || gizmos.Target == null) throw new System.Exception("Cannot set cameraTargets because the command builder has already been disposed or does not exist.");
+				var target = gizmos.Target as DrawingData;
+				if (!target.data.StillExists(uniqueID)) throw new System.Exception("Cannot set cameraTargets because the command builder has already been disposed or does not exist.");
+				target.data.Get(uniqueID).meta.cameraTargets = value;
 			}
 		}
 
@@ -2997,7 +2994,7 @@ namespace Pathfinding.Drawing {
 				// The first 128 elements in the font data are guaranteed to be laid out as ascii.
 				// We use this since we cannot use the dynamic font lookup.
 				System.UInt16 c = *(text + i);
-				if (c >= 128) c = (System.UInt16) '?';
+				if (c >= 128) c = (System.UInt16)'?';
 				if (c == (byte)'\n') c = SDFLookupData.Newline;
 				// Ignore carriage return instead of printing them as '?'. Windows encodes newlines as \r\n.
 				if (c == (byte)'\r') continue;
@@ -3128,7 +3125,7 @@ namespace Pathfinding.Drawing {
 				// The first 128 elements in the font data are guaranteed to be laid out as ascii.
 				// We use this since we cannot use the dynamic font lookup.
 				System.UInt16 c = *(text + i);
-				if (c >= 128) c = (System.UInt16) '?';
+				if (c >= 128) c = (System.UInt16)'?';
 				if (c == (byte)'\n') c = SDFLookupData.Newline;
 				Add(c);
 			}

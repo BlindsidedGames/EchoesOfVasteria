@@ -5,6 +5,7 @@ using Pathfinding.WindowsStore;
 using Pathfinding.Serialization;
 using Pathfinding.Util;
 using Pathfinding.Sync;
+using System;
 
 namespace Pathfinding {
 	[System.Serializable]
@@ -265,6 +266,11 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Serializes all graphs settings to a byte array.
+		///
+		/// <code>
+		/// byte[] bytes = AstarPath.active.data.SerializeGraphs();
+		/// </code>
+		///
 		/// See: DeserializeGraphs(byte[])
 		/// </summary>
 		public byte[] SerializeGraphs () {
@@ -273,25 +279,78 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Serializes all graphs settings and optionally node data to a byte array.
+		///
+		/// <code>
+		/// byte[] bytes = AstarPath.active.data.SerializeGraphs(Pathfinding.Serialization.SerializeSettings.NodesAndSettings);
+		/// </code>
+		///
 		/// See: DeserializeGraphs(byte[])
-		/// See: Pathfinding.Serialization.SerializeSettings
+		/// See: <see cref="Pathfinding.Serialization.SerializeSettings"/>
 		/// </summary>
 		public byte[] SerializeGraphs (SerializeSettings settings) {
 			return SerializeGraphs(settings, out var _);
 		}
 
 		/// <summary>
-		/// Main serializer function.
-		/// Serializes all graphs to a byte array
-		/// A similar function exists in the AstarPathEditor.cs script to save additional info
+		/// Serializes all graphs to a byte array.
+		///
+		/// You can later load the graphs using <see cref="DeserializeGraphs(byte[])"/> or <see cref="DeserializeGraphsAdditive(byte[])"/>.
+		///
+		/// A similar function exists in the AstarPathEditor.cs script to save the state of the graph inspectors as well.
 		/// </summary>
 		public byte[] SerializeGraphs (SerializeSettings settings, out uint checksum) {
-			return SerializeGraphs(settings, out checksum, graphs);
+			return SerializeGraphs(settings, graphs, out checksum);
 		}
 
-		byte[] SerializeGraphs (SerializeSettings settings, out uint checksum, NavGraph[] graphs) {
+		/// <summary>
+		/// Serializes a single graph to a byte array.
+		///
+		/// You can later load the graph using <see cref="DeserializeGraphs(byte[])"/> or <see cref="DeserializeGraphsAdditive(byte[])"/>.
+		///
+		/// All cross-graph connections between this graph and other graphs will be excluded from the serialized data.
+		///
+		/// Warning: If you are using multiple graphs, and you are serializing and deserializing single graphs, the graph may not keep its original index in the <see cref="graphs"/> array.
+		/// This means that things like graph masks (e.g. <see cref="Seeker.graphMask"/>) may not reference the correct graph after deserialization.
+		/// </summary>
+		public byte[] SerializeGraph (SerializeSettings settings, NavGraph graph) {
+			return SerializeGraph(settings, graph, out var _);
+		}
+
+		/// <summary>
+		/// Serializes a single graph to a byte array.
+		///
+		/// You can later load the graph using <see cref="DeserializeGraphs(byte[])"/> or <see cref="DeserializeGraphsAdditive(byte[])"/>.
+		///
+		/// All cross-graph connections between this graph and other graphs will be excluded from the serialized data.
+		///
+		/// Warning: If you are using multiple graphs, and you are serializing and deserializing single graphs, the graph may not keep its original index in the <see cref="graphs"/> array.
+		/// This means that things like graph masks (e.g. <see cref="Seeker.graphMask"/>) may not reference the correct graph after deserialization.
+		/// </summary>
+		public byte[] SerializeGraph (SerializeSettings settings, NavGraph graph, out uint checksum) {
+			if (graph == null) throw new ArgumentNullException(nameof(graph));
+			return SerializeGraphs(settings, new NavGraph[] { graph }, out checksum);
+		}
+
+		/// <summary>
+		/// Serializes a set of graphs to a byte array.
+		///
+		/// You can later load the graphs using <see cref="DeserializeGraphs(byte[])"/> or <see cref="DeserializeGraphsAdditive(byte[])"/>.
+		///
+		/// All cross-graph connections between these graphs and other graphs will be excluded from the serialized data.
+		///
+		/// Warning: If you are using multiple graphs, and you are serializing and deserializing subsets of graphs, the graphs may not keep their original indices in the <see cref="graphs"/> array.
+		/// This means that things like graph masks (e.g. <see cref="Seeker.graphMask"/>) may not reference the correct graph after deserialization.
+		/// </summary>
+		public byte[] SerializeGraphs (SerializeSettings settings, NavGraph[] graphs, out uint checksum) {
 			MarkerSerializeGraphs.Begin();
 			using (AssertSafe()) {
+				for (int i = 0; i < graphs.Length; i++) {
+					if (graphs[i] == null) continue;
+					var idx = Array.IndexOf(this.graphs, graphs[i]);
+					if (idx == -1) throw new InvalidOperationException("One of the specified graphs is not loaded. It cannot be serialized.");
+					if (idx != graphs[i].graphIndex) throw new InvalidOperationException("One of the specified graphs has an invalid graph index.");
+				}
+
 				var sr = new AstarSerializer(this, settings, active.gameObject);
 
 				sr.OpenSerialize();
@@ -308,7 +367,13 @@ namespace Pathfinding {
 			}
 		}
 
-		/// <summary>Deserializes graphs from <see cref="data"/></summary>
+		/// <summary>
+		/// Deserializes graphs from <see cref="data"/>.
+		///
+		/// <code>
+		/// AstarPath.active.data.DeserializeGraphs(bytes);
+		/// </code>
+		/// </summary>
 		public void DeserializeGraphs () {
 			var dataBytes = data;
 			if (dataBytes != null) {
@@ -383,8 +448,14 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Deserializes and loads graphs from the specified byte array additively.
-		/// An error will be logged if deserialization fails.
-		/// This function will add loaded graphs to the current ones.
+		///
+		/// All loaded graphs will be appended to the <see cref="graphs"/> array.
+		///
+		/// <code>
+		/// AstarPath.active.data.DeserializeGraphsAdditive(bytes);
+		/// </code>
+		///
+		/// If the serialized graphs only contain settings, you may want to call <see cref="AstarPath.active.Scan"/> to scan the graphs after deserialization.
 		///
 		/// Returns: The deserialized graphs
 		/// </summary>
@@ -431,6 +502,7 @@ namespace Pathfinding {
 
 			// Trim nulls at the end
 			while (gr.Count > 0 && gr[gr.Count-1] == null) gr.RemoveAt(gr.Count-1);
+			var firstNewGraphIndex = gr.Count;
 
 			FindGraphTypes();
 			// This may be false if the user is editing a prefab, for example.
@@ -460,7 +532,7 @@ namespace Pathfinding {
 
 			// Assign correct graph indices.
 			bool anyScanned = false;
-			for (int i = 0; i < graphs.Length; i++) {
+			for (int i = firstNewGraphIndex; i < graphs.Length; i++) {
 				if (graphs[i] == null) continue;
 				graphs[i].GetNodes(node => node.GraphIndex = (uint)i);
 				anyScanned |= graphs[i].isScanned;
@@ -590,6 +662,8 @@ namespace Pathfinding {
 		/// See: <see cref="ClearGraphs"/>
 		/// </summary>
 		public bool RemoveGraph (NavGraph graph) {
+			if (graph == null) throw new System.ArgumentNullException(nameof(graph));
+
 			// Make sure the pathfinding threads are paused
 			using (AssertSafe()) {
 				active.DirtyBounds(graph.bounds);
@@ -623,7 +697,7 @@ namespace Pathfinding {
 			int i = System.Array.IndexOf(graphs, graph);
 			if (i == -1) throw new System.ArgumentException("Graph doesn't exist");
 
-			var bytes = SerializeGraphs(SerializeSettings.Settings, out var _, new NavGraph[] { graph });
+			var bytes = SerializeGraph(SerializeSettings.Settings, graph);
 			var newGraphs = DeserializeGraphsAdditive(bytes, false);
 			UnityEngine.Assertions.Assert.AreEqual(1, newGraphs.Length);
 

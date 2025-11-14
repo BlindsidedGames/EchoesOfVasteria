@@ -5,12 +5,19 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Pathfinding.ECS {
+	/// <summary>
+	/// Aligns the agent's rotation with its movement direction, if the local avoidance system is causing it to move differently than expected.
+	///
+	/// Sometimes the agent may want to move in one direction (or stand still), but the local avoidance system tells it to move somewhere completely different.
+	/// In those cases, we need to adjust the agent's desired rotation to avoid it looking like it's strafing.
+	/// </summary>
 	[BurstCompile]
-	[WithAll(typeof(SimulateMovement), typeof(SimulateMovementFinalize))]
+	[WithAll(typeof(SimulateMovement))]
 	public partial struct JobAlignAgentWithMovementDirection : IJobEntity {
 		public float dt;
 
 		public void Execute (ref LocalTransform transform, in MovementSettings movementSettings, in MovementState movementState, in AgentCylinderShape shape, in AgentMovementPlane movementPlane, in MovementControl movementControl, ref ResolvedMovement resolvedMovement) {
+			// Check if the local avoidance system is forcing the agent to move
 			if (math.lengthsq(movementControl.targetPoint - resolvedMovement.targetPoint) > 0.001f && resolvedMovement.speed > movementSettings.follower.speed * 0.1f) {
 				// If the agent is moving, align it with the movement direction
 				var desiredDirection = movementPlane.value.ToPlane(movementControl.targetPoint - transform.Position);

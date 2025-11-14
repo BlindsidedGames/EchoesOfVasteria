@@ -174,7 +174,7 @@ namespace Pathfinding {
 		///
 		/// Note: Assumes the current active AstarPath instance is the same one that created this node.
 		///
-		/// Warning: Should only be called by graph classes on their own nodes
+		/// Warning: Should only be called by graph classes on their own nodes. If you want to remove nodes from a point graph, use <see cref="PointGraph.RemoveNode"/> instead.
 		/// </summary>
 		public void Destroy () {
 			if (Destroyed) return;
@@ -300,9 +300,13 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Penalty cost for walking on this node.
+		/// Additional cost for entering this node.
 		/// This can be used to make it harder/slower to walk over specific nodes.
-		/// A cost of 1000 (<see cref="Pathfinding.Int3.Precision"/>) corresponds to the cost of moving 1 world unit.
+		/// A cost of 1000 (<see cref="Int3.Precision"/>) corresponds to the cost of moving 1 world unit.
+		///
+		/// This cost does not scale with the distance traversed across the node.
+		/// For recast/navmesh graphs, it is recommended to use costs that scale with the distance instead.
+		/// For example <see cref="TraversalCosts.tagCostMultipliers"/>.
 		///
 		/// See: graph-updates (view in online documentation for working links)
 		/// </summary>
@@ -312,7 +316,7 @@ namespace Pathfinding {
 			set {
 				if (value > 0xFFFFFF)
 					Debug.LogWarning("Very high penalty applied. Are you sure negative values haven't underflowed?\n" +
-						"Penalty values this high could with long paths cause overflows and in some cases infinity loops because of that.\n" +
+						"Penalty values this high could with long paths cause overflows and in some cases infinite loops because of that.\n" +
 						"Penalty value applied: "+value);
 				penalty = value;
 			}
@@ -452,9 +456,9 @@ namespace Pathfinding {
 		/// <param name="data">Custom data which will be passed to the delegate.</param>
 		/// <param name="connectionFilter">A bitmask of which connection types will be included. A connection can either be incoming, outgoing, or both (bidirectional). You may pass any combination of \reflink{Connection.OutgoingConnection} and \reflink{Connection.IncomingConnection}.
 		///  Defaults to only outgoing connections. Unless one-way links are added to a graph, all connections will typically be bidirectional.</param>
-		public abstract void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter = Connection.OutgoingConnection);
+		public abstract void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter = Connection.OutgoingConnection);
 
-		public delegate void GetConnectionsWithData<T>(GraphNode node, ref T data);
+		public delegate void NodeActionWithData<T>(GraphNode node, ref T data);
 
 		/// <summary>
 		/// Adds a connection between two nodes.
@@ -476,8 +480,8 @@ namespace Pathfinding {
 		///
 		/// <code>
 		/// // Connect two nodes
-		/// var node1 = AstarPath.active.GetNearest(transform.position, NNConstraint.None).node;
-		/// var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NNConstraint.None).node;
+		/// var node1 = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.None).node;
+		/// var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NearestNodeConstraint.None).node;
 		/// var cost = (uint)(node2.position - node1.position).costMagnitude;
 		///
 		/// GraphNode.Connect(node1, node2, cost, OffMeshLinks.Directionality.TwoWay);
@@ -536,8 +540,8 @@ namespace Pathfinding {
 		/// <code>
 		/// AstarPath.active.AddWorkItem(new AstarWorkItem(ctx => {
 		///     // Connect two nodes
-		///     var node1 = AstarPath.active.GetNearest(transform.position, NNConstraint.None).node;
-		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NNConstraint.None).node;
+		///     var node1 = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.None).node;
+		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NearestNodeConstraint.None).node;
 		///     var cost = (uint)(node2.position - node1.position).costMagnitude;
 		///     node1.AddPartialConnection(node2, cost, true, true);
 		///     node2.AddPartialConnection(node1, cost, true, true);
@@ -569,8 +573,8 @@ namespace Pathfinding {
 		/// <code>
 		/// AstarPath.active.AddWorkItem(new AstarWorkItem(ctx => {
 		///     // Connect two nodes
-		///     var node1 = AstarPath.active.GetNearest(transform.position, NNConstraint.None).node;
-		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NNConstraint.None).node;
+		///     var node1 = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.None).node;
+		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NearestNodeConstraint.None).node;
 		///     var cost = (uint)(node2.position - node1.position).costMagnitude;
 		///     node1.AddPartialConnection(node2, cost, true, true);
 		///     node2.AddPartialConnection(node1, cost, true, true);
@@ -608,8 +612,8 @@ namespace Pathfinding {
 		/// <code>
 		/// AstarPath.active.AddWorkItem(new AstarWorkItem(ctx => {
 		///     // Connect two nodes
-		///     var node1 = AstarPath.active.GetNearest(transform.position, NNConstraint.None).node;
-		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NNConstraint.None).node;
+		///     var node1 = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.None).node;
+		///     var node2 = AstarPath.active.GetNearest(transform.position + Vector3.right, NearestNodeConstraint.None).node;
 		///     var cost = (uint)(node2.position - node1.position).costMagnitude;
 		///     node1.AddPartialConnection(node2, cost, true, true);
 		///     node2.AddPartialConnection(node1, cost, true, true);
@@ -691,7 +695,7 @@ namespace Pathfinding {
 		/// Open the node.
 		/// Used internally by the A* algorithm.
 		/// </summary>
-		public abstract void Open(Path path, uint pathNodeIndex, uint gScore);
+		public abstract void Open(ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore);
 
 		/// <summary>
 		/// Open the node at a specific point.
@@ -700,7 +704,7 @@ namespace Pathfinding {
 		///
 		/// Used when a path starts inside a node, or when an off-mesh link is used to move to a point inside this node.
 		/// </summary>
-		public abstract void OpenAtPoint(Path path, uint pathNodeIndex, Int3 position, uint gScore);
+		public abstract void OpenAtPoint(ref Path.SearchContext ctx, uint pathNodeIndex, Int3 position, uint gScore);
 
 		/// <summary>
 		/// The position of the path node during the search.
@@ -837,7 +841,7 @@ namespace Pathfinding {
 			AstarPath.active.hierarchicalGraph.AddDirtyNode(this);
 		}
 
-		public override void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter = Connection.OutgoingConnection) {
+		public override void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter = Connection.OutgoingConnection) {
 			if (connections == null) return;
 			for (int i = 0; i < connections.Length; i++) if ((connections[i].shapeEdgeInfo & connectionFilter) != 0) action(connections[i].node, ref data);
 		}

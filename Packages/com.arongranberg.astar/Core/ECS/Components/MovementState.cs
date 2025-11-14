@@ -78,6 +78,9 @@ namespace Pathfinding.ECS {
 		const int reachedEndOfPathAndOrientationFlag = 1 << 3;
 		const int ReachedEndOfPartFlag = 1 << 4;
 		const int TraversingLastPartFlag = 1 << 5;
+		const int HasValidEndPointFlag = 1 << 6;
+		const int GraphIndexOffsetInFlags = 8;
+		const ushort GraphIndexMaskInFlags = (ushort)(0xFF << GraphIndexOffsetInFlags);
 
 		/// <summary>
 		/// True if the agent has reached its destination.
@@ -168,6 +171,13 @@ namespace Pathfinding.ECS {
 			set => flags = (ushort)((flags & ~TraversingLastPartFlag) | (value ? TraversingLastPartFlag : 0));
 		}
 
+		public bool hasValidEndPoint {
+			[IgnoredByDeepProfiler]
+			get => (flags & HasValidEndPointFlag) != 0;
+			[IgnoredByDeepProfiler]
+			set => flags = (ushort)((flags & ~HasValidEndPointFlag) | (value ? HasValidEndPointFlag : 0));
+		}
+
 		/// <summary>
 		/// The index of the graph that the agent is currently traversing.
 		///
@@ -175,9 +185,9 @@ namespace Pathfinding.ECS {
 		/// </summary>
 		public uint graphIndex {
 			[IgnoredByDeepProfiler]
-			get => (uint)(flags >> 8);
+			get => (uint)(flags >> GraphIndexOffsetInFlags);
 			[IgnoredByDeepProfiler]
-			internal set => flags = (ushort)((flags & 0xFF) | (ushort)(value << 8));
+			internal set => flags = (ushort)((flags & ~GraphIndexMaskInFlags) | (ushort)(value << GraphIndexOffsetInFlags));
 		}
 
 		/// <summary>

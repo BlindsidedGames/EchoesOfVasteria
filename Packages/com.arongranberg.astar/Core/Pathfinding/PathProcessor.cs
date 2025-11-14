@@ -15,7 +15,7 @@ namespace Pathfinding {
 
 	public class PathProcessor {
 		public event System.Action<Path> OnPathPreSearch;
-		public event System.Action<Path> OnPathPostSearch;
+		public event System.Action<PathHandler, Path> OnPathPostSearch;
 		public event System.Action OnQueueUnblocked;
 
 		internal BlockableChannel<Path> queue;
@@ -316,27 +316,33 @@ namespace Pathfinding {
 					// Tick for when the path started, used for calculating how long time the calculation took
 					long startTicks = System.DateTime.UtcNow.Ticks;
 
+					var searchContext = new Path.SearchContext {
+						pathHandler = pathHandler,
+						path = path,
+						pathID = path.pathID,
+					};
+
 					// Prepare the path
-					ipath.Prepare();
+					ipath.Prepare(ref searchContext);
 
 					// When using a heuristic, break ties using the H score.
 					// When not using a heuristic, break ties by the insertion order of the nodes.
 					// This will make paths a lot prettier, especially on grid graphs.
-					pathHandler.heap.tieBreaking = path.heuristicObjectiveInternal.hasHeuristic ? BinaryHeap.TieBreaking.HScore : BinaryHeap.TieBreaking.InsertionOrder;
+					pathHandler.heap.tieBreaking = searchContext.heuristicObjective.hasHeuristic ? BinaryHeap.TieBreaking.HScore : BinaryHeap.TieBreaking.InsertionOrder;
 					MarkerPreparePath.End();
 
 
 					if (path.CompleteState == PathCompleteState.NotCalculated) {
 						// For visualization purposes, we set the last computed path to p, so we can view debug info on it in the editor (scene view).
-						astar.debugPathData = ipath.PathHandler;
-						astar.debugPathID = path.pathID;
+						astar.debugPathData = pathHandler;
+						astar.debugPathID = searchContext.pathID;
 
 						// Loop while the path has not been fully calculated
 						while (path.CompleteState == PathCompleteState.NotCalculated) {
 							// Do some work on the path calculation.
 							// The function will return when it has taken too much time
 							// or when it has finished calculation
-							ipath.CalculateStep(targetTick);
+							ipath.CalculateStep(ref searchContext, targetTick);
 
 							targetTick = System.DateTime.UtcNow.Ticks + maxTicks;
 
@@ -357,14 +363,14 @@ namespace Pathfinding {
 					}
 
 					// Cleans up node tagging and other things
-					ipath.Cleanup();
+					ipath.Cleanup(ref searchContext);
 					pathHandler.heap.Clear(pathHandler.pathNodes);
 
 
 					if (path.immediateCallback != null) path.immediateCallback(path);
 
 					if (OnPathPostSearch != null) {
-						OnPathPostSearch(path);
+						OnPathPostSearch(pathHandler, path);
 					}
 
 					// Push the path onto the return stack
@@ -450,26 +456,32 @@ namespace Pathfinding {
 				long startTicks = System.DateTime.UtcNow.Ticks;
 				long totalTicks = 0;
 
-				ip.Prepare();
+				var searchContext = new Path.SearchContext {
+					pathHandler = pathHandler,
+					path = p,
+					pathID = p.pathID,
+				};
+
+				ip.Prepare(ref searchContext);
 
 				// When using a heuristic, break ties using the H score.
 				// When not using a heuristic, break ties by the insertion order of the nodes.
 				// This will make paths a lot prettier, especially on grid graphs.
-				pathHandler.heap.tieBreaking = p.heuristicObjectiveInternal.hasHeuristic ? BinaryHeap.TieBreaking.HScore : BinaryHeap.TieBreaking.InsertionOrder;
+				pathHandler.heap.tieBreaking = searchContext.heuristicObjective.hasHeuristic ? BinaryHeap.TieBreaking.HScore : BinaryHeap.TieBreaking.InsertionOrder;
 
 				// Check if the Prepare call caused the path to complete
 				// If this happens the path usually failed
 				if (p.CompleteState == PathCompleteState.NotCalculated) {
 					// For debug uses, we set the last computed path to p, so we can view debug info on it in the editor (scene view).
-					astar.debugPathData = ip.PathHandler;
-					astar.debugPathID = p.pathID;
+					astar.debugPathData = searchContext.pathHandler;
+					astar.debugPathID = searchContext.pathID;
 
 					// The error can turn up in the Init function
 					while (p.CompleteState == PathCompleteState.NotCalculated) {
 						// Run some pathfinding calculations.
 						// The function will return when it has taken too much time
 						// or when it has finished calculating the path.
-						ip.CalculateStep(targetTick);
+						ip.CalculateStep(ref searchContext, targetTick);
 
 
 						// If the path has finished calculating, we can break here directly instead of sleeping
@@ -502,7 +514,7 @@ namespace Pathfinding {
 				}
 
 				// Cleans up node tagging and other things
-				ip.Cleanup();
+				ip.Cleanup(ref searchContext);
 				pathHandler.heap.Clear(pathHandler.pathNodes);
 
 
@@ -514,7 +526,7 @@ namespace Pathfinding {
 
 				// It needs to be stored in a local variable to avoid race conditions
 				var tmpOnPathPostSearch = OnPathPostSearch;
-				if (tmpOnPathPostSearch != null) tmpOnPathPostSearch(p);
+				if (tmpOnPathPostSearch != null) tmpOnPathPostSearch(pathHandler, p);
 
 
 				// Push the path onto the return stack

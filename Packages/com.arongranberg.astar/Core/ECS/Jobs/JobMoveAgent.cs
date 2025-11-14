@@ -11,14 +11,9 @@ namespace Pathfinding.ECS {
 	public partial struct JobMoveAgent : IJobEntity {
 		public float dt;
 
-		static void UpdateVelocityEstimate (ref LocalTransform transform, ref MovementStatistics movementStatistics, float dt) {
-			if (dt > 0.000001f) {
-				movementStatistics.estimatedVelocity = (transform.Position - movementStatistics.lastPosition) / dt;
-			}
-		}
-
-		static void ResolveRotation (ref LocalTransform transform, ref MovementState state, in ResolvedMovement resolvedMovement, in MovementSettings movementSettings, in AgentMovementPlane movementPlane, float dt) {
-			var currentRotation = movementPlane.value.ToPlane(transform.Rotation);
+		/// <summary>Calculates the final rotation for the agent on this simulation step, based on the <see cref="ResolvedMovement"/> component</summary>
+		public static quaternion ResolveRotation (quaternion rotation, ref MovementState state, in ResolvedMovement resolvedMovement, in MovementSettings movementSettings, in AgentMovementPlane movementPlane, float dt) {
+			var currentRotation = movementPlane.value.ToPlane(rotation);
 			var currentInternalRotation = currentRotation - state.rotationOffset - state.rotationOffset2;
 			var deltaRotation = math.clamp(AstarMath.DeltaAngle(currentInternalRotation, resolvedMovement.targetRotation), -resolvedMovement.rotationSpeed * dt, resolvedMovement.rotationSpeed * dt);
 			var extraRotationSpeed = math.radians(movementSettings.follower.maxRotationSpeed) * 0.5f;
@@ -54,13 +49,14 @@ namespace Pathfinding.ECS {
 				state.rotationOffset2 += math.clamp(-state.rotationOffset2, -extraRotationSpeed * dt, extraRotationSpeed * dt);
 			}
 
-			transform.Rotation = movementPlane.value.ToWorldRotation(newInternalRotation + state.rotationOffset + state.rotationOffset2);
+			return movementPlane.value.ToWorldRotation(newInternalRotation + state.rotationOffset + state.rotationOffset2);
 		}
 
-		public static float3 MoveWithoutGravity (ref LocalTransform transform, in ResolvedMovement resolvedMovement, in AgentMovementPlane movementPlane, float dt) {
+		/// <summary>Calculates the amount the agent should move during this simulation step, based on the <see cref="ResolvedMovement"/> component</summary>
+		public static float3 MoveWithoutGravity (float3 position, in ResolvedMovement resolvedMovement, in AgentMovementPlane movementPlane, float dt) {
 			UnityEngine.Assertions.Assert.IsTrue(math.all(math.isfinite(resolvedMovement.targetPoint)));
 			// Move only along the movement plane
-			var localDir = movementPlane.value.ToPlane(resolvedMovement.targetPoint - transform.Position);
+			var localDir = movementPlane.value.ToPlane(resolvedMovement.targetPoint - position);
 			var magn = math.length(localDir);
 			var localDelta = math.select(localDir, localDir * math.clamp(resolvedMovement.speed * dt / magn, 0, 1.0f), magn > 0.0001f);
 			var delta = movementPlane.value.ToWorld(localDelta, 0);
@@ -84,7 +80,7 @@ namespace Pathfinding.ECS {
 		}
 
 		public static void MoveAgent (ref LocalTransform transform, in AgentCylinderShape shape, in AgentMovementPlane movementPlane, ref MovementState state, in MovementSettings movementSettings, in ResolvedMovement resolvedMovement, ref MovementStatistics movementStatistics, float dt) {
-			var delta = MoveWithoutGravity(ref transform, in resolvedMovement, in movementPlane, dt);
+			var delta = MoveWithoutGravity(transform.Position, in resolvedMovement, in movementPlane, dt);
 			UnityEngine.Assertions.Assert.IsTrue(math.all(math.isfinite(delta)), "Refusing to set the agent's position to a non-finite vector");
 			transform.Position += delta;
 			// In 2D games, the agent may move slightly in the Z direction, due to floating point errors.
@@ -92,9 +88,7 @@ namespace Pathfinding.ECS {
 			if (math.abs(transform.Position.z) < 0.00001f) transform.Position.z = 0;
 
 			ResolvePositionSmoothing(delta, ref state, in movementSettings, dt);
-			ResolveRotation(ref transform, ref state, in resolvedMovement, in movementSettings, in movementPlane, dt);
-			UpdateVelocityEstimate(ref transform, ref movementStatistics, dt);
-			movementStatistics.lastPosition = transform.Position;
+			transform.Rotation = ResolveRotation(transform.Rotation, ref state, in resolvedMovement, in movementSettings, in movementPlane, dt);
 		}
 	}
 }

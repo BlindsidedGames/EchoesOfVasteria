@@ -1,6 +1,4 @@
 #if MODULE_ENTITIES
-using Pathfinding.Drawing;
-using Pathfinding.Util;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -15,7 +13,6 @@ namespace Pathfinding.ECS {
 		public NativeArray<RaycastHit> raycastHits;
 		[ReadOnly]
 		public NativeArray<RaycastCommand> raycastCommands;
-		public CommandBuilder draw;
 		public float dt;
 
 		void ResolveGravity (RaycastHit hit, bool grounded, ref LocalTransform transform, in AgentMovementPlane movementPlane, ref GravityState gravityState) {
@@ -51,7 +48,7 @@ namespace Pathfinding.ECS {
 
 		public void Execute (ref LocalTransform transform, in MovementSettings movementSettings, ref AgentMovementPlane movementPlane, ref GravityState gravityState, in AgentMovementPlaneSource movementPlaneSource, [Unity.Entities.EntityIndexInQuery] int entityIndexInQuery) {
 			var hit = raycastHits[entityIndexInQuery];
-			var hitAnything = math.any((float3)hit.normal != 0f);
+			var hitAnything = hit.colliderInstanceID != 0;
 			if (hitAnything && movementPlaneSource.value == MovementPlaneSource.Raycast) {
 				movementPlane.value = movementPlane.value.MatchUpDirection(hit.normal);
 			}

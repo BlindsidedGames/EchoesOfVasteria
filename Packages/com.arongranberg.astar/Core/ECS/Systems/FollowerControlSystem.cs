@@ -74,9 +74,12 @@ namespace Pathfinding.ECS {
 		}
 
 		public void OnUpdate (ref SystemState systemState) {
-			if (AstarPath.active != null) {
-				ProcessControlLoop(ref systemState, AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime);
-			}
+			if (AstarPath.active == null) return;
+
+			// Skip system if there are no ECS agents that need movement control
+			if (SystemAPI.QueryBuilder().WithAll<MovementState>().Build().IsEmptyIgnoreFilter) return;
+
+			ProcessControlLoop(ref systemState, AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime);
 		}
 
 		void ProcessControlLoop (ref SystemState systemState, float dt) {

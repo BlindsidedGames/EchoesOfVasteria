@@ -15,6 +15,16 @@ namespace Pathfinding {
 		bool tagPenaltiesOpen;
 		bool legend = false;
 
+		static readonly GUIContent[] PositionSyncOptions = new [] {
+			new GUIContent("Move independently of transform"),
+			new GUIContent("Move agent with transform")
+		};
+
+		static readonly GUIContent[] RotationSyncOptions = new [] {
+			new GUIContent("Rotate independently of transform"),
+			new GUIContent("Rotate agent with transform")
+		};
+
 		protected override void OnDisable () {
 			base.OnDisable();
 			EditorPrefs.SetBool("FollowerEntity.debug", debug);
@@ -55,70 +65,135 @@ namespace Pathfinding {
 			debug = EditorGUILayout.Foldout(debug, "Debug info");
 			if (debug) {
 				EditorGUI.indentLevel++;
-				EditorGUI.BeginDisabledGroup(true);
-				if (targets.Length == 1) {
-					var ai = target as FollowerEntity;
-					EditorGUILayout.Toggle("Reached Destination", ai.reachedDestination);
-					EditorGUILayout.Toggle("Reached End Of Path", ai.reachedEndOfPath);
-					if (ai.enableLocalAvoidance) {
-						EditorGUILayout.Toggle("Reached (maybe crowded) End Of Path", ai.reachedCrowdedEndOfPath);
-					}
-					EditorGUILayout.Toggle("Has Path", ai.hasPath);
-					EditorGUILayout.Toggle("Path Pending", ai.pathPending);
-					if (ai.isTraversingOffMeshLink) {
-						EditorGUILayout.Toggle("Traversing Off-Mesh Link", true);
-					}
-					if (ai.isStopped) {
-						EditorGUILayout.Toggle("IsStopped (user controlled)", ai.isStopped);
-					}
-					EditorGUI.EndDisabledGroup();
+				DebugInspectorContents();
+				EditorGUI.indentLevel--;
+			}
+		}
 
-					var newDestination = EditorGUILayout.Vector3Field("Destination", ai.destination);
-					if (ai.entityExists) ai.destination = newDestination;
+		void DebugInspectorContents () {
+			EditorGUI.BeginDisabledGroup(true);
 
-					EditorGUI.BeginDisabledGroup(true);
-					EditorGUILayout.LabelField("Remaining Distance", ai.remainingDistance.ToString("0.00"));
-					EditorGUILayout.LabelField("Speed", ai.velocity.magnitude.ToString("0.00"));
+			if (!Application.isPlaying) {
+				EditorGUILayout.HelpBox("Debug info is only available while playing.", MessageType.Info);
+				return;
+			}
+
+			if (targets.Length == 1) {
+				var ai = target as FollowerEntity;
+
+				if (!ai.enabled) {
+					EditorGUILayout.HelpBox("FollowerEntity is disabled.", MessageType.Info);
+					return;
+				}
+
+				// The FollowerEntity could be baked, or have an internal entity
+				FollowerEntityProxy proxy;
+				if (ai.entityExists) {
+					proxy = new FollowerEntityProxy(ai.world, ai.entity);
 				} else {
-					int nReachedDestination = 0;
-					int nReachedEndOfPath = 0;
-					int nReachedCrowdedEndOfPath = 0;
-					int nPending = 0;
-					for (int i = 0; i < targets.Length; i++) {
-						var ai = targets[i] as FollowerEntity;
+					// For a baked entity, try to get the entities created from this authoring object
+					var ls = new Unity.Collections.NativeList<Entity>(Unity.Collections.Allocator.Temp);
+					var world = World.DefaultGameObjectInjectionWorld; // Guess the default world
+					world?.EntityManager.Debug.GetEntitiesForAuthoringObject(ai.gameObject, ls);
+
+					if (ls.Length == 0) {
+						EditorGUILayout.HelpBox("No entities found for this object. Cannot display debug info.", MessageType.Warning);
+						return;
+					} else if (ls.Length != 1) {
+						EditorGUILayout.HelpBox("Multiple entities found for this object. Cannot display debug info.", MessageType.Warning);
+						return;
+					}
+
+					proxy = new FollowerEntityProxy(world, ls[0]);
+
+					if (!proxy.likelyHasReasonableComponents) {
+						EditorGUILayout.HelpBox("The entity is missing some required components.", MessageType.Warning);
+						return;
+					}
+				}
+
+				EditorGUILayout.Toggle("Reached Destination", proxy.reachedDestination);
+				EditorGUILayout.Toggle("Reached End Of Path", proxy.reachedEndOfPath);
+				if (proxy.enableLocalAvoidance) {
+					EditorGUILayout.Toggle("Reached (maybe crowded) End Of Path", proxy.reachedCrowdedEndOfPath);
+				}
+				EditorGUILayout.Toggle("Has Path", proxy.hasPath);
+				EditorGUILayout.Toggle("Path Pending", proxy.pathPending);
+				if (proxy.isTraversingOffMeshLink) {
+					EditorGUILayout.Toggle("Traversing Off-Mesh Link", true);
+				}
+				if (proxy.isStopped) {
+					EditorGUILayout.Toggle("IsStopped (user controlled)", proxy.isStopped);
+				}
+				EditorGUI.EndDisabledGroup();
+
+				EditorGUI.BeginChangeCheck();
+				var newDestination = EditorGUILayout.Vector3Field("Destination", proxy.destination);
+				if (EditorGUI.EndChangeCheck() && proxy.entityExists) proxy.SetDestination(newDestination, proxy.destinationFacingDirection);
+
+				EditorGUI.BeginDisabledGroup(true);
+				EditorGUILayout.LabelField("Remaining Distance", proxy.remainingDistance.ToString("0.00"));
+				EditorGUILayout.LabelField("Speed", proxy.velocity.magnitude.ToString("0.00"));
+			} else {
+				var ls = new Unity.Collections.NativeList<Entity>(Unity.Collections.Allocator.Temp);
+				var world = World.DefaultGameObjectInjectionWorld; // Guess the default world
+
+				int nReachedDestination = 0;
+				int nReachedEndOfPath = 0;
+				int nReachedCrowdedEndOfPath = 0;
+				int nPending = 0;
+				int nBaked = 0;
+				for (int i = 0; i < targets.Length; i++) {
+					var ai = targets[i] as FollowerEntity;
+
+					var origCount = ls.Length;
+					world?.EntityManager.Debug.GetEntitiesForAuthoringObject(targets[i], ls);
+					if (ls.Length == origCount) {
+						if (ai.reachedDestination) nReachedDestination++;
+						if (ai.reachedEndOfPath) nReachedEndOfPath++;
+						if (ai.reachedCrowdedEndOfPath) nReachedCrowdedEndOfPath++;
+						if (ai.pathPending) nPending++;
+					} else {
+						nBaked++;
+					}
+				}
+				if (nBaked == ls.Length) {
+					for (int i = 0; i < ls.Length; i++) {
+						var ai = new FollowerEntityProxy(world, ls[i]);
 						if (ai.reachedDestination) nReachedDestination++;
 						if (ai.reachedEndOfPath) nReachedEndOfPath++;
 						if (ai.reachedCrowdedEndOfPath) nReachedCrowdedEndOfPath++;
 						if (ai.pathPending) nPending++;
 					}
-					EditorGUILayout.LabelField("Reached Destination", nReachedDestination + " of " + targets.Length);
-					EditorGUILayout.LabelField("Reached End Of Path", nReachedEndOfPath + " of " + targets.Length);
-					EditorGUILayout.LabelField("Reached (maybe crowded) End Of Path", nReachedCrowdedEndOfPath + " of " + targets.Length);
-					EditorGUILayout.LabelField("Path Pending", nPending + " of " + targets.Length);
+				} else {
+					EditorGUILayout.HelpBox("Some authoring script baked multiple entities. Cannot determine which ones are relevant. Cannot display debug info.", MessageType.Warning);
+					return;
+				}
+				EditorGUILayout.LabelField("Reached Destination", nReachedDestination + " of " + targets.Length);
+				EditorGUILayout.LabelField("Reached End Of Path", nReachedEndOfPath + " of " + targets.Length);
+				EditorGUILayout.LabelField("Reached (maybe crowded) End Of Path", nReachedCrowdedEndOfPath + " of " + targets.Length);
+				EditorGUILayout.LabelField("Path Pending", nPending + " of " + targets.Length);
+			}
+			EditorGUI.EndDisabledGroup();
+
+			legend = EditorGUILayout.Foldout(legend, "Debug rendering legend");
+			if (legend) {
+				EditorGUI.indentLevel++;
+				EditorGUI.BeginDisabledGroup(true);
+				Section("General");
+				EditorGUILayout.ColorField("Destination", Color.blue);
+				EditorGUILayout.ColorField("Path", JobDrawFollowerGizmos.Path);
+
+				var debugRendering = (Pathfinding.PID.PIDMovement.DebugFlags)FindProperty("movement.debugFlags").intValue;
+				if ((debugRendering & PID.PIDMovement.DebugFlags.Rotation) != 0) {
+					Section("Rotation");
+					EditorGUILayout.ColorField("Visual Rotation", JobDrawFollowerGizmos.VisualRotationColor);
+					EditorGUILayout.ColorField("Unsmoothed Rotation", JobDrawFollowerGizmos.UnsmoothedRotation);
+					EditorGUILayout.ColorField("Internal Rotation", JobDrawFollowerGizmos.InternalRotation);
+					EditorGUILayout.ColorField("Target Internal Rotation", JobDrawFollowerGizmos.TargetInternalRotation);
+					EditorGUILayout.ColorField("Target Internal Rotation Hint", JobDrawFollowerGizmos.TargetInternalRotationHint);
 				}
 				EditorGUI.EndDisabledGroup();
-
-				legend = EditorGUILayout.Foldout(legend, "Debug rendering legend");
-				if (legend) {
-					EditorGUI.indentLevel++;
-					EditorGUI.BeginDisabledGroup(true);
-					Section("General");
-					EditorGUILayout.ColorField("Destination", Color.blue);
-					EditorGUILayout.ColorField("Path", JobDrawFollowerGizmos.Path);
-
-					var debugRendering = (Pathfinding.PID.PIDMovement.DebugFlags)FindProperty("movement.debugFlags").intValue;
-					if ((debugRendering & PID.PIDMovement.DebugFlags.Rotation) != 0) {
-						Section("Rotation");
-						EditorGUILayout.ColorField("Visual Rotation", JobDrawFollowerGizmos.VisualRotationColor);
-						EditorGUILayout.ColorField("Unsmoothed Rotation", JobDrawFollowerGizmos.UnsmoothedRotation);
-						EditorGUILayout.ColorField("Internal Rotation", JobDrawFollowerGizmos.InternalRotation);
-						EditorGUILayout.ColorField("Target Internal Rotation", JobDrawFollowerGizmos.TargetInternalRotation);
-						EditorGUILayout.ColorField("Target Internal Rotation Hint", JobDrawFollowerGizmos.TargetInternalRotationHint);
-						EditorGUI.EndDisabledGroup();
-						EditorGUI.indentLevel--;
-					}
-				}
-
 				EditorGUI.indentLevel--;
 			}
 		}
@@ -129,13 +204,13 @@ namespace Pathfinding {
 				EditorGUILayout.HelpBox("Custom traversal provider active", MessageType.None);
 			}
 
-			PropertyField("managedState.pathfindingSettings.graphMask", "Traversable Graphs");
+			PropertyField("managedSettings.pathfindingSettings.graphMask", "Traversable Graphs");
 
 			tagPenaltiesOpen = EditorGUILayout.Foldout(tagPenaltiesOpen, new GUIContent("Tags", "Settings for each tag"));
 			if (tagPenaltiesOpen) {
 				EditorGUI.indentLevel++;
 				var traversableTags = this.targets.Select(s => (s as FollowerEntity).pathfindingSettings.traversableTags).ToArray();
-				SeekerEditor.TagsEditor(FindProperty("managedState.pathfindingSettings.tagPenalties"), traversableTags);
+				SeekerEditor.TagsEditor(FindProperty("managedSettings.pathfindingSettings.tagCostMultipliers"), FindProperty("managedSettings.pathfindingSettings.tagEntryCosts"), traversableTags);
 				for (int i = 0; i < targets.Length; i++) {
 					(targets[i] as FollowerEntity).pathfindingSettings.traversableTags = traversableTags[i];
 				}
@@ -171,7 +246,7 @@ namespace Pathfinding {
 			FloatField("movement.follower.leadInRadiusWhenApproachingDestination", min: 0f);
 			FloatField("movement.follower.desiredWallDistance", min: 0f);
 
-			if (!is2D && PropertyField("managedState.enableGravity", "Gravity")) {
+			if (!is2D && PropertyField("enableGravityBacking", "Gravity")) {
 				EditorGUI.indentLevel++;
 				PropertyField("movement.groundMask", "Raycast Ground Mask");
 				EditorGUI.indentLevel--;
@@ -188,26 +263,39 @@ namespace Pathfinding {
 				}
 			}
 
-			this.Popup("syncPosition", new [] { new GUIContent("Move independently of transform"), new GUIContent("Move agent with transform") }, "Position Sync");
-			this.Popup("syncRotation", new [] { new GUIContent("Rotate independently of transform"), new GUIContent("Rotate agent with transform") }, "Rotation Sync");
+			if ((target as MonoBehaviour).gameObject.scene.isSubScene) {
+				EditorGUI.BeginDisabledGroup(true);
+				EditorGUILayout.Popup(new GUIContent("Position Sync", "Position sync cannot be changed when the FollowerEntity is in a sub scene"), 0, PositionSyncOptions);
+				EditorGUILayout.Popup(new GUIContent("Rotation Sync", "Rotation sync cannot be changed when the FollowerEntity is in a sub scene"), 0, RotationSyncOptions);
+				EditorGUI.EndDisabledGroup();
+			} else {
+				this.Popup("syncPosition", PositionSyncOptions, "Position Sync");
+				this.Popup("syncRotation", RotationSyncOptions, "Rotation Sync");
+			}
 
 			Section("Pathfinding");
 			PathfindingSettingsInspector();
 			AutoRepathInspector();
 
 
-			if (SectionEnableable("Local Avoidance", "managedState.enableLocalAvoidance")) {
+			if (SectionEnableable("Local Avoidance", "enableLocalAvoidanceBacking")) {
 				if (Application.isPlaying && RVOSimulator.active == null && !EditorUtility.IsPersistent(target)) {
 					EditorGUILayout.HelpBox("There is no enabled RVOSimulator component in the scene. A single global RVOSimulator component is required for local avoidance.", MessageType.Warning);
 				}
-				FloatField("managedState.rvoSettings.agentTimeHorizon", min: 0f, max: 20.0f);
-				FloatField("managedState.rvoSettings.obstacleTimeHorizon", min: 0f, max: 20.0f);
-				PropertyField("managedState.rvoSettings.maxNeighbours");
-				ClampInt("managedState.rvoSettings.maxNeighbours", min: 0, max: SimulatorBurst.MaxNeighbourCount);
-				PropertyField("managedState.rvoSettings.layer");
-				PropertyField("managedState.rvoSettings.collidesWith");
-				Slider("managedState.rvoSettings.priority", left: 0f, right: 1.0f);
-				PropertyField("managedState.rvoSettings.locked");
+				if (targets.Length == 1) {
+					var ai = target as FollowerEntity;
+					if (ai.localAvoidanceTemporarilyDisabled) {
+						EditorGUILayout.HelpBox("Local avoidance is temporarily disabled while traversing an off-mesh link.", MessageType.Warning);
+					}
+				}
+				FloatField("rvoSettingsBacking.agentTimeHorizon", min: 0f, max: 20.0f);
+				FloatField("rvoSettingsBacking.obstacleTimeHorizon", min: 0f, max: 20.0f);
+				PropertyField("rvoSettingsBacking.maxNeighbours");
+				ClampInt("rvoSettingsBacking.maxNeighbours", min: 0, max: SimulatorBurst.MaxNeighbourCount);
+				PropertyField("rvoSettingsBacking.layer");
+				PropertyField("rvoSettingsBacking.collidesWith");
+				Slider("rvoSettingsBacking.priority", left: 0f, right: 1.0f);
+				PropertyField("rvoSettingsBacking.locked");
 
 				if (targets.Length == 1) {
 					var ai = target as FollowerEntity;
@@ -227,13 +315,26 @@ namespace Pathfinding {
 
 			Section("Debug");
 			PropertyField("movement.debugFlags", "Movement Debug Rendering");
-			PropertyField("managedState.rvoSettings.debug", "Local Avoidance Debug Rendering");
+			PropertyField("rvoSettingsBacking.debug", "Local Avoidance Debug Rendering");
 			DebugInspector();
 
 			if (EditorGUI.EndChangeCheck()) {
 				for (int i = 0; i < targets.Length; i++) {
 					var script = targets[i] as FollowerEntity;
 					script.SyncWithEntity();
+				}
+			}
+		}
+
+		public void OnSceneGUI () {
+			if (EditorApplication.isPaused) {
+				var script = target as FollowerEntity;
+				if (script.position != script.transform.position && script.updatePosition) {
+					// Force sync the position with the entity.
+					// The user may have moved the entity in the scene view.
+					// If the game is paused, we still want the entity to be in the correct position immediately,
+					// in order to draw gizmos correctly.
+					script.position = script.transform.position;
 				}
 			}
 		}

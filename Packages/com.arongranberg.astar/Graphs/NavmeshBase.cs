@@ -99,12 +99,12 @@ namespace Pathfinding {
 		/// This can be important on sloped surfaces. See the image below in which the closest point for each blue point is queried for:
 		/// [Open online documentation to see images]
 		///
-		/// You can also control this using a <see cref="Pathfinding.NNConstraint.distanceXZ field on an NNConstraint"/>.
+		/// You can also control this using a <see cref="NearestNodeConstraint.distanceMetric"/>.
 		///
-		/// Deprecated: Set the appropriate fields on the NNConstraint instead.
+		/// Deprecated: Set the appropriate fields on the NearestNodeConstraint instead.
 		/// </summary>
 		[JsonMember]
-		[System.Obsolete("Set the appropriate fields on the NNConstraint instead")]
+		[System.Obsolete("Set the appropriate fields on the NearestNodeConstraint instead")]
 		public bool nearestSearchOnlyXZ;
 
 		/// <summary>
@@ -400,6 +400,19 @@ namespace Pathfinding {
 			}
 		}
 
+		public override void GetNodes<T>(GraphNode.NodeActionWithData<T> action, ref T data) {
+			if (tiles == null) return;
+
+			for (int i = 0; i < tiles.Length; i++) {
+				if (tiles[i] == null || tiles[i].x+tiles[i].z*tileXCount != i) continue;
+				TriangleMeshNode[] nodes = tiles[i].nodes;
+
+				if (nodes == null) continue;
+
+				for (int j = 0; j < nodes.Length; j++) action(nodes[j], ref data);
+			}
+		}
+
 		/// <summary>
 		/// Returns a rect containing the indices of all tiles touching the specified bounds.
 		/// If a margin is passed, the bounding box in graph space is expanded by that amount in every direction.
@@ -453,15 +466,15 @@ namespace Pathfinding {
 			}
 		}
 
-		public override float NearestNodeDistanceSqrLowerBound (Vector3 position, NNConstraint constraint) {
+		public override float NearestNodeDistanceSqrLowerBound (Vector3 position, ref NearestNodeConstraint constraint) {
 			if (tiles == null) return float.PositiveInfinity;
 
 			var localPosition = (float3)transform.InverseTransform(position);
-			var projection = new BBTree.ProjectionParams(constraint, transform);
+			var projection = new BBTree.ProjectionParams(ref constraint.distanceMetric, transform);
 			return projection.SquaredRectPointDistanceOnPlane(new IntRect(0, 0, (int)(Int3.Precision * tileXCount * TileWorldSizeX), (int)(Int3.Precision * tileZCount * TileWorldSizeZ)), localPosition);
 		}
 
-		public override NNInfo GetNearest (Vector3 position, NNConstraint constraint, float maxDistanceSqr) {
+		public override NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 			if (tiles == null) return NNInfo.Empty;
 
 			var localPosition = (float3)transform.InverseTransform(position);
@@ -476,8 +489,8 @@ namespace Pathfinding {
 			int wmax = Math.Max(tileXCount, tileZCount);
 
 			var best = NNInfo.Empty;
-			float bestDistanceSq = maxDistanceSqr;
-			var projection = new BBTree.ProjectionParams(constraint, transform);
+			float maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+			var projection = new BBTree.ProjectionParams(ref constraint.distanceMetric, transform);
 
 			var tileSize = Math.Min(TileWorldSizeX, TileWorldSizeX);
 			// Search outwards in a diamond pattern from the closest tile
@@ -502,8 +515,8 @@ namespace Pathfinding {
 						if (x >= 0 && x < tileXCount) {
 							NavmeshTile tile = tiles[x + z*tileXCount];
 
-							if (tile != null && tile.bbTree.DistanceSqrLowerBound(localPosition, in projection) <= bestDistanceSq) {
-								tile.bbTree.QueryClosest(localPosition, constraint, in projection, ref bestDistanceSq, ref best, tile.nodes, tile.tris, tile.vertsInGraphSpace);
+							if (tile != null && tile.bbTree.DistanceSqrLowerBound(localPosition, in projection) <= maxDistanceSqr) {
+								tile.bbTree.QueryClosest(localPosition, ref constraint, in projection, ref maxDistanceSqr, ref best, tile.nodes, tile.tris, tile.vertsInGraphSpace);
 							}
 						}
 
@@ -518,7 +531,7 @@ namespace Pathfinding {
 				// Note that even if distanceLimit=0 we should run at least one iteration of the loop.
 				var nextW = w+1;
 				var distanceThreshold = math.max(0, nextW-2)*tileSize;
-				if (projection.alignedWithXZPlane && bestDistanceSq - 0.00001f <= distanceThreshold*distanceThreshold) break;
+				if (projection.alignedWithXZPlane && maxDistanceSqr - 0.00001f <= distanceThreshold*distanceThreshold) break;
 			}
 
 			// Transform the closest point from graph space to world space
@@ -526,9 +539,9 @@ namespace Pathfinding {
 			return best;
 		}
 
-		public override NNInfo RandomPointOnSurface (NNConstraint nnConstraint = null, bool highQuality = true) {
+		public override NNInfo RandomPointOnSurface (NearestNodeConstraint constraint, bool highQuality = true) {
 			if (highQuality) {
-				return base.RandomPointOnSurface(nnConstraint, highQuality);
+				return base.RandomPointOnSurface(constraint, highQuality);
 			} else {
 				if (!isScanned || tiles.Length == 0) return NNInfo.Empty;
 
@@ -538,7 +551,7 @@ namespace Pathfinding {
 					var tile = tiles[(tileIndex + i) % tiles.Length];
 					if (tile.nodes.Length == 0) continue;
 					var node = tile.nodes[UnityEngine.Random.Range(0, tile.nodes.Length)];
-					if (nnConstraint == null || nnConstraint.Suitable(node)) {
+					if (constraint.Suitable(node)) {
 						return new NNInfo(node, node.RandomPointOnSurface(), 0);
 					}
 				}
@@ -564,19 +577,38 @@ namespace Pathfinding {
 		/// See: <see cref="GetNearest"/>
 		///
 		/// See: <see cref="IsPointOnNavmesh"/>, if you only need to know if the point is on the navmesh or not.
+		/// Deprecated: Use the overload that takes a NearestNodeConstraint instead. See the migration guide for version 5.4 for more details.
 		/// </summary>
+		[System.Obsolete("Use the overload that takes a NearestNodeConstraint instead. See the migration guide for version 5.4 for more details.")]
 		public GraphNode PointOnNavmesh (Vector3 position, NNConstraint constraint) {
+			return PointOnNavmesh(position, constraint.ToNearestNodeConstraint());
+		}
+
+		/// <summary>
+		/// Finds the first node which contains position.
+		/// "Contains" is defined as position is inside the triangle node when seen from above.
+		/// In case of a multilayered environment, the closest node which contains the point is returned.
+		///
+		/// Returns null if there was no node containing the point. This serves as a quick
+		/// check for "is this point on the navmesh or not".
+		///
+		/// Note that the behaviour of this method is distinct from the GetNearest method.
+		/// The GetNearest method will return the closest node to a point,
+		/// which is not necessarily the one which contains it when seen from above.
+		///
+		/// Uses <see cref="NearestNodeConstraint.distanceMetric"/> to define the "up" direction. The up direction of the graph will be used if it is not set.
+		/// The up direction defines what "inside" a node means. A point is inside a node if it is inside the triangle when seen from above.
+		///
+		/// See: <see cref="GetNearest"/>
+		///
+		/// See: <see cref="IsPointOnNavmesh"/>, if you only need to know if the point is on the navmesh or not.
+		/// </summary>
+		public GraphNode PointOnNavmesh (Vector3 position, NearestNodeConstraint constraint) {
 			if (tiles == null) return null;
-			// TODO: Kinda ugly to modify the NNConstraint here
-			// This is not ideal, especially if the query is being done on a separate thread
-			constraint = constraint ?? NNConstraint.None;
-			var prevDistanceMetric = constraint.distanceMetric;
-			if (!constraint.distanceMetric.isProjectedDistance) {
-				constraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
-			}
+			constraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
 			constraint.distanceMetric.distanceScaleAlongProjectionDirection = 0;
-			var result = GetNearest(position, constraint, 0).node;
-			constraint.distanceMetric = prevDistanceMetric;
+			constraint.maxDistanceSqr = 0;
+			var result = GetNearest(position, ref constraint).node;
 			return result;
 		}
 
@@ -1072,7 +1104,7 @@ namespace Pathfinding {
 			if (tris.Length % 3 != 0) throw new System.ArgumentException("Triangle array's length must be a multiple of 3 (tris)");
 			if (tags.Length > 0 && tags.Length != tris.Length / 3) throw new System.ArgumentException("Triangle array must be 3 times the size of the tags array");
 			if (verts.Length > VertexIndexMask) {
-				Debug.LogError("Too many vertices in the tile (" + verts.Length + " > " + VertexIndexMask +")\nYou can enable ASTAR_RECAST_LARGER_TILES under the 'Optimizations' tab in the A* Inspector to raise this limit. Or you can use a smaller tile size to reduce the likelihood of this happening.");
+				Debug.LogError("Too many vertices in the tile (" + verts.Length + " > " + VertexIndexMask +")\nYou can enable ASTAR_RECAST_LARGER_TILES under the 'Optimizations' tab in the A* Inspector to raise this limit. Or you can use a higher simplification level (RecastGraph.contourMaxError) or a smaller tile size to reduce the likelihood of this happening (a tile size between 64 and 256 is recommended, but you can go outside it if necessary). The affected tile will be left empty.");
 				verts = default;
 				tris = default;
 			}
@@ -1112,8 +1144,8 @@ namespace Pathfinding {
 				graph = this,
 			};
 
-			if (!Mathf.Approximately(x*TileWorldSizeX*Int3.FloatPrecision, (float)Math.Round(x*TileWorldSizeX*Int3.FloatPrecision))) Debug.LogWarning("Possible numerical imprecision. Consider adjusting tileSize and/or cellSize");
-			if (!Mathf.Approximately(z*TileWorldSizeZ*Int3.FloatPrecision, (float)Math.Round(z*TileWorldSizeZ*Int3.FloatPrecision))) Debug.LogWarning("Possible numerical imprecision. Consider adjusting tileSize and/or cellSize");
+			if (!Mathf.Approximately(x*TileWorldSizeX*Int3.FloatPrecision, (float)Math.Round(x*TileWorldSizeX*Int3.FloatPrecision))) Debug.LogWarning("Possible numerical imprecision. Consider adjusting tile size and/or voxel size");
+			if (!Mathf.Approximately(z*TileWorldSizeZ*Int3.FloatPrecision, (float)Math.Round(z*TileWorldSizeZ*Int3.FloatPrecision))) Debug.LogWarning("Possible numerical imprecision. Consider adjusting tile size and/or voxel size");
 
 			Profiler.BeginSample("Clear Previous Tiles");
 
@@ -1238,7 +1270,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1255,7 +1291,8 @@ namespace Pathfinding {
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo.</param>
 		/// <param name="hint">If you know which node the start point is on, you can pass it here to save a GetNearest call, resulting in a minor performance boost. Otherwise, pass null. The start point will be clamped to the surface of this node.</param>
 		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit) {
-			return Linecast(this, start, end, hint, out hit, null);
+			var constraint = TraversalConstraint.None;
+			return Linecast(this, start, end, hint, out hit, ref constraint, null);
 		}
 
 		/// <summary>
@@ -1274,7 +1311,8 @@ namespace Pathfinding {
 		/// <param name="end">Point to linecast to. In world space.</param>
 		/// <param name="hint">If you know which node the start point is on, you can pass it here to save a GetNearest call, resulting in a minor performance boost. Otherwise, pass null. The start point will be clamped to the surface of this node.</param>
 		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint) {
-			return Linecast(this, start, end, hint, out var _hit, null);
+			var constraint = TraversalConstraint.None;
+			return Linecast(this, start, end, hint, out var _hit, ref constraint, null);
 		}
 
 		/// <summary>
@@ -1287,7 +1325,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1305,7 +1347,8 @@ namespace Pathfinding {
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses.</param>
 		/// <param name="hint">If you know which node the start point is on, you can pass it here to save a GetNearest call, resulting in a minor performance boost. Otherwise, pass null. The start point will be clamped to the surface of this node.</param>
 		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace) {
-			return Linecast(this, start, end, hint, out hit, trace);
+			var constraint = TraversalConstraint.None;
+			return Linecast(this, start, end, hint, out hit, ref constraint, trace);
 		}
 
 		/// <summary>
@@ -1318,7 +1361,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1334,10 +1381,9 @@ namespace Pathfinding {
 		/// <param name="end">Point to linecast to. In world space.</param>
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses.</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
-		public bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
-			return Linecast(this, start, end, null, out hit, trace, filter);
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. Note that already unwalkable nodes cannot be made walkable in this way.</param>
+		public bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace) {
+			return Linecast(this, start, end, null, out hit, ref traversalConstraint, trace);
 		}
 
 		/// <summary>
@@ -1350,7 +1396,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1366,11 +1416,10 @@ namespace Pathfinding {
 		/// <param name="end">Point to linecast to. In world space.</param>
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses.</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. Note that already unwalkable nodes cannot be made walkable in this way.</param>
 		/// <param name="hint">If you know which node the start point is on, you can pass it here to save a GetNearest call, resulting in a minor performance boost. Otherwise, pass null. The start point will be clamped to the surface of this node.</param>
-		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
-			return Linecast(this, start, end, hint, out hit, trace, filter);
+		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace) {
+			return Linecast(this, start, end, hint, out hit, ref traversalConstraint, trace);
 		}
 
 
@@ -1384,7 +1433,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1402,17 +1455,9 @@ namespace Pathfinding {
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo.</param>
 		/// <param name="hint">If you know which node the start point is on, you can pass it here to save a GetNearest call, resulting in a minor performance boost. Otherwise, pass null. The start point will be clamped to the surface of this node.</param>
 		public static bool Linecast (NavmeshBase graph, Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit) {
-			return Linecast(graph, start, end, hint, out hit, null);
+			var constraint = TraversalConstraint.None;
+			return Linecast(graph, start, end, hint, out hit, ref constraint, null);
 		}
-
-		/// <summary>Cached <see cref="NNConstraint.None"/> with distanceXZ=true to reduce allocations</summary>
-		static readonly NNConstraint NNConstraintNoneXZ = new NNConstraint {
-			constrainWalkability = false,
-			constrainArea = false,
-			constrainTags = false,
-			constrainDistance = false,
-			graphMask = -1,
-		};
 
 		/// <summary>Used to optimize linecasts by precomputing some values</summary>
 		static readonly byte[] LinecastShapeEdgeLookup;
@@ -1464,7 +1509,11 @@ namespace Pathfinding {
 		/// var start = transform.position;
 		/// var end = start + Vector3.forward * 10;
 		/// var trace = new List<GraphNode>();
-		/// if (graph.Linecast(start, end, out GraphHitInfo hit, trace, null)) {
+		///
+		/// var traversalConstraint = TraversalConstraint.None;
+		/// traversalConstraint.tags = 1 << 3; // Only allow traversing nodes with tag 3
+		///
+		/// if (graph.Linecast(start, end, out GraphHitInfo hit, ref traversalConstraint, trace)) {
 		///     Debug.Log("Linecast traversed " + trace.Count + " nodes before hitting an obstacle");
 		///     Debug.DrawLine(start, hit.point, Color.red);
 		///     Debug.DrawLine(hit.point, end, Color.blue);
@@ -1482,9 +1531,8 @@ namespace Pathfinding {
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo</param>
 		/// <param name="hint">If you already know the node which contains the origin point, you may pass it here for slighly improved performance. If null, a search for the closest node will be done.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes along the line up until it hits an obstacle or reaches the end.</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
-		public static bool Linecast (NavmeshBase graph, Vector3 origin, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter = null) {
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. Note that already unwalkable nodes cannot be made walkable in this way.</param>
+		public static bool Linecast (NavmeshBase graph, Vector3 origin, Vector3 end, GraphNode hint, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace) {
 			if (!graph.RecalculateNormals) {
 				throw new System.InvalidOperationException("The graph is configured to not recalculate normals. This is typically used for spherical navmeshes or other non-planar ones. Linecasts cannot be done on such navmeshes. Enable 'Recalculate Normals' on the navmesh graph if you want to use linecasts.");
 			}
@@ -1495,14 +1543,18 @@ namespace Pathfinding {
 			if (float.IsNaN(end.x + end.y + end.z)) throw new System.ArgumentException("end is NaN");
 
 			var node = hint as TriangleMeshNode;
-			NNConstraintNoneXZ.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
+			var nearestNodeConstraint = NearestNodeConstraint.None;
+			nearestNodeConstraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
+			nearestNodeConstraint.maxDistance = 0.001f;
 			if (node == null) {
-				var nn = graph.GetNearest(origin, NNConstraintNoneXZ);
+				var nn = graph.GetNearest(origin, ref nearestNodeConstraint);
 				node = nn.node as TriangleMeshNode;
 
-				if (node == null || nn.distanceCostSqr > 0.001f*0.001f) {
+				Assert.IsTrue(node == null || nn.distanceCostSqr <= nearestNodeConstraint.maxDistanceSqr);
+				if (node == null) {
 					hit.origin = origin;
 					hit.point = origin;
+					hit.tangentOrigin = hit.origin;
 					return true;
 				}
 			}
@@ -1511,7 +1563,7 @@ namespace Pathfinding {
 			var i3originInGraphSpace = node.ClosestPointOnNodeXZInGraphSpace(origin);
 			hit.origin = graph.transform.Transform((Vector3)i3originInGraphSpace);
 
-			if (!node.Walkable || (filter != null && !filter(node))) {
+			if (!traversalConstraint.CanTraverse(node)) {
 				hit.node = node;
 				hit.point = hit.origin;
 				hit.tangentOrigin = hit.origin;
@@ -1566,11 +1618,11 @@ namespace Pathfinding {
 					hit.point = end;
 					hit.node = node;
 
-					var endNode = graph.GetNearest(end, NNConstraintNoneXZ).node as TriangleMeshNode;
+					var endNode = graph.GetNearest(end, ref nearestNodeConstraint).node as TriangleMeshNode;
 					if (endNode == node || endNode == null) {
 						// We ended up at the right node.
 						// If endNode == null we also take this branch.
-						// That case may happen if a linecast is made to a point, but the point way a very large distance straight up into the air.
+						// That case may happen if a linecast is made to a point, but the point was a very large distance straight up into the air.
 						// The linecast may indeed reach the right point, but it's so far away up into the air that the GetNearest method will stop searching.
 						return false;
 					} else if (sideNodeExit == Side.Colinear) {
@@ -1617,7 +1669,7 @@ namespace Pathfinding {
 						// This might be the next node that we enter
 
 						var neighbour = nodeConnections[i].node as TriangleMeshNode;
-						if (neighbour == null || !neighbour.Walkable || (filter != null && !filter(neighbour))) continue;
+						if (neighbour == null || !traversalConstraint.CanTraverse(node, neighbour)) continue;
 
 						int shapeEdgeB = nodeConnections[i].adjacentShapeEdge;
 
@@ -1656,6 +1708,27 @@ namespace Pathfinding {
 			}
 		}
 
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(this, start, end, null, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(this, start, end, hint, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public static bool Linecast (NavmeshBase graph, Vector3 origin, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter = null) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(graph, origin, end, hint, out hit, ref constraint, trace);
+		}
+
 		/// <summary>Start at node, then walk around the given vertex and see if targetNode is reachable by doing this.</summary>
 		/// <param name="node">The node to start from</param>
 		/// <param name="targetNode">The node to check if it is reachable</param>
@@ -1691,12 +1764,12 @@ namespace Pathfinding {
 			return false;
 		}
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
+		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
 			if (!drawNodes) {
 				return;
 			}
 
-			using (var builder = gizmos.GetBuilder(redrawScope)) {
+			using (var builder = gizmos.GetBuilder(redrawScope, renderInGame)) {
 				var bounds = new Bounds();
 				bounds.SetMinMax(Vector3.zero, forcedBoundsSize);
 				// Draw a write cube using the latest transform
@@ -1739,7 +1812,7 @@ namespace Pathfinding {
 					// will never invalidate the cache in another row.
 					if (hashedNodes > 1024 || (i % tileXCount) == tileXCount - 1 || i == tiles.Length - 1) {
 						if (!gizmos.Draw(hasher, redrawScope)) {
-							using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope)) {
+							using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame)) {
 								if (showMeshSurface || showMeshOutline) {
 									CreateNavmeshSurfaceVisualization(tiles, startTileIndex, i + 1, helper);
 									CreateNavmeshOutlineVisualization(tiles, startTileIndex, i + 1, helper);
@@ -1767,7 +1840,7 @@ namespace Pathfinding {
 				}
 			}
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope, renderInGame);
 		}
 
 		/// <summary>Creates a mesh of the surfaces of the navmesh for use in OnDrawGizmos in the editor</summary>

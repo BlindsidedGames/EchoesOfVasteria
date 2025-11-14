@@ -21,7 +21,7 @@ namespace Pathfinding {
 				graph.nearestSearchOnlyXZ = EditorGUILayout.Toggle(new GUIContent("Nearest node queries in XZ space",
 					"Recomended for single-layered environments.\nFaster but can be inacurate esp. in multilayered contexts."), graph.nearestSearchOnlyXZ);
 
-				EditorGUILayout.HelpBox("The global toggle for node queries in XZ space has been deprecated. Use the NNConstraint settings instead.", MessageType.Warning);
+				EditorGUILayout.HelpBox("The global toggle for node queries in XZ space has been deprecated. Use the NearestNodeConstraint settings instead.", MessageType.Warning);
 			}
 			#pragma warning restore 618
 

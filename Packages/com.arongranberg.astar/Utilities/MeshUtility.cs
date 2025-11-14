@@ -21,15 +21,26 @@ namespace Pathfinding.Util {
 			rawMeshData.GetVertices(vertices);
 			int totalIndices = 0;
 			for (int subMeshIndex = 0; subMeshIndex < rawMeshData.subMeshCount; subMeshIndex++) {
+#if UNITY_6000_2_OR_NEWER
+				totalIndices += (int)rawMeshData.GetLod(subMeshIndex, 0).indexCount;
+#else
 				totalIndices += rawMeshData.GetSubMesh(subMeshIndex).indexCount;
+#endif
 			}
 			indices = new NativeArray<int>(totalIndices, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			int offset = 0;
 			for (int subMeshIndex = 0; subMeshIndex < rawMeshData.subMeshCount; subMeshIndex++) {
+#if UNITY_6000_2_OR_NEWER
+				var lodRange = rawMeshData.GetLod(subMeshIndex, 0);
+				rawMeshData.GetIndices(indices.GetSubArray(offset, (int)lodRange.indexCount), subMeshIndex, 0);
+				offset += (int)lodRange.indexCount;
+#else
 				var submesh = rawMeshData.GetSubMesh(subMeshIndex);
 				rawMeshData.GetIndices(indices.GetSubArray(offset, submesh.indexCount), subMeshIndex);
-				offset += submesh.indexCount;
+				offset += (int)submesh.indexCount;
+#endif
 			}
+			UnityEngine.Assertions.Assert.AreEqual(offset, totalIndices);
 		}
 
 		/// <summary>

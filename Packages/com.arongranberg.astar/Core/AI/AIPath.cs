@@ -219,8 +219,8 @@ namespace Pathfinding {
 		/// <summary>\copydoc Pathfinding::IAstarAI::canSearch</summary>
 		bool IAstarAI.canSearch { get => canSearch; set => canSearch = value; }
 
-		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
-		bool IAstarAI.canMove { get => canMove; set => canMove = value; }
+		/// <summary>\copydoc Pathfinding::IAstarAI::simulateMovement</summary>
+		bool IAstarAI.simulateMovement { get => simulateMovement; set => simulateMovement = value; }
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::movementPlane</summary>
 		NativeMovementPlane IAstarAI.movementPlane => new NativeMovementPlane(movementPlane);
@@ -456,15 +456,15 @@ namespace Pathfinding {
 			}
 		}
 
-		static NNConstraint cachedNNConstraint = NNConstraint.Walkable;
 		protected override Vector3 ClampToNavmesh (Vector3 position, out bool positionChanged) {
 			if (constrainInsideGraph) {
-				cachedNNConstraint.tags = seeker.traversableTags;
-				cachedNNConstraint.graphMask = seeker.graphMask;
-				cachedNNConstraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft();
+				var constraint = NearestNodeConstraint.Walkable;
+				constraint.tags = seeker.traversableTags;
+				constraint.graphMask = seeker.graphMask;
+				constraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft();
 				// Note: We don't want to set nn.constrainDistance = false (i.e. allow finding nodes arbitrarily far away), because that can lead to harsh
 				// performance cliffs if agents for example fall through the ground or get thrown off the map, or something like that (it's bound to happen in some games).
-				var nearestOnNavmesh = AstarPath.active.GetNearest(position, cachedNNConstraint);
+				var nearestOnNavmesh = AstarPath.active.GetNearest(position, constraint);
 
 				if (nearestOnNavmesh.node == null) {
 					// Found no valid node to constrain to. This can happen if there are no valid nodes close enough to the agent.

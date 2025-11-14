@@ -10,6 +10,7 @@ namespace References.UI
 		public TMP_Text cardsGainedThisSessionText;
 		public Button tasteButton;
 		public Button stopButton;
+		public Button mixAll;
 		public Transform pieChartParent;
 	}
 }

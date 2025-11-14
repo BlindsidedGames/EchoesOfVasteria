@@ -14,19 +14,19 @@ namespace Pathfinding.Pooling {
 		/// </summary>
 		public static void Pool (Path path) {
 #if !ASTAR_NO_POOLING
+			if (((IPathInternals)path).Pooled) {
+				throw new System.ArgumentException("The path is already pooled.");
+			}
+			((IPathInternals)path).Pooled = true;
+			((IPathInternals)path).OnEnterPool();
+			var tp = path.GetType();
+
 			lock (pool) {
-				if (((IPathInternals)path).Pooled) {
-					throw new System.ArgumentException("The path is already pooled.");
-				}
-
-				Stack<Path> poolStack;
-				if (!pool.TryGetValue(path.GetType(), out poolStack)) {
+				if (!pool.TryGetValue(tp, out var poolStack)) {
 					poolStack = new Stack<Path>();
-					pool[path.GetType()] = poolStack;
+					pool[tp] = poolStack;
 				}
 
-				((IPathInternals)path).Pooled = true;
-				((IPathInternals)path).OnEnterPool();
 				poolStack.Push(path);
 			}
 #endif
@@ -61,8 +61,8 @@ namespace Pathfinding.Pooling {
 			((IPathInternals)result).Reset();
 			return result;
 #else
+			T result;
 			lock (pool) {
-				T result;
 				Stack<Path> poolStack;
 				if (pool.TryGetValue(typeof(T), out poolStack) && poolStack.Count > 0) {
 					// Guaranteed to have the correct type
@@ -77,11 +77,10 @@ namespace Pathfinding.Pooling {
 
 					totalCreated[typeof(T)]++;
 				}
-
-				((IPathInternals)result).Pooled = false;
-				((IPathInternals)result).Reset();
-				return result;
 			}
+			((IPathInternals)result).Pooled = false;
+			((IPathInternals)result).Reset();
+			return result;
 #endif
 		}
 	}

@@ -211,7 +211,7 @@ namespace Pathfinding.PID {
 			const float HIGH_EFFORT_TIME = 0.2f;
 			modifiedAlpha = math.max(modifiedAlpha, math.min(80.0f, math.pow(1.0f / math.max(0, remainingTime - HIGH_EFFORT_TIME), 3)));
 
-			Assert.IsTrue(math.isfinite(modifiedAlpha));
+			Assert.IsTrue(math.isfinite(modifiedAlpha) || modifiedAlpha == float.PositiveInfinity);
 			return modifiedAlpha;
 		}
 
@@ -709,10 +709,15 @@ namespace Pathfinding.PID {
 			// is right at the end of the navmesh. This is a common case when for example ordering an agent to interact
 			// with some prop.
 			//
-			//      Agent
-			//   |    |
-			// <-x----/
-			//   |
+			//        A <- Agent approaching destination at wall
+			//###|    |
+			//#<-x----/
+			//###|
+			//
+			//            A <- agent approaching destination facing away from wall, right next to a corner
+			//        ######
+			//  <-x   ######
+			//
 			//
 			var distToObstacle = SmallestDistanceWithinWedge(endOfPath2D - 0.01f * facingDir2D, n2 - 0.1f * facingDir2D, -n2 - 0.1f * facingDir2D, 0.001f, edges);
 			var maxRadius = settings.leadInRadiusWhenApproachingDestination;
@@ -721,8 +726,21 @@ namespace Pathfinding.PID {
 
 			// Calculate the intersection point of the two tangents of the circle, one at endOfPath2D and one at position2D.
 			// Offset is the distance from endOfPath2D to the intersection point
+			//
+			//   |-------- offset ------|
+			//   A ~ ~ - ,              p
+			//             ' ,         /
+			//                 ,      /
+			//                  ,    /
+			//                   ,  /
+			//                   , /
+			//                   ,
+			//                  x   <- destination
+			//                 /
+			//               |_   <- facingDir2D
+			//
 			var dot = math.abs(math.dot(math.normalizesafe(d1), n2));
-			var offset = 1.0f / math.sqrt(1 - dot*dot) * math.length(d1) * 0.5f;
+			var offset = 1.0f / math.max(0.1f, math.sqrt(1 - dot*dot)) * math.length(d1) * 0.5f;
 
 			// Tweak the offset slightly to account for the maximum radius.
 			// Limit the radius using a smooth thresholding function.
@@ -741,7 +759,10 @@ namespace Pathfinding.PID {
 
 			// If the new corner is not visible from the agent's current position,
 			// then return the original corner, as we do not want to try to walk into a wall.
-			if (math.lengthsq(Linecast(position2D, newNextCorner2D, edges) - newNextCorner2D) > 0.01f) {
+			//
+			// Additionally, if the new corner is not visible from the end of the path, we also return the original corner.
+			// Since there's likely some obstacle in the way, and we don't want to try to walk into a wall.
+			if (math.lengthsq(Linecast(position2D, newNextCorner2D, edges) - newNextCorner2D) > 0.001f || math.lengthsq(Linecast(endOfPath2D, newNextCorner2D, edges) - newNextCorner2D) > 0.001f) {
 				return nextCorner2D;
 			} else {
 				return newNextCorner2D;
@@ -1018,7 +1039,9 @@ namespace Pathfinding.PID {
 			Assert.IsTrue(minRotationSpeed >= 0);
 
 			// With dampingRatio = 1, this will result in critical damping
-			var alpha = followingStrength;
+
+			// Following strength may be infinite if the rotation speed of the agent is infinite. Clamp it to a finite value to avoid NaNs.
+			var alpha = math.min(followingStrength, 10000f);
 			var beta = 2 * math.sqrt(math.abs(alpha)) * DampingRatio;
 			var gamma = 1.0f;
 			var angleToCurveError = AstarMath.DeltaAngle(angle, curveAngle);

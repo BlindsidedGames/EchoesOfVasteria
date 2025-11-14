@@ -478,88 +478,88 @@ code {
 
 .simplesect-return {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-author,
 .simplesect-authors {
   border-color: #0BAA0B;
-  background-color: #0BAA0B1F;
+  background-color: rgba(11, 170, 11, 0.1215686275);
 }
 
 .simplesect-version {
   border-color: #0BAA0B;
-  background-color: #0BAA0B1F;
+  background-color: rgba(11, 170, 11, 0.1215686275);
 }
 
 .simplesect-since {
   border-color: #D48B0D;
-  background-color: #D48B0D1F;
+  background-color: rgba(212, 139, 13, 0.1215686275);
 }
 
 .simplesect-date {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-note {
   border-color: #15458C;
-  background-color: #15458C1F;
+  background-color: rgba(21, 69, 140, 0.1215686275);
 }
 
 .simplesect-warning {
   border-color: #D40D0D;
-  background-color: #D40D0D1F;
+  background-color: rgba(212, 13, 13, 0.1215686275);
 }
 
 .simplesect-pre {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-post {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-copyright {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-invariant {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-remark {
   border-color: #15458C;
-  background-color: #15458C1F;
+  background-color: rgba(21, 69, 140, 0.1215686275);
 }
 
 .simplesect-attention {
   border-color: #D48B0D;
-  background-color: #D48B0D1F;
+  background-color: rgba(212, 139, 13, 0.1215686275);
 }
 
 .simplesect-par {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-rcs {
   border-color: #505050;
-  background-color: #5050501F;
+  background-color: rgba(80, 80, 80, 0.1215686275);
 }
 
 .simplesect-see {
   border-color: #0BAA0B;
-  background-color: #0BAA0B1F;
+  background-color: rgba(11, 170, 11, 0.1215686275);
 }
 
 .simplesect-deprecated {
   border-color: #303030;
-  background-color: #3030301F;
+  background-color: rgba(48, 48, 48, 0.1215686275);
 }
 
 .member-list .member-brief {
@@ -700,12 +700,14 @@ table.member-list-section span {
   padding: 5px 5px 5px 15px;
   line-height: 50%;
   border-top: 1px #AAA solid;
-  opacity: 0;
-  transition: opacity 0.2s;
 }
 .member-top-prot .protection {
   display: inline-block;
   padding: 0.4em 0.6em 0.4em 0.6em;
+}
+.member-top-prot {
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 .member-top-prot.active {
   opacity: 1;
@@ -910,10 +912,10 @@ table.horizontalAlternative2D3D td {
   vertical-align: top;
 }
 table.horizontalAlternative2D3D td.Alt2D {
-  background: #6599e755;
+  background: rgba(101, 153, 231, 0.3333333333);
 }
 table.horizontalAlternative2D3D td.Alt3D {
-  background: #ed858555;
+  background: rgba(237, 133, 133, 0.3333333333);
 }
 
 .inspector-field {
@@ -1031,16 +1033,19 @@ table.horizontalAlternative2D3D td.Alt3D {
   src: local('Bitter Regular'), local('Bitter-Regular'), url(https://fonts.gstatic.com/s/bitter/v13/rax8HiqOu8IVPmn7f4xs.ttf) format('truetype');
 }
 </style>
-    <link rel="canonical" href="data:image/png;base64,events.js:377
+    <link rel="canonical" href="data:image/png;base64,node:events:496
       throw er; // Unhandled 'error' event
       ^
 
 Error: ENOENT: no such file or directory, open '/home/arong/Unity/PackageBuild/docs/html_standalone/https:/arongranberg.com/astar/documentation/stable/getstarted.html'
 Emitted 'error' event on ReadStream instance at:
-    at internal/fs/streams.js:126:14
-    at FSReqCallback.oncomplete (fs.js:179:23) {
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
   errno: -2,
   code: 'ENOENT',
   syscall: 'open',
   path: '/home/arong/Unity/PackageBuild/docs/html_standalone/https:/arongranberg.com/astar/documentation/stable/getstarted.html'
 }
+
+Node.js v22.18.0

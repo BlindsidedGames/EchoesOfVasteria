@@ -30,6 +30,8 @@ namespace Pathfinding.Jobs {
 		List<NativeArray<byte> > buffer;
 		List<NativeList<byte> > buffer2;
 		List<NativeQueue<byte> > buffer3;
+		List<(System.IntPtr, AllocatorManager.AllocatorHandle, int, int)> ptrBuffer;
+		List<(System.IntPtr, Allocator)> ptrBufferTracked;
 		List<GCHandle> gcHandles;
 
 		public void Add<T>(NativeArray<T> data) where T : unmanaged {
@@ -50,6 +52,20 @@ namespace Pathfinding.Jobs {
 			// SAFETY: This is safe because NativeQueue<byte> and NativeQueue<T> have the same memory layout.
 			if (buffer3 == null) buffer3 = ListPool<NativeQueue<byte> >.Claim();
 			buffer3.Add(UnsafeUtility.As<NativeQueue<T>, NativeQueue<byte> >(ref data));
+		}
+
+		public void Add<T>(UnsafeList<T> data) where T : unmanaged {
+			if (ptrBuffer == null) ptrBuffer = ListPool<(System.IntPtr, AllocatorManager.AllocatorHandle, int, int)>.Claim();
+			unsafe {
+				ptrBuffer.Add(((System.IntPtr)data.Ptr, data.Allocator, UnsafeUtility.SizeOf<T>() * data.Capacity, UnsafeUtility.AlignOf<T>()));
+			}
+		}
+
+		public void Add<T>(UnsafeSpan<T> data) where T : unmanaged {
+			if (ptrBufferTracked == null) ptrBufferTracked = ListPool<(System.IntPtr, Allocator)>.Claim();
+			unsafe {
+				ptrBufferTracked.Add(((System.IntPtr)data.ptr, data.Allocator));
+			}
 		}
 
 		public void Remove<T>(NativeArray<T> data) where T : unmanaged {
@@ -95,6 +111,22 @@ namespace Pathfinding.Jobs {
 			if (gcHandles != null) {
 				for (int i = 0; i < gcHandles.Count; i++) gcHandles[i].Free();
 				ListPool<GCHandle>.Release(ref gcHandles);
+			}
+			if (ptrBuffer != null) {
+				for (int i = 0; i < ptrBuffer.Count; i++) {
+					unsafe {
+						AllocatorManager.Free(ptrBuffer[i].Item2, (void*)ptrBuffer[i].Item1, ptrBuffer[i].Item3, ptrBuffer[i].Item4);
+					}
+				}
+				ListPool<(System.IntPtr, AllocatorManager.AllocatorHandle, int, int)>.Release(ref ptrBuffer);
+			}
+			if (ptrBufferTracked != null) {
+				for (int i = 0; i < ptrBufferTracked.Count; i++) {
+					unsafe {
+						UnsafeUtility.FreeTracked((void*)ptrBufferTracked[i].Item1, ptrBufferTracked[i].Item2);
+					}
+				}
+				ListPool<(System.IntPtr, Allocator)>.Release(ref ptrBufferTracked);
 			}
 			UnityEngine.Profiling.Profiler.EndSample();
 		}

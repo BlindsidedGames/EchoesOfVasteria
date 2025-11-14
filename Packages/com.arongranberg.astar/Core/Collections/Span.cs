@@ -23,16 +23,23 @@ namespace Pathfinding.Collections {
 		[NativeDisableUnsafePtrRestriction]
 		internal readonly unsafe T* ptr;
 		internal readonly uint length;
+		public readonly Allocator Allocator;
 
 		/// <summary>Number of elements in this span</summary>
 		public int Length => (int)length;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public unsafe UnsafeSpan(void* ptr, int length) {
+		public unsafe UnsafeSpan(void* ptr, int length, Allocator allocator = Unity.Collections.Allocator.None) {
 			if (length < 0) throw new System.ArgumentOutOfRangeException();
 			if (length > 0 && ptr == null) throw new System.ArgumentNullException();
 			this.ptr = (T*)ptr;
 			this.length = (uint)length;
+			this.Allocator = allocator;
+		}
+
+		/// <summary>Creates a new UnsafeSpan from a C# array</summary>
+		public unsafe UnsafeSpan(T[] data, Allocator allocator) : this(allocator, data.Length) {
+			this.CopyFrom(data);
 		}
 
 		/// <summary>
@@ -46,6 +53,7 @@ namespace Pathfinding.Collections {
 				this.ptr = (T*)UnsafeUtility.PinGCArrayAndGetDataAddress(data, out gcHandle);
 			}
 			this.length = (uint)data.Length;
+			this.Allocator = Unity.Collections.Allocator.None;
 		}
 
 		/// <summary>
@@ -59,6 +67,7 @@ namespace Pathfinding.Collections {
 				this.ptr = (T*)UnsafeUtility.PinGCArrayAndGetDataAddress(data, out gcHandle);
 			}
 			this.length = (uint)data.Length;
+			this.Allocator = Unity.Collections.Allocator.None;
 		}
 
 		/// <summary>
@@ -73,6 +82,7 @@ namespace Pathfinding.Collections {
 				if (length > 0) this.ptr = (T*)UnsafeUtility.MallocTracked(length * (long)UnsafeUtility.SizeOf<T>(), UnsafeUtility.AlignOf<T>(), allocator, 1);
 				else this.ptr = null;
 				this.length = (uint)length;
+				this.Allocator = allocator;
 			}
 		}
 
@@ -113,7 +123,7 @@ namespace Pathfinding.Collections {
 		public UnsafeSpan<U> Reinterpret<U> () where U : unmanaged {
 			unsafe {
 				if (sizeof(T) != sizeof(U)) throw new System.InvalidOperationException("Cannot reinterpret span because the size of the types do not match");
-				return new UnsafeSpan<U>(ptr, (int)length);
+				return new UnsafeSpan<U>(ptr, (int)length, Allocator);
 			}
 		}
 
@@ -127,7 +137,7 @@ namespace Pathfinding.Collections {
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 				if (sizeof(T) != expectedOriginalTypeSize) throw new System.InvalidOperationException("Cannot reinterpret span because sizeof(T) != expectedOriginalTypeSize");
 #endif
-				return new UnsafeSpan<U>(ptr, (int)length * sizeof(T) / sizeof(U));
+				return new UnsafeSpan<U>(ptr, (int)length * sizeof(T) / sizeof(U), Allocator);
 			}
 		}
 
@@ -138,7 +148,7 @@ namespace Pathfinding.Collections {
 		public UnsafeSpan<T> Slice (int start, int length) {
 			if (start < 0 || length < 0 || start + length > this.length) throw new System.ArgumentOutOfRangeException();
 			unsafe {
-				return new UnsafeSpan<T>(ptr + start, length);
+				return new UnsafeSpan<T>(ptr + start, length, Allocator);
 			}
 		}
 
@@ -229,6 +239,7 @@ namespace Pathfinding.Collections {
 		/// Warning: This span must have been allocated using the specified allocator.
 		/// </summary>
 		public unsafe NativeArray<T> MoveToNativeArray (Allocator allocator) {
+			UnityEngine.Assertions.Assert.AreEqual(allocator, Allocator, "Allocator mismatch. The span must have been allocated using the same allocator as the one used to create the NativeArray.");
 			var arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<T>(ptr, Length, allocator);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref arr, AtomicSafetyHandle.Create());
@@ -243,9 +254,17 @@ namespace Pathfinding.Collections {
 		///
 		/// Warning: You must never use this span (or any other span referencing the same memory) again after calling this method.
 		/// </summary>
-		public unsafe void Free (Allocator allocator) {
-			if (length > 0) UnsafeUtility.FreeTracked(ptr, allocator);
+		public unsafe void Free (Allocator expectedAllocator) {
+			if (length > 0) {
+				UnityEngine.Assertions.Assert.AreEqual(expectedAllocator, Allocator, "Allocator mismatch. The span must have been allocated using the same allocator as the one used to free it.");
+				UnsafeUtility.FreeTracked(ptr, expectedAllocator);
+			}
 		}
+
+		public void Free () {
+			Free(Allocator);
+		}
+
 
 		/// <summary>
 		/// Returns a new span with a different size, copies the current data over to it, and frees this span.
@@ -259,6 +278,9 @@ namespace Pathfinding.Collections {
 		/// Returns: The new span.
 		/// </summary>
 		public unsafe UnsafeSpan<T> Reallocate (Allocator allocator, int newSize) {
+			if (length > 0) UnityEngine.Assertions.Assert.AreEqual(allocator, Allocator, "Allocator mismatch. The span must have been allocated using the same allocator as the one used to reallocate it.");
+			if (newSize < 0) throw new System.ArgumentOutOfRangeException(nameof(newSize), "New size must be non-negative");
+			if (newSize == Length) return this; // No need to reallocate if the size is the same
 			var newSpan = new UnsafeSpan<T>(allocator, newSize);
 			Slice(0, System.Math.Min(newSize, Length)).CopyTo(newSpan);
 			Free(allocator);
@@ -356,6 +378,24 @@ namespace Pathfinding.Collections {
 		}
 
 		/// <summary>
+		/// Moves a NativeArray to a span.
+		///
+		/// This transfers ownership of the memory to the UnsafeSpan, without any copying.
+		/// The span must be disposed using <see cref="UnsafeSpan.Free"/> when you are done with it.
+		/// The native array cannot be used after this operation, and must not be disposed.
+		/// </summary>
+		public static UnsafeSpan<T> MoveToUnsafeSpan<T>(this NativeArray<T> arr) where T : unmanaged {
+			unsafe {
+				var span = new UnsafeSpan<T>(arr.GetUnsafePtr(), arr.Length, arr.GetAllocator());
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
+				var safetyHandle = NativeArrayUnsafeUtility.GetAtomicSafetyHandle(arr);
+				AtomicSafetyHandle.Release(safetyHandle);
+#endif
+				return span;
+			}
+		}
+
+		/// <summary>
 		/// Converts a NativeArray to a span without performing any checks.
 		///
 		/// The span is a view of the array memory, so do not dispose the array while the span is in use.
@@ -379,6 +419,15 @@ namespace Pathfinding.Collections {
 		public static UnsafeSpan<T> AsUnsafeReadOnlySpan<T>(this NativeArray<T> arr) where T : unmanaged {
 			unsafe {
 				return new UnsafeSpan<T>(arr.GetUnsafeReadOnlyPtr(), arr.Length);
+			}
+		}
+
+		static readonly int AllocatorOffset = UnsafeUtility.GetFieldOffset(typeof(NativeArray<int>).GetField("m_AllocatorLabel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
+
+		public static Allocator GetAllocator<T>(this NativeArray<T> arr) where T : unmanaged {
+			unsafe {
+				var ptr = (byte*)UnsafeUtility.AddressOf(ref arr);
+				return *(Allocator*)(ptr + AllocatorOffset);
 			}
 		}
 

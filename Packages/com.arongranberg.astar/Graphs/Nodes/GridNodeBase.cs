@@ -407,21 +407,30 @@ namespace Pathfinding {
 		/// </summary>
 		public abstract void ResetConnectionsInternal();
 
-		public override void OpenAtPoint (Path path, uint pathNodeIndex, Int3 pos, uint gScore) {
-			path.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, pathNodeIndex, gScore);
-			path.OpenCandidateConnection(pathNodeIndex, NodeIndex, gScore, 0, 0, position);
+		public override void OpenAtPoint (ref Path.SearchContext ctx, uint pathNodeIndex, Int3 pos, uint gScore) {
+			// Design decision: the cost of moving from a grid node to the end point which is on the node is always 0.
+			// This has no effect on the paths, but it makes for more preditable behavior for games that are turn-based
+			// and want to calculate precise costs for all movements.
+			ctx.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, pathNodeIndex, gScore, 0.0f);
+			ctx.OpenCandidateConnection(pathNodeIndex, NodeIndex, gScore, 0, position);
 		}
 
-		public override void Open (Path path, uint pathNodeIndex, uint gScore) {
-			path.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, pathNodeIndex, gScore);
+		public override void Open (ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore) {
+			// Design decision: the cost of moving from a grid node to the end point which is on the node is always 0.
+			// This has no effect on the paths, but it makes for more preditable behavior for games that are turn-based
+			// and want to calculate precise costs for all movements.
+			ctx.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, pathNodeIndex, gScore, 0.0f);
 
 #if !ASTAR_GRID_NO_CUSTOM_CONNECTIONS
 			if (connections != null) {
+				var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
 				for (int i = 0; i < connections.Length; i++) {
 					GraphNode other = connections[i].node;
-					if (!connections[i].isOutgoing || !path.CanTraverse(this, other)) continue;
+					if (!connections[i].isOutgoing || !ctx.traversalConstraint.CanTraverse(this, other)) continue;
 
-					path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, connections[i].cost, 0, other.position);
+					var connectionCost = ctx.traversalCosts.GetConnectionCost(this, other);
+					connectionCost += (uint)((ourTraversalCostFactor + ctx.traversalCosts.GetTraversalCostMultiplier(other)) * 0.5f * connections[i].cost);
+					ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
 				}
 			}
 #endif
@@ -453,7 +462,7 @@ namespace Pathfinding {
 			ClearCustomConnections(alsoReverse);
 		}
 
-		public override void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter) {
+		public override void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter) {
 			if (connections == null) return;
 			for (int i = 0; i < connections.Length; i++) if ((connections[i].shapeEdgeInfo & connectionFilter) != 0) action(connections[i].node, ref data);
 		}

@@ -12,7 +12,6 @@ namespace Pathfinding.ECS {
 	public partial struct JobPrepareAgentRaycasts : IJobEntity {
 		public NativeArray<RaycastCommand> raycastCommands;
 		public QueryParameters raycastQueryParameters;
-		public CommandBuilder draw;
 		public float dt;
 		public float gravity;
 

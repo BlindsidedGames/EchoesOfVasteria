@@ -50,7 +50,7 @@ namespace Pathfinding.ECS {
 				return new EntityQueryBuilder(Allocator.Temp)
 					   .WithAllRW<MovementState>()
 					   .WithAllRW<ManagedState>()
-					   .WithAllRW<LocalTransform>()
+					   .WithAll<LocalTransform>()
 					   .WithAll<MovementSettings, AutoRepathPolicy, DestinationPoint, AgentMovementPlane, AgentCylinderShape>()
 				       //    .WithAny<ReadyToTraverseOffMeshLink>() // TODO: Use WithPresent in newer versions
 					   .WithAbsent<AgentOffMeshLinkTraversal>();
@@ -75,7 +75,7 @@ namespace Pathfinding.ECS {
 				entityManagerHandle.Free();
 			}
 
-			void Update (ref SystemState systemState) {
+			public void Update (ref SystemState systemState) {
 				LocalTransformTypeHandleRO.Update(ref systemState);
 				MovementStateTypeHandleRW.Update(ref systemState);
 				AgentCylinderShapeTypeHandleRO.Update(ref systemState);
@@ -169,8 +169,8 @@ namespace Pathfinding.ECS {
 				// Update the start and end points of the path based on the current position and destination.
 				// This will repair the path if necessary, ensuring that the agent has a valid, if not necessarily optimal, path.
 				// If it cannot be repaired well, the path will be marked as stale.
-				state.closestOnNavmesh = pathTracer.UpdateStart(transform.Position, PathTracer.RepairQuality.High, movementPlane.value, managedState.pathfindingSettings.traversalProvider, managedState.activePath);
-				state.endOfPath = pathTracer.UpdateEnd(destination.destination, PathTracer.RepairQuality.High, movementPlane.value, managedState.pathfindingSettings.traversalProvider, managedState.activePath);
+				state.closestOnNavmesh = pathTracer.UpdateStart(transform.Position, PathTracer.RepairQuality.High, movementPlane.value);
+				state.endOfPath = pathTracer.UpdateEnd(destination.destination, PathTracer.RepairQuality.High, movementPlane.value);
 				MarkerRepair.End();
 
 				if (state.pathTracerVersion != pathTracer.version) {
@@ -185,13 +185,14 @@ namespace Pathfinding.ECS {
 					// In the future we might want to switch dynamically between these modes,
 					// but on the other hand, it is very nice to be able to use the exact same code path for everything.
 					// pathTracer.GetNextCorners(nextCornersScratch, 3, ref indicesScratch, allocator);
-					var numCorners = pathTracer.GetNextCornerIndices(ref indicesScratch, pathTracer.desiredCornersForGoodSimplification, allocator, out bool lastCorner, managedState.pathfindingSettings.traversalProvider, managedState.activePath);
+					var numCorners = pathTracer.GetNextCornerIndices(ref indicesScratch, pathTracer.desiredCornersForGoodSimplification, allocator, true, out bool lastCorner);
 					pathTracer.ConvertCornerIndicesToPathProjected(indicesScratch, numCorners, lastCorner, nextCornersScratch, movementPlane.value.up);
 					MarkerGetNextCorners.End();
 
 					// We need to copy a few fields to a new struct, in order to be able to pass it to a burstified function
 					var pathTracerInfo = new JobRepairPathHelpers.PathTracerInfo {
 						endPointOfFirstPart = pathTracer.endPointOfFirstPart,
+						hasValidEndPoint = pathTracer.hasValidEndPoint,
 						partCount = pathTracer.partCount,
 						isStale = pathTracer.isStale
 					};
@@ -222,12 +223,11 @@ namespace Pathfinding.ECS {
 		public struct PathTracerInfo {
 			public float3 endPointOfFirstPart;
 			public int partCount;
-			// Bools are not blittable by burst so we must use a byte instead. Very ugly, but it is what it is.
-			byte isStaleBacking;
-			public bool isStale {
-				get => isStaleBacking != 0;
-				set => isStaleBacking = value ? (byte)1 : (byte)0;
-			}
+			// Bools are not blittable by burst so we must add this attribute. Very ugly, but it is what it is.
+			[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.U1)]
+			public bool isStale;
+			[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.U1)]
+			public bool hasValidEndPoint;
 		}
 
 		/// <summary>Checks if the agent has reached its destination, or the end of the path</summary>
@@ -255,6 +255,7 @@ namespace Pathfinding.ECS {
 			state.reachedEndOfPath = !pathTracer.isStale && validHeightRangeEndOfPart && pathTracer.partCount == 1 && state.remainingDistanceToEndOfPart <= stopDistance;
 			state.reachedDestination = !pathTracer.isStale && validHeightRangeDestination && pathTracer.partCount == 1 && state.remainingDistanceToEndOfPart + endOfPathToDestination <= stopDistance + (state.reachedEndOfPath ? FUZZ : 0);
 			state.traversingLastPart = pathTracer.partCount == 1;
+			state.hasValidEndPoint = pathTracer.hasValidEndPoint;
 			UpdateReachedOrientation(ref state, ref transform, ref movementPlane, ref destination);
 		}
 

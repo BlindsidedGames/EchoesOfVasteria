@@ -27,6 +27,12 @@ namespace Pathfinding {
 			rect.xMin += width + spacing;
 			return r;
 		}
+
+		public static Rect SliceColumnRight (ref Rect rect, float width, float spacing = 0) {
+			var r = new Rect(rect.xMax - width, rect.y, width, rect.height);
+			rect.xMax -= width + spacing;
+			return r;
+		}
 	}
 
 	/// <summary>

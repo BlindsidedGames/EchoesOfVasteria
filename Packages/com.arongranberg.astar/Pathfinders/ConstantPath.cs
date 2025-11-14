@@ -81,8 +81,6 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Reset the path to default values.
-		/// Clears the <see cref="allNodes"/> list.
-		/// Note: This does not reset the <see cref="endingCondition"/>.
 		///
 		/// Also sets <see cref="heuristic"/> to Heuristic.None as it is the default value for this path type
 		/// </summary>
@@ -96,8 +94,8 @@ namespace Pathfinding {
 			heuristic = Heuristic.None;
 		}
 
-		protected override void Prepare () {
-			var startNNInfo = GetNearest(startPoint);
+		protected override void Prepare (ref SearchContext ctx) {
+			var startNNInfo = AstarPath.active.GetNearest(startPoint, nearestNodeConstraint);
 
 			startNode = startNNInfo.node;
 			if (startNode == null) {
@@ -105,29 +103,43 @@ namespace Pathfinding {
 				return;
 			}
 
-			pathHandler.AddTemporaryNode(new TemporaryNode {
+			ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 				type = TemporaryNodeType.Start,
 				position = (Int3)startNNInfo.position,
 				associatedNode = startNode.NodeIndex,
 			});
-			heuristicObjective = new HeuristicObjective(int3.zero, Heuristic.None, 0.0f);
-			AddStartNodesToHeap();
+			ctx.heuristicObjective = new HeuristicObjective(int3.zero, Heuristic.None, 0.0f);
+			ctx.traversalConstraint = traversalConstraint;
+			ctx.traversalCosts = traversalCosts;
+			ctx.AddStartNodesToHeap();
 		}
 
-		protected override void OnHeapExhausted () {
+		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			CompleteState = PathCompleteState.Complete;
 		}
 
-		protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
+		protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 			throw new System.InvalidOperationException("ConstantPaths do not have any end nodes");
 		}
 
-		public override void OnVisitNode (uint pathNode, uint hScore, uint gScore) {
-			var node = pathHandler.GetNode(pathNode);
+		public override void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
+			var node = ctx.pathHandler.GetNode(pathNode);
 			if (endingCondition.TargetFound(node, hScore, gScore)) {
 				CompleteState = PathCompleteState.Complete;
 			} else {
-				allNodes.Add(node);
+				// Some nodes have multiple variants (in particular triangle nodes), and they may get visited multiple times.
+				// We only want to add them once, so we use flag2 to mark that we have already added this node.
+				if (!ctx.pathHandler.pathNodes[node.NodeIndex].flag2) {
+					ctx.pathHandler.pathNodes[node.NodeIndex].flag2 = true;
+					allNodes.Add(node);
+				}
+			}
+		}
+
+		protected override void Cleanup (ref SearchContext ctx) {
+			base.Cleanup(ref ctx);
+			for (int i = 0; i < allNodes.Count; i++) {
+				ctx.pathHandler.pathNodes[allNodes[i].NodeIndex].flag2 = false;
 			}
 		}
 	}

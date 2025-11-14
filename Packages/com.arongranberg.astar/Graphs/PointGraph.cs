@@ -33,24 +33,25 @@ namespace Pathfinding {
 	/// Note: Does not support linecast because the nodes do not have a surface.
 	///
 	/// See: get-started-point (view in online documentation for working links)
+	/// See: creating-point-nodes (view in online documentation for working links)
 	/// See: graphTypes (view in online documentation for working links)
 	///
 	/// \section pointgraph-inspector Inspector
 	/// [Open online documentation to see images]
 	///
-	/// \inspectorField{Root, root}
-	/// \inspectorField{Recursive, recursive}
-	/// \inspectorField{Tag, searchTag}
-	/// \inspectorField{Max Distance, maxDistance}
-	/// \inspectorField{Max Distance (axis aligned), limits}
-	/// \inspectorField{Raycast, raycast}
-	/// \inspectorField{Raycast → Use 2D Physics, use2DPhysics}
-	/// \inspectorField{Raycast → Thick Raycast, thickRaycast}
-	/// \inspectorField{Raycast → Thick Raycast → Radius, thickRaycastRadius}
-	/// \inspectorField{Raycast → Mask, mask}
-	/// \inspectorField{Optimize For Sparse Graph, optimizeForSparseGraph}
-	/// \inspectorField{Nearest Node Queries Find Closest, nearestNodeDistanceMode}
-	/// \inspectorField{Initial Penalty, initialPenalty}
+	/// \inspectorField{root; Root}
+	/// \inspectorField{recursive; Recursive}
+	/// \inspectorField{searchTag; Tag}
+	/// \inspectorField{maxDistance; Max Distance}
+	/// \inspectorField{limits; Max Distance (axis aligned)}
+	/// \inspectorField{raycast; Raycast}
+	/// \inspectorField{use2DPhysics; Raycast → Use 2D Physics}
+	/// \inspectorField{thickRaycast; Raycast → Thick Raycast}
+	/// \inspectorField{thickRaycastRadius; Raycast → Thick Raycast → Radius}
+	/// \inspectorField{mask; Raycast → Mask}
+	/// \inspectorField{optimizeForSparseGraph; Optimize For Sparse Graph}
+	/// \inspectorField{nearestNodeDistanceMode; Nearest Node Queries Find Closest}
+	/// \inspectorField{initialPenalty; Initial Penalty}
 	/// </summary>
 	[JsonOptIn]
 	[Pathfinding.Util.Preserve]
@@ -225,7 +226,13 @@ namespace Pathfinding {
 			for (int i = 0; i < count; i++) action(nodes[i]);
 		}
 
-		public override NNInfo GetNearest (Vector3 position, NNConstraint constraint, float maxDistanceSqr) {
+		public override void GetNodes<T>(GraphNode.NodeActionWithData<T> action, ref T data) {
+			if (nodes == null) return;
+			var count = nodeCount;
+			for (int i = 0; i < count; i++) action(nodes[i], ref data);
+		}
+
+		public override NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 			if (nodes == null) return NNInfo.Empty;
 			var iposition = (Int3)position;
 
@@ -233,13 +240,14 @@ namespace Pathfinding {
 				Debug.LogWarning("Lookup tree is not in the correct state. Have you changed PointGraph.optimizeForSparseGraph without calling RebuildNodeLookup?");
 			}
 
+			var maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+
 			if (lookupTree != null) {
 				if (nearestNodeDistanceMode == NodeDistanceMode.Node) {
-					var minDistSqr = maxDistanceSqr;
-					var closestNode = lookupTree.GetNearest(iposition, constraint, ref minDistSqr);
-					return closestNode == null ? NNInfo.Empty : new NNInfo(closestNode, (Vector3)closestNode.position, minDistSqr);
+					var closestNode = lookupTree.GetNearest(iposition, ref constraint, ref maxDistanceSqr);
+					return closestNode == null ? NNInfo.Empty : new NNInfo(closestNode, (Vector3)closestNode.position, maxDistanceSqr);
 				} else {
-					var closestNode = lookupTree.GetNearestConnection(iposition, constraint, maximumConnectionLength);
+					var closestNode = lookupTree.GetNearestConnection(iposition, ref constraint, maximumConnectionLength);
 					return closestNode == null ? NNInfo.Empty : FindClosestConnectionPoint(closestNode as PointNode, position, maxDistanceSqr);
 				}
 			}
@@ -251,7 +259,7 @@ namespace Pathfinding {
 				PointNode node = nodes[i];
 				long dist = (iposition - node.position).sqrMagnitudeLong;
 
-				if (dist < minDist && (constraint == null || constraint.Suitable(node))) {
+				if (dist < minDist && constraint.Suitable(node)) {
 					minDist = dist;
 					minNode = node;
 				}
@@ -282,20 +290,20 @@ namespace Pathfinding {
 			return new NNInfo(node, closestConnectionPoint, maxDistanceSqr);
 		}
 
-		public override NNInfo RandomPointOnSurface (NNConstraint nnConstraint = null, bool highQuality = true) {
+		public override NNInfo RandomPointOnSurface (NearestNodeConstraint constraint, bool highQuality = true) {
 			if (!isScanned || nodes.Length == 0) return NNInfo.Empty;
 
 			// All nodes have the same surface area, so just pick a random node
 			for (int i = 0; i < 10; i++) {
 				var node = this.nodes[UnityEngine.Random.Range(0, this.nodes.Length)];
-				if (node != null && (nnConstraint == null || nnConstraint.Suitable(node))) {
+				if (node != null && constraint.Suitable(node)) {
 					return new NNInfo(node, node.RandomPointOnSurface(), 0);
 				}
 			}
 
 			// If a valid node was not found after a few tries, the graph likely contains a lot of unwalkable/unsuitable nodes.
 			// Fall back to the base method which will try to find a valid node by checking all nodes.
-			return base.RandomPointOnSurface(nnConstraint, highQuality);
+			return base.RandomPointOnSurface(constraint, highQuality);
 		}
 
 		/// <summary>
@@ -407,7 +415,29 @@ namespace Pathfinding {
 			}
 		}
 
-		/// <summary>Recursively counds children of a transform</summary>
+		/// <summary>
+		/// Removes all nodes from the graph.
+		///
+		/// This is faster than removing each node one by one.
+		///
+		/// See: <see cref="AddNode"/>
+		/// See: <see cref="RemoveNode"/>
+		/// See: creating-point-nodes (view in online documentation for working links)
+		/// </summary>
+		public void Clear () {
+			AssertSafeToUpdateGraph();
+			if (nodes == null) return;
+
+			for (int i = 0; i < nodeCount; i++) {
+				nodes[i].Destroy();
+			}
+
+			nodeCount = 0;
+			nodes = new PointNode[0];
+			RebuildNodeLookup();
+		}
+
+		/// <summary>Recursively counts children of a transform</summary>
 		protected static int CountChildren (Transform tr) {
 			int c = 0;
 
@@ -814,12 +844,12 @@ namespace Pathfinding {
 #if UNITY_EDITOR
 		static readonly Color NodeColor = new Color(0.161f, 0.341f, 1f, 0.5f);
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
-			base.OnDrawGizmos(gizmos, drawNodes, redrawScope);
+		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+			base.OnDrawGizmos(gizmos, drawNodes, redrawScope, renderInGame);
 
 			if (!drawNodes) return;
 
-			using (var draw = gizmos.GetBuilder()) {
+			using (var draw = gizmos.GetBuilder(redrawScope, renderInGame)) {
 				using (draw.WithColor(NodeColor)) {
 					if (this.isScanned) {
 						for (int i = 0; i < nodeCount; i++) {

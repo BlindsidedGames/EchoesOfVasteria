@@ -17,14 +17,14 @@ namespace Pathfinding {
 			window.position = new Rect(Screen.currentResolution.width/2 - 300, Mathf.Max(5, Screen.currentResolution.height/3 - 150), 600, 400);
 			window.version = version;
 			window.summary = summary;
-			window.titleContent = new GUIContent("New Version of the A* Pathfinding Project");
+			window.titleContent = new GUIContent("New version of the A* Pathfinding Project");
 			return window;
 		}
 
 		public void OnDestroy () {
 			if (version != null && !setReminder) {
-				Debug.Log("Closed window, reminding again tomorrow");
-				EditorPrefs.SetString("AstarRemindUpdateDate", DateTime.UtcNow.AddDays(1).ToString(System.Globalization.CultureInfo.InvariantCulture));
+				Debug.Log("Closed window, reminding again in a week");
+				EditorPrefs.SetString("AstarRemindUpdateDate", DateTime.UtcNow.AddDays(7).ToString(System.Globalization.CultureInfo.InvariantCulture));
 				EditorPrefs.SetString("AstarRemindUpdateVersion", version.ToString());
 			}
 		}
@@ -49,7 +49,7 @@ namespace Pathfinding {
 
 			GUILayout.Label("New Update Available!", largeStyle);
 			GUILayout.Label("There is a new version of the <b>A* Pathfinding Project</b> available for download.\n" +
-				"The new version is <b>" + version + "</b> you have <b>" + AstarPath.Version + "</b>\n\n"+
+				"The new version is <b>" + version + "</b>, you are using <b>" + AstarPath.Version + "</b>\n\n"+
 				"<i>Summary:</i>\n"+summary, normalStyle
 				);
 
@@ -87,8 +87,8 @@ namespace Pathfinding {
 				Close();
 			}
 
-			if (GUILayout.Button("Remind me later ( 1 week )", GUILayout.MaxWidth(200))) {
-				EditorPrefs.SetString("AstarRemindUpdateDate", DateTime.UtcNow.AddDays(7).ToString(System.Globalization.CultureInfo.InvariantCulture));
+			if (GUILayout.Button("Remind me later (1 month)", GUILayout.MaxWidth(200))) {
+				EditorPrefs.SetString("AstarRemindUpdateDate", DateTime.UtcNow.AddDays(30).ToString(System.Globalization.CultureInfo.InvariantCulture));
 				EditorPrefs.SetString("AstarRemindUpdateVersion", version.ToString());
 				setReminder = true;
 				Close();

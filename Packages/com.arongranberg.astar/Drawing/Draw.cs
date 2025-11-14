@@ -17,6 +17,16 @@ namespace Pathfinding.Drawing {
 		internal static CommandBuilder builder;
 		internal static CommandBuilder ingame_builder;
 
+		/// <summary>
+		/// Draws items in the editor and in standalone games, even if gizmos are disabled.
+		/// See: ingame (view in online documentation for working links)
+		/// </summary>
+		public static ref CommandBuilder ingame {
+			get {
+				DrawingManager.Init();
+				return ref ingame_builder;
+			}
+		}
 
 		/// <summary>
 		/// Draws items in the editor if gizmos are enabled.

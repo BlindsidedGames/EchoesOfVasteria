@@ -95,7 +95,7 @@ namespace andywiecko.BurstTriangulator {
 		}
 	}
 
-	public enum TriangulatorErrorType : byte {
+	public enum TriangulatorErrorType: byte {
 		Ok,
 		PositionsLengthLessThan3,
 		PositionsMustBeFinite,

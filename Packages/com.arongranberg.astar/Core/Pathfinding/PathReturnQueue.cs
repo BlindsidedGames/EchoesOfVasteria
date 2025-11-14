@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
+using Pathfinding.Util;
 
 namespace Pathfinding {
 	class PathReturnQueue {
@@ -8,7 +9,8 @@ namespace Pathfinding {
 		/// Holds all paths which are waiting to be flagged as completed.
 		/// See: <see cref="ReturnPaths"/>
 		/// </summary>
-		readonly Queue<Path> pathReturnQueue = new Queue<Path>();
+		Queue<Path> pathReturnQueueWriting = new Queue<Path>();
+		Queue<Path> pathReturnQueueReading = new Queue<Path>();
 
 		/// <summary>
 		/// Paths are claimed silently by some object to prevent them from being recycled while still in use.
@@ -24,8 +26,8 @@ namespace Pathfinding {
 		}
 
 		public void Enqueue (Path path) {
-			lock (pathReturnQueue) {
-				pathReturnQueue.Enqueue(path);
+			lock (this) {
+				pathReturnQueueWriting.Enqueue(path);
 			}
 		}
 
@@ -40,20 +42,26 @@ namespace Pathfinding {
 
 			// Hard coded limit on 1.0 ms
 			long targetTick = timeSlice ? System.DateTime.UtcNow.Ticks + 1 * 10000 : 0;
-			// TODO: Use timeslice
 
 			int counter = 0;
 			int totalReturned = 0;
-			// Loop through the linked list and return all paths
+
+			// Go through all paths that have been calculated by the pathfinding threads and call their callbacks to indicate that they are calculated
 			while (true) {
-				// Move to the next path
-				Path path;
-				lock (pathReturnQueue) {
-					if (pathReturnQueue.Count == 0) break;
-					path = pathReturnQueue.Dequeue();
+				if (pathReturnQueueReading.Count == 0) {
+					// Swap queues
+					lock (this) {
+						// We use double-buffering to avoid having to take a lock every single iteration.
+						// This way, we only need to take the lock twice per frame.
+						Memory.Swap(ref pathReturnQueueReading, ref pathReturnQueueWriting);
+					}
+
+					if (pathReturnQueueReading.Count == 0) break;
 				}
 
-				// Will increment path state to Returned
+				// Move to the next path
+				Path path = pathReturnQueueReading.Dequeue();
+
 				((IPathInternals)path).AdvanceState(PathState.Returning);
 
 				try {
@@ -63,7 +71,6 @@ namespace Pathfinding {
 					Debug.LogException(e);
 				}
 
-				// Will increment path state to Returned
 				((IPathInternals)path).AdvanceState(PathState.Returned);
 
 				path.Release(pathsClaimedSilentlyBy, true);

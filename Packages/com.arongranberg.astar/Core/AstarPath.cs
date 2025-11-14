@@ -25,12 +25,14 @@ using Thread = System.Threading.Thread;
 /// Core component for the A* Pathfinding System.
 /// This class handles all of the pathfinding system, calculates all paths and stores the info.
 /// This class is a singleton class, meaning there should only exist at most one active instance of it in the scene.
-/// It might be a bit hard to use directly, usually interfacing with the pathfinding system is done through the <see cref="Pathfinding.Seeker"/> class.
+///
+/// See: inspector (view in online documentation for working links)
+/// See: calling-directly (view in online documentation for working links)
 /// </summary>
 [HelpURL("https://arongranberg.com/astar/documentation/stable/astarpath.html")]
 public class AstarPath : VersionedMonoBehaviour {
 	/// <summary>The version number for the A* Pathfinding Project</summary>
-	public static readonly System.Version Version = new System.Version(5, 3, 8);
+	public static readonly System.Version Version = new System.Version(5, 4, 4);
 
 	/// <summary>Information about where the package was downloaded</summary>
 	public enum AstarDistribution { WebsiteDownload, AssetStore, PackageManager };
@@ -64,6 +66,8 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// <summary>
 	/// Visualize graphs in the scene view (editor only).
 	/// [Open online documentation to see images]
+	///
+	/// See: <see cref="showGraphsInStandalonePlayer"/>
 	/// </summary>
 	public bool showNavGraphs = true;
 
@@ -84,6 +88,19 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// See: <see cref="GraphDebugMode"/>
 	/// </summary>
 	public GraphDebugMode debugMode;
+
+	/// <summary>
+	/// How to visualize graph updates in the editor.
+	/// This is used to visualize the bounds of graph updates, and how they affect the graph.
+	///
+	/// If <see cref="showGraphsInStandalonePlayer"/> is enabled, the visualization will also be shown in a standalone player.
+	///
+	/// [Open online documentation to see images]
+	/// [Open online documentation to see images]
+	///
+	/// See: <see cref="GraphUpdateDebugMode"/> for more info about the different modes.
+	/// </summary>
+	public GraphUpdateDebugMode graphUpdateDebugMode = GraphUpdateDebugMode.Nothing;
 
 	/// <summary>
 	/// Low value to use for certain <see cref="debugMode"/> modes.
@@ -157,7 +174,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	///
 	/// [Open online documentation to see images]
 	///
-	/// See: <see cref="NNConstraint.constrainDistance"/>
+	/// See: <see cref="NearestNodeConstraint.maxDistance"/>
 	/// </summary>
 	public float maxNearestNodeDistance = 100;
 
@@ -198,18 +215,18 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// Graphs will be prioritized based on their order in the inspector.
 	/// The first graph which has a node closer than <see cref="prioritizeGraphsLimit"/> will be chosen instead of searching all graphs.
 	///
-	/// Deprecated: This setting has been removed. It was always a bit of a hack. Use NNConstraint.graphMask if you want to choose which graphs are searched.
+	/// Deprecated: This setting has been removed. It was always a bit of a hack. Use TraversalConstraint.graphMask if you want to choose which graphs are searched.
 	/// </summary>
-	[System.Obsolete("This setting has been removed. It was always a bit of a hack. Use NNConstraint.graphMask if you want to choose which graphs are searched.", true)]
+	[System.Obsolete("This setting has been removed. It was always a bit of a hack. Use TraversalConstraint.graphMask if you want to choose which graphs are searched.", true)]
 	public bool prioritizeGraphs = false;
 
 	/// <summary>
 	/// Distance limit for <see cref="prioritizeGraphs"/>.
 	/// See: <see cref="prioritizeGraphs"/>
 	///
-	/// Deprecated: This setting has been removed. It was always a bit of a hack. Use NNConstraint.graphMask if you want to choose which graphs are searched.
+	/// Deprecated: This setting has been removed. It was always a bit of a hack. Use TraversalConstraint.graphMask if you want to choose which graphs are searched.
 	/// </summary>
-	[System.Obsolete("This setting has been removed. It was always a bit of a hack. Use NNConstraint.graphMask if you want to choose which graphs are searched.", true)]
+	[System.Obsolete("This setting has been removed. It was always a bit of a hack. Use TraversalConstraint.graphMask if you want to choose which graphs are searched.", true)]
 	public float prioritizeGraphsLimit = 1F;
 
 	/// <summary>
@@ -254,6 +271,13 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// See: <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia: Dijkstra's Algorithm</a>
 	/// </summary>
 	public float heuristicScale = 1F;
+
+	/// <summary>
+	/// The effective heuristic scale.
+	/// This is the heuristic scale used for pathfinding. Zero is returned if <see cref="heuristic"/> is set to None, otherwise <see cref="heuristicScale"/> is returned.
+	/// See: <see cref="heuristic"/>
+	/// </summary>
+	public float effectiveHeuristicScale => heuristic == Heuristic.None ? 0 : heuristicScale;
 
 	/// <summary>
 	/// Number of pathfinding threads to use.
@@ -533,7 +557,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	readonly WorkItemProcessor workItems;
 
 	/// <summary>Holds all paths waiting to be calculated and calculates them</summary>
-	readonly PathProcessor pathProcessor;
+	internal readonly PathProcessor pathProcessor;
 
 	/// <summary>Holds global node data that cannot be stored in individual graphs</summary>
 	internal GlobalNodeStorage nodeStorage;
@@ -544,11 +568,12 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// Graph data is always consistent from the main-thread's perspective, but if you are using jobs to read from graph data, you may need this.
 	///
 	/// A write lock is held automatically...
+	///
 	/// - During graph updates. During async graph updates, the lock is only held once per frame while the graph update is actually running, not for the whole duration.
 	/// - During work items. Async work items work similarly to graph updates, the lock is only held once per frame while the work item is actually running.
 	/// - When <see cref="GraphModifier"/> events run.
 	/// - When graph related callbacks, such as <see cref="OnGraphsUpdated"/>, run.
-	/// - During the last step of a graph's scanning process. See <see cref="ScanningStage"/>.
+	/// - During the last step of a graph's scanning process, when the new graph data is being made visible to the rest of the game. See <see cref="ScanningStage"/>.
 	///
 	/// To use e.g. AstarPath.active.GetNearest from an ECS job, you'll need to acquire a read lock first, and make sure the lock is only released when the job is finished.
 	///
@@ -564,8 +589,6 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// </summary>
 	RWLock graphDataLock = new RWLock();
 
-	bool graphUpdateRoutineRunning = false;
-
 	/// <summary>Makes sure QueueGraphUpdates will not queue multiple graph update orders</summary>
 	bool graphUpdatesWorkItemAdded = false;
 
@@ -573,7 +596,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// Time the last graph update was done.
 	/// Used to group together frequent graph updates to batches
 	/// </summary>
-	float lastGraphUpdate = -9999F;
+	float lastGraphUpdate = float.NegativeInfinity;
 
 	/// <summary>Held if any work items are currently queued</summary>
 	PathProcessor.GraphUpdateLock workItemLock;
@@ -599,9 +622,25 @@ public class AstarPath : VersionedMonoBehaviour {
 
 	/// <summary>
 	/// Shows or hides graph inspectors.
-	/// Used internally by the editor
+	/// Used internally by the editor.
+	///
+	/// See: <see cref="showNavGraphs"/>
+	/// See: <see cref="showGraphsInStandalonePlayer"/>
 	/// </summary>
 	public bool showGraphs = false;
+
+	/// <summary>
+	/// Shows or hides the graph visualizations in standalone games.
+	/// Normally, graph visualizations are only shown in the editor.
+	/// If this is set to true, the graph visualizations will also be shown in standalone games.
+	///
+	/// Note: In the editor, this setting has no effect.
+	///
+	/// Note: <see cref="showNavGraphs"/> will be ignored in standalone builds, and this value will be used instead.
+	///
+	/// See: <see cref="NavGraph.drawGizmos"/>
+	/// </summary>
+	public bool showGraphsInStandalonePlayer = false;
 
 	/// <summary>
 	/// The next unused Path ID.
@@ -641,8 +680,8 @@ public class AstarPath : VersionedMonoBehaviour {
 			if (tmp != null) tmp(path);
 		};
 
-		pathProcessor.OnPathPostSearch += path => {
-			LogPathResults(path);
+		pathProcessor.OnPathPostSearch += (pathHandler, path) => {
+			LogPathResults(pathHandler.DebugStringBuilder, path);
 			var tmp = OnPathPostSearch;
 			if (tmp != null) tmp(path);
 		};
@@ -709,61 +748,71 @@ public class AstarPath : VersionedMonoBehaviour {
 		return nextFreePathID++;
 	}
 
+#if UNITY_EDITOR
+	struct DebugLimitsCtx {
+		public UnsafeSpan<GlobalNodeStorage.DebugPathNode> debugPathNodes;
+		public ushort debugPathID;
+		public float debugFloor;
+		public float debugRoof;
+		public GraphDebugMode debugMode;
+	}
+#endif
+
 	void RecalculateDebugLimits () {
 #if UNITY_EDITOR
-		debugFloor = float.PositiveInfinity;
-		debugRoof = float.NegativeInfinity;
-
-		bool ignoreSearchTree = !showSearchTree || debugPathData == null;
-		UnsafeSpan<GlobalNodeStorage.DebugPathNode> debugPathNodes;
-		if (debugPathData != null && debugPathData.threadID < active.nodeStorage.pathfindingThreadData.Length) debugPathNodes = active.nodeStorage.pathfindingThreadData[debugPathData.threadID].debugPathNodes;
-		else debugPathNodes = default;
+		var ctx = new DebugLimitsCtx {
+			debugPathNodes = showSearchTree && debugPathData != null && debugPathData.threadID < active.nodeStorage.pathfindingThreadData.Length ? active.nodeStorage.pathfindingThreadData[debugPathData.threadID].debugPathNodes : default,
+			debugPathID = debugPathID,
+			debugFloor = float.PositiveInfinity,
+			debugRoof = float.NegativeInfinity,
+			debugMode = debugMode,
+		};
 
 		for (int i = 0; i < graphs.Length; i++) {
 			if (graphs[i] != null && graphs[i].drawGizmos) {
-				graphs[i].GetNodes(node => {
-					if (node.Walkable && (ignoreSearchTree || Pathfinding.Util.GraphGizmoHelper.InSearchTree(node, debugPathNodes, debugPathID))) {
+				graphs[i].GetNodes(static (GraphNode node, ref DebugLimitsCtx ctx) => {
+					if (node.Walkable && (ctx.debugPathNodes.length == 0 || GraphGizmoHelper.InSearchTree(node, ctx.debugPathNodes, ctx.debugPathID))) {
 						float value;
-						if (debugMode == GraphDebugMode.Penalty) {
+						if (ctx.debugMode == GraphDebugMode.Penalty) {
 							value = node.Penalty;
-						} else if (debugPathNodes.Length > 0) {
-							var rnode = debugPathNodes[node.NodeIndex];
-							switch (debugMode) {
-							case GraphDebugMode.F:
-								value = rnode.g + rnode.h;
-								break;
-							case GraphDebugMode.G:
-								value = rnode.g;
-								break;
-							default:
-							case GraphDebugMode.H:
-								value = rnode.h;
-								break;
+						} else if (ctx.debugPathNodes.Length > 0) {
+							var rnode = ctx.debugPathNodes[node.NodeIndex];
+							switch (ctx.debugMode) {
+								case GraphDebugMode.F:
+									value = rnode.g + rnode.h;
+									break;
+								case GraphDebugMode.G:
+									value = rnode.g;
+									break;
+								default:
+								case GraphDebugMode.H:
+									value = rnode.h;
+									break;
 							}
 						} else {
 							value = 0;
 						}
-						debugFloor = Mathf.Min(debugFloor, value);
-						debugRoof = Mathf.Max(debugRoof, value);
+						ctx.debugFloor = Mathf.Min(ctx.debugFloor, value);
+						ctx.debugRoof = Mathf.Max(ctx.debugRoof, value);
 					}
-				});
+				}, ref ctx);
 			}
 		}
 
-		if (float.IsInfinity(debugFloor)) {
-			debugFloor = 0;
-			debugRoof = 1;
+		if (float.IsInfinity(ctx.debugFloor)) {
+			ctx.debugFloor = 0;
+			ctx.debugRoof = 1;
 		}
 
 		// Make sure they are not identical, that will cause the color interpolation to fail
-		if (debugRoof-debugFloor < 1) debugRoof += 1;
+		if (ctx.debugRoof-ctx.debugFloor < 1) ctx.debugRoof += 1;
+		debugFloor = ctx.debugFloor;
+		debugRoof = ctx.debugRoof;
 #else
 		debugFloor = 0;
 		debugRoof = 1;
 #endif
 	}
-
-	RedrawScope redrawScope;
 
 	/// <summary>Calls OnDrawGizmos on all graphs</summary>
 	public override void DrawGizmos () {
@@ -773,32 +822,31 @@ public class AstarPath : VersionedMonoBehaviour {
 
 		InitializeColors();
 
-		if (!redrawScope.isValid) redrawScope = DrawingManager.GetRedrawScope(gameObject);
+		var render = Application.isEditor ? showNavGraphs : showGraphsInStandalonePlayer;
+		var renderInGame = showGraphsInStandalonePlayer && !Application.isEditor;
 
-		if (!workItems.workItemsInProgress && !isScanning) {
-			// When updating graphs, graph info might not be valid,
-			// and we cannot render anything during those frames.
-			// Therefore we use a redraw scope which will continue drawing
-			// until we dispose it.
-			redrawScope.Rewind();
-			if (showNavGraphs && !manualDebugFloorRoof) {
-				RecalculateDebugLimits();
-			}
+		// Note: even when graph updates are in-progress, the graph data will always be consistent and valid on the main thread.
+		// So we can draw gizmos at any time.
 
-			Profiler.BeginSample("Graph.OnDrawGizmos");
-			// Loop through all graphs and draw their gizmos
-			for (int i = 0; i < graphs.Length; i++) {
-				if (graphs[i] != null && graphs[i].drawGizmos)
-					graphs[i].OnDrawGizmos(DrawingManager.instance.gizmos, showNavGraphs, redrawScope);
-			}
-			Profiler.EndSample();
-
-			if (showNavGraphs) {
-				euclideanEmbedding.OnDrawGizmos();
-				if (debugMode == GraphDebugMode.HierarchicalNode) hierarchicalGraph.OnDrawGizmos(DrawingManager.instance.gizmos, redrawScope);
-				if (debugMode == GraphDebugMode.NavmeshBorderObstacles) hierarchicalGraph.navmeshEdges.OnDrawGizmos(DrawingManager.instance.gizmos, redrawScope);
-			}
+		if (render && !manualDebugFloorRoof) {
+			RecalculateDebugLimits();
 		}
+
+		Profiler.BeginSample("Graph.OnDrawGizmos");
+		// Loop through all graphs and draw their gizmos
+		for (int i = 0; i < graphs.Length; i++) {
+			if (graphs[i] != null && graphs[i].drawGizmos)
+				graphs[i].OnDrawGizmos(DrawingManager.instance.gizmos, render, default, renderInGame);
+		}
+		Profiler.EndSample();
+
+		if (render) {
+			euclideanEmbedding.OnDrawGizmos();
+			if (debugMode == GraphDebugMode.HierarchicalNode) hierarchicalGraph.OnDrawGizmos(DrawingManager.instance.gizmos, renderInGame);
+			if (debugMode == GraphDebugMode.NavmeshBorderObstacles) hierarchicalGraph.navmeshEdges.OnDrawGizmos(DrawingManager.instance.gizmos, renderInGame);
+		}
+
+		workItems.DrawGizmos();
 	}
 
 #if !ASTAR_NO_GUI
@@ -819,16 +867,18 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// See: PathLog
 	/// See: Pathfinding.Path.DebugString
 	/// </summary>
-	private void LogPathResults (Path path) {
+	private void LogPathResults (System.Text.StringBuilder debugStringBuilder, Path path) {
 		if (logPathResults != PathLog.None && (path.error || logPathResults != PathLog.OnlyErrors)) {
-			string debug = (path as IPathInternals).DebugString(logPathResults);
+			debugStringBuilder.Clear();
+			(path as IPathInternals).DebugString(debugStringBuilder, logPathResults);
+			var output = debugStringBuilder.ToString();
 
 			if (logPathResults == PathLog.InGame) {
-				inGameDebugPath = debug;
+				inGameDebugPath = output;
 			} else if (path.error) {
-				Debug.LogWarning(debug);
+				Debug.LogWarning(output);
 			} else {
-				Debug.Log(debug);
+				Debug.Log(output);
 			}
 		}
 	}
@@ -852,6 +902,8 @@ public class AstarPath : VersionedMonoBehaviour {
 		// Don't do anything when not in play mode
 		if (!Application.isPlaying) return;
 
+		TryQueueGraphUpdates();
+
 		// Execute blocking actions such as graph updates
 		// when not scanning
 		if (!isScanning) {
@@ -863,6 +915,11 @@ public class AstarPath : VersionedMonoBehaviour {
 
 		// Return calculated paths
 		pathReturnQueue.ReturnPaths(true);
+
+		if (!Application.isEditor && showGraphsInStandalonePlayer) {
+			showGraphs = showGraphsInStandalonePlayer;
+			DrawGizmos();
+		}
 	}
 
 	private void PerformBlockingActions (bool force = false) {
@@ -979,7 +1036,7 @@ public class AstarPath : VersionedMonoBehaviour {
 
 	/// <summary>
 	/// Will apply queued graph updates as soon as possible, regardless of <see cref="batchGraphUpdates"/>.
-	/// Calling this multiple times will not create multiple callbacks.
+	/// Calling this multiple times, before graph updates are applied, is equivalent to calling it once.
 	/// This function is useful if you are limiting graph updates, but you want a specific graph update to be applied as soon as possible regardless of the time limit.
 	/// Note that this does not block until the updates are done, it merely bypasses the <see cref="batchGraphUpdates"/> time limit.
 	///
@@ -1002,21 +1059,27 @@ public class AstarPath : VersionedMonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Waits a moment with updating graphs.
-	/// If batchGraphUpdates is set, we want to keep some space between them to let pathfinding threads running and then calculate all queued calls at once
-	/// </summary>
-	IEnumerator DelayedGraphUpdate () {
-		graphUpdateRoutineRunning = true;
-
-		yield return new WaitForSeconds(graphUpdateBatchingInterval-(Time.realtimeSinceStartup-lastGraphUpdate));
-		QueueGraphUpdates();
-		graphUpdateRoutineRunning = false;
+	/// <summary>Calls <see cref="QueueGraphUpdates"/>, unless we should wait for a larger batch</summary>
+	void TryQueueGraphUpdates () {
+		if (IsAnyGraphUpdateQueued && (!batchGraphUpdates || Time.realtimeSinceStartup >= lastGraphUpdate + graphUpdateBatchingInterval)) {
+			QueueGraphUpdates();
+		}
 	}
 
 	/// <summary>
 	/// Update all graphs within bounds after delay seconds.
 	/// The graphs will be updated as soon as possible.
+	///
+	/// <code>
+	/// // Create an obstacle
+	/// var obstacle = GameObject.Instantiate(someObstacle, somePosition, Quaternion.identity);
+	///
+	/// // Use the bounding box from the attached collider
+	/// var bounds = obstacle.GetComponent<Collider>().bounds;
+	///
+	/// // Update the graph to account for the new obstacle
+	/// AstarPath.active.UpdateGraphs(bounds);
+	/// </code>
 	///
 	/// See: FlushGraphUpdates
 	/// See: batchGraphUpdates
@@ -1029,6 +1092,18 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// <summary>
 	/// Update all graphs using the GraphUpdateObject after delay seconds.
 	/// This can be used to, e.g make all nodes in a region unwalkable, or set them to a higher penalty.
+	///
+	/// <code>
+	/// // using Pathfinding; //At top of script
+	///
+	/// // As an example, use the bounding box from the attached collider
+	/// Bounds bounds = GetComponent<Collider>().bounds;
+	/// var guo = new GraphUpdateObject(bounds);
+	///
+	/// // Set some settings
+	/// guo.updatePhysics = true;
+	/// AstarPath.active.UpdateGraphs(guo);
+	/// </code>
 	///
 	/// See: FlushGraphUpdates
 	/// See: batchGraphUpdates
@@ -1053,6 +1128,17 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// UpdateGraphs(new GraphUpdateObject(bounds));
 	/// </code>
 	///
+	/// <code>
+	/// // Create an obstacle
+	/// var obstacle = GameObject.Instantiate(someObstacle, somePosition, Quaternion.identity);
+	///
+	/// // Use the bounding box from the attached collider
+	/// var bounds = obstacle.GetComponent<Collider>().bounds;
+	///
+	/// // Update the graph to account for the new obstacle
+	/// AstarPath.active.UpdateGraphs(bounds);
+	/// </code>
+	///
 	/// See: FlushGraphUpdates
 	/// See: batchGraphUpdates
 	/// See: graph-updates (view in online documentation for working links)
@@ -1066,6 +1152,18 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// This can be used to, e.g make all nodes in a region unwalkable, or set them to a higher penalty.
 	/// The graphs will be updated as soon as possible (with respect to <see cref="batchGraphUpdates)"/>
 	///
+	/// <code>
+	/// // using Pathfinding; //At top of script
+	///
+	/// // As an example, use the bounding box from the attached collider
+	/// Bounds bounds = GetComponent<Collider>().bounds;
+	/// var guo = new GraphUpdateObject(bounds);
+	///
+	/// // Set some settings
+	/// guo.updatePhysics = true;
+	/// AstarPath.active.UpdateGraphs(guo);
+	/// </code>
+	///
 	/// See: FlushGraphUpdates
 	/// See: batchGraphUpdates
 	/// See: graph-updates (view in online documentation for working links)
@@ -1077,15 +1175,7 @@ public class AstarPath : VersionedMonoBehaviour {
 		ob.internalStage = GraphUpdateObject.STAGE_PENDING;
 		graphUpdates.AddToQueue(ob);
 
-		// If we should limit graph updates, start a coroutine which waits until we should update graphs
-		if (batchGraphUpdates && Time.realtimeSinceStartup-lastGraphUpdate < graphUpdateBatchingInterval) {
-			if (!graphUpdateRoutineRunning) {
-				StartCoroutine(DelayedGraphUpdate());
-			}
-		} else {
-			// Otherwise, graph updates should be carried out as soon as possible
-			QueueGraphUpdates();
-		}
+		TryQueueGraphUpdates();
 	}
 
 	/// <summary>
@@ -1133,63 +1223,9 @@ public class AstarPath : VersionedMonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Calculates number of threads to use.
-	/// If count is not Automatic, simply returns count casted to an int.
-	/// Returns: An int specifying how many threads to use, 0 means a coroutine should be used for pathfinding instead of a separate thread.
-	///
-	/// If count is set to Automatic it will return a value based on the number of processors and memory for the current system.
-	/// If memory is <= 512MB or logical cores are <= 1, it will return 0. If memory is <= 1024 it will clamp threads to max 2.
-	/// Otherwise it will return the number of logical cores clamped to 6.
-	///
-	/// When running on WebGL this method always returns 0
-	/// </summary>
-	public static int CalculateThreadCount (ThreadCount count) {
-#if UNITY_WEBGL
-		return 0;
-#else
-		if (count == ThreadCount.AutomaticLowLoad || count == ThreadCount.AutomaticHighLoad) {
-#if ASTARDEBUG
-			Debug.Log(SystemInfo.systemMemorySize + " " + SystemInfo.processorCount + " " + SystemInfo.processorType);
-#endif
-
-			int logicalCores = Mathf.Max(1, SystemInfo.processorCount);
-			int memory = SystemInfo.systemMemorySize;
-
-			if (memory <= 0) {
-				Debug.LogError("Machine reporting that is has <= 0 bytes of RAM. This is definitely not true, assuming 1 GiB");
-				memory = 1024;
-			}
-
-			if (logicalCores <= 1) return 0;
-
-			if (memory <= 512) return 0;
-
-			if (count == ThreadCount.AutomaticHighLoad) {
-				if (memory <= 1024) logicalCores = System.Math.Min(logicalCores, 2);
-			} else {
-				//Always run at at most processorCount-1 threads (one core reserved for unity thread).
-				// Many computers use hyperthreading, so dividing by two is used to remove the hyperthreading cores, pathfinding
-				// doesn't scale well past the number of physical cores anyway
-				logicalCores /= 2;
-				logicalCores = Mathf.Max(1, logicalCores);
-
-				if (memory <= 1024) logicalCores = System.Math.Min(logicalCores, 2);
-
-				logicalCores = System.Math.Min(logicalCores, 6);
-			}
-
-			return logicalCores;
-		} else {
-			int val = (int)count;
-			return val;
-		}
-#endif
-	}
-
 	/// <summary>Initializes the <see cref="pathProcessor"/> field</summary>
 	void InitializePathProcessor () {
-		int numThreads = CalculateThreadCount(threadCount);
+		int numThreads = threadCount.ToConcreteThreadCount();
 
 		// Outside of play mode everything is synchronous, so no threads are used.
 		if (!Application.isPlaying) numThreads = 0;
@@ -1322,7 +1358,6 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// - Shutdown pathfinding threads if they are running (any pending path requests are left in the queue)
 	/// </summary>
 	void OnDisable () {
-		redrawScope.Dispose();
 		if (active == this) {
 			if (asyncScanTask != null) {
 				Debug.LogWarning("An async scan was running when the AstarPath component was disabled. Blocking until the async scan is complete.", this);
@@ -1919,7 +1954,11 @@ public class AstarPath : VersionedMonoBehaviour {
 
 	internal void DirtyBounds (Bounds bounds) {
 		offMeshLinks.DirtyBounds(bounds);
-		workItems.DirtyGraphs();
+		workItems.DirtyBounds(bounds);
+	}
+
+	internal void VisualizeOriginalGraphUpdateBounds (Bounds bounds) {
+		workItems.VisualizeOriginalGraphUpdateBounds(bounds);
 	}
 
 	private static int waitForPathDepth = 0;
@@ -2070,24 +2109,13 @@ public class AstarPath : VersionedMonoBehaviour {
 	}
 
 	/// <summary>
-	/// Cached NNConstraint to avoid unnecessary allocations.
-	/// This should ideally be fixed by making NNConstraint an immutable class/struct.
-	/// </summary>
-	internal static readonly NNConstraint NNConstraintClosestAsSeenFromAbove = new NNConstraint() {
-		constrainWalkability = false,
-		constrainTags = false,
-		constrainDistance = true,
-		distanceMetric = DistanceMetric.ClosestAsSeenFromAbove(),
-	};
-
-	/// <summary>
 	/// True if the point is on a walkable part of the navmesh, as seen from above.
 	///
 	/// A point is considered on the navmesh if it is above or below a walkable navmesh surface, at any distance,
 	/// and if it is not above/below a closer unwalkable node.
 	///
 	/// Note: This means that, for example, in multi-story building a point will be considered on the navmesh if any walkable floor is below or above the point.
-	/// If you want more complex behavior then you can use the GetNearest method together with the appropriate <see cref="NNConstraint.distanceMetric"/> settings for your use case.
+	/// If you want more complex behavior then you can use the GetNearest method together with the appropriate <see cref="NearestNodeConstraint.distanceMetric"/> settings for your use case.
 	///
 	/// This uses the graph's natural up direction to determine which way is up.
 	/// Therefore, it will also work on rotated graphs, as well as graphs in 2D mode.
@@ -2103,19 +2131,22 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// </summary>
 	/// <param name="position">The point to check</param>
 	public bool IsPointOnNavmesh (Vector3 position) {
-		// We use the None constraint, instead of Walkable, to avoid ignoring unwalkable nodes that are closer to the point.
-		var nearest = GetNearest(position, NNConstraintClosestAsSeenFromAbove);
 		const float MaxHorizontalDistance = 0.01f;
 		const float MaxCostSqr = MaxHorizontalDistance * MaxHorizontalDistance;
-		// TODO: Set a distance threshold in the NNConstraint, to optimize it
-		return nearest.node != null && nearest.node.Walkable && nearest.distanceCostSqr < MaxCostSqr;
+		// We use the None constraint, instead of Walkable, to avoid ignoring unwalkable nodes that are closer to the point.
+		var constraint = NearestNodeConstraint.None;
+		constraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
+		constraint.maxDistanceSqr = MaxCostSqr;
+		var nearest = GetNearest(position, constraint);
+		UnityEngine.Assertions.Assert.IsTrue(nearest.node == null || nearest.distanceCostSqr <= MaxCostSqr);
+		return nearest.node != null && nearest.node.Walkable;
 	}
 
 	/// <summary>
-	/// Returns the nearest node to a position.
-	/// This method will search through all graphs and query them for the closest node to this position, and then it will return the closest one of those.
+	/// Returns the nearest node to a point.
+	/// This method will search through all graphs and query them for the closest node (walkable or unwalkable) to this position.
 	///
-	/// Equivalent to GetNearest(position, NNConstraint.None).
+	/// Equivalent to GetNearest(position, NearestNodeConstraint.None).
 	///
 	/// <code>
 	/// // Find the closest node to this GameObject's position
@@ -2126,32 +2157,30 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// }
 	/// </code>
 	///
-	/// See: Pathfinding.NNConstraint
+	/// See: <see cref="NearestNodeConstraint"/>
 	/// </summary>
 	public NNInfo GetNearest (Vector3 position) {
-		return GetNearest(position, null);
+		return GetNearest(position, NearestNodeConstraint.None);
 	}
 
 	/// <summary>
 	/// Returns the nearest node to a point using the specified NNConstraint.
 	///
 	/// Searches through all graphs for their nearest nodes to the specified position and picks the closest one.
-	/// The NNConstraint can be used to specify constraints on which nodes can be chosen such as only picking walkable nodes.
+	/// The NNConstraint can be used to specify constraints on which nodes can be chosen, such as only picking walkable nodes.
 	///
 	/// <code>
-	/// GraphNode node = AstarPath.active.GetNearest(transform.position, NNConstraint.Walkable).node;
+	/// GraphNode node = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.Walkable).node;
 	/// </code>
 	///
 	/// <code>
-	/// var constraint = NNConstraint.None;
+	/// var constraint = NearestNodeConstraint.None;
 	///
 	/// // Constrain the search to walkable nodes only
-	/// constraint.constrainWalkability = true;
-	/// constraint.walkable = true;
+	/// constraint.walkable = NearestNodeConstraint.WalkabilityConstraint.Walkable;
 	///
 	/// // Constrain the search to only nodes with tag 3 or tag 5
 	/// // The 'tags' field is a bitmask
-	/// constraint.constrainTags = true;
 	/// constraint.tags = (1 << 3) | (1 << 5);
 	///
 	/// var info = AstarPath.active.GetNearest(transform.position, constraint);
@@ -2160,13 +2189,54 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// </code>
 	///
 	/// See: <see cref="NNConstraint"/>
+	/// Deprecated: This method is obsolete. Use the overload that takes a NearestNodeConstraint instead.
 	/// </summary>
 	/// <param name="position">The point to find nodes close to</param>
 	/// <param name="constraint">The constraint which determines which graphs and nodes are acceptable to search on. May be null, in which case all nodes will be considered acceptable.</param>
+	[System.Obsolete("NNConstraint is obsolete. Use the overload that takes a NearestNodeConstraint instead")]
 	public NNInfo GetNearest (Vector3 position, NNConstraint constraint) {
+		return GetNearest(position, constraint != null ? constraint.ToNearestNodeConstraint() : NearestNodeConstraint.None);
+	}
+
+	/// <summary>
+	/// Returns the nearest node to a point using the specified NearestNodeConstraint.
+	///
+	/// Searches through all graphs for their nearest nodes to the specified position and picks the closest one.
+	/// The <see cref="NearestNodeConstraint"/> can be used to specify constraints on which nodes can be chosen, such as only picking walkable nodes.
+	///
+	/// <code>
+	/// GraphNode node = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.Walkable).node;
+	/// </code>
+	///
+	/// <code>
+	/// var constraint = NearestNodeConstraint.None;
+	///
+	/// // Constrain the search to walkable nodes only
+	/// constraint.walkable = NearestNodeConstraint.WalkabilityConstraint.Walkable;
+	///
+	/// // Constrain the search to only nodes with tag 3 or tag 5
+	/// // The 'tags' field is a bitmask
+	/// constraint.tags = (1 << 3) | (1 << 5);
+	///
+	/// var info = AstarPath.active.GetNearest(transform.position, constraint);
+	/// var node = info.node;
+	/// var closestPoint = info.position;
+	/// </code>
+	///
+	/// See: <see cref="NearestNodeConstraint"/>
+	/// </summary>
+	/// <param name="position">The point to find nodes close to</param>
+	/// <param name="constraint">The constraint which determines which graphs and nodes are acceptable to search on.</param>
+	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+	public NNInfo GetNearest (Vector3 position, NearestNodeConstraint constraint) {
+		return GetNearest(position, ref constraint);
+	}
+
+	internal NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 		// Cache property lookups
 		var graphs = this.graphs;
-		var maxNearestNodeDistanceSqr = constraint == null || constraint.constrainDistance ? this.maxNearestNodeDistanceSqr : float.PositiveInfinity;
+		constraint.maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+		UnityEngine.Assertions.Assert.IsTrue(constraint.maxDistanceSqr >= 0);
 		NNInfo nearestNode = NNInfo.Empty;
 
 		if (graphs == null || graphs.Length == 0) return nearestNode;
@@ -2175,50 +2245,141 @@ public class AstarPath : VersionedMonoBehaviour {
 		// This improves performance by about 10% when there is only one graph.
 		if (graphs.Length == 1) {
 			var graph = graphs[0];
-			if (graph == null || (constraint != null && !constraint.SuitableGraph(0, graph))) {
+			if (graph == null || !constraint.graphMask.Contains(graph)) {
 				return nearestNode;
 			}
 
-			nearestNode = graph.GetNearest(position, constraint, maxNearestNodeDistanceSqr);
-			UnityEngine.Assertions.Assert.IsTrue(nearestNode.node == null || nearestNode.distanceCostSqr <= maxNearestNodeDistanceSqr);
+			nearestNode = graph.GetNearest(position, ref constraint);
+			UnityEngine.Assertions.Assert.IsTrue(nearestNode.node == null || nearestNode.distanceCostSqr <= constraint.maxDistanceSqr);
 		} else {
-			UnsafeSpan<(float, int)> distances;
+			UnsafeSpan<(float, uint)> distances;
 			unsafe {
 				// The number of graphs is limited to GraphNode.MaxGraphIndex (256),
 				// and typically there are only a few graphs, so allocating this on the stack is fine.
 				var distancesPtr = stackalloc (float, int)[graphs.Length];
-				distances = new UnsafeSpan<(float, int)>(distancesPtr, graphs.Length);
+				distances = new UnsafeSpan<(float, uint)>(distancesPtr, graphs.Length);
 			}
 
 			// Iterate through all graphs and find a lower bound on the distance to the nearest node.
 			// We then sort these distances and run the full get nearest search on the graphs in order of increasing distance.
 			// This is an optimization to avoid running the full get nearest search on graphs which are far away.
 			int numCandidateGraphs = 0;
-			for (int i = 0; i < graphs.Length; i++) {
+			for (uint i = 0; i < (uint)graphs.Length; i++) {
 				NavGraph graph = graphs[i];
 
 				// Check if this graph should be searched
-				if (graph == null || (constraint != null && !constraint.SuitableGraph(i, graph))) {
+				if (graph == null || !constraint.graphMask.Contains(i)) {
 					continue;
 				}
-				var lowerBound = graph.NearestNodeDistanceSqrLowerBound(position, constraint);
-				if (lowerBound > maxNearestNodeDistanceSqr) continue;
+				var lowerBound = graph.NearestNodeDistanceSqrLowerBound(position, ref constraint);
+				if (lowerBound > constraint.maxDistanceSqr) continue;
 
 				distances[numCandidateGraphs++] = (lowerBound, i);
 			}
 			distances = distances.Slice(0, numCandidateGraphs);
 			distances.Sort();
 			for (int i = 0; i < distances.Length; i++) {
-				if (distances[i].Item1 > maxNearestNodeDistanceSqr) break;
+				if (distances[i].Item1 > constraint.maxDistanceSqr) break;
 				var graph = graphs[distances[i].Item2];
-				NNInfo nnInfo = graph.GetNearest(position, constraint, maxNearestNodeDistanceSqr);
-				if (nnInfo.distanceCostSqr < maxNearestNodeDistanceSqr) {
-					maxNearestNodeDistanceSqr = nnInfo.distanceCostSqr;
+				NNInfo nnInfo = graph.GetNearest(position, ref constraint);
+				if (nnInfo.distanceCostSqr < constraint.maxDistanceSqr) {
+					constraint.maxDistanceSqr = nnInfo.distanceCostSqr;
 					nearestNode = nnInfo;
 				}
 			}
 		}
 		return nearestNode;
+	}
+
+	/// <summary>
+	/// Finds the closest navmesh border to the given position.
+	///
+	/// Returns: True if a border was found, false otherwise.
+	///
+	/// [Open online documentation to see images]
+	/// [Open online documentation to see videos]
+	///
+	/// <code>
+	/// var origin = target.position;
+	/// using (Draw.WithLineWidth(2)) {
+	///     if (AstarPath.active.GetNearestBorder(origin, NearestNodeConstraint.Walkable, out var hit)) {
+	///         Draw.Arrow(origin, hit.point, Palette.Yellow);
+	///         Draw.SphereOutline(origin, 0.1f, Palette.Yellow);
+	///         Draw.SphereOutline(hit.point, 0.1f, Palette.Yellow);
+	///         Draw.Ray(hit.tangentOrigin, hit.tangent, Palette.Purple);
+	///     }
+	/// }
+	/// </code>
+	///
+	/// This method will first find the nearest node to the specified position using the specified constraint.
+	/// You can think of this as the node the agent is currently standing on.
+	/// Then, it will search for the closest border to that node, which is connected to it.
+	///
+	/// The constraint is only used to find the nearest node, it does not inform what borders are found afterwards.
+	/// Notably, if an agent cannot traverse a given tag, it will still not consider a border between that tag and a node with a walkable tag as a valid border.
+	///
+	/// On a point graph, this method will always return false, since point nodes do not have any borders as such.
+	///
+	/// Note: hit.node will always be null, as it is currently not possible for the code to figure out which border belongs to what node. You can call <see cref="AstarPath.GetNearest"/> with hit.point if you need this information.
+	///
+	/// See: <see cref="GraphUtilities.GetContours"/>
+	/// See: <see cref="GetNearest"/>
+	/// See: <see cref="FollowerEntity.nearestNavmeshBorder"/>
+	/// </summary>
+	/// <param name="position">The position to search from.</param>
+	/// <param name="constraint">Constraint for which nodes are acceptable for the agent to stand on.</param>
+	/// <param name="hit">Information about the closest border, if any was found.</param>
+	public bool GetNearestBorder (Vector3 position, NearestNodeConstraint constraint, out GraphHitInfo hit) {
+		var nn = GetNearest(position, constraint);
+		return GetNearestBorder(position, nn.node, out hit);
+	}
+
+	/// <summary>
+	/// Finds the closest navmesh border to the given position.
+	///
+	/// [Open online documentation to see images]
+	/// [Open online documentation to see videos]
+	///
+	/// <code>
+	/// var origin = target.position;
+	/// using (Draw.WithLineWidth(2)) {
+	///     if (AstarPath.active.GetNearestBorder(origin, NearestNodeConstraint.Walkable, out var hit)) {
+	///         Draw.Arrow(origin, hit.point, Palette.Yellow);
+	///         Draw.SphereOutline(origin, 0.1f, Palette.Yellow);
+	///         Draw.SphereOutline(hit.point, 0.1f, Palette.Yellow);
+	///         Draw.Ray(hit.tangentOrigin, hit.tangent, Palette.Purple);
+	///     }
+	/// }
+	/// </code>
+	///
+	/// Returns: True if a border was found, false otherwise.
+	///
+	/// Note: hit.node will always be null, as it is currently not possible for the code to figure out which border belongs to what node. You can call <see cref="AstarPath.GetNearest"/> with hit.point if you need this information.
+	///
+	/// See: <see cref="GraphUtilities.GetContours"/>
+	/// See: <see cref="GetNearest"/>
+	/// See: <see cref="FollowerEntity.nearestNavmeshBorder"/>
+	/// </summary>
+	/// <param name="position">The position to search from.</param>
+	/// <param name="sourceNode">The node to search from. Only borders connected (directly or indirectly) to this node will be considered. This could for example be the node that an agent is currently standing on.</param>
+	/// <param name="hit">Information about the closest border, if any was found.</param>
+	public bool GetNearestBorder (Vector3 position, GraphNode sourceNode, out GraphHitInfo hit) {
+		if (sourceNode is PointNode) {
+			// Early out on point graphs, as it would otherwise try to search through the whole graph, looking for a border that won't exist.
+			hit = new GraphHitInfo {
+				origin = position,
+				point = Vector3.positiveInfinity,
+			};
+			return false;
+		}
+
+		var scratchBuffer = new Unity.Collections.NativeList<int>(Unity.Collections.Allocator.Temp);
+		scratchBuffer.Clear();
+		var borderData = GetNavmeshBorderData(out var readLock);
+		readLock.dependency.Complete();
+		hit = borderData.GetClosestEdge(sourceNode != null && sourceNode.Walkable ? sourceNode.HierarchicalNodeIndex : -1, position, scratchBuffer);
+		readLock.Unlock();
+		return hit.point.x != float.PositiveInfinity;
 	}
 
 	/// <summary>
@@ -2240,6 +2401,8 @@ public class AstarPath : VersionedMonoBehaviour {
 	///
 	/// Note: Only grid, recast and navmesh graphs support linecasts. The closest raycastable graph to the start point will be used for the linecast.
 	/// Note: Linecasts cannot pass through off-mesh links.
+	///
+	/// [Open online documentation to see videos]
 	///
 	/// See: <see cref="NavmeshBase.Linecast"/>
 	/// See: <see cref="GridGraph.Linecast"/>
@@ -2271,6 +2434,8 @@ public class AstarPath : VersionedMonoBehaviour {
 	///
 	/// Note: Only grid, recast and navmesh graphs support linecasts. The closest raycastable graph to the start point will be used for the linecast.
 	/// Note: Linecasts cannot pass through off-mesh links.
+	///
+	/// [Open online documentation to see videos]
 	///
 	/// See: <see cref="NavmeshBase.Linecast"/>
 	/// See: <see cref="GridGraph.Linecast"/>
@@ -2312,7 +2477,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	}
 
 	/// <summary>
-	/// Returns the node closest to the ray (slow).
+	/// Returns the nearest node to a ray (slow).
 	/// Warning: This function is brute-force and very slow, use with caution
 	/// </summary>
 	public GraphNode GetNearest (Ray ray) {
@@ -2373,7 +2538,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	public GraphSnapshot Snapshot (Bounds bounds, GraphMask graphMask) {
 		Profiler.BeginSample("Capturing Graph Snapshot");
 		var inner = new List<IGraphSnapshot>();
-		for (int i = 0; i < graphs.Length; i++) {
+		for (uint i = 0; i < (uint)graphs.Length; i++) {
 			if (graphs[i] != null && graphMask.Contains(i)) {
 				var s = graphs[i].Snapshot(bounds);
 				if (s != null) inner.Add(s);
@@ -2444,6 +2609,7 @@ public class AstarPath : VersionedMonoBehaviour {
 	///
 	/// See: <see cref="LockGraphDataForReading"/>
 	/// See: <see cref="graphDataLock"/>
+	/// See: <see cref="AddWorkItem"/>
 	/// </summary>
 	public RWLock.LockSync LockGraphDataForWritingSync() => graphDataLock.WriteSync();
 

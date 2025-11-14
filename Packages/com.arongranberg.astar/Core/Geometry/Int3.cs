@@ -278,7 +278,7 @@ namespace Pathfinding {
 		#endregion
 
 		public override int GetHashCode () {
-			return x*73856093 ^ y*19349669 ^ z*83492791;
+			return x*73856093 + y*19349669 + z*83492791;
 		}
 	}
 }

@@ -2,6 +2,7 @@ using Pathfinding.Collections;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Profiling;
@@ -88,6 +89,14 @@ namespace Pathfinding.Graphs.Navmesh.Jobs {
 					// If we are just updating a part of the graph we still want to assign the nodes the proper global tile index
 					var graphTileIndex = (z + tileRect.ymin)*graphTileCount.x + (x + tileRect.xmin);
 					var mesh = tileMeshes[tileIndex];
+					var preCutMesh = isUsingCuts ? preCutTileMeshes[tileIndex] : default;
+
+					int highestVertexCount = math.max(mesh.verticesInTileSpace.Length, preCutMesh.verticesInTileSpace.Length);
+					if (highestVertexCount > RecastGraph.VertexIndexMask) {
+						Debug.LogError($"Too many vertices in the tile ({highestVertexCount} > {RecastGraph.VertexIndexMask})\nYou can enable ASTAR_RECAST_LARGER_TILES under the 'Optimizations' tab in the A* Inspector to raise this limit. Or you can use a higher simplification level (RecastGraph.contourMaxError) or a smaller tile size to reduce the likelihood of this happening (a tile size between 64 and 256 is recommended, but you can go outside it if necessary). The affected tile will be left empty.");
+						mesh = default;
+						preCutMesh = default;
+					}
 
 					// Convert tile space to graph space and world space
 					var verticesInGraphSpace = mesh.verticesInTileSpace.Clone(Allocator.Persistent);
@@ -121,7 +130,6 @@ namespace Pathfinding.Graphs.Navmesh.Jobs {
 						// If no cuts are used, we don't save the pre-cut data, to reduce memory usage,
 						// as it is identical to the post-cut data.
 						// These arrays can be re-created from the other tile data, if needed.
-						var preCutMesh = preCutTileMeshes[tileIndex];
 						tile.preCutVertsInTileSpace = preCutMesh.verticesInTileSpace.Clone(Allocator.Persistent);
 						tile.preCutTris = preCutMesh.triangles.Clone(Allocator.Persistent);
 						tile.preCutTags = preCutMesh.tags.Clone(Allocator.Persistent);

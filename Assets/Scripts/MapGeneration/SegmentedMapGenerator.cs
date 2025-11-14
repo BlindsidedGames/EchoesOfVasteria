@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TimelessEchoes.Tasks;
@@ -17,6 +18,7 @@ namespace TimelessEchoes.MapGeneration
         [SerializeField] private Transform segmentParent;
         [SerializeField] private Transform decorParent;
         [SerializeField] private AstarPath pathfinder;
+        [SerializeField] [Min(1)] private int warmupSegmentCount = 3;
 
         private TilemapChunkGenerator chunkGenerator;
         private ProceduralTaskGenerator taskGenerator;
@@ -33,6 +35,18 @@ namespace TimelessEchoes.MapGeneration
         private int lastRightTile;
         private Vector3 lastGraphCenter;
 
+        private bool initialGenerationComplete;
+        private float initialGenerationProgressValue;
+        private WaitUntil waitForInitialGeneration;
+
+        public bool InitialGenerationComplete => initialGenerationComplete;
+
+        public float InitialGenerationProgress =>
+            initialGenerationComplete ? 1f : initialGenerationProgressValue;
+
+        public event Action<float> InitialGenerationProgressed;
+        public event Action InitialGenerationFinished;
+
         private class Segment
         {
             public int startX;
@@ -42,6 +56,7 @@ namespace TimelessEchoes.MapGeneration
 
         private void Awake()
         {
+            ResetInitialGenerationTracking();
             chunkGenerator = GetComponent<TilemapChunkGenerator>();
             taskGenerator = GetComponent<ProceduralTaskGenerator>();
             controller = GetComponent<TaskController>();
@@ -59,10 +74,50 @@ namespace TimelessEchoes.MapGeneration
             segmentSize = cfg.segmentedMapSettings.segmentSize;
         }
 
+        private void ResetInitialGenerationTracking()
+        {
+            initialGenerationComplete = false;
+            initialGenerationProgressValue = 0f;
+            waitForInitialGeneration = null;
+        }
+
+        public IEnumerator WaitForInitialGeneration()
+        {
+            if (InitialGenerationComplete)
+                yield break;
+
+            waitForInitialGeneration ??= new WaitUntil(() => initialGenerationComplete);
+            yield return waitForInitialGeneration;
+        }
+
+        private void UpdateInitialGenerationProgress(float normalizedProgress)
+        {
+            if (initialGenerationComplete)
+                return;
+
+            initialGenerationProgressValue = Mathf.Clamp01(normalizedProgress);
+            InitialGenerationProgressed?.Invoke(initialGenerationProgressValue);
+        }
+
+        private void CompleteInitialGeneration()
+        {
+            if (initialGenerationComplete)
+                return;
+
+            initialGenerationComplete = true;
+            initialGenerationProgressValue = 1f;
+            InitialGenerationProgressed?.Invoke(initialGenerationProgressValue);
+            InitialGenerationFinished?.Invoke();
+        }
+
         private IEnumerator Start()
         {
-            for (var i = 0; i < 3; i++)
+            var warmupCount = Mathf.Max(1, warmupSegmentCount);
+            for (var i = 0; i < warmupCount; i++)
+            {
                 yield return StartCoroutine(CreateSegment());
+                UpdateInitialGenerationProgress((i + 1f) / warmupCount);
+            }
 
             // Ensure TilemapCollider2D has rebuilt before first scan
             yield return new WaitForEndOfFrame();
@@ -70,6 +125,7 @@ namespace TimelessEchoes.MapGeneration
             yield return null; // extra frame for composite/tiles to finish updating
 
             MoveGraph();
+            CompleteInitialGeneration();
         }
 
         private void Update()

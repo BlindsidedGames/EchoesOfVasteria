@@ -85,7 +85,9 @@ namespace Pathfinding.RVO {
 
 		public SimulatorBurst.HorizonAgentData horizonAgentData;
 
+#if UNITY_EDITOR
 		public CommandBuilder draw;
+#endif
 
 		public bool allowBoundsChecks { get { return true; } }
 
@@ -340,21 +342,30 @@ namespace Pathfinding.RVO {
 
 					var dirSqrLength = math.lengthsq(relativePosition);
 					var combinedRadius = agentData.radius[other] + radius;
-					if (dirSqrLength < combinedRadius*combinedRadius && dirSqrLength > 0.00000001f) {
-						// Collision
-						var dirLength = math.sqrt(dirSqrLength);
-						var normalizedDir = relativePosition * (1.0f / dirLength);
+					if (dirSqrLength < combinedRadius*combinedRadius) {
+						if (dirSqrLength > 0.00000001f) {
+							// Collision
+							var dirLength = math.sqrt(dirSqrLength);
+							var normalizedDir = relativePosition * (1.0f / dirLength);
 
-						// Overlap amount
-						var weight = combinedRadius - dirLength;
+							// Overlap amount
+							var weight = combinedRadius - dirLength;
 
-						// Position offset required to make the agents not collide anymore
-						var offset = normalizedDir * weight;
-						// In a later step a weighted average will be taken so that the average offset is extracted
-						var weightedOffset = offset * weight;
+							// Position offset required to make the agents not collide anymore
+							var offset = normalizedDir * weight;
+							// In a later step a weighted average will be taken so that the average offset is extracted
+							var weightedOffset = offset * weight;
 
-						totalOffset += weightedOffset;
-						totalWeight += weight;
+							totalOffset += weightedOffset;
+							totalWeight += weight;
+						} else {
+							// The agents are in the exact same place. Just move in some direction randomly.
+							// Use a pseudo-random value based on the indices i and j instead of UnityEngine.Random
+							float pseudoRandom = math.frac(i * 0.521353f + j * 0.753177f);
+							math.sincos(pseudoRandom * math.PI * 2, out float sin, out float cos);
+							totalOffset += 100 * new float2(cos, sin) * radius * 0.01f;
+							totalWeight += 100;
+						}
 					}
 				}
 
@@ -481,7 +492,9 @@ namespace Pathfinding.RVO {
 
 		public SimulatorBurst.AgentOutputData output;
 		public int numAgents;
+#if UNITY_EDITOR
 		public CommandBuilder draw;
+#endif
 
 		private static readonly ProfilerMarker MarkerInvert = new ProfilerMarker("InvertArrows");
 		private static readonly ProfilerMarker MarkerAlloc = new ProfilerMarker("Alloc");
@@ -699,7 +712,9 @@ namespace Pathfinding.RVO {
 
 		const int MaxObstacleCount = 50;
 
+#if UNITY_EDITOR
 		public CommandBuilder draw;
+#endif
 
 		public void Execute (int startIndex, int batchSize) {
 			ExecuteORCA(startIndex, batchSize);
@@ -1283,7 +1298,7 @@ namespace Pathfinding.RVO {
 					orcaLineToAgent[numLines] = otherIndex;
 					numLines++;
 #if UNITY_EDITOR
-					if (agentData.HasDebugFlag(agentIndex, AgentDebugFlags.AgentVOs)) {
+					if (agentData.HasDebugFlag(agentIndex, AgentDebugFlags.AgentVelocityObstacles)) {
 						draw.PushMatrix(math.mul(float4x4.TRS(position, quaternion.identity, 1), movementPlane.matrix));
 						var voCenter = math.lerp(optimalVelocity, otherOptimalVelocity, 0.5f);
 						DrawVO(draw, relativePosition * tempInverseTimeHorizon + otherOptimalVelocity, combinedRadius * tempInverseTimeHorizon, otherOptimalVelocity, Color.black);
@@ -1316,7 +1331,7 @@ namespace Pathfinding.RVO {
 
 
 #if UNITY_EDITOR
-				if (agentData.HasDebugFlag(agentIndex, AgentDebugFlags.ObstacleVOs)) {
+				if (agentData.HasDebugFlag(agentIndex, AgentDebugFlags.ObstacleVelocityObstacles)) {
 					draw.PushColor(new Color(1, 1, 1, 0.2f));
 					draw.PushMatrix(math.mul(float4x4.TRS(position, quaternion.identity, 1), movementPlane.matrix));
 					for (int i = 0; i < numLines; i++) {
@@ -1430,11 +1445,14 @@ namespace Pathfinding.RVO {
 					var targetDir = math.normalizesafe(movementPlane.ToPlane(agentData.targetPoint[agentIndex] - position));
 					var forwardClearance = CalculateForwardClearance(neighbours, movementPlane, position, agentRadius, targetDir);
 					output.forwardClearance[agentIndex] = forwardClearance;
+
+#if UNITY_EDITOR
 					if (agentData.HasDebugFlag(agentIndex, AgentDebugFlags.ForwardClearance) && forwardClearance < float.PositiveInfinity) {
 						draw.PushLineWidth(2);
 						draw.Ray(position, movementPlane.ToWorld(targetDir) * forwardClearance, Color.red);
 						draw.PopLineWidth();
 					}
+#endif
 				}
 			}
 		}

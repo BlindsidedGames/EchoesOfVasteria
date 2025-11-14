@@ -79,7 +79,7 @@ namespace Pathfinding.ECS {
 			if (mode == Pathfinding.AutoRepathPolicy.Mode.EveryNSeconds) {
 				return timeSinceLast >= tmpPeriod;
 			} else {
-				// cost = change in destination / max(distance to destination, radius)
+				// cost = change in destination / max(distance to destination, radius) = approximately the change in angle to the destination (in radians)
 				float squaredCost = math.lengthsq(destination - lastDestination) / math.max(math.lengthsq(position - lastDestination), radius*radius);
 				float fraction = squaredCost * (Sensitivity*Sensitivity);
 				if (float.IsNaN(fraction)) {
@@ -96,7 +96,7 @@ namespace Pathfinding.ECS {
 
 		public void OnPathCalculated (bool hadError) {
 			if (hadError) {
-				pathFailures = (byte)math.min(255, pathFailures++);
+				pathFailures = (byte)math.min(255, pathFailures+1);
 			} else {
 				pathFailures = 0;
 			}

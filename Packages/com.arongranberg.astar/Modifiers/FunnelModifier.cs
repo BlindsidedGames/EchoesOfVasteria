@@ -95,8 +95,7 @@ namespace Pathfinding {
 			}
 
 			if (quality == FunnelQuality.High) {
-				System.Func<GraphNode, bool>  filter = p.CanTraverse;
-				Funnel.Simplify(parts, ref p.path, filter);
+				Funnel.Simplify(parts, ref p.path, ref p.traversalCosts, ref p.traversalConstraint);
 			}
 
 			for (int i = 0; i < parts.Count; i++) {
@@ -105,13 +104,8 @@ namespace Pathfinding {
 					// If this is a grid graph (and not a hexagonal graph) then we can use a special
 					// string pulling algorithm for grid graphs which works a lot better.
 					if (p.path[part.startIndex].Graph is GridGraph gg && gg.neighbours != NumNeighbours.Six) {
-						// TODO: Avoid dynamic allocations
-						System.Func<GraphNode, uint>  traversalCost = null;
-						if (accountForGridPenalties) {
-							traversalCost = p.GetTraversalCost;
-						}
-						System.Func<GraphNode, bool>  filter = p.CanTraverse;
-						var result = GridStringPulling.Calculate(p.path, part.startIndex, part.endIndex, part.startPoint, part.endPoint, traversalCost, filter, int.MaxValue);
+						var traversalCosts = accountForGridPenalties ? p.traversalCosts : default;
+						var result = GridStringPulling.Calculate(p.path, part.startIndex, part.endIndex, part.startPoint, part.endPoint, ref traversalCosts, ref p.traversalConstraint, int.MaxValue);
 						funnelPath.AddRange(result);
 						ListPool<Vector3>.Release(ref result);
 					} else {

@@ -14,17 +14,18 @@ namespace Pathfinding.ECS {
 		public EntityCommandBuffer commandBuffer;
 		public float deltaTime;
 
-		public void Execute (Entity entity, ManagedState state, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, ManagedAgentOffMeshLinkTraversal managedLinkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled) {
-			if (!MoveNext(entity, state, ref transform, ref movementPlane, ref movementControl, ref movementSettings, ref linkInfo, managedLinkInfo, movementDisabled, deltaTime)) {
+		public void Execute (Entity entity, ManagedState state, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, ManagedAgentOffMeshLinkTraversal managedLinkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled, EnabledRefRW<AgentOffMeshLinkLocalAvoidanceDisabled> localAvoidanceDisabled) {
+			if (!MoveNext(entity, state, ref transform, ref movementPlane, ref movementControl, ref movementSettings, ref linkInfo, managedLinkInfo, movementDisabled, localAvoidanceDisabled, deltaTime)) {
 				commandBuffer.RemoveComponent<AgentOffMeshLinkTraversal>(entity);
 				commandBuffer.RemoveComponent<ManagedAgentOffMeshLinkTraversal>(entity);
 				commandBuffer.RemoveComponent<AgentOffMeshLinkMovementDisabled>(entity);
+				commandBuffer.RemoveComponent<AgentOffMeshLinkLocalAvoidanceDisabled>(entity);
 			}
 		}
 
-		public static bool MoveNext (Entity entity, ManagedState state, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, ManagedAgentOffMeshLinkTraversal managedLinkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled, float deltaTime) {
+		public static bool MoveNext (Entity entity, ManagedState state, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, ManagedAgentOffMeshLinkTraversal managedLinkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled, EnabledRefRW<AgentOffMeshLinkLocalAvoidanceDisabled> localAvoidanceDisabled, float deltaTime) {
 			unsafe {
-				managedLinkInfo.context.SetInternalData(entity, ref transform, ref movementPlane, ref movementControl, ref movementSettings, ref linkInfo, movementDisabled, state, deltaTime);
+				managedLinkInfo.context.SetInternalData(entity, ref transform, ref movementPlane, ref movementControl, ref movementSettings, ref linkInfo, movementDisabled, localAvoidanceDisabled, state, deltaTime);
 			}
 
 			// Initialize the coroutine during the first step.
@@ -38,6 +39,9 @@ namespace Pathfinding.ECS {
 					managedLinkInfo.stateMachine = managedLinkInfo.handler != null? managedLinkInfo.handler.GetOffMeshLinkStateMachine(managedLinkInfo.context) : null;
 				}
 				managedLinkInfo.coroutine = managedLinkInfo.stateMachine != null? managedLinkInfo.stateMachine.OnTraverseOffMeshLink(managedLinkInfo.context).GetEnumerator() : JobStartOffMeshLinkTransition.DefaultOnTraverseOffMeshLink(managedLinkInfo.context).GetEnumerator();
+
+				// Don't disable local avoidance during off-mesh links by default. The link traversal code can do that itself if it wants to.
+				if (localAvoidanceDisabled.IsValid) localAvoidanceDisabled.ValueRW = false;
 			}
 
 			bool finished;

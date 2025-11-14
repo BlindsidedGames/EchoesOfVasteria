@@ -23,7 +23,9 @@ namespace Tests.EditMode
         {
             var go = new GameObject("OracleBetaTest");
             var oracle = go.AddComponent<Oracle>();
-            oracle.beta = true;
+            var config = ScriptableObject.CreateInstance<BuildModeConfig>();
+            config.Beta = true;
+            oracle.SetBuildModeConfig(config);
             oracle.betaSaveIteration = 3;
 
             Assert.AreEqual("Beta3Save1", oracle.GetSlotDirectoryName(0));
@@ -35,7 +37,9 @@ namespace Tests.EditMode
         {
             var go = new GameObject("OracleBetaPrefsTest");
             var oracle = go.AddComponent<Oracle>();
-            oracle.beta = true;
+            var config = ScriptableObject.CreateInstance<BuildModeConfig>();
+            config.Beta = true;
+            oracle.SetBuildModeConfig(config);
             oracle.betaSaveIteration = 2;
 
             Assert.AreEqual("Beta2Slot1_Completion", oracle.GetSlotPlayerPrefsKey(1, "Completion"));
@@ -47,7 +51,9 @@ namespace Tests.EditMode
         {
             var go = new GameObject("OracleBetaClampTest");
             var oracle = go.AddComponent<Oracle>();
-            oracle.beta = true;
+            var config = ScriptableObject.CreateInstance<BuildModeConfig>();
+            config.Beta = true;
+            oracle.SetBuildModeConfig(config);
             oracle.betaSaveIteration = 0;
 
             Assert.AreEqual("Beta1Save1", oracle.GetSlotDirectoryName(0));

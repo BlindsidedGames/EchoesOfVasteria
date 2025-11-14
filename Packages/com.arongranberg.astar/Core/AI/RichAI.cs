@@ -202,8 +202,8 @@ namespace Pathfinding {
 		/// <summary>\copydoc Pathfinding::IAstarAI::canSearch</summary>
 		bool IAstarAI.canSearch { get { return canSearch; } set { canSearch = value; } }
 
-		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
-		bool IAstarAI.canMove { get { return canMove; } set { canMove = value; } }
+		/// <summary>\copydoc Pathfinding::IAstarAI::simulateMovement</summary>
+		bool IAstarAI.simulateMovement { get { return simulateMovement; } set { simulateMovement = value; } }
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::movementPlane</summary>
 		NativeMovementPlane IAstarAI.movementPlane => new NativeMovementPlane(movementPlane);

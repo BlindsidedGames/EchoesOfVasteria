@@ -100,7 +100,7 @@ namespace Pathfinding.ECS {
 			}
 			if ((settings.debugFlags & PIDMovement.DebugFlags.Path) != 0 && managedState.pathTracer.hasPath) {
 				scratchBuffer1.Clear();
-				managedState.pathTracer.GetNextCorners(scratchBuffer1, int.MaxValue, ref scratchBuffer2, Allocator.Temp, managedState.pathfindingSettings.traversalProvider, managedState.activePath);
+				managedState.pathTracer.GetNextCorners(scratchBuffer1, int.MaxValue, ref scratchBuffer2, Allocator.Temp, false);
 				var span = scratchBuffer1.AsUnsafeSpan();
 				draw.PushColor(Path);
 				DrawGizmosJobUtils.DrawPath(ref draw, ref span, ref shape);

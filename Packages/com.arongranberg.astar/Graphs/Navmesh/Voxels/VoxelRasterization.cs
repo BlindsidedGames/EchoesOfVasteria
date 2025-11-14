@@ -14,6 +14,15 @@ namespace Pathfinding.Graphs.Navmesh.Voxelization.Burst {
 
 		public UnsafeSpan<int> triangles;
 
+		/// <summary>If set, overrides <see cref="area"/> on a per-triangle basis.</summary>
+		public UnsafeSpan<int> areas;
+
+		/// <summary>
+		/// Area to set for the mesh.
+		///
+		/// This will split the navmesh on area boundaries.
+		/// If you OR this value with <see cref="VoxelUtilityBurst.TagReg"/>, then the area will be propagated to the final node tags.
+		/// </summary>
 		public int area;
 
 		/// <summary>World bounds of the mesh. Assumed to already be multiplied with the matrix</summary>
@@ -29,9 +38,6 @@ namespace Pathfinding.Graphs.Navmesh.Voxelization.Burst {
 
 		/// <summary>If true, both sides of the mesh will be walkable. If false, only the side that the normal points towards will be walkable</summary>
 		public bool doubleSided;
-
-		/// <summary>If true, the <see cref="area"/> will be interpreted as a node tag and applied to the final nodes</summary>
-		public bool areaIsTag;
 
 		/// <summary>
 		/// If true, the mesh will be flattened to the base of the graph during rasterization.
@@ -132,13 +138,12 @@ namespace Pathfinding.Graphs.Navmesh.Voxelization.Burst {
 				for (int i = 0; i < vs.Length; i++) verts[i] = math.transform(localToVoxelMatrix, vs[i]);
 
 				int mesharea = mesh.area;
-				if (mesh.areaIsTag) {
-					mesharea |= VoxelUtilityBurst.TagReg;
-				}
+				var areas = mesh.areas;
 
 				var meshBounds = new IntRect();
+				UnityEngine.Assertions.Assert.IsTrue(areas.Length == 0 || areas.Length == tris.Length / 3);
 
-				for (int i = 0; i < tris.Length; i += 3) {
+				for (int i = 0, triIndex = 0; i < tris.Length; i += 3, triIndex++) {
 					float3 p1 = verts[tris[i]];
 					float3 p2 = verts[tris[i+1]];
 					float3 p3 = verts[tris[i+2]];
@@ -173,7 +178,10 @@ namespace Pathfinding.Graphs.Navmesh.Voxelization.Burst {
 					float3 normal = math.cross(p2-p1, p3-p1);
 					float cosSlopeAngle = math.normalizesafe(normal).y;
 					if (mesh.doubleSided) cosSlopeAngle = math.abs(cosSlopeAngle);
-					int area = cosSlopeAngle < slopeLimit ? CompactVoxelField.UnwalkableArea : 1 + mesharea;
+
+					// If the mesh has per-triangle areas, use those
+					int area = areas.Length > 0 ? 1 + areas[triIndex] : 1 + mesharea;
+					if (cosSlopeAngle < slopeLimit) area = CompactVoxelField.UnwalkableArea;
 
 					clipperOrig[0] = p1;
 					clipperOrig[1] = p2;

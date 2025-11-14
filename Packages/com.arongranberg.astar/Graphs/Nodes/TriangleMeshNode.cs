@@ -321,19 +321,18 @@ namespace Pathfinding {
 			pos = new Int3(p.x, p.y, p.z);
 		}
 
-		public override void OpenAtPoint (Path path, uint pathNodeIndex, Int3 point, uint gScore) {
+		public override void OpenAtPoint (ref Path.SearchContext ctx, uint pathNodeIndex, Int3 point, uint gScore) {
 			if (InaccuratePathSearch) {
-				Open(path, pathNodeIndex, gScore);
+				Open(ref ctx, pathNodeIndex, gScore);
 			} else {
-				OpenAtPoint(path, pathNodeIndex, point, -1, gScore);
+				OpenAtPoint(ref ctx, pathNodeIndex, point, -1, gScore);
 			}
 		}
 
-		public override void Open (Path path, uint pathNodeIndex, uint gScore) {
-			var pathHandler = (path as IPathInternals).PathHandler;
+		public override void Open (ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore) {
 			if (InaccuratePathSearch) {
-				var pn = pathHandler.pathNodes[pathNodeIndex];
-				if (pn.flag1) path.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, NodeIndex, gScore);
+				var pn = ctx.pathHandler.pathNodes[pathNodeIndex];
+				if (pn.flag1) ctx.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, NodeIndex, gScore, ctx.traversalCosts.GetTraversalCostMultiplier(this));
 
 				if (connections != null) {
 					// Iterate over all adjacent nodes
@@ -341,7 +340,7 @@ namespace Pathfinding {
 						var conn = connections[i];
 						var other = conn.node;
 						if (conn.isOutgoing && other.NodeIndex != pn.parentIndex) {
-							path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, conn.cost + path.GetTraversalCost(other), 0, other.position);
+							ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + (uint)System.Math.Round(conn.cost * ctx.traversalCosts.GetTraversalCostMultiplier(this)) + ctx.traversalCosts.GetConnectionCost(this, other), 0, other.position);
 						}
 					}
 				}
@@ -350,13 +349,14 @@ namespace Pathfinding {
 			// One path node variant is created for each side of the triangle
 			// This particular path node represents just one of the sides of the triangle.
 			var edge = (int)(pathNodeIndex - NodeIndex);
-			OpenAtPoint(path, pathNodeIndex, DecodeVariantPosition(pathNodeIndex, pathHandler.pathNodes[pathNodeIndex].fractionAlongEdge), edge, gScore);
+			OpenAtPoint(ref ctx, pathNodeIndex, DecodeVariantPosition(pathNodeIndex, ctx.pathHandler.pathNodes[pathNodeIndex].fractionAlongEdge), edge, gScore);
 		}
 
-		void OpenAtPoint (Path path, uint pathNodeIndex, Int3 pos, int edge, uint gScore) {
-			var pathHandler = (path as IPathInternals).PathHandler;
+		void OpenAtPoint (ref Path.SearchContext ctx, uint pathNodeIndex, Int3 pos, int edge, uint gScore) {
+			var pathHandler = ctx.pathHandler;
 			var pn = pathHandler.pathNodes[pathNodeIndex];
-			if (pn.flag1) path.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, NodeIndex, gScore);
+			var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
+			if (pn.flag1) ctx.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, NodeIndex, gScore, ourTraversalCostFactor);
 			int visitedEdges = 0;
 			bool cameFromOtherEdgeInThisTriangle = pn.parentIndex >= NodeIndex && pn.parentIndex < NodeIndex + 3;
 
@@ -377,25 +377,25 @@ namespace Pathfinding {
 
 						if (conn.shapeEdge == edge) {
 							// Make sure we can traverse the neighbour
-							if (path.CanTraverse(this, other)) {
+							if (ctx.traversalConstraint.CanTraverse(this, other)) {
 								var tOther = other as TriangleMeshNode;
 
 								// Fast path out if we know we have already searched this node and we cannot improve it
-								if (!path.ShouldConsiderPathNode(adjacentPathNodeIndex)) {
+								if (!ctx.ShouldConsiderPathNode(adjacentPathNodeIndex)) {
 									continue;
 								}
+								var otherGScore = gScore + ctx.traversalCosts.GetConnectionCost(this, other);
 
 								if (conn.edgesAreIdentical) {
 									// The edge on the other node is identical to this edge (but reversed).
 									// This means that no other node can reach the other node through that edge.
 									// This is great, because we can then skip adding that node to the heap just
 									// to immediatelly pop it again. This is a performance optimization.
-
-									var otherGScore = gScore + path.GetTraversalCost(other);
-									path.SkipOverNode(adjacentPathNodeIndex, pathNodeIndex, PathNode.ReverseFractionAlongEdge(pn.fractionAlongEdge), uint.MaxValue, otherGScore);
-									tOther.OpenAtPoint(path, adjacentPathNodeIndex, pos, sharedEdgeOnOtherNode, otherGScore);
+									ctx.SkipOverNode(ref ctx, adjacentPathNodeIndex, pathNodeIndex, PathNode.ReverseFractionAlongEdge(pn.fractionAlongEdge), uint.MaxValue, otherGScore);
+									tOther.OpenAtPoint(ref ctx, adjacentPathNodeIndex, pos, sharedEdgeOnOtherNode, otherGScore);
 								} else {
-									OpenSingleEdge(path, pathNodeIndex, tOther, sharedEdgeOnOtherNode, pos, gScore);
+									// The edge on the other node is not quite identical to this edge. It will be colinear, though.
+									OpenSingleEdge(ref ctx, pathNodeIndex, tOther, sharedEdgeOnOtherNode, pos, otherGScore, ourTraversalCostFactor);
 								}
 							}
 						} else {
@@ -413,24 +413,25 @@ namespace Pathfinding {
 							// We also make sure we don't attempt to move to the same edge twice, as that's just a waste of time.
 							if (!cameFromOtherEdgeInThisTriangle && (visitedEdges & (1 << conn.shapeEdge)) == 0) {
 								visitedEdges |= 1 << conn.shapeEdge;
-								OpenSingleEdge(path, pathNodeIndex, this, conn.shapeEdge, pos, gScore);
+								OpenSingleEdge(ref ctx, pathNodeIndex, this, conn.shapeEdge, pos, gScore, ourTraversalCostFactor);
 							}
 						}
-					} else if (!cameFromOtherEdgeInThisTriangle) {
+					} else if (!cameFromOtherEdgeInThisTriangle) { // If we came from another edge of this triangle, we will already been able to explore this connection via a more optimal route, so we can skip it now.
 						// This is a connection to some other node type, most likely. For example an off-mesh link.
-						if (path.CanTraverse(this, other) && path.ShouldConsiderPathNode(other.NodeIndex)) {
-							var cost = (uint)(other.position - pos).costMagnitude;
+
+						if (ctx.traversalConstraint.CanTraverse(this, other) && ctx.ShouldConsiderPathNode(other.NodeIndex)) {
+							var connectionCost = (uint)System.Math.Round((other.position - pos).magnitude * ourTraversalCostFactor);
 
 							if (edge != -1) {
-								// We are moving from an edge of this triangle
-								path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, cost, 0, other.position);
+								// We are moving from an edge of this triangle, but our parent node is (likely) an adjacent triangle.
+								// This can happen due to the performance optimization above where we skip adding a node to the heap.
+								ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
 							} else {
 								// In some situations we may be moving directly from one off-mesh link to another one without
 								// passing through any concrete nodes in between. In this case we need to create a temporary node
 								// to allow the correct path to be reconstructed later. The only important part of the temporary
 								// node is that we save this node as the associated node.
-								// This is somewhat ugly, and it limits the number of times we can encounter this case during
-								// a single search (there's a limit to the number of temporary nodes we can have at the same time).
+								// This is somewhat ugly.
 								// Fortunately, this case only happens if there is more than 1 off-mesh link connected to a single
 								// node, which is quite rare in most games.
 								// In this case, pathNodeIndex will be another node's index, not a path node belonging to this node.
@@ -441,9 +442,9 @@ namespace Pathfinding {
 									type = TemporaryNodeType.Ignore,
 								});
 								ref var viaPathNode = ref pathHandler.pathNodes[viaNode];
-								viaPathNode.pathID = path.pathID;
+								viaPathNode.pathID = ctx.pathID;
 								viaPathNode.parentIndex = pathNodeIndex;
-								path.OpenCandidateConnection(viaNode, other.NodeIndex, gScore, cost, 0, other.position);
+								ctx.OpenCandidateConnection(viaNode, other.NodeIndex, gScore + connectionCost, 0, other.position);
 							}
 						}
 					}
@@ -458,7 +459,7 @@ namespace Pathfinding {
 				if (pathHandler.pathNodes[NodeIndex].flag1) {
 					// Note: If we entered this node via an off-mesh link, then #pathNodeIndex may not belong to this node,
 					// but instead to the off-mesh link. This is fine. The path can still be reconstructed correctly later.
-					path.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, NodeIndex, gScore);
+					ctx.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, NodeIndex, gScore, ourTraversalCostFactor);
 				}
 
 				// Sometimes we may enter a node via e.g. an off-mesh link that doesn't have any other adjacent triangles.
@@ -466,63 +467,60 @@ namespace Pathfinding {
 				// ConstantPath notice that the node has been visited.
 				// The code above would otherwise skip this node completely.
 				if (visitedEdges == 0) {
-					OpenSingleEdge(path, pathNodeIndex, this, 0, pos, gScore);
+					OpenSingleEdge(ref ctx, pathNodeIndex, this, 0, pos, gScore, ourTraversalCostFactor);
 				}
 			}
 		}
 
-		void OpenSingleEdge (Path path, uint pathNodeIndex, TriangleMeshNode other, int sharedEdgeOnOtherNode, Int3 pos, uint gScore) {
+		void OpenSingleEdge (ref Path.SearchContext ctx, uint pathNodeIndex, TriangleMeshNode other, int sharedEdgeOnOtherNode, Int3 pos, uint gScore, float traversalCostFactor) {
 			var adjacentPathNodeIndex = other.NodeIndex + (uint)sharedEdgeOnOtherNode;
 
 			// Fast path out if we know we have already searched this node and we cannot improve it
-			if (!path.ShouldConsiderPathNode(adjacentPathNodeIndex)) {
+			if (!ctx.ShouldConsiderPathNode(adjacentPathNodeIndex)) {
 				return;
 			}
 
 			var s1 = other.GetVertex(sharedEdgeOnOtherNode);
 			var s2 = other.GetVertex((sharedEdgeOnOtherNode + 1) % 3);
 
-			var pathHandler = (path as IPathInternals).PathHandler;
-			// TODO: Incorrect, counts nodes multiple times
-			var otherEnteringCost = path.GetTraversalCost(other);
-
-			var candidateG = gScore + otherEnteringCost;
+			var pathHandler = ctx.pathHandler;
 
 			OpenSingleEdgeBurst(
 				ref s1,
 				ref s2,
 				ref pos,
-				path.pathID,
+				ctx.pathID,
 				pathNodeIndex,
 				adjacentPathNodeIndex,
 				other.NodeIndex,
-				candidateG,
+				gScore,
+				traversalCostFactor,
 				ref pathHandler.pathNodes,
 				ref pathHandler.heap,
-				ref path.heuristicObjectiveInternal
+				ref ctx.heuristicObjective
 				);
 		}
 
 		[Unity.Burst.BurstCompile]
-		static void OpenSingleEdgeBurst (ref Int3 s1, ref Int3 s2, ref Int3 pos, ushort pathID, uint pathNodeIndex, uint candidatePathNodeIndex, uint candidateNodeIndex, uint candidateG, ref UnsafeSpan<PathNode> pathNodes, ref BinaryHeap heap, ref HeuristicObjective heuristicObjective) {
+		static void OpenSingleEdgeBurst (ref Int3 s1, ref Int3 s2, ref Int3 pos, ushort pathID, uint pathNodeIndex, uint candidatePathNodeIndex, uint candidateNodeIndex, uint candidateG, float traversalCostFactor, ref UnsafeSpan<PathNode> pathNodes, ref BinaryHeap heap, ref HeuristicObjective heuristicObjective) {
 			CalculateBestEdgePosition(ref s1, ref s2, ref pos, out var closestPointAlongEdge, out var quantizedFractionAlongEdge, out var cost);
-			candidateG += cost;
+			candidateG += (uint)(cost * traversalCostFactor);
 
-			var pars = new Path.OpenCandidateParams {
+			var pars = new Path.SearchContext.OpenCandidateParams {
 				pathID = pathID,
 				parentPathNode = pathNodeIndex,
 				targetPathNode = candidatePathNodeIndex,
 				targetNodeIndex = candidateNodeIndex,
-				candidateG = candidateG,
+				targetG = candidateG,
 				fractionAlongEdge = quantizedFractionAlongEdge,
 				targetNodePosition = closestPointAlongEdge,
 				pathNodes = pathNodes,
 			};
-			Path.OpenCandidateConnectionBurst(ref pars, ref heap, ref heuristicObjective);
+			Path.SearchContext.OpenCandidateConnectionBurst(ref pars, ref heap, ref heuristicObjective);
 		}
 
 		[Unity.Burst.BurstCompile]
-		static void CalculateBestEdgePosition (ref Int3 s1, ref Int3 s2, ref Int3 pos, out int3 closestPointAlongEdge, out uint quantizedFractionAlongEdge, out uint cost) {
+		static void CalculateBestEdgePosition (ref Int3 s1, ref Int3 s2, ref Int3 pos, out int3 closestPointAlongEdge, out uint quantizedFractionAlongEdge, out float cost) {
 			// Find the closest point on the other edge. From here on, we will let the position of that path node be this closest point.
 			// This is much better than using the edge midpoint, and also better than any interpolation between closestFractionAlongEdge
 			// and the midpoint (0.5).
@@ -540,7 +538,7 @@ namespace Pathfinding {
 			closestPointAlongEdge = (int3)closestPointAlongEdgeV;
 
 			var diff = posi - closestPointAlongEdge;
-			cost = (uint)new Int3(diff.x, diff.y, diff.z).costMagnitude;
+			cost = new Int3(diff.x, diff.y, diff.z).magnitude;
 		}
 
 		/// <summary>

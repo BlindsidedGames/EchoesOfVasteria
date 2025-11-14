@@ -216,22 +216,22 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Closest node to the point which satisfies the constraint and is at most at the given distance</summary>
-		public GraphNode GetNearest (Int3 point, NNConstraint constraint, ref float distanceSqr) {
+		public GraphNode GetNearest (Int3 point, ref NearestNodeConstraint constraint, ref float distanceSqr) {
 			GraphNode best = null;
 			long bestSqrDist = distanceSqr < float.PositiveInfinity ? (long)(Int3.FloatPrecision * Int3.FloatPrecision * distanceSqr) : long.MaxValue;
 
-			GetNearestInternal(1, point, constraint, ref best, ref bestSqrDist);
+			GetNearestInternal(1, point, ref constraint, ref best, ref bestSqrDist);
 			distanceSqr = best != null ? Int3.PrecisionFactor*Int3.PrecisionFactor * bestSqrDist : float.PositiveInfinity;
 			return best;
 		}
 
-		void GetNearestInternal (int index, Int3 point, NNConstraint constraint, ref GraphNode best, ref long bestSqrDist) {
+		void GetNearestInternal (int index, Int3 point, ref NearestNodeConstraint constraint, ref GraphNode best, ref long bestSqrDist) {
 			var data = tree[index].data;
 
 			if (data != null) {
 				for (int i = tree[index].count - 1; i >= 0; i--) {
 					var dist = (data[i].position - point).sqrMagnitudeLong;
-					if (dist < bestSqrDist && (constraint == null || constraint.Suitable(data[i]))) {
+					if (dist < bestSqrDist && constraint.Suitable(data[i])) {
 						bestSqrDist = dist;
 						best = data[i];
 					}
@@ -239,18 +239,18 @@ namespace Pathfinding {
 			} else {
 				var dist = (long)(point[tree[index].splitAxis] - tree[index].split);
 				var childIndex = 2 * index + (dist < 0 ? 0 : 1);
-				GetNearestInternal(childIndex, point, constraint, ref best, ref bestSqrDist);
+				GetNearestInternal(childIndex, point, ref constraint, ref best, ref bestSqrDist);
 
 				// Try the other one if it is possible to find a valid node on the other side
 				if (dist*dist < bestSqrDist) {
 					// childIndex ^ 1 will flip the last bit, so if childIndex is odd, then childIndex ^ 1 will be even
-					GetNearestInternal(childIndex ^ 0x1, point, constraint, ref best, ref bestSqrDist);
+					GetNearestInternal(childIndex ^ 0x1, point, ref constraint, ref best, ref bestSqrDist);
 				}
 			}
 		}
 
 		/// <summary>Closest node to the point which satisfies the constraint</summary>
-		public GraphNode GetNearestConnection (Int3 point, NNConstraint constraint, long maximumSqrConnectionLength) {
+		public GraphNode GetNearestConnection (Int3 point, ref NearestNodeConstraint constraint, long maximumSqrConnectionLength) {
 			GraphNode best = null;
 			long bestSqrDist = long.MaxValue;
 
@@ -261,11 +261,11 @@ namespace Pathfinding {
 			// Note: (x+3)/4 to round up
 			long offset = (maximumSqrConnectionLength+3)/4;
 
-			GetNearestConnectionInternal(1, point, constraint, ref best, ref bestSqrDist, offset);
+			GetNearestConnectionInternal(1, point, ref constraint, ref best, ref bestSqrDist, offset);
 			return best;
 		}
 
-		void GetNearestConnectionInternal (int index, Int3 point, NNConstraint constraint, ref GraphNode best, ref long bestSqrDist, long distanceThresholdOffset) {
+		void GetNearestConnectionInternal (int index, Int3 point, ref NearestNodeConstraint constraint, ref GraphNode best, ref long bestSqrDist, long distanceThresholdOffset) {
 			var data = tree[index].data;
 
 			if (data != null) {
@@ -273,7 +273,7 @@ namespace Pathfinding {
 				for (int i = tree[index].count - 1; i >= 0; i--) {
 					var dist = (data[i].position - point).sqrMagnitudeLong;
 					// Note: the subtraction is important. If we used an addition on the RHS instead the result might overflow as bestSqrDist starts as long.MaxValue
-					if (dist - distanceThresholdOffset < bestSqrDist && (constraint == null || constraint.Suitable(data[i]))) {
+					if (dist - distanceThresholdOffset < bestSqrDist && constraint.Suitable(data[i])) {
 						// This node may contains the closest connection
 						// Check all connections
 						var conns = (data[i] as PointNode).connections;
@@ -304,13 +304,13 @@ namespace Pathfinding {
 			} else {
 				var dist = (long)(point[tree[index].splitAxis] - tree[index].split);
 				var childIndex = 2 * index + (dist < 0 ? 0 : 1);
-				GetNearestConnectionInternal(childIndex, point, constraint, ref best, ref bestSqrDist, distanceThresholdOffset);
+				GetNearestConnectionInternal(childIndex, point, ref constraint, ref best, ref bestSqrDist, distanceThresholdOffset);
 
 				// Try the other one if it is possible to find a valid node on the other side
 				// Note: the subtraction is important. If we used an addition on the RHS instead the result might overflow as bestSqrDist starts as long.MaxValue
 				if (dist*dist - distanceThresholdOffset < bestSqrDist) {
 					// childIndex ^ 1 will flip the last bit, so if childIndex is odd, then childIndex ^ 1 will be even
-					GetNearestConnectionInternal(childIndex ^ 0x1, point, constraint, ref best, ref bestSqrDist, distanceThresholdOffset);
+					GetNearestConnectionInternal(childIndex ^ 0x1, point, ref constraint, ref best, ref bestSqrDist, distanceThresholdOffset);
 				}
 			}
 		}

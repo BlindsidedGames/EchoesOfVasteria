@@ -1,6 +1,6 @@
 using UnityEngine;
 using Pathfinding.Util;
-using UnityEngine.Tilemaps;
+using Unity.Mathematics;
 
 namespace Pathfinding.Graphs.Navmesh {
 	/// <summary>
@@ -62,6 +62,19 @@ namespace Pathfinding.Graphs.Navmesh {
 
 			// Calculate world bounds of all affected tiles
 			return new IntRect(Mathf.FloorToInt((bounds.min.x - margin) / TileWorldSizeX), Mathf.FloorToInt((bounds.min.z - margin) / TileWorldSizeZ), Mathf.FloorToInt((bounds.max.x + margin) / TileWorldSizeX), Mathf.FloorToInt((bounds.max.z + margin) / TileWorldSizeZ));
+		}
+
+		/// <summary>
+		/// Returns a rect containing the indices of all tiles touching the specified bounds.
+		/// If a margin is passed, the bounding box in graph space is expanded by that amount in every direction.
+		/// </summary>
+		public static IntRect GetTouchingTiles (ref float4x4 worldToGraphTransform, float2 tileSize, Bounds bounds, float margin = 0) {
+			bounds = MathExtensions.BoundsOfTransformedBounds(worldToGraphTransform, bounds);
+
+			// Calculate world bounds of all affected tiles
+			var min = (int2)math.floor((new float2(bounds.min.x, bounds.min.z) - margin) / tileSize);
+			var max = (int2)math.floor((new float2(bounds.max.x, bounds.max.z) + margin) / tileSize);
+			return new IntRect(min.x, min.y, max.x, max.y);
 		}
 
 		/// <summary>Returns a rect containing the indices of all tiles touching the specified bounds.</summary>

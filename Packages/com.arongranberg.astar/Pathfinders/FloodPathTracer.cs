@@ -3,26 +3,6 @@ using Pathfinding.Pooling;
 
 namespace Pathfinding {
 	/// <summary>
-	/// Restrict suitable nodes by if they have been searched by a FloodPath.
-	///
-	/// Suitable nodes are in addition to the basic contraints, only the nodes which return true on a FloodPath.HasPathTo (node) call.
-	/// See: Pathfinding.FloodPath
-	/// See: Pathfinding.FloodPathTracer
-	/// </summary>
-	public class FloodPathConstraint : NNConstraint {
-		readonly FloodPath path;
-
-		public FloodPathConstraint (FloodPath path) {
-			if (path == null) { Debug.LogWarning("FloodPathConstraint should not be used with a NULL path"); }
-			this.path = path;
-		}
-
-		public override bool Suitable (GraphNode node) {
-			return base.Suitable(node) && path.HasPathTo(node);
-		}
-	}
-
-	/// <summary>
 	/// Traces a path created with the Pathfinding.FloodPath.
 	///
 	/// See Pathfinding.FloodPath for examples on how to use this path type
@@ -50,13 +30,13 @@ namespace Pathfinding {
 
 		protected void Setup (Vector3 start, FloodPath flood, OnPathDelegate callback) {
 			this.flood = flood;
+			this.traversalConstraint = flood.traversalConstraint;
 
 			if (flood == null || flood.PipelineState < PathState.Returning) {
 				throw new System.ArgumentException("You must supply a calculated FloodPath to the 'flood' argument");
 			}
 
 			base.Setup(start, flood.originalStartPoint, callback);
-			nnConstraint = new FloodPathConstraint(flood);
 		}
 
 		protected override void Reset () {
@@ -68,43 +48,44 @@ namespace Pathfinding {
 		/// Initializes the path.
 		/// Traces the path from the start node.
 		/// </summary>
-		protected override void Prepare () {
+		protected override void Prepare (ref SearchContext ctx) {
+			var pathHandler = ctx.pathHandler;
 			if (!this.flood.IsValid(pathHandler.nodeStorage)) {
 				FailWithError("The flood path is invalid because nodes have been destroyed since it was calculated. Please recalculate the flood path.");
 				return;
 			}
 
-			base.Prepare();
+			var nn = this.nearestNodeConstraint;
+			var origConstraint = nn; // If the path originally used a ITraversalProvider or filter function, we need to check that as well
+			nn.filter = (GraphNode node) => flood.HasPathTo(node) && origConstraint.Suitable(node);
+			FindStartAndEndNodes(ref ctx, ref nn);
 
-			if (CompleteState == PathCompleteState.NotCalculated) {
-				for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-					var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-					ref var tempNode = ref pathHandler.GetTemporaryNode(nodeIndex);
-					if (tempNode.type == TemporaryNodeType.Start) {
-						var node = pathHandler.GetNode(tempNode.associatedNode);
+			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
+				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
+				ref var tempNode = ref pathHandler.GetTemporaryNode(nodeIndex);
+				if (tempNode.type == TemporaryNodeType.Start) {
+					var node = pathHandler.GetNode(tempNode.associatedNode);
 
-						// This is guaranteed by the FloodPathConstraint
-						bool found = false;
-						for (uint k = 0; k < node.PathNodeVariants; k++) {
-							if (flood.GetParent(node.NodeIndex + k) != 0) {
-								found = true;
-								CompleteState = PathCompleteState.Complete;
-								Trace(node.NodeIndex + k);
-								break;
-							}
+					// It is guaranteed that we find a valid node, since we added a filter to the NearestNodeConstraint above
+					bool found = false;
+					for (uint k = 0; k < node.PathNodeVariants; k++) {
+						if (flood.GetParent(node.NodeIndex + k) != 0) {
+							found = true;
+							OnFoundEndNode(ref ctx, node.NodeIndex + k, 0, 0);
+							break;
 						}
-						if (!found) {
-							FailWithError("The flood path did not contain any information about the end node. Have you modified the path's nnConstraint to an instance which does not subclass FloodPathConstraint?");
-						}
-						return;
 					}
+					if (!found) {
+						FailWithError("The flood path did not contain any information about the end node. This should not happen.");
+					}
+					return;
 				}
-
-				FailWithError("Could not find a valid start node");
 			}
+
+			FailWithError("Could not find a valid start node");
 		}
 
-		protected override void CalculateStep (long targetTick) {
+		protected override void CalculateStep (ref SearchContext ctx, long targetTick) {
 			if (CompleteState != PathCompleteState.Complete) throw new System.Exception("Something went wrong. At this point the path should be completed");
 		}
 
@@ -113,10 +94,11 @@ namespace Pathfinding {
 		/// This will build an array (<see cref="path)"/> of the nodes this path will pass through and also set the <see cref="vectorPath"/> array to the <see cref="path"/> arrays positions.
 		/// This implementation will use the <see cref="flood"/> (FloodPath) to trace the path from precalculated data.
 		/// </summary>
-		protected override void Trace (uint fromPathNodeIndex) {
+		protected override void Trace (ref SearchContext ctx, uint fromPathNodeIndex) {
 			uint pathNodeIndex = fromPathNodeIndex;
 			int count = 0;
 			GraphNode lastNode = null;
+			var pathHandler = ctx.pathHandler;
 
 			while (pathNodeIndex != 0) {
 				if ((pathNodeIndex & FloodPath.TemporaryNodeBit) != 0) {
@@ -133,7 +115,7 @@ namespace Pathfinding {
 					// the same node multiple times in a sequence (but different variants of it).
 					// In the final path we don't want the duplicates.
 					if (node != lastNode) {
-						if (!CanTraverse(node)) {
+						if (!traversalConstraint.CanTraverse(node)) {
 							FailWithError("A node in the path is no longer walkable. The FloodPath needs to be recalculated before you can use a FloodPathTracer.");
 							return;
 						}

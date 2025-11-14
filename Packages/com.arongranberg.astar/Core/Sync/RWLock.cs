@@ -161,6 +161,13 @@ namespace Pathfinding.Sync {
 					lock2.lastRead = JobHandle.CombineDependencies(lock2.lastRead, handle);
 				}
 			}
+
+			/// <summary>Release the lock immediately</summary>
+			public readonly void Unlock () {
+				UnityEngine.Assertions.Assert.IsTrue(dependency.IsCompleted, "Calling Unlock without the lock's dependency being completed. You are most likely doing something wrong.");
+				if (lock1 != null) lock1.RemovePendingAsync();
+				if (lock2 != null) lock2.RemovePendingAsync();
+			}
 		}
 
 		public readonly struct ReadLockAsync {

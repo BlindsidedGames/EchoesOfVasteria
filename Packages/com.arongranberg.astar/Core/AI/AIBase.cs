@@ -66,8 +66,16 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>\copydocref{IAstarAI.simulateMovement}</summary>
+		[FormerlySerializedAs("canMove")]
+		public bool simulateMovement = true;
+
 		/// <summary>\copydocref{IAstarAI.canMove}</summary>
-		public bool canMove = true;
+		[System.Obsolete("Renamed to simulateMovement")]
+		public bool canMove {
+			get => simulateMovement;
+			set => simulateMovement = value;
+		}
 
 		/// <summary>Max speed in world units per second</summary>
 		[UnityEngine.Serialization.FormerlySerializedAs("speed")]
@@ -243,7 +251,7 @@ namespace Pathfinding {
 		/// as for example root motion but still want the AI to move freely.
 		/// See: Combined with calling <see cref="MovementUpdate"/> from a separate script instead of it being called automatically one can take a similar approach to what is documented here: https://docs.unity3d.com/Manual/nav-CouplingAnimationAndNavigation.html
 		///
-		/// See: <see cref="canMove"/> which in contrast to this field will disable all movement calculations.
+		/// See: <see cref="simulateMovement"/> which in contrast to this field will disable all movement calculations.
 		/// See: <see cref="updateRotation"/>
 		/// </summary>
 		public bool updatePosition { get; set; } = true;
@@ -447,7 +455,7 @@ namespace Pathfinding {
 
 			if (shouldRecalculatePath) SearchPath();
 
-			if (canMove) {
+			if (simulateMovement) {
 				MovementUpdate(dt, out var nextPosition, out var nextRotation);
 				UnityEngine.Profiling.Profiler.BeginSample("Finalize");
 				FinalizeMovement(nextPosition, nextRotation);
@@ -469,7 +477,7 @@ namespace Pathfinding {
 			if (startHasRun) {
 				// Clamp the agent to the navmesh (which is what the Teleport call will do essentially. Though only some movement scripts require this, like RichAI).
 				// The Teleport call will also make sure some variables are properly initialized (like #prevPosition1 and #prevPosition2)
-				if (canMove) Teleport(position, false);
+				if (simulateMovement) Teleport(position, false);
 				autoRepath.Reset();
 				if (shouldRecalculatePath) SearchPath();
 			}

@@ -256,8 +256,12 @@ namespace Pathfinding {
 			if (funnelSimplification) {
 				List<GraphNode> tmp = ListPool<GraphNode>.Claim(end-start);
 
-				var tagPenalties = path.seeker != null ? path.seeker.tagPenalties : Path.ZeroTagPenalties;
-				var traversableTags = path.seeker != null ? path.seeker.traversableTags : -1;
+				// TODO: Save from path?
+				var traversalConstraint = TraversalConstraint.None;
+				traversalConstraint.tags = path.seeker != null ? path.seeker.traversableTags : -1;
+				var traversalCosts = new TraversalCosts();
+				traversalCosts.tagCostMultipliers = path.seeker != null ? path.seeker.tagCostMultipliers : null;
+				traversalCosts.tagEntryCosts = path.seeker != null ? path.seeker.tagEntryCosts : null;
 
 				Funnel.Simplify(new Funnel.PathPart {
 					startIndex = start,
@@ -265,7 +269,7 @@ namespace Pathfinding {
 					startPoint = exactStart,
 					endPoint = exactEnd,
 					type = Funnel.PartType.NodeSequence,
-				}, graph, nodes, tmp, tagPenalties, traversableTags);
+				}, graph, nodes, tmp, ref traversalCosts, ref traversalConstraint);
 
 				if (this.nodes.Capacity < tmp.Count) this.nodes.Capacity = tmp.Count;
 

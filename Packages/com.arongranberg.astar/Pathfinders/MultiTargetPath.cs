@@ -226,7 +226,8 @@ namespace Pathfinding {
 			}
 		}
 
-		protected void RebuildOpenList () {
+		protected void RebuildOpenList (ref SearchContext ctx) {
+			var pathHandler = ctx.pathHandler;
 			BinaryHeap heap = pathHandler.heap;
 			if (heap.tieBreaking != BinaryHeap.TieBreaking.HScore) return;
 
@@ -239,15 +240,16 @@ namespace Pathfinding {
 					pos = pathHandler.GetNode(pathNodeIndex).DecodeVariantPosition(pathNodeIndex, pathHandler.pathNodes[pathNodeIndex].fractionAlongEdge);
 				}
 				// Note: node index can be 0 here because the multi target path never uses the euclidean embedding
-				var hScore = (uint)heuristicObjective.Calculate((int3)pos, 0);
+				var hScore = (uint)ctx.heuristicObjective.Calculate((int3)pos, 0);
 				heap.SetH(i, hScore);
 			}
 
 			pathHandler.heap.Rebuild(pathHandler.pathNodes);
 		}
 
-		protected override void Prepare () {
-			var startNNInfo = GetNearest(startPoint);
+		protected override void Prepare (ref SearchContext ctx) {
+			var constraint = nearestNodeConstraint;
+			var startNNInfo = AstarPath.active.GetNearest(startPoint, constraint);
 			var startNode = startNNInfo.node;
 
 			if (endingCondition != null) {
@@ -260,21 +262,16 @@ namespace Pathfinding {
 				return;
 			}
 
-			if (!CanTraverse(startNode)) {
-				FailWithError("The node closest to the start point could not be traversed");
-				return;
-			}
+			UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(startNode));
 
-			// Tell the NNConstraint which node was found as the start node if it is a PathNNConstraint and not a normal NNConstraint
-			if (nnConstraint is PathNNConstraint pathNNConstraint) {
-				pathNNConstraint.SetStart(startNNInfo.node);
-			}
-
-			pathHandler.AddTemporaryNode(new TemporaryNode {
+			ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 				associatedNode = startNNInfo.node.NodeIndex,
 				position = (Int3)startNNInfo.position,
 				type = TemporaryNodeType.Start,
 			});
+
+			// Find the closest nodes that we can reach from the start node
+			constraint.area = (int)startNode.Area;
 
 			vectorPaths = new List<Vector3>[targetPoints.Length];
 			nodePaths = new List<GraphNode>[targetPoints.Length];
@@ -283,120 +280,97 @@ namespace Pathfinding {
 			targetPathCosts = new uint[targetPoints.Length];
 			targetNodeCount = 0;
 
-			bool anyWalkable = false;
-			bool anySameArea = false;
-			bool anyNotNull = false;
+			bool anyReachable = false;
 
 			for (int i = 0; i < targetPoints.Length; i++) {
 				var originalTarget = targetPoints[i];
-				var endNNInfo = GetNearest(originalTarget);
+				var endNNInfo = AstarPath.active.GetNearest(originalTarget, constraint);
 
 				targetNodes[i] = endNNInfo.node;
 
 				targetPoints[i] = endNNInfo.position;
-				if (targetNodes[i] != null) {
-					anyNotNull = true;
-				}
 
-				bool notReachable = false;
+				if (endNNInfo.node != null) {
+					anyReachable = true;
+					UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(endNNInfo.node));
+					UnityEngine.Assertions.Assert.IsTrue(endNNInfo.node.Area == startNode.Area);
 
-				if (endNNInfo.node != null && CanTraverse(endNNInfo.node)) {
-					anyWalkable = true;
-				} else {
-					notReachable = true;
-				}
-
-				if (endNNInfo.node != null && endNNInfo.node.Area == startNode.Area) {
-					anySameArea = true;
-				} else {
-					notReachable = true;
-				}
-
-				if (notReachable) {
-					// Signal that the pathfinder should not look for this node because we have already found it
-					targetsFound[i] = true;
-				} else {
 					targetNodeCount++;
 #if !ASTAR_NO_GRID_GRAPH
 					// Potentially we want to special case grid graphs a bit
 					// to better support some kinds of games
-					if (!EndPointGridGraphSpecialCase(endNNInfo.node, originalTarget, i))
+					if (!EndPointGridGraphSpecialCase(ref ctx, endNNInfo.node, originalTarget, i))
 #endif
 					{
-						pathHandler.AddTemporaryNode(new TemporaryNode {
+						ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 							associatedNode = endNNInfo.node.NodeIndex,
 							position = (Int3)endNNInfo.position,
 							targetIndex = i,
 							type = TemporaryNodeType.End,
 						});
 					}
+				} else {
+					// Signal that the pathfinder should not look for this target because we cannot find a valid target node
+					targetsFound[i] = true;
 				}
 			}
 
 			startPoint = startNNInfo.position;
 
-			if (!anyNotNull) {
+			if (!anyReachable) {
 				FailWithError("Couldn't find a valid node close to the any of the end points");
 				return;
 			}
 
-			if (!anyWalkable) {
-				FailWithError("No target nodes could be traversed");
-				return;
-			}
-
-			if (!anySameArea) {
-				FailWithError("There's no valid path to any of the given targets");
-				return;
-			}
-
-			MarkNodesAdjacentToTemporaryEndNodes();
-			AddStartNodesToHeap();
-			RecalculateHTarget();
+			ctx.traversalConstraint = traversalConstraint;
+			ctx.traversalCosts = traversalCosts;
+			ctx.MarkNodesAdjacentToTemporaryEndNodes();
+			ctx.AddStartNodesToHeap();
+			RecalculateHTarget(ref ctx);
 		}
 
-		void RecalculateHTarget () {
+		void RecalculateHTarget (ref SearchContext ctx) {
 			if (pathsForAll) {
 				// Sequentially go through all targets.
 				// First we will find the path to the first target (or at least aim for it, we might find another one along the way),
 				// then we will change the heuristic objective to the second target and so on.
 				// This does not guarantee that we find the targets in order of closest to furthest,
 				// but that is not required since we want to find all paths anyway.
-				var target = FirstTemporaryEndNode();
-				heuristicObjective = new HeuristicObjective(target, target, heuristic, heuristicScale, 0, null);
+				var target = ctx.FirstTemporaryEndNode();
+				ctx.heuristicObjective = new HeuristicObjective(target, target, heuristic, heuristicScale, 0, null);
 			} else {
 				// Create a bounding box that contains all the end points,
 				// and use that to calculate the heuristic.
 				// This will ensure we find the closest target first.
-				TemporaryEndNodesBoundingBox(out var mnTarget, out var mxTarget);
-				heuristicObjective = new HeuristicObjective(mnTarget, mxTarget, heuristic, heuristicScale, 0, null);
+				ctx.TemporaryEndNodesBoundingBox(out var mnTarget, out var mxTarget);
+				ctx.heuristicObjective = new HeuristicObjective(mnTarget, mxTarget, heuristic, heuristicScale, 0, null);
 			}
 
 			// Rebuild the open list since all the H scores have changed
-			RebuildOpenList();
+			RebuildOpenList(ref ctx);
 		}
 
-		protected override void Cleanup () {
+		protected override void Cleanup (ref SearchContext ctx) {
 			// Make sure that the shortest path is set
 			// after the path has been calculated
 			ChooseShortestPath();
-			base.Cleanup();
+			base.Cleanup(ref ctx);
 		}
 
-		protected override void OnHeapExhausted () {
+		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			CompleteState = PathCompleteState.Complete;
 		}
 
-		protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
-			if (!pathHandler.IsTemporaryNode(pathNode)) {
+		protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
+			if (!ctx.pathHandler.IsTemporaryNode(pathNode)) {
 				FailWithError("Expected the end node to be a temporary node. Cannot determine which path it belongs to. This could happen if you are using a custom ending condition for the path.");
 				return;
 			}
 
-			var targetIndex = pathHandler.GetTemporaryNode(pathNode).targetIndex;
+			var targetIndex = ctx.pathHandler.GetTemporaryNode(pathNode).targetIndex;
 			if (targetsFound[targetIndex]) throw new System.ArgumentException("This target has already been found");
 
-			Trace(pathNode);
+			Trace(ref ctx, pathNode);
 			vectorPaths[targetIndex] = vectorPath;
 			nodePaths[targetIndex] = path;
 			vectorPath = ListPool<Vector3>.Claim();
@@ -410,9 +384,9 @@ namespace Pathfinding {
 			// Mark all end nodes for this target as ignored to avoid including them
 			// in the H-score calculation and to avoid calling OnFoundEndNode for this
 			// target index again.
-			for (uint i = 0; i < pathHandler.numTemporaryNodes; i++) {
-				var nodeIndex = pathHandler.temporaryNodeStartIndex + i;
-				ref var node = ref pathHandler.GetTemporaryNode(nodeIndex);
+			for (uint i = 0; i < ctx.pathHandler.numTemporaryNodes; i++) {
+				var nodeIndex = ctx.pathHandler.temporaryNodeStartIndex + i;
+				ref var node = ref ctx.pathHandler.GetTemporaryNode(nodeIndex);
 				if (node.type == TemporaryNodeType.End && node.targetIndex == targetIndex) {
 					node.type = TemporaryNodeType.Ignore;
 				}
@@ -432,20 +406,17 @@ namespace Pathfinding {
 				return;
 			}
 
-			RecalculateHTarget();
+			RecalculateHTarget(ref ctx);
 		}
 
-		protected override void Trace (uint pathNodeIndex) {
-			base.Trace(pathNodeIndex, !inverted);
+		protected override void Trace (ref SearchContext ctx, uint pathNodeIndex) {
+			base.Trace(ref ctx, pathNodeIndex, !inverted);
 		}
 
-		protected override string DebugString (PathLog logMode) {
+		protected override void DebugString (System.Text.StringBuilder text, PathLog logMode) {
 			if (logMode == PathLog.None || (!error && logMode == PathLog.OnlyErrors)) {
-				return "";
+				return;
 			}
-
-			System.Text.StringBuilder text = pathHandler.DebugStringBuilder;
-			text.Length = 0;
 
 			DebugStringPrefix(logMode, text);
 
@@ -470,14 +441,10 @@ namespace Pathfinding {
 					text.Append(((Vector3)endPoint).ToString());
 					text.Append("\n	Graph: ");
 					text.Append(startNode.GraphIndex);
-					text.Append("\nBinary Heap size at completion: ");
-					text.AppendLine((pathHandler.heap.numberOfItems-2).ToString());  // -2 because numberOfItems includes the next item to be added and item zero is not used
 				}
 			}
 
 			DebugStringSuffix(logMode, text);
-
-			return text.ToString();
 		}
 	}
 }

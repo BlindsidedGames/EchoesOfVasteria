@@ -13,6 +13,8 @@ namespace Pathfinding {
 	using Unity.Collections;
 	using Unity.Jobs;
 	using Unity.Mathematics;
+	using System;
+	using Pathfinding.Collections;
 
 	[System.Serializable]
 	/// <summary>Stores editor colors</summary>
@@ -109,12 +111,16 @@ namespace Pathfinding {
 
 
 	/// <summary>
-	/// Info about what a ray- or linecasts hit.
+	/// Info about what a raycast, linecast or nearest border query hit.
 	///
 	/// This is the return value of the <see cref="IRaycastableGraph.Linecast"/> methods.
 	/// Some members will also be initialized even if nothing was hit, see the individual member descriptions for more info.
 	///
 	/// [Open online documentation to see images]
+	///
+	/// See: <see cref="IRaycastableGraph.Linecast"/>
+	/// See: <see cref="AstarPath.Linecast"/>
+	/// See: <see cref="AstarPath.GetNearestBorder"/>
 	/// </summary>
 	public struct GraphHitInfo {
 		/// <summary>
@@ -156,6 +162,9 @@ namespace Pathfinding {
 		/// [Open online documentation to see images]
 		///
 		/// If nothing was hit, this will be Vector3.zero.
+		///
+		/// In some cases, an obstruction could be reported, but no edge was hit per se.
+		/// For example if the origin was inside an unwalkable node. In those cases this field will be set to Vector3.zero.
 		/// </summary>
 		public Vector3 tangent;
 
@@ -290,6 +299,9 @@ namespace Pathfinding {
 		///
 		/// The "upwards" direction will be set to the graph's natural up direction.
 		///
+		/// If there are multiple nodes overlapping the point when seen from above (e.g. multiple floors in a building),
+		/// then the height coordinate will be used as a tie-breaker.
+		///
 		/// [Open online documentation to see images]
 		///
 		/// See: <see cref="projectionAxis"/>
@@ -322,207 +334,6 @@ namespace Pathfinding {
 		public static DistanceMetric ClosestAsSeenFromAbove (Vector3 up) => new DistanceMetric { projectionAxis = up, distanceScaleAlongProjectionDirection = 0.0f };
 	}
 
-	/// <summary>Nearest node constraint. Constrains which nodes will be returned by the <see cref="AstarPath.GetNearest"/> function</summary>
-	public class NNConstraint {
-		/// <summary>
-		/// Graphs treated as valid to search on.
-		/// This is a bitmask meaning that bit 0 specifies whether or not the first graph in the graphs list should be able to be included in the search,
-		/// bit 1 specifies whether or not the second graph should be included and so on.
-		/// <code>
-		/// // Enables the first and third graphs to be included, but not the rest
-		/// myNNConstraint.graphMask = (1 << 0) | (1 << 2);
-		/// </code>
-		/// <code>
-		/// GraphMask mask1 = GraphMask.FromGraphName("My Grid Graph");
-		/// GraphMask mask2 = GraphMask.FromGraphName("My Other Grid Graph");
-		///
-		/// NNConstraint nn = NNConstraint.Walkable;
-		///
-		/// nn.graphMask = mask1 | mask2;
-		///
-		/// // Find the node closest to somePoint which is either in 'My Grid Graph' OR in 'My Other Grid Graph'
-		/// var info = AstarPath.active.GetNearest(somePoint, nn);
-		/// </code>
-		///
-		/// Note: This does only affect which nodes are returned from a <see cref="AstarPath.GetNearest"/> call, if a valid graph is connected to an invalid graph using a node link then it might be searched anyway.
-		///
-		/// See: <see cref="AstarPath.GetNearest"/>
-		/// See: <see cref="SuitableGraph"/>
-		/// See: bitmasks (view in online documentation for working links)
-		/// </summary>
-		public GraphMask graphMask = -1;
-
-		/// <summary>Only treat nodes in the area <see cref="area"/> as suitable. Does not affect anything if <see cref="area"/> is less than 0 (zero)</summary>
-		public bool constrainArea;
-
-		/// <summary>Area ID to constrain to. Will not affect anything if less than 0 (zero) or if <see cref="constrainArea"/> is false</summary>
-		public int area = -1;
-
-		/// <summary>
-		/// Determines how to measure distances to the navmesh.
-		///
-		/// The default is a euclidean distance, which works well for most things.
-		///
-		/// See: <see cref="DistanceMetric"/>
-		/// </summary>
-		public DistanceMetric distanceMetric;
-
-		/// <summary>Constrain the search to only walkable or unwalkable nodes depending on <see cref="walkable"/>.</summary>
-		public bool constrainWalkability = true;
-
-		/// <summary>
-		/// Only search for walkable or unwalkable nodes if <see cref="constrainWalkability"/> is enabled.
-		/// If true, only walkable nodes will be searched for, otherwise only unwalkable nodes will be searched for.
-		/// Does not affect anything if <see cref="constrainWalkability"/> if false.
-		/// </summary>
-		public bool walkable = true;
-
-		/// <summary>
-		/// if available, do an XZ check instead of checking on all axes.
-		/// The navmesh/recast graph as well as the grid/layered grid graph supports this.
-		///
-		/// This can be important on sloped surfaces. See the image below in which the closest point for each blue point is queried for:
-		/// [Open online documentation to see images]
-		///
-		/// Deprecated: Use <see cref="distanceMetric"/> = DistanceMetric.ClosestAsSeenFromAbove() instead
-		/// </summary>
-		[System.Obsolete("Use distanceMetric = DistanceMetric.ClosestAsSeenFromAbove() instead")]
-		public bool distanceXZ {
-			get {
-				return distanceMetric.isProjectedDistance && distanceMetric.distanceScaleAlongProjectionDirection == 0;
-			}
-			set {
-				if (value) {
-					distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
-				} else {
-					distanceMetric = DistanceMetric.Euclidean;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets if tags should be constrained.
-		/// See: <see cref="tags"/>
-		/// </summary>
-		public bool constrainTags = true;
-
-		/// <summary>
-		/// Nodes which have any of these tags set are suitable.
-		/// This is a bitmask, i.e bit 0 indicates that tag 0 is good, bit 3 indicates tag 3 is good etc.
-		/// See: <see cref="constrainTags"/>
-		/// See: <see cref="graphMask"/>
-		/// See: bitmasks (view in online documentation for working links)
-		/// </summary>
-		public int tags = -1;
-
-		/// <summary>
-		/// Constrain distance to node.
-		/// Uses distance from <see cref="AstarPath.maxNearestNodeDistance"/>.
-		/// If this is false, it will completely ignore the distance limit.
-		///
-		/// If there are no suitable nodes within the distance limit then the search will terminate with a null node as a result.
-		/// Note: This value is not used in this class, it is used by the AstarPath.GetNearest function.
-		/// </summary>
-		public bool constrainDistance = true;
-
-		/// <summary>
-		/// Returns whether or not the graph conforms to this NNConstraint's rules.
-		/// Note that only the first 31 graphs are considered using this function.
-		/// If the <see cref="graphMask"/> has bit 31 set (i.e the last graph possible to fit in the mask), all graphs
-		/// above index 31 will also be considered suitable.
-		/// </summary>
-		public virtual bool SuitableGraph (int graphIndex, NavGraph graph) {
-			return graphMask.Contains(graphIndex);
-		}
-
-		/// <summary>Returns whether or not the node conforms to this NNConstraint's rules</summary>
-		public virtual bool Suitable (GraphNode node) {
-			if (constrainWalkability && node.Walkable != walkable) return false;
-
-			if (constrainArea && area >= 0 && node.Area != area) return false;
-
-			if (constrainTags && ((tags >> (int)node.Tag) & 0x1) == 0) return false;
-
-			return true;
-		}
-
-		public void UseSettings (PathRequestSettings settings) {
-			graphMask = settings.graphMask;
-			constrainTags = true;
-			tags = settings.traversableTags;
-			constrainWalkability = true;
-			walkable = true;
-		}
-
-		/// <summary>
-		/// The default NNConstraint.
-		/// Equivalent to new NNConstraint ().
-		/// This NNConstraint has settings which works for most, it only finds walkable nodes
-		/// and it constrains distance set by A* Inspector -> Settings -> Max Nearest Node Distance
-		///
-		/// Deprecated: Use <see cref="NNConstraint.Walkable"/> instead. It is equivalent, but the name is more descriptive.
-		/// </summary>
-		[System.Obsolete("Use NNConstraint.Walkable instead. It is equivalent, but the name is more descriptive")]
-		public static NNConstraint Default {
-			get {
-				return new NNConstraint();
-			}
-		}
-
-		/// <summary>
-		/// An NNConstraint which filters out unwalkable nodes.
-		/// This is the most commonly used NNConstraint.
-		///
-		/// It also constrains the nearest node to be within the distance set by A* Inspector -> Settings -> Max Nearest Node Distance
-		/// </summary>
-		public static NNConstraint Walkable {
-			get {
-				return new NNConstraint();
-			}
-		}
-
-		/// <summary>Returns a constraint which does not filter the results</summary>
-		public static NNConstraint None {
-			get {
-				return new NNConstraint {
-						   constrainWalkability = false,
-						   constrainArea = false,
-						   constrainTags = false,
-						   constrainDistance = false,
-						   graphMask = -1,
-				};
-			}
-		}
-
-		/// <summary>Default constructor. Equals to the property <see cref="Default"/></summary>
-		public NNConstraint () {
-		}
-	}
-
-	/// <summary>
-	/// A special NNConstraint which can use different logic for the start node and end node in a path.
-	/// A PathNNConstraint can be assigned to the Path.nnConstraint field, the path will first search for the start node, then it will call <see cref="SetStart"/> and proceed with searching for the end node (nodes in the case of a MultiTargetPath).
-	/// The default PathNNConstraint will constrain the end point to lie inside the same area as the start point.
-	/// </summary>
-	public class PathNNConstraint : NNConstraint {
-		public static new PathNNConstraint Walkable {
-			get {
-				return new PathNNConstraint {
-						   constrainArea = true
-				};
-			}
-		}
-
-		/// <summary>Called after the start node has been found. This is used to get different search logic for the start and end nodes in a path</summary>
-		public virtual void SetStart (GraphNode node) {
-			if (node != null) {
-				area = (int)node.Area;
-			} else {
-				constrainArea = false;
-			}
-		}
-	}
-
 	/// <summary>
 	/// Result of a nearest node query.
 	///
@@ -547,16 +358,16 @@ namespace Pathfinding {
 		/// Cost for picking this node as the closest node.
 		/// This is typically the squared distance from the query point to <see cref="position"/>.
 		///
-		/// However, it may be different if the <see cref="NNConstraint"/> used a different cost function.
-		/// For example, if <see cref="NNConstraint.distanceMetric"/> is <see cref="DistanceMetric.ClosestAsSeenFromAbove()"/>,
+		/// However, it may be different if the <see cref="NearestNodeConstraint"/> used a different cost function.
+		/// For example, if <see cref="NearestNodeConstraint.distanceMetric"/> is <see cref="DistanceMetric.ClosestAsSeenFromAbove()"/>,
 		/// then this value will be the squared distance in the XZ plane.
 		///
 		/// This value is not guaranteed to be smaller or equal to the squared euclidean distance from the query point to <see cref="position"/>.
-		/// In particular for a navmesh/recast graph with a <see cref="DistanceMetric.ClosestAsSeenFromAboveSoft"/> NNConstraint it may
+		/// In particular for a navmesh/recast graph with a <see cref="DistanceMetric.ClosestAsSeenFromAboveSoft"/> NearestNodeConstraint it may
 		/// be slightly greater for some configurations. This is fine because we are only using this value for the rough
 		/// distance limit performanced by <see cref="AstarPath.maxNearestNodeDistance"/>, and it's not a problem if it is slightly inaccurate.
 		///
-		/// See: <see cref="NNConstraint.distanceMetric"/>
+		/// See: <see cref="NearestNodeConstraint.distanceMetric"/>
 		///
 		/// If <see cref="node"/> is null, then this value is positive infinity.
 		/// </summary>
@@ -770,8 +581,20 @@ namespace Pathfinding {
 		/// NNConstraint to use.
 		/// The Pathfinding.NNConstraint.SuitableGraph function will be called on the NNConstraint to enable filtering of which graphs to update.
 		/// Note: As the Pathfinding.NNConstraint.SuitableGraph function is A* Pathfinding Project Pro only, this variable doesn't really affect anything in the free version.
+		///
+		/// Deprecated: Use the <see cref="graphMask"/> field instead
 		/// </summary>
-		public NNConstraint nnConstraint = NNConstraint.None;
+		[System.Obsolete("Use the graphMask field instead")]
+		public NNConstraintGraphUpdateObjectProxy nnConstraint => new NNConstraintGraphUpdateObjectProxy(this);
+
+		/// <summary>
+		/// Which graphs to update.
+		/// This ia bitmask containing all graphs which should be updated.
+		///
+		/// See: bitmasks (view in online documentation for working links)
+		/// See: <see cref="GraphMask"/>
+		/// </summary>
+		public GraphMask graphMask = GraphMask.everything;
 
 		/// <summary>
 		/// Penalty to add to the nodes.
@@ -970,6 +793,7 @@ namespace Pathfinding {
 		/// <summary>Deprecated:</summary>
 		[System.Obsolete]
 		bool Linecast(Vector3 start, Vector3 end, GraphNode startNodeHint, out GraphHitInfo hit);
+
 		/// <summary>
 		/// Checks if the straight line of sight between the two points on the graph is obstructed.
 		///
@@ -980,8 +804,37 @@ namespace Pathfinding {
 		/// <param name="startNodeHint">If you know which node contains the start point, you may pass it here to save a GetNearest call. Otherwise, pass null. If the start point is not actually inside the give node, you may get different behavior on different graph types. Some will clamp the start point to the surface of the hint node, and some will ignore the hint parameter completely.</param>
 		/// <param name="hit">Additional information about what was hit.</param>
 		/// <param name="trace">If you supply a list, it will be filled with all nodes that the linecast traversed. You may pass null if you don't care about this.</param>
-		/// <param name="filter">You may supply a callback to indicate which nodes should be considered unwalkable. Note that already unwalkable nodes cannot be made walkable in this way.</param>
-		bool Linecast(Vector3 start, Vector3 end, GraphNode startNodeHint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter = null);
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. Note that already unwalkable nodes cannot be made walkable in this way.</param>
+		bool Linecast(Vector3 start, Vector3 end, GraphNode startNodeHint, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace);
+
+		/// <summary>
+		/// Checks if the straight line of sight between the two points on the graph is obstructed.
+		///
+		/// Returns: True if an obstacle was hit, and false otherwise.
+		/// </summary>
+		/// <param name="start">The start point of the raycast.</param>
+		/// <param name="end">The end point of the raycast.</param>
+		/// <param name="startNodeHint">If you know which node contains the start point, you may pass it here to save a GetNearest call. Otherwise, pass null. If the start point is not actually inside the give node, you may get different behavior on different graph types. Some will clamp the start point to the surface of the hint node, and some will ignore the hint parameter completely.</param>
+		/// <param name="hit">Additional information about what was hit.</param>
+		/// <param name="trace">If you supply a list, it will be filled with all nodes that the linecast traversed. You may pass null if you don't care about this.</param>
+		bool Linecast (Vector3 start, Vector3 end, GraphNode startNodeHint, out GraphHitInfo hit, List<GraphNode> trace) {
+			var constraint = TraversalConstraint.None;
+			return Linecast(start, end, startNodeHint, out hit, ref constraint, trace);
+		}
+
+		/// <summary>
+		/// Checks if the straight line of sight between the two points on the graph is obstructed.
+		///
+		/// Returns: True if an obstacle was hit, and false otherwise.
+		/// </summary>
+		/// <param name="start">The start point of the raycast.</param>
+		/// <param name="end">The end point of the raycast.</param>
+		/// <param name="hit">Additional information about what was hit.</param>
+		bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit) {
+			var constraint = TraversalConstraint.None;
+			return Linecast(start, end, out hit, ref constraint, null);
+		}
+
 		/// <summary>
 		/// Checks if the straight line of sight between the two points on the graph is obstructed.
 		///
@@ -991,8 +844,36 @@ namespace Pathfinding {
 		/// <param name="end">The end point of the raycast.</param>
 		/// <param name="hit">Additional information about what was hit.</param>
 		/// <param name="trace">If you supply a list, it will be filled with all nodes that the linecast traversed. You may pass null if you don't care about this.</param>
-		/// <param name="filter">You may supply a callback to indicate which nodes should be considered unwalkable. Note that already unwalkable nodes cannot be made walkable in this way.</param>
-		bool Linecast(Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace = null, System.Func<GraphNode, bool> filter = null);
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. Note that already unwalkable nodes cannot be made walkable in this way.</param>
+		bool Linecast(Vector3 start, Vector3 end, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null);
+
+		/// <summary>
+		/// Checks if the straight line of sight between the two points on the graph is obstructed.
+		///
+		/// Returns: True if an obstacle was hit, and false otherwise.
+		/// </summary>
+		/// <param name="start">The start point of the raycast.</param>
+		/// <param name="end">The end point of the raycast.</param>
+		/// <param name="hit">Additional information about what was hit.</param>
+		/// <param name="trace">If you supply a list, it will be filled with all nodes that the linecast traversed. You may pass null if you don't care about this.</param>
+		bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace) {
+			var constraint = TraversalConstraint.None;
+			return Linecast(start, end, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead of a filter function")]
+		bool Linecast (Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(start, end, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead of a filter function")]
+		bool Linecast (Vector3 start, Vector3 end, GraphNode startNodeHint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(start, end, startNodeHint, out hit, ref constraint, trace);
+		}
 	}
 
 	/// <summary>
@@ -1141,7 +1022,7 @@ namespace Pathfinding {
 					a.ymax = intersection.ymin - 1;
 					return a;
 				} else {
-					throw new System.ArgumentException("B splits A into two disjoint parts");
+					throw new ArgumentException("B splits A into two disjoint parts");
 				}
 			} else if (a.ymin == intersection.ymin && a.ymax == intersection.ymax) {
 				if (a.xmin == intersection.xmin) {
@@ -1151,10 +1032,10 @@ namespace Pathfinding {
 					a.xmax = intersection.xmin - 1;
 					return a;
 				} else {
-					throw new System.ArgumentException("B splits A into two disjoint parts");
+					throw new ArgumentException("B splits A into two disjoint parts");
 				}
 			} else {
-				throw new System.ArgumentException("B covers either a corner of A, or does not touch the edges of A at all");
+				throw new ArgumentException("B covers either a corner of A, or does not touch the edges of A at all");
 			}
 		}
 
@@ -1200,16 +1081,17 @@ namespace Pathfinding {
 	}
 
 	/// <summary>
-	/// Holds a bitmask of graphs.
-	/// This bitmask can hold up to 32 graphs.
+	/// A combination of graphs.
+	/// Represents a set of graphs, which is usually used to filter which graphs to use for pathfinding, or which graphs to apply an update to.
 	///
-	/// The bitmask can be converted to and from integers implicitly.
+	/// This mask can hold any subset of small graph indices (up to graph index 30), but only a combination of at most 3 graphs of large graph indices (larger than 30).
+	/// Almost all games will use only one or a few graphs, so you can think of this as being able to represent any combination of graphs.
 	///
 	/// <code>
 	/// GraphMask mask1 = GraphMask.FromGraphName("My Grid Graph");
 	/// GraphMask mask2 = GraphMask.FromGraphName("My Other Grid Graph");
 	///
-	/// NNConstraint nn = NNConstraint.Walkable;
+	/// NearestNodeConstraint nn = NearestNodeConstraint.Walkable;
 	///
 	/// nn.graphMask = mask1 | mask2;
 	///
@@ -1220,56 +1102,190 @@ namespace Pathfinding {
 	/// See: bitmasks (view in online documentation for working links)
 	/// </summary>
 	[System.Serializable]
+#if UNITY_2023_1_OR_NEWER
+	[Unity.Properties.GeneratePropertyBag]
+#endif
 	public struct GraphMask {
-		/// <summary>Bitmask representing the mask</summary>
-		public int value;
+		/// <summary>
+		/// Internal representation of the mask.
+		///
+		/// Depending on LargeGraphIndicesBit (bit 31) the mask is in one of two modes:
+		/// - If LargeGraphIndicesBit is set, then the lower 3x8 bits are used to store indices of 3 graphs (0-254, 255 represents no graph). The InvertedBit (bit 30) is used to indicate if the mask is inverted.
+		/// - If LargeGraphIndicesBit is not set, then the lower 30 bits are a normal bitmask for the first 30 graphs, and bit 30 (RemainingGraphIndicesBit) represents all graph indices larger or equal to 30.
+		///
+		/// Combining two masks is not trivial and can actually throw an exception if you try to combine too many large graph indices.
+		/// Fortunately, hitting this limit is very rare, and will never happen in normal use.
+		///
+		/// There are technically two representations that contain all graphs. All bits set, and all bits except the LargeGraphIndicesBit.
+		/// However, we prevent the latter from being created, to avoid confusion.
+		///
+		/// Note: Has to stay an int, and not an uint, because Unity will refuse to deserialize old values like -1 otherwise, and we really want to keep backwards compatibility.
+		/// </summary>
+		[SerializeField]
+		private int value;
+
+		const uint LargeGraphIndicesBit = 1U << 31;
+		const uint InvertedBit = 1U << 30;
+		const uint SmallestLargeGraphIndex = 30;
+		const uint RemainingGraphIndicesBit = 1U << 30;
+		const uint Everything = ~0U;
 
 		/// <summary>A mask containing every graph</summary>
-		public static GraphMask everything => new GraphMask(-1);
+		public static GraphMask everything => new GraphMask(Everything);
 
-		public GraphMask (int value) {
-			this.value = value;
-		}
+		/// <summary>True if the mask contains all graphs, i.e. if it is equal to GraphMask.everything</summary>
+		public bool containsAllGraphs => (uint)value == Everything;
+		public bool isPureBitmask => (uint)value == Everything || (value & LargeGraphIndicesBit) == 0;
 
-		public static implicit operator int(GraphMask mask) {
-			return mask.value;
-		}
 
-		public static implicit operator GraphMask (int mask) {
-			return new GraphMask(mask);
-		}
-
-		/// <summary>Combines two masks to form the intersection between them</summary>
-		public static GraphMask operator & (GraphMask lhs, GraphMask rhs) {
-			return new GraphMask(lhs.value & rhs.value);
+		public GraphMask (uint value) {
+			this.value = (int)value;
 		}
 
 		/// <summary>Combines two masks to form the union of them</summary>
 		public static GraphMask operator | (GraphMask lhs, GraphMask rhs) {
-			return new GraphMask(lhs.value | rhs.value);
+			if ((uint)lhs.value == Everything || (uint)rhs.value == Everything) return everything;
+			if (lhs.value == rhs.value) return lhs;
+
+			var union = (uint)lhs.value | (uint)rhs.value;
+			if ((union & LargeGraphIndicesBit) == 0) {
+				// There are technically two representations for "everything". We collapse the one which is all bits except the LargeGraphIndicesBit to the one which is all bits.
+				if (union == (~0U & ~LargeGraphIndicesBit)) return everything;
+				return new GraphMask(union);
+			}
+
+			unsafe {
+				var indices = stackalloc uint[3];
+				indices[0] = GraphNode.InvalidGraphIndex;
+				indices[1] = GraphNode.InvalidGraphIndex;
+				indices[2] = GraphNode.InvalidGraphIndex;
+				var cnt = 0;
+				InsertMask(indices, ref cnt, (uint)lhs.value);
+				InsertMask(indices, ref cnt, (uint)rhs.value);
+
+				UnityEngine.Assertions.Assert.IsTrue(cnt <= 3);
+				UnityEngine.Assertions.Assert.IsTrue(cnt > 0);
+				UnityEngine.Assertions.Assert.IsTrue(indices[0] < indices[1] || indices[0] == GraphNode.InvalidGraphIndex);
+				UnityEngine.Assertions.Assert.IsTrue(indices[1] < indices[2] || indices[1] == GraphNode.InvalidGraphIndex);
+				UnityEngine.Assertions.Assert.IsTrue(indices[2] <= 0xFF);
+				UnityEngine.Assertions.Assert.IsTrue(GraphNode.MaxGraphIndex < 0xFF);
+
+				return new GraphMask(LargeGraphIndicesBit | indices[0] | (indices[1] << 8) | (indices[2] << 16));
+			}
+		}
+
+		static unsafe void InsertMask (uint* indices, ref int cnt, uint mask) {
+			if ((mask & LargeGraphIndicesBit) == 0) {
+				if ((mask & RemainingGraphIndicesBit) != 0) {
+					throw new ArgumentException("Cannot combine more than 3 large graph indices into a single mask. The GraphMask can only represent arbitrary combinations of graph indices smaller than 30. Larger graph indices have some limitations.");
+				}
+
+				for (int i = 0; i < SmallestLargeGraphIndex; i++) {
+					if ((mask & (1U << i)) != 0) {
+						InsertSorted(indices, ref cnt, (uint)i);
+					}
+				}
+			} else {
+				if ((mask & InvertedBit) != 0) {
+					throw new ArgumentException("Cannot combine an inverted mask with large graph indices. The GraphMask can only represent arbitrary combinations of graph indices smaller than 30. Larger graph indices have some limitations.");
+				}
+
+				var g1 = mask & 0xFF;
+				var g2 = (mask >> 8) & 0xFF;
+				var g3 = (mask >> 16) & 0xFF;
+				InsertSorted(indices, ref cnt, g1);
+				InsertSorted(indices, ref cnt, g2);
+				InsertSorted(indices, ref cnt, g3);
+			}
+		}
+
+		/// <summary>Insert one item, as part of an insertion-sort</summary>
+		static unsafe void InsertSorted (uint* indices, ref int cnt, uint value) {
+			if (value == GraphNode.InvalidGraphIndex) return;
+			for (int i = 0; i < cnt; i++) {
+				if (indices[i] == value) return;
+			}
+			if (cnt >= 3) throw new ArgumentException("Cannot combine more than 3 large graph indices into a single mask. The GraphMask can only represent arbitrary combinations of graph indices smaller than 30. Larger graph indices have some limitations.");
+			cnt++;
+			int insertionIndex = cnt;
+			while (insertionIndex > 0 && value < indices[insertionIndex-1]) {
+				insertionIndex--;
+			}
+
+			new UnsafeSpan<int>(indices, cnt).Move(insertionIndex, insertionIndex+1, cnt-insertionIndex-1);
+			indices[insertionIndex] = value;
 		}
 
 		/// <summary>Inverts the mask</summary>
 		public static GraphMask operator ~ (GraphMask lhs) {
-			return new GraphMask(~lhs.value);
+			if ((uint)lhs.value == Everything) return new GraphMask();
+			if ((lhs.value & LargeGraphIndicesBit) != 0) return new GraphMask((uint)lhs.value ^ InvertedBit);
+			else return new GraphMask(~(uint)lhs.value & ~LargeGraphIndicesBit);
+		}
+
+		public static bool operator == (GraphMask lhs, GraphMask rhs) {
+			return lhs.value == rhs.value;
+		}
+
+		public static bool operator != (GraphMask lhs, GraphMask rhs) {
+			return lhs.value != rhs.value;
+		}
+
+		public readonly override bool Equals (object obj) {
+			return obj is GraphMask mask && value == mask.value;
+		}
+
+		public readonly override int GetHashCode () {
+			return value;
+		}
+
+		/// <summary>True if this mask contains the given graph</summary>
+		public readonly bool Contains (NavGraph graph) {
+			return Contains(graph.graphIndex);
 		}
 
 		/// <summary>True if this mask contains the graph with the given graph index</summary>
-		public bool Contains (int graphIndex) {
-			return ((value >> graphIndex) & 1) != 0;
+		public readonly bool Contains (uint graphIndex) {
+			var value = (uint)this.value;
+			// Optimization for the exceedingly common case
+			if (value == Everything) return true;
+
+			if ((value & LargeGraphIndicesBit) != 0) {
+				// Special case. Mask contains indices greater or equal to 30
+				var g1 = value & 0xFF;
+				var g2 = (value >> 8) & 0xFF;
+				var g3 = (value >> 16) & 0xFF;
+				var res = g1 == graphIndex || g2 == graphIndex || g3 == graphIndex;
+				return res == ((value & InvertedBit) == 0);
+			} else {
+				// Common case. Mask contains a subset of indices smaller than 30
+				// And if bit 30 (RemainingGraphIndicesBit) is set, it contains all indices greater or equal to 30 as well
+				return ((value >> (int)Mathf.Min(graphIndex, SmallestLargeGraphIndex)) & 1) != 0U;
+			}
 		}
 
-		/// <summary>A bitmask containing the given graph</summary>
+		/// <summary>
+		/// A bitmask containing the given graph.
+		///
+		/// See: <see cref="FromGraphIndex"/>
+		/// </summary>
 		public static GraphMask FromGraph (NavGraph graph) {
-			return 1 << (int)graph.graphIndex;
+			return FromGraphIndex(graph.graphIndex);
 		}
 
 		public override string ToString () {
-			return value.ToString();
+			return System.Convert.ToString(value, 2);
 		}
 
 		/// <summary>A bitmask containing the given graph index.</summary>
-		public static GraphMask FromGraphIndex(uint graphIndex) => new GraphMask(1 << (int)graphIndex);
+		public static GraphMask FromGraphIndex (uint graphIndex) {
+			if (graphIndex < SmallestLargeGraphIndex) {
+				return new GraphMask(1U << (int)graphIndex);
+			} else {
+				UnityEngine.Assertions.Assert.IsTrue(graphIndex <= GraphNode.MaxGraphIndex);
+				return new GraphMask(LargeGraphIndicesBit | graphIndex | (GraphNode.InvalidGraphIndex << 8) | (GraphNode.InvalidGraphIndex << 16));
+			}
+		}
 
 		/// <summary>
 		/// A bitmask containing the first graph with the given name.
@@ -1277,7 +1293,7 @@ namespace Pathfinding {
 		/// GraphMask mask1 = GraphMask.FromGraphName("My Grid Graph");
 		/// GraphMask mask2 = GraphMask.FromGraphName("My Other Grid Graph");
 		///
-		/// NNConstraint nn = NNConstraint.Walkable;
+		/// NearestNodeConstraint nn = NearestNodeConstraint.Walkable;
 		///
 		/// nn.graphMask = mask1 | mask2;
 		///
@@ -1288,7 +1304,7 @@ namespace Pathfinding {
 		public static GraphMask FromGraphName (string graphName) {
 			var graph = AstarPath.active.data.FindGraph(g => g.name == graphName);
 
-			if (graph == null) throw new System.ArgumentException("Could not find any graph with the name '" + graphName + "'");
+			if (graph == null) throw new ArgumentException("Could not find any graph with the name '" + graphName + "'");
 			return FromGraph(graph);
 		}
 	}
@@ -1440,6 +1456,45 @@ namespace Pathfinding {
 		NavmeshBorderObstacles,
 	}
 
+	/// <summary>
+	/// How to visualize graph updates in the editor.
+	/// This is used to visualize the bounds of graph updates, and how they affect the graph.
+	///
+	/// See: <see cref="GraphUpdateObject"/>
+	/// See: <see cref="AstarPath.graphUpdateDebugMode"/>
+	/// </summary>
+	[Flags]
+	public enum GraphUpdateDebugMode {
+		Nothing = 0,
+		/// <summary>
+		/// Visualize the original bounds of graph updates.
+		/// This is the volume which was specified in the <see cref="GraphUpdateObject"/>.
+		///
+		/// In the screenshot, it is visualized as a yellow box.
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="GraphUpdateObject.bounds"/>
+		/// </summary>
+		VisualizeOriginalBounds = 1 << 0,
+		/// <summary>
+		/// Visualize the affected regions of graph updates.
+		/// This is typically larger than the original bounds.
+		/// For recast graphs, it will be the bounds of the tiles that were updated.
+		/// For grid graphs, it will be the bounds of a rectangle of nodes a bit larger than the original bounds.
+		///
+		/// In the screenshot, it is visualized as an orange box.
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="GraphUpdateObject.bounds"/>
+		/// </summary>
+		VisualizeAffectedBounds = 1 << 1,
+		/// <summary>
+		/// If enabled, the visualizations will stick around for a second or so, to make it easier to see what is happening.
+		/// If disabled, the visualizations will only be shown for a single frame.
+		/// </summary>
+		VisualizeOverTime = 1 << 2,
+	}
+
 	/// <summary>Number of threads to use</summary>
 	public enum ThreadCount {
 		AutomaticLowLoad = -1,
@@ -1453,6 +1508,64 @@ namespace Pathfinding {
 		Six,
 		Seven,
 		Eight
+	}
+
+	static class ThreadCountExtensions {
+		/// <summary>
+		/// Calculates number of threads to use.
+		/// If count is not Automatic, simply returns count casted to an int.
+		/// Returns: An int specifying how many threads to use, 0 means a coroutine should be used for pathfinding instead of a separate thread.
+		///
+		/// If count is set to Automatic it will return a value based on the number of processors and memory for the current system.
+		///
+		/// When running on WebGL this method always returns 0
+		/// </summary>
+		public static int ToConcreteThreadCount (this ThreadCount count) {
+#if UNITY_WEBGL
+			return 0;
+#else
+			if (count == ThreadCount.AutomaticLowLoad || count == ThreadCount.AutomaticHighLoad) {
+#if ASTARDEBUG
+				Debug.Log(SystemInfo.systemMemorySize + " " + SystemInfo.processorCount + " " + SystemInfo.processorType);
+#endif
+
+				int logicalCores = Mathf.Max(1, SystemInfo.processorCount);
+				int memory = SystemInfo.systemMemorySize;
+
+				if (memory <= 0) {
+					Debug.LogError("Machine reporting that is has <= 0 bytes of RAM. This is definitely not true, assuming 1 GiB");
+					memory = 1024;
+				}
+
+				if (logicalCores <= 1) return 0;
+
+				if (memory <= 512) return 0;
+
+				if (count == ThreadCount.AutomaticHighLoad) {
+					if (memory <= 1024) logicalCores = Math.Min(logicalCores, 2);
+
+					// Scale the number of threads based on the number of logical cores
+					// But if the computer has a lot of cores, limit to half as many threads as cores.
+					// This is both due to hyperthreading, and just to reduce memory usage.
+					logicalCores = Math.Min(logicalCores, Math.Max(8, (logicalCores / 2) + 2));
+				} else {
+					// Many computers use hyperthreading, so dividing by two is used to remove the hyperthreading cores, pathfinding
+					// doesn't scale well past the number of physical cores anyway
+					logicalCores /= 2;
+					logicalCores = Mathf.Max(1, logicalCores);
+
+					if (memory <= 1024) logicalCores = Math.Min(logicalCores, 2);
+
+					logicalCores = Math.Min(logicalCores, 6);
+				}
+
+				return logicalCores;
+			} else {
+				int val = (int)count;
+				return val;
+			}
+#endif
+		}
 	}
 
 	/// <summary>Internal state of a path in the pipeline</summary>
@@ -1476,19 +1589,26 @@ namespace Pathfinding {
 	public enum PathCompleteState {
 		/// <summary>
 		/// The path has not been calculated yet.
-		/// See: <see cref="Pathfinding.Path.IsDone()"/>
+		/// See: <see cref="Path.IsDone"/>
 		/// </summary>
 		NotCalculated = 0,
 		/// <summary>
 		/// The path calculation is done, but it failed.
-		/// See: <see cref="Pathfinding.Path.error"/>
+		/// See: <see cref="Path.error"/>
 		/// </summary>
 		Error = 1,
-		/// <summary>The path has been successfully calculated</summary>
+		/// <summary>
+		/// The path has been successfully calculated.
+		///
+		/// Warning: Do not use this to check if the path has been calculated yet, as this is set on a separate thread before the state of the path is finalized. Use <see cref="Path.IsDone"/>, callbacks, <see cref="Path.WaitForPath"/> or <see cref="Path.BlockUntilCalculated"/> instead.
+		/// You'll run into race conditions if you use this to check if the path has been calculated.
+		///
+		/// See: calling-pathfinding (view in online documentation for working links)
+		/// </summary>
 		Complete = 2,
 		/// <summary>
 		/// The path has been calculated, but only a partial path could be found.
-		/// See: <see cref="Pathfinding.ABPath.calculatePartial"/>
+		/// See: <see cref="ABPath.calculatePartial"/>
 		/// </summary>
 		Partial = 3,
 	}

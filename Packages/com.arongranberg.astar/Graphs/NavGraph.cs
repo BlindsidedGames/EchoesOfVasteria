@@ -34,6 +34,8 @@ namespace Pathfinding {
 		/// <summary>
 		/// Used as an ID of the graph, considered to be unique.
 		/// Note: This is Pathfinding.Util.Guid not System.Guid. A replacement for System.Guid was coded for better compatibility with iOS
+		///
+		/// Note: You should never have to change this value yourself.
 		/// </summary>
 		[JsonMember]
 		public Guid guid;
@@ -135,7 +137,7 @@ namespace Pathfinding {
 		public virtual int CountNodes () {
 			int count = 0;
 
-			GetNodes(_ => count++);
+			GetNodes((GraphNode _, ref int count) => count++, ref count);
 			return count;
 		}
 
@@ -149,10 +151,10 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Calls a delegate with all nodes in the graph.
+		/// Calls a delegate with every node in the graph.
 		/// This is the primary way of iterating through all nodes in a graph.
 		///
-		/// Do not change the graph structure inside the delegate.
+		/// Do not change the graph structure inside the callback.
 		///
 		/// <code>
 		/// var gg = AstarPath.active.data.gridGraph;
@@ -173,9 +175,37 @@ namespace Pathfinding {
 		/// gg.GetNodes((System.Action<GraphNode>)nodes.Add);
 		/// </code>
 		///
-		/// See: <see cref="Pathfinding.AstarData.GetNodes"/>
+		/// See: <see cref="AstarData.GetNodes"/>
 		/// </summary>
-		public abstract void GetNodes(System.Action<GraphNode> action);
+		public virtual void GetNodes (System.Action<GraphNode> action) {
+			GetNodes((GraphNode node, ref System.Action<GraphNode> action) => action(node), ref action);
+		}
+
+		/// <summary>
+		/// Calls a delegate with every node in the graph.
+		/// This is the primary way of iterating through all nodes in a graph.
+		///
+		/// In contrast to the other overload, this one allows you to pass in a custom reference type, which will be passed to your callback.
+		/// This is useful to avoid allocating a new delegate for every call, thus reducing garbage collection pressure.
+		///
+		/// Do not change the graph structure inside the callback.
+		///
+		/// <code>
+		/// var graph = AstarPath.active.data.gridGraph;
+		/// int numWalkable = 0;
+		///
+		/// // Passes the number of walkable nodes as a reference parameter
+		/// // to avoid GC allocations due creating a closure.
+		/// graph.GetNodes((GraphNode node, ref int numWalkable) => {
+		///     if (node.Walkable) {
+		///         numWalkable++;
+		///     }
+		/// }, ref numWalkable);
+		/// </code>
+		///
+		/// See: <see cref="AstarData.GetNodes"/>
+		/// </summary>
+		public abstract void GetNodes<T>(GraphNode.NodeActionWithData<T> action, ref T data);
 
 		/// <summary>
 		/// True if the point is on a walkable part of the navmesh, as seen from above.
@@ -184,7 +214,7 @@ namespace Pathfinding {
 		/// and if it is not above/below a closer unwalkable node.
 		///
 		/// Note: This means that, for example, in multi-story building a point will be considered on the navmesh if any walkable floor is below or above the point.
-		/// If you want more complex behavior then you can use the GetNearest method together with the appropriate <see cref="NNConstraint.distanceMetric"/> settings for your use case.
+		/// If you want more complex behavior then you can use the GetNearest method together with the appropriate <see cref="NearestNodeConstraint.distanceMetric"/> settings for your use case.
 		///
 		/// This uses the graph's natural up direction to determine which way is up.
 		/// Therefore, it will also work on rotated graphs, as well as graphs in 2D mode.
@@ -200,11 +230,15 @@ namespace Pathfinding {
 		/// </summary>
 		/// <param name="position">The point to check</param>
 		public virtual bool IsPointOnNavmesh (Vector3 position) {
-			// We use the None constraint, instead of Walkable, to avoid ignoring unwalkable nodes that are closer to the point.
 			const float MaxHorizontalDistance = 0.01f;
 			const float MaxCostSqr = MaxHorizontalDistance * MaxHorizontalDistance;
-			var nearest = GetNearest(position, AstarPath.NNConstraintClosestAsSeenFromAbove, MaxCostSqr);
-			return nearest.node != null && nearest.node.Walkable && nearest.distanceCostSqr < MaxCostSqr;
+			// We use the None constraint, instead of Walkable, to avoid ignoring unwalkable nodes that are closer to the point.
+			var constraint = NearestNodeConstraint.None;
+			constraint.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
+			constraint.maxDistanceSqr = MaxCostSqr;
+			var nearest = GetNearest(position, constraint);
+			UnityEngine.Assertions.Assert.IsTrue(nearest.node == null || nearest.distanceCostSqr <= MaxCostSqr);
+			return nearest.node != null && nearest.node.Walkable;
 		}
 
 		/// <summary>
@@ -273,7 +307,7 @@ namespace Pathfinding {
 		/// </summary>
 		public virtual void RelocateNodes (Matrix4x4 deltaMatrix) {
 			AssertSafeToUpdateGraph();
-			GetNodes(node => node.position = ((Int3)deltaMatrix.MultiplyPoint((Vector3)node.position)));
+			GetNodes((GraphNode node, ref Matrix4x4 deltaMatrix) => node.position = ((Int3)deltaMatrix.MultiplyPoint((Vector3)node.position)), ref deltaMatrix);
 		}
 
 		/// <summary>
@@ -287,9 +321,24 @@ namespace Pathfinding {
 		/// </summary>
 		/// <param name="position">The position to check from</param>
 		/// <param name="constraint">A constraint on which nodes are valid. This may or may not be used by the function. You may pass null if you consider all nodes valid.</param>
-		public virtual float NearestNodeDistanceSqrLowerBound (Vector3 position, NNConstraint constraint = null) {
+		public virtual float NearestNodeDistanceSqrLowerBound (Vector3 position, ref NearestNodeConstraint constraint) {
 			// If the graph doesn't provide a way to calculate a lower bound, just return 0, since that is always a valid lower bound
 			return 0;
+		}
+
+		/// <summary>
+		/// Returns the nearest node to a position.
+		///
+		/// The returned <see cref="NNInfo"/> will contain both the closest node, and the closest point on the surface of that node.
+		/// The distance is measured to the closest point on the surface of the node.
+		///
+		/// See: You can use <see cref="AstarPath.GetNearest(Vector3)"/> instead, if you want to check all graphs.
+		/// </summary>
+		/// <param name="position">The position to try to find the closest node to.</param>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public NNInfo GetNearest (Vector3 position) {
+			var constraint = NearestNodeConstraint.None;
+			return GetNearest(position, ref constraint);
 		}
 
 		/// <summary>
@@ -301,18 +350,19 @@ namespace Pathfinding {
 		/// See: You can use <see cref="AstarPath.GetNearest(Vector3)"/> instead, if you want to check all graphs.
 		///
 		/// Version: Before 4.3.63, this method would not use the NNConstraint in all cases.
+		/// Deprecated: Use the overload that takes a NearestNodeConstraint instead.
 		/// </summary>
 		/// <param name="position">The position to try to find the closest node to.</param>
 		/// <param name="constraint">Used to limit which nodes are considered acceptable.
 		///                   You may, for example, only want to consider walkable nodes.
 		///                   If null, all nodes will be considered acceptable.</param>
-		public NNInfo GetNearest (Vector3 position, NNConstraint constraint = null) {
-			var maxDistanceSqr = constraint == null || constraint.constrainDistance ? active.maxNearestNodeDistanceSqr : float.PositiveInfinity;
-			return GetNearest(position, constraint, maxDistanceSqr);
+		[System.Obsolete("Use the overload that takes a NearestNodeConstraint instead. See the migration guide for version 5.4 for more details.")]
+		public NNInfo GetNearest (Vector3 position, NNConstraint constraint) {
+			return GetNearest(position, constraint != null ? constraint.ToNearestNodeConstraint() : NearestNodeConstraint.None);
 		}
 
 		/// <summary>
-		/// Nearest node to a position using the specified NNConstraint.
+		/// Nearest node to a position using the specified NearestNodeConstraint.
 		///
 		/// The returned <see cref="NNInfo"/> will contain both the closest node, and the closest point on the surface of that node.
 		/// The distance is measured to the closest point on the surface of the node.
@@ -321,29 +371,31 @@ namespace Pathfinding {
 		/// </summary>
 		/// <param name="position">The position to try to find the closest node to.</param>
 		/// <param name="constraint">Used to limit which nodes are considered acceptable.
-		///                   You may, for example, only want to consider walkable nodes.
-		///                   If null, all nodes will be considered acceptable.</param>
-		/// <param name="maxDistanceSqr">The maximum squared distance from the position to the node.
-		///                       If the node is further away than this, the function will return an empty NNInfo.
-		///                       You may pass infinity if you do not want to limit the distance.</param>
-		public virtual NNInfo GetNearest (Vector3 position, NNConstraint constraint, float maxDistanceSqr) {
+		///                   You may, for example, only want to consider walkable nodes.</param>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public NNInfo GetNearest (Vector3 position, NearestNodeConstraint constraint) {
+			return GetNearest(position, ref constraint);
+		}
+
+		public virtual NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 			// This is a default implementation and it is pretty slow
 			// Graphs usually override this to provide faster and more specialised implementations
 
-			float minDistSqr = maxDistanceSqr;
+			var maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
 			GraphNode minNode = null;
+			var constraintCopy = constraint;
 
 			// Loop through all nodes and find the closest suitable node
 			GetNodes(node => {
 				float dist = (position-(Vector3)node.position).sqrMagnitude;
 
-				if (dist < minDistSqr && (constraint == null || constraint.Suitable(node))) {
-					minDistSqr = dist;
+				if (dist < maxDistanceSqr && constraintCopy.Suitable(node)) {
+					maxDistanceSqr = dist;
 					minNode = node;
 				}
 			});
 
-			return minNode != null ? new NNInfo(minNode, (Vector3)minNode.position, minDistSqr) : NNInfo.Empty;
+			return minNode != null ? new NNInfo(minNode, (Vector3)minNode.position, maxDistanceSqr) : NNInfo.Empty;
 		}
 
 		/// <summary>
@@ -355,14 +407,21 @@ namespace Pathfinding {
 			return GetNearest(position, constraint);
 		}
 
+		[System.Obsolete("Use the overload that takes a NearestNodeConstraint instead. See the migration guide for version 5.4 for more details.")]
+		public NNInfo RandomPointOnSurface (NNConstraint nnConstraint, bool highQuality = true) {
+			return RandomPointOnSurface(nnConstraint?.ToNearestNodeConstraint() ?? NearestNodeConstraint.None, highQuality);
+		}
+
 		/// <summary>
 		/// A random point on the graph.
 		///
 		/// If there are no suitable nodes in the graph, <see cref="NNInfo.Empty"/> will be returned.
 		///
+		/// Note: The point will be on the surface of any node, including unwalkable ones. If you want to restrict the point to only be on walkable nodes, use <see cref="RandomPointOnSurface(NearestNodeConstraint,bool)"/>.
+		///
 		/// <code>
 		/// // Pick a random walkable point on the graph, sampled uniformly over the graph's surface
-		/// var sample = AstarPath.active.graphs[0].RandomPointOnSurface(NNConstraint.Walkable);
+		/// var sample = AstarPath.active.graphs[0].RandomPointOnSurface(NearestNodeConstraint.Walkable);
 		///
 		/// // Use a random point on the surface of the node as the destination.
 		/// var destination1 = sample.position;
@@ -374,15 +433,41 @@ namespace Pathfinding {
 		/// See: <see cref="PathUtilities.GetPointsOnNodes"/>
 		/// See: wander (view in online documentation for working links)
 		/// </summary>
-		/// <param name="nnConstraint">Optionally set to constrain which nodes are allowed to be returned. If null, all nodes are allowed, including unwalkable ones.</param>
 		/// <param name="highQuality">If true, this method is allowed to be more computationally heavy, in order to pick a random point more uniformly (based on the nodes' surface area).
 		///        If false, this method should be fast as possible, but the distribution of sampled points may be a bit skewed. This setting only affects recast and navmesh graphs.</param>
-		public virtual NNInfo RandomPointOnSurface (NNConstraint nnConstraint, bool highQuality = true) {
+		public NNInfo RandomPointOnSurface (bool highQuality = true) {
+			return RandomPointOnSurface(NearestNodeConstraint.None, highQuality);
+		}
+
+		/// <summary>
+		/// A random point on the graph.
+		///
+		/// If there are no suitable nodes in the graph, <see cref="NNInfo.Empty"/> will be returned.
+		///
+		/// <code>
+		/// // Pick a random walkable point on the graph, sampled uniformly over the graph's surface
+		/// var sample = AstarPath.active.graphs[0].RandomPointOnSurface(NearestNodeConstraint.Walkable);
+		///
+		/// // Use a random point on the surface of the node as the destination.
+		/// var destination1 = sample.position;
+		/// // Or use the center of the node as the destination
+		/// var destination2 = (Vector3)sample.node.position;
+		/// </code>
+		///
+		/// See: <see cref="GraphNode.RandomPointOnSurface"/>
+		/// See: <see cref="PathUtilities.GetPointsOnNodes"/>
+		/// See: wander (view in online documentation for working links)
+		/// </summary>
+		/// <param name="constraint">Constrains which nodes are allowed to be returned.</param>
+		/// <param name="highQuality">If true, this method is allowed to be more computationally heavy, in order to pick a random point more uniformly (based on the nodes' surface area).
+		///        If false, this method should be fast as possible, but the distribution of sampled points may be a bit skewed. This setting only affects recast and navmesh graphs.</param>
+		public virtual NNInfo RandomPointOnSurface (NearestNodeConstraint constraint, bool highQuality = true) {
 			// Use reservoir sampling to pick a random node
 			GraphNode bestNode = null;
 			var weight = 0f;
+			var allNodesAreSuitable = constraint.allNodesAreSuitable;
 			GetNodes(node => {
-				if (nnConstraint == null || nnConstraint.Suitable(node)) {
+				if (allNodesAreSuitable || constraint.Suitable(node)) {
 					var w = node.SurfaceArea();
 					// Make sure the code works even for nodes that have zero surface area (like point nodes)
 					if (w <= 0) w = 0.001f;
@@ -484,7 +569,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Draw gizmos for the graph</summary>
-		public virtual void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
+		public virtual void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
 			if (!drawNodes) {
 				return;
 			}
@@ -494,37 +579,38 @@ namespace Pathfinding {
 			// this method to draw gizmos in a more optimized way
 
 			var hasher = new NodeHasher(active);
-			GetNodes(node => hasher.HashNode(node));
+			GetNodes(static (GraphNode node, ref NodeHasher hasher) => hasher.HashNode(node), ref hasher);
 
 			// Update the gizmo mesh if necessary
 			if (!gizmos.Draw(hasher, redrawScope)) {
-				using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope)) {
-					if (helper.showSearchTree) helper.builder.PushLineWidth(2);
-					GetNodes((System.Action<GraphNode>)helper.DrawConnections);
-					if (helper.showSearchTree) helper.builder.PopLineWidth();
-				}
+				var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame);
+				if (helper.showSearchTree) helper.builder.PushLineWidth(2);
+				GetNodes(static (GraphNode node, ref GraphGizmoHelper helper) => helper.DrawConnections(node), ref helper);
+				if (helper.showSearchTree) helper.builder.PopLineWidth();
+				helper.Dispose();
 			}
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope, renderInGame);
 		}
 
-		protected void DrawUnwalkableNodes (DrawingData gizmos, float size, RedrawScope redrawScope) {
+		protected void DrawUnwalkableNodes (DrawingData gizmos, float size, RedrawScope redrawScope, bool renderInGame) {
 			var hasher = new DrawingData.Hasher();
 			hasher.Add(this);
 
-			GetNodes(node => {
+			GetNodes(static (GraphNode node, ref DrawingData.Hasher hasher) => {
 				hasher.Add(node.Walkable);
 				if (!node.Walkable) hasher.Add(node.position);
-			});
+			}, ref hasher);
 
 			if (!gizmos.Draw(hasher, redrawScope)) {
-				using (var builder = gizmos.GetBuilder(hasher)) {
-					using (builder.WithColor(AstarColor.UnwalkableNode)) {
-						GetNodes(node => {
-							if (!node.Walkable) builder.SolidBox((Vector3)node.position, new Unity.Mathematics.float3(size, size, size));
-						});
-					}
+				var builder = gizmos.GetBuilder(hasher, default, renderInGame);
+				using (builder.WithColor(AstarColor.UnwalkableNode)) {
+					var ctx = (builder, size);
+					GetNodes(static (GraphNode node, ref (CommandBuilder, float)ctx) => {
+						if (!node.Walkable) ctx.Item1.SolidBox((Vector3)node.position, new Unity.Mathematics.float3(ctx.Item2, ctx.Item2, ctx.Item2));
+					}, ref ctx);
 				}
+				builder.Dispose();
 			}
 		}
 

@@ -265,8 +265,8 @@ namespace TimelessEchoes.Quests
                 {
                     var title = data.questName.GetLocalizedString();
                     ui.progressText.text = string.IsNullOrEmpty(title)
-                        ? "<size=80%>Complete</size>"
-                        : $"{title}\n<size=80%>Complete</size>";
+                        ? "<size=80%>Ready to turn in</size>"
+                        : $"{title}\n<size=80%>Ready to turn in</size>";
                 }
                 else
                 {

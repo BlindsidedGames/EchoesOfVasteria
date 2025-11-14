@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using Unity.Jobs;
 using UnityEngine.Assertions;
+using System.Collections.Generic;
+using Pathfinding.Drawing;
+using Unity.Mathematics;
 
 namespace Pathfinding {
 	/// <summary>
@@ -165,6 +168,18 @@ namespace Pathfinding {
 		/// </summary>
 		// TODO: Deprecate?
 		void SetGraphDirty(NavGraph graph);
+
+		/// <summary>
+		/// Add a visualization for showing the original bounds of a graph update.
+		///
+		/// For example, each bounding box for a navmesh cut will be sent to this method to allow visualizing it in the scene view.
+		///
+		/// This has no effect on gameplay, it is only for debugging purposes.
+		///
+		/// See: <see cref="AstarPath.graphUpdateDebugMode"/>
+		/// See: <see cref="IWorkItemContext.DirtyBounds"/>
+		/// </summary>
+		void VisualizeOriginalGraphUpdateBounds(Bounds bounds);
 	}
 
 	class WorkItemProcessor : IWorkItemContext {
@@ -175,6 +190,7 @@ namespace Pathfinding {
 
 		readonly AstarPath astar;
 		readonly IndexedQueue<AstarWorkItem> workItems = new IndexedQueue<AstarWorkItem>();
+		readonly List<BoundsVisualization> boundsVisualizations = new List<BoundsVisualization>();
 
 
 		/// <summary>True if any work items are queued right now</summary>
@@ -193,6 +209,25 @@ namespace Pathfinding {
 		/// updates are in progress.
 		/// </summary>
 		public bool workItemsInProgress { get; private set; }
+
+		struct BoundsVisualization {
+			public Bounds bounds;
+			public float createdTime;
+			public int createdFrame;
+			public BoundsVisualizationType type;
+
+			public enum BoundsVisualizationType {
+				OriginalBounds,
+				AffectedBounds
+			}
+
+			public BoundsVisualization (Bounds bounds, BoundsVisualizationType type) {
+				this.bounds = bounds;
+				this.type = type;
+				createdTime = Time.realtimeSinceStartup;
+				createdFrame = Time.frameCount;
+			}
+		}
 
 		/// <summary>Similar to Queue<T> but allows random access</summary>
 		// TODO: Replace with CircularBuffer?
@@ -236,6 +271,10 @@ namespace Pathfinding {
 			}
 		}
 
+		public void VisualizeOriginalGraphUpdateBounds (Bounds bounds) {
+			if ((astar.graphUpdateDebugMode & GraphUpdateDebugMode.VisualizeOriginalBounds) != 0) boundsVisualizations.Add(new BoundsVisualization(bounds, BoundsVisualization.BoundsVisualizationType.OriginalBounds));
+		}
+
 		/// <summary>
 		/// Call during work items to queue a flood fill.
 		/// An instant flood fill can be done via FloodFill()
@@ -261,10 +300,13 @@ namespace Pathfinding {
 		// This will also call DirtyGraphs
 		void IWorkItemContext.SetGraphDirty(NavGraph graph) => astar.DirtyBounds(graph.bounds);
 
-		// This will also call DirtyGraphs
-		void IGraphUpdateContext.DirtyBounds(Bounds bounds) => astar.DirtyBounds(bounds);
+		void IGraphUpdateContext.DirtyBounds (Bounds bounds) {
+			// This will also call the other overload of DirtyBounds
+			astar.DirtyBounds(bounds);
+		}
 
-		internal void DirtyGraphs () {
+		internal void DirtyBounds (Bounds bounds) {
+			if ((astar.graphUpdateDebugMode & GraphUpdateDebugMode.VisualizeAffectedBounds) != 0) boundsVisualizations.Add(new BoundsVisualization(bounds, BoundsVisualization.BoundsVisualizationType.AffectedBounds));
 			anyGraphsDirty = true;
 		}
 
@@ -421,6 +463,52 @@ namespace Pathfinding {
 		/// </summary>
 		public bool ProcessWorkItemsForUpdate (bool force) {
 			return ProcessWorkItems(force, true);
+		}
+
+		public void DrawGizmos () {
+			if (!Application.isEditor && !astar.showGraphsInStandalonePlayer) {
+				boundsVisualizations.Clear();
+				return;
+			}
+
+			var frame = Time.frameCount;
+			var time = Time.realtimeSinceStartup;
+			var draw = Application.isEditor ? Draw.editor : Draw.ingame;
+			var removeCount = 0;
+			var mode = astar.graphUpdateDebugMode;
+
+			using (draw.WithLineWidth(2)) {
+				for (int i = 0; i < boundsVisualizations.Count; i++) {
+					var boundsVis = boundsVisualizations[i];
+					var first = boundsVis.createdFrame == frame;
+
+					Color color;
+					bool show;
+					if (boundsVis.type == BoundsVisualization.BoundsVisualizationType.OriginalBounds) {
+						color = Palette.Colorbrewer.Set1.Yellow;
+						show = (mode & GraphUpdateDebugMode.VisualizeOriginalBounds) != 0;
+					} else if (boundsVis.type == BoundsVisualization.BoundsVisualizationType.AffectedBounds) {
+						color = Palette.Colorbrewer.Set1.Orange;
+						show = (mode & GraphUpdateDebugMode.VisualizeAffectedBounds) != 0;
+					} else {
+						throw new System.ArgumentOutOfRangeException();
+					}
+
+					if (!first) color.a *= 0.5f * math.exp(-2f * (time - boundsVis.createdTime));
+
+					if (color.a < 0.01f) {
+						removeCount = i + 1;
+					}
+
+					if (show) draw.WireBox(boundsVis.bounds, color);
+				}
+			}
+
+			if ((mode & GraphUpdateDebugMode.VisualizeOverTime) == 0 || !Application.isPlaying) {
+				boundsVisualizations.Clear();
+			} else if (removeCount > 0) {
+				boundsVisualizations.RemoveRange(0, removeCount);
+			}
 		}
 	}
 }

@@ -8,14 +8,17 @@ namespace Pathfinding {
 	/// See: <see cref="Path.UseSettings"/>
 	/// </summary>
 	[System.Serializable]
-	public struct PathRequestSettings {
+#if UNITY_2023_1_OR_NEWER
+	[Unity.Properties.GeneratePropertyBag]
+#endif
+	public struct PathRequestSettings : System.IEquatable<PathRequestSettings> {
 		/// <summary>
 		/// Graphs that this agent can use.
 		/// This field determines which graphs will be considered when searching for the start and end nodes of a path.
 		/// It is useful in numerous situations, for example if you want to make one graph for small units and one graph for large units, or one graph for people and one graph for ships.
 		///
 		/// This is a bitmask so if you for example want to make the agent only use graph index 3 then you can set this to:
-		/// <code> settings.graphMask = 1 << 3; </code>
+		/// <code> settings.graphMask = GraphMask.FromGraphIndex(3); </code>
 		///
 		/// See: bitmasks (view in online documentation for working links)
 		///
@@ -27,7 +30,7 @@ namespace Pathfinding {
 		/// GraphMask mask1 = GraphMask.FromGraphName("My Grid Graph");
 		/// GraphMask mask2 = GraphMask.FromGraphName("My Other Grid Graph");
 		///
-		/// NNConstraint nn = NNConstraint.Walkable;
+		/// NearestNodeConstraint nn = NearestNodeConstraint.Walkable;
 		///
 		/// nn.graphMask = mask1 | mask2;
 		///
@@ -47,8 +50,13 @@ namespace Pathfinding {
 		/// [Open online documentation to see images]
 		///
 		/// See: tags (view in online documentation for working links)
+		/// Deprecated: Use <see cref="tagEntryCosts"/> or <see cref="tagCostMultipliers"/> instead.
 		/// </summary>
-		public int[] tagPenalties;
+		[System.Obsolete("Use tagEntryCosts or tagCostMultipliers instead")]
+		public uint[] tagPenalties {
+			get => tagEntryCosts;
+			set => tagEntryCosts = value;
+		}
 
 		/// <summary>
 		/// The tags which this agent can traverse.
@@ -64,6 +72,13 @@ namespace Pathfinding {
 		/// See: tags (view in online documentation for working links)
 		/// </summary>
 		public int traversableTags;
+
+		/// <summary>\copydocref{TraversalCosts.tagCostMultipliers}</summary>
+		public float[] tagCostMultipliers;
+
+		/// <summary>\copydocref{TraversalCosts.tagEntryCosts}</summary>
+		[UnityEngine.Serialization.FormerlySerializedAs("tagPenalties")]
+		public uint[] tagEntryCosts;
 
 		/// <summary>
 		/// Filters which nodes the agent can traverse, and can also add penalties to each traversed node.
@@ -81,11 +96,62 @@ namespace Pathfinding {
 		public ITraversalProvider traversalProvider;
 
 		/// <summary>A PathRequestSettings instance with default values for all fields</summary>
-		public static PathRequestSettings Default => new PathRequestSettings {
-			graphMask = GraphMask.everything,
-			tagPenalties = new int[32],
-			traversableTags = -1,
-			traversalProvider = null,
-		};
+		public static PathRequestSettings Default {
+			get {
+				var res = new PathRequestSettings {
+					graphMask = GraphMask.everything,
+					tagCostMultipliers = new float[32],
+					tagEntryCosts = new uint[32],
+					traversableTags = -1,
+					traversalProvider = null,
+				};
+				for (int i = 0; i < res.tagCostMultipliers.Length; i++) res.tagCostMultipliers[i] = 1f;
+				return res;
+			}
+		}
+
+		/// <summary>
+		/// Converts this struct to a <see cref="NearestNodeConstraint"/> which can be used for nearest node queries.
+		///
+		/// See: <see cref="NearestNodeConstraint"/>
+		/// See: <see cref="AstarPath.GetNearest"/>
+		/// </summary>
+		public NearestNodeConstraint ToNearestNodeConstraint () {
+			return ToTraversalConstraint().ToNearestNodeConstraint();
+		}
+
+		/// <summary>
+		/// Converts this struct to a <see cref="TraversalConstraint"/> which can be used for pathfinding or linecasts.
+		///
+		/// See: <see cref="TraversalConstraint"/>
+		/// </summary>
+		public TraversalConstraint ToTraversalConstraint () {
+			return new TraversalConstraint {
+					   tags = traversableTags,
+					   traversalProvider = traversalProvider,
+					   graphMask = graphMask,
+			};
+		}
+
+		/// <summary>
+		/// Converts this struct to a <see cref="TraversalCosts"/> which can be used for pathfinding.
+		///
+		/// See: <see cref="TraversalCosts"/>
+		/// </summary>
+		public TraversalCosts ToTraversalCosts () {
+			return new TraversalCosts {
+					   tagEntryCosts = tagEntryCosts,
+					   tagCostMultipliers = tagCostMultipliers,
+					   traversalProvider = traversalProvider,
+			};
+		}
+
+		public bool Equals (PathRequestSettings other) {
+			return graphMask == other.graphMask &&
+				   Util.Memory.SequenceEqual(tagCostMultipliers, other.tagCostMultipliers) &&
+				   Util.Memory.SequenceEqual(tagEntryCosts, other.tagEntryCosts) &&
+				   traversableTags == other.traversableTags &&
+				   traversalProvider == other.traversalProvider;
+		}
 	}
 }

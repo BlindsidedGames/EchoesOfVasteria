@@ -165,7 +165,7 @@ namespace Pathfinding {
 #endif
 		}
 
-		public override void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter) {
+		public override void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter) {
 			if ((connectionFilter & (Connection.IncomingConnection | Connection.OutgoingConnection)) == 0) return;
 
 			LayerGridGraph graph = GetGridGraph(GraphIndex);
@@ -301,13 +301,14 @@ namespace Pathfinding {
 			return true;
 		}
 
-		public override void Open (Path path, uint pathNodeIndex, uint gScore) {
+		public override void Open (ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore) {
 			LayerGridGraph graph = GetGridGraph(GraphIndex);
 
 			int[] neighbourOffsets = graph.neighbourOffsets;
-			uint[] neighbourCosts = graph.neighbourCosts;
+			float[] neighbourCosts = graph.neighbourCosts;
 			var nodes = graph.nodes;
 			int index = NodeInGridIndex;
+			var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
 
 			// Bitmask of the 8 connections out of this node.
 			// Each bit represents one connection.
@@ -323,7 +324,7 @@ namespace Pathfinding {
 			var conns = 0xFF;
 
 			for (int dir = 0; dir < MaxNeighbours; dir++) {
-				if (dir == 4 && (path.traversalProvider == null || path.traversalProvider.filterDiagonalGridConnections)) {
+				if (dir == 4 && ctx.traversalConstraint.filterDiagonalGridConnections) {
 					conns = GridNode.FilterDiagonalConnections(conns, graph.neighbours, graph.cutCorners);
 				}
 
@@ -331,18 +332,20 @@ namespace Pathfinding {
 				if (conn != LevelGridNode.NoConnection && ((conns >> dir) & 0x1) != 0) {
 					GraphNode other = nodes[index+neighbourOffsets[dir] + graph.lastScannedWidth*graph.lastScannedDepth*conn];
 
-					if (!path.CanTraverse(this, other)) {
+					if (!ctx.traversalConstraint.CanTraverse(this, other)) {
 						conns &= ~(1 << dir);
 						continue;
 					}
 
-					path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, neighbourCosts[dir], 0, other.position);
+					var connectionCost = ctx.traversalCosts.GetConnectionCost(this, other);
+					connectionCost += (uint)System.Math.Round((ourTraversalCostFactor + ctx.traversalCosts.GetTraversalCostMultiplier(other)) * (0.5f * neighbourCosts[dir]));
+					ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
 				} else {
 					conns &= ~(1 << dir);
 				}
 			}
 
-			base.Open(path, pathNodeIndex, gScore);
+			base.Open(ref ctx, pathNodeIndex, gScore);
 		}
 
 		public override void SerializeNode (GraphSerializationContext ctx) {

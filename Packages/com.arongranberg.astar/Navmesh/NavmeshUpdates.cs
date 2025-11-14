@@ -22,9 +22,12 @@ namespace Pathfinding.Graphs.Navmesh {
 		/// For worlds with a very large number of NavmeshCut objects, it might be bad for performance to do this check every frame.
 		/// If you think this is a performance penalty, increase this number to check less often.
 		///
-		/// For almost all games, this can be kept at 0.
-		///
 		/// If negative, no updates will be done. They must be manually triggered using <see cref="ForceUpdate"/>.
+		///
+		/// For almost all games, this can be kept at 0.
+		/// If you are smoothly moving navmesh cuts around, however, you may want to increase this a bit, to avoid triggering a navmesh update every frame.
+		///
+		/// An update not only has the cost associated with the update directly, but also the cost of recalculating the path for any agents that are using the affected part of the navmesh.
 		///
 		/// <code>
 		/// // Check every frame (the default)
@@ -196,7 +199,7 @@ namespace Pathfinding.Graphs.Navmesh {
 				// it may intersect with the new tiles and we will need to recalculate them in that case.
 				var allCuts = clipperLookup.AllItems;
 				for (var cut = allCuts; cut != null; cut = cut.next) {
-					var newGraphSpaceBounds = ExpandedBounds(cut.obj.GetBounds(tileLayout.transform, characterRadius));
+					var newGraphSpaceBounds = ExpandedXZBounds(cut.obj.GetBounds(tileLayout.transform, characterRadius));
 					var newTouchingTiles = tileLayout.GetTouchingTilesInGraphSpace(newGraphSpaceBounds);
 					if (cut.previousBounds != newTouchingTiles) {
 						clipperLookup.Dirty(cut.obj);
@@ -237,10 +240,10 @@ namespace Pathfinding.Graphs.Navmesh {
 			/// <summary>Called when a NavmeshCut or NavmeshAdd is enabled</summary>
 			public void AddClipper (NavmeshClipper obj) {
 				AssertEnabled();
-				if (!obj.graphMask.Contains((int)graph.graphIndex)) return;
+				if (!obj.graphMask.Contains(graph)) return;
 
 				var characterRadius = graph.NavmeshCuttingCharacterRadius;
-				var graphSpaceBounds = ExpandedBounds(obj.GetBounds(tileLayout.transform, characterRadius));
+				var graphSpaceBounds = ExpandedXZBounds(obj.GetBounds(tileLayout.transform, characterRadius));
 				var touchingTiles = tileLayout.GetTouchingTilesInGraphSpace(graphSpaceBounds);
 				clipperLookup.Add(obj, touchingTiles);
 			}
@@ -299,7 +302,10 @@ namespace Pathfinding.Graphs.Navmesh {
 			}
 		}
 
-		static Rect ExpandedBounds (Rect rect) {
+		static Rect ExpandedXZBounds (Bounds bounds) {
+			var mn = bounds.min;
+			var size = bounds.size;
+			var rect = new Rect(mn.x, mn.z, size.x, size.z);
 			rect.xMin -= TileHandler.TileSnappingMaxDistance * Int3.PrecisionFactor;
 			rect.yMin -= TileHandler.TileSnappingMaxDistance * Int3.PrecisionFactor;
 			rect.xMax += TileHandler.TileSnappingMaxDistance * Int3.PrecisionFactor;
@@ -444,6 +450,7 @@ namespace Pathfinding.Graphs.Navmesh {
 				}
 
 				var characterRadius = handler.graph.NavmeshCuttingCharacterRadius;
+				bool visualizeOriginalBounds = (astar.graphUpdateDebugMode & GraphUpdateDebugMode.VisualizeOriginalBounds) != 0 && (Application.isEditor || astar.showGraphsInStandalonePlayer);
 				// Reload all bounds touching the previous bounds and current bounds
 				// of navmesh cuts that have moved or changed in some other way
 				for (var cut = allCuts; cut != null; cut = cut.next) {
@@ -451,8 +458,14 @@ namespace Pathfinding.Graphs.Navmesh {
 						// Make sure the tile where it was is updated
 						handler.MarkTilesDirty(cut.previousBounds);
 
-						var newGraphSpaceBounds = ExpandedBounds(cut.obj.GetBounds(handler.tileLayout.transform, characterRadius));
-						var newTouchingTiles = handler.tileLayout.GetTouchingTilesInGraphSpace(newGraphSpaceBounds);
+						var graphSpaceBounds = cut.obj.GetBounds(handler.tileLayout.transform, characterRadius);
+
+						if (visualizeOriginalBounds) {
+							astar.VisualizeOriginalGraphUpdateBounds(handler.tileLayout.transform.Transform(graphSpaceBounds));
+						}
+
+						var expandedGraphSpaceBounds = ExpandedXZBounds(graphSpaceBounds);
+						var newTouchingTiles = handler.tileLayout.GetTouchingTilesInGraphSpace(expandedGraphSpaceBounds);
 						handler.clipperLookup.Move(cut.obj, newTouchingTiles);
 						handler.MarkTilesDirty(newTouchingTiles);
 

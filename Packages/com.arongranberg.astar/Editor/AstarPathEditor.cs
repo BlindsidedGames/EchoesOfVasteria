@@ -14,7 +14,7 @@ namespace Pathfinding {
 		/// Holds node counts for each graph to avoid calculating it every frame.
 		/// Only used for visualization purposes
 		/// </summary>
-		static Dictionary<NavGraph, (float, int, int)> graphNodeCounts;
+		static Dictionary<NavGraph, (float, (int, int))> graphNodeCounts;
 
 		/// <summary>List of all graph editors for the graphs. May be larger than script.data.graphs.Length</summary>
 		GraphEditor[] graphEditors;
@@ -513,27 +513,25 @@ namespace Pathfinding {
 			graphEditor.infoFadeArea.Begin();
 
 			if (graphEditor.infoFadeArea.BeginFade()) {
-				int total = 0;
-				int numWalkable = 0;
-
 				// Calculate number of nodes in the graph
-				(float, int, int)pair;
-				graphNodeCounts = graphNodeCounts ?? new Dictionary<NavGraph, (float, int, int)>();
+				(float, (int, int)) pair;
+				graphNodeCounts = graphNodeCounts ?? new Dictionary<NavGraph, (float, (int, int))>();
 
 				if (!graphNodeCounts.TryGetValue(graphEditor.target, out pair) || (Time.realtimeSinceStartup-pair.Item1) > 2) {
-					graphEditor.target.GetNodes(node => {
+					var counters = (0, 0);
+					graphEditor.target.GetNodes(static (GraphNode node, ref (int, int)counters) => {
 						// Guard against bad user-implemented graphs
 						if (node != null) {
-							total++;
-							if (node.Walkable) numWalkable++;
+							counters.Item1++;
+							if (node.Walkable) counters.Item2++;
 						}
-					});
-					pair = (Time.realtimeSinceStartup, total, numWalkable);
+					}, ref counters);
+					pair = (Time.realtimeSinceStartup, counters);
 					graphNodeCounts[graphEditor.target] = pair;
 				}
 
-				total = pair.Item2;
-				numWalkable = pair.Item3;
+				var total = pair.Item2.Item1;
+				var numWalkable = pair.Item2.Item2;
 
 				EditorGUI.indentLevel++;
 
@@ -542,6 +540,7 @@ namespace Pathfinding {
 				EditorGUILayout.LabelField("Unwalkable", (total-numWalkable).ToString());
 				if (!graphEditor.target.isScanned) EditorGUILayout.HelpBox("The graph is not scanned", MessageType.Info);
 
+				EditorGUILayout.LabelField("Graph Index", graphEditor.target.graphIndex.ToString());
 				EditorGUI.indentLevel--;
 			}
 
@@ -821,7 +820,7 @@ namespace Pathfinding {
 
 			EditorGUI.EndDisabledGroup();
 
-			int threads = AstarPath.CalculateThreadCount(script.threadCount);
+			int threads = script.threadCount.ToConcreteThreadCount();
 			if (threads > 0) EditorGUILayout.HelpBox("Using " + threads +" thread(s)" + (script.threadCount < 0 ? " on your machine" : ""), MessageType.None);
 			else EditorGUILayout.HelpBox("Using a single coroutine (no threads)" + (script.threadCount < 0 ? " on your machine" : ""), MessageType.None);
 			if (threads > SystemInfo.processorCount) EditorGUILayout.HelpBox("Using more threads than there are CPU cores may not have a positive effect on performance", MessageType.Warning);
@@ -1011,6 +1010,10 @@ namespace Pathfinding {
 				script.unwalkableNodeDebugSize = EditorGUILayout.FloatField("Size", script.unwalkableNodeDebugSize);
 				EditorGUI.indentLevel--;
 			}
+
+			script.graphUpdateDebugMode = (GraphUpdateDebugMode)EditorGUILayout.EnumFlagsField("Graph Update Debug Mode", script.graphUpdateDebugMode);
+
+			script.showGraphsInStandalonePlayer = EditorGUILayout.Toggle(new GUIContent("Show Graphs in Standalone Player", "If true, graph visualizations will be rendered in standalone builds. Normally they are only visible in the editor."), script.showGraphsInStandalonePlayer);
 
 			alwaysVisibleArea.End();
 		}

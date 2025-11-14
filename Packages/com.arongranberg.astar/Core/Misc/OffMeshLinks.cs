@@ -407,10 +407,8 @@ namespace Pathfinding {
 			ScheduleUpdate();
 		}
 
-		NNConstraint cachedNNConstraint = NNConstraint.Walkable;
-
 		bool ClampSegment (Anchor anchor, GraphMask graphMask, float maxSnappingDistance, out Anchor result, List<GraphNode> nodes) {
-			var nn = cachedNNConstraint;
+			var nn = NearestNodeConstraint.Walkable;
 			nn.distanceMetric = DistanceMetric.Euclidean;
 			nn.graphMask = graphMask;
 			Profiler.BeginSample("GetNearest");
@@ -618,7 +616,10 @@ namespace Pathfinding {
 					}
 
 					// Add new connections
-					if (astar.data.linkGraph == null) astar.data.AddGraph<LinkGraph>();
+					if (astar.data.linkGraph == null) {
+						var graph = astar.data.AddGraph<LinkGraph>();
+						graph.name = "Internal graph for off-mesh links";
+					}
 					concrete.Connect(astar.data.linkGraph, source);
 					combined.concrete = concrete;
 					source.status = OffMeshLinkStatus.Active;

@@ -5,11 +5,15 @@ using Pathfinding.Pooling;
 using Pathfinding.Sync;
 using Pathfinding.Graphs.Navmesh.Voxelization.Burst;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Assertions;
+using Pathfinding.Collections;
+using Unity.Burst;
+using Pathfinding.Util;
 
 namespace Pathfinding.Graphs.Navmesh {
 	/// <summary>
@@ -18,6 +22,7 @@ namespace Pathfinding.Graphs.Navmesh {
 	/// See: <see cref="RecastGraph"/> for more documentation on the individual fields.
 	/// See: <see cref="RecastBuilder"/>
 	/// </summary>
+	[BurstCompile]
 	public struct TileBuilder {
 		public float walkableClimb;
 		public RecastGraph.CollectionSettings collectionSettings;
@@ -37,6 +42,7 @@ namespace Pathfinding.Graphs.Navmesh {
 		public TileLayout tileLayout;
 		public IntRect tileRect;
 		public List<RecastGraph.PerLayerModification> perLayerModifications;
+		public List<RecastGraph.PerTerrainLayerModification> perTerrainLayerModifications;
 
 		public class TileBuilderOutput : IProgress, System.IDisposable {
 			public NativeReference<int> currentTileCounter;
@@ -81,6 +87,7 @@ namespace Pathfinding.Graphs.Navmesh {
 			this.contourMaxError = graph.contourMaxError;
 			this.relevantGraphSurfaceMode = graph.relevantGraphSurfaceMode;
 			this.perLayerModifications = graph.perLayerModifications;
+			this.perTerrainLayerModifications = graph.perTerrainLayerModifications;
 
 			if (collectionSettings.physicsScene == null) collectionSettings.physicsScene = graph.active.gameObject.scene.GetPhysicsScene();
 			if (collectionSettings.physicsScene2D == null) collectionSettings.physicsScene2D = graph.active.gameObject.scene.GetPhysicsScene2D();
@@ -118,7 +125,7 @@ namespace Pathfinding.Graphs.Navmesh {
 			} else {
 				mask = 0;
 			}
-			var meshGatherer = new RecastMeshGatherer(collectionSettings.physicsScene.Value, collectionSettings.physicsScene2D.Value, bounds, collectionSettings.terrainHeightmapDownsamplingFactor, mask, tagMask, perLayerModifications, tileLayout.cellSize / collectionSettings.colliderRasterizeDetail);
+			var meshGatherer = new RecastMeshGatherer(collectionSettings.physicsScene.Value, collectionSettings.physicsScene2D.Value, bounds, collectionSettings.terrainHeightmapDownsamplingFactor, mask, tagMask, perLayerModifications, perTerrainLayerModifications, tileLayout.cellSize / collectionSettings.colliderRasterizeDetail);
 
 			if (collectionSettings.rasterizeMeshes && dimensionMode == RecastGraph.DimensionMode.Dimension3D) {
 				Profiler.BeginSample("Find meshes");
@@ -187,22 +194,21 @@ namespace Pathfinding.Graphs.Navmesh {
 		}
 
 		/// <summary>Creates a list for every tile and adds every mesh that touches a tile to the corresponding list</summary>
-		BucketMapping PutMeshesIntoTileBuckets (RecastMeshGatherer.MeshCollection meshCollection, IntRect tileBuckets) {
+		[BurstCompile]
+		static void PutMeshesIntoTileBuckets (ref UnsafeSpan<RasterizationMesh> meshes, ref IntRect tileBuckets, ref float4x4 worldToGraphMatrix, ref float2 tileSize, int borderExpansion, out UnsafeSpan<int> bucketRanges, out UnsafeSpan<int> pointers) {
 			var bucketCount = tileBuckets.Width*tileBuckets.Height;
-			var buckets = new NativeList<int>[bucketCount];
-			var borderExpansion = TileBorderSizeInWorldUnits;
+			var buckets = new UnsafeSpan<UnsafeList<int> >(Allocator.Temp, bucketCount);
 
 			for (int i = 0; i < buckets.Length; i++) {
-				buckets[i] = new NativeList<int>(Allocator.Persistent);
+				buckets[i] = new UnsafeList<int>(8, Allocator.Temp);
 			}
 
 			var offset = -tileBuckets.Min;
 			var clamp = new IntRect(0, 0, tileBuckets.Width - 1, tileBuckets.Height - 1);
-			var meshes = meshCollection.meshes;
 			for (int i = 0; i < meshes.Length; i++) {
 				var mesh = meshes[i];
 				var bounds = mesh.bounds;
-				var rect = tileLayout.GetTouchingTiles(bounds, borderExpansion);
+				var rect = TileLayout.GetTouchingTiles(ref worldToGraphMatrix, tileSize, bounds, borderExpansion);
 				rect = IntRect.Intersection(rect.Offset(offset), clamp);
 				for (int z = rect.ymin; z <= rect.ymax; z++) {
 					for (int x = rect.xmin; x <= rect.xmax; x++) {
@@ -211,28 +217,18 @@ namespace Pathfinding.Graphs.Navmesh {
 				}
 			}
 
-			// Concat buckets
+			// Concatenate buckets
 			int allPointersCount = 0;
 			for (int i = 0; i < buckets.Length; i++) allPointersCount += buckets[i].Length;
-			var allPointers = new NativeArray<int>(allPointersCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			var bucketRanges = new NativeArray<int>(bucketCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			pointers = new UnsafeSpan<int>(Allocator.Persistent, allPointersCount);
+			bucketRanges = new UnsafeSpan<int>(Allocator.Persistent, bucketCount);
 			allPointersCount = 0;
 			for (int i = 0; i < buckets.Length; i++) {
-				// If we have an empty bucket at the end of the array then allPointersCount might be equal to allPointers.Length which would cause an assert to trigger.
-				// So for empty buckets don't call the copy method
-				if (buckets[i].Length > 0) {
-					NativeArray<int>.Copy(buckets[i].AsArray(), 0, allPointers, allPointersCount, buckets[i].Length);
-				}
+				buckets[i].AsUnsafeSpan().CopyTo(pointers.Slice(allPointersCount, buckets[i].Length));
 				allPointersCount += buckets[i].Length;
 				bucketRanges[i] = allPointersCount;
 				buckets[i].Dispose();
 			}
-
-			return new BucketMapping {
-					   meshes = meshCollection.meshes,
-					   pointers = allPointers,
-					   bucketRanges = bucketRanges,
-			};
 		}
 
 		public Promise<TileBuilderOutput> Schedule (DisposeArena arena) {
@@ -251,7 +247,16 @@ namespace Pathfinding.Graphs.Navmesh {
 			var meshes = CollectMeshes(worldBounds);
 
 			Profiler.BeginSample("PutMeshesIntoTileBuckets");
-			var buckets = PutMeshesIntoTileBuckets(meshes, tileRect);
+			var meshesSpan = meshes.meshes.AsUnsafeSpan();
+			// Note: Assumes the graph matrix is an affine transformation matrix (which is true for everything one can set in the inspector)
+			var worldToGraphMatrix = (float4x4)tileLayout.transform.inverseMatrix;
+			var tileSize = new float2(tileLayout.TileWorldSize);
+			PutMeshesIntoTileBuckets(ref meshesSpan, ref tileRect, ref worldToGraphMatrix, ref tileSize, TileBorderSizeInVoxels, out var bucketRanges, out var pointers);
+			var buckets = new BucketMapping {
+				meshes = meshes.meshes,
+				pointers = pointers.MoveToNativeArray(Allocator.Persistent),
+				bucketRanges = bucketRanges.MoveToNativeArray(Allocator.Persistent),
+			};
 			Profiler.EndSample();
 
 			Profiler.BeginSample("Allocating tiles");

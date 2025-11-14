@@ -64,7 +64,7 @@ namespace Pathfinding {
 	/// [Open online documentation to see videos]
 	///
 	/// See: <see cref="Pathfinding.PathUtilities.IsPathPossible"/>
-	/// See: <see cref="Pathfinding.NNConstraint"/>
+	/// See: <see cref="Pathfinding.NearestNodeConstraint"/>
 	/// See: <see cref="Pathfinding.GraphNode.Area"/>
 	/// </summary>
 	public class HierarchicalGraph {
@@ -80,6 +80,7 @@ namespace Pathfinding {
 		int[] areas;
 		byte[] dirty;
 		int[] versions;
+		bool anyNodesDestroyed = false;
 		internal NativeList<Bounds> bounds;
 		/// <summary>Holds areas.Length as a burst-accessible reference</summary>
 		NativeReference<int> numHierarchicalNodes;
@@ -191,6 +192,7 @@ namespace Pathfinding {
 			dirty[node.HierarchicalNodeIndex] = 1;
 			dirtyNodes.Reset((int)node.NodeIndex);
 			node.IsHierarchicalNodeDirty = false;
+			anyNodesDestroyed = true;
 		}
 
 		/// <summary>
@@ -230,9 +232,10 @@ namespace Pathfinding {
 			public NativeList<Bounds> bounds;
 			public NativeList<int> dirtiedHierarchicalNodes;
 			public NativeReference<int> numHierarchicalNodes;
+			bool warnedAboutTooManyHierarchicalNodes;
 
 			void Grow (HierarchicalGraph graph) {
-				var newChildren = new List<GraphNode>[System.Math.Max(64, graph.children.Length*2)];
+				var newChildren = new List<GraphNode>[System.Math.Min((int)GraphNode.MaxHierarchicalNodeIndex + 1, System.Math.Max(64, graph.children.Length*2))];
 				var newAreas = new int[newChildren.Length];
 				var newDirty = new byte[newChildren.Length];
 				var newVersions = new int[newChildren.Length];
@@ -264,7 +267,16 @@ namespace Pathfinding {
 			}
 
 			int GetHierarchicalNodeIndex (HierarchicalGraph graph) {
-				if (graph.freeNodeIndices.Length == 0) Grow(graph);
+				if (graph.freeNodeIndices.Length == 0) {
+					if (graph.children.Length == (int)GraphNode.MaxHierarchicalNodeIndex + 1) {
+						if (!warnedAboutTooManyHierarchicalNodes) {
+							Debug.LogError("Max number of hierarchical nodes in the graphs reached. Your graphs must be extremely fragmented. Pathfinding may not work correctly.\nYour graphs likely have too many connected components. They are visualized as differently colored regions when using A* Inspector -> Settings -> Graph Coloring = Areas");
+							warnedAboutTooManyHierarchicalNodes = true;
+						}
+						return 0;
+					}
+					Grow(graph);
+				}
 				return graph.freeNodeIndices.PopEnd();
 			}
 
@@ -393,7 +405,7 @@ namespace Pathfinding {
 				context.queue.Enqueue(startNode);
 				startNode.HierarchicalNodeIndex = hierarchicalNode;
 
-				GraphNode.GetConnectionsWithData<Context> visitConnection = (GraphNode neighbour, ref Context context) => {
+				GraphNode.NodeActionWithData<Context> visitConnection = (GraphNode neighbour, ref Context context) => {
 					if (neighbour.Destroyed) {
 						throw new System.InvalidOperationException("A node in a " + AstarPath.active.graphs[context.graphindex].GetType().Name + " contained a connection to a destroyed " + neighbour.GetType().Name + ".");
 					}
@@ -506,6 +518,8 @@ namespace Pathfinding {
 						Assert.IsFalse(node.Destroyed);
 						if (!node.Destroyed && node.HierarchicalNodeIndex == 0 && node.Walkable) {
 							var hNode = GetHierarchicalNodeIndex(hGraph);
+							if (hNode == 0) continue;
+
 							Profiler.BeginSample("FindChildren");
 							FindHierarchicalNodeChildren(hGraph, hNode, node);
 							Profiler.EndSample();
@@ -521,6 +535,7 @@ namespace Pathfinding {
 				}
 
 				hGraph.dirtyNodes.Clear();
+				hGraph.anyNodesDestroyed = false;
 
 				// Recalculate the connected components of the hierarchical nodes
 				// This is usually very quick compared to the code above
@@ -548,7 +563,7 @@ namespace Pathfinding {
 		public JobHandle JobRecalculateIfNecessary (JobHandle dependsOn = default) {
 			if (!connectionAllocator.IsCreated) throw new System.InvalidOperationException("The hierarchical graph has not been initialized. Please call OnEnable before using it.");
 
-			if (!dirtyNodes.IsEmpty) {
+			if (!dirtyNodes.IsEmpty || anyNodesDestroyed) {
 				var writeLock = rwLock.Write();
 				var lastJob = new JobRecalculateComponents {
 					hGraphGC = gcHandle,
@@ -581,15 +596,15 @@ namespace Pathfinding {
 			RecalculateIfNecessary();
 		}
 
-		public void OnDrawGizmos (DrawingData gizmos, RedrawScope redrawScope) {
+		public void OnDrawGizmos (DrawingData gizmos, bool renderInGame) {
 			var hasher = new NodeHasher(AstarPath.active);
 
 			hasher.Add(gizmoVersion);
 
-			if (!gizmos.Draw(hasher, redrawScope)) {
+			if (!gizmos.Draw(hasher)) {
 				var readLock = rwLock.ReadSync();
 				try {
-					using (var builder = gizmos.GetBuilder(hasher, redrawScope)) {
+					using (var builder = gizmos.GetBuilder(hasher, default, renderInGame)) {
 						for (int i = 0; i < areas.Length; i++) {
 							if (children[i].Count > 0) {
 								builder.WireBox(bounds[i].center, bounds[i].size);

@@ -44,6 +44,7 @@ namespace Pathfinding.Serialization {
 		/// <summary>Metadata about graphs being deserialized</summary>
 		public readonly GraphMeta meta;
 
+		/// <summary>True if a graph should be persisted. Indexed by graph index</summary>
 		public bool[] persistentGraphs;
 
 		public GraphSerializationContext (BinaryReader reader, GraphNode[] id2NodeMapping, uint graphIndex, GraphMeta meta) {
@@ -199,6 +200,8 @@ namespace Pathfinding.Serialization {
 
 		/// <summary>Graphs that are being serialized or deserialized</summary>
 		private NavGraph[] graphs;
+
+		/// <summary>True if the graph should be serialized, indexed by graph index</summary>
 		bool[] persistentGraphs;
 
 		/// <summary>
@@ -361,12 +364,14 @@ namespace Pathfinding.Serialization {
 
 			if (graphs == null) graphs = new NavGraph[0];
 
-			persistentGraphs = new bool[graphs.Length];
+			persistentGraphs = new bool[data.graphs.Length];
 			for (int i = 0; i < graphs.Length; i++) {
-				//Ignore graph if null or if it should not persist
-				persistentGraphs[i] = graphs[i] != null && graphs[i].persistent;
+				if (graphs[i] == null) continue;
 
-				if (!persistentGraphs[i]) continue;
+				// Ignore graph if null or if it should not persist
+				persistentGraphs[graphs[i].graphIndex] = graphs[i] != null && graphs[i].persistent;
+
+				if (!persistentGraphs[graphs[i].graphIndex]) continue;
 
 				// Serialize the graph to a byte array
 				byte[] bytes = Serialize(graphs[i]);
@@ -388,7 +393,7 @@ namespace Pathfinding.Serialization {
 			// For each graph, save the guid
 			// of the graph and the type of it
 			for (int i = 0; i < graphs.Length; i++) {
-				if (persistentGraphs[i]) {
+				if (graphs[i] != null && persistentGraphs[graphs[i].graphIndex]) {
 					meta.guids.Add(graphs[i].guid.ToString());
 					meta.typeNames.Add(graphs[i].GetType().FullName);
 				} else {
@@ -417,12 +422,12 @@ namespace Pathfinding.Serialization {
 
 			for (int i = 0; i < graphs.Length; i++) {
 				if (graphs[i] == null || !graphs[i].persistent) continue;
-				graphs[i].GetNodes(node => {
+				graphs[i].GetNodes((GraphNode node, ref int maxIndex) => {
 					maxIndex = Math.Max((int)node.NodeIndex, maxIndex);
 					if (node.Destroyed) {
 						Debug.LogError("Graph contains destroyed nodes. This is a bug.");
 					}
-				});
+				}, ref maxIndex);
 			}
 			return maxIndex;
 		}
@@ -586,7 +591,7 @@ namespace Pathfinding.Serialization {
 
 			// Create a new graph of the right type
 			NavGraph graph = data.CreateGraph(graphType);
-			graph.graphIndex = (uint)(graphIndex);
+			graph.graphIndex = (uint)graphIndex;
 
 			var jsonName = "graph" + zipIndex + jsonExt;
 
@@ -702,7 +707,7 @@ namespace Pathfinding.Serialization {
 			var reader = GetBinaryReader(entry);
 			var ctx = new GraphSerializationContext(reader, int2Node, graph.graphIndex, meta);
 
-			graph.GetNodes(node => node.DeserializeReferences(ctx));
+			graph.GetNodes((GraphNode node, ref GraphSerializationContext ctx) => node.DeserializeReferences(ctx), ref ctx);
 		}
 
 		void DeserializeAndRemoveOldNodeLinks (GraphSerializationContext ctx) {

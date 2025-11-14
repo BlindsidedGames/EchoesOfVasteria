@@ -22,8 +22,8 @@ namespace Pathfinding {
 		/// This method is extremely fast because it only uses precalculated information.
 		///
 		/// <code>
-		/// GraphNode node1 = AstarPath.active.GetNearest(point1, NNConstraint.Walkable).node;
-		/// GraphNode node2 = AstarPath.active.GetNearest(point2, NNConstraint.Walkable).node;
+		/// GraphNode node1 = AstarPath.active.GetNearest(point1, NearestNodeConstraint.Walkable).node;
+		/// GraphNode node2 = AstarPath.active.GetNearest(point2, NearestNodeConstraint.Walkable).node;
 		///
 		/// if (PathUtilities.IsPathPossible(node1, node2)) {
 		///     // Yay, there is a path between those two nodes
@@ -184,7 +184,7 @@ namespace Pathfinding {
 		/// [Open online documentation to see videos]
 		///
 		/// <code>
-		/// var seed = AstarPath.active.GetNearest(transform.position, NNConstraint.Walkable).node;
+		/// var seed = AstarPath.active.GetNearest(transform.position, NearestNodeConstraint.Walkable).node;
 		/// var nodes = PathUtilities.BFS(seed, 10);
 		/// foreach (var node in nodes) {
 		///     Debug.DrawRay((Vector3)node.position, Vector3.up, Color.red, 10);
@@ -358,7 +358,7 @@ namespace Pathfinding {
 
 			if (graph == null) throw new System.ArgumentException("g is not a NavGraph");
 
-			var nn = graph.GetNearest(center, NNConstraint.Walkable);
+			var nn = graph.GetNearest(center, NearestNodeConstraint.Walkable);
 			center = nn.position;
 
 			if (nn.node == null) {
@@ -573,18 +573,10 @@ namespace Pathfinding {
 			return positions;
 		}
 
-		class ConstrainToSet : NNConstraint {
-			public HashSet<GraphNode> nodes;
-
-			public override bool Suitable (GraphNode node) {
-				return nodes.Contains(node);
-			}
-		}
-
 		public static void GetPointsAroundPointWorldFlexible (Vector3 center, Quaternion rotation, List<Vector3> positions) {
 			if (positions.Count == 0) return;
 
-			var snapped = AstarPath.active.GetNearest(center, NNConstraint.Walkable);
+			var snapped = AstarPath.active.GetNearest(center, NearestNodeConstraint.Walkable);
 
 			// Move slightly toward the node center just to avoid the group center being on a node edge
 			var groupPos = Vector3.Lerp(snapped.position, (Vector3)snapped.node.position, 0.001f);
@@ -610,9 +602,9 @@ namespace Pathfinding {
 				return minNodes > 0 || ((Vector3)node.position - groupPos).sqrMagnitude < maxSqrDistance;
 			});
 
-			NNConstraint nn = new ConstrainToSet() {
-				nodes = new HashSet<GraphNode>(nodes)
-			};
+			NearestNodeConstraint nn = NearestNodeConstraint.None;
+			var hashSet = new HashSet<GraphNode>(nodes);
+			nn.filter = hashSet.Contains;
 
 			int iterations = 3;
 			for (int k = 0; k < iterations; k++) {

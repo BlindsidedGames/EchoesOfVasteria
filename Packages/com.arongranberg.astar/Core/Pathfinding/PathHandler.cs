@@ -7,52 +7,6 @@ namespace Pathfinding {
 	using Unity.Profiling;
 
 	/// <summary>
-	/// NNConstraint which also takes an <see cref="ITraversalProvider"/> into account.
-	///
-	/// Paths will automatically use this if an ITraversalProvider is set on the path.
-	/// </summary>
-	public class NNConstraintWithTraversalProvider : NNConstraint {
-		public ITraversalProvider traversalProvider;
-		public NNConstraint baseConstraint;
-		public Path path;
-
-		public void Reset () {
-			traversalProvider = null;
-			baseConstraint = null;
-			path = null;
-		}
-
-		public bool isSet => traversalProvider != null;
-
-		public void Set (Path path, NNConstraint constraint, ITraversalProvider traversalProvider) {
-			this.path = path;
-			this.traversalProvider = traversalProvider;
-			// Note: We need to pass most requests to the base constraint, because it may be a subclass of NNConstraint and have additional logic
-			baseConstraint = constraint;
-			// We also need to copy some fields to this instance, because
-			// some fields are used directly. Primarily distanceMetric and constrainDistance,
-			// but we copy all of them for good measure.
-			this.graphMask = constraint.graphMask;
-			this.constrainArea = constraint.constrainArea;
-			this.area = constraint.area;
-			this.distanceMetric = constraint.distanceMetric;
-			this.constrainWalkability = constraint.constrainWalkability;
-			this.walkable = constraint.walkable;
-			this.constrainTags = constraint.constrainTags;
-			this.tags = constraint.tags;
-			this.constrainDistance = constraint.constrainDistance;
-		}
-
-		public override bool SuitableGraph (int graphIndex, NavGraph graph) {
-			return baseConstraint.SuitableGraph(graphIndex, graph);
-		}
-
-		public override bool Suitable (GraphNode node) {
-			return baseConstraint.Suitable(node) && traversalProvider.CanTraverse(path, node);
-		}
-	}
-
-	/// <summary>
 	/// Stores temporary node data for a single pathfinding request.
 	/// Every node has one PathNode per thread used.
 	/// It stores e.g G score, H score and other temporary variables needed
@@ -161,7 +115,6 @@ namespace Pathfinding {
 
 		public readonly int threadID;
 		public readonly int totalThreadCount;
-		public readonly NNConstraintWithTraversalProvider constraintWrapper = new NNConstraintWithTraversalProvider();
 		internal readonly GlobalNodeStorage nodeStorage;
 		public int numTemporaryNodes { [IgnoredByDeepProfiler] get; private set; }
 
@@ -263,7 +216,7 @@ namespace Pathfinding {
 			if (numTemporaryNodes >= temporaryNodes.Length) {
 				// Reallocate the node storage to fit more temporary nodes
 				// This will invalidate all references to path nodes and temporary nodes,
-				// so we must ensure that no `ref` variables life across this call.
+				// so we must ensure that no `ref` variables live across this call.
 				nodeStorage.GrowTemporaryNodeStorage(threadID);
 				pathNodes = nodeStorage.pathfindingThreadData[threadID].pathNodes;
 				temporaryNodes = temporaryNodes.Reallocate(Allocator.Persistent, pathNodes.Length - (int)temporaryNodeStartIndex);

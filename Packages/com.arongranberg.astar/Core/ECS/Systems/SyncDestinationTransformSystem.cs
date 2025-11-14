@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Pathfinding.ECS {
 	using Pathfinding;
 
-	[UpdateBefore(typeof(RepairPathSystem))]
+	[UpdateBefore(typeof(SchedulePathSearchSystem))]
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	[RequireMatchingQueriesForUpdate]
 	public partial struct SyncDestinationTransformSystem : ISystem {

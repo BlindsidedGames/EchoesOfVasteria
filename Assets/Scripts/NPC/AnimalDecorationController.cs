@@ -77,7 +77,7 @@ namespace TimelessEchoes.NPC
                 // Clear any previous path and snap to the new position
                 ai.Teleport(position, true);
                 ai.destination = position; // ensure no lingering destination
-                ai.canMove = true;
+                ai.simulateMovement = true;
             }
             transform.position = position;
             nextWanderTime = Time.time;
@@ -144,14 +144,14 @@ namespace TimelessEchoes.NPC
         {
             isPaused = true;
             if (ai != null)
-                ai.canMove = false;
+                ai.simulateMovement = false;
         }
 
         public void ResumeMovement()
         {
             isPaused = false;
             if (ai != null)
-                ai.canMove = true;
+                ai.simulateMovement = true;
         }
 
         protected Animator Animator => animator;

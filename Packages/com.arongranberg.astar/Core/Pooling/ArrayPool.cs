@@ -34,6 +34,8 @@ namespace Pathfinding.Pooling {
 		/// </summary>
 		const int MaximumExactArrayLength = 256;
 
+		static readonly bool containsReferenceTypes;
+
 		/// <summary>
 		/// Internal pool.
 		/// The arrays in each bucket have lengths of 2^i
@@ -43,6 +45,23 @@ namespace Pathfinding.Pooling {
 #if !ASTAR_OPTIMIZE_POOLING
 		static readonly HashSet<T[]> inPool = new HashSet<T[]>();
 #endif
+
+		static ArrayPool () {
+			// Check if T is a reference type
+			containsReferenceTypes = typeof(T).IsClass || typeof(T).IsInterface || typeof(T).IsArray;
+
+			if (!containsReferenceTypes) {
+				var fields = typeof(T).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				// Check if T has any fields which are reference types.
+				// Just one level deep, because we are lazy
+				foreach (var field in fields) {
+					if (field.FieldType.IsClass || field.FieldType.IsInterface || field.FieldType.IsArray) {
+						containsReferenceTypes = true;
+						break;
+					}
+				}
+			}
+		}
 #endif
 
 		/// <summary>
@@ -132,6 +151,11 @@ namespace Pathfinding.Pooling {
 			bool isPowerOfTwo = array.Length != 0 && (array.Length & (array.Length - 1)) == 0;
 			if (!isPowerOfTwo && !allowNonPowerOfTwo && array.Length != 0) throw new System.ArgumentException("Length is not a power of 2");
 
+			if (containsReferenceTypes) {
+				// Clear the array to avoid leaking references to objects that could have otherwise been collected by the GC
+				Array.Fill(array, default);
+			}
+
 			lock (pool) {
 #if !ASTAR_OPTIMIZE_POOLING
 				if (!inPool.Add(array)) {
@@ -153,6 +177,11 @@ namespace Pathfinding.Pooling {
 					Stack<T[]> stack = exactPool[array.Length];
 					if (stack == null) stack = exactPool[array.Length] = new Stack<T[]>();
 					stack.Push(array);
+				} else {
+#if !ASTAR_OPTIMIZE_POOLING
+					// If the array is too long, do not pool it
+					inPool.Remove(array);
+#endif
 				}
 			}
 #endif
@@ -170,10 +199,7 @@ namespace Pathfinding.Pooling {
 		/// </summary>
 		public static T[] ToArrayFromPool<T>(this List<T> list) {
 			var arr = ArrayPool<T>.ClaimWithExactLength(list.Count);
-
-			for (int i = 0; i < arr.Length; i++) {
-				arr[i] = list[i];
-			}
+			list.CopyTo(arr);
 			return arr;
 		}
 

@@ -11,6 +11,7 @@ namespace Pathfinding {
 		public static bool meshesUnreadableAtRuntimeFoldout;
 		ReorderableList tagMaskList;
 		ReorderableList perLayerModificationsList;
+		ReorderableList perTerrainLayerModificationsList;
 
 		public enum UseTiles {
 			UseTiles = 0,
@@ -60,6 +61,7 @@ namespace Pathfinding {
 						"an attached collider is preferable."), settings.rasterizeTrees);
 					settings.terrainHeightmapDownsamplingFactor = EditorGUILayout.IntField(new GUIContent("Heightmap Downsampling", "How much to downsample the terrain's heightmap. A lower value is better, but slower to scan"), settings.terrainHeightmapDownsamplingFactor);
 					settings.terrainHeightmapDownsamplingFactor = Mathf.Max(1, settings.terrainHeightmapDownsamplingFactor);
+					DrawIndentedList(perTerrainLayerModificationsList);
 					EditorGUI.indentLevel--;
 				}
 
@@ -99,6 +101,7 @@ namespace Pathfinding {
 					var element = graph.perLayerModifications[index];
 					var w = rect.width;
 					var spacing = EditorGUIUtility.standardVerticalSpacing;
+					rect.yMin += 1; // Fix alignment
 					element.layer = EditorGUI.LayerField(SliceColumn(ref rect, w * 0.3f, spacing), element.layer);
 
 					if (element.mode == RecastNavmeshModifier.Mode.WalkableSurfaceWithTag) {
@@ -135,6 +138,72 @@ namespace Pathfinding {
 						}
 					}
 					graph.perLayerModifications.Add(newMod);
+				}
+			};
+
+			var terrain = Terrain.activeTerrain;
+			GUIContent[] terrainLayerOptions = null;
+			if (terrain != null && terrain.terrainData != null) {
+				var terrainLayers = terrain.terrainData.terrainLayers;
+				terrainLayerOptions = new GUIContent[terrainLayers.Length];
+				for (int i = 0; i < terrainLayers.Length; i++) {
+					terrainLayerOptions[i] = new GUIContent(terrainLayers[i] != null ? terrainLayers[i].name : "Terrain Layer " + i);
+					terrainLayerOptions[i].image = terrainLayers[i]?.diffuseTexture;
+				}
+			}
+
+			perTerrainLayerModificationsList = new ReorderableList(graph.perTerrainLayerModifications, typeof(RecastGraph.PerTerrainLayerModification), true, true, true, true) {
+				drawElementCallback = (Rect rect, int index, bool active, bool isFocused) => {
+					var element = graph.perTerrainLayerModifications[index];
+					var w = rect.width;
+
+					// Fix alignment
+					rect.yMin += EditorGUIUtility.standardVerticalSpacing/2;
+					rect.height -= EditorGUIUtility.standardVerticalSpacing;
+
+					var spacing = EditorGUIUtility.standardVerticalSpacing;
+					var thresholdRect = GUIUtilityx.SliceColumnRight(ref rect, 50, 0);
+					var thresholdLabelRect = GUIUtilityx.SliceColumnRight(ref rect, 70, 10);
+
+					if (terrainLayerOptions != null) {
+						element.layer = EditorGUI.Popup(SliceColumn(ref rect, w * 0.2f, spacing), element.layer, terrainLayerOptions);
+					} else {
+						element.layer = EditorGUI.IntField(SliceColumn(ref rect, w * 0.2f, spacing), element.layer);
+						element.layer = Mathf.Max(element.layer, 0);
+					}
+
+					if (element.mode == RecastNavmeshModifier.Mode.WalkableSurfaceWithTag) {
+						element.mode = (RecastNavmeshModifier.Mode)EditorGUI.EnumPopup(SliceColumn(ref rect, w * 0.3f, spacing), element.mode);
+						element.surfaceID = Util.EditorGUILayoutHelper.TagField(rect, GUIContent.none, element.surfaceID, AstarPathEditor.EditTags);
+						element.surfaceID = Mathf.Clamp(element.surfaceID, 0, GraphNode.MaxTagIndex);
+					} else if (element.mode == RecastNavmeshModifier.Mode.WalkableSurfaceWithSeam) {
+						element.mode = (RecastNavmeshModifier.Mode)EditorGUI.EnumPopup(SliceColumn(ref rect, w * 0.3f, spacing), element.mode);
+						string helpTooltip = "All surfaces on this mesh will be walkable and a " +
+											 "seam will be created between the surfaces on this mesh and the surfaces on other meshes (with a different surface id)";
+						GUI.Label(SliceColumn(ref rect, 70, spacing), new GUIContent("Surface ID", helpTooltip));
+						element.surfaceID = Mathf.Max(0, EditorGUI.IntField(rect, new GUIContent("", helpTooltip), element.surfaceID));
+					} else {
+						element.mode = (RecastNavmeshModifier.Mode)EditorGUI.EnumPopup(rect, element.mode);
+					}
+
+					GUI.Label(thresholdLabelRect, new GUIContent("Threshold", "How much the terrain layer must be above the base plane to be considered walkable. " +
+						"0 means that the terrain layer must be at least at the base plane level, 1 means that it must be at least one cell above the base plane level."));
+					element.threshold = EditorGUI.FloatField(thresholdRect, element.threshold);
+					element.threshold = Mathf.Clamp(element.threshold, 0, 1);
+
+					graph.perTerrainLayerModifications[index] = element;
+				},
+				drawHeaderCallback = (Rect rect) => {
+					GUI.Label(rect, "Per Terrain Layer Modifications");
+				},
+				elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing,
+				onAddCallback = (ReorderableList list) => {
+					// Find the first layer that is not already modified
+					var newMod = RecastGraph.PerTerrainLayerModification.Default;
+					while (graph.perTerrainLayerModifications.Exists(mod => mod.layer == newMod.layer)) {
+						newMod.layer++;
+					}
+					graph.perTerrainLayerModifications.Add(newMod);
 				}
 			};
 		}
@@ -267,8 +336,11 @@ namespace Pathfinding {
 			Separator();
 			Header("Rasterization");
 
-			graph.cellSize = EditorGUILayout.FloatField(new GUIContent("Voxel Size", "Size of one voxel in world units"), graph.cellSize);
-			if (graph.cellSize < 0.001F) graph.cellSize = 0.001F;
+			EditorGUI.BeginChangeCheck();
+			graph.cellSize = Mathf.Max(0.001f, EditorGUILayout.FloatField(new GUIContent("Voxel Size", "Size of one voxel in world units"), graph.cellSize));
+			if (EditorGUI.EndChangeCheck()) {
+				graph.cellSize = Mathf.Round(graph.cellSize * Int3.Precision) / (float)Int3.Precision; // Round to a multiple of Int3.Precision, to avoid precision issues
+			}
 
 			graph.useTiles = (UseTiles)EditorGUILayout.EnumPopup("Use Tiles", graph.useTiles ? UseTiles.UseTiles : UseTiles.DontUseTiles) == UseTiles.UseTiles;
 
@@ -387,7 +459,7 @@ namespace Pathfinding {
 				graph.nearestSearchOnlyXZ = EditorGUILayout.Toggle(new GUIContent("Nearest node queries in XZ space",
 					"Recomended for single-layered environments.\nFaster but can be inacurate esp. in multilayered contexts."), graph.nearestSearchOnlyXZ);
 
-				EditorGUILayout.HelpBox("The global toggle for node queries in XZ space has been deprecated. Use the NNConstraint settings instead.", MessageType.Warning);
+				EditorGUILayout.HelpBox("The global toggle for node queries in XZ space has been deprecated. Use the NearestNodeConstraint settings instead.", MessageType.Warning);
 			}
 			#pragma warning restore 618
 

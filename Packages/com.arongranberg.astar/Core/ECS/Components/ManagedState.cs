@@ -4,20 +4,26 @@ using Unity.Entities;
 namespace Pathfinding.ECS {
 	using Pathfinding;
 	using Pathfinding.ECS.RVO;
+	using Unity.Properties;
 	using UnityEngine.Serialization;
 
 	/// <summary>
-	/// Settings for agent movement that cannot be put anywhere else.
+	/// Runtime state for agent movement that requires managed types.
 	///
 	/// The Unity ECS in general wants everything in components to be unmanaged types.
-	/// However, some things cannot be unmanaged types, for example delegates and interfaces.
+	/// However, some things cannot be unmanaged types, for example delegates, interfaces and objects.
 	/// There are also other things like path references and node references which are not unmanaged types at the moment.
 	///
 	/// This component is used to store those things.
 	///
-	/// It can also be used for things that are not used often, and so are best kept out-of-band to avoid bloating the ECS chunks too much.
+	/// This component is created at runtime and does not store any settings that need to be persistent.
 	/// </summary>
 	[System.Serializable]
+#if MODULE_ENTITIES_1_3_0_OR_NEWER
+	[Unity.Entities.TypeManager.TypeOverrides(hasNoEntityReferences: true, hasNoBlobReferences: true, hasNoUnityObjectReferences: true)]
+#else
+	[Unity.Entities.TypeManager.TypeOverrides(hasNoEntityReferences: true, hasNoBlobReferences: true)]
+#endif
 	public class ManagedState : IComponentData, System.IDisposable, System.ICloneable {
 		/// <summary>
 		/// Settings for when to recalculate the path.
@@ -35,16 +41,24 @@ namespace Pathfinding.ECS {
 		///
 		/// When the agent has local avoidance enabled, these settings will be copied into a <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component which is attached to the agent.
 		///
+		/// Note: When the agent is used in a subscene, this field has no effect at runtime. Instead, set the data for the <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component.
+		///
 		/// See: <see cref="enableLocalAvoidance"/>
 		/// </summary>
 		[FormerlySerializedAs("rvoAgent")]
+		[System.Obsolete("Use FollowerEntity.rvoSettings or the RVOAgent ECS component instead", false)]
+		[DontCreateProperty]
 		public RVOAgent rvoSettings = RVOAgent.Default;
 
 		/// <summary>Callback for when the agent starts to traverse an off-mesh link</summary>
 		[System.NonSerialized]
+		[System.Obsolete("Use ManagedSettings.onTraverseOffMeshLink instead", false)]
+		[DontCreateProperty]
 		public IOffMeshLinkHandler onTraverseOffMeshLink;
 
-		public PathRequestSettings pathfindingSettings = PathRequestSettings.Default;
+		[System.Obsolete("Use ManagedSettings.pathfindingSettings instead", false)]
+		[DontCreateProperty]
+		public PathRequestSettings pathfindingSettings;
 
 		/// <summary>
 		/// True if local avoidance is enabled for this agent.
@@ -52,8 +66,12 @@ namespace Pathfinding.ECS {
 		/// Enabling this will automatically add a <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component to the entity.
 		///
 		/// See: local-avoidance (view in online documentation for working links)
+		///
+		/// Note: When the agent is used in a subscene, this field has no effect at runtime. Instead, add or remove the <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component.
 		/// </summary>
 		[FormerlySerializedAs("rvoEnabled")]
+		[System.Obsolete("Use FollowerEntity.enableLocalAvoidance or remove/add the RVOAgent ECS component instead", false)]
+		[DontCreateProperty]
 		public bool enableLocalAvoidance;
 
 		/// <summary>
@@ -62,11 +80,15 @@ namespace Pathfinding.ECS {
 		/// The agent will always fall down according to its own movement plane.
 		/// The gravity applied is Physics.gravity.y.
 		///
-		/// Enabling this will add the <see cref="GravityState"/> component to the entity.
+		/// Enabling this will enable the <see cref="GravityState"/> component of the entity.
 		///
 		/// This has no effect if the agent's orientation is set to YAxisForward (2D mode).
 		/// Gravity does not really make sense for top-down 2D games. The gravity setting is also hidden from the inspector in this mode.
+		///
+		/// Note: When the agent is used in a subscene, this field has no effect at runtime. Instead, disable or enable the <see cref="GravityState"/> component directly.
 		/// </summary>
+		[System.Obsolete("Use FollowerEntity.enableGravity or toggle the enabled state of the GravityState ECS component instead", false)]
+		[DontCreateProperty]
 		public bool enableGravity = true;
 
 		/// <summary>Path that is being calculated, if any</summary>
@@ -145,7 +167,14 @@ namespace Pathfinding.ECS {
 					// call those functions. The incomplete state will not be observable outside the system.
 					// When called from FollowerEntity, the SetPath method on that component will ensure that these methods are called.
 				} else {
+					// The path had an error, so we should stop moving.
+					// However, we keep the agent anchored to the graph it was traversing before (if any).
+					// Marking the path as unrepairable prevents the agent from immediately trying to locally repair its path,
+					// which may give incorrect results, or just use up a ton of cpu power.
+					// The behavior of the agent will be similar to if ai.isStopped is set: the agent will smoothly slow down until stationary.
+					// The next time a path is successfully calculated, the unrepairable state will be cleared.
 					abPath.Release(state);
+					state.pathTracer.SetEmptyAndUnrepairable();
 				}
 			} else {
 				// Path calculation has been started, but it is not yet complete. Cannot really handle this.
@@ -191,7 +220,7 @@ namespace Pathfinding.ECS {
 			if (pathTracer.partCount < 2 && pathTracer.GetPartType(1) != Funnel.PartType.OffMeshLink) {
 				throw new System.InvalidOperationException("The next part in the path is not an off-mesh link.");
 			}
-			pathTracer.PopParts(2, pathfindingSettings.traversalProvider, activePath);
+			pathTracer.PopParts(2);
 		}
 
 		/// <summary>
@@ -203,16 +232,6 @@ namespace Pathfinding.ECS {
 		object System.ICloneable.Clone () {
 			return new ManagedState {
 					   pathTracer = pathTracer.Clone(),
-					   rvoSettings = rvoSettings,
-					   pathfindingSettings = new PathRequestSettings {
-						   graphMask = pathfindingSettings.graphMask,
-						   tagPenalties = pathfindingSettings.tagPenalties != null ? (int[])pathfindingSettings.tagPenalties.Clone() : null,
-						   traversableTags = pathfindingSettings.traversableTags,
-						   traversalProvider = null,  // Cannot be safely cloned or copied
-					   },
-					   enableLocalAvoidance = enableLocalAvoidance,
-					   enableGravity = enableGravity,
-					   onTraverseOffMeshLink = null,  // Cannot be safely cloned or copied
 					   pendingPath = null,  // Cannot be safely cloned or copied
 					   activePath = null,  // Cannot be safely cloned or copied
 			};

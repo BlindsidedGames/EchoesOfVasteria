@@ -230,7 +230,7 @@ namespace Pathfinding {
 					// will change during iteration
 					for (int i = connectionBuffer.Count - 1; i >= 0; i--) {
 						var neighbour = connectionBuffer[i];
-						if (!path.CanTraverse(neighbour)) continue;
+						if (!path.traversalConstraint.CanTraverse(node, neighbour)) continue;
 
 						// Find the closest point on the connection between the nodes
 						// and check if the distance to that point is lower than the previous best

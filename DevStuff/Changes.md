@@ -1,3 +1,12 @@
+- Added a Cauldron drinking mix-all button that pairs every stocked ingredient batch and refreshes the selections after draining them.
+- Blocked BuffManager auto-casting while the run loading overlay is active by exposing GameManager.RunLoadingActive so buffs wait for initial map generation to finish.
+- Added MCP read_console guidance to `AGENTS.md` so log retrieval always uses `action: \"get\"` instead of the invalid `\"read\"`.
+- Added SegmentedMapGenerator warmup progress/wait hooks, forced a TaskController resort, and wired new GameManager loading overlay/progress fields so hero/buff activation waits until the first map chunks and tasks finish spawning.
+- Removed the Forge stats Quality Equipped block so the panel only shows the best rolled values per slot.
+- Beta builds now skip the demo variant so the Build All Beta flow only authorizes the full SKU per platform.
+- Moved the demo/beta toggles into a `BuildModeConfig` ScriptableObject, updated Oracle/tests to read from it, and reworked BatchBuild to sequence Linux→Windows→Mac full/demo builds (plus a Beta menu option) into dedicated release/demo/beta output folders.
+- Cleared the A* upgrade warnings by swapping our AIBase movement toggles to `simulateMovement`, moving Hero idle target resolution to `NearestNodeConstraint`, and fixing the unreachable cache hydration check in `UgsLeaderboardsReporter`.
+- Updated pinned quest completion text to read "Ready to turn in" so UI messaging matches the new copy requirements.
 - Corrected skill level-up toasts to show the full level range during multi-level gains, added synchronous edit-mode coverage, and wired EditMode.Tests to the test runner/TextMeshPro assemblies.
 - Added raw XP developer console commands for each skill (and all skills) plus the developer login password update to "Matt", tightening console lookups to avoid ambiguous reference compile errors.
 - Added quest skill experience rewards with raw XP application and edit-mode coverage for the quest grant path.

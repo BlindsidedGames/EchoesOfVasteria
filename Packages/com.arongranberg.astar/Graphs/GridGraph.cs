@@ -48,47 +48,47 @@ namespace Pathfinding {
 	/// \section gridgraph-inspector Inspector
 	/// [Open online documentation to see images]
 	///
-	/// \inspectorField{Shape, inspectorGridMode}
-	/// \inspectorField{2D, is2D}
-	/// \inspectorField{Align  to tilemap, AlignToTilemap}
-	/// \inspectorField{Width, width}
-	/// \inspectorField{Depth, depth}
-	/// \inspectorField{Node size, nodeSize}
-	/// \inspectorField{Aspect ratio (isometric/advanced shape), aspectRatio}
-	/// \inspectorField{Isometric angle (isometric/advanced shape), isometricAngle}
-	/// \inspectorField{Center, center}
-	/// \inspectorField{Rotation, rotation}
-	/// \inspectorField{Connections, neighbours}
-	/// \inspectorField{Cut corners, cutCorners}
-	/// \inspectorField{Max step height, maxStepHeight}
-	/// \inspectorField{Account for slopes, maxStepUsesSlope}
-	/// \inspectorField{Max slope, maxSlope}
-	/// \inspectorField{Erosion iterations, erodeIterations}
-	/// \inspectorField{Erosion → Erosion Uses Tags, erosionUseTags}
-	/// \inspectorField{Use 2D physics, collision.use2D}
+	/// \inspectorField{inspectorGridMode; Shape}
+	/// \inspectorField{is2D; 2D}
+	/// \inspectorField{AlignToTilemap; Align  to tilemap}
+	/// \inspectorField{width; Width}
+	/// \inspectorField{depth; Depth}
+	/// \inspectorField{nodeSize; Node size}
+	/// \inspectorField{aspectRatio; Aspect ratio (isometric/advanced shape)}
+	/// \inspectorField{isometricAngle; Isometric angle (isometric/advanced shape)}
+	/// \inspectorField{center; Center}
+	/// \inspectorField{rotation; Rotation}
+	/// \inspectorField{neighbours; Connections}
+	/// \inspectorField{cutCorners; Cut corners}
+	/// \inspectorField{maxStepHeight; Max step height}
+	/// \inspectorField{maxStepUsesSlope; Account for slopes}
+	/// \inspectorField{maxSlope; Max slope}
+	/// \inspectorField{erodeIterations; Erosion iterations}
+	/// \inspectorField{erosionUseTags; Erosion → Erosion Uses Tags}
+	/// \inspectorField{collision.use2D; Use 2D physics}
 	///
 	/// <i>Collision testing</i>
-	/// \inspectorField{Collider type, collision.type}
-	/// \inspectorField{Diameter, collision.diameter}
-	/// \inspectorField{Height/length, collision.height}
-	/// \inspectorField{Offset, collision.collisionOffset}
-	/// \inspectorField{Obstacle layer mask, collision.mask}
-	/// \inspectorField{Preview, GridGraphEditor.collisionPreviewOpen}
+	/// \inspectorField{collision.type; Collider type}
+	/// \inspectorField{collision.diameter; Diameter}
+	/// \inspectorField{collision.height; Height/length}
+	/// \inspectorField{collision.collisionOffset; Offset}
+	/// \inspectorField{collision.mask; Obstacle layer mask}
+	/// \inspectorField{GridGraphEditor.collisionPreviewOpen; Preview}
 	///
 	/// <i>Height testing</i>
-	/// \inspectorField{Ray length, collision.fromHeight}
-	/// \inspectorField{Mask, collision.heightMask}
-	/// \inspectorField{Thick raycast, collision.thickRaycast}
-	/// \inspectorField{Unwalkable when no ground, collision.unwalkableWhenNoGround}
+	/// \inspectorField{collision.fromHeight; Ray length}
+	/// \inspectorField{collision.heightMask; Mask}
+	/// \inspectorField{collision.thickRaycast; Thick raycast}
+	/// \inspectorField{collision.unwalkableWhenNoGround; Unwalkable when no ground}
 	///
 	/// <i>Rules</i>
 	/// Take a look at grid-rules (view in online documentation for working links) for a list of available rules.
 	///
 	/// <i>Other settings</i>
-	/// \inspectorField{Show surface, showMeshSurface}
-	/// \inspectorField{Show outline, showMeshOutline}
-	/// \inspectorField{Show connections, showNodeConnections}
-	/// \inspectorField{Initial penalty, NavGraph.initialPenalty}
+	/// \inspectorField{showMeshSurface; Show surface}
+	/// \inspectorField{showMeshOutline; Show outline}
+	/// \inspectorField{showNodeConnections; Show connections}
+	/// \inspectorField{NavGraph.initialPenalty; Initial penalty}
 	///
 	/// \section gridgraph-updating Updating the graph during runtime
 	/// Any graph which implements the IUpdatableGraph interface can be updated during runtime.
@@ -204,7 +204,13 @@ namespace Pathfinding {
 
 		public override void GetNodes (System.Action<GraphNode> action) {
 			if (nodes == null) return;
-			for (int i = 0; i < nodes.Length; i++) action(nodes[i]);
+			// Nodes entries can be null in layered grid graphs
+			for (int i = 0; i < nodes.Length; i++) if (nodes[i] != null) action(nodes[i]);
+		}
+
+		public override void GetNodes<T>(GraphNode.NodeActionWithData<T> action, ref T data) {
+			if (nodes == null) return;
+			for (int i = 0; i < nodes.Length; i++) if (nodes[i] != null) action(nodes[i], ref data);
 		}
 
 		/// <summary>
@@ -631,7 +637,7 @@ namespace Pathfinding {
 		/// See <see cref="neighbourOffsets"/>.
 		/// </summary>
 		[System.NonSerialized]
-		public readonly uint[] neighbourCosts = new uint[8];
+		public readonly float[] neighbourCosts = new float[8];
 
 		/// <summary>Offsets in the X direction for neighbour nodes. Only 1, 0 or -1</summary>
 		public static readonly int[] neighbourXOffsets = { 0, 1, 0, -1, 1, 1, -1, -1 };
@@ -983,7 +989,7 @@ namespace Pathfinding {
 		///         |
 		/// </code>
 		/// </summary>
-		public uint GetConnectionCost (int dir) {
+		public float GetConnectionCost (int dir) {
 			return neighbourCosts[dir];
 		}
 
@@ -1261,7 +1267,7 @@ namespace Pathfinding {
 			}
 		}
 
-		public override float NearestNodeDistanceSqrLowerBound (Vector3 position, NNConstraint constraint) {
+		public override float NearestNodeDistanceSqrLowerBound (Vector3 position, ref NearestNodeConstraint constraint) {
 			if (nodes == null || depth*width*LayerCount != nodes.Length) {
 				return float.PositiveInfinity;
 			}
@@ -1289,7 +1295,7 @@ namespace Pathfinding {
 			return nodes[z*width+x];
 		}
 
-		public override NNInfo GetNearest (Vector3 position, NNConstraint constraint, float maxDistanceSqr) {
+		public override NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 			if (nodes == null || depth*width*LayerCount != nodes.Length) {
 				return NNInfo.Empty;
 			}
@@ -1312,10 +1318,11 @@ namespace Pathfinding {
 			// See constraint.projectionAxis for more info.
 			// Note: The grid graph does not support any projectionAxis other than one parallel to the graph's up axis.
 			// So if the constraint has a projectionAxis, we treat it as if it is transform.up
-			var projectedDistance = constraint != null ? constraint.distanceMetric.isProjectedDistance : false;
+			var projectedDistance = constraint.distanceMetric.isProjectedDistance;
 
 			// Search up to this distance
-			float minDistSqr = maxDistanceSqr;
+			var maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+			float bestDistSqr = maxDistanceSqr;
 			var layerCount = LayerCount;
 			var layerStride = width*depth;
 			long yOffset = 0;
@@ -1328,9 +1335,10 @@ namespace Pathfinding {
 			}
 
 			// Check the closest cell
+			var allNodesAreSuitable = constraint.allNodesAreSuitable;
 			for (int y = 0; y < layerCount; y++) {
 				var node = nodes[z*width + x + layerStride*y];
-				if (node != null && (constraint == null || constraint.Suitable(node))) {
+				if (node != null && (allNodesAreSuitable || constraint.Suitable(node))) {
 					float cost;
 					if (projectedDistance) {
 						var distX = math.clamp(xf, x, x + 1.0f) - xf;
@@ -1342,9 +1350,9 @@ namespace Pathfinding {
 					} else {
 						cost = ((Vector3)node.position-globalPosition).sqrMagnitude;
 					}
-					if (cost <= minDistSqr) {
+					if (cost <= bestDistSqr) {
 						// Minimum distance so far
-						minDistSqr = cost;
+						bestDistSqr = cost;
 						minNode = node;
 					}
 				}
@@ -1369,7 +1377,7 @@ namespace Pathfinding {
 				// Since we search in a square pattern, we will have to search up to
 				// sqrt(2) times further away than the closest node we have found so far (or the maximum distance).
 				var distanceThreshold = math.max(0, w-2)*nodeSize + distanceToEdgeOfNode;
-				if (minDistSqr - 0.00001f <= distanceThreshold*distanceThreshold) {
+				if (bestDistSqr - 0.00001f <= distanceThreshold*distanceThreshold) {
 					break;
 				}
 
@@ -1386,7 +1394,7 @@ namespace Pathfinding {
 							var nodeIndex = nx+nz*width;
 							for (int y = 0; y < layerCount; y++) {
 								var node = nodes[nodeIndex + layerStride*y];
-								if (node != null && (constraint == null || constraint.Suitable(node))) {
+								if (node != null && (allNodesAreSuitable || constraint.Suitable(node))) {
 									float cost;
 									if (projectedDistance) {
 										var distX = math.clamp(xf, nx, nx + 1.0f) - xf;
@@ -1398,9 +1406,9 @@ namespace Pathfinding {
 									} else {
 										cost = ((Vector3)node.position-globalPosition).sqrMagnitude;
 									}
-									if (cost <= minDistSqr) {
+									if (cost <= bestDistSqr) {
 										// Minimum distance so far
-										minDistSqr = cost;
+										bestDistSqr = cost;
 										minNode = node;
 									}
 								}
@@ -1438,7 +1446,7 @@ namespace Pathfinding {
 					//       __B__
 					//
 					// In this case, even though A might be closer with DistanceMetric.ClosestAsSeenFromAboveSoft,
-					// we want to return node B because clamping to A would mean clamping along to an obstacle edge
+					// we want to return node B because clamping to A would mean clamping along an obstacle edge
 					// which does not exist (A and B are connected).
 					// This is very important when this is used to clamp the agent to the navmesh,
 					// but it is also generally what you want in other situations as well.
@@ -1452,8 +1460,8 @@ namespace Pathfinding {
 
 						// Try to walk along d1, if that does not work, try d2
 						var next = minNode.GetNeighbourAlongDirection(d1);
-						if (next != null && (constraint == null || constraint.Suitable(next))) minNode = next;
-						else if (d2 != -1 && (next = minNode.GetNeighbourAlongDirection(d2)) != null && (constraint == null || constraint.Suitable(next))) minNode = next;
+						if (next != null && (allNodesAreSuitable || constraint.Suitable(next))) minNode = next;
+						else if (d2 != -1 && (next = minNode.GetNeighbourAlongDirection(d2)) != null && (allNodesAreSuitable || constraint.Suitable(next))) minNode = next;
 						else break;
 					}
 				}
@@ -1464,7 +1472,7 @@ namespace Pathfinding {
 				var closest = transform.Transform(new Vector3(Mathf.Clamp(xf, nx, nx+1f), transform.InverseTransform((Vector3)minNode.position).y, Mathf.Clamp(zf, nz, nz+1f)));
 				// If projectedDistance is enabled, the distance is already accurate.
 				// Otherwise, we need to calculate the distance to the closest point on the node instead of to the center
-				var cost = projectedDistance ? minDistSqr : (closest-globalPosition).sqrMagnitude;
+				var cost = projectedDistance ? bestDistSqr : (closest-globalPosition).sqrMagnitude;
 				return cost <= maxDistanceSqr ? new NNInfo(
 					minNode,
 					closest,
@@ -1475,20 +1483,20 @@ namespace Pathfinding {
 			}
 		}
 
-		public override NNInfo RandomPointOnSurface (NNConstraint nnConstraint = null, bool highQuality = true) {
+		public override NNInfo RandomPointOnSurface (NearestNodeConstraint constraint, bool highQuality = true) {
 			if (!isScanned || nodes.Length == 0) return NNInfo.Empty;
 
 			// All nodes have the same surface area, so just pick a random node
 			for (int i = 0; i < 10; i++) {
 				var node = this.nodes[UnityEngine.Random.Range(0, this.nodes.Length)];
-				if (node != null && (nnConstraint == null || nnConstraint.Suitable(node))) {
+				if (node != null && constraint.Suitable(node)) {
 					return new NNInfo(node, node.RandomPointOnSurface(), 0);
 				}
 			}
 
 			// If a valid node was not found after a few tries, the graph likely contains a lot of unwalkable/unsuitable nodes.
 			// Fall back to the base method which will try to find a valid node by checking all nodes.
-			return base.RandomPointOnSurface(nnConstraint, highQuality);
+			return base.RandomPointOnSurface(constraint, highQuality);
 		}
 
 		/// <summary>
@@ -1511,10 +1519,12 @@ namespace Pathfinding {
 			// For hexagonal graphs the node size is different from the width of a hexagon.
 			float nodeWidth = neighbours == NumNeighbours.Six ? ConvertNodeSizeToHexagonSize(InspectorGridHexagonNodeSize.Width, nodeSize) : nodeSize;
 
-			uint straightCost = (uint)Mathf.RoundToInt(nodeWidth*Int3.Precision);
+			// We round the costs to make them a bit more predictable when calculating paths.
+			// This is not strictly necessary, but avoids lots of decimals in printouts, and barely affects anything else.
+			float straightCost = Mathf.Round(nodeWidth*Int3.Precision);
 
 			// Diagonals normally cost sqrt(2) (approx 1.41) times more
-			uint diagonalCost = uniformEdgeCosts ? straightCost : (uint)Mathf.RoundToInt(nodeWidth*Mathf.Sqrt(2F)*Int3.Precision);
+			float diagonalCost = uniformEdgeCosts ? straightCost : Mathf.Round(nodeWidth*Mathf.Sqrt(2F)*Int3.Precision);
 
 			neighbourCosts[0] = straightCost;
 			neighbourCosts[1] = straightCost;
@@ -2317,8 +2327,8 @@ namespace Pathfinding {
 			RecalculateConnectionsInRegion(new IntRect(x, z, x, z));
 		}
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
-			using (var helper = GraphGizmoHelper.GetSingleFrameGizmoHelper(gizmos, active, redrawScope)) {
+		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+			using (var helper = GraphGizmoHelper.GetSingleFrameGizmoHelper(gizmos, active, redrawScope, renderInGame)) {
 				// The width and depth fields might not be up to date, so recalculate
 				// them from the #unclampedSize field
 				int w, d;
@@ -2363,7 +2373,7 @@ namespace Pathfinding {
 
 					if (!gizmos.Draw(hasher, redrawScope)) {
 						Profiler.BeginSample("Rebuild Retained Gizmo Chunk");
-						using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope)) {
+						using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame)) {
 							if (showNodeConnections) {
 								if (helper.showSearchTree) helper.builder.PushLineWidth(2);
 								for (int i = 0; i < allNodesCount; i++) {
@@ -2382,7 +2392,7 @@ namespace Pathfinding {
 			}
 			ArrayPool<GridNodeBase>.Release(ref allNodes);
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, nodeSize * 0.3f, redrawScope);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, nodeSize * 0.3f, redrawScope, renderInGame);
 		}
 
 		/// <summary>
@@ -2807,6 +2817,7 @@ namespace Pathfinding {
 			};
 		}
 
+		#region Linecast
 		/// <summary>
 		/// Returns if there is an obstacle between from and to on the graph.
 		/// This is not the same as Physics.Linecast, this function traverses the graph and looks for collisions.
@@ -2848,9 +2859,7 @@ namespace Pathfinding {
 		/// <param name="hint">This parameter is deprecated. It will be ignored.</param>
 		[System.Obsolete("The hint parameter is deprecated")]
 		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint) {
-			GraphHitInfo hit;
-
-			return Linecast(from, to, hint, out hit);
+			return Linecast(from, to, hint, out GraphHitInfo hit);
 		}
 
 		/// <summary>
@@ -2873,12 +2882,13 @@ namespace Pathfinding {
 		/// <param name="hint">This parameter is deprecated. It will be ignored.</param>
 		[System.Obsolete("The hint parameter is deprecated")]
 		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint, out GraphHitInfo hit) {
-			return Linecast(from, to, hint, out hit, null);
+			var nn = TraversalConstraint.None;
+			return Linecast(from, to, hint, out hit, ref nn, null);
 		}
 
 		/// <summary>Magnitude of the cross product a x b</summary>
 		protected static long CrossMagnitude (int2 a, int2 b) {
-			return (long)a.x*b.y - (long)b.x*a.y;
+			return (long)a.x * b.y - (long)b.x * a.y;
 		}
 
 		/// <summary>
@@ -2977,11 +2987,35 @@ namespace Pathfinding {
 		/// <param name="hit">Contains info on what was hit, see GraphHitInfo</param>
 		/// <param name="hint">This parameter is deprecated. It will be ignored.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
+		/// <param name="traversalConstraint">Determines which nodes can be traversed by the linecast. Unwalkable nodes can never be traversed regardless of the constraint.</param>
 		[System.Obsolete("The hint parameter is deprecated")]
-		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter = null) {
-			return Linecast(from, to, out hit, trace, filter);
+		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace) {
+			return Linecast(from, to, out hit, ref traversalConstraint, trace);
+		}
+
+		/// <summary>
+		/// Returns if there is an obstacle between from and to on the graph.
+		///
+		/// This is not the same as Physics.Linecast, this function traverses the graph and looks for collisions.
+		///
+		/// Edge cases are handled as follows:
+		/// - Shared edges and corners between walkable and unwalkable nodes are treated as walkable (so for example if the linecast just touches a corner of an unwalkable node, this is allowed).
+		/// - If the linecast starts outside the graph, a hit is returned at from.
+		/// - If the linecast starts inside the graph, but the end is outside of it, a hit is returned at the point where it exits the graph (unless there are any other hits before that).
+		///
+		/// <code>
+		/// var gg = AstarPath.active.data.gridGraph;
+		/// bool anyObstaclesInTheWay = gg.Linecast(transform.position, enemy.position);
+		/// </code>
+		///
+		/// [Open online documentation to see images]
+		/// </summary>
+		/// <param name="from">Point to linecast from</param>
+		/// <param name="to">Point to linecast to</param>
+		/// <param name="hit">Contains info on what was hit, see \reflink{GraphHitInfo}.</param>
+		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit) {
+			var nn = TraversalConstraint.None;
+			return Linecast(from, to, out hit, ref nn, null);
 		}
 
 		/// <summary>
@@ -3005,10 +3039,35 @@ namespace Pathfinding {
 		/// <param name="to">Point to linecast to</param>
 		/// <param name="hit">Contains info on what was hit, see \reflink{GraphHitInfo}.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
-		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit, List<GraphNode> trace = null, System.Func<GraphNode, bool> filter = null) {
-			var res = Linecast(from, to, out GridHitInfo gridHit, trace, filter);
+		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit, List<GraphNode> trace = null) {
+			var traversalConstraint = TraversalConstraint.None;
+			return Linecast(from, to, out hit, ref traversalConstraint, trace);
+		}
+
+		/// <summary>
+		/// Returns if there is an obstacle between from and to on the graph.
+		///
+		/// This is not the same as Physics.Linecast, this function traverses the graph and looks for collisions.
+		///
+		/// Edge cases are handled as follows:
+		/// - Shared edges and corners between walkable and unwalkable nodes are treated as walkable (so for example if the linecast just touches a corner of an unwalkable node, this is allowed).
+		/// - If the linecast starts outside the graph, a hit is returned at from.
+		/// - If the linecast starts inside the graph, but the end is outside of it, a hit is returned at the point where it exits the graph (unless there are any other hits before that).
+		///
+		/// <code>
+		/// var gg = AstarPath.active.data.gridGraph;
+		/// bool anyObstaclesInTheWay = gg.Linecast(transform.position, enemy.position);
+		/// </code>
+		///
+		/// [Open online documentation to see images]
+		/// </summary>
+		/// <param name="from">Point to linecast from</param>
+		/// <param name="to">Point to linecast to</param>
+		/// <param name="hit">Contains info on what was hit, see \reflink{GraphHitInfo}.</param>
+		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
+		/// <param name="traversalConstraint">Determines which nodes can be traversed by the linecast. Unwalkable nodes can never be traversed regardless of the constraint.</param>
+		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null) {
+			var res = Linecast(from, to, out GridHitInfo gridHit, ref traversalConstraint, trace);
 			hit = new GraphHitInfo {
 				origin = from,
 				node = gridHit.node,
@@ -3020,7 +3079,7 @@ namespace Pathfinding {
 				var ndir = gridHit.direction;
 				if (ndir == -1 || gridHit.node == null) {
 					// We didn't really hit a wall. Possibly the start node was unwalkable or we ended up at the right cell, but wrong floor (layered grid graphs only)
-					hit.point = gridHit.node == null || !gridHit.node.Walkable || (filter != null && !filter(gridHit.node)) ? from : to;
+					hit.point = gridHit.node == null || !traversalConstraint.CanTraverse(gridHit.node) ? from : to;
 					if (gridHit.node != null) hit.point = gridHit.node.ProjectOnSurface(hit.point);
 					hit.tangentOrigin = Vector3.zero;
 					hit.tangent = Vector3.zero;
@@ -3104,11 +3163,30 @@ namespace Pathfinding {
 		/// </summary>
 		/// <param name="fromNode">Node to start from.</param>
 		/// <param name="toNode">Node to try to reach using a straight line.</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
-		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode, System.Func<GraphNode, bool> filter = null) {
-			var nodeCenter = new int2(FixedPrecisionScale/2, FixedPrecisionScale/2);
-			return Linecast(fromNode, nodeCenter, toNode, nodeCenter, out GridHitInfo hit, null, filter);
+		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode) {
+			var traversalConstraint = TraversalConstraint.None;
+			return Linecast(fromNode, toNode, ref traversalConstraint);
+		}
+
+		/// <summary>
+		/// Returns if there is an obstacle between the two nodes on the graph.
+		///
+		/// This method is very similar to the other Linecast methods however it is a bit faster
+		/// due to not having to look up which node is closest to a particular input point.
+		///
+		/// <code>
+		/// var gg = AstarPath.active.data.gridGraph;
+		/// var node1 = gg.GetNode(2, 3);
+		/// var node2 = gg.GetNode(5, 7);
+		/// bool anyObstaclesInTheWay = gg.Linecast(node1, node2);
+		/// </code>
+		/// </summary>
+		/// <param name="fromNode">Node to start from.</param>
+		/// <param name="toNode">Node to try to reach using a straight line.</param>
+		/// <param name="traversalConstraint">Determines which nodes can be traversed by the linecast. Unwalkable nodes can never be traversed regardless of the constraint.</param>
+		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode, ref TraversalConstraint traversalConstraint) {
+			var nodeCenter = new int2(FixedPrecisionScale / 2, FixedPrecisionScale / 2);
+			return Linecast(fromNode, nodeCenter, toNode, nodeCenter, out GridHitInfo hit, ref traversalConstraint, null);
 		}
 
 		/// <summary>
@@ -3135,9 +3213,8 @@ namespace Pathfinding {
 		/// <param name="to">Point to linecast to</param>
 		/// <param name="hit">Contains info on what was hit, see \reflink{GridHitInfo}</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
-		public bool Linecast (Vector3 from, Vector3 to, out GridHitInfo hit, List<GraphNode> trace = null, System.Func<GraphNode, bool> filter = null) {
+		/// <param name="traversalConstraint">Determines which nodes can be traversed by the linecast. Unwalkable nodes can never be traversed regardless of the constraint.</param>
+		public bool Linecast (Vector3 from, Vector3 to, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null) {
 			Vector3 fromInGraphSpace = transform.InverseTransform(from);
 			Vector3 toInGraphSpace = transform.InverseTransform(to);
 
@@ -3177,8 +3254,8 @@ namespace Pathfinding {
 				startNode, new Vector2(fromInGraphSpaceClipped.x - startNode.XCoordinateInGrid, fromInGraphSpaceClipped.z - startNode.ZCoordinateInGrid),
 				endNode, new Vector2(toInGraphSpaceClipped.x - endNode.XCoordinateInGrid, toInGraphSpaceClipped.z - endNode.ZCoordinateInGrid),
 				out hit,
+				ref traversalConstraint,
 				trace,
-				filter,
 				toIsOutsideGraph
 				);
 		}
@@ -3206,21 +3283,40 @@ namespace Pathfinding {
 		/// <param name="normalizedToPoint">Where in the end node to end. This is a normalized value so each component must be in the range 0 to 1 (inclusive).</param>
 		/// <param name="hit">Contains info on what was hit, see \reflink{GridHitInfo}</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
-		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
-		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
 		/// <param name="continuePastEnd">If true, the linecast will continue past the end point in the same direction until it hits something.</param>
-		public bool Linecast (GridNodeBase fromNode, Vector2 normalizedFromPoint, GridNodeBase toNode, Vector2 normalizedToPoint, out GridHitInfo hit, List<GraphNode> trace = null, System.Func<GraphNode, bool> filter = null, bool continuePastEnd = false) {
-			var fixedNormalizedFromPoint = new int2((int)Mathf.Round(normalizedFromPoint.x*FixedPrecisionScale), (int)Mathf.Round(normalizedFromPoint.y*FixedPrecisionScale));
-			var fixedNormalizedToPoint = new int2((int)Mathf.Round(normalizedToPoint.x*FixedPrecisionScale), (int)Mathf.Round(normalizedToPoint.y*FixedPrecisionScale));
-
-			return Linecast(fromNode, fixedNormalizedFromPoint, toNode, fixedNormalizedToPoint, out hit, trace, filter, continuePastEnd);
+		public bool Linecast (GridNodeBase fromNode, Vector2 normalizedFromPoint, GridNodeBase toNode, Vector2 normalizedToPoint, out GridHitInfo hit, List<GraphNode> trace = null, bool continuePastEnd = false) {
+			var traversalConstraint = TraversalConstraint.None;
+			return Linecast(fromNode, normalizedFromPoint, toNode, normalizedToPoint, out hit, ref traversalConstraint, trace, continuePastEnd);
 		}
 
 		/// <summary>
 		/// Returns if there is an obstacle between the two nodes on the graph.
-		/// Like <see cref="Linecast(GridNodeBase,Vector2,GridNodeBase,Vector2,GridHitInfo,List<GraphNode>,System.Func<GraphNode,bool>,bool)"/> but takes normalized points as fixed precision points normalized between 0 and FixedPrecisionScale instead of between 0 and 1.
+		///
+		/// This method is very similar to the other Linecast methods but it gives some extra control, in particular when the start/end points are at node corners instead of inside nodes.
+		///
+		/// Shared edges and corners between walkable and unwalkable nodes are treated as walkable.
+		/// So for example if the linecast just touches a corner of an unwalkable node, this is allowed.
 		/// </summary>
-		public bool Linecast (GridNodeBase fromNode, int2 fixedNormalizedFromPoint, GridNodeBase toNode, int2 fixedNormalizedToPoint, out GridHitInfo hit, List<GraphNode> trace = null, System.Func<GraphNode, bool> filter = null, bool continuePastEnd = false) {
+		/// <param name="fromNode">Node to start from.</param>
+		/// <param name="normalizedFromPoint">Where in the start node to start. This is a normalized value so each component must be in the range 0 to 1 (inclusive).</param>
+		/// <param name="toNode">Node to try to reach using a straight line.</param>
+		/// <param name="normalizedToPoint">Where in the end node to end. This is a normalized value so each component must be in the range 0 to 1 (inclusive).</param>
+		/// <param name="hit">Contains info on what was hit, see \reflink{GridHitInfo}</param>
+		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
+		/// <param name="traversalConstraint">Determines which nodes can be traversed by the linecast. Unwalkable nodes can never be traversed regardless of the constraint.</param>
+		/// <param name="continuePastEnd">If true, the linecast will continue past the end point in the same direction until it hits something.</param>
+		public bool Linecast (GridNodeBase fromNode, Vector2 normalizedFromPoint, GridNodeBase toNode, Vector2 normalizedToPoint, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null, bool continuePastEnd = false) {
+			var fixedNormalizedFromPoint = new int2((int)Mathf.Round(normalizedFromPoint.x * FixedPrecisionScale), (int)Mathf.Round(normalizedFromPoint.y * FixedPrecisionScale));
+			var fixedNormalizedToPoint = new int2((int)Mathf.Round(normalizedToPoint.x * FixedPrecisionScale), (int)Mathf.Round(normalizedToPoint.y * FixedPrecisionScale));
+
+			return Linecast(fromNode, fixedNormalizedFromPoint, toNode, fixedNormalizedToPoint, out hit, ref traversalConstraint, trace, continuePastEnd);
+		}
+
+		/// <summary>
+		/// Returns if there is an obstacle between the two nodes on the graph.
+		/// Like <see cref="Linecast(GridNodeBase,Vector2,GridNodeBase,Vector2,GridHitInfo,TraversalConstraint,List<GraphNode>,bool)"/> but takes normalized points as fixed precision points normalized between 0 and FixedPrecisionScale instead of between 0 and 1.
+		/// </summary>
+		public bool Linecast (GridNodeBase fromNode, int2 fixedNormalizedFromPoint, GridNodeBase toNode, int2 fixedNormalizedToPoint, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null, bool continuePastEnd = false) {
 			/*
 			* Briefly, the algorithm used in this function can be described as:
 			* 1. Determine the two axis aligned directions which will bring us closer to the target.
@@ -3245,7 +3341,7 @@ namespace Pathfinding {
 			if (toNode == null) throw new System.ArgumentNullException(nameof(toNode));
 
 			// Use the filter
-			if ((filter != null && !filter(fromNode)) || !fromNode.Walkable) {
+			if (!traversalConstraint.CanTraverse(fromNode)) {
 				hit = new GridHitInfo {
 					node = fromNode,
 					direction = -1,
@@ -3319,6 +3415,7 @@ namespace Pathfinding {
 			int directionToReduceError = (quadrant + 1) & 0x3;
 			// This is the direction which moves further to the left of the segment (when looking from the start)
 			int directionToIncreaseError = (quadrant + 2) & 0x3;
+			int directionDiagonal = directionToReduceError + 4;
 
 			// All errors used in this function are proportional to the signed distance.
 			// They have a common multiplier which is dir.magnitude, but dividing away that would be very slow.
@@ -3387,18 +3484,29 @@ namespace Pathfinding {
 				GridNodeBase nextNode;
 
 				if (nerror == 0) {
-					// This would be a diagonal move. But we don't allow those for simplicity (we can just as well just take it in two axis aligned steps).
-					// In this case we are free to choose which direction to move.
+					// This is a diagonal move
+					ndir = directionDiagonal;
+					// Only allow taking a diagonal move if we have at least 2 steps remaining
+					nextNode = remainingSteps > 1 ? fromNode.GetNeighbourAlongDirection(ndir) : null;
+					if (nextNode != null && (nextNode == prevNode || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
+
+					// Taking a diagonal takes us one additional step closer to the target node compared to an axis-aligned move.
+					if (nextNode != null) remainingSteps--;
+
+					// We are free to choose which of the axis-aligned directions to move via.
 					// If one direction is blocked, we choose the other one.
-					ndir = symmetryBreakingDirection1;
-					nextNode = fromNode.GetNeighbourAlongDirection(ndir);
-					if ((filter != null && nextNode != null && !filter(nextNode)) || nextNode == prevNode) nextNode = null;
+
+					if (nextNode == null) {
+						ndir = symmetryBreakingDirection1;
+						nextNode = fromNode.GetNeighbourAlongDirection(ndir);
+						if (nextNode != null && (nextNode == prevNode || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
+					}
 
 					if (nextNode == null) {
 						// Try the other one too...
 						ndir = symmetryBreakingDirection2;
 						nextNode = fromNode.GetNeighbourAlongDirection(ndir);
-						if ((filter != null && nextNode != null && !filter(nextNode)) || nextNode == prevNode) nextNode = null;
+						if (nextNode != null && (nextNode == prevNode || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
 					}
 				} else {
 					// This is the happy-path of the linecast. We just move in the direction of the line.
@@ -3408,7 +3516,7 @@ namespace Pathfinding {
 					nextNode = fromNode.GetNeighbourAlongDirection(ndir);
 
 					// Use the filter
-					if ((filter != null && nextNode != null && !filter(nextNode)) || nextNode == prevNode) nextNode = null;
+					if (nextNode != null && (nextNode == prevNode || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
 				}
 
 				// If we cannot move forward from this node, we might still be able to by side-stepping.
@@ -3443,7 +3551,7 @@ namespace Pathfinding {
 							// Try to side-step in that direction.
 
 							nextNode = fromNode.GetNeighbourAlongDirection(d);
-							if ((filter != null && nextNode != null && !filter(nextNode)) || nextNode == prevNode || nextNode == preventBacktrackingTo) nextNode = null;
+							if (nextNode != null && (nextNode == prevNode || nextNode == preventBacktrackingTo || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
 
 							if (nextNode != null) {
 								// This side-stepping might add 1 additional step to the path, or not. It's hard to say.
@@ -3523,11 +3631,12 @@ namespace Pathfinding {
 					var node = fromNode;
 					for (int i = 0; i < 3 && node != toNode; i++) {
 						if (trace != null) trace.Add(node);
-						node = node.GetNeighbourAlongDirection(d);
-						if (node == null || (filter != null && !filter(node))) {
+						var nextNode = node.GetNeighbourAlongDirection(d);
+						if (nextNode == null || !traversalConstraint.CanTraverse(node, nextNode)) {
 							node = null;
 							break;
 						}
+						node = nextNode;
 						d = (d + 1) & 0x3;
 					}
 
@@ -3538,11 +3647,12 @@ namespace Pathfinding {
 						d = (counterClockwiseDirection + 1) & 0x3;
 						for (int i = 0; i < 3 && node != toNode; i++) {
 							if (trace != null) trace.Add(node);
-							node = node.GetNeighbourAlongDirection(d);
-							if (node == null || (filter != null && !filter(node))) {
+							var nextNode = node.GetNeighbourAlongDirection(d);
+							if (nextNode == null || !traversalConstraint.CanTraverse(node, nextNode)) {
 								node = null;
 								break;
 							}
+							node = nextNode;
 							d = (d - 1 + 4) & 0x3;
 						}
 
@@ -3558,6 +3668,39 @@ namespace Pathfinding {
 			if (trace != null) trace.Add(fromNode);
 			return fromNode != toNode;
 		}
+		#endregion
+
+		#region Legacy Linecast Overloads
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (Vector3 from, Vector3 to, out GridHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(from, to, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(fromNode, toNode, ref constraint);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(from, to, out hit, ref constraint, trace);
+		}
+
+		[System.Obsolete("Use the overload that takes a TraversalConstraint instead. See the migration guide for version 5.4 for more information.")]
+		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
+			var constraint = TraversalConstraint.None;
+			constraint.filter = filter;
+			return Linecast(from, to, hint, out hit, ref constraint, trace);
+		}
+
+		#endregion
 
 		protected override void SerializeExtraInfo (GraphSerializationContext ctx) {
 			if (nodes == null) {

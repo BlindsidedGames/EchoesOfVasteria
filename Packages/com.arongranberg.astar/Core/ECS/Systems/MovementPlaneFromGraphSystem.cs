@@ -14,7 +14,7 @@ namespace Pathfinding.ECS {
 	using Unity.Transforms;
 	using UnityEngine.Profiling;
 
-	[UpdateBefore(typeof(RepairPathSystem))]
+	[UpdateBefore(typeof(SchedulePathSearchSystem))] // Only needs to run before TraverseOffMeshLinkSystem, but doing this leads to better scheduling
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	[RequireMatchingQueriesForUpdate]
 	[BurstCompile]

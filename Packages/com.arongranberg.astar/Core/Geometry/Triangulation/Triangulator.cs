@@ -136,7 +136,7 @@ namespace andywiecko.BurstTriangulator {
 		public Preprocessor Preprocessor { get; set; } = Preprocessor.None;
 	}
 
-	public enum ConstraintType : byte {
+	public enum ConstraintType: byte {
 		/// <summary>
 		/// A constrained edge will always be present in the output mesh.
 		///
@@ -156,7 +156,7 @@ namespace andywiecko.BurstTriangulator {
 		ConstrainedAndHoleBoundary,
 	}
 
-	public enum HalfedgeState : byte {
+	public enum HalfedgeState: byte {
 		Unconstrained,
 		Constrained,
 		ConstrainedAndHoleBoundary,
@@ -205,8 +205,8 @@ namespace andywiecko.BurstTriangulator {
 		public static implicit operator InputData<T2>(ManagedInput<T2> input) => new()
 		{
 			Positions = input.Positions == null ? default : input.Positions.AsNativeArray(),
-						ConstraintEdges = input.ConstraintEdges == null ? default : input.ConstraintEdges.AsNativeArray(),
-										  HoleSeeds = input.HoleSeeds == null ? default : input.HoleSeeds.AsNativeArray(),
+			ConstraintEdges = input.ConstraintEdges == null ? default : input.ConstraintEdges.AsNativeArray(),
+			HoleSeeds = input.HoleSeeds == null ? default : input.HoleSeeds.AsNativeArray(),
 		};
 	}
 
@@ -593,15 +593,15 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 			);
 
 		public static implicit operator Args(TriangulationSettings settings) => new(
-			autoHolesAndBoundary : settings.AutoHolesAndBoundary,
-			preprocessor : settings.Preprocessor,
-			refineMesh : settings.RefineMesh,
-			restoreBoundary : settings.RestoreBoundary,
-			sloanMaxIters : settings.SloanMaxIters,
-			validateInput : settings.ValidateInput,
-			verbose : settings.Verbose,
-			refinementThresholdAngle : settings.RefinementThresholds.Angle,
-			refinementThresholdArea : settings.RefinementThresholds.Area
+			autoHolesAndBoundary: settings.AutoHolesAndBoundary,
+			preprocessor: settings.Preprocessor,
+			refineMesh: settings.RefineMesh,
+			restoreBoundary: settings.RestoreBoundary,
+			sloanMaxIters: settings.SloanMaxIters,
+			validateInput: settings.ValidateInput,
+			verbose: settings.Verbose,
+			refinementThresholdAngle: settings.RefinementThresholds.Angle,
+			refinementThresholdArea: settings.RefinementThresholds.Area
 			);
 
 		/// <summary>
@@ -1126,7 +1126,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 
 				// Edge validation
 				for (int i = 0; i < constraints.Length / 2; i++) {
-					var(a0Id, a1Id) = (constraints[2 * i], constraints[2 * i + 1]);
+					var (a0Id, a1Id) = (constraints[2 * i], constraints[2 * i + 1]);
 					var count = positions.Length;
 					if (a0Id >= count || a0Id < 0 || a1Id >= count || a1Id < 0) {
 						status.Value = Status.ConstraintOutOfBounds(i, new int2(a0Id, a1Id), count);
@@ -1141,11 +1141,11 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 
 				// Edge-edge validation
 				for (int i = 0; i < constraints.Length / 2; i++) {
-					var(a0Id, a1Id) = (constraints[2 * i], constraints[2 * i + 1]);
-					var(a0, a1) = (positions[a0Id], positions[a1Id]);
+					var (a0Id, a1Id) = (constraints[2 * i], constraints[2 * i + 1]);
+					var (a0, a1) = (positions[a0Id], positions[a1Id]);
 
 					for (int j = i + 1; j < constraints.Length / 2; j++) {
-						var(b0Id, b1Id) = (constraints[2 * j], constraints[2 * j + 1]);
+						var (b0Id, b1Id) = (constraints[2 * j], constraints[2 * j + 1]);
 
 						if (a0Id == b0Id && a1Id == b1Id || a0Id == b1Id && a1Id == b0Id) {
 							status.Value = Status.DuplicateConstraint(i, j);
@@ -1157,7 +1157,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 							continue;
 						}
 
-						var(b0, b1) = (positions[b0Id], positions[b1Id]);
+						var (b0, b1) = (positions[b0Id], positions[b1Id]);
 						// Check if the two constraints intersect, but ignore if they only overlap at endpoints
 						if (EdgeEdgeIntersection(a0, a1, b0, b1) && !(PointLineSegmentIntersection(a0, b0, b1) || PointLineSegmentIntersection(a1, b0, b1) || PointLineSegmentIntersection(b0, a0, a1) || PointLineSegmentIntersection(b1, a0, a1))) {
 							status.Value = Status.ConstraintIntersection(i, j);
@@ -1669,7 +1669,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 					var _p = triangles[h2];
 					var _q = triangles[h5];
 
-					var(p0, p1, p2, p3) = (positions[_i], positions[_q], positions[_j], positions[_p]);
+					var (p0, p1, p2, p3) = (positions[_i], positions[_q], positions[_j], positions[_p]);
 					if (!IsConvexQuadrilateral(p0, p1, p2, p3)) {
 						unresolvedIntersections.Add(h0);
 						continue;
@@ -1727,8 +1727,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 			}
 
 			private bool EdgeEdgeIntersection (int2 e1, int2 e2) {
-				var(a0, a1) = (positions[e1.x], positions[e1.y]);
-				var(b0, b1) = (positions[e2.x], positions[e2.y]);
+				var (a0, a1) = (positions[e1.x], positions[e1.y]);
+				var (b0, b1) = (positions[e2.x], positions[e2.y]);
 				return !(math.any(e1.xy == e2.xy | e1.xy == e2.yx)) && UnsafeTriangulator<T, T2, TBig, TTransform, TUtils>.EdgeEdgeIntersection(a0, a1, b0, b1);
 			}
 
@@ -1771,7 +1771,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 				//       '. v
 				//          h2'
 				var tunnelInit = -1;
-				var(ci, cj) = (edge.x, edge.y);
+				var (ci, cj) = (edge.x, edge.y);
 				var h0init = pointToHalfedge[ci];
 				var h0 = h0init;
 				do{
@@ -2068,8 +2068,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 
 			private int FindTriangle (T2 p) {
 				for (int tId = 0; tId < triangles.Length / 3; tId++) {
-					var(i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
-					var(a, b, c) = (positions[i], positions[j], positions[k]);
+					var (i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
+					var (a, b, c) = (positions[i], positions[j], positions[k]);
 					if (utils.PointInsideTriangle(p, a, b, c)) {
 						return tId;
 					}
@@ -2160,8 +2160,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 			const float ConcentricShellReferenceRadius = 0.001f;
 
 			public RefineMeshStep(OutputData<T2> output, Args args, TTransform lt) : this(output,
-																						  area2Threshold : utils.Cast(utils.mul(utils.Cast(utils.mul(utils.Const(2), utils.Const(args.RefinementThresholdArea))), lt.AreaScalingFactor)),
-																						  angleThreshold : utils.Const(args.RefinementThresholdAngle))
+																						  area2Threshold: utils.Cast(utils.mul(utils.Cast(utils.mul(utils.Const(2), utils.Const(args.RefinementThresholdArea))), lt.AreaScalingFactor)),
+																						  angleThreshold: utils.Const(args.RefinementThresholdAngle))
 			{ }
 
 			public RefineMeshStep(OutputData<T2> output, T area2Threshold, T angleThreshold) {
@@ -2211,7 +2211,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 				using var tQueue = new NativeList<int>(triangles.Length, allocator);
 
 				for (int tId = 0; tId < triangles.Length / 3; tId++) {
-					var(i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
+					var (i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
 					circles[tId] = new(CalculateCircumCircle(i, j, k, outputPositions.AsArray()));
 				}
 
@@ -2263,8 +2263,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 			}
 
 			private void SplitEdge (int he, NativeList<int> heQueue, NativeList<int> tQueue) {
-				var(i, j) = (triangles[he], triangles[NextHalfedge(he)]);
-				var(e0, e1) = (outputPositions[i], outputPositions[j]);
+				var (i, j) = (triangles[he], triangles[NextHalfedge(he)]);
+				var (e0, e1) = (outputPositions[i], outputPositions[j]);
 
 				T2 p;
 				// Use midpoint method for:
@@ -2277,7 +2277,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 				} else {
 					var alpha = utils.alpha(utils.Const(ConcentricShellReferenceRadius), dSquare: utils.Cast(utils.distancesq(e0, e1)));
 					// Swap points to provide symmetry in splitting
-					p = i < initialPointsCount? utils.lerp(e0, e1, alpha) : utils.lerp(e1, e0, alpha);
+					p = i < initialPointsCount ? utils.lerp(e0, e1, alpha) : utils.lerp(e1, e0, alpha);
 				}
 
 				constrainedHalfedges[he] = HalfedgeState.Unconstrained;
@@ -2347,8 +2347,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private bool IsBadTriangle (int tId) {
-				var(i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
-				var(a, b, c) = (outputPositions[i], outputPositions[j], outputPositions[k]);
+				var (i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
+				var (a, b, c) = (outputPositions[i], outputPositions[j], outputPositions[k]);
 				var area2 = Area2(a, b, c);
 				return utils.greater(area2, maximumArea2) || AngleIsTooSmall(tId, angleThreshold);
 			}
@@ -2362,9 +2362,9 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 						continue;
 					}
 
-					var(i, j) = (triangles[he], triangles[NextHalfedge(he)]);
+					var (i, j) = (triangles[he], triangles[NextHalfedge(he)]);
 					if (halfedges[he] == -1 || i < j) {
-						var(p0, p1) = (outputPositions[i], outputPositions[j]);
+						var (p0, p1) = (outputPositions[i], outputPositions[j]);
 						if (utils.le(utils.dot(utils.diff(p0, c.Center), utils.diff(p1, c.Center)), utils.Zero())) {
 							edges.Add(he);
 						}
@@ -2374,8 +2374,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 				if (edges.IsEmpty) {
 					UnsafeInsertPointBulk(c.Center, initTriangle: tId, heQueue, tQueue);
 				} else {
-					var(i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
-					var(xi, xj, xk) = (outputPositions[i], outputPositions[j], outputPositions[k]);
+					var (i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
+					var (xi, xj, xk) = (outputPositions[i], outputPositions[j], outputPositions[k]);
 					var area2 = Area2(xi, xj, xk);
 					if (utils.greater(area2, maximumArea2)) { // TODO split permited
 						foreach (var he in edges.AsArray().AsReadOnly()) {
@@ -2393,8 +2393,8 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private bool AngleIsTooSmall (int tId, T minimumAngle) {
-				var(i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
-				var(pA, pB, pC) = (outputPositions[i], outputPositions[j], outputPositions[k]);
+				var (i, j, k) = (triangles[3 * tId + 0], triangles[3 * tId + 1], triangles[3 * tId + 2]);
+				var (pA, pB, pC) = (outputPositions[i], outputPositions[j], outputPositions[k]);
 				return UnsafeTriangulator<T, T2, TBig, TTransform, TUtils>.AngleIsTooSmall(pA, pB, pC, minimumAngle);
 			}
 
@@ -2718,7 +2718,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 		private static T Cross(T2 a, T2 b) => utils.Cast(utils.diff(utils.mul(utils.X(a), utils.Y(b)), utils.mul(utils.Y(a), utils.X(b))));
 		private static TBig CircumRadiusSq(T2 a, T2 b, T2 c) => utils.distancesq(utils.CircumCenter(a, b, c), a);
 		private static (T2, T) CalculateCircumCircle (int i, int j, int k, NativeArray<T2> positions) {
-			var(pA, pB, pC) = (positions[i], positions[j], positions[k]);
+			var (pA, pB, pC) = (positions[i], positions[j], positions[k]);
 			return (utils.CircumCenter(pA, pB, pC), utils.Cast(CircumRadiusSq(pA, pB, pC)));
 		}
 		private static bool ccw(T2 a, T2 b, T2 c) => utils.greater(
@@ -3185,7 +3185,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 		public readonly bool PointInsideTriangle (float2 p, float2 a, float2 b, float2 c) {
 			static float cross(float2 a, float2 b) => a.x * b.y - a.y * b.x;
 			static float3 bar (float2 a, float2 b, float2 c, float2 p) {
-				var(v0, v1, v2) = (b - a, c - a, p - a);
+				var (v0, v1, v2) = (b - a, c - a, p - a);
 				var denInv = 1 / cross(v0, v1);
 				var v = denInv * cross(v2, v1);
 				var w = denInv * cross(v0, v2);
@@ -3271,7 +3271,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 		public readonly bool PointInsideTriangle (double2 p, double2 a, double2 b, double2 c) {
 			static double cross(double2 a, double2 b) => a.x * b.y - a.y * b.x;
 			static double3 bar (double2 a, double2 b, double2 c, double2 p) {
-				var(v0, v1, v2) = (b - a, c - a, p - a);
+				var (v0, v1, v2) = (b - a, c - a, p - a);
 				var denInv = 1 / cross(v0, v1);
 				var v = denInv * cross(v2, v1);
 				var w = denInv * cross(v0, v2);
@@ -3456,7 +3456,7 @@ namespace andywiecko.BurstTriangulator.LowLevel.Unsafe {
 		public readonly bool PointInsideTriangle (fp2 p, fp2 a, fp2 b, fp2 c) {
 			static fp cross(fp2 a, fp2 b) => a.x * b.y - a.y * b.x;
 			static fp3 bar (fp2 a, fp2 b, fp2 c, fp2 p) {
-				var(v0, v1, v2) = (b - a, c - a, p - a);
+				var (v0, v1, v2) = (b - a, c - a, p - a);
 				var denInv = 1 / cross(v0, v1);
 				var v = denInv * cross(v2, v1);
 				var w = denInv * cross(v0, v2);

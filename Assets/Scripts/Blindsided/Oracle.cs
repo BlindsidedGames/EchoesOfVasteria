@@ -48,8 +48,9 @@ namespace Blindsided
             wipeInProgress = false;
         }
 
-        [TabGroup("SaveData")] public bool demo;
-        [TabGroup("SaveData")] [HorizontalGroup("SaveData/BetaRow")] [LabelText("Beta")] public bool beta;
+        [TabGroup("SaveData")] [InlineEditor] [SerializeField] private BuildModeConfig buildModeConfig;
+        [TabGroup("SaveData")] [ShowInInspector] public bool demo => ActiveBuildModeConfig != null && ActiveBuildModeConfig.Demo;
+        [TabGroup("SaveData")] [HorizontalGroup("SaveData/BetaRow")] [ShowInInspector] [LabelText("Beta")] public bool beta => ActiveBuildModeConfig != null && ActiveBuildModeConfig.Beta;
         [TabGroup("SaveData")] [HorizontalGroup("SaveData/BetaRow")] [LabelText("Iteration")] [MinValue(1)] [EnableIf(nameof(beta))] public int betaSaveIteration = 1;
 
         [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
@@ -71,6 +72,19 @@ namespace Blindsided
         private int GetSafeBetaIteration()
         {
             return Mathf.Max(MinBetaIteration, betaSaveIteration);
+        }
+
+        private BuildModeConfig ActiveBuildModeConfig
+        {
+            get
+            {
+                if (buildModeConfig == null)
+                {
+                    buildModeConfig = BuildModeConfig.Load();
+                }
+
+                return buildModeConfig;
+            }
         }
 
         private string GetBetaPrefix()
@@ -114,6 +128,13 @@ namespace Blindsided
         private void OnValidate()
         {
             betaSaveIteration = Mathf.Max(MinBetaIteration, betaSaveIteration);
+        }
+#endif
+
+#if UNITY_INCLUDE_TESTS
+        public void SetBuildModeConfig(BuildModeConfig overrideConfig)
+        {
+            buildModeConfig = overrideConfig;
         }
 #endif
 

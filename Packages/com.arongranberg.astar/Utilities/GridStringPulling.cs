@@ -164,15 +164,14 @@ namespace Pathfinding {
 		/// Cost of moving across all the nodes in the list, along the given segment.
 		/// It is assumed that the segment intersects the nodes. Any potentially intersecting nodes that are not part of the list will be ignored.
 		/// </summary>
-		static uint LinecastCost (List<GraphNode> trace, int2 segmentStart, int2 segmentEnd, GridGraph gg, System.Func<GraphNode, uint> traversalCost) {
+		static uint LinecastCost (List<GraphNode> trace, int2 segmentStart, int2 segmentEnd, GridGraph gg, ref TraversalCosts traversalCosts) {
 			// Check the cost of the segment compared to not taking this "shortcut"
 			uint cost = 0;
 
 			for (int k = 0; k < trace.Count; k++) {
 				var node = trace[k] as GridNodeBase;
-				// Note: this assumes the default grid connection costs are used. Which is relatively reasonable
-				// since they require changing the code to modify.
-				cost += (uint)(((float)traversalCost(node) + gg.nodeSize*Int3.Precision) * IntersectionLength(new int2(node.XCoordinateInGrid, node.ZCoordinateInGrid)*FixedPrecisionScale, segmentStart, segmentEnd));
+				if (k > 0) cost += traversalCosts.GetConnectionCost(trace[k-1], trace[k]);
+				cost += (uint)(traversalCosts.GetTraversalCostMultiplier(node) * gg.nodeSize * Int3.Precision * IntersectionLength(new int2(node.XCoordinateInGrid, node.ZCoordinateInGrid)*FixedPrecisionScale, segmentStart, segmentEnd));
 			}
 			return cost;
 		}
@@ -194,10 +193,10 @@ namespace Pathfinding {
 		/// <param name="nodeEndIndex">The last index in pathNodes that is used.</param>
 		/// <param name="startPoint">A more exact start point for the path. This should be a point inside the first node (if not, it will be clamped to the node's surface).</param>
 		/// <param name="endPoint">A more exact end point for the path. This should be a point inside the first node (if not, it will be clamped to the node's surface).</param>
-		/// <param name="traversalCost">Can be used to specify how much it costs to traverse each node. If this is null, node penalties and tag penalties will be completely ignored.</param>
-		/// <param name="filter">Can be used to filter out additional nodes that should be treated as unwalkable. It is assumed that all nodes in pathNodes pass this filter.</param>
+		/// <param name="traversalConstraint">Can be used to prevent the linecast from traversing some nodes. Use \reflink{TraversalConstraint.None} to not apply any constraints. It is assumed that all nodes in pathNodes pass this filter.</param>
+		/// <param name="traversalCosts">Can be used to specify how much it costs to traverse each node. Sometimes the geometrically shortest path is not the best path. The algorithm will still discard any simplifications which don't make the path less costly.</param>
 		/// <param name="maxCorners">If you only need the first N points of the result, you can specify that here, to avoid unnecessary work.</param>
-		public static List<Vector3> Calculate (List<GraphNode> pathNodes, int nodeStartIndex, int nodeEndIndex, Vector3 startPoint, Vector3 endPoint, System.Func<GraphNode, uint> traversalCost = null, System.Func<GraphNode, bool> filter = null, int maxCorners = int.MaxValue) {
+		public static List<Vector3> Calculate (List<GraphNode> pathNodes, int nodeStartIndex, int nodeEndIndex, Vector3 startPoint, Vector3 endPoint, ref TraversalCosts traversalCosts, ref TraversalConstraint traversalConstraint, int maxCorners = int.MaxValue) {
 			Profiler.BeginSample("Funnel");
 			marker6.Begin();
 			// A list of indices into the arrays defined below.
@@ -258,10 +257,12 @@ namespace Pathfinding {
 				}
 				points[j] = point + normalized;
 				normalizedPoints[j] = normalized;
-				if (j > 0 && traversalCost != null) {
+				if (j > 0) {
 					// Calculate the cost of moving along the original path
-					costSoFar += (uint)(((float)traversalCost(nodes[j-1]) + gg.nodeSize*Int3.Precision) * IntersectionLength(new int2(nodes[j-1].XCoordinateInGrid, nodes[j-1].ZCoordinateInGrid)*FixedPrecisionScale, points[j-1], points[j]));
-					costSoFar += (uint)(((float)traversalCost(nodes[j]) + gg.nodeSize*Int3.Precision) * IntersectionLength(gridCoordinates*FixedPrecisionScale, points[j-1], points[j]));
+					// Note: For the first/last nodes, we may have duplicate nodes with different normalized points.
+					if (nodes[j-1] != nodes[j]) costSoFar += traversalCosts.GetConnectionCost(nodes[j-1], nodes[j]);
+					costSoFar += (uint)((float)traversalCosts.GetTraversalCostMultiplier(nodes[j-1]) * gg.nodeSize * Int3.Precision * IntersectionLength(new int2(nodes[j-1].XCoordinateInGrid, nodes[j-1].ZCoordinateInGrid)*FixedPrecisionScale, points[j-1], points[j]));
+					costSoFar += (uint)((float)traversalCosts.GetTraversalCostMultiplier(nodes[j]) * gg.nodeSize * Int3.Precision * IntersectionLength(gridCoordinates*FixedPrecisionScale, points[j-1], points[j]));
 				}
 				costs[j] = costSoFar;
 			}
@@ -321,11 +322,15 @@ namespace Pathfinding {
 						break;
 					} else {
 						trace.Clear();
-						if (gg.Linecast(nodeLast, normalizedLast, nodes[idx], normalizedPoints[idx], out hit, trace, filter)) {
+						if (idx == last+1) {
+							// Linecast and cost check should in theory always succeed if we are just checking the next node in the path
+							// However, in practice, it may pick the "wrong" node in edge cases when going through diagonal connections (could be more costly).
+							// So for performance, and robustness, we just assume that the linecast will succeed.
+						} else if (gg.Linecast(nodeLast, normalizedLast, nodes[idx], normalizedPoints[idx], out hit, ref traversalConstraint, trace)) {
 							mxFailMode = PredicateFailMode.LinecastObstacle;
 							break;
-						} else if (traversalCost != null) {
-							var cost = LinecastCost(trace, points[last], points[idx], gg, traversalCost);
+						} else {
+							var cost = LinecastCost(trace, points[last], points[idx], gg, ref traversalCosts);
 							if (cost > costs[idx] - costs[last] + COST_FUDGE) {
 								// The "shortcut" had such a high penalty that it's not worth taking it
 								mxFailMode = PredicateFailMode.LinecastCost;
@@ -361,11 +366,15 @@ namespace Pathfinding {
 						mxFailMode = PredicateFailMode.Turn;
 					} else {
 						trace.Clear();
-						if (gg.Linecast(nodeLast, normalizedLast, nodes[idx], normalizedPoints[idx], out hit, trace, filter)) {
+						if (idx == last+1) {
+							// Linecast and cost check should in theory always succeed if we are just checking the next node in the path
+							// However, in practice, it may pick the "wrong" node in edge cases when going through diagonal connections (could be more costly).
+							// So for performance, and robustness, we just assume that the linecast will succeed.
+						} else if (gg.Linecast(nodeLast, normalizedLast, nodes[idx], normalizedPoints[idx], out hit, ref traversalConstraint, trace)) {
 							mxFailMode = PredicateFailMode.LinecastObstacle;
 							pred = true;
-						} else if (traversalCost != null) {
-							var cost = LinecastCost(trace, points[last], points[idx], gg, traversalCost);
+						} else {
+							var cost = LinecastCost(trace, points[last], points[idx], gg, ref traversalCosts);
 							if (cost > costs[idx] - costs[last] + COST_FUDGE) {
 								// The "shortcut" had such a high penalty that it's not worth taking it
 								mxFailMode = PredicateFailMode.LinecastCost;
@@ -395,10 +404,14 @@ namespace Pathfinding {
 					if (turnPredicate) {
 					} else {
 						trace.Clear();
-						if (gg.Linecast(nodeLast, normalizedLast, nodes[i+mn], normalizedPoints[i+mn], out hit, trace, filter)) {
+						if (i+mn == last+1) {
+							// Linecast and cost check should in theory always succeed if we are just checking the next node in the path
+							// However, in practice, it may pick the "wrong" node in edge cases when going through diagonal connections (could be more costly).
+							// So for performance, and robustness, we just assume that the linecast will succeed.
+						} else if (gg.Linecast(nodeLast, normalizedLast, nodes[i+mn], normalizedPoints[i+mn], out hit, ref traversalConstraint, trace)) {
 							pred = true;
-						} else if (traversalCost != null) {
-							var cost = LinecastCost(trace, points[last], points[i+mn], gg, traversalCost);
+						} else {
+							var cost = LinecastCost(trace, points[last], points[i+mn], gg, ref traversalCosts);
 							if (cost > costs[i+mn] - costs[last] + COST_FUDGE) {
 								// The "shortcut" had such a high penalty that it's not worth taking it
 								mxLinecastCost = cost;
@@ -437,7 +450,7 @@ namespace Pathfinding {
 					// Re-run a previously successfully linecast to get all nodes it traversed.
 					trace.Clear();
 					int chosenCorner;
-					if (gg.Linecast(nodes[lastSuccessfulStart], normalizedPoints[lastSuccessfulStart], nodes[lastSuccessfulEnd], normalizedPoints[lastSuccessfulEnd], out hit, trace, filter)) {
+					if (gg.Linecast(nodes[lastSuccessfulStart], normalizedPoints[lastSuccessfulStart], nodes[lastSuccessfulEnd], normalizedPoints[lastSuccessfulEnd], out hit, ref traversalConstraint, trace)) {
 						// Weird! This linecast should have succeeded.
 						// Maybe the path crosses some unwalkable nodes it shouldn't cross (the graph could have changed).
 						// Or possibly the linecast implementation doesn't handle some edge case (there are so many!)
@@ -468,12 +481,11 @@ namespace Pathfinding {
 							var node = trace[j] as GridNodeBase;
 							var nodeGridPos = new int2(node.XCoordinateInGrid, node.ZCoordinateInGrid);
 							var nodeCenter = nodeGridPos * FixedPrecisionScale;
-							if (traversalCost != null) {
-								// Not perfectly accurate as it doesn't measure the cost to the exact corner
-								candidateCostSoFar += (uint)(((float)traversalCost(node) + gg.nodeSize*Int3.Precision) * IntersectionLength(nodeCenter, lastSuccessfulStartPoint, lastSuccessfulEndPoint));
-							}
+							// Not perfectly accurate as it doesn't measure the cost to the exact corner
+							if (j > 0) candidateCostSoFar += traversalCosts.GetConnectionCost(trace[j-1], trace[j]);
+							candidateCostSoFar += (uint)((float)traversalCosts.GetTraversalCostMultiplier(node) * gg.nodeSize * Int3.Precision * IntersectionLength(nodeCenter, lastSuccessfulStartPoint, lastSuccessfulEndPoint));
 							for (int d = 0; d < 4; d++) {
-								if (!node.HasConnectionInDirection(d) || (filter != null && !filter(node.GetNeighbourAlongDirection(d)))) {
+								if (!node.HasConnectionInDirection(d) || !traversalConstraint.CanTraverse(node, node.GetNeighbourAlongDirection(d))) {
 									for (int q = 0; q < 2; q++) {
 										var ncorner = directionToCorners[(d+q)&0x3];
 										var corner = nodeCenter + ncorner;

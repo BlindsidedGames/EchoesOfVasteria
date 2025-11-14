@@ -100,6 +100,7 @@ namespace TimelessEchoes.UI
 			{
 				if (drinking.tasteButton != null) drinking.tasteButton.onClick.AddListener(() => cauldron?.StartTasting());
 				if (drinking.stopButton != null) drinking.stopButton.onClick.AddListener(() => cauldron?.StopTasting());
+				if (drinking.mixAll != null) drinking.mixAll.onClick.AddListener(OnMixAllClicked);
 			}
 			// Weights tooltip wiring (mirror Forge behavior)
 			if (weightsHoverObject != null)
@@ -185,37 +186,8 @@ namespace TimelessEchoes.UI
 		private void RefreshMixSlots()
 		{
 			if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
-			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
-			var eligibleFromTasks = new HashSet<Resource>();
-			foreach (var t in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
-			{
-				if (t == null) continue;
-				var skillName = t.associatedSkill != null ? t.associatedSkill.name : null;
-				if (string.IsNullOrEmpty(skillName)) continue;
-				var isFarming = skillName.IndexOf("farm", System.StringComparison.OrdinalIgnoreCase) >= 0;
-				var isFishing = skillName.IndexOf("fish", System.StringComparison.OrdinalIgnoreCase) >= 0;
-				if (!isFarming && !isFishing) continue;
-				foreach (var drop in t.resourceDrops)
-				{
-					if (drop == null || drop.resource == null) continue;
-					eligibleFromTasks.Add(drop.resource);
-				}
-			}
-
-			// Include manual overrides: any Resource categorized as Farming or Fishing
-			var eligible = new HashSet<Resource>(eligibleFromTasks);
-			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
-			{
-				if (r == null) continue;
-				if (r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing)
-					eligible.Add(r);
-			}
-
-			var eligibleFoods = Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && eligible.Contains(r) && (rm != null && rm.IsUnlocked(r)))
-				.OrderBy(r => r.resourceID)
-				.ThenBy(r => r.name)
-				.ToList();
+			var eligibleFoods = BuildEligibleFoodsList();
+			UpdateMixAllButtonState(eligibleFoods);
 
 			// Clear any previous selections that are not foods or have zero amount
 			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
@@ -272,6 +244,57 @@ namespace TimelessEchoes.UI
 			}
 			RefreshMixButton();
 			RefreshSelectedDisplaySlots();
+		}
+
+		private List<Resource> BuildEligibleFoodsList()
+		{
+			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
+			var eligibleFromTasks = new HashSet<Resource>();
+			foreach (var t in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
+			{
+				if (t == null) continue;
+				var skillName = t.associatedSkill != null ? t.associatedSkill.name : null;
+				if (string.IsNullOrEmpty(skillName)) continue;
+				var isFarming = skillName.IndexOf("farm", System.StringComparison.OrdinalIgnoreCase) >= 0;
+				var isFishing = skillName.IndexOf("fish", System.StringComparison.OrdinalIgnoreCase) >= 0;
+				if (!isFarming && !isFishing) continue;
+				foreach (var drop in t.resourceDrops)
+				{
+					if (drop == null || drop.resource == null) continue;
+					eligibleFromTasks.Add(drop.resource);
+				}
+			}
+
+			// Include manual overrides: any Resource categorized as Farming or Fishing
+			var eligible = new HashSet<Resource>(eligibleFromTasks);
+			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+			{
+				if (r == null) continue;
+				if (r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing)
+					eligible.Add(r);
+			}
+
+			return Blindsided.Utilities.AssetCache.GetAll<Resource>("")
+				.Where(r => r != null && eligible.Contains(r) && (rm != null && rm.IsUnlocked(r)))
+				.OrderBy(r => r.resourceID)
+				.ThenBy(r => r.name)
+				.ToList();
+		}
+
+		private void UpdateMixAllButtonState(List<Resource> eligibleFoods)
+		{
+			if (drinking == null || drinking.mixAll == null || rm == null) return;
+			var stocked = 0;
+			foreach (var res in eligibleFoods)
+			{
+				if (res == null) continue;
+				if (rm.GetAmount(res) > 0)
+				{
+					stocked++;
+					if (stocked >= 2) break;
+				}
+			}
+			drinking.mixAll.interactable = stocked >= 2;
 		}
 
 		private void ToggleSelection(Resource r, CauldronMixItemUIReferences ui)
@@ -331,6 +354,38 @@ namespace TimelessEchoes.UI
 			if (cauldron == null || selectedA == null || selectedB == null) return;
 			cauldron.MixMax(selectedA, selectedB);
 			selectedA = selectedB = null;
+			nextGreen = true;
+			RefreshMixSlots();
+			RefreshDrinkingTexts();
+			RefreshSelectedDisplaySlots();
+		}
+
+		private void OnMixAllClicked()
+		{
+			if (cauldron == null || rm == null) return;
+			var eligibleFoods = BuildEligibleFoodsList();
+			if (eligibleFoods.Count < 2) return;
+
+			var stocked = new List<Resource>();
+			foreach (var res in eligibleFoods)
+			{
+				if (res != null && rm.GetAmount(res) > 0)
+					stocked.Add(res);
+			}
+
+			if (stocked.Count < 2) return;
+
+			for (int i = 0; i + 1 < stocked.Count; i += 2)
+			{
+				var first = stocked[i];
+				var second = stocked[i + 1];
+				if (first == null || second == null) continue;
+				if (rm.GetAmount(first) <= 0 || rm.GetAmount(second) <= 0) continue;
+				cauldron.MixMax(first, second);
+			}
+
+			selectedA = null;
+			selectedB = null;
 			nextGreen = true;
 			RefreshMixSlots();
 			RefreshDrinkingTexts();

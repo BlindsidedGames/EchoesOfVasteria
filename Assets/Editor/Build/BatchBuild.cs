@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Blindsided;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Build;
@@ -14,77 +15,68 @@ namespace BuildTools
     public static class BatchBuild
     {
         // Defaults requested by the user when building from the editor.
-        private const string DefaultLinuxDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Linux";
-        private const string DefaultWindowsDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Windows";
-        private const string DefaultMacDir = @"C:\Users\mattr\Documents\Unity\Builds\Echoes of Vasteria\Mac";
+        private const string BuildRoot = @"C:\Users\mattr\Documents\Unity\Builds";
+        private const string FullBuildFolderName = "Echoes of Vasteria";
+        private const string DemoBuildFolderName = "Echoes of Vasteria Demo";
+        private const string BetaBuildFolderName = "Echoes of Vasteria Beta";
 
         [MenuItem("Build/Build All (Linux+Windows IL2CPP then Mac Mono)")]
         public static void BuildAllFromMenu()
         {
-            var productName = PlayerSettings.productName;
-            var scenes = GetEnabledScenes();
-
-            // Linux (IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
-            {
-                var linuxAppPath = Path.Combine(DefaultLinuxDir, productName + ".x86_64");
-                EnsureDirectoryForLocation(linuxAppPath);
-                var linuxReport = BuildStandalone(
-                    BuildTarget.StandaloneLinux64,
-                    ScriptingImplementation.IL2CPP,
-                    linuxAppPath,
-                    scenes
-                );
-                LogReport("Linux (IL2CPP)", linuxReport);
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Linux build: target StandaloneLinux64 is not supported (module not installed?).");
-            }
-
-            // Windows (IL2CPP)
-            if (IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
-            {
-                var windowsAppPath = Path.Combine(DefaultWindowsDir, productName + ".exe");
-                EnsureDirectoryForLocation(windowsAppPath);
-                var windowsReport = BuildStandalone(
-                    BuildTarget.StandaloneWindows64,
-                    ScriptingImplementation.IL2CPP,
-                    windowsAppPath,
-                    scenes
-                );
-                LogReport("Windows (IL2CPP)", windowsReport);
-            }
-            else
-            {
-                Debug.LogWarning("Skipping Windows build: target StandaloneWindows64 is not supported.");
-            }
-
-            // macOS (Mono)
-            TryBuildMacMono(productName, scenes);
+            BuildAllInternal(betaFlag: false);
         }
 
-        private static bool TryBuildMacMono(string productName, string[] scenes)
+        [MenuItem("Build/Build All Beta (Linux+Windows IL2CPP then Mac Mono)")]
+        public static void BuildAllBetaFromMenu()
         {
-            // Build macOS app with Mono if the target is supported in this Editor installation.
-            if (!IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneOSX))
+            BuildAllInternal(betaFlag: true);
+        }
+
+        private static void BuildAllInternal(bool betaFlag)
+        {
+            var productName = PlayerSettings.productName;
+            var scenes = GetEnabledScenes();
+            var config = BuildModeConfig.LoadOrCreateAsset();
+            var originalDemo = config.Demo;
+            var originalBeta = config.Beta;
+
+            try
             {
-                Debug.LogWarning("Skipping macOS build: Build target StandaloneOSX is not supported in this Editor installation.");
-                return true; // Not a failure; just skipped.
+                BuildPlatformVariants("Linux", BuildTarget.StandaloneLinux64, ScriptingImplementation.IL2CPP, config, betaFlag, productName, scenes);
+                BuildPlatformVariants("Windows", BuildTarget.StandaloneWindows64, ScriptingImplementation.IL2CPP, config, betaFlag, productName, scenes);
+                BuildPlatformVariants("macOS", BuildTarget.StandaloneOSX, ScriptingImplementation.Mono2x, config, betaFlag, productName, scenes);
+            }
+            finally
+            {
+                ApplyBuildModeFlags(config, originalDemo, originalBeta);
+            }
+        }
+
+        private static void BuildPlatformVariants(string platformLabel, BuildTarget target, ScriptingImplementation backend, BuildModeConfig config, bool betaFlag, string productName, string[] scenes)
+        {
+            if (!IsTargetSupported(BuildTargetGroup.Standalone, target))
+            {
+                Debug.LogWarning($"Skipping {platformLabel} build: target {target} is not supported (module not installed?).");
+                return;
             }
 
-            var macAppPath = Path.Combine(DefaultMacDir, productName + ".app");
-            EnsureDirectoryForLocation(macAppPath);
+            var backendLabel = GetBackendLabel(backend);
+            var variantPrefix = betaFlag ? "Beta " : string.Empty;
+            BuildVariant(config, false, betaFlag, $"{platformLabel} {variantPrefix}Full ({backendLabel})", target, backend, productName, scenes);
+            if (!betaFlag)
+            {
+                BuildVariant(config, true, betaFlag, $"{platformLabel} Demo ({backendLabel})", target, backend, productName, scenes);
+            }
+        }
 
-            var macReport = BuildStandalone(
-                BuildTarget.StandaloneOSX,
-                ScriptingImplementation.Mono2x,
-                macAppPath,
-                scenes
-            );
+        private static void BuildVariant(BuildModeConfig config, bool isDemo, bool betaFlag, string label, BuildTarget target, ScriptingImplementation backend, string productName, string[] scenes)
+        {
+            ApplyBuildModeFlags(config, isDemo, betaFlag);
 
-            LogReport("macOS (Mono)", macReport);
-            return macReport.summary.result == BuildResult.Succeeded;
+            var locationPath = GetBuildLocation(isDemo, betaFlag, target, productName);
+            EnsureDirectoryForLocation(locationPath);
+            var report = BuildStandalone(target, backend, locationPath, scenes);
+            LogReport(label, report);
         }
 
         private static BuildReport BuildStandalone(
@@ -161,6 +153,74 @@ namespace BuildTools
         private static bool IsTargetSupported(BuildTargetGroup group, BuildTarget target)
         {
             return BuildPipeline.IsBuildTargetSupported(group, target);
+        }
+
+        private static string GetBuildLocation(bool isDemo, bool isBeta, BuildTarget target, string productName)
+        {
+            var baseDir = GetBaseBuildDirectory(isDemo, isBeta);
+            var platformFolder = GetPlatformFolder(target);
+            var extension = GetExecutableExtension(target);
+            return Path.Combine(baseDir, platformFolder, productName + extension);
+        }
+
+        private static string GetBaseBuildDirectory(bool isDemo, bool isBeta)
+        {
+            string folderName;
+            if (isBeta)
+                folderName = BetaBuildFolderName;
+            else
+                folderName = isDemo ? DemoBuildFolderName : FullBuildFolderName;
+
+            return Path.Combine(BuildRoot, folderName);
+        }
+
+        private static string GetPlatformFolder(BuildTarget target)
+        {
+            switch (target)
+            {
+                case BuildTarget.StandaloneLinux64:
+                    return "Linux";
+                case BuildTarget.StandaloneWindows64:
+                    return "Windows";
+                case BuildTarget.StandaloneOSX:
+                    return "Mac";
+                default:
+                    return target.ToString();
+            }
+        }
+
+        private static string GetExecutableExtension(BuildTarget target)
+        {
+            switch (target)
+            {
+                case BuildTarget.StandaloneLinux64:
+                    return ".x86_64";
+                case BuildTarget.StandaloneWindows64:
+                    return ".exe";
+                case BuildTarget.StandaloneOSX:
+                    return ".app";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        private static void ApplyBuildModeFlags(BuildModeConfig config, bool isDemo, bool betaFlag)
+        {
+            if (config == null)
+                return;
+
+            if (config.Demo == isDemo && config.Beta == betaFlag)
+                return;
+
+            config.Demo = isDemo;
+            config.Beta = betaFlag;
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+        }
+
+        private static string GetBackendLabel(ScriptingImplementation backend)
+        {
+            return backend == ScriptingImplementation.Mono2x ? "Mono" : backend.ToString();
         }
     }
 }

@@ -117,34 +117,12 @@ namespace Pathfinding {
 		static float[] DPCosts = new float[16];
 		static int[] DPParents = new int[16];
 
-		Filter cachedFilter = new Filter();
-
-		NNConstraint cachedNNConstraint = NNConstraint.None;
-
-		class Filter {
-			public Path path;
-			public readonly System.Func<GraphNode, bool> cachedDelegate;
-
-			public Filter() {
-				cachedDelegate = this.CanTraverse;
-			}
-
-			bool CanTraverse (GraphNode node) {
-				return path.CanTraverse(node);
-			}
-		}
-
 		public override void Apply (Path p) {
 			if (!useRaycasting && !useGraphRaycasting) return;
 
 			var points = p.vectorPath;
-			cachedFilter.path = p;
 
-			// Use the same graph mask as the path.
-			// We don't want to use the tag mask or other options for this though since then the linecasting will be will confused.
-			cachedNNConstraint.graphMask = p.nnConstraint.graphMask;
-
-			if (ValidateLine(null, null, p.vectorPath[0], p.vectorPath[p.vectorPath.Count-1], cachedFilter.cachedDelegate, cachedNNConstraint)) {
+			if (ValidateLine(null, null, p.vectorPath[0], p.vectorPath[p.vectorPath.Count-1], ref p.traversalConstraint)) {
 				// A very common case is that there is a straight line to the target.
 				var s = p.vectorPath[0];
 				var e = p.vectorPath[p.vectorPath.Count-1];
@@ -161,7 +139,7 @@ namespace Pathfinding {
 						points.Reverse();
 					}
 
-					points = quality >= Quality.High ? ApplyDP(p, points, cachedFilter.cachedDelegate, cachedNNConstraint) : ApplyGreedy(p, points, cachedFilter.cachedDelegate, cachedNNConstraint);
+					points = quality >= Quality.High ? ApplyDP(p, points, ref p.traversalConstraint) : ApplyGreedy(p, points, ref p.traversalConstraint);
 				}
 				if ((iterations % 2) == 0) points.Reverse();
 			}
@@ -169,7 +147,7 @@ namespace Pathfinding {
 			p.vectorPath = points;
 		}
 
-		List<Vector3> ApplyGreedy (Path p, List<Vector3> points, System.Func<GraphNode, bool> filter, NNConstraint nnConstraint) {
+		List<Vector3> ApplyGreedy (Path p, List<Vector3> points, ref TraversalConstraint traversalConstraint) {
 			bool canBeOriginalNodes = points.Count == p.path.Count;
 			int startIndex = 0;
 
@@ -188,7 +166,7 @@ namespace Pathfinding {
 					}
 					Vector3 end = points[endIndex];
 					var endNode = canBeOriginalNodes && end == (Vector3)p.path[endIndex].position ? p.path[endIndex] : null;
-					if (!ValidateLine(startNode, endNode, start, end, filter, nnConstraint)) break;
+					if (!ValidateLine(startNode, endNode, start, end, ref traversalConstraint)) break;
 					mn = mx;
 					mx *= 2;
 				}
@@ -199,7 +177,7 @@ namespace Pathfinding {
 					Vector3 end = points[endIndex];
 					var endNode = canBeOriginalNodes && end == (Vector3)p.path[endIndex].position ? p.path[endIndex] : null;
 
-					if (ValidateLine(startNode, endNode, start, end, filter, nnConstraint)) {
+					if (ValidateLine(startNode, endNode, start, end, ref traversalConstraint)) {
 						mn = mid;
 					} else {
 						mx = mid;
@@ -213,7 +191,7 @@ namespace Pathfinding {
 			return points;
 		}
 
-		List<Vector3> ApplyDP (Path p, List<Vector3> points, System.Func<GraphNode, bool> filter, NNConstraint nnConstraint) {
+		List<Vector3> ApplyDP (Path p, List<Vector3> points, ref TraversalConstraint traversalConstraint) {
 			if (DPCosts.Length < points.Count) {
 				DPCosts = new float[points.Count];
 				DPParents = new int[points.Count];
@@ -232,7 +210,7 @@ namespace Pathfinding {
 					float d2 = d + (points[j] - start).magnitude + 0.0001f;
 					if (DPParents[j] == -1 || d2 < DPCosts[j]) {
 						var endIsOriginalNode = canBeOriginalNodes && points[j] == (Vector3)p.path[j].position;
-						if (j == i+1 || ValidateLine(startIsOriginalNode ? p.path[i] : null, endIsOriginalNode ? p.path[j] : null, start, points[j], filter, nnConstraint)) {
+						if (j == i+1 || ValidateLine(startIsOriginalNode ? p.path[i] : null, endIsOriginalNode ? p.path[j] : null, start, points[j], ref traversalConstraint)) {
 							DPCosts[j] = d2;
 							DPParents[j] = i;
 						} else {
@@ -257,7 +235,7 @@ namespace Pathfinding {
 		/// Check if a straight path between v1 and v2 is valid.
 		/// If both n1 and n2 are supplied it is assumed that the line goes from the center of n1 to the center of n2 and a more optimized graph linecast may be done.
 		/// </summary>
-		protected bool ValidateLine (GraphNode n1, GraphNode n2, Vector3 v1, Vector3 v2, System.Func<GraphNode, bool> filter, NNConstraint nnConstraint) {
+		protected bool ValidateLine (GraphNode n1, GraphNode n2, Vector3 v1, Vector3 v2, ref TraversalConstraint traversalConstraint) {
 			if (useRaycasting) {
 				// Use raycasting to check if a straight path between v1 and v2 is valid
 				if (use2DPhysics) {
@@ -298,8 +276,12 @@ namespace Pathfinding {
 #if !ASTAR_NO_GRID_GRAPH
 				bool betweenNodeCenters = n1 != null && n2 != null;
 #endif
-				if (n1 == null) n1 = AstarPath.active.GetNearest(v1, nnConstraint).node;
-				if (n2 == null) n2 = AstarPath.active.GetNearest(v2, nnConstraint).node;
+				// Use the same graph mask as the path.
+				// We don't want to use the tag mask or other options for this though since then the linecasting will be will confused.
+				var graphNNConstraint = NearestNodeConstraint.None;
+				graphNNConstraint.graphMask = traversalConstraint.graphMask;
+				if (n1 == null) n1 = AstarPath.active.GetNearest(v1, ref graphNNConstraint).node;
+				if (n2 == null) n2 = AstarPath.active.GetNearest(v2, ref graphNNConstraint).node;
 
 				if (n1 != null && n2 != null) {
 					// Use graph raycasting to check if a straight path between v1 and v2 is valid
@@ -318,11 +300,11 @@ namespace Pathfinding {
 						// This method is also more stable when raycasting along a diagonal when the line just touches an obstacle.
 						// The normal linecast method may or may not detect that as a hit depending on floating point errors
 						// however this method never detect it as an obstacle (and that is very good for this component as it improves the simplification).
-						return !gg.Linecast(n1 as GridNodeBase, n2 as GridNodeBase, filter);
+						return !gg.Linecast(n1 as GridNodeBase, n2 as GridNodeBase, ref traversalConstraint);
 					} else
 #endif
 					if (rayGraph != null) {
-						return !rayGraph.Linecast(v1, v2, out GraphHitInfo _, null, filter);
+						return !rayGraph.Linecast(v1, v2, out GraphHitInfo _, ref traversalConstraint, null);
 					}
 				}
 			}

@@ -96,6 +96,7 @@ namespace Pathfinding.ECS {
 		internal unsafe LocalTransform* transformPtr;
 		internal unsafe AgentMovementPlane* movementPlanePtr;
 		internal EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled;
+		internal EnabledRefRW<AgentOffMeshLinkLocalAvoidanceDisabled> localAvoidanceDisabled;
 
 		/// <summary>The entity that is traversing the off-mesh link</summary>
 		public Entity entity;
@@ -112,7 +113,6 @@ namespace Pathfinding.ECS {
 		[Unity.Properties.DontCreateProperty]
 		internal OffMeshLinks.OffMeshLinkConcrete concreteLink;
 
-		protected bool disabledRVO;
 		protected float backupRotationSmoothing = float.NaN;
 
 		/// <summary>
@@ -243,13 +243,14 @@ namespace Pathfinding.ECS {
 		/// This is used by the job system to set the data of the context.
 		/// You should almost never need to use this.
 		/// </summary>
-		public virtual unsafe void SetInternalData (Entity entity, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled, ManagedState state, float deltaTime) {
+		public virtual unsafe void SetInternalData (Entity entity, ref LocalTransform transform, ref AgentMovementPlane movementPlane, ref MovementControl movementControl, ref MovementSettings movementSettings, ref AgentOffMeshLinkTraversal linkInfo, EnabledRefRW<AgentOffMeshLinkMovementDisabled> movementDisabled, EnabledRefRW<AgentOffMeshLinkLocalAvoidanceDisabled> localAvoidanceDisabled, ManagedState state, float deltaTime) {
 			this.linkInfoPtr = (AgentOffMeshLinkTraversal*)UnsafeUtility.AddressOf(ref linkInfo);
 			this.movementControlPtr = (MovementControl*)UnsafeUtility.AddressOf(ref movementControl);
 			this.movementSettingsPtr = (MovementSettings*)UnsafeUtility.AddressOf(ref movementSettings);
 			this.transformPtr = (LocalTransform*)UnsafeUtility.AddressOf(ref transform);
 			this.movementPlanePtr = (AgentMovementPlane*)UnsafeUtility.AddressOf(ref movementPlane);
 			this.movementDisabled = movementDisabled;
+			this.localAvoidanceDisabled = localAvoidanceDisabled;
 			this.managedState = state;
 			this.deltaTime = deltaTime;
 			this.entity = entity;
@@ -262,10 +263,7 @@ namespace Pathfinding.ECS {
 		/// but calling this method will make other agents ignore them completely while traversing the link.
 		/// </summary>
 		public void DisableLocalAvoidance () {
-			if (managedState.enableLocalAvoidance) {
-				disabledRVO = true;
-				managedState.enableLocalAvoidance = false;
-			}
+			if (localAvoidanceDisabled.IsValid) localAvoidanceDisabled.ValueRW = true;
 		}
 
 		/// <summary>
@@ -294,10 +292,6 @@ namespace Pathfinding.ECS {
 		/// This method is automatically called when the agent finishes traversing the link.
 		/// </summary>
 		public virtual void Restore () {
-			if (disabledRVO) {
-				managedState.enableLocalAvoidance = true;
-				disabledRVO = false;
-			}
 			if (!float.IsNaN(backupRotationSmoothing)) {
 				movementSettings.rotationSmoothing = backupRotationSmoothing;
 				backupRotationSmoothing = float.NaN;
@@ -330,7 +324,7 @@ namespace Pathfinding.ECS {
 		public virtual void Abort (bool teleportToStart = true) {
 			if (teleportToStart) Teleport(link.relativeStart);
 			// Cancel the current path, as otherwise the agent will instantly try to traverse the off-mesh link again.
-			managedState.pathTracer.RemoveAllButFirstNode(movementPlane, managedState.pathfindingSettings.traversalProvider);
+			managedState.pathTracer.RemoveAllButFirstNode();
 			throw new AbortOffMeshLinkTraversal();
 		}
 
@@ -394,6 +388,7 @@ namespace Pathfinding.ECS {
 			clone.gameObjectCache = null;
 			clone.managedState = null;
 			clone.movementDisabled = default;
+			clone.localAvoidanceDisabled = default;
 			unsafe {
 				clone.linkInfoPtr = null;
 				clone.movementControlPtr = null;

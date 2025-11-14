@@ -78,7 +78,7 @@ namespace Pathfinding {
 			return false;
 		}
 
-		public override void GetConnections<T>(GetConnectionsWithData<T> action, ref T data, int connectionFilter) {
+		public override void GetConnections<T>(NodeActionWithData<T> action, ref T data, int connectionFilter) {
 			if (connections == null) return;
 			for (int i = 0; i < connections.Length; i++) if ((connections[i].shapeEdgeInfo & connectionFilter) != 0) action(connections[i].node, ref data);
 		}
@@ -151,45 +151,49 @@ namespace Pathfinding {
 			}
 		}
 
-		public override void Open (Path path, uint pathNodeIndex, uint gScore) {
-			path.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, pathNodeIndex, gScore);
+		public override void Open (ref Path.SearchContext ctx, uint pathNodeIndex, uint gScore) {
+			var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
+			ctx.OpenCandidateConnectionsToEndNode(position, pathNodeIndex, pathNodeIndex, gScore, ourTraversalCostFactor);
 
 			if (connections == null) return;
 
 			for (int i = 0; i < connections.Length; i++) {
 				GraphNode other = connections[i].node;
 
-				if (connections[i].isOutgoing && path.CanTraverse(this, other)) {
+				if (connections[i].isOutgoing && ctx.traversalConstraint.CanTraverse(this, other)) {
+					var connectionCost = ctx.traversalCosts.GetConnectionCost(this, other);
 					if (other is PointNode) {
-						path.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore, connections[i].cost, 0, other.position);
+						// Half the traversal is done on this node and half on the other node.
+						connectionCost += (uint)System.Math.Round(connections[i].cost * 0.5f * (ourTraversalCostFactor + ctx.traversalCosts.GetTraversalCostMultiplier(other)));
+						ctx.OpenCandidateConnection(pathNodeIndex, other.NodeIndex, gScore + connectionCost, 0, other.position);
 					} else {
 						// When connecting to a non-point node, use a special function to open the connection.
-						// The typical case for this is that we are at the end of an off-mesh link and we are connecting to a navmesh node.
+						// The typical case for this is that we are at the end of something similar to an off-mesh link and we are connecting to a navmesh node.
 						// In that case, this node's position is in the interior of the navmesh node. We let the navmesh node decide how
 						// that should be handled.
-						other.OpenAtPoint(path, pathNodeIndex, position, gScore);
+						// The built-in off mesh links are handled using the LinkNode class, and it behaves in a similar way.
+						other.OpenAtPoint(ref ctx, pathNodeIndex, position, gScore + connectionCost);
 					}
 				}
 			}
 		}
 
-		public override void OpenAtPoint (Path path, uint pathNodeIndex, Int3 pos, uint gScore) {
-			if (path.CanTraverse(this)) {
-				// TODO: Ideally we should only allow connections to the temporary end node directly from the temporary start node
-				// iff they lie on the same connection edge. Otherwise we need to pass through the center of this node.
-				//
-				//   N1---E----N2
-				//   |   /
-				//   | /
-				//   S
-				//   |
-				//   N3
-				//
-				path.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, pathNodeIndex, gScore);
+		public override void OpenAtPoint (ref Path.SearchContext ctx, uint pathNodeIndex, Int3 pos, uint gScore) {
+			// TODO: Ideally we should only allow connections to the temporary end node directly from the temporary start node
+			// iff they lie on the same connection edge. Otherwise we need to pass through the center of this node.
+			//
+			//   N1---E----N2
+			//   |   /
+			//   | /
+			//   S
+			//   |
+			//   N3
+			//
+			var ourTraversalCostFactor = ctx.traversalCosts.GetTraversalCostMultiplier(this);
+			ctx.OpenCandidateConnectionsToEndNode(pos, pathNodeIndex, pathNodeIndex, gScore, ourTraversalCostFactor);
 
-				var cost = (uint)(pos - this.position).costMagnitude;
-				path.OpenCandidateConnection(pathNodeIndex, NodeIndex, gScore, cost, 0, position);
-			}
+			var connectionCost = (uint)System.Math.Round((pos - this.position).magnitude * ourTraversalCostFactor);
+			ctx.OpenCandidateConnection(pathNodeIndex, NodeIndex, gScore + connectionCost, 0, position);
 		}
 
 		public override int GetGizmoHashCode () {

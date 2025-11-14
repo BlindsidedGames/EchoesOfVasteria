@@ -233,9 +233,6 @@ namespace Pathfinding.Collections {
 				var wraparoundItems = length - inOrderItems;
 				if (wraparoundItems > 0) System.Array.Copy(data, 0, newData, (head + inOrderItems) & (newData.Length - 1), wraparoundItems);
 
-				// If T is a class, we need to clear the old array to avoid leaking references that prevent the GC from working
-				System.Array.Fill(data, default(T));
-
 				ArrayPool<T>.Release(ref data);
 			}
 			data = newData;
@@ -243,7 +240,6 @@ namespace Pathfinding.Collections {
 
 		/// <summary>Release the backing array of this buffer back into an array pool</summary>
 		public void Pool () {
-			System.Array.Fill(data, default(T));
 			ArrayPool<T>.Release(ref data);
 			length = 0;
 			head = 0;

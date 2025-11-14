@@ -1,8 +1,8 @@
-using Pathfinding;
-
 namespace Pathfinding {
 	/// <summary>
 	/// Represents a single pathfinding tag.
+	///
+	/// Values of this type will be automatically displayed in the unity inspector as a dropdown list of all the pathfinding tags.
 	///
 	/// Note: The tag refers to a pathfinding tag, not a unity tag that is applied to GameObjects, or any other kind of tag.
 	///
@@ -38,6 +38,15 @@ namespace Pathfinding {
 			if (tag == -1) throw new System.ArgumentException("There's no pathfinding tag with the name '" + tagName + "'");
 
 			return new PathfindingTag((uint)tag);
+		}
+
+		/// <summary>
+		/// Converts the tag value to a bitmask of tags.
+		///
+		/// This can, for example, be used to set <see cref="TraversalConstraint.tags"/>.
+		/// </summary>
+		public int ToMask () {
+			return 1 << (int)value;
 		}
 
 		public override string ToString () {

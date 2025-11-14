@@ -75,8 +75,16 @@ namespace Pathfinding {
 		/// </summary>
 		public AutoRepathPolicy autoRepath = new AutoRepathPolicy();
 
-		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
-		public bool canMove = true;
+		/// <summary>\copydocref{IAstarAI.simulateMovement}</summary>
+		[UnityEngine.Serialization.FormerlySerializedAs("canMove")]
+		public bool simulateMovement = true;
+
+		/// <summary>\copydocref{IAstarAI.canMove}</summary>
+		[System.Obsolete("Renamed to simulateMovement")]
+		public bool canMove {
+			get => simulateMovement;
+			set => simulateMovement = value;
+		}
 
 		/// <summary>Speed in world units</summary>
 		public float speed = 3;
@@ -160,7 +168,7 @@ namespace Pathfinding {
 		/// If false then all movement calculations will happen as usual, but the object that this component is attached to will not move
 		/// instead only the <see cref="position"/> property will change.
 		///
-		/// See: <see cref="canMove"/> which in contrast to this field will disable all movement calculations.
+		/// See: <see cref="simulateMovement"/> which in contrast to this field will disable all movement calculations.
 		/// See: <see cref="updateRotation"/>
 		/// </summary>
 		public bool updatePosition { get; set; } = true;
@@ -225,8 +233,8 @@ namespace Pathfinding {
 		/// <summary>\copydoc Pathfinding::IAstarAI::canSearch</summary>
 		bool IAstarAI.canSearch { get { return canSearch; } set { canSearch = value; } }
 
-		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
-		bool IAstarAI.canMove { get { return canMove; } set { canMove = value; } }
+		/// <summary>\copydoc Pathfinding::IAstarAI::simulateMovement</summary>
+		bool IAstarAI.simulateMovement { get { return simulateMovement; } set { simulateMovement = value; } }
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::velocity</summary>
 		public Vector3 velocity {
@@ -627,7 +635,7 @@ namespace Pathfinding {
 
 		protected virtual void Update () {
 			if (shouldRecalculatePath) SearchPath();
-			if (canMove) {
+			if (simulateMovement) {
 				Vector3 nextPosition;
 				Quaternion nextRotation;
 				MovementUpdate(Time.deltaTime, out nextPosition, out nextRotation);

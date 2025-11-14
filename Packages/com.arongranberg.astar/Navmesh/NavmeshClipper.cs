@@ -104,7 +104,7 @@ namespace Pathfinding {
 		}
 
 		public abstract void NotifyUpdated(GridLookup<NavmeshClipper>.Root previousState);
-		public abstract Rect GetBounds(GraphTransform transform, float radiusMargin);
+		public abstract Bounds GetBounds(GraphTransform transform, float radiusMargin);
 		public abstract bool RequiresUpdate(GridLookup<NavmeshClipper>.Root previousState);
 		public abstract void ForceUpdate();
 	}

@@ -6,11 +6,8 @@ using Unity.Burst;
 using Unity.Jobs;
 using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Jobs;
-using GCHandle = System.Runtime.InteropServices.GCHandle;
 
 namespace Pathfinding.ECS {
-	using Pathfinding;
 	using Pathfinding.ECS.RVO;
 	using Pathfinding.Drawing;
 	using Pathfinding.Util;
@@ -24,19 +21,10 @@ namespace Pathfinding.ECS {
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	[RequireMatchingQueriesForUpdate]
 	public partial struct AIMoveSystem : ISystem {
-		EntityQuery entityQueryPrepareMovement;
 		EntityQuery entityQueryWithGravity;
-		EntityQuery entityQueryGizmos;
 		EntityQuery entityQueryMovementOverride;
-		JobRepairPath.Scheduler jobRepairPathScheduler;
-		ComponentTypeHandle<MovementState> MovementStateTypeHandleRO;
-		ComponentTypeHandle<ResolvedMovement> ResolvedMovementHandleRO;
 
 		public void OnCreate (ref SystemState state) {
-			jobRepairPathScheduler = new JobRepairPath.Scheduler(ref state);
-			MovementStateTypeHandleRO = state.GetComponentTypeHandle<MovementState>(true);
-			ResolvedMovementHandleRO = state.GetComponentTypeHandle<ResolvedMovement>(true);
-
 			entityQueryWithGravity = state.GetEntityQuery(
 				ComponentType.ReadWrite<LocalTransform>(),
 				ComponentType.ReadOnly<AgentCylinderShape>(),
@@ -57,20 +45,6 @@ namespace Pathfinding.ECS {
 				ComponentType.ReadOnly<AgentMovementPlaneSource>(),
 				ComponentType.ReadOnly<SimulateMovement>(),
 				ComponentType.ReadOnly<SimulateMovementFinalize>()
-				);
-
-			entityQueryPrepareMovement = jobRepairPathScheduler.GetEntityQuery(Allocator.Temp).WithAll<SimulateMovement, SimulateMovementRepair>().Build(ref state);
-
-			entityQueryGizmos = state.GetEntityQuery(
-				ComponentType.ReadOnly<LocalTransform>(),
-				ComponentType.ReadOnly<AgentCylinderShape>(),
-				ComponentType.ReadOnly<MovementSettings>(),
-				ComponentType.ReadOnly<AgentMovementPlane>(),
-				ComponentType.ReadOnly<ManagedState>(),
-				ComponentType.ReadOnly<MovementState>(),
-				ComponentType.ReadOnly<ResolvedMovement>(),
-
-				ComponentType.ReadOnly<SimulateMovement>()
 				);
 
 			entityQueryMovementOverride = state.GetEntityQuery(
@@ -95,13 +69,7 @@ namespace Pathfinding.ECS {
 
 		static readonly ProfilerMarker MarkerMovementOverride = new ProfilerMarker("MovementOverrideBeforeMovement");
 
-		public void OnDestroy (ref SystemState state) {
-			jobRepairPathScheduler.Dispose();
-		}
-
 		public void OnUpdate (ref SystemState systemState) {
-			var draw = DrawingManager.GetBuilder();
-
 			// This system is executed at least every frame to make sure the agent is moving smoothly even at high fps.
 			// The control loop and local avoidance may be running less often.
 			// So this is designated a "cheap" system, and we use the corresponding delta time for that.
@@ -113,35 +81,20 @@ namespace Pathfinding.ECS {
 
 			RunMovementOverrideBeforeMovement(ref systemState, dt);
 
-			// Move all agents which do not have a GravityState component
+			// Move all agents
 			systemState.Dependency = new JobMoveAgent {
 				dt = dt,
 			}.ScheduleParallel(systemState.Dependency);
 
-			ScheduleApplyGravity(ref systemState, draw, dt);
-			var gizmosDependency = systemState.Dependency;
-
-			UpdateTypeHandles(ref systemState);
-
-			systemState.Dependency = ScheduleRepairPaths(ref systemState, systemState.Dependency);
-
-			// Draw gizmos only in the editor, and at most once per frame.
-			// The movement calculations may run multiple times per frame when using high time-scales,
-			// but rendering gizmos more than once would just lead to clutter.
-			if (Application.isEditor && AIMovementSystemGroup.TimeScaledRateManager.IsLastSubstep) {
-				gizmosDependency = ScheduleDrawGizmos(draw, systemState.Dependency);
-			}
-
-			// Render gizmos as soon as all relevant jobs are done
-			draw.DisposeAfter(gizmosDependency);
-			systemState.Dependency = ScheduleSyncEntitiesToTransforms(ref systemState, systemState.Dependency);
-			systemState.Dependency = JobHandle.CombineDependencies(systemState.Dependency, gizmosDependency);
-			systemState.Dependency = new JobClearTemporaryData().Schedule(systemState.Dependency);
+			ScheduleApplyGravity(ref systemState, dt);
 		}
 
-		void ScheduleApplyGravity (ref SystemState systemState, CommandBuilder draw, float dt) {
+		void ScheduleApplyGravity (ref SystemState systemState, float dt) {
 			Profiler.BeginSample("Gravity");
-			// Note: We cannot use CalculateEntityCountWithoutFiltering here, because the GravityState component can be disabled
+			// Allocate one raycast command and one hit for each entity that needs gravity.
+			// Note: We don't want to use CalculateEntityCountWithoutFiltering here, because the GravityState component can be disabled.
+			// We could get only an upper bound, but fortunately using CalculateEntityCount here is fine, because the dependencies it injects
+			// are usually long done by this point, so it doesn't add much overhead.
 			var count = entityQueryWithGravity.CalculateEntityCount();
 			var raycastCommands = CollectionHelper.CreateNativeArray<RaycastCommand>(count, systemState.WorldUpdateAllocator, NativeArrayOptions.UninitializedMemory);
 			var raycastHits = CollectionHelper.CreateNativeArray<RaycastHit>(count, systemState.WorldUpdateAllocator, NativeArrayOptions.UninitializedMemory);
@@ -150,7 +103,6 @@ namespace Pathfinding.ECS {
 			systemState.Dependency = new JobPrepareAgentRaycasts {
 				raycastQueryParameters = new QueryParameters(-1, false, QueryTriggerInteraction.Ignore, false),
 				raycastCommands = raycastCommands,
-				draw = draw,
 				dt = dt,
 				gravity = Physics.gravity.y,
 			}.ScheduleParallel(entityQueryWithGravity, systemState.Dependency);
@@ -161,7 +113,6 @@ namespace Pathfinding.ECS {
 			systemState.Dependency = new JobApplyGravity {
 				raycastHits = raycastHits,
 				raycastCommands = raycastCommands,
-				draw = draw,
 				dt = dt,
 			}.ScheduleParallel(entityQueryWithGravity, JobHandle.CombineDependencies(systemState.Dependency, raycastJob));
 
@@ -180,58 +131,6 @@ namespace Pathfinding.ECS {
 				}.Run(entityQueryMovementOverride);
 				MarkerMovementOverride.End();
 			}
-		}
-
-		void UpdateTypeHandles (ref SystemState systemState) {
-			MovementStateTypeHandleRO.Update(ref systemState);
-			ResolvedMovementHandleRO.Update(ref systemState);
-		}
-
-		JobHandle ScheduleRepairPaths (ref SystemState systemState, JobHandle dependency) {
-			Profiler.BeginSample("RepairPaths");
-			// This job accesses graph data, but this is safe because the AIMovementSystemGroup
-			// holds a read lock on the graph data while its subsystems are running.
-			dependency = jobRepairPathScheduler.ScheduleParallel(ref systemState, entityQueryPrepareMovement, dependency);
-			Profiler.EndSample();
-			return dependency;
-		}
-
-		JobHandle ScheduleDrawGizmos (CommandBuilder commandBuilder, JobHandle dependency) {
-			// Note: The ScheduleRepairPaths job runs right before this, so those handles are still valid
-			return new JobDrawFollowerGizmos {
-					   draw = commandBuilder,
-					   entityManagerHandle = jobRepairPathScheduler.entityManagerHandle,
-					   LocalTransformTypeHandleRO = jobRepairPathScheduler.LocalTransformTypeHandleRO,
-					   AgentCylinderShapeHandleRO = jobRepairPathScheduler.AgentCylinderShapeTypeHandleRO,
-					   MovementSettingsHandleRO = jobRepairPathScheduler.MovementSettingsTypeHandleRO,
-					   AgentMovementPlaneHandleRO = jobRepairPathScheduler.AgentMovementPlaneTypeHandleRO,
-					   ManagedStateHandleRW = jobRepairPathScheduler.ManagedStateTypeHandleRW,
-					   MovementStateHandleRO = MovementStateTypeHandleRO,
-					   ResolvedMovementHandleRO = ResolvedMovementHandleRO,
-			}.ScheduleParallel(entityQueryGizmos, dependency);
-		}
-
-		JobHandle ScheduleSyncEntitiesToTransforms (ref SystemState systemState, JobHandle dependency) {
-			Profiler.BeginSample("SyncEntitiesToTransforms");
-			int numComponents = BatchedEvents.GetComponents<FollowerEntity>(BatchedEvents.Event.None, out var transforms, out var components);
-			if (numComponents == 0) {
-				Profiler.EndSample();
-				return dependency;
-			}
-
-			var entities = CollectionHelper.CreateNativeArray<Entity>(numComponents, systemState.WorldUpdateAllocator);
-			for (int i = 0; i < numComponents; i++) entities[i] = components[i].entity;
-
-			dependency = new JobSyncEntitiesToTransforms {
-				entities = entities,
-				syncPositionWithTransform = SystemAPI.GetComponentLookup<SyncPositionWithTransform>(true),
-				syncRotationWithTransform = SystemAPI.GetComponentLookup<SyncRotationWithTransform>(true),
-				orientationYAxisForward = SystemAPI.GetComponentLookup<OrientationYAxisForward>(true),
-				entityPositions = SystemAPI.GetComponentLookup<LocalTransform>(true),
-				movementState = SystemAPI.GetComponentLookup<MovementState>(true),
-			}.Schedule(transforms, dependency);
-			Profiler.EndSample();
-			return dependency;
 		}
 	}
 }

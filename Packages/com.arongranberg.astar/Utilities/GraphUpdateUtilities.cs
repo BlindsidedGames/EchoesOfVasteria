@@ -78,7 +78,7 @@ namespace Pathfinding {
 				for (int i = 0; i < nodes.Count; i++) if (!nodes[i].Walkable) return false;
 
 				// Create a snapshot to allow us to revert the graphs to their original state
-				var snapshot = AstarPath.active.Snapshot(guo.bounds, guo.nnConstraint.graphMask);
+				var snapshot = AstarPath.active.Snapshot(guo.bounds, guo.graphMask);
 
 				AstarPath.active.UpdateGraphs(guo);
 

@@ -98,7 +98,6 @@ namespace Blindsided.UGS
 
             if (general.ConsoleUsed)
                 return;
-                return;
             lastUploadedCompletionSeconds = general.LastUploadedCompletionSeconds > 0d ? general.LastUploadedCompletionSeconds : -1d;
             lastUploadedCheaterSeconds = general.LastUploadedCompletionCheaterSeconds > 0d ? general.LastUploadedCompletionCheaterSeconds : -1d;
             lastUploadedDistance = general.LastUploadedDistanceReached > 0d ? general.LastUploadedDistanceReached : -1d;

@@ -63,17 +63,17 @@ namespace Pathfinding {
 			}
 		}
 
-		public void OnDrawGizmos (DrawingData gizmos, RedrawScope redrawScope) {
+		public void OnDrawGizmos (DrawingData gizmos, bool renderInGame) {
 			if (!obstacleData.obstacleVertices.IsCreated) return;
 
 			var hasher = new NodeHasher(AstarPath.active);
 			hasher.Add(12314127); // Some random constant to avoid hash collisions with other systems
 			hasher.Add(gizmoVersion);
 
-			if (!gizmos.Draw(hasher, redrawScope)) {
+			if (!gizmos.Draw(hasher)) {
 				var readLock = rwLock.ReadSync();
 				try {
-					using (var builder = gizmos.GetBuilder(hasher, redrawScope)) {
+					using (var builder = gizmos.GetBuilder(hasher, default, renderInGame)) {
 						for (int i = 1; i < obstacleData.obstacles.Length; i++) {
 							var ob = obstacleData.obstacles[i];
 							var vertices = obstacleData.obstacleVertices.GetSpan(ob.verticesAllocation);
@@ -371,14 +371,81 @@ namespace Pathfinding {
 				edgeBuffer.Length = edgeVertexOffset;
 			}
 
+			public GraphHitInfo GetClosestEdge (int hierarchicalNode, float3 position, NativeList<int> scratchBuffer) {
+				GraphHitInfo hit = default;
+				hit.origin = position;
+				hit.point = Vector3.positiveInfinity;
+
+				if (!obstacleData.obstacleVertices.IsCreated) return hit;
+
+				// The hierarchical node is invalid. Maybe it has been removed.
+				if (hierarchicalNode < 0 || hierarchicalNode >= hierarhicalNodeData.connectionAllocations.Length || hierarhicalNodeData.connectionAllocations[hierarchicalNode] == SlabAllocator<int>.InvalidAllocation) return hit;
+
+				var queue = scratchBuffer;
+				queue.Clear();
+				queue.Add(hierarchicalNode);
+				int queueIndex = 0;
+				float closestDistSqr = float.PositiveInfinity;
+
+				while (queueIndex < queue.Length) {
+					var node = queue[queueIndex++];
+
+					if (hierarhicalNodeData.bounds[node].SqrDistance(position) > closestDistSqr) continue;
+
+					var obstacle = obstacleData.obstacles[node];
+					if (obstacle.verticesAllocation != SlabAllocator<float3>.ZeroLengthArray) {
+						var vertices = obstacleData.obstacleVertices.GetSpan(obstacle.verticesAllocation);
+						var groups = obstacleData.obstacleVertexGroups.GetSpan(obstacle.groupsAllocation);
+						int offset = 0;
+						for (int i = 0; i < groups.Length; i++) {
+							var group = groups[i];
+							var closestInGroupBounds = math.min(math.max(position, group.boundsMn), group.boundsMx);
+							var groupDistSqr = math.lengthsq(closestInGroupBounds - position);
+							if (groupDistSqr < closestDistSqr) {
+								var loop = group.type == RVO.ObstacleType.Loop;
+								for (int a = offset + (loop ? group.vertexCount - 1 : 0), b = offset + (loop ? 0 : 1); b < offset + group.vertexCount; a = b, b++) {
+									var p1 = vertices[a];
+									var p2 = vertices[b];
+
+									var t = math.clamp(VectorMath.ClosestPointOnLineFactor(p1, p2, position), 0, 1);
+									var closestPoint = math.lerp(p1, p2, t);
+									var distSqr = math.lengthsq(closestPoint - position);
+									if (distSqr < closestDistSqr) {
+										closestDistSqr = distSqr;
+										hit.point = closestPoint;
+										hit.tangent = p2 - p1;
+										hit.tangentOrigin = p1;
+									}
+								}
+							}
+							offset += group.vertexCount;
+						}
+					}
+
+					// Enqueue neighbours
+					var conns = hierarhicalNodeData.connectionAllocator.GetSpan(hierarhicalNodeData.connectionAllocations[node]);
+					for (int i = 0; i < conns.Length; i++) {
+						var neighbour = conns[i];
+						if (!queue.Contains(neighbour)) {
+							queue.Add(neighbour);
+						}
+					}
+				}
+
+				return hit;
+			}
+
 			public void GetObstaclesInRange (int hierarchicalNode, Bounds bounds, NativeList<int> obstacleIndexBuffer) {
+				obstacleIndexBuffer.Clear();
 				if (!obstacleData.obstacleVertices.IsCreated) return;
+
+				// The hierarchical node is invalid. Maybe it has been removed.
+				if (hierarchicalNode < 0 || hierarchicalNode >= hierarhicalNodeData.connectionAllocations.Length || hierarhicalNodeData.connectionAllocations[hierarchicalNode] == SlabAllocator<int>.InvalidAllocation) return;
+
 				GetHierarchicalNodesInRangeRec(hierarchicalNode, bounds, hierarhicalNodeData.connectionAllocator, hierarhicalNodeData.connectionAllocations, hierarhicalNodeData.bounds, obstacleIndexBuffer);
 			}
 
 			public void GetEdgesInRange (int hierarchicalNode, Bounds localBounds, NativeList<float2> edgeBuffer, NativeList<int> scratchBuffer, NativeMovementPlane movementPlane) {
-				if (!obstacleData.obstacleVertices.IsCreated) return;
-
 				GetObstaclesInRange(hierarchicalNode, movementPlane.ToWorld(localBounds), scratchBuffer);
 				ConvertObstaclesToEdges(ref obstacleData, scratchBuffer, localBounds, edgeBuffer, movementPlane);
 			}

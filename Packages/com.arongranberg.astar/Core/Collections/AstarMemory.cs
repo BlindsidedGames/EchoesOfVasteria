@@ -62,6 +62,17 @@ namespace Pathfinding.Util {
 			return dst;
 		}
 
+		public static bool SequenceEqual<T>(T[] a, T[] b) where T : IEquatable<T> {
+			if (a == null && b == null) return true;
+			if (a == null || b == null) return false;
+			if (a.Length != b.Length) return false;
+
+			for (int i = 0; i < a.Length; i++) {
+				if (!a[i].Equals(b[i])) return false;
+			}
+			return true;
+		}
+
 		public static void Rotate3DArray<T>(T[] arr, int3 size, int dx, int dz) {
 			int width = size.x;
 			int height = size.y;

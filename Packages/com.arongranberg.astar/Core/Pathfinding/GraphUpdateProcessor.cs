@@ -130,6 +130,7 @@ namespace Pathfinding {
 			while (graphUpdateQueue.Count > 0) {
 				var ob = graphUpdateQueue.Dequeue();
 				pendingGraphUpdates.Add(ob);
+				context.VisualizeOriginalGraphUpdateBounds(ob.bounds);
 				if (ob.internalStage != GraphUpdateObject.STAGE_PENDING) {
 					Debug.LogError("Expected remaining graph update to be pending");
 					continue;
@@ -141,7 +142,7 @@ namespace Pathfinding {
 				var updates = ListPool<GraphUpdateObject>.Claim();
 				for (int i = 0; i < pendingGraphUpdates.Count; i++) {
 					GraphUpdateObject ob = pendingGraphUpdates[i];
-					if (ob.nnConstraint == null || ob.nnConstraint.SuitableGraph((int)gr.graphIndex, gr)) {
+					if (ob.graphMask.Contains(gr)) {
 						updates.Add(ob);
 					}
 				}

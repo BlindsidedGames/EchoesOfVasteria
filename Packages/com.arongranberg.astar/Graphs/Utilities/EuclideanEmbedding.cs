@@ -26,7 +26,7 @@ namespace Pathfinding.Graphs.Util {
 	public class EuclideanEmbedding {
 		/// <summary>
 		/// If heuristic optimization should be used and how to place the pivot points.
-		/// See: heuristic-opt
+		/// See: heuristic-opt (view in online documentation for working links)
 		/// See: Game AI Pro - Pathfinding Architecture Optimizations by Steve Rabin and Nathan R. Sturtevant
 		/// </summary>
 		public HeuristicOptimizationMode mode;
@@ -102,7 +102,7 @@ namespace Pathfinding.Graphs.Util {
 		}
 
 		void GetClosestWalkableNodesToChildrenRecursively (Transform tr, List<GraphNode> nodes) {
-			var nn = NNConstraint.Walkable;
+			var nn = NearestNodeConstraint.Walkable;
 			foreach (Transform ch in tr) {
 				var info = AstarPath.active.GetNearest(ch.position, nn);
 				if (info.node != null && info.node.Walkable) {
@@ -158,11 +158,11 @@ namespace Pathfinding.Graphs.Util {
 			// Find any node in the graphs
 			for (int j = 0; j < graphs.Length; j++) {
 				if (graphs[j] != null) {
-					graphs[j].GetNodes(node => {
+					graphs[j].GetNodes(static (GraphNode node, ref GraphNode first) => {
 						if (node != null && node.Walkable && first == null) {
 							first = node;
 						}
-					});
+					}, ref first);
 				}
 			}
 
@@ -242,15 +242,16 @@ namespace Pathfinding.Graphs.Util {
 				return p;
 			}
 
-			protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
+			protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 				throw new System.InvalidOperationException();
 			}
 
-			protected override void OnHeapExhausted () {
+			protected override void OnHeapExhausted (ref SearchContext ctx) {
 				CompleteState = PathCompleteState.Complete;
 			}
 
-			public override void OnVisitNode (uint pathNode, uint hScore, uint gScore) {
+			public override void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
+				var pathHandler = ctx.pathHandler;
 				if (!pathHandler.IsTemporaryNode(pathNode)) {
 					// Get the node and then the node index from that.
 					// This is because a triangle mesh node will have 3 path nodes,
@@ -274,15 +275,17 @@ namespace Pathfinding.Graphs.Util {
 				}
 			}
 
-			protected override void Prepare () {
-				pathHandler.AddTemporaryNode(new TemporaryNode {
+			protected override void Prepare (ref SearchContext ctx) {
+				ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 					associatedNode = startNode.NodeIndex,
 					position = startNode.position,
 					type = TemporaryNodeType.Start,
 				});
-				heuristicObjective = new HeuristicObjective(0, Heuristic.None, 0.0f);
-				MarkNodesAdjacentToTemporaryEndNodes();
-				AddStartNodesToHeap();
+				ctx.heuristicObjective = new HeuristicObjective(0, Heuristic.None, 0.0f);
+				ctx.traversalConstraint = traversalConstraint;
+				ctx.traversalCosts = traversalCosts;
+				ctx.MarkNodesAdjacentToTemporaryEndNodes();
+				ctx.AddStartNodesToHeap();
 			}
 		}
 
@@ -422,7 +425,7 @@ namespace Pathfinding.Graphs.Util {
 										var adjacentNode = gg.nodes[nz*gg.width + nx];
 										if (adjacentNode.Walkable) {
 											for (uint piv = 0; piv < pivotCount; piv++) {
-												uint cost = costs[adjacentNode.NodeIndex*(uint)pivotCount + piv] + gg.neighbourCosts[d];
+												uint cost = costs[adjacentNode.NodeIndex*(uint)pivotCount + piv] + (uint)gg.neighbourCosts[d];
 												costs[pivotIndex + piv] = System.Math.Min(costs[pivotIndex + piv], cost);
 												//Debug.DrawLine((Vector3)node.position, (Vector3)adjacentNode.position, Color.blue, 1);
 											}

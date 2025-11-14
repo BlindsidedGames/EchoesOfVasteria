@@ -139,7 +139,7 @@ When making changes to this **2D** Unity project:
 - `functions.unityMCP__manage_scene` - Load, save, or otherwise manage Unity scenes.
 - `functions.unityMCP__manage_script` / `functions.unityMCP__manage_script_capabilities` - Access legacy script editing operations and capability metadata.
 - `functions.unityMCP__manage_shader` - Create or update shader assets.
-- `functions.unityMCP__read_console` - Read Unity editor console output for diagnostics.
+- `functions.unityMCP__read_console` - Read Unity editor console output for diagnostics. Use `"get"` for `action` when retrieving logs (the `"read"` literal causes validation failures) and `"clear"` when purging entries.
 - `functions.unityMCP__read_resource` - Read project resources with optional slicing for partial content.
 - `functions.unityMCP__run_tests` - Execute Unity tests when supported in the environment.
 - `functions.unityMCP__script_apply_edits` - Perform structured method-level edits on Unity scripts with validation.

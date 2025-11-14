@@ -213,7 +213,7 @@ namespace Pathfinding.Collections {
 			public readonly float2 projectedUpNormalized;
 			public readonly float3 projectionAxis;
 			public readonly float distanceScaleAlongProjectionAxis;
-			public readonly DistanceMetric distanceMetric;
+			public readonly DistanceMetric distanceMetricType;
 			// bools are for some reason not blittable by the burst compiler, so we have to use a byte
 			readonly byte alignedWithXZPlaneBacking;
 
@@ -267,16 +267,16 @@ namespace Pathfinding.Collections {
 				}
 			}
 
-			public ProjectionParams(NNConstraint constraint, GraphTransform graphTransform) {
+			public ProjectionParams(ref Pathfinding.DistanceMetric distanceMetric, GraphTransform graphTransform) {
 				const float MAX_ERROR_IN_RADIANS = 0.01f;
 
 				// The normal of the plane we are projecting onto (if any).
-				if (constraint != null && constraint.distanceMetric.projectionAxis != Vector3.zero) {
+				if (distanceMetric.projectionAxis != Vector3.zero) {
 					// (inf,inf,inf) is a special value indicating to use the graph's natural up direction
-					if (float.IsPositiveInfinity(constraint.distanceMetric.projectionAxis.x)) {
+					if (float.IsPositiveInfinity(distanceMetric.projectionAxis.x)) {
 						projectionAxis = new float3(0, 1, 0);
 					} else {
-						projectionAxis = math.normalizesafe(graphTransform.InverseTransformVector(constraint.distanceMetric.projectionAxis));
+						projectionAxis = math.normalizesafe(graphTransform.InverseTransformVector(distanceMetric.projectionAxis));
 					}
 
 					if (projectionAxis.x*projectionAxis.x + projectionAxis.z*projectionAxis.z < MAX_ERROR_IN_RADIANS*MAX_ERROR_IN_RADIANS) {
@@ -284,9 +284,9 @@ namespace Pathfinding.Collections {
 						// by using a fast-path here.
 						projectedUpNormalized = float2.zero;
 						planeProjection = new float2x3(1, 0, 0, 0, 0, 1); // math.transpose(new float3x2(new float3(1, 0, 0), new float3(0, 0, 1)));
-						distanceMetric = DistanceMetric.ScaledManhattan;
+						distanceMetricType = DistanceMetric.ScaledManhattan;
 						alignedWithXZPlaneBacking = (byte)1;
-						distanceScaleAlongProjectionAxis = math.max(constraint.distanceMetric.distanceScaleAlongProjectionDirection, 0);
+						distanceScaleAlongProjectionAxis = math.max(distanceMetric.distanceScaleAlongProjectionDirection, 0);
 						return;
 					}
 
@@ -301,7 +301,7 @@ namespace Pathfinding.Collections {
 					// This is important because the BBTree stores its rectangles in the XZ plane.
 					// If the projection is close enough to the XZ plane, we snap to that because it allows us to use faster and more precise distance calculations.
 					projectedUpNormalized = math.lengthsq(planeProjection.c1) <= MAX_ERROR_IN_RADIANS*MAX_ERROR_IN_RADIANS ? float2.zero : math.normalize(planeProjection.c1);
-					distanceMetric = DistanceMetric.ScaledManhattan;
+					distanceMetricType = DistanceMetric.ScaledManhattan;
 					alignedWithXZPlaneBacking = math.all(projectedUpNormalized == 0) ? (byte)1 : (byte)0;
 
 					// The distance along the projection axis is scaled by a cost factor to make the distance
@@ -312,12 +312,12 @@ namespace Pathfinding.Collections {
 					// Even if this value is zero we will use the distance along the projection axis to break ties.
 					// Otherwise, when getting the nearest node in e.g. a tall building, it would not be well defined
 					// which floor of the building was closest.
-					distanceScaleAlongProjectionAxis = math.max(constraint.distanceMetric.distanceScaleAlongProjectionDirection, 0);
+					distanceScaleAlongProjectionAxis = math.max(distanceMetric.distanceScaleAlongProjectionDirection, 0);
 				} else {
 					projectionAxis = float3.zero;
 					planeProjection = default;
 					projectedUpNormalized = default;
-					distanceMetric = DistanceMetric.Euclidean;
+					distanceMetricType = DistanceMetric.Euclidean;
 					alignedWithXZPlaneBacking = 1;
 					distanceScaleAlongProjectionAxis = 0;
 				}
@@ -330,9 +330,9 @@ namespace Pathfinding.Collections {
 		}
 
 		/// <summary>
-		/// Queries the tree for the closest node to p constrained by the NNConstraint trying to improve an existing solution.
+		/// Queries the tree for the closest node to p constrained by the NearestNodeConstraint trying to improve an existing solution.
 		/// Note that this function will only fill in the constrained node.
-		/// If you want a node not constrained by any NNConstraint, do an additional search with constraint = NNConstraint.None
+		/// If you want a node not constrained by any NearestNodeConstraint, do an additional search with constraint = NearestNodeConstraint.None
 		/// </summary>
 		/// <param name="p">Point to search around</param>
 		/// <param name="constraint">Optionally set to constrain which nodes to return</param>
@@ -344,7 +344,7 @@ namespace Pathfinding.Collections {
 		/// <param name="triangles">The triangles that this BBTree was built from</param>
 		/// <param name="vertices">The vertices that this BBTree was built from</param>
 		/// <param name="projection">Projection parameters derived from the constraint</param>
-		public void QueryClosest (float3 p, NNConstraint constraint, in ProjectionParams projection, ref float distanceSqr, ref NNInfo previous, GraphNode[] nodes, UnsafeSpan<int> triangles, UnsafeSpan<Int3> vertices) {
+		public void QueryClosest (float3 p, ref NearestNodeConstraint constraint, in ProjectionParams projection, ref float distanceSqr, ref NNInfo previous, GraphNode[] nodes, UnsafeSpan<int> triangles, UnsafeSpan<Int3> vertices) {
 			if (tree.Length == 0) return;
 
 			UnsafeSpan<NearbyNodesIterator.BoxWithDist> stack;
@@ -372,12 +372,13 @@ namespace Pathfinding.Collections {
 
 			// We use an iterator which searches through the tree and returns nodes closer than it.distanceThresholdSqr.
 			// The iterator is compiled using burst for high performance, but when a new candidate node is found we need
-			// to evaluate it in pure C# due to the NNConstraint being a C# class.
-			// TODO: If constraint==null (or NNConstraint.None) we could run the whole thing in burst to improve perf even more.
+			// to evaluate it in pure C# due to the NearestNodeConstraint requiring some managed state.
+			// TODO: If allNodesAreSuitable we could run the whole thing in burst to improve perf even more.
 			var result = previous;
+			bool allNodesAreSuitable = constraint.allNodesAreSuitable;
 			while (it.stackSize > 0 && it.MoveNext()) {
 				var current = it.current;
-				if (constraint == null || constraint.Suitable(nodes[current.node])) {
+				if (allNodesAreSuitable || constraint.Suitable(nodes[current.node])) {
 					it.distanceThresholdSqr = current.distanceSq;
 					it.tieBreakingDistanceThreshold = current.tieBreakingDistance;
 					result = new NNInfo(nodes[current.node], current.closestPointOnNode, current.distanceSq);
@@ -469,7 +470,7 @@ namespace Pathfinding.Collections {
 							var vi1 = it.vertices[it.triangles[ti1]];
 							var vi2 = it.vertices[it.triangles[ti2]];
 							var vi3 = it.vertices[it.triangles[ti3]];
-							if (it.projection.distanceMetric == DistanceMetric.Euclidean) {
+							if (it.projection.distanceMetricType == DistanceMetric.Euclidean) {
 								var v1 = (float3)vi1;
 								var v2 = (float3)vi2;
 								var v3 = (float3)vi3;

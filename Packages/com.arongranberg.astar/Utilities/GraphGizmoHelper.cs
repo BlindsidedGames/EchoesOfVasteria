@@ -70,18 +70,18 @@ namespace Pathfinding.Util {
 			drawConnection = DrawConnection;
 		}
 
-		public static GraphGizmoHelper GetSingleFrameGizmoHelper (DrawingData gizmos, AstarPath active, RedrawScope redrawScope) {
-			return GetGizmoHelper(gizmos, active, DrawingData.Hasher.NotSupplied, redrawScope);
+		public static GraphGizmoHelper GetSingleFrameGizmoHelper (DrawingData gizmos, AstarPath active, RedrawScope redrawScope, bool renderInGame) {
+			return GetGizmoHelper(gizmos, active, DrawingData.Hasher.NotSupplied, redrawScope, renderInGame);
 		}
 
-		public static GraphGizmoHelper GetGizmoHelper (DrawingData gizmos, AstarPath active, DrawingData.Hasher hasher, RedrawScope redrawScope) {
+		public static GraphGizmoHelper GetGizmoHelper (DrawingData gizmos, AstarPath active, DrawingData.Hasher hasher, RedrawScope redrawScope, bool renderInGame) {
 			var helper = ObjectPool<GraphGizmoHelper>.Claim();
 
-			helper.Init(active, hasher, gizmos, redrawScope);
+			helper.Init(active, hasher, gizmos, redrawScope, renderInGame);
 			return helper;
 		}
 
-		public void Init (AstarPath active, DrawingData.Hasher hasher, DrawingData gizmos, RedrawScope redrawScope) {
+		public void Init (AstarPath active, DrawingData.Hasher hasher, DrawingData gizmos, RedrawScope redrawScope, bool renderInGame) {
 			if (active != null) {
 				debugData = active.debugPathData;
 				debugPathID = active.debugPathID;
@@ -98,7 +98,7 @@ namespace Pathfinding.Util {
 #endif
 			}
 			this.hasher = hasher;
-			builder = gizmos.GetBuilder(hasher, redrawScope);
+			builder = gizmos.GetBuilder(hasher, redrawScope, renderInGame);
 		}
 
 		public void OnEnterPool () {
@@ -256,7 +256,7 @@ namespace Pathfinding.Util {
 			}
 		}
 
-		void System.IDisposable.Dispose () {
+		public void Dispose () {
 			var tmp = this;
 
 			ObjectPool<GraphGizmoHelper>.Release(ref tmp);

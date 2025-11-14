@@ -123,6 +123,7 @@ namespace TimelessEchoes
         public Vector3 ReaperSpawnOffset => reaperSpawnOffset;
         public Transform MeetingParent => meetingParent;
         public GameObject CurrentMap { get; private set; }
+        public bool RunLoadingActive => runLoadingActive;
 
         public float BonusPercentPerKill => bonusPercentPerKill;
 
@@ -275,8 +276,10 @@ namespace TimelessEchoes
         private float nextStatsUpdateTime;
 
         [SerializeField] private float startingDistance;
-        [SerializeField] private GameObject loadingOverlay;
+        [SerializeField] private GameObject runLoadingOverlay;
+        [SerializeField] private SlicedFilledImage runLoadingProgress;
         [SerializeField] private float warpDuration = 1f;
+        private bool runLoadingActive;
 
         // Auto-restart on stall settings
         [TitleGroup("Run Stall Monitor")] [SerializeField]
@@ -567,8 +570,8 @@ namespace TimelessEchoes
             // Starting a new run: no cooldowns from previous state
             BuffManager.Instance?.ClearActiveBuffs();
             BuffManager.Instance?.UpdateDistance(0f);
-            // Re-enable buff ticking and auto-cast now that a new run is starting
-            BuffManager.Instance?.Resume();
+            // Delay buff ticking until the map fully initializes
+            BuffManager.Instance?.Pause();
             // If this is the first run of a session (tavern was active), reset session aggregates
             if (statTracker != null && tavernUI != null && tavernUI.activeSelf)
                 statTracker.BeginSession();
@@ -598,6 +601,8 @@ namespace TimelessEchoes
             if (taskController == null)
                 yield break;
 
+            var segmentedGenerator = CurrentMap.GetComponentInChildren<SegmentedMapGenerator>();
+
             hero = taskController.hero;
             if (hero != null)
             {
@@ -617,6 +622,10 @@ namespace TimelessEchoes
                     }
                 }
                 hero.gameObject.SetActive(true);
+                hero.SetActiveState(false);
+                var startupInput = hero.GetComponent<PlayerInput>();
+                if (startupInput != null)
+                    startupInput.enabled = false;
                 var hp = hero.GetComponent<HeroHealth>();
                 if (hp != null)
                 {
@@ -677,7 +686,13 @@ namespace TimelessEchoes
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
+            SetRunLoadingVisible(true);
+            yield return AwaitInitialGeneration(segmentedGenerator);
+            taskController?.ForceResortNow();
+
             yield return StartCoroutine(FastForwardStart());
+            SetRunLoadingVisible(false);
+            UpdateRunLoadingProgress(0f);
 
             // Initialize distance and buff state immediately after restart to avoid 0% stalls
             if (statTracker != null && hero != null)
@@ -688,6 +703,8 @@ namespace TimelessEchoes
                 RichPresenceManager.Instance?.UpdateDistance(statTracker.CurrentRunDistance);
 #endif
             }
+
+            BuffManager.Instance?.Resume();
 
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
@@ -709,8 +726,6 @@ namespace TimelessEchoes
             if (playerInput != null)
                 playerInput.enabled = false;
             hero.SetActiveState(false);
-            if (loadingOverlay != null)
-                loadingOverlay.SetActive(true);
 
             var startPos = hero.transform.position;
             if (warpDuration > 0f)
@@ -747,8 +762,42 @@ namespace TimelessEchoes
             hero.SetActiveState(true);
             if (playerInput != null)
                 playerInput.enabled = true;
-            if (loadingOverlay != null)
-                loadingOverlay.SetActive(false);
+        }
+
+        private IEnumerator AwaitInitialGeneration(SegmentedMapGenerator generator)
+        {
+            if (generator == null)
+            {
+                UpdateRunLoadingProgress(1f);
+                yield break;
+            }
+
+            void OnProgress(float value) => UpdateRunLoadingProgress(value);
+
+            UpdateRunLoadingProgress(generator.InitialGenerationProgress);
+            generator.InitialGenerationProgressed += OnProgress;
+            try
+            {
+                yield return generator.WaitForInitialGeneration();
+            }
+            finally
+            {
+                generator.InitialGenerationProgressed -= OnProgress;
+                UpdateRunLoadingProgress(1f);
+            }
+        }
+
+        private void SetRunLoadingVisible(bool visible)
+        {
+            runLoadingActive = visible;
+            if (runLoadingOverlay != null)
+                runLoadingOverlay.SetActive(visible);
+        }
+
+        private void UpdateRunLoadingProgress(float normalized)
+        {
+            if (runLoadingProgress != null)
+                runLoadingProgress.fillAmount = Mathf.Clamp01(normalized);
         }
 
         private void OnHeroDeath()

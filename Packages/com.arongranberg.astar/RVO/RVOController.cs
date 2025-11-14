@@ -13,18 +13,18 @@ namespace Pathfinding.RVO {
 	/// use that to move the object using a method it sees fit (for example using a CharacterController, using
 	/// transform.Translate or using a rigidbody).
 	///
-	/// \inspectorField{Radius, RVOController.radius}
-	/// \inspectorField{Height, RVOController.height}
-	/// \inspectorField{Center, RVOController.center}
-	/// \inspectorField{Agent Time Horizon, RVOController.agentTimeHorizon}
-	/// \inspectorField{Obstacle Time Horizon, RVOController.obstacleTimeHorizon}
-	/// \inspectorField{Max Neighbours, RVOController.maxNeighbours}
-	/// \inspectorField{Layer, RVOController.layer}
-	/// \inspectorField{Collides with, RVOController.collidesWith}
-	/// \inspectorField{Priority, RVOController.priority}
-	/// \inspectorField{Lock When Not Moving, RVOController.lockWhenNotMoving}
-	/// \inspectorField{Locked, RVOController.locked}
-	/// \inspectorField{Debug, RVOController.debug}
+	/// \inspectorField{RVOController.radius; Radius}
+	/// \inspectorField{RVOController.height; Height}
+	/// \inspectorField{RVOController.center; Center}
+	/// \inspectorField{RVOController.agentTimeHorizon; Agent Time Horizon}
+	/// \inspectorField{RVOController.obstacleTimeHorizon; Obstacle Time Horizon}
+	/// \inspectorField{RVOController.maxNeighbours; Max Neighbours}
+	/// \inspectorField{RVOController.layer; Layer}
+	/// \inspectorField{RVOController.collidesWith; Collides with}
+	/// \inspectorField{RVOController.priority; Priority}
+	/// \inspectorField{RVOController.lockWhenNotMoving; Lock When Not Moving}
+	/// \inspectorField{RVOController.locked; Locked}
+	/// \inspectorField{RVOController.debug; Debug}
 	///
 	/// <code>
 	/// public void Update () {

@@ -26,6 +26,21 @@ namespace Pathfinding.ECS {
 			static TimeData cheapTimeData;
 
 			/// <summary>
+			/// Additional time scale multiplier to apply to the simulation.
+			/// This can be used to speed up or slow down the simulation instead of using Unity's Time.timeScale.
+			///
+			/// The final time scale will be Unity's Time.timeScale multiplied by this value.
+			///
+			/// Default value is 1.0.
+			///
+			/// <code>
+			/// var aiMovementSystemGroup = Unity.Entities.World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<AIMovementSystemGroup>();
+			/// aiMovementSystemGroup.CustomTimeScale = 3.0;
+			/// </code>
+			/// </summary>
+			public double CustomTimeScale = 1.0;
+
+			/// <summary>
 			/// True if it was determined that zero substeps should be simulated.
 			/// In this case all systems will get an opportunity to run a single update,
 			/// but they should avoid systems that don't have to run every single frame.
@@ -92,7 +107,8 @@ namespace Pathfinding.ECS {
 					timeDataQueue.Clear();
 
 					if (inGroup) throw new System.InvalidOperationException("Cannot nest simulation groups using TimeScaledRateManager");
-					var fullDt = (float)(group.World.Time.ElapsedTime - lastFullSimulation);
+					var currentTime = group.World.Time.ElapsedTime*CustomTimeScale;
+					var fullDt = (float)(currentTime - lastFullSimulation);
 
 					// It has been observed that the time move backwards.
 					// Not quite sure when it happens, but we need to guard against it.
@@ -111,7 +127,6 @@ namespace Pathfinding.ECS {
 					// the number of simulation steps will also be reduced. In the limit where the simulation
 					// takes up essentially the whole frame's cpu time, then we only do 1 simulation step per frame.
 					numUpdatesThisFrame = Mathf.FloorToInt(Mathf.Pow(fullDt / (maximumDt + ownProcessingTimePerIteration), 0.8f));
-					var currentTime = group.World.Time.ElapsedTime;
 					cheapSimulationOnly = numUpdatesThisFrame == 0;
 					if (cheapSimulationOnly) {
 						timeDataQueue.Add(new TimeData(
@@ -156,6 +171,14 @@ namespace Pathfinding.ECS {
 			public float Timestep {
 				get => maximumDt;
 				set => maximumDt = value;
+			}
+		}
+
+		/// <summary>\copydocref{AIMovementSystemGroup.TimeScaledRateManager.CustomTimeScale}</summary>
+		public double CustomTimeScale {
+			get => (RateManager as AIMovementSystemGroup.TimeScaledRateManager).CustomTimeScale;
+			set {
+				(RateManager as AIMovementSystemGroup.TimeScaledRateManager).CustomTimeScale = value;
 			}
 		}
 

@@ -222,9 +222,6 @@ namespace Pathfinding {
 		}
 
 #if !ASTAR_NO_GRID_GRAPH
-		/// <summary>Cached <see cref="Pathfinding.NNConstraint.None"/> to reduce allocations</summary>
-		static readonly NNConstraint NNConstraintNone = NNConstraint.None;
-
 		/// <summary>
 		/// Applies a special case for grid nodes.
 		///
@@ -253,14 +250,17 @@ namespace Pathfinding {
 		/// Image below shows paths when this special case has been disabled
 		/// [Open online documentation to see images]
 		/// </summary>
-		protected virtual bool EndPointGridGraphSpecialCase (GraphNode closestWalkableEndNode, Vector3 originalEndPoint, int targetIndex) {
+		protected virtual bool EndPointGridGraphSpecialCase (ref SearchContext ctx, GraphNode closestWalkableEndNode, Vector3 originalEndPoint, int targetIndex) {
 			var gridNode = closestWalkableEndNode as GridNode;
 
 			if (gridNode != null) {
 				var gridGraph = GridNode.GetGridGraph(gridNode.GraphIndex);
 
 				// Find the closest node, not neccessarily walkable
-				var endNNInfo2 = gridGraph.GetNearest(originalEndPoint, NNConstraintNone);
+				var nn = NearestNodeConstraint.None;
+				nn.maxDistanceSqr = 0.01f*0.01f;
+				nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
+				var endNNInfo2 = gridGraph.GetNearest(originalEndPoint, ref nn);
 				var gridNode2 = endNNInfo2.node as GridNode;
 
 				if (gridNode != gridNode2 && gridNode2 != null) {
@@ -313,7 +313,7 @@ namespace Pathfinding {
 
 					if (wasClose) {
 						// We now need to find all nodes marked with an x to be able to mark them as targets
-						AddEndpointsForSurroundingGridNodes(gridNode2, originalEndPoint, targetIndex);
+						AddEndpointsForSurroundingGridNodes(ref ctx, gridNode2, originalEndPoint, targetIndex);
 
 						// hTargetNode is used for heuristic optimizations
 						// (also known as euclidean embedding).
@@ -331,7 +331,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Helper method to add endpoints around a specific unwalkable grid node</summary>
-		void AddEndpointsForSurroundingGridNodes (GridNode gridNode, Vector3 desiredPoint, int targetIndex) {
+		void AddEndpointsForSurroundingGridNodes (ref SearchContext ctx, GridNode gridNode, Vector3 desiredPoint, int targetIndex) {
 			// Loop through all adjacent grid nodes
 			var gridGraph = GridNode.GetGridGraph(gridNode.GraphIndex);
 
@@ -355,8 +355,8 @@ namespace Pathfinding {
 
 				var adjacentNode = gridGraph.GetNode(nx, nz);
 				// Check if the position is still inside the grid
-				if (adjacentNode != null) {
-					pathHandler.AddTemporaryNode(new TemporaryNode {
+				if (adjacentNode != null && traversalConstraint.CanTraverse(adjacentNode)) {
+					ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 						type = TemporaryNodeType.End,
 						position = (Int3)adjacentNode.ClosestPointOnNode(desiredPoint),
 						associatedNode = adjacentNode.NodeIndex,
@@ -368,13 +368,13 @@ namespace Pathfinding {
 #endif
 
 		/// <summary>Prepares the path. Searches for start and end nodes and does some simple checking if a path is at all possible</summary>
-		protected override void Prepare () {
-			var startNNInfo = GetNearest(startPoint);
+		protected override void Prepare (ref SearchContext ctx) {
+			var constraint = this.nearestNodeConstraint;
+			FindStartAndEndNodes(ref ctx, ref constraint);
+		}
 
-			//Tell the NNConstraint which node was found as the start node if it is a PathNNConstraint and not a normal NNConstraint
-			if (nnConstraint is PathNNConstraint pathNNConstraint) {
-				pathNNConstraint.SetStart(startNNInfo.node);
-			}
+		protected void FindStartAndEndNodes (ref SearchContext ctx, ref NearestNodeConstraint constraint) {
+			var startNNInfo = AstarPath.active.GetNearest(startPoint, constraint);
 
 			startPoint = startNNInfo.position;
 
@@ -383,12 +383,9 @@ namespace Pathfinding {
 				return;
 			}
 
-			if (!CanTraverse(startNNInfo.node)) {
-				FailWithError("The node closest to the start point could not be traversed");
-				return;
-			}
+			UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(startNNInfo.node));
 
-			pathHandler.AddTemporaryNode(new TemporaryNode {
+			ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 				associatedNode = startNNInfo.node.NodeIndex,
 				position = (Int3)startNNInfo.position,
 				type = TemporaryNodeType.Start,
@@ -398,7 +395,9 @@ namespace Pathfinding {
 			// Some path types might want to use most of the ABPath code, but will not have an explicit end point at this stage
 			uint endNodeIndex = 0;
 			if (hasEndPoint) {
-				var endNNInfo = GetNearest(originalEndPoint);
+				// Find the closest node that we can reach from the start node
+				constraint.area = (int)startNNInfo.node.Area;
+				var endNNInfo = AstarPath.active.GetNearest(originalEndPoint, constraint);
 				endPoint = endNNInfo.position;
 
 				if (endNNInfo.node == null) {
@@ -406,27 +405,18 @@ namespace Pathfinding {
 					return;
 				}
 
-				// This should not trigger unless the user has modified the NNConstraint
-				if (!CanTraverse(endNNInfo.node)) {
-					FailWithError("The node closest to the end point could not be traversed");
-					return;
-				}
-
-				// This should not trigger unless the user has modified the NNConstraint
-				if (startNNInfo.node.Area != endNNInfo.node.Area) {
-					FailWithError("There is no valid path to the target");
-					return;
-				}
+				UnityEngine.Assertions.Assert.IsTrue(traversalConstraint.CanTraverse(endNNInfo.node));
+				UnityEngine.Assertions.Assert.AreEqual(startNNInfo.node.Area, endNNInfo.node.Area);
 
 				endNodeIndex = endNNInfo.node.NodeIndex;
 
 #if !ASTAR_NO_GRID_GRAPH
 				// Potentially we want to special case grid graphs a bit
 				// to better support some kinds of games
-				if (!EndPointGridGraphSpecialCase(endNNInfo.node, originalEndPoint, 0))
+				if (!EndPointGridGraphSpecialCase(ref ctx, endNNInfo.node, originalEndPoint, 0))
 #endif
 				{
-					pathHandler.AddTemporaryNode(new TemporaryNode {
+					ctx.pathHandler.AddTemporaryNode(new TemporaryNode {
 						associatedNode = endNNInfo.node.NodeIndex,
 						position = (Int3)endNNInfo.position,
 						type = TemporaryNodeType.End,
@@ -434,29 +424,32 @@ namespace Pathfinding {
 				}
 			}
 
-			TemporaryEndNodesBoundingBox(out var mnTarget, out var mxTarget);
-			heuristicObjective = new HeuristicObjective(mnTarget, mxTarget, heuristic, heuristicScale, endNodeIndex, AstarPath.active.euclideanEmbedding);
-			MarkNodesAdjacentToTemporaryEndNodes();
-			AddStartNodesToHeap();
+			ctx.TemporaryEndNodesBoundingBox(out var mnTarget, out var mxTarget);
+			ctx.heuristicObjective = new HeuristicObjective(mnTarget, mxTarget, heuristic, heuristicScale, endNodeIndex, AstarPath.active.euclideanEmbedding);
+			ctx.traversalConstraint = traversalConstraint;
+			ctx.traversalCosts = traversalCosts;
+			ctx.MarkNodesAdjacentToTemporaryEndNodes();
+			ctx.AddStartNodesToHeap();
 		}
 
-		void CompletePartial () {
+		void CompletePartial (ref SearchContext ctx) {
 			CompleteState = PathCompleteState.Partial;
 			// TODO: Add unit test for this
-			endPoint = pathHandler.GetNode(partialBestTargetPathNodeIndex).ClosestPointOnNode(originalEndPoint);
+			endPoint = ctx.pathHandler.GetNode(partialBestTargetPathNodeIndex).ClosestPointOnNode(originalEndPoint);
 			cost = partialBestTargetGScore;
-			Trace(partialBestTargetPathNodeIndex);
+			Trace(ref ctx, partialBestTargetPathNodeIndex);
 		}
 
-		protected override void OnHeapExhausted () {
+		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			if (calculatePartial && partialBestTargetPathNodeIndex != GraphNode.InvalidNodeIndex) {
-				CompletePartial();
+				CompletePartial(ref ctx);
 			} else {
 				FailWithError("Searched all reachable nodes, but could not find target. This can happen if you have nodes with a different tag blocking the way to the goal. You can enable path.calculatePartial to handle that case as a workaround (though this comes with a performance cost).");
 			}
 		}
 
-		protected override void OnFoundEndNode (uint pathNode, uint hScore, uint gScore) {
+		protected override void OnFoundEndNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
+			var pathHandler = ctx.pathHandler;
 			if (pathHandler.IsTemporaryNode(pathNode)) {
 				// Common case, a temporary node is used to represent the target.
 				// However, it may not be clamped to the closest point on the node.
@@ -480,17 +473,17 @@ namespace Pathfinding {
 			}
 			cost = gScore;
 			CompleteState = PathCompleteState.Complete;
-			Trace(pathNode);
+			Trace(ref ctx, pathNode);
 		}
 
-		public override void OnVisitNode (uint pathNode, uint hScore, uint gScore) {
+		public override void OnVisitNode (ref SearchContext ctx, uint pathNode, uint hScore, uint gScore) {
 			// This method may be called multiple times without checking if the path is complete yet.
 			if (CompleteState != PathCompleteState.NotCalculated) return;
 
 			if (endingCondition != null) {
-				var node = pathHandler.GetNode(pathNode);
+				var node = ctx.pathHandler.GetNode(pathNode);
 				if (endingCondition.TargetFound(node, hScore, gScore)) {
-					OnFoundEndNode(pathNode, hScore, gScore);
+					OnFoundEndNode(ref ctx, pathNode, hScore, gScore);
 					if (CompleteState == PathCompleteState.Complete) {
 						return;
 					}
@@ -505,44 +498,40 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Returns a debug string for this path.</summary>
-		protected override string DebugString (PathLog logMode) {
+		protected override void DebugString (System.Text.StringBuilder builder, PathLog logMode) {
 			if (logMode == PathLog.None || (!error && logMode == PathLog.OnlyErrors)) {
-				return "";
+				return;
 			}
 
-			var text = new System.Text.StringBuilder();
-
-			DebugStringPrefix(logMode, text);
+			DebugStringPrefix(logMode, builder);
 			if (!error) {
-				text.Append(" Path Cost: ");
-				text.Append(cost);
+				builder.Append(" Path Cost: ");
+				builder.Append(cost);
 			}
 
 			if (!error && logMode == PathLog.Heavy) {
 				if (hasEndPoint && endNode != null) {
-					// text.Append("\nEnd Node\n	G: ");
-					// text.Append(nodeR.G);
-					// text.Append("\n	H: ");
-					// text.Append(nodeR.H);
-					// text.Append("\n	F: ");
-					// text.Append(nodeR.F);
-					text.Append("\n	Point: ");
-					text.Append(((Vector3)endPoint).ToString());
-					text.Append("\n	Graph: ");
-					text.Append(endNode.GraphIndex);
+					// builder.Append("\nEnd Node\n	G: ");
+					// builder.Append(nodeR.G);
+					// builder.Append("\n	H: ");
+					// builder.Append(nodeR.H);
+					// builder.Append("\n	F: ");
+					// builder.Append(nodeR.F);
+					builder.Append("\n	Point: ");
+					builder.Append(((Vector3)endPoint).ToString());
+					builder.Append("\n	Graph: ");
+					builder.Append(endNode.GraphIndex);
 				}
 
-				text.Append("\nStart Node");
-				text.Append("\n	Point: ");
-				text.Append(((Vector3)startPoint).ToString());
-				text.Append("\n	Graph: ");
-				if (startNode != null) text.Append(startNode.GraphIndex);
-				else text.Append("< null startNode >");
+				builder.Append("\nStart Node");
+				builder.Append("\n	Point: ");
+				builder.Append(((Vector3)startPoint).ToString());
+				builder.Append("\n	Graph: ");
+				if (startNode != null) builder.Append(startNode.GraphIndex);
+				else builder.Append("< null startNode >");
 			}
 
-			DebugStringSuffix(logMode, text);
-
-			return text.ToString();
+			DebugStringSuffix(logMode, builder);
 		}
 	}
 }

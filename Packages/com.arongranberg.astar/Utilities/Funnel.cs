@@ -39,7 +39,7 @@ namespace Pathfinding {
 	///         var parts = Funnel.SplitIntoParts(path);
 	///         // Optionally simplify the path to make it straighter
 	///         var nodes = path.path;
-	///         Funnel.Simplify(parts, ref nodes);
+	///         Funnel.Simplify(parts, ref nodes, ref path.traversalCosts, ref path.traversalConstraint);
 	///
 	///         using (Draw.WithLineWidth(2)) {
 	///             // Go through all the parts and draw them in the scene view
@@ -198,7 +198,7 @@ namespace Pathfinding {
 		}
 
 
-		public static void Simplify (List<PathPart> parts, ref List<GraphNode> nodes, System.Func<GraphNode, bool> filter = null) {
+		public static void Simplify (List<PathPart> parts, ref List<GraphNode> nodes, ref TraversalCosts traversalCosts, ref TraversalConstraint traversalConstraint) {
 			List<GraphNode> resultNodes = ListPool<GraphNode>.Claim();
 
 			for (int i = 0; i < parts.Count; i++) {
@@ -210,7 +210,7 @@ namespace Pathfinding {
 
 				if (part.type == PartType.NodeSequence) {
 					if (nodes[part.startIndex].Graph is IRaycastableGraph graph) {
-						Simplify(part, graph, nodes, resultNodes, Path.ZeroTagPenalties, -1, filter);
+						Simplify(part, graph, nodes, resultNodes, ref traversalCosts, ref traversalConstraint);
 						newPart.endIndex = resultNodes.Count - 1;
 						parts[i] = newPart;
 						continue;
@@ -236,7 +236,7 @@ namespace Pathfinding {
 		///
 		/// Requires graph to implement IRaycastableGraph
 		/// </summary>
-		public static void Simplify (PathPart part, IRaycastableGraph graph, List<GraphNode> nodes, List<GraphNode> result, int[] tagPenalties, int traversableTags, System.Func<GraphNode, bool> filter = null) {
+		public static void Simplify (PathPart part, IRaycastableGraph graph, List<GraphNode> nodes, List<GraphNode> result, ref TraversalCosts traversalCosts, ref TraversalConstraint traversalConstraint) {
 			var start = part.startIndex;
 			var end = part.endIndex;
 			var startPoint = part.startPoint;
@@ -248,26 +248,36 @@ namespace Pathfinding {
 				throw new System.ArgumentException("start > end");
 			}
 
+			static bool PathTraversable (List<GraphNode> nodes, int start, int end, ref TraversalConstraint traversalConstraint) {
+				for (int i = start; i <= end; i++) {
+					if (i == start ? !traversalConstraint.CanTraverse(nodes[i]) : !traversalConstraint.CanTraverse(nodes[i-1], nodes[i])) return false;
+				}
+				return true;
+			}
+
+			static void PathCost (List<GraphNode> nodes, int start, int end, ref TraversalCosts traversalCosts, out long connectionCost, out float avgCost) {
+				// This is very much an approximation of the actual cost of the path. But hopefully it's good enough for most cases.
+				connectionCost = 0;
+				avgCost = 0;
+				for (int i = start; i < end; i++) {
+					connectionCost += traversalCosts.GetConnectionCost(nodes[i], nodes[i+1]);
+					avgCost += traversalCosts.GetTraversalCostMultiplier(nodes[i]);
+				}
+				avgCost += traversalCosts.GetTraversalCostMultiplier(nodes[end]);
+				avgCost /= (end - start) + 1;
+			}
+
 			// Do a straight line of sight check to see if the path can be simplified to a single line
 			{
 				if (!graph.Linecast(startPoint, endPoint, out GraphHitInfo hit) && hit.node == nodes[end]) {
 					graph.Linecast(startPoint, endPoint, out hit, result);
 
-					long penaltySum = 0;
-					long penaltySum2 = 0;
-					for (int i = start; i <= end; i++) {
-						penaltySum += nodes[i].Penalty + tagPenalties[nodes[i].Tag];
-					}
+					PathCost(nodes, start, end, ref traversalCosts, out long oldConnectionCost, out float oldAvgCost);
+					PathCost(result, 0, result.Count - 1, ref traversalCosts, out long newConnectionCost, out float newAvgCost);
 
-					bool walkable = true;
-					for (int i = 0; i < result.Count; i++) {
-						penaltySum2 += result[i].Penalty + tagPenalties[result[i].Tag];
-						walkable &= ((traversableTags >> (int)result[i].Tag) & 1) == 1;
-						walkable &= filter == null || filter(result[i]);
-					}
-
-					// Allow 40% more penalty on average per node
-					if (!walkable || (penaltySum*1.4*result.Count) < (penaltySum2*(end-start+1))) {
+					// Allow 10% more traversal cost on average per node.
+					// This is very much an approximation of the actual cost of the path. But hopefully it's good enough for most cases.
+					if ((newConnectionCost > oldConnectionCost) || (newAvgCost > 1.1f*oldAvgCost) || !PathTraversable(result, 0, result.Count - 1, ref traversalConstraint)) {
 						// The straight line penalties are much higher than the original path.
 						// Revert the simplification
 						result.Clear();
@@ -329,20 +339,12 @@ namespace Pathfinding {
 					Vector3 ep = mn == end ? endPoint : (Vector3)nodes[mn].position;
 					graph.Linecast(sp, ep, out _, result);
 
-					long penaltySum = 0;
-					long penaltySum2 = 0;
-					for (int i = start; i <= mn; i++) {
-						penaltySum += nodes[i].Penalty + tagPenalties[nodes[i].Tag];
-					}
+					PathCost(nodes, start, end, ref traversalCosts, out long oldConnectionCost, out float oldAvgCost);
+					PathCost(result, 0, result.Count - 1, ref traversalCosts, out long newConnectionCost, out float newAvgCost);
 
-					bool walkable = true;
-					for (int i = resCount; i < result.Count; i++) {
-						penaltySum2 += result[i].Penalty + tagPenalties[result[i].Tag];
-						walkable &= ((traversableTags >> (int)result[i].Tag) & 1) == 1;
-					}
-
-					// Allow 40% more penalty on average per node
-					if (!walkable || (penaltySum*1.4*(result.Count-resCount)) < (penaltySum2*(mn-start+1)) || result[result.Count-1] != nodes[mn]) {
+					// Allow 10% more traversal cost on average per node.
+					// This is very much an approximation of the actual cost of the path. But hopefully it's good enough for most cases.
+					if (result[result.Count-1] != nodes[mn] || (newConnectionCost > oldConnectionCost) || (newAvgCost > 1.1f*oldAvgCost) || !PathTraversable(result, 0, result.Count - 1, ref traversalConstraint)) {
 						// Linecast hit the wrong node or it is a lot more expensive than the original path
 						result.RemoveRange(resCount, result.Count-resCount);
 
@@ -612,7 +614,7 @@ namespace Pathfinding {
 
 				if (splitAtEveryPortal) {
 					float2 prev2D = Unwrap(leftFunnel[0], rightFunnel[0], unwrappedPortals[0].xy, unwrappedPortals[0].zw, startPoint, -1, projectionAxis);
-					var prevIdx = 0;
+					var prevIdx = -1;
 					for (int i = 0; i < numCorners; i++) {
 						var idx = indices[i] & FunnelPortalIndexMask;
 						var rightSide = (indices[i] & RightSideBit) != 0;
@@ -626,7 +628,7 @@ namespace Pathfinding {
 					}
 					if (lastCorner) {
 						var next2D = Unwrap(leftFunnel.Last, rightFunnel.Last, unwrappedPortals.Last.xy, unwrappedPortals.Last.zw, endPoint, 1, projectionAxis);
-						CalculatePortalIntersections(prevIdx + 1, unwrappedPortals.Length - 1, leftFunnel, rightFunnel, unwrappedPortals, prev2D, next2D, result);
+						CalculatePortalIntersections(prevIdx + 1, unwrappedPortals.Length, leftFunnel, rightFunnel, unwrappedPortals, prev2D, next2D, result);
 						result.Add(endPoint);
 					}
 				} else {
