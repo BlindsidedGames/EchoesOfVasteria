@@ -20,19 +20,25 @@ namespace BuildTools
         private const string DemoBuildFolderName = "Echoes of Vasteria Demo";
         private const string BetaBuildFolderName = "Echoes of Vasteria Beta";
 
-        [MenuItem("Build/Build All (Linux+Windows IL2CPP then Mac Mono)")]
-        public static void BuildAllFromMenu()
+        [MenuItem("Build/Build All Full (Linux+Windows IL2CPP then Mac Mono)")]
+        public static void BuildAllFullFromMenu()
         {
-            BuildAllInternal(betaFlag: false);
+            BuildAllForVariant(isDemo: false, isBeta: false);
+        }
+
+        [MenuItem("Build/Build All Demo (Linux+Windows IL2CPP then Mac Mono)")]
+        public static void BuildAllDemoFromMenu()
+        {
+            BuildAllForVariant(isDemo: true, isBeta: false);
         }
 
         [MenuItem("Build/Build All Beta (Linux+Windows IL2CPP then Mac Mono)")]
         public static void BuildAllBetaFromMenu()
         {
-            BuildAllInternal(betaFlag: true);
+            BuildAllForVariant(isDemo: false, isBeta: true);
         }
 
-        private static void BuildAllInternal(bool betaFlag)
+        private static void BuildAllForVariant(bool isDemo, bool isBeta)
         {
             var productName = PlayerSettings.productName;
             var scenes = GetEnabledScenes();
@@ -42,17 +48,19 @@ namespace BuildTools
 
             try
             {
-                BuildPlatformVariants("Linux", BuildTarget.StandaloneLinux64, ScriptingImplementation.IL2CPP, config, betaFlag, productName, scenes);
-                BuildPlatformVariants("Windows", BuildTarget.StandaloneWindows64, ScriptingImplementation.IL2CPP, config, betaFlag, productName, scenes);
-                BuildPlatformVariants("macOS", BuildTarget.StandaloneOSX, ScriptingImplementation.Mono2x, config, betaFlag, productName, scenes);
+                ApplyBuildModeFlags(config, isDemo, isBeta);
+                BuildPlatform("Linux", BuildTarget.StandaloneLinux64, ScriptingImplementation.IL2CPP, config, isDemo, isBeta, productName, scenes);
+                BuildPlatform("Windows", BuildTarget.StandaloneWindows64, ScriptingImplementation.IL2CPP, config, isDemo, isBeta, productName, scenes);
+                BuildPlatform("macOS", BuildTarget.StandaloneOSX, ScriptingImplementation.Mono2x, config, isDemo, isBeta, productName, scenes);
             }
             finally
             {
                 ApplyBuildModeFlags(config, originalDemo, originalBeta);
+                RestoreDefaultBuildTarget();
             }
         }
 
-        private static void BuildPlatformVariants(string platformLabel, BuildTarget target, ScriptingImplementation backend, BuildModeConfig config, bool betaFlag, string productName, string[] scenes)
+        private static void BuildPlatform(string platformLabel, BuildTarget target, ScriptingImplementation backend, BuildModeConfig config, bool isDemo, bool isBeta, string productName, string[] scenes)
         {
             if (!IsTargetSupported(BuildTargetGroup.Standalone, target))
             {
@@ -60,20 +68,11 @@ namespace BuildTools
                 return;
             }
 
+            ApplyBuildModeFlags(config, isDemo, isBeta);
             var backendLabel = GetBackendLabel(backend);
-            var variantPrefix = betaFlag ? "Beta " : string.Empty;
-            BuildVariant(config, false, betaFlag, $"{platformLabel} {variantPrefix}Full ({backendLabel})", target, backend, productName, scenes);
-            if (!betaFlag)
-            {
-                BuildVariant(config, true, betaFlag, $"{platformLabel} Demo ({backendLabel})", target, backend, productName, scenes);
-            }
-        }
-
-        private static void BuildVariant(BuildModeConfig config, bool isDemo, bool betaFlag, string label, BuildTarget target, ScriptingImplementation backend, string productName, string[] scenes)
-        {
-            ApplyBuildModeFlags(config, isDemo, betaFlag);
-
-            var locationPath = GetBuildLocation(isDemo, betaFlag, target, productName);
+            var variantLabel = GetVariantLabel(isDemo, isBeta);
+            var label = $"{platformLabel} {variantLabel}({backendLabel})";
+            var locationPath = GetBuildLocation(isDemo, isBeta, target, productName);
             EnsureDirectoryForLocation(locationPath);
             var report = BuildStandalone(target, backend, locationPath, scenes);
             LogReport(label, report);
@@ -218,9 +217,24 @@ namespace BuildTools
             AssetDatabase.SaveAssets();
         }
 
+        private static string GetVariantLabel(bool isDemo, bool isBeta)
+        {
+            if (isBeta) return "Beta ";
+            if (isDemo) return "Demo ";
+            return "Full ";
+        }
+
         private static string GetBackendLabel(ScriptingImplementation backend)
         {
             return backend == ScriptingImplementation.Mono2x ? "Mono" : backend.ToString();
+        }
+
+        private static void RestoreDefaultBuildTarget()
+        {
+            if (!IsTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
+                return;
+
+            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
         }
     }
 }

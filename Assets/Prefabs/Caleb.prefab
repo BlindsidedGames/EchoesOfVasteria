@@ -526,6 +526,7 @@ MonoBehaviour:
   ai: {fileID: 8560947185031467494}
   idleWalkStep: 5
   setter: {fileID: 3963385185172838639}
+  richPresenceUpdateInterval: 2
   autoBuffAnimator: {fileID: 8666374849889485386}
   autoBuffSpriteRenderer: {fileID: 3516590666455192206}
 --- !u!114 &559727629078150424
@@ -585,7 +586,40 @@ MonoBehaviour:
       m_Bits: 4294967295
     useGraphRaycasting: 0
   traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tagCostMultipliers:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
 --- !u!114 &8560947185031467494
@@ -603,13 +637,13 @@ MonoBehaviour:
   version: 1073741824
   radius: 0.22
   height: 2
-  canMove: 1
+  simulateMovement: 1
   maxSpeed: 4
   gravity: {x: 0, y: 0, z: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 0.7
+  endReachedDistance: 0.9
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 0
@@ -629,7 +663,7 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: 100
   rotationSpeed: 360
-  slowdownDistance: 0.6
+  slowdownDistance: 0.7
   pickNextWaypointDist: 0.5
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1

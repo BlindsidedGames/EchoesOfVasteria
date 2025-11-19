@@ -194,7 +194,7 @@ namespace TimelessEchoes
                     if (retreatQueued)
                         desired = "Retreating...";
                     else if (hero != null && hero.InCombat)
-                        desired = "In Combat...";
+                        desired = "Queue Retreat";
                     else
                         desired = "Return To Town";
 
@@ -208,21 +208,13 @@ namespace TimelessEchoes
                 if (retreatBonusText != null)
                 {
                     string desired;
-                    if (heroActive && hero != null && !hero.InCombat)
+                    if (heroActive && hero != null)
                     {
                         var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
                         var percent = kills * bonusPercentPerKill;
-                        desired = $"+{percent:0}% Resources";
-                    }
-                    else if (retreatQueued && hero != null && hero.InCombat)
-                    {
-                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var percent = kills * bonusPercentPerKill;
-                        desired = $"Retreat Queued +{percent:0}%";
-                    }
-                    else if (hero != null && hero.InCombat)
-                    {
-                        desired = "Queue Retreat";
+                        desired = retreatQueued && hero.InCombat
+                            ? $"Retreat Queued +{percent:0}%"
+                            : $"+{percent:0}% Resources";
                     }
                     else
                     {

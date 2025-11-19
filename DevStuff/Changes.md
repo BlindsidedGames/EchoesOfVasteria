@@ -1,7 +1,10 @@
+- Updated return/retreat UI so the return button shows "Queue Retreat" while in combat and the retreat bonus label keeps displaying resource bonuses.
 - Added a Cauldron drinking mix-all button that pairs every stocked ingredient batch and refreshes the selections after draining them.
 - Blocked BuffManager auto-casting while the run loading overlay is active by exposing GameManager.RunLoadingActive so buffs wait for initial map generation to finish.
 - Added MCP read_console guidance to `AGENTS.md` so log retrieval always uses `action: \"get\"` instead of the invalid `\"read\"`.
 - Added SegmentedMapGenerator warmup progress/wait hooks, forced a TaskController resort, and wired new GameManager loading overlay/progress fields so hero/buff activation waits until the first map chunks and tasks finish spawning.
+- Build All flows now restore the active build target back to Linux once the sequence completes so the editor stays on our primary platform.
+- Split Build/Build All into dedicated Full, Demo, and Beta menu items, ensuring each button sets the shared BuildModeConfig flags up front before running the Linux→Windows→Mac build sequence.
 - Removed the Forge stats Quality Equipped block so the panel only shows the best rolled values per slot.
 - Beta builds now skip the demo variant so the Build All Beta flow only authorizes the full SKU per platform.
 - Moved the demo/beta toggles into a `BuildModeConfig` ScriptableObject, updated Oracle/tests to read from it, and reworked BatchBuild to sequence Linux→Windows→Mac full/demo builds (plus a Beta menu option) into dedicated release/demo/beta output folders.

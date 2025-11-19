@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
-    m_Localized: v1.4.1
+    m_Localized: v1.4.2
     m_Metadata:
       m_Items: []
   - m_Id: 7986628786536448
@@ -196,17 +196,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9898115700506624
-    m_Localized: "<b>Balance</b>\n\u2022 Chests are now guaranteed to have at least
-      one core in them. \n\u2022 Chests have had their spawn distances overhauled.\n<b>Changes</b>\n\u2022
-      Cores no longer have a chance of rolling gear above their rarity. EG Nori no
-      longer rolls above Nori.\n\u2022 Slipstream has been changed to multiply gamespeed.
-      \n\u2022 Tasks now show their chance to spawn in the tasks screen.\n\u2022
-      Tasks can be toggled on to double their weight which increases their chance
-      to spawn.\n\u2022 Seasonal leaderboard has been retired and replaced with a
-      total tasks completed leaderboard. \n\u2022 The base leaderboard now tracks
-      the fastest completion of all the quests.\n<b>Minor changes</b>\n\u2022 Crystal
-      Chest  is now named Erif, Golden is now Dlog, Metal is Nori, and Wooden is
-      Eznorb."
+    m_Localized: "<b>Changes</b>\n\u2022 Added two new quests. For the Jam! & Gilliver's
+      Travels.\n\u2022 Improved intro message.\n\u2022 Fixed level up alerts showing
+      lower values than you had.\n\u2022 Removed the Forge stats Quality Equipped
+      block.\n\u2022 Pinned quests now say \"Ready to turn in\" rather than \"Complete.\n\u2022
+      Added an overlay when loading a map.\n\u2022 Added a new Mix All Button.\n<b>Backend</b>\n\u2022
+      Updated A* to a newer version."
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
