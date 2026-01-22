@@ -30,3 +30,36 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 20dee8d0646cb654fad8897601b78df8, type: 2}
   - {fileID: 11400000, guid: 045dafbb1acad16438e4c24c4a9ce0b4, type: 2}
   - {fileID: 11400000, guid: 4fc2f1b9db75169428c17129d8b27e48, type: 2}
+  resourceUnlocks:
+  - task: {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+    requiredLevel: 1
+    overrideIcon: {fileID: 0}
+    description: Unlocks Medium Tree
+  - task: {fileID: 11400000, guid: be28fd76aeb073b499a5fe6d63225d6b, type: 2}
+    requiredLevel: 6
+    overrideIcon: {fileID: 0}
+    description: Unlocks Large Tree
+  - task: {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+    requiredLevel: 13
+    overrideIcon: {fileID: 0}
+    description: Unlocks Medium Oak Tree
+  - task: {fileID: 11400000, guid: 5b79a1d3e3b8c6049ac8306d32db9416, type: 2}
+    requiredLevel: 18
+    overrideIcon: {fileID: 0}
+    description: Unlocks Large Oak Tree
+  - task: {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+    requiredLevel: 31
+    overrideIcon: {fileID: 0}
+    description: Unlocks Medium Birch Tree
+  - task: {fileID: 11400000, guid: 936d408e4a462034db61d9e94a22a424, type: 2}
+    requiredLevel: 36
+    overrideIcon: {fileID: 0}
+    description: Unlocks Large Birch Tree
+  - task: {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
+    requiredLevel: 81
+    overrideIcon: {fileID: 0}
+    description: Unlocks Medium Spruce Tree
+  - task: {fileID: 11400000, guid: 311095139adb56e4baedb88f0634fdc4, type: 2}
+    requiredLevel: 86
+    overrideIcon: {fileID: 0}
+    description: Unlocks Large Spruce Tree
