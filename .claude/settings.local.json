@@ -7,7 +7,34 @@
       "Bash(do grep -q \"2f44203294b08aa48ae12596adc07c8d\\\\|4299317281158b54b805206d5dc7ace5\\\\|5d911cd1d4ad28b4684302804dcf44d2\\\\|7eccc7dde778fd24d98f5f37cb4e9451\\\\|aee31bf9d29c6b34e83feb0744f80e45\\\\|0393b767d52dded48b4147f39f25f9ff\\\\|8a18857e90fcac348ba107a6d4b45789\" \"$file\")",
       "Bash(echo:*)",
       "Bash(done)",
-      "mcp__unityMCP__*"
+      "mcp__unityMCP__*",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout -b*)",
+      "Bash(git push*)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git stash*)",
+      "Bash(git merge*)",
+      "Bash(git rebase*)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(gh repo view*)",
+      "Bash(gh api*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fd*)",
+      "Bash(git checkout -- *)",
+      "Bash(git rebase -i*)",
+      "Bash(git commit --amend*)"
     ]
   }
 }
