@@ -42,6 +42,7 @@ MonoBehaviour:
     m_LocalVariables: []
   npcId: 
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 72c197707d4c4c529d67db6a7e711132, type: 2}
   requirements:
@@ -52,6 +53,16 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName: 
+    buffCastIcon: {fileID: 0}
+  rewards:
+  - type: 1
+    resource: {fileID: 0}
+    amount: 0
+    skill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+    experience: 18000
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

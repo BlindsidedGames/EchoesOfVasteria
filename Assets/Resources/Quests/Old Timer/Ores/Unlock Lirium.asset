@@ -41,6 +41,8 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 8881bebf2bb94df4a91353c851ca2b6f, type: 2}
   requirements:
@@ -51,9 +53,22 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName: 
+    buffCastIcon: {fileID: 0}
+  rewards:
+  - type: 1
+    resource: {fileID: 0}
+    amount: 0
+    skill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
+    experience: 5400
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
   references:
     version: 2
     RefIds: []
