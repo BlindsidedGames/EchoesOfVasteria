@@ -106,15 +106,17 @@ namespace TimelessEchoes.Skills
                 if (refs == null)
                     continue;
 
+                var rootImage = entry.GetComponent<Image>() ?? refs.ToggleImage;
+
                 if (item.IsMilestone)
                 {
-                    var binding = new EntryBinding(skill, item.Milestone, refs, entry.GetComponent<Image>() ?? refs.ToggleImage);
+                    var binding = new EntryBinding(skill, item.Milestone, refs, rootImage);
                     bindings.Add(binding);
                     ConfigureEntry(binding);
                 }
                 else
                 {
-                    ConfigureResourceUnlockEntry(refs, item.Unlock, currentLevel);
+                    ConfigureResourceUnlockEntry(refs, item.Unlock, currentLevel, rootImage);
                 }
             }
         }
@@ -259,24 +261,29 @@ namespace TimelessEchoes.Skills
         }
 
         private void ConfigureResourceUnlockEntry(MilestoneEntryUIReferences refs,
-            ResourceUnlockEntry unlock, int currentLevel)
+            ResourceUnlockEntry unlock, int currentLevel, Image rootImage)
         {
             bool isUnlocked = currentLevel >= unlock.requiredLevel;
 
+            // Get the task icon sprite from TaskData
+            var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task?.taskIcon;
+
             // Show task icon
             if (refs.TaskImageObject != null)
-                refs.TaskImageObject.SetActive(true);
+                refs.TaskImageObject.SetActive(iconSprite != null);
             if (refs.TaskImage != null)
             {
-                refs.TaskImage.sprite = unlock.overrideIcon ?? unlock.task?.taskIcon;
-                refs.TaskImage.color = isUnlocked ? unlockedColor : lockedColor;
+                refs.TaskImage.sprite = iconSprite;
+                refs.TaskImage.color = Color.white;
+                if (iconSprite != null)
+                    refs.TaskImage.SetNativeSize();
             }
 
             // Title - shows what unlocks
             string name = unlock.task?.taskName ?? "Resource";
             refs.NameText?.SetText(isUnlocked
-                ? $"{name} Unlocked"
-                : $"{name} | Unlocks at level {unlock.requiredLevel}");
+                ? $"{name} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>"
+                : $"{name} | <size=80%>Unlocks at level {unlock.requiredLevel}</size>");
 
             // Brief description instead of passive/active text
             if (refs.PassiveText != null)
@@ -292,6 +299,10 @@ namespace TimelessEchoes.Skills
             if (refs.ToggleImage != null) refs.ToggleImage.gameObject.SetActive(false);
             if (refs.SetText != null) refs.SetText.text = string.Empty;
             if (refs.SetIcon != null) refs.SetIcon.enabled = false;
+
+            // Grey out the whole entry if locked (same as milestones)
+            if (rootImage != null)
+                rootImage.color = isUnlocked ? unlockedColor : lockedColor;
         }
 
         private void HandleToggle(EntryBinding binding)

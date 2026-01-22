@@ -11,8 +11,10 @@ namespace TimelessEchoes.Skills
     {
         public TaskData task;
         public int requiredLevel;
-        public Sprite overrideIcon;  // Optional, falls back to task.taskIcon
-        public string description;   // Brief description shown in UI
+        public bool useOverrideIcon;
+        [ShowIf("useOverrideIcon")]
+        public Sprite overrideIcon;
+        public string description;
     }
 
     [ManageableData]
