@@ -15,6 +15,13 @@ namespace Pathfinding.Graphs.Navmesh {
 		/// <summary>One tag per triangle</summary>
 		public uint[] tags;
 
+		public void Validate () {
+			UnityEngine.Assertions.Assert.IsTrue(tags.Length*3 == triangles.Length);
+			for (int i = 0; i < triangles.Length; i++) {
+				UnityEngine.Assertions.Assert.IsTrue(triangles[i] >= 0 && triangles[i] < verticesInTileSpace.Length, "Triangle index is out of bounds");
+			}
+		}
+
 		/// <summary>Unsafe version of <see cref="TileMesh"/></summary>
 		public struct TileMeshUnsafe {
 			/// <summary>Three indices per triangle</summary>

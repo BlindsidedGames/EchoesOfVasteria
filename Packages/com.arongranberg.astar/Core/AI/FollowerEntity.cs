@@ -1460,7 +1460,7 @@ namespace Pathfinding {
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::Move</summary>
 		public void Move (Vector3 deltaPosition) {
-			proxy.Move(deltaPosition);
+			position += deltaPosition;
 		}
 
 		/// <summary>

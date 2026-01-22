@@ -203017,6 +203017,7 @@ MonoBehaviour:
   showNavGraphs: 1
   showUnwalkableNodes: 0
   debugMode: 0
+  graphUpdateDebugMode: 0
   debugFloor: 0
   debugRoof: 1
   manualDebugFloorRoof: 0
@@ -203083,6 +203084,7 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
+  showGraphsInStandalonePlayer: 0
 --- !u!4 &2060354939
 Transform:
   m_ObjectHideFlags: 0

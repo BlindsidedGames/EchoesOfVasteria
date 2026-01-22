@@ -517,8 +517,7 @@ namespace VinToolsEditor.BetterRuleTiles
 
         public void FixMissingTexture(Texture2D tex)
         {
-            var importer = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(tex)) as TextureImporter;
-            if (importer == null) return;
+            TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(tex));
 
             importer.isReadable = true;
 

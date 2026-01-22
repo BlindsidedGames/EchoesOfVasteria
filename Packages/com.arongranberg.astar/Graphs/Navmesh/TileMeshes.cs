@@ -1,6 +1,8 @@
+using System;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Pathfinding.Graphs.Navmesh {
 	/// <summary>
@@ -11,7 +13,7 @@ namespace Pathfinding.Graphs.Navmesh {
 	/// <code>
 	/// // Scans the first 6x6 chunk of tiles of the recast graph (the IntRect uses inclusive coordinates)
 	/// var graph = AstarPath.active.data.recastGraph;
-	/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, new TileLayout(graph), new IntRect(0, 0, 5, 5));
+	/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, TileLayout.FromGraph(graph), new IntRect(0, 0, 5, 5));
 	/// var disposeArena = new Pathfinding.Jobs.DisposeArena();
 	/// var promise = buildSettings.Schedule(disposeArena);
 	///
@@ -96,20 +98,13 @@ namespace Pathfinding.Graphs.Navmesh {
 			for (int z = 0; z < tileRect.Height; z++) {
 				for (int x = 0; x < tileRect.Width; x++) {
 					var tile = tileMeshes[(z*tileRect.Width) + x];
-					UnityEngine.Assertions.Assert.IsTrue(tile.tags.Length*3 == tile.triangles.Length);
+					tile.Validate();
+
 					writer.Write(tile.triangles.Length);
 					writer.Write(tile.verticesInTileSpace.Length);
-					for (int i = 0; i < tile.verticesInTileSpace.Length; i++) {
-						var v = tile.verticesInTileSpace[i];
-						writer.Write(v.x);
-						writer.Write(v.y);
-						writer.Write(v.z);
-					}
-					for (int i = 0; i < tile.triangles.Length; i++) {
-						UnityEngine.Assertions.Assert.IsTrue(tile.triangles[i] >= 0 && tile.triangles[i] < tile.verticesInTileSpace.Length, "Triangle index is out of bounds");
-						writer.Write(tile.triangles[i]);
-					}
-					for (int i = 0; i < tile.tags.Length; i++) writer.Write(tile.tags[i]);
+					writer.Write(System.Runtime.InteropServices.MemoryMarshal.AsBytes(tile.verticesInTileSpace.AsSpan()));
+					writer.Write(System.Runtime.InteropServices.MemoryMarshal.AsBytes(tile.triangles.AsSpan()));
+					writer.Write(System.Runtime.InteropServices.MemoryMarshal.AsBytes(tile.tags.AsSpan()));
 				}
 			}
 			writer.Close();
@@ -131,25 +126,33 @@ namespace Pathfinding.Graphs.Navmesh {
 
 			var tileRect = new IntRect(0, 0, w - 1, h - 1);
 
+			static void ReadTo<T>(System.IO.BinaryReader reader, T[] span) where T : unmanaged {
+				var byteSpan = System.Runtime.InteropServices.MemoryMarshal.AsBytes(span.AsSpan());
+				int totalRead = 0;
+				while (totalRead < byteSpan.Length) {
+					int read = reader.Read(byteSpan.Slice(totalRead));
+					if (read == 0) throw new System.Exception("Unexpected end of stream");
+					totalRead += read;
+				}
+			}
+
 			var tileMeshes = new TileMesh[w*h];
 			for (int z = 0; z < h; z++) {
 				for (int x = 0; x < w; x++) {
-					int[] tris = new int[reader.ReadInt32()];
-					Int3[] vertsInTileSpace = new Int3[reader.ReadInt32()];
-					uint[] tags = new uint[tris.Length/3];
-
-					for (int i = 0; i < vertsInTileSpace.Length; i++) vertsInTileSpace[i] = new Int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
-					for (int i = 0; i < tris.Length; i++) {
-						tris[i] = reader.ReadInt32();
-						UnityEngine.Assertions.Assert.IsTrue(tris[i] >= 0 && tris[i] < vertsInTileSpace.Length, "Triangle index is out of bounds");
-					}
-					for (int i = 0; i < tags.Length; i++) tags[i] = reader.ReadUInt32();
-
-					tileMeshes[x + z*w] = new TileMesh {
-						triangles = tris,
-						verticesInTileSpace = vertsInTileSpace,
-						tags = tags,
+					var triCount = reader.ReadInt32();
+					var vertCount = reader.ReadInt32();
+					var tile = new TileMesh {
+						triangles = new int[triCount],
+						verticesInTileSpace = new Int3[vertCount],
+						tags = new uint[triCount/3],
 					};
+
+					ReadTo(reader, tile.verticesInTileSpace);
+					ReadTo(reader, tile.triangles);
+					ReadTo(reader, tile.tags);
+
+					tile.Validate();
+					tileMeshes[x + z*w] = tile;
 				}
 			}
 			return new TileMeshes {

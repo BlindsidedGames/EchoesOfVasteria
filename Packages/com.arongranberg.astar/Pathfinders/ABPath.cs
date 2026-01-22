@@ -440,6 +440,24 @@ namespace Pathfinding {
 			Trace(ref ctx, partialBestTargetPathNodeIndex);
 		}
 
+		/// <summary>
+		/// Refreshes the start and end points of the path.
+		/// Useful if the agent has moved significantly since the path was requested.
+		///
+		/// If the path has not yet been processed by the pathfinding system, the start and end points will be updated immediately.
+		/// If the path is being calculated or has been calculated, this function will do nothing.
+		///
+		/// A common way is to call this function once per frame until the path has been calculated,
+		/// with the most up-to-date positions of the agent and the target.
+		/// </summary>
+		public virtual void RefreshPathEndpoints (Vector3 start, Vector3 end) {
+			lock (this) {
+				if (PipelineState == PathState.PathQueue || PipelineState == PathState.Created) {
+					UpdateStartEnd(start, end);
+				}
+			}
+		}
+
 		protected override void OnHeapExhausted (ref SearchContext ctx) {
 			if (calculatePartial && partialBestTargetPathNodeIndex != GraphNode.InvalidNodeIndex) {
 				CompletePartial(ref ctx);

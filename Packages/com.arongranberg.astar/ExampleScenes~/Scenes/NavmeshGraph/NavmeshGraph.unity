@@ -431,6 +431,7 @@ MonoBehaviour:
   showNavGraphs: 1
   showUnwalkableNodes: 0
   debugMode: 0
+  graphUpdateDebugMode: 0
   debugFloor: 0
   debugRoof: 1
   manualDebugFloorRoof: 0
@@ -497,6 +498,7 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
+  showGraphsInStandalonePlayer: 0
 --- !u!114 &44
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1023,7 +1025,7 @@ MonoBehaviour:
   version: 1073741824
   radius: 0.3
   height: 1.2
-  canMove: 1
+  simulateMovement: 1
   maxSpeed: 2.2
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
@@ -1111,7 +1113,40 @@ MonoBehaviour:
       m_Bits: 4294967295
     useGraphRaycasting: 0
   traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tagCostMultipliers:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
 --- !u!143 &1797897909

@@ -39,6 +39,26 @@ namespace Pathfinding {
 			base.Setup(start, flood.originalStartPoint, callback);
 		}
 
+		/// <summary>
+		/// Refreshes the start and end points of the path.
+		/// Useful if the agent has moved significantly since the path was requested.
+		///
+		/// If the path has not yet been processed by the pathfinding system, the start and end points will be updated immediately.
+		/// If the path is being calculated or has been calculated, this function will do nothing.
+		///
+		/// A common way is to call this function once per frame until the path has been calculated,
+		/// with the most up-to-date positions of the agent and the target.
+		///
+		/// Note: For a FloodPathTracer, this method only updates the end point, since the start point is determined by the flood path passed to the constructor.
+		/// </summary>
+		public override void RefreshPathEndpoints (Vector3 start, Vector3 end) {
+			lock (this) {
+				if (PipelineState == PathState.PathQueue || PipelineState == PathState.Created) {
+					originalEndPoint = endPoint = end;
+				}
+			}
+		}
+
 		protected override void Reset () {
 			base.Reset();
 			flood = null;

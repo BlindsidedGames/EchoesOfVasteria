@@ -99,11 +99,7 @@ namespace Pathfinding.Graphs.Navmesh {
 
 			void ForceUpdateLayoutFromGraph () {
 				Assert.IsNotNull(graph.GetTiles());
-				if (graph is NavMeshGraph navmeshGraph) {
-					SetLayout(new TileLayout(navmeshGraph));
-				} else if (graph is RecastGraph recastGraph) {
-					SetLayout(new TileLayout(recastGraph));
-				}
+				SetLayout(TileLayout.FromGraph(graph));
 			}
 
 			void SetLayout (TileLayout tileLayout) {

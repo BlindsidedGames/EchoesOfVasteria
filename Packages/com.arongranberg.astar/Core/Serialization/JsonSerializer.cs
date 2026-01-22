@@ -94,20 +94,25 @@ namespace Pathfinding.Serialization {
 					var cost = reader.ReadUInt32();
 					if (deserializeMetadata) {
 						byte shapeEdgeInfo = Connection.NoSharedEdge;
-						if (meta.version < AstarSerializer.V4_1_0) {
-							// Read nothing
-						} else if (meta.version < AstarSerializer.V4_3_68) {
-							// Read, but discard data
-							reader.ReadByte();
+						// Keep all compatibility checks behind a single check for performance
+						if (meta.version < AstarSerializer.V4_3_87) {
+							if (meta.version < AstarSerializer.V4_1_0) {
+								// Read nothing
+							} else if (meta.version < AstarSerializer.V4_3_68) {
+								// Read, but discard data
+								reader.ReadByte();
+							} else {
+								shapeEdgeInfo = reader.ReadByte();
+							}
+							if (meta.version < AstarSerializer.V4_3_85) {
+								// Previously some additional bits were set to 1
+								shapeEdgeInfo &= 0b1111 | (1 << 6);
+							}
+							if (meta.version < AstarSerializer.V4_3_87) {
+								shapeEdgeInfo |= Connection.IncomingConnection | Connection.OutgoingConnection;
+							}
 						} else {
 							shapeEdgeInfo = reader.ReadByte();
-						}
-						if (meta.version < AstarSerializer.V4_3_85) {
-							// Previously some additional bits were set to 1
-							shapeEdgeInfo &= 0b1111 | (1 << 6);
-						}
-						if (meta.version < AstarSerializer.V4_3_87) {
-							shapeEdgeInfo |= Connection.IncomingConnection | Connection.OutgoingConnection;
 						}
 
 						connections[i] = new Connection(
@@ -162,9 +167,11 @@ namespace Pathfinding.Serialization {
 
 		public UnsafeSpan<T> ReadSpan<T>(Allocator allocator) where T : unmanaged {
 			var res = new UnsafeSpan<T>(allocator, reader.ReadInt32());
-			if (UnsafeUtility.SizeOf<T>() % sizeof(int) != 0) throw new Exception("Cannot read data of type "+typeof(T)+" because it has a size which is not a multiple of 4 bytes");
-			var s = res.Reinterpret<int>(UnsafeUtility.SizeOf<T>());
-			for (int i = 0; i < s.Length; i++) s[i] = reader.ReadInt32();
+			var s = res.Reinterpret<byte>(UnsafeUtility.SizeOf<T>());
+			unsafe {
+				var n = reader.Read(new System.Span<byte>(s.ptr, s.Length));
+				if (n != s.Length) throw new Exception("Unexpected end of stream");
+			}
 			return res;
 		}
 	}
@@ -839,7 +846,7 @@ namespace Pathfinding.Serialization {
 #if NETFX_CORE
 			return new BinaryReader(entry.Open());
 #else
-			var stream = new System.IO.MemoryStream();
+			var stream = new MemoryStream((int)entry.UncompressedSize);
 
 			entry.Extract(stream);
 			stream.Position = 0;
@@ -852,7 +859,7 @@ namespace Pathfinding.Serialization {
 #if NETFX_CORE
 			var reader = new StreamReader(entry.Open());
 #else
-			var buffer = new MemoryStream();
+			var buffer = new MemoryStream((int)entry.UncompressedSize);
 
 			entry.Extract(buffer);
 			buffer.Position = 0;

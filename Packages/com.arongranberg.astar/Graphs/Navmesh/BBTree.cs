@@ -50,10 +50,12 @@ namespace Pathfinding.Collections {
 		[BurstCompile]
 		static void Build (ref UnsafeSpan<int> triangles, ref UnsafeSpan<Int3> vertices, out BBTree bbTree) {
 			var nodeCount = triangles.Length/3;
-			// We will use approximately 2N tree nodes
-			var tree = new UnsafeList<BBTreeBox>((int)(nodeCount * 2.1f), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			// We will use approximately N node references
-			var nodes = new UnsafeList<int>((int)(nodeCount * 1.1f), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			// We will use approximately 2L tree nodes (inner + leaf), where L is the number of leaf nodes.
+			// Each leaf node holds up to MaximumLeafSize nodes, so we will have around nodeCount / MaximumLeafSize leaf nodes.
+			// Our tree will likely not be optimal, so multiply by 1.5.
+			var tree = new UnsafeList<BBTreeBox>((int)(nodeCount * (2f * 1.5f / MaximumLeafSize)), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			// We will use approximately N node references, but adjust upwards because each leaf node is not optimally filled
+			var nodes = new UnsafeList<int>((int)(nodeCount * 1.5f), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
 			// This will store the order of the nodes while the tree is being built
 			// It turns out that it is a lot faster to do this than to actually modify
@@ -62,7 +64,7 @@ namespace Pathfinding.Collections {
 			// instead of 4 bytes (sizeof(int)).
 			// It also means we don't have to make a copy of the nodes array since
 			// we do not modify it
-			var permutation = new NativeArray<int>(nodeCount, Allocator.Temp);
+			var permutation = new NativeArray<int>(nodeCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
 			for (int i = 0; i < nodeCount; i++) {
 				permutation[i] = i;
 			}
@@ -70,7 +72,8 @@ namespace Pathfinding.Collections {
 			// Precalculate the bounds of the nodes in XZ space.
 			// It turns out that calculating the bounds is a bottleneck and precalculating
 			// the bounds makes it around 3 times faster to build a tree
-			var nodeBounds = new NativeArray<IntRect>(nodeCount, Allocator.Temp);
+			var nodeBounds = new NativeArray<IntRect>(nodeCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+
 			for (int i = 0; i < nodeCount; i++) {
 				var v0 = ((int3)vertices[triangles[i*3+0]]).xz;
 				var v1 = ((int3)vertices[triangles[i*3+1]]).xz;

@@ -1,3 +1,25 @@
+## 5.4.5 (2025-11-21)
+- Breaking changes
+		- Some tree colliders that were previously included in recast graph scans may now be excluded, in accordance with the layer and tag filtering settings on the recast graph. See below for more details.
+			This is a bug fix, but you may have been relying on the previous (incorrect) behavior.
+- Fixed having many FollowerEntity agents with local avoidance enabled in the exact same position, could cause significant performance issues in some rare cases.
+- Fixed recast graphs would not take the layers, tags nor collider isTrigger state of tree prefabs into account when scanning. This could result in tree collider being included in the scan even if they should be excluded.
+- Fixed \reflink{NavmeshBase.ReplaceTiles} not applying tags to the new tiles.
+- Fixed a small memory leak caused by prefabs sometimes being kept in memory longer than they should, in the Unity editor.
+- The navmesh graph will now show a "Fix" button if the input mesh is not readable.
+		Clicking the button will try to enable read/write on the mesh import settings automatically.
+- Fixed an exception that could be thrown when scanning a navmesh graph twice in a row with a null source mesh.
+- Fixed example code not being updated for 5.4 changes in the \ref multiple-agent-types tutorial.
+- Fixed a regression in 5.4 that \reflink{FollowerEntity.Move} would not move the Transform immediately, but only the agent's internal position.
+- Improved performance and reduced allocations when destroying navmesh/recast graphs.
+- Reduced allocations when loading graphs.
+- Add \reflink{NavmeshBase.ToTileMeshes} method to export tiles of the graph to the portable \reflink{TileMeshes} representation.
+- Improve performance of serializing and deserializing \reflink{TileMeshes}.
+- Fixed calling \reflink{NavmeshBase.ClearTiles} and then \reflink{NavmeshBase.ReplaceTiles} could skip applying navmesh cuts.
+- Reduce memory usage of recast/navmesh graphs.
+- Fixed \reflink{FollowerEntity} sometimes instantly stopping after a nearby graph update caused the navmesh underneath it to be destroyed.
+- The FollowerEntity will now refresh the endpoints of any pending path every frame, to ensure it is as up-to-date as possible when the path is calculated. This is important primarily when you have lots of agents calculating paths at the same time, or the game is running at a low framerate.
+
 ## 5.4.4 (2025-10-06)
 - Note
 		- This stable release contains the features of all beta releases 5.4.0 through 5.4.3.

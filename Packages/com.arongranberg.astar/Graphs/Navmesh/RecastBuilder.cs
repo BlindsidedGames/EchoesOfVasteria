@@ -13,7 +13,7 @@ namespace Pathfinding.Graphs.Navmesh {
 		/// <code>
 		/// // Scans the first 6x6 chunk of tiles of the recast graph (the IntRect uses inclusive coordinates)
 		/// var graph = AstarPath.active.data.recastGraph;
-		/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, new TileLayout(graph), new IntRect(0, 0, 5, 5));
+		/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, TileLayout.FromGraph(graph), new IntRect(0, 0, 5, 5));
 		/// var disposeArena = new Pathfinding.Jobs.DisposeArena();
 		/// var promise = buildSettings.Schedule(disposeArena);
 		///

@@ -128,6 +128,26 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
+		/// Refreshes the start point of the path.
+		/// Useful if the agent has moved significantly since the path was requested.
+		///
+		/// If the path has not yet been processed by the pathfinding system, the start point will be updated immediately.
+		/// If the path is being calculated or has been calculated, this function will do nothing.
+		///
+		/// A common way is to call this function once per frame until the path has been calculated,
+		/// with the most up-to-date position of the agent.
+		///
+		/// Note: For a RandomPath, this method only updates the start point, since the end point is determined by the pathfinding result.
+		/// </summary>
+		public override void RefreshPathEndpoints (Vector3 start, Vector3 end) {
+			lock (this) {
+				if (PipelineState == PathState.PathQueue || PipelineState == PathState.Created) {
+					originalStartPoint = startPoint = start;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Calls callback to return the calculated path.
 		/// See: <see cref="callback"/>
 		/// </summary>

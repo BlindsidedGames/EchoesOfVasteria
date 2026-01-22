@@ -2791,6 +2791,16 @@ PrefabInstance:
       propertyPath: managedState.rvoEnabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 137986479916754273, guid: d0bfae93e8d4c8927a0403e663df2f31,
+        type: 3}
+      propertyPath: managedState.pathfindingSettings.tagCostMultipliers.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 137986479916754273, guid: d0bfae93e8d4c8927a0403e663df2f31,
+        type: 3}
+      propertyPath: managedSettings.pathfindingSettings.tagCostMultipliers.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 137986479916754275, guid: d0bfae93e8d4c8927a0403e663df2f31,
         type: 3}
       propertyPath: traversableTags
@@ -4443,12 +4453,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1073741824
   data:
-    dataString: UEsDBBQAAAgIAAAIIewbZSXRMwIAADoEAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtU01v2zAM/SuBz5th2Y4T77i06A5LO8QBVnTYgZEYW6gsdbKcr6L/faLifHTdSfYj3xP5SL1GvAEL3KFdgJB9F30ZJfH00yjiRjvT2znsbq011uMZoahUJQ8Y0lIPbEE9w0rhN5R14zw8jqfsCp8p2a5CNtFb2FXKvBA9L+P8iNyKGr+jrl3j4TQhUOoF1tLo4SqWEIpCOmOXUuEJTqlQNwCPH5CnM9J3SDzqztkePSJki7rzV8yNIK3o5gRkN5GPr4A/19b0WiwtbNB2sJJKuj2l/hx6ozyLCjeg3Z2Fl6bq7Ro4niXNvXEL/NNLe8yFzvvsC5sZpaTwopd6zrE5dk0odA2qexdZorUg9X84S4vXvfFBfnGK36ADqcjd4Hj37D9fR9EGVB98HL2Ra1DPj6Ffv+n3eFsF7cvZcBqhNQ6ct+kosaPRenQ/nAc6g9zaWI7iKznYzVB7uQuj8NuQjws2EIuYZeNJnoRRkUJWxmXOyukHoaGOQYZNypjlEzYuBqHxNE7zLB1UWJbGZcZYNgk6XWO2ZO5D75TUeOUwRe79zGZGa+TUXPdPlHjDcC82awSLnav8wZsHrfaPT1c01LQi97BpPXfWOyd1feHWvRTvhxDxLCmYQIRVsVrDZPw5FRyKaVauC0zSBFgU2pBaOgnqh9dX7mS7f1JXe6GhDYoL5H4DRmE1af+Ehe2dPLTmalekXpuK+/3RD0eNc9t+c0B5v8VteHcVhhaIGr2+RW9/AVBLAwQUAAAICAAACCHsxQHj8G8AAAB6AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9azsNBRUEovSizIKAaKGII4pZkpIHa0UrKxgZlhSmpqYpJZUlqiuamuUUpyopmFsWWaWaqBkUGioVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrpeUGpyYnGJO8hwpdhaAFBLAQItABQAAAgIAAAIIewbZSXRMwIAADoEAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAAAIIezFAePwbwAAAHoAAAAJACQAAAAAAAAAAAAAAIACAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAOgMAAAAA
+    dataString: UEsDBBQAAAgIAAAIIexsC4K4pAIAAFgFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtVF1v2jAU/Ssoz1tEEgiwx0HXTSrtBEitOu3hYl8Sq47NHAdKEf99vo6h6cdTpHPvOffrOMeIlWCAWTQL4KKpo2+9fjz+0ouYVlY3Zg7PV8Zo4/CMUJRyKV7Qp6UO2IN8grXEnyiK0jp4GI+TDj6Volr7bKJX8LyUekv0wSQetMgVL/AGVWFLB6d9AoVaYCG0CqWSPqHIhdVmJSSe4ZQatQF4+IA8XpCmRuLRdNY06JAtmhs4oJlrLjaCgXXVKPznbxtcoTEg1Oc5x0gSTvLUrebUTXQfRl42ZgMM74UtV1BELqNukV+zwLClwbrUkrfbPlFNLipUtaswD3KzM5DNSGMN7KkwulF8ZWCHpoa1kMIeupUpz6DEHSh7bWBbhlYukvpW2wX+a4TxuUxLiYzGWqK1QhU03bEDn4l+DTVRtuWhFqxeMlQUOZ7eYensjPoVzaF+IqAX7UA2/mg9ClooQsgv3EDtHOhONnWlBadal0tdYnO3M3/CDcj6TSQc6xPOymD36rZNbM1awXam96qGaivd7D/cK/A+T8NmqI/FWWiGFoQMUa2m7YouLalGSprLaOtt0s78TPd16CF8X+jr599ow5B/p3PWU1TWmykwcvdWBsM8CcQ8TrLhaND3RiaFbBJPBslk/EEoPIsgk4wmcTIYJcM8CA3HcTrI0qCSZGk8yZIkG3kdZ8c9TXPXWLcM7GyZIrfOB1OtVOuK+l2UeMFpr6tWCM7kduk+rLxT8vDw2KGhIr/ewq5y3GnjzffKLRrB37omYlk/TzgirPP1BkbDrylnkI+zySbHftqHJPJjCCWsAPnb6Ut7Xrv74XS8oaDyigtk7rg9/07I2dzA/lq8VLrjF6E2esmch9Rdq3EZ25kCpNs3v/J/pc77iY6n6PQfUEsDBBQAAAgIAAAIIezvRo0NbgAAAHkAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNUz1jPRUVBKL0osyCgGChiCOKWZKSB2tFKysYGZYUpqamKSWVJaormprlFKcqKZhbFlmlmqgZFBoqFSLFB9SWVBql9ibipET0BiSUZaZl5KZl66XlBqcmJxiTvIcKXYWgBQSwECLQAUAAAICAAACCHsbAuCuKQCAABYBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAACCHs70aNDW4AAAB5AAAACQAkAAAAAAAAAAAAAADxAgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAKoDAAAAAA==
     file_cachedStartup: {fileID: 0}
     cacheStartup: 0
   showNavGraphs: 1
   showUnwalkableNodes: 1
   debugMode: 6
+  graphUpdateDebugMode: 0
   debugFloor: 0
   debugRoof: 1
   manualDebugFloorRoof: 0
@@ -4474,9 +4485,9 @@ MonoBehaviour:
     - {r: 0.25, g: 0.5, b: 0.5, a: 1}
   tagNames:
   - Basic Ground
-  - Green
-  - Red
-  - HighPenalty
+  - Dirt road
+  - 2
+  - 3
   - 4
   - 5
   - 6
@@ -4519,6 +4530,7 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
+  showGraphsInStandalonePlayer: 0
 --- !u!4 &1318193367
 Transform:
   m_ObjectHideFlags: 0

@@ -155,6 +155,8 @@ namespace Pathfinding.Examples {
 
 			nextPosition += (float3)anim.deltaPosition;
 
+			// Write back how the agent actually moved this frame
+			// This will inform the system on how to move the internal entity.
 			resolvedMovement.targetPoint = nextPosition;
 			resolvedMovement.targetRotation = movementPlane.value.ToPlane(nextRotation);
 			// target rotation speed?
@@ -165,7 +167,7 @@ namespace Pathfinding.Examples {
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
 			if (ai is AIBase aiBase) {
-				aiBase.canMove = false;
+				aiBase.simulateMovement = false;
 				// aiBase.updatePosition = false;
 				// aiBase.updateRotation = false;
 			}

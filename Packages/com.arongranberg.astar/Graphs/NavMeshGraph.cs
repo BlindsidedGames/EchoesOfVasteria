@@ -357,6 +357,9 @@ namespace Pathfinding {
 			}
 
 			public void Apply (IGraphUpdateContext ctx) {
+				// Destroy all previous nodes (if any)
+				graph.DestroyAllNodes();
+
 				if (emptyGraph) {
 					graph.forcedBoundsSize = Vector3.zero;
 					graph.transform = transform;
@@ -366,9 +369,6 @@ namespace Pathfinding {
 					graph.navmeshUpdateData.Dispose();
 					return;
 				}
-
-				// Destroy all previous nodes (if any)
-				graph.DestroyAllNodes();
 
 				// Initialize all nodes that were created in the jobs
 				for (int j = 0; j < tiles.Length; j++) AstarPath.active.InitializeNodes(tiles[j].nodes);

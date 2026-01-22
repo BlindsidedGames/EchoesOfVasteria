@@ -61,6 +61,7 @@ namespace Pathfinding {
 	///
 	/// See: <see cref="RecastGraph"/>
 	/// See: <see cref="TileMeshes"/>
+	/// See: <see cref="NavmeshBase.ToTileMeshes"/>
 	/// </summary>
 	[AddComponentMenu("Pathfinding/Navmesh Prefab")]
 	[HelpURL("https://arongranberg.com/astar/documentation/stable/navmeshprefab.html")]
@@ -209,7 +210,7 @@ namespace Pathfinding {
 		/// <summary>Moves and rotates this object so that it is aligned with tiles in the given graph</summary>
 		public void SnapToClosestTileAlignment (RecastGraph graph) {
 			// Calculate a new tile layout, because the graph may not be scanned yet (especially if this code runs outside of play mode)
-			var tileLayout = new TileLayout(graph);
+			var tileLayout = TileLayout.FromGraph(graph);
 			SnapToGraph(tileLayout, transform.position, transform.rotation, bounds, out IntRect tileRect, out int snappedRotation, out float yOffset);
 			var graphSpaceBounds = tileLayout.GetTileBoundsInGraphSpace(tileRect.xmin, tileRect.ymin, tileRect.Width, tileRect.Height);
 			var centerInGraphSpace = new Vector3(graphSpaceBounds.center.x, yOffset, graphSpaceBounds.center.z);
@@ -249,7 +250,7 @@ namespace Pathfinding {
 				AstarPath.active.AddWorkItem(ctx => {
 					var graph = AstarPath.active.data.recastGraph;
 					if (graph != null) {
-						SnapToGraph(new TileLayout(graph), pos, rot, bounds, out IntRect tileRect, out int rotation, out float yOffset);
+						SnapToGraph(TileLayout.FromGraph(graph), pos, rot, bounds, out IntRect tileRect, out int rotation, out float yOffset);
 						graph.ClearTiles(tileRect);
 					}
 				});
@@ -316,7 +317,7 @@ namespace Pathfinding {
 
 			AstarPath.active.AddWorkItem(() => {
 				UnityEngine.Profiling.Profiler.BeginSample("NavmeshPrefab.Apply");
-				SnapToGraph(new TileLayout(graph), transform.position, transform.rotation, bounds, out IntRect tileRect, out int rotation, out float yOffset);
+				SnapToGraph(TileLayout.FromGraph(graph), transform.position, transform.rotation, bounds, out IntRect tileRect, out int rotation, out float yOffset);
 
 				var tileMeshes = TileMeshes.Deserialize(serializedNavmesh.bytes);
 				tileMeshes.Rotate(rotation);

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace VinTools.BetterRuleTiles.Sample
@@ -21,7 +23,7 @@ namespace VinTools.BetterRuleTiles.Sample
             if (propertyTest != null) propertyTest.onReadValue -= DisplayValue;
         }
 
-        private void DisplayValue(string msg)
+        void DisplayValue(string msg)
         {
             valueText.text = "Move your cursor over the tile to see it's values.\n\n" + msg;
         }

@@ -13,7 +13,7 @@ namespace Pathfinding.Examples {
 		/// <summary>[Update]</summary>
 		void Update () {
 			if (transform.hasChanged && AstarPath.active != null) {
-				var node = AstarPath.active.GetNearest(transform.position, NNConstraint.None).node;
+				var node = AstarPath.active.GetNearest(transform.position).node;
 				if (node != null) {
 					transform.position = (Vector3)node.position;
 					transform.hasChanged = false;

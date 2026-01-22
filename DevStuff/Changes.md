@@ -1,3 +1,4 @@
+- Added `DevStuff/EoV_New_Employee_Systems_Overview.md` with a code-verified systems overview, corrected naming, and clarified progression gates.
 - Updated return/retreat UI so the return button shows "Queue Retreat" while in combat and the retreat bonus label keeps displaying resource bonuses.
 - Added a Cauldron drinking mix-all button that pairs every stocked ingredient batch and refreshes the selections after draining them.
 - Blocked BuffManager auto-casting while the run loading overlay is active by exposing GameManager.RunLoadingActive so buffs wait for initial map generation to finish.

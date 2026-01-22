@@ -88,10 +88,10 @@ namespace Pathfinding.Graphs.Navmesh {
 			return r;
 		}
 
-		public TileLayout(RecastGraph graph) : this(new Bounds(graph.forcedBoundsCenter, graph.forcedBoundsSize), Quaternion.Euler(graph.rotation), graph.cellSize, graph.editorTileSize, graph.useTiles) {
-		}
-
-		public TileLayout(NavMeshGraph graph) : this(new Bounds(graph.transform.Transform(graph.forcedBoundsSize*0.5f), graph.forcedBoundsSize), Quaternion.Euler(graph.rotation), 0.001f, 0, false) {
+		public static TileLayout FromGraph (NavmeshBase graph) {
+			if (graph is RecastGraph rg) return new TileLayout(new Bounds(rg.forcedBoundsCenter, rg.forcedBoundsSize), Quaternion.Euler(rg.rotation), rg.cellSize, rg.editorTileSize, rg.useTiles);
+			else if (graph is NavMeshGraph ng) return new TileLayout(new Bounds(ng.transform.Transform(ng.forcedBoundsSize*0.5f), ng.forcedBoundsSize), Quaternion.Euler(ng.rotation), 0.001f, 0, false);
+			else throw new System.ArgumentException("The graph must be a RecastGraph or NavMeshGraph");
 		}
 
 		public TileLayout(Bounds bounds, Quaternion rotation, float cellSize, int tileSizeInVoxels, bool useTiles) {

@@ -84,6 +84,28 @@ namespace Pathfinding {
 			return p;
 		}
 
+		/// <summary>
+		/// Refreshes the start and end points of the path.
+		/// Useful if the agent has moved significantly since the path was requested.
+		///
+		/// If the path has not yet been processed by the pathfinding system, the start and end points will be updated immediately.
+		/// If the path is being calculated or has been calculated, this function will do nothing.
+		///
+		/// A common way is to call this function once per frame until the path has been calculated,
+		/// with the most up-to-date positions of the agent and the target.
+		///
+		/// Note: For a multi target path, this function only supports updating the common start point or the common end point. Not all individual targets/start points. Depending on which constructor is used, either the start parameter or the end parameter will be used, and the other one ignored.
+		/// </summary>
+		public override void RefreshPathEndpoints (Vector3 start, Vector3 end) {
+			lock (this) {
+				if (PipelineState == PathState.PathQueue || PipelineState == PathState.Created) {
+					// This function only supports updating the common point of all paths, for this path type.
+					// So either the common start point or the common end point.
+					originalStartPoint = startPoint = inverted ? end : start;
+				}
+			}
+		}
+
 		protected void Setup (Vector3 start, Vector3[] targets, OnPathDelegate[] callbackDelegates, OnPathDelegate callback) {
 			inverted = false;
 			this.callback = callback;

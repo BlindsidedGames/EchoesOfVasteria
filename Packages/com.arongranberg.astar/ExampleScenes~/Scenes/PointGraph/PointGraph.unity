@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 258597283}
   - component: {fileID: 258597282}
   - component: {fileID: 258597281}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,6 +361,7 @@ MonoBehaviour:
   showNavGraphs: 1
   showUnwalkableNodes: 1
   debugMode: 0
+  graphUpdateDebugMode: 0
   debugFloor: 0
   debugRoof: 1
   manualDebugFloorRoof: 0
@@ -395,6 +396,7 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
+  showGraphsInStandalonePlayer: 0
 --- !u!4 &334859064
 Transform:
   m_ObjectHideFlags: 0
@@ -422,7 +424,7 @@ GameObject:
   - component: {fileID: 925020023}
   - component: {fileID: 925020022}
   - component: {fileID: 925020021}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +461,7 @@ MonoBehaviour:
   version: 1073741824
   radius: 0.5
   height: 2
-  canMove: 1
+  simulateMovement: 1
   maxSpeed: 5
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
@@ -516,7 +518,40 @@ MonoBehaviour:
       m_Bits: 4294967295
     useGraphRaycasting: 0
   traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tagCostMultipliers:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
 --- !u!4 &925020024
@@ -644,7 +679,7 @@ MonoBehaviour:
   version: 1073741824
   mask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 59
   target: {fileID: 2031071674}
   trigger: 0
   clickEffect: {fileID: 0}

@@ -67,6 +67,8 @@ namespace Pathfinding.Serialization.Zip {
 		internal string name;
 		internal byte[] bytes;
 
+		public long UncompressedSize => bytes.Length;
+
 		public ZipEntry (string name, byte[] bytes) {
 			this.name = name;
 			this.bytes = bytes;

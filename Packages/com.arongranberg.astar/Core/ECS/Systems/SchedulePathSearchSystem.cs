@@ -1,7 +1,6 @@
 #pragma warning disable CS0282
 #if MODULE_ENTITIES
 using Unity.Entities;
-using UnityEngine.Profiling;
 using Unity.Transforms;
 using Unity.Burst;
 
@@ -9,15 +8,20 @@ namespace Pathfinding.ECS {
 	using Pathfinding;
 	using Unity.Burst.Intrinsics;
 	using Unity.Collections;
-	using Unity.Jobs;
 	using Unity.Mathematics;
 	using Unity.Profiling;
+	using UnityEngine;
 
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	[UpdateBefore(typeof(RepairPathSystem))]
 	[UpdateBefore(typeof(TraverseOffMeshLinkSystem))]
 	[BurstCompile]
 	public partial struct SchedulePathSearchSystem : ISystem {
+		static readonly ProfilerMarker MarkerSchedulePathSearch = new ProfilerMarker("Schedule Path Search");
+		static readonly ProfilerMarker MarkerCheckStaleness = new ProfilerMarker("Check Path Staleness");
+		static readonly ProfilerMarker MarkerShouldRecalculatePaths = new ProfilerMarker("Check Should Recalculate Paths");
+		static readonly ProfilerMarker MarkerRecalculatePaths = new ProfilerMarker("Schedule Path Calculations");
+
 		public void OnUpdate (ref SystemState systemState) {
 			// While the agent can technically discover that the path is stale during a simulation step,
 			// only scheduling paths during the first substep is typically good enough.
@@ -26,7 +30,7 @@ namespace Pathfinding.ECS {
 			// Skip system if there are no ECS agents that use pathfinding
 			if (SystemAPI.QueryBuilder().WithAll<ManagedState>().Build().IsEmptyIgnoreFilter) return;
 
-			Profiler.BeginSample("Schedule search");
+			MarkerSchedulePathSearch.Begin();
 			var bits = new NativeBitArray(512, Allocator.TempJob);
 			systemState.CompleteDependency();
 
@@ -40,30 +44,30 @@ namespace Pathfinding.ECS {
 			var pathfindingLock = AstarPath.active.PausePathfindingSoon();
 
 			// Propagate staleness
-			Profiler.BeginSample("Check stale");
+			MarkerCheckStaleness.Begin();
 			new JobCheckStaleness {
 				isPathStale = bits,
 			}.Run();
-			Profiler.EndSample();
+			MarkerCheckStaleness.End();
 
-			Profiler.BeginSample("Check should recalculate");
+			MarkerShouldRecalculatePaths.Begin();
 			// Calculate which agents want to recalculate their path (using burst)
 			new JobShouldRecalculatePaths {
 				time = (float)SystemAPI.Time.ElapsedTime,
 				isPathStale = bits,
 			}.Run();
-			Profiler.EndSample();
+			MarkerShouldRecalculatePaths.End();
 
-			Profiler.BeginSample("Schedule path calculations");
+			MarkerRecalculatePaths.Begin();
 			// Schedule the path calculations
 			new JobRecalculatePaths {
 				time = (float)SystemAPI.Time.ElapsedTime,
 			}.Run();
-			Profiler.EndSample();
+			MarkerRecalculatePaths.End();
 
 			pathfindingLock.Release();
 			bits.Dispose();
-			Profiler.EndSample();
+			MarkerSchedulePathSearch.End();
 		}
 
 		[WithAbsent(typeof(ManagedAgentOffMeshLinkTraversal))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
@@ -74,10 +78,11 @@ namespace Pathfinding.ECS {
 
 			public void Execute (ManagedState state) {
 				isPathStale.Set(index++, state.pathTracer.isStale);
+				isPathStale.Set(index++, state.pendingPath != null);
 			}
 
 			public bool OnChunkBegin (in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask) {
-				if (index + chunk.Count > isPathStale.Length) isPathStale.Resize(math.ceilpow2(index + chunk.Count), NativeArrayOptions.ClearMemory);
+				if (index + chunk.Count*2 > isPathStale.Length) isPathStale.Resize(math.ceilpow2(index + chunk.Count*2), NativeArrayOptions.ClearMemory);
 				return true;
 			}
 
@@ -95,7 +100,9 @@ namespace Pathfinding.ECS {
 
 			public void Execute (ref ECS.AutoRepathPolicy autoRepathPolicy, in LocalTransform transform, in AgentCylinderShape shape, in DestinationPoint destination, EnabledRefRW<AgentShouldRecalculatePath> shouldRecalculatePath) {
 				var isPathStale = this.isPathStale.IsSet(index++);
-				shouldRecalculatePath.ValueRW = autoRepathPolicy.ShouldRecalculatePath(transform.Position, shape.radius, destination.destination, time, isPathStale);
+				// If a path is pending, we always want to run JobRecalculatePaths for that agent, to refresh the path endpoints.
+				var isPathPending = this.isPathStale.IsSet(index++);
+				shouldRecalculatePath.ValueRW = isPathPending || autoRepathPolicy.ShouldRecalculatePath(transform.Position, shape.radius, destination.destination, time, isPathStale);
 			}
 		}
 
@@ -110,12 +117,18 @@ namespace Pathfinding.ECS {
 			}
 
 			public static void MaybeRecalculatePath (ManagedState state, ManagedSettings settings, ref ECS.AutoRepathPolicy autoRepathPolicy, ref LocalTransform transform, ref DestinationPoint destination, ref AgentMovementPlane movementPlane, float time, bool wantsToRecalculatePath) {
-				if (wantsToRecalculatePath && state.pendingPath == null) {
-					var path = ABPath.Construct(transform.Position, destination.destination, null);
-					path.UseSettings(settings.pathfindingSettings);
-					path.nearestNodeDistanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.value.up);
-					ManagedState.SetPath(path, state, in movementPlane, ref destination);
-					autoRepathPolicy.OnScheduledPathRecalculation(destination.destination, time);
+				if (wantsToRecalculatePath) {
+					if (state.pendingPath == null) {
+						var path = ABPath.Construct(transform.Position, destination.destination, null);
+						path.UseSettings(settings.pathfindingSettings);
+						path.nearestNodeDistanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.value.up);
+						ManagedState.SetPath(path, state, in movementPlane, ref destination);
+						autoRepathPolicy.OnScheduledPathRecalculation(destination.destination, time);
+					} else if (state.pendingPath is ABPath aBPath) {
+						// Refresh the endpoints of the pending path.
+						// This is useful if the agent has moved significantly since the path was requested.
+						aBPath.RefreshPathEndpoints(transform.Position, destination.destination);
+					}
 				}
 			}
 		}

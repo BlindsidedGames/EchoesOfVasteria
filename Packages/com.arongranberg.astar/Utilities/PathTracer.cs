@@ -839,7 +839,7 @@ namespace Pathfinding {
 				// If the current node is destroyed, we must use a global GetNearest check to find the closest non-destroyed node.
 				// We do this so that we can still clamp the agent to the navmesh even if the current node is destroyed.
 				// We do not want to replace the path with just a single node, because that may cause odd movement for a few frames
-				// while the path is being recalculated. So we only adjust the start point of th path, but keep following the
+				// while the path is being recalculated. So we only adjust the start point of the path, but keep following the
 				// potentially stale path until the new path is ready.
 
 				if (isStart) {
@@ -849,13 +849,14 @@ namespace Pathfinding {
 
 					var nn = traversalConstraint.ToNearestNodeConstraint();
 					nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAboveSoft(movementPlane.up);
-					var globallyClosestNode = AstarPath.active != null? AstarPath.active.GetNearest(point, nn).node : null;
+					var globallyClosestNode = AstarPath.active != null? AstarPath.active.GetNearest(point, nn) : NNInfo.Empty;
 
-					startNode = globallyClosestNode;
+					startNode = globallyClosestNode.node;
 					if (startNode != null) {
-						part.startPoint = startNode.ClosestPointOnNode(point);
+						var clampedStartPoint = globallyClosestNode.position;
+						part.startPoint = clampedStartPoint;
 
-						if (part.endIndex - part.startIndex < 10 && partCount <= 1) {
+						if (part.endIndex - part.startIndex < 5 && partCount <= 1) {
 							// This is a short path, a local repair should probably be able to repair it.
 							// The path will be repaired when the end of the path is being set (typically it is done right after setting the start point).
 
@@ -865,17 +866,16 @@ namespace Pathfinding {
 							// and lead into the obstacle.
 							// We do not do this for long paths, because the repair is unlikely to succeed, and we may end
 							// up with a partial path that goes in the wrong direction. It is then better to just wait for
-							// the path to be recalculated.
+							// the path to be recalculated. If the repair fails, the agent will also stop immediately, which looks jankier than clipping obstacles for a frame or so.
 
-							var clampedStartPoint = part.startPoint;
 							// Make the path into just a single node
 							this.Clear();
-							startNode = globallyClosestNode;
+							startNode = globallyClosestNode.node;
 							this.partGraphType = PartGraphTypeFromNode(startNode);
 							unclampedStartPoint = point;
 							unclampedEndPoint = clampedStartPoint;
-							this.nodes.PushEnd(globallyClosestNode);
-							this.nodeHashes.PushEnd(HashNode(globallyClosestNode));
+							this.nodes.PushEnd(globallyClosestNode.node);
+							this.nodeHashes.PushEnd(HashNode(globallyClosestNode.node));
 							this.parts = new Funnel.PathPart[1];
 							this.parts[0] = new Funnel.PathPart {
 								startIndex = nodes.AbsoluteStartIndex,
@@ -885,6 +885,9 @@ namespace Pathfinding {
 							};
 						}
 					} else {
+						// Continue with a best-effort approach
+						// Note: startNode will in this case NOT be the same as nodes.First. This is because nodes.First is destroyed and we want to continue following the stale path.
+						// But we set startNode to the node the agent is *actually* in, which allows us to clamp the agent to the navmesh currently, find nearby obstacles and expose it to users.
 						part.startPoint = point;
 					}
 				} else {

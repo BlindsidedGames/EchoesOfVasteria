@@ -288,14 +288,18 @@ namespace Pathfinding {
 		}
 
 		protected override void DestroyAllNodes () {
-			// Remove cross-graph connections
 			GetNodes(node => {
-				node.GetConnections(other => {
+				// Remove cross-graph connections
+				node.GetConnections(static (GraphNode other, ref GraphNode node) => {
 					if (node.GraphIndex != other.GraphIndex) other.RemovePartialConnection(node);
-				});
-			});
-			// Destroy all nodes
-			GetNodes(node => {
+				}, ref node);
+
+				// Discard all other connections without disconnecting them properly from the other node.
+				// This is safe because we are going to destroy all nodes in this graph anyway.
+				// We want to do this before calling node.Destroy to avoid spending lots of time
+				// disconnecting nodes properly (involves a lot of array resizing and copying).
+				node.ClearConnections(false);
+
 				node.Destroy();
 			});
 
@@ -933,7 +937,13 @@ namespace Pathfinding {
 
 			for (int z = tileRect.ymin; z <= tileRect.ymax; z++) {
 				for (int x = tileRect.xmin; x <= tileRect.xmax; x++) {
-					ClearTile(x, z, NewEmptyTile(x, z));
+					var t = NewEmptyTile(x, z);
+					// Preserve whether the tile is cut or not as otherwise, if doing:
+					// 1. ClearTiles
+					// 2. ReplaceTiles
+					// it would think that navmesh cuts don't need to be reapplied
+					t.isCut = GetTile(x, z)?.isCut ?? false;
+					ClearTile(x, z, t);
 				}
 			}
 			EndBatchTileUpdate();
@@ -1762,6 +1772,211 @@ namespace Pathfinding {
 
 			// This means that either the vertex is not on this node, or there's no adjacent node that also shares this vertex, assuming we walk in the right direction around the vertex
 			return false;
+		}
+
+		public virtual void Resize (IntRect newTileBounds) {
+			AssertSafeToUpdateGraph();
+			if (newTileBounds != new IntRect(0, 0, 0, 0)) {
+				throw new System.InvalidOperationException("Navmesh graphs can only have a single tile. Use a RecastGraph for tiled navmeshes.");
+			}
+		}
+
+		protected virtual void SetLayout (TileLayout info) {
+			this.tileXCount = info.tileCount.x;
+			this.tileZCount = info.tileCount.y;
+			this.transform = info.transform;
+		}
+
+		/// <summary>
+		/// Extracts tiles from the graph into a portable format.
+		/// Returns: The extracted tiles.
+		///
+		/// This can be used for many things, for example world streaming or placing large prefabs that have been pre-scanned.
+		///
+		/// The extracted tiles will have the same world-space size as this graph's tiles.
+		/// Navmesh cuts are not baked into the extracted tiles.
+		///
+		/// Note: The meshes do not have any information about the graph's settings, they are just lightweight containers for the navmesh data.
+		///
+		/// <code>
+		/// var graph = AstarPath.active.data.recastGraph;
+		/// var tileMeshes = graph.ToTileMeshes();
+		/// // Store as a byte array
+		/// var bytes = tileMeshes.Serialize();
+		///
+		/// // Later on, load it back
+		/// var tileMeshes2 = TileMeshes.Deserialize(bytes);
+		///
+		/// // Load the tiles back into the graph
+		/// AstarPath.active.AddWorkItem(() => {
+		///     graph.ReplaceTiles(tileMeshes2);
+		/// });
+		/// AstarPath.active.FlushWorkItems();
+		/// </code>
+		///
+		/// See: <see cref="NavmeshPrefab"/>
+		/// See: <see cref="ReplaceTiles"/>
+		/// See: <see cref="TileMeshes"/>
+		/// See: <see cref="RecastBuilder.BuildTileMeshes"/>
+		/// See: <see cref="TileWorldSizeX"/>
+		/// See: <see cref="TileWorldSizeZ"/>
+		/// See: <see cref="tileXCount"/>
+		/// See: <see cref="tileZCount"/>
+		/// </summary>
+		/// <param name="tileRect">If specified, only tiles within this rectangle will be extracted. The rectangle is specified in tile coordinates starting at (0,0). If larger than the graph, it will be clamped to the graph's size.</param>
+		public TileMeshes ToTileMeshes (IntRect? tileRect = null) {
+			if (tiles == null) {
+				return new TileMeshes {
+						   tileRect = new IntRect(0, 0, 0, 0),
+						   tileWorldSize = new Vector2(0, 0),
+						   tileMeshes = new TileMesh[0]
+				};
+			}
+
+			// Clamp to graph
+			var graphRect = new IntRect(0, 0, tileXCount - 1, tileZCount - 1);
+			var clampedTileRect = IntRect.Intersection(tileRect ?? graphRect, graphRect);
+
+			int w = clampedTileRect.Width;
+			int h = clampedTileRect.Height;
+
+			var outMeshes = new TileMeshes {
+				tileRect = clampedTileRect,
+				tileWorldSize = new Vector2(TileWorldSizeX, TileWorldSizeZ),
+				tileMeshes = new TileMesh[w * h]
+			};
+
+			for (int z = 0; z < h; z++) {
+				for (int x = 0; x < w; x++) {
+					int gx = clampedTileRect.xmin + x;
+					int gz = clampedTileRect.ymin + z;
+					var tile = GetTile(gx, gz);
+					var mesh = new TileMesh();
+
+					if (tile == null) {
+						mesh.verticesInTileSpace = new Int3[0];
+						mesh.triangles = new int[0];
+						mesh.tags = new uint[0];
+					} else if (tile.isCut) {
+						// Prefer pre-cut (tile-local) data if tile is cut
+						// This ensures that we won't bake in navmesh cuts
+						mesh.verticesInTileSpace = tile.preCutVertsInTileSpace.ToArray();
+						mesh.triangles = tile.preCutTris.ToArray();
+						mesh.tags = tile.preCutTags.ToArray();
+					} else {
+						mesh.verticesInTileSpace = tile.vertsInGraphSpace.ToArray();
+						mesh.triangles = tile.tris.ToArray();
+						mesh.tags = new uint[tile.nodes.Length];
+						for (int i = 0; i < tile.nodes.Length; i++) {
+							mesh.tags[i] = tile.nodes[i].Tag;
+						}
+
+						// Convert vertsInGraphSpace to tile-local (subtract tile world offset)
+						var offset = (Int3) new Vector3(gx * TileWorldSizeX, 0, gz * TileWorldSizeZ);
+						for (int i = 0; i < mesh.verticesInTileSpace.Length; i++) mesh.verticesInTileSpace[i] -= offset;
+					}
+
+					outMeshes.tileMeshes[x + z * w] = mesh;
+				}
+			}
+
+			return outMeshes;
+		}
+
+		/// <summary>Initialize the graph with empty tiles if it is not currently scanned</summary>
+		public void EnsureInitialized () {
+			AssertSafeToUpdateGraph();
+			if (this.tiles == null) {
+				TriangleMeshNode.SetNavmeshHolder(AstarPath.active.data.GetGraphIndex(this), this);
+				SetLayout(TileLayout.FromGraph(this));
+				FillWithEmptyTiles();
+			}
+		}
+
+		/// <summary>
+		/// Load tiles from a <see cref="TileMeshes"/> object into this graph.
+		///
+		/// This can be used for many things, for example world streaming or placing large prefabs that have been pre-scanned.
+		///
+		/// The loaded tiles must have the same world-space size as this graph's tiles.
+		/// The world-space size for a recast graph is given by the <see cref="RecastGraph.cellSize"/> multiplied by <see cref="RecastGraph.tileSizeX"/> (or <see cref="RecastGraph.tileSizeZ"/>).
+		///
+		/// If the graph is not scanned when this method is called, the graph will be initialized and consist of just the tiles loaded by this call.
+		///
+		/// <code>
+		/// // Scans the first 6x6 chunk of tiles of the recast graph (the IntRect uses inclusive coordinates)
+		/// var graph = AstarPath.active.data.recastGraph;
+		/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, TileLayout.FromGraph(graph), new IntRect(0, 0, 5, 5));
+		/// var disposeArena = new Pathfinding.Jobs.DisposeArena();
+		/// var promise = buildSettings.Schedule(disposeArena);
+		///
+		/// AstarPath.active.AddWorkItem(() => {
+		///     // Block until the asynchronous job completes
+		///     var result = promise.Complete();
+		///     TileMeshes tiles = result.tileMeshes.ToManaged();
+		///     // Take the scanned tiles and place them in the graph,
+		///     // but not at their original location, but 2 tiles away, rotated 90 degrees.
+		///     tiles.tileRect = tiles.tileRect.Offset(new Vector2Int(2, 0));
+		///     tiles.Rotate(1);
+		///     graph.ReplaceTiles(tiles);
+		///
+		///     // Dispose unmanaged data
+		///     disposeArena.DisposeAll();
+		///     result.Dispose();
+		/// });
+		/// </code>
+		///
+		/// See: <see cref="NavmeshPrefab"/>
+		/// See: <see cref="TileMeshes"/>
+		/// See: <see cref="RecastBuilder.BuildTileMeshes"/>
+		/// See: <see cref="Resize"/>
+		/// See: <see cref="ReplaceTile"/>
+		/// See: <see cref="TileWorldSizeX"/>
+		/// See: <see cref="TileWorldSizeZ"/>
+		/// </summary>
+		/// <param name="tileMeshes">The tiles to load. They will be loaded into the graph at the \reflink{TileMeshes.tileRect} tile coordinates.</param>
+		/// <param name="yOffset">All vertices in the loaded tiles will be moved upwards (or downwards if negative) by this amount.</param>
+		public void ReplaceTiles (TileMeshes tileMeshes, float yOffset = 0) {
+			AssertSafeToUpdateGraph();
+			EnsureInitialized();
+
+			if (tileMeshes.tileWorldSize.x != TileWorldSizeX || tileMeshes.tileWorldSize.y != TileWorldSizeZ) {
+				throw new System.Exception("Loaded tile size does not match this graph's tile size.\n"
+					+ "The source tiles have a world-space tile size of " + tileMeshes.tileWorldSize + " while this graph's tile size is (" + TileWorldSizeX + "," + TileWorldSizeZ + ").\n"
+					+ "For a recast graph, the world-space tile size is defined as the cell size * the tile size in voxels");
+			}
+
+			var w = tileMeshes.tileRect.Width;
+			var h = tileMeshes.tileRect.Height;
+			UnityEngine.Assertions.Assert.AreEqual(w*h, tileMeshes.tileMeshes.Length);
+
+			// Ensure the graph is large enough
+			var newTileBounds = IntRect.Union(
+				new IntRect(0, 0, tileXCount - 1, tileZCount - 1),
+				tileMeshes.tileRect
+				);
+			Resize(newTileBounds);
+			tileMeshes.tileRect = tileMeshes.tileRect.Offset(-newTileBounds.Min);
+
+			StartBatchTileUpdate();
+			var updatedTiles = new NavmeshTile[w*h];
+			for (int z = 0; z < h; z++) {
+				for (int x = 0; x < w; x++) {
+					var tile = tileMeshes.tileMeshes[x + z*w];
+
+					var offset = (Int3) new Vector3(0, yOffset, 0);
+					for (int i = 0; i < tile.verticesInTileSpace.Length; i++) {
+						tile.verticesInTileSpace[i] += offset;
+					}
+					var tileCoordinates = new Vector2Int(x, z) + tileMeshes.tileRect.Min;
+					ReplaceTile(tileCoordinates.x, tileCoordinates.y, tile.verticesInTileSpace, tile.triangles, tile.tags, false);
+					updatedTiles[x + z*w] = GetTile(tileCoordinates.x, tileCoordinates.y);
+				}
+			}
+			EndBatchTileUpdate();
+
+			// TODO: Call after ReplaceTile too? Make sure it's not called after navmesh cut updates
+			if (OnRecalculatedTiles != null) OnRecalculatedTiles(updatedTiles);
 		}
 
 		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {

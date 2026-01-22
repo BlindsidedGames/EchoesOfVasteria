@@ -940,7 +940,7 @@ namespace Pathfinding {
 		/// </summary>
 		public void SnapBoundsToScene () {
 			var arena = new DisposeArena();
-			var meshes = new TileBuilder(this, new TileLayout(this), default).CollectMeshes(new Bounds(Vector3.zero, new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity)));
+			var meshes = new TileBuilder(this, TileLayout.FromGraph(this), default).CollectMeshes(new Bounds(Vector3.zero, new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity)));
 
 			if (meshes.meshes.Length > 0) {
 				// Project all bounding boxes into a space relative to the current rotation of the graph
@@ -1017,7 +1017,7 @@ namespace Pathfinding {
 						if (!anyNew) continue;
 					}
 
-					var tileLayout = new TileLayout(graph);
+					var tileLayout = TileLayout.FromGraph(graph);
 					var pendingGraphUpdatePromise = RecastBuilder.BuildTileMeshes(graph, tileLayout, touchingTiles).Schedule(graph.pendingGraphUpdateArena);
 					var pendingCutPromise = RecastBuilder.CutTiles(graph, graph.navmeshUpdateData.clipperLookup, tileLayout).Schedule(pendingGraphUpdatePromise);
 					var pendingGraphUpdatePromise2 = RecastBuilder.BuildNodeTiles(graph, tileLayout).Schedule(graph.pendingGraphUpdateArena, pendingGraphUpdatePromise, pendingCutPromise);
@@ -1153,7 +1153,7 @@ namespace Pathfinding {
 
 				RelevantGraphSurface.UpdateAllPositions();
 
-				tileLayout = new TileLayout(graph);
+				tileLayout = TileLayout.FromGraph(graph);
 
 				// If this is true, just fill the graph with empty tiles
 				if (graph.scanEmptyGraph || tileLayout.tileCount.x*tileLayout.tileCount.y <= 0) {
@@ -1290,7 +1290,7 @@ namespace Pathfinding {
 
 				var disposeArena = new DisposeArena();
 
-				var tileLayout = new TileLayout(graph);
+				var tileLayout = TileLayout.FromGraph(graph);
 				// Disable cropping to the graph's exact bounds, since the new tiles are actually
 				// created outside the current bounds of the graph.
 				tileLayout.graphSpaceSize.x = float.PositiveInfinity;
@@ -1332,12 +1332,10 @@ namespace Pathfinding {
 			return new GraphTransform(Matrix4x4.TRS(bounds.center, rotation, Vector3.one) * Matrix4x4.TRS(-bounds.extents, Quaternion.identity, Vector3.one));
 		}
 
-		protected void SetLayout (TileLayout info) {
-			this.tileXCount = info.tileCount.x;
-			this.tileZCount = info.tileCount.y;
+		protected override void SetLayout (TileLayout info) {
+			base.SetLayout(info);
 			this.tileSizeX = info.tileSizeInVoxels.x;
 			this.tileSizeZ = info.tileSizeInVoxels.y;
-			this.transform = info.transform;
 		}
 
 		/// <summary>Convert character radius to a number of voxels</summary>
@@ -1391,7 +1389,7 @@ namespace Pathfinding {
 		/// </code>
 		/// </summary>
 		/// <param name="newTileBounds">Rectangle of tiles that the graph should contain. Relative to the old bounds.</param>
-		public virtual void Resize (IntRect newTileBounds) {
+		public override void Resize (IntRect newTileBounds) {
 			AssertSafeToUpdateGraph();
 
 			if (!newTileBounds.IsValid()) throw new System.ArgumentException("Invalid tile bounds");
@@ -1468,103 +1466,7 @@ namespace Pathfinding {
 			this.tileXCount = newTileBounds.Width;
 			this.tileZCount = newTileBounds.Height;
 			EndBatchTileUpdate();
-			this.navmeshUpdateData.OnResized(newTileBounds, new TileLayout(this));
-		}
-
-		/// <summary>Initialize the graph with empty tiles if it is not currently scanned</summary>
-		public void EnsureInitialized () {
-			AssertSafeToUpdateGraph();
-			if (this.tiles == null) {
-				TriangleMeshNode.SetNavmeshHolder(AstarPath.active.data.GetGraphIndex(this), this);
-				SetLayout(new TileLayout(this));
-				FillWithEmptyTiles();
-			}
-		}
-
-		/// <summary>
-		/// Load tiles from a <see cref="TileMeshes"/> object into this graph.
-		///
-		/// This can be used for many things, for example world streaming or placing large prefabs that have been pre-scanned.
-		///
-		/// The loaded tiles must have the same world-space size as this graph's tiles.
-		/// The world-space size for a recast graph is given by the <see cref="cellSize"/> multiplied by <see cref="tileSizeX"/> (or <see cref="tileSizeZ)"/>.
-		///
-		/// If the graph is not scanned when this method is called, the graph will be initialized and consist of just the tiles loaded by this call.
-		///
-		/// <code>
-		/// // Scans the first 6x6 chunk of tiles of the recast graph (the IntRect uses inclusive coordinates)
-		/// var graph = AstarPath.active.data.recastGraph;
-		/// var buildSettings = RecastBuilder.BuildTileMeshes(graph, new TileLayout(graph), new IntRect(0, 0, 5, 5));
-		/// var disposeArena = new Pathfinding.Jobs.DisposeArena();
-		/// var promise = buildSettings.Schedule(disposeArena);
-		///
-		/// AstarPath.active.AddWorkItem(() => {
-		///     // Block until the asynchronous job completes
-		///     var result = promise.Complete();
-		///     TileMeshes tiles = result.tileMeshes.ToManaged();
-		///     // Take the scanned tiles and place them in the graph,
-		///     // but not at their original location, but 2 tiles away, rotated 90 degrees.
-		///     tiles.tileRect = tiles.tileRect.Offset(new Vector2Int(2, 0));
-		///     tiles.Rotate(1);
-		///     graph.ReplaceTiles(tiles);
-		///
-		///     // Dispose unmanaged data
-		///     disposeArena.DisposeAll();
-		///     result.Dispose();
-		/// });
-		/// </code>
-		///
-		/// See: <see cref="NavmeshPrefab"/>
-		/// See: <see cref="TileMeshes"/>
-		/// See: <see cref="RecastBuilder.BuildTileMeshes"/>
-		/// See: <see cref="Resize"/>
-		/// See: <see cref="ReplaceTile"/>
-		/// See: <see cref="TileWorldSizeX"/>
-		/// See: <see cref="TileWorldSizeZ"/>
-		/// </summary>
-		/// <param name="tileMeshes">The tiles to load. They will be loaded into the graph at the \reflink{TileMeshes.tileRect} tile coordinates.</param>
-		/// <param name="yOffset">All vertices in the loaded tiles will be moved upwards (or downwards if negative) by this amount.</param>
-		public void ReplaceTiles (TileMeshes tileMeshes, float yOffset = 0) {
-			AssertSafeToUpdateGraph();
-			EnsureInitialized();
-
-			if (tileMeshes.tileWorldSize.x != TileWorldSizeX || tileMeshes.tileWorldSize.y != TileWorldSizeZ) {
-				throw new System.Exception("Loaded tile size does not match this graph's tile size.\n"
-					+ "The source tiles have a world-space tile size of " + tileMeshes.tileWorldSize + " while this graph's tile size is (" + TileWorldSizeX + "," + TileWorldSizeZ + ").\n"
-					+ "For a recast graph, the world-space tile size is defined as the cell size * the tile size in voxels");
-			}
-
-			var w = tileMeshes.tileRect.Width;
-			var h = tileMeshes.tileRect.Height;
-			UnityEngine.Assertions.Assert.AreEqual(w*h, tileMeshes.tileMeshes.Length);
-
-			// Ensure the graph is large enough
-			var newTileBounds = IntRect.Union(
-				new IntRect(0, 0, tileXCount - 1, tileZCount - 1),
-				tileMeshes.tileRect
-				);
-			Resize(newTileBounds);
-			tileMeshes.tileRect = tileMeshes.tileRect.Offset(-newTileBounds.Min);
-
-			StartBatchTileUpdate();
-			var updatedTiles = new NavmeshTile[w*h];
-			for (int z = 0; z < h; z++) {
-				for (int x = 0; x < w; x++) {
-					var tile = tileMeshes.tileMeshes[x + z*w];
-
-					var offset = (Int3) new Vector3(0, yOffset, 0);
-					for (int i = 0; i < tile.verticesInTileSpace.Length; i++) {
-						tile.verticesInTileSpace[i] += offset;
-					}
-					var tileCoordinates = new Vector2Int(x, z) + tileMeshes.tileRect.Min;
-					ReplaceTile(tileCoordinates.x, tileCoordinates.y, tile.verticesInTileSpace, tile.triangles);
-					updatedTiles[x + z*w] = GetTile(tileCoordinates.x, tileCoordinates.y);
-				}
-			}
-			EndBatchTileUpdate();
-
-			// TODO: Call after ReplaceTile too? Make sure it's not called after navmesh cut updates
-			if (OnRecalculatedTiles != null) OnRecalculatedTiles(updatedTiles);
+			this.navmeshUpdateData.OnResized(newTileBounds, TileLayout.FromGraph(this));
 		}
 
 		protected override void PostDeserialization (GraphSerializationContext ctx) {

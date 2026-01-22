@@ -1,6 +1,10 @@
 ---
 title: Changelog
 ---
+## Version 1.4.6
+
+- Fixed [Issue #32](https://github.com/Vinark117/BetterRuleTiles-Support/issues/32): Can't build app
+
 ## Version 1.4.5
 
 - Implemented [Feature #29](https://github.com/Vinark117/BetterRuleTiles-Support/issues/29): Improved the sprite & tile replace window

@@ -330,7 +330,7 @@ namespace Pathfinding.Examples {
 				public float deltaTime;
 
 				public void Execute (ref LocalTransform transform, in AgentMovementPlane movementPlane, in ResolvedMovement resolvedMovement) {
-					transform.Position += Pathfinding.ECS.JobMoveAgent.MoveWithoutGravity(ref transform, in resolvedMovement, in movementPlane, deltaTime);
+					transform.Position += Pathfinding.ECS.JobMoveAgent.MoveWithoutGravity(transform.Position, in resolvedMovement, in movementPlane, deltaTime);
 				}
 			}
 		}

@@ -253,7 +253,10 @@ namespace Pathfinding.ECS.RVO {
 				var scale = math.abs(transform.Scale);
 				var r = shape.radius * scale * 3f;
 				var area = quadtree.QueryArea(transform.Position, r);
-				var density = area / (MaximumCirclePackingDensity * math.PI * r * r);
+
+				// Calculate the agent density in a circle around the agent and compare it to optimal circle packing
+				// This should be between 0 and 1, but if agents are overlapping it can be larger than 1, which is why we clamp it.
+				var density = math.min(1.0f, area / (MaximumCirclePackingDensity * math.PI * r * r));
 
 				resolved.targetPoint = agentOutputData.targetPoint[index];
 				resolved.speed = agentOutputData.speed[index];

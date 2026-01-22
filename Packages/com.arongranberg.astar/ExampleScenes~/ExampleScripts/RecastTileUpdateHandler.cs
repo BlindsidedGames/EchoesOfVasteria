@@ -149,7 +149,7 @@ namespace Pathfinding {
 						bounds.extents *= 0.5f;
 
 						var guo = new GraphUpdateObject(bounds);
-						guo.nnConstraint.graphMask = 1 << (int)graph.graphIndex;
+						guo.graphMask = GraphMask.FromGraph(graph);
 
 						AstarPath.active.UpdateGraphs(guo);
 					}

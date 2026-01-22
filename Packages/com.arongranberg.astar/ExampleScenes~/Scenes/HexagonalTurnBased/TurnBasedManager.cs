@@ -91,7 +91,7 @@ namespace Pathfinding.Examples {
 		IEnumerator MoveToNode (TurnBasedAI unit, GraphNode node) {
 			var path = ABPath.Construct(unit.transform.position, (Vector3)node.position);
 
-			path.traversalProvider = unit.traversalProvider;
+			path.traversalConstraint.traversalProvider = unit.traversalProvider;
 
 			// Schedule the path for calculation
 			AstarPath.StartPath(path);
@@ -169,7 +169,7 @@ namespace Pathfinding.Examples {
 		void GeneratePossibleMoves (TurnBasedAI unit) {
 			var path = ConstantPath.Construct(unit.transform.position, unit.movementPoints * 1000 + 1);
 
-			path.traversalProvider = unit.traversalProvider;
+			path.traversalConstraint.traversalProvider = unit.traversalProvider;
 
 			// Schedule the path for calculation
 			AstarPath.StartPath(path);

@@ -7,7 +7,7 @@ namespace Pathfinding.Examples.RTS {
 	[HelpURL("https://arongranberg.com/astar/documentation/stable/rtsbuildingmanager.html")]
 	public class RTSBuildingManager : MonoBehaviour {
 		public static bool IsValidBuildingPlacement (GameObject building) {
-			var onNavmesh = AstarPath.active.data.recastGraph.PointOnNavmesh(building.transform.position, NNConstraint.None);
+			var onNavmesh = AstarPath.active.data.recastGraph.PointOnNavmesh(building.transform.position, NearestNodeConstraint.None);
 
 			// Check if the center of the building is on the navmesh
 			if (onNavmesh == null) return false;
@@ -17,10 +17,13 @@ namespace Pathfinding.Examples.RTS {
 
 			var graph = AstarPath.active.data.recastGraph;
 			var characterRadius = graph.characterRadius;
-			var boundingBox = cuts[0].GetBounds(graph.transform, characterRadius);
+			var boundingBox3D = cuts[0].GetBounds(graph.transform, characterRadius);
+			var boundingBox = new Rect(boundingBox3D.min.x, boundingBox3D.min.z, boundingBox3D.size.x, boundingBox3D.size.z);
 			List<NavmeshCut.Contour> contours = new List<NavmeshCut.Contour>();
 			for (int i = 0; i < cuts.Length; i++) {
-				boundingBox = RectUnion(boundingBox, cuts[i].GetBounds(graph.transform, characterRadius));
+				var b3D = cuts[i].GetBounds(graph.transform, characterRadius);
+				var b = new Rect(b3D.min.x, b3D.min.z, b3D.size.x, b3D.size.z);
+				boundingBox = RectUnion(boundingBox, b);
 				cuts[i].GetContour(contours, Matrix4x4.identity, characterRadius);
 			}
 

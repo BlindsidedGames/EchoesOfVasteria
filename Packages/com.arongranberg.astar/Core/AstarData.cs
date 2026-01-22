@@ -6,6 +6,7 @@ using Pathfinding.Serialization;
 using Pathfinding.Util;
 using Pathfinding.Sync;
 using System;
+using UnityEngine.Profiling;
 
 namespace Pathfinding {
 	[System.Serializable]
@@ -393,6 +394,7 @@ namespace Pathfinding {
 
 		void ClearGraphsInternal () {
 			if (graphs == null) return;
+			Profiler.BeginSample("Destroy Graphs");
 			using (AssertSafe()) {
 				for (int i = 0; i < graphs.Length; i++) {
 					if (graphs[i] != null) {
@@ -404,6 +406,7 @@ namespace Pathfinding {
 				graphs = new NavGraph[0];
 				UpdateShortcuts();
 			}
+			Profiler.EndSample();
 		}
 
 		public void DisposeUnmanagedData () {

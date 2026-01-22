@@ -1016,12 +1016,23 @@ namespace Pathfinding.Graphs.Navmesh {
 						// The prefab has a collider, use that instead
 						var collider = colliders[j];
 
+						var hasNavmeshModifier = collider.gameObject.TryGetComponent<RecastNavmeshModifier>(out var navmeshModifier) && navmeshModifier.enabled;
+						if (hasNavmeshModifier) {
+							if (navmeshModifier.includeInScan == RecastNavmeshModifier.ScanInclusion.AlwaysExclude) continue;
+							else if (navmeshModifier.includeInScan == RecastNavmeshModifier.ScanInclusion.AlwaysInclude) {
+								// Always include
+							} else if (!ShouldIncludeColliderInPrefab(collider)) { // Auto mode
+								continue;
+							}
+						} else if (!ShouldIncludeColliderInPrefab(collider)) { // No navmesh modifier, use auto mode
+							continue;
+						}
+
+
 						// Generate a mesh from the collider
 						if (ConvertColliderToGatheredMesh(collider, rootMatrixInv * collider.transform.localToWorldMatrix) is GatheredMesh mesh) {
 							// For trees, we only suppport generating a mesh from a collider. So we ignore the navmeshModifier.geometrySource field.
-							if (collider.gameObject.TryGetComponent<RecastNavmeshModifier>(out var navmeshModifier) && navmeshModifier.enabled) {
-								if (navmeshModifier.includeInScan == RecastNavmeshModifier.ScanInclusion.AlwaysExclude) continue;
-
+							if (hasNavmeshModifier) {
 								mesh.ApplyNavmeshModifier(navmeshModifier);
 							} else {
 								mesh.ApplyLayerModification(modificationsByLayer[collider.gameObject.layer]);
@@ -1103,7 +1114,11 @@ namespace Pathfinding.Graphs.Navmesh {
 		}
 
 		bool ShouldIncludeCollider (Collider collider) {
-			if (!collider.enabled || collider.isTrigger || !collider.bounds.Intersects(bounds) || (collider.TryGetComponent<RecastNavmeshModifier>(out var rmo) && rmo.enabled)) return false;
+			return ShouldIncludeColliderInPrefab(collider) && collider.bounds.Intersects(bounds) && !(collider.TryGetComponent<RecastNavmeshModifier>(out var rmo) && rmo.enabled);
+		}
+
+		bool ShouldIncludeColliderInPrefab (Collider collider) {
+			if (!collider.enabled || collider.isTrigger) return false;
 
 			var go = collider.gameObject;
 			if (((mask >> go.layer) & 1) != 0) return true;

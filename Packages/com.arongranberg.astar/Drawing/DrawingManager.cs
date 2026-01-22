@@ -147,6 +147,7 @@ namespace Pathfinding.Drawing {
 	public class DrawingManager : MonoBehaviour {
 		public DrawingData gizmos;
 		static List<GizmoDrawerGroup> gizmoDrawers = new List<GizmoDrawerGroup>();
+		static List<(System.Type, IDrawGizmos)> pendingGizmoDrawers = new List<(System.Type, IDrawGizmos)>();
 		static Dictionary<System.Type, int> gizmoDrawerIndices = new Dictionary<System.Type, int>();
 #if UNITY_EDITOR
 		static float lastGizmoInfoRefresh = float.NegativeInfinity;
@@ -256,6 +257,7 @@ namespace Pathfinding.Drawing {
 				// See https://forum.arongranberg.com/t/drawingmanager-holds-on-to-memory-in-batch-mode/17765
 				ignoreAllDrawing = true;
 				gizmoDrawers.Clear();
+				pendingGizmoDrawers.Clear();
 				gizmoDrawerIndices.Clear();
 			}
 		}
@@ -485,12 +487,14 @@ namespace Pathfinding.Drawing {
 				Draw.builder = gizmos.GetBuiltInBuilder(false);
 				Draw.ingame_builder = gizmos.GetBuiltInBuilder(true);
 				lastFrameTime = Time.realtimeSinceStartup;
+				AddPendingGizmoDrawers();
 				RemoveDestroyedGizmoDrawers();
 			}
 
 			// Avoid potential memory leak if gizmos are not being drawn
 			if (lastFilterFrame - Time.frameCount > 5) {
 				lastFilterFrame = Time.frameCount;
+				AddPendingGizmoDrawers();
 				RemoveDestroyedGizmoDrawers();
 			}
 		}
@@ -593,6 +597,35 @@ namespace Pathfinding.Drawing {
 #else
 			return true;
 #endif
+		}
+
+		static void AddPendingGizmoDrawers () {
+			for (int i = 0; i < pendingGizmoDrawers.Count; i++) {
+				var (overrideType, item) = pendingGizmoDrawers[i];
+				var index = GetGizmoDrawerIndex(overrideType);
+				if (index == -1) continue;
+
+				if (item is MonoBehaviour script) {
+					if (!script) {
+						// Destroyed before we could add it
+						continue;
+					}
+
+#if UNITY_EDITOR
+					if (!script.gameObject.scene.IsValid()) {
+						// The object is likely part of a persistent prefab asset. We will never have to draw any gizmos for it, because it will never become enabled, and it will never show up in the scene view.
+						continue;
+					}
+#endif
+				}
+
+				gizmoDrawers[index].drawers.Add(item);
+			}
+			pendingGizmoDrawers.Clear();
+			if (pendingGizmoDrawers.Capacity > 1024) {
+				// Avoid holding on to too much memory. Especially on the first frame of the game, we may end up adding tons of items in one frame, and then never needing that much capacity again.
+				pendingGizmoDrawers.Capacity = 4;
+			}
 		}
 
 		static void RemoveDestroyedGizmoDrawers () {
@@ -748,6 +781,7 @@ namespace Pathfinding.Drawing {
 			// Only build gizmos if a camera actually needs them.
 			// This is only done for the first camera that needs them each frame.
 			if (drawGizmos && !builtGizmos && allowCameraDefault) {
+				AddPendingGizmoDrawers();
 				RemoveDestroyedGizmoDrawers();
 				lastFilterFrame = Time.frameCount;
 				builtGizmos = true;
@@ -779,12 +813,7 @@ namespace Pathfinding.Drawing {
 		}
 
 		public static void Register (IDrawGizmos item, System.Type overrideType) {
-			if (ignoreAllDrawing) return;
-
-			var index = GetGizmoDrawerIndex(overrideType);
-			if (index == -1) return;
-
-			gizmoDrawers[index].drawers.Add(item);
+			if (!ignoreAllDrawing) pendingGizmoDrawers.Add((overrideType, item));
 		}
 
 		static int GetGizmoDrawerIndex (System.Type tp) {

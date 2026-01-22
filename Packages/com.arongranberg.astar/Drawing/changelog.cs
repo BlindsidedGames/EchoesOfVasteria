@@ -4,6 +4,7 @@
 ///
 /// - 1.7.9
 ///     - Got rid of some small GC allocations.
+///     - Fixed a memory leak in the Unity Editor caused by prefab references sometimes being kept in memory even though they shouldn't.
 ///
 /// - 1.7.8 (2025-05-06)
 ///     - Fixed a minor GC allocation happening every frame when using URP.
