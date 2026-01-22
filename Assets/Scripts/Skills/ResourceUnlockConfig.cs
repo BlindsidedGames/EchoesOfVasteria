@@ -40,7 +40,7 @@ namespace TimelessEchoes.Skills
                 "farming" => farmingUnlocks,
                 "fishing" => fishingUnlocks,
                 "mining" => miningUnlocks,
-                "woodcutting" => woodcuttingUnlocks,
+                "woodcutting" or "logging" => woodcuttingUnlocks,
                 "looting" => lootingUnlocks,
                 _ => new()
             };

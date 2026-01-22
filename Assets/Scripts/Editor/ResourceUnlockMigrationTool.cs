@@ -56,7 +56,8 @@ public class ResourceUnlockMigrationTool : EditorWindow
         config.farmingUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("farming"));
         config.fishingUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("fishing"));
         config.miningUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("mining"));
-        config.woodcuttingUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("woodcutting"));
+        // Woodcutting skill is named "Logging" in the asset
+        config.woodcuttingUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("logging") ?? tasksBySkill.GetValueOrDefault("woodcutting"));
         config.lootingUnlocks = BuildUnlockList(tasksBySkill.GetValueOrDefault("looting"));
 
         EditorUtility.SetDirty(config);
@@ -71,9 +72,9 @@ public class ResourceUnlockMigrationTool : EditorWindow
         if (tasks == null || tasks.Count == 0)
             return new();
 
-        // Sort by minX distance (progression indicator)
+        // Sort by taskID to ensure proper ordering (e.g., medium trees before big trees)
         var sorted = tasks
-            .OrderBy(t => t.minX)
+            .OrderBy(t => t.taskID)
             .ToList();
 
         var result = new List<ResourceUnlockConfig.UnlockMapping>();
