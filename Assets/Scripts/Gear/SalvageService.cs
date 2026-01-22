@@ -30,7 +30,7 @@ namespace TimelessEchoes.Gear
             if (drops == null || drops.Count == 0)
                 return 0;
 
-            var results = DropResolver.RollDrops(drops, extraChances, 0f, ignoreQuest: true);
+            var results = DropResolver.RollDrops(drops, extraChances, 0f, ignoreSkillLevel: true);
             int totalAwardedEntries = 0;
             rm.BeginBatch();
             try

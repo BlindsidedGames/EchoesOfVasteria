@@ -4,12 +4,12 @@ using Blindsided.SaveData;
 using Sirenix.OdinInspector;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Skills;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 using static Blindsided.Oracle;
-using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.Tasks
 {
@@ -892,11 +892,23 @@ namespace TimelessEchoes.Tasks
             {
                 if (!TaskAllowed(t, true, true, true))
                     return false;
-                if (t != null)
-                    if (t.requiredQuest != null && !QuestCompleted(t.requiredQuest.questId))
-                        return false;
+                if (!IsTaskUnlocked(t))
+                    return false;
                 return true;
             });
+        }
+
+        private bool IsTaskUnlocked(TaskData task)
+        {
+            if (task == null) return false;
+            if (task.requiredSkillLevel <= 0) return true;  // No requirement
+            if (task.associatedSkill == null) return false;
+
+            var controller = SkillController.Instance;
+            if (controller == null) return false;
+
+            int level = controller.GetProgress(task.associatedSkill)?.Level ?? 1;
+            return level >= task.requiredSkillLevel;
         }
 
         private TaskData PickTaskEntry(float worldX)
