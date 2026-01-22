@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Serialization;
-using TimelessEchoes.Quests;
 
 namespace TimelessEchoes.Upgrades
 {
@@ -16,7 +15,7 @@ namespace TimelessEchoes.Upgrades
         public float minX;
         // Maximum world X position allowed for this drop to occur
         public float maxX = float.PositiveInfinity;
-        // Quest required for this drop to occur
-        public QuestData requiredQuest;
+        [Tooltip("Skill level required for this drop (0 = no requirement)")]
+        public int requiredSkillLevel;
     }
 }

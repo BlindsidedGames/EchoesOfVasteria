@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Quests;
 using TimelessEchoes.MapGeneration;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -33,8 +32,9 @@ namespace TimelessEchoes.Tasks
         [TitleGroup("Spawn Range")]
         [LabelText("Enforce Max Distance")]
         public bool enforceMaxDistance;
-        [TitleGroup("General")]
-        public QuestData requiredQuest;
+        [TitleGroup("Spawn Range")]
+        [Tooltip("Skill level required for this task (0 = no requirement)")]
+        public int requiredSkillLevel;
         [TitleGroup("General")]
         public float taskDuration;
         [TitleGroup("General")]
