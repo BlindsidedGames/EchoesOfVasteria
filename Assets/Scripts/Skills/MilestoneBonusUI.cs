@@ -265,30 +265,28 @@ namespace TimelessEchoes.Skills
         {
             bool isUnlocked = currentLevel >= unlock.requiredLevel;
 
-            // Get the task icon sprite from TaskData
-            var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task?.taskIcon;
-
-            // Show task icon
+            // Show task icon only when unlocked (match Tasks panel behavior)
             if (refs.TaskImageObject != null)
-                refs.TaskImageObject.SetActive(iconSprite != null);
-            if (refs.TaskImage != null)
+                refs.TaskImageObject.SetActive(isUnlocked);
+            if (refs.TaskImage != null && isUnlocked)
             {
+                var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task?.taskIcon;
                 refs.TaskImage.sprite = iconSprite;
                 refs.TaskImage.color = Color.white;
                 if (iconSprite != null)
                     refs.TaskImage.SetNativeSize();
             }
 
-            // Title - shows what unlocks
-            string name = unlock.task?.taskName ?? "Resource";
+            // Title - show "???" when locked (match Tasks panel behavior)
+            string name = isUnlocked ? (unlock.task?.taskName ?? "Resource") : "???";
             refs.NameText?.SetText(isUnlocked
                 ? $"{name} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>"
                 : $"{name} | <size=80%>Unlocks at level {unlock.requiredLevel}</size>");
 
-            // Brief description instead of passive/active text
+            // Description only when unlocked
             if (refs.PassiveText != null)
             {
-                refs.PassiveText.text = !string.IsNullOrEmpty(unlock.description)
+                refs.PassiveText.text = isUnlocked && !string.IsNullOrEmpty(unlock.description)
                     ? unlock.description
                     : string.Empty;
             }

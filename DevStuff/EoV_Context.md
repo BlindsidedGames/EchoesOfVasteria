@@ -17,6 +17,21 @@ This document provides complete context for AI assistance with the EoV codebase.
 
 ---
 
+## Codebase Statistics
+
+| Metric | Count |
+|--------|-------|
+| C# Files | 289 |
+| Directories | 32 |
+| ScriptableObject Classes | 27 |
+| Singleton/Manager Classes | 19+ |
+| Quest Assets | 97 |
+| Resource Assets | 69 |
+| Prefabs | 257 |
+| Milestone Effect Types | 9 |
+
+---
+
 ## Core Loop (Runtime)
 
 EoV runs as auto-played map sessions:
@@ -87,6 +102,16 @@ public class Skill : SerializedScriptableObject
 ```
 
 **Milestones:** Unlock at skill levels, have passive/active effects, can spawn Echoes.
+
+**Milestone Effect Types (9 classes in `Assets/Scripts/Skills/Milestones/`):**
+| Effect Class | Purpose |
+|--------------|---------|
+| MilestoneStatEffectDefinition | Flat or percent stat bonuses |
+| MilestoneResourceBonusEffectDefinition | Resource drop multipliers |
+| MilestoneExperienceBonusEffectDefinition | XP multipliers (per-skill or global) |
+| MilestoneSpawnEchoEffectDefinition | Spawn echoes with duration/probability |
+| MilestoneChanceEffectDefinition | Proc chance effects |
+| MilestoneCauldronTasteBonusEffectDefinition | Cauldron-specific effects |
 
 ### Woodcutting
 - **Always available** (requires Barkley quest "Another Magicool Gift")
@@ -456,6 +481,27 @@ Fraud detection routes suspicious times to cheater board. Includes version metad
 
 ## Technical Architecture
 
+### Design Patterns
+
+**Singleton (3 approaches):**
+1. `Singleton<T>` generic base class — preferred for MonoBehaviours
+2. Manual `Instance` property — legacy pattern in some managers
+3. Static classes — for stateless utilities (HeroStatSystem, Combat, TaskWeightService)
+
+**Service Pattern:**
+Stateless services: `CraftingService`, `SalvageService`, `TaskWeightService`, `BaseStatService`
+
+**References Pattern (UI):**
+MonoBehaviour classes in `References/` hold SerializeField UI references, decoupling logic from scene structure. 24 reference classes total.
+
+**ScriptableObject Configuration:**
+27 SO classes drive gameplay configuration. Key types:
+- `Skill` — XP curve, milestones, resource unlocks
+- `QuestData` — Requirements, rewards, chains
+- `TaskData` — Drops, skill mapping, weights
+- `EnemyData` — Stats, drops, scaling
+- `MapGenerationConfig` — Terrain, tasks, enemies per map
+
 ### Object Pooling (`Assets/Scripts/Blindsided/Utilities/Pooling/PoolManager.cs`)
 
 - Prefab-based pools (by instance ID)
@@ -467,12 +513,29 @@ Fraud detection routes suspicious times to cheater board. Includes version metad
 
 ### Save Data (`Assets/Scripts/Blindsided/SaveData/GameData.cs`)
 
-Key persisted data:
-- `Disciples` — Alter Echo records
-- `CauldronTotals` — Lifetime tasting stats
-- `AutoBuffSlots` — Per-slot state
-- `CraftingMasteryLevel/XP` — Ivan
-- `CauldronEvaLevel/Xp` — Eva
+**Save Format:** Odin Binary serialization with custom header (schema version, timestamp, build ID)
+**Autosave:** Every 30 seconds
+**Backup:** Maintains `snapshot.bin`, `snapshot.prev1.bin`, `snapshot.prev2.bin` rotation
+
+**Key Persisted Fields:**
+| Category | Fields |
+|----------|--------|
+| Session | PlayTime, OfflineTime, TimeScale, DateQuitString |
+| Skills | SkillData (level, XP, milestones per skill) |
+| Resources | Resources (amounts, earned flags, best rates) |
+| Quests | Quests (progress, completion), PinnedQuests |
+| Gear | EquipmentBySlot, CraftingMasteryLevel/XP |
+| Cauldron | CauldronStew, CauldronCardCounts, EvaLevel/XP |
+| Disciples | Disciples (offline generation records) |
+| Stats | General (lifetime stats), ForgeStats, MapStats |
+| Preferences | SavedPreferences (UI settings) |
+
+**Migrations:**
+| Version | Migration | Purpose |
+|---------|-----------|---------|
+| 1.2.12 | Migration_DuckHelmetSanitation | Fix duck helmet affixes |
+| 1.2.17 | Migration_CauldronOverflowRedistribution | Cap card tiers, redistribute |
+| 1.2.17 | Migration_GearAffixQuality | Populate percentile quality |
 
 ---
 
@@ -503,3 +566,66 @@ Key persisted data:
 | Save | `Assets/Scripts/Blindsided/SaveData/GameData.cs` |
 | Leaderboards | `Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs` |
 | Map Gen | `Assets/Scripts/MapGeneration/SegmentedMapGenerator.cs` |
+
+---
+
+## Map Generation System
+
+**Flow:** `SegmentedMapGenerator` → `TilemapChunkGenerator` → `ProceduralTaskGenerator`
+
+**Segment System:**
+- 3-segment queue (64x18 tiles default)
+- Oldest segment recycled when hero reaches 3rd segment
+- Async coroutines spread work across frames
+
+**Per-Map Configuration (`Assets/Scriptables/MapSettings/*.asset`):**
+| Setting | Purpose |
+|---------|---------|
+| Terrain layers | Bottom/middle/top terrain assets |
+| Task weights | Per-skill category weights |
+| Enemy list | EnemyData assets to spawn |
+| Enemy density | Enemies per horizontal unit |
+| NPC tasks | Fixed NPC spawn positions |
+
+**Map Status:**
+| Map | Focus | Status |
+|-----|-------|--------|
+| Farmlands | Farming | Complete |
+| Woods | Woodcutting | Complete |
+| River | Fishing | Complete |
+| Beach | Gathering | Complete (no enemies) |
+| Mines | Mining+Looting | Complete |
+| **Halloween** | Seasonal | **BROKEN - empty task lists** |
+
+---
+
+## Known Technical Debt
+
+### Critical
+| Issue | Location |
+|-------|----------|
+| Halloween map has empty task lists | `Haloween.asset` |
+
+### Major (Large Classes)
+| File | Lines | Issue |
+|------|-------|-------|
+| HeroBase.cs | 1545 | Mixes movement, combat, tasks, stats, UI |
+| CauldronManager.cs | 1297 | Handles mixing, tasting, cards, Eva, infinity |
+| ProceduralTaskGenerator.cs | 983 | Tasks, enemies, NPCs, terrain validation |
+| SettingsPanelUI.cs | 1130 | Too many UI responsibilities |
+
+### Medium
+- 14 bare `catch {}` blocks in HeroBase.cs silently swallow exceptions
+- Progress calculation duplicated across 4 quest files
+- Inconsistent singleton patterns (3 approaches)
+- Some References classes contain logic (should be data-only)
+- No max collection sizes in ForgeStats (potential memory bloat)
+- Pooling has no max size limit
+
+### Minor
+- 15 files cluttering Scripts/ root directory
+- Empty Migration/ directory exists
+- "Haloween" spelling (should be "Halloween")
+- Health.cs should be renamed EnemyHealth.cs
+- DistanceRun quest requirement type exists but unused
+- Namespace inconsistency in References/ classes

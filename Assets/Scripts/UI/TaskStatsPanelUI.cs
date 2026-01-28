@@ -17,11 +17,7 @@ namespace TimelessEchoes.UI
     public class TaskStatsPanelUI : MonoBehaviour
     {
         [SerializeField] private StatPanelReferences references;
-        [Header("Distance Preview")]
-        [SerializeField] private Slider distanceSlider;
-        [SerializeField] private TMP_Text distanceText;
         private GameplayStatTracker statTracker;
-        private EnemyStatsPanelUI enemyPanel;
         private float lastKnownMaxDistance;
 
         [SerializeField] private float updateInterval = 0.1f;
@@ -120,8 +116,6 @@ namespace TimelessEchoes.UI
         private void OnDisable()
         {
             UITicker.Instance?.Unsubscribe(RefreshTick);
-            if (distanceSlider != null)
-                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
             if (statTracker != null)
                 statTracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
             TaskWeightService.ToggleChanged -= OnTaskWeightToggleChanged;
@@ -134,76 +128,26 @@ namespace TimelessEchoes.UI
             SortEntries();
         }
 
-        private void EnsureDistanceControls()
-        {
-            if (distanceSlider != null && distanceText != null)
-                return;
-
-            if (enemyPanel == null)
-                enemyPanel = FindFirstObjectByType<EnemyStatsPanelUI>(FindObjectsInactive.Include);
-
-            if (enemyPanel != null)
-            {
-                if (distanceSlider == null)
-                    distanceSlider = enemyPanel.DistanceSlider;
-                if (distanceText == null)
-                    distanceText = enemyPanel.DistanceText;
-            }
-        }
-
         private void SetupDistanceSlider()
         {
-            EnsureDistanceControls();
-            if (distanceSlider == null)
-                return;
-
-            var tracker = GameplayStatTracker.Instance;
-            lastKnownMaxDistance = tracker != null ? tracker.MaxRunDistance : 0f;
-            if (distanceSlider != null)
-            {
-                distanceSlider.minValue = 0f;
-                distanceSlider.maxValue = lastKnownMaxDistance;
-                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
-                distanceSlider.onValueChanged.AddListener(OnDistanceSliderChanged);
-            }
-            UpdateDistanceLabel();
+            // Distance slider is no longer used for tasks - spawning uses skill-based unlocks instead.
+            // Just track max distance for display purposes.
+            lastKnownMaxDistance = GetPreviewDistance();
         }
 
         private void OnMaxRunDistanceChanged(float newMax)
         {
-            if (distanceSlider != null)
-            {
-                bool wasAtMax = Mathf.Approximately(distanceSlider.value, lastKnownMaxDistance);
-                distanceSlider.maxValue = newMax;
-                if (wasAtMax || distanceSlider.value > newMax)
-                    distanceSlider.SetValueWithoutNotify(newMax);
-            }
-            lastKnownMaxDistance = newMax;
-            UpdateDistanceLabel();
+            lastKnownMaxDistance = newMax > 0f ? newMax : 100f;
             UpdateEntries();
-        }
-
-        private void OnDistanceSliderChanged(float _)
-        {
-            UpdateDistanceLabel();
-            cachedWeightsWorldX = float.NaN;
-            UpdateEntries();
-        }
-
-        private void UpdateDistanceLabel()
-        {
-            if (distanceText == null)
-                return;
-            var distance = GetPreviewDistance();
-            distanceText.text = $"Distance: {CalcUtils.FormatNumber(distance, true)}";
         }
 
         private float GetPreviewDistance()
         {
-            if (distanceSlider != null)
-                return Mathf.Clamp(distanceSlider.value, distanceSlider.minValue, distanceSlider.maxValue);
+            // Use max distance if available, otherwise use a reasonable default for preview calculations.
+            // The default of 100f ensures spawn weights work correctly when no run has been started yet.
             var tracker = GameplayStatTracker.Instance;
-            return tracker != null ? tracker.MaxRunDistance : 0f;
+            var maxDist = tracker != null ? tracker.MaxRunDistance : 0f;
+            return maxDist > 0f ? maxDist : 100f;
         }
 
         private void OnTaskWeightToggleChanged(TaskData task, bool _)
@@ -416,13 +360,24 @@ namespace TimelessEchoes.UI
             }
 
             // Town/default view: compare only within the associated skill (category) independent of map weights.
+            // Only include unlocked tasks in the calculation.
             var skill = data.associatedSkill;
             if (!tasksBySkill.TryGetValue(skill, out var list) || list == null || list.Count == 0)
                 return false;
 
             float total = 0f;
             for (int i = 0; i < list.Count; i++)
-                total += TaskWeightService.GetEffectiveWeight(list[i], worldX);
+            {
+                if (IsTaskUnlocked(list[i]))
+                    total += TaskWeightService.GetEffectiveWeight(list[i], worldX);
+            }
+
+            // If task is locked, spawn chance is 0
+            if (!IsTaskUnlocked(data))
+            {
+                chance = 0f;
+                return true;
+            }
 
             var weight = TaskWeightService.GetEffectiveWeight(data, worldX);
             chance = total > 0f ? weight / total : 0f;
@@ -493,7 +448,7 @@ namespace TimelessEchoes.UI
             if (ui.entrySpawnDistanceText != null)
             {
                 var weightText = CalcUtils.FormatNumber(Mathf.Max(0f, effectiveWeight), true);
-                string minStr = CalcUtils.FormatNumber(data.minX, true);
+                string minStr = CalcUtils.FormatNumber(data.GetEffectiveMinX(), true);
                 bool showMaxDistance = data != null && data.enforceMaxDistance;
                 string maxStr = float.IsInfinity(data.maxX)
                     ? "Infinity"
@@ -608,6 +563,11 @@ namespace TimelessEchoes.UI
             foreach (var data in order)
                 if (entries.TryGetValue(data, out var ui))
                     ui.transform.SetSiblingIndex(index++);
+        }
+
+        private bool IsTaskUnlocked(TaskData task)
+        {
+            return TaskWeightService.IsTaskUnlocked(task);
         }
     }
 }

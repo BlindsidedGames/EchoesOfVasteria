@@ -25,7 +25,14 @@
       "Bash(gh pr *)",
       "Bash(gh issue *)",
       "Bash(gh repo view*)",
-      "Bash(gh api*)"
+      "Bash(gh api*)",
+      "Bash(git commit:*)",
+      "Bash(xargs -I {} bash -c 'echo \"\"=== {} ===\"\" && cat \"\"{}\"\"')",
+      "Bash(cd:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Read(//c/Users/mattr/Documents/Unity/Projects/Echoes of Vasteria/Assets/**)",
+      "Bash(while read dir)"
     ],
     "deny": [
       "Bash(git push --force*)",
