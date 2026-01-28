@@ -64,8 +64,17 @@ namespace TimelessEchoes.Hero
         /// </summary>
         protected HeroMovementController movementController;
 
+        /// <summary>
+        /// Public accessor for the combat controller.
+        /// </summary>
+        public HeroCombatController CombatController => combatController;
+
+        /// <summary>
+        /// Public accessor for the movement controller.
+        /// </summary>
+        public HeroMovementController MovementController => movementController;
+
         [SerializeField] private BuffManager buffController;
-        [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
         [SerializeField] private bool allowAttacks = true;
@@ -104,6 +113,10 @@ namespace TimelessEchoes.Hero
         /// Handles death/disengage subscriptions and provides query methods.
         /// </summary>
         protected EnemyEngagementTracker engagementTracker;
+
+        // Throttling for cleanup operations (Phase 3.5.6)
+        private float nextCleanupTime;
+        private const float CleanupInterval = 0.1f; // 10Hz
 
         private float attackSpeedBonus;
 
@@ -534,8 +547,12 @@ namespace TimelessEchoes.Hero
                 animator.speed = targetAnimSpeed;
             SetSecondaryAnimatorSpeed(targetAnimSpeed);
 
-            // Clean up stale enemies (dead, disengaged, or null)
-            engagementTracker?.CleanupStaleEnemies();
+            // Clean up stale enemies (dead, disengaged, or null) - throttled to 10Hz
+            if (Time.time >= nextCleanupTime)
+            {
+                engagementTracker?.CleanupStaleEnemies();
+                nextCleanupTime = Time.time + CleanupInterval;
+            }
 
             // Update combat state via combat controller
             var stillInCombat = combatController?.UpdateCombat() ?? false;
@@ -619,7 +636,6 @@ namespace TimelessEchoes.Hero
 
         // Stats accessors and updates
         public float Damage => HeroStatSystem.GetSnapshot().damage * CombatDamageMultiplier;
-        public float BaseDamage => baseDamage + damageBonus + gearDamageBonus;
         public float AttackRate => HeroStatSystem.GetSnapshot().attacksPerSecond;
         public float MoveSpeed => HeroStatSystem.GetSnapshot().movementSpeed;
         public float MaxHealthValue => HeroStatSystem.GetSnapshot().maxHealth;

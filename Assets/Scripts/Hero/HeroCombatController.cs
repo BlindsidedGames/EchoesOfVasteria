@@ -341,50 +341,74 @@ namespace TimelessEchoes.Hero
             }
         }
 
+        // Cached camera reference for bounds checking (Phase 4 optimization)
+        private Camera cachedCamera;
+        private float cameraRefreshTime;
+        private const float CameraRefreshInterval = 1f;
+
+        /// <summary>
+        /// Get camera bounds for visibility filtering. Returns false if no camera available.
+        /// </summary>
+        private bool TryGetCameraBounds(out Vector3 min, out Vector3 max)
+        {
+            min = max = Vector3.zero;
+
+            // Refresh cached camera reference periodically
+            if (cachedCamera == null || Time.time >= cameraRefreshTime)
+            {
+                cachedCamera = EnemyActivator.Instance != null
+                    ? EnemyActivator.Instance.GetComponent<Camera>()
+                    : null;
+                cameraRefreshTime = Time.time + CameraRefreshInterval;
+            }
+
+            if (cachedCamera == null) return false;
+
+            const float padding = 2f;
+            min = cachedCamera.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
+            max = cachedCamera.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
+            return true;
+        }
+
+        /// <summary>
+        /// Check if a position is within camera bounds.
+        /// </summary>
+        private static bool IsInBounds(Vector3 p, Vector3 min, Vector3 max)
+        {
+            return p.x >= min.x && p.x <= max.x && p.y >= min.y && p.y <= max.y;
+        }
+
         /// <summary>
         /// Find the nearest living enemy within camera bounds.
         /// </summary>
         public Transform FindNearestEnemy(float range)
         {
             Transform nearest = null;
-            var best = float.MaxValue;
+            var bestSqr = float.MaxValue;
+            var rangeSqr = range * range;
             var enemies = EnemyActivator.ActiveEnemies;
             if (enemies == null)
                 return null;
 
             Vector2 pos = transform.position;
-
-            var cam = EnemyActivator.Instance != null
-                ? EnemyActivator.Instance.GetComponent<Camera>()
-                : null;
-            Vector3 min = Vector3.zero, max = Vector3.zero;
-            var checkBounds = false;
-            if (cam != null)
-            {
-                const float padding = 2f;
-                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
-                checkBounds = true;
-            }
+            var checkBounds = TryGetCameraBounds(out var min, out var max);
 
             foreach (var enemy in enemies)
             {
                 if (enemy == null) continue;
                 if (!enemy.TryGetTransformSafe(out var enemyTransform)) continue;
 
-                if (checkBounds)
-                {
-                    var p = enemyTransform.position;
-                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
-                        continue;
-                }
+                if (checkBounds && !IsInBounds(enemyTransform.position, min, max))
+                    continue;
 
                 var hp = enemy.Health;
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(pos, enemyTransform.position);
-                if (d <= range && d < best)
+
+                var offset = (Vector2)enemyTransform.position - pos;
+                var sqrDist = offset.sqrMagnitude;
+                if (sqrDist <= rangeSqr && sqrDist < bestSqr)
                 {
-                    best = d;
+                    bestSqr = sqrDist;
                     nearest = enemyTransform;
                 }
             }
@@ -409,42 +433,29 @@ namespace TimelessEchoes.Hero
                 return FindNearestEnemy(range);
 
             Transform nearest = null;
-            var best = float.MaxValue;
+            var bestSqr = float.MaxValue;
+            var rangeSqr = range * range;
             var enemies = EnemyActivator.ActiveEnemies;
             if (enemies == null)
                 return null;
 
             Vector2 pos = transform.position;
-
-            var cam = EnemyActivator.Instance != null
-                ? EnemyActivator.Instance.GetComponent<Camera>()
-                : null;
-            Vector3 min = Vector3.zero, max = Vector3.zero;
-            var checkBounds = false;
-            if (cam != null)
-            {
-                const float padding = 2f;
-                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
-                checkBounds = true;
-            }
+            var checkBounds = TryGetCameraBounds(out var min, out var max);
 
             foreach (var enemy in enemies)
             {
                 if (enemy == null) continue;
                 if (!enemy.TryGetTransformSafe(out var enemyTransform)) continue;
 
-                if (checkBounds)
-                {
-                    var p = enemyTransform.position;
-                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
-                        continue;
-                }
+                if (checkBounds && !IsInBounds(enemyTransform.position, min, max))
+                    continue;
 
                 var hp = enemy.Health;
                 if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(pos, enemyTransform.position);
-                if (d > range) continue;
+
+                var offset = (Vector2)enemyTransform.position - pos;
+                var sqrDist = offset.sqrMagnitude;
+                if (sqrDist > rangeSqr) continue;
 
                 var combinedDps = EstimateCombinedDps(enemyTransform);
                 if (combinedDps > 0f)
@@ -455,9 +466,9 @@ namespace TimelessEchoes.Hero
                         continue;
                 }
 
-                if (d < best)
+                if (sqrDist < bestSqr)
                 {
-                    best = d;
+                    bestSqr = sqrDist;
                     nearest = enemyTransform;
                 }
             }
@@ -521,7 +532,7 @@ namespace TimelessEchoes.Hero
             float expectedCritFactor = 1f + critChance * (critDamageMultiplier - 1f);
 
             // Get the attacker's combat controller for its damage multiplier
-            var attackerCombat = attacker.GetComponent<HeroCombatController>();
+            var attackerCombat = attacker.CombatController;
             var attackerMultiplier = attackerCombat != null ? attackerCombat.CombatDamageMultiplier : 1f;
 
             float perHitBeforeDefense = snap.damage * attackerMultiplier * killMult * expectedCritFactor;
@@ -544,7 +555,7 @@ namespace TimelessEchoes.Hero
             var enemyStats = enemy.Stats;
             float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
 
-            var attackerCombat = attacker.GetComponent<HeroCombatController>();
+            var attackerCombat = attacker.CombatController;
             var attackerMultiplier = attackerCombat != null ? attackerCombat.CombatDamageMultiplier : 1f;
 
             float perHitBeforeDefense = snap.damage * attackerMultiplier * killMult;
@@ -570,8 +581,8 @@ namespace TimelessEchoes.Hero
             var main = HeroController.Instance;
             if (main != null && (object)main != hero)
             {
-                var mainCombat = main.GetComponent<HeroCombatController>();
-                var mainSetter = main.GetComponent<Pathfinding.AIDestinationSetter>();
+                var mainCombat = main.CombatController;
+                var mainSetter = main.MovementController?.Setter;
                 var t = mainCombat != null ? mainCombat.CurrentTarget : null;
                 var st = mainSetter != null ? mainSetter.target : null;
                 if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))
@@ -585,8 +596,8 @@ namespace TimelessEchoes.Hero
                 var hc = echo as HeroBase;
                 if (hc == null || (object)hc == hero) continue;
 
-                var echoCombat = echo.GetComponent<HeroCombatController>();
-                var echoSetter = echo.GetComponent<Pathfinding.AIDestinationSetter>();
+                var echoCombat = hc.CombatController;
+                var echoSetter = hc.MovementController?.Setter;
                 var t = echoCombat != null ? echoCombat.CurrentTarget : null;
                 var st = echoSetter != null ? echoSetter.target : null;
                 if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))

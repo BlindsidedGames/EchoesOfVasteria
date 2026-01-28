@@ -1,4 +1,5 @@
 using System.Linq;
+using TimelessEchoes.Utilities;
 using UnityEngine;
 
 namespace TimelessEchoes.Hero
@@ -101,11 +102,7 @@ namespace TimelessEchoes.Hero
         protected override void UpdateSecondaryAnimatorMovement(Vector2 lastMove, float speed)
         {
             if (autoBuffAnimator != null && autoBuffAnimator.isActiveAndEnabled)
-            {
-                autoBuffAnimator.SetFloat("MoveX", lastMove.x);
-                autoBuffAnimator.SetFloat("MoveY", lastMove.y);
-                autoBuffAnimator.SetFloat("MoveMagnitude", speed);
-            }
+                AnimatorMovementHelper.SetMovement(autoBuffAnimator, lastMove, speed);
         }
 
         protected override void UpdateSecondarySpriteFlip(bool flipX)

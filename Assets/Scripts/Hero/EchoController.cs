@@ -354,8 +354,7 @@ namespace TimelessEchoes.Hero
             // Prefer finishing the current enemy if in combat
             if (InCombat)
             {
-                var setter = GetComponent<AIDestinationSetter>();
-                var target = setter != null ? setter.target : null;
+                var target = movementController?.Setter?.target;
                 var enemyComp = target != null ? target.GetComponent<Enemy>() : null;
                 var hp = enemyComp != null ? enemyComp.Health : null;
                 if (hp != null && hp.CurrentHealth > 0f)
