@@ -28,6 +28,17 @@ namespace TimelessEchoes.Gear
                     sum += a.value;
             return sum;
         }
+
+        /// <summary>
+        /// Resets the item for pooling reuse.
+        /// </summary>
+        public void Reset()
+        {
+            slot = null;
+            rarity = null;
+            core = null;
+            affixes?.Clear();
+        }
     }
 }
 

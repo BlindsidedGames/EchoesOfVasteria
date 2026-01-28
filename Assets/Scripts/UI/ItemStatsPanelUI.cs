@@ -25,6 +25,10 @@ namespace TimelessEchoes.UI
         private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private readonly Dictionary<Resource, float> minDistanceLookup = new();
         private List<Resource> defaultOrder = new();
+        // Scratch lists for allocation-free sorting
+        private readonly List<Resource> _scratchKnown = new();
+        private readonly List<Resource> _scratchUnknown = new();
+        private readonly List<Resource> _scratchFinal = new();
 
         public enum SortMode
         {
@@ -62,8 +66,16 @@ namespace TimelessEchoes.UI
 
         private void RefreshTick()
         {
+            if (!IsPanelVisible()) return;
             UpdateEntries();
             SortEntries();
+        }
+
+        private bool IsPanelVisible()
+        {
+            if (references != null && references.itemEntryParent != null)
+                return references.itemEntryParent.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
         public void SetSortMode(SortMode mode)
@@ -252,73 +264,103 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0)
                 return;
 
-            var known = defaultOrder.Where(r => r.totalReceived > 0);
-            var unknown = defaultOrder.Where(r => r.totalReceived <= 0);
+            // Split into known/unknown using scratch lists (allocation-free)
+            _scratchKnown.Clear();
+            _scratchUnknown.Clear();
+            _scratchFinal.Clear();
+
+            for (int i = 0; i < defaultOrder.Count; i++)
+            {
+                var r = defaultOrder[i];
+                if (r.totalReceived > 0)
+                    _scratchKnown.Add(r);
+                else
+                    _scratchUnknown.Add(r);
+            }
 
             if (sortMode == SortMode.Default)
             {
-                var sortedKnownDefault = known
-                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                    .ThenBy(r => r.name)
-                    .ToList();
-                var sortedUnknownDefault = unknown
-                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                    .ThenBy(r => r.name)
-                    .ToList();
-                var finalDefault = sortedKnownDefault.Concat(sortedUnknownDefault).ToList();
-                ApplyOrder(finalDefault);
+                // Already sorted by ID/name in defaultOrder, just partition
+                _scratchKnown.Sort(CompareByIdThenName);
+                _scratchUnknown.Sort(CompareByIdThenName);
+                _scratchFinal.AddRange(_scratchKnown);
+                _scratchFinal.AddRange(_scratchUnknown);
+                ApplyOrderScratch();
                 return;
             }
 
             if (sortMode == SortMode.Tier)
             {
-                var sortedKnownTier = known
-                    .OrderByDescending(r => resourceManager != null ? resourceManager.GetTier(r) : 1)
-                    .ThenBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                    .ThenBy(r => r.name)
-                    .ToList();
-                var finalTier = sortedKnownTier.Concat(unknown).ToList();
-                ApplyOrder(finalTier);
+                _scratchKnown.Sort(CompareByTierDescThenIdName);
+                _scratchFinal.AddRange(_scratchKnown);
+                _scratchFinal.AddRange(_scratchUnknown);
+                ApplyOrderScratch();
                 return;
             }
 
             if (sortMode == SortMode.Unknown)
             {
-                var sortedUnknownUnknown = unknown
-                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                    .ThenBy(r => r.name)
-                    .ToList();
-                var sortedKnownUnknown = known
-                    .OrderBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                    .ThenBy(r => r.name)
-                    .ToList();
-                var finalUnknown = sortedUnknownUnknown.Concat(sortedKnownUnknown).ToList();
-                ApplyOrder(finalUnknown);
+                _scratchUnknown.Sort(CompareByIdThenName);
+                _scratchKnown.Sort(CompareByIdThenName);
+                _scratchFinal.AddRange(_scratchUnknown);
+                _scratchFinal.AddRange(_scratchKnown);
+                ApplyOrderScratch();
                 return;
             }
 
-            // Use double to avoid overflow/clamping when values exceed Int32 range
-            double GetValue(Resource r)
-            {
-                return sortMode == SortMode.Collected ? r.totalReceived : r.totalSpent;
-            }
+            // Collected or Spent mode
+            if (sortMode == SortMode.Collected)
+                _scratchKnown.Sort(CompareByCollectedDescThenIdName);
+            else
+                _scratchKnown.Sort(CompareBySpentDescThenIdName);
 
-            var sortedKnownByValue = known
-                .OrderByDescending(GetValue)
-                .ThenBy(r => int.TryParse(r.resourceID.ToString(), out var id) ? id : 0)
-                .ThenBy(r => r.name)
-                .ToList();
-
-            var finalOrder = sortedKnownByValue.Concat(unknown).ToList();
-            ApplyOrder(finalOrder);
+            _scratchFinal.AddRange(_scratchKnown);
+            _scratchFinal.AddRange(_scratchUnknown);
+            ApplyOrderScratch();
         }
 
-        private void ApplyOrder(IList<Resource> order)
+        private void ApplyOrderScratch()
         {
             var index = 0;
-            foreach (var res in order)
-                if (entries.TryGetValue(res, out var ui))
+            for (int i = 0; i < _scratchFinal.Count; i++)
+            {
+                if (entries.TryGetValue(_scratchFinal[i], out var ui))
                     ui.transform.SetSiblingIndex(index++);
+            }
         }
+
+        private static int GetResourceId(Resource r)
+        {
+            return int.TryParse(r.resourceID.ToString(), out var id) ? id : 0;
+        }
+
+        private int CompareByIdThenName(Resource a, Resource b)
+        {
+            var idA = GetResourceId(a);
+            var idB = GetResourceId(b);
+            if (idA != idB) return idA.CompareTo(idB);
+            return string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+        }
+
+        private int CompareByTierDescThenIdName(Resource a, Resource b)
+        {
+            var tierA = resourceManager != null ? resourceManager.GetTier(a) : 1;
+            var tierB = resourceManager != null ? resourceManager.GetTier(b) : 1;
+            if (tierA != tierB) return tierB.CompareTo(tierA); // Descending
+            return CompareByIdThenName(a, b);
+        }
+
+        private int CompareByCollectedDescThenIdName(Resource a, Resource b)
+        {
+            if (a.totalReceived != b.totalReceived) return b.totalReceived.CompareTo(a.totalReceived); // Descending
+            return CompareByIdThenName(a, b);
+        }
+
+        private int CompareBySpentDescThenIdName(Resource a, Resource b)
+        {
+            if (a.totalSpent != b.totalSpent) return b.totalSpent.CompareTo(a.totalSpent); // Descending
+            return CompareByIdThenName(a, b);
+        }
+
     }
 }

@@ -24,6 +24,7 @@ namespace Blindsided.SaveData
         private const string VSyncEnabledKey = "VSyncEnabled";
         private const string SafeAreaRatioKey = "SafeAreaRatio";
         private const string MuteWhenUnfocusedKey = "MuteWhenUnfocused";
+        private const string FastCraftModeKey = "FastCraftMode";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -319,6 +320,20 @@ namespace Blindsided.SaveData
         {
             get => oracle.saveData.SavedPreferences.LockAutocraftStatSet;
             set => oracle.saveData.SavedPreferences.LockAutocraftStatSet = value;
+        }
+
+        /// <summary>
+        /// Fast Craft Mode: when enabled, forge telemetry skips detailed stat tracking
+        /// during autocrafting for maximum performance. Essential stats are still recorded.
+        /// </summary>
+        public static bool FastCraftMode
+        {
+            get => PlayerPrefs.GetInt(FastCraftModeKey, 0) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(FastCraftModeKey, value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
         }
 
         public static bool ShowPinnedQuests

@@ -449,6 +449,7 @@ namespace Blindsided.SaveData
             public int TotalCrafts;
             public int TotalEquippedFromCraft;
             public int TotalSalvaged;
+            public int BatchSalvageCount; // Items salvaged via batch (turbo mode expected yields)
             public int TotalAutocraftSessions;
             public int TotalCraftUntilUpgradeSessions;
             public int TotalFailedCraftAttempts;

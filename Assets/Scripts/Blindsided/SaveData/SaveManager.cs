@@ -87,10 +87,13 @@ namespace Blindsided.SaveData
                 }
             }
 
-            // Verify temp by re-reading
-            if (!TryReadSnapshot(tmpPath, out var _))
+            // Lightweight verification: check file exists and has expected size
+            // (Full deserialization verification was causing 2MB+ GC allocation per save)
+            var expectedSize = headerBytes.Length + payload.Length;
+            var fileInfo = new FileInfo(tmpPath);
+            if (!fileInfo.Exists || fileInfo.Length != expectedSize)
             {
-                Debug.LogWarning($"Verification failed after writing temp snapshot for slot '{CurrentSlotName}' at '{tmpPath}'. Aborting save.");
+                Debug.LogWarning($"Verification failed after writing temp snapshot for slot '{CurrentSlotName}' at '{tmpPath}'. Expected {expectedSize} bytes, got {(fileInfo.Exists ? fileInfo.Length : 0)}.");
                 TrySafeDelete(tmpPath);
                 return Task.FromResult(false);
             }

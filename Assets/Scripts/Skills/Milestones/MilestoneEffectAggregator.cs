@@ -17,6 +17,7 @@ namespace TimelessEchoes.Skills
         private float _globalResourceBonus;
         private float _globalExperienceBonus;
         private float _cauldronTasteBonus;
+        private float _forgeCraftSpeedBonus;
 
         private static readonly SkillMilestoneSummary EmptySummary = new();
         private static readonly System.Collections.Generic.IReadOnlyDictionary<TimelessEchoes.Upgrades.BaseStat, float> EmptyStatBonusMap = new System.Collections.Generic.Dictionary<TimelessEchoes.Upgrades.BaseStat, float>();
@@ -33,6 +34,7 @@ namespace TimelessEchoes.Skills
             _globalResourceBonus = 0f;
             _globalExperienceBonus = 0f;
             _cauldronTasteBonus = 0f;
+            _forgeCraftSpeedBonus = 0f;
         }
 
         private SkillMilestoneSummary GetOrCreateSummary(Skill skill)
@@ -215,6 +217,22 @@ namespace TimelessEchoes.Skills
         }
 
         public float GetCauldronTasteBonus() => _cauldronTasteBonus;
+
+        /// <summary>
+        /// Adds a forge craft speed bonus (crafts per second).
+        /// </summary>
+        public void AddForgeCraftSpeedBonus(float amount)
+        {
+            if (amount <= 0f)
+                return;
+
+            _forgeCraftSpeedBonus += amount;
+        }
+
+        /// <summary>
+        /// Gets the total forge craft speed bonus (crafts per second).
+        /// </summary>
+        public float GetForgeCraftSpeedBonus() => _forgeCraftSpeedBonus;
 
         public float GetFlatStatBonus(BaseStat upgrade)
         {

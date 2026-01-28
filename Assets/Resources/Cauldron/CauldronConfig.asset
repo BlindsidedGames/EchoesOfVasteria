@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e501616f3df048458993620564c0965, type: 3}
   m_Name: CauldronConfig
   m_EditorClassIdentifier: 
-  rollsPerSecond: 10
+  rollsPerSecond: 100
   stewPerRoll: 1
   resourceTierThresholds: 01000000190000004b000000c8000000ee020000dc050000ac0d000010270000
   buffTierThresholds: 0100000005000000190000004b000000c8000000ee020000dc050000b80b0000
@@ -91,3 +91,4 @@ MonoBehaviour:
   sliceAECombat: {r: 0.05, g: 0.2, b: 0.65, a: 1}
   sliceAELooting: {r: 0.12, g: 0.65, b: 0.85, a: 1}
   sliceInfinity: {r: 0.9176471, g: 0.40000004, b: 0.427451, a: 1}
+  stewChangeThrottleInterval: 0.1

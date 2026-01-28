@@ -34,6 +34,16 @@ namespace TimelessEchoes.Gear
 
 		[Tooltip("Exponent for XP curve (e.g., 1.25 means slowly increasing).")]
 		public float xpLevelMultiplier = 1.25f;
+
+		[Title("Autocrafting Speed")]
+		[Tooltip("Base crafts per second before any milestone bonuses.")]
+		[MinValue(1)] public int baseCraftsPerSecond = 10;
+
+		[Tooltip("Maximum crafts per second cap (0 = no cap).")]
+		[MinValue(0)] public int maxCraftsPerSecond = 100;
+
+		[Tooltip("Batch interval in seconds. Lower = smoother but more CPU overhead.")]
+		[Range(0.01f, 1f)] public float batchInterval = 0.1f;
     }
 }
 

@@ -479,6 +479,7 @@ namespace TimelessEchoes.UI
 
 		private void OnInventoryChangedUi()
 		{
+			if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
 			RefreshMixSlots();
 			RefreshPieChart();
 			RefreshWeightsText();
