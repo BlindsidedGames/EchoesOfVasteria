@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using TimelessEchoes.Skills;
 using UnityEngine;
-using static TimelessEchoes.Quests.QuestUtils;
 
 namespace TimelessEchoes.Upgrades
 {
     /// <summary>
     /// Utility for rolling weighted ResourceDrop tables with optional extra slots.
-    /// Handles world position and quest requirements.
+    /// Handles world position and skill level requirements.
     /// </summary>
     public static class DropResolver
     {
@@ -24,9 +24,16 @@ namespace TimelessEchoes.Upgrades
         /// <param name="drops">Potential drops to choose from.</param>
         /// <param name="additionalLootChances">Sequential extra slot chances after the first guaranteed roll (0-1 values).</param>
         /// <param name="worldX">World position used for min/max filters.</param>
-        /// <param name="ignoreQuest">If true, required quest checks are skipped.</param>
+        /// <param name="associatedSkill">Skill used for unlock level checks.</param>
+        /// <param name="ignoreSkillLevel">If true, required skill level checks are skipped.</param>
         /// <param name="rand">Optional random generator; defaults to UnityEngine.Random.value.</param>
-        public static List<DropResult> RollDrops(IEnumerable<ResourceDrop> drops, IList<float> additionalLootChances, float worldX, bool ignoreQuest = false, Func<float> rand = null)
+        public static List<DropResult> RollDrops(
+            IEnumerable<ResourceDrop> drops,
+            IList<float> additionalLootChances,
+            float worldX,
+            Skill associatedSkill = null,
+            bool ignoreSkillLevel = false,
+            Func<float> rand = null)
         {
             float Rand() => rand != null ? rand() : UnityEngine.Random.value;
 
@@ -38,7 +45,7 @@ namespace TimelessEchoes.Upgrades
             {
                 if (drop == null || drop.resource == null) continue;
                 if (drop.weight <= 0f) continue;
-                if (!ignoreQuest && drop.requiredQuest != null && !QuestCompleted(drop.requiredQuest.questId)) continue;
+                if (!ignoreSkillLevel && !IsDropUnlocked(drop, associatedSkill)) continue;
                 if (worldX < drop.minX || worldX > drop.maxX) continue;
                 available.Add(drop);
             }
@@ -91,6 +98,22 @@ namespace TimelessEchoes.Upgrades
             }
 
             return results;
+        }
+
+        private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)
+        {
+            if (drop.requiredSkillLevel <= 0)
+                return true;  // No requirement
+
+            if (skill == null)
+                return false;
+
+            var controller = SkillController.Instance;
+            if (controller == null)
+                return false;
+
+            int level = controller.GetProgress(skill)?.Level ?? 1;
+            return level >= drop.requiredSkillLevel;
         }
     }
 }

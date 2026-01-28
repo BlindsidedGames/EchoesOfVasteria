@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Blindsided.Utilities;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
-using TimelessEchoes.Quests;
 using TimelessEchoes.MapGeneration;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -29,12 +28,16 @@ namespace TimelessEchoes.Tasks
         [MinValue(0f)]
         public float minX;
         [TitleGroup("Spawn Range")]
+        [LabelText("Enforce Min Distance")]
+        public bool enforceMinDistance;
+        [TitleGroup("Spawn Range")]
         public float maxX = float.PositiveInfinity;
         [TitleGroup("Spawn Range")]
         [LabelText("Enforce Max Distance")]
         public bool enforceMaxDistance;
-        [TitleGroup("General")]
-        public QuestData requiredQuest;
+        [TitleGroup("Spawn Range")]
+        [Tooltip("Skill level required for this task (0 = no requirement)")]
+        public int requiredSkillLevel;
         [TitleGroup("General")]
         public float taskDuration;
         [TitleGroup("General")]
@@ -78,6 +81,11 @@ namespace TimelessEchoes.Tasks
         public float GetWeight(float worldX)
         {
             return TaskWeightService.GetEffectiveWeight(this, worldX);
+        }
+
+        public float GetEffectiveMinX()
+        {
+            return enforceMinDistance ? minX : 10f;
         }
 
         public float GetEffectiveMaxX()

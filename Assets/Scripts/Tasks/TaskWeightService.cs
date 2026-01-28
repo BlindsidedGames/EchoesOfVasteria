@@ -1,5 +1,6 @@
 using System;
 using Blindsided.SaveData;
+using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
 using UnityEngine;
 using static Blindsided.Oracle;
@@ -26,7 +27,11 @@ namespace TimelessEchoes.Tasks
             if (task == null)
                 return 0f;
 
-            if (worldX < task.minX)
+            // Check skill-based unlock requirement
+            if (!IsTaskUnlocked(task))
+                return 0f;
+
+            if (worldX < task.GetEffectiveMinX())
                 return 0f;
 
             var baseWeight = Mathf.Max(0f, task.weight);
@@ -41,6 +46,19 @@ namespace TimelessEchoes.Tasks
                 weight *= OutOfRangeMultiplier;
 
             return weight;
+        }
+
+        public static bool IsTaskUnlocked(TaskData task)
+        {
+            if (task == null) return false;
+            if (task.requiredSkillLevel <= 0) return true;
+            if (task.associatedSkill == null) return false;
+
+            var controller = SkillController.Instance;
+            if (controller == null) return false;
+
+            int level = controller.GetProgress(task.associatedSkill)?.Level ?? 1;
+            return level >= task.requiredSkillLevel;
         }
 
         public static bool IsToggleEnabled(TaskData task)

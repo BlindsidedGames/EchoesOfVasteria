@@ -40,7 +40,7 @@ namespace TimelessEchoes.Tasks
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
 
-            var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, worldX);
+            var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, worldX, associatedSkill);
             // Batch ResourceManager notifications to coalesce UI refreshes into a single update
             resourceManager.BeginBatch();
             try

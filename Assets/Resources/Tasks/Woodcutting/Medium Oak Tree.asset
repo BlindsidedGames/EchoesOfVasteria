@@ -19,7 +19,8 @@ MonoBehaviour:
   xpForCompletion: 5
   minX: 100
   maxX: 2500
-  requiredQuest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+  enforceMaxDistance: 0
+  requiredSkillLevel: 13
   taskDuration: 3
   sfxInterval: 0.7
   taskPrefab: {fileID: 5366876333383290996, guid: 59f9cd6a2535b134ea8a37959ddf07a6, type: 3}
@@ -36,13 +37,13 @@ MonoBehaviour:
     weight: 1
     minX: 100
     maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 1
     minX: 0
     maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   additionalLootChances:
   - 0.3
   - 0.2

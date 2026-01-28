@@ -20,7 +20,7 @@ MonoBehaviour:
   minX: 60
   maxX: 1000
   enforceMaxDistance: 0
-  requiredQuest: {fileID: 0}
+  requiredSkillLevel: 7
   taskDuration: 3
   sfxInterval: 0.7
   taskPrefab: {fileID: 33249571399304914, guid: 51e75dc08a554be4287e26b5ee13d2c4, type: 3}
@@ -36,13 +36,13 @@ MonoBehaviour:
     weight: 1
     minX: 0
     maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}
     dropRange: {x: 2, y: 5}
     weight: 0.7
     minX: 60
     maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   additionalLootChances:
   - 0.5
   resetProgressOnInterrupt: 0

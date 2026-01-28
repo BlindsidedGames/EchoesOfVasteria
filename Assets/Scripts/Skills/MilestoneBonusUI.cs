@@ -83,18 +83,41 @@ namespace TimelessEchoes.Skills
             if (controller == null)
                 controller = FindFirstObjectByType<SkillController>();
 
-            var ordered = skill.milestones.Where(m => m != null).OrderBy(m => m.UnlockLevel);
+            var progress = controller != null ? controller.GetProgress(skill) : null;
+            int currentLevel = progress != null ? progress.Level : 1;
 
-            foreach (var definition in ordered)
+            // Combine milestones and resource unlocks, sorted by required level
+            var milestoneEntries = skill.milestones
+                .Where(m => m != null)
+                .Select(m => (Level: m.UnlockLevel, IsMilestone: true, Milestone: m, Unlock: (ResourceUnlockEntry)null));
+
+            var unlockEntries = (skill.resourceUnlocks ?? new List<ResourceUnlockEntry>())
+                .Where(u => u != null && u.task != null)
+                .Select(u => (Level: u.requiredLevel, IsMilestone: false, Milestone: (MilestoneDefinition)null, Unlock: u));
+
+            var allEntries = milestoneEntries.Concat(unlockEntries)
+                .OrderBy(e => e.Level)
+                .ToList();
+
+            foreach (var item in allEntries)
             {
                 var entry = Instantiate(entryPrefab, entryParent);
                 var refs = entry.GetComponent<MilestoneEntryUIReferences>();
                 if (refs == null)
                     continue;
 
-                var binding = new EntryBinding(skill, definition, refs, entry.GetComponent<Image>() ?? refs.ToggleImage);
-                bindings.Add(binding);
-                ConfigureEntry(binding);
+                var rootImage = entry.GetComponent<Image>() ?? refs.ToggleImage;
+
+                if (item.IsMilestone)
+                {
+                    var binding = new EntryBinding(skill, item.Milestone, refs, rootImage);
+                    bindings.Add(binding);
+                    ConfigureEntry(binding);
+                }
+                else
+                {
+                    ConfigureResourceUnlockEntry(refs, item.Unlock, currentLevel, rootImage);
+                }
             }
         }
 
@@ -235,6 +258,49 @@ namespace TimelessEchoes.Skills
             }
             if (binding.RootImage != null)
                 binding.RootImage.color = unlocked ? unlockedColor : lockedColor;
+        }
+
+        private void ConfigureResourceUnlockEntry(MilestoneEntryUIReferences refs,
+            ResourceUnlockEntry unlock, int currentLevel, Image rootImage)
+        {
+            bool isUnlocked = currentLevel >= unlock.requiredLevel;
+
+            // Show task icon only when unlocked (match Tasks panel behavior)
+            if (refs.TaskImageObject != null)
+                refs.TaskImageObject.SetActive(isUnlocked);
+            if (refs.TaskImage != null && isUnlocked)
+            {
+                var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task?.taskIcon;
+                refs.TaskImage.sprite = iconSprite;
+                refs.TaskImage.color = Color.white;
+                if (iconSprite != null)
+                    refs.TaskImage.SetNativeSize();
+            }
+
+            // Title - show "???" when locked (match Tasks panel behavior)
+            string name = isUnlocked ? (unlock.task?.taskName ?? "Resource") : "???";
+            refs.NameText?.SetText(isUnlocked
+                ? $"{name} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>"
+                : $"{name} | <size=80%>Unlocks at level {unlock.requiredLevel}</size>");
+
+            // Description only when unlocked
+            if (refs.PassiveText != null)
+            {
+                refs.PassiveText.text = isUnlocked && !string.IsNullOrEmpty(unlock.description)
+                    ? unlock.description
+                    : string.Empty;
+            }
+
+            // Hide toggle and other milestone-specific elements
+            if (refs.ActiveText != null) refs.ActiveText.gameObject.SetActive(false);
+            if (refs.ToggleButton != null) refs.ToggleButton.gameObject.SetActive(false);
+            if (refs.ToggleImage != null) refs.ToggleImage.gameObject.SetActive(false);
+            if (refs.SetText != null) refs.SetText.text = string.Empty;
+            if (refs.SetIcon != null) refs.SetIcon.enabled = false;
+
+            // Grey out the whole entry if locked (same as milestones)
+            if (rootImage != null)
+                rootImage.color = isUnlocked ? unlockedColor : lockedColor;
         }
 
         private void HandleToggle(EntryBinding binding)

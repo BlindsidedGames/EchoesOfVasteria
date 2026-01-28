@@ -338,7 +338,7 @@ namespace TimelessEchoes.EditorTools
                                 for (int i = 0; i < count; i++)
                                 {
                                         var produced = new Dictionary<Resource, int>();
-                                        var rolled = DropResolver.RollDrops(t.resourceDrops, includeAdditionalLootChances ? t.additionalLootChances : null, x, assumeQuests, Rand01);
+                                        var rolled = DropResolver.RollDrops(t.resourceDrops, includeAdditionalLootChances ? t.additionalLootChances : null, x, t.associatedSkill, assumeQuests, Rand01);
                                         foreach (var res in rolled)
                                         {
                                                 produced.TryGetValue(res.resource, out var prev);
