@@ -6,6 +6,7 @@ using TimelessEchoes.Buffs;
 using TimelessEchoes.Quests;
 using TimelessEchoes.Skills;
 using TimelessEchoes.UI;
+using TimelessEchoes.Upgrades.Cauldron;
 using TimelessEchoes.Utilities;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
@@ -54,14 +55,36 @@ namespace TimelessEchoes.Upgrades
         private readonly List<string> poolAllCards = new(); // union of above
         private readonly List<string> poolInfinityCards = new(); // INF:<Stat>
         private bool cardPoolsDirty = true;
-        private float? _nextStatsEmitTime;
-        private float? _nextSessionCardsEmitTime;
         [Header("Perf Throttling")] [SerializeField] [Min(0.05f)] private float cardPoolsRebuildMinInterval = 0.5f;
         [SerializeField] [Min(0.05f)] private float weightsNotifyInterval = 0.25f;
         private float nextCardPoolsRebuildAllowed;
         private float nextWeightsNotifyTime;
         private Coroutine resourceSubscribeRoutine;
         private Coroutine autoStartRoutine;
+
+        // Extracted services (Phase 1E.1)
+        private CardTierCalculator _tierCalculator;
+        private CardPoolManager _poolManager;
+        private TasteRollResolver _rollResolver;
+        private EvaProgressionService _evaProgression;
+        private AEResourceGroupClassifier _groupClassifier;
+
+        // Throttled actions (replacing manual throttle fields)
+        private ThrottledAction _statsEmitThrottle;
+        private ThrottledAction _sessionCardsEmitThrottle;
+        private ThrottledAction _stewChangeThrottle;
+
+        // Card batching for performance (Phase 2B.1)
+        private readonly List<(string id, int delta)> _pendingCardGains = new();
+        private bool _isBatchingCards = false;
+
+        // Config hot-reload sync (once per second)
+        private float _nextConfigSyncTime;
+        private float _currentTickInterval;
+
+        // Multi-roll per frame support
+        private float _lastTasteTime;
+        private float _accumulatedTasteTime;
 
         public event Action OnStewChanged;
         public event Action OnWeightsChanged;
@@ -122,8 +145,16 @@ namespace TimelessEchoes.Upgrades
             private set
             {
                 if (oracle == null) return;
+                var oldValue = oracle.saveData.CauldronStew;
                 oracle.saveData.CauldronStew = Math.Max(0, value);
-                OnStewChanged?.Invoke();
+
+                // Throttle stew change events to reduce UI update frequency
+                // Always emit if changed significantly (> 10 stew) or if throttle allows
+                var significantChange = Math.Abs(value - oldValue) > 10;
+                if (significantChange || (_stewChangeThrottle?.TryExecute() ?? true))
+                {
+                    OnStewChanged?.Invoke();
+                }
             }
         }
 
@@ -131,18 +162,20 @@ namespace TimelessEchoes.Upgrades
 
         public int EvaLevel
         {
-            get => oracle != null ? Math.Max(1, oracle.saveData.CauldronEvaLevel) : 1;
+            get => _evaProgression?.Level ?? (oracle != null ? Math.Max(1, oracle.saveData.CauldronEvaLevel) : 1);
             private set
             {
+                if (_evaProgression != null) _evaProgression.LoadFromSave(value, _evaProgression.Xp);
                 if (oracle != null) oracle.saveData.CauldronEvaLevel = Math.Max(1, value);
             }
         }
 
         public double EvaXp
         {
-            get => oracle != null ? oracle.saveData.CauldronEvaXp : 0;
+            get => _evaProgression?.Xp ?? (oracle != null ? oracle.saveData.CauldronEvaXp : 0);
             private set
             {
+                if (_evaProgression != null) _evaProgression.LoadFromSave(_evaProgression.Level, value);
                 if (oracle != null) oracle.saveData.CauldronEvaXp = Math.Max(0, value);
             }
         }
@@ -175,6 +208,9 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public float GetTierFill01(string id)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.GetTierProgress(id);
+            // Fallback to old logic if not initialized
             if (string.IsNullOrEmpty(id) || config == null || oracle == null)
                 return 0f;
 
@@ -204,6 +240,9 @@ namespace TimelessEchoes.Upgrades
 
         public int GetResourceTier(string resourceName)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.GetResourceTier(resourceName);
+            // Fallback to old logic if not initialized
             if (oracle == null || string.IsNullOrEmpty(resourceName)) return 0;
             var key = $"RES:{resourceName}";
             var dict = oracle.saveData.CauldronCardCounts;
@@ -213,6 +252,9 @@ namespace TimelessEchoes.Upgrades
 
         public int GetBuffTier(string buffName)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.GetBuffTier(buffName);
+            // Fallback to old logic if not initialized
             if (oracle == null || string.IsNullOrEmpty(buffName)) return 0;
             var key = $"BUFF:{buffName}";
             var dict = oracle.saveData.CauldronCardCounts;
@@ -273,6 +315,9 @@ namespace TimelessEchoes.Upgrades
         // -------- Max Tier Helpers --------
         private bool IsResourceMaxed(string resourceName)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.IsResourceMaxed(resourceName);
+            // Fallback to old logic if not initialized
             if (config == null) return false;
             var maxTier = config.resourceTierThresholds != null ? config.resourceTierThresholds.Length : 0;
             if (maxTier <= 0) return false;
@@ -281,6 +326,9 @@ namespace TimelessEchoes.Upgrades
 
         private bool IsBuffMaxed(string buffName)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.IsBuffMaxed(buffName);
+            // Fallback to old logic if not initialized
             if (config == null) return false;
             var maxTier = config.buffTierThresholds != null ? config.buffTierThresholds.Length : 0;
             if (maxTier <= 0) return false;
@@ -289,6 +337,9 @@ namespace TimelessEchoes.Upgrades
 
         private bool IsIdMaxed(string id)
         {
+            // Delegate to service if available
+            if (_tierCalculator != null) return _tierCalculator.IsMaxed(id);
+            // Fallback to old logic if not initialized
             if (string.IsNullOrEmpty(id)) return false;
             if (id.StartsWith("RES:")) return IsResourceMaxed(id.Substring(4));
             if (id.StartsWith("BUFF:")) return IsBuffMaxed(id.Substring(5));
@@ -326,13 +377,41 @@ namespace TimelessEchoes.Upgrades
             questManager = TimelessEchoes.Quests.QuestManager.Instance;
             if (config == null)
                 Log("CauldronConfig missing", TELogCategory.General, this);
+            InitializeServices();
+        }
+
+        private void InitializeServices()
+        {
+            _tierCalculator = new CardTierCalculator(config, () => oracle?.saveData?.CauldronCardCounts);
+            _groupClassifier = new AEResourceGroupClassifier();
+            _poolManager = new CardPoolManager(
+                _tierCalculator,
+                _groupClassifier,
+                () => resourceManager ?? ResourceManager.Instance,
+                () => questManager ?? TimelessEchoes.Quests.QuestManager.Instance,
+                cardPoolsRebuildMinInterval
+            );
+            _poolManager.Initialize(); // Cache asset lists and force initial rebuild (Phase 2B.2)
+            _rollResolver = new TasteRollResolver(_poolManager, config);
+            _evaProgression = new EvaProgressionService();
+            _evaProgression.OnLevelUp += () => DebouncedWeightsChanged();
+
+            // Initialize throttles
+            _statsEmitThrottle = new ThrottledAction(0.2f);
+            _sessionCardsEmitThrottle = new ThrottledAction(0.2f);
+            _stewChangeThrottle = new ThrottledAction(config != null ? config.stewChangeThrottleInterval : 0.1f);
+
+            // Sync Eva progression with current save data if available
+            SyncEvaProgressionFromSave();
         }
 
         private void OnEnable()
         {
             if (UITicker.Instance != null)
-                UITicker.Instance.Subscribe(TasteTick,
-                    1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f));
+            {
+                _currentTickInterval = 1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f);
+                UITicker.Instance.Subscribe(TasteTick, _currentTickInterval);
+            }
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
             EventHandler.OnLoadData += HandleSaveDataLoaded;
@@ -474,7 +553,40 @@ namespace TimelessEchoes.Upgrades
 
         private void HandleSaveDataLoaded()
         {
+            SyncEvaProgressionFromSave();
             TryAutoStartTasting();
+        }
+
+        private void SyncEvaProgressionFromSave()
+        {
+            if (_evaProgression != null && oracle?.saveData != null)
+            {
+                _evaProgression.LoadFromSave(oracle.saveData.CauldronEvaLevel, oracle.saveData.CauldronEvaXp);
+            }
+        }
+
+        /// <summary>
+        /// Syncs throttle intervals from config once per second, allowing runtime config tweaks.
+        /// </summary>
+        private void SyncConfigValuesIfNeeded()
+        {
+            var now = Time.unscaledTime;
+            if (now < _nextConfigSyncTime) return;
+            _nextConfigSyncTime = now + 1f;
+
+            if (config == null) return;
+
+            // Update stew change throttle interval from config
+            _stewChangeThrottle?.SetInterval(config.stewChangeThrottleInterval);
+
+            // Update rolls per second if changed
+            var desiredInterval = 1f / Mathf.Max(1f, config.rollsPerSecond);
+            if (Mathf.Abs(desiredInterval - _currentTickInterval) > 0.0001f && UITicker.Instance != null)
+            {
+                UITicker.Instance.Unsubscribe(TasteTick);
+                _currentTickInterval = desiredInterval;
+                UITicker.Instance.Subscribe(TasteTick, _currentTickInterval);
+            }
         }
 
         // -------- Tasting --------
@@ -482,6 +594,8 @@ namespace TimelessEchoes.Upgrades
         {
             if (tastingActive) return;
             tastingActive = true;
+            _lastTasteTime = Time.unscaledTime;
+            _accumulatedTasteTime = 0f;
             ResetSessionStats();
             OnTasteSessionStarted?.Invoke();
             OnSessionCardsChanged?.Invoke(sessionCardsGained);
@@ -501,19 +615,43 @@ namespace TimelessEchoes.Upgrades
         private void TasteTick()
         {
             if (!tastingActive || config == null) return;
+            SyncConfigValuesIfNeeded();
+
+            // Calculate how many rolls should happen this frame based on elapsed time
+            var now = Time.unscaledTime;
+            var deltaTime = now - _lastTasteTime;
+            _lastTasteTime = now;
+
+            // Accumulate time and calculate rolls to process
+            _accumulatedTasteTime += deltaTime;
+            var rollInterval = 1f / Mathf.Max(1f, config.rollsPerSecond);
+            var rollsToProcess = Mathf.FloorToInt(_accumulatedTasteTime / rollInterval);
+
+            if (rollsToProcess <= 0) return;
+
+            // Cap rolls per frame to prevent freezing (e.g., after alt-tab)
+            const int maxRollsPerFrame = 500;
+            rollsToProcess = Mathf.Min(rollsToProcess, maxRollsPerFrame);
+            _accumulatedTasteTime -= rollsToProcess * rollInterval;
+
             var cost = GetStewCostPerRoll();
-            if (Stew < cost)
+            var cardMultiplier = GetTasteCardMultiplier();
+
+            for (int i = 0; i < rollsToProcess; i++)
             {
-                StopTasting();
-                return;
+                if (Stew < cost)
+                {
+                    StopTasting();
+                    return;
+                }
+
+                Stew -= cost;
+                GainEvaXp(cost);
+                sessionTastings++;
+                if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
+                ResolveTasteOutcome(cardMultiplier);
             }
 
-            Stew -= cost;
-            GainEvaXp(cost); // XP matches stew spent per taste
-            sessionTastings++;
-            if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
-            var cardMultiplier = GetTasteCardMultiplier();
-            ResolveTasteOutcome(cardMultiplier);
             // Throttle stats UI updates to reduce canvas rebuilds
             if (ShouldEmitStatsNow())
             {
@@ -525,18 +663,35 @@ namespace TimelessEchoes.Upgrades
 
         private void GainEvaXp(double amount)
         {
-            EvaXp += amount;
-            while (EvaXp >= GetXpToNextLevel(EvaLevel))
+            if (_evaProgression != null)
             {
-                EvaXp -= GetXpToNextLevel(EvaLevel);
-                EvaLevel++;
-                OnWeightsChanged?.Invoke();
+                // Use the service (it will fire OnLevelUp which triggers DebouncedWeightsChanged)
+                _evaProgression.GainXp(amount);
+                // Sync to save data
+                if (oracle != null)
+                {
+                    oracle.saveData.CauldronEvaLevel = _evaProgression.Level;
+                    oracle.saveData.CauldronEvaXp = _evaProgression.Xp;
+                }
+            }
+            else
+            {
+                // Fallback to old logic if service not initialized
+                EvaXp += amount;
+                while (EvaXp >= GetXpToNextLevel(EvaLevel))
+                {
+                    EvaXp -= GetXpToNextLevel(EvaLevel);
+                    EvaLevel++;
+                    OnWeightsChanged?.Invoke();
+                }
             }
         }
 
         private double GetXpToNextLevel(int level)
         {
-            // Simple progression: 50 + 10*(level-1)
+            // Delegate to service if available
+            if (_evaProgression != null) return _evaProgression.GetXpToNextLevel(level);
+            // Fallback to old logic if not initialized: 50 + 10*(level-1)
             return 50 + 10 * Mathf.Max(0, level - 1);
         }
 
@@ -684,39 +839,66 @@ namespace TimelessEchoes.Upgrades
         private void GrantRandomCards(int count, float cardMultiplier, bool onlyAlterEcho = false, bool onlyBuffs = false)
         {
             int draws = ScaleCardCount(count, cardMultiplier);
+            if (draws <= 1)
+            {
+                // Single card - no batching needed
+                var id = PickRandomCardId(onlyAlterEcho, onlyBuffs);
+                if (id != null) AddCardCount(id, 1);
+                return;
+            }
+
+            // Multiple cards - use batching for performance
+            BeginCardBatch();
             for (var i = 0; i < draws; i++)
             {
                 var id = PickRandomCardId(onlyAlterEcho, onlyBuffs);
-                if (id == null) continue;
-                AddCardCount(id, 1);
+                if (id != null) AddCardCountBatched(id, 1);
             }
+            EndCardBatch();
         }
 
         private void GrantRandomInfinityCards(int count, float cardMultiplier)
         {
             int draws = ScaleCardCount(count, cardMultiplier);
+            if (draws <= 1)
+            {
+                // Single card - no batching needed
+                var id = PickRandomInfinityId();
+                if (id != null) AddCardCount(id, 1);
+                return;
+            }
+
+            // Multiple cards - use batching for performance
+            BeginCardBatch();
             for (var i = 0; i < draws; i++)
             {
                 var id = PickRandomInfinityId();
-                if (id == null) return;
-                AddCardCount(id, 1);
+                if (id != null) AddCardCountBatched(id, 1);
             }
+            EndCardBatch();
         }
 
         private void GrantRandomResourceCardFromGroup(AEResourceGroup group, float cardMultiplier)
         {
             int draws = ScaleCardCount(1, cardMultiplier);
+            if (draws <= 1)
+            {
+                // Single card - no batching needed
+                var id = PickRandomResourceCardIdByGroup(group);
+                if (id == null) id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
+                if (id != null) AddCardCount(id, 1);
+                return;
+            }
+
+            // Multiple cards - use batching for performance
+            BeginCardBatch();
             for (var i = 0; i < draws; i++)
             {
                 var id = PickRandomResourceCardIdByGroup(group);
-                if (id == null)
-                {
-                    // Fallback to any resource
-                    id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
-                }
-                if (id != null)
-                    AddCardCount(id, 1);
+                if (id == null) id = PickRandomCardId(onlyAlterEcho: true, onlyBuffs: false);
+                if (id != null) AddCardCountBatched(id, 1);
             }
+            EndCardBatch();
         }
 
         private string PickRandomCardId(bool onlyAlterEcho, bool onlyBuffs)
@@ -742,12 +924,22 @@ namespace TimelessEchoes.Upgrades
         private void GrantLowestCard(int count, float cardMultiplier)
         {
             int draws = ScaleCardCount(count, cardMultiplier);
+            if (draws <= 1)
+            {
+                // Single card - no batching needed
+                var id = GetLowestCountCardId();
+                if (id != null) AddCardCount(id, 1);
+                return;
+            }
+
+            // Multiple cards - use batching for performance
+            BeginCardBatch();
             for (var i = 0; i < draws; i++)
             {
                 var id = GetLowestCountCardId();
-                if (id == null) return;
-                AddCardCount(id, 1);
+                if (id != null) AddCardCountBatched(id, 1);
             }
+            EndCardBatch();
         }
 
         private string GetLowestCountCardId()
@@ -842,6 +1034,7 @@ namespace TimelessEchoes.Upgrades
             if (!isInfinity)
             {
                 cardPoolsDirty = true;
+                _poolManager?.MarkDirty();
                 DebouncedWeightsChanged();
             }
 
@@ -862,6 +1055,132 @@ namespace TimelessEchoes.Upgrades
             {
                 // ignore
             }
+        }
+
+        /// <summary>
+        /// Adds a card gain to the pending batch. Call FlushPendingCards() after batch is complete.
+        /// </summary>
+        private void AddCardCountBatched(string id, int delta)
+        {
+            _pendingCardGains.Add((id, delta));
+        }
+
+        /// <summary>
+        /// Flushes all pending card gains in a single batch, triggering cascade updates only once.
+        /// This dramatically reduces overhead when gaining multiple cards per taste (e.g., VastSurge x10).
+        /// </summary>
+        private void FlushPendingCards()
+        {
+            if (_pendingCardGains.Count == 0) return;
+
+            bool anyBuffTierChanged = false;
+            bool anyTierChanged = false;
+            int totalCardsGained = 0;
+            var dict = oracle.saveData.CauldronCardCounts;
+
+            foreach (var (id, delta) in _pendingCardGains)
+            {
+                if (delta <= 0) continue;
+
+                bool isInfinity = !string.IsNullOrEmpty(id) && id.StartsWith("INF:");
+
+                // Skip if maxed (except infinity)
+                if (!isInfinity && IsIdMaxed(id))
+                    continue;
+
+                // Track tier changes
+                int oldTier = 0;
+                if (!isInfinity && _tierCalculator != null)
+                    oldTier = _tierCalculator.GetTier(id);
+
+                // Update count
+                if (!dict.ContainsKey(id)) dict[id] = 0;
+                dict[id] += delta;
+                totalCardsGained += delta;
+
+                // Check for tier change
+                if (!isInfinity && _tierCalculator != null)
+                {
+                    int newTier = _tierCalculator.GetTier(id);
+                    if (newTier != oldTier)
+                    {
+                        anyTierChanged = true;
+                        if (id.StartsWith("BUFF:"))
+                            anyBuffTierChanged = true;
+                    }
+                }
+
+                // Fire per-card event
+                OnCardGained?.Invoke(id, delta);
+            }
+
+            if (totalCardsGained == 0)
+            {
+                _pendingCardGains.Clear();
+                return;
+            }
+
+            // Update session stats
+            sessionCardsGained += totalCardsGained;
+            if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += totalCardsGained;
+
+            // Cascade updates ONCE (not per card)
+            try { TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty(); }
+            catch { }
+
+            if (anyBuffTierChanged)
+            {
+                try { TimelessEchoes.Buffs.BuffManager.Instance?.RecomputeActiveBuffEffects(); }
+                catch { }
+            }
+
+            if (anyTierChanged)
+            {
+                cardPoolsDirty = true;
+                _poolManager?.MarkDirty();
+                DebouncedWeightsChanged();
+            }
+
+            try
+            {
+                TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
+                    TimelessEchoes.Hero.DirtyMask.Damage |
+                    TimelessEchoes.Hero.DirtyMask.AttackRate |
+                    TimelessEchoes.Hero.DirtyMask.CritChance |
+                    TimelessEchoes.Hero.DirtyMask.Move |
+                    TimelessEchoes.Hero.DirtyMask.Defense |
+                    TimelessEchoes.Hero.DirtyMask.Regen |
+                    TimelessEchoes.Hero.DirtyMask.MaxHealth,
+                    TimelessEchoes.Hero.DirtyReason.BuffsChanged);
+            }
+            catch { }
+
+            // Throttled UI updates
+            if (ShouldEmitSessionCardsNow())
+                OnSessionCardsChanged?.Invoke(sessionCardsGained);
+            if (ShouldEmitStatsNow())
+                OnStatsChanged?.Invoke(GetStatsSnapshot());
+
+            _pendingCardGains.Clear();
+        }
+
+        /// <summary>
+        /// Begins a batching session for card gains. Cards added via AddCardCountBatched will be held
+        /// until EndCardBatch is called.
+        /// </summary>
+        private void BeginCardBatch()
+        {
+            _isBatchingCards = true;
+            _pendingCardGains.Clear();
+        }
+
+        /// <summary>
+        /// Ends the batching session and flushes all pending cards.
+        /// </summary>
+        private void EndCardBatch()
+        {
+            _isBatchingCards = false;
+            FlushPendingCards();
         }
 
         private List<string> BuildAllCardIds(bool onlyAlterEcho, bool onlyBuffs)
@@ -982,6 +1301,9 @@ namespace TimelessEchoes.Upgrades
 
         public AEResourceGroup GetResourceGroup(Resource res)
         {
+            // Delegate to service if available
+            if (_groupClassifier != null) return _groupClassifier.Classify(res);
+            // Fallback to old logic if not initialized
             if (res == null) return AEResourceGroup.Combat;
 
             // Explicit override on Resource takes precedence
@@ -1193,6 +1515,8 @@ namespace TimelessEchoes.Upgrades
         {
             cachedGroupPools.Clear();
             cardPoolsDirty = true;
+            _poolManager?.MarkDirty();
+            _groupClassifier?.ClearCache();
             DebouncedWeightsChanged();
         }
 
@@ -1200,6 +1524,7 @@ namespace TimelessEchoes.Upgrades
         {
             cachedGroupPools.Clear();
             cardPoolsDirty = true;
+            _poolManager?.MarkDirty();
             DebouncedWeightsChanged();
         }
 
@@ -1274,24 +1599,12 @@ namespace TimelessEchoes.Upgrades
 
         private bool ShouldEmitStatsNow()
         {
-            var now = Time.unscaledTime;
-            if (_nextStatsEmitTime == null || now >= _nextStatsEmitTime.Value)
-            {
-                _nextStatsEmitTime = now + 0.2f; // 5 Hz
-                return true;
-            }
-            return false;
+            return _statsEmitThrottle?.TryExecute() ?? true;
         }
 
         private bool ShouldEmitSessionCardsNow()
         {
-            var now = Time.unscaledTime;
-            if (_nextSessionCardsEmitTime == null || now >= _nextSessionCardsEmitTime.Value)
-            {
-                _nextSessionCardsEmitTime = now + 0.2f; // 5 Hz
-                return true;
-            }
-            return false;
+            return _sessionCardsEmitThrottle?.TryExecute() ?? true;
         }
     }
 }

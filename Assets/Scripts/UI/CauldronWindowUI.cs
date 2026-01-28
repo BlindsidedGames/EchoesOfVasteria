@@ -4,7 +4,9 @@ using System.Linq;
 using Blindsided.Utilities;
 using References.UI;
 using TMPro;
+using TimelessEchoes.UI.Cauldron;
 using TimelessEchoes.Upgrades;
+using TimelessEchoes.Upgrades.Cauldron;
 using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
@@ -63,9 +65,14 @@ namespace TimelessEchoes.UI
 		[SerializeField] private Image weightsHoverImage;
 		[SerializeField] private GameObject weightsHoverObject;
 
-		[Header("Tier Sprites")] 
+		[Header("Tier Sprites")]
 		[SerializeField] private List<Sprite> tierSprites = new(); // 8 entries: index 0 used for unknown and tier 1
 		[SerializeField] private List<Sprite> borderTierSprites = new(); // 8 entries matching tiers
+
+		[Header("Presenters (Optional)")]
+		[SerializeField] private CauldronPieChartPresenter pieChartPresenter;
+		[SerializeField] private CauldronWeightsPresenter weightsPresenter;
+		[SerializeField] private CauldronMixPresenter mixPresenter;
 
 		public Sprite GetTierSprite(int tier)
 		{
@@ -115,6 +122,16 @@ namespace TimelessEchoes.UI
 				var exit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
 				exit.callback.AddListener(_ => HideWeightsTooltip());
 				trigger.triggers.Add(exit);
+			}
+			// Wire mix presenter if assigned (future use)
+			if (mixPresenter != null)
+			{
+				mixPresenter.Initialize();
+				mixPresenter.OnMixRequested += (a, b) =>
+				{
+					if (cauldron != null && a != null && b != null)
+						cauldron.MixMax(a, b);
+				};
 			}
 		}
 
@@ -470,6 +487,16 @@ namespace TimelessEchoes.UI
 		private void RefreshPieChart()
 		{
 			if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
+
+			// Delegate to presenter if available
+			if (pieChartPresenter != null && cauldron != null && config != null)
+			{
+				var presenterWeights = cauldron.GetEffectiveWeightsAtLevel(cauldron.EvaLevel);
+				pieChartPresenter.Refresh(presenterWeights, config);
+				return;
+			}
+
+			// Keep existing implementation as fallback
 			if (config == null || oddsPieSlices == null || oddsPieSlices.Count == 0) return;
 			var lvl = cauldron != null ? cauldron.EvaLevel : 1;
 			var eff = cauldron != null ? cauldron.GetEffectiveWeightsAtLevel(lvl) : default;
@@ -594,33 +621,12 @@ namespace TimelessEchoes.UI
 				drinking.cardsGainedThisSessionText.text = $"Cards Gained | {total}";
 		}
 
-		private void OnStatsChanged(CauldronManager.TastingStats s)
+		private void OnStatsChanged(CauldronManager.TastingStats stats)
 		{
 			if (statsText == null) return;
-			_statsSb.Clear();
-			_statsSb.Append("<b>Totals</b>\n");
-			_statsSb.Append("• Tastings: "); _statsSb.Append(s.tastings.ToString("N0")); _statsSb.Append('\n');
-			_statsSb.Append("• Cards Gained: "); _statsSb.Append(s.cardsGained.ToString("N0")); _statsSb.Append('\n');
-			_statsSb.Append("<b>Roll Distribution</b>\n");
-			_statsSb.Append("• Gained Nothing: "); _statsSb.Append(s.gainedNothing.ToString("N0")); _statsSb.Append('\n');
-			var hasSub = s.aeFarming + s.aeFishing + s.aeMining + s.aeWoodcutting + s.aeCombat > 0;
-			if (hasSub)
-			{
-				_statsSb.Append("• AE - Farming: "); _statsSb.Append(s.aeFarming.ToString("N0")); _statsSb.Append('\n');
-				_statsSb.Append("• AE - Fishing: "); _statsSb.Append(s.aeFishing.ToString("N0")); _statsSb.Append('\n');
-				_statsSb.Append("• AE - Mining: "); _statsSb.Append(s.aeMining.ToString("N0")); _statsSb.Append('\n');
-				_statsSb.Append("• AE - Logging: "); _statsSb.Append(s.aeWoodcutting.ToString("N0")); _statsSb.Append('\n');
-				_statsSb.Append("• AE - Looting: "); _statsSb.Append(s.aeLooting.ToString("N0")); _statsSb.Append('\n');
-				_statsSb.Append("• AE - Combat: "); _statsSb.Append(s.aeCombat.ToString("N0")); _statsSb.Append('\n');
-			}
-			else
-			{
-				_statsSb.Append("• Alter-Echo: "); _statsSb.Append(s.alterEcho.ToString("N0")); _statsSb.Append('\n');
-			}
-			_statsSb.Append("• Buffs: "); _statsSb.Append(s.buffs.ToString("N0")); _statsSb.Append('\n');
-			_statsSb.Append("• Low Cards: "); _statsSb.Append(s.lowCards.ToString("N0")); _statsSb.Append('\n');
-			_statsSb.Append("• Eva's Blessing: "); _statsSb.Append(s.evasBlessing.ToString("N0")); _statsSb.Append('\n');
-			_statsSb.Append("• The Vast One's Surge: "); _statsSb.Append(s.vastSurge.ToString("N0"));
+
+			// Use the extracted formatter
+			TastingStatsFormatter.Format(_statsSb, stats, showSubcategories: true);
 			statsText.SetText(_statsSb);
 		}
 
@@ -637,6 +643,14 @@ namespace TimelessEchoes.UI
 
 		private void RefreshWeightsText()
 		{
+			// Delegate to presenter if available
+			if (weightsPresenter != null && cauldron != null && config != null)
+			{
+				weightsPresenter.Refresh(cauldron.EvaLevel, cauldron, config);
+				return;
+			}
+
+			// Keep existing implementation as fallback
 			if ((firstPercentText == null && spriteColText == null && nextPercentText == null && nameColText == null) || config == null || cauldron == null) return;
 			var lvl = Mathf.Max(1, cauldron.EvaLevel);
 			var next = lvl + 1;
@@ -742,12 +756,26 @@ namespace TimelessEchoes.UI
 		private void ShowWeightsTooltip()
 		{
 			RefreshWeightsText();
+			if (weightsPresenter != null)
+			{
+				weightsPresenter.ShowTooltip();
+				return;
+			}
+
+			// Existing fallback
 			if (weightsHoverObject != null)
 				weightsHoverObject.SetActive(true);
 		}
 
 		private void HideWeightsTooltip()
 		{
+			if (weightsPresenter != null)
+			{
+				weightsPresenter.HideTooltip();
+				return;
+			}
+
+			// Existing fallback
 			if (weightsHoverObject != null)
 				weightsHoverObject.SetActive(false);
 		}

@@ -59,6 +59,10 @@ namespace TimelessEchoes.Upgrades
 		[Header("Infinity Slice Color")]
 		public Color sliceInfinity = new Color(0.95f, 0.95f, 0.95f);
 
+		[Header("Performance")]
+		[Tooltip("Minimum interval between stew change event emissions (seconds).")]
+		[Min(0.01f)] public float stewChangeThrottleInterval = 0.1f;
+
 		public float GetTotalWeight(int evaLevel)
 		{
 			// Sum all categories including AE subcategories
