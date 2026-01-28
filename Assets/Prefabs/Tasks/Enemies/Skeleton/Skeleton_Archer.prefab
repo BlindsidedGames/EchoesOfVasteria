@@ -56,10 +56,16 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: fa5c5ead31adba84aab4b87031402956, type: 2}
   animator: {fileID: 3857100333722271928}
   spriteRenderer: {fileID: 9165481713511291873}
+  invertXFlip: 0
   fourDirectional: 0
   projectileOrigin: {fileID: 1929803122595014453}
   targetUpdateInterval: 1
   levelText: {fileID: 7690468655359413076}
+  randomizeSpriteLibraryOnSpawn: 0
+  spriteLibraryVariants: []
+  regularSectionWeight: 1
+  weightedSpriteLibraryVariants: []
+  targetSpriteLibrary: {fileID: 0}
   combatSkill: {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
 --- !u!114 &2113197715023221888
 MonoBehaviour:
@@ -82,6 +88,7 @@ MonoBehaviour:
   deathSfx: 1
 --- !u!212 &9165481713511291873
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -100,6 +107,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -121,9 +130,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 4288904503397713336, guid: 304ae9f776fc0074db2d80bf4916bddc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -133,7 +144,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3857100333722271928
 Animator:
@@ -182,7 +192,40 @@ MonoBehaviour:
       m_Bits: 4294967295
     useGraphRaycasting: 0
   traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tagCostMultipliers:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
 --- !u!114 &8369330806658217446
@@ -200,7 +243,7 @@ MonoBehaviour:
   version: 1073741824
   radius: 0.22
   height: 2
-  canMove: 1
+  simulateMovement: 1
   maxSpeed: 4
   gravity: {x: 0, y: 0, z: 0}
   groundMask:

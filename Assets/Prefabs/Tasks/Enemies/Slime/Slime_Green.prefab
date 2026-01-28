@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1929803122595014453}
   - component: {fileID: 6263738220208231591}
-  - component: {fileID: 2113197715023221888}
   - component: {fileID: 9165481713511291873}
   - component: {fileID: 3857100333722271928}
   - component: {fileID: 1365065969073088839}
@@ -18,6 +17,7 @@ GameObject:
   - component: {fileID: 1711541776261050643}
   - component: {fileID: 7044753637461727427}
   - component: {fileID: 6869387718579178363}
+  - component: {fileID: 23466369101891846}
   m_Layer: 6
   m_Name: Slime_Green
   m_TagString: Enemy
@@ -56,31 +56,20 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 4f6905179186c264a82ad2c4dbec39bd, type: 2}
   animator: {fileID: 3857100333722271928}
   spriteRenderer: {fileID: 9165481713511291873}
+  invertXFlip: 0
   fourDirectional: 0
   projectileOrigin: {fileID: 1929803122595014453}
   targetUpdateInterval: 1
   levelText: {fileID: 9162615085892016524}
+  randomizeSpriteLibraryOnSpawn: 0
+  spriteLibraryVariants: []
+  regularSectionWeight: 1
+  weightedSpriteLibraryVariants: []
+  targetSpriteLibrary: {fileID: 0}
   combatSkill: {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
---- !u!114 &2113197715023221888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2377590028762114089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  healthBar: {fileID: 7682178666978389647}
-  minFillPercent: 0.07
-  barSprites: []
-  healthBarParent: {fileID: 872065370303357239}
-  healthText: {fileID: 7713704215437400623}
 --- !u!212 &9165481713511291873
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -99,6 +88,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -120,9 +111,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -4205559767448164548, guid: dc4b433488da2004da77cb9f48ffa55d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -132,7 +125,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3857100333722271928
 Animator:
@@ -181,7 +173,40 @@ MonoBehaviour:
       m_Bits: 4294967295
     useGraphRaycasting: 0
   traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  tagCostMultipliers:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
 --- !u!114 &8369330806658217446
@@ -199,7 +224,7 @@ MonoBehaviour:
   version: 1073741824
   radius: 0.22
   height: 2
-  canMove: 1
+  simulateMovement: 1
   maxSpeed: 4
   gravity: {x: 0, y: 0, z: 0}
   groundMask:
@@ -309,6 +334,25 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.18}
   m_Radius: 0.21
+--- !u!114 &23466369101891846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377590028762114089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Enemies.EnemyHealth
+  maxHealth: 10
+  healthBar: {fileID: 7682178666978389647}
+  minFillPercent: 0.05
+  barSprites: []
+  healthBarParent: {fileID: 872065370303357239}
+  healthText: {fileID: 7713704215437400623}
+  deathSfx: 0
 --- !u!1001 &3437081256072592309
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -404,6 +448,14 @@ PrefabInstance:
     - target: {fileID: 2569521172027136642, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
       propertyPath: m_Name
       value: HealthBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2569521172027136642, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295848737936447816, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5808186465148379705, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
       propertyPath: m_hasFontAssetChanged

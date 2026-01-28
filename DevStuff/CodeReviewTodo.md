@@ -12,8 +12,8 @@
 |------------|--------|-------|---------|
 | 1. Core Systems | COMPLETE | Agent A | 2026-01-28 |
 | 2. Economy & Progression | COMPLETE | Agent B | 2026-01-28 |
-| 3. Quest & NPC | In Progress | Agent A | 2026-01-28 |
-| 4. Infrastructure | In Progress | Agent B | 2026-01-28 |
+| 3. Quest & NPC | COMPLETE | Agent A | 2026-01-28 |
+| 4. Infrastructure | COMPLETE | Agent B | 2026-01-28 |
 | 5. UI & References | COMPLETE | Agent A | 2026-01-28 |
 | 6. Map Generation | COMPLETE | Agent B | 2026-01-28 |
 

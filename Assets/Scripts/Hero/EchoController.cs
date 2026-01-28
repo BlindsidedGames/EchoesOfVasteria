@@ -95,7 +95,7 @@ namespace TimelessEchoes.Hero
 
         // Expiration deferral state: wait for current enemy kill or task completion
         private bool expirationDeferred;
-        private Health deferredEnemyHealth;
+        private EnemyHealth deferredEnemyHealth;
         private ITask deferredTask;
         private float deferStartTime;
 
@@ -356,7 +356,8 @@ namespace TimelessEchoes.Hero
             {
                 var setter = GetComponent<AIDestinationSetter>();
                 var target = setter != null ? setter.target : null;
-                var hp = target != null ? target.GetComponent<Health>() : null;
+                var enemyComp = target != null ? target.GetComponent<Enemy>() : null;
+                var hp = enemyComp != null ? enemyComp.Health : null;
                 if (hp != null && hp.CurrentHealth > 0f)
                 {
                     deferredEnemyHealth = hp;

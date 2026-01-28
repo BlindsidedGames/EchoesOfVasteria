@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
 using TimelessEchoes.Upgrades;
@@ -142,8 +143,12 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private Button closeButton;
         [SerializeField] [Space] private Button townsfolkButton;
         [SerializeField] [Space] private GameObject townsfolkDropdown;
-        [SerializeField] [Space] private Button calebButton; // Inspector name: Caleb
-        [SerializeField] [Space] private GameObject calebDropdown;
+        [FormerlySerializedAs("calebButton")]
+        [SerializeField] [Space] private Button hubButton;
+        [FormerlySerializedAs("calebDropdown")]
+        [SerializeField] [Space] private GameObject hubDropdown;
+        [SerializeField] [Space] private Button beginAdventureButton;
+        [SerializeField] [Space] private GameObject beginAdventureDropdown;
 
         private bool _rightMouseWasDown;
 
@@ -181,8 +186,10 @@ namespace TimelessEchoes.UI
                 closeButton.onClick.AddListener(CloseAllWindows);
             if (townsfolkButton != null)
                 townsfolkButton.onClick.AddListener(ToggleTownsfolkDropdown);
-            if (calebButton != null)
-                calebButton.onClick.AddListener(ToggleCalebDropdown);
+            if (hubButton != null)
+                hubButton.onClick.AddListener(ToggleHubDropdown);
+            if (beginAdventureButton != null)
+                beginAdventureButton.onClick.AddListener(ToggleBeginAdventureDropdown);
         }
 
         private void OnEnable()
@@ -238,8 +245,10 @@ namespace TimelessEchoes.UI
                 closeButton.onClick.RemoveListener(CloseAllWindows);
             if (townsfolkButton != null)
                 townsfolkButton.onClick.RemoveListener(ToggleTownsfolkDropdown);
-            if (calebButton != null)
-                calebButton.onClick.RemoveListener(ToggleCalebDropdown);
+            if (hubButton != null)
+                hubButton.onClick.RemoveListener(ToggleHubDropdown);
+            if (beginAdventureButton != null)
+                beginAdventureButton.onClick.RemoveListener(ToggleBeginAdventureDropdown);
             if (Instance == this)
                 Instance = null;
         }
@@ -400,8 +409,9 @@ namespace TimelessEchoes.UI
             if (townsfolkDropdown == null)
                 return;
 
-            // Ensure mutual exclusivity with Caleb dropdown
-            CloseCalebDropdown();
+            // Ensure mutual exclusivity with other dropdowns
+            CloseHubDropdown();
+            CloseBeginAdventureDropdown();
 
             var newActive = !townsfolkDropdown.activeSelf;
             townsfolkDropdown.SetActive(newActive);
@@ -413,22 +423,42 @@ namespace TimelessEchoes.UI
                 townsfolkDropdown.SetActive(false);
         }
 
-        private void ToggleCalebDropdown()
+        private void ToggleHubDropdown()
         {
-            if (calebDropdown == null)
+            if (hubDropdown == null)
                 return;
 
-            // Ensure mutual exclusivity with Townsfolk dropdown
+            // Ensure mutual exclusivity with other dropdowns
             CloseTownsfolkDropdown();
+            CloseBeginAdventureDropdown();
 
-            var newActive = !calebDropdown.activeSelf;
-            calebDropdown.SetActive(newActive);
+            var newActive = !hubDropdown.activeSelf;
+            hubDropdown.SetActive(newActive);
         }
 
-        private void CloseCalebDropdown()
+        private void CloseHubDropdown()
         {
-            if (calebDropdown != null && calebDropdown.activeSelf)
-                calebDropdown.SetActive(false);
+            if (hubDropdown != null && hubDropdown.activeSelf)
+                hubDropdown.SetActive(false);
+        }
+
+        private void ToggleBeginAdventureDropdown()
+        {
+            if (beginAdventureDropdown == null)
+                return;
+
+            // Ensure mutual exclusivity with other dropdowns
+            CloseTownsfolkDropdown();
+            CloseHubDropdown();
+
+            var newActive = !beginAdventureDropdown.activeSelf;
+            beginAdventureDropdown.SetActive(newActive);
+        }
+
+        private void CloseBeginAdventureDropdown()
+        {
+            if (beginAdventureDropdown != null && beginAdventureDropdown.activeSelf)
+                beginAdventureDropdown.SetActive(false);
         }
 
         public void CloseForgeInfo()
@@ -444,10 +474,10 @@ namespace TimelessEchoes.UI
 
             var windowWasActive = reference.window.activeSelf;
 
-            // Close the townsfolk dropdown when any other button is pressed
+            // Close all dropdowns when any window button is pressed
             CloseTownsfolkDropdown();
-            // Also close the Caleb dropdown when any other button is pressed
-            CloseCalebDropdown();
+            CloseHubDropdown();
+            CloseBeginAdventureDropdown();
 
             CloseAllWindows();
 
@@ -500,7 +530,8 @@ namespace TimelessEchoes.UI
             if (lockStats != null)
                 lockStats.SetActive(false);
             CloseTownsfolkDropdown();
-            CloseCalebDropdown();
+            CloseHubDropdown();
+            CloseBeginAdventureDropdown();
 
             EnableAllWindowButtons();
             UpdateTownButtonsVisibility();

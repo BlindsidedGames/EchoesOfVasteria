@@ -249,7 +249,7 @@ namespace TimelessEchoes.Tasks
             var enemy = obj.GetComponent<Enemy>();
             if (enemy != null)
             {
-                var hp = enemy.GetComponent<Health>();
+                var hp = enemy.Health;
                 if (hp != null)
                     hp.Init((int)hp.MaxHealth);
                 var kill = enemy.GetComponent<KillEnemyTask>();
@@ -328,7 +328,7 @@ namespace TimelessEchoes.Tasks
                 var enemy = obj.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    var hp = enemy.GetComponent<Health>();
+                    var hp = enemy.Health;
                     if (hp != null)
                         hp.Init((int)hp.MaxHealth);
                     var kill = enemy.GetComponent<KillEnemyTask>();
@@ -421,7 +421,8 @@ namespace TimelessEchoes.Tasks
 
                 if (task is KillEnemyTask kill)
                 {
-                    var health = kill.target != null ? kill.target.GetComponent<Health>() : null;
+                    var enemyComp = kill.target != null ? kill.target.GetComponent<Enemy>() : null;
+                    var health = enemyComp != null ? enemyComp.Health : null;
                     if (kill.target == null || health == null || health.CurrentHealth <= 0f || kill.IsComplete())
                     {
                         if (i <= currentIndex)

@@ -76,13 +76,41 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 43810669774899895, guid: f3a27f43c7070b1458586ed35bab3dfb, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 23466369101891846, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1746869136220420480}
   m_SourcePrefab: {fileID: 100100000, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
 --- !u!1 &6724702029569888453 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 872065370303357239, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
   m_PrefabInstance: {fileID: 5857144657511018994}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8193780003442596315 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2377590028762114089, guid: ecfc6fa2867da674c82b2413b109a473, type: 3}
+  m_PrefabInstance: {fileID: 5857144657511018994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1746869136220420480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193780003442596315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28f20d8903b84f458d9330a9b3ec8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Enemies.EnemyHealth
+  maxHealth: 10
+  healthBar: {fileID: 0}
+  minFillPercent: 0.05
+  barSprites: []
+  healthBarParent: {fileID: 0}
+  healthText: {fileID: 0}
+  deathSfx: 0

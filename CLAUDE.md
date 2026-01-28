@@ -190,6 +190,10 @@ Assets/
 # Main scene: Assets/Scenes/Main.unity
 ```
 
+## Change Log
+
+After making changes to the codebase, append a summary to `DevStuff/Changes.md`. Each entry should be a single line describing what was added, changed, fixed, or removed.
+
 ## See Also
 
 - [DevStuff/EoV_Context.md](DevStuff/EoV_Context.md) - Full systems documentation
