@@ -1,5 +1,6 @@
 using Pathfinding;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Utilities;
 using UnityEngine;
 
 namespace TimelessEchoes.NPC
@@ -31,18 +32,12 @@ namespace TimelessEchoes.NPC
             if (hero != null && ai != null)
                 ai.maxSpeed = hero.MoveSpeed + 1f;
             Vector2 vel = ai != null ? ai.desiredVelocity : Vector2.zero;
-            var dir = vel;
-            dir.y = 0f;
+            Vector2 dir = AnimatorMovementHelper.SnapToCardinal(vel, false);
 
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir;
 
-            if (animator != null)
-            {
-                animator.SetFloat("MoveX", lastMoveDir.x);
-                animator.SetFloat("MoveY", lastMoveDir.y);
-                animator.SetFloat("MoveMagnitude", vel.magnitude);
-            }
+            AnimatorMovementHelper.SetMovement(animator, lastMoveDir, vel.magnitude);
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;

@@ -14,6 +14,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.UI;
+using TimelessEchoes.Utilities;
 using Blindsided.Utilities.Pooling;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -26,6 +27,8 @@ namespace TimelessEchoes.Hero
 {
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
+    [RequireComponent(typeof(EnemyEngagementTracker))]
+    [RequireComponent(typeof(HeroCombatController))]
     /// <summary>
     /// Controls the main hero and echo clones: movement (A*), combat targeting and attacks,
     /// task interaction, stat application, and hooks into Buffs/Skills/Stats/UI.
@@ -35,6 +38,11 @@ namespace TimelessEchoes.Hero
     public abstract class HeroBase : MonoBehaviour
     {
         public static event System.Action OnMainHeroDiceChanged;
+
+        /// <summary>
+        /// Invoke the dice changed event from combat controller.
+        /// </summary>
+        internal static void InvokeMainHeroDiceChanged() => OnMainHeroDiceChanged?.Invoke();
         // Derived classes specify whether this actor is an Echo
         protected abstract bool IsEchoActor { get; }
         public bool IsEcho => IsEchoActor;
@@ -47,8 +55,11 @@ namespace TimelessEchoes.Hero
         [SerializeField] private string diceQuestID = "Protect the Town";
         [SerializeField] private Skill combatSkill;
 
-        // Echo skill indicators are defined on EchoController only
-        private bool diceUnlocked;
+        /// <summary>
+        /// Handles combat logic: targeting, DPS estimation, attack execution, dice rolling.
+        /// </summary>
+        protected HeroCombatController combatController;
+
         [SerializeField] private BuffManager buffController;
         [SerializeField] private LayerMask enemyMask = ~0;
         [SerializeField] private string currentTaskName;
@@ -84,15 +95,11 @@ namespace TimelessEchoes.Hero
             set => combatAggroRange = value;
         }
 
-        private Transform currentEnemy;
-        private Health currentEnemyHealth;
-        private Enemy currentEnemyComp;
-
-        private readonly HashSet<Enemy> engagedEnemies = new();
-        private readonly Dictionary<Enemy, Action> enemyDeathHandlers = new();
-        private readonly Dictionary<Enemy, Action<Enemy>> enemyDisengageHandlers = new();
-        private readonly List<Enemy> enemyRemovalBuffer = new();
-        private readonly Dictionary<Enemy, Transform> enemyTargets = new();
+        /// <summary>
+        /// Tracks enemies that have engaged with this hero/echo.
+        /// Handles death/disengage subscriptions and provides query methods.
+        /// </summary>
+        protected EnemyEngagementTracker engagementTracker;
 
         [SerializeField] private AIPath ai;
 
@@ -110,8 +117,11 @@ namespace TimelessEchoes.Hero
         private float gearDefenseBonus;
         private float gearHealthBonus;
         private float gearMoveSpeedBonus;
-        private float combatDamageMultiplier = 1f;
-        public float CombatDamageMultiplier => combatDamageMultiplier;
+
+        /// <summary>
+        /// Current combat damage multiplier from dice roll.
+        /// </summary>
+        public float CombatDamageMultiplier => combatController != null ? combatController.CombatDamageMultiplier : 1f;
 
         private bool logicActive = true;
 
@@ -126,9 +136,6 @@ namespace TimelessEchoes.Hero
 
         [SerializeField] private float idleWalkStep = 5f;
         private Transform idleWalkTarget;
-
-        private bool isRolling;
-        private float lastAttack = float.NegativeInfinity;
 
         private Vector2 lastMoveDir = Vector2.down;
         private float moveSpeedBonus;
@@ -145,7 +152,7 @@ namespace TimelessEchoes.Hero
         [NonSerialized] protected TaskController taskCtrl;
         public ITask CurrentTask { get; private set; }
         public Animator Animator => animator;
-        public bool InCombat => state == State.Combat;
+        public bool InCombat => combatController != null && combatController.IsInCombat;
 
         protected virtual void Awake()
         {
@@ -153,6 +160,8 @@ namespace TimelessEchoes.Hero
                 ai = GetComponent<AIPath>();
             if (setter == null)
                 setter = GetComponent<AIDestinationSetter>();
+            engagementTracker = GetComponent<EnemyEngagementTracker>();
+            combatController = GetComponent<HeroCombatController>();
             health = GetComponent<HeroHealth>();
             if (buffController == null)
             {
@@ -172,9 +181,8 @@ namespace TimelessEchoes.Hero
             if (mapUI == null)
                 mapUI = FindFirstObjectByType<MapUI>();
 
-            diceUnlocked = QuestCompleted(diceQuestID);
-            if (diceRoller != null)
-                diceRoller.gameObject.SetActive(diceUnlocked);
+            // Initialize combat controller
+            combatController?.Init(this, stats, animator, projectileOrigin, combatSkill, ai, setter, diceRoller, diceQuestID);
 
             state = State.Idle;
 
@@ -318,7 +326,7 @@ namespace TimelessEchoes.Hero
             CurrentTask = null;
             state = State.Idle;
             destinationOverride = false;
-            lastAttack = Time.time - 1f / CurrentAttackRate;
+            combatController?.ResetState();
 
             if (!IsEchoActor)
             {
@@ -371,22 +379,8 @@ namespace TimelessEchoes.Hero
             // Unsubscribe to avoid leaks
             HeroStatSystem.OnStatsRecalculated -= HandleHeroStatsRecalculated;
 
-            foreach (var enemy in engagedEnemies)
-            {
-                if (enemyDeathHandlers.TryGetValue(enemy, out var death))
-                {
-                    var hp = enemy != null ? enemy.GetComponent<Health>() : null;
-                    if (hp != null)
-                        hp.OnDeath -= death;
-                }
-
-                if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
-                    Enemy.OnEngage -= disengage;
-            }
-
-            engagedEnemies.Clear();
-            enemyDeathHandlers.Clear();
-            enemyDisengageHandlers.Clear();
+            // Clear tracked enemies and their event subscriptions
+            engagementTracker?.Clear();
 
             if (idleWalkTarget != null)
                 Destroy(idleWalkTarget.gameObject);
@@ -419,293 +413,38 @@ namespace TimelessEchoes.Hero
 
         private void OnAutoBuffChanged() => OnAutoBuffChangedImpl();
 
-        // Combat (selected key methods needed internally)
-        private float EstimateDpsAgainst(TimelessEchoes.Enemies.Enemy enemy, HeroBase attacker)
-        {
-            if (enemy == null || attacker == null)
-                return 0f;
-            if (!attacker.AllowAttacks || attacker.stats == null)
-                return 0f;
-
-            Transform et; try { et = enemy.transform; } catch { et = null; }
-            if (et == null) return 0f;
-
-            var snap = HeroStatSystem.GetSnapshot();
-            var killTracker = TimelessEchoes.Stats.EnemyKillTracker.Instance;
-            var enemyStats = enemy.Stats;
-            float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-            float critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
-            float critDamageMultiplier = 1f + Mathf.Max(0f, snap.critDamagePercent) / 100f;
-            float expectedCritFactor = 1f + critChance * (critDamageMultiplier - 1f);
-            float perHitBeforeDefense = snap.damage * attacker.CombatDamageMultiplier * killMult * expectedCritFactor;
-            float defense = enemy.GetDefense();
-            float perHitAfterDefense = TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
-            float attacksPerSecond = Mathf.Max(0f, snap.attacksPerSecond);
-            return perHitAfterDefense * attacksPerSecond;
-        }
-
         private void HudDistanceTick()
         {
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
         }
 
-        private float EstimatePerHitAgainst(TimelessEchoes.Enemies.Enemy enemy, HeroBase attacker)
-        {
-            if (enemy == null || attacker == null) return 0f;
-            if (!attacker.AllowAttacks || attacker.stats == null) return 0f;
-            var snap = HeroStatSystem.GetSnapshot();
-            var killTracker = TimelessEchoes.Stats.EnemyKillTracker.Instance;
-            var enemyStats = enemy.Stats;
-            float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-            float perHitBeforeDefense = snap.damage * attacker.CombatDamageMultiplier * killMult;
-            float defense = enemy.GetDefense();
-            return TimelessEchoes.Combat.ApplyDefense(perHitBeforeDefense, defense);
-        }
-
-        private float EstimateCombinedDps(Transform enemyTransform)
-        {
-            if (enemyTransform == null)
-                return 0f;
-
-            var enemy = enemyTransform.GetComponent<TimelessEchoes.Enemies.Enemy>();
-            if (enemy == null)
-                return 0f;
-
-            float dps = 0f;
-
-            // Main hero if targeting this enemy
-            var main = HeroController.Instance;
-            if (main != null && (object)main != this)
-            {
-                Transform t = null;
-                Transform st = null;
-                try { t = main.currentEnemy; } catch { t = null; }
-                try { st = main.setter != null ? main.setter.target : null; } catch { st = null; }
-                if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))
-                {
-                    var add = EstimateDpsAgainst(enemy, main);
-                    dps += add;
-                }
-            }
-
-            // Other combat-enabled echoes targeting this enemy
-            foreach (var echo in EchoController.CombatEchoes)
-            {
-                if (echo == null || !echo.isActiveAndEnabled) continue;
-                var hc = echo as HeroBase;
-                if (hc == null || (object)hc == this) continue;
-
-                Transform t = null;
-                Transform st = null;
-                try { t = hc.currentEnemy; } catch { t = null; }
-                try { st = hc.setter != null ? hc.setter.target : null; } catch { st = null; }
-                if ((t != null && t == enemyTransform) || (st != null && st == enemyTransform))
-                {
-                    var add = EstimateDpsAgainst(enemy, hc);
-                    dps += add;
-                }
-            }
-
-            return dps;
-        }
-
-        private Transform FindNearestEnemyTimeAware(float range, float thresholdSec)
-        {
-            if (thresholdSec <= 0f)
-                return FindNearestEnemy(range);
-
-            Transform nearest = null;
-            var best = float.MaxValue;
-            var enemies = TimelessEchoes.Enemies.EnemyActivator.ActiveEnemies;
-            if (enemies == null)
-                return null;
-            Vector2 pos = transform.position;
-
-            var cam = TimelessEchoes.Enemies.EnemyActivator.Instance != null
-                ? TimelessEchoes.Enemies.EnemyActivator.Instance.GetComponent<Camera>()
-                : null;
-            Vector3 min = Vector3.zero, max = Vector3.zero;
-            var checkBounds = false;
-            if (cam != null)
-            {
-                const float padding = 2f;
-                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
-                checkBounds = true;
-            }
-
-            foreach (var enemy in enemies)
-            {
-                if (enemy == null) continue;
-
-                Transform enemyTransform = null;
-                try { enemyTransform = enemy.transform; }
-                catch { continue; }
-
-                if (enemyTransform == null) continue;
-
-                if (checkBounds)
-                {
-                    var p = enemyTransform.position;
-                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
-                        continue;
-                }
-
-                var hp = enemy.GetComponent<Health>();
-                if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(pos, enemyTransform.position);
-                if (d > range) continue;
-
-                var combinedDps = EstimateCombinedDps(enemyTransform);
-                if (combinedDps > 0f)
-                {
-                    var maxHp = Mathf.Max(0.0001f, hp.MaxHealth);
-                    var ttk = maxHp / combinedDps;
-                    if (ttk <= thresholdSec)
-                        continue;
-                }
-
-                if (d < best)
-                {
-                    best = d;
-                    nearest = enemyTransform;
-                }
-            }
-
-            if (nearest == null)
-                return FindNearestEnemy(range);
-            return nearest;
-        }
-
-        private Transform FindNearestEnemy(float range)
-        {
-            Transform nearest = null;
-            var best = float.MaxValue;
-            var enemies = TimelessEchoes.Enemies.EnemyActivator.ActiveEnemies;
-            if (enemies == null)
-                return null;
-            Vector2 pos = transform.position;
-
-            var cam = TimelessEchoes.Enemies.EnemyActivator.Instance != null
-                ? TimelessEchoes.Enemies.EnemyActivator.Instance.GetComponent<Camera>()
-                : null;
-            Vector3 min = Vector3.zero, max = Vector3.zero;
-            var checkBounds = false;
-            if (cam != null)
-            {
-                const float padding = 2f;
-                min = cam.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-                max = cam.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
-                checkBounds = true;
-            }
-
-            foreach (var enemy in enemies)
-            {
-                if (enemy == null) continue;
-
-                Transform enemyTransform = null;
-                try { enemyTransform = enemy.transform; }
-                catch { continue; }
-
-                if (enemyTransform == null) continue;
-
-                if (checkBounds)
-                {
-                    var p = enemyTransform.position;
-                    if (p.x < min.x || p.x > max.x || p.y < min.y || p.y > max.y)
-                        continue;
-                }
-
-                var hp = enemy.GetComponent<Health>();
-                if (hp == null || hp.CurrentHealth <= 0f) continue;
-                var d = Vector2.Distance(pos, enemyTransform.position);
-                if (d <= range && d < best)
-                {
-                    best = d;
-                    nearest = enemyTransform;
-                }
-            }
-
-            return nearest;
-        }
-
-        private Transform FindNearestEnemy()
-        {
-            return FindNearestEnemy(stats.visionRange);
-        }
-
+        /// <summary>
+        /// Handle combat with the specified enemy. Delegates to combat controller.
+        /// </summary>
         private void HandleCombat(Transform enemy)
         {
-            ai.simulateMovement = true;
-
             var wasPerformingTask = state == State.PerformingTask;
-            if (state != State.Combat)
-            {
-                Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
-                if (diceUnlocked && diceRoller != null && !isRolling)
-                {
-                    var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
-                    var cooldown = rate > 0f ? 1f / rate : 0.5f;
-                    StartCoroutine(RollForCombat(cooldown));
-                }
-            }
-
-            // If the main hero already had a task, release it so echoes can keep working during combat
-            if (!IsEchoActor && CurrentTask != null)
-            {
-                var releasedTask = CurrentTask;
-
-                if (!wasPerformingTask)
-                    releasedTask.OnInterrupt(this);
-
-                if (releasedTask is BaseTask baseTask)
-                    baseTask.ReleaseClaim(this);
-
-                CurrentTask = null;
-                currentTaskName = "None";
-                currentTaskObject = null;
-            }
-
             state = State.Combat;
-            setter.target = enemy;
 
-            var hp = enemy.GetComponent<Health>();
-            if (hp == null || hp.CurrentHealth <= 0f) return;
-
-            var dist = Vector2.Distance(transform.position, enemy.position);
-            if (dist <= stats.visionRange)
+            combatController?.HandleCombat(enemy, wasPerformingTask, () =>
             {
-                var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
-                var cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
-                if (allowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
+                // Release current task when entering combat
+                if (CurrentTask != null)
                 {
-                    lastMoveDir = enemy.position - transform.position;
-                    Attack(enemy);
-                    lastAttack = Time.time;
+                    var releasedTask = CurrentTask;
+
+                    if (!wasPerformingTask)
+                        releasedTask.OnInterrupt(this);
+
+                    if (releasedTask is BaseTask baseTask)
+                        baseTask.ReleaseClaim(this);
+
+                    CurrentTask = null;
+                    currentTaskName = "None";
+                    currentTaskObject = null;
                 }
-            }
-        }
-
-        private System.Collections.IEnumerator RollForCombat(float duration)
-        {
-            if (!diceUnlocked || diceRoller == null)
-                yield break;
-
-            isRolling = true;
-            lastAttack = Time.time;
-
-            yield return StartCoroutine(diceRoller.Roll(duration));
-
-            combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
-            isRolling = false;
-
-            if (!IsEchoActor)
-            {
-                HeroStatSystem.MarkDirty(DirtyMask.Damage, DirtyReason.DiceUsed);
-                HeroStatSystem.ForceRunStartRefresh();
-                OnMainHeroDiceChanged?.Invoke();
-            }
+            });
         }
 
         private void OnEnemyEngage(TimelessEchoes.Enemies.Enemy enemy)
@@ -713,21 +452,17 @@ namespace TimelessEchoes.Hero
             if (enemy == null)
                 return;
 
-            var hp = enemy.GetComponent<Health>();
+            var hp = enemy.Health;
             if (hp == null || hp.CurrentHealth <= 0f)
             {
-                UnregisterEngagedEnemy(enemy);
+                engagementTracker?.UnregisterEnemy(enemy);
+                combatController?.ClearCurrentEnemyIfMatch(enemy);
                 return;
             }
 
             // Determine who the enemy is targeting at the time of engagement
-            Transform engagedTarget = null;
-            try
-            {
-                var dst = enemy.GetComponent<AIDestinationSetter>();
-                engagedTarget = dst != null ? dst.target : null;
-            }
-            catch { engagedTarget = null; }
+            var dst = enemy.GetComponent<AIDestinationSetter>();
+            var engagedTarget = dst != null ? dst.target : null;
 
             bool targetingMainHero = engagedTarget == transform;
 
@@ -741,9 +476,7 @@ namespace TimelessEchoes.Hero
                 if (state == State.PerformingTask && !assistEchoWhileOnTask)
                     return;
 
-                Transform et = null;
-                try { et = enemy.transform; } catch { et = null; }
-                if (et == null)
+                if (!enemy.TryGetTransformSafe(out var et))
                     return;
                 var dist = Vector2.Distance(transform.position, et.position);
                 if (dist > assistEchoThreatRadius)
@@ -752,145 +485,28 @@ namespace TimelessEchoes.Hero
 
             if (enemy.IsEngaged)
             {
-                if (!engagedEnemies.Contains(enemy))
-                {
-                    engagedEnemies.Add(enemy);
-                    // Track the target we saw at engagement time
-                    enemyTargets[enemy] = engagedTarget;
-
-                    System.Action deathHandler = () => UnregisterEngagedEnemy(enemy);
-                    hp.OnDeath += deathHandler;
-                    enemyDeathHandlers[enemy] = deathHandler;
-
-                    System.Action<TimelessEchoes.Enemies.Enemy> disengageHandler = null;
-                    disengageHandler = e =>
-                    {
-                        if (e == enemy && !e.IsEngaged)
-                            UnregisterEngagedEnemy(enemy);
-                    };
-                    TimelessEchoes.Enemies.Enemy.OnEngage += disengageHandler;
-                    enemyDisengageHandlers[enemy] = disengageHandler;
-                }
-                else
-                {
-                    // Update the known target on re-engagement
-                    enemyTargets[enemy] = engagedTarget;
-                }
+                // Register with tracker (handles death/disengage subscriptions)
+                engagementTracker?.RegisterEnemy(enemy, engagedTarget);
             }
             else
             {
-                UnregisterEngagedEnemy(enemy);
+                engagementTracker?.UnregisterEnemy(enemy);
+                combatController?.ClearCurrentEnemyIfMatch(enemy);
                 return;
             }
 
             if (!allowAttacks)
                 return;
 
-            if (currentEnemy != null && currentEnemy != enemy.transform)
+            // Check if already targeting a different enemy via combat controller
+            var currentTarget = combatController?.CurrentTarget;
+            if (currentTarget != null && currentTarget != enemy.transform)
                 return;
-
-            if (currentEnemy == null)
-            {
-                currentEnemyHealth?.SetHealthBarVisible(false);
-                currentEnemy = enemy.transform;
-                currentEnemyHealth = hp;
-                currentEnemyHealth.SetHealthBarVisible(true);
-                if (currentEnemyComp == null)
-                {
-                    try { currentEnemyComp = enemy; } catch { currentEnemyComp = null; }
-                }
-            }
 
             if (state == State.PerformingTask && CurrentTask != null)
                 CurrentTask.OnInterrupt(this);
 
             HandleCombat(enemy.transform);
-        }
-
-        private void UnregisterEngagedEnemy(TimelessEchoes.Enemies.Enemy enemy)
-        {
-            if (enemy == null)
-                return;
-
-            if (engagedEnemies.Remove(enemy))
-            {
-                if (enemyTargets.ContainsKey(enemy))
-                    enemyTargets.Remove(enemy);
-                if (enemyDeathHandlers.TryGetValue(enemy, out var death))
-                {
-                    var hp = enemy.GetComponent<Health>();
-                    if (hp != null)
-                        hp.OnDeath -= death;
-                    enemyDeathHandlers.Remove(enemy);
-                }
-
-                if (enemyDisengageHandlers.TryGetValue(enemy, out var disengage))
-                {
-                    TimelessEchoes.Enemies.Enemy.OnEngage -= disengage;
-                    enemyDisengageHandlers.Remove(enemy);
-                }
-            }
-
-            Transform enemyTransformSafe = null;
-            try { enemyTransformSafe = enemy.transform; } catch { enemyTransformSafe = null; }
-
-            if (enemyTransformSafe != null && currentEnemy == enemyTransformSafe)
-            {
-                currentEnemyHealth?.SetHealthBarVisible(false);
-                currentEnemy = null;
-                currentEnemyHealth = null;
-                currentEnemyComp = null;
-            }
-        }
-
-        private void Attack(Transform target)
-        {
-            if (stats.projectilePrefab == null || target == null) return;
-            var go = target.gameObject;
-            // Do not attack targets that are inactive or already returned to the pool
-            if (go == null || !go.activeInHierarchy)
-                return;
-            var pooled = go.GetComponent<PooledObject>();
-            if (pooled != null && pooled.inPool)
-                return;
-
-            var enemy = target.GetComponent<Health>();
-            if (enemy == null || enemy.CurrentHealth <= 0f) return;
-
-            animator.Play("Attack");
-            OnAttackAnimationStarted();
-
-            var origin = projectileOrigin ? projectileOrigin : transform;
-            var projObj = Blindsided.Utilities.Pooling.PoolManager.Get(stats.projectilePrefab);
-            projObj.transform.position = origin.position;
-            projObj.transform.rotation = Quaternion.identity;
-            var proj = projObj.GetComponent<Projectile>();
-            if (proj != null)
-            {
-                var killTracker = TimelessEchoes.Stats.EnemyKillTracker.Instance;
-                if (killTracker == null)
-                    Log("EnemyKillTracker missing", TELogCategory.Combat, this);
-                var enemyStats = target.GetComponent<TimelessEchoes.Enemies.Enemy>()?.Stats;
-                var bonus = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-                var snap = HeroStatSystem.GetSnapshot();
-                var dmgBase = snap.damage * combatDamageMultiplier;
-                var critDamageMultiplier = 1f + Mathf.Max(0f, snap.critDamagePercent) / 100f;
-                var total = dmgBase * bonus;
-
-                var critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
-                var isCritical = false;
-                if (critChance > 0f && UnityEngine.Random.value < Mathf.Clamp01(critChance))
-                {
-                    total *= critDamageMultiplier;
-                    isCritical = true;
-                    var tracker = GameplayStatTracker.Instance ??
-                                  FindFirstObjectByType<GameplayStatTracker>();
-                    tracker?.AddCriticalHit();
-                }
-
-                var bonusDamage = total - dmgBase;
-                proj.Init(target, total, true, null, combatSkill, bonusDamage, isCritical, -1, IsEchoActor);
-            }
         }
 
         // Tasks orchestration
@@ -944,76 +560,36 @@ namespace TimelessEchoes.Hero
                 animator.speed = targetAnimSpeed;
             SetSecondaryAnimatorSpeed(targetAnimSpeed);
 
-            enemyRemovalBuffer.Clear();
-            foreach (var enemy in engagedEnemies)
+            // Clean up stale enemies (dead, disengaged, or null)
+            engagementTracker?.CleanupStaleEnemies();
+
+            // Update combat state via combat controller
+            var stillInCombat = combatController?.UpdateCombat() ?? false;
+
+            // Resolve nearest enemy target via combat controller
+            var isPerformingTask = state == State.PerformingTask;
+            var nearest = combatController?.ResolveNearestTarget(isPerformingTask, assistEchoWhileOnTask, assistEchoThreatRadius);
+
+            // Try to engage enemy
+            if (allowAttacks && nearest != null)
             {
-                var hp = enemy != null ? enemy.GetComponent<Health>() : null;
-                if (enemy == null || hp == null || hp.CurrentHealth <= 0f || !enemy.IsEngaged)
-                    enemyRemovalBuffer.Add(enemy);
-            }
-
-            foreach (var enemy in enemyRemovalBuffer)
-                UnregisterEngagedEnemy(enemy);
-
-            if (currentEnemy != null)
-            {
-                var hp = currentEnemyHealth;
-                if (hp == null)
+                var engaged = combatController?.TryEngageEnemy(nearest, () =>
                 {
-                    hp = currentEnemy.GetComponent<Health>();
-                    currentEnemyHealth = hp;
-                }
-                var enemyComp = currentEnemyComp;
-                if (enemyComp == null)
-                {
-                    enemyComp = currentEnemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
-                    currentEnemyComp = enemyComp;
-                }
+                    if (isPerformingTask && CurrentTask != null)
+                        CurrentTask.OnInterrupt(this);
+                }) ?? false;
 
-                // Clear stale targets if enemy is inactive or pooled
-                var enemyGo = currentEnemy != null ? currentEnemy.gameObject : null;
-                var isInactive = enemyGo == null || !enemyGo.activeInHierarchy || (enemyComp != null && !enemyComp.isActiveAndEnabled);
-                var pooledMarker = enemyGo != null ? enemyGo.GetComponent<PooledObject>() : null;
-                var isPooled = pooledMarker != null && pooledMarker.inPool;
-
-                if (hp == null || hp.CurrentHealth <= 0f || enemyComp == null || (!IsEchoActor && !engagedEnemies.Contains(enemyComp)) || isInactive || isPooled)
+                if (engaged)
                 {
-                    currentEnemyHealth?.SetHealthBarVisible(false);
-                    currentEnemy = null;
-                    currentEnemyHealth = null;
-                    currentEnemyComp = null;
-                }
-                else if (IsEchoActor && allowAttacks)
-                {
-                    var otherDps = EstimateCombinedDps(currentEnemy);
-                    if (otherDps > 0f)
-                    {
-                        var enemy = currentEnemyComp;
-                        float perHit = EstimatePerHitAgainst(enemy, this);
-                        if (perHit > 0f && hp.CurrentHealth <= perHit)
-                        {
-                            currentEnemyHealth?.SetHealthBarVisible(false);
-                            currentEnemy = null;
-                            currentEnemyHealth = null;
-                            currentEnemyComp = null;
-                        }
-                    }
+                    state = State.Combat;
+                    return;
                 }
             }
 
-            var nearest = ResolveNearestEnemyTarget();
-
-            if (allowAttacks && nearest != null && TryEngageEnemy(nearest))
-                return;
-            if (state == State.Combat && engagedEnemies.Count == 0)
+            // Exit combat if no engaged enemies
+            if (state == State.Combat && !stillInCombat)
             {
-                Log("Hero exiting combat", TELogCategory.Combat, this);
-                combatDamageMultiplier = 1f;
-                isRolling = false;
-                diceRoller?.ResetRoll();
-                currentEnemyHealth?.SetHealthBarVisible(false);
-                currentEnemyHealth = null;
-                currentEnemyComp = null;
+                combatController?.ExitCombat();
                 state = State.Idle;
                 taskCtrl?.SelectEarliestTask(this);
             }
@@ -1065,162 +641,8 @@ namespace TimelessEchoes.Hero
             }
         }
 
-        private Transform ResolveNearestEnemyTarget()
-        {
-            var nearest = currentEnemy;
-
-            if (!allowAttacks || stats == null)
-                return nearest;
-
-            if (nearest != null)
-                return nearest;
-
-            if (engagedEnemies.Count > 0)
-            {
-                var best = float.PositiveInfinity;
-                TimelessEchoes.Enemies.Enemy chosen = null;
-                foreach (var enemy in engagedEnemies)
-                {
-                    if (enemy == null) continue;
-                    Transform enemyTransform = null;
-                    try { enemyTransform = enemy.transform; } catch { continue; }
-                    if (enemyTransform == null) continue;
-
-                    var ok = true;
-                    if (!enemyTargets.TryGetValue(enemy, out var target))
-                        target = null;
-
-                    if (target != transform)
-                    {
-                        if (state == State.PerformingTask && !assistEchoWhileOnTask)
-                        {
-                            ok = false;
-                        }
-                        else
-                        {
-                            var distance = Vector2.Distance(transform.position, enemyTransform.position);
-                            ok = distance <= assistEchoThreatRadius;
-                        }
-                    }
-
-                    if (!ok)
-                        continue;
-
-                    var dist = Vector2.Distance(transform.position, enemyTransform.position);
-                    if (dist < best)
-                    {
-                        best = dist;
-                        chosen = enemy;
-                    }
-                }
-
-                if (chosen != null)
-                {
-                    try { nearest = chosen.transform; }
-                    catch { nearest = null; }
-                }
-                else
-                {
-                    nearest = null;
-                }
-            }
-            else
-            {
-                var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
-                nearest = IsEchoActor
-                    ? FindNearestEnemyTimeAware(range, EchoAvoidIfTTKBelowSeconds)
-                    : FindNearestEnemy(range);
-            }
-
-            return nearest;
-        }
-
-        private bool TryEngageEnemy(Transform enemy)
-        {
-            if (!allowAttacks || stats == null || enemy == null)
-                return false;
-
-            if (setter == null)
-                setter = GetComponent<AIDestinationSetter>();
-            if (ai == null)
-                ai = GetComponent<AIPath>();
-
-            if (setter == null || ai == null)
-                return false;
-
-            if (currentEnemy != enemy)
-            {
-                currentEnemyHealth?.SetHealthBarVisible(false);
-                currentEnemy = enemy;
-                currentEnemyHealth = enemy.GetComponent<Health>();
-                currentEnemyComp = enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
-            }
-            else if (currentEnemyHealth == null)
-            {
-                currentEnemyHealth = enemy.GetComponent<Health>();
-                if (currentEnemyComp == null)
-                    currentEnemyComp = enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
-            }
-
-            setter.target = enemy;
-            ai.simulateMovement = true;
-
-            var enemyComp = currentEnemyComp != null
-                ? currentEnemyComp
-                : enemy.GetComponent<TimelessEchoes.Enemies.Enemy>();
-
-            var enemyEngaged = enemyComp != null && engagedEnemies.Contains(enemyComp);
-            var range = UnlimitedAggroRange ? combatAggroRange : stats.visionRange;
-            var delta = (Vector2)(enemy.position - transform.position);
-            var withinRange = delta.sqrMagnitude <= range * range;
-
-            if (!enemyEngaged && !withinRange)
-                return true;
-
-            if (currentEnemyHealth != null)
-                currentEnemyHealth.SetHealthBarVisible(true);
-
-            if (state == State.PerformingTask && CurrentTask != null)
-                CurrentTask.OnInterrupt(this);
-
-            HandleCombat(enemy);
-            return true;
-        }
-
-        private Transform FindFallbackEnemyTarget()
-        {
-            var enemies = TimelessEchoes.Enemies.EnemyActivator.ActiveEnemies;
-            if (enemies == null)
-                return null;
-
-            var origin = (Vector2)transform.position;
-            Transform nearest = null;
-            var bestSqr = float.PositiveInfinity;
-
-            foreach (var enemy in enemies)
-            {
-                if (enemy == null) continue;
-
-                Transform enemyTransform = null;
-                try { enemyTransform = enemy.transform; } catch { continue; }
-                if (enemyTransform == null) continue;
-
-                var hp = enemy.GetComponent<Health>();
-                if (hp == null || hp.CurrentHealth <= 0f) continue;
-
-                var offset = (Vector2)enemyTransform.position - origin;
-                var sqr = offset.sqrMagnitude;
-                if (sqr < bestSqr)
-                {
-                    bestSqr = sqr;
-                    nearest = enemyTransform;
-                }
-            }
-
-            return nearest;
-        }
         // Stats accessors and updates
-        public float Damage => HeroStatSystem.GetSnapshot().damage * combatDamageMultiplier;
+        public float Damage => HeroStatSystem.GetSnapshot().damage * CombatDamageMultiplier;
         public float BaseDamage => baseDamage + damageBonus + gearDamageBonus;
         public float AttackRate => HeroStatSystem.GetSnapshot().attacksPerSecond;
         public float MoveSpeed => HeroStatSystem.GetSnapshot().movementSpeed;
@@ -1356,42 +778,25 @@ namespace TimelessEchoes.Hero
         private void UpdateAnimation()
         {
             Vector2 vel = ai.desiredVelocity;
-            var dir = vel;
+            Vector2 dir = vel;
 
             if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
                 dir = setter.target.position - transform.position;
 
-            if (fourDirectional)
-            {
-                if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
-                    dir.y = 0f;
-                else
-                    dir.x = 0f;
-            }
-            else
-            {
-                dir.y = 0f;
-            }
+            dir = AnimatorMovementHelper.SnapToCardinal(dir, fourDirectional);
 
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir.normalized;
 
             var speed = vel.magnitude;
 
-            if (animator != null)
-            {
-                animator.SetFloat("MoveX", lastMoveDir.x);
-                animator.SetFloat("MoveY", lastMoveDir.y);
-                animator.SetFloat("MoveMagnitude", speed);
-            }
-
+            AnimatorMovementHelper.SetMovement(animator, lastMoveDir, speed);
             UpdateSecondaryAnimatorMovement(lastMoveDir, speed);
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = lastMoveDir.x < 0f;
 
             UpdateSecondarySpriteFlip(lastMoveDir.x < 0f);
-
         }
 
         public void SetActiveState(bool active)
@@ -1400,12 +805,8 @@ namespace TimelessEchoes.Hero
             if (setter != null) setter.enabled = active;
             logicActive = active;
 
-            if (!active && animator != null)
-            {
-                animator.SetFloat("MoveX", 0f);
-                animator.SetFloat("MoveY", 0f);
-                animator.SetFloat("MoveMagnitude", 0f);
-            }
+            if (!active)
+                AnimatorMovementHelper.ClearMovement(animator);
         }
 
         public void SetDestination(Transform dest)
@@ -1451,11 +852,22 @@ namespace TimelessEchoes.Hero
                 return;
             }
 
-            if (!IsEchoActor && allowAttacks)
+            if (!IsEchoActor && allowAttacks && combatController != null)
             {
-                var fallbackEnemy = FindFallbackEnemyTarget();
-                if (fallbackEnemy != null && TryEngageEnemy(fallbackEnemy))
-                    return;
+                var fallbackEnemy = combatController.FindFallbackEnemyTarget();
+                if (fallbackEnemy != null)
+                {
+                    var engaged = combatController.TryEngageEnemy(fallbackEnemy, () =>
+                    {
+                        if (state == State.PerformingTask && CurrentTask != null)
+                            CurrentTask.OnInterrupt(this);
+                    });
+                    if (engaged)
+                    {
+                        state = State.Combat;
+                        return;
+                    }
+                }
             }
             if (idleWalkTarget == null)
             {
@@ -1529,6 +941,11 @@ namespace TimelessEchoes.Hero
         public void PlaySecondaryAnimation(string stateName) => OnPlaySecondaryAnimation(stateName);
         public void SetSecondaryTrigger(string triggerName) => OnSetSecondaryTrigger(triggerName);
         public void ResetSecondaryTrigger(string triggerName) => OnResetSecondaryTrigger(triggerName);
+
+        /// <summary>
+        /// Called by HeroCombatController when an attack animation starts.
+        /// </summary>
+        internal void OnAttackStarted() => OnAttackAnimationStarted();
 
         // Hooks for main-hero-only visual mirroring (no-op for echoes)
         protected virtual void OnPostAwakeAnimatorSetup() {}

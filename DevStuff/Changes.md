@@ -1,3 +1,5 @@
+- Completed Phase 2 of HeroBase refactoring: created `HeroCombatController.cs` to encapsulate combat logic (target tracking, DPS estimation, attack execution, dice rolling), and updated HeroBase to delegate all combat operations to the new component.
+- Completed Phase 1 of HeroBase refactoring: created `EnemyEngagementTracker.cs` to encapsulate enemy tracking collections (engagedEnemies, deathHandlers, disengageHandlers, enemyTargets), extracted subscription management to the tracker, and updated HeroBase to delegate all engagement operations to the new component.
 - Added `DevStuff/EoV_New_Employee_Systems_Overview.md` with a code-verified systems overview, corrected naming, and clarified progression gates.
 - Updated return/retreat UI so the return button shows "Queue Retreat" while in combat and the retreat bonus label keeps displaying resource bonuses.
 - Added a Cauldron drinking mix-all button that pairs every stocked ingredient batch and refreshes the selections after draining them.
@@ -71,3 +73,6 @@
 
 
 - Gated task completion weight bonuses behind the task toggle so disabled tasks stay at base weight while enabled tasks get the tier bonus before the 2x multiplier.
+- Added `DevStuff/HeroBaseRefactor.md` with comprehensive analysis of HeroBase (1545 lines), its inheritance hierarchy (HeroController, EchoController), 14 bare catch blocks, and a phased extraction plan for combat/movement/engagement systems.
+- Updated `DevStuff/HeroBaseRefactor.md` with detailed implementation phases: Phase 0 (DRY utilities, rename Health→EnemyHealth, expose Enemy.Health), Phase 1-3 (extract engagement/combat/movement controllers), and testing checklists.
+- Implemented Phase 0 of HeroBase refactoring: created `UnityObjectExtensions.cs` (TryGetTransformSafe), `AnimatorMovementHelper.cs` (cached animator hashes), renamed Health.cs to EnemyHealth.cs, exposed Enemy.Health and Enemy.PooledMarker properties, replaced 14 bare try-catch blocks with safe extension methods, and updated animator calls across HeroBase, Enemy, MildredMovementController, and AnimalDecorationController.

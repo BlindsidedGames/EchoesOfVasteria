@@ -34,7 +34,7 @@ namespace TimelessEchoes
             Enemy.OnEngage -= OnEnemyEngage;
             foreach (var pair in deathHandlers)
             {
-                var hp = pair.Key != null ? pair.Key.GetComponent<Health>() : null;
+                var hp = pair.Key != null ? pair.Key.Health : null;
                 if (hp != null)
                     hp.OnDeath -= pair.Value;
             }
@@ -68,7 +68,7 @@ namespace TimelessEchoes
                 return;
 
             engagedSlimes.Add(enemy);
-            var hp = enemy.GetComponent<Health>();
+            var hp = enemy.Health;
             if (hp != null)
             {
                 System.Action handler = () => UnregisterSlime(enemy);
@@ -86,7 +86,7 @@ namespace TimelessEchoes
                 return;
             if (engagedSlimes.Remove(enemy) && deathHandlers.TryGetValue(enemy, out var handler))
             {
-                var hp = enemy.GetComponent<Health>();
+                var hp = enemy.Health;
                 if (hp != null)
                     hp.OnDeath -= handler;
                 deathHandlers.Remove(enemy);

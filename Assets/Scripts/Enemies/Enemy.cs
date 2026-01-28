@@ -8,6 +8,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Buffs;
+using TimelessEchoes.Utilities;
 using Blindsided.SaveData;
 using TMPro;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace TimelessEchoes.Enemies
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
     [RequireComponent(typeof(RVOController))]
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(EnemyHealth))]
     /// <summary>
     /// Runtime enemy AI: computes level from world X, idles/wanders when idle,
     /// periodically selects a target (hero or eligible echo), moves using A* and
@@ -61,7 +62,7 @@ namespace TimelessEchoes.Enemies
         private bool lastDamageFromEcho;
 
         private AIPath ai;
-        private Health health;
+        private EnemyHealth health;
         private float nextAttack;
         private float nextTargetUpdate;
         private AIDestinationSetter setter;
@@ -81,6 +82,16 @@ namespace TimelessEchoes.Enemies
         public bool IsEngaged => setter != null && setter.target != null && setter.target != wanderTarget;
         public EnemyData Stats => stats;
         public int Level => level;
+
+        /// <summary>
+        /// The cached EnemyHealth component on this enemy. Use instead of GetComponent for performance.
+        /// </summary>
+        public EnemyHealth Health => health;
+
+        /// <summary>
+        /// The cached PooledObject marker on this enemy. Use instead of GetComponent for performance.
+        /// </summary>
+        public PooledObject PooledMarker { get; private set; }
 
         public float GetDefense()
         {
@@ -107,7 +118,8 @@ namespace TimelessEchoes.Enemies
         {
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
-            health = GetComponent<Health>();
+            health = GetComponent<EnemyHealth>();
+            PooledMarker = GetComponent<PooledObject>();
 
             // Do not parent a wander target under the enemy. We acquire a pooled
             // target object when needed (InitForSpawn/OnEnable) and release it when
@@ -285,27 +297,13 @@ namespace TimelessEchoes.Enemies
 
             if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
                 dir = setter.target.position - transform.position;
-            if (fourDirectional)
-            {
-                if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
-                    dir.y = 0f;
-                else
-                    dir.x = 0f;
-            }
-            else
-            {
-                dir.y = 0f;
-            }
+
+            dir = AnimatorMovementHelper.SnapToCardinal(dir, fourDirectional);
 
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir;
 
-            if (animator != null)
-            {
-                animator.SetFloat("MoveX", lastMoveDir.x);
-                animator.SetFloat("MoveY", lastMoveDir.y);
-                animator.SetFloat("MoveMagnitude", vel.magnitude);
-            }
+            AnimatorMovementHelper.SetMovement(animator, lastMoveDir, vel.magnitude);
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
@@ -357,28 +355,13 @@ namespace TimelessEchoes.Enemies
             if (setter == null || setter.target == null)
                 return;
 
-            var dir = setter.target.position - transform.position;
-            if (fourDirectional)
-            {
-                if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
-                    dir.y = 0f;
-                else
-                    dir.x = 0f;
-            }
-            else
-            {
-                dir.y = 0f;
-            }
+            Vector2 dir = setter.target.position - transform.position;
+            dir = AnimatorMovementHelper.SnapToCardinal(dir, fourDirectional);
 
             if (dir.sqrMagnitude > 0.0001f)
                 lastMoveDir = dir;
 
-            if (animator != null)
-            {
-                animator.SetFloat("MoveX", lastMoveDir.x);
-                animator.SetFloat("MoveY", lastMoveDir.y);
-                animator.SetFloat("MoveMagnitude", 0f);
-            }
+            AnimatorMovementHelper.SetMovement(animator, lastMoveDir, 0f);
 
             if (spriteRenderer != null)
                 spriteRenderer.flipX = invertXFlip ? lastMoveDir.x > 0f : lastMoveDir.x < 0f;
@@ -756,12 +739,8 @@ namespace TimelessEchoes.Enemies
             if (setter != null) setter.enabled = active;
             logicActive = active;
 
-            if (!active && animator != null)
-            {
-                animator.SetFloat("MoveX", 0f);
-                animator.SetFloat("MoveY", 0f);
-                animator.SetFloat("MoveMagnitude", 0f);
-            }
+            if (!active)
+                AnimatorMovementHelper.ClearMovement(animator);
         }
 
         private void HandleAllyEngaged(Enemy other)

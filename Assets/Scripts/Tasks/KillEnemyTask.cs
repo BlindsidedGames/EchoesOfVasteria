@@ -9,7 +9,7 @@ namespace TimelessEchoes.Tasks
     public class KillEnemyTask : BaseTask
     {
         public Transform target;
-        private Health health;
+        private EnemyHealth health;
         private bool complete;
 
         public override Transform Target => target;
@@ -21,7 +21,7 @@ namespace TimelessEchoes.Tasks
                 health.OnDeath -= OnDeath;
 
             complete = false;
-            
+
             if (target == null)
             {
                 complete = true;
@@ -29,7 +29,8 @@ namespace TimelessEchoes.Tasks
                 return;
             }
 
-            health = target.GetComponent<Health>();
+            var enemy = target.GetComponent<Enemy>();
+            health = enemy != null ? enemy.Health : null;
             if (health != null)
                 health.OnDeath += OnDeath;
 

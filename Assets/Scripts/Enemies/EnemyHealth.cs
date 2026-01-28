@@ -8,7 +8,7 @@ namespace TimelessEchoes.Enemies
     /// <summary>
     /// Standard health component for enemies.
     /// </summary>
-    public class Health : HealthBase
+    public class EnemyHealth : HealthBase
     {
         public enum DeathSfx
         {
