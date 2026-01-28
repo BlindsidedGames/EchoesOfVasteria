@@ -25,6 +25,13 @@ namespace TimelessEchoes.Gear
 
         private readonly Queue<string> recentSlots = new();
 
+        // Pooled scratch lists to reduce allocations in hot paths
+        private readonly List<(RaritySO rarity, float w)> _scratchWeights = new(16);
+        private readonly List<string> _scratchSlotPool = new(8);
+        private readonly List<string> _scratchRecentSlots = new(8);
+        private readonly List<StatDefSO> _scratchAvailableStats = new(16);
+        private float[] _scratchSlotWeights = new float[8];
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -85,222 +92,173 @@ namespace TimelessEchoes.Gear
                 rm.EndBatch();
             }
 
-            // Record resource spends per resource and per core
-            if (oracle != null && oracle.saveData != null)
-            {
-                var forgeLocal = oracle.saveData.Forge;
-                if (forgeLocal != null)
-                {
-                    if (core.requiredIngot != null)
-                    {
-                        var keyIngot = core.requiredIngot.name;
-                        if (!forgeLocal.ResourcesSpent.ContainsKey(keyIngot)) forgeLocal.ResourcesSpent[keyIngot] = 0;
-                        forgeLocal.ResourcesSpent[keyIngot] += core.ingotCost;
-                    }
-                    if (coreResource != null)
-                    {
-                        var keyCore = coreResource.name;
-                        if (!forgeLocal.ResourcesSpent.ContainsKey(keyCore)) forgeLocal.ResourcesSpent[keyCore] = 0;
-                        forgeLocal.ResourcesSpent[keyCore] += coreCost;
-                    }
-
-                    var coreKeySpend = core.name;
-                    if (!forgeLocal.CoresSpentByCore.ContainsKey(coreKeySpend)) forgeLocal.CoresSpentByCore[coreKeySpend] = 0;
-                    forgeLocal.CoresSpentByCore[coreKeySpend] += coreCost;
-                    if (!forgeLocal.IngotsSpentByCore.ContainsKey(coreKeySpend)) forgeLocal.IngotsSpentByCore[coreKeySpend] = 0;
-                    forgeLocal.IngotsSpentByCore[coreKeySpend] += core.ingotCost;
-                }
-            }
+            // Record resource spending via analytics service
+            ForgeAnalyticsService.Instance?.RecordResourceSpend(core, core.requiredIngot, core.ingotCost, coreResource, coreCost);
 
             var rarity = RollRarity(core);
             var slot = !string.IsNullOrWhiteSpace(selectedSlot) ? selectedSlot : RollSlot(core, slotWhitelist);
-			var item = new GearItem { rarity = rarity, slot = slot, core = core };
+			var item = GearObjectPool.GetItem();
+			item.rarity = rarity;
+			item.slot = slot;
+			item.core = core;
             RollAffixes(item);
             RegisterRecentSlot(slot);
             // Award Ivan XP based on core tier and rolled rarity
             GrantIvanExperience(core, rarity);
 
-            // Update forge craft stats
-            if (oracle != null && oracle.saveData != null && oracle.saveData.Forge != null)
+            // Record craft telemetry via analytics service
+            if (ForgeAnalyticsService.Instance != null)
             {
-                var forge = oracle.saveData.Forge;
-
-                // Totals & counters
-                forge.TotalCrafts++;
-                forge.CraftsSinceLastUpgrade++;
-
-                // Distributions
-                var coreKey = core != null ? core.name : "(null)";
-                var rarityKey = rarity != null ? rarity.name : "(null)";
-                var slotKey = string.IsNullOrWhiteSpace(slot) ? "(null)" : slot;
-                if (!forge.CraftsByCore.ContainsKey(coreKey)) forge.CraftsByCore[coreKey] = 0;
-                forge.CraftsByCore[coreKey]++;
-                if (!forge.CraftsByRarity.ContainsKey(rarityKey)) forge.CraftsByRarity[rarityKey] = 0;
-                forge.CraftsByRarity[rarityKey]++;
-                if (!forge.CraftsBySlot.ContainsKey(slotKey)) forge.CraftsBySlot[slotKey] = 0;
-                forge.CraftsBySlot[slotKey]++;
-                if (!forge.CraftsBySlotTotals.ContainsKey(slotKey)) forge.CraftsBySlotTotals[slotKey] = 0;
-                forge.CraftsBySlotTotals[slotKey]++;
-
-                if (!forge.RarityCountsByCore.ContainsKey(coreKey)) forge.RarityCountsByCore[coreKey] = new System.Collections.Generic.Dictionary<string, int>();
-                if (!forge.RarityCountsByCore[coreKey].ContainsKey(rarityKey)) forge.RarityCountsByCore[coreKey][rarityKey] = 0;
-                forge.RarityCountsByCore[coreKey][rarityKey]++;
-
-                if (!forge.SlotCountsByCore.ContainsKey(coreKey)) forge.SlotCountsByCore[coreKey] = new System.Collections.Generic.Dictionary<string, int>();
-                if (!forge.SlotCountsByCore[coreKey].ContainsKey(slotKey)) forge.SlotCountsByCore[coreKey][slotKey] = 0;
-                forge.SlotCountsByCore[coreKey][slotKey]++;
-
-                int affixCount = item.affixes != null ? item.affixes.Count : 0;
-                if (!forge.AffixCountDistribution.ContainsKey(affixCount)) forge.AffixCountDistribution[affixCount] = 0;
-                forge.AffixCountDistribution[affixCount]++;
-
-                // Stat roll aggregates (global, by rarity, by slot) and cumulative totals
-                if (item.affixes != null)
-                {
-                    foreach (var a in item.affixes)
-                    {
-                        if (a == null || a.stat == null) continue;
-                        var def = a.stat;
-                        var statId = string.IsNullOrWhiteSpace(def.id) ? def.name : def.id;
-
-                        if (!forge.StatRolls.ContainsKey(statId)) forge.StatRolls[statId] = new GameData.ForgeStats.StatAgg();
-                        var agg = forge.StatRolls[statId];
-                        agg.count++;
-                        agg.sum += a.value;
-                        if (a.value < agg.min) agg.min = a.value;
-                        if (a.value > agg.max) agg.max = a.value;
-
-                        if (!forge.StatRollsByRarity.ContainsKey(rarityKey)) forge.StatRollsByRarity[rarityKey] = new System.Collections.Generic.Dictionary<string, GameData.ForgeStats.StatAgg>();
-                        if (!forge.StatRollsByRarity[rarityKey].ContainsKey(statId)) forge.StatRollsByRarity[rarityKey][statId] = new GameData.ForgeStats.StatAgg();
-                        var rAgg = forge.StatRollsByRarity[rarityKey][statId];
-                        rAgg.count++;
-                        rAgg.sum += a.value;
-                        if (a.value < rAgg.min) rAgg.min = a.value;
-                        if (a.value > rAgg.max) rAgg.max = a.value;
-
-                        if (!forge.StatRollsBySlot.ContainsKey(slotKey)) forge.StatRollsBySlot[slotKey] = new System.Collections.Generic.Dictionary<string, GameData.ForgeStats.StatAgg>();
-                        if (!forge.StatRollsBySlot[slotKey].ContainsKey(statId)) forge.StatRollsBySlot[slotKey][statId] = new GameData.ForgeStats.StatAgg();
-                        var sAgg = forge.StatRollsBySlot[slotKey][statId];
-                        sAgg.count++;
-                        sAgg.sum += a.value;
-                        if (a.value < sAgg.min) sAgg.min = a.value;
-                        if (a.value > sAgg.max) sAgg.max = a.value;
-
-                        // High roll threshold: top-percent-of-range against stat def's min/max
-                        float thrQ = Mathf.Clamp01(forge.HighRollTopPercentThreshold);
-                        float thrVal = Mathf.Lerp(def.minRoll, def.maxRoll, thrQ);
-                        if (a.value >= thrVal)
-                        {
-                            if (!forge.HighRollsByStat.ContainsKey(statId)) forge.HighRollsByStat[statId] = 0;
-                            forge.HighRollsByStat[statId]++;
-                        }
-
-                        if (!forge.CumulativeStatTotalsByStat.ContainsKey(statId)) forge.CumulativeStatTotalsByStat[statId] = 0;
-                        forge.CumulativeStatTotalsByStat[statId] += a.value;
-
-                        // Highest single roll per stat
-                        if (!forge.HighestRollByStat.ContainsKey(statId) || a.value > forge.HighestRollByStat[statId])
-                            forge.HighestRollByStat[statId] = a.value;
-                    }
-                }
-
-                // Upgrade evaluation
                 var eq = equipment != null ? equipment.GetEquipped(slot) : null;
-                float delta = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
-                if (!forge.UpgradeScoreDeltaBySlot.ContainsKey(slotKey)) forge.UpgradeScoreDeltaBySlot[slotKey] = new GameData.ForgeStats.FloatAgg();
-                forge.UpgradeScoreDeltaBySlot[slotKey].count++;
-                forge.UpgradeScoreDeltaBySlot[slotKey].sum += delta;
-
-                bool isUpgrade = eq == null || TimelessEchoes.Gear.UI.UpgradeEvaluator.IsPotentialUpgrade(this, item, eq);
-                if (isUpgrade)
-                {
-                    if (!forge.UpgradesBySlot.ContainsKey(slotKey)) forge.UpgradesBySlot[slotKey] = 0;
-                    forge.UpgradesBySlot[slotKey]++;
-                    if (!forge.UpgradesByRarity.ContainsKey(rarityKey)) forge.UpgradesByRarity[rarityKey] = 0;
-                    forge.UpgradesByRarity[rarityKey]++;
-
-                    forge.TotalUpgradeEvents++;
-                    forge.CumulativeCraftsBetweenUpgrades += forge.CraftsSinceLastUpgrade;
-                    if (forge.CraftsSinceLastUpgrade > forge.MaxCraftsBetweenUpgrades)
-                        forge.MaxCraftsBetweenUpgrades = forge.CraftsSinceLastUpgrade;
-                    forge.AverageCraftsPerUpgrade = forge.TotalUpgradeEvents > 0
-                        ? (float)(forge.CumulativeCraftsBetweenUpgrades / (double)forge.TotalUpgradeEvents)
-                        : 0f;
-                    forge.CraftsSinceLastUpgrade = 0;
-                }
-
-                // Track best single-piece score by slot and core (delta vs current)
-                float pieceScore = Mathf.Max(0f, delta);
-                if (!forge.BestPieceScoreBySlot.ContainsKey(slotKey) || pieceScore > forge.BestPieceScoreBySlot[slotKey])
-                    forge.BestPieceScoreBySlot[slotKey] = pieceScore;
-                if (!forge.BestPieceScoreByCore.ContainsKey(coreKey) || pieceScore > forge.BestPieceScoreByCore[coreKey])
-                    forge.BestPieceScoreByCore[coreKey] = pieceScore;
-                if (!forge.MinPieceScoreByCore.ContainsKey(coreKey) || pieceScore < forge.MinPieceScoreByCore[coreKey])
-                    forge.MinPieceScoreByCore[coreKey] = pieceScore;
-                if (!forge.MaxPieceScoreByCore.ContainsKey(coreKey) || pieceScore > forge.MaxPieceScoreByCore[coreKey])
-                    forge.MaxPieceScoreByCore[coreKey] = pieceScore;
-                // Best by rarity
-                if (!forge.BestPieceScoreByRarity.ContainsKey(rarityKey) || pieceScore > forge.BestPieceScoreByRarity[rarityKey])
-                    forge.BestPieceScoreByRarity[rarityKey] = pieceScore;
-
-                // Track best absolute score by slot/core/rarity (independent of the currently equipped item)
+                float upgradeScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
                 float absScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeAbsoluteScore(this, item);
-                if (forge.BestAbsolutePieceScoreBySlot == null)
-                    forge.BestAbsolutePieceScoreBySlot = new System.Collections.Generic.Dictionary<string, float>();
-                if (!forge.BestAbsolutePieceScoreBySlot.ContainsKey(slotKey) || absScore > forge.BestAbsolutePieceScoreBySlot[slotKey])
-                    forge.BestAbsolutePieceScoreBySlot[slotKey] = absScore;
-                if (forge.BestAbsolutePieceScoreByCore == null)
-                    forge.BestAbsolutePieceScoreByCore = new System.Collections.Generic.Dictionary<string, float>();
-                if (!forge.BestAbsolutePieceScoreByCore.ContainsKey(coreKey) || absScore > forge.BestAbsolutePieceScoreByCore[coreKey])
+                bool isUpgrade = eq == null || TimelessEchoes.Gear.UI.UpgradeEvaluator.IsPotentialUpgrade(this, item, eq);
+
+                var craftResult = new CraftResult
                 {
-                    forge.BestAbsolutePieceScoreByCore[coreKey] = absScore;
-                    if (forge.BestAbsolutePieceSlotByCore == null)
-                        forge.BestAbsolutePieceSlotByCore = new System.Collections.Generic.Dictionary<string, string>();
-                    forge.BestAbsolutePieceSlotByCore[coreKey] = slotKey;
-                }
-                if (forge.BestAbsolutePieceScoreByRarity == null)
-                    forge.BestAbsolutePieceScoreByRarity = new System.Collections.Generic.Dictionary<string, float>();
-                if (!forge.BestAbsolutePieceScoreByRarity.ContainsKey(rarityKey) || absScore > forge.BestAbsolutePieceScoreByRarity[rarityKey])
-                {
-                    forge.BestAbsolutePieceScoreByRarity[rarityKey] = absScore;
-                    if (forge.BestAbsolutePieceSlotByRarity == null)
-                        forge.BestAbsolutePieceSlotByRarity = new System.Collections.Generic.Dictionary<string, string>();
-                    forge.BestAbsolutePieceSlotByRarity[rarityKey] = slotKey;
-                }
+                    Core = core,
+                    Rarity = rarity,
+                    Slot = slot,
+                    Item = item,
+                    EquippedComparison = eq,
+                    UpgradeScore = upgradeScore,
+                    AbsoluteScore = absScore,
+                    IsUpgrade = isUpgrade
+                };
+
+                ForgeAnalyticsService.Instance.RecordCraft(craftResult);
             }
 
             return item;
         }
 
-        private RaritySO RollRarity(CoreSO core)
+        /// <summary>
+        /// Batch crafting result structure.
+        /// </summary>
+        public struct BatchCraftResult
         {
-                        // Compute rarity weights with optional level scaling
-                        var weights = new List<(RaritySO rarity, float w)>();
-                        int level = GetIvanLevel();
-                        foreach (var r in rarities)
+            public int TotalCrafted;
+            public int UpgradesFound;
+            public GearItem BestUpgrade;
+            public float BestUpgradeScore;
+            public GearItem LastCrafted;
+        }
+
+        /// <summary>
+        /// Crafts multiple items in batch for autocrafting efficiency.
+        /// Uses ForgeAnalyticsService batch mode to defer telemetry.
+        /// </summary>
+        /// <param name="count">Number of items to craft</param>
+        /// <param name="core">Core to craft with</param>
+        /// <param name="selectedSlot">Optional fixed slot</param>
+        /// <param name="slotWhitelist">Optional slot whitelist</param>
+        /// <param name="coreResource">Core resource to spend</param>
+        /// <param name="coreCost">Cost per craft</param>
+        /// <param name="stopOnUpgrade">Stop when an upgrade is found</param>
+        /// <returns>Batch result with statistics</returns>
+        public BatchCraftResult CraftBatch(
+            int count,
+            CoreSO core,
+            string selectedSlot = null,
+            List<string> slotWhitelist = null,
+            TimelessEchoes.Upgrades.Resource coreResource = null,
+            int coreCost = 1,
+            bool stopOnUpgrade = false)
+        {
+            var result = new BatchCraftResult();
+
+            if (core == null || count <= 0 || coreResource == null || coreCost <= 0)
+                return result;
+
+            var rm = ResourceManager.Instance;
+            if (rm == null) return result;
+
+            // Begin analytics batch mode
+            ForgeAnalyticsService.Instance?.BeginBatch();
+
+            try
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    // Check resources before each craft
+                    var haveIngots = rm.GetAmount(core.requiredIngot) >= core.ingotCost;
+                    var haveCores = rm.GetAmount(coreResource) >= coreCost;
+                    if (!haveIngots || !haveCores)
+                        break;
+
+                    var item = Craft(core, selectedSlot, slotWhitelist, coreResource, coreCost);
+                    if (item == null)
+                        break;
+
+                    result.TotalCrafted++;
+                    result.LastCrafted = item;
+
+                    // Check if upgrade
+                    var eq = equipment?.GetEquipped(item.slot);
+                    var upgradeScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
+                    var isUpgrade = eq == null || upgradeScore > 0.0001f;
+
+                    if (isUpgrade)
+                    {
+                        result.UpgradesFound++;
+                        if (upgradeScore > result.BestUpgradeScore)
                         {
-                                float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
-                                float bonus = (r != null && config != null && config.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
-                                var raw = Mathf.Max(0f, baseW + bonus);
-                                var range = r != null ? core.GetRarityWeightRange(r) : new Vector2(0f, float.PositiveInfinity);
-                                var w = Mathf.Clamp(raw, range.x, range.y);
-                                weights.Add((r, w));
+                            result.BestUpgradeScore = upgradeScore;
+                            result.BestUpgrade = item;
                         }
 
-            var total = weights.Sum(t => t.w);
+                        if (stopOnUpgrade)
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                // End batch mode (flushes all pending telemetry)
+                ForgeAnalyticsService.Instance?.EndBatch();
+            }
+
+            return result;
+        }
+
+        private RaritySO RollRarity(CoreSO core)
+        {
+            // Use pooled scratch list to avoid allocations
+            _scratchWeights.Clear();
+            int level = GetIvanLevel();
+
+            foreach (var r in rarities)
+            {
+                float baseW = (r != null ? core.GetRarityWeight(r) : 0f) * (r != null ? r.globalWeightMultiplier : 1f);
+                float bonus = (r != null && config != null && config.enableLevelScaling) ? core.GetRarityWeightPerLevel(r) * level : 0f;
+                var raw = Mathf.Max(0f, baseW + bonus);
+                var range = r != null ? core.GetRarityWeightRange(r) : new Vector2(0f, float.PositiveInfinity);
+                var w = Mathf.Clamp(raw, range.x, range.y);
+                _scratchWeights.Add((r, w));
+            }
+
+            float total = 0f;
+            foreach (var t in _scratchWeights)
+                total += t.w;
+
             if (total <= 0f)
                 return rarities.OrderBy(r => r.tierIndex).FirstOrDefault();
 
             var roll = UnityEngine.Random.value * total;
-            foreach (var (rarity, w) in weights)
+            foreach (var (rarity, w) in _scratchWeights)
             {
                 if (w <= 0f) continue;
                 if (roll <= w) return rarity;
                 roll -= w;
             }
 
-			var chosen = weights.LastOrDefault(t => t.w > 0f).rarity ?? rarities.OrderBy(r => r.tierIndex).FirstOrDefault();
-			return chosen;
+            // Fallback to last valid weight
+            for (int i = _scratchWeights.Count - 1; i >= 0; i--)
+            {
+                if (_scratchWeights[i].w > 0f)
+                    return _scratchWeights[i].rarity;
+            }
+            return rarities.OrderBy(r => r.tierIndex).FirstOrDefault();
         }
 
 		private int GetIvanLevel()
@@ -354,22 +312,8 @@ namespace TimelessEchoes.Gear
 			float needed = config.xpForFirstLevel * Mathf.Pow(Mathf.Max(1, oracle.saveData.CraftingMasteryLevel), config.xpLevelMultiplier);
 			OnIvanXpChanged?.Invoke(oracle.saveData.CraftingMasteryLevel, oracle.saveData.CraftingMasteryXP, needed);
 
-			// Update Forge XP aggregates and snapshot
-			if (oracle.saveData.Forge != null)
-			{
-				var forgeLocal = oracle.saveData.Forge;
-				forgeLocal.IvanLevelAtCraft = oracle.saveData.CraftingMasteryLevel;
-				forgeLocal.IvanXpAtCraft = oracle.saveData.CraftingMasteryXP;
-				forgeLocal.IvanXpGainedTotal += grant;
-				int levelUps = Mathf.Max(0, oracle.saveData.CraftingMasteryLevel - beforeLevel);
-				forgeLocal.IvanLevelUpsFromCrafts += levelUps;
-				var coreKey = core != null ? core.name : "(null)";
-				var rarityKey = rolled != null ? rolled.name : "(null)";
-				if (!forgeLocal.IvanXpByCore.ContainsKey(coreKey)) forgeLocal.IvanXpByCore[coreKey] = 0;
-				forgeLocal.IvanXpByCore[coreKey] += grant;
-				if (!forgeLocal.IvanXpByRarity.ContainsKey(rarityKey)) forgeLocal.IvanXpByRarity[rarityKey] = 0;
-				forgeLocal.IvanXpByRarity[rarityKey] += grant;
-			}
+			// Record Ivan XP telemetry via analytics service
+			ForgeAnalyticsService.Instance?.RecordIvanXp(core, rolled, grant, beforeLevel, oracle.saveData.CraftingMasteryLevel);
 		}
 
         public (int level, float currentXp, float neededXp) GetIvanXpState()
@@ -383,76 +327,107 @@ namespace TimelessEchoes.Gear
 
         private string RollSlot(CoreSO core, List<string> slotWhitelist)
         {
-            var pool = equipment != null ? equipment.Slots.ToList() : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-            if (slotWhitelist != null && slotWhitelist.Count > 0)
-                pool = pool.Where(slotWhitelist.Contains).ToList();
-            if (pool.Count == 0) pool.Add("Weapon");
+            // Use pooled scratch list
+            _scratchSlotPool.Clear();
+            if (equipment != null)
+            {
+                foreach (var slot in equipment.Slots)
+                    _scratchSlotPool.Add(slot);
+            }
+            else
+            {
+                _scratchSlotPool.AddRange(new[] { "Weapon", "Helmet", "Chest", "Boots" });
+            }
 
-            // Optional per-core slot weights
-            float[] weights = new float[pool.Count];
+            // Filter by whitelist if provided
+            if (slotWhitelist != null && slotWhitelist.Count > 0)
+            {
+                for (int i = _scratchSlotPool.Count - 1; i >= 0; i--)
+                {
+                    if (!slotWhitelist.Contains(_scratchSlotPool[i]))
+                        _scratchSlotPool.RemoveAt(i);
+                }
+            }
+
+            if (_scratchSlotPool.Count == 0)
+                _scratchSlotPool.Add("Weapon");
+
+            // Calculate weights (reuse array if large enough, resize only when needed)
+            if (_scratchSlotWeights.Length < _scratchSlotPool.Count)
+                _scratchSlotWeights = new float[_scratchSlotPool.Count * 2];
+            var weights = _scratchSlotWeights;
             bool useCore = core.slotNames != null && core.slotNames.Count == core.slotWeights.Count && core.slotNames.Count > 0;
-            for (int i = 0; i < pool.Count; i++)
+            for (int i = 0; i < _scratchSlotPool.Count; i++)
             {
                 float w = 1f;
                 if (useCore)
                 {
-                    var idx = core.slotNames.FindIndex(n => string.Equals(n, pool[i], StringComparison.OrdinalIgnoreCase));
+                    var idx = core.slotNames.FindIndex(n => string.Equals(n, _scratchSlotPool[i], StringComparison.OrdinalIgnoreCase));
                     if (idx >= 0) w = Mathf.Max(0f, core.slotWeights[idx]);
                 }
                 weights[i] = w;
             }
 
+            // Apply recent slot penalty
             if (config != null && config.enableSmartSlotProtection && recentSlots.Count > 0)
             {
-                var recent = recentSlots.ToList();
-                for (int i = 0; i < pool.Count; i++)
+                _scratchRecentSlots.Clear();
+                foreach (var s in recentSlots)
+                    _scratchRecentSlots.Add(s);
+
+                for (int i = 0; i < _scratchSlotPool.Count; i++)
                 {
-                    if (recent.Contains(pool[i]))
+                    if (_scratchRecentSlots.Contains(_scratchSlotPool[i]))
                         weights[i] *= Mathf.Clamp01(1f - config.recentSlotPenalty);
                 }
             }
 
-            float total = weights.Sum();
-            if (total <= 0f) return pool[UnityEngine.Random.Range(0, pool.Count)];
+            float total = 0f;
+            foreach (var w in weights)
+                total += w;
+
+            if (total <= 0f)
+                return _scratchSlotPool[UnityEngine.Random.Range(0, _scratchSlotPool.Count)];
+
             float roll = UnityEngine.Random.value * total;
-            for (int i = 0; i < pool.Count; i++)
+            for (int i = 0; i < _scratchSlotPool.Count; i++)
             {
                 var w = weights[i];
                 if (w <= 0f) continue;
-                if (roll <= w) return pool[i];
+                if (roll <= w) return _scratchSlotPool[i];
                 roll -= w;
             }
-            return pool.Last();
+            return _scratchSlotPool[_scratchSlotPool.Count - 1];
         }
 
         private void RollAffixes(GearItem item)
         {
             if (item == null || item.rarity == null) return;
 			int count = Mathf.Max(1, item.rarity.affixCount);
-			var available = new List<StatDefSO>(stats.Where(s => s != null));
-			// Restrict Move Speed to Boots only
-			if (!string.Equals(item.slot, "Boots", StringComparison.OrdinalIgnoreCase))
+
+			// Use pooled scratch list
+			_scratchAvailableStats.Clear();
+			foreach (var s in stats)
 			{
-				available = available.Where(s => s.heroMapping != HeroStatMapping.MoveSpeed).ToList();
+				if (s == null) continue;
+				// Restrict Move Speed to Boots only
+				if (s.heroMapping == HeroStatMapping.MoveSpeed &&
+					!string.Equals(item.slot, "Boots", StringComparison.OrdinalIgnoreCase))
+					continue;
+				_scratchAvailableStats.Add(s);
 			}
 
-			// Determine guaranteed first-line stat by slot
+			// Determine guaranteed first-line stat by slot (avoid string allocations)
 			StatDefSO guaranteed = null;
-			switch ((item.slot ?? string.Empty).Trim().ToLowerInvariant())
-			{
-				case "boots":
-					guaranteed = GetStatByMapping(HeroStatMapping.MoveSpeed);
-					break;
-				case "chest":
-					guaranteed = GetStatByMapping(HeroStatMapping.Defense);
-					break;
-				case "helmet":
-					guaranteed = GetStatByMapping(HeroStatMapping.MaxHealth);
-					break;
-				case "weapon":
-					guaranteed = GetStatByMapping(HeroStatMapping.Damage);
-					break;
-			}
+			var slotStr = item.slot;
+			if (string.Equals(slotStr, "Boots", StringComparison.OrdinalIgnoreCase))
+				guaranteed = GetStatByMapping(HeroStatMapping.MoveSpeed);
+			else if (string.Equals(slotStr, "Chest", StringComparison.OrdinalIgnoreCase))
+				guaranteed = GetStatByMapping(HeroStatMapping.Defense);
+			else if (string.Equals(slotStr, "Helmet", StringComparison.OrdinalIgnoreCase))
+				guaranteed = GetStatByMapping(HeroStatMapping.MaxHealth);
+			else if (string.Equals(slotStr, "Weapon", StringComparison.OrdinalIgnoreCase))
+				guaranteed = GetStatByMapping(HeroStatMapping.Damage);
 
 			// Helper to roll a value with rarity-aware bands, optional jackpot, and rarity floor
 			float RollValue(StatDefSO def)
@@ -480,17 +455,31 @@ namespace TimelessEchoes.Gear
 			// Add guaranteed first affix if available
 			if (guaranteed != null)
 			{
-				item.affixes.Add(new GearAffix { stat = guaranteed, value = RollValue(guaranteed) });
-				available.RemoveAll(s => s == guaranteed);
+				var affix = GearObjectPool.GetAffix();
+				affix.stat = guaranteed;
+				affix.value = RollValue(guaranteed);
+				item.affixes.Add(affix);
+				// Remove guaranteed stat manually to avoid lambda allocation
+				for (int i = _scratchAvailableStats.Count - 1; i >= 0; i--)
+				{
+					if (_scratchAvailableStats[i] == guaranteed)
+					{
+						_scratchAvailableStats.RemoveAt(i);
+						break;
+					}
+				}
 			}
 
 			// Fill remaining affixes without duplicates
-			for (int i = item.affixes.Count; i < count && available.Count > 0; i++)
+			for (int i = item.affixes.Count; i < count && _scratchAvailableStats.Count > 0; i++)
 			{
-				int idx = UnityEngine.Random.Range(0, available.Count);
-				var def = available[idx];
-				available.RemoveAt(idx);
-				item.affixes.Add(new GearAffix { stat = def, value = RollValue(def) });
+				int idx = UnityEngine.Random.Range(0, _scratchAvailableStats.Count);
+				var def = _scratchAvailableStats[idx];
+				_scratchAvailableStats.RemoveAt(idx);
+				var affix = GearObjectPool.GetAffix();
+				affix.stat = def;
+				affix.value = RollValue(def);
+				item.affixes.Add(affix);
 			}
 		}
 

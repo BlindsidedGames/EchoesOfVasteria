@@ -17,6 +17,10 @@ namespace TimelessEchoes.Upgrades
             public int count;
         }
 
+        // Scratch lists to avoid allocations in hot path
+        [ThreadStatic] private static List<DropResult> _scratchResults;
+        [ThreadStatic] private static List<ResourceDrop> _scratchAvailable;
+
         /// <summary>
         /// Rolls from the provided drops, returning results with amounts calculated
         /// using the same biased range logic as runtime systems.
@@ -35,34 +39,39 @@ namespace TimelessEchoes.Upgrades
             bool ignoreSkillLevel = false,
             Func<float> rand = null)
         {
-            float Rand() => rand != null ? rand() : UnityEngine.Random.value;
+            // Initialize scratch lists on first use
+            _scratchResults ??= new List<DropResult>(8);
+            _scratchAvailable ??= new List<ResourceDrop>(16);
+            _scratchResults.Clear();
+            _scratchAvailable.Clear();
 
-            var results = new List<DropResult>();
-            if (drops == null) return results;
+            if (drops == null) return _scratchResults;
 
-            var available = new List<ResourceDrop>();
             foreach (var drop in drops)
             {
                 if (drop == null || drop.resource == null) continue;
                 if (drop.weight <= 0f) continue;
                 if (!ignoreSkillLevel && !IsDropUnlocked(drop, associatedSkill)) continue;
                 if (worldX < drop.minX || worldX > drop.maxX) continue;
-                available.Add(drop);
+                _scratchAvailable.Add(drop);
             }
 
-            if (available.Count == 0) return results;
+            if (_scratchAvailable.Count == 0) return _scratchResults;
 
-            ResourceDrop ChooseWeighted(List<ResourceDrop> pool)
+            float Rand() => rand != null ? rand() : UnityEngine.Random.value;
+
+            int ChooseWeightedIndex(List<ResourceDrop> pool)
             {
                 float total = 0f;
-                foreach (var d in pool) total += Mathf.Max(0f, d.weight);
+                for (int i = 0; i < pool.Count; i++)
+                    total += Mathf.Max(0f, pool[i].weight);
                 float roll = Rand() * total;
-                foreach (var d in pool)
+                for (int i = 0; i < pool.Count; i++)
                 {
-                    roll -= Mathf.Max(0f, d.weight);
-                    if (roll <= 0f) return d;
+                    roll -= Mathf.Max(0f, pool[i].weight);
+                    if (roll <= 0f) return i;
                 }
-                return pool[pool.Count - 1];
+                return pool.Count - 1;
             }
 
             int RollAmount(ResourceDrop drop)
@@ -78,26 +87,28 @@ namespace TimelessEchoes.Upgrades
             {
                 int amt = RollAmount(drop);
                 if (amt > 0)
-                    results.Add(new DropResult { resource = drop.resource, count = amt });
+                    _scratchResults.Add(new DropResult { resource = drop.resource, count = amt });
             }
 
-            var selected = ChooseWeighted(available);
-            available.Remove(selected);
+            int selectedIdx = ChooseWeightedIndex(_scratchAvailable);
+            var selected = _scratchAvailable[selectedIdx];
+            _scratchAvailable.RemoveAt(selectedIdx);
             AddResult(selected);
 
             if (additionalLootChances != null)
             {
                 foreach (var chance in additionalLootChances)
                 {
-                    if (available.Count == 0) break;
+                    if (_scratchAvailable.Count == 0) break;
                     if (Rand() > Mathf.Clamp01(chance)) break;
-                    selected = ChooseWeighted(available);
-                    available.Remove(selected);
+                    selectedIdx = ChooseWeightedIndex(_scratchAvailable);
+                    selected = _scratchAvailable[selectedIdx];
+                    _scratchAvailable.RemoveAt(selectedIdx);
                     AddResult(selected);
                 }
             }
 
-            return results;
+            return _scratchResults;
         }
 
         private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)

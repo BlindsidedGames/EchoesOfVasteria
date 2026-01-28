@@ -7,6 +7,7 @@ using Blindsided.SaveData;
 using Blindsided.Utilities;
 using MPUIKIT;
 using TimelessEchoes.Gear;
+using TimelessEchoes.Skills;
 using TimelessEchoes.UI;
 using TimelessEchoes.Upgrades;
 using TMPro;
@@ -124,6 +125,16 @@ namespace TimelessEchoes.Gear.UI
         private double crystalCraftAmount = 1;
         private double chunkCraftAmount = 1;
         private double coreCraftAmount = 1;
+
+        // Conversion pipelines for unified conversion handling
+        private ConversionPipeline ingotPipeline;
+        private ConversionPipeline crystalPipeline;
+        private ConversionPipeline chunkPipeline;
+        private ConversionPipeline corePipeline;
+
+        // Dirty flags for deferred UI updates (Phase 1.5 optimization)
+        private bool _gearSlotsNeedRefresh;
+        private bool _statsNeedRefresh;
         #endregion
 
         #region Unity Lifecycle
@@ -287,6 +298,9 @@ namespace TimelessEchoes.Gear.UI
             // Initialize button states based on current selections/resources
             RefreshActionButtons();
 
+            // Initialize conversion pipelines
+            InitializeConversionPipelines();
+
             if (coreWeightHoverObject != null)
                 coreWeightHoverObject.SetActive(false);
             if (coreWeightHoverImage != null)
@@ -333,13 +347,36 @@ namespace TimelessEchoes.Gear.UI
             OnResourcesChanged();
         }
 
+        private void LateUpdate()
+        {
+            // Process deferred UI updates to coalesce multiple events
+            if (_gearSlotsNeedRefresh)
+            {
+                UpdateAllGearSlots();
+                _gearSlotsNeedRefresh = false;
+            }
+            if (_statsNeedRefresh)
+            {
+                UpdateSelectedSlotStats();
+                UpdateAggregateStatsText();
+                _statsNeedRefresh = false;
+            }
+        }
+
+        /// <summary>
+        /// Combined handler for equipment changes to reduce event cascade.
+        /// </summary>
+        private void OnEquipmentChangedCombined()
+        {
+            _gearSlotsNeedRefresh = true;
+            _statsNeedRefresh = true;
+        }
+
         private void OnEnable()
         {
             if (equipment != null)
             {
-                equipment.OnEquipmentChanged += UpdateAllGearSlots;
-                equipment.OnEquipmentChanged += UpdateSelectedSlotStats;
-                equipment.OnEquipmentChanged += UpdateAggregateStatsText;
+                equipment.OnEquipmentChanged += OnEquipmentChangedCombined;
             }
 
             // Refresh Ivan XP display on open
@@ -409,9 +446,7 @@ namespace TimelessEchoes.Gear.UI
         {
             if (equipment != null)
             {
-                equipment.OnEquipmentChanged -= UpdateAllGearSlots;
-                equipment.OnEquipmentChanged -= UpdateSelectedSlotStats;
-                equipment.OnEquipmentChanged -= UpdateAggregateStatsText;
+                equipment.OnEquipmentChanged -= OnEquipmentChangedCombined;
             }
 
             if (RM != null) RM.OnInventoryChanged -= OnResourcesChanged;
@@ -805,6 +840,43 @@ namespace TimelessEchoes.Gear.UI
             return haveIngots && haveCores;
         }
 
+        #region Conversion Pipeline
+
+        private void InitializeConversionPipelines()
+        {
+            // Create pipelines for each conversion type
+            ingotPipeline = ConversionPipelineFactory.CreateIngotPipeline(ingotConversionSection);
+            crystalPipeline = ConversionPipelineFactory.CreateCrystalPipeline(crystalConversionSection, slimeResource);
+            chunkPipeline = ConversionPipelineFactory.CreateChunkPipeline(chunkConversionSection, stoneResource);
+            corePipeline = ConversionPipelineFactory.CreateCorePipeline(coreConversionSection, ResolveCurrentAndNextCoreResources);
+        }
+
+        private void OnPipelineConversionCompleted(ConversionType type, ref double craftAmount, double persistedAmount)
+        {
+            // Refresh stats UI
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+
+            // Clamp and persist the amount
+            craftAmount = ClampCraftAmount(craftAmount);
+            persistedAmount = craftAmount;
+
+            // Refresh resources display
+            OnResourcesChanged();
+
+            // Save to disk
+            try
+            {
+                EventHandler.SaveData();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"SaveData after {type} conversion failed: {ex}");
+            }
+        }
+
+        #endregion
+
         private bool CanCraftCoreConversion()
         {
             if (selectedCore == null) return false;
@@ -863,247 +935,102 @@ namespace TimelessEchoes.Gear.UI
 
         private void OnCraftIngotClicked()
         {
-            if (!CanCraftIngot()) return;
+            if (ingotPipeline == null || !CanCraftIngot()) return;
             var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
-            var amount = GetCraftAmountForIngots(rm, core);
-            if (amount <= 0) return;
-            // Batch spend/add to avoid multiple UI refreshes per click
-            rm.BeginBatch();
-            try
-            {
-                if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                    rm.Spend(core.chunkResource, core.chunkCostPerIngot * amount);
-                if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                    rm.Spend(core.crystalResource, core.crystalCostPerIngot * amount);
-                rm.Add(core.requiredIngot, amount, trackStats: false);
-            }
-            finally
-            {
-                rm.EndBatch();
-            }
-            // Stats: conversion action and resource deltas
-            var o = Blindsided.Oracle.oracle;
-            if (o != null && o.saveData != null && o.saveData.Forge != null)
-            {
-                var forge = o.saveData.Forge;
-                forge.IngotConversions++;
-                if (core.chunkResource != null && core.chunkCostPerIngot > 0)
-                {
-                    var k = core.chunkResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += core.chunkCostPerIngot * amount;
-                }
-                if (core.crystalResource != null && core.crystalCostPerIngot > 0)
-                {
-                    var k = core.crystalResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += core.crystalCostPerIngot * amount;
-                }
-            }
+
+            // Set desired amount and perform conversion
+            ingotPipeline.DesiredAmount = ingotCraftAmount;
+            if (!ingotPipeline.PerformConversion(rm, core)) return;
+
             // Persist desired amount
             ingotCraftAmount = ClampCraftAmount(ingotCraftAmount);
             ForgeIngotCraftAmount = ingotCraftAmount;
-            OnResourcesChanged();
-            // Refresh stats UI
-            var statsUi1 = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi1 != null) statsUi1.MarkDirty();
 
-            // Persist conversion to in-memory save (defer disk write) and update stats
-            try
-            {
-                var o1 = Blindsided.Oracle.oracle;
-                if (o1 != null && o1.saveData != null && o1.saveData.Forge != null)
-                {
-                    var forge = o1.saveData.Forge;
-                    var ingotName = core.requiredIngot != null ? core.requiredIngot.name : "Ingot";
-                    if (!forge.IngotsCraftedByResource.ContainsKey(ingotName)) forge.IngotsCraftedByResource[ingotName] = 0;
-                    forge.IngotsCraftedByResource[ingotName] += amount;
-                }
-                Blindsided.EventHandler.SaveData();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"SaveData after ingot craft failed: {ex}");
-            }
+            // Refresh UI
+            OnResourcesChanged();
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+
+            // Save to disk
+            try { EventHandler.SaveData(); }
+            catch (System.Exception ex) { Debug.LogError($"SaveData after ingot craft failed: {ex}"); }
         }
 
         private void OnCraftCrystalClicked()
         {
-            if (!CanCraftCrystal()) return;
+            if (crystalPipeline == null || !CanCraftCrystal()) return;
             var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
-            var amount = GetCraftAmountForCrystals(rm, core);
-            if (amount <= 0) return;
-            // Batch spend/add to avoid multiple UI refreshes per click
-            rm.BeginBatch();
-            try
-            {
-                if (core.chunkResource != null)
-                    rm.Spend(core.chunkResource, 2 * amount);
-                if (slimeResource != null)
-                    rm.Spend(slimeResource, 1 * amount);
-                if (core.crystalResource != null)
-                    rm.Add(core.crystalResource, amount, trackStats: false);
-            }
-            finally
-            {
-                rm.EndBatch();
-            }
-            // Refresh stats UI
-            var statsUi2 = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi2 != null) statsUi2.MarkDirty();
-            // Stats: crystal conversion
-            {
-                var o = Blindsided.Oracle.oracle;
-                if (o != null && o.saveData != null && o.saveData.Forge != null)
-                {
-                    var forge = o.saveData.Forge;
-                    forge.CrystalCrafted += amount;
-                    if (core.chunkResource != null) { var k = core.chunkResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 2 * amount; }
-                    if (slimeResource != null) { var k = slimeResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 1 * amount; }
-                }
-            }
+
+            // Set desired amount and perform conversion
+            crystalPipeline.DesiredAmount = crystalCraftAmount;
+            if (!crystalPipeline.PerformConversion(rm, core)) return;
+
+            // Persist desired amount
             crystalCraftAmount = ClampCraftAmount(crystalCraftAmount);
             ForgeCrystalCraftAmount = crystalCraftAmount;
-            OnResourcesChanged();
 
-            // Persist conversion to in-memory save (defer disk write) and update stats
-            try
-            {
-                var o2 = Blindsided.Oracle.oracle;
-                if (o2 != null && o2.saveData != null && o2.saveData.Forge != null)
-                {
-                    var forge = o2.saveData.Forge;
-                    var crystalName = core.crystalResource != null ? core.crystalResource.name : "Crystal";
-                    if (!forge.CrystalsCraftedByResource.ContainsKey(crystalName)) forge.CrystalsCraftedByResource[crystalName] = 0;
-                    forge.CrystalsCraftedByResource[crystalName] += amount;
-                }
-                Blindsided.EventHandler.SaveData();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"SaveData after crystal craft failed: {ex}");
-            }
+            // Refresh UI
+            OnResourcesChanged();
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+
+            // Save to disk
+            try { EventHandler.SaveData(); }
+            catch (System.Exception ex) { Debug.LogError($"SaveData after crystal craft failed: {ex}"); }
         }
 
         private void OnCraftChunkClicked()
         {
-            if (!CanCraftChunk()) return;
+            if (chunkPipeline == null || !CanCraftChunk()) return;
             var rm = RM;
             var core = selectedCore;
             if (rm == null || core == null) return;
-            var amount = GetCraftAmountForChunks(rm, core);
-            if (amount <= 0) return;
-            // Batch spend/add to avoid multiple UI refreshes per click
-            rm.BeginBatch();
-            try
-            {
-                if (core.crystalResource != null)
-                    rm.Spend(core.crystalResource, 1 * amount);
-                if (stoneResource != null)
-                    rm.Spend(stoneResource, 2 * amount);
-                if (core.chunkResource != null)
-                    rm.Add(core.chunkResource, amount, trackStats: false);
-            }
-            finally
-            {
-                rm.EndBatch();
-            }
-            // Refresh stats UI
-            var statsUi3 = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi3 != null) statsUi3.MarkDirty();
-            // Stats: chunk conversion
-            {
-                var o = Blindsided.Oracle.oracle;
-                if (o != null && o.saveData != null && o.saveData.Forge != null)
-                {
-                    var forge = o.saveData.Forge;
-                    forge.ChunksCrafted += amount;
-                    if (core.crystalResource != null) { var k = core.crystalResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 1 * amount; }
-                    if (stoneResource != null) { var k = stoneResource.name; if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0; forge.ConversionSpentByResource[k] += 2 * amount; }
-                }
-            }
+
+            // Set desired amount and perform conversion
+            chunkPipeline.DesiredAmount = chunkCraftAmount;
+            if (!chunkPipeline.PerformConversion(rm, core)) return;
+
+            // Persist desired amount
             chunkCraftAmount = ClampCraftAmount(chunkCraftAmount);
             ForgeChunkCraftAmount = chunkCraftAmount;
-            OnResourcesChanged();
 
-            // Persist conversion to in-memory save (defer disk write) and update stats
-            try
-            {
-                var o3 = Blindsided.Oracle.oracle;
-                if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
-                {
-                    var forge = o3.saveData.Forge;
-                    var chunkName = core.chunkResource != null ? core.chunkResource.name : "Chunk";
-                    if (!forge.ChunksCraftedByResource.ContainsKey(chunkName)) forge.ChunksCraftedByResource[chunkName] = 0;
-                    forge.ChunksCraftedByResource[chunkName] += amount;
-                }
-                Blindsided.EventHandler.SaveData();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"SaveData after chunk craft failed: {ex}");
-            }
+            // Refresh UI
+            OnResourcesChanged();
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+
+            // Save to disk
+            try { EventHandler.SaveData(); }
+            catch (System.Exception ex) { Debug.LogError($"SaveData after chunk craft failed: {ex}"); }
         }
 
         private void OnCraftCoreConversionClicked()
         {
-            if (!CanCraftCoreConversion()) return;
-            var rm = RM; var core = selectedCore; if (rm == null || core == null) return;
-            var (curRes, nextRes, isFinalTier) = ResolveCurrentAndNextCoreResources(core);
-            if (isFinalTier || curRes == null || nextRes == null) return;
-            var amount = GetCraftAmountForCores(rm, core);
-            if (amount <= 0) return;
+            if (corePipeline == null || !CanCraftCoreConversion()) return;
+            var rm = RM;
+            var core = selectedCore;
+            if (rm == null || core == null) return;
 
-            rm.BeginBatch();
-            try
-            {
-                rm.Spend(curRes, 5 * amount);
-                rm.Spend(nextRes, 1 * amount);
-                rm.Add(nextRes, 2 * amount, trackStats: false);
-            }
-            finally
-            {
-                rm.EndBatch();
-            }
+            // Set desired amount and perform conversion
+            corePipeline.DesiredAmount = coreCraftAmount;
+            if (!corePipeline.PerformConversion(rm, core)) return;
 
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
-            {
-                var o = Blindsided.Oracle.oracle;
-                if (o != null && o.saveData != null && o.saveData.Forge != null)
-                {
-                    var forge = o.saveData.Forge;
-                    forge.CoreConversions++;
-                    if (forge.ConversionSpentByResource == null) forge.ConversionSpentByResource = new System.Collections.Generic.Dictionary<string, double>();
-                    if (forge.CoresCraftedByResource == null) forge.CoresCraftedByResource = new System.Collections.Generic.Dictionary<string, double>();
-                    if (curRes != null)
-                    {
-                        var k = curRes.name;
-                        if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0;
-                        forge.ConversionSpentByResource[k] += 5 * amount;
-                    }
-                    if (nextRes != null)
-                    {
-                        var k = nextRes.name;
-                        if (!forge.ConversionSpentByResource.ContainsKey(k)) forge.ConversionSpentByResource[k] = 0;
-                        forge.ConversionSpentByResource[k] += 1 * amount;
-                        if (!forge.CoresCraftedByResource.ContainsKey(k)) forge.CoresCraftedByResource[k] = 0;
-                        forge.CoresCraftedByResource[k] += 2 * amount;
-                    }
-                }
-            }
+            // Persist desired amount
             coreCraftAmount = ClampCraftAmount(coreCraftAmount);
             ForgeCoreCraftAmount = coreCraftAmount;
-            OnResourcesChanged();
 
-            try
-            {
-                Blindsided.EventHandler.SaveData();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"SaveData after core conversion failed: {ex}");
-            }
+            // Refresh UI
+            OnResourcesChanged();
+            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
+            if (statsUi != null) statsUi.MarkDirty();
+
+            // Save to disk
+            try { EventHandler.SaveData(); }
+            catch (System.Exception ex) { Debug.LogError($"SaveData after core conversion failed: {ex}"); }
         }
 
         private (Resource currentTierCore, Resource nextTierCore, bool isFinalTier) ResolveCurrentAndNextCoreResources(CoreSO core)
@@ -1189,9 +1116,62 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
         }
 
+        /// <summary>
+        /// Gets the current crafts per second based on config and milestone bonuses.
+        /// </summary>
+        private int GetCurrentCraftsPerSecond()
+        {
+            var config = crafting?.Config;
+            if (config == null) return 10;
+
+            int baseSpeed = Mathf.Max(1, config.baseCraftsPerSecond);
+            int maxSpeed = config.maxCraftsPerSecond;
+
+            // Get milestone bonus from skill controller
+            float milestoneBonus = 0f;
+            var controller = SkillController.Instance;
+            if (controller != null)
+                milestoneBonus = controller.Aggregator.GetForgeCraftSpeedBonus();
+
+            int total = baseSpeed + Mathf.RoundToInt(milestoneBonus);
+
+            // Apply cap if configured
+            if (maxSpeed > 0)
+                total = Mathf.Min(total, maxSpeed);
+
+            return Mathf.Max(1, total);
+        }
+
         private IEnumerator CraftUntilUpgradeCoroutine()
         {
-            var wait = new WaitForSecondsRealtime(0.1f); // ~10 crafts per second
+            // Calculate dynamic speed from config + milestone bonuses
+            var config = crafting?.Config;
+            float batchInterval = config != null ? config.batchInterval : 0.1f;
+            int craftsPerSec = GetCurrentCraftsPerSecond();
+
+            // For low speeds (≤ batchInterval rate), use longer wait times
+            // For high speeds (> batchInterval rate), batch multiple crafts per frame
+            int craftsPerBatch = Mathf.Max(1, Mathf.RoundToInt(craftsPerSec * batchInterval));
+            float waitTime = craftsPerSec > 0 ? Mathf.Max(batchInterval, 1.0f / craftsPerSec) : batchInterval;
+            var wait = new WaitForSecondsRealtime(waitTime);
+
+            // Turbo mode: batch salvage yields when processing multiple crafts (>1) for maximum speed
+            // Uses expected value calculation instead of rolling each item individually
+            bool turboMode = craftsPerBatch > 1;
+            int turboSalvageCount = 0; // Accumulated items to batch salvage
+
+            // Hot-reload config once per second
+            float lastConfigCheck = Time.unscaledTime;
+            const float configCheckInterval = 1.0f;
+
+            // Throttle timers for UI updates during autocraft
+            float lastVisualUpdate = Time.unscaledTime;
+            float lastStatsUpdate = Time.unscaledTime;
+            float lastResourceUpdate = Time.unscaledTime - 0.5f; // Stagger by 0.5s from stats
+            const float visualUpdateInterval = 0.1f;   // 10 Hz
+            const float statsUpdateInterval = 1.0f;    // 1 Hz
+            const float resourceUpdateInterval = 1.0f; // 1 Hz
+
             // Capture baseline affix stat set at the start of the session if Lock Stats is enabled
             HashSet<StatDefSO> baselineSet = null;
             if (StaticReferences.LockAutocraftStatSet)
@@ -1202,113 +1182,212 @@ namespace TimelessEchoes.Gear.UI
             }
 
             var pendingAutoSalvage = lastCrafted != null;
-            while (isAutoCrafting)
+            bool shouldBreak = false;
+
+            while (isAutoCrafting && !shouldBreak)
             {
-                // Auto-salvage the previous craft only if we are continuing the loop
-                if (pendingAutoSalvage && lastCrafted != null)
+                // Hot-reload config check (once per second)
+                if (Time.unscaledTime - lastConfigCheck >= configCheckInterval)
                 {
-                    SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
-                    lastCrafted = null;
-                    pendingAutoSalvage = false;
-                }
-
-                if (!CanCraft())
-                {
-                    // Out of resources stop reason
-                    var o = Blindsided.Oracle.oracle;
-                    if (o != null && o.saveData != null && o.saveData.Forge != null)
+                    lastConfigCheck = Time.unscaledTime;
+                    config = crafting?.Config;
+                    batchInterval = config != null ? config.batchInterval : 0.1f;
+                    int newCraftsPerSec = GetCurrentCraftsPerSecond();
+                    if (newCraftsPerSec != craftsPerSec)
                     {
-                        var forge = o.saveData.Forge;
-                        if (!forge.AutocraftStopReasons.ContainsKey("OutOfResources")) forge.AutocraftStopReasons["OutOfResources"] = 0;
-                        forge.AutocraftStopReasons["OutOfResources"]++;
+                        craftsPerSec = newCraftsPerSec;
+                        craftsPerBatch = Mathf.Max(1, Mathf.RoundToInt(craftsPerSec * batchInterval));
+                        waitTime = craftsPerSec > 0 ? Mathf.Max(batchInterval, 1.0f / craftsPerSec) : batchInterval;
+                        wait = new WaitForSecondsRealtime(waitTime);
+                        turboMode = craftsPerBatch > 1;
                     }
-                    break;
                 }
 
-                if (selectedCore == null || crafting == null)
-                    break;
-
-                var coreSlot = GetSlotForCore(selectedCore);
-                var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
-                var craftedItem = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
-                if (craftedItem == null)
+                // Batch multiple crafts per frame for high speeds
+                // Wrap in ResourceManager batch to defer OnInventoryChanged until batch ends
+                var rm = ResourceManager.Instance;
+                rm?.BeginBatch();
+                try
                 {
-                    RefreshActionButtons();
-                    break;
-                }
-
-                lastCrafted = craftedItem;
-
-                // Count autocraft craft
+                for (int batch = 0; batch < craftsPerBatch && isAutoCrafting; batch++)
                 {
-                    var o2 = Blindsided.Oracle.oracle;
-                    if (o2 != null && o2.saveData != null && o2.saveData.Forge != null)
-                        o2.saveData.Forge.AutocraftCrafts++;
-                }
+                    bool isLastInBatch = (batch == craftsPerBatch - 1);
 
-                var eq = equipment?.GetEquipped(lastCrafted.slot);
-                var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
-                ShowResult(summary);
-                UpdateResultPreview(lastCrafted);
-                OnResourcesChanged();
-                ForceRefreshAllCoreSlots();
-                ThrottledRefreshOdds();
-
-                if (UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq))
-                {
-                    bool passesLock = true;
-                    if (StaticReferences.LockAutocraftStatSet)
+                    // Discard previous craft - turbo mode accumulates for batch salvage
+                    if (pendingAutoSalvage && lastCrafted != null)
                     {
-                        if (baselineSet != null)
+                        if (turboMode)
                         {
-                            var rolledSet = BuildAffixStatSet(lastCrafted);
-                            passesLock = AffixSetsEqual(baselineSet, rolledSet);
+                            // Fast path: release to pool and count for batch salvage
+                            GearObjectPool.ReleaseItem(lastCrafted);
+                            turboSalvageCount++;
                         }
                         else
                         {
-                            // No baseline equipped; allow any upgrade to stop
-                            passesLock = true;
+                            // Normal path: salvage for resources
+                            SalvageService.Instance?.Salvage(lastCrafted, isAuto: true);
                         }
+                        lastCrafted = null;
+                        pendingAutoSalvage = false;
                     }
 
-                    if (passesLock)
+                    if (!CanCraft())
                     {
-                        // Stop reason: Upgraded
+                        // Out of resources stop reason
                         var o = Blindsided.Oracle.oracle;
                         if (o != null && o.saveData != null && o.saveData.Forge != null)
                         {
                             var forge = o.saveData.Forge;
-                            if (!forge.AutocraftStopReasons.ContainsKey("Upgraded")) forge.AutocraftStopReasons["Upgraded"] = 0;
-                            forge.AutocraftStopReasons["Upgraded"]++;
-                            // Track best rarity reached by slot
-                            var slot = lastCrafted != null ? lastCrafted.slot : null;
-                            if (!string.IsNullOrWhiteSpace(slot) && lastCrafted != null && lastCrafted.rarity != null)
+                            if (!forge.AutocraftStopReasons.ContainsKey("OutOfResources")) forge.AutocraftStopReasons["OutOfResources"] = 0;
+                            forge.AutocraftStopReasons["OutOfResources"]++;
+                        }
+                        shouldBreak = true;
+                        break;
+                    }
+
+                    if (selectedCore == null || crafting == null)
+                    {
+                        shouldBreak = true;
+                        break;
+                    }
+
+                    var coreSlot = GetSlotForCore(selectedCore);
+                    var coreRes = coreSlot != null ? coreSlot.CoreResource : null;
+                    var craftedItem = crafting.Craft(selectedCore, selectedSlot, null, coreRes);
+                    if (craftedItem == null)
+                    {
+                        RefreshActionButtons();
+                        shouldBreak = true;
+                        break;
+                    }
+
+                    lastCrafted = craftedItem;
+
+                    // Count autocraft craft
+                    {
+                        var o2 = Blindsided.Oracle.oracle;
+                        if (o2 != null && o2.saveData != null && o2.saveData.Forge != null)
+                            o2.saveData.Forge.AutocraftCrafts++;
+                    }
+
+                    var eq = equipment?.GetEquipped(lastCrafted.slot);
+
+                    // Check for stop conditions (always check, may stop early)
+                    bool isUpgrade = UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq);
+                    bool isVastium = StaticReferences.StopAutocraftOnVastium &&
+                                     lastCrafted?.rarity?.GetName() == "Vastium";
+                    bool isStopping = isUpgrade || isVastium;
+
+                    // Throttled UI updates during autocraft
+                    float now = Time.unscaledTime;
+
+                    // Visual preview: 10 Hz or immediate on stop
+                    bool doVisualUpdate = isStopping || (isLastInBatch && (now - lastVisualUpdate) >= visualUpdateInterval);
+                    if (doVisualUpdate)
+                    {
+                        lastVisualUpdate = now;
+                        var summary = GearStatTextBuilder.BuildCraftResultSummary(lastCrafted, eq);
+                        ShowResult(summary);
+                        UpdateResultPreview(lastCrafted);
+                    }
+
+                    // Stats rebuild: 1 Hz or immediate on stop
+                    bool doStatsUpdate = isStopping || (isLastInBatch && (now - lastStatsUpdate) >= statsUpdateInterval);
+                    if (doStatsUpdate)
+                    {
+                        lastStatsUpdate = now;
+                        ForceRefreshAllCoreSlots();
+                        ThrottledRefreshOdds();
+                    }
+
+                    // Resource display: 1 Hz staggered or immediate on stop
+                    bool doResourceUpdate = isStopping || (isLastInBatch && (now - lastResourceUpdate) >= resourceUpdateInterval);
+                    if (doResourceUpdate)
+                    {
+                        lastResourceUpdate = now;
+                        OnResourcesChanged();
+                    }
+
+                    if (isUpgrade)
+                    {
+                        bool passesLock = true;
+                        if (StaticReferences.LockAutocraftStatSet)
+                        {
+                            if (baselineSet != null)
                             {
-                                var tier = lastCrafted.rarity.tierIndex;
-                                if (!forge.AutocraftBestRarityTierBySlot.ContainsKey(slot) || forge.AutocraftBestRarityTierBySlot[slot] < tier)
-                                    forge.AutocraftBestRarityTierBySlot[slot] = tier;
+                                var rolledSet = BuildAffixStatSet(lastCrafted);
+                                passesLock = AffixSetsEqual(baselineSet, rolledSet);
+                            }
+                            else
+                            {
+                                // No baseline equipped; allow any upgrade to stop
+                                passesLock = true;
                             }
                         }
-                        break; // leave lastCrafted for player to review/replace/salvage
-                    }
-                }
 
-                if (StaticReferences.StopAutocraftOnVastium &&
-                    lastCrafted?.rarity?.GetName() == "Vastium")
-                {
-                    var o3 = Blindsided.Oracle.oracle;
-                    if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
+                        if (passesLock)
+                        {
+                            // Stop reason: Upgraded
+                            var o = Blindsided.Oracle.oracle;
+                            if (o != null && o.saveData != null && o.saveData.Forge != null)
+                            {
+                                var forge = o.saveData.Forge;
+                                if (!forge.AutocraftStopReasons.ContainsKey("Upgraded")) forge.AutocraftStopReasons["Upgraded"] = 0;
+                                forge.AutocraftStopReasons["Upgraded"]++;
+                                // Track best rarity reached by slot
+                                var slot = lastCrafted != null ? lastCrafted.slot : null;
+                                if (!string.IsNullOrWhiteSpace(slot) && lastCrafted != null && lastCrafted.rarity != null)
+                                {
+                                    var tier = lastCrafted.rarity.tierIndex;
+                                    if (!forge.AutocraftBestRarityTierBySlot.ContainsKey(slot) || forge.AutocraftBestRarityTierBySlot[slot] < tier)
+                                        forge.AutocraftBestRarityTierBySlot[slot] = tier;
+                                }
+                            }
+                            shouldBreak = true;
+                            break; // leave lastCrafted for player to review/replace/salvage
+                        }
+                    }
+
+                    if (isVastium)
                     {
-                        var forge = o3.saveData.Forge;
-                        if (!forge.AutocraftStopReasons.ContainsKey("Vastium")) forge.AutocraftStopReasons["Vastium"] = 0;
-                        forge.AutocraftStopReasons["Vastium"]++;
+                        var o3 = Blindsided.Oracle.oracle;
+                        if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
+                        {
+                            var forge = o3.saveData.Forge;
+                            if (!forge.AutocraftStopReasons.ContainsKey("Vastium")) forge.AutocraftStopReasons["Vastium"] = 0;
+                            forge.AutocraftStopReasons["Vastium"]++;
+                        }
+                        shouldBreak = true;
+                        break;
                     }
-                    break;
+
+                    pendingAutoSalvage = true;
+                }
+                }
+                finally
+                {
+                    rm?.EndBatch();
                 }
 
-                pendingAutoSalvage = true;
-                RefreshActionButtons();
-                yield return wait;
+                // Batch salvage turbo mode items at end of each batch
+                if (turboSalvageCount > 0 && selectedCore != null)
+                {
+                    SalvageService.Instance?.BatchSalvage(selectedCore, turboSalvageCount);
+                    turboSalvageCount = 0;
+                }
+
+                if (!shouldBreak)
+                {
+                    RefreshActionButtons();
+                    yield return wait;
+                }
+            }
+
+            // Final batch salvage for any remaining turbo items
+            if (turboSalvageCount > 0 && selectedCore != null)
+            {
+                SalvageService.Instance?.BatchSalvage(selectedCore, turboSalvageCount);
+                turboSalvageCount = 0;
             }
 
             isAutoCrafting = false;
