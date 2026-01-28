@@ -1,3 +1,4 @@
+- Completed Phase 3 of HeroBase refactoring: created `HeroMovementController.cs` to encapsulate movement logic (pathfinding, animation sync, destination management, idle walking), and updated HeroBase to delegate all movement operations to the new component.
 - Completed Phase 2 of HeroBase refactoring: created `HeroCombatController.cs` to encapsulate combat logic (target tracking, DPS estimation, attack execution, dice rolling), and updated HeroBase to delegate all combat operations to the new component.
 - Completed Phase 1 of HeroBase refactoring: created `EnemyEngagementTracker.cs` to encapsulate enemy tracking collections (engagedEnemies, deathHandlers, disengageHandlers, enemyTargets), extracted subscription management to the tracker, and updated HeroBase to delegate all engagement operations to the new component.
 - Added `DevStuff/EoV_New_Employee_Systems_Overview.md` with a code-verified systems overview, corrected naming, and clarified progression gates.
