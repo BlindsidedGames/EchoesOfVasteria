@@ -1,6 +1,11 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+
+// UITicker usage here is intentional - HUD distance display updates at a throttled rate (5 Hz).
+// This is a lightweight display update. Suppress the deprecation warning.
+#pragma warning disable CS0618
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

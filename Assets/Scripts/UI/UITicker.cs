@@ -7,7 +7,15 @@ namespace TimelessEchoes.UI
     /// <summary>
     /// Centralized UI ticker that invokes registered callbacks at requested intervals.
     /// Lives across scenes. Designed for zero per-frame GC allocations.
+    /// 
+    /// DEPRECATED: Prefer event-driven UI updates using EventDrivenStatsPanelUI base class.
+    /// This class remains for backwards compatibility with non-UI systems that legitimately
+    /// need periodic polling (e.g., CauldronManager tasting, GameManager run buttons).
+    /// 
+    /// For new UI code, subscribe directly to system events instead of UITicker.
+    /// See EventDrivenStatsPanelUI in UI/Core for the recommended pattern.
     /// </summary>
+    [System.Obsolete("UITicker is deprecated for UI updates. Use EventDrivenStatsPanelUI base class with direct event subscriptions instead. UITicker remains available for non-UI periodic tasks.")]
     public class UITicker : MonoBehaviour
     {
         private static bool _isQuitting;

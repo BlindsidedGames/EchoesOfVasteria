@@ -1,6 +1,7 @@
 using Blindsided.Utilities;
 using TimelessEchoes.References.UI;
 using TimelessEchoes.Stats;
+using TimelessEchoes.UI.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,9 +12,10 @@ using static TimelessEchoes.TELogger;
 namespace TimelessEchoes.UI
 {
     /// <summary>
-    ///     Displays recent run statistics on a bar graph and text fields.
+    /// Event-driven run stats panel displaying recent run statistics.
+    /// Subscribes to GameplayStatTracker events instead of polling via UITicker.
     /// </summary>
-    public class RunStatsPanelUI : MonoBehaviour
+    public class RunStatsPanelUI : EventDrivenStatsPanelUI
     {
         [SerializeField] private RunBarUI[] runBars = new RunBarUI[50];
         [SerializeField] private TMP_Text longestRunText;
@@ -41,9 +43,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private Color killsAbandonedBarColor = Color.gray;
         [SerializeField] private Color killsReapedBarColor = Color.magenta;
 
-        [SerializeField] private float updateInterval = 0.1f;
-        private float nextUpdateTime;
-
         public enum GraphMode
         {
             Distance,
@@ -58,7 +57,8 @@ namespace TimelessEchoes.UI
         {
             graphMode = mode;
             UpdateGraphLabel();
-            UpdateUI();
+            if (IsPanelVisible())
+                RefreshUI();
         }
 
         private void UpdateGraphLabel()
@@ -111,31 +111,38 @@ namespace TimelessEchoes.UI
                 }
         }
 
-        private void OnEnable()
-        {
-            UpdateGraphLabel();
-            UpdateUI();
-            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-        }
-
-        private void OnDisable()
-        {
-            if (runStatUI != null)
-                runStatUI.gameObject.SetActive(false);
-            UITicker.Instance?.Unsubscribe(RefreshTick);
-        }
-
-        private void RefreshTick()
-        {
-            if (!IsPanelVisible()) return;
-            UpdateUI();
-        }
-
-        private bool IsPanelVisible()
+        protected override bool IsPanelVisible()
         {
             // Graph is drawn into this GameObject; use its active state
             return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
+
+        protected override void SubscribeToEvents()
+        {
+            // Re-acquire tracker in case it wasn't ready at Awake
+            if (statTracker == null)
+                statTracker = GameplayStatTracker.Instance;
+            
+            if (statTracker != null)
+            {
+                // Run stats primarily change when a run ends
+                statTracker.OnRunEnded += HandleRunEnded;
+            }
+        }
+
+        protected override void UnsubscribeFromEvents()
+        {
+            if (runStatUI != null)
+                runStatUI.gameObject.SetActive(false);
+            
+            if (statTracker != null)
+            {
+                statTracker.OnRunEnded -= HandleRunEnded;
+            }
+        }
+
+        // Event handlers
+        private void HandleRunEnded(bool _) => OnDataChanged();
 
         private void OnBarEnter(RunBarUI bar, PointerEventData eventData)
         {
@@ -231,6 +238,12 @@ namespace TimelessEchoes.UI
         {
             if (runStatUI != null)
                 runStatUI.gameObject.SetActive(false);
+        }
+
+        protected override void RefreshUI()
+        {
+            UpdateUI();
+            isDirty = false;
         }
 
         private void UpdateUI()

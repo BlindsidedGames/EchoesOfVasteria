@@ -14,6 +14,10 @@ using static Blindsided.Oracle;
 using EventHandler = Blindsided.EventHandler;
 using Random = UnityEngine.Random;
 
+// UITicker usage here is intentional - CauldronManager drives tasting game logic at a fixed rate.
+// This is core game mechanics, not UI polling. Suppress the deprecation warning.
+#pragma warning disable CS0618
+
 namespace TimelessEchoes.Upgrades
 {
 	/// <summary>

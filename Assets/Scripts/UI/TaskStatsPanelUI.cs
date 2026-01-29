@@ -7,6 +7,7 @@ using TimelessEchoes.Stats;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Skills;
 using TimelessEchoes.MapGeneration;
+using TimelessEchoes.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using static TimelessEchoes.TELogger;
@@ -14,14 +15,15 @@ using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.UI
 {
-    public class TaskStatsPanelUI : MonoBehaviour
+    /// <summary>
+    /// Event-driven task stats panel. Subscribes to TaskWeightService and GameplayStatTracker
+    /// events instead of polling via UITicker.
+    /// </summary>
+    public class TaskStatsPanelUI : EventDrivenStatsPanelUI
     {
         [SerializeField] private StatPanelReferences references;
         private GameplayStatTracker statTracker;
         private float lastKnownMaxDistance;
-
-        [SerializeField] private float updateInterval = 0.1f;
-        private float nextUpdateTime;
 
         private readonly Dictionary<TaskData, TaskStatEntryUIReferences> entries = new();
         private readonly Dictionary<TaskData, EntryDisplayState> lastDisplayedByTask = new();
@@ -35,7 +37,7 @@ namespace TimelessEchoes.UI
         private float cachedWeightsWorldX = float.NaN;
         private List<TaskData> defaultOrder = new();
 
-        // Scratch lists for allocation-free sorting (following ItemStatsPanelUI pattern)
+        // Scratch lists for allocation-free sorting
         private readonly List<TaskData> _scratchKnown = new();
         private readonly List<TaskData> _scratchUnknown = new();
         private readonly List<TaskData> _scratchFinal = new();
@@ -103,44 +105,60 @@ namespace TimelessEchoes.UI
             BuildEntries();
         }
 
-        private void OnEnable()
+        protected override bool IsPanelVisible()
         {
-            TaskWeightService.ToggleChanged += OnTaskWeightToggleChanged;
-            if (statTracker == null)
-                statTracker = GameplayStatTracker.Instance;
-            if (statTracker != null)
-                statTracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
-            SetupDistanceSlider();
-            UpdateEntries();
-            SortEntries();
-            nextUpdateTime = Time.unscaledTime + updateInterval;
-            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
+            if (references != null && references.taskEntryParent != null)
+                return references.taskEntryParent.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
-        private void Update()
+        protected override void SubscribeToEvents()
         {
-            if (UITicker.Instance != null) return;
-            if (Time.unscaledTime >= nextUpdateTime)
+            // Re-acquire tracker in case it wasn't ready at Awake
+            if (statTracker == null)
+                statTracker = GameplayStatTracker.Instance;
+            
+            // Subscribe to task toggle changes
+            TaskWeightService.ToggleChanged += OnTaskWeightToggleChanged;
+            
+            if (statTracker != null)
             {
-                UpdateEntries();
-                SortEntries();
-                nextUpdateTime = Time.unscaledTime + updateInterval;
+                statTracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
+                statTracker.OnTaskCompletedEvent += OnTaskCompleted;
+            }
+            
+            SetupDistanceSlider();
+        }
+
+        protected override void UnsubscribeFromEvents()
+        {
+            TaskWeightService.ToggleChanged -= OnTaskWeightToggleChanged;
+            
+            if (statTracker != null)
+            {
+                statTracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
+                statTracker.OnTaskCompletedEvent -= OnTaskCompleted;
             }
         }
 
-        private void OnDisable()
+        // Event handlers
+        private void OnTaskWeightToggleChanged(TaskData task, bool _)
         {
-            UITicker.Instance?.Unsubscribe(RefreshTick);
-            if (statTracker != null)
-                statTracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
-            TaskWeightService.ToggleChanged -= OnTaskWeightToggleChanged;
+            cachedWeightsWorldX = float.NaN;
+            _sortDirty = true; // Toggle change may affect spawn weights and sort order
+            OnDataChanged();
         }
 
-        private void RefreshTick()
+        private void OnMaxRunDistanceChanged(float newMax)
         {
-            if (!IsPanelVisible()) return;
-            UpdateEntries();
-            SortEntries();
+            lastKnownMaxDistance = newMax > 0f ? newMax : 100f;
+            OnDataChanged();
+        }
+
+        private void OnTaskCompleted()
+        {
+            _sortDirty = true; // Completion may change known/unknown status
+            OnDataChanged();
         }
 
         private void SetupDistanceSlider()
@@ -148,12 +166,6 @@ namespace TimelessEchoes.UI
             // Distance slider is no longer used for tasks - spawning uses skill-based unlocks instead.
             // Just track max distance for display purposes.
             lastKnownMaxDistance = GetPreviewDistance();
-        }
-
-        private void OnMaxRunDistanceChanged(float newMax)
-        {
-            lastKnownMaxDistance = newMax > 0f ? newMax : 100f;
-            UpdateEntries();
         }
 
         private float GetPreviewDistance()
@@ -165,29 +177,13 @@ namespace TimelessEchoes.UI
             return maxDist > 0f ? maxDist : 100f;
         }
 
-        private void OnTaskWeightToggleChanged(TaskData task, bool _)
-        {
-            cachedWeightsWorldX = float.NaN;
-            _sortDirty = true; // Toggle change may affect spawn weights and sort order
-            if (!isActiveAndEnabled)
-                return;
-            UpdateEntries();
-            SortEntries();
-        }
-
-        private bool IsPanelVisible()
-        {
-            if (references != null && references.taskEntryParent != null)
-                return references.taskEntryParent.gameObject.activeInHierarchy;
-            return gameObject.activeInHierarchy && isActiveAndEnabled;
-        }
-
         public void SetSortMode(SortMode mode)
         {
             if (sortMode == mode) return;
             sortMode = mode;
             _sortDirty = true;
-            SortEntries();
+            if (IsPanelVisible())
+                RefreshUI();
         }
 
         private void BuildEntries()
@@ -223,8 +219,6 @@ namespace TimelessEchoes.UI
                 }
                 list.Add(data);
             }
-
-            SortEntries();
         }
 
         private void ConfigureEntry(TaskData data, TaskStatEntryUIReferences ui)
@@ -248,6 +242,13 @@ namespace TimelessEchoes.UI
             if (data == null) return;
             var current = TaskWeightService.IsToggleEnabled(data);
             TaskWeightService.SetToggle(data, !current);
+        }
+
+        protected override void RefreshUI()
+        {
+            UpdateEntries();
+            SortEntries();
+            isDirty = false;
         }
 
         private void UpdateEntries()

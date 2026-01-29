@@ -7,12 +7,17 @@ using TimelessEchoes.Stats;
 using Blindsided.Utilities;
 using static TimelessEchoes.TELogger;
 using TimelessEchoes.Utilities;
+using TimelessEchoes.UI.Core;
 using UnityEngine.UI;
 using TMPro;
 
 namespace TimelessEchoes.UI
 {
-    public class EnemyStatsPanelUI : MonoBehaviour
+    /// <summary>
+    /// Event-driven enemy stats panel. Subscribes to EnemyKillTracker and GameplayStatTracker
+    /// events instead of polling via UITicker.
+    /// </summary>
+    public class EnemyStatsPanelUI : EventDrivenStatsPanelUI
     {
         [SerializeField] private StatPanelReferences references;
         [Header("Distance Preview")]
@@ -21,15 +26,12 @@ namespace TimelessEchoes.UI
         private EnemyKillTracker killTracker;
         private float lastKnownMaxDistance;
 
-        [SerializeField] private float updateInterval = 0.1f;
-        private float nextUpdateTime;
-
         private readonly Dictionary<EnemyData, EnemyStatEntryUIReferences> entries = new();
         private readonly Dictionary<EnemyData, (double kills, int reveal, float bonus, int level, bool spawnable)> lastDisplayed = new();
         private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private List<EnemyData> defaultOrder = new();
 
-        // Scratch lists for allocation-free sorting (following ItemStatsPanelUI pattern)
+        // Scratch lists for allocation-free sorting
         private readonly List<EnemyData> _scratchKnown = new();
         private readonly List<EnemyData> _scratchUnknown = new();
         private readonly List<EnemyData> _scratchFinal = new();
@@ -67,50 +69,55 @@ namespace TimelessEchoes.UI
             BuildEntries();
         }
 
-        private void OnEnable()
+        protected override bool IsPanelVisible()
         {
-            UpdateEntries();
-            SortEntries();
-            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-            SetupDistanceSlider();
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            if (tracker != null)
-                tracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
+            if (references != null && references.enemyEntryParent != null)
+                return references.enemyEntryParent.gameObject.activeInHierarchy;
+            return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
-        private void OnDisable()
+        protected override void SubscribeToEvents()
         {
-            UITicker.Instance?.Unsubscribe(RefreshTick);
-            if (distanceSlider != null)
-                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            if (tracker != null)
-                tracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
-        }
-
-        private void RefreshTick()
-        {
-            if (!IsPanelVisible()) return;
-            UpdateEntries();
-            SortEntries();
-        }
-
-        private void SetupDistanceSlider()
-        {
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            float max = tracker != null ? tracker.MaxRunDistance : 0f;
-            lastKnownMaxDistance = max;
-            if (distanceSlider != null)
+            // Re-acquire trackers in case they weren't ready at Awake
+            if (killTracker == null)
+                killTracker = EnemyKillTracker.Instance;
+            
+            if (killTracker != null)
             {
-                distanceSlider.minValue = 0f;
-                distanceSlider.maxValue = max;
-                // Default to max run distance per requirements
-                distanceSlider.SetValueWithoutNotify(max);
-                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
-                distanceSlider.onValueChanged.AddListener(OnDistanceSliderChanged);
+                killTracker.OnKillRegistered += HandleKillRegistered;
             }
-            UpdateDistanceLabel();
-            UpdateEntries();
+            
+            var statTracker = GameplayStatTracker.Instance;
+            if (statTracker != null)
+            {
+                statTracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
+            }
+            
+            SetupDistanceSlider();
+        }
+
+        protected override void UnsubscribeFromEvents()
+        {
+            if (killTracker != null)
+            {
+                killTracker.OnKillRegistered -= HandleKillRegistered;
+            }
+            
+            var statTracker = GameplayStatTracker.Instance;
+            if (statTracker != null)
+            {
+                statTracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
+            }
+            
+            if (distanceSlider != null)
+                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
+        }
+
+        // Event handlers
+        private void HandleKillRegistered(EnemyData enemy)
+        {
+            _sortDirty = true; // Kill may change known/unknown status
+            OnDataChanged();
         }
 
         private void OnMaxRunDistanceChanged(float newMax)
@@ -125,18 +132,35 @@ namespace TimelessEchoes.UI
             }
             lastKnownMaxDistance = newMax;
             UpdateDistanceLabel();
-            UpdateEntries();
+            OnDataChanged();
         }
 
         private void OnDistanceSliderChanged(float _)
         {
             UpdateDistanceLabel();
-            UpdateEntries();
+            OnDataChanged();
+        }
+
+        private void SetupDistanceSlider()
+        {
+            var tracker = GameplayStatTracker.Instance;
+            float max = tracker != null ? tracker.MaxRunDistance : 0f;
+            lastKnownMaxDistance = max;
+            if (distanceSlider != null)
+            {
+                distanceSlider.minValue = 0f;
+                distanceSlider.maxValue = max;
+                // Default to max run distance per requirements
+                distanceSlider.SetValueWithoutNotify(max);
+                distanceSlider.onValueChanged.RemoveListener(OnDistanceSliderChanged);
+                distanceSlider.onValueChanged.AddListener(OnDistanceSliderChanged);
+            }
+            UpdateDistanceLabel();
         }
 
         private float GetPreviewDistance()
         {
-            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            var tracker = GameplayStatTracker.Instance;
             if (distanceSlider != null)
                 return Mathf.Clamp(distanceSlider.value, 0f, tracker != null ? tracker.MaxRunDistance : float.MaxValue);
             return tracker != null ? tracker.MaxRunDistance : 0f;
@@ -154,19 +178,13 @@ namespace TimelessEchoes.UI
             }
         }
 
-        private bool IsPanelVisible()
-        {
-            if (references != null && references.enemyEntryParent != null)
-                return references.enemyEntryParent.gameObject.activeInHierarchy;
-            return gameObject.activeInHierarchy && isActiveAndEnabled;
-        }
-
         public void SetSortMode(SortMode mode)
         {
             if (sortMode == mode) return;
             sortMode = mode;
             _sortDirty = true;
-            SortEntries();
+            if (IsPanelVisible())
+                RefreshUI();
         }
 
         private void BuildEntries()
@@ -192,8 +210,13 @@ namespace TimelessEchoes.UI
                 if (ui == null) continue;
                 entries[stats] = ui;
             }
+        }
 
+        protected override void RefreshUI()
+        {
+            UpdateEntries();
             SortEntries();
+            isDirty = false;
         }
 
         private void UpdateEntries()
@@ -387,7 +410,6 @@ namespace TimelessEchoes.UI
             }
 
             // Sort revealed by stat value (descending), then by display order
-            // We need to capture sortMode locally for the comparison
             var currentMode = sortMode;
             _scratchKnown.Sort((a, b) =>
             {
@@ -420,16 +442,6 @@ namespace TimelessEchoes.UI
             {
                 if (entries.TryGetValue(_scratchFinal[i], out var ui))
                     ui.transform.SetSiblingIndex(i);
-            }
-        }
-
-        private void ApplyOrder(IList<EnemyData> order)
-        {
-            int index = 0;
-            foreach (var stats in order)
-            {
-                if (entries.TryGetValue(stats, out var ui))
-                    ui.transform.SetSiblingIndex(index++);
             }
         }
     }

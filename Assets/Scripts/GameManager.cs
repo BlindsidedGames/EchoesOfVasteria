@@ -1,6 +1,11 @@
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+
+// UITicker usage here is intentional - run button UI refreshes at a fixed rate for responsiveness.
+// This is a lightweight check that benefits from throttled polling. Suppress the deprecation warning.
+#pragma warning disable CS0618
+
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -9,6 +9,10 @@ using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
 using TimelessEchoes.Upgrades;
 
+// UITicker usage here is intentional - polling right-click for window close is a lightweight check
+// that doesn't benefit from event-driven architecture. Suppress the deprecation warning.
+#pragma warning disable CS0618
+
 namespace TimelessEchoes.UI
 {
     /// <summary>

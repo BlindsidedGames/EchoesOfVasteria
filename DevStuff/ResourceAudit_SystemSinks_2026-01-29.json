@@ -1,0 +1,1424 @@
+[
+  {
+    "name": "Copium Chunks",
+    "asset": "Assets/Resources/Resource Items/Copium Chunks.asset",
+    "guid": "cd0c8986dc3857640bf78c2cb3734d8e",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15328:  - {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Unlock Idle.asset:50:    resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}",
+      "Assets/Resources/Tasks/Mining/Copium Ore.asset:40:  - resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}",
+      "Assets/Resources/Gear/Cores/Copium.asset:18:  chunkResource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}",
+      "Assets/Resources/Gear/Cores/Copium.asset:58:  - resource: {fileID: 11400000, guid: cd0c8986dc3857640bf78c2cb3734d8e, type: 2}"
+    ]
+  },
+  {
+    "name": "Copium Crystal",
+    "asset": "Assets/Resources/Resource Items/Copium Crystal.asset",
+    "guid": "c57a924f0ab50614ca64ef288331eec2",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15329:  - {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Gear/Cores/Copium.asset:20:  crystalResource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Gear/Cores/Copium.asset:64:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:71:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:68:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:68:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:68:  - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}"
+    ]
+  },
+  {
+    "name": "Copium Ingot",
+    "asset": "Assets/Resources/Resource Items/Copium Ingot.asset",
+    "guid": "11f3334d8dea6d04a965c954f3ebac14",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15330:  - {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}",
+      "Assets/Scenes/Main.unity:64513:      objectReference: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}",
+      "Assets/Resources/Gear/Cores/Copium.asset:16:  requiredIngot: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}"
+    ]
+  },
+  {
+    "name": "Dlog Chunks",
+    "asset": "Assets/Resources/Resource Items/Dlog Chunks.asset",
+    "guid": "72499b5ec8c98a143937cc737473baa8",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15316:  - {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Unlock Erif.asset:50:    resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}",
+      "Assets/Resources/Tasks/Mining/Dlog Ore.asset:40:  - resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}",
+      "Assets/Resources/Gear/Cores/Dlog.asset:18:  chunkResource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}",
+      "Assets/Resources/Gear/Cores/Dlog.asset:58:  - resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}"
+    ]
+  },
+  {
+    "name": "Dlog Crystal",
+    "asset": "Assets/Resources/Resource Items/Dlog Crystal.asset",
+    "guid": "2ebd59f743307bc4ca7a7d1e55491b6c",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15317:  - {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Gear/Cores/Dlog.asset:20:  crystalResource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Gear/Cores/Dlog.asset:64:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:53:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:50:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:50:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:50:  - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}"
+    ]
+  },
+  {
+    "name": "Dlog Ingot",
+    "asset": "Assets/Resources/Resource Items/Dlog Ingot.asset",
+    "guid": "2f9539665c7da1c40a0d1e32ba15158e",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:9343:      objectReference: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}",
+      "Assets/Scenes/Main.unity:15318:  - {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}",
+      "Assets/Resources/Gear/Cores/Dlog.asset:16:  requiredIngot: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}"
+    ]
+  },
+  {
+    "name": "Erif Chunks",
+    "asset": "Assets/Resources/Resource Items/Erif Chunks.asset",
+    "guid": "d2f56fea92ca73547975b06c9e6ef130",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15320:  - {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Unlock Lirium.asset:50:    resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}",
+      "Assets/Resources/Tasks/Mining/Erif Ore.asset:40:  - resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}",
+      "Assets/Resources/Gear/Cores/Erif.asset:18:  chunkResource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}",
+      "Assets/Resources/Gear/Cores/Erif.asset:58:  - resource: {fileID: 11400000, guid: d2f56fea92ca73547975b06c9e6ef130, type: 2}"
+    ]
+  },
+  {
+    "name": "Erif Crystal",
+    "asset": "Assets/Resources/Resource Items/Erif Crystal.asset",
+    "guid": "01a714e515d3f4f40aca69459d70c9a3",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15321:  - {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Gear/Cores/Erif.asset:20:  crystalResource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Gear/Cores/Erif.asset:64:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:59:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:56:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:56:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:56:  - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}"
+    ]
+  },
+  {
+    "name": "Erif Ingot",
+    "asset": "Assets/Resources/Resource Items/Erif Ingot.asset",
+    "guid": "9ae27bd7bddb22149894301ea8bbf9af",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15322:  - {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}",
+      "Assets/Scenes/Main.unity:197533:      objectReference: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}",
+      "Assets/Resources/Gear/Cores/Erif.asset:16:  requiredIngot: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}"
+    ]
+  },
+  {
+    "name": "Eznorb Chunks",
+    "asset": "Assets/Resources/Resource Items/Eznorb Chunks.asset",
+    "guid": "f9dad579683f8b343b6db9ed58886a07",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15308:  - {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}",
+      "Assets/Resources/Tasks/Mining/Eznorb Ore.asset:40:  - resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}",
+      "Assets/Resources/Gear/Cores/Eznorb.asset:18:  chunkResource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}",
+      "Assets/Resources/Gear/Cores/Eznorb.asset:58:  - resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}"
+    ]
+  },
+  {
+    "name": "Eznorb Crystal",
+    "asset": "Assets/Resources/Resource Items/Eznorb Crystal.asset",
+    "guid": "eac487199cf71634491bac5855d2e4f5",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15309:  - {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Gear/Cores/Eznorb.asset:20:  crystalResource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Gear/Cores/Eznorb.asset:64:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:41:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:38:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:38:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:38:  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}"
+    ]
+  },
+  {
+    "name": "Eznorb Ingot",
+    "asset": "Assets/Resources/Resource Items/Eznorb Ingot.asset",
+    "guid": "fd9d01ece4e2c454dae0765c61a02e16",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15310:  - {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}",
+      "Assets/Scenes/Main.unity:257965:      objectReference: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}",
+      "Assets/Resources/Gear/Cores/Eznorb.asset:16:  requiredIngot: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}"
+    ]
+  },
+  {
+    "name": "Idle Chunks",
+    "asset": "Assets/Resources/Resource Items/Idle Chunks.asset",
+    "guid": "25f9be8c6652e39409f68e3fdea67577",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15332:  - {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Unlock Vastium.asset:50:    resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}",
+      "Assets/Resources/Tasks/Mining/Idle Ore.asset:40:  - resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}",
+      "Assets/Resources/Gear/Cores/Idle.asset:18:  chunkResource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}",
+      "Assets/Resources/Gear/Cores/Idle.asset:58:  - resource: {fileID: 11400000, guid: 25f9be8c6652e39409f68e3fdea67577, type: 2}"
+    ]
+  },
+  {
+    "name": "Idle Crystal",
+    "asset": "Assets/Resources/Resource Items/Idle Crystal.asset",
+    "guid": "bec6646bec02be748b6325fa80cb6655",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15333:  - {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Gear/Cores/Idle.asset:20:  crystalResource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Gear/Cores/Idle.asset:64:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:77:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:74:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:74:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:74:  - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}"
+    ]
+  },
+  {
+    "name": "Idle Ingot",
+    "asset": "Assets/Resources/Resource Items/Idle Ingot.asset",
+    "guid": "98bec1c46fc0c544bb51840ca1f918aa",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15334:  - {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}",
+      "Assets/Scenes/Main.unity:18705:      objectReference: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}",
+      "Assets/Resources/Gear/Cores/Idle.asset:16:  requiredIngot: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}"
+    ]
+  },
+  {
+    "name": "Lirium Chunks",
+    "asset": "Assets/Resources/Resource Items/Lirium Chunks.asset",
+    "guid": "82c11950e343dcf4eb8b405b27ea5ee4",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15324:  - {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Unlock Copium.asset:50:    resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}",
+      "Assets/Resources/Tasks/Mining/Lirium Ore.asset:40:  - resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}",
+      "Assets/Resources/Gear/Cores/Lirium.asset:18:  chunkResource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}",
+      "Assets/Resources/Gear/Cores/Lirium.asset:58:  - resource: {fileID: 11400000, guid: 82c11950e343dcf4eb8b405b27ea5ee4, type: 2}"
+    ]
+  },
+  {
+    "name": "Lirium Crystal",
+    "asset": "Assets/Resources/Resource Items/Lirium Crystal.asset",
+    "guid": "3fc88fefd277cff43ba21a4816fd993c",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15325:  - {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Gear/Cores/Lirium.asset:20:  crystalResource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Gear/Cores/Lirium.asset:64:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:65:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:62:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:62:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:62:  - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}"
+    ]
+  },
+  {
+    "name": "Lirium Ingot",
+    "asset": "Assets/Resources/Resource Items/Lirium Ingot.asset",
+    "guid": "c2be3e74687deba4296ed40f93cb37bb",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15326:  - {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}",
+      "Assets/Scenes/Main.unity:163695:      objectReference: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}",
+      "Assets/Resources/Gear/Cores/Lirium.asset:16:  requiredIngot: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}"
+    ]
+  },
+  {
+    "name": "Nori Chunks",
+    "asset": "Assets/Resources/Resource Items/Nori Chunks.asset",
+    "guid": "697cde1431421814ba3219fab35f6cf9",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15312:  - {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}",
+      "Assets/Resources/Quests/Old Timer/Ores/Chunky Business.asset:50:    resource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}",
+      "Assets/Resources/Tasks/Mining/Nori Ore.asset:40:  - resource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}",
+      "Assets/Resources/Gear/Cores/Nori.asset:18:  chunkResource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}",
+      "Assets/Resources/Gear/Cores/Nori.asset:58:  - resource: {fileID: 11400000, guid: 697cde1431421814ba3219fab35f6cf9, type: 2}"
+    ]
+  },
+  {
+    "name": "Nori Crystal",
+    "asset": "Assets/Resources/Resource Items/Nori Crystal.asset",
+    "guid": "183f7bb9228fc354681abf509895d03f",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15313:  - {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Gear/Cores/Nori.asset:20:  crystalResource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Gear/Cores/Nori.asset:64:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:47:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:44:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:44:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:44:  - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}"
+    ]
+  },
+  {
+    "name": "Nori Ingot",
+    "asset": "Assets/Resources/Resource Items/Nori Ingot.asset",
+    "guid": "f96c4a57aabf68c42a298a2de063e3a8",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15314:  - {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}",
+      "Assets/Scenes/Main.unity:190551:      objectReference: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}",
+      "Assets/Resources/Gear/Cores/Nori.asset:16:  requiredIngot: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}"
+    ]
+  },
+  {
+    "name": "Vastium Chunks",
+    "asset": "Assets/Resources/Resource Items/Vastium Chunks.asset",
+    "guid": "b44e0d1f8e117ba4d8816e75c36fab21",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15336:  - {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}",
+      "Assets/Resources/Tasks/Mining/Vastium Ore.asset:40:  - resource: {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}",
+      "Assets/Resources/Gear/Cores/Vastium.asset:18:  chunkResource: {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}",
+      "Assets/Resources/Gear/Cores/Vastium.asset:58:  - resource: {fileID: 11400000, guid: b44e0d1f8e117ba4d8816e75c36fab21, type: 2}"
+    ]
+  },
+  {
+    "name": "Vastium Crystal",
+    "asset": "Assets/Resources/Resource Items/Vastium Crystal.asset",
+    "guid": "4559fb45d6ad98246b96535dd6a04349",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "enemy",
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 21,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15337:  - {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Gear/Cores/Vastium.asset:20:  crystalResource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Gear/Cores/Vastium.asset:64:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:83:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:80:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:80:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:80:  - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}"
+    ]
+  },
+  {
+    "name": "Vastium Ingot",
+    "asset": "Assets/Resources/Resource Items/Vastium Ingot.asset",
+    "guid": "18bd6c715eea1f24fabc9f075129aa65",
+    "bucket": "HAS_SYSTEM_USE",
+    "tags": [
+      "gear_system",
+      "scene"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15338:  - {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}",
+      "Assets/Scenes/Main.unity:21838:      objectReference: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}",
+      "Assets/Resources/Gear/Cores/Vastium.asset:16:  requiredIngot: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}"
+    ]
+  },
+  {
+    "name": "Bloopicus Maximus",
+    "asset": "Assets/Resources/Resource Items/Bloopicus Maximus.asset",
+    "guid": "289297afb43756445933dca5ff8d7138",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15347:  - {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}",
+      "Assets/Resources/Quests/SkillExperience/Gilliver's Travels.asset:50:    resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}",
+      "Assets/Resources/Quests/Mildred/BuffSlot5.asset:49:    resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Bloopicus Maximus.asset:33:  - resource: {fileID: 11400000, guid: 289297afb43756445933dca5ff8d7138, type: 2}"
+    ]
+  },
+  {
+    "name": "Bone",
+    "asset": "Assets/Resources/Resource Items/Bone.asset",
+    "guid": "b448067cd3b40aa478fb72e658eee42b",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 8,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15305:  - {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Prefabs/Tasks/Enemies/Slime/Slime_Yellow.prefab:70:      objectReference: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:26:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Archer.asset:32:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:26:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Mage.asset:32:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:26:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}",
+      "Assets/Resources/Enemies/Skeleton_Swordsman.asset:32:  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}"
+    ]
+  },
+  {
+    "name": "Carrot",
+    "asset": "Assets/Resources/Resource Items/Carrot.asset",
+    "guid": "9e342e09a47b4014ab320cc6d06a2a3d",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15348:  - {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}",
+      "Assets/Scenes/Main.unity:257392:  resource: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Spud.asset:50:    resource: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}",
+      "Assets/Resources/Tasks/Farming/Carrot.asset:34:  - resource: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}"
+    ]
+  },
+  {
+    "name": "Chicken",
+    "asset": "Assets/Resources/Resource Items/Chicken.asset",
+    "guid": "c01df43f8f8915e468176ef1249fa722",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15365:  - {fileID: 11400000, guid: c01df43f8f8915e468176ef1249fa722, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Chicken.asset:25:  - resource: {fileID: 11400000, guid: c01df43f8f8915e468176ef1249fa722, type: 2}"
+    ]
+  },
+  {
+    "name": "Chillie",
+    "asset": "Assets/Resources/Resource Items/Chillie.asset",
+    "guid": "52b45ffed04e559418584d82175340a6",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15349:  - {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}",
+      "Assets/Scenes/Main.unity:253973:  resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Pumpking.asset:50:    resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}",
+      "Assets/Resources/Tasks/Farming/Chillie.asset:34:  - resource: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}"
+    ]
+  },
+  {
+    "name": "Copium Core",
+    "asset": "Assets/Resources/Resource Items/Copium Core.asset",
+    "guid": "2e9fdeb6cbb36164da71dbb62fbd720a",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15331:  - {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}",
+      "Assets/Scenes/Main.unity:64509:      objectReference: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:72:  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:72:  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:72:  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}"
+    ]
+  },
+  {
+    "name": "Corn",
+    "asset": "Assets/Resources/Resource Items/Corn.asset",
+    "guid": "1fd4ff0f627126a4a8ca50ea71793823",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15350:  - {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}",
+      "Assets/Scenes/Main.unity:250620:  resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Wheat.asset:50:    resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}",
+      "Assets/Resources/Tasks/Farming/Corn.asset:34:  - resource: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}"
+    ]
+  },
+  {
+    "name": "Cucumber",
+    "asset": "Assets/Resources/Resource Items/Cucumber.asset",
+    "guid": "5eaebeeea7cd85948922c1bcab927ca6",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15351:  - {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Leek.asset:50:    resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}",
+      "Assets/Resources/Tasks/Farming/Cucumber.asset:34:  - resource: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}"
+    ]
+  },
+  {
+    "name": "Dlog Core",
+    "asset": "Assets/Resources/Resource Items/Dlog Core.asset",
+    "guid": "2d94657f9f194bd4e9d9b82d65dcaa94",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 8,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:9339:      objectReference: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Scenes/Main.unity:15319:  - {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Golden Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Crystal Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:54:  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}"
+    ]
+  },
+  {
+    "name": "Egg",
+    "asset": "Assets/Resources/Resource Items/Egg.asset",
+    "guid": "ab45f835bf64ff1418d8a391794e125a",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15366:  - {fileID: 11400000, guid: ab45f835bf64ff1418d8a391794e125a, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Chicken.asset:31:  - resource: {fileID: 11400000, guid: ab45f835bf64ff1418d8a391794e125a, type: 2}"
+    ]
+  },
+  {
+    "name": "Erif Core",
+    "asset": "Assets/Resources/Resource Items/Erif Core.asset",
+    "guid": "b6e2a77fe18c74243998ae416085dd35",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 7,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15323:  - {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Scenes/Main.unity:197529:      objectReference: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:60:  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:60:  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:60:  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Resources/Tasks/Looting/Crystal Chest.asset:60:  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:60:  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}"
+    ]
+  },
+  {
+    "name": "Eznorb Core",
+    "asset": "Assets/Resources/Resource Items/Eznorb Core.asset",
+    "guid": "c179c63de4230254383d26a0f2c0715d",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 10,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15311:  - {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Scenes/Main.unity:257961:      objectReference: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Wooden Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Golden Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Crystal Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/MetalChest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:42:  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}"
+    ]
+  },
+  {
+    "name": "Feather",
+    "asset": "Assets/Resources/Resource Items/Feather.asset",
+    "guid": "9b8342747b02439438dbacd529ed8931",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15302:  - {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Chicken.asset:37:  - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}"
+    ]
+  },
+  {
+    "name": "Flippy Floppy",
+    "asset": "Assets/Resources/Resource Items/Flippy Floppy.asset",
+    "guid": "691350e69adc08a4082225a8015d2955",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15340:  - {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}",
+      "Assets/Resources/Quests/Mildred/BuffSlot1.asset:50:    resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Flippy Floppy.asset:33:  - resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}"
+    ]
+  },
+  {
+    "name": "Flipzoid",
+    "asset": "Assets/Resources/Resource Items/Flipzoid.asset",
+    "guid": "c906b6628db99c14d94b3b43d531523f",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15345:  - {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}",
+      "Assets/Resources/Quests/Mildred/BuffSlot4.asset:49:    resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Flipzoid.asset:33:  - resource: {fileID: 11400000, guid: c906b6628db99c14d94b3b43d531523f, type: 2}"
+    ]
+  },
+  {
+    "name": "Funion",
+    "asset": "Assets/Resources/Resource Items/Funion.asset",
+    "guid": "b4981418ea008e74f8918c87bac15573",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15352:  - {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}",
+      "Assets/Scenes/Main.unity:248277:  resource: {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Turnip.asset:50:    resource: {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}",
+      "Assets/Resources/Tasks/Farming/Funion.asset:34:  - resource: {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}"
+    ]
+  },
+  {
+    "name": "Idle Core",
+    "asset": "Assets/Resources/Resource Items/Idle Core.asset",
+    "guid": "e1755a5c82b38474aa140bd97161fe63",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15335:  - {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}",
+      "Assets/Scenes/Main.unity:18701:      objectReference: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:78:  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:78:  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}"
+    ]
+  },
+  {
+    "name": "Leather",
+    "asset": "Assets/Resources/Resource Items/Leather.asset",
+    "guid": "0d0c0d6eb92c2314596c9d8b51935653",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 9,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15306:  - {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Wooden Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Golden Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Crystal Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/MetalChest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:36:  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}"
+    ]
+  },
+  {
+    "name": "Leek",
+    "asset": "Assets/Resources/Resource Items/Leek.asset",
+    "guid": "92206defd8abd854c835604fc2ebfc33",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15353:  - {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}",
+      "Assets/Scenes/Main.unity:247050:  resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Parsnip.asset:50:    resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}",
+      "Assets/Resources/Tasks/Farming/Leek.asset:34:  - resource: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}"
+    ]
+  },
+  {
+    "name": "Lettuce",
+    "asset": "Assets/Resources/Resource Items/Lettuce.asset",
+    "guid": "49595052db28a8e48a4eb1fa7d04b7f6",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15354:  - {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}",
+      "Assets/Scenes/Main.unity:250356:  resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}",
+      "Assets/Scenes/Main.unity:252832:  resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Cucumber.asset:50:    resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}",
+      "Assets/Resources/Tasks/Farming/Lettuce.asset:34:  - resource: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}"
+    ]
+  },
+  {
+    "name": "Lirium Core",
+    "asset": "Assets/Resources/Resource Items/Lirium Core.asset",
+    "guid": "1bac3dac70cad2e409b66c0225460f71",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 6,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15327:  - {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}",
+      "Assets/Scenes/Main.unity:163691:      objectReference: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:66:  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:66:  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:66:  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:66:  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}"
+    ]
+  },
+  {
+    "name": "Log",
+    "asset": "Assets/Resources/Resource Items/Log.asset",
+    "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 16,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15304:  - {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Putting up Walls.asset:49:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Into The Woods.asset:49:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Finishing Touches.asset:49:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Adding A Roof.asset:49:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 2.asset:57:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 3.asset:56:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Quests/Barkley/A Sturdier Frame.asset:49:    resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Spruce Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Oak Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Birch Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Oak Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Spruce Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Birch Tree.asset:41:  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}"
+    ]
+  },
+  {
+    "name": "Muddy Muck Muncher",
+    "asset": "Assets/Resources/Resource Items/Muddy Muck Muncher.asset",
+    "guid": "457dbb132eac48d429163353adb4b532",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15341:  - {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}",
+      "Assets/Resources/Quests/Mildred/BuffSlot2.asset:49:    resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Muddy Muck Muncher.asset:33:  - resource: {fileID: 11400000, guid: 457dbb132eac48d429163353adb4b532, type: 2}"
+    ]
+  },
+  {
+    "name": "Mutton",
+    "asset": "Assets/Resources/Resource Items/Mutton.asset",
+    "guid": "e78551f83edfa39498c144470c42b987",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15369:  - {fileID: 11400000, guid: e78551f83edfa39498c144470c42b987, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Sheep.asset:25:  - resource: {fileID: 11400000, guid: e78551f83edfa39498c144470c42b987, type: 2}"
+    ]
+  },
+  {
+    "name": "Niblet the Bold",
+    "asset": "Assets/Resources/Resource Items/Niblet the Bold.asset",
+    "guid": "25caf48dcc8c9d64d9b2927980cfa324",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15346:  - {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Niblet the Bold.asset:33:  - resource: {fileID: 11400000, guid: 25caf48dcc8c9d64d9b2927980cfa324, type: 2}"
+    ]
+  },
+  {
+    "name": "Nori Core",
+    "asset": "Assets/Resources/Resource Items/Nori Core.asset",
+    "guid": "067acda5cc1c56a4d9927390cb7529c8",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 9,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15315:  - {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Scenes/Main.unity:190547:      objectReference: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Lirium Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Copium Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Idle Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Golden Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Crystal Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/MetalChest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:48:  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}"
+    ]
+  },
+  {
+    "name": "Parsnip",
+    "asset": "Assets/Resources/Resource Items/Parsnip.asset",
+    "guid": "fb12ddb33d729bf48a519c61510dca6a",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15355:  - {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}",
+      "Assets/Scenes/Main.unity:253726:  resource: {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Pepper.asset:50:    resource: {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}",
+      "Assets/Resources/Tasks/Farming/Parsnip.asset:34:  - resource: {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}"
+    ]
+  },
+  {
+    "name": "Pepper",
+    "asset": "Assets/Resources/Resource Items/Pepper.asset",
+    "guid": "db783fe988c6728428405a8c18c3f5d8",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15356:  - {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}",
+      "Assets/Scenes/Main.unity:250318:  resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Chilli.asset:50:    resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}",
+      "Assets/Resources/Tasks/Farming/Pepper.asset:34:  - resource: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}"
+    ]
+  },
+  {
+    "name": "Pork",
+    "asset": "Assets/Resources/Resource Items/Pork.asset",
+    "guid": "2127cdd04bf07ac4b9c19b6432213a1d",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15367:  - {fileID: 11400000, guid: 2127cdd04bf07ac4b9c19b6432213a1d, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Pig.asset:25:  - resource: {fileID: 11400000, guid: 2127cdd04bf07ac4b9c19b6432213a1d, type: 2}"
+    ]
+  },
+  {
+    "name": "Pumking",
+    "asset": "Assets/Resources/Resource Items/Pumking.asset",
+    "guid": "c11abbf84f4141844b21de6f7af929ea",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15357:  - {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}",
+      "Assets/Scenes/Main.unity:252487:  resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}",
+      "Assets/Resources/Quests/Eva/Spooktacular.asset:50:    resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Strawberry.asset:50:    resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}",
+      "Assets/Resources/Tasks/Farming/Pumking.asset:34:  - resource: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}"
+    ]
+  },
+  {
+    "name": "Radish",
+    "asset": "Assets/Resources/Resource Items/Radish.asset",
+    "guid": "d0108dc3e7727584d9523efdc3d331a0",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 7,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15358:  - {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Scenes/Main.unity:202891:  debugResource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Scenes/Main.unity:250975:  resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Resources/Quests/Eva/Which witch.asset:49:    resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Corn.asset:50:    resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Resources/Quests/SkillExperience/For The Jam.asset:50:    resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}",
+      "Assets/Resources/Tasks/Farming/Radish.asset:34:  - resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}"
+    ]
+  },
+  {
+    "name": "Sir Splashford III",
+    "asset": "Assets/Resources/Resource Items/Sir Splashford III.asset",
+    "guid": "59c67a9fee0efc84997a60754c5f02ba",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15342:  - {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Sir Splashford III.asset:33:  - resource: {fileID: 11400000, guid: 59c67a9fee0efc84997a60754c5f02ba, type: 2}"
+    ]
+  },
+  {
+    "name": "Slime",
+    "asset": "Assets/Resources/Resource Items/Slime.asset",
+    "guid": "1b77cb67ea1673647af1d3a57796d18f",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "quest",
+      "scene"
+    ],
+    "refCount": 18,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15307:  - {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Scenes/Main.unity:65500:  slimeResource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 3.asset:63:    resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:29:  - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}"
+    ]
+  },
+  {
+    "name": "Snapjaw Jr.",
+    "asset": "Assets/Resources/Resource Items/Snapjaw Jr..asset",
+    "guid": "bf23b8a0a0d501543b9e7310db929300",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15344:  - {fileID: 11400000, guid: bf23b8a0a0d501543b9e7310db929300, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Snapjaw Jr..asset:33:  - resource: {fileID: 11400000, guid: bf23b8a0a0d501543b9e7310db929300, type: 2}"
+    ]
+  },
+  {
+    "name": "Spud",
+    "asset": "Assets/Resources/Resource Items/Spud.asset",
+    "guid": "fd0a53a91094b2b4da64fec1b7c7bace",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15359:  - {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}",
+      "Assets/Scenes/Main.unity:249419:  resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Tomato.asset:50:    resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}",
+      "Assets/Resources/Tasks/Farming/Spud.asset:34:  - resource: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}"
+    ]
+  },
+  {
+    "name": "Steak",
+    "asset": "Assets/Resources/Resource Items/Steak.asset",
+    "guid": "d2b03aa2dd8d2a4438598423b3dca1ec",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "scene"
+    ],
+    "refCount": 2,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15368:  - {fileID: 11400000, guid: d2b03aa2dd8d2a4438598423b3dca1ec, type: 2}",
+      "Assets/Resources/Enemies/Farmlands/Cow.asset:25:  - resource: {fileID: 11400000, guid: d2b03aa2dd8d2a4438598423b3dca1ec, type: 2}"
+    ]
+  },
+  {
+    "name": "Stick",
+    "asset": "Assets/Resources/Resource Items/Stick.asset",
+    "guid": "024c1162874b64e43be92b8892b40efb",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 12,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15303:  - {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 2.asset:50:    resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 3.asset:49:    resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Quests/Barkley/Fence 1.asset:49:    resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Spruce Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Oak Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Birch Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Medium Oak Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Spruce Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}",
+      "Assets/Resources/Tasks/Woodcutting/Large Birch Tree.asset:35:  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}"
+    ]
+  },
+  {
+    "name": "Stone",
+    "asset": "Assets/Resources/Resource Items/Stone.asset",
+    "guid": "5bbcfec123bdb15458219aa5fcddc841",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "enemy",
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 26,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15301:  - {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Scenes/Main.unity:65501:  stoneResource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Quests/Barkley/Finishing Touches.asset:56:    resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Nori Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Eznorb Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Erif Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Dlog Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Vastium Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Lirium Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Idle Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Tasks/Mining/Copium Ore.asset:34:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Yellow.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Red.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Pink.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Green.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Large/LargeSlime_Blue.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Red.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Pink.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Blue.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Green.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Medium/MediumSlime_Yellow.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Yellow.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Pink.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Blue.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Red.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}",
+      "Assets/Resources/Enemies/Slimes/Small/SmallSlime_Green.asset:35:  - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}"
+    ]
+  },
+  {
+    "name": "Strawberry",
+    "asset": "Assets/Resources/Resource Items/Strawberry.asset",
+    "guid": "dcd8ad1628b899a48847deb1cb2b3739",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15360:  - {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}",
+      "Assets/Scenes/Main.unity:251723:  resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Funion.asset:50:    resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}",
+      "Assets/Resources/Tasks/Farming/Strawberry.asset:34:  - resource: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}"
+    ]
+  },
+  {
+    "name": "Tomato",
+    "asset": "Assets/Resources/Resource Items/Tomato.asset",
+    "guid": "e8e8a19bb4573f540a00a6d78dddd0db",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 5,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15361:  - {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}",
+      "Assets/Scenes/Main.unity:251076:  resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Lettuce.asset:50:    resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Cucumber.asset:61:    resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}",
+      "Assets/Resources/Tasks/Farming/Tomato.asset:34:  - resource: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}"
+    ]
+  },
+  {
+    "name": "Turnip",
+    "asset": "Assets/Resources/Resource Items/Turnip.asset",
+    "guid": "420847cbb07e26640a57575ee30d5120",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15362:  - {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}",
+      "Assets/Scenes/Main.unity:250422:  resource: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}",
+      "Assets/Resources/Tasks/Farming/Turnip.asset:34:  - resource: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}"
+    ]
+  },
+  {
+    "name": "Vastium Core",
+    "asset": "Assets/Resources/Resource Items/Vastium Core.asset",
+    "guid": "ae618b00309e56e4a87824a497a82aaf",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15339:  - {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}",
+      "Assets/Scenes/Main.unity:21834:      objectReference: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}",
+      "Assets/Resources/Tasks/Looting/Vastium Chest.asset:84:  - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}"
+    ]
+  },
+  {
+    "name": "Watermelone",
+    "asset": "Assets/Resources/Resource Items/Watermelone.asset",
+    "guid": "ae1b523394ff9eb49866f20982e4c68d",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15363:  - {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}",
+      "Assets/Scenes/Main.unity:256638:  resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Carrot.asset:50:    resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}",
+      "Assets/Resources/Tasks/Farming/Wartermelone.asset:34:  - resource: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}"
+    ]
+  },
+  {
+    "name": "Wheat",
+    "asset": "Assets/Resources/Resource Items/Wheat.asset",
+    "guid": "9e0063ffd6091384fba5f8a233b51808",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 4,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15364:  - {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}",
+      "Assets/Scenes/Main.unity:253935:  resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}",
+      "Assets/Resources/Quests/Flora and Tillman/Unlock Watermelone.asset:50:    resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}",
+      "Assets/Resources/Tasks/Farming/Wheat.asset:34:  - resource: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}"
+    ]
+  },
+  {
+    "name": "Wigglelittle",
+    "asset": "Assets/Resources/Resource Items/Wigglelittle.asset",
+    "guid": "c6baa65f60afab548b279c321897df99",
+    "bucket": "NO_SYSTEM_SINK",
+    "tags": [
+      "quest",
+      "scene",
+      "task"
+    ],
+    "refCount": 3,
+    "refsSample": [
+      "Assets/Scenes/Main.unity:15343:  - {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}",
+      "Assets/Resources/Quests/Mildred/BuffSlot3.asset:49:    resource: {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}",
+      "Assets/Resources/Tasks/Fishing/Wigglelittle.asset:33:  - resource: {fileID: 11400000, guid: c6baa65f60afab548b279c321897df99, type: 2}"
+    ]
+  }
+]

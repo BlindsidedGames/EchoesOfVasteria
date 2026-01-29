@@ -2,18 +2,20 @@ using System.Text;
 using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Stats;
+using TimelessEchoes.UI.Core;
 using UnityEngine;
 using static TimelessEchoes.TELogger;
 
 namespace TimelessEchoes.UI
 {
-    public class GeneralStatsPanelUI : MonoBehaviour
+    /// <summary>
+    /// Event-driven general stats panel. Subscribes to GameplayStatTracker events
+    /// instead of polling via UITicker.
+    /// </summary>
+    public class GeneralStatsPanelUI : EventDrivenStatsPanelUI
     {
         [SerializeField] private GeneralStatsUIReferences references;
         private GameplayStatTracker statTracker;
-
-        [SerializeField] private float updateInterval = 0.1f;
-        private float nextUpdateTime;
 
         // StringBuilder for allocation-free text building
         private readonly StringBuilder _sb = new StringBuilder(256);
@@ -27,31 +29,60 @@ namespace TimelessEchoes.UI
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
         }
 
-        private void OnEnable()
-        {
-            UpdateTexts();
-            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-        }
-
-        private void OnDisable()
-        {
-            UITicker.Instance?.Unsubscribe(RefreshTick);
-        }
-
-        private void RefreshTick()
-        {
-            if (!IsPanelVisible()) return;
-            UpdateTexts();
-        }
-
-        private bool IsPanelVisible()
+        protected override bool IsPanelVisible()
         {
             if (references != null && references.distanceLongestTasksText != null)
                 return references.distanceLongestTasksText.gameObject.activeInHierarchy;
             return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
-        private void UpdateTexts()
+        protected override void SubscribeToEvents()
+        {
+            // Re-acquire tracker in case it wasn't ready at Awake
+            if (statTracker == null)
+                statTracker = GameplayStatTracker.Instance;
+            
+            if (statTracker != null)
+            {
+                statTracker.OnDistanceAdded += HandleDistanceAdded;
+                statTracker.OnRunEnded += HandleRunEnded;
+                statTracker.OnTaskCompletedEvent += HandleTaskCompleted;
+                statTracker.OnMaxRunDistanceChanged += HandleMaxDistanceChanged;
+            }
+            
+            // Also subscribe to kill events for kill stats
+            var killTracker = TimelessEchoes.Enemies.EnemyKillTracker.Instance;
+            if (killTracker != null)
+            {
+                killTracker.OnKillRegistered += HandleKillRegistered;
+            }
+        }
+
+        protected override void UnsubscribeFromEvents()
+        {
+            if (statTracker != null)
+            {
+                statTracker.OnDistanceAdded -= HandleDistanceAdded;
+                statTracker.OnRunEnded -= HandleRunEnded;
+                statTracker.OnTaskCompletedEvent -= HandleTaskCompleted;
+                statTracker.OnMaxRunDistanceChanged -= HandleMaxDistanceChanged;
+            }
+            
+            var killTracker = TimelessEchoes.Enemies.EnemyKillTracker.Instance;
+            if (killTracker != null)
+            {
+                killTracker.OnKillRegistered -= HandleKillRegistered;
+            }
+        }
+
+        // Event handlers - just mark dirty and refresh if visible
+        private void HandleDistanceAdded(float _) => OnDataChanged();
+        private void HandleRunEnded(bool _) => OnDataChanged();
+        private void HandleTaskCompleted() => OnDataChanged();
+        private void HandleMaxDistanceChanged(float _) => OnDataChanged();
+        private void HandleKillRegistered(TimelessEchoes.Enemies.EnemyData _) => OnDataChanged();
+
+        protected override void RefreshUI()
         {
             if (references == null || statTracker == null) return;
 
@@ -103,6 +134,8 @@ namespace TimelessEchoes.UI
                 _sb.Append(statTracker.TimesReaped);
                 references.killsDamageDeathsText.SetText(_sb);
             }
+            
+            isDirty = false;
         }
     }
 }

@@ -5,6 +5,7 @@ using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Upgrades;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.UI.Core;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static TimelessEchoes.TELogger;
@@ -12,13 +13,14 @@ using TimelessEchoes.Utilities;
 
 namespace TimelessEchoes.UI
 {
-    public class ItemStatsPanelUI : MonoBehaviour
+    /// <summary>
+    /// Event-driven item stats panel. Subscribes to ResourceManager events
+    /// instead of polling via UITicker.
+    /// </summary>
+    public class ItemStatsPanelUI : EventDrivenStatsPanelUI
     {
         [SerializeField] private StatPanelReferences references;
         private ResourceManager resourceManager;
-
-        [SerializeField] private float updateInterval = 0.1f;
-        private float nextUpdateTime;
 
         private readonly Dictionary<Resource, ItemEntryUIReferences> entries = new();
         private readonly Dictionary<Resource, (double amount, double totalReceived, double totalSpent)> lastDisplayed = new();
@@ -52,36 +54,47 @@ namespace TimelessEchoes.UI
             BuildEntries();
         }
 
-        private void OnEnable()
-        {
-            UpdateEntries();
-            SortEntries();
-            UITicker.Instance?.Subscribe(RefreshTick, updateInterval);
-        }
-
-        private void OnDisable()
-        {
-            UITicker.Instance?.Unsubscribe(RefreshTick);
-        }
-
-        private void RefreshTick()
-        {
-            if (!IsPanelVisible()) return;
-            UpdateEntries();
-            SortEntries();
-        }
-
-        private bool IsPanelVisible()
+        protected override bool IsPanelVisible()
         {
             if (references != null && references.itemEntryParent != null)
                 return references.itemEntryParent.gameObject.activeInHierarchy;
             return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
+        protected override void SubscribeToEvents()
+        {
+            // Re-acquire manager in case it wasn't ready at Awake
+            if (resourceManager == null)
+                resourceManager = ResourceManager.Instance;
+            
+            if (resourceManager != null)
+            {
+                resourceManager.OnInventoryChanged += HandleInventoryChanged;
+                resourceManager.OnResourceAdded += HandleResourceAdded;
+                resourceManager.OnResourceTierUpgraded += HandleTierUpgraded;
+            }
+        }
+
+        protected override void UnsubscribeFromEvents()
+        {
+            if (resourceManager != null)
+            {
+                resourceManager.OnInventoryChanged -= HandleInventoryChanged;
+                resourceManager.OnResourceAdded -= HandleResourceAdded;
+                resourceManager.OnResourceTierUpgraded -= HandleTierUpgraded;
+            }
+        }
+
+        // Event handlers
+        private void HandleInventoryChanged() => OnDataChanged();
+        private void HandleResourceAdded(Resource _, double __, bool ___) => OnDataChanged();
+        private void HandleTierUpgraded(Resource _, int __) => OnDataChanged();
+
         public void SetSortMode(SortMode mode)
         {
             sortMode = mode;
-            SortEntries();
+            if (IsPanelVisible())
+                RefreshUI();
         }
 
         private void BuildEntries()
@@ -106,8 +119,6 @@ namespace TimelessEchoes.UI
                 if (ui == null) continue;
                 entries[res] = ui;
             }
-
-            SortEntries();
         }
 
         private void BuildMinDistanceLookup()
@@ -148,6 +159,13 @@ namespace TimelessEchoes.UI
                         minDistanceLookup[drop.resource] = minDist;
                 }
             }
+        }
+
+        protected override void RefreshUI()
+        {
+            UpdateEntries();
+            SortEntries();
+            isDirty = false;
         }
 
         private void UpdateEntries()
