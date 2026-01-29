@@ -1192,7 +1192,7 @@ namespace TimelessEchoes.Upgrades
                 {
                     if (res == null || res.DisableAlterEcho) continue;
                     if (rm != null && rm.IsUnlocked(res))
-                        list.Add($"RES:{res.name}");
+                        list.Add(res.CardId);
                 }
             }
             if (!onlyAlterEcho)
@@ -1202,7 +1202,7 @@ namespace TimelessEchoes.Upgrades
                     if (buff == null) continue;
                     var required = buff.requiredQuest;
                     if (required == null || (qm != null && qm.IsQuestCompleted(required)))
-                        list.Add($"BUFF:{buff.name}");
+                        list.Add(buff.CardId);
                 }
             }
             return list;
@@ -1229,7 +1229,7 @@ namespace TimelessEchoes.Upgrades
                 if (res == null || res.DisableAlterEcho) continue;
                 if (rm != null && rm.IsUnlocked(res))
                 {
-                    var id = $"RES:{res.name}";
+                    var id = res.CardId;
                     // Skip maxed resources
                     if (!IsIdMaxed(id))
                     {
@@ -1245,7 +1245,7 @@ namespace TimelessEchoes.Upgrades
                 var required = buff.requiredQuest;
                 if (required == null || (qm != null && qm.IsQuestCompleted(required)))
                 {
-                    var id = $"BUFF:{buff.name}";
+                    var id = buff.CardId;
                     // Skip maxed buffs
                     if (!IsIdMaxed(id))
                     {
@@ -1285,7 +1285,7 @@ namespace TimelessEchoes.Upgrades
                 if (rm != null && !rm.IsUnlocked(res)) continue;
                 if (GetResourceGroup(res) == group)
                 {
-                    var id = $"RES:{res.name}";
+                    var id = res.CardId;
                     if (!IsIdMaxed(id))
                         list.Add(id);
                 }
