@@ -103,11 +103,20 @@ namespace TimelessEchoes.Gear.UI
         #endregion
 
         #region Cached Services & State
+        // Static slot order to avoid repeated List allocations
+        private static readonly IReadOnlyList<string> SlotOrder = new[] { "Weapon", "Helmet", "Chest", "Boots" };
+
         private CraftingService crafting;
         private EquipmentController equipment;
         private ResourceManager rm;
+
+        // Cached component references to avoid FindFirstObjectByType calls
+        private ForgeStatsUIController _cachedStatsUI;
+        private TaskbarFlasher _cachedTaskbarFlasher;
         private float nextOddsRefreshTime;
         private ResourceManager RM => rm ?? (rm = ResourceManager.Instance);
+        private ForgeStatsUIController StatsUI => _cachedStatsUI != null ? _cachedStatsUI : (_cachedStatsUI = FindFirstObjectByType<ForgeStatsUIController>());
+        private TaskbarFlasher Flasher => _cachedTaskbarFlasher != null ? _cachedTaskbarFlasher : (_cachedTaskbarFlasher = FindFirstObjectByType<TaskbarFlasher>());
 
         private List<CoreSO> cores = new();
         private CoreSO selectedCore;
@@ -135,6 +144,7 @@ namespace TimelessEchoes.Gear.UI
         // Dirty flags for deferred UI updates (Phase 1.5 optimization)
         private bool _gearSlotsNeedRefresh;
         private bool _statsNeedRefresh;
+        private bool _resourcesNeedRefresh;
         #endregion
 
         #region Unity Lifecycle
@@ -246,7 +256,7 @@ namespace TimelessEchoes.Gear.UI
             gearSlotNameByRef.Clear();
             var slotNames = equipment != null
                 ? equipment.Slots
-                : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+                : SlotOrder;
             for (var i = 0; i < gearSlots.Count; i++)
             {
                 var slotRef = gearSlots[i];
@@ -360,6 +370,11 @@ namespace TimelessEchoes.Gear.UI
                 UpdateSelectedSlotStats();
                 UpdateAggregateStatsText();
                 _statsNeedRefresh = false;
+            }
+            if (_resourcesNeedRefresh)
+            {
+                ProcessResourcesRefresh();
+                _resourcesNeedRefresh = false;
             }
         }
 
@@ -732,8 +747,7 @@ namespace TimelessEchoes.Gear.UI
             // Fallback to unknown sprite per slot order if needed
             if (sprite == null)
             {
-                var order = new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-                var idx = order.IndexOf(item.slot);
+                var idx = SlotOrder.IndexOf(item.slot);
                 if (idx >= 0 && idx < unknownGearSprites.Count)
                     sprite = unknownGearSprites[idx];
                 if (sprite != null)
@@ -787,8 +801,7 @@ namespace TimelessEchoes.Gear.UI
 
             if (idx < 0)
             {
-                var order = new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-                idx = order.IndexOf(slot);
+                idx = SlotOrder.IndexOf(slot);
             }
 
             if (idx >= 0 && idx < unknownGearSprites.Count)
@@ -854,8 +867,7 @@ namespace TimelessEchoes.Gear.UI
         private void OnPipelineConversionCompleted(ConversionType type, ref double craftAmount, double persistedAmount)
         {
             // Refresh stats UI
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
+            StatsUI?.MarkDirty();
 
             // Clamp and persist the amount
             craftAmount = ClampCraftAmount(craftAmount);
@@ -950,8 +962,7 @@ namespace TimelessEchoes.Gear.UI
 
             // Refresh UI
             OnResourcesChanged();
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
+            StatsUI?.MarkDirty();
 
             // Save to disk
             try { EventHandler.SaveData(); }
@@ -975,8 +986,7 @@ namespace TimelessEchoes.Gear.UI
 
             // Refresh UI
             OnResourcesChanged();
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
+            StatsUI?.MarkDirty();
 
             // Save to disk
             try { EventHandler.SaveData(); }
@@ -1000,8 +1010,7 @@ namespace TimelessEchoes.Gear.UI
 
             // Refresh UI
             OnResourcesChanged();
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
+            StatsUI?.MarkDirty();
 
             // Save to disk
             try { EventHandler.SaveData(); }
@@ -1025,8 +1034,7 @@ namespace TimelessEchoes.Gear.UI
 
             // Refresh UI
             OnResourcesChanged();
-            var statsUi = FindFirstObjectByType<ForgeStatsUIController>();
-            if (statsUi != null) statsUi.MarkDirty();
+            StatsUI?.MarkDirty();
 
             // Save to disk
             try { EventHandler.SaveData(); }
@@ -1111,7 +1119,7 @@ namespace TimelessEchoes.Gear.UI
             }
 
             // Notify: forge autocrafting stopped
-            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            Flasher?.FlashNow();
 
             RefreshActionButtons();
         }
@@ -1395,7 +1403,7 @@ namespace TimelessEchoes.Gear.UI
             RefreshActionButtons();
 
             // Notify: forge autocrafting stopped (due to upgrade/out-of-resources/vastium)
-            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            Flasher?.FlashNow();
             // If the forge window is not open, enable the attention indicator(s)
             if (!TimelessEchoes.UI.TownWindowManager.IsForgeOpen)
             {
@@ -1702,7 +1710,7 @@ namespace TimelessEchoes.Gear.UI
         {
             var slotNames = equipment != null
                 ? equipment.Slots
-                : new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
+                : SlotOrder;
             for (var i = 0; i < gearSlots.Count; i++)
             {
                 var slotRef = gearSlots[i];
@@ -1745,8 +1753,7 @@ namespace TimelessEchoes.Gear.UI
                 else
                 {
                     // If unknown state, show the unknown sprite for this slot and set native size
-                    var order = new List<string> { "Weapon", "Helmet", "Chest", "Boots" };
-                    var idx = order.IndexOf(name);
+                    var idx = SlotOrder.IndexOf(name);
                     if (idx >= 0 && idx < unknownGearSprites.Count && slotRef.GearImage != null)
                     {
                         slotRef.GearImage.sprite = unknownGearSprites[idx];
@@ -1924,6 +1931,11 @@ namespace TimelessEchoes.Gear.UI
         private void OnResourcesChanged()
         {
             if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
+            _resourcesNeedRefresh = true;
+        }
+
+        private void ProcessResourcesRefresh()
+        {
             var previewSlot = GetSlotForCore(selectedCore);
             UpdateSelectedCorePreview(previewSlot);
             UpdateIngotPreview(selectedCore);

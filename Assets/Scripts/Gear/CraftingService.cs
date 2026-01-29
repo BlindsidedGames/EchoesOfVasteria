@@ -242,7 +242,7 @@ namespace TimelessEchoes.Gear
                 total += t.w;
 
             if (total <= 0f)
-                return rarities.OrderBy(r => r.tierIndex).FirstOrDefault();
+                return rarities.FirstOrDefault();
 
             var roll = UnityEngine.Random.value * total;
             foreach (var (rarity, w) in _scratchWeights)
@@ -258,7 +258,7 @@ namespace TimelessEchoes.Gear
                 if (_scratchWeights[i].w > 0f)
                     return _scratchWeights[i].rarity;
             }
-            return rarities.OrderBy(r => r.tierIndex).FirstOrDefault();
+            return rarities.FirstOrDefault();
         }
 
 		private int GetIvanLevel()
