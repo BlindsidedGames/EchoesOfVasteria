@@ -400,10 +400,12 @@ namespace TimelessEchoes.MapGeneration
                 if (RandomRangeFloat(0f, 1f) > density)
                     continue;
 
-                // Two-pass, non-alloc weighted pick over allowed entries
-                // Pass 1: compute total weight for allowed entries at this cell
-                var total = 0f;
-                if (settings.decor != null && settings.decor.decor != null)
+                // Single-pass weighted reservoir sampling (non-alloc)
+                // Each entry accepted with probability w/totalSoFar, giving uniform weighted distribution
+                DecorEntry picked = null;
+                var totalWeight = 0f;
+
+                if (settings.decor.decor != null)
                 {
                     foreach (var d in settings.decor.decor)
                     {
@@ -411,42 +413,19 @@ namespace TimelessEchoes.MapGeneration
                         if (d.GetWeight(worldPos) <= 0f) continue;
 
                         var cfg = d.config;
+                        if (cfg == null) continue;
+
                         var allowed = !cfg.borderOnly
                             ? !IsBufferedEdge(cell, baseTile, cfg.topBuffer, cfg.bottomBuffer, cfg.sideBuffer)
                             : IsBorderCell(cell, baseTile, cfg);
-
                         if (!allowed) continue;
 
-                        var w = d.config != null ? d.config.weight : 0f;
-                        if (w > 0f) total += w;
-                    }
-                }
+                        var w = cfg.weight;
+                        if (w <= 0f) continue;
 
-                if (total <= 0f)
-                    continue;
-
-                // Pass 2: roll and select
-                var r = RandomRangeFloat(0f, total);
-                DecorEntry picked = null;
-                foreach (var d in settings.decor.decor)
-                {
-                    if (d == null) continue;
-                    if (d.GetWeight(worldPos) <= 0f) continue;
-
-                    var cfg = d.config;
-                    var allowed = !cfg.borderOnly
-                        ? !IsBufferedEdge(cell, baseTile, cfg.topBuffer, cfg.bottomBuffer, cfg.sideBuffer)
-                        : IsBorderCell(cell, baseTile, cfg);
-                    if (!allowed) continue;
-
-                    var w = d.config != null ? d.config.weight : 0f;
-                    if (w <= 0f) continue;
-
-                    r -= w;
-                    if (r <= 0f)
-                    {
-                        picked = d;
-                        break;
+                        totalWeight += w;
+                        if (RandomRangeFloat(0f, totalWeight) < w)
+                            picked = d;
                     }
                 }
 
