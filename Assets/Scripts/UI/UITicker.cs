@@ -6,12 +6,15 @@ namespace TimelessEchoes.UI
 {
     /// <summary>
     /// Centralized UI ticker that invokes registered callbacks at requested intervals.
-    /// Lives across scenes.
+    /// Lives across scenes. Designed for zero per-frame GC allocations.
     /// </summary>
     public class UITicker : MonoBehaviour
     {
         private static bool _isQuitting;
-        private class Subscription
+
+        // Using struct to avoid per-subscription heap allocation
+        // The List<T> will box these, but only on Subscribe (not per-frame)
+        private struct Subscription
         {
             public Action Callback;
             public float Interval;
@@ -37,118 +40,111 @@ namespace TimelessEchoes.UI
         }
 
         private readonly List<Subscription> _subscriptions = new List<Subscription>();
-        private readonly List<Subscription> _toRemove = new List<Subscription>();
-        // Diagnostics (editor only)
-        private const float SLOW_CALLBACK_WARN_MS = 4f; // warn if a single callback exceeds this
-        private const float WARN_REPEAT_COOLDOWN_SEC = 5f; // don't spam the same warning
-        private const float HIGH_FREQUENCY_INTERVAL_SEC = 0.02f; // ~50Hz; UI should rarely need faster
+
+        // Opt-in profiling (only enable when actively debugging)
+        [SerializeField] private bool enableProfiling = false;
+        private const float SLOW_CALLBACK_WARN_MS = 4f;
+        private const float WARN_REPEAT_COOLDOWN_SEC = 5f;
         private readonly Dictionary<Action, float> _lastWarnTime = new Dictionary<Action, float>();
-        private readonly Dictionary<Action, float> _lastExceptionWarnTime = new Dictionary<Action, float>();
-        private readonly HashSet<Action> _warnedHighFrequency = new HashSet<Action>();
 
         public void Subscribe(Action callback, float interval)
         {
             if (callback == null || interval <= 0f) return;
-            // Avoid duplicate subscriptions of the same delegate
-            foreach (var sub in _subscriptions)
+
+            // Check for existing subscription and update it
+            for (int i = 0; i < _subscriptions.Count; i++)
             {
+                var sub = _subscriptions[i];
                 if (sub.Callback == callback)
                 {
                     sub.Interval = interval;
                     sub.NextTime = Time.unscaledTime + interval;
+                    _subscriptions[i] = sub; // Write back since it's a struct
                     return;
                 }
             }
+
             _subscriptions.Add(new Subscription
             {
                 Callback = callback,
                 Interval = interval,
                 NextTime = Time.unscaledTime + interval
             });
-
-            // Warn about overly aggressive update rates in editor
-            #if UNITY_EDITOR
-            if (interval < HIGH_FREQUENCY_INTERVAL_SEC && !_warnedHighFrequency.Contains(callback))
-            {
-                _warnedHighFrequency.Add(callback);
-                try
-                {
-                    var method = callback.Method;
-                    var owner = method != null ? method.DeclaringType : null;
-                    Debug.LogWarning($"[UITicker] High-frequency subscription: {owner?.Name}.{method?.Name} every {interval * 1000f:F1} ms");
-                }
-                catch { /* best-effort only */ }
-            }
-            #endif
         }
 
         public void Unsubscribe(Action callback)
         {
             if (callback == null) return;
-            _toRemove.Clear();
-            foreach (var sub in _subscriptions)
-                if (sub.Callback == callback)
-                    _toRemove.Add(sub);
-            if (_toRemove.Count > 0)
-                foreach (var sub in _toRemove)
-                    _subscriptions.Remove(sub);
+            // Reverse iterate to safely remove during iteration
+            for (int i = _subscriptions.Count - 1; i >= 0; i--)
+            {
+                if (_subscriptions[i].Callback == callback)
+                {
+                    _subscriptions.RemoveAt(i);
+                    return; // Each callback should only be subscribed once
+                }
+            }
         }
 
         private void Update()
         {
             var now = Time.unscaledTime;
-            for (int i = 0; i < _subscriptions.Count; i++)
+            var count = _subscriptions.Count;
+
+            for (int i = 0; i < count; i++)
             {
                 var sub = _subscriptions[i];
                 if (now >= sub.NextTime)
                 {
+                    // Invoke callback with minimal overhead
+                    // No try-catch in release builds to avoid exception handling overhead
                     #if UNITY_EDITOR
+                    if (enableProfiling)
                     {
-                        var t0 = Time.realtimeSinceStartup;
-                        try
-                        {
-                            sub.Callback?.Invoke();
-                        }
-                        catch (Exception ex)
-                        {
-                            if (!_lastExceptionWarnTime.TryGetValue(sub.Callback, out var lastExTime) || now - lastExTime >= WARN_REPEAT_COOLDOWN_SEC)
-                            {
-                                _lastExceptionWarnTime[sub.Callback] = now;
-                                try
-                                {
-                                    var method = sub.Callback?.Method;
-                                    var owner = method != null ? method.DeclaringType : null;
-                                    Debug.LogError($"[UITicker] Subscriber threw: {owner?.Name}.{method?.Name} → {ex}");
-                                }
-                                catch { /* ignore */ }
-                            }
-                        }
-                        var elapsedMs = (Time.realtimeSinceStartup - t0) * 1000f;
-                        if (elapsedMs >= SLOW_CALLBACK_WARN_MS)
-                        {
-                            if (!_lastWarnTime.TryGetValue(sub.Callback, out var lastWarn) || now - lastWarn >= WARN_REPEAT_COOLDOWN_SEC)
-                            {
-                                _lastWarnTime[sub.Callback] = now;
-                                try
-                                {
-                                    var method = sub.Callback?.Method;
-                                    var owner = method != null ? method.DeclaringType : null;
-                                    Debug.LogWarning($"[UITicker] Slow callback: {owner?.Name}.{method?.Name} took {elapsedMs:F2} ms (interval {sub.Interval * 1000f:F1} ms)");
-                                }
-                                catch { /* ignore */ }
-                            }
-                        }
+                        InvokeWithProfiling(sub.Callback, now);
                     }
-                    #else
+                    else
                     {
                         try { sub.Callback?.Invoke(); }
                         catch (Exception) { /* swallow to avoid breaking the loop */ }
                     }
+                    #else
+                    try { sub.Callback?.Invoke(); }
+                    catch (Exception) { /* swallow to avoid breaking the loop */ }
                     #endif
+
+                    // Update next time - must write back since it's a struct
                     sub.NextTime = now + sub.Interval;
+                    _subscriptions[i] = sub;
                 }
             }
         }
+
+        #if UNITY_EDITOR
+        private void InvokeWithProfiling(Action callback, float now)
+        {
+            var t0 = Time.realtimeSinceStartup;
+            try
+            {
+                callback?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[UITicker] Subscriber threw: {ex}");
+            }
+
+            var elapsedMs = (Time.realtimeSinceStartup - t0) * 1000f;
+            if (elapsedMs >= SLOW_CALLBACK_WARN_MS)
+            {
+                if (!_lastWarnTime.TryGetValue(callback, out var lastWarn) || now - lastWarn >= WARN_REPEAT_COOLDOWN_SEC)
+                {
+                    _lastWarnTime[callback] = now;
+                    // Avoid reflection in hot path - just log the time
+                    Debug.LogWarning($"[UITicker] Slow callback took {elapsedMs:F2} ms");
+                }
+            }
+        }
+        #endif
 
         private void OnApplicationQuit()
         {

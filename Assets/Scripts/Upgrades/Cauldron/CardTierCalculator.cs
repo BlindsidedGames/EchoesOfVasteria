@@ -119,19 +119,34 @@ namespace TimelessEchoes.Upgrades.Cauldron
 
         /// <summary>
         /// Checks if a card has reached the maximum tier.
+        /// Optimized to avoid Substring allocations by checking prefix char and using full cardId.
         /// </summary>
         public bool IsMaxed(string cardId)
         {
             if (string.IsNullOrEmpty(cardId) || _config == null)
                 return false;
 
-            if (cardId.StartsWith(ResourcePrefix))
-                return IsResourceMaxed(cardId.Substring(ResourcePrefix.Length));
-            if (cardId.StartsWith(BuffPrefix))
-                return IsBuffMaxed(cardId.Substring(BuffPrefix.Length));
+            // Check first char to determine type without allocating via StartsWith
+            var firstChar = cardId[0];
+            if (firstChar == 'R') // RES:
+                return IsMaxedByFullId(cardId, _config.resourceTierThresholds);
+            if (firstChar == 'B') // BUFF:
+                return IsMaxedByFullId(cardId, _config.buffTierThresholds);
 
             // INF: cards have no max
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a card is maxed using its full ID directly (avoids Substring allocation).
+        /// </summary>
+        private bool IsMaxedByFullId(string fullCardId, int[] thresholds)
+        {
+            if (thresholds == null || thresholds.Length == 0)
+                return false;
+            var count = GetCount(fullCardId);
+            var tier = GetTierFromThresholds(count, thresholds);
+            return tier >= thresholds.Length;
         }
 
         /// <summary>

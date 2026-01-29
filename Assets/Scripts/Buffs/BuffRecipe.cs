@@ -45,6 +45,22 @@ namespace TimelessEchoes.Buffs
         [TitleGroup("General")]
         public QuestData requiredQuest;
 
+        // Cached card ID to avoid string allocations in hot paths
+        [System.NonSerialized] private string _cachedCardId;
+        /// <summary>
+        /// Returns the Cauldron card ID for this buff (e.g., "BUFF:Haste").
+        /// Cached after first access to avoid allocations.
+        /// </summary>
+        public string CardId
+        {
+            get
+            {
+                if (_cachedCardId == null)
+                    _cachedCardId = "BUFF:" + name;
+                return _cachedCardId;
+            }
+        }
+
         [TitleGroup("Effects")]
         public List<BuffEffect> baseEffects = new();
 

@@ -80,7 +80,10 @@ namespace TimelessEchoes.Upgrades
 
         // Config hot-reload sync (once per second)
         private float _nextConfigSyncTime;
-        private float _currentTickInterval;
+
+        // Fixed tick interval for UITicker (decoupled from rollsPerSecond for UI responsiveness)
+        // The time-accumulation in TasteTick handles any rollsPerSecond value automatically
+        private const float UI_TICK_INTERVAL = 0.1f; // 10 Hz
 
         // Multi-roll per frame support
         private float _lastTasteTime;
@@ -407,11 +410,9 @@ namespace TimelessEchoes.Upgrades
 
         private void OnEnable()
         {
-            if (UITicker.Instance != null)
-            {
-                _currentTickInterval = 1f / Mathf.Max(1f, config != null ? config.rollsPerSecond : 10f);
-                UITicker.Instance.Subscribe(TasteTick, _currentTickInterval);
-            }
+            // Subscribe at fixed 10 Hz for UI responsiveness; TasteTick's time-accumulation
+            // handles any rollsPerSecond value automatically
+            UITicker.Instance?.Subscribe(TasteTick, UI_TICK_INTERVAL);
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
             EventHandler.OnLoadData += HandleSaveDataLoaded;
@@ -579,14 +580,8 @@ namespace TimelessEchoes.Upgrades
             // Update stew change throttle interval from config
             _stewChangeThrottle?.SetInterval(config.stewChangeThrottleInterval);
 
-            // Update rolls per second if changed
-            var desiredInterval = 1f / Mathf.Max(1f, config.rollsPerSecond);
-            if (Mathf.Abs(desiredInterval - _currentTickInterval) > 0.0001f && UITicker.Instance != null)
-            {
-                UITicker.Instance.Unsubscribe(TasteTick);
-                _currentTickInterval = desiredInterval;
-                UITicker.Instance.Subscribe(TasteTick, _currentTickInterval);
-            }
+            // Note: rollsPerSecond changes are handled automatically by TasteTick's time-accumulation.
+            // The UITicker subscription stays at fixed 10 Hz for consistent UI responsiveness.
         }
 
         // -------- Tasting --------
@@ -1197,7 +1192,7 @@ namespace TimelessEchoes.Upgrades
                 {
                     if (res == null || res.DisableAlterEcho) continue;
                     if (rm != null && rm.IsUnlocked(res))
-                        list.Add($"RES:{res.name}");
+                        list.Add(res.CardId);
                 }
             }
             if (!onlyAlterEcho)
@@ -1207,7 +1202,7 @@ namespace TimelessEchoes.Upgrades
                     if (buff == null) continue;
                     var required = buff.requiredQuest;
                     if (required == null || (qm != null && qm.IsQuestCompleted(required)))
-                        list.Add($"BUFF:{buff.name}");
+                        list.Add(buff.CardId);
                 }
             }
             return list;
@@ -1234,7 +1229,7 @@ namespace TimelessEchoes.Upgrades
                 if (res == null || res.DisableAlterEcho) continue;
                 if (rm != null && rm.IsUnlocked(res))
                 {
-                    var id = $"RES:{res.name}";
+                    var id = res.CardId;
                     // Skip maxed resources
                     if (!IsIdMaxed(id))
                     {
@@ -1250,7 +1245,7 @@ namespace TimelessEchoes.Upgrades
                 var required = buff.requiredQuest;
                 if (required == null || (qm != null && qm.IsQuestCompleted(required)))
                 {
-                    var id = $"BUFF:{buff.name}";
+                    var id = buff.CardId;
                     // Skip maxed buffs
                     if (!IsIdMaxed(id))
                     {
@@ -1290,7 +1285,7 @@ namespace TimelessEchoes.Upgrades
                 if (rm != null && !rm.IsUnlocked(res)) continue;
                 if (GetResourceGroup(res) == group)
                 {
-                    var id = $"RES:{res.name}";
+                    var id = res.CardId;
                     if (!IsIdMaxed(id))
                         list.Add(id);
                 }
