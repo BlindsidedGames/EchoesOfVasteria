@@ -70,6 +70,9 @@ namespace TimelessEchoes.MapGeneration
         private TileBase[] columnBuffer;
         // Dedicated null buffer used only for clears to avoid residual data
         private TileBase[] clearColumnBuffer;
+        // Reusable buffers for per-column depth values
+        private int[] sandDepthBuffer;
+        private int[] grassDepthBuffer;
         // Per-segment lookup for decor prefabs by cell for O(1) clears
         private readonly Dictionary<Vector3Int, Transform> decorLookup = new();
 
@@ -125,8 +128,10 @@ namespace TimelessEchoes.MapGeneration
             currentDecorParent = decorParent;
             decorLookup.Clear();
 
-            var sandDepths = new int[segmentSize.x];
-            var grassDepths = new int[segmentSize.x];
+            if (sandDepthBuffer == null || sandDepthBuffer.Length != segmentSize.x)
+                sandDepthBuffer = new int[segmentSize.x];
+            if (grassDepthBuffer == null || grassDepthBuffer.Length != segmentSize.x)
+                grassDepthBuffer = new int[segmentSize.x];
 
             var currentSandDepth = prevSandDepth >= 0 ? prevSandDepth : RandomRange(sandDepthRange.x, sandDepthRange.y + 1);
             var currentGrassDepth = prevGrassDepth >= 0 ? prevGrassDepth : RandomRange(grassDepthRange.x, grassDepthRange.y + 1);
@@ -135,8 +140,8 @@ namespace TimelessEchoes.MapGeneration
             {
                 for (var segX = 0; segX < minAreaWidth && x < segmentSize.x; segX++, x++)
                 {
-                    sandDepths[x] = currentSandDepth;
-                    grassDepths[x] = currentGrassDepth;
+                    sandDepthBuffer[x] = currentSandDepth;
+                    grassDepthBuffer[x] = currentGrassDepth;
                 }
 
                 var sandDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
@@ -155,8 +160,8 @@ namespace TimelessEchoes.MapGeneration
             var processed = 0;
             for (var x = 0; x < segmentSize.x; x++)
             {
-                var sandDepth = sandDepths[x];
-                var grassDepth = grassDepths[x];
+                var sandDepth = sandDepthBuffer[x];
+                var grassDepth = grassDepthBuffer[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
                 for (var y = 0; y < segmentSize.y; y++)
@@ -180,8 +185,8 @@ namespace TimelessEchoes.MapGeneration
             processed = 0;
             for (var x = 0; x < segmentSize.x; x++)
             {
-                var sandDepth = sandDepths[x];
-                var grassDepth = grassDepths[x];
+                var sandDepth = sandDepthBuffer[x];
+                var grassDepth = grassDepthBuffer[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
                 PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth, decorParent);
                 processed++;
@@ -192,8 +197,8 @@ namespace TimelessEchoes.MapGeneration
             if (segmentSize.x > 0)
             {
                 var lastIndex = segmentSize.x - 1;
-                prevSandDepth = sandDepths[lastIndex];
-                prevGrassDepth = grassDepths[lastIndex];
+                prevSandDepth = sandDepthBuffer[lastIndex];
+                prevGrassDepth = grassDepthBuffer[lastIndex];
             }
         }
 
@@ -225,8 +230,10 @@ namespace TimelessEchoes.MapGeneration
 
         private void GenerateInternal(Vector2Int offset, Vector2Int segmentSize, Transform decorParent)
         {
-            var sandDepths = new int[segmentSize.x];
-            var grassDepths = new int[segmentSize.x];
+            if (sandDepthBuffer == null || sandDepthBuffer.Length != segmentSize.x)
+                sandDepthBuffer = new int[segmentSize.x];
+            if (grassDepthBuffer == null || grassDepthBuffer.Length != segmentSize.x)
+                grassDepthBuffer = new int[segmentSize.x];
 
             var currentSandDepth = prevSandDepth >= 0
                 ? prevSandDepth
@@ -239,12 +246,8 @@ namespace TimelessEchoes.MapGeneration
             {
                 for (var segX = 0; segX < minAreaWidth && x < segmentSize.x; segX++, x++)
                 {
-                    var sandDepth = currentSandDepth;
-                    var grassDepth = currentGrassDepth;
-
-
-                    sandDepths[x] = sandDepth;
-                    grassDepths[x] = grassDepth;
+                    sandDepthBuffer[x] = currentSandDepth;
+                    grassDepthBuffer[x] = currentGrassDepth;
                 }
 
                 var sandDelta = RandomRange(-edgeWaviness, edgeWaviness + 1);
@@ -264,8 +267,8 @@ namespace TimelessEchoes.MapGeneration
 
             for (var x = 0; x < segmentSize.x; x++)
             {
-                var sandDepth = sandDepths[x];
-                var grassDepth = grassDepths[x];
+                var sandDepth = sandDepthBuffer[x];
+                var grassDepth = grassDepthBuffer[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
 
                 // Fill column buffer once per column
@@ -284,10 +287,10 @@ namespace TimelessEchoes.MapGeneration
                 for (var y = 0; y < waterDepth; y++)
                 {
                     var leftWaterBottom = x > 0
-                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]
+                        ? segmentSize.y - sandDepthBuffer[x - 1] - grassDepthBuffer[x - 1]
                         : waterDepth;
                     var rightWaterBottom = x < segmentSize.x - 1
-                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]
+                        ? segmentSize.y - sandDepthBuffer[x + 1] - grassDepthBuffer[x + 1]
                         : waterDepth;
 
                     var isCurrentTileSideEdge = y < leftWaterBottom || y < rightWaterBottom;
@@ -301,17 +304,17 @@ namespace TimelessEchoes.MapGeneration
                 for (var y = waterDepth; y < waterDepth + sandDepth; y++)
                 {
                     var leftWaterBottom = x > 0
-                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1]
+                        ? segmentSize.y - sandDepthBuffer[x - 1] - grassDepthBuffer[x - 1]
                         : waterDepth;
                     var rightWaterBottom = x < segmentSize.x - 1
-                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1]
+                        ? segmentSize.y - sandDepthBuffer[x + 1] - grassDepthBuffer[x + 1]
                         : waterDepth;
 
                     var leftGrassBottom = x > 0
-                        ? segmentSize.y - grassDepths[x - 1]
+                        ? segmentSize.y - grassDepthBuffer[x - 1]
                         : waterDepth + sandDepth;
                     var rightGrassBottom = x < segmentSize.x - 1
-                        ? segmentSize.y - grassDepths[x + 1]
+                        ? segmentSize.y - grassDepthBuffer[x + 1]
                         : waterDepth + sandDepth;
 
                     var isCurrentTileWaterEdge = y < leftWaterBottom || y < rightWaterBottom;
@@ -331,10 +334,10 @@ namespace TimelessEchoes.MapGeneration
                 for (var y = waterDepth + sandDepth; y < waterDepth + sandDepth + grassDepth; y++)
                 {
                     var leftGrassBottom = x > 0
-                        ? segmentSize.y - sandDepths[x - 1] - grassDepths[x - 1] + sandDepths[x - 1]
+                        ? segmentSize.y - sandDepthBuffer[x - 1] - grassDepthBuffer[x - 1] + sandDepthBuffer[x - 1]
                         : waterDepth + sandDepth;
                     var rightGrassBottom = x < segmentSize.x - 1
-                        ? segmentSize.y - sandDepths[x + 1] - grassDepths[x + 1] + sandDepths[x + 1]
+                        ? segmentSize.y - sandDepthBuffer[x + 1] - grassDepthBuffer[x + 1] + sandDepthBuffer[x + 1]
                         : waterDepth + sandDepth;
 
                     var isCurrentTileSideEdge = y < leftGrassBottom || y < rightGrassBottom;
@@ -348,8 +351,8 @@ namespace TimelessEchoes.MapGeneration
 
             for (var x = 0; x < segmentSize.x; x++)
             {
-                var sandDepth = sandDepths[x];
-                var grassDepth = grassDepths[x];
+                var sandDepth = sandDepthBuffer[x];
+                var grassDepth = grassDepthBuffer[x];
                 var waterDepth = Mathf.Max(0, segmentSize.y - sandDepth - grassDepth);
                 PlaceDecorForColumn(offset.x + x, offset.y, waterDepth, sandDepth, grassDepth, decorParent);
             }
@@ -357,8 +360,8 @@ namespace TimelessEchoes.MapGeneration
             if (segmentSize.x > 0)
             {
                 var lastIndex = segmentSize.x - 1;
-                prevSandDepth = sandDepths[lastIndex];
-                prevGrassDepth = grassDepths[lastIndex];
+                prevSandDepth = sandDepthBuffer[lastIndex];
+                prevGrassDepth = grassDepthBuffer[lastIndex];
             }
         }
 
