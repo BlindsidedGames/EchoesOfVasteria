@@ -15,6 +15,11 @@ namespace TimelessEchoes.Upgrades.Cauldron
     {
         private readonly Dictionary<Resource, CauldronManager.AEResourceGroup> _cache = new();
 
+        // Static cache for TaskData→AEResourceGroup mappings. These are based on static
+        // ScriptableObject data and never change at runtime, so we cache them permanently
+        // to avoid repeated string allocations from skill.name access.
+        private static readonly Dictionary<TaskData, CauldronManager.AEResourceGroup?> _taskGroupCache = new();
+
         /// <summary>
         /// Classifies a resource into an AE subcategory.
         /// Results are cached for performance.
@@ -113,12 +118,26 @@ namespace TimelessEchoes.Upgrades.Cauldron
 
         /// <summary>
         /// Infers the AE resource group from a task based on its associated skill or prefab type.
+        /// Results are cached in a static dictionary to avoid repeated string allocations.
         /// </summary>
         /// <param name="t">The task data to analyze.</param>
         /// <returns>The inferred group, or null if no clear classification.</returns>
         private CauldronManager.AEResourceGroup? InferGroupFromTask(TaskData t)
         {
-            var skill = t != null ? t.associatedSkill : null;
+            if (t == null) return null;
+
+            // Check static cache first to avoid string allocations from skill.name
+            if (_taskGroupCache.TryGetValue(t, out var cached))
+                return cached;
+
+            var result = InferGroupFromTaskInternal(t);
+            _taskGroupCache[t] = result;
+            return result;
+        }
+
+        private static CauldronManager.AEResourceGroup? InferGroupFromTaskInternal(TaskData t)
+        {
+            var skill = t.associatedSkill;
             var name = skill != null ? skill.name : null;
             if (!string.IsNullOrEmpty(name))
             {
@@ -137,7 +156,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
             }
 
             // Fallback: try prefab type name
-            var prefab = t != null ? t.taskPrefab : null;
+            var prefab = t.taskPrefab;
             if (prefab != null)
             {
                 var typeName = prefab.GetType().Name;

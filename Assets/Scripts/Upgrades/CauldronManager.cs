@@ -1511,7 +1511,9 @@ namespace TimelessEchoes.Upgrades
             cachedGroupPools.Clear();
             cardPoolsDirty = true;
             _poolManager?.MarkDirty();
-            _groupClassifier?.ClearCache();
+            // NOTE: Do NOT clear _groupClassifier cache here - resource group classifications
+            // are based on static TaskData/EnemyData drop tables, not inventory state.
+            // Clearing it causes O(resources × tasks) recomputation with heavy string allocations.
             DebouncedWeightsChanged();
         }
 
