@@ -29,6 +29,21 @@ namespace TimelessEchoes.UI
         private readonly System.Text.StringBuilder _sb = new System.Text.StringBuilder(128);
         private List<EnemyData> defaultOrder = new();
 
+        // Scratch lists for allocation-free sorting (following ItemStatsPanelUI pattern)
+        private readonly List<EnemyData> _scratchKnown = new();
+        private readonly List<EnemyData> _scratchUnknown = new();
+        private readonly List<EnemyData> _scratchFinal = new();
+        private bool _sortDirty = true;
+        private SortMode _lastAppliedSortMode;
+
+        // Static comparison delegates to avoid closure allocations
+        private static readonly System.Comparison<EnemyData> CompareByDisplayOrderThenName =
+            (a, b) =>
+            {
+                int cmp = a.displayOrder.CompareTo(b.displayOrder);
+                return cmp != 0 ? cmp : string.Compare(a.enemyName, b.enemyName, System.StringComparison.Ordinal);
+            };
+
         public enum SortMode
         {
             Default,
@@ -148,7 +163,9 @@ namespace TimelessEchoes.UI
 
         public void SetSortMode(SortMode mode)
         {
+            if (sortMode == mode) return;
             sortMode = mode;
+            _sortDirty = true;
             SortEntries();
         }
 
@@ -166,6 +183,7 @@ namespace TimelessEchoes.UI
                 .ToList();
             defaultOrder = sorted;
             entries.Clear();
+            _sortDirty = true; // Ensure initial sort happens
 
             foreach (var stats in sorted)
             {
@@ -197,10 +215,16 @@ namespace TimelessEchoes.UI
             bool withinMax = float.IsInfinity(stats.maxX) || previewDist <= stats.maxX;
             bool spawnable = previewDist >= stats.minX && withinMax;
 
-            if (lastDisplayed.TryGetValue(stats, out var last)
-                && last.kills == kills && last.reveal == reveal && Mathf.Approximately(last.bonus, bonus)
-                && last.level == level && last.spawnable == spawnable)
-                return;
+            if (lastDisplayed.TryGetValue(stats, out var last))
+            {
+                // Detect transition from unknown to known - requires re-sort
+                if (last.kills == 0 && kills > 0)
+                    _sortDirty = true;
+
+                if (last.kills == kills && last.reveal == reveal && Mathf.Approximately(last.bonus, bonus)
+                    && last.level == level && last.spawnable == spawnable)
+                    return;
+            }
             lastDisplayed[stats] = (kills, reveal, bonus, level, spawnable);
 
             if (ui.enemyIconImage != null)
@@ -305,68 +329,98 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0 || defaultOrder.Count == 0)
                 return;
 
+            // Early exit if no re-sort needed
+            if (!_sortDirty && sortMode == _lastAppliedSortMode)
+                return;
+
+            _sortDirty = false;
+            _lastAppliedSortMode = sortMode;
+
+            // Clear scratch lists for reuse
+            _scratchKnown.Clear();
+            _scratchUnknown.Clear();
+            _scratchFinal.Clear();
+
             if (sortMode == SortMode.Default)
             {
-                IEnumerable<EnemyData> known = defaultOrder;
-                IEnumerable<EnemyData> unknown = Enumerable.Empty<EnemyData>();
-                if (killTracker != null)
+                // Partition into known/unknown
+                for (int i = 0; i < defaultOrder.Count; i++)
                 {
-                    known = defaultOrder.Where(s => killTracker.GetKills(s) > 0);
-                    unknown = defaultOrder.Where(s => killTracker.GetKills(s) <= 0);
+                    var enemy = defaultOrder[i];
+                    if (killTracker != null && killTracker.GetKills(enemy) > 0)
+                        _scratchKnown.Add(enemy);
+                    else
+                        _scratchUnknown.Add(enemy);
                 }
 
-                var sortedKnown = known
-                    .OrderBy(s => s.displayOrder)
-                    .ThenBy(s => s.enemyName)
-                    .ToList();
-                var sortedUnknown = unknown
-                    .OrderBy(s => s.displayOrder)
-                    .ThenBy(s => s.enemyName)
-                    .ToList();
+                // Sort each partition
+                _scratchKnown.Sort(CompareByDisplayOrderThenName);
+                _scratchUnknown.Sort(CompareByDisplayOrderThenName);
 
-                var finalDefault = sortedKnown.Concat(sortedUnknown).ToList();
-                ApplyOrder(finalDefault);
+                // Combine: known first, then unknown
+                _scratchFinal.AddRange(_scratchKnown);
+                _scratchFinal.AddRange(_scratchUnknown);
+                ApplyOrderScratch();
                 return;
             }
 
+            // Stat-based sorting modes
             int threshold = sortMode switch
             {
                 SortMode.Damage => 1,
                 SortMode.Health => 2,
                 SortMode.Defense => 3,
-                // Movement reveal now at threshold 5
                 SortMode.MoveSpeed => 5,
                 SortMode.AttackRate => 4,
                 SortMode.Vision => 6,
                 _ => 0
             };
 
-            float GetValue(EnemyData s) => sortMode switch
+            // Partition into revealed/unrevealed based on threshold
+            for (int i = 0; i < defaultOrder.Count; i++)
             {
-                SortMode.Damage => s.damage,
-                SortMode.Health => s.maxHealth,
-                SortMode.Defense => s.defense,
-                SortMode.MoveSpeed => s.moveSpeed,
-                SortMode.AttackRate => s.attackSpeed,
-                SortMode.Vision => s.visionRange,
-                _ => 0
-            };
-
-            IEnumerable<EnemyData> revealed = defaultOrder;
-            IEnumerable<EnemyData> unrevealed = Enumerable.Empty<EnemyData>();
-            if (killTracker != null)
-            {
-                revealed = defaultOrder.Where(s => killTracker.GetRevealLevel(s) >= threshold);
-                unrevealed = defaultOrder.Where(s => killTracker.GetRevealLevel(s) < threshold);
+                var enemy = defaultOrder[i];
+                if (killTracker != null && killTracker.GetRevealLevel(enemy) >= threshold)
+                    _scratchKnown.Add(enemy);
+                else
+                    _scratchUnknown.Add(enemy);
             }
 
-            var sortedRevealed = revealed
-                .OrderByDescending(GetValue)
-                .ThenBy(s => s.displayOrder)
-                .ToList();
+            // Sort revealed by stat value (descending), then by display order
+            // We need to capture sortMode locally for the comparison
+            var currentMode = sortMode;
+            _scratchKnown.Sort((a, b) =>
+            {
+                float valA = GetStatValue(a, currentMode);
+                float valB = GetStatValue(b, currentMode);
+                int cmp = valB.CompareTo(valA); // Descending
+                return cmp != 0 ? cmp : a.displayOrder.CompareTo(b.displayOrder);
+            });
 
-            var finalOrder = sortedRevealed.Concat(unrevealed).ToList();
-            ApplyOrder(finalOrder);
+            // Combine: revealed first, then unrevealed (unrevealed keeps default order)
+            _scratchFinal.AddRange(_scratchKnown);
+            _scratchFinal.AddRange(_scratchUnknown);
+            ApplyOrderScratch();
+        }
+
+        private static float GetStatValue(EnemyData s, SortMode mode) => mode switch
+        {
+            SortMode.Damage => s.damage,
+            SortMode.Health => s.maxHealth,
+            SortMode.Defense => s.defense,
+            SortMode.MoveSpeed => s.moveSpeed,
+            SortMode.AttackRate => s.attackSpeed,
+            SortMode.Vision => s.visionRange,
+            _ => 0
+        };
+
+        private void ApplyOrderScratch()
+        {
+            for (int i = 0; i < _scratchFinal.Count; i++)
+            {
+                if (entries.TryGetValue(_scratchFinal[i], out var ui))
+                    ui.transform.SetSiblingIndex(i);
+            }
         }
 
         private void ApplyOrder(IList<EnemyData> order)

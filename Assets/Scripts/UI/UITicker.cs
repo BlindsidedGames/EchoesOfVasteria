@@ -37,7 +37,6 @@ namespace TimelessEchoes.UI
         }
 
         private readonly List<Subscription> _subscriptions = new List<Subscription>();
-        private readonly List<Subscription> _toRemove = new List<Subscription>();
         // Diagnostics (editor only)
         private const float SLOW_CALLBACK_WARN_MS = 4f; // warn if a single callback exceeds this
         private const float WARN_REPEAT_COOLDOWN_SEC = 5f; // don't spam the same warning
@@ -50,8 +49,9 @@ namespace TimelessEchoes.UI
         {
             if (callback == null || interval <= 0f) return;
             // Avoid duplicate subscriptions of the same delegate
-            foreach (var sub in _subscriptions)
+            for (int i = 0; i < _subscriptions.Count; i++)
             {
+                var sub = _subscriptions[i];
                 if (sub.Callback == callback)
                 {
                     sub.Interval = interval;
@@ -85,13 +85,16 @@ namespace TimelessEchoes.UI
         public void Unsubscribe(Action callback)
         {
             if (callback == null) return;
-            _toRemove.Clear();
-            foreach (var sub in _subscriptions)
-                if (sub.Callback == callback)
-                    _toRemove.Add(sub);
-            if (_toRemove.Count > 0)
-                foreach (var sub in _toRemove)
-                    _subscriptions.Remove(sub);
+            // Reverse iterate to safely remove during iteration
+            for (int i = _subscriptions.Count - 1; i >= 0; i--)
+            {
+                if (_subscriptions[i].Callback == callback)
+                {
+                    _subscriptions.RemoveAt(i);
+                    // Each callback should only be subscribed once, so we can return early
+                    return;
+                }
+            }
         }
 
         private void Update()
