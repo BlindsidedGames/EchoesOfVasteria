@@ -104,7 +104,7 @@ namespace TimelessEchoes.Gear.UI
 
         #region Cached Services & State
         // Static slot order to avoid repeated List allocations
-        private static readonly IReadOnlyList<string> SlotOrder = new[] { "Weapon", "Helmet", "Chest", "Boots" };
+        private static readonly string[] SlotOrder = { "Weapon", "Helmet", "Chest", "Boots" };
 
         private CraftingService crafting;
         private EquipmentController equipment;
@@ -254,7 +254,7 @@ namespace TimelessEchoes.Gear.UI
 
             // Wire gear slot buttons with fallback to EquipmentController order
             gearSlotNameByRef.Clear();
-            var slotNames = equipment != null
+            IReadOnlyList<string> slotNames = equipment != null
                 ? equipment.Slots
                 : SlotOrder;
             for (var i = 0; i < gearSlots.Count; i++)
@@ -747,7 +747,7 @@ namespace TimelessEchoes.Gear.UI
             // Fallback to unknown sprite per slot order if needed
             if (sprite == null)
             {
-                var idx = SlotOrder.IndexOf(item.slot);
+                var idx = Array.IndexOf(SlotOrder,item.slot);
                 if (idx >= 0 && idx < unknownGearSprites.Count)
                     sprite = unknownGearSprites[idx];
                 if (sprite != null)
@@ -801,7 +801,7 @@ namespace TimelessEchoes.Gear.UI
 
             if (idx < 0)
             {
-                idx = SlotOrder.IndexOf(slot);
+                idx = Array.IndexOf(SlotOrder,slot);
             }
 
             if (idx >= 0 && idx < unknownGearSprites.Count)
@@ -1708,7 +1708,7 @@ namespace TimelessEchoes.Gear.UI
 
         private void UpdateAllGearSlots()
         {
-            var slotNames = equipment != null
+            IReadOnlyList<string> slotNames = equipment != null
                 ? equipment.Slots
                 : SlotOrder;
             for (var i = 0; i < gearSlots.Count; i++)
@@ -1753,7 +1753,7 @@ namespace TimelessEchoes.Gear.UI
                 else
                 {
                     // If unknown state, show the unknown sprite for this slot and set native size
-                    var idx = SlotOrder.IndexOf(name);
+                    var idx = Array.IndexOf(SlotOrder,name);
                     if (idx >= 0 && idx < unknownGearSprites.Count && slotRef.GearImage != null)
                     {
                         slotRef.GearImage.sprite = unknownGearSprites[idx];
