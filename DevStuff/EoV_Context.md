@@ -262,17 +262,51 @@ public class QuestData : ScriptableObject
 
 ## Forge System
 
-### Crafting (`Assets/Scripts/Gear/CraftingService.cs`)
+### Architecture
+
+The forge system uses a service-oriented architecture with extracted components for performance and maintainability:
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| CraftingService | `Gear/CraftingService.cs` | Core crafting logic, rarity/slot/affix rolling |
+| SalvageService | `Gear/SalvageService.cs` | Item salvaging with resource recovery |
+| ForgeAnalyticsService | `Gear/ForgeAnalyticsService.cs` | Centralized telemetry recording |
+| BackgroundTelemetryProcessor | `Gear/BackgroundTelemetryProcessor.cs` | Off-thread analytics processing |
+| GearObjectPool | `Gear/GearObjectPool.cs` | Object pooling for GearItem/GearAffix |
+| ScoreEvaluationService | `Gear/UI/ScoreEvaluationService.cs` | Frame-based caching for upgrade evaluation |
+| UpgradeEvaluator | `Gear/UI/UpgradeEvaluator.cs` | Score calculation, quality evaluation |
+| ConversionPipeline | `Gear/UI/ConversionPipeline.cs` | Abstraction for forge conversions |
+
+**UI Components (extracted from ForgeWindowUI):**
+| Component | File | Purpose |
+|-----------|------|---------|
+| ForgeSlotManager | `Gear/UI/ForgeWindowUI/ForgeSlotManager.cs` | Slot selection state management |
+| ForgeResultPreview | `Gear/UI/ForgeWindowUI/ForgeResultPreview.cs` | Result display UI |
+| ForgeIvanXpDisplay | `Gear/UI/ForgeWindowUI/ForgeIvanXpDisplay.cs` | Ivan XP bar/level UI |
+| UIThrottler | `Gear/UI/ForgeWindowUI/UIThrottler.cs` | Multi-frequency UI update throttling |
+
+### Crafting Flow (`Assets/Scripts/Gear/CraftingService.cs`)
 
 1. Consume ingots + core resources
 2. Roll rarity (weighted, level-scaled)
 3. Roll slot with smart protection (recent slots penalized 25%)
-4. Generate affixes by rarity
+4. Generate affixes by rarity (pooled GearAffix objects)
 5. Award Ivan XP
+6. Record telemetry via ForgeAnalyticsService (batched during autocrafting)
+
+### Autocrafting Performance
+
+High-speed autocrafting (configurable via `CraftingConfigSO`) uses:
+- **Multi-frequency UI throttling:** Visual preview at 10 Hz, stats rebuild at 1 Hz, resource display at 1 Hz (staggered)
+- **Resource batching:** `ResourceManager.BeginBatch()/EndBatch()` defers events until batch ends
+- **Object pooling:** GearItem/GearAffix reused via GearObjectPool
+- **Background telemetry:** Analytics processed off main thread via BackgroundTelemetryProcessor
+- **Turbo mode:** Skips individual salvage processing, uses expected value calculation for batch salvage
 
 ### Ingot Conversion
 
 `CoreSO` defines `requiredIngot`, `chunkCostPerIngot`, `crystalCostPerIngot`. Chunks + Crystals → Ingots.
+Conversion pipelines abstracted via `ConversionPipeline` class for DRY code.
 
 ### Stat Quality as Percentiles
 
@@ -304,6 +338,28 @@ Items store stat quality as **normalized [0,1] percentile**, not absolute values
 
 **Unlock:** Quest "Unlock Cauldron" (ResourcesGathered 50,000)
 
+### Architecture
+
+The cauldron system uses extracted service classes for maintainability and performance:
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| CauldronManager | `Upgrades/CauldronManager.cs` | Main coordinator, events, save integration |
+| CardIdentifierFactory | `Upgrades/Cauldron/CardIdentifierFactory.cs` | Card ID construction/parsing (`RES:`, `BUFF:`, `INF:`) |
+| CardTierCalculator | `Upgrades/Cauldron/CardTierCalculator.cs` | Tier calculation from thresholds |
+| CardPoolManager | `Upgrades/Cauldron/CardPoolManager.cs` | Card pool caching with throttled rebuilds |
+| TasteRollResolver | `Upgrades/Cauldron/TasteRollResolver.cs` | Roll outcome resolution with weighted selection |
+| EvaProgressionService | `Upgrades/Cauldron/EvaProgressionService.cs` | Eva leveling and XP management |
+| AEResourceGroupClassifier | `Upgrades/Cauldron/AEResourceGroupClassifier.cs` | Resource→group classification with caching |
+| TastingStatsFormatter | `Upgrades/Cauldron/TastingStatsFormatter.cs` | Stats StringBuilder formatting |
+
+**UI Presenters (extracted from CauldronWindowUI):**
+| Component | File | Purpose |
+|-----------|------|---------|
+| CauldronPieChartPresenter | `UI/Cauldron/CauldronPieChartPresenter.cs` | Pie chart rendering |
+| CauldronWeightsPresenter | `UI/Cauldron/CauldronWeightsPresenter.cs` | Weights preview/tooltip |
+| CauldronMixPresenter | `UI/Cauldron/CauldronMixPresenter.cs` | Mixing slot selection |
+
 ### Mixing (Resources → Stew)
 
 ```csharp
@@ -313,7 +369,12 @@ stewGained = points / 100.0
 
 ### Tasting (Stew → Cards)
 
-Auto-rolls at configurable rate from `CauldronConfig.asset`.
+Auto-rolls at configurable rate from `CauldronConfig.asset`. High-frequency tasting (3000+ rolls/sec) supported via:
+- **Multi-roll per frame:** Calculates rolls based on elapsed time, capped at 500 rolls/frame
+- **Batched card additions:** `BeginCardBatch()/EndCardBatch()` reduces cascade updates from N to 1
+- **Cached asset lists:** Asset lookups cached at startup in CardPoolManager
+- **Pre-computed classifications:** Resource groups classified at startup
+- **Stew event throttling:** `OnStewChanged` throttled to ~10 Hz
 
 **Card Types:**
 | Type | Prefix | Effect |
@@ -337,6 +398,7 @@ Auto-rolls at configurable rate from `CauldronConfig.asset`.
 ### Eva Leveling
 
 XP = stew spent. Next level = `50 + 10*(level-1)`. Level affects tasting weights.
+Managed by `EvaProgressionService` with `OnLevelUp` event.
 
 ### Infinity (Eternal)
 
@@ -489,27 +551,48 @@ Fraud detection routes suspicious times to cheater board. Includes version metad
 3. Static classes — for stateless utilities (HeroStatSystem, Combat, TaskWeightService)
 
 **Service Pattern:**
-Stateless services: `CraftingService`, `SalvageService`, `TaskWeightService`, `BaseStatService`
+Stateless/extracted services: `CraftingService`, `SalvageService`, `TaskWeightService`, `BaseStatService`, `ForgeAnalyticsService`, `ScoreEvaluationService`, `CardPoolManager`, `TasteRollResolver`, `EvaProgressionService`, `AEResourceGroupClassifier`
+
+**Utility Classes:**
+- `ThrottledAction` — Reusable execution throttling (Utilities/)
+- `DictionaryExtensions` — Dictionary helper methods for telemetry (Blindsided/Utilities/)
+- `CardIdentifierFactory` — Card ID construction/parsing (static)
+- `TastingStatsFormatter` — Stats StringBuilder formatting (static)
+- `UnityObjectExtensions` — Safe Transform access (Utilities/)
+- `AnimatorMovementHelper` — Cached animator parameter hashes (Utilities/)
 
 **References Pattern (UI):**
 MonoBehaviour classes in `References/` hold SerializeField UI references, decoupling logic from scene structure. 24 reference classes total.
 
+**Presenter Pattern (UI):**
+UI presenters extracted from monolithic UI classes for separation of concerns:
+- `CauldronPieChartPresenter`, `CauldronWeightsPresenter`, `CauldronMixPresenter`
+- `ForgeSlotManager`, `ForgeResultPreview`, `ForgeIvanXpDisplay`
+
 **ScriptableObject Configuration:**
-27 SO classes drive gameplay configuration. Key types:
+27+ SO classes drive gameplay configuration. Key types:
 - `Skill` — XP curve, milestones, resource unlocks
 - `QuestData` — Requirements, rewards, chains
 - `TaskData` — Drops, skill mapping, weights
 - `EnemyData` — Stats, drops, scaling
 - `MapGenerationConfig` — Terrain, tasks, enemies per map
+- `CraftingConfigSO` — Autocrafting speed, batch settings
+- `CauldronConfig` — Tasting rate, throttle intervals
 
-### Object Pooling (`Assets/Scripts/Blindsided/Utilities/Pooling/PoolManager.cs`)
+### Object Pooling
 
+**PoolManager (`Assets/Scripts/Blindsided/Utilities/Pooling/PoolManager.cs`):**
 - Prefab-based pools (by instance ID)
 - Named pools (procedural GameObjects)
 - Playable Graph cleanup
 - Warning at >100 inactive
 
-**Pooled:** Echoes, Enemies, Projectiles, Floating Text, UI
+**GearObjectPool (`Assets/Scripts/Gear/GearObjectPool.cs`):**
+- Lightweight pooling for `GearItem` and `GearAffix` objects
+- Pre-warmed at startup for autocrafting performance
+- Items returned on salvage for reuse
+
+**Pooled:** Echoes, Enemies, Projectiles, Floating Text, UI, GearItems, GearAffixes
 
 ### Save Data (`Assets/Scripts/Blindsided/SaveData/GameData.cs`)
 
@@ -555,17 +638,21 @@ MonoBehaviour classes in `References/` hold SerializeField UI references, decoup
 | Skills | `Assets/Scripts/Skills/Skill.cs`, `MilestoneDefinition.cs` |
 | Tasks | `Assets/Scripts/Tasks/[Skill]Task.cs` |
 | Combat | `Assets/Scripts/Combat/Combat.cs` |
-| Enemies | `Assets/Scripts/Enemies/EnemyData.cs`, `Enemy.cs` |
+| Enemies | `Assets/Scripts/Enemies/EnemyData.cs`, `Enemy.cs`, `EnemyHealth.cs` |
 | Quests | `Assets/Scripts/Quests/QuestData.cs`, `QuestManager.cs` |
-| Forge | `Assets/Scripts/Gear/CraftingService.cs`, `GearItem.cs`, `StatRollMath.cs` |
+| Forge | `Assets/Scripts/Gear/CraftingService.cs`, `ForgeAnalyticsService.cs`, `GearObjectPool.cs`, `BackgroundTelemetryProcessor.cs` |
+| Forge UI | `Assets/Scripts/Gear/UI/ForgeWindowUI/ForgeWindowUI.cs`, `ScoreEvaluationService.cs`, `UpgradeEvaluator.cs` |
 | Cauldron | `Assets/Scripts/Upgrades/CauldronManager.cs`, `CauldronConfig.cs` |
+| Cauldron Services | `Assets/Scripts/Upgrades/Cauldron/CardPoolManager.cs`, `TasteRollResolver.cs`, `EvaProgressionService.cs` |
 | Buffs | `Assets/Scripts/Buffs/BuffManager.cs`, `BuffRecipe.cs` |
 | Echoes | `Assets/Scripts/Hero/EchoController.cs`, `EchoManager.cs` |
 | Hero | `Assets/Scripts/Hero/HeroController.cs`, `HeroBase.cs`, `HeroStatSystem.cs` |
-| Pooling | `Assets/Scripts/Blindsided/Utilities/Pooling/PoolManager.cs` |
+| Hero Controllers | `Assets/Scripts/Hero/HeroCombatController.cs`, `HeroMovementController.cs`, `EnemyEngagementTracker.cs` |
+| Pooling | `Assets/Scripts/Blindsided/Utilities/Pooling/PoolManager.cs`, `Assets/Scripts/Gear/GearObjectPool.cs` |
 | Save | `Assets/Scripts/Blindsided/SaveData/GameData.cs` |
 | Leaderboards | `Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs` |
 | Map Gen | `Assets/Scripts/MapGeneration/SegmentedMapGenerator.cs` |
+| Utilities | `Assets/Scripts/Utilities/ThrottledAction.cs`, `AnimatorMovementHelper.cs`, `UnityObjectExtensions.cs` |
 
 ---
 
@@ -609,23 +696,30 @@ MonoBehaviour classes in `References/` hold SerializeField UI references, decoup
 ### Major (Large Classes)
 | File | Lines | Issue |
 |------|-------|-------|
-| HeroBase.cs | 1545 | Mixes movement, combat, tasks, stats, UI |
-| CauldronManager.cs | 1297 | Handles mixing, tasting, cards, Eva, infinity |
 | ProceduralTaskGenerator.cs | 983 | Tasks, enemies, NPCs, terrain validation |
 | SettingsPanelUI.cs | 1130 | Too many UI responsibilities |
 
+**Resolved:**
+- ~~HeroBase.cs~~ — Refactored: extracted HeroCombatController, HeroMovementController, EnemyEngagementTracker
+- ~~CauldronManager.cs~~ — Refactored: extracted CardPoolManager, TasteRollResolver, EvaProgressionService, AEResourceGroupClassifier
+- ~~ForgeWindowUI.cs~~ — Refactored: extracted ForgeSlotManager, ForgeResultPreview, ForgeIvanXpDisplay, UIThrottler
+
 ### Medium
-- 14 bare `catch {}` blocks in HeroBase.cs silently swallow exceptions
 - Progress calculation duplicated across 4 quest files
 - Inconsistent singleton patterns (3 approaches)
 - Some References classes contain logic (should be data-only)
-- No max collection sizes in ForgeStats (potential memory bloat)
 - Pooling has no max size limit
+
+**Resolved:**
+- ~~14 bare `catch {}` blocks in HeroBase.cs~~ — Replaced with safe extension methods (UnityObjectExtensions)
+- ~~No max collection sizes in ForgeStats~~ — Background telemetry processor manages telemetry off-thread
 
 ### Minor
 - 15 files cluttering Scripts/ root directory
 - Empty Migration/ directory exists
 - "Haloween" spelling (should be "Halloween")
-- Health.cs should be renamed EnemyHealth.cs
 - DistanceRun quest requirement type exists but unused
 - Namespace inconsistency in References/ classes
+
+**Resolved:**
+- ~~Health.cs should be renamed EnemyHealth.cs~~ — Renamed to EnemyHealth.cs

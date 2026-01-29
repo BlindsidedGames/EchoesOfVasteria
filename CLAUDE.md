@@ -43,7 +43,10 @@ Used across: Mining Chunks, Looting Cores, Enemy Crystals, Crafted Ingots, Gear 
 3. **Static classes** - For stateless utilities (HeroStatSystem, Combat, TaskWeightService)
 
 ### Service Pattern
-Stateless service classes: `CraftingService`, `SalvageService`, `TaskWeightService`, `BaseStatService`
+Stateless/extracted service classes:
+- **Forge:** `CraftingService`, `SalvageService`, `ForgeAnalyticsService`, `ScoreEvaluationService`, `GearObjectPool`, `BackgroundTelemetryProcessor`
+- **Cauldron:** `CardPoolManager`, `TasteRollResolver`, `EvaProgressionService`, `AEResourceGroupClassifier`, `CardTierCalculator`
+- **General:** `TaskWeightService`, `BaseStatService`
 
 ### References Pattern (UI Architecture)
 MonoBehaviour classes in `References/` hold SerializeField UI references, decoupling logic from scene structure:
@@ -60,13 +63,14 @@ Assets/
 ├── Scripts/
 │   ├── (Root - 15 files)     # GameManager, TargetRegistry, HealthBase, Projectile
 │   ├── Audio/          (3)   # AudioManager, SfxPlayer
-│   ├── Blindsided/    (60)   # Framework: SaveData/, UGS/, Utilities/
+│   ├── Blindsided/    (61)   # Framework: SaveData/, UGS/, Utilities/, DictionaryExtensions
 │   ├── Buffs/          (4)   # BuffManager, BuffRecipe, BuffTypes
 │   ├── Combat/         (1)   # Combat.cs (damage formula)
 │   ├── Editor/         (4)   # Editor windows and tools
-│   ├── Enemies/        (7)   # EnemyData, Enemy, Health
-│   ├── Gear/          (20)   # CraftingService, GearItem, StatRollMath, SO/, UI/
-│   ├── Hero/          (15)   # HeroController, HeroBase, EchoManager, Stats/
+│   ├── Enemies/        (7)   # EnemyData, Enemy, EnemyHealth
+│   ├── Gear/          (30)   # CraftingService, ForgeAnalyticsService, GearObjectPool, BackgroundTelemetryProcessor, SO/, UI/
+│   │   └── UI/ForgeWindowUI/  # ForgeSlotManager, ForgeResultPreview, ForgeIvanXpDisplay, UIThrottler
+│   ├── Hero/          (18)   # HeroController, HeroBase, HeroCombatController, HeroMovementController, EnemyEngagementTracker
 │   ├── Localization/   (1)   # LocalizationManager
 │   ├── MapGeneration/  (9)   # SegmentedMapGenerator, TilemapChunkGenerator
 │   ├── NPC/            (4)   # NpcObjectStateController, decorations
@@ -79,9 +83,11 @@ Assets/
 │   ├── Steamworks.NET/ (7)   # Steam achievements, leaderboards
 │   ├── Tasks/         (16)   # ITask hierarchy, TaskController
 │   ├── Tools/          (4)   # Console commands, debug
-│   ├── UI/            (31)   # Window managers, panels
-│   ├── Upgrades/      (16)   # Resource, ResourceManager, CauldronManager
-│   └── Utilities/     (11)   # Singleton base, helpers
+│   ├── UI/            (34)   # Window managers, panels
+│   │   └── Cauldron/        # CauldronPieChartPresenter, CauldronWeightsPresenter, CauldronMixPresenter
+│   ├── Upgrades/      (23)   # Resource, ResourceManager, CauldronManager
+│   │   └── Cauldron/        # CardPoolManager, TasteRollResolver, EvaProgressionService, CardIdentifierFactory, etc.
+│   └── Utilities/     (14)   # Singleton base, ThrottledAction, AnimatorMovementHelper, UnityObjectExtensions
 ├── Resources/
 │   ├── Buffs/         (10)   # Buff recipe assets
 │   ├── Cauldron/       (1)   # CauldronConfig.asset
@@ -169,18 +175,18 @@ Assets/
 
 | System | Primary Files |
 |--------|---------------|
-| Hero | `Hero/HeroController.cs`, `Hero/HeroBase.cs` (1545 lines) |
+| Hero | `Hero/HeroController.cs`, `Hero/HeroBase.cs`, `Hero/HeroCombatController.cs`, `Hero/HeroMovementController.cs` |
 | Stats | `Hero/Stats/HeroStatSystem.cs` (static cache) |
 | Combat | `Combat/Combat.cs` (damage formula) |
 | Tasks | `Tasks/TaskController.cs`, `Tasks/BaseTask.cs` |
-| Enemies | `Enemies/Enemy.cs`, `Enemies/EnemyData.cs` |
+| Enemies | `Enemies/Enemy.cs`, `Enemies/EnemyData.cs`, `Enemies/EnemyHealth.cs` |
 | Quests | `Quests/QuestData.cs`, `Quests/QuestManager.cs` |
 | Resources | `Upgrades/Resource.cs`, `Upgrades/ResourceManager.cs` |
 | Skills | `Skills/Skill.cs`, `Skills/MilestoneDefinition.cs` |
-| Cauldron | `Upgrades/CauldronManager.cs` (1297 lines) |
-| Forge | `Gear/CraftingService.cs`, `Gear/StatRollMath.cs` |
+| Cauldron | `Upgrades/CauldronManager.cs`, `Upgrades/Cauldron/CardPoolManager.cs`, `Upgrades/Cauldron/TasteRollResolver.cs` |
+| Forge | `Gear/CraftingService.cs`, `Gear/ForgeAnalyticsService.cs`, `Gear/GearObjectPool.cs`, `Gear/BackgroundTelemetryProcessor.cs` |
 | Save | `Blindsided/SaveData/GameData.cs`, `SaveManager.cs` |
-| Pooling | `Blindsided/Utilities/Pooling/PoolManager.cs` |
+| Pooling | `Blindsided/Utilities/Pooling/PoolManager.cs`, `Gear/GearObjectPool.cs` |
 | Map Gen | `MapGeneration/SegmentedMapGenerator.cs` |
 
 ## Build & Test
@@ -197,5 +203,5 @@ After making changes to the codebase, append a summary to `DevStuff/Changes.md`.
 ## See Also
 
 - [DevStuff/EoV_Context.md](DevStuff/EoV_Context.md) - Full systems documentation
-- [DevStuff/CodeReviewTodo.md](DevStuff/CodeReviewTodo.md) - Code review findings
 - [DevStuff/Todo.md](DevStuff/Todo.md) - Current development tasks
+- [DevStuff/Archive/](DevStuff/Archive/) - Historical plans and analysis documents
