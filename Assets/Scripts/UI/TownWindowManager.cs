@@ -8,10 +8,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
 using TimelessEchoes.Upgrades;
-
-// UITicker usage here is intentional - polling right-click for window close is a lightweight check
-// that doesn't benefit from event-driven architecture. Suppress the deprecation warning.
-#pragma warning disable CS0618
+using System.Collections;
 
 namespace TimelessEchoes.UI
 {
@@ -66,6 +63,7 @@ namespace TimelessEchoes.UI
 
         private bool _cauldronStopHooked;
         private bool _cauldronTastingStartedThisSession;
+        private Coroutine _pollCloseWindowsCoroutine;
         private void HookCauldronStop()
         {
             if (_cauldronStopHooked) return;
@@ -200,14 +198,18 @@ namespace TimelessEchoes.UI
         {
             _cauldronTastingStartedThisSession = false;
             EventHandler.OnLoadData += HandleLoadData;
-            UITicker.Instance?.Subscribe(PollCloseAllWindows, 0.05f);
+            _pollCloseWindowsCoroutine = StartCoroutine(PollCloseAllWindowsCoroutine());
             HookCauldronStop();
         }
 
         private void OnDisable()
         {
             EventHandler.OnLoadData -= HandleLoadData;
-            UITicker.Instance?.Unsubscribe(PollCloseAllWindows);
+            if (_pollCloseWindowsCoroutine != null)
+            {
+                StopCoroutine(_pollCloseWindowsCoroutine);
+                _pollCloseWindowsCoroutine = null;
+            }
             UnhookCauldronStop();
             _cauldronTastingStartedThisSession = false;
         }
@@ -266,6 +268,16 @@ namespace TimelessEchoes.UI
             var isDown = mouse.rightButton.isPressed;
             if (isDown && !_rightMouseWasDown) CloseAllWindows();
             _rightMouseWasDown = isDown;
+        }
+
+        private IEnumerator PollCloseAllWindowsCoroutine()
+        {
+            var wait = new WaitForSecondsRealtime(0.05f);
+            while (true)
+            {
+                PollCloseAllWindows();
+                yield return wait;
+            }
         }
 
         private void HandleLoadData()

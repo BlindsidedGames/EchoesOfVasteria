@@ -2,10 +2,6 @@
 #define DISABLESTEAMWORKS
 #endif
 
-// UITicker usage here is intentional - run button UI refreshes at a fixed rate for responsiveness.
-// This is a lightweight check that benefits from throttled polling. Suppress the deprecation warning.
-#pragma warning disable CS0618
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -292,6 +288,7 @@ namespace TimelessEchoes
         private float stallDistanceEpsilon = 0.01f;
 
         private Coroutine stallMonitorCoroutine;
+        private Coroutine runButtonsUICoroutine;
         private float lastObservedRunDistance;
         private float lastRunDistanceChangeTime;
 
@@ -429,13 +426,26 @@ namespace TimelessEchoes
 
         private void OnEnable()
         {
-            // Drive run-related UI via UITicker to avoid per-frame churn
-            TimelessEchoes.UI.UITicker.Instance?.Subscribe(RefreshRunButtonsUI, 0.1f);
+            runButtonsUICoroutine = StartCoroutine(RunButtonsUICoroutine());
         }
 
         private void OnDisable()
         {
-            TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(RefreshRunButtonsUI);
+            if (runButtonsUICoroutine != null)
+            {
+                StopCoroutine(runButtonsUICoroutine);
+                runButtonsUICoroutine = null;
+            }
+        }
+
+        private IEnumerator RunButtonsUICoroutine()
+        {
+            var wait = new WaitForSecondsRealtime(0.1f);
+            while (true)
+            {
+                RefreshRunButtonsUI();
+                yield return wait;
+            }
         }
 
         private void Update()
@@ -446,7 +456,7 @@ namespace TimelessEchoes
                 nextStatsUpdateTime = Time.time + statsUpdateInterval;
             }
 
-            // UI refresh moved to RefreshRunButtonsUI via UITicker
+            // UI refresh handled by RunButtonsUICoroutine
 
             if (retreatQueued && hero != null && !hero.InCombat)
             {

@@ -51,7 +51,7 @@ namespace TimelessEchoes.UI
             }
             
             // Also subscribe to kill events for kill stats
-            var killTracker = TimelessEchoes.Enemies.EnemyKillTracker.Instance;
+            var killTracker = EnemyKillTracker.Instance;
             if (killTracker != null)
             {
                 killTracker.OnKillRegistered += HandleKillRegistered;
@@ -68,7 +68,7 @@ namespace TimelessEchoes.UI
                 statTracker.OnMaxRunDistanceChanged -= HandleMaxDistanceChanged;
             }
             
-            var killTracker = TimelessEchoes.Enemies.EnemyKillTracker.Instance;
+            var killTracker = EnemyKillTracker.Instance;
             if (killTracker != null)
             {
                 killTracker.OnKillRegistered -= HandleKillRegistered;

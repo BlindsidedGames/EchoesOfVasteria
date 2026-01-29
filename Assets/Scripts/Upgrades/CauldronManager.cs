@@ -5,7 +5,6 @@ using Blindsided.Utilities;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Quests;
 using TimelessEchoes.Skills;
-using TimelessEchoes.UI;
 using TimelessEchoes.Upgrades.Cauldron;
 using TimelessEchoes.Utilities;
 using UnityEngine;
@@ -13,10 +12,6 @@ using static TimelessEchoes.TELogger;
 using static Blindsided.Oracle;
 using EventHandler = Blindsided.EventHandler;
 using Random = UnityEngine.Random;
-
-// UITicker usage here is intentional - CauldronManager drives tasting game logic at a fixed rate.
-// This is core game mechanics, not UI polling. Suppress the deprecation warning.
-#pragma warning disable CS0618
 
 namespace TimelessEchoes.Upgrades
 {
@@ -64,7 +59,7 @@ namespace TimelessEchoes.Upgrades
         private float nextCardPoolsRebuildAllowed;
         private float nextWeightsNotifyTime;
         private Coroutine resourceSubscribeRoutine;
-        private Coroutine autoStartRoutine;
+        private Coroutine tasteTickCoroutine;
 
         // Extracted services (Phase 1E.1)
         private CardTierCalculator _tierCalculator;
@@ -85,7 +80,7 @@ namespace TimelessEchoes.Upgrades
         // Config hot-reload sync (once per second)
         private float _nextConfigSyncTime;
 
-        // Fixed tick interval for UITicker (decoupled from rollsPerSecond for UI responsiveness)
+        // Fixed tick interval for tasting coroutine (decoupled from rollsPerSecond for UI responsiveness)
         // The time-accumulation in TasteTick handles any rollsPerSecond value automatically
         private const float UI_TICK_INTERVAL = 0.1f; // 10 Hz
 
@@ -414,9 +409,9 @@ namespace TimelessEchoes.Upgrades
 
         private void OnEnable()
         {
-            // Subscribe at fixed 10 Hz for UI responsiveness; TasteTick's time-accumulation
+            // Start tasting coroutine at fixed 10 Hz; TasteTick's time-accumulation
             // handles any rollsPerSecond value automatically
-            UITicker.Instance?.Subscribe(TasteTick, UI_TICK_INTERVAL);
+            tasteTickCoroutine = StartCoroutine(TasteTickCoroutine());
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
             EventHandler.OnLoadData += HandleSaveDataLoaded;
@@ -432,7 +427,11 @@ namespace TimelessEchoes.Upgrades
 
         private void OnDisable()
         {
-            UITicker.Instance?.Unsubscribe(TasteTick);
+            if (tasteTickCoroutine != null)
+            {
+                StopCoroutine(tasteTickCoroutine);
+                tasteTickCoroutine = null;
+            }
             EventHandler.OnLoadData -= ResetSessionStats;
             EventHandler.OnLoadData -= HandleSaveDataLoaded;
             if (resourceManager != null)
@@ -441,11 +440,6 @@ namespace TimelessEchoes.Upgrades
             {
                 StopCoroutine(resourceSubscribeRoutine);
                 resourceSubscribeRoutine = null;
-            }
-            if (autoStartRoutine != null)
-            {
-                StopCoroutine(autoStartRoutine);
-                autoStartRoutine = null;
             }
             EventHandler.OnQuestHandin -= OnQuestHandinHandler;
         }
@@ -532,28 +526,7 @@ namespace TimelessEchoes.Upgrades
         {
             if (tastingActive) return;
             if (!HasStewForNextRoll()) return;
-            if (UITicker.Instance == null)
-            {
-                if (autoStartRoutine == null)
-                    autoStartRoutine = StartCoroutine(WaitForTickerAndAutoStart());
-                return;
-            }
-
-            if (autoStartRoutine != null)
-            {
-                StopCoroutine(autoStartRoutine);
-                autoStartRoutine = null;
-            }
-
             StartTasting();
-        }
-
-        private IEnumerator WaitForTickerAndAutoStart()
-        {
-            while (UITicker.Instance == null)
-                yield return null;
-            autoStartRoutine = null;
-            TryAutoStartTasting();
         }
 
         private void HandleSaveDataLoaded()
@@ -585,7 +558,7 @@ namespace TimelessEchoes.Upgrades
             _stewChangeThrottle?.SetInterval(config.stewChangeThrottleInterval);
 
             // Note: rollsPerSecond changes are handled automatically by TasteTick's time-accumulation.
-            // The UITicker subscription stays at fixed 10 Hz for consistent UI responsiveness.
+            // The coroutine runs at fixed 10 Hz for consistent UI responsiveness.
         }
 
         // -------- Tasting --------
@@ -657,6 +630,16 @@ namespace TimelessEchoes.Upgrades
                 var statsHandler = OnStatsChanged;
                 if (statsHandler != null)
                     statsHandler(GetStatsSnapshot());
+            }
+        }
+
+        private IEnumerator TasteTickCoroutine()
+        {
+            var wait = new WaitForSecondsRealtime(UI_TICK_INTERVAL);
+            while (true)
+            {
+                TasteTick();
+                yield return wait;
             }
         }
 

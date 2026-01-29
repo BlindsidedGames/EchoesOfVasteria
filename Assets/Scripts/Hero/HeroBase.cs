@@ -2,10 +2,6 @@
 #define DISABLESTEAMWORKS
 #endif
 
-// UITicker usage here is intentional - HUD distance display updates at a throttled rate (5 Hz).
-// This is a lightweight display update. Suppress the deprecation warning.
-#pragma warning disable CS0618
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,6 +148,7 @@ namespace TimelessEchoes.Hero
         private float healthBonus;
         private float moveSpeedBonus;
         private MapUI mapUI;
+        private Coroutine hudDistanceCoroutine;
 
 #if !DISABLESTEAMWORKS
         [SerializeField] private float richPresenceUpdateInterval = 2f;
@@ -352,10 +349,10 @@ namespace TimelessEchoes.Hero
             if (!IsEchoActor)
                 Enemy.OnEngage += OnEnemyEngage;
 
-            // Throttle HUD distance updates via UITicker (5 Hz)
+            // Throttle HUD distance updates (5 Hz)
             if (!IsEchoActor && mapUI != null)
             {
-                TimelessEchoes.UI.UITicker.Instance?.Subscribe(HudDistanceTick, 0.2f);
+                hudDistanceCoroutine = StartCoroutine(HudDistanceCoroutine());
                 // Push an immediate refresh on enable so HUD isn't stale
                 HudDistanceTick();
             }
@@ -375,9 +372,12 @@ namespace TimelessEchoes.Hero
             if (!IsEchoActor)
                 Enemy.OnEngage -= OnEnemyEngage;
 
-            // Unsubscribe from UITicker to avoid leaks when disabled
-            if (!IsEchoActor)
-                TimelessEchoes.UI.UITicker.Instance?.Unsubscribe(HudDistanceTick);
+            // Stop HUD distance coroutine to avoid leaks when disabled
+            if (hudDistanceCoroutine != null)
+            {
+                StopCoroutine(hudDistanceCoroutine);
+                hudDistanceCoroutine = null;
+            }
 
             // Unsubscribe to avoid leaks
             HeroStatSystem.OnStatsRecalculated -= HandleHeroStatsRecalculated;
@@ -416,6 +416,16 @@ namespace TimelessEchoes.Hero
         {
             if (mapUI != null)
                 mapUI.UpdateDistance(transform.position.x);
+        }
+
+        private System.Collections.IEnumerator HudDistanceCoroutine()
+        {
+            var wait = new WaitForSecondsRealtime(0.2f);
+            while (true)
+            {
+                HudDistanceTick();
+                yield return wait;
+            }
         }
 
         /// <summary>
