@@ -35,6 +35,21 @@ namespace TimelessEchoes.UI
         private float cachedWeightsWorldX = float.NaN;
         private List<TaskData> defaultOrder = new();
 
+        // Scratch lists for allocation-free sorting (following ItemStatsPanelUI pattern)
+        private readonly List<TaskData> _scratchKnown = new();
+        private readonly List<TaskData> _scratchUnknown = new();
+        private readonly List<TaskData> _scratchFinal = new();
+        private bool _sortDirty = true;
+        private SortMode _lastAppliedSortMode;
+
+        // Static comparison delegate to avoid closure allocations
+        private static readonly System.Comparison<TaskData> CompareByIdThenName =
+            (a, b) =>
+            {
+                int cmp = a.taskID.CompareTo(b.taskID);
+                return cmp != 0 ? cmp : string.Compare(a.taskName, b.taskName, System.StringComparison.Ordinal);
+            };
+
         public enum SortMode
         {
             Default,
@@ -153,6 +168,7 @@ namespace TimelessEchoes.UI
         private void OnTaskWeightToggleChanged(TaskData task, bool _)
         {
             cachedWeightsWorldX = float.NaN;
+            _sortDirty = true; // Toggle change may affect spawn weights and sort order
             if (!isActiveAndEnabled)
                 return;
             UpdateEntries();
@@ -168,7 +184,9 @@ namespace TimelessEchoes.UI
 
         public void SetSortMode(SortMode mode)
         {
+            if (sortMode == mode) return;
             sortMode = mode;
+            _sortDirty = true;
             SortEntries();
         }
 
@@ -187,6 +205,7 @@ namespace TimelessEchoes.UI
             defaultOrder = sorted;
             entries.Clear();
             tasksBySkill.Clear();
+            _sortDirty = true; // Ensure initial sort happens
 
             foreach (var data in sorted)
             {
@@ -414,9 +433,15 @@ namespace TimelessEchoes.UI
                 ? remaining
                   : (hasCompletions ? 0 : -1);
 
-            if (lastDisplayedByTask.TryGetValue(data, out var cached) &&
-                cached.Matches(completed, time, xp, spawnChance, effectiveWeight, nextImprovement, toggleEnabled))
-                return;
+            if (lastDisplayedByTask.TryGetValue(data, out var cached))
+            {
+                // Detect transition from unknown to known - requires re-sort
+                if (cached.completed == 0 && completed > 0)
+                    _sortDirty = true;
+
+                if (cached.Matches(completed, time, xp, spawnChance, effectiveWeight, nextImprovement, toggleEnabled))
+                    return;
+            }
 
             var updatedState = new EntryDisplayState();
             updatedState.Set(completed, time, xp, spawnChance, effectiveWeight, nextImprovement, toggleEnabled);
@@ -505,64 +530,88 @@ namespace TimelessEchoes.UI
             if (entries.Count == 0)
                 return;
 
-            IEnumerable<TaskData> known = defaultOrder;
-            IEnumerable<TaskData> unknown = Enumerable.Empty<TaskData>();
-            if (statTracker != null)
+            // Early exit if no re-sort needed
+            if (!_sortDirty && sortMode == _lastAppliedSortMode)
+                return;
+
+            _sortDirty = false;
+            _lastAppliedSortMode = sortMode;
+
+            // Clear scratch lists for reuse
+            _scratchKnown.Clear();
+            _scratchUnknown.Clear();
+            _scratchFinal.Clear();
+
+            // Partition into known/unknown
+            for (int i = 0; i < defaultOrder.Count; i++)
             {
-                known = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) > 0);
-                unknown = defaultOrder.Where(t => (statTracker.GetTaskRecord(t)?.TotalCompleted ?? 0) == 0);
+                var task = defaultOrder[i];
+                if (statTracker != null && (statTracker.GetTaskRecord(task)?.TotalCompleted ?? 0) > 0)
+                    _scratchKnown.Add(task);
+                else
+                    _scratchUnknown.Add(task);
             }
 
             if (sortMode == SortMode.Default)
             {
-                var sortedKnownDefault = known
-                    .OrderBy(t => t.taskID)
-                    .ThenBy(t => t.taskName)
-                    .ToList();
-                var sortedUnknownDefault = unknown
-                    .OrderBy(t => t.taskID)
-                    .ThenBy(t => t.taskName)
-                    .ToList();
-                var finalDefault = sortedKnownDefault.Concat(sortedUnknownDefault).ToList();
-                ApplyOrder(finalDefault);
+                // Sort each partition by ID then name
+                _scratchKnown.Sort(CompareByIdThenName);
+                _scratchUnknown.Sort(CompareByIdThenName);
+
+                // Combine: known first, then unknown
+                _scratchFinal.AddRange(_scratchKnown);
+                _scratchFinal.AddRange(_scratchUnknown);
+                ApplyOrderScratch();
                 return;
             }
 
             if (sortMode == SortMode.Unknown)
             {
-                var sortedUnknownUnknown = unknown
-                    .OrderBy(t => t.taskID)
-                    .ThenBy(t => t.taskName)
-                    .ToList();
-                var sortedKnownUnknown = known
-                    .OrderBy(t => t.taskID)
-                    .ThenBy(t => t.taskName)
-                    .ToList();
-                var finalUnknown = sortedUnknownUnknown.Concat(sortedKnownUnknown).ToList();
-                ApplyOrder(finalUnknown);
+                // Sort each partition by ID then name
+                _scratchKnown.Sort(CompareByIdThenName);
+                _scratchUnknown.Sort(CompareByIdThenName);
+
+                // Combine: unknown first, then known
+                _scratchFinal.AddRange(_scratchUnknown);
+                _scratchFinal.AddRange(_scratchKnown);
+                ApplyOrderScratch();
                 return;
             }
 
-            float GetValue(TaskData t) => sortMode == SortMode.Completions
-                ? statTracker?.GetTaskRecord(t)?.TotalCompleted ?? 0
-                : statTracker?.GetTaskRecord(t)?.TimeSpent ?? 0f;
+            // Completions or TaskTime mode - sort known by value descending
+            var currentMode = sortMode;
+            var tracker = statTracker;
+            _scratchKnown.Sort((a, b) =>
+            {
+                float valA = GetStatValue(a, currentMode, tracker);
+                float valB = GetStatValue(b, currentMode, tracker);
+                int cmp = valB.CompareTo(valA); // Descending
+                if (cmp != 0) return cmp;
+                cmp = a.taskID.CompareTo(b.taskID);
+                return cmp != 0 ? cmp : string.Compare(a.taskName, b.taskName, System.StringComparison.Ordinal);
+            });
 
-            var sortedKnownByValue = known
-                .OrderByDescending(GetValue)
-                .ThenBy(t => t.taskID)
-                .ThenBy(t => t.taskName)
-                .ToList();
-
-            var finalOrder = sortedKnownByValue.Concat(unknown).ToList();
-            ApplyOrder(finalOrder);
+            // Combine: sorted known first, then unknown (keeps default order)
+            _scratchFinal.AddRange(_scratchKnown);
+            _scratchFinal.AddRange(_scratchUnknown);
+            ApplyOrderScratch();
         }
 
-        private void ApplyOrder(IList<TaskData> order)
+        private static float GetStatValue(TaskData t, SortMode mode, GameplayStatTracker tracker)
         {
-            var index = 0;
-            foreach (var data in order)
-                if (entries.TryGetValue(data, out var ui))
-                    ui.transform.SetSiblingIndex(index++);
+            if (tracker == null) return 0f;
+            var record = tracker.GetTaskRecord(t);
+            if (record == null) return 0f;
+            return mode == SortMode.Completions ? record.TotalCompleted : record.TimeSpent;
+        }
+
+        private void ApplyOrderScratch()
+        {
+            for (int i = 0; i < _scratchFinal.Count; i++)
+            {
+                if (entries.TryGetValue(_scratchFinal[i], out var ui))
+                    ui.transform.SetSiblingIndex(i);
+            }
         }
 
         private bool IsTaskUnlocked(TaskData task)

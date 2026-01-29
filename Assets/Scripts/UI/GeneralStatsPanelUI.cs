@@ -1,3 +1,4 @@
+using System.Text;
 using Blindsided.Utilities;
 using TimelessEchoes.References.StatPanel;
 using TimelessEchoes.Stats;
@@ -13,6 +14,9 @@ namespace TimelessEchoes.UI
 
         [SerializeField] private float updateInterval = 0.1f;
         private float nextUpdateTime;
+
+        // StringBuilder for allocation-free text building
+        private readonly StringBuilder _sb = new StringBuilder(256);
 
         private void Awake()
         {
@@ -53,29 +57,51 @@ namespace TimelessEchoes.UI
 
             if (references.distanceLongestTasksText != null)
             {
-                var dist = CalcUtils.FormatNumber(statTracker.DistanceTravelled, true);
-                var longest = CalcUtils.FormatNumber(statTracker.LongestRun, true);
-                var shortest = CalcUtils.FormatNumber(statTracker.ShortestRun, true);
-                var average = CalcUtils.FormatNumber(statTracker.AverageRun, true);
-                var tasks = CalcUtils.FormatNumber(statTracker.TasksCompleted, true);
-                var resources = CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true);
-                var reapDist = $"{statTracker.MaxRunDistance:N0}";
-                var mostKills = CalcUtils.FormatNumber(statTracker.MostKillsSingleRun, true);
                 var isKillScaling = GameManager.Instance != null && GameManager.Instance.IsKillScalingMode;
-                references.distanceLongestTasksText.text = isKillScaling
-                    ? $"Steps Taken: {dist}\nMost Kills: {mostKills}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}"
-                    : $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}\nReaping Distance: {reapDist}";
+                _sb.Clear();
+                _sb.Append("Steps Taken: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.DistanceTravelled, true));
+                _sb.Append('\n');
+                if (isKillScaling)
+                {
+                    _sb.Append("Most Kills: ");
+                    _sb.Append(CalcUtils.FormatNumber(statTracker.MostKillsSingleRun, true));
+                }
+                else
+                {
+                    _sb.Append("Longest Run: ");
+                    _sb.Append(CalcUtils.FormatNumber(statTracker.LongestRun, true));
+                }
+                _sb.Append('\n');
+                _sb.Append("Tasks Completed: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.TasksCompleted, true));
+                _sb.Append('\n');
+                _sb.Append("Resources Gathered: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true));
+                _sb.Append('\n');
+                _sb.Append("Reaping Distance: ");
+                _sb.Append(statTracker.MaxRunDistance.ToString("N0"));
+                references.distanceLongestTasksText.SetText(_sb);
             }
 
             if (references.killsDamageDeathsText != null)
             {
-                var kills = CalcUtils.FormatNumber(statTracker.TotalKills, true);
-                var dealt = CalcUtils.FormatNumber(statTracker.DamageDealt, true);
-                var deaths = CalcUtils.FormatNumber(statTracker.Deaths, true);
-                var taken = CalcUtils.FormatNumber(statTracker.DamageTaken, true);
-                var reaps = statTracker.TimesReaped.ToString();
-                references.killsDamageDeathsText.text =
-                    $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}\nTimes Reaped: {reaps}";
+                _sb.Clear();
+                _sb.Append("Kills: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.TotalKills, true));
+                _sb.Append('\n');
+                _sb.Append("Damage Dealt: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.DamageDealt, true));
+                _sb.Append('\n');
+                _sb.Append("Deaths: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.Deaths, true));
+                _sb.Append('\n');
+                _sb.Append("Damage Taken: ");
+                _sb.Append(CalcUtils.FormatNumber(statTracker.DamageTaken, true));
+                _sb.Append('\n');
+                _sb.Append("Times Reaped: ");
+                _sb.Append(statTracker.TimesReaped);
+                references.killsDamageDeathsText.SetText(_sb);
             }
         }
     }

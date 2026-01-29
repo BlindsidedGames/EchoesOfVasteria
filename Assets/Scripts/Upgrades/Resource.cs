@@ -39,6 +39,22 @@ namespace TimelessEchoes.Upgrades
         [Tooltip("Override how this resource is categorized for the Cauldron. Auto uses inferred grouping.")]
         public CauldronCategory cauldronCategory = CauldronCategory.Auto;
 
+        // Cached card ID to avoid string allocations in hot paths
+        [System.NonSerialized] private string _cachedCardId;
+        /// <summary>
+        /// Returns the Cauldron card ID for this resource (e.g., "RES:Wheat").
+        /// Cached after first access to avoid allocations.
+        /// </summary>
+        public string CardId
+        {
+            get
+            {
+                if (_cachedCardId == null)
+                    _cachedCardId = "RES:" + name;
+                return _cachedCardId;
+            }
+        }
+
         [HideInInspector] public double totalReceived;
         [HideInInspector] public double totalSpent;
     }
