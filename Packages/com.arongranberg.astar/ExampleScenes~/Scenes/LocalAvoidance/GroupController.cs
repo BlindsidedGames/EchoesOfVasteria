@@ -76,7 +76,12 @@ namespace Pathfinding.Examples {
 		}
 
 		public void Order () {
-			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+#if MODULE_INPUT_SYSTEM
+			var mousePosition = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+#else
+			var mousePosition = Input.mousePosition;
+#endif
+			Ray ray = cam.ScreenPointToRay(mousePosition);
 			RaycastHit hit;
 
 			if (Physics.Raycast(ray, out hit)) {

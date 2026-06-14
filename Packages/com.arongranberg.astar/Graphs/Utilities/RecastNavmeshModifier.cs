@@ -197,6 +197,13 @@ namespace Pathfinding {
 			treeKey = default;
 			if (!this.dynamic) {
 				var newBounds = CalculateBounds();
+				if (newBounds.extents == Vector3.zero) {
+					// The collider has likely been destroyed before this script was disabled.
+					// This can happen due to Unity's script execution order when destroying objects.
+					// In this case we cannot really do any bounds checking, so just return.
+					// Interestingly, the deletion order seems different when deleting the GO manually in the hierarchy, and when using GameObject.Destroy.
+					return;
+				}
 				// When using static baching, the bounds of the object may shrink.
 				// In particular, if the object has been rotated, the renderer's bounds will originally use an approximation of the AABB (presumably just the original AABB, but rotated and then axis aligned again),
 				// but after static batching, it actually looks at the new mesh (with the rotation baked in), and can generate a more precise AABB (which may be smaller).

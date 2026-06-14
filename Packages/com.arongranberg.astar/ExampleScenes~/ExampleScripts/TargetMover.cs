@@ -42,6 +42,7 @@ namespace Pathfinding {
 			useGUILayout = false;
 		}
 
+#if !MODULE_INPUT_SYSTEM
 		public void OnGUI () {
 			if (trigger != Trigger.Continuously && cam != null && Event.current.type == EventType.MouseDown) {
 				if (Event.current.clickCount == (trigger == Trigger.DoubleClick ? 2 : 1)) {
@@ -49,12 +50,21 @@ namespace Pathfinding {
 				}
 			}
 		}
+#endif
 
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
 			if (trigger == Trigger.Continuously && cam != null) {
 				UpdateTargetPosition();
 			}
+#if MODULE_INPUT_SYSTEM
+			if (trigger != Trigger.Continuously && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame) {
+				var clickCount = UnityEngine.InputSystem.Mouse.current.clickCount.ReadValue();
+				if (clickCount >= (trigger == Trigger.DoubleClick ? 2 : 1)) {
+					UpdateTargetPosition();
+				}
+			}
+#endif
 		}
 
 		public void UpdateTargetPosition () {
@@ -62,18 +72,24 @@ namespace Pathfinding {
 			bool positionFound = false;
 			Transform hitObject = null;
 
+#if MODULE_INPUT_SYSTEM
+			var mousePosition = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+#else
+			var mousePosition = Input.mousePosition;
+#endif
+
 			// If the game view has never been rendered, the mouse position can be infinite
-			if (!float.IsFinite(Input.mousePosition.x)) return;
+			if (!float.IsFinite(mousePosition.x)) return;
 
 			if (use2D) {
-				newPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+				newPosition = cam.ScreenToWorldPoint(mousePosition);
 				newPosition.z = 0;
 				positionFound = true;
 				var collider = Physics2D.OverlapPoint(newPosition, mask);
 				if (collider != null) hitObject = collider.transform;
 			} else {
 				// Fire a ray through the scene at the mouse position and place the target where it hits
-				if (cam.pixelRect.Contains(Input.mousePosition) && Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out var hit, Mathf.Infinity, mask)) {
+				if (cam.pixelRect.Contains(mousePosition) && Physics.Raycast(cam.ScreenPointToRay(mousePosition), out var hit, Mathf.Infinity, mask)) {
 					newPosition = hit.point;
 					hitObject = hit.transform;
 					positionFound = true;

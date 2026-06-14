@@ -29,20 +29,36 @@ namespace Pathfinding.Examples {
 
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
+#if MODULE_INPUT_SYSTEM
+			var isCtrlPressed = UnityEngine.InputSystem.Keyboard.current.leftCtrlKey.isPressed;
+			var wasRPressedThisFrame = UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame;
+			var wasPPressedThisFrame = UnityEngine.InputSystem.Keyboard.current.pKey.wasPressedThisFrame;
+			var isPPressed = UnityEngine.InputSystem.Keyboard.current.pKey.isPressed;
+#else
+			var isCtrlPressed = Input.GetKey(KeyCode.LeftControl);
+			var wasRPressedThisFrame = Input.GetKeyDown("r");
+			var wasPPressedThisFrame = Input.GetKeyDown("p");
+			var isPPressed = Input.GetKey("p");
+#endif
 			// Check if P is being pressed.
 			// Don't place objects if ctrl is pressed to avoid conflicts with the pause shortcut (ctrl+shift+P)
-			if (!Input.GetKey(KeyCode.LeftControl) && (Input.GetKeyDown("p") || (Input.GetKey("p") && Time.time - lastPlacedTime > 0.3f))) {
+			if (!isCtrlPressed && (wasPPressedThisFrame || (isPPressed && Time.time - lastPlacedTime > 0.3f))) {
 				PlaceObject();
 			}
 
-			if (Input.GetKeyDown("r")) {
+			if (wasRPressedThisFrame) {
 				RemoveObject();
 			}
 		}
 
 		public void PlaceObject () {
 			lastPlacedTime = Time.time;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+#if MODULE_INPUT_SYSTEM
+			var mousePosition = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+#else
+			var mousePosition = Input.mousePosition;
+#endif
+			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
 			// Figure out where the ground is
 			if (Physics.Raycast(ray, out var hit, Mathf.Infinity, ~0)) {
@@ -64,7 +80,12 @@ namespace Pathfinding.Examples {
 		}
 
 		public void RemoveObject () {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+#if MODULE_INPUT_SYSTEM
+			var mousePosition = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+#else
+			var mousePosition = Input.mousePosition;
+#endif
+			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
 			// Check what object is under the mouse cursor
 			if (Physics.Raycast(ray, out var hit, Mathf.Infinity)) {

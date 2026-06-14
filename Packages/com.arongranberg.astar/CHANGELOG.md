@@ -1,3 +1,18 @@
+## 5.4.6 (2026-01-22)
+- Added \reflink{FollowerEntity.nextOffMeshLink}, to get information about the next off-mesh link in the agent's path.
+- Fixed some compilation warnings in Unity 6.4.
+- Added support for the Input System Package to the example scenes. They now work both with the legacy input system and the new Input System package.
+- Fixed an exception that could happen if an off-mesh link was disabled on the frame before an agent was about to traverse it.
+- Fixed paths on grid graphs could in rare cases be calculated incorrectly if the end point was right in the middle between two nodes (regression in 5.4).
+- Fixed GetNearest on grid graphs could fail to return a node if it was almost, but not quite, outside the search radius.
+- Fixed gizmos would sometimes not be drawn for objects loaded in using async or additive scene loading (regression in 5.4.5).
+- Fixed ProceduralGraphMover throwing an exception if target is destroyed in the middle of an update.
+- Exposed \reflink{RandomPath.rnd} so that you can set a custom random number generator for the path.
+		This allows for reproducible random paths by using a fixed seed.
+- Fixed A* Inspector -> Settings -> Colors -> Opacity settings did not work.
+- Fixed occasional "Diagonal Connections Not Supported" error when using \reflink{FollowerEntity} on a grid graph.
+- Avoid "The RecastNavmeshModifier has been moved or resized since it was enabled" error in some cases when the object's collider was destroyed before the \reflink{RecastNavmeshModifier}.
+
 ## 5.4.5 (2025-11-21)
 - Breaking changes
 		- Some tree colliders that were previously included in recast graph scans may now be excluded, in accordance with the layer and tag filtering settings on the recast graph. See below for more details.
@@ -19,6 +34,7 @@
 - Reduce memory usage of recast/navmesh graphs.
 - Fixed \reflink{FollowerEntity} sometimes instantly stopping after a nearby graph update caused the navmesh underneath it to be destroyed.
 - The FollowerEntity will now refresh the endpoints of any pending path every frame, to ensure it is as up-to-date as possible when the path is calculated. This is important primarily when you have lots of agents calculating paths at the same time, or the game is running at a low framerate.
+
 
 ## 5.4.4 (2025-10-06)
 - Note

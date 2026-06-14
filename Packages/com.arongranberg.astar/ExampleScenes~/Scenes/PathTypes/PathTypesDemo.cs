@@ -68,31 +68,43 @@ namespace Pathfinding.Examples {
 
 		// Update is called once per frame
 		void Update () {
-			var mousePos = Input.mousePosition;
+#if MODULE_INPUT_SYSTEM
+			var mousePosition = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+			var isMousePressed = UnityEngine.InputSystem.Mouse.current.leftButton.isPressed;
+			var isMouseClick = UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame;
+			var isShiftPressed = UnityEngine.InputSystem.Keyboard.current.leftShiftKey.isPressed;
+			var isCtrlPressed = UnityEngine.InputSystem.Keyboard.current.leftCtrlKey.isPressed;
+#else
+			var mousePosition = Input.mousePosition;
+			var isMousePressed = Input.GetKey(KeyCode.Mouse0);
+			var isMouseClick = Input.GetKeyDown(KeyCode.Mouse0);
+			var isShiftPressed = Input.GetKey(KeyCode.LeftShift);
+			var isCtrlPressed = Input.GetKey(KeyCode.LeftControl);
+#endif
 
 			// If the game view is not active, the mouse position can be infinite
-			if (!float.IsFinite(mousePos.x)) return;
+			if (!float.IsFinite(mousePosition.x)) return;
 
 			var cam = Camera.main;
 			if (cam == null) return;
-			Ray ray = cam.ScreenPointToRay(mousePos);
+			Ray ray = cam.ScreenPointToRay(mousePosition);
 
 			// Find the intersection with the y=0 plane
 			Vector3 zeroIntersect = ray.origin + ray.direction * (ray.origin.y / -ray.direction.y);
 
 			end.position = zeroIntersect;
 
-			if (Input.GetMouseButtonUp(0)) {
-				if (Input.GetKey(KeyCode.LeftShift)) {
+			if (isMouseClick) {
+				if (isShiftPressed) {
 					multipoints.Add(zeroIntersect);
 				}
 
-				if (Input.GetKey(KeyCode.LeftControl)) {
+				if (isCtrlPressed) {
 					multipoints.Clear();
 				}
 			}
 
-			if (Input.GetMouseButton(0) && Input.mousePosition.x > 225 && (lastPath == null || lastPath.IsDone())) {
+			if (isMousePressed && mousePosition.x > 225 && (lastPath == null || lastPath.IsDone())) {
 				DemoPath();
 			}
 		}

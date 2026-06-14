@@ -26,8 +26,6 @@ namespace Pathfinding {
 		public Color _ConnectionLowLerp;
 		public Color _ConnectionHighLerp;
 
-		public Color _MeshEdgeColor;
-
 		/// <summary>
 		/// Holds user set area colors.
 		/// Use GetAreaColor to get an area color
@@ -41,12 +39,10 @@ namespace Pathfinding {
 		public static Color ConnectionLowLerp = new Color(0, 1, 0, 0.5F);
 		public static Color ConnectionHighLerp = new Color(1, 0, 0, 0.5F);
 
-		public static Color MeshEdgeColor = new Color(0, 0, 0, 0.5F);
-
 		private static Color[] AreaColors = new Color[1];
 
 		public static int ColorHash () {
-			var hash = SolidColor.GetHashCode() ^ UnwalkableNode.GetHashCode() ^ BoundsHandles.GetHashCode() ^ ConnectionLowLerp.GetHashCode() ^ ConnectionHighLerp.GetHashCode() ^ MeshEdgeColor.GetHashCode();
+			var hash = SolidColor.GetHashCode() ^ UnwalkableNode.GetHashCode() ^ BoundsHandles.GetHashCode() ^ ConnectionLowLerp.GetHashCode() ^ ConnectionHighLerp.GetHashCode();
 
 			for (int i = 0; i < AreaColors.Length; i++) hash = 7*hash ^ AreaColors[i].GetHashCode();
 			return hash;
@@ -85,7 +81,6 @@ namespace Pathfinding {
 			BoundsHandles = _BoundsHandles;
 			ConnectionLowLerp = _ConnectionLowLerp;
 			ConnectionHighLerp = _ConnectionHighLerp;
-			MeshEdgeColor = _MeshEdgeColor;
 			AreaColors = _AreaColors;
 		}
 
@@ -105,7 +100,6 @@ namespace Pathfinding {
 			_BoundsHandles = new Color(0.29F, 0.454F, 0.741F, 0.9F);
 			_ConnectionLowLerp = new Color(0, 1, 0, 0.5F);
 			_ConnectionHighLerp = new Color(1, 0, 0, 0.5F);
-			_MeshEdgeColor = new Color(0, 0, 0, 0.5F);
 		}
 	}
 

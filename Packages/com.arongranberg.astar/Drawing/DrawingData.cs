@@ -519,7 +519,7 @@ namespace Pathfinding.Drawing {
 
 			static int UniqueIDCounter = 0;
 
-			public void Init (Hasher hasher, RedrawScope frameRedrawScope, RedrawScope customRedrawScope, bool isGizmos, int drawOrderIndex, int sceneModeVersion) {
+			public void Init (Hasher hasher, RedrawScope frameRedrawScope, RedrawScope customRedrawScope, bool isGizmos, int drawOrderIndex) {
 				if (state != State.Reserved) throw new System.InvalidOperationException();
 
 				meta = new Meta {
@@ -529,7 +529,7 @@ namespace Pathfinding.Drawing {
 					isGizmos = isGizmos,
 					version = 0, // Will be filled in later
 					drawOrderIndex = drawOrderIndex,
-					sceneModeVersion = sceneModeVersion,
+					sceneModeVersion = 0, // Will be filled in later
 					cameraTargets = null,
 				};
 
@@ -616,6 +616,12 @@ namespace Pathfinding.Drawing {
 				// render persistent per camera
 				const int PersistentDrawOrderOffset = 1000000;
 				var tmpMeta = meta;
+				// The scene mode may have changed since this builder was initialized.
+				// This can, for example, happen on the first frame of the game.
+				// The builder may have been created before the game mode switched.
+				// This is important to make sure WithDuration works even on the first frame of the game.
+				tmpMeta.sceneModeVersion = gizmos.adjustedSceneModeVersion;
+
 				// Reserve some buffers.
 				// We need to set a deterministic order in which things are drawn to avoid flickering.
 				// The shaders use the z buffer most of the time, but there are still
@@ -1169,12 +1175,12 @@ namespace Pathfinding.Drawing {
 		/// If false, it will only be rendered in the editor when gizmos are enabled.</param>
 		public CommandBuilder GetBuilder (bool renderInGame = false) {
 			UpdateTime();
-			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, default, !renderInGame, false, adjustedSceneModeVersion);
+			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, default, !renderInGame, false);
 		}
 
 		internal CommandBuilder GetBuiltInBuilder (bool renderInGame = false) {
 			UpdateTime();
-			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, default, !renderInGame, true, adjustedSceneModeVersion);
+			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, default, !renderInGame, true);
 		}
 
 		/// <summary>
@@ -1185,7 +1191,7 @@ namespace Pathfinding.Drawing {
 		/// <param name="renderInGame">If true, this builder will be rendered in standalone games and in the editor even if gizmos are disabled.</param>
 		public CommandBuilder GetBuilder (RedrawScope redrawScope, bool renderInGame = false) {
 			UpdateTime();
-			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, redrawScope, !renderInGame, false, adjustedSceneModeVersion);
+			return new CommandBuilder(this, Hasher.NotSupplied, frameRedrawScope, redrawScope, !renderInGame, false);
 		}
 
 		/// <summary>
@@ -1200,7 +1206,7 @@ namespace Pathfinding.Drawing {
 			// Do not do this if a hash is not given.
 			if (!hasher.Equals(Hasher.NotSupplied)) DiscardData(hasher);
 			UpdateTime();
-			return new CommandBuilder(this, hasher, frameRedrawScope, redrawScope, !renderInGame, false, adjustedSceneModeVersion);
+			return new CommandBuilder(this, hasher, frameRedrawScope, redrawScope, !renderInGame, false);
 		}
 
 		/// <summary>Material to use for surfaces</summary>

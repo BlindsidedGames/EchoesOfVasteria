@@ -321,7 +321,7 @@ namespace Pathfinding {
 #if !ASTAR_NO_GRID_GRAPH
 					// Potentially we want to special case grid graphs a bit
 					// to better support some kinds of games
-					if (!EndPointGridGraphSpecialCase(ref ctx, endNNInfo.node, originalTarget, i))
+					if (!EndPointGridGraphSpecialCase(ref ctx, constraint, endNNInfo, originalTarget, i))
 #endif
 					{
 						ctx.pathHandler.AddTemporaryNode(new TemporaryNode {

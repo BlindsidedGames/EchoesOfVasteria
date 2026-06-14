@@ -1371,17 +1371,17 @@ namespace TimelessEchoes.Gear.UI
 
                     pendingAutoSalvage = true;
                 }
+
+                // Batch salvage turbo mode items INSIDE the batch to avoid double OnInventoryChanged
+                if (turboSalvageCount > 0 && selectedCore != null)
+                {
+                    SalvageService.Instance?.BatchSalvageWithinBatch(selectedCore, turboSalvageCount);
+                    turboSalvageCount = 0;
+                }
                 }
                 finally
                 {
                     rm?.EndBatch();
-                }
-
-                // Batch salvage turbo mode items at end of each batch
-                if (turboSalvageCount > 0 && selectedCore != null)
-                {
-                    SalvageService.Instance?.BatchSalvage(selectedCore, turboSalvageCount);
-                    turboSalvageCount = 0;
                 }
 
                 if (!shouldBreak)

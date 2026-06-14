@@ -250,20 +250,37 @@ namespace Pathfinding {
 		/// Image below shows paths when this special case has been disabled
 		/// [Open online documentation to see images]
 		/// </summary>
-		protected virtual bool EndPointGridGraphSpecialCase (ref SearchContext ctx, GraphNode closestWalkableEndNode, Vector3 originalEndPoint, int targetIndex) {
-			var gridNode = closestWalkableEndNode as GridNode;
+		protected virtual bool EndPointGridGraphSpecialCase (ref SearchContext ctx, NearestNodeConstraint nn, NNInfo closestWalkableEndNode, Vector3 originalEndPoint, int targetIndex) {
+			var gridNode = closestWalkableEndNode.node as GridNode;
 
 			if (gridNode != null) {
+				if (gridNode.ContainsPoint(originalEndPoint)) {
+					// Can't get any closer than this.
+					// Performance optimization for the common case.
+					return false;
+				}
+
 				var gridGraph = GridNode.GetGridGraph(gridNode.GraphIndex);
 
 				// Find the closest node, not neccessarily walkable
-				var nn = NearestNodeConstraint.None;
-				nn.maxDistanceSqr = 0.01f*0.01f;
-				nn.distanceMetric = DistanceMetric.ClosestAsSeenFromAbove();
-				var endNNInfo2 = gridGraph.GetNearest(originalEndPoint, ref nn);
+				var nn2 = NearestNodeConstraint.None;
+				nn2.distanceMetric = nn.distanceMetric;
+				// We know we can find a node at least this close
+				nn2.maxDistanceSqr = closestWalkableEndNode.distanceCostSqr + 0.001f;
+				var endNNInfo2 = gridGraph.GetNearest(originalEndPoint, ref nn2);
 				var gridNode2 = endNNInfo2.node as GridNode;
 
-				if (gridNode != gridNode2 && gridNode2 != null) {
+				// We know we can find a node here, since closestWalkableEndNode.node exists
+				UnityEngine.Assertions.Assert.IsNotNull(gridNode2);
+
+				// If the closest node is different from the closest walkable node
+				// then we might want to apply the special case.
+				//
+				// Cases:
+				// 1. point is outside grid graph -> should not apply special case.
+				// 2. point is above an unwalkable node, which would have been the closest one according to the original distance metric, had it not been unwalkable -> should apply special case.
+				// 3. point is above an unwalkable node, but it's not the closest one according to the original distance metric (e.g. when jumping off a ledge) -> should not apply special case.
+				if (gridNode != gridNode2 && gridNode2 != null && gridNode2.ContainsPoint(originalEndPoint)) {
 					// Calculate the coordinates of the nodes
 					var x1 = gridNode.NodeInGridIndex % gridGraph.width;
 					var z1 = gridNode.NodeInGridIndex / gridGraph.width;
@@ -413,7 +430,7 @@ namespace Pathfinding {
 #if !ASTAR_NO_GRID_GRAPH
 				// Potentially we want to special case grid graphs a bit
 				// to better support some kinds of games
-				if (!EndPointGridGraphSpecialCase(ref ctx, endNNInfo.node, originalEndPoint, 0))
+				if (!EndPointGridGraphSpecialCase(ref ctx, constraint, endNNInfo, originalEndPoint, 0))
 #endif
 				{
 					ctx.pathHandler.AddTemporaryNode(new TemporaryNode {

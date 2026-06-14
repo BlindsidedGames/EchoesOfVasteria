@@ -446,12 +446,6 @@ namespace Pathfinding.RVO {
 	/// You will most likely mostly use the wrapper class <see cref="RVOSimulator"/>.
 	/// </summary>
 	public class SimulatorBurst {
-		/// <summary>
-		/// Inverse desired simulation fps.
-		/// See: DesiredDeltaTime
-		/// </summary>
-		private float desiredDeltaTime = 0.05f;
-
 		/// <summary>Number of agents in this simulation</summary>
 		int numAgents = 0;
 
@@ -819,13 +813,6 @@ namespace Pathfinding.RVO {
 		}
 
 		/// <summary>
-		/// Time in seconds between each simulation step.
-		/// This is the desired delta time, the simulation will never run at a higher fps than
-		/// the rate at which the Update function is called.
-		/// </summary>
-		public float DesiredDeltaTime { get { return desiredDeltaTime; } set { desiredDeltaTime = System.Math.Max(value, 0.0f); } }
-
-		/// <summary>
 		/// Bias agents to pass each other on the right side.
 		/// If the desired velocity of an agent puts it on a collision course with another agent or an obstacle
 		/// its desired velocity will be rotated this number of radians (1 radian is approximately 57°) to the right.
@@ -870,7 +857,6 @@ namespace Pathfinding.RVO {
 		/// <summary>Create a new simulator.</summary>
 		/// <param name="movementPlane">The plane that the movement happens in. XZ for 3D games, XY for 2D games.</param>
 		public SimulatorBurst (MovementPlane movementPlane) {
-			this.DesiredDeltaTime = 1;
 			this.movementPlane = movementPlane;
 
 			AllocateAgentSpace();

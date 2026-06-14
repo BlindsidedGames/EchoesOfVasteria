@@ -1937,7 +1937,7 @@ namespace Pathfinding {
 			}
 
 			alternativePath.Clear();
-			var obstructed = grid.Linecast(startNode, normalizedPointStart, endNode, normalizedPointEnd, out var _, ref traversalConstraint, alternativePath, false);
+			var obstructed = grid.Linecast(startNode, normalizedPointStart, endNode, normalizedPointEnd, out var _, ref traversalConstraint, alternativePath, false, allowDiagonals: false);
 			if (!obstructed) {
 				Assert.AreEqual(startNode, alternativePath[0]);
 				Assert.AreEqual(endNode, alternativePath[alternativePath.Count-1]);
@@ -1989,6 +1989,7 @@ namespace Pathfinding {
 				return false;
 			}
 		}
+
 
 		/// <summary>
 		/// Removes diagonal connections in a grid path and replaces them with two axis-aligned connections.

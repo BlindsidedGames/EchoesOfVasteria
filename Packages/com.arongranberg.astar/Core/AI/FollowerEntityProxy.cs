@@ -258,6 +258,21 @@ namespace Pathfinding.ECS {
 			}
 		}
 
+		/// <summary>\copydocref{FollowerEntity.nextOffMeshLink}</summary>
+		public OffMeshLinks.OffMeshLinkTracer nextOffMeshLink {
+			get {
+				var l = offMeshLink;
+				if (l.link != null) return l;
+
+				if (entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState)) {
+					if (managedState.pathTracer.isNextPartValidLink) {
+						return managedState.pathTracer.GetLinkInfo(1);
+					}
+				}
+				return default;
+			}
+		}
+
 		/// <summary>\copydocref{FollowerEntity.onTraverseOffMeshLink}</summary>
 		public IOffMeshLinkHandler onTraverseOffMeshLink {
 			get => entityStorageCache.GetComponentData(world, entity, ref managedSettingsAccessRO, out var managedSettings) ? managedSettings.onTraverseOffMeshLink : null;

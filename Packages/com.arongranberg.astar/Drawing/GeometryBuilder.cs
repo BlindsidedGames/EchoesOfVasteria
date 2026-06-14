@@ -758,6 +758,83 @@ namespace Pathfinding.Drawing {
 			}
 		}
 
+		void AddRing (RingData ring) {
+			// Ring is generated in the XZ plane. Rotation is handled by currentMatrix (set via PushMatrix).
+			// Degenerate ring (no area)
+			if (ring.innerRadius >= ring.outerRadius) return;
+
+			ring.endAngle = math.clamp(ring.endAngle, ring.startAngle - Mathf.PI * 2, ring.startAngle + Mathf.PI * 2);
+
+			var steps = CircleSteps(ring.center, ring.outerRadius, maxPixelError, ref currentMatrix, cameraDepthToPixelSize, cameraPosition);
+
+
+			float invSteps = 1.0f / steps;
+
+			unsafe {
+				var solidVertices = &buffers->solidVertices;
+				var solidTriangles = &buffers->solidTriangles;
+				// 2 vertices per step (inner and outer edge)
+				Reserve(solidVertices, (steps + 1) * 2 * UnsafeUtility.SizeOf<Vertex>());
+				// 2 triangles per step (6 indices per step)
+				Reserve(solidTriangles, 6 * steps * UnsafeUtility.SizeOf<int>());
+
+				var innerMatrix = math.mul(currentMatrix, Matrix4x4.TRS(ring.center, Quaternion.identity, new Vector3(ring.innerRadius, ring.innerRadius, ring.innerRadius)));
+				var outerMatrix = math.mul(currentMatrix, Matrix4x4.TRS(ring.center, Quaternion.identity, new Vector3(ring.outerRadius, ring.outerRadius, ring.outerRadius)));
+
+				var mn = minBounds;
+				var mx = maxBounds;
+				int vertexCount = solidVertices->Length / UnsafeUtility.SizeOf<Vertex>();
+
+				// Generate vertices for the ring
+				// Using (cos, 0, sin) to match CircleXZ convention: angle 0 = +X axis in the XZ plane
+				for (int i = 0; i <= steps; i++) {
+					var t = math.lerp(ring.startAngle, ring.endAngle, i * invSteps);
+					math.sincos(t, out float sin, out float cos);
+
+					var innerP = PerspectiveDivide(math.mul(innerMatrix, new float4(cos, 0, sin, 1)));
+					var outerP = PerspectiveDivide(math.mul(outerMatrix, new float4(cos, 0, sin, 1)));
+
+					// Update the bounding box
+					mn = math.min(math.min(mn, innerP), outerP);
+					mx = math.max(math.max(mx, innerP), outerP);
+
+					Add(solidVertices, new Vertex {
+						position = innerP,
+						color = currentColor,
+						uv = new float2(0, 0),
+						uv2 = new float3(0, 0, 0),
+					});
+					Add(solidVertices, new Vertex {
+						position = outerP,
+						color = currentColor,
+						uv = new float2(0, 0),
+						uv2 = new float3(0, 0, 0),
+					});
+				}
+
+				minBounds = mn;
+				maxBounds = mx;
+
+				// Generate triangles for the ring (quad strip)
+				for (int i = 0; i < steps; i++) {
+					int v0 = vertexCount + i * 2;      // Inner vertex at angle i
+					int v1 = vertexCount + i * 2 + 1;  // Outer vertex at angle i
+					int v2 = vertexCount + (i + 1) * 2;      // Inner vertex at angle i+1
+					int v3 = vertexCount + (i + 1) * 2 + 1;  // Outer vertex at angle i+1
+
+					// First triangle
+					Add(solidTriangles, v0);
+					Add(solidTriangles, v1);
+					Add(solidTriangles, v2);
+
+					// Second triangle
+					Add(solidTriangles, v2);
+					Add(solidTriangles, v1);
+					Add(solidTriangles, v3);
+				}
+			}
+		}
+
 		void AddSolidTriangle (TriangleData triangle) {
 			unsafe {
 				var solidVertices = &buffers->solidVertices;
@@ -1010,6 +1087,9 @@ namespace Pathfinding.Drawing {
 				break;
 			case Command.Disc:
 				AddDisc(reader.ReadNext<CircleData>());
+				break;
+			case Command.Ring:
+				AddRing(reader.ReadNext<RingData>());
 				break;
 			case Command.Box:
 				AddBox(reader.ReadNext<BoxData>());

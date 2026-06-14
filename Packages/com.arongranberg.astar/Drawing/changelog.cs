@@ -3,8 +3,21 @@
 /// \order{-10}
 ///
 /// - 1.7.9
+///     - Fixed WithDuration not working on the first frame of the game.
 ///     - Got rid of some small GC allocations.
 ///     - Fixed a memory leak in the Unity Editor caused by prefab references sometimes being kept in memory even though they shouldn't.
+///
+///     - Fixed ALINE not working when using foveated rendering in VR with URP.
+///     - Added <see cref="Draw.WireRing"/> to draw ring (annulus) outlines in 3D.
+///         [Open online documentation to see images]
+///     - Added <see cref="Draw.SolidRing"/> to draw filled rings (annuli) in 3D.
+///         [Open online documentation to see images]
+///     - Added <see cref="Draw.xz.WireRing"/> to draw ring outlines in 2D.
+///         [Open online documentation to see images]
+///     - Added <see cref="Draw.xz.SolidRing"/> to draw filled rings in 2D.
+///         [Open online documentation to see images]
+///     - Added a new example scene showing off various drawing primitives in an animated sci-fi interface style.
+///         [Open online documentation to see images]
 ///
 /// - 1.7.8 (2025-05-06)
 ///     - Fixed a minor GC allocation happening every frame when using URP.

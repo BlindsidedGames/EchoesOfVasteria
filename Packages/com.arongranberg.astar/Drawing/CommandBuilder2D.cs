@@ -142,6 +142,14 @@ namespace Pathfinding.Drawing {
 		///
 		/// You can draw an arc by supplying the startAngle and endAngle parameters.
 		///
+		/// <code>
+		/// Draw.xz.Circle(float3.zero, 0.75f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.xz.Circle(float3.zero, 0.75f, -Mathf.PI*0.25f, Mathf.PI*1.25f, color);
+		/// </code>
 		/// [Open online documentation to see images]
 		///
 		/// See: <see cref="Circle(float3,float,float,float)"/>
@@ -155,20 +163,7 @@ namespace Pathfinding.Drawing {
 			Circle(xy ? new float3(center, 0) : new float3(center.x, 0, center.y), radius, startAngle, endAngle);
 		}
 
-		/// <summary>
-		/// Draws a circle.
-		///
-		/// You can draw an arc by supplying the startAngle and endAngle parameters.
-		///
-		/// [Open online documentation to see images]
-		///
-		/// See: <see cref="CommandBuilder.Circle(float3,float3,float)"/>
-		/// See: <see cref="Arc(float3,float3,float3)"/>
-		/// </summary>
-		/// <param name="center">Center of the circle or arc.</param>
-		/// <param name="radius">Radius of the circle or arc.</param>
-		/// <param name="startAngle">Starting angle in radians. 0 corrsponds to the positive X axis.</param>
-		/// <param name="endAngle">End angle in radians.</param>
+		/// <summary>\copydocref{Circle(float2,float,float,float)}</summary>
 		public void Circle (float3 center, float radius, float startAngle = 0f, float endAngle = 2 * math.PI) {
 			if (xy) {
 				draw.PushMatrix(XZ_TO_XY_MATRIX);
@@ -189,6 +184,14 @@ namespace Pathfinding.Drawing {
 		///
 		/// You can draw an arc by supplying the startAngle and endAngle parameters.
 		///
+		/// <code>
+		/// Draw.xz.SolidCircle(float3.zero, 0.75f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.xz.SolidCircle(float3.zero, 0.75f, -Mathf.PI*0.25f, Mathf.PI*1.25f, color);
+		/// </code>
 		/// [Open online documentation to see images]
 		///
 		/// See: <see cref="Draw.SolidCircle(float3,float3,float)"/>
@@ -415,6 +418,80 @@ namespace Pathfinding.Drawing {
 		/// <param name="totalSize">Total size of the grid along the X and Z axes.</param>
 		public void WireGrid (float3 center, int2 cells, float2 totalSize) {
 			draw.WireGrid(center, xy ? XY_TO_XZ_ROTATION : XZ_TO_XZ_ROTATION, cells, totalSize);
+		}
+
+		/// <summary>
+		/// Draws a ring (annulus) outline in 2D.
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		///
+		/// You can draw a ring segment (arc) by supplying the startAngle and endAngle parameters.
+		/// If drawing a partial ring (not a full circle), connector lines will be drawn between the endpoints of the inner and outer arcs.
+		///
+		/// <code>
+		/// Draw.xz.WireRing(float2.zero, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.xz.WireRing(float2.zero, 0.3f, 0.7f, 0f, Mathf.PI * 1.5f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="SolidRing(float2,float,float,float,float)"/>
+		/// See: <see cref="Draw.WireRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		/// <param name="startAngle">Starting angle in radians. 0 corresponds to the positive X axis. Defaults to 0.</param>
+		/// <param name="endAngle">End angle in radians. Defaults to 2π (full circle).</param>
+		public void WireRing (float2 center, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * math.PI) {
+			WireRing(xy ? new float3(center, 0) : new float3(center.x, 0, center.y), innerRadius, outerRadius, startAngle, endAngle);
+		}
+
+		/// <summary>\copydocref{WireRing(float2,float,float,float,float)}</summary>
+		public void WireRing (float3 center, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * math.PI) {
+			draw.WireRing(center, xy ? XY_TO_XZ_ROTATION : XZ_TO_XZ_ROTATION, innerRadius, outerRadius, startAngle, endAngle);
+		}
+
+		/// <summary>
+		/// Draws a solid ring (filled annulus) in 2D.
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		/// This draws the filled area between the two circles.
+		///
+		/// You can draw a ring segment (arc) by supplying the startAngle and endAngle parameters.
+		///
+		/// <code>
+		/// Draw.xz.SolidRing(float2.zero, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.xz.SolidRing(float2.zero, 0.3f, 0.7f, 0f, Mathf.PI * 1.5f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="WireRing(float2,float,float,float,float)"/>
+		/// See: <see cref="Draw.SolidRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		/// <param name="startAngle">Starting angle in radians. 0 corresponds to the positive X axis. Defaults to 0.</param>
+		/// <param name="endAngle">End angle in radians. Defaults to 2π (full circle).</param>
+		public void SolidRing (float2 center, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * math.PI) {
+			SolidRing(xy ? new float3(center, 0) : new float3(center.x, 0, center.y), innerRadius, outerRadius, startAngle, endAngle);
+		}
+
+		/// <summary>\copydocref{SolidRing(float2,float,float,float,float)}</summary>
+		public void SolidRing (float3 center, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * math.PI) {
+			if (xy) {
+				draw.PushMatrix(XZ_TO_XY_MATRIX);
+				draw.SolidRingXZInternal(new float3(center.x, center.z, center.y), innerRadius, outerRadius, startAngle, endAngle);
+				draw.PopMatrix();
+			} else {
+				draw.SolidRingXZInternal(center, innerRadius, outerRadius, startAngle, endAngle);
+			}
 		}
 	}
 }

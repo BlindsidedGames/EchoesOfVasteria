@@ -33,6 +33,27 @@ namespace TimelessEchoes.Gear
             var rm = ResourceManager.Instance;
             if (rm == null) return;
 
+            rm.BeginBatch();
+            try
+            {
+                BatchSalvageWithinBatch(core, count);
+            }
+            finally
+            {
+                rm.EndBatch();
+            }
+        }
+
+        /// <summary>
+        /// Batch salvage that assumes caller has already called BeginBatch.
+        /// Use this when combining multiple operations into a single batch to reduce OnInventoryChanged events.
+        /// </summary>
+        public void BatchSalvageWithinBatch(CoreSO core, int count)
+        {
+            if (core == null || count <= 0) return;
+            var rm = ResourceManager.Instance;
+            if (rm == null) return;
+
             var drops = core.salvageDrops;
             var extraChances = core.salvageAdditionalLootChances;
             if (drops == null || drops.Count == 0) return;
@@ -80,47 +101,39 @@ namespace TimelessEchoes.Gear
                 _scratchExpected[drop.resource] += expected;
             }
 
-            // Award resources
-            rm.BeginBatch();
-            try
+            // Award resources (no batch management - caller handles it)
+            var o = Blindsided.Oracle.oracle;
+            var forge = (o != null && o.saveData != null) ? o.saveData.Forge : null;
+
+            foreach (var kv in _scratchExpected)
             {
-                var o = Blindsided.Oracle.oracle;
-                var forge = (o != null && o.saveData != null) ? o.saveData.Forge : null;
+                int amount = Mathf.RoundToInt(kv.Value * count);
+                if (amount <= 0) continue;
+                rm.Add(kv.Key, amount, trackStats: false);
 
-                foreach (var kv in _scratchExpected)
-                {
-                    int amount = Mathf.RoundToInt(kv.Value * count);
-                    if (amount <= 0) continue;
-                    rm.Add(kv.Key, amount, trackStats: false);
-
-                    // Record stats
-                    if (forge != null)
-                    {
-                        var rname = kv.Key.name;
-                        if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname))
-                            forge.ResourcesGainedFromSalvage[rname] = 0;
-                        forge.ResourcesGainedFromSalvage[rname] += amount;
-                        if (!forge.SalvageYieldPerResource.ContainsKey(rname))
-                            forge.SalvageYieldPerResource[rname] =
-                                new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
-                        var agg = forge.SalvageYieldPerResource[rname];
-                        agg.count += count;
-                        agg.sum += amount;
-                    }
-                }
-
-                // Update salvage counters
+                // Record stats
                 if (forge != null)
                 {
-                    forge.TotalSalvaged += count;
-                    forge.SalvageItems += count;
-                    forge.BatchSalvageCount += count;
-                    forge.SalvagesByCore.Increment(core.name, count);
+                    var rname = kv.Key.name;
+                    if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname))
+                        forge.ResourcesGainedFromSalvage[rname] = 0;
+                    forge.ResourcesGainedFromSalvage[rname] += amount;
+                    if (!forge.SalvageYieldPerResource.ContainsKey(rname))
+                        forge.SalvageYieldPerResource[rname] =
+                            new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
+                    var agg = forge.SalvageYieldPerResource[rname];
+                    agg.count += count;
+                    agg.sum += amount;
                 }
             }
-            finally
+
+            // Update salvage counters
+            if (forge != null)
             {
-                rm.EndBatch();
+                forge.TotalSalvaged += count;
+                forge.SalvageItems += count;
+                forge.BatchSalvageCount += count;
+                forge.SalvagesByCore.Increment(core.name, count);
             }
         }
 

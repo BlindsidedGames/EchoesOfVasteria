@@ -612,7 +612,7 @@ namespace Pathfinding.Drawing {
 					}
 
 #if UNITY_EDITOR
-					if (!script.gameObject.scene.IsValid()) {
+					if (PrefabUtility.IsPartOfPrefabAsset(script)) {
 						// The object is likely part of a persistent prefab asset. We will never have to draw any gizmos for it, because it will never become enabled, and it will never show up in the scene view.
 						continue;
 					}

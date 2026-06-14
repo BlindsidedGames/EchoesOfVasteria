@@ -14,10 +14,6 @@ namespace Pathfinding {
 			PropertyField("hardCollisions");
 			PropertyField("useNavmeshAsObstacle");
 
-			// Section("Execution");
-			// PropertyField("desiredSimulationFPS");
-			// ClampInt("desiredSimulationFPS", 1);
-
 			Section("Debugging");
 			PropertyField("drawQuadtree");
 		}

@@ -136,6 +136,12 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private Button forgeInfoButton;
         [SerializeField] [Space] private TMP_Text forgeInfoButtonText;
         [SerializeField] [Space] private WindowReference options = new();
+
+        [Title("Additional Buttons")]
+        [SerializeField] private Button forgeButton2;
+        [SerializeField] private Button cauldronButton2;
+        [SerializeField] private Button alterEchoesButton2;
+
         [SerializeField] [Space] private GameObject discord;
         [SerializeField] [Space] private GameObject autoPin;
         [SerializeField] [Space] private GameObject stopOnVastium;
@@ -192,6 +198,14 @@ namespace TimelessEchoes.UI
                 hubButton.onClick.AddListener(ToggleHubDropdown);
             if (beginAdventureButton != null)
                 beginAdventureButton.onClick.AddListener(ToggleBeginAdventureDropdown);
+
+            // Additional buttons
+            if (forgeButton2 != null)
+                forgeButton2.onClick.AddListener(OpenForge);
+            if (cauldronButton2 != null)
+                cauldronButton2.onClick.AddListener(OpenCauldron);
+            if (alterEchoesButton2 != null)
+                alterEchoesButton2.onClick.AddListener(OpenAlterEchoes);
         }
 
         private void OnEnable()
@@ -255,6 +269,15 @@ namespace TimelessEchoes.UI
                 hubButton.onClick.RemoveListener(ToggleHubDropdown);
             if (beginAdventureButton != null)
                 beginAdventureButton.onClick.RemoveListener(ToggleBeginAdventureDropdown);
+
+            // Additional buttons
+            if (forgeButton2 != null)
+                forgeButton2.onClick.RemoveListener(OpenForge);
+            if (cauldronButton2 != null)
+                cauldronButton2.onClick.RemoveListener(OpenCauldron);
+            if (alterEchoesButton2 != null)
+                alterEchoesButton2.onClick.RemoveListener(OpenAlterEchoes);
+
             if (Instance == this)
                 Instance = null;
         }

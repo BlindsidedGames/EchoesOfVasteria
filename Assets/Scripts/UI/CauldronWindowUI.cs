@@ -95,6 +95,14 @@ namespace TimelessEchoes.UI
 		private bool _tastingOccurredThisSession;
 		[SerializeField] private ResourceManager rm;
 
+		// Dirty flags for throttled updates (coalesce multiple events per frame)
+		private bool _mixSlotsNeedRefresh;
+		private bool _pieChartNeedsRefresh;
+		private bool _weightsNeedRefresh;
+
+		// Cached eligible foods list to avoid repeated LINQ allocations
+		private List<Resource> _cachedEligibleFoods;
+
 		private void Awake()
 		{
 			cauldron ??= CauldronManager.Instance;
@@ -137,6 +145,8 @@ namespace TimelessEchoes.UI
 
 		private void OnEnable()
 		{
+			// Invalidate cache on window open in case unlocks changed while closed
+			InvalidateEligibleFoodsCache();
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();
@@ -203,7 +213,7 @@ namespace TimelessEchoes.UI
 		private void RefreshMixSlots()
 		{
 			if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
-			var eligibleFoods = BuildEligibleFoodsList();
+			var eligibleFoods = GetEligibleFoods();
 			UpdateMixAllButtonState(eligibleFoods);
 
 			// Clear any previous selections that are not foods or have zero amount
@@ -263,7 +273,18 @@ namespace TimelessEchoes.UI
 			RefreshSelectedDisplaySlots();
 		}
 
-		private List<Resource> BuildEligibleFoodsList()
+		private List<Resource> GetEligibleFoods()
+		{
+			// Return cached list if available; only rebuild when invalidated
+			return _cachedEligibleFoods ??= BuildEligibleFoodsListInternal();
+		}
+
+		private void InvalidateEligibleFoodsCache()
+		{
+			_cachedEligibleFoods = null;
+		}
+
+		private List<Resource> BuildEligibleFoodsListInternal()
 		{
 			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
 			var eligibleFromTasks = new HashSet<Resource>();
@@ -291,11 +312,19 @@ namespace TimelessEchoes.UI
 					eligible.Add(r);
 			}
 
-			return Blindsided.Utilities.AssetCache.GetAll<Resource>("")
-				.Where(r => r != null && eligible.Contains(r) && (rm != null && rm.IsUnlocked(r)))
-				.OrderBy(r => r.resourceID)
-				.ThenBy(r => r.name)
-				.ToList();
+			// Build sorted list of unlocked eligible resources
+			var result = new List<Resource>();
+			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+			{
+				if (r != null && eligible.Contains(r) && rm != null && rm.IsUnlocked(r))
+					result.Add(r);
+			}
+			result.Sort((a, b) =>
+			{
+				int cmp = a.resourceID.CompareTo(b.resourceID);
+				return cmp != 0 ? cmp : string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+			});
+			return result;
 		}
 
 		private void UpdateMixAllButtonState(List<Resource> eligibleFoods)
@@ -380,7 +409,7 @@ namespace TimelessEchoes.UI
 		private void OnMixAllClicked()
 		{
 			if (cauldron == null || rm == null) return;
-			var eligibleFoods = BuildEligibleFoodsList();
+			var eligibleFoods = GetEligibleFoods();
 			if (eligibleFoods.Count < 2) return;
 
 			var stocked = new List<Resource>();
@@ -463,6 +492,8 @@ namespace TimelessEchoes.UI
 
 		private void OnSaveOrLoad()
 		{
+			// Invalidate cache when save data changes (unlocks may differ)
+			InvalidateEligibleFoodsCache();
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();
@@ -480,9 +511,32 @@ namespace TimelessEchoes.UI
 		private void OnInventoryChangedUi()
 		{
 			if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
-			RefreshMixSlots();
-			RefreshPieChart();
-			RefreshWeightsText();
+			// Skip if cauldron window isn't actually visible to user
+			if (!TownWindowManager.IsCauldronOpen) return;
+			// Set dirty flags for LateUpdate to process (coalesces multiple events per frame)
+			_mixSlotsNeedRefresh = true;
+			_pieChartNeedsRefresh = true;
+			_weightsNeedRefresh = true;
+		}
+
+		private void LateUpdate()
+		{
+			// Process dirty flags - coalesces multiple OnInventoryChanged events into single refresh per frame
+			if (_mixSlotsNeedRefresh)
+			{
+				RefreshMixSlots();
+				_mixSlotsNeedRefresh = false;
+			}
+			if (_pieChartNeedsRefresh)
+			{
+				RefreshPieChart();
+				_pieChartNeedsRefresh = false;
+			}
+			if (_weightsNeedRefresh)
+			{
+				RefreshWeightsText();
+				_weightsNeedRefresh = false;
+			}
 		}
 
 		private void RefreshPieChart()

@@ -597,10 +597,29 @@ namespace Pathfinding {
 		/// But be careful about accessing properties like <see cref="OffMeshLinkSource.gameObject"/>, as that may refer to a destroyed gameObject.
 		///
 		/// See: offmeshlinks (view in online documentation for working links)
+		/// See: <see cref="nextOffMeshLink"/>
 		/// See: <see cref="onTraverseOffMeshLink"/>
 		/// See: <see cref="isTraversingOffMeshLink"/>
 		/// </summary>
 		public OffMeshLinks.OffMeshLinkTracer offMeshLink => proxy.offMeshLink;
+
+		/// <summary>
+		/// The off-mesh link that the agent will traverse next, or the one it is traversing (if any).
+		///
+		/// The next link in the path will be returned regardless of the distance to it.
+		///
+		/// This will be a default <see cref="OffMeshLinks.OffMeshLinkTracer"/> if the agent is not traversing an off-mesh link, and there are no remaining off-mesh links in its path (the <see cref="OffMeshLinks.OffMeshLinkTracer.link"/> field will be null).
+		///
+		/// Note: If the off-mesh link is destroyed while the agent is traversing it, this property will still return the link.
+		/// But be careful about accessing properties like <see cref="OffMeshLinkSource.gameObject"/>, as that may refer to a destroyed gameObject.
+		///
+		/// See: offmeshlinks (view in online documentation for working links)
+		/// See: <see cref="GetRemainingPath"/>
+		/// See: <see cref="offMeshLink"/>
+		/// See: <see cref="onTraverseOffMeshLink"/>
+		/// See: <see cref="isTraversingOffMeshLink"/>
+		/// </summary>
+		public OffMeshLinks.OffMeshLinkTracer nextOffMeshLink => proxy.nextOffMeshLink;
 
 		/// <summary>
 		/// Callback to be called when an agent starts traversing an off-mesh link.

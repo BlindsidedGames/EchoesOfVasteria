@@ -81,8 +81,15 @@ namespace Pathfinding {
 
 		int nodesEvaluatedRep;
 
-		/// <summary>Random number generator</summary>
-		readonly System.Random rnd = new System.Random();
+		/// <summary>
+		/// Random number generator source.
+		///
+		/// You may supply a custom random number generator here in order to get reproducible paths by using a fixed seed.
+		/// If not, a new System.Random instance will be created when the path is constructed.
+		///
+		/// Keep in mind that multiple paths should never share the same System.Random instance, since paths are calculated in parallel.
+		/// </summary>
+		public System.Random rnd;
 
 		protected override bool hasEndPoint => false;
 
@@ -100,6 +107,7 @@ namespace Pathfinding {
 			chosenPathNodeGScore = 0;
 			maxGScore = 0;
 			aim = Vector3.zero;
+			rnd = new System.Random();
 
 			nodesEvaluatedRep = 0;
 		}

@@ -8,16 +8,13 @@ namespace Pathfinding.ECS {
 
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	[UpdateBefore(typeof(FollowerControlSystem))]
-	[UpdateBefore(typeof(RepairPathSystem))]
+	[UpdateBefore(typeof(RepairPathSystem))] // Must run before RepairPathSystem to allow the agent to instantly start moving correctly after an agent finishes traversing an off-mesh link.
 	public partial struct TraverseOffMeshLinkSystem : ISystem {
-		EntityQuery entityQueryPrepare;
 		EntityQuery entityQueryOffMeshLinkCleanup;
 		public JobRepairPath.Scheduler jobRepairPathScheduler;
 
 		public void OnCreate (ref SystemState state) {
 			jobRepairPathScheduler = new JobRepairPath.Scheduler(ref state);
-
-			entityQueryPrepare = jobRepairPathScheduler.GetEntityQuery(Unity.Collections.Allocator.Temp).WithAll<SimulateMovement, SimulateMovementRepair>().Build(ref state);
 
 			entityQueryOffMeshLinkCleanup = state.GetEntityQuery(
 				// ManagedAgentOffMeshLinkTraversal is a cleanup component.
@@ -54,6 +51,12 @@ namespace Pathfinding.ECS {
 			         // Do not try to add another off-mesh link component to agents that already have one.
 					 .WithNone<AgentOffMeshLinkTraversal>()) {
 				// UnityEngine.Assertions.Assert.IsTrue(movementState.ValueRO.reachedEndOfPart && state.pathTracer.isNextPartValidLink);
+				if (!state.pathTracer.isNextPartValidLink) {
+					// The ReadyToTraverseOffMeshLink component is set at the end of a frame by the RepairPathSystem.
+					// In rare cases, the link may have been invalidated between then and now.
+					// In that case, just skip this agent and let the RepairPathSystem add the component again later if needed.
+					continue;
+				}
 				var linkInfo = NextLinkToTraverse(state);
 				var ctx = new AgentOffMeshLinkTraversalContext(linkInfo.link);
 				// Add the AgentOffMeshLinkTraversal and ManagedAgentOffMeshLinkTraversal components when the agent should start traversing an off-mesh link.

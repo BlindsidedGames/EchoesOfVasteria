@@ -39,10 +39,18 @@ namespace Pathfinding.Graphs.Grid.Rules {
 
 		public override int Hash {
 			get {
-				var h = base.Hash ^ (texture != null ? (31 * texture.GetInstanceID()) ^ (int)texture.updateCount : 0);
-#if UNITY_EDITOR
-				if (texture != null) h ^= (int)texture.imageContentsHash.GetHashCode();
+				var h = base.Hash;
+				if (texture != null) {
+#if UNITY_6000_4_OR_NEWER
+					var textureID = texture.GetEntityId().GetHashCode();
+#else
+					var textureID = texture != null ? texture.GetInstanceID() : 0;
 #endif
+					h ^= (31 * textureID) ^ (int)texture.updateCount;
+#if UNITY_EDITOR
+					h ^= (int)texture.imageContentsHash.GetHashCode();
+#endif
+				}
 				return h;
 			}
 		}

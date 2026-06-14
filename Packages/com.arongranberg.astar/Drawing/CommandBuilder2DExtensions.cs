@@ -218,6 +218,10 @@ namespace Pathfinding.Drawing {
 
 
 
+
+
+
+
 		/// <summary>\copydocref{Ray(float3,float3)}</summary>
 		public void Ray (float3 origin, float3 direction, Color color) {
 			draw.Ray(origin, direction, color);
@@ -409,6 +413,14 @@ namespace Pathfinding.Drawing {
 
 
 
+
+
+
+
+
+
+
+
 		/// <summary>\copydocref{Line(float3,float3)}</summary>
 		public void Line (float3 a, float3 b, Color color) {
 			draw.Line(a, b, color);
@@ -424,7 +436,6 @@ namespace Pathfinding.Drawing {
 			Circle(center, radius, 0f, 2 * math.PI, color);
 		}
 		/// <summary>\copydocref{Circle(float3,float,float,float)}</summary>
-		/// <param name="color">Color of the object</param>
 		public void Circle (float3 center, float radius, float startAngle, float endAngle, Color color) {
 			draw.PushColor(color);
 			if (xy) {
@@ -437,7 +448,6 @@ namespace Pathfinding.Drawing {
 			draw.PopColor();
 		}
 		/// <summary>\copydocref{Circle(float3,float,float,float)}</summary>
-		/// <param name="color">Color of the object</param>
 		public void Circle (float3 center, float radius, Color color) {
 			Circle(center, radius, 0f, 2 * math.PI, color);
 		}

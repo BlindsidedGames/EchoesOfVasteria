@@ -19,13 +19,13 @@ namespace Pathfinding.Drawing {
 		internal static readonly int PushCommands = (1 << (int)Command.PushColor) | (1 << (int)Command.PushMatrix) | (1 << (int)Command.PushSetMatrix) | (1 << (int)Command.PushPersist) | (1 << (int)Command.PushLineWidth);
 		internal static readonly int PopCommands = (1 << (int)Command.PopColor) | (1 << (int)Command.PopMatrix) | (1 << (int)Command.PopPersist) | (1 << (int)Command.PopLineWidth);
 		internal static readonly int MetaCommands = PushCommands | PopCommands;
-		internal static readonly int DynamicCommands = (1 << (int)Command.SphereOutline) | (1 << (int)Command.CircleXZ) | (1 << (int)Command.Circle) | (1 << (int)Command.DiscXZ) | (1 << (int)Command.Disc) | (1 << (int)Command.Text) | (1 << (int)Command.Text3D) | (1 << (int)Command.CaptureState) | MetaCommands;
+		internal static readonly int DynamicCommands = (1 << (int)Command.SphereOutline) | (1 << (int)Command.CircleXZ) | (1 << (int)Command.Circle) | (1 << (int)Command.DiscXZ) | (1 << (int)Command.Disc) | (1 << (int)Command.Ring) | (1 << (int)Command.Text) | (1 << (int)Command.Text3D) | (1 << (int)Command.CaptureState) | MetaCommands;
 		internal static readonly int StaticCommands = (1 << (int)Command.Line) | (1 << (int)Command.Box) | (1 << (int)Command.WirePlane) | (1 << (int)Command.WireBox) | (1 << (int)Command.SolidTriangle) | MetaCommands;
 
 		internal static readonly int[] CommandSizes;
 		static StreamSplitter() {
 			// Size of all commands in bytes
-			CommandSizes = new int[22];
+			CommandSizes = new int[23];
 			CommandSizes[(int)Command.PushColor] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<Color32>();
 			CommandSizes[(int)Command.PopColor] = UnsafeUtility.SizeOf<Command>() + 0;
 			CommandSizes[(int)Command.PushMatrix] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<float4x4>();
@@ -37,6 +37,7 @@ namespace Pathfinding.Drawing {
 			CommandSizes[(int)Command.Circle] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<CircleData>();
 			CommandSizes[(int)Command.Disc] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<CircleData>();
 			CommandSizes[(int)Command.DiscXZ] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<CircleXZData>();
+			CommandSizes[(int)Command.Ring] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<RingData>();
 			CommandSizes[(int)Command.Box] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<BoxData>();
 			CommandSizes[(int)Command.WirePlane] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<PlaneData>();
 			CommandSizes[(int)Command.WireBox] = UnsafeUtility.SizeOf<Command>() + UnsafeUtility.SizeOf<BoxData>();

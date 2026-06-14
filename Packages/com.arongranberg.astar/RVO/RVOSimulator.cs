@@ -28,17 +28,6 @@ namespace Pathfinding.RVO {
 		public static RVOSimulator active { get; private set; }
 
 		/// <summary>
-		/// Desired FPS for rvo simulation.
-		/// It is usually not necessary to run a crowd simulation at a very high fps.
-		/// Usually 10-30 fps is enough, but it can be increased for better quality.
-		/// The rvo simulation will never run at a higher fps than the game
-		/// </summary>
-		[Tooltip("Desired FPS for rvo simulation. It is usually not necessary to run a crowd simulation at a very high fps.\n" +
-			"Usually 10-30 fps is enough, but can be increased for better quality.\n"+
-			"The rvo simulation will never run at a higher fps than the game")]
-		public int desiredSimulationFPS = 20;
-
-		/// <summary>
 		/// Number of RVO worker threads.
 		/// If set to None, no multithreading will be used.
 		/// Using multithreading can significantly improve performance by offloading work to other CPU cores.
@@ -140,10 +129,7 @@ namespace Pathfinding.RVO {
 		void Update () {
 			if (!Application.isPlaying) return;
 
-			if (desiredSimulationFPS < 1) desiredSimulationFPS = 1;
-
 			var sim = GetSimulator();
-			sim.DesiredDeltaTime = 1.0f / desiredSimulationFPS;
 			sim.SymmetryBreakingBias = symmetryBreakingBias;
 			sim.HardCollisions = hardCollisions;
 			sim.drawQuadtree = drawQuadtree;

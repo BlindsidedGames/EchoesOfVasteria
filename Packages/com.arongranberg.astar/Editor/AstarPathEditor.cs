@@ -1030,28 +1030,25 @@ namespace Pathfinding {
 				colors._UnwalkableNode = EditorGUILayout.ColorField("Unwalkable Node", colors._UnwalkableNode);
 				colors._BoundsHandles = EditorGUILayout.ColorField("Bounds Handles", colors._BoundsHandles);
 
-				colors._ConnectionLowLerp = EditorGUILayout.ColorField("Connection Gradient (low)", colors._ConnectionLowLerp);
-				colors._ConnectionHighLerp = EditorGUILayout.ColorField("Connection Gradient (high)", colors._ConnectionHighLerp);
-
-				colors._MeshEdgeColor = EditorGUILayout.ColorField("Mesh Edge", colors._MeshEdgeColor);
+				colors._ConnectionLowLerp = EditorGUILayout.ColorField("Graph Debug Gradient (low)", colors._ConnectionLowLerp);
+				colors._ConnectionHighLerp = EditorGUILayout.ColorField("Graph Debug Gradient (high)", colors._ConnectionHighLerp);
 
 				if (EditorResourceHelper.GizmoSurfaceMaterial != null && EditorResourceHelper.GizmoLineMaterial != null) {
 					EditorGUI.BeginChangeCheck();
-					var col1 = EditorResourceHelper.GizmoSurfaceMaterial.color;
-					col1.a = EditorGUILayout.Slider("Navmesh Surface Opacity", col1.a, 0, 1);
+					var current = Drawing.DrawingSettings.GetSettingsAsset();
 
-					var col2 = EditorResourceHelper.GizmoLineMaterial.color;
-					col2.a = EditorGUILayout.Slider("Navmesh Outline Opacity", col2.a, 0, 1);
+					Undo.RecordObject(current, "Change gizmo transparency");
 
-					var fade = EditorResourceHelper.GizmoSurfaceMaterial.GetColor("_FadeColor");
-					fade.a = EditorGUILayout.Slider("Opacity Behind Objects", fade.a, 0, 1);
+					current.settings.solidOpacity = EditorGUILayout.Slider("Gizmo Surface Opacity", current.settings.solidOpacity, 0, 1);
+
+					current.settings.lineOpacity = EditorGUILayout.Slider("Gizmo Line Opacity", current.settings.lineOpacity, 0, 1);
+
+					current.settings.solidOpacityBehindObjects = EditorGUILayout.Slider("Opacity Behind Objects", current.settings.solidOpacityBehindObjects, 0, 1);
 
 					if (EditorGUI.EndChangeCheck()) {
-						Undo.RecordObjects(new [] { EditorResourceHelper.GizmoSurfaceMaterial, EditorResourceHelper.GizmoLineMaterial }, "Change navmesh transparency");
-						EditorResourceHelper.GizmoSurfaceMaterial.color = col1;
-						EditorResourceHelper.GizmoLineMaterial.color = col2;
-						EditorResourceHelper.GizmoSurfaceMaterial.SetColor("_FadeColor", fade);
-						EditorResourceHelper.GizmoLineMaterial.SetColor("_FadeColor", fade * new Color(1, 1, 1, 0.7f));
+						// Technically a different setting, but for simplicity we just derive the line opacity behind objects from the solid opacity behind objects
+						current.settings.lineOpacityBehindObjects = current.settings.solidOpacityBehindObjects * 0.26f;
+						EditorUtility.SetDirty(current);
 					}
 				}
 

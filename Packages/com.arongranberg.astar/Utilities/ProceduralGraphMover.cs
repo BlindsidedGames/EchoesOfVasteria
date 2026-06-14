@@ -116,7 +116,7 @@ namespace Pathfinding {
 
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
-			if (AstarPath.active == null || graph == null || !graph.isScanned) return;
+			if (AstarPath.active == null || graph == null || !graph.isScanned || target == null) return;
 
 			if (graph is GridGraph gg) {
 				// Calculate where the graph center and the target position is in graph space
@@ -183,6 +183,10 @@ namespace Pathfinding {
 			List<(IGraphUpdatePromise, IEnumerator<JobHandle>)> promises = new List<(IGraphUpdatePromise, IEnumerator<JobHandle>)>();
 			AstarPath.active.AddWorkItem(new AstarWorkItem(
 				ctx => {
+				// If target is destroyed before the update starts, do nothing.
+				// Once the update starts, we will always complete it even if the target is destroyed in the meantime.
+				if (target == null) return;
+
 				// Find the direction that we want to move the graph in.
 				// Calculate this in graph space (where a distance of one is the size of one node)
 				Vector3 dir = graph.transform.InverseTransformVector(target.position - graph.center);

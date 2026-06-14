@@ -759,6 +759,14 @@ namespace Pathfinding.Drawing {
 
 
 
+
+
+
+
+
+
+
+
 		/// <summary>
 		/// \copydocref{Drawing::CommandBuilder::Line(float3,float3,Color)}
 		/// Warning: This method cannot be used inside of Burst jobs. See job-system (view in online documentation for working links) instead.

@@ -1322,7 +1322,16 @@ namespace Pathfinding {
 
 			// Search up to this distance
 			var maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+
 			float bestDistSqr = maxDistanceSqr;
+			if (!projectedDistance) {
+				// In this mode, we initially use an inaccurate distance calculation which just checks the node centers
+				// Therefore we need to increase the initial maxDistanceSqr a bit to avoid skipping nodes whose real
+				// distance would be within the limit.
+				// The node center can be at most sqrt(2)*(nodeSize/2) away from the closest point on the node
+				var bestDist = math.sqrt(bestDistSqr) + nodeSize * 0.707106f;
+				bestDistSqr = bestDist*bestDist;
+			}
 			var layerCount = LayerCount;
 			var layerStride = width*depth;
 			long yOffset = 0;
@@ -1369,15 +1378,33 @@ namespace Pathfinding {
 			// and so on...
 
 			// Lower bound on the distance to any cell which is not the closest one
-			float distanceToEdgeOfNode = Mathf.Min(Mathf.Min(xf - x, 1.0f - (xf - x)), Mathf.Min(zf - z, 1.0f - (zf - z))) * nodeSize;
+			// The Abs calls are to handle the case when the point is outside the grid. In that case this will end up being the distance to the edge of the graph.
+			float distanceToEdgeOfNode = Mathf.Min(Mathf.Min(Mathf.Abs(xf - x), Mathf.Abs(1.0f - (xf - x))), Mathf.Min(Mathf.Abs(zf - z), Mathf.Abs(1.0f - (zf - z)))) * nodeSize;
 
 			for (int w = 1;; w++) {
 				// Check if the nodes are within distance limit.
 				// This is an optimization to avoid calculating the distance to all nodes.
 				// Since we search in a square pattern, we will have to search up to
 				// sqrt(2) times further away than the closest node we have found so far (or the maximum distance).
-				var distanceThreshold = math.max(0, w-2)*nodeSize + distanceToEdgeOfNode;
-				if (bestDistSqr - 0.00001f <= distanceThreshold*distanceThreshold) {
+				//
+				//        3
+				//      3 2 3
+				//    3 2 1 2 3
+				//  3 2 1 0 1 2 3
+				//    3 2 1 2 3
+				//      3 2 3
+				//        3
+				//
+				float closestDistanceToAnyNodeInIteration;
+				if (projectedDistance) {
+					// Calculate a lower bound on the distance to any part of the nodes surfaces, for the nodes in this iteration
+					closestDistanceToAnyNodeInIteration = math.max(0, w-2) * 1.4142f * 0.5f * nodeSize + distanceToEdgeOfNode;
+				} else {
+					// In this mode, we initially use an inaccurate distance calculation which just checks the node centers
+					closestDistanceToAnyNodeInIteration = math.max(0, w-1) * 1.4142f * 0.5f * nodeSize + distanceToEdgeOfNode;
+				}
+
+				if (bestDistSqr - 0.00001f <= closestDistanceToAnyNodeInIteration*closestDistanceToAnyNodeInIteration) {
 					break;
 				}
 
@@ -1404,6 +1431,9 @@ namespace Pathfinding {
 										cost = Mathf.Sqrt(distSideSqr) + Mathf.Abs(distUp);
 										cost = cost*cost;
 									} else {
+										// This is not quite accurate. There are closer points within the node square.
+										// We will calculate the exact closest point later if this is the closest node.
+										// This will still allow us to determine which node is the closest.
 										cost = ((Vector3)node.position-globalPosition).sqrMagnitude;
 									}
 									if (cost <= bestDistSqr) {
@@ -3316,7 +3346,7 @@ namespace Pathfinding {
 		/// Returns if there is an obstacle between the two nodes on the graph.
 		/// Like <see cref="Linecast(GridNodeBase,Vector2,GridNodeBase,Vector2,GridHitInfo,TraversalConstraint,List<GraphNode>,bool)"/> but takes normalized points as fixed precision points normalized between 0 and FixedPrecisionScale instead of between 0 and 1.
 		/// </summary>
-		public bool Linecast (GridNodeBase fromNode, int2 fixedNormalizedFromPoint, GridNodeBase toNode, int2 fixedNormalizedToPoint, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null, bool continuePastEnd = false) {
+		public bool Linecast (GridNodeBase fromNode, int2 fixedNormalizedFromPoint, GridNodeBase toNode, int2 fixedNormalizedToPoint, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null, bool continuePastEnd = false, bool allowDiagonals = true) {
 			/*
 			* Briefly, the algorithm used in this function can be described as:
 			* 1. Determine the two axis aligned directions which will bring us closer to the target.
@@ -3486,8 +3516,9 @@ namespace Pathfinding {
 				if (nerror == 0) {
 					// This is a diagonal move
 					ndir = directionDiagonal;
+
 					// Only allow taking a diagonal move if we have at least 2 steps remaining
-					nextNode = remainingSteps > 1 ? fromNode.GetNeighbourAlongDirection(ndir) : null;
+					nextNode = remainingSteps > 1 && allowDiagonals ? fromNode.GetNeighbourAlongDirection(ndir) : null;
 					if (nextNode != null && (nextNode == prevNode || !traversalConstraint.CanTraverse(fromNode, nextNode))) nextNode = null;
 
 					// Taking a diagonal takes us one additional step closer to the target node compared to an axis-aligned move.

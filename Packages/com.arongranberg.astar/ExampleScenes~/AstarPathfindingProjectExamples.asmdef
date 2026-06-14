@@ -13,7 +13,8 @@
         "GUID:a5baed0c9693541a5bd947d336ec7659",
         "GUID:efa45043feb7e4147a305b73b5cea642",
         "GUID:8819f35a0fc84499b990e90a4ca1911f",
-        "GUID:5f3cf485eb0554709a8abbeace890c86"
+        "GUID:5f3cf485eb0554709a8abbeace890c86",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -61,6 +62,11 @@
             "name": "com.unity.entities.graphics",
             "expression": "0.0.0",
             "define": "MODULE_ENTITIES_GRAPHICS"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "0.0.0",
+            "define": "MODULE_INPUT_SYSTEM"
         }
     ],
     "noEngineReferences": false

@@ -132,14 +132,14 @@ namespace Pathfinding.Drawing {
 		}
 
 
-		internal CommandBuilder(DrawingData gizmos, Hasher hasher, RedrawScope frameRedrawScope, RedrawScope customRedrawScope, bool isGizmos, bool isBuiltInCommandBuilder, int sceneModeVersion) {
+		internal CommandBuilder(DrawingData gizmos, Hasher hasher, RedrawScope frameRedrawScope, RedrawScope customRedrawScope, bool isGizmos, bool isBuiltInCommandBuilder) {
 			// We need to use a GCHandle instead of a normal reference to be able to pass this object to burst compiled function pointers.
 			// The NativeSetClassTypeToNullOnSchedule unfortunately only works together with the job system, not with raw functions.
 			this.gizmos = GCHandle.Alloc(gizmos, GCHandleType.Normal);
 
 			threadIndex = 0;
 			uniqueID = gizmos.data.Reserve(isBuiltInCommandBuilder);
-			gizmos.data.Get(uniqueID).Init(hasher, frameRedrawScope, customRedrawScope, isGizmos, gizmos.GetNextDrawOrderIndex(), sceneModeVersion);
+			gizmos.data.Get(uniqueID).Init(hasher, frameRedrawScope, customRedrawScope, isGizmos, gizmos.GetNextDrawOrderIndex());
 			unsafe {
 				buffer = gizmos.data.Get(uniqueID).bufferPtr;
 			}
@@ -331,6 +331,7 @@ namespace Pathfinding.Drawing {
 			CircleXZ,
 			Disc,
 			DiscXZ,
+			Ring,
 			SphereOutline,
 			Box,
 			WirePlane,
@@ -369,6 +370,15 @@ namespace Pathfinding.Drawing {
 			public float3 center;
 			public float3 normal;
 			public float radius;
+		}
+
+		/// <summary>Holds rendering data for a ring (annulus)</summary>
+		internal struct RingData {
+			public float3 center;
+			public float innerRadius;
+			public float outerRadius;
+			public float startAngle;
+			public float endAngle;
 		}
 
 		/// <summary>Holds rendering data for a sphere</summary>
@@ -1074,6 +1084,8 @@ namespace Pathfinding.Drawing {
 		/// See: <see cref="CommandBuilder.Circle(float3,float3,float)"/>
 		/// See: <see cref="CircleXY(float3,float,float,float)"/>
 		/// See: <see cref="Arc(float3,float3,float3)"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xz.Circle"/> instead
 		/// </summary>
 		/// <param name="center">Center of the circle or arc.</param>
 		/// <param name="radius">Radius of the circle or arc.</param>
@@ -1109,6 +1121,8 @@ namespace Pathfinding.Drawing {
 		///
 		/// See: <see cref="CommandBuilder.Circle(float3,float3,float)"/>
 		/// See: <see cref="Arc(float3,float3,float3)"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xy.Circle"/> instead
 		/// </summary>
 		/// <param name="center">Center of the circle or arc.</param>
 		/// <param name="radius">Radius of the circle or arc.</param>
@@ -1178,6 +1192,8 @@ namespace Pathfinding.Drawing {
 		/// See: <see cref="SolidCircle(float3,float3,float)"/>
 		/// See: <see cref="CommandBuilder2D.SolidCircle(float3,float,float,float)"/>
 		/// See: <see cref="SolidArc(float3,float3,float3)"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xz.SolidCircle"/> instead
 		/// </summary>
 		/// <param name="center">Center of the disc or solid arc.</param>
 		/// <param name="radius">Radius of the disc or solid arc.</param>
@@ -1211,6 +1227,8 @@ namespace Pathfinding.Drawing {
 		/// See: <see cref="SolidCircle(float3,float3,float)"/>
 		/// See: <see cref="CommandBuilder2D.SolidCircle(float3,float,float,float)"/>
 		/// See: <see cref="SolidArc(float3,float3,float3)"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xy.SolidCircle"/> instead
 		/// </summary>
 		/// <param name="center">Center of the disc or solid arc.</param>
 		/// <param name="radius">Radius of the disc or solid arc.</param>
@@ -2056,6 +2074,8 @@ namespace Pathfinding.Drawing {
 		/// Draws a cross in the XZ plane.
 		///
 		/// [Open online documentation to see images]
+		///
+		/// Deprecated: Use <see cref="Draw.xz.Cross"/> instead
 		/// </summary>
 		[System.Obsolete("Use Draw.xz.Cross instead")]
 		public void CrossXZ (float3 position, float size = 1) {
@@ -2068,6 +2088,8 @@ namespace Pathfinding.Drawing {
 		/// Draws a cross in the XY plane.
 		///
 		/// [Open online documentation to see images]
+		///
+		/// Deprecated: Use <see cref="Draw.xy.Cross"/> instead
 		/// </summary>
 		[System.Obsolete("Use Draw.xy.Cross instead")]
 		public void CrossXY (float3 position, float size = 1) {
@@ -2434,6 +2456,8 @@ namespace Pathfinding.Drawing {
 		/// [Open online documentation to see images]
 		///
 		/// See: <see cref="WirePolygon"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xz.WireRectangle"/> instead
 		/// </summary>
 		[System.Obsolete("Use Draw.xz.WireRectangle instead")]
 		public void WireRectangleXZ (float3 center, float2 size) {
@@ -2472,6 +2496,8 @@ namespace Pathfinding.Drawing {
 		/// See: <see cref="WireRectangleXZ"/>
 		/// See: <see cref="WireRectangle(float3,quaternion,float2)"/>
 		/// See: <see cref="WirePolygon"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xy.WireRectangle"/> instead
 		/// </summary>
 		[System.Obsolete("Use Draw.xy.WireRectangle instead")]
 		public void WireRectangle (Rect rect) {
@@ -2580,6 +2606,8 @@ namespace Pathfinding.Drawing {
 		/// See: <see cref="WireRectangleXZ"/>
 		/// See: <see cref="WireRectangle(float3,quaternion,float2)"/>
 		/// See: <see cref="SolidBox"/>
+		///
+		/// Deprecated: Use <see cref="Draw.xy.SolidRectangle"/> instead
 		/// </summary>
 		[System.Obsolete("Use Draw.xy.SolidRectangle instead")]
 		public void SolidRectangle (Rect rect) {
@@ -2767,6 +2795,173 @@ namespace Pathfinding.Drawing {
 			PushMatrix(float4x4.TRS(center, rotation, size));
 			SolidBox(float3.zero, Vector3.one);
 			PopMatrix();
+		}
+
+		/// <summary>
+		/// Draws a ring (annulus) outline.
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		///
+		/// <code>
+		/// Draw.WireRing(Vector3.zero, Vector3.up, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="SolidRing(float3,float3,float,float)"/>
+		/// See: <see cref="CommandBuilder2D.WireRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="normal">Direction perpendicular to the plane of the ring. If this is (0,0,0) then nothing will be rendered.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		public void WireRing (float3 center, float3 normal, float innerRadius, float outerRadius) {
+			if (innerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(innerRadius), "Inner radius must be non-negative");
+			if (outerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(outerRadius), "Outer radius must be non-negative");
+			if (innerRadius > outerRadius) throw new System.ArgumentException("Inner radius cannot be larger than outer radius");
+
+			Circle(center, normal, innerRadius);
+			Circle(center, normal, outerRadius);
+		}
+
+		/// <summary>
+		/// Draws a solid ring (filled annulus).
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		/// This draws the filled area between the two circles.
+		///
+		/// <code>
+		/// Draw.SolidRing(Vector3.zero, Vector3.up, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// Note: To draw a ring segment (partial ring/arc), use the overload that takes a quaternion: <see cref="SolidRing(float3,quaternion,float,float,float,float)"/>
+		///
+		/// See: <see cref="WireRing(float3,float3,float,float)"/>
+		/// See: <see cref="CommandBuilder2D.SolidRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="normal">Direction perpendicular to the plane of the ring. If this is (0,0,0) then nothing will be rendered.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		public void SolidRing (float3 center, float3 normal, float innerRadius, float outerRadius) {
+			if (innerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(innerRadius), "Inner radius must be non-negative");
+			if (outerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(outerRadius), "Outer radius must be non-negative");
+			if (innerRadius > outerRadius) throw new System.ArgumentException("Inner radius cannot be larger than outer radius");
+
+			// If the ring has a zero normal then just ignore it
+			if (math.all(normal == 0)) return;
+
+			// Convert normal to rotation: rotate from (0,1,0) to the desired normal
+			// This makes the ring lie in the plane perpendicular to the normal
+			var rotation = Quaternion.FromToRotation(new float3(0, 1, 0), normal);
+
+			PushMatrix(float4x4.TRS(center, rotation, Vector3.one));
+			SolidRingXZInternal(float3.zero, innerRadius, outerRadius, 0f, 2 * Mathf.PI);
+			PopMatrix();
+		}
+
+		/// <summary>
+		/// Draws a wire ring (annulus) outline.
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		///
+		/// You can draw a ring segment (arc) by supplying the startAngle and endAngle parameters.
+		/// The angles increase counter-clockwise when viewed from above (looking down the local -Y axis).
+		///
+		/// If drawing a partial ring (not a full circle), connector lines will be drawn between the endpoints of the inner and outer arcs.
+		///
+		/// <code>
+		/// Draw.WireRing(Vector3.zero, Vector3.up, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.WireRing(Vector3.zero, Quaternion.identity, 0.3f, 0.7f, 0f, Mathf.PI * 1.5f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="SolidRing(float3,quaternion,float,float,float,float)"/>
+		/// See: <see cref="CommandBuilder2D.WireRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="rotation">Rotation of the ring. The ring will lie in the XZ plane with respect to this rotation.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		/// <param name="startAngle">Starting angle in radians. 0 corresponds to the positive X axis in the ring's local space. Defaults to 0.</param>
+		/// <param name="endAngle">End angle in radians. Defaults to 2π (full circle).</param>
+		public void WireRing (float3 center, quaternion rotation, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * Mathf.PI) {
+			if (innerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(innerRadius), "Inner radius must be non-negative");
+			if (outerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(outerRadius), "Outer radius must be non-negative");
+			if (innerRadius > outerRadius) throw new System.ArgumentException("Inner radius cannot be larger than outer radius");
+
+			PushMatrix(float4x4.TRS(center, rotation, Vector3.one));
+
+			// Draw inner and outer arcs
+			CircleXZInternal(float3.zero, innerRadius, startAngle, endAngle);
+			CircleXZInternal(float3.zero, outerRadius, startAngle, endAngle);
+
+			// If not a full circle, draw connectors between the arc endpoints
+			if (math.abs(endAngle - startAngle) < 2 * Mathf.PI - 0.001f) {
+				math.sincos(startAngle, out float sinStart, out float cosStart);
+				math.sincos(endAngle, out float sinEnd, out float cosEnd);
+
+				var innerStart = new float3(cosStart * innerRadius, 0, sinStart * innerRadius);
+				var outerStart = new float3(cosStart * outerRadius, 0, sinStart * outerRadius);
+				var innerEnd = new float3(cosEnd * innerRadius, 0, sinEnd * innerRadius);
+				var outerEnd = new float3(cosEnd * outerRadius, 0, sinEnd * outerRadius);
+
+				Line(innerStart, outerStart);
+				Line(innerEnd, outerEnd);
+			}
+
+			PopMatrix();
+		}
+
+		/// <summary>
+		/// Draws a solid ring (filled annulus).
+		/// A ring is a flat shape consisting of two concentric circles - an outer circle and an inner circle (like a donut or washer viewed from above).
+		/// This draws the filled area between the two circles.
+		///
+		/// You can draw a ring segment (arc) by supplying the startAngle and endAngle parameters.
+		/// The angles increase counter-clockwise when viewed from above (looking down the local -Y axis).
+		///
+		/// <code>
+		/// Draw.SolidRing(Vector3.zero, Vector3.up, 0.3f, 0.7f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// <code>
+		/// Draw.SolidRing(Vector3.zero, Quaternion.identity, 0.3f, 0.7f, 0f, Mathf.PI * 1.5f, color);
+		/// </code>
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="WireRing(float3,quaternion,float,float,float,float)"/>
+		/// See: <see cref="CommandBuilder2D.SolidRing"/>
+		/// </summary>
+		/// <param name="center">Center point of the ring.</param>
+		/// <param name="rotation">Rotation of the ring. The ring will lie in the XZ plane with respect to this rotation.</param>
+		/// <param name="innerRadius">Radius of the inner circle (the hole).</param>
+		/// <param name="outerRadius">Radius of the outer circle.</param>
+		/// <param name="startAngle">Starting angle in radians. 0 corresponds to the positive X axis in the ring's local space. Defaults to 0.</param>
+		/// <param name="endAngle">End angle in radians. Defaults to 2π (full circle).</param>
+		public void SolidRing (float3 center, quaternion rotation, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * Mathf.PI) {
+			if (innerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(innerRadius), "Inner radius must be non-negative");
+			if (outerRadius < 0) throw new System.ArgumentOutOfRangeException(nameof(outerRadius), "Outer radius must be non-negative");
+			if (innerRadius > outerRadius) throw new System.ArgumentException("Inner radius cannot be larger than outer radius");
+
+			PushMatrix(float4x4.TRS(center, rotation, Vector3.one));
+			SolidRingXZInternal(float3.zero, innerRadius, outerRadius, startAngle, endAngle);
+			PopMatrix();
+		}
+
+		internal void SolidRingXZInternal (float3 center, float innerRadius, float outerRadius, float startAngle = 0f, float endAngle = 2 * Mathf.PI) {
+			Reserve<RingData>();
+			Add(Command.Ring);
+			Add(new RingData { center = center, innerRadius = innerRadius, outerRadius = outerRadius, startAngle = startAngle, endAngle = endAngle });
+		}
+
+		internal void SolidRingXZInternal (float3 center, float innerRadius, float outerRadius, float startAngle, float endAngle, Color color) {
+			Reserve<Color32, RingData>();
+			Add(Command.Ring | Command.PushColorInline);
+			Add(ConvertColor(color));
+			Add(new RingData { center = center, innerRadius = innerRadius, outerRadius = outerRadius, startAngle = startAngle, endAngle = endAngle });
 		}
 
 		/// <summary>

@@ -20,7 +20,11 @@ namespace Pathfinding.Graphs.Grid.Jobs {
 
 		public void Execute () {
 			for (int i = 0; i < hits.Length; i++) {
+#if UNITY_6000_4_OR_NEWER
+				result[i] = hits[i].entityId == default;
+#else
 				result[i] = hits[i].instanceID == 0;
+#endif
 			}
 		}
 	}

@@ -296,14 +296,12 @@ Pathfinding.AstarColor.AreaColors	astarcolor.html#AreaColors
 Pathfinding.AstarColor.BoundsHandles	astarcolor.html#BoundsHandles	
 Pathfinding.AstarColor.ConnectionHighLerp	astarcolor.html#ConnectionHighLerp	
 Pathfinding.AstarColor.ConnectionLowLerp	astarcolor.html#ConnectionLowLerp	
-Pathfinding.AstarColor.MeshEdgeColor	astarcolor.html#MeshEdgeColor	
 Pathfinding.AstarColor.SolidColor	astarcolor.html#SolidColor	
 Pathfinding.AstarColor.UnwalkableNode	astarcolor.html#UnwalkableNode	
 Pathfinding.AstarColor._AreaColors	astarcolor.html#_AreaColors	Holds user set area colors. \n\nUse GetAreaColor to get an area color
 Pathfinding.AstarColor._BoundsHandles	astarcolor.html#_BoundsHandles	
 Pathfinding.AstarColor._ConnectionHighLerp	astarcolor.html#_ConnectionHighLerp	
 Pathfinding.AstarColor._ConnectionLowLerp	astarcolor.html#_ConnectionLowLerp	
-Pathfinding.AstarColor._MeshEdgeColor	astarcolor.html#_MeshEdgeColor	
 Pathfinding.AstarColor._SolidColor	astarcolor.html#_SolidColor	
 Pathfinding.AstarColor._UnwalkableNode	astarcolor.html#_UnwalkableNode	
 Pathfinding.AstarData.MarkerDeserializeGraphs	astardata.html#MarkerDeserializeGraphs	
@@ -787,6 +785,7 @@ Pathfinding.ECS.FollowerEntityProxy.movementStatisticsAccessRO	followerentitypro
 Pathfinding.ECS.FollowerEntityProxy.movementStatisticsAccessRW	followerentityproxy.html#movementStatisticsAccessRW	
 Pathfinding.ECS.FollowerEntityProxy.nearestNavmeshBorder	followerentityproxy.html#nearestNavmeshBorder	Border of the navmesh closest to the agent's current position. \n\nThe border of the navmesh is what separates the walkable and unwalkable part of the world.\n\n <b>[image in online documentation]</b><b>[video in online documentation]</b>\n\nIf no border could be found (for example if the agent has no path), then the <b>hit.point</b> field will be positive infinity.\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.nextCornersScratch	followerentityproxy.html#nextCornersScratch	
+Pathfinding.ECS.FollowerEntityProxy.nextOffMeshLink	followerentityproxy.html#nextOffMeshLink	The off-mesh link that the agent will traverse next, or the one it is traversing (if any). \n\nThe next link in the path will be returned regardless of the distance to it.\n\nThis will be a default OffMeshLinks.OffMeshLinkTracer if the agent is not traversing an off-mesh link, and there are no remaining off-mesh links in its path (the OffMeshLinks.OffMeshLinkTracer.link field will be null).\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.offMeshLink	followerentityproxy.html#offMeshLink	The off-mesh link that the agent is currently traversing. \n\nThis will be a default OffMeshLinks.OffMeshLinkTracer if the agent is not traversing an off-mesh link (the OffMeshLinks.OffMeshLinkTracer.link field will be null).\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.onSearchPath	followerentityproxy.html#onSearchPath	Called when the agent recalculates its path. \n\nThis is called both for automatic path recalculations (see canSearch) and manual ones (see SearchPath).\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.onTraverseOffMeshLink	followerentityproxy.html#onTraverseOffMeshLink	Callback to be called when an agent starts traversing an off-mesh link. \n\nThe handler will be called when the agent starts traversing an off-mesh link. It allows you to to control the agent for the full duration of the link traversal.\n\nUse the passed context struct to get information about the link and to control the agent.\n\n<b>[code in online documentation]</b>\n\n[more in online documentation]\nYou can alternatively set the corresponding property property on the off-mesh link ( NodeLink2.onTraverseOffMeshLink) to specify a callback for a specific off-mesh link.\n\n[more in online documentation]
@@ -1033,7 +1032,6 @@ Pathfinding.ECS.SyncTransformsToEntitiesSystem.SyncTransformsToEntitiesJob.syncR
 Pathfinding.ECS.SyncTransformsToEntitiesSystem.YAxisForwardToZAxisForward	synctransformstoentitiessystem.html#YAxisForwardToZAxisForward	
 Pathfinding.ECS.SyncTransformsToEntitiesSystem.ZAxisForwardToYAxisForward	synctransformstoentitiessystem.html#ZAxisForwardToYAxisForward	
 Pathfinding.ECS.TraverseOffMeshLinkSystem.entityQueryOffMeshLinkCleanup	traverseoffmeshlinksystem.html#entityQueryOffMeshLinkCleanup	
-Pathfinding.ECS.TraverseOffMeshLinkSystem.entityQueryPrepare	traverseoffmeshlinksystem.html#entityQueryPrepare	
 Pathfinding.ECS.TraverseOffMeshLinkSystem.jobRepairPathScheduler	traverseoffmeshlinksystem.html#jobRepairPathScheduler	
 Pathfinding.EditorBase.cachedTooltips	editorbase.html#cachedTooltips	
 Pathfinding.EditorBase.cachedURLs	editorbase.html#cachedURLs	
@@ -1550,6 +1548,7 @@ Pathfinding.FollowerEntity.movementPlaneSource	followerentity.html#movementPlane
 Pathfinding.FollowerEntity.movementPlaneSourceBacking	followerentity.html#movementPlaneSourceBacking	
 Pathfinding.FollowerEntity.movementSettings	followerentity.html#movementSettings	Various movement settings. \n\nSome of these settings are exposed on the FollowerEntity directly. For example maxSpeed.\n\n[more in online documentation]
 Pathfinding.FollowerEntity.nearestNavmeshBorder	followerentity.html#nearestNavmeshBorder	Border of the navmesh closest to the agent's current position. \n\nThe border of the navmesh is what separates the walkable and unwalkable part of the world.\n\n <b>[image in online documentation]</b><b>[video in online documentation]</b>\n\nIf no border could be found (for example if the agent has no path), then the <b>hit.point</b> field will be positive infinity.\n\n[more in online documentation]
+Pathfinding.FollowerEntity.nextOffMeshLink	followerentity.html#nextOffMeshLink	The off-mesh link that the agent will traverse next, or the one it is traversing (if any). \n\nThe next link in the path will be returned regardless of the distance to it.\n\nThis will be a default OffMeshLinks.OffMeshLinkTracer if the agent is not traversing an off-mesh link, and there are no remaining off-mesh links in its path (the OffMeshLinks.OffMeshLinkTracer.link field will be null).\n\n[more in online documentation]
 Pathfinding.FollowerEntity.offMeshLink	followerentity.html#offMeshLink	The off-mesh link that the agent is currently traversing. \n\nThis will be a default OffMeshLinks.OffMeshLinkTracer if the agent is not traversing an off-mesh link (the OffMeshLinks.OffMeshLinkTracer.link field will be null).\n\n[more in online documentation]
 Pathfinding.FollowerEntity.onSearchPath	followerentity.html#onSearchPath	Called when the agent recalculates its path. \n\nThis is called both for automatic path recalculations (see canSearch) and manual ones (see SearchPath).\n\n[more in online documentation]
 Pathfinding.FollowerEntity.onTraverseOffMeshLink	followerentity.html#onTraverseOffMeshLink	Callback to be called when an agent starts traversing an off-mesh link. \n\nThe handler will be called when the agent starts traversing an off-mesh link. It allows you to to control the agent for the full duration of the link traversal.\n\nUse the passed context struct to get information about the link and to control the agent.\n\n<b>[code in online documentation]</b>\n\n[more in online documentation]\nYou can alternatively set the corresponding property property on the off-mesh link ( NodeLink2.onTraverseOffMeshLink) to specify a callback for a specific off-mesh link.\n\n[more in online documentation]
@@ -3680,7 +3679,6 @@ Pathfinding.RVO.RVOQuadtreeBurst.maxSpeeds	rvoquadtreeburst.html#maxSpeeds
 Pathfinding.RVO.RVOQuadtreeBurst.movementPlane	rvoquadtreeburst.html#movementPlane	
 Pathfinding.RVO.RVOQuadtreeBurst.nodeAreas	rvoquadtreeburst.html#nodeAreas	
 Pathfinding.RVO.RVOSimulator.active	rvosimulator.html#active	First RVOSimulator in the scene (usually there is only one)
-Pathfinding.RVO.RVOSimulator.desiredSimulationFPS	rvosimulator.html#desiredSimulationFPS	Desired FPS for rvo simulation. \n\nIt is usually not necessary to run a crowd simulation at a very high fps. Usually 10-30 fps is enough, but it can be increased for better quality. The rvo simulation will never run at a higher fps than the game
 Pathfinding.RVO.RVOSimulator.doubleBuffering	rvosimulator.html#doubleBuffering	Calculate local avoidance in between frames. \n\nIf this is enabled and multithreading is used, the local avoidance calculations will continue to run until the next frame instead of waiting for them to be done the same frame. This can increase the performance but it can make the agents seem a little less responsive.\n\nThis will only be read at Awake. \n\n[more in online documentation]
 Pathfinding.RVO.RVOSimulator.drawQuadtree	rvosimulator.html#drawQuadtree	
 Pathfinding.RVO.RVOSimulator.hardCollisions	rvosimulator.html#hardCollisions	Prevent agent overlap more aggressively. \n\nThis will it much harder for agents to overlap, even in crowded scenarios. It is particularly noticable when running at a low simulation fps. This does not influence agent avoidance when the agents are not overlapping.\n\nEnabling this has a small performance penalty, usually not high enough to care about.\n\nDisabling this may be beneficial if you want softer behaviour when larger groups of agents collide.
@@ -3753,7 +3751,6 @@ Pathfinding.RVO.SimulatorBurst.AgentOutputData.forwardClearance	agentoutputdata.
 Pathfinding.RVO.SimulatorBurst.AgentOutputData.numNeighbours	agentoutputdata.html#numNeighbours	
 Pathfinding.RVO.SimulatorBurst.AgentOutputData.speed	agentoutputdata.html#speed	
 Pathfinding.RVO.SimulatorBurst.AgentOutputData.targetPoint	agentoutputdata.html#targetPoint	
-Pathfinding.RVO.SimulatorBurst.DesiredDeltaTime	simulatorburst.html#DesiredDeltaTime	Time in seconds between each simulation step. \n\nThis is the desired delta time, the simulation will never run at a higher fps than the rate at which the Update function is called.
 Pathfinding.RVO.SimulatorBurst.HardCollisions	simulatorburst.html#HardCollisions	Use hard collisions.
 Pathfinding.RVO.SimulatorBurst.HorizonAgentData.horizonMaxAngle	horizonagentdata.html#horizonMaxAngle	
 Pathfinding.RVO.SimulatorBurst.HorizonAgentData.horizonMinAngle	horizonagentdata.html#horizonMinAngle	
@@ -3776,7 +3773,6 @@ Pathfinding.RVO.SimulatorBurst.agentDestroyCallbacks	simulatorburst.html#agentDe
 Pathfinding.RVO.SimulatorBurst.agentPreCalculationCallbacks	simulatorburst.html#agentPreCalculationCallbacks	
 Pathfinding.RVO.SimulatorBurst.anyAgentsInSimulation	simulatorburst.html#anyAgentsInSimulation	
 Pathfinding.RVO.SimulatorBurst.debugDrawingScope	simulatorburst.html#debugDrawingScope	Scope for drawing gizmos even on frames during which the simulation is not running. \n\nThis is used to draw the obstacles, quadtree and agent debug lines.
-Pathfinding.RVO.SimulatorBurst.desiredDeltaTime	simulatorburst.html#desiredDeltaTime	Inverse desired simulation fps. \n\n[more in online documentation]
 Pathfinding.RVO.SimulatorBurst.drawQuadtree	simulatorburst.html#drawQuadtree	
 Pathfinding.RVO.SimulatorBurst.freeAgentIndices	simulatorburst.html#freeAgentIndices	
 Pathfinding.RVO.SimulatorBurst.horizonAgentData	simulatorburst.html#horizonAgentData	
@@ -3809,7 +3805,7 @@ Pathfinding.RandomPath.hasEndPoint	randompath.html#hasEndPoint	Determines if a s
 Pathfinding.RandomPath.maxGScore	randompath.html#maxGScore	The G score of maxGScorePathNodeIndex.
 Pathfinding.RandomPath.maxGScorePathNodeIndex	randompath.html#maxGScorePathNodeIndex	The node with the highest G score which is still lower than searchLength. \n\nUsed as a backup if a node with a G score higher than searchLength could not be found
 Pathfinding.RandomPath.nodesEvaluatedRep	randompath.html#nodesEvaluatedRep	
-Pathfinding.RandomPath.rnd	randompath.html#rnd	Random number generator.
+Pathfinding.RandomPath.rnd	randompath.html#rnd	Random number generator source. \n\nYou may supply a custom random number generator here in order to get reproducible paths by using a fixed seed. If not, a new System.Random instance will be created when the path is constructed.\n\nKeep in mind that multiple paths should never share the same System.Random instance, since paths are calculated in parallel.
 Pathfinding.RandomPath.searchLength	randompath.html#searchLength	G score to stop searching at. \n\nThe G score is rougly the distance to get from the start node to a node multiplied by 1000 (per default, see Pathfinding.Int3.Precision), plus any penalties.\n\n <b>[video in online documentation]</b>
 Pathfinding.RandomPath.spread	randompath.html#spread	All G scores between searchLength and searchLength+spread are valid end points, a random one of them is chosen as the final point. \n\nOn grid graphs a low spread usually works (but keep it higher than nodeSize*1000 since that it the default cost of moving between two nodes), on NavMesh graphs I would recommend a higher spread so it can evaluate more nodes.\n\n <b>[video in online documentation]</b>
 Pathfinding.RaycastModifier.DPCosts	raycastmodifier.html#DPCosts	

@@ -48,7 +48,11 @@ namespace Pathfinding.ECS {
 
 		public void Execute (ref LocalTransform transform, in MovementSettings movementSettings, ref AgentMovementPlane movementPlane, ref GravityState gravityState, in AgentMovementPlaneSource movementPlaneSource, [Unity.Entities.EntityIndexInQuery] int entityIndexInQuery) {
 			var hit = raycastHits[entityIndexInQuery];
+#if UNITY_6000_4_OR_NEWER
+			var hitAnything = hit.colliderEntityId != default;
+#else
 			var hitAnything = hit.colliderInstanceID != 0;
+#endif
 			if (hitAnything && movementPlaneSource.value == MovementPlaneSource.Raycast) {
 				movementPlane.value = movementPlane.value.MatchUpDirection(hit.normal);
 			}
