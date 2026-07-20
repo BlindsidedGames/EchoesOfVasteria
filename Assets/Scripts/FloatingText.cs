@@ -12,6 +12,10 @@ namespace TimelessEchoes
     {
         public static readonly Color DefaultColor = new Color32(0xEA, 0xD4, 0xAA, 0xFF);
         private static GameObject prefab = null;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => prefab = null;
+
         [SerializeField] private float moveDistance = 1f;
         [SerializeField] private float lifetime = 1f;
         private float speed;

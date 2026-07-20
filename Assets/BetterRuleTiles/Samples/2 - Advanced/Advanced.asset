@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c9615a5cbd6b740a310c57c8d53257, type: 3}
   m_Name: Advanced
   m_EditorClassIdentifier: 
+  UseTileSet: 0
+  _spriteSheets: []
+  _spriteSheetCurrentOffset: {x: 0, y: 0}
   settings:
+    _selectedExportScript: 0
     _gridShape: 0
-    _zoomAmount: 0.63346463
-    _gridCellSize: {x: 32, y: 32}
+    _zoomAmount: 0.598796
+    _cellSize: {x: 1, y: 1}
+    _tileSize: {x: 1, y: 1}
     _tileRenderOffset: {x: 0, y: 0}
-    _gridOffset: {x: 609.07336, y: 463.65067}
+    _gridOffset: {x: 988.6836, y: 177.64336}
+    _spriteAnchor: {x: 0.5, y: 0.5}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -36,18 +42,24 @@ MonoBehaviour:
     _lockedOutlineColor: {r: 1, g: 0, b: 0, a: 1}
     _collapseSimilarRules: 0
     _useUniversalSpriteSettings: 0
+    _treatSimilarTilesAsSame: 0
     _presetBlockColor: {r: 1, g: 0.5764706, b: 0.05882353, a: 1}
   _imageObjects: []
   _tileObjects:
   - {fileID: 1422357396726750172}
-  _hexTileObjects: []
+  _oldHexTiles: []
   _grid:
   - Position: {x: 11, y: 1}
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -73,8 +85,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -97,12 +114,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 5}
-    Sprite: {fileID: -2455775453941419483, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -2455775453941419483, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 32
+    info_ExportedRuleOrder: 32
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -128,8 +149,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -152,12 +178,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 7}
-    Sprite: {fileID: 1919852563886843932, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 1919852563886843932, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 33
+    info_ExportedRuleOrder: 33
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -183,8 +213,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -210,8 +245,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -234,12 +274,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 7, y: 6}
-    Sprite: {fileID: 7747969498277567530, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 7747969498277567530, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 0
+    info_ExportedRuleOrder: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -265,8 +309,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -289,12 +338,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: 5}
-    Sprite: {fileID: -1360409950514755245, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -1360409950514755245, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 34
+    info_ExportedRuleOrder: 34
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -317,12 +370,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: 7}
-    Sprite: {fileID: -3268497425394815164, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -3268497425394815164, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 35
+    info_ExportedRuleOrder: 35
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -348,8 +405,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -375,8 +437,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -402,8 +469,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -429,8 +501,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -456,8 +533,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -483,8 +565,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -510,8 +597,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -537,8 +629,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -564,8 +661,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -588,12 +690,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 12, y: 6}
-    Sprite: {fileID: -7333667465980939252, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -7333667465980939252, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 16
+    info_ExportedRuleOrder: 16
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -619,8 +725,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -643,12 +754,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 13, y: 7}
-    Sprite: {fileID: -1338530704310333808, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -1338530704310333808, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 17
+    info_ExportedRuleOrder: 17
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -674,8 +789,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -698,12 +818,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 14, y: 6}
-    Sprite: {fileID: 5060518175605648744, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 5060518175605648744, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 18
+    info_ExportedRuleOrder: 18
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -729,8 +853,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -753,12 +882,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 13, y: 5}
-    Sprite: {fileID: 2876289842292397269, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 2876289842292397269, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 19
+    info_ExportedRuleOrder: 19
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -784,8 +917,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -811,8 +949,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -838,8 +981,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -865,8 +1013,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -892,8 +1045,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -919,8 +1077,13 @@ MonoBehaviour:
     Sprite: {fileID: 918139711895885004, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 20
+    info_ExportedRuleOrder: 20
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -943,12 +1106,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 14, y: -1}
-    Sprite: {fileID: 3511303046735141340, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 3511303046735141340, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 21
+    info_ExportedRuleOrder: 21
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -971,12 +1138,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 12, y: 1}
-    Sprite: {fileID: -5086438056879495722, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -5086438056879495722, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 22
+    info_ExportedRuleOrder: 22
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -999,12 +1170,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 14, y: 1}
-    Sprite: {fileID: -4169188284693801165, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -4169188284693801165, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 23
+    info_ExportedRuleOrder: 23
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1030,8 +1205,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1057,8 +1237,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1084,8 +1269,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1111,8 +1301,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1138,8 +1333,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1165,8 +1365,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1192,8 +1397,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1219,8 +1429,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1246,8 +1461,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1273,8 +1493,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1300,8 +1525,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1327,8 +1557,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1354,8 +1589,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1381,8 +1621,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1408,8 +1653,13 @@ MonoBehaviour:
     Sprite: {fileID: 887928161550792138, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 24
+    info_ExportedRuleOrder: 24
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1433,10 +1683,15 @@ MonoBehaviour:
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: -1}
     Sprite: {fileID: 745841626403570789, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
-    TileID: 1
+    TileID: -2147483648
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 25
+    info_ExportedRuleOrder: 25
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1459,12 +1714,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 1}
-    Sprite: {fileID: -6747421613608841231, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -6747421613608841231, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 26
+    info_ExportedRuleOrder: 26
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1488,10 +1747,15 @@ MonoBehaviour:
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: 1}
     Sprite: {fileID: 378510455043679678, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
-    TileID: 1
+    TileID: -2147483648
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 27
+    info_ExportedRuleOrder: 27
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1517,8 +1781,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1544,8 +1813,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1569,10 +1843,15 @@ MonoBehaviour:
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: 0}
     Sprite: {fileID: 0}
-    TileID: 1
+    TileID: -2147483648
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1598,8 +1877,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1625,8 +1909,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1652,8 +1941,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1679,8 +1973,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1706,8 +2005,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1733,8 +2037,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1760,8 +2069,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1787,8 +2101,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1814,8 +2133,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1841,8 +2165,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1868,8 +2197,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1895,8 +2229,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1919,12 +2258,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 0, y: -1}
-    Sprite: {fileID: -5292647261990834348, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -5292647261990834348, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 1
+    info_ExportedRuleOrder: 1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1947,12 +2290,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 2, y: -1}
-    Sprite: {fileID: -3638206246315484973, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -3638206246315484973, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 28
+    info_ExportedRuleOrder: 28
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -1978,8 +2325,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2005,8 +2357,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2029,12 +2386,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -2, y: -1}
-    Sprite: {fileID: -1288263786353817358, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -1288263786353817358, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 29
+    info_ExportedRuleOrder: 29
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2060,8 +2421,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2084,12 +2450,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 0, y: -3}
-    Sprite: {fileID: -2252955222662681551, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -2252955222662681551, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 30
+    info_ExportedRuleOrder: 30
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2115,8 +2485,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2142,8 +2517,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2166,12 +2546,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 2, y: -3}
-    Sprite: {fileID: -1905652470267465447, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -1905652470267465447, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 36
+    info_ExportedRuleOrder: 36
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2197,8 +2581,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2224,8 +2613,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2251,8 +2645,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2278,8 +2677,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2302,12 +2706,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -2, y: -3}
-    Sprite: {fileID: 2483181217229616039, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 2483181217229616039, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 37
+    info_ExportedRuleOrder: 37
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2333,8 +2741,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2360,8 +2773,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2387,8 +2805,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2411,12 +2834,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 0, y: 1}
-    Sprite: {fileID: -2112737299535947800, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -2112737299535947800, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 31
+    info_ExportedRuleOrder: 31
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2442,8 +2869,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2469,8 +2901,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2493,12 +2930,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 2, y: 1}
-    Sprite: {fileID: -601677842210107440, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -601677842210107440, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 38
+    info_ExportedRuleOrder: 38
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2524,8 +2965,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2551,8 +2997,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2578,8 +3029,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2605,8 +3061,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2629,12 +3090,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -2, y: 1}
-    Sprite: {fileID: -3619114268394944511, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -3619114268394944511, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 39
+    info_ExportedRuleOrder: 39
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2660,8 +3125,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2687,8 +3157,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2714,8 +3189,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2738,12 +3218,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -1, y: -7}
-    Sprite: {fileID: -8443642464835747935, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -8443642464835747935, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 2
+    info_ExportedRuleOrder: 2
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2766,12 +3250,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 1, y: -7}
-    Sprite: {fileID: -5458343138778018379, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -5458343138778018379, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 3
+    info_ExportedRuleOrder: 3
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2794,12 +3282,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -1, y: -9}
-    Sprite: {fileID: 8296768581933770509, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 8296768581933770509, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 4
+    info_ExportedRuleOrder: 4
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2822,12 +3314,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 1, y: -9}
-    Sprite: {fileID: 4096599733341001204, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 4096599733341001204, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 5
+    info_ExportedRuleOrder: 5
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2853,8 +3349,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2880,8 +3381,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2907,8 +3413,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2934,8 +3445,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2961,8 +3477,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -2988,8 +3509,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3015,8 +3541,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3042,8 +3573,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3069,8 +3605,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3096,8 +3637,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3123,8 +3669,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3150,8 +3701,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3177,8 +3733,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3204,8 +3765,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3231,8 +3797,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3258,8 +3829,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3285,8 +3861,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3312,8 +3893,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3339,8 +3925,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3366,8 +3957,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3393,8 +3989,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3417,12 +4018,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -1, y: 7}
-    Sprite: {fileID: -9120626113919346638, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -9120626113919346638, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 6
+    info_ExportedRuleOrder: 6
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3448,8 +4053,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3472,12 +4082,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -1, y: 5}
-    Sprite: {fileID: 8935116391671119923, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 8935116391671119923, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 7
+    info_ExportedRuleOrder: 7
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3503,8 +4117,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3527,12 +4146,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 1, y: 5}
-    Sprite: {fileID: 5440291298764554988, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 5440291298764554988, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 8
+    info_ExportedRuleOrder: 8
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3558,8 +4181,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3582,12 +4210,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 1, y: 7}
-    Sprite: {fileID: 8915606343298973229, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 8915606343298973229, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 9
+    info_ExportedRuleOrder: 9
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3613,8 +4245,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3640,8 +4277,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3667,8 +4309,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3694,8 +4341,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3721,8 +4373,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3748,8 +4405,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3775,8 +4437,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3802,8 +4469,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3829,8 +4501,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3856,8 +4533,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3883,8 +4565,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3910,8 +4597,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3937,8 +4629,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3964,8 +4661,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -3991,8 +4693,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4018,8 +4725,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4045,8 +4757,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4072,8 +4789,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4099,8 +4821,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4126,8 +4853,13 @@ MonoBehaviour:
     Sprite: {fileID: 953783120112740992, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 10
+    info_ExportedRuleOrder: 10
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4153,8 +4885,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4177,12 +4914,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: -8}
-    Sprite: {fileID: 6785028972473229031, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 6785028972473229031, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 11
+    info_ExportedRuleOrder: 11
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4208,8 +4949,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4232,12 +4978,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 8, y: -8}
-    Sprite: {fileID: 1611802837339211158, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 1611802837339211158, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 12
+    info_ExportedRuleOrder: 12
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4263,8 +5013,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4287,12 +5042,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 7, y: -7}
-    Sprite: {fileID: 6435101608598299951, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 6435101608598299951, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 13
+    info_ExportedRuleOrder: 13
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4318,8 +5077,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4345,8 +5109,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4372,8 +5141,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4399,8 +5173,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4426,8 +5205,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4453,8 +5237,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4480,8 +5269,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4507,8 +5301,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4534,8 +5333,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4561,8 +5365,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4588,8 +5397,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4615,8 +5429,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4642,8 +5461,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4669,8 +5493,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4693,12 +5522,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 0, y: 12}
-    Sprite: {fileID: -1599222074695836703, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -1599222074695836703, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 40
+    info_ExportedRuleOrder: 40
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4724,8 +5557,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4751,8 +5589,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4778,8 +5621,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4802,12 +5650,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: -2, y: 12}
-    Sprite: {fileID: 3412340275108458791, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 3412340275108458791, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 41
+    info_ExportedRuleOrder: 41
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4833,8 +5685,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4860,8 +5717,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4884,12 +5746,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 2, y: 12}
-    Sprite: {fileID: -8489321040709604124, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -8489321040709604124, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 42
+    info_ExportedRuleOrder: 42
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4915,8 +5781,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4942,8 +5813,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4969,8 +5845,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -4996,8 +5877,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5020,12 +5906,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 13}
-    Sprite: {fileID: -6755643376888039831, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -6755643376888039831, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 43
+    info_ExportedRuleOrder: 43
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5051,8 +5941,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5078,8 +5973,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5105,8 +6005,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5129,12 +6034,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 11}
-    Sprite: {fileID: 3941948186986737496, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 3941948186986737496, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 44
+    info_ExportedRuleOrder: 44
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5160,8 +6069,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5187,8 +6101,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5214,8 +6133,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5238,12 +6162,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 6, y: 15}
-    Sprite: {fileID: -4298306793728516231, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -4298306793728516231, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 45
+    info_ExportedRuleOrder: 45
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5269,8 +6197,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5296,8 +6229,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5323,8 +6261,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5347,12 +6290,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 10, y: 11}
-    Sprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 46
+    info_ExportedRuleOrder: 46
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5378,8 +6325,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5405,8 +6357,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5432,8 +6389,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5459,8 +6421,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5483,12 +6450,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 10, y: 15}
-    Sprite: {fileID: -7520349544260831245, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: -7520349544260831245, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 14
+    info_ExportedRuleOrder: 14
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5514,8 +6485,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5541,8 +6517,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5568,8 +6549,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5595,8 +6581,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5622,8 +6613,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5649,8 +6645,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5676,8 +6677,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5700,12 +6706,16 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 14, y: 11}
-    Sprite: {fileID: 7783693668955549748, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    Sprite: {fileID: 7783693668955549748, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: 15
+    info_ExportedRuleOrder: 15
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5731,8 +6741,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5758,8 +6773,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5785,8 +6805,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5812,8 +6837,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5839,8 +6869,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5866,8 +6901,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5893,8 +6933,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5920,8 +6965,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5947,8 +6997,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -5974,8 +7029,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6001,8 +7061,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6028,8 +7093,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6055,8 +7125,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6082,8 +7157,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6109,8 +7189,13 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6136,8 +7221,45 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
+    _overrideUniversalSpriteSettings: 0
+    GameObject: {fileID: 0}
+    Sprites: []
+    ColliderType: 1
+    OutputSprite: 0
+    Transform: 0
+    IncludeSpriteInOutput: 0
+    NoiseScale: 0.5
+    RandomTransform: 0
+    MinAnimationSpeed: 1
+    MaxAnimationSpeed: 1
+    PatternSize: {x: 1, y: 1}
+    NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+  - Position: {x: 9, y: 2}
+    Sprite: {fileID: 0}
+    TileID: -2147483648
+    UseDefaultSettings: 1
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
+    Locked: 0
+    Priority: 0
+    PriorityModifier: 0
+    info_InitialRuleOrder: -1
+    info_ExportedRuleOrder: -1
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
     Sprites: []
@@ -6167,8 +7289,7 @@ MonoBehaviour:
     TextureShape: 0
     MirrorTexX: 0
     MirrorTexY: 0
-    DefaultSprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-      type: 3}
+    DefaultSprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     ColliderType: 1
     DefaultGameObject: {fileID: 0}
     uniqueTile: 1
@@ -6177,6 +7298,8 @@ MonoBehaviour:
     customProperties: []
   _overrideSprites: []
   _presetBlocks: []
+  _tempTex:
+  - {fileID: 0}
 --- !u!114 &1422357396726750172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6189,8 +7312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf43673b89acb484b907a8b9ace39472, type: 3}
   m_Name: Ground
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71,
-    type: 3}
+  m_DefaultSprite: {fileID: -6399861423333123127, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -7182,105 +8304,4 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 1
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  variations: []
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 0
-  HasExtraTilingRules: 0

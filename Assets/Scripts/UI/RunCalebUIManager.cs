@@ -16,6 +16,10 @@ namespace TimelessEchoes.UI
     public class RunCalebUIManager : MonoBehaviour
     {
         public static RunCalebUIManager Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         [SerializeField] private RunCalebUIReferences uiReferences;
         [SerializeField] private GameObject skillsWindow;
         [SerializeField] private BuffManager buffManager;
@@ -116,7 +120,7 @@ namespace TimelessEchoes.UI
                 skillsWindow.SetActive(newState);
                 if (newState)
                 {
-                    var tooltip = FindFirstObjectByType<RunBuffTooltipUIReferences>();
+                    var tooltip = FindAnyObjectByType<RunBuffTooltipUIReferences>();
                     if (tooltip != null && tooltip.tooltipPanel != null)
                         tooltip.tooltipPanel.SetActive(false);
                 }

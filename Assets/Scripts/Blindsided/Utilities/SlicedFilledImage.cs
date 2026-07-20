@@ -661,6 +661,14 @@ namespace Blindsided.Utilities
 #if UNITY_2017_4 || UNITY_2018_2_OR_NEWER
         private static readonly List<SlicedFilledImage> m_TrackedTexturelessImages = new();
         private static bool s_Initialized;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetAtlasTracking()
+        {
+            SpriteAtlasManager.atlasRegistered -= RebuildImage;
+            m_TrackedTexturelessImages.Clear();
+            s_Initialized = false;
+        }
 #endif
     }
 }

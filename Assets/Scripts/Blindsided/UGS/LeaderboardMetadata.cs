@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,13 +9,6 @@ namespace Blindsided.UGS
     /// </summary>
     internal static class LeaderboardMetadata
     {
-        [Serializable]
-        private struct Payload
-        {
-            public string GameVersionCreated;
-            public string LastGameVersion;
-        }
-
         // Returns a serializable object (dictionary) suitable for UGS metadata (expects JSON object, not string)
         public static object Build()
         {

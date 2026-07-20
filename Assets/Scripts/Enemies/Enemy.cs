@@ -49,7 +49,7 @@ namespace TimelessEchoes.Enemies
         [Serializable]
         private class WeightedSpriteLibraryEntry
         {
-            public SpriteLibraryAsset asset;
+            public SpriteLibraryAsset asset = null;
             public float weight = 1f;
         }
 

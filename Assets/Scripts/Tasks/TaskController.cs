@@ -15,6 +15,10 @@ namespace TimelessEchoes.Tasks
     public class TaskController : MonoBehaviour
     {
         public static TaskController Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         [SerializeField] private List<MonoBehaviour> taskObjects = new();
 
 
@@ -679,7 +683,7 @@ namespace TimelessEchoes.Tasks
             if (task != null && task.IsComplete())
             {
                 var tracker = GameplayStatTracker.Instance ??
-                              FindFirstObjectByType<GameplayStatTracker>();
+                              FindAnyObjectByType<GameplayStatTracker>();
                 var data = (task as BaseTask)?.taskData;
                 var xp = (task as BaseTask)?.LastGrantedXp ?? 0f;
                 tracker?.RegisterTaskComplete(data, duration, xp);

@@ -10,13 +10,23 @@ namespace VinTools.BetterRuleTiles.Sample
         public CustomPropertyTest propertyTest;
         public Text valueText;
 
+#if UNITY_2023_1_OR_NEWER
         private void OnEnable()
         {
-            if (valueText == null) valueText = FindFirstObjectByType<Text>();
+            if (valueText == null) valueText = FindAnyObjectByType<Text>();
 
-            if (propertyTest == null) propertyTest = FindFirstObjectByType<CustomPropertyTest>();
+            if (propertyTest == null) propertyTest = FindAnyObjectByType<CustomPropertyTest>();
             if (propertyTest != null) propertyTest.onReadValue += DisplayValue;
         }
+#else
+        private void OnEnable()
+        {
+            if (valueText == null) valueText = FindObjectOfType<Text>();
+
+            if (propertyTest == null) propertyTest = FindObjectOfType<CustomPropertyTest>();
+            if (propertyTest != null) propertyTest.onReadValue += DisplayValue;
+        }
+#endif
 
         private void OnDisable()
         {

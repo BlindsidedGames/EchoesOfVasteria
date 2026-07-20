@@ -79,7 +79,7 @@ namespace TimelessEchoes.Buffs
 
             if (heroHealth == null || !heroHealth.gameObject.activeInHierarchy)
                 heroHealth = HeroHealth.Instance ??
-                             FindFirstObjectByType<HeroHealth>();
+                             FindAnyObjectByType<HeroHealth>();
 
             var transparent = new Color(1f, 1f, 1f, 0f);
             var grey = new Color(1f, 1f, 1f, 0.4f);

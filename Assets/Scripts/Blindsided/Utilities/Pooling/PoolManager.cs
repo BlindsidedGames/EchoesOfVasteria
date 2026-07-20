@@ -14,12 +14,6 @@ namespace Blindsided.Utilities.Pooling
         private static Transform poolRoot;
         private static bool isQuitting;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void Initialize()
-        {
-            Application.quitting += OnApplicationQuitting;
-        }
-        
         // Ensure any PlayableGraphs created by components like PlayableDirector
         // are explicitly destroyed before destroying pooled objects to avoid
         // "PlayableGraph was not destroyed" warnings during teardown.
@@ -53,6 +47,8 @@ namespace Blindsided.Utilities.Pooling
             isQuitting = false;
             poolsByPrefabId.Clear();
             poolsByName.Clear();
+            Application.quitting -= OnApplicationQuitting;
+            Application.quitting += OnApplicationQuitting;
         }
 
         private static void OnApplicationQuitting()
@@ -109,7 +105,7 @@ namespace Blindsided.Utilities.Pooling
             public string key; // prefab name or named pool key
         }
 
-        private static readonly Dictionary<int, PoolInfo> poolsByPrefabId = new();
+        private static readonly Dictionary<EntityId, PoolInfo> poolsByPrefabId = new();
         private static readonly Dictionary<string, PoolInfo> poolsByName = new();
         private const int InactiveWarningThreshold = 100;
 
@@ -192,7 +188,7 @@ namespace Blindsided.Utilities.Pooling
 
         private static PoolInfo GetOrCreatePrefabPool(GameObject prefab)
         {
-            int id = prefab.GetInstanceID();
+            EntityId id = prefab.GetEntityId();
             if (!poolsByPrefabId.TryGetValue(id, out var info))
             {
                 info = new PoolInfo { key = prefab.name };

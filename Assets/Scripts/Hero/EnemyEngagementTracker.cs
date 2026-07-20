@@ -41,6 +41,9 @@ namespace TimelessEchoes.Hero
         /// <param name="enemy">The enemy to track.</param>
         /// <param name="target">The transform the enemy was targeting when engaged.</param>
         /// <returns>True if newly registered, false if already tracked (target updated).</returns>
+        // The tracker intentionally keeps engagement state while disabled. OnDestroy
+        // calls Clear(), but UDR0004 only recognizes an OnDisable cleanup pattern.
+#pragma warning disable UDR0004
         public bool RegisterEnemy(Enemy enemy, Transform target)
         {
             if (enemy == null)
@@ -77,6 +80,7 @@ namespace TimelessEchoes.Hero
 
             return true;
         }
+#pragma warning restore UDR0004
 
         /// <summary>
         /// Unregister an enemy, removing it from tracking and unsubscribing from events.
@@ -218,6 +222,11 @@ namespace TimelessEchoes.Hero
             deathHandlers.Clear();
             disengageHandlers.Clear();
             enemyTargets.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            Clear();
         }
     }
 }

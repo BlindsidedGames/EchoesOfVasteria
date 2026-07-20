@@ -27,13 +27,16 @@ namespace TimelessEchoes
     {
         private static AchievementManager instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => instance = null;
+
         public static AchievementManager Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<AchievementManager>();
+                    instance = FindAnyObjectByType<AchievementManager>();
                     if (instance == null)
                         instance = new GameObject("AchievementManager").AddComponent<AchievementManager>();
                 }

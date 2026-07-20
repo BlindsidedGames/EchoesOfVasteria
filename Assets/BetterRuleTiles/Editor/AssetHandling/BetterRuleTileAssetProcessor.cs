@@ -1,11 +1,5 @@
 ﻿#if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using System;
-
-namespace VinTools.BetterRuleTiles
+namespace VinTools.BetterRuleTiles.Editor.AssetHandling
 {
     public class BetterRuleTileAssetProcessor : UnityEditor.AssetModificationProcessor
     {

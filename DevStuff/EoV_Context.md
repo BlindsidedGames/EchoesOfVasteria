@@ -10,7 +10,7 @@ This document provides complete context for AI assistance with the EoV codebase.
 |-------|-------|
 | **Title** | Echoes of Vasteria (EoV) |
 | **Platform** | Steam (Steamworks.NET integration) |
-| **Engine** | Unity 6.3 LTS (6000.3.5f1) |
+| **Engine** | Unity 6.5 (6000.5.1f1) |
 | **Genre** | Incremental/idle hero management RPG with auto-running map sessions |
 | **Presentation** | 2D top-down pixel art, tilemaps, A* navigation |
 | **Current Version** | v1.4.3 |

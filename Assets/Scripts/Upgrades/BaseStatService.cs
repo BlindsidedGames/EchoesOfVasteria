@@ -14,6 +14,9 @@ namespace TimelessEchoes.Upgrades
     {
         private static BaseStat[] cachedStats;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => cachedStats = null;
+
         /// <summary>
         /// Returns every <see cref="BaseStat"/> available to the project. Falls back to an empty sequence
         /// when nothing can be loaded so callers never handle nulls.

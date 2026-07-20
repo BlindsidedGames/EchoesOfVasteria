@@ -3,13 +3,13 @@
 Scope: runtime/editor scripts under `Assets/Scripts`, `Assets/Editor`, and `Assets/Tests`. Third-party and package code was scanned for context but not turned into project tasks unless project scripts depend on it directly.
 
 Unity API notes checked against official Unity documentation:
-- `Object.FindObjectOfType` / `Object.FindObjectsOfType` are obsolete in current Unity; use `FindFirstObjectByType`, `FindAnyObjectByType`, or `FindObjectsByType` with `FindObjectsSortMode.None` when a scene query is unavoidable. See Unity docs: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Object.FindObjectOfType.html and https://docs.unity.cn/ScriptReference/Object.FindObjectsByType.html.
-- `Resources.Load` / `Resources.LoadAll` remain valid APIs, but repeated runtime resource scans are worth isolating behind cache or serialized references in Unity 6000.2.1f1. See Unity docs: https://docs.unity3d.com/ScriptReference/Resources.Load.html and https://docs.unity3d.com/ScriptReference/Resources.LoadAll.html.
+- `Object.FindObjectOfType`, `Object.FindObjectsOfType`, and `FindFirstObjectByType` are obsolete in Unity 6000.5. Use `FindAnyObjectByType` or the current `FindObjectsByType` overload when a scene query is unavoidable. See Unity docs: https://docs.unity3d.com/ScriptReference/Object.FindAnyObjectByType.html and https://docs.unity3d.com/ScriptReference/Object.FindObjectsByType.html.
+- `Resources.Load` / `Resources.LoadAll` remain valid APIs, but repeated runtime resource scans are worth isolating behind cache or serialized references in Unity 6000.5.1f1. See Unity docs: https://docs.unity3d.com/ScriptReference/Resources.Load.html and https://docs.unity3d.com/ScriptReference/Resources.LoadAll.html.
 - `CinemachineVirtualCamera` should not be introduced; current project code already uses `CinemachineCamera` in gameplay controllers. See Cinemachine docs: https://docs.unity.cn/Packages/com.unity.cinemachine@3.1/api/Unity.Cinemachine.CinemachineVirtualCamera.html.
 
 ## P0 - Replace Scene-Wide Lookup Fallbacks With Explicit Runtime References
 
-Several systems still use `FindFirstObjectByType` or `FindObjectsByType` as normal dependency recovery instead of explicit ownership. These are not obsolete, but Unity documents object-finding as a slow scene query, and the pattern makes initialization order fragile.
+Several systems still use `FindAnyObjectByType` or `FindObjectsByType` as normal dependency recovery instead of explicit ownership. These calls are supported, but the pattern makes initialization order fragile and performs a scene query.
 
 Evidence:
 - `Assets/Scripts/GameManager.cs:500`, `:642`, `:690`, `:816`, `:1232`
@@ -156,16 +156,16 @@ Performance impact: reduces runtime asset lookup and full resource scans. Mainta
 
 Suggested tests: EditMode validation test for required registry/config assets.
 
-## P3 - Remove Compatibility Branches That No Longer Apply To Unity 6000
+## P3 - Remove Compatibility Branches That No Longer Apply To Unity 6000.5
 
-The project targets Unity 6000.2.1f1, but at least one local script keeps pre-Unity-6 compatibility code for obsolete object-finding APIs.
+The project targets Unity 6000.5.1f1, but at least one local script keeps pre-Unity-6 compatibility code for obsolete object-finding APIs.
 
 Evidence:
-- `Assets/Scripts/GameManager.cs:1229-1235` uses `FindObjectsByType` for Unity 6000 and falls back to obsolete `Object.FindObjectsOfType` otherwise.
+- `Assets/Scripts/GameManager.cs:1234-1238` uses `FindObjectsByType` for Unity 6000 and falls back to obsolete `Object.FindObjectsOfType` otherwise.
 
 Task: Remove pre-Unity-6 fallback branches in project-owned code where the target version is fixed. This keeps obsolete APIs out of the codebase and reduces warning noise.
 
-Performance impact: small but positive when the modern overload uses `FindObjectsSortMode.None`. Maintainability impact: aligns code with the documented Unity target.
+Performance impact: small but positive when the current overload avoids legacy sorting behavior. Maintainability impact: aligns code with the documented Unity target.
 
 Suggested tests: compile validation.
 

@@ -1034,13 +1034,15 @@ namespace TimelessEchoes.UI
         [Serializable]
         private class SlotMetaView
         {
-            public int schemaVersion;
-            public string timestampUtc;
-            public string buildId;
-            public int sizeBytes;
-            public string integrity;
-            public string createdVersion;
-            public string lastVersion;
+            // Populated by JsonUtility; explicit defaults document that reflection is
+            // the writer and prevent the C# compiler from treating them as unassigned.
+            public int schemaVersion = 0;
+            public string timestampUtc = null;
+            public string buildId = null;
+            public int sizeBytes = 0;
+            public string integrity = null;
+            public string createdVersion = null;
+            public string lastVersion = null;
         }
 
         private void UpdateSlotDynamic(int index)

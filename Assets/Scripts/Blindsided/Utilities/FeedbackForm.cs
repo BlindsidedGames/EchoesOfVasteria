@@ -39,6 +39,9 @@ namespace Blindsided.Utilities
 
         public static FeedbackForm Instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         private void Awake()
         {
             Instance = this;
@@ -129,7 +132,7 @@ namespace Blindsided.Utilities
         {
             if (Instance != null) return;
             // Try to find an existing instance first
-            Instance = Object.FindFirstObjectByType<FeedbackForm>();
+            Instance = Object.FindAnyObjectByType<FeedbackForm>();
             if (Instance != null) return;
 
             // Create a lightweight host if none exists

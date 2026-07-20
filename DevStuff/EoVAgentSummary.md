@@ -8,7 +8,7 @@ Quick reference for AI agents working on Echoes of Vasteria.
 
 **Echoes of Vasteria** is an **incremental/idle RPG** on Steam where a hero auto-runs through procedurally generated 2D maps, completing tasks and fighting enemies. Players don't control movement directly - they manage gear, skills, quests, and resource systems.
 
-- **Engine:** Unity 6.3 LTS (6000.3.5f1)
+- **Engine:** Unity 6.5 (6000.5.1f1)
 - **Style:** 2D top-down pixel art with A* pathfinding
 - **Codebase:** 289 C# files, 32 directories
 

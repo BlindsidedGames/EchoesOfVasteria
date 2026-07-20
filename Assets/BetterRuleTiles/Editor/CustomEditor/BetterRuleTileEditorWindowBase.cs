@@ -1,106 +1,26 @@
 ﻿#if UNITY_EDITOR
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEditor;
-using VinTools.BetterRuleTiles;
-using VinTools.BetterRuleTiles.Internal;
-using VinToolsEditor.Utilities;
-using VinTools.Utilities;
+using UnityEngine;
+using VinTools.BetterRuleTiles.Editor.GUIWindows;
+using VinTools.BetterRuleTiles.Runtime.Utilities;
+using Tex = VinTools.BetterRuleTiles.Editor.Data.EditorTextures;
 
-namespace VinToolsEditor.BetterRuleTiles
+namespace VinTools.BetterRuleTiles.Editor.EditorWindows
 {
     public class BetterRuleTileEditorWindowBase : EditorWindow
     {
-        #region Textures
-        protected virtual void SetUpTextures()
+        public BetterRuleTileContainer _file;
+
+        public bool _needsRepaint = false;
+
+        /*protected virtual void CreateGUI()
         {
-            SetUpTextures_Solid();
-        }
-
-        #region Solid color textures
-        protected static Color c_windowBorderColor = new Color(60f / 255f, 60f / 255f, 60f / 255f);
-        protected static Color c_fieldBoxColor = new Color(50f / 255f, 50f / 255f, 50f / 255f);
-        protected static Color c_backgroundColor = new Color(40f / 255f, 40f / 255f, 40f / 255f);
-        protected static Color c_toolbarBackgroundColor = new Color(60f / 255f, 60f / 255f, 60f / 255f);
-        protected static Color c_highlightColor = new Color(168f / 255f, 168f / 255f, 168f / 255f);
-
-        protected static Texture2D t_windowBorderTexture;
-        protected static Texture2D t_blankTexture;
-        protected static Texture2D t_fieldBoxTexture;
-
-        protected static Texture2D t_backgroundTexture;
-        protected static Texture2D t_toolbarBackgroundTexture;
-        protected static Texture2D t_highlightTexture;
-
-        protected static Texture2D t_emptyTexture;
-        protected static Texture2D t_defaultButtonTexture;
-        protected static Texture2D t_hoverButtonTexture;
-        protected static Texture2D t_activeButtonTexture;
-
-        protected void SetUpTextures_Solid()
-        {
-            bool darkTheme = EditorGUIUtility.isProSkin;
-
-            if (darkTheme)
-            {
-                t_backgroundTexture = TextureUtils.CreateColoredTexture(c_backgroundColor);
-                t_fieldBoxTexture = TextureUtils.CreateColoredTexture(c_fieldBoxColor);
-                t_windowBorderTexture = TextureUtils.CreateColoredTexture(c_windowBorderColor);
-            }
-            else
-            {
-                c_backgroundColor = new Color(160f / 255f, 160f / 255f, 160f / 255f);
-                c_fieldBoxColor = new Color(180f / 255f, 180f / 255f, 180f / 255f);
-                c_windowBorderColor = new Color(200f / 255f, 200f / 255f, 200f / 255f);
-
-                t_backgroundTexture = TextureUtils.CreateColoredTexture(c_backgroundColor);
-                t_fieldBoxTexture = TextureUtils.CreateColoredTexture(c_fieldBoxColor);
-                t_windowBorderTexture = TextureUtils.CreateColoredTexture(c_windowBorderColor);
-            }
-
-            t_toolbarBackgroundTexture = TextureUtils.CreateColoredTexture(c_toolbarBackgroundColor);
-            t_highlightTexture = TextureUtils.CreateColoredTexture(c_highlightColor);
-
-            t_emptyTexture = TextureUtils.CreateColoredTexture(Color.clear);
-            t_defaultButtonTexture = TextureUtils.CreateColoredTexture(88f / 255f);
-            t_hoverButtonTexture = TextureUtils.CreateColoredTexture(103f / 255f);
-            t_activeButtonTexture = TextureUtils.CreateColoredTexture(new Color(70f / 255f, 96f / 255f, 124f / 255f));
-
-            t_blankTexture = TextureUtils.CreateColoredTexture(Color.white);
-        }
-        #endregion
-        #endregion
-
-        #region Styles
-        protected GUIStyle _toolbarButtonStyle;
-
-        protected virtual void SetUpStyles()
-        {
-            //set up toolbar button style
-            _toolbarButtonStyle = new GUIStyle();
-            _toolbarButtonStyle.normal.background = t_defaultButtonTexture;
-            _toolbarButtonStyle.hover.background = t_hoverButtonTexture;
-            _toolbarButtonStyle.active.background = t_activeButtonTexture;
-            _toolbarButtonStyle.onNormal.background = t_activeButtonTexture;
-            _toolbarButtonStyle.margin = new RectOffset(1, 1, 0, 0);
-            _toolbarButtonStyle.alignment = TextAnchor.MiddleCenter;
-            _toolbarButtonStyle.imagePosition = ImagePosition.ImageOnly;
-            _toolbarButtonStyle.padding = new RectOffset(2, 2, 2, 2);
-        }
-        #endregion
-
-        protected bool _needsRepaint = false;
-
-        protected virtual void CreateGUI()
-        {
-            //set up textures
-            SetUpTextures();
-
             //set up styles
             SetUpStyles();
-        }
+        }*/
 
         protected virtual void OnGUI()
         {
@@ -113,7 +33,7 @@ namespace VinToolsEditor.BetterRuleTiles
         }
 
         #region Windows
-        public virtual GUIWindow[] _windows { get; set; } = new GUIWindow[1];
+        public virtual GUIWindow[] Windows { get; set; } = new GUIWindow[1];
         public bool _initializedWindows { get; protected set; } = false;
         private bool _clickedOnWindow = false;
 
@@ -138,7 +58,7 @@ namespace VinToolsEditor.BetterRuleTiles
             int id = GetWindowIdUnderMouse();
 
             if (id < 0) return null;
-            return _windows[id];
+            return Windows[id];
         }
         /// <summary>
         /// returns true if a mouse button is held down over a window
@@ -159,9 +79,9 @@ namespace VinToolsEditor.BetterRuleTiles
         {
             if (!_initializedWindows) return -1;
 
-            for (int i = 0; i < _windows.Length; i++)
+            for (int i = 0; i < Windows.Length; i++)
             {
-                if (_windows[i] != null && _windows[i].rectangle.Contains(Event.current.mousePosition) && _windows[i].visible) return i;
+                if (Windows[i] != null && Windows[i].rectangle.Contains(Event.current.mousePosition) && Windows[i].visible) return i;
             }
             return -1;
         }
@@ -170,26 +90,27 @@ namespace VinToolsEditor.BetterRuleTiles
         /// </summary>
         /// <param name="windowSize"></param>
         /// <returns></returns>
-        protected bool IsMouseInMethodWindow(Vector2 windowSize)
+        public bool IsMouseInMethodWindow(Vector2 windowSize)
         {
             Rect pos = new Rect(Vector2.zero, windowSize);
             return pos.Contains(Event.current.mousePosition);
         }
-
 
         protected virtual void SetUpWindows()
         {
             _initializedWindows = true;
         }
 
-        protected virtual void DisplayWindows()
+        protected virtual void DisplayWindows() => DisplayWindows(Array.Empty<GUIWindow>());
+        protected void DisplayWindows(params GUIWindow[] extraWindows)
         {
-            //check if the windows are set up or if they aren't missing
-            if (!_initializedWindows || _windows.Any(t => t == null)) SetUpWindows();
+            // check if the windows are set up or if they aren't missing
+            if (!_initializedWindows || Windows.Any(t => t == null)) SetUpWindows();
 
-            //draw the windows
+            // draw the windows
             BeginWindows();
-            for (int i = 0; i < _windows.Length; i++) if (_windows[i] != null) _windows[i].Show(i, position);
+            for (int i = 0; i < Windows.Length; i++) if (Windows[i] != null) Windows[i].Show(i, position);
+            for (int i = 0; i < extraWindows.Length; i++) if (extraWindows[i] != null) extraWindows[i].Show(Windows.Length + i, position);
             EndWindows();
         }
         #endregion

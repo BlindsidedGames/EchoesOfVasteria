@@ -535,60 +535,7 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 3
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations: []
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 0
-  HasExtraTilingRules: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,12 +548,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c9615a5cbd6b740a310c57c8d53257, type: 3}
   m_Name: SpriteSettings
   m_EditorClassIdentifier: 
+  UseTileSet: 0
+  _spriteSheets: []
+  _spriteSheetCurrentOffset: {x: 0, y: 0}
   settings:
     _gridShape: 0
     _zoomAmount: 0.5097193
-    _gridCellSize: {x: 32, y: 32}
+    _cellSize: {x: 1, y: 1}
     _tileRenderOffset: {x: 0, y: 0}
     _gridOffset: {x: 923.1797, y: 324.28015}
+    _tileAnchor: {x: 0.5, y: 0.5}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -625,6 +576,7 @@ MonoBehaviour:
     _lockedOutlineColor: {r: 1, g: 0, b: 0, a: 1}
     _collapseSimilarRules: 0
     _useUniversalSpriteSettings: 1
+    _treatSimilarTilesAsSame: 0
     _presetBlockColor: {r: 1, g: 0.5764706, b: 0.05882353, a: 1}
   _imageObjects: []
   _tileObjects:
@@ -637,7 +589,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -664,7 +617,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -692,7 +646,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -719,7 +674,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -747,7 +703,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -774,7 +731,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -801,7 +759,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -829,7 +788,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -856,7 +816,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -884,7 +845,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -912,7 +874,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -939,7 +902,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -966,7 +930,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -993,7 +958,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1020,7 +986,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1047,7 +1014,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1074,7 +1042,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1101,7 +1070,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1128,7 +1098,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1155,7 +1126,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1183,7 +1155,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1210,7 +1183,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1238,7 +1212,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1265,7 +1240,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1293,7 +1269,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1320,7 +1297,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1348,7 +1326,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1375,7 +1354,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1402,7 +1382,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1429,7 +1410,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1456,7 +1438,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1483,7 +1466,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1510,7 +1494,8 @@ MonoBehaviour:
     Sprite: {fileID: 918139711895885004, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1538,7 +1523,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1566,7 +1552,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1594,7 +1581,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1621,7 +1609,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1648,7 +1637,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1675,7 +1665,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1702,7 +1693,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1729,7 +1721,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1756,7 +1749,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1783,7 +1777,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1810,7 +1805,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1837,7 +1833,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1864,7 +1861,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1891,7 +1889,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1918,7 +1917,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1945,7 +1945,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1972,7 +1973,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -1999,7 +2001,8 @@ MonoBehaviour:
     Sprite: {fileID: 887928161550792138, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2026,7 +2029,8 @@ MonoBehaviour:
     Sprite: {fileID: 745841626403570789, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2054,7 +2058,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2081,7 +2086,8 @@ MonoBehaviour:
     Sprite: {fileID: 378510455043679678, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2108,7 +2114,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2135,7 +2142,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2162,7 +2170,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2189,7 +2198,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2216,7 +2226,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2243,7 +2254,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2270,7 +2282,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2297,7 +2310,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2324,7 +2338,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2351,7 +2366,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2378,7 +2394,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2405,7 +2422,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2432,7 +2450,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2459,7 +2478,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2486,7 +2506,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2514,7 +2535,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2542,7 +2564,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2569,7 +2592,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2596,7 +2620,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2624,7 +2649,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2651,7 +2677,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2679,7 +2706,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2706,7 +2734,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2733,7 +2762,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2761,7 +2791,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2788,7 +2819,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2815,7 +2847,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2842,7 +2875,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2869,7 +2903,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2897,7 +2932,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2924,7 +2960,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2951,7 +2988,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -2978,7 +3016,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3006,7 +3045,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3033,7 +3073,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3060,7 +3101,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3088,7 +3130,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3115,7 +3158,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3142,7 +3186,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3169,7 +3214,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3196,7 +3242,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3224,7 +3271,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3251,7 +3299,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3278,7 +3327,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3305,7 +3355,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3333,7 +3384,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3361,7 +3413,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3389,7 +3442,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3417,7 +3471,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3444,7 +3499,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3471,7 +3527,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3498,7 +3555,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3525,7 +3583,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3552,7 +3611,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3579,7 +3639,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3606,7 +3667,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3633,7 +3695,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3660,7 +3723,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3687,7 +3751,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3714,7 +3779,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3741,7 +3807,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3768,7 +3835,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3795,7 +3863,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3822,7 +3891,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3849,7 +3919,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3876,7 +3947,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3903,7 +3975,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3930,7 +4003,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3957,7 +4031,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -3984,7 +4059,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4012,7 +4088,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4039,7 +4116,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4067,7 +4145,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4094,7 +4173,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4122,7 +4202,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4149,7 +4230,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4177,7 +4259,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4204,7 +4287,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4231,7 +4315,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4258,7 +4343,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4285,7 +4371,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4312,7 +4399,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4339,7 +4427,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4366,7 +4455,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4393,7 +4483,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4420,7 +4511,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4447,7 +4539,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4474,7 +4567,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4501,7 +4595,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4528,7 +4623,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4555,7 +4651,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4582,7 +4679,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4609,7 +4707,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4636,7 +4735,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4663,7 +4763,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4690,7 +4791,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4717,7 +4819,8 @@ MonoBehaviour:
     Sprite: {fileID: 953783120112740992, guid: 1fee0be3f64a97b4bae35855cf5f2c71, type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4744,7 +4847,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4772,7 +4876,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4799,7 +4904,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4827,7 +4933,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4854,7 +4961,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4882,7 +4990,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4909,7 +5018,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4936,7 +5046,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4963,7 +5074,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -4990,7 +5102,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5017,7 +5130,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5044,7 +5158,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5071,7 +5186,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5098,7 +5214,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5125,7 +5242,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5152,7 +5270,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5179,7 +5298,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5206,7 +5326,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5233,7 +5354,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5260,7 +5382,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5288,7 +5411,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5315,7 +5439,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5342,7 +5467,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5369,7 +5495,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5397,7 +5524,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5424,7 +5552,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5451,7 +5580,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5479,7 +5609,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5506,7 +5637,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5533,7 +5665,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5560,7 +5693,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5587,7 +5721,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5615,7 +5750,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5642,7 +5778,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5669,7 +5806,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5696,7 +5834,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5724,7 +5863,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5751,7 +5891,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5778,7 +5919,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5805,7 +5947,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5833,7 +5976,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5860,7 +6004,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5887,7 +6032,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5914,7 +6060,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5942,7 +6089,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5969,7 +6117,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -5996,7 +6145,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6023,7 +6173,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6050,7 +6201,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6078,7 +6230,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6105,7 +6258,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6132,7 +6286,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6159,7 +6314,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6186,7 +6342,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6213,7 +6370,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6240,7 +6398,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6267,7 +6426,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6295,7 +6455,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6322,7 +6483,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6349,7 +6511,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6376,7 +6539,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6403,7 +6567,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6430,7 +6595,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6457,7 +6623,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6484,7 +6651,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6511,7 +6679,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6538,7 +6707,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6565,7 +6735,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6592,7 +6763,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6619,7 +6791,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6646,7 +6819,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6673,7 +6847,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6700,7 +6875,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6727,7 +6903,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6754,7 +6931,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6781,7 +6959,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6808,7 +6987,8 @@ MonoBehaviour:
     Sprite: {fileID: 475435623110610922, guid: 9282b9c91612c834f86f240d2424cae0, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6835,7 +7015,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6863,7 +7044,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6890,7 +7072,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6917,7 +7100,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6945,7 +7129,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -6972,7 +7157,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7000,7 +7186,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7028,7 +7215,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7055,7 +7243,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7082,7 +7271,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7109,7 +7299,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7136,7 +7327,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7163,7 +7355,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7190,7 +7383,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7217,7 +7411,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7244,7 +7439,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7271,7 +7467,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7299,7 +7496,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7326,7 +7524,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7354,7 +7553,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7381,7 +7581,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7409,7 +7610,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7436,7 +7638,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7464,7 +7667,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7491,7 +7695,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7518,7 +7723,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7545,7 +7751,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7572,7 +7779,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7599,7 +7807,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7627,7 +7836,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7655,7 +7865,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7683,7 +7894,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7711,7 +7923,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7738,7 +7951,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7765,7 +7979,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7792,7 +8007,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7819,7 +8035,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7846,7 +8063,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7873,7 +8091,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7900,7 +8119,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7927,7 +8147,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7954,7 +8175,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -7981,7 +8203,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8008,7 +8231,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8035,7 +8259,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8062,7 +8287,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8089,7 +8315,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8117,7 +8344,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8145,7 +8373,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8173,7 +8402,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8200,7 +8430,8 @@ MonoBehaviour:
     Sprite: {fileID: -84818713481696047, guid: 9282b9c91612c834f86f240d2424cae0, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8227,7 +8458,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8254,7 +8486,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8281,7 +8514,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8308,7 +8542,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8335,7 +8570,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8362,7 +8598,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8389,7 +8626,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8416,7 +8654,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8443,7 +8682,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8470,7 +8710,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8497,7 +8738,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8524,7 +8766,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8551,7 +8794,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8578,7 +8822,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8605,7 +8850,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8633,7 +8879,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8661,7 +8908,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8688,7 +8936,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8715,7 +8964,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8743,7 +8993,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8770,7 +9021,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8798,7 +9050,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8825,7 +9078,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8852,7 +9106,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8880,7 +9135,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8907,7 +9163,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8934,7 +9191,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8961,7 +9219,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -8988,7 +9247,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9016,7 +9276,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9043,7 +9304,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9070,7 +9332,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9097,7 +9360,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9125,7 +9389,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9152,7 +9417,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9179,7 +9445,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9207,7 +9474,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9234,7 +9502,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9261,7 +9530,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9288,7 +9558,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9315,7 +9586,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9342,7 +9614,8 @@ MonoBehaviour:
     Sprite: {fileID: 867027377922445235, guid: 9282b9c91612c834f86f240d2424cae0, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9369,7 +9642,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9396,7 +9670,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9423,7 +9698,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9451,7 +9727,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9479,7 +9756,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9507,7 +9785,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9535,7 +9814,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9562,7 +9842,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9589,7 +9870,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9616,7 +9898,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9643,7 +9926,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9670,7 +9954,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9697,7 +9982,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9724,7 +10010,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9751,7 +10038,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9778,7 +10066,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9805,7 +10094,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9832,7 +10122,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9859,7 +10150,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9886,7 +10178,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9913,7 +10206,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9940,7 +10234,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9967,7 +10262,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -9994,7 +10290,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10021,7 +10318,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10048,7 +10346,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10075,7 +10374,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10102,7 +10402,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10130,7 +10431,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10157,7 +10459,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10185,7 +10488,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10212,7 +10516,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10240,7 +10545,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10267,7 +10573,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10295,7 +10602,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10322,7 +10630,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10349,7 +10658,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10376,7 +10686,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10403,7 +10714,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10430,7 +10742,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10457,7 +10770,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10484,7 +10798,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10511,7 +10826,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10538,7 +10854,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10565,7 +10882,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10592,7 +10910,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10619,7 +10938,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10646,7 +10966,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10673,7 +10994,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10700,7 +11022,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10727,7 +11050,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10754,7 +11078,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10781,7 +11106,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10808,7 +11134,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10836,7 +11163,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10863,7 +11191,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10891,7 +11220,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10918,7 +11248,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10946,7 +11277,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -10973,7 +11305,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11000,7 +11333,8 @@ MonoBehaviour:
     Sprite: {fileID: 623291888168982980, guid: 9282b9c91612c834f86f240d2424cae0, type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11027,7 +11361,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11054,7 +11389,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11081,7 +11417,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11108,7 +11445,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11135,7 +11473,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11162,7 +11501,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11189,7 +11529,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11216,7 +11557,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11243,7 +11585,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11270,7 +11613,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11297,7 +11641,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11324,7 +11669,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11351,7 +11697,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11378,7 +11725,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11406,7 +11754,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11433,7 +11782,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11460,7 +11810,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11487,7 +11838,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11515,7 +11867,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11542,7 +11895,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11569,7 +11923,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11597,7 +11952,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11624,7 +11980,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11651,7 +12008,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11678,7 +12036,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11705,7 +12064,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11733,7 +12093,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11760,7 +12121,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11787,7 +12149,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11814,7 +12177,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11842,7 +12206,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11869,7 +12234,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11896,7 +12262,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11923,7 +12290,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11951,7 +12319,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -11978,7 +12347,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12005,7 +12375,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12032,7 +12403,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12060,7 +12432,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12087,7 +12460,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12114,7 +12488,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12141,7 +12516,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12168,7 +12544,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12196,7 +12573,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12223,7 +12601,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12250,7 +12629,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12277,7 +12657,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12304,7 +12685,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12331,7 +12713,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12358,7 +12741,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12385,7 +12769,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12413,7 +12798,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12440,7 +12826,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12467,7 +12854,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12494,7 +12882,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12521,7 +12910,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12548,7 +12938,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12575,7 +12966,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12602,7 +12994,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12629,7 +13022,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12656,7 +13050,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12683,7 +13078,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12710,7 +13106,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12737,7 +13134,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12764,7 +13162,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12791,7 +13190,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12818,7 +13218,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12845,7 +13246,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12873,7 +13275,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12901,7 +13304,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12929,7 +13333,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12957,7 +13362,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -12985,7 +13391,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13013,7 +13420,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13041,7 +13449,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13069,7 +13478,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13097,7 +13507,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13125,7 +13536,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13153,7 +13565,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13181,7 +13594,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13209,7 +13623,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13237,7 +13652,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13265,7 +13681,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13293,7 +13710,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13321,7 +13739,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13349,7 +13768,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13377,7 +13797,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13405,7 +13826,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13433,7 +13855,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13461,7 +13884,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13489,7 +13913,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13517,7 +13942,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13545,7 +13971,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13573,7 +14000,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13601,7 +14029,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13629,7 +14058,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13657,7 +14087,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13685,7 +14116,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13713,7 +14145,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13741,7 +14174,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13769,7 +14203,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13797,7 +14232,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13825,7 +14261,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13853,7 +14290,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13881,7 +14319,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13909,7 +14348,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13937,7 +14377,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13965,7 +14406,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -13993,7 +14435,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14021,7 +14464,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14049,7 +14493,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14077,7 +14522,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14105,7 +14551,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14133,7 +14580,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14161,7 +14609,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14189,7 +14638,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14217,7 +14667,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14245,7 +14696,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14272,7 +14724,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14299,7 +14752,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14326,7 +14780,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14353,7 +14808,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14380,7 +14836,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14407,7 +14864,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14434,7 +14892,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14461,7 +14920,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14488,7 +14948,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14515,7 +14976,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14542,7 +15004,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14569,7 +15032,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14596,7 +15060,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14623,7 +15088,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14650,7 +15116,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14677,7 +15144,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14704,7 +15172,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14731,7 +15200,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14758,7 +15228,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14785,7 +15256,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14812,7 +15284,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14839,7 +15312,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14866,7 +15340,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14893,7 +15368,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14920,7 +15396,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14947,7 +15424,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -14974,7 +15452,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15001,7 +15480,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15028,7 +15508,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15055,7 +15536,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15082,7 +15564,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15109,7 +15592,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15136,7 +15620,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15163,7 +15648,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15190,7 +15676,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15217,7 +15704,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15244,7 +15732,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15271,7 +15760,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15298,7 +15788,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15325,7 +15816,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15352,7 +15844,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15379,7 +15872,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15406,7 +15900,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15433,7 +15928,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15461,7 +15957,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15489,7 +15986,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15517,7 +16015,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15545,7 +16044,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15573,7 +16073,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15601,7 +16102,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15629,7 +16131,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15657,7 +16160,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15685,7 +16189,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15713,7 +16218,8 @@ MonoBehaviour:
       type: 3}
     TileID: 3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15740,7 +16246,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15767,7 +16274,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15794,7 +16302,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15821,7 +16330,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15848,7 +16358,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15875,7 +16386,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15902,7 +16414,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15929,7 +16442,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15956,7 +16470,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -15983,7 +16498,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16010,7 +16526,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16037,7 +16554,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: -3
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16064,7 +16582,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16091,7 +16610,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16119,7 +16639,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16147,7 +16668,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16175,7 +16697,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16203,7 +16726,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16231,7 +16755,8 @@ MonoBehaviour:
       type: 3}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16259,7 +16784,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16287,7 +16813,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16315,7 +16842,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16343,7 +16871,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16371,7 +16900,8 @@ MonoBehaviour:
       type: 3}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16398,7 +16928,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16425,7 +16956,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16452,7 +16984,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16479,7 +17012,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16506,7 +17040,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16533,7 +17068,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16560,7 +17096,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16587,7 +17124,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16614,7 +17152,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 2
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16641,7 +17180,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16668,7 +17208,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16695,7 +17236,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16722,7 +17264,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16749,7 +17292,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16776,7 +17320,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16803,7 +17348,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16830,7 +17376,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -16857,7 +17404,8 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TileID: 1
     UseDefaultSettings: 1
-    IsModified: 0
+    AreNeighborPositionsModified: 0
+    AreOutputSpritesModified: 0
     Locked: 0
     _overrideUniversalSpriteSettings: 0
     GameObject: {fileID: 0}
@@ -17013,6 +17561,10 @@ MonoBehaviour:
     MaxAnimationSpeed: 6
     PatternSize: {x: 1, y: 1}
   _presetBlocks: []
+  _tempTex:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1422357396726750172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17167,53 +17719,6 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: 0000000000000000000000000000000000000000030000000300000000000000
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 4873358367803472704, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 4365072214762097464, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: -4147135289202293165, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 643645489602608906, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: -7088790019483620798, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 4760121670689881827, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 6
-    m_MaxAnimationSpeed: 6
-    m_PerlinScale: 0.5
-    m_Output: 2
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: -4573408279075214707, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 1
-    m_MaxAnimationSpeed: 1
-    m_PerlinScale: 0.5
-    m_Output: 0
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -17592,6 +18097,53 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: fdffffff000000000000000000000000000000000000000000000000fdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 4873358367803472704, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 4365072214762097464, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: -4147135289202293165, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 643645489602608906, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: -7088790019483620798, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 4760121670689881827, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 6
+    m_MaxAnimationSpeed: 6
+    m_PerlinScale: 0.5
+    m_Output: 2
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: -4573408279075214707, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -18306,137 +18858,7 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 1
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations:
-  - {fileID: 3257331234897913525}
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 1
-  HasExtraTilingRules: 0
 --- !u!114 &3257331234897913525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18591,58 +19013,6 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: 0000000000000000000000000300000000000000030000000000000000000000
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 8201368165407130277, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: -1285638715501733310, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 8205141292254445082, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 2058576119414841407, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 8930554481666654525, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: -1908146683188866790, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 6
-    m_MaxAnimationSpeed: 6
-    m_PerlinScale: 0.5
-    m_Output: 2
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 5148676874399617708, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: -4573408279075214707, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 8769834437802526653, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 4539855897199859091, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 4741064742094319209, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    - {fileID: 6639618438358369150, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 6
-    m_MaxAnimationSpeed: 6
-    m_PerlinScale: 0.5
-    m_Output: 2
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -19021,6 +19391,58 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: fdffffff000000000000000000000000000000000000000000000000fdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 8201368165407130277, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: -1285638715501733310, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 8205141292254445082, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 2058576119414841407, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 8930554481666654525, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: -1908146683188866790, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 6
+    m_MaxAnimationSpeed: 6
+    m_PerlinScale: 0.5
+    m_Output: 2
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 5148676874399617708, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: -4573408279075214707, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 8769834437802526653, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 4539855897199859091, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 4741064742094319209, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    - {fileID: 6639618438358369150, guid: 00a64cce896629246864755d1e0f5dff, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 6
+    m_MaxAnimationSpeed: 6
+    m_PerlinScale: 0.5
+    m_Output: 2
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -19735,134 +20157,4 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 2
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations:
-  - {fileID: 1422357396726750172}
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 2
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 1
-  HasExtraTilingRules: 0

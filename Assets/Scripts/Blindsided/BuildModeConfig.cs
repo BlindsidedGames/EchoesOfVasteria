@@ -29,6 +29,9 @@ namespace Blindsided
 
         private static BuildModeConfig cachedInstance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => cachedInstance = null;
+
         public static BuildModeConfig Load()
         {
             if (cachedInstance == null)

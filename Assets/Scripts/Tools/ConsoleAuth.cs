@@ -12,6 +12,9 @@ namespace TimelessEchoes
         private const string DevPassword = "Matt";
         private static bool _isAuthenticated;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => _isAuthenticated = false;
+
         /// <summary>
         /// If true, dev commands are unlocked.
         /// </summary>

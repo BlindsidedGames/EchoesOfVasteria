@@ -77,10 +77,12 @@ public class QuestFlowWindow : EditorWindow
     private const float GridSpacing = 20f;
 
     // --- FEATURE: Static styles for different node states ---
+#pragma warning disable UDR0001 // Editor-only GUI cache, recreated lazily for each editor domain.
     private static GUIStyle s_defaultNodeStyle;
     private static GUIStyle s_redNodeStyle;
     private static GUIStyle s_orangeNodeStyle;
     private static bool s_stylesInitialized;
+#pragma warning restore UDR0001
 
     [MenuItem("Window/Quest Flow Editor")]
     private static void OpenWindow()

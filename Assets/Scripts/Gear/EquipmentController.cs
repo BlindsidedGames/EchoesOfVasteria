@@ -13,6 +13,10 @@ namespace TimelessEchoes.Gear
     {
         public static EquipmentController Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         [SerializeField] private List<string> slots = new() { "Weapon", "Helmet", "Chest", "Boots" };
 
         private readonly Dictionary<string, GearItem> equippedBySlot = new();

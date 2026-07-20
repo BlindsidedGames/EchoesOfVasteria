@@ -18,6 +18,9 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
         private static SteamStatsUpdater instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => instance = null;
+
         /// <summary>
         /// Singleton instance accessor.
         /// </summary>
@@ -27,7 +30,7 @@ namespace TimelessEchoes
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<SteamStatsUpdater>();
+                    instance = FindAnyObjectByType<SteamStatsUpdater>();
                     if (instance == null)
                         instance = new GameObject("SteamStatsUpdater").AddComponent<SteamStatsUpdater>();
                 }

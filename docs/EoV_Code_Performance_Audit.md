@@ -10,8 +10,8 @@ The focus was code quality, architecture risk, and performance in hot paths: `Up
 
 Unity/API references checked against official documentation:
 
-- Unity notes `FindFirstObjectByType` is resource intensive: https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Object.FindFirstObjectByType.html
-- Unity recommends `FindObjectsByType(..., FindObjectsSortMode.None)` when sorted results are unnecessary: https://docs.unity3d.com/ScriptReference/Object.FindObjectsByType.html
+- Unity 6000.5 deprecates `FindFirstObjectByType`; use `FindAnyObjectByType` when an arbitrary matching object is sufficient: https://docs.unity3d.com/ScriptReference/Object.FindAnyObjectByType.html
+- Unity 6000.5 provides `FindObjectsByType` overloads that no longer require the legacy sort-mode argument: https://docs.unity3d.com/ScriptReference/Object.FindObjectsByType.html
 - `Tilemap.SetTilesBlock` is the intended batch tile placement API versus individual `SetTile` calls: https://docs.unity3d.com/ScriptReference/Tilemaps.Tilemap.SetTilesBlock.html
 - Cinemachine 3 uses the `CinemachineCamera` component: https://docs.unity.cn/Packages/com.unity.cinemachine@3.1/manual/CinemachineCamera.html
 
@@ -104,7 +104,7 @@ Suggested Editor tests: Test quest readiness event emission when progress crosse
 
 Files: `Assets/Scripts/Projectile.cs:82`, `Assets/Scripts/Projectile.cs:109`, `Assets/Scripts/Projectile.cs:115`, `Assets/Scripts/Projectile.cs:126`, `Assets/Scripts/Projectile.cs:179`, `Assets/Scripts/Projectile.cs:190`, `Assets/Scripts/Hero/HeroCombatController.cs:610`
 
-Evidence: Projectiles are pooled and cache `IHasHealth`/`IDamageable` in `Init()`, but the hit branch still does several `GetComponent` calls and fallback `FindFirstObjectByType` calls for skill/stat services. Movement uses `Vector2.Distance` after already moving toward the target.
+Evidence: Projectiles are pooled and cache `IHasHealth`/`IDamageable` in `Init()`, but the hit branch still does several `GetComponent` calls and fallback `FindAnyObjectByType` calls for skill/stat services. Movement uses `Vector2.Distance` after already moving toward the target.
 
 Why it matters: Projectile hit code is bursty under high attack speed and echo-heavy combat. Pooling avoids instantiate churn, but component lookups and scene searches in a burst path can still create CPU spikes.
 
@@ -132,19 +132,19 @@ Evidence: Cleanup uses `CurrentMap.GetComponentsInChildren<PooledObject>(true)` 
 
 Why it matters: These are transition paths, not per-frame paths, but they happen around run start/return where hitching is visible. They also increase coupling to hierarchy names and make pooling ownership harder to verify.
 
-Fix direction: Let `SegmentedMapGenerator` or a map-owned registry release known segment roots and spawned objects. Store a serialized `Mildred` reference or a small `NamedMapActor` registry on the map prefab instead of scanning transforms by string. Keep `FindObjectsByType(..., FindObjectsSortMode.None)` for rare global cleanup until a stronger owner registry exists.
+Fix direction: Let `SegmentedMapGenerator` or a map-owned registry release known segment roots and spawned objects. Store a serialized `Mildred` reference or a small `NamedMapActor` registry on the map prefab instead of scanning transforms by string. Keep the current `FindObjectsByType<T>(FindObjectsInactive.Include)` overload for rare global cleanup until a stronger owner registry exists.
 
 Suggested Editor tests: Test a map registry helper resolves optional actors without scene-name scans and that cleanup releases registered pooled roots exactly once.
 
 ### 10. Align project version documentation and API migration expectations
 
-Files: `README.md:3`, `README.md:15`, `ProjectSettings/ProjectVersion.txt:1`, `Packages/manifest.json:12`, `CameraClampExtension.cs:19`, `GameManager.cs:1231`
+Files: `README.md:3`, `README.md:18`, `ProjectSettings/ProjectVersion.txt:1`, `AGENTS.md:27`, `CameraClampExtension.cs:19`, `GameManager.cs:1234`
 
-Evidence: README says the project is built with Unity `6000.2.1f1`, the opening instructions mention `6000.1.6f1`, and `ProjectSettings/ProjectVersion.txt` says `6000.4.1f1`. The project uses Cinemachine `3.1.4` and current scripts use `CinemachineCamera`, which matches the intended Cinemachine 3 direction. `GameManager` already uses `FindObjectsByType` with `FindObjectsSortMode.None` for Unity 6000.
+Current state: `ProjectSettings/ProjectVersion.txt`, README setup guidance, and repository instructions now identify Unity `6000.5.1f1` as the supported editor. The project uses Cinemachine 3 and current scripts use `CinemachineCamera`, matching the intended API direction. `GameManager` uses the Unity 6000.5 `FindObjectsByType<T>(FindObjectsInactive)` overload.
 
 Why it matters: Version drift can hide API warnings and package compatibility decisions. Unity 6000.x also changes object-find API expectations, so audit and test baselines should target the actual editor version used by the project.
 
-Fix direction: Decide whether the supported editor is `6000.4.1f1` or the older README versions, then update documentation and CI/test expectations together. Keep avoiding `CinemachineVirtualCamera`; continue preferring `CinemachineCamera`.
+Fix direction: Keep documentation, generated project files, CI, and test expectations aligned with `ProjectSettings/ProjectVersion.txt`. Continue avoiding `CinemachineVirtualCamera` and prefer `CinemachineCamera`.
 
 Suggested Editor tests: No gameplay test needed. Add a lightweight editor validation test only if the team wants automated checks for package/editor version metadata.
 
@@ -169,7 +169,6 @@ Suggested Editor tests: No gameplay test needed. Add a lightweight editor valida
 
 ## Open Questions
 
-- What is the supported Unity editor version now: README `6000.2.1f1`, README setup `6000.1.6f1`, or `ProjectSettings` `6000.4.1f1`?
 - How large can task density, enemy density, and combat echo count get in intended late-game saves?
 - Is the greedy proximity task route required for gameplay feel, or is mostly left-to-right ordering acceptable with backtracking exceptions?
 - Is the A* full rescan masking stale-node bugs that an incremental update must explicitly handle?

@@ -21,6 +21,10 @@ namespace TimelessEchoes.UI
     public class TownWindowManager : MonoBehaviour
     {
         public static TownWindowManager Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         // Expose simple open-state checks for other systems
         public static bool IsForgeOpen => Instance != null && Instance.forge.window != null && Instance.forge.window.activeSelf;
         public static bool IsCauldronOpen => Instance != null && Instance.cauldron.window != null && Instance.cauldron.window.activeSelf;
@@ -104,7 +108,7 @@ namespace TimelessEchoes.UI
             if (!IsCauldronOpen)
             {
                 ShowCauldronAttention();
-                FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+                FindAnyObjectByType<TaskbarFlasher>()?.FlashNow();
             }
             else
             {

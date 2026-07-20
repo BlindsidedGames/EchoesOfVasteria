@@ -1,6 +1,6 @@
 # Echoes of Vasteria
 
-Echoes of Vasteria formerly known as Timeless Echoes is an incremental hero management game built with Unity **6000.2.1f1**.
+Echoes of Vasteria formerly known as Timeless Echoes is an incremental hero management game built with Unity **6000.5.1f1**.
 
 ## Overview
 In this game you choose a hero who automatically runs through maps. Each run spawns a `Map` prefab which procedurally generates terrain and tasks.
@@ -15,7 +15,7 @@ The game continues to run maps while closed. When you return, the results of the
 ## Opening the Project
 1. Clone or download this repository.
 2. Open **Unity Hub** and add the project folder.
-3. When prompted select Unity `6000.1.6f1` or a compatible editor.
+3. When prompted, select Unity `6000.5.1f1`.
 
 ## Playing
 Open the `Main` scene in `Assets/Scenes` and press **Play**.
@@ -107,7 +107,7 @@ sets the **steam_display** key with a localization token. Example tokens are
 - Developer how-tos: `Documentation/HOW_TO_ADD_FEATURES.md`
 
 ## Development Guidelines
-Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.1.6f1**.
+Refer to [Unity's official documentation](https://docs.unity3d.com) and ensure all changes work with **Unity 6000.5.1f1**.
 
 ## Keystore Credentials
 To avoid storing keystore passwords in the repository, create a local credentials file. In the Unity editor choose **Tools > Create Keystore Credentials** and enter your keystore details. The window writes a `.keystore_credentials` file which is ignored by Git. Load these credentials in your shell before opening Unity:

@@ -9,7 +9,7 @@ namespace TimelessEchoes.Audio
     public class ProjectileHitSfx : MonoBehaviour
     {
         private AudioManager Audio => AudioManager.Instance ??
-                                      FindFirstObjectByType<AudioManager>();
+                                      FindAnyObjectByType<AudioManager>();
 
         public enum HitType
         {

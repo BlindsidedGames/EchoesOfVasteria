@@ -11,6 +11,10 @@ namespace TimelessEchoes.Stats
     public class EnemyKillTracker : MonoBehaviour
     {
         public static EnemyKillTracker Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         // Reveal thresholds in kills. First four grant +25% damage each; last two grant +50% each.
         public static readonly int[] Thresholds = { 10, 100, 1000, 10000, 25000, 100000 };
 

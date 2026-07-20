@@ -124,7 +124,8 @@ namespace Blindsided.Utilities
         public static readonly string[] EnergyPrefixJ = { "J", "KJ", "MJ", "GJ", "TJ", "PJ", "EJ", "ZJ", "YJ" };
         public static readonly string[] EnergyPrefixW = { "W", "KW", "MW", "GW", "TW", "PW", "EW", "ZW", "YW" };
 
-        public static Dictionary<string, string> replacements = new()
+        private static readonly IReadOnlyDictionary<string, string> replacements =
+            new Dictionary<string, string>
         {
             { "{colorHighlight}", ColourHighlight }
         };

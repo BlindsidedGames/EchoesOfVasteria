@@ -30,6 +30,14 @@ namespace TimelessEchoes.UI
         }
 
         private static UITicker _instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            _isQuitting = false;
+            _instance = null;
+        }
+
         public static bool HasInstance => _instance != null;
         public static UITicker Instance
         {

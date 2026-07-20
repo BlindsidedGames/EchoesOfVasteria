@@ -85,12 +85,16 @@ namespace TimelessEchoes.UI
             _ = RefreshAsync();
         }
 
+        private void OnDisable()
+        {
+            Blindsided.EventHandler.OnLoadData -= RefreshNow;
+        }
+
         private void OnDestroy()
         {
             if (refreshButton != null) refreshButton.onClick.RemoveAllListeners();
             if (toggleButton != null) toggleButton.onClick.RemoveAllListeners();
             if (seasonalToggleButton != null) seasonalToggleButton.onClick.RemoveAllListeners();
-            Blindsided.EventHandler.OnLoadData -= RefreshNow;
         }
 
         // No board switching UI anymore (single stat; seasonal toggle handles board)

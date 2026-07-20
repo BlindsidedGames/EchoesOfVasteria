@@ -16,6 +16,7 @@ namespace Blindsided.UGS
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoInit()
         {
+            _initTask = null;
             // Fire-and-forget early initialization; callers can still await EnsureInitializedAsync.
             _ = EnsureInitializedAsync();
         }

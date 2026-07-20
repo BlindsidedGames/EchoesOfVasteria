@@ -31,6 +31,9 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
         private static RichPresenceManager instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => instance = null;
+
         /// <summary>
         ///     Singleton instance accessor.
         /// </summary>
@@ -40,7 +43,7 @@ namespace TimelessEchoes
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<RichPresenceManager>();
+                    instance = FindAnyObjectByType<RichPresenceManager>();
                     if (instance == null)
                         instance = new GameObject("RichPresenceManager").AddComponent<RichPresenceManager>();
                 }

@@ -16,6 +16,10 @@ namespace TimelessEchoes.Gear
     {
         public static ForgeAnalyticsService Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         // Batch mode state
         private bool _batchMode;
         private readonly List<CraftResult> _pendingCrafts = new(64);

@@ -1,11 +1,9 @@
 ﻿#if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System;
+using UnityEditor;
+using UnityEngine;
 
-namespace VinToolsEditor.Utilities
+namespace VinTools.BetterRuleTiles.Editor.CustomGUI
 {
     public class EditorGUIField<T> where T : UnityEngine.Object
     {

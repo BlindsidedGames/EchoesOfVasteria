@@ -87,7 +87,7 @@ namespace TimelessEchoes.UI
             if (statTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
             if (runStatUI == null)
-                runStatUI = FindFirstObjectByType<RunStatUIReferences>();
+                runStatUI = FindAnyObjectByType<RunStatUIReferences>();
             foreach (var bar in runBars)
                 if (bar != null)
                 {

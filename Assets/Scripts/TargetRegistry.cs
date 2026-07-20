@@ -10,12 +10,16 @@ namespace TimelessEchoes
     public class TargetRegistry : MonoBehaviour, ITargetRegistry
     {
         private static TargetRegistry instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => instance = null;
+
         public static TargetRegistry Instance
         {
             get
             {
                 if (instance == null)
-                    instance = FindFirstObjectByType<TargetRegistry>();
+                    instance = FindAnyObjectByType<TargetRegistry>();
                 return instance;
             }
         }

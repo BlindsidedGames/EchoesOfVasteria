@@ -132,6 +132,15 @@ namespace TimelessEchoes.Stats
         public float SessionDuration { get; private set; }
         private static Dictionary<string, Resource> lookup;
         private static Dictionary<int, TaskData> taskLookup;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            lookup = null;
+            taskLookup = null;
+        }
+
         private float runScaledDuration;
 
         private void Awake()

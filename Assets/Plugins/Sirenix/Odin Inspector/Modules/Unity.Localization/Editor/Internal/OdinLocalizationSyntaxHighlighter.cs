@@ -62,11 +62,14 @@ namespace Sirenix.OdinInspector.Modules.Localization.Editor.Internal
 			Formatter.Settings.ParseErrorAction = ErrorAction.OutputErrorInResult;
 			Formatter.Settings.FormatErrorAction = ErrorAction.OutputErrorInResult;
 
-			Format format;
-
 			try
 			{
-				format = Formatter.Parser.ParseFormat(source, Formatter.GetNotEmptyFormatterExtensionNames());
+				Format format = Formatter.Parser.ParseFormat(source, Formatter.GetNotEmptyFormatterExtensionNames());
+
+				exception = null;
+				foundError = !string.Equals(format.baseString, source, StringComparison.Ordinal);
+
+				return foundError ? format.baseString : string.Empty;
 			}
 			catch (Exception e)
 			{
@@ -78,20 +81,11 @@ namespace Sirenix.OdinInspector.Modules.Localization.Editor.Internal
 
 				return $"Unity Formatter threw {ObjectNames.NicifyVariableName(e.GetType().GetNiceName())}: '{e.Message}'\nCheck the console for more information.";
 			}
-
-			exception = null;
-
-			Buffer.Clear();
-
-			int expectedSize = source.Length;
-			AppendToBuffer(format, source, ref expectedSize);
-
-			foundError = expectedSize != Buffer.Length;
-
-			Formatter.Settings.ParseErrorAction = ErrorAction.MaintainTokens;
-			Formatter.Settings.FormatErrorAction = ErrorAction.MaintainTokens;
-
-			return Buffer.ToString();
+			finally
+			{
+				Formatter.Settings.ParseErrorAction = ErrorAction.MaintainTokens;
+				Formatter.Settings.FormatErrorAction = ErrorAction.MaintainTokens;
+			}
 		}
 
 		private static void AppendColorAsRichTag(Color color, ref int expectedSize)
@@ -128,11 +122,6 @@ namespace Sirenix.OdinInspector.Modules.Localization.Editor.Internal
 		{
 			for (var i = 0; i < format.Items.Count; i++)
 			{
-				if (Buffer.Length == source.Length)
-				{
-					break;
-				}
-				
 				FormatItem item = format.Items[i];
 
 				if (!(item is Placeholder placeholder))

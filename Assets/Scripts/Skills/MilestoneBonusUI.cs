@@ -27,13 +27,13 @@ namespace TimelessEchoes.Skills
         private void Awake()
         {
             if (controller == null)
-                controller = FindFirstObjectByType<SkillController>();
+                controller = FindAnyObjectByType<SkillController>();
         }
 
         private void OnEnable()
         {
             if (controller == null)
-                controller = FindFirstObjectByType<SkillController>();
+                controller = FindAnyObjectByType<SkillController>();
 
             if (controller != null)
                 controller.OnMilestoneDataChanged += HandleMilestoneDataChanged;
@@ -81,7 +81,7 @@ namespace TimelessEchoes.Skills
                 return;
 
             if (controller == null)
-                controller = FindFirstObjectByType<SkillController>();
+                controller = FindAnyObjectByType<SkillController>();
 
             var progress = controller != null ? controller.GetProgress(skill) : null;
             int currentLevel = progress != null ? progress.Level : 1;

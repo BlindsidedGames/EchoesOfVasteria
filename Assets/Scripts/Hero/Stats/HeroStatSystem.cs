@@ -24,6 +24,21 @@ namespace TimelessEchoes.Hero
         private static HeroStatsSnapshot _cache;
         public static bool IsDirty { get; private set; } = true;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            OnStatsRecalculated = null;
+            _initialized = false;
+            _dirtyMask = DirtyMask.All;
+            _version = 0;
+            _hero = null;
+            _cache = default;
+            IsDirty = true;
+#if UNITY_EDITOR
+            _lastDirtyReason = default;
+#endif
+        }
+
         public static void Initialize(HeroController hero)
         {
             _hero = hero != null ? hero : HeroController.Instance;

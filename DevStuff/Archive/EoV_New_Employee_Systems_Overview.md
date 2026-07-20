@@ -7,7 +7,7 @@ This overview summarizes the runtime systems, progression rules, and data assets
 - Platform: Steam builds with Steamworks.NET integration.
 - Genre: incremental hero management game with auto-running map sessions.
 - Presentation: 2D top-down pixel art driven by tilemaps and A* navigation.
-- Engine: Unity 6000.2.6f2 in `ProjectSettings/ProjectVersion.txt` (repo guidance still references 6000.2.1f1/6000.1.6f1, confirm target before upgrading).
+- Engine: Unity 6000.5.1f1, matching `ProjectSettings/ProjectVersion.txt` and current repository guidance.
 
 ## Core Loop (Runtime)
 EoV runs as a sequence of auto-played maps. Each run spawns a `Map` prefab, `TilemapChunkGenerator` plus `ProceduralTaskGenerator` build terrain and task nodes, and `TaskController` assigns the earliest unfinished task (ordered by world X) while the hero uses A* pathfinding to travel and fight. Tasks grant resources and XP, enemies can drop gear, chests always contain gear, and offline runs continue while the game is closed. See `Assets/Scripts/MapGeneration/*`, `Assets/Scripts/Tasks/*`, and the overview in `README.md`.

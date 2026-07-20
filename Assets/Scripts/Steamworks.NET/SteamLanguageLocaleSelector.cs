@@ -61,11 +61,14 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
     ///     Flag stored in <see cref="PlayerPrefs" /> indicating whether Steam language
     ///     should be used to select the locale.
     /// </summary>
+    // This property stores through PlayerPrefs and has no static backing state.
+#pragma warning disable UDR0001
     public static bool UseSteamLanguage
     {
         get => PlayerPrefs.GetInt(UseSteamLanguageKey, 0) == 1;
         set => PlayerPrefs.SetInt(UseSteamLanguageKey, value ? 1 : 0);
     }
+#pragma warning restore UDR0001
 
     /// <inheritdoc />
     public Locale GetStartupLocale(ILocalesProvider availableLocales)

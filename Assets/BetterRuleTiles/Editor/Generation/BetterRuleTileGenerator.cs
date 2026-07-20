@@ -1,281 +1,231 @@
 #if UNITY_EDITOR
-using System.Linq;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.ComponentModel;
+using System.Linq;
 using UnityEditor;
-using UnityEditor.Tilemaps;
-using VinTools.BetterRuleTiles;
+using UnityEngine;
+using UnityEngine.Tilemaps;
 using VinTools.BetterRuleTiles.Internal;
+using VinTools.BetterRuleTiles;
+using VinTools.BetterRuleTiles.Editor.Utilities;
 
-namespace VinToolsEditor.BetterRuleTiles
+namespace VinTools.BetterRuleTiles.Editor.Generation
 {
-    public class BetterRuleTileGenerator
+    public partial class BetterRuleTileGenerator
     {
+        public static Type GetDefaultTileType(BetterRuleTileContainer.GridShape gridShape)
+        {
+            // if that failed, generate the tiles based on shape
+            switch (gridShape)
+            {
+                case BetterRuleTileContainer.GridShape.Square: return typeof(BetterRuleTile);
+                case BetterRuleTileContainer.GridShape.Isometric: return typeof(BetterRuleTile);
+                case BetterRuleTileContainer.GridShape.HexagonalPointedTop: return typeof(BetterHexagonalRuleTile);
+                case BetterRuleTileContainer.GridShape.HexagonalFlatTop: return typeof(BetterHexagonalRuleTile);
+                default: return typeof(BetterRuleTile);
+            }
+        }
+        
         public static void GenerateTiles(BetterRuleTileContainer container)
         {
-            //generate the tiles, based on shape
+            // if successfully generated using custom tiles, don't continue
+            if (GenerateCustomTiles(container)) return;
+            
+            // if that failed, generate the tiles based on shape
             switch (container.settings._gridShape)
             {
-                case BetterRuleTileContainer.GridShape.Square: GenerateSquareTiles(container); break;
-                case BetterRuleTileContainer.GridShape.Isometric: GenerateSquareTiles(container); break;
-                case BetterRuleTileContainer.GridShape.HexagonalPointedTop: GenerateHexTiles(container); break;
-                case BetterRuleTileContainer.GridShape.HexagonalFlatTop: GenerateHexTiles(container); break;
+                case BetterRuleTileContainer.GridShape.Square: GenerateTiles<BetterRuleTileBase>(container); break;
+                case BetterRuleTileContainer.GridShape.Isometric: GenerateTiles<BetterRuleTileBase>(container); break;
+                case BetterRuleTileContainer.GridShape.HexagonalPointedTop: GenerateTiles<BetterHexagonalRuleTileBase>(container); break;
+                case BetterRuleTileContainer.GridShape.HexagonalFlatTop: GenerateTiles<BetterHexagonalRuleTileBase>(container); break;
+            }
+        }
+
+        public static void GenerateTiles<T>(BetterRuleTileContainer container) where T : TileBase, IBetterRuleTile
+        {
+            // Updated package, hex tiles are now handled together with regular tiles
+            // move all old hex tiles to the regular tile list
+            foreach (var hexTile in container._oldHexTiles) container._tileObjects.Add(hexTile);
+            container._oldHexTiles.Clear();
+
+            // create list of tiles
+            List<T> tiles = new List<T>();
+
+            // generate tiles
+            for (int i = 0; i < container.Tiles.Count; i++)
+            {
+                tiles.Add(GenerateTile<T>(container, container.Tiles[i].UniqueID));
             }
 
-            //highlight object
+            // assign the other tiles
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                //set tiles to their correct place
+                foreach (T item in tiles) 
+                    tiles[i].otherTiles[item.UniqueIdentifier - 1] = item.Tile;
+            }
+            
+            // set variations
+            SetVariations(container, tiles);
+            foreach (var tile in tiles) tile.HasVariations = tile.variations.Count > 0;
+            
+            // copy extended tiling rule to regular tiling rule
+            foreach (var tile in tiles)
+            {
+                // check if there are extra tiling rules
+                tile.HasExtraTilingRules = tile.TempTilingRules.Any(t => t.IsCustomOutputSprite);
+
+                // split tiling rules to default and extra
+                ExportTilingRules(tile.TempTilingRules, out var tilingRules, out var extras);
+                tile.TilingRules = tilingRules;
+                tile.m_ExtraTilingRules = extras;
+                tile.TempTilingRules.Clear();
+
+                // add settings
+                tile.TreatSimilarTilesAsSame = container.settings._treatSimilarTilesAsSame;
+            }
+
+            // delete unused previous tiles 
+            // container.DeleteUnusedTileObjects();
+
+            // create Tiles
+            foreach (var tile in tiles) container.SaveObjectToAsset(tile);
+            
+            
+            // ------ edit asset to use the actual tiles ------
+            // Get the guids to replace
+            List<string> exportedScriptGuid = new List<string>{ TypeUtils.GetTypeGuid(typeof(T)) };
+            foreach (var obj in container._tileObjects)
+            {
+                string guid = TypeUtils.GetTypeGuid(obj.GetType());
+                if (!exportedScriptGuid.Contains(guid)) exportedScriptGuid.Add(guid);
+            }
+            
+            // get the correct script guid
+            string correctScriptGuid = container.settings._selectedExportScriptGUID;
+            if (correctScriptGuid == "Default")
+            {
+                if (typeof(T).IsAssignableFrom(typeof(BetterRuleTileBase))) correctScriptGuid = TypeUtils.GetTypeGuid(typeof(BetterRuleTile));
+                if (typeof(T).IsAssignableFrom(typeof(BetterHexagonalRuleTileBase))) correctScriptGuid = TypeUtils.GetTypeGuid(typeof(BetterHexagonalRuleTile));
+            }
+                
+            // edit file
+            string path = AssetDatabase.GetAssetPath(container);
+            string content = System.IO.File.ReadAllText(path);
+            foreach (var replaceFrom in exportedScriptGuid)
+            {
+                if (replaceFrom == correctScriptGuid) continue;
+                
+                //Debug.Log($"Replaced from {replaceFrom} to {correctScriptGuid}");
+                content = content.Replace(replaceFrom, correctScriptGuid);
+            }
+
+            // save edited file
+            System.IO.File.WriteAllText(path, content);
+            AssetDatabase.Refresh();
+            
+            // highlight object
             Selection.activeObject = container;
             EditorGUIUtility.PingObject(container);
         }
-
-        #region Per-type functions
-        public static void GenerateSquareTiles(BetterRuleTileContainer container)
+        static T GenerateTile<T>(BetterRuleTileContainer container, int uniqueID) where T : TileBase, IBetterRuleTile
         {
-            //create list of tiles
-            List<BetterRuleTile> tiles = new List<BetterRuleTile>();
+            T tile = (T)container._tileObjects.Find(t => ((IBetterRuleTile)t).UniqueIdentifier == uniqueID);
+            if (tile == null) tile = ScriptableObject.CreateInstance<T>();
 
-            //generate tiles
-            for (int i = 0; i < container.Tiles.Count; i++)
-            {
-                tiles.Add(GenerateTile(container, container.Tiles[i].UniqueID));
-            }
-
-            //assign the other tiles
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                //set tiles to their correct place
-                foreach (var item in tiles) tiles[i].otherTiles[item.UniqueID - 1] = item;
-            }
-
-            //set variations
-            SetVariations(container, tiles);
-            foreach (var tile in tiles) tile.HasVariations = tile.variations.Count > 0;
-
-            //copy extended tiling rule to regular tiling rule
-            foreach (var tile in tiles)
-            {
-                //check if there are extra tiling rules
-                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
-
-                ExportTilingRules(ref tile.m_ExtendedTilingRules, out var tilingRules, out var extras);
-                tile.m_TilingRules = tilingRules;
-                tile.m_ExtraTilingRules = extras;
-
-                //add settings
-                tile.TreatSimilarTilesAsSame = container.settings._treatSimilarTilesAsSame;
-            }
-
-            //delete unused previous tiles 
-            container.DeleteUnusedSquareTileObjects();
-
-            //create Tiles
-            foreach (var tile in tiles) container.SaveObjectToAsset(tile);
-        }
-        public static void GenerateHexTiles(BetterRuleTileContainer container)
-        {
-            //create list of tiles
-            List<BetterHexagonalRuleTile> tiles = new List<BetterHexagonalRuleTile>();
-
-            //generate tiles
-            for (int i = 0; i < container.Tiles.Count; i++)
-            {
-                tiles.Add(GenerateHexTile(container, container.Tiles[i].UniqueID));
-            }
-
-            //assign the other tiles
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                //set tiles to their correct place
-                foreach (var item in tiles) tiles[i].otherTiles[item.UniqueID - 1] = item;
-            }
-
-            //set variations
-            SetVariations(container, tiles);
-            foreach (var tile in tiles) tile.HasVariations = tile.variations.Count > 0;
-
-            //copy extended tiling rule to regular tiling rule
-            foreach (var tile in tiles)
-            {
-                //check if there are extra tiling rules
-                tile.HasExtraTilingRules = tile.m_ExtendedTilingRules.Any(t => t.IsCustomOutputSprite);
-
-                ExportTilingRules(ref tile.m_ExtendedTilingRules, out var tilingRules, out var extras);
-                tile.m_TilingRules = tilingRules;
-                tile.m_ExtraTilingRules = extras;
-
-                //add settings
-                tile.TreatSimilarTilesAsSame = container.settings._treatSimilarTilesAsSame;
-            }
-
-            //delete unused previous tiles 
-            container.DeleteUnusedHexTileObjects();
-
-            //create Tiles
-            foreach (var tile in tiles) container.SaveObjectToAsset(tile);
-        }
-
-        static BetterRuleTile GenerateTile(BetterRuleTileContainer container, int UniqueID)
-        {
-            BetterRuleTile tile = container._tileObjects.Find(t => t.UniqueID == UniqueID);
-            if (tile == null) tile = ScriptableObject.CreateInstance<BetterRuleTile>();
-
-            var templateTile = container.Tiles.Find(t => t.UniqueID == UniqueID);
+            var templateTile = container.Tiles.Find(t => t.UniqueID == uniqueID);
 
             tile.name = templateTile.Name;
-            tile.UniqueID = UniqueID;
+            tile.UniqueIdentifier = uniqueID;
             //tile.variationParent = null;
-            tile.otherTiles = new BetterRuleTile[container._tiles.Max(t => t.UniqueID)];
-            tile.m_DefaultColliderType = templateTile.ColliderType;
+            tile.otherTiles = new TileBase[container._tiles.Max(t => t.UniqueID)];
+            tile.DefaultColliderType = templateTile.ColliderType;
 
-            tile.m_ExtendedTilingRules = GenerateRules(container, UniqueID);
-            tile.m_DefaultSprite = templateTile.DefaultSprite;
-            tile.m_DefaultGameObject = templateTile.DefaultGameObject;
+            tile.TempTilingRules = GenerateRules(container, uniqueID);
+            tile.DefaultSprite = templateTile.DefaultSprite;
+            tile.DefaultGameObject = templateTile.DefaultGameObject;
 
-            tile.customProperties.Clear();
+            tile.CustomTileProperties.Clear();
             for (int i = 0; i < templateTile.customProperties.Count; i++)
             {
-                tile.customProperties.Add(new CustomTileProperty(templateTile.customProperties[i]));
+                tile.CustomTileProperties.Add(new CustomTileProperty(templateTile.customProperties[i]));
             }
 
-            if (tile.m_DefaultSprite == null)
+            if (tile.DefaultSprite == null)
             {
-                Debug.LogWarning($"Default sprite of tile \"{tile}\" is not set, which could result in the tile displaying as a blank space.");
+                //Debug.LogWarning($"Default sprite of tile \"{tile}\" is not set, a sprite was automatically assigned.");
+                tile.DefaultSprite = tile.TempTilingRules.Last().m_Sprites[0];
+
+                // if it's still null
+                if (tile.DefaultSprite == null)
+                {
+                    Debug.LogWarning($"Default sprite of tile \"{tile}\" is not set, which could result in the tile displaying as a blank space.");
+                }
+            }
+
+            // for tilesets assign the defaults based on the simplest tiling rule, since you can't assign those there
+            if (container.UseTileSet)
+            {
+                tile.DefaultGameObject = tile.TempTilingRules.Last().m_GameObject;
+                tile.DefaultColliderType = tile.TempTilingRules.Last().m_ColliderType;
             }
 
             return tile;
         }
-        static BetterHexagonalRuleTile GenerateHexTile(BetterRuleTileContainer container, int UniqueID)
-        {
-            BetterHexagonalRuleTile tile = container._hexTileObjects.Find(t => t.UniqueID == UniqueID);
-            if (tile == null) tile = ScriptableObject.CreateInstance<BetterHexagonalRuleTile>();
-
-            var templateTile = container.Tiles.Find(t => t.UniqueID == UniqueID);
-
-            tile.name = templateTile.Name;
-            tile.UniqueID = UniqueID;
-            //tile.variationParent = null;
-            tile.otherTiles = new BetterHexagonalRuleTile[container._tiles.Max(t => t.UniqueID)];
-            tile.m_DefaultColliderType = templateTile.ColliderType;
-
-            tile.m_ExtendedTilingRules = GenerateRules(container, UniqueID);
-            tile.m_DefaultSprite = templateTile.DefaultSprite;
-            tile.m_DefaultGameObject = templateTile.DefaultGameObject;
-
-            tile.customProperties.Clear();
-            for (int i = 0; i < templateTile.customProperties.Count; i++)
-            {
-                tile.customProperties.Add(new CustomTileProperty(templateTile.customProperties[i]));
-            }
-
-            if (tile.m_DefaultSprite == null)
-            {
-                Debug.LogWarning($"Default sprite of tile \"{tile}\" is not set, which could result in the tile displaying as a blank space.");
-            }
-
-            return tile;
-        }
-
-        static void SetVariations(BetterRuleTileContainer container, List<BetterRuleTile> tiles)
+        
+        static void SetVariations<T>(BetterRuleTileContainer container, List<T> tiles) where T : TileBase, IBetterRuleTile
         {
             //for every tile
             for (int i = 0; i < tiles.Count; i++)
             {
                 //find tiles where the variated tile is this tile
-                var variations = container._tiles.Where(t => !t.uniqueTile && t.variationOf == tiles[i].UniqueID).ToArray();
+                var variations = container._tiles.Where(t => !t.uniqueTile && t.variationOf == tiles[i].UniqueIdentifier).ToArray();
                 //Debug.Log($"{tiles[i].name} variation count: {variations.Length}");
 
                 //add those tiles
                 foreach (var item in variations)
                 {
-                    var obj = tiles.Find(t => t.UniqueID == item.UniqueID);
+                    var obj = tiles.Find(t => t.UniqueIdentifier == item.UniqueID);
 
                     //obj.variationParent = tiles[i];
-                    AddParentRules(ref obj.m_ExtendedTilingRules, ref tiles[i].m_ExtendedTilingRules);
+                    obj.TempTilingRules = AddParentRules(obj.TempTilingRules, tiles[i].TempTilingRules);
                     //tiles[i].variations.Add(obj); //not needed since the parent is only for adding the missing rules
                 }
 
                 //add variations set up manually by the user
                 tiles[i].variations.Clear(); //reset
-                var tileOf = container.Tiles.Find(t => t.UniqueID == tiles[i].UniqueID);
+                var tileOf = container.Tiles.Find(t => t.UniqueID == tiles[i].UniqueIdentifier);
                 foreach (var item in tileOf.variations)
                 {
-                    var brTile = tiles.Find(t => t.UniqueID == item);
-                    if (brTile != null && !tiles[i].variations.Contains(brTile)) tiles[i].variations.Add(brTile);
+                    var brTile = tiles.Find(t => t.UniqueIdentifier == item);
+                    if (brTile != null && !tiles[i].variations.Contains(brTile.Tile)) tiles[i].variations.Add(brTile.Tile);
                 }
             }
         }
-        static void SetVariations(BetterRuleTileContainer container, List<BetterHexagonalRuleTile> tiles)
-        {
-            //for every tile
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                //find tiles where the variated tile is this tile
-                var variations = container._tiles.Where(t => !t.uniqueTile && t.variationOf == tiles[i].UniqueID).ToArray();
-                //Debug.Log($"{tiles[i].name} variation count: {variations.Length}");
-
-                //add those tiles
-                foreach (var item in variations)
-                {
-                    var obj = tiles.Find(t => t.UniqueID == item.UniqueID);
-
-                    //obj.variationParent = tiles[i];
-                    AddParentRules(ref obj.m_ExtendedTilingRules, ref tiles[i].m_ExtendedTilingRules);
-                    //tiles[i].variations.Add(obj); //not needed since the parent is only for adding the missing rules
-                }
-
-                //add variations set up manually by the user
-                tiles[i].variations.Clear(); //reset
-                var tileOf = container.Tiles.Find(t => t.UniqueID == tiles[i].UniqueID);
-                foreach (var item in tileOf.variations)
-                {
-                    var brTile = tiles.Find(t => t.UniqueID == item);
-                    if (brTile != null && !tiles[i].variations.Contains(brTile)) tiles[i].variations.Add(brTile);
-                }
-            }
-        }
-        #endregion
-
-        /*static void ExportTilingRules<T>(T tile)
-        {
-            int count = tile.m_ExtendedTilingRules.Count();
-
-            var tempTilingRules = new RuleTile.TilingRule[count];
-            var tempExtras = new ExtraTilingRule[count];
-
-            for (int i = 0; i < count; i++)
-            {
-                tempTilingRules[i] = tile.m_ExtendedTilingRules[i].ExportTilingRule();
-                tempExtras[i] = tile.m_ExtendedTilingRules[i].ExportExtras();
-            }
-
-            tile.m_TilingRules = tempTilingRules.ToList();
-            tile.m_ExtraTilingRules = tempExtras.ToList();
-
-            tile.m_ExtendedTilingRules.Clear();
-        }*/
-
-
+        
+        
 
         #region Generic: tiling rules
-        static List<ExtendedTilingRule> GenerateRules(BetterRuleTileContainer container, int UniqueID)
+        static List<ExtendedTilingRule> GenerateRules(BetterRuleTileContainer container, int uniqueID)
         {
-            //create new tiling rule list
+            // create new tiling rule list
             List<ExtendedTilingRule> tilingRules = new List<ExtendedTilingRule>();
 
-            //find the tile object
-            var tileOf = container.Tiles.Find(t => t.UniqueID == UniqueID);
+            // find the tile object
+            var tileOf = container.Tiles.Find(t => t.UniqueID == uniqueID);
 
-            foreach (var item in container.Grid.FindAll(t => t.TileID == UniqueID))
+            foreach (var item in container.Grid.FindAll(t => t.TileID == uniqueID))
             {
-                //ignore tile if has no sprite
+                // ignore tile if it has no sprite
                 if (item.Sprite == null) continue;
-                //order neighborpositions by grid order
+                // order neighbor positions by grid order
                 item.NeighborPositions = item.NeighborPositions.OrderBy(t => t.y * -10000 + t.x).ToList();
-
-                //create a new list for the neighbor position because it needs to be converted from editor to tilemap coords
+                
+                // create a new list for the neighbor position because it needs to be converted from editor to tilemap coords
                 List<Vector3Int> NeighborPositions = new List<Vector3Int>();
 
-                //check if the tile is part of a preset block
+                // check if the tile is part of a preset block
                 var presetBlock = container._presetBlocks.Find(p => p.InBounds(item.Position));
                 if (presetBlock != null)
                 {
@@ -284,7 +234,7 @@ namespace VinToolsEditor.BetterRuleTiles
                         NeighborPositions.Add((Vector3Int)container.EditorToUnityCoord(new Vector2Int(neighbor.x, neighbor.y), item.Position));
                     }
                 }
-                //convert default neighbor positions from editor coordinates to tilemap coordinates
+                // convert default neighbor positions from editor coordinates to tilemap coordinates
                 else
                 {
                     foreach (var neighbor in item.NeighborPositions)
@@ -292,30 +242,36 @@ namespace VinToolsEditor.BetterRuleTiles
                         NeighborPositions.Add((Vector3Int)container.EditorToUnityCoord(new Vector2Int(neighbor.x, neighbor.y), item.Position));
                     }
                 }
-
-                //create tiling
+                
+                // make sure there are no duplicates in the neighborPositions
+                NeighborPositions = RemoveDuplacePositions(NeighborPositions);
+                
+                // create tiling
                 int[] neighbors = new int[NeighborPositions.Count];
 
-                //set neighbors
+                // set neighbors
                 for (int i = 0; i < neighbors.Length; i++)
                 {
                     //neighbors[i] = GetNeighborRule(container, container.Grid.Find(t => t.Position == new Vector2Int(item.Position.x + NeighborPositions[i].x, item.Position.y - NeighborPositions[i].y)), UniqueID);
-                    neighbors[i] = GetNeighborRule(container, container.Grid.Find(t => t.Position == item.Position + container.EditorToUnityCoord((Vector2Int)NeighborPositions[i], item.Position)), UniqueID);
+                    neighbors[i] = GetNeighborRule(container, container.Grid.Find(t => t.Position == item.Position + container.EditorToUnityCoord((Vector2Int)NeighborPositions[i], item.Position)), uniqueID);
                 }
 
-                //create tiling rule
+                // create tiling rule
                 ExtendedTilingRule tilingRule = CreateTilingRule(container, item, tileOf, presetBlock);
                 tilingRule.m_NeighborPositions = container.DisplaceRules(NeighborPositions, item.Position);
                 tilingRule.m_Neighbors = neighbors.ToList();
+                tilingRule.brtCell = item;
 
-                //add tiling rule to list
+                // add tiling rule to list
                 tilingRules.Add(tilingRule);
             }
 
-            //return list
+            // Handle duplicates and sorting
             tilingRules = RemoveDuplicates(tilingRules);
             if (container.settings._collapseSimilarRules) tilingRules = SimplifyNeighborRules(tilingRules);
             tilingRules = SortRules(tilingRules);
+            
+            // return rules
             return tilingRules;
         }
         static ExtendedTilingRule CreateTilingRule(BetterRuleTileContainer container, BetterRuleTileContainer.GridCell cell, BetterRuleTileContainer.TileData parentTileData, BetterRuleTileContainer.PresetBlock presetBlock)
@@ -394,11 +350,26 @@ namespace VinToolsEditor.BetterRuleTiles
                 tilingRule.m_RuleTransform = cell.Transform;
             }
 
-            //settings which are not tied to the universal sprite settings or preset blocks
-            //
+            // settings which are not tied to the universal sprite settings or preset blocks
+            tilingRule.priorityModifier = cell.PriorityModifier;
+            tilingRule.priorityGroup = cell.Priority;
 
             //return
             return tilingRule;
+        }
+        static List<Vector3Int> RemoveDuplacePositions(List<Vector3Int> neighborPositions)
+        {
+            //create new empty list
+            List<Vector3Int> newList = new List<Vector3Int>();
+
+            //add positions to the new list if it doesn't contain it yet
+            foreach (var pos in neighborPositions)
+            {
+                if (!newList.Contains(pos)) newList.Add(pos);
+            }
+
+            //return list with no duplicates
+            return newList;
         }
         static List<ExtendedTilingRule> RemoveDuplicates(List<ExtendedTilingRule> tilingRules)
         {
@@ -481,7 +452,7 @@ namespace VinToolsEditor.BetterRuleTiles
                     //if not same just make the tile ignore that position
                     if (tilingRules[t].m_Neighbors[i] != tilingRule.m_Neighbors[i])
                     {
-                        tilingRule.m_Neighbors[i] = Neighbor.Ignore;
+                        tilingRule.m_Neighbors[i] = -1;
                         break;
                     }
                 }
@@ -502,36 +473,136 @@ namespace VinToolsEditor.BetterRuleTiles
 
             return true;
         }
-        static List<ExtendedTilingRule> SortRules(List<ExtendedTilingRule> tilingRules) => tilingRules.OrderByDescending(t => GetNeighborPriority(t)).ToList();
+
+        static List<ExtendedTilingRule> SortRules(List<ExtendedTilingRule> tilingRules)
+        {
+            List<List<ExtendedTilingRule>> tempGrouped = tilingRules
+                .GroupBy(t => t.priorityGroup) // Group by priority
+                .OrderByDescending(g => g.Key) // Order groups in descending order
+                .Select(g => g.OrderByDescending(t => GetNeighborPriority(t)).ToList()) // order each group separately
+                .ToList();
+
+            int i = 0;
+            // for all groups
+            foreach (var group in tempGrouped)
+            {
+                // save the initial indexes
+                foreach (var rule in group)
+                {
+                    rule.brtCell.info_InitialRuleOrder = i;
+                    i++;
+                }
+                
+                // adjust priority by group
+                ApplyCustomPriority(group);
+            }
+            
+            // combine groups into a full list
+            var temp = tempGrouped.SelectMany(g => g).ToList();
+            
+            // save final priority in cell
+            for (int j = 0; j < tilingRules.Count; j++) temp[j].brtCell.info_ExportedRuleOrder = j;
+            
+            // return sorted list
+            return temp;
+        }
         static int GetNeighborPriority(RuleTile.TilingRule tr)
         {
             int num = 0;
             for (int i = 0; i < tr.m_Neighbors.Count; i++)
             {
-                if (tr.m_Neighbors[i] != Neighbor.Ignore) num += 100; //add 100 for every non space
+                if (tr.m_Neighbors[i] != -1) num += 100; //add 100 for every non space
                 if (tr.m_Neighbors[i] > 0) num += 5; //add +5 for every connection tile
             }
             return num;
         }
+        
+        /// <summary>
+        /// Changes the order of the tiles based on their priorityModifier property
+        /// </summary>
+        /// <param name="tilingRules"></param>
+        static void ApplyCustomPriority(List<ExtendedTilingRule> tilingRules)
+        {
+            // returns true if priority changed
+            bool ChangePriority(int i, Predicate<int> predicate)
+            {
+                // This is needed since the index changes during operation
+                var tileToCheck = tilingRules[i];
+                // change priority
+                if (predicate(tileToCheck.priorityModifier))
+                {
+                    var moved = BumpListPriority(tilingRules, i, i + tileToCheck.priorityModifier);
+                    tileToCheck.priorityModifier -= moved;
+                    
+                    // if haven't modified the priority, continue iterating
+                    if (moved == 0) return false;
+                    // else priority change and this index contains a new item
+                    return true;
+                }
+                
+                // no change
+                return false;
+            }
+            
+            // decrease priority
+            int i = 0;
+            while (i < tilingRules.Count) if (!ChangePriority(i, (m) => m > 0)) i++;
+            
+            // increase priority
+            // iterate from lowest to highest priority rules
+            i = tilingRules.Count - 1;
+            while (i >= 0) if (!ChangePriority(i, (m) => m < 0)) i--;
+        }
+        /// <summary>
+        /// Move up an item in the specified list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Amount of spaces moved</returns>
+        static int BumpListPriority<T>(List<T> list, int from, int to)
+        {
+            if (to == from) return 0;
+            //Debug.Log($"Moving rule from {from} to {to}");
+            
+            // make sure we don't go out of range
+            if (to < 0) to = 0;
+            if (to >= list.Count) to = list.Count - 1;
+            
+            // save the item we're moving
+            T tempObj = list[from];
+            
+            // move items in-between
+            // increasing priority (index with lower index has higher priority)
+            if (to < from) for (int i = from; i > to; i--) list[i] = list[i - 1];
+            // decrease priority (increase index)
+            else for (int i = from; i < to; i++) list[i] = list[i + 1];
+            
+            // move temp item
+            list[to] = tempObj;
+            return to - from;
+        }
+        
         static int GetNeighborRule(BetterRuleTileContainer container, BetterRuleTileContainer.GridCell cell, int TileID)
         {
-            if (cell == null) return Neighbor.Ignore;
-            if (cell.TileID == TileID) return Neighbor.This;
-            if (cell.TileID == -3) return Neighbor.NotThis;
-            if (cell.TileID == -4) return Neighbor.Any;
-            if (cell.TileID == -2) return Neighbor.Empty;
+            if (cell == null) return -1;
+            if (cell.TileID == TileID) return 0;
+            if (cell.TileID < 0) return cell.TileID;
 
             if (container.Tiles.Exists(t => t.UniqueID == cell.TileID)) return cell.TileID;
 
-            return Neighbor.Ignore;
+            return -1;
         }
 
-        static void AddParentRules(ref List<ExtendedTilingRule> tileRules, ref List<ExtendedTilingRule> parentRules)
+        static List<ExtendedTilingRule> AddParentRules(List<ExtendedTilingRule> original, List<ExtendedTilingRule> parentRules)
         {
             //add extra rules for parent tile
-            foreach (var item in parentRules) tileRules.Add(CopyTilingRule(item));
+            foreach (var item in parentRules) original.Add(CopyTilingRule(item));
             //clear duplicate rules
-            tileRules = RemoveDuplicates(tileRules);
+            original = RemoveDuplicates(original);
+
+            return original;
         }
         static ExtendedTilingRule CopyTilingRule(ExtendedTilingRule from)
         {
@@ -551,20 +622,18 @@ namespace VinToolsEditor.BetterRuleTiles
                 m_RuleTransform = from.m_RuleTransform,
             };
         }
-        static void ExportTilingRules(ref List<ExtendedTilingRule> m_ExtendedTilingRules, out List<RuleTile.TilingRule> tempTilingRules, out List<ExtraTilingRule> tempExtras)
+        static void ExportTilingRules(List<ExtendedTilingRule> original, out List<RuleTile.TilingRule> tempTilingRules, out List<ExtraTilingRule> tempExtras)
         {
-            int count = m_ExtendedTilingRules.Count();
+            int count = original.Count();
 
             tempTilingRules = new RuleTile.TilingRule[count].ToList();
             tempExtras = new ExtraTilingRule[count].ToList();
 
             for (int i = 0; i < count; i++)
             {
-                tempTilingRules[i] = m_ExtendedTilingRules[i].ExportTilingRule();
-                tempExtras[i] = m_ExtendedTilingRules[i].ExportExtras();
+                tempTilingRules[i] = original[i].ExportTilingRule();
+                tempExtras[i] = original[i].ExportExtras();
             }
-
-            m_ExtendedTilingRules.Clear();
         }
         #endregion
     }

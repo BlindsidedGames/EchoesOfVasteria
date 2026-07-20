@@ -8,6 +8,10 @@ namespace Blindsided.SaveData
 {
     public static class StaticReferences
     {
+        // Most writable static properties in this class are façades over save data
+        // or PlayerPrefs, not retained static state. Unity's domain-reload analyzer
+        // cannot see through those accessors; the real retained state is reset below.
+#pragma warning disable UDR0001, UDR0002
         private const string MasterVolumeKey = "MasterVolume";
         private const string MusicVolumeKey = "MusicVolume";
         private const string SfxVolumeKey = "SfxVolume";
@@ -37,6 +41,15 @@ namespace Blindsided.SaveData
 
         // Runtime-only bonus contributed by AE section tiers; not persisted. Updated by Collections UI.
         private static float disciplePercentCollectionsBonus;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            ActiveNpcMeetings.Clear();
+            disciplePercentCollectionsBonus = 0f;
+            ShowLevelTextChanged = null;
+            AutoBuffChanged = null;
+        }
 
         public static float DisciplePercent
         {
@@ -411,5 +424,6 @@ namespace Blindsided.SaveData
 
             oracle.saveData.CompletionPercentage = total > 0 ? completed / (float)total * 100f : 0f;
         }
+#pragma warning restore UDR0001, UDR0002
     }
 }

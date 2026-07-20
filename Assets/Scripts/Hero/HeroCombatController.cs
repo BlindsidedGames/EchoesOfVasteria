@@ -652,7 +652,7 @@ namespace TimelessEchoes.Hero
                     total *= critDamageMultiplier;
                     isCritical = true;
                     var gameTracker = GameplayStatTracker.Instance ??
-                                      UnityEngine.Object.FindFirstObjectByType<GameplayStatTracker>();
+                                      UnityEngine.Object.FindAnyObjectByType<GameplayStatTracker>();
                     gameTracker?.AddCriticalHit();
                 }
 

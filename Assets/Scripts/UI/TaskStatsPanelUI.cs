@@ -112,6 +112,9 @@ namespace TimelessEchoes.UI
             return gameObject.activeInHierarchy && isActiveAndEnabled;
         }
 
+        // UDR0004 cannot follow EventDrivenStatsPanelUI.OnDisable into the
+        // UnsubscribeFromEvents override immediately below.
+#pragma warning disable UDR0004
         protected override void SubscribeToEvents()
         {
             // Re-acquire tracker in case it wasn't ready at Awake
@@ -129,6 +132,7 @@ namespace TimelessEchoes.UI
             
             SetupDistanceSlider();
         }
+#pragma warning restore UDR0004
 
         protected override void UnsubscribeFromEvents()
         {

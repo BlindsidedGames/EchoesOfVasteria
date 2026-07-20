@@ -13,6 +13,10 @@ namespace TimelessEchoes.Gear
     {
         public static CraftingService Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         [SerializeField] private CraftingConfigSO config;
         [SerializeField] private List<RaritySO> rarities = new();
         [SerializeField] private List<StatDefSO> stats = new();

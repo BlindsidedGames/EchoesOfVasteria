@@ -10,7 +10,7 @@ namespace TimelessEchoes.Hero
     public class HeroAudio : MonoBehaviour
     {
         private AudioManager Audio => AudioManager.Instance ??
-            Object.FindFirstObjectByType<AudioManager>();
+            Object.FindAnyObjectByType<AudioManager>();
 
         public void PlayWoodcutting()
         {

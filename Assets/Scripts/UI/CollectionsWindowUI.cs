@@ -31,7 +31,6 @@ namespace TimelessEchoes.UI
 		private readonly Dictionary<CauldronManager.AEResourceGroup, CollectionSectionUIReferences> currentAESections = new();
 		private readonly Dictionary<CauldronManager.AEResourceGroup, List<string>> sectionItemIdsByGroup = new();
 		private CollectionSectionUIReferences currentBuffsSection;
-		private static float lastAppliedDiscipleBonus; // retained for immediate session-only tracking; replaced by StaticReferences bonus field
 		// Track last-applied tiers so we only update borders when they change
 		private readonly Dictionary<CauldronManager.AEResourceGroup, int> lastSectionTier = new();
 		private int lastBuffsGroupTier;
@@ -64,7 +63,7 @@ namespace TimelessEchoes.UI
 			cauldron ??= CauldronManager.Instance;
 			rm = ResourceManager.Instance;
 			cachedCauldronManager = cauldron ?? CauldronManager.Instance;
-			cachedCauldronWindow = FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow = FindAnyObjectByType<CauldronWindowUI>();
 			if (cardTooltipObject != null)
 				cardTooltipObject.SetActive(false);
 		}
@@ -410,13 +409,13 @@ namespace TimelessEchoes.UI
 
 		private Sprite GetTierSpriteFromCauldron(int tier)
 		{
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 			return cachedCauldronWindow != null ? cachedCauldronWindow.GetTierSprite(tier) : null;
 		}
 
 		private Sprite GetBorderTierSpriteFromCauldron(int tier)
 		{
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 			return cachedCauldronWindow != null ? cachedCauldronWindow.GetBorderTierSprite(tier) : null;
 		}
 
@@ -453,7 +452,7 @@ namespace TimelessEchoes.UI
 		private void UpdateSectionTierVisuals()
 		{
 			cachedCauldronManager ??= CauldronManager.Instance;
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 
 			foreach (var kv in currentAESections)
 			{
@@ -543,7 +542,6 @@ namespace TimelessEchoes.UI
 
 			var newBonus = 0.001f * Mathf.Max(0, totalCompletedTiers);
 			DisciplePercentCollectionsBonus = newBonus;
-			lastAppliedDiscipleBonus = newBonus;
 			TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.RefreshRates();
 		}
 
@@ -570,7 +568,7 @@ namespace TimelessEchoes.UI
 		private void FlushDirtySections()
 		{
 			cachedCauldronManager ??= CauldronManager.Instance;
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 			// Update AE groups
 			foreach (var grp in dirtyGroups)
 			{
@@ -736,7 +734,7 @@ namespace TimelessEchoes.UI
 		private string BuildTooltipText(string id, out int cardTier, out bool isInfinity)
 		{
 			cachedCauldronManager ??= CauldronManager.Instance;
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 
 			string sectionName;
 			int sectionTier;
@@ -843,7 +841,7 @@ namespace TimelessEchoes.UI
 		private void ApplyTooltipBorder(int cardTier, bool isInfinity)
 		{
 			if (cardTooltipBorderImage == null) return;
-			cachedCauldronWindow ??= FindFirstObjectByType<CauldronWindowUI>();
+			cachedCauldronWindow ??= FindAnyObjectByType<CauldronWindowUI>();
 			if (cachedCauldronWindow == null) return;
 			var borderSprite = isInfinity ? GetBorderTierSpriteFromCauldron(7) : GetBorderTierSpriteFromCauldron(cardTier);
 			cardTooltipBorderImage.sprite = borderSprite;

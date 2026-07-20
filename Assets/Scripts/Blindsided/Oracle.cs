@@ -8,6 +8,7 @@ using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.Gear;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,12 @@ namespace Blindsided
     public class Oracle : SerializedMonoBehaviour
     {
         public static Oracle oracle;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            oracle = null;
+        }
         // Autosave management
         private Coroutine _autosaveRoutine;
         private const float FirstAutosaveDelaySeconds = 30f;
@@ -55,7 +62,7 @@ namespace Blindsided
 
         [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
 
-        [TabGroup("SaveData")] public GameData saveData = new();
+        [TabGroup("SaveData")] [NonSerialized, OdinSerialize] public GameData saveData = new();
 
         [Header("Seasonal Leaderboard")]
 
@@ -178,7 +185,7 @@ namespace Blindsided
         private void OnApplicationQuit()
         {
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
             if (tracker != null && tracker.RunInProgress)
                 tracker.AbandonRun();
 #if UNITY_ANDROID || UNITY_IOS

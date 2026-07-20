@@ -15,7 +15,7 @@ namespace TimelessEchoes.UI
         private void Awake()
         {
             if (questManager == null)
-                questManager = Object.FindFirstObjectByType<QuestManager>();
+                questManager = Object.FindAnyObjectByType<QuestManager>();
         }
 
         private void Update()

@@ -22,7 +22,7 @@ namespace Blindsided.Utilities
 
             var oracle = Oracle.oracle;
             if (oracle == null)
-                oracle = FindFirstObjectByType<Oracle>();
+                oracle = FindAnyObjectByType<Oracle>();
 
             if (oracle != null && oracle.demo)
             {

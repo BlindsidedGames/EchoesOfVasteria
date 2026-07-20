@@ -17,13 +17,17 @@ namespace TimelessEchoes
     {
 #if !DISABLESTEAMWORKS
         private static SteamLeaderboardsReporter instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => instance = null;
+
         public static SteamLeaderboardsReporter Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<SteamLeaderboardsReporter>();
+                    instance = FindAnyObjectByType<SteamLeaderboardsReporter>();
                     if (instance == null)
                         instance = new GameObject("SteamLeaderboardsReporter").AddComponent<SteamLeaderboardsReporter>();
                 }

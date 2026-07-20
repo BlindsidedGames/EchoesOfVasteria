@@ -16,6 +16,9 @@ namespace TimelessEchoes.Upgrades
 		private const string SpriteAssetPath = "Fonts/FloatingTextIcons";
 		private static TMP_SpriteAsset spriteAsset;
 
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		private static void ResetStatics() => spriteAsset = null;
+
 		public enum StatKey
 		{
 			Damage,

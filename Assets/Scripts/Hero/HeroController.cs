@@ -12,6 +12,10 @@ namespace TimelessEchoes.Hero
     {
         public static HeroController Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         [SerializeField] private Animator autoBuffAnimator;
         [SerializeField] private SpriteRenderer autoBuffSpriteRenderer;
 

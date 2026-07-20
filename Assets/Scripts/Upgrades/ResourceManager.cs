@@ -17,6 +17,10 @@ namespace TimelessEchoes.Upgrades
     public class ResourceManager : Singleton<ResourceManager>
     {
         private static Dictionary<string, Resource> lookup;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => lookup = null;
+
         private int batchDepth;
         private bool pendingInventoryChanged;
         private readonly Dictionary<Resource, int> tiers = new();

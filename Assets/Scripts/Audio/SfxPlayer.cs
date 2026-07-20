@@ -17,6 +17,11 @@ namespace TimelessEchoes.Audio
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
+            _source = null;
+            _mixerGroup = null;
+            _lastClip = null;
+            _lastPlay = 0f;
+
             var go = new GameObject("SFX Source");
             Object.DontDestroyOnLoad(go);
 

@@ -27,7 +27,7 @@ namespace TimelessEchoes
 
         private void Awake()
         {
-            _console = FindFirstObjectByType<QuantumConsole>(FindObjectsInactive.Include);
+            _console = FindAnyObjectByType<QuantumConsole>(FindObjectsInactive.Include);
         }
 
         private void OnEnable()
@@ -49,7 +49,7 @@ namespace TimelessEchoes
 
             if (_console == null)
             {
-                _console = FindFirstObjectByType<QuantumConsole>(FindObjectsInactive.Include);
+                _console = FindAnyObjectByType<QuantumConsole>(FindObjectsInactive.Include);
                 if (_console == null)
                 {
                     return;

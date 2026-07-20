@@ -3,22 +3,22 @@ title: Shortcuts
 ---
 # Grid controls
 
-- **Left Mouse Click** - Use the selected tool on the [[Grid]]
-- **Right Mouse Click & Drag** - Move the [[Grid]] around
-- **Middle Mouse Click & Drag** - Move the [[Grid]] around
-- **Mouse Scroll** - Zoom in the [[Grid]]
+- **Left Mouse Click** - Use the selected tool on the **grid**
+- **Right Mouse Click & Drag** - Move the **grid** around
+- **Middle Mouse Click & Drag** - Move the **grid** around
+- **Mouse Scroll** - Zoom in the **grid**
 
 # Keyboard shortcuts
 
-- **B** - Select the [[Brush]] tool
-- **D** - Select the [[Eraser]] tool
-- **E** - Select the [[Tile inspector]] tool
-- **I** - Select the [[Picker tool]]
+- **B** - Select the [[Editor Tools#Brush tool|brush tool]]
+- **D** - Select the [[Editor Tools#Eraser tool|eraser tool]]
+- **E** - Select the [[Editor Tools#Grid cell inspector tool|grid cell inspector tool]]
+- **I** - Select the [[Editor Tools#Picker tool|picker tool]]
 - **L** - [[Lock selection]]
-- **M** - Select the [[Move tool]]
-- **P** - Create [[Preset block]]
+- **M** - Select the [[Editor Tools#Move tool|move tool]]
+- **P** - Create [[Preset block|a preset block]]
 - **U** - Unlock selection
-- **S** - Select the [[Selection tool]]
+- **S** - Select the [[Editor Tools#Selection tool|selection tool]]
 
 - **Delete** - Delete the selected area
 

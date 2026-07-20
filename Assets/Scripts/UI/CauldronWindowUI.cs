@@ -199,7 +199,7 @@ namespace TimelessEchoes.UI
 								cauldronAttentionObject.SetActive(true);
 							TimelessEchoes.UI.TownWindowManager.ShowCauldronAttention();
 						}
-						FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+						FindAnyObjectByType<TaskbarFlasher>()?.FlashNow();
 					}
 					cauldron.OnTasteSessionStopped += OneShotStopped;
 				}
@@ -658,7 +658,7 @@ namespace TimelessEchoes.UI
 				drinking.cardsGainedThisSessionText.text = "Cards Gained | 0";
 			UpdateTasteStopButtons();
 			// Ensure any previous flashes are cleared when tasting starts
-			FindFirstObjectByType<TaskbarFlasher>()?.StopFlashing();
+			FindAnyObjectByType<TaskbarFlasher>()?.StopFlashing();
 		}
 
 		private void OnTasteSessionStopped()
@@ -667,7 +667,7 @@ namespace TimelessEchoes.UI
 			if (!_tastingOccurredThisSession) return;
 			_tastingOccurredThisSession = false;
 			// Flash when cauldron tasting stops
-			FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+			FindAnyObjectByType<TaskbarFlasher>()?.FlashNow();
 		}
 
 		private void OnSessionCardsChanged(int total)

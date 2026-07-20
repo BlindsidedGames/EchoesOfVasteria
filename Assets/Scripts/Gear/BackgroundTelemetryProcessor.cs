@@ -15,6 +15,10 @@ namespace TimelessEchoes.Gear
     {
         public static BackgroundTelemetryProcessor Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         private readonly ConcurrentQueue<CraftResult> _pendingResults = new();
         private Thread _processorThread;
         private volatile bool _running;

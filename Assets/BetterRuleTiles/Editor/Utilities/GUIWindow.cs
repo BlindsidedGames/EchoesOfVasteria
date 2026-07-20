@@ -1,10 +1,7 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
-namespace VinToolsEditor.Utilities
+namespace VinTools.BetterRuleTiles.Editor.GUIWindows
 {
     public class GUIWindow
     {
@@ -13,6 +10,7 @@ namespace VinToolsEditor.Utilities
         {
             Free = 0,
             Fill = 1,
+            Center = 2,
 
             SpanTop = 10,
             SpanBottom = 11,
@@ -25,16 +23,17 @@ namespace VinToolsEditor.Utilities
             BottomRightCorner = 23,
         }
 
-        public WindowLayout layout;
-        public RectOffset padding;
+        protected WindowLayout layout;
+        protected RectOffset padding;
         public Rect rectangle;
         public bool lockPosition;
-        public bool visible = false;
-        public bool hideOnUnfocus = false;
-        public bool autoLayout = false;
-        public GUIContent windowTitle;
-        public GUIStyle windowStyle;
-        public GUI.WindowFunction windowFunction;
+        protected bool hideOnUnfocus = false;
+        protected bool autoLayout = false;
+        protected GUIContent windowTitle;
+        protected GUIStyle windowStyle;
+        protected GUI.WindowFunction windowFunction;
+        
+        private bool _visible = false;
         #endregion
 
         #region Properties
@@ -45,6 +44,19 @@ namespace VinToolsEditor.Utilities
 
         public Vector2 position { get => new Vector2(x, y); set { x = value.x; y = value.y; } }
         public Vector2 size { get => new Vector2(width, height); set { width = value.x; height = value.y; } }
+
+        public bool visible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible == value) return;
+                
+                _visible = value;
+                if (value) OnBecameVisible();
+                else OnBecameHidden();
+            }
+        }
         #endregion
 
         #region Constructor
@@ -122,19 +134,19 @@ namespace VinToolsEditor.Utilities
         #endregion
 
         #region Methods
-        public void Show(int WindowID, Rect MainWindowPosition)
+        public void Show(int windowID, Rect mainWindowPosition, bool forceShow = false)
         {
             //if not visible ignore
-            if (!visible) return;
+            if (!visible && !forceShow) return;
 
             //if auto layout is enabled
-            if (lockPosition) ApplyLayout(MainWindowPosition);
+            if (lockPosition) ApplyLayout(mainWindowPosition);
 
             //show window
-            if (autoLayout && windowStyle != null) rectangle = GUILayout.Window(WindowID, rectangle, WindowGUI, windowTitle, windowStyle);
-            if (autoLayout && windowStyle == null) rectangle = GUILayout.Window(WindowID, rectangle, WindowGUI, windowTitle);
-            if (!autoLayout && windowStyle != null) rectangle = GUI.Window(WindowID, rectangle, WindowGUI, windowTitle, windowStyle);
-            if (!autoLayout && windowStyle == null) rectangle = GUI.Window(WindowID, rectangle, WindowGUI, windowTitle);
+            if (autoLayout && windowStyle != null) rectangle = GUILayout.Window(windowID, rectangle, WindowGUI, windowTitle, windowStyle);
+            if (autoLayout && windowStyle == null) rectangle = GUILayout.Window(windowID, rectangle, WindowGUI, windowTitle);
+            if (!autoLayout && windowStyle != null) rectangle = GUI.Window(windowID, rectangle, WindowGUI, windowTitle, windowStyle);
+            if (!autoLayout && windowStyle == null) rectangle = GUI.Window(windowID, rectangle, WindowGUI, windowTitle);
 
             //return
             if (!hideOnUnfocus) return;
@@ -143,40 +155,46 @@ namespace VinToolsEditor.Utilities
             if ((Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag) && !rectangle.Contains(Event.current.mousePosition)) visible = false;
         }
 
-        public virtual void WindowGUI(int WindowID)
+        public virtual void WindowGUI(int windowID)
         {
             //execute window function if not null
-            windowFunction?.Invoke(WindowID);
+            windowFunction?.Invoke(windowID);
+
+            //drag window if not locked
+            if (!lockPosition) GUI.DragWindow();
         }
 
-        public void ApplyLayout(Rect MainWindowPosition)
+        public void ApplyLayout(Rect mainWindowPosition)
         {
             switch (layout)
             {
                 case WindowLayout.Fill:
-                    width = MainWindowPosition.width - padding.left - padding.right;
-                    height = MainWindowPosition.height - padding.top - padding.bottom;
+                    width = mainWindowPosition.width - padding.left - padding.right;
+                    height = mainWindowPosition.height - padding.top - padding.bottom;
                     x = padding.left;
                     y = padding.top;
                     break;
+                case WindowLayout.Center:
+                    position = (mainWindowPosition.size - size) / 2;
+                    break;
                 case WindowLayout.SpanTop:
-                    width = MainWindowPosition.width - padding.left - padding.right;
+                    width = mainWindowPosition.width - padding.left - padding.right;
                     x = padding.left;
                     y = padding.top;
                     break;
                 case WindowLayout.SpanBottom:
-                    width = MainWindowPosition.width - padding.left - padding.right;
+                    width = mainWindowPosition.width - padding.left - padding.right;
                     x = padding.left;
-                    y = MainWindowPosition.height - height - padding.bottom;
+                    y = mainWindowPosition.height - height - padding.bottom;
                     break;
                 case WindowLayout.SpanLeft:
-                    height = MainWindowPosition.height - padding.top - padding.bottom;
+                    height = mainWindowPosition.height - padding.top - padding.bottom;
                     x = padding.left;
                     y = padding.top;
                     break;
                 case WindowLayout.SpanRight:
-                    height = MainWindowPosition.height - padding.top - padding.bottom;
-                    x = MainWindowPosition.width - width - padding.right;
+                    height = mainWindowPosition.height - padding.top - padding.bottom;
+                    x = mainWindowPosition.width - width - padding.right;
                     y = padding.top;
                     break;
                 case WindowLayout.TopLeftCorner:
@@ -184,18 +202,28 @@ namespace VinToolsEditor.Utilities
                     y = padding.top;
                     break;
                 case WindowLayout.TopRightCorner:
-                    x = MainWindowPosition.width - width - padding.right;
+                    x = mainWindowPosition.width - width - padding.right;
                     y = padding.top;
                     break;
                 case WindowLayout.BottomLeftCorner:
                     x = padding.left;
-                    y = MainWindowPosition.height - height - padding.bottom;
+                    y = mainWindowPosition.height - height - padding.bottom;
                     break;
                 case WindowLayout.BottomRightCorner:
-                    x = MainWindowPosition.width - width - padding.right;
-                    y = MainWindowPosition.height - height - padding.bottom;
+                    x = mainWindowPosition.width - width - padding.right;
+                    y = mainWindowPosition.height - height - padding.bottom;
                     break;
             }
+        }
+
+        public virtual void OnBecameVisible()
+        {
+            
+        }
+
+        public virtual void OnBecameHidden()
+        {
+            
         }
         #endregion
     }

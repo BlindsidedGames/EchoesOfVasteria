@@ -10,6 +10,10 @@ namespace TimelessEchoes.Gear
     {
         public static SalvageService Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         // Scratch dictionary for batch salvage to avoid allocations
         private readonly Dictionary<Resource, float> _scratchExpected = new(8);
 

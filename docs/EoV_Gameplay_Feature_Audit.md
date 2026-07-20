@@ -218,7 +218,7 @@ Add a low-allocation goals strip to the Cauldron window showing nearest resource
   - Keep tests under `Assets/Tests/EditMode` when they can operate on ScriptableObjects, services, and reflected UI helpers.
   - Use Unity MCP tooling to run tests in this project.
 - Performance validation should be part of each feature slice:
-  - Avoid new per-frame LINQ, `FindFirstObjectByType`, `GetComponent`, or full asset scans in runtime loops.
+  - Avoid new per-frame LINQ, scene-wide object queries, `GetComponent`, or full asset scans in runtime loops.
   - Reuse current event-driven patterns from `TaskStatsPanelUI`, `RunStatsPanelUI`, `MapUI`, and recent Forge/Cauldron throttling work.
   - For UI additions, cache last displayed values and update only on state changes or throttled intervals.
   - For spawn/combat additions, compute modifiers at spawn or event boundaries, not every frame.

@@ -268,7 +268,7 @@ namespace TimelessEchoes.Buffs
             }
 
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
             if (tracker != null)
             {
                 if (recipe.durationType == BuffDurationType.DistancePercent)
@@ -293,7 +293,7 @@ namespace TimelessEchoes.Buffs
             if (!CanActivate(recipe)) return false;
 
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
             tracker?.AddBuffCast();
             OnBuffCast?.Invoke(recipe, isAuto);
 
@@ -721,7 +721,7 @@ namespace TimelessEchoes.Buffs
         private void AutoCastBuffs()
         {
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
             if (tracker == null || !tracker.RunInProgress)
                 return;
 

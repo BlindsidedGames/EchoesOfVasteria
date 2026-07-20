@@ -17,6 +17,13 @@ namespace Blindsided.SaveData.Migrations
         private static readonly List<ISaveMigration> Registered = new List<ISaveMigration>();
         private static bool defaultsRegistered;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Registered.Clear();
+            defaultsRegistered = false;
+        }
+
         public static void Register(ISaveMigration migration)
         {
             if (migration == null) return;

@@ -13,6 +13,10 @@ namespace TimelessEchoes.Quests
     {
         public static QuestObjectStateController Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         [System.Serializable]
         public class Entry
         {
@@ -82,7 +86,7 @@ namespace TimelessEchoes.Quests
 
         private static bool QuestInProgress(string questId)
         {
-            var manager = Object.FindFirstObjectByType<QuestManager>();
+            var manager = Object.FindAnyObjectByType<QuestManager>();
             return manager != null && manager.IsQuestInProgress(questId);
         }
     }

@@ -564,68 +564,7 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 3
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations: []
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 0
-  HasExtraTilingRules: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,12 +577,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c9615a5cbd6b740a310c57c8d53257, type: 3}
   m_Name: Connections
   m_EditorClassIdentifier: 
+  UseTileSet: 0
+  _spriteSheets: []
+  _spriteSheetCurrentOffset: {x: 0, y: 0}
   settings:
     _gridShape: 0
     _zoomAmount: 0.34274024
-    _gridCellSize: {x: 32, y: 32}
+    _cellSize: {x: 1, y: 1}
     _tileRenderOffset: {x: 0, y: 0}
     _gridOffset: {x: 697.2085, y: 251.40875}
+    _tileAnchor: {x: 0.5, y: 0.5}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -662,6 +605,7 @@ MonoBehaviour:
     _lockedOutlineColor: {r: 1, g: 0, b: 0, a: 1}
     _collapseSimilarRules: 0
     _useUniversalSpriteSettings: 0
+    _treatSimilarTilesAsSame: 0
     _presetBlockColor: {r: 1, g: 0.5764706, b: 0.05882353, a: 1}
   _imageObjects: []
   _tileObjects:
@@ -18237,6 +18181,10 @@ MonoBehaviour:
     customProperties: []
   _overrideSprites: []
   _presetBlocks: []
+  _tempTex:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1422357396726750172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18391,48 +18339,6 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: 0000000000000000000000000000000000000000030000000300000000000000
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 8088830456793213489, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 1
-    m_MaxAnimationSpeed: 1
-    m_PerlinScale: 0.5
-    m_Output: 0
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 8954592487278907307, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 1
-    m_MaxAnimationSpeed: 1
-    m_PerlinScale: 0.5
-    m_Output: 0
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -18811,6 +18717,48 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: fdffffff000000000000000000000000000000000000000000000000fdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 8088830456793213489, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 8954592487278907307, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -19515,137 +19463,7 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 1
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations:
-  - {fileID: 3257331234897913525}
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 1
-  HasExtraTilingRules: 0
 --- !u!114 &3257331234897913525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19800,48 +19618,6 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: 0000000000000000000000000300000000000000030000000000000000000000
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 7591774343886807129, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 1
-    m_MaxAnimationSpeed: 1
-    m_PerlinScale: 0.5
-    m_Output: 0
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
-    m_NeighborPositions:
-    - {x: -1, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 1, y: 1, z: 0}
-    m_RuleTransform: 0
-  - m_Id: 0
-    m_Sprites:
-    - {fileID: 6049605792901559095, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
-    m_GameObject: {fileID: 0}
-    m_MinAnimationSpeed: 1
-    m_MaxAnimationSpeed: 1
-    m_PerlinScale: 0.5
-    m_Output: 0
-    m_ColliderType: 1
-    m_RandomTransform: 0
-    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -20220,6 +19996,48 @@ MonoBehaviour:
     m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: fdffffff000000000000000000000000000000000000000000000000fdffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 7591774343886807129, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0300000000000000000000000300000000000000fdfffffffdffffffffffffff
+    m_NeighborPositions:
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 6049605792901559095, guid: b7375496a96c7964280d5d3a13f83663, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0000000000000000030000000000000003000000fffffffffdfffffffdffffff
     m_NeighborPositions:
     - {x: -1, y: -1, z: 0}
     - {x: 0, y: -1, z: 0}
@@ -20924,134 +20742,4 @@ MonoBehaviour:
     - {x: 1, y: 1, z: 0}
     m_RuleTransform: 0
   UniqueID: 2
-  otherTiles:
-  - {fileID: 1422357396726750172}
-  - {fileID: 3257331234897913525}
-  - {fileID: -243629850139950682}
-  variations:
-  - {fileID: 1422357396726750172}
   customProperties: []
-  m_ExtendedTilingRules: []
-  m_ExtraTilingRules:
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  - m_ExtendedOutputSprite: 0
-    m_Patternsize: {x: 1, y: 1}
-  HasVariations: 1
-  HasExtraTilingRules: 0

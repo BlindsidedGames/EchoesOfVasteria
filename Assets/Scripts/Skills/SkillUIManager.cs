@@ -49,7 +49,7 @@ namespace TimelessEchoes.Skills
         private void Awake()
         {
             if (controller == null)
-                controller = FindFirstObjectByType<SkillController>();
+                controller = FindAnyObjectByType<SkillController>();
             if (skillSelectors.Count == 0)
                 skillSelectors.AddRange(GetComponentsInChildren<SkillUIReferences>(true));
 

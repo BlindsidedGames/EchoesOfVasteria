@@ -16,6 +16,10 @@ namespace TimelessEchoes.Upgrades
     public class ResourceInventoryUI : MonoBehaviour
     {
         public static ResourceInventoryUI Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         private ResourceManager resourceManager;
         [SerializeField] private List<Resource> resources = new();
         [SerializeField] private ResourceUIReferences slotPrefab;
@@ -43,7 +47,7 @@ namespace TimelessEchoes.Upgrades
 
             // Cache StatPanelReferences if not assigned in Inspector
             if (statPanelReferences == null)
-                statPanelReferences = FindFirstObjectByType<StatPanelReferences>();
+                statPanelReferences = FindAnyObjectByType<StatPanelReferences>();
 
             if (slotParent == null)
                 slotParent = transform;

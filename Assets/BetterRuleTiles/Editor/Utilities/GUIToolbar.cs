@@ -1,13 +1,8 @@
 ﻿#if UNITY_EDITOR
-using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
-namespace VinToolsEditor.Utilities
+namespace VinTools.BetterRuleTiles.Editor.CustomGUI
 {
     public class GUIToolbar
     {
@@ -85,6 +80,13 @@ namespace VinToolsEditor.Utilities
 
             space.Left += 18;
         }
+        public void DrawDividerLeft(Color color)
+        {
+            EditorGUI.DrawRect(new Rect(currentMargin.Left + 7, currentMargin.Up + 2, 1, 16), color);
+            EditorGUI.DrawRect(new Rect(currentMargin.Left + 10, currentMargin.Up + 2, 1, 16), color);
+
+            space.Left += 18;
+        }
 
         public bool DrawButtonRight(GUIContent content)
         {
@@ -123,6 +125,13 @@ namespace VinToolsEditor.Utilities
         {
             GUI.DrawTexture(new Rect(container.width - currentMargin.Right - 8, currentMargin.Up + 2, 1, 16), tex);
             GUI.DrawTexture(new Rect(container.width - currentMargin.Right - 11, currentMargin.Up + 2, 1, 16), tex);
+
+            space.Right += 18;
+        }
+        public void DrawDividerRight(Color color)
+        {
+            EditorGUI.DrawRect(new Rect(container.width - currentMargin.Right - 8, currentMargin.Up + 2, 1, 16), color);
+            EditorGUI.DrawRect(new Rect(container.width - currentMargin.Right - 11, currentMargin.Up + 2, 1, 16), color);
 
             space.Right += 18;
         }

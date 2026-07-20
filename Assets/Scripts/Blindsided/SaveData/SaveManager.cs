@@ -21,6 +21,9 @@ namespace Blindsided.SaveData
         private readonly object fileLock = new object();
         private static string rootPathOverride;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => rootPathOverride = null;
+
         private SaveManager()
         {
             // No-op: legacy HMAC secret is no longer used

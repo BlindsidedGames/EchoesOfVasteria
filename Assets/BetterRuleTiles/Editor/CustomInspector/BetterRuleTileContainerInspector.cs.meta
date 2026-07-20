@@ -3,7 +3,9 @@ guid: 7e30ee4b06bab504296c6e6ef59ea938
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BRTContainerIcon: {fileID: 21300000, guid: 56d04fd8ea83266498d4b4ffe4b3b160, type: 3}
+  - TilesetIcon: {fileID: 21300000, guid: 8270bd42b43a24845a247e8b17ad8458, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
@@ -13,6 +15,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 269392
   packageName: Better Rule Tiles
-  packageVersion: 1.4.6
+  packageVersion: 1.5.0
   assetPath: Assets/BetterRuleTiles/Editor/CustomInspector/BetterRuleTileContainerInspector.cs
-  uploadId: 831906
+  uploadId: 938568

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Blindsided.SaveData;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using TimelessEchoes.UI;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -26,7 +27,7 @@ namespace TimelessEchoes.Audio
 
         [Header("Music")] [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource musicSourceB;
-        [SerializeField] private Dictionary<MusicTrack, AudioClip> musicClips = new();
+        [OdinSerialize] private Dictionary<MusicTrack, AudioClip> musicClips = new();
 
         [Header("Task Clips")] [SerializeField]
         private AudioClip[] woodcuttingClips;
@@ -72,6 +73,12 @@ namespace TimelessEchoes.Audio
             Farming,
             Fishing,
             Mining
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
         }
 
         private void Awake()

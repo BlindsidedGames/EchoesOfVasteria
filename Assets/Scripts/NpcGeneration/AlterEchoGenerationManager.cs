@@ -29,6 +29,10 @@ namespace TimelessEchoes.NpcGeneration
         public IReadOnlyList<AlterEchoGenerator> Generators => generators;
         public event Action OnGeneratorsRebuilt;
         private static Dictionary<string, Resource> lookup;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => lookup = null;
+
         protected override void Awake()
         {
             base.Awake();

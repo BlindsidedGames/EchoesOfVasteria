@@ -10,6 +10,10 @@ namespace TimelessEchoes.Hero
     public class HeroHealth : HealthBase
     {
         public static HeroHealth Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         private HeroController controller;
         public bool Immortal { get; set; }
 
@@ -116,7 +120,7 @@ namespace TimelessEchoes.Hero
         protected override void AfterDamage(float total)
         {
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
             tracker?.AddDamageTaken(total);
         }
 

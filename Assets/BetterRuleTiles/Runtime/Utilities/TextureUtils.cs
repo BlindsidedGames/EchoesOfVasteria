@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace VinTools.Utilities
+namespace VinTools.BetterRuleTiles.Runtime.Utilities
 {
     public static class TextureUtils
     {
@@ -158,80 +156,46 @@ namespace VinTools.Utilities
         }
         public static Texture2D CreatePointedTopHexagonTexture(Color color, int width, int height)
         {
-            //create texture
             Texture2D tex = new Texture2D(width, height);
+            Color transparent = new Color(0, 0, 0, 0);
+            float aspectRatioFactor = Mathf.Sqrt(3f) / 2f; 
 
-            //set texture colors
-            for (int x = 0; x < tex.width; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < tex.height; y++)
+                float nx = (((float)x / width) - 0.5f) / aspectRatioFactor;
+
+                for (int y = 0; y < height; y++)
                 {
+                    float ny = ((float)y / height) - 0.5f;
 
-                    if (y < tex.height / 4)
-                    {
-                        float currentHeight = Mathf.Lerp(0f, .5f, Mathf.Abs((width / 2 - (float)x) / (width)));
-                        float heightPixel = (height * currentHeight);
-
-                        //set color
-                        tex.SetPixel(x, y, y >= heightPixel ? color : new Color(0, 0, 0, 0));
-                    }
-                    else if (y >= tex.height / 4 * 3)
-                    {
-                        float currentHeight = Mathf.Lerp(1f, .5f, Mathf.Abs((width / 2 - (float)x) / (width - 1)));
-                        float heightPixel = (height * currentHeight);
-
-                        //set color
-                        tex.SetPixel(x, y, y <= heightPixel ? color : new Color(0, 0, 0, 0));
-                    }
-                    else
-                    {
-                        //set color
-                        tex.SetPixel(x, y, color);
-                    }
+                    if (Mathf.Abs(nx) <= 0.5f && (Mathf.Abs(ny) + Mathf.Abs(nx) * 0.5f) <= 0.5f) tex.SetPixel(x, y, color);
+                    else tex.SetPixel(x, y, transparent);
                 }
             }
 
-            //apply texture
             tex.filterMode = FilterMode.Point;
             tex.Apply();
             return tex;
         }
         public static Texture2D CreateFlatTopHexagonTexture(Color color, int width, int height)
         {
-            //create texture
             Texture2D tex = new Texture2D(width, height);
+            Color transparent = new Color(0, 0, 0, 0);
+            float aspectRatioFactor = Mathf.Sqrt(3f) / 2f;
 
-            //set texture colors
-            for (int x = 0; x < tex.width; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < tex.height; y++)
+                float nx = ((float)x / width) - 0.5f;
+
+                for (int y = 0; y < height; y++)
                 {
+                    float ny = (((float)y / height) - 0.5f) / aspectRatioFactor;
 
-                    if (x < tex.width / 4)
-                    {
-                        float currentHeight = Mathf.Lerp(0f, .5f, Mathf.Abs((height / 2 - (float)y) / (height)));
-                        float heightPixel = (width * currentHeight);
-
-                        //set color
-                        tex.SetPixel(x, y, x >= heightPixel ? color : new Color(0, 0, 0, 0));
-                    }
-                    else if (x >= tex.width / 4 * 3)
-                    {
-                        float currentHeight = Mathf.Lerp(1f, .5f, Mathf.Abs((height / 2 - (float)y) / (height - 1)));
-                        float heightPixel = (width * currentHeight);
-
-                        //set color
-                        tex.SetPixel(x, y, x <= heightPixel ? color : new Color(0, 0, 0, 0));
-                    }
-                    else
-                    {
-                        //set color
-                        tex.SetPixel(x, y, color);
-                    }
+                    if (Mathf.Abs(ny) <= 0.5f && (Mathf.Abs(nx) + Mathf.Abs(ny) * 0.5f) <= 0.5f) tex.SetPixel(x, y, color);
+                    else tex.SetPixel(x, y, transparent);
                 }
             }
 
-            //apply texture
             tex.filterMode = FilterMode.Point;
             tex.Apply();
             return tex;
@@ -425,31 +389,52 @@ namespace VinTools.Utilities
         }
         public static Texture2D MaskTexture(Texture2D original, Texture2D mask)
         {
-            //check if sizes match
+            // check if sizes match
             if (original.width != mask.width || original.height != mask.height)
             {
                 Debug.LogWarning("Texture and mask need to be the same size!");
                 return original;
             }
 
-            //create texture
-            Texture2D tex = new Texture2D(original.width, original.height);
+            Color[] originalPixels = original.GetPixels();
+            Color[] maskPixels = mask.GetPixels();
+            Color[] resultPixels = new Color[originalPixels.Length];
 
-            //set texture colors
-            for (int x = 0; x < tex.width; x++)
+            // calculate the masked color
+            for (int i = 0; i < originalPixels.Length; i++)
             {
-                for (int y = 0; y < tex.height; y++)
-                {
-                    Color c = original.GetPixel(x, y);
-                    Color m = mask.GetPixel(x, y);
-                    tex.SetPixel(x, y, new Color(c.r, c.g, c.b, m.a * c.a));
-                }
+                Color c = originalPixels[i];
+                Color m = maskPixels[i];
+            
+                // Your math was perfect here: blend the alphas
+                resultPixels[i] = new Color(c.r, c.g, c.b, c.a * m.a);
             }
 
-            //apply texture
+            // create texture
+            Texture2D tex = new Texture2D(original.width, original.height, original.format, false);
+        
+            // apply texture
+            tex.SetPixels(resultPixels);
             tex.filterMode = FilterMode.Point;
             tex.Apply();
+
             return tex;
+        }
+        public static Texture2D RemoveColor(Texture2D tex, Color color)
+        {
+            //create a new texture with transparent background
+            Texture2D transparentTexture = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+            Color[] pixels = tex.GetPixels();
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                if (pixels[i] == color) pixels[i].a = 0;
+            }
+
+            transparentTexture.SetPixels(pixels);
+
+            transparentTexture.Apply();
+            return transparentTexture;
         }
 
     }

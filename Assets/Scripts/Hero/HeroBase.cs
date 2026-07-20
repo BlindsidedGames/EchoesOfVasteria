@@ -184,11 +184,11 @@ namespace TimelessEchoes.Hero
                 taskCtrl = TimelessEchoes.Tasks.TaskController.Instance
                            ?? GetComponent<TimelessEchoes.Tasks.TaskController>()
                            ?? GetComponentInParent<TimelessEchoes.Tasks.TaskController>()
-                           ?? FindFirstObjectByType<TimelessEchoes.Tasks.TaskController>();
+                           ?? FindAnyObjectByType<TimelessEchoes.Tasks.TaskController>();
             }
 
             if (mapUI == null)
-                mapUI = FindFirstObjectByType<MapUI>();
+                mapUI = FindAnyObjectByType<MapUI>();
 
             // Initialize combat controller (uses ai/setter from movementController)
             var ai = movementController?.AI;
@@ -201,7 +201,7 @@ namespace TimelessEchoes.Hero
 
             // Subscribe to equipment changes and initialize gear bonuses
             var equipInit = EquipmentController.Instance ??
-                            FindFirstObjectByType<EquipmentController>();
+                            FindAnyObjectByType<EquipmentController>();
             if (equipInit != null)
                 equipInit.OnEquipmentChanged += RecalculateGearBonuses;
             RecalculateGearBonuses();
@@ -295,7 +295,7 @@ namespace TimelessEchoes.Hero
                     taskCtrl = TimelessEchoes.Tasks.TaskController.Instance
                                ?? GetComponent<TimelessEchoes.Tasks.TaskController>()
                                ?? GetComponentInParent<TimelessEchoes.Tasks.TaskController>()
-                               ?? FindFirstObjectByType<TimelessEchoes.Tasks.TaskController>();
+                               ?? FindAnyObjectByType<TimelessEchoes.Tasks.TaskController>();
                 }
             }
 
@@ -397,7 +397,7 @@ namespace TimelessEchoes.Hero
             movementController?.Cleanup();
 
             var equip = EquipmentController.Instance ??
-                        FindFirstObjectByType<EquipmentController>();
+                        FindAnyObjectByType<EquipmentController>();
             if (equip != null)
                 equip.OnEquipmentChanged -= RecalculateGearBonuses;
         }
@@ -739,7 +739,7 @@ namespace TimelessEchoes.Hero
         private void RecalculateGearBonuses()
         {
             var equip = TimelessEchoes.Gear.EquipmentController.Instance ??
-                        FindFirstObjectByType<TimelessEchoes.Gear.EquipmentController>();
+                        FindAnyObjectByType<TimelessEchoes.Gear.EquipmentController>();
             if (equip == null)
             {
                 gearDamageBonus = gearAttackSpeedBonus = gearDefenseBonus = gearHealthBonus = gearMoveSpeedBonus = 0f;

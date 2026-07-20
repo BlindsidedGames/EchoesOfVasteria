@@ -41,6 +41,9 @@ namespace TimelessEchoes
     {
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => CurrentGenerationConfig = null;
+
         [TitleGroup("Prefabs")] [SerializeField]
         private GameObject mapPrefab;
 
@@ -497,7 +500,7 @@ namespace TimelessEchoes
 
         private void HideTooltip()
         {
-            var tooltip = FindFirstObjectByType<TooltipUIReferences>();
+            var tooltip = FindAnyObjectByType<TooltipUIReferences>();
             if (tooltip != null)
                 tooltip.gameObject.SetActive(false);
         }
@@ -548,7 +551,7 @@ namespace TimelessEchoes
             HideTooltip();
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
             // Stop any ongoing taskbar flashing when a new run begins
-            FindFirstObjectByType<TaskbarFlasher>()?.StopFlashing();
+            FindAnyObjectByType<TaskbarFlasher>()?.StopFlashing();
             heroDead = false;
             returnOnDeathQueued = false;
             retreatQueued = false;
@@ -639,7 +642,7 @@ namespace TimelessEchoes
                     hp.Init((int)hp.MaxHealth);
                     hp.OnDeath += OnHeroDeath;
                     if (runCalebUI == null)
-                        runCalebUI = FindFirstObjectByType<RunCalebUIReferences>();
+                        runCalebUI = FindAnyObjectByType<RunCalebUIReferences>();
                     if (runCalebUI != null)
                         hp.HealthBar = runCalebUI.healthBar;
                 }
@@ -687,7 +690,7 @@ namespace TimelessEchoes
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
             if (runCalebUI == null)
-                runCalebUI = FindFirstObjectByType<RunCalebUIReferences>();
+                runCalebUI = FindAnyObjectByType<RunCalebUIReferences>();
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(true);
             npcObjectStateController?.UpdateObjectStates();
@@ -813,7 +816,7 @@ namespace TimelessEchoes
             heroDead = true;
             HeroDied?.Invoke();
             // Flash taskbar to get player's attention on death
-            FindFirstObjectByType<TaskbarFlasher>()?.FlashNow();
+            FindAnyObjectByType<TaskbarFlasher>()?.FlashNow();
             if (returnToTavernButton != null)
                 returnToTavernButton.interactable = false;
             if (returnOnDeathButton != null)
@@ -1229,7 +1232,7 @@ namespace TimelessEchoes
         private static void DestroyAllEchoes()
         {
 #if UNITY_6000_0_OR_NEWER
-            var echoes = FindObjectsByType<EchoController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            var echoes = FindObjectsByType<EchoController>(FindObjectsInactive.Include);
 #else
             var echoes = Object.FindObjectsOfType<EchoController>(true);
 #endif

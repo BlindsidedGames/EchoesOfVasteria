@@ -206,7 +206,7 @@ namespace TimelessEchoes
             if (!oracle.saveData.CompletedNpcTasks.Contains("Witch1"))
                 oracle.saveData.CompletedNpcTasks.Add("Witch1");
 
-            var qm = FindFirstObjectByType<QuestManager>();
+            var qm = FindAnyObjectByType<QuestManager>();
             qm?.OnNpcMet("Witch1");
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }

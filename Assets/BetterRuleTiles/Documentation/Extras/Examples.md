@@ -3,11 +3,11 @@ title: Examples
 ---
 # Examples
 
-The package comes with a few examples to help you better understand the tool. All of the examples contain a [[Better rule tile container]] asset, a tilemap, a scene, and a little description to explain that example.
+The package comes with a few examples to help you better understand the tool. All of the examples contain a [[Better rule tile container|BRT container]] asset, a scene, and a little description to explain that example.
 
 # #1 - Simplify rules
 
-This first example shows you how to create [[Tiling rule]]s using the `Simplify similar rules` option from the [[Export options]].
+This first example shows you how to create [[Tiling rule|tiling rules]] using the `Simplify similar rules` option from the [[Better Rule Tile Editor#Export options|export options]].
 
 ![[example-simplify-rules.png]]
 
@@ -18,7 +18,7 @@ This first example shows you how to create [[Tiling rule]]s using the `Simplify 
 
 # #2 - Advanced
 
-This second example shows you how you can make more generic [[Tiling rule]]s, by laying out them in a way where the tiles doesn't check for the neighbors which wouldn't affect them.
+This second example shows you how you can make more generic [[Tiling rule|tiling rules]], by laying out them in a way where the tiles doesn't check for the neighbors which wouldn't affect them.
 
 ![[example-advanced.png]]
 
@@ -29,7 +29,7 @@ This second example shows you how you can make more generic [[Tiling rule]]s, by
 
 # #3 - Preset blocks
 
-This example shows a potential use for the [[Preset block]] feature.
+This example shows a potential use for the [[Preset block|preset block]] feature.
 
 ![[example-preset-blocks.png]]
 
@@ -40,7 +40,7 @@ This example shows a potential use for the [[Preset block]] feature.
 
 # #4 - Connection
 
-This example shows you how you can create interactions between different tiles, by drawing the [[Tiling rule]]s in a way that they check for other tiles. This example also show how to make tiles always connect to each other using the `Connection` feature from the [[Tile inspector]].
+This example shows you how you can create interactions between different tiles, by drawing the [[Tiling rule|tiling rules]] in a way that they check for other tiles. This example also show how to make tiles always connect to each other using the `Connection` feature from the [[Tile inspector|tile inspector]].
 
 ![[example-conection.png]]
 
@@ -51,7 +51,7 @@ This example shows you how you can create interactions between different tiles, 
 
 # #5 - Universal sprite settings
 
-This next example shows how to use the [[Sprite override settings]] window which you can enable from the [[Export options]] window.
+This next example shows how to use the [[Sprite override settings|sprite override settings]] window which you can enable from the [[Better Rule Tile Editor#Export options|export options]] window.
 
 ![[example-universal-sprite-settings.png]]
 
@@ -66,7 +66,7 @@ This next example shows how to use the [[Sprite override settings]] window which
 
 # #6 - Variations
 
-This example shows you how you can use one tile as a fallback for another one. You can do this in the [[Tile inspector]] window.
+This example shows you how you can use one tile as a fallback for another one. You can do this in the [[Tile inspector|tile inspector]] window.
 
 ![[example-variations.png]]
 
@@ -79,9 +79,17 @@ This example shows you how you can use one tile as a fallback for another one. Y
 
 # #7 - Custom properties
 
-This last example shows you how you can use the [[Custom properties]] feature in your games. It includes the usual tile container, tilemap and scene, but it also includes an example script that you can try out to see the feature in-game.
+This example shows you how you can use the [[Custom properties|custom properties]] feature in your games. It includes the usual tile container, tilemap and scene, but it also includes an example script that you can try out to see the feature in-game.
 
 ![[example-custom-properties.png]]
 
 > [!hint]
 > If you want to store information in the tiles you can add properties to them in the tile inspector under the properties tab. You can create a script that reads these values from the tilemap, check the sample scripts provided for further info.
+
+# #8 - Tilesets
+
+This final example gives you a fully set up sample of a [[Tileset Editor|tileset]]. A completely new editor introduced in version 1.5.
+![[example-tilesets.png]]
+
+> [!HINT] Tilesets
+> Tilesets are an easier and faster method of creating rule tiles. To use them you'll have to create a tileset container. Right click in the project folder, and navigate to: `Create/2D/Tiles/Tileset Container`. Double-click on the asset to open the Tileset Editor

@@ -64,7 +64,7 @@ namespace TimelessEchoes.Tasks
             {
                 StaticReferences.ActiveNpcMeetings.Remove(npcId);
                 StaticReferences.CompletedNpcTasks.Add(npcId);
-                var qm = Object.FindFirstObjectByType<QuestManager>();
+                var qm = Object.FindAnyObjectByType<QuestManager>();
                 qm?.OnNpcMet(npcId);
             }
             GrantCompletionXP();

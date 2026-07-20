@@ -13,6 +13,10 @@ namespace TimelessEchoes.Gear.UI
     {
         public static ScoreEvaluationService Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         // Cached theoretical max per slot (computed once, invalidated on asset reload)
         private Dictionary<string, float> _theoreticalMaxBySlot = new();
         private bool _cacheValid;

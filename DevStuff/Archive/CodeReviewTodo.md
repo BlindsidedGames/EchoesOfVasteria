@@ -211,16 +211,6 @@
 
 ## Documentation Updates Completed
 
-### CLAUDE.md - UPDATED
-- [x] Added missing directories (Audio, Editor, Localization, NPC, Platform, References, Stats, Tools, Utilities)
-- [x] Documented root-level files (15 files)
-- [x] Added Architecture Patterns section (Singleton, Service, References patterns)
-- [x] Added full directory structure with file counts
-- [x] Added NPC IDs and quest folder counts
-- [x] Added Maps table with status (including Halloween BROKEN warning)
-- [x] Added Quest Requirement Types table
-- [x] Added Key Files Reference table
-
 ### EoV_Context.md - UPDATED
 - [x] Added Codebase Statistics section
 - [x] Added Milestone Effect Types table (9 types)

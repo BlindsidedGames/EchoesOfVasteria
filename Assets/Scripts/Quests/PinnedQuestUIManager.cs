@@ -20,6 +20,10 @@ namespace TimelessEchoes.Quests
     public class PinnedQuestUIManager : MonoBehaviour
     {
         public static PinnedQuestUIManager Instance { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         public const int MaxPins = 5;
 
         [SerializeField] private QuestPinUI entryPrefab;

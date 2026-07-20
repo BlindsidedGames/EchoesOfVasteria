@@ -35,7 +35,7 @@ namespace TimelessEchoes.UI
         // True when the user has enabled the safety switch.
         [HideInInspector] public bool safetyEnabled;
 
-        public DateTime? lastPlayed;
+        [NonSerialized] public DateTime? lastPlayed;
 
         // Completion percentage for the slot.
         public float completionPercentage;

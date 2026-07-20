@@ -20,6 +20,10 @@ namespace TimelessEchoes.Skills
 
         public static SkillController Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
+
         [SerializeField] private Skill combatSkill;
         [SerializeField] private List<Skill> skills = new();
         [SerializeField] private List<MilestoneSetDefinition> setDefinitions = new();

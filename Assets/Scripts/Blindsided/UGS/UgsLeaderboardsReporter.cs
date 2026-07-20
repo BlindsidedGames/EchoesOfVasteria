@@ -25,7 +25,7 @@ namespace Blindsided.UGS
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<UgsLeaderboardsReporter>();
+                    instance = FindAnyObjectByType<UgsLeaderboardsReporter>();
                     if (instance == null)
                         instance = new GameObject("UgsLeaderboardsReporter").AddComponent<UgsLeaderboardsReporter>();
                 }
@@ -37,7 +37,8 @@ namespace Blindsided.UGS
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoCreate()
         {
-            if (FindFirstObjectByType<UgsLeaderboardsReporter>() == null)
+            instance = null;
+            if (FindAnyObjectByType<UgsLeaderboardsReporter>() == null)
             {
                 new GameObject("UgsLeaderboardsReporter").AddComponent<UgsLeaderboardsReporter>();
             }

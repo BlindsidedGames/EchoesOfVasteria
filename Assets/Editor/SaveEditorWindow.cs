@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Text;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Serialization;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace TimelessEchoes.Editor
             GetWindow<SaveEditorWindow>(utility: false, title: "Save Editor");
         }
 
-        [ShowInInspector]
+        [NonSerialized, OdinSerialize, ShowInInspector]
         [HideReferenceObjectPicker]
         [Title("Game Data", subtitle: "Edit any fields, then Copy/Paste TE1 string" , bold: true)]
         [PropertyOrder(0)]

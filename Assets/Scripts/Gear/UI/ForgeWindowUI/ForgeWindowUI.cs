@@ -110,13 +110,13 @@ namespace TimelessEchoes.Gear.UI
         private EquipmentController equipment;
         private ResourceManager rm;
 
-        // Cached component references to avoid FindFirstObjectByType calls
+        // Cached component references to avoid repeated object searches.
         private ForgeStatsUIController _cachedStatsUI;
         private TaskbarFlasher _cachedTaskbarFlasher;
         private float nextOddsRefreshTime;
         private ResourceManager RM => rm ?? (rm = ResourceManager.Instance);
-        private ForgeStatsUIController StatsUI => _cachedStatsUI != null ? _cachedStatsUI : (_cachedStatsUI = FindFirstObjectByType<ForgeStatsUIController>());
-        private TaskbarFlasher Flasher => _cachedTaskbarFlasher != null ? _cachedTaskbarFlasher : (_cachedTaskbarFlasher = FindFirstObjectByType<TaskbarFlasher>());
+        private ForgeStatsUIController StatsUI => _cachedStatsUI != null ? _cachedStatsUI : (_cachedStatsUI = FindAnyObjectByType<ForgeStatsUIController>());
+        private TaskbarFlasher Flasher => _cachedTaskbarFlasher != null ? _cachedTaskbarFlasher : (_cachedTaskbarFlasher = FindAnyObjectByType<TaskbarFlasher>());
 
         private List<CoreSO> cores = new();
         private CoreSO selectedCore;

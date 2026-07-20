@@ -1,13 +1,17 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using VinTools.BetterRuleTiles;
-using VinTools.Utilities;
+using VinTools.BetterRuleTiles.Editor.Data;
+using VinTools.BetterRuleTiles.Editor.EditorWindows;
+using VinTools.BetterRuleTiles.Runtime.Utilities;
+using Tex = VinTools.BetterRuleTiles.Editor.Data.EditorTextures;
+using Cache = VinTools.BetterRuleTiles.Editor.Data.SpriteCache;
+using Style = VinTools.BetterRuleTiles.Editor.Data.CustomStyles;
+using Clipboard = VinTools.BetterRuleTiles.Editor.Data.TileEditorClipboard;
 
-namespace VinToolsEditor.BetterRuleTiles
+namespace VinTools.BetterRuleTiles.Editor.Grid
 {
     public class EditorGridBase
     {
@@ -16,91 +20,30 @@ namespace VinToolsEditor.BetterRuleTiles
         {
             this.window = window;
             SetUpClass(window, _new);
+            
+            //cache all sprites
+            foreach (var item in window._file._grid) Cache.Add(item.Sprite);
         }
 
         public void SetUpClass(BetterRuleTileEditor window, bool _new)
         {
-            SetUpTextures();
-
-            _miniGridButtonStyle = new GUIStyle(EditorStyles.miniButtonMid);
-            _miniGridButtonStyle.normal.background = t_MiniButtonBG;
-            _miniGridButtonStyle.hover.background = t_MiniButtonBG;
-            _miniGridButtonStyle.active.background = t_MiniButtonBG;
-            _miniGridButtonStyle.onNormal.background = t_MiniButtonBG;
-            _miniGridButtonStyle.alignment = TextAnchor.MiddleCenter;
-            _miniGridButtonStyle.imagePosition = ImagePosition.ImageOnly;
-            _miniGridButtonStyle.padding = new RectOffset(1, 1, 2, 0);
-
-            _whiteTextStyle = new GUIStyle("boldlabel");
-            _whiteTextStyle.normal.textColor = Color.white;
 
             if (_new)
             {
-                window._gridCellSize = new Vector2Int(32, 32);
+                window._file.settings._cellSize = Vector2.one;
                 window._tileRenderOffset = Vector2.zero;
             }
-
-            //cache all sprites
-            foreach (var item in window._file._grid)
-            {
-                if (item.Sprite != null && !_spriteTextureCache.ContainsKey(item.Sprite)) CacheSprite(item.Sprite);
-            }
-        }
-        void SetUpTextures()
-        {
-            t_backgroundTexture = TextureUtils.CreateColoredTexture(40f / 256f);
-            t_lineTexture = TextureUtils.CreateColoredTexture(81f / 256f);
-            t_highlightTexture = TextureUtils.CreateColoredTexture(168f / 255f);
-            t_selectedTexture = TextureUtils.CreateColoredTexture(new Color(40f / 255f, 168f / 255f, 168f / 255f));
-            t_clipboardTexture = TextureUtils.CreateColoredTexture(new Color(40f / 255f, 168f / 255f, 40f / 255f));
-            t_inspectingTexture = TextureUtils.CreateColoredTexture(new Color(1f, 1f, 40f / 255f));
-            t_modifiedTexture = TextureUtils.CreateColoredTexture(new Color(1f, 210f / 255f, 1f));
-            t_modifiedDarkTexture = TextureUtils.CreateColoredTexture(new Color(.25f, 40f / 255f, .25f));
-
-            t_MirrorX = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwQAADsEBuJFr7QAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAAG1JREFUOE+lj9ENwCAIRB2IFdyRfRiuDSaXAF4MrR9P5eRhHGb2Gxp2oaEjIovTXSrAnPNx6hlgyCZ7o6omOdYOldGIZhAziEmOTSfigLV0RYAB9y9f/7kO8L3WUaQyhCgz0dmCL9CwCw172HgBeyG6oloC8fAAAAAASUVORK5CYII=");
-            t_MirrorY = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAAG9JREFUOE+djckNACEMAykoLdAjHbPyw1IOJ0L7mAejjFlm9hspyd77Kk+kBAjPOXcakJIh6QaKyOE0EB5dSPJAiUmOiL8PMVGxugsP/0OOib8vsY8yYwy6gRyC8CB5QIWgCMKBLgRSkikEUr5h6wOPWfMoCYILdgAAAABJRU5ErkJggg==");
-            t_MirrorXY = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAAHkSURBVDhPrVJLSwJRFJ4cdXwjPlrVJly1kB62cpEguElXKgYKIpaC+EIEEfGxLqI/UES1KaJlEdGmRY9ltCsIWrUJatGm0eZO3xkHIsJdH3zce+ec75z5zr3cf2MMmLdYLA/BYFA2mUyPOPvwnR+GR4PXaDQLLpfrKpVKSb1eT6bV6XTeocAS4sIw7S804BzEZ4IgsGq1ykhcr9dlj8czwPdbxJdBMyX/As/zLiz74Ar2J9lsVulcKpUYut5DnEbsHFwEx8AhtFqtGViD6BOc1ul0B5lMRhGXy2Wm1+ufkBOE/2fsL1FsQpXCiCAcQiAlk0kJRZjf7+9TRxI3Gg0WCoW+IpGISHHERBS5UKUch8n2K5WK3O125VqtpqydTkdZie12W261WjIVo73b7RZVKccZDIZ1q9XaT6fTLB6PD9BFKhQKjITFYpGFw+FBNBpVOgcCARH516pUGZYZXk5R4B3efLBxDM9f1CkWi/WR3ICtGVh6Rd4NPE+p0iEgmkSRLRoMEjYhHpA4kUiIOO8iZRU8AmnadK2/QOOfhnjPZrO95fN5Zdq5XE5yOBwvuKoNxGfBkQ8FzXkPprnj9Xrfm82mDI8fsLON3x5H/Od+RwHdLfDds9vtn0aj8QoF6QH9JzjuG3acpxmu1RgPAAAAAElFTkSuQmCC");
-            t_Rotated = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwQAADsEBuJFr7QAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAAHdJREFUOE+djssNwCAMQxmIFdgx+2S4Vj4YxWlQgcOT8nuG5u5C732Sd3lfLlmPMR4QhXgrTQaimUlA3EtD+CJlBuQ7aUAUMjEAv9gWCQNEPhHJUkYfZ1kEpcxDzioRzGIlr0Qwi0r+Q5rTgM+AAVcygHgt7+HtBZs/2QVWP8ahAAAAAElFTkSuQmCC");
-            t_Fixed = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjHxIGmVAAAA50lEQVQ4T51Ruw6CQBCkwBYKWkIgQAs9gfgCvgb4BML/qWBM9Bdo9QPIuVOQ3JIzosVkc7Mzty9NCPE3lORaKMm1YA/LsnTXdbdhGJ6iKHoVRTEi+r4/OI6zN01Tl/XM7HneLsuyW13XU9u2ous6gYh3kiR327YPsp6ZgyDom6aZYFqiqqqJ8mdZz8xoca64BHjkZT0zY0aVcQbysp6Z4zj+Vvkp65mZttxjOSozdkEzD7KemekcxzRNHxDOHSDiQ/DIy3pmpjtuSJBThStGKMtyRKSOLnSm3DCMz3f+FUpyLZTkOgjtDSWORSDbpbmNAAAAAElFTkSuQmCC");
-
-            t_MiniButtonBG = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAZUlEQVQ4Ee1UQQ7AIAibyx7Jbywvd63ZkQvByxKagEhooz0wzOwiJgMqCgC5/jCdENM7oCTBXfAcjAoWybgrChG3BSNXcr32MOdXNN0eRq7kev/wEN+ntM8qIZm9D12FbkWAfH8BcuYZpQ7rMLkAAAAASUVORK5CYII=");
-            t_MiniButtonCheckmark = TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAnUlEQVQ4EaWSjQ6DIBCD1fgie1LPJ5/3LZTUIQvOJoT7actBmKf3a3qC5YkY7T8Gmx961wBx5KomdwwkZoBqMmrgYhnsBCMGXfGVQb0bzcRPMQSfQGSZKIcHItdnbBJhLYGTo9S0kxI3Yhqz/UQ3oSdEBpdiCH4FSEHREBl3xfDcgNxNouTUu9AbOEEnavdeE/sbNM2RwvcVRjQnzgHLpxuAC3HkEAAAAABJRU5ErkJggg==");
-
-            t_fieldBoxTexture = TextureUtils.CreateColoredTexture(50f / 255f);
-            t_windowBorderTexture = TextureUtils.CreateColoredTexture(60f / 255f);
-            t_presetBlockTexture = TextureUtils.CreateColoredTexture(new Color(255 / 255f, 147 / 255f, 15 / 255f));
-
-            t_lockedTexture = TextureUtils.MaskTexture(TextureUtils.CreateFilledTexture(Color.red, 64, 64), TextureUtils.Base64ToTexture("iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABcElEQVR4Ae3Yyw7CMAxEUSrx34gvL7DsKCIvT2xPyi5Z0NzTRawe53m+Hn6/t8OjL73PxQdwD8ZeNkC4YDZA+GBrgHTBswDpg3sB5IJrAPLBCHB85wDcY68v9zD7YZX/f7Ovwd/zQwUjCAMgdDADIFWwBUDq4BEAqeAWAOngEsBWwSUA3Fu5dh+8GNfgP0D3YDwcGyBcMBsgfLA1QLrgWYD0wb0AcsE1APlgBLi/B6AIYR160mTMAaGD8QVbAKQKtgBIHTwCIBXcAiAdXALYKrgEgHsr1+6Dl8Ut0APmHoyHZQOEC2YDhA+2BkgXPAuQPrgXQC64BiAfjAD39wAUIaxDT5qMOSB0ML5gC4BUwRYAqYNHAKSCWwCkg0sAWwWXAHBv5dp98LK4BXrA3IPxsGyAcMFsgPDB1gDpgmcB0gf3AsgF1wDkgxHg/h6AIoR16EmTMQeEDsYXbAGQKtgCIHXwCIBUcAuAdHAJYKtgBPgAlvxQYsbXAVwAAAAASUVORK5CYII="));
         }
         #endregion
 
         #region variables
         public BetterRuleTileEditor window;
-        public static Texture2D t_backgroundTexture;
-        public static Texture2D t_lineTexture;
-        public static Texture2D t_highlightTexture;
-        public static Texture2D t_selectedTexture;
-        public static Texture2D t_clipboardTexture;
-        public static Texture2D t_inspectingTexture;
-        public static Texture2D t_modifiedTexture;
-        public static Texture2D t_modifiedDarkTexture;
-        public static Texture2D t_lockedTexture;
-        public static Texture2D t_presetBlockTexture;
-
-        public static Texture2D t_windowBorderTexture;
-        public static Texture2D t_fieldBoxTexture;
-
-        public static Texture2D t_MirrorX;
-        public static Texture2D t_MirrorY;
-        public static Texture2D t_MirrorXY;
-        public static Texture2D t_Rotated;
-        public static Texture2D t_Fixed;
-
-        public static Texture2D t_MiniButtonBG;
-        public static Texture2D t_MiniButtonCheckmark;
-
+        
+        public virtual Texture2D t_lockedTexture => Tex.Get(Tex.T_ID.t_lockedTexture);
+        public virtual Vector2 _defaultTileScale => Vector2.one;
 
         public Vector2 d_currentGridCellSize;
+        public Vector2 d_currentUnscaledGridCellSize;
         public Vector2 d_currentGridStart;
         public Vector2 d_currentGridCellAmount;
         public Vector2 d_currentGridOffset;
@@ -108,22 +51,18 @@ namespace VinToolsEditor.BetterRuleTiles
 
         public Vector2 _dragStartPos = Vector2.zero;
         public Vector2 _zoomScroll = new Vector2(0, 250);
-        public Dictionary<Sprite, Texture2D> _spriteTextureCache = new Dictionary<Sprite, Texture2D>();
-        public KeyValuePair<Sprite, Texture2D>[] _sortedSpriteCache = new KeyValuePair<Sprite, Texture2D>[0];
-
-        public GUIStyle _miniGridButtonStyle;
-        public GUIStyle _whiteTextStyle;
 
         public float _zoomAmount { get => window._zoomAmount; set => window._zoomAmount = value; }
-        public Vector2Int _gridCellSize { get => window._gridCellSize; set => window._gridCellSize = value; }
+
+        public Vector2Int _gridCellSize => Vector2Int.RoundToInt(window._file.settings._cellSize * BetterRuleTileContainer.EditorSettings.GridUnitPixelSize);
         public Vector2 _tileRenderOffset { get => window._tileRenderOffset; set => window._tileRenderOffset = value; }
         public Vector2 _gridOffset { get => window._gridOffset; set => window._gridOffset = value; }
         public BetterRuleTileContainer.EditorSettings settings => window._file.settings;
         #endregion
-        
+
         public void DrawAll()
         {
-            //draw base grid, tiles and sprites
+            //draw base grid, tiles and spritess
             DrawgGridBG();
             DrawTiles(window._file.Grid);
             ManageGrid();
@@ -133,17 +72,18 @@ namespace VinToolsEditor.BetterRuleTiles
             if (window._showRuler && _zoomAmount > .8f) DrawRuler();
 
             //draw paste tiles, sprites and selection
-            if (window._hasPasteSelection)
+            if (Clipboard.CurrentlyPastingInEditor == window)
             {
-                var clipboardMovedBy = new Vector2Int((int)window._clipboardRect.position.x, (int)window._clipboardRect.position.y) - window._clipboardOriginalPos;
-                DrawPreviewTiles(window._clipboard, clipboardMovedBy);
-                DrawPreviewSprites(window._clipboard, clipboardMovedBy);
-                DrawGridTileOutline(Vector2Int.RoundToInt(window._clipboardRect.position), Vector2Int.RoundToInt(window._clipboardRect.size), t_clipboardTexture);
+                var clipboardMovedBy = new Vector2Int((int)Clipboard.Rect.position.x, (int)Clipboard.Rect.position.y) - Clipboard.Origin;
+                DrawClipboardPreviewTiles(Clipboard.Contents, clipboardMovedBy);
+                DrawClipboardPreviewSprites(Clipboard.Contents, clipboardMovedBy);
+                DrawGridTileOutline(Vector2Int.RoundToInt(Clipboard.Rect.position), Vector2Int.RoundToInt(Clipboard.Rect.size), Tex.Get(Tex.C_ID.clipboardColor));
             }
 
 
             //highlight modified cells
             if (window._showModified)
+            {
                 foreach (var tile in window._file.Grid.Where(t => t.AreNeighborPositionsModified || t.AreOutputSpritesModified))
                 {
                     bool cycle = Mathf.FloorToInt((float)EditorApplication.timeSinceStartup * 5f) % 2 == 0;
@@ -158,20 +98,22 @@ namespace VinToolsEditor.BetterRuleTiles
                         if (tile.AreNeighborPositionsModified) DrawGridTileOutline(tile.Position, Vector2Int.one, new Color(1f, 1f, 210f / 255f));
                     }
                 }
-
+            }
+            
             //draw preset blocks
             DrawPresetBlocksOverlay(window._file._presetBlocks);
             //draw locked tile overlay
             DrawLockedOverlay(window._file.Grid);
 
             //draw selection
-            if (window._inspectingCell != null) DrawGridTileOutline(window._inspectingCell.Position, t_inspectingTexture);
-            if (window._hasSelection) DrawGridTileOutline(Vector2Int.RoundToInt(window._selectionRect.position), Vector2Int.RoundToInt(window._selectionRect.size), t_highlightTexture);
-            if (window._movingSelection) DrawGridTileOutline(Vector2Int.RoundToInt(window._selectionRect.position) + window._moveToPos - window._moveFromPos, Vector2Int.RoundToInt(window._selectionRect.size), t_selectedTexture);
-            if (window._movingPasteSelection) DrawGridTileOutline(Vector2Int.RoundToInt(window._clipboardRect.position) + window._moveToPos - window._moveFromPos, Vector2Int.RoundToInt(window._clipboardRect.size), t_selectedTexture);
+            if (window._inspectingCell != null) DrawGridTileOutline(window._inspectingCell.Position, Tex.Get(Tex.C_ID.inspectingColor));
+            if (window._hasSelection) DrawGridTileOutline(Vector2Int.RoundToInt(window._selectionRect.position), Vector2Int.RoundToInt(window._selectionRect.size), Tex.Get(Tex.C_ID.highlightColor));
+            if (window.HasInspectingSelection(out var rect)) DrawGridTileOutline(rect.position, rect.size, Tex.Get(Tex.C_ID.inspectingColor));
+            if (window._movingSelection) DrawGridTileOutline(Vector2Int.RoundToInt(window._selectionRect.position) + window._moveToPos - window._moveFromPos, Vector2Int.RoundToInt(window._selectionRect.size), Tex.Get(Tex.C_ID.selectedColor));
+            if (window._movingPasteSelection) DrawGridTileOutline(Vector2Int.RoundToInt(Clipboard.Rect.position) + window._moveToPos - window._moveFromPos, Vector2Int.RoundToInt(Clipboard.Rect.size), Tex.Get(Tex.C_ID.selectedColor));
 
-            //update
-            window.Repaint();
+            // Moved to BetterRuleTileEditor.cs
+            //window.Repaint();
         }
 
         #region Grid value functions
@@ -238,15 +180,28 @@ namespace VinToolsEditor.BetterRuleTiles
             }
 
             //draw background
-            if (t_backgroundTexture == null) SetUpTextures();
-            GUI.DrawTexture(new Rect(Vector2.zero, new Vector2(window.position.width, window.position.height)), t_backgroundTexture);
+            Color bgColor = Tex.Get(Tex.C_ID.c_backgroundColor);
+            EditorGUI.DrawRect(new Rect(Vector2.zero, new Vector2(window.position.width, window.position.height)), bgColor);
+            // draw warning background for the tileset location
+            if (window._file.UseTileSet)
+            {
+                // get pos of tile -1 -1
+                var startPos = GetGridPos(new Vector2Int(-1, -1));
+                // calculate coordinates
+                var drawStartPos = new Vector2(startPos.x < 0 ? 0 : startPos.x, startPos.y < 0 ? 0 : startPos.y);
+                var drawSize = new Vector2(window.position.width - drawStartPos.x, window.position.height - drawStartPos.y);
+                // create bg color
+                var warningBG = new Color(bgColor.r + .2f, bgColor.g, bgColor.b, bgColor.a);
+                // draw BG
+                EditorGUI.DrawRect(new Rect(drawStartPos, drawSize), warningBG);
+            }
         }
         public void ManageGrid()
         {
             //calculate values and draw gridlines
             DrawGrid();
 
-            //quit if mouse is over a ui
+            //quit if mouse is over a window
             if (window.IsMouseOverWindow()) return;
 
             //drag move grid
@@ -274,7 +229,7 @@ namespace VinToolsEditor.BetterRuleTiles
 
                 //apply zoom
                 _zoomAmount -= zoom * _zoomAmount;
-                _zoomAmount = Mathf.Clamp(_zoomAmount, .1f, 6f);
+                _zoomAmount = Mathf.Clamp(_zoomAmount, .1f, 24f);
 
                 //reset scroll
                 _zoomScroll.y = 250;
@@ -292,11 +247,9 @@ namespace VinToolsEditor.BetterRuleTiles
         }
         public virtual void CalculateGridVariables()
         {
-            if (_gridCellSize.x < 1) _gridCellSize = new Vector2Int(1, _gridCellSize.y);
-            if (_gridCellSize.y < 1) _gridCellSize = new Vector2Int(_gridCellSize.x, 1);
-
             //calculate variables
             d_currentGridCellSize = Vector2Int.FloorToInt((Vector2)_gridCellSize * _zoomAmount);
+            d_currentUnscaledGridCellSize = Vector2Int.FloorToInt(_zoomAmount * BetterRuleTileContainer.EditorSettings.GridUnitPixelSize * Vector2.one);
 
             if (d_currentGridCellSize.x < 1) d_currentGridCellSize.x = 1;
             if (d_currentGridCellSize.y < 1) d_currentGridCellSize.y = 1;
@@ -317,8 +270,6 @@ namespace VinToolsEditor.BetterRuleTiles
         }
         public virtual void DrawGrid()
         {
-            if (t_lineTexture == null) SetUpTextures();
-
             CalculateGridVariables();
 
             if (!window._file.settings._renderSmallGrid && _zoomAmount < window._file.settings._zoomTreshold) return;
@@ -326,48 +277,42 @@ namespace VinToolsEditor.BetterRuleTiles
             //draw grid lines
             for (int x = 0; x < d_currentGridCellAmount.x; x++)
             {
-                GUI.DrawTexture(new Rect(
+                EditorGUI.DrawRect(new Rect(
                     d_currentGridStart.x + x * d_currentGridCellSize.x,
                     d_currentGridStart.y,
                     1,
                     d_currentGridCellAmount.y * d_currentGridCellSize.y
                     ),
-                    t_lineTexture);
+                    Tex.Get(Tex.C_ID.lineColor));
             }
             for (int y = 0; y < d_currentGridCellAmount.y; y++)
             {
-                GUI.DrawTexture(new Rect(
+                EditorGUI.DrawRect(new Rect(
                     d_currentGridStart.x,
                     d_currentGridStart.y + y * d_currentGridCellSize.y,
                     d_currentGridCellAmount.x * d_currentGridCellSize.x,
                     1
                     ),
-                    t_lineTexture);
+                    Tex.Get(Tex.C_ID.lineColor));
             }
         }
         public virtual void DrawRuler()
         {
-            //get style
-            GUIStyle centeredTextStyle = new GUIStyle("label");
-            centeredTextStyle.alignment = TextAnchor.LowerCenter;
-
             //draw bottom row
             for (int x = 0; x < d_currentGridCellAmount.x; x++)
             {
-                GUI.Label(new Rect(d_currentGridStart.x + x * d_currentGridCellSize.x, window.position.height - 50, d_currentGridCellSize.x, 50), $"{d_currentGridOffset.x + x}", centeredTextStyle);
+                GUI.Label(new Rect(d_currentGridStart.x + x * d_currentGridCellSize.x, window.position.height - 50, d_currentGridCellSize.x, 50), $"{d_currentGridOffset.x + x}", Style.LowerCenteredLabel);
             }
-
-            //change style
-            centeredTextStyle.alignment = TextAnchor.MiddleLeft;
 
             //draw left row
             for (int y = 0; y < d_currentGridCellAmount.y; y++)
             {
-                GUI.Label(new Rect(0, d_currentGridStart.y + y * d_currentGridCellSize.y, 50, d_currentGridCellSize.y), $"{d_currentGridOffset.y + y}", centeredTextStyle);
+                GUI.Label(new Rect(0, d_currentGridStart.y + y * d_currentGridCellSize.y, 50, d_currentGridCellSize.y), $"{d_currentGridOffset.y + y}", Style.MiddleLeftLabel);
             }
         }
 
         public void DrawGridTileOutline(Vector2Int tile, Texture2D tex, bool drawAll = true) => DrawGridTileOutline(tile, Vector2Int.one, tex, drawAll);
+        public void DrawGridTileOutline(Vector2Int tile, Color col, bool drawAll = true) => DrawGridTileOutline(tile, Vector2Int.one, col, drawAll);
         public virtual void DrawGridTileOutline(Vector2Int tile, Vector2Int size, Texture2D tex, bool drawAll = true)
         {
             Rect rect = new Rect(GetGridPos(tile).position, size * d_currentGridCellSize);
@@ -434,11 +379,9 @@ namespace VinToolsEditor.BetterRuleTiles
         }
         public virtual void DrawLockedOverlay(List<BetterRuleTileContainer.GridCell> item)
         {
-            if (t_lockedTexture == null) SetUpTextures();
-
             foreach (var cell in item.FindAll(t => t.Locked))
             {
-                if (settings._renderLockedOverlay) GUI.DrawTexture(GetGridPos(cell.Position), t_lockedTexture);
+                if (settings._renderLockedOverlay) GUI.DrawTexture(RectTools.SquareifyRect(GetGridPos(cell.Position)), t_lockedTexture, ScaleMode.ScaleToFit);
                 if (settings._renderLockedOutline) DrawGridTileOutline(cell.Position, Vector2Int.one, settings._lockedOutlineColor, true);
             }
         }
@@ -463,67 +406,12 @@ namespace VinToolsEditor.BetterRuleTiles
                 if (!IsTileInWindow(item[i].Position)) continue;
                 if (item[i].Sprite == null) continue;
 
-                //add sprite to cache if not in it yet
-                if (!_spriteTextureCache.ContainsKey(item[i].Sprite) || _spriteTextureCache[item[i].Sprite] == null) CacheSprite(item[i].Sprite);
-
-                GUI.DrawTexture(GetOffsetGridPos(item[i].Position), _spriteTextureCache[item[i].Sprite]);
+                GridSpriteRenderer.DrawSpriteOnGrid(this, item[i]);
             }
         }
-        public virtual void DrawPreviewSprites(List<BetterRuleTileContainer.GridCell> item, Vector2Int moveBy) => DrawSprites(item);
-
-        /// <summary>
-        /// Add the specified sprite to the texture chache
-        /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        public virtual void CacheSprite(Sprite sprite)
-        {
-            if (sprite == null) return;
-
-            bool createNew = true;
-            if (_spriteTextureCache.ContainsKey(sprite))
-            {
-                if (_spriteTextureCache[sprite] == null) createNew = false;
-                else return;
-            }
-
-            if (!sprite.texture.isReadable) FixMissingTexture(sprite.texture);
-
-            if (sprite.texture.isReadable)
-            {
-                Rect rect = sprite.textureRect;
-                var colors = sprite.texture.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
-
-                Texture2D tex = new Texture2D((int)rect.width, (int)rect.height);
-                tex.SetPixels(colors);
-                tex.filterMode = FilterMode.Point;
-                tex.Apply();
-
-                if (createNew) _spriteTextureCache.Add(sprite, tex);
-                else _spriteTextureCache[sprite] = tex;
-                SortSpriteCache();
-            }
-            else
-            {
-                var tex = TextureUtils.CreateMissingTexture();
-                if (createNew) _spriteTextureCache.Add(sprite, tex);
-                else _spriteTextureCache[sprite] = tex;
-                SortSpriteCache();
-                DisplayMissingTextureError(sprite);
-            }
-        }
-        public void SortSpriteCache() => _sortedSpriteCache = _spriteTextureCache.ToArray().OrderBy(t => t.Key.name).ToArray();
+        public virtual void DrawClipboardPreviewSprites(List<BetterRuleTileContainer.GridCell> item, Vector2Int moveBy) => DrawSprites(item);
+        
         public virtual void DisplayMissingTextureError(Sprite sprite) => Debug.LogWarning($"Texture data of sprite \"{sprite}\" couldn't be read as the image is not readable. Enable the \"Read/Write\" option in the texture import settings, than reload the editor window.", sprite.texture);
-
-        public void FixMissingTexture(Texture2D tex)
-        {
-            TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(tex));
-
-            importer.isReadable = true;
-
-            EditorUtility.SetDirty(importer);
-            importer.SaveAndReimport();
-        }
 
         public virtual void DrawTiles(List<BetterRuleTileContainer.GridCell> item)
         {
@@ -531,28 +419,12 @@ namespace VinToolsEditor.BetterRuleTiles
             {
                 //if item not on screen, ignore
                 if (!IsTileInWindow(item[i].Position)) continue;
-                if (!window._file.DoesTileExist(item[i].TileID)) continue;
-
-                if (item[i].TileID > 0) GUI.DrawTexture(GetOffsetGridPos(item[i].Position), window._file.GetTileTex(item[i].TileID));
-                else
-                {
-                    DrawDefaultTiles(item, i, GetGridPos(item[i].Position));
-                }
+                
+                GridSpriteRenderer.DrawTileOnGrid(this, item[i], window._drawerData);
             }
         }
-        public virtual void DrawPreviewTiles(List<BetterRuleTileContainer.GridCell> item, Vector2Int movedBy) => DrawTiles(item);
-        public virtual void DrawDefaultTiles(List<BetterRuleTileContainer.GridCell> item, int i, Rect rect)
-        {
-            if (!window._initializedWindows) return;
-
-            switch (item[i].TileID)
-            {
-                case -2: GUI.DrawTexture(rect, window.t_gridTex_Empty); break;
-                case -3: GUI.DrawTexture(rect, window.t_gridTex_NotSame); break;
-                case -4: GUI.DrawTexture(rect, window.t_gridTex_Any); break;
-            }
-        }
-
+        public virtual void DrawClipboardPreviewTiles(List<BetterRuleTileContainer.GridCell> item, Vector2Int movedBy) => DrawTiles(item);
+        
         public Rect GetOffsetGridPos(Vector2Int tile)
         {
             Rect original = GetGridPos(tile);
@@ -596,14 +468,14 @@ namespace VinToolsEditor.BetterRuleTiles
                         GUIContent buttonIcon = new GUIContent("");
                         switch (cell.Transform)
                         {
-                            case RuleTile.TilingRuleOutput.Transform.Fixed: buttonIcon = new GUIContent(t_Fixed, "Fixed"); break;
-                            case RuleTile.TilingRuleOutput.Transform.Rotated: buttonIcon = new GUIContent(t_Rotated, "Rotated"); break;
-                            case RuleTile.TilingRuleOutput.Transform.MirrorX: buttonIcon = new GUIContent(t_MirrorX, "MirrorX"); break;
-                            case RuleTile.TilingRuleOutput.Transform.MirrorY: buttonIcon = new GUIContent(t_MirrorY, "MirrorY"); break;
-                            case RuleTile.TilingRuleOutput.Transform.MirrorXY: buttonIcon = new GUIContent(t_MirrorXY, "MirrorXY"); break;
+                            case RuleTile.TilingRuleOutput.Transform.Fixed: buttonIcon = new GUIContent(Tex.Get(Tex.T_ID.t_Fixed), "Fixed"); break;
+                            case RuleTile.TilingRuleOutput.Transform.Rotated: buttonIcon = new GUIContent(Tex.Get(Tex.T_ID.t_Rotated), "Rotated"); break;
+                            case RuleTile.TilingRuleOutput.Transform.MirrorX: buttonIcon = new GUIContent(Tex.Get(Tex.T_ID.t_MirrorX), "MirrorX"); break;
+                            case RuleTile.TilingRuleOutput.Transform.MirrorY: buttonIcon = new GUIContent(Tex.Get(Tex.T_ID.t_MirrorY), "MirrorY"); break;
+                            case RuleTile.TilingRuleOutput.Transform.MirrorXY: buttonIcon = new GUIContent(Tex.Get(Tex.T_ID.t_MirrorXY), "MirrorXY"); break;
                         }
 
-                        if (GUI.Button(cellRect, buttonIcon, _miniGridButtonStyle))
+                        if (GUI.Button(cellRect, buttonIcon, Style.MiniGridButtonStyle))
                         {
                             switch (cell.Transform)
                             {
@@ -617,16 +489,24 @@ namespace VinToolsEditor.BetterRuleTiles
                         continue;
                     }
 
-                    //has rule
+                    // has rule
                     if (cell.NeighborPositions.Contains(new Vector3Int(x, y, 0)))
                     {
-                        if (GUI.Button(cellRect, t_MiniButtonCheckmark, _miniGridButtonStyle)) cell.NeighborPositions.Remove(new Vector3Int(x, y, 0));
+                        if (GUI.Button(cellRect, Tex.Get(Tex.T_ID.t_MiniButtonCheckmark), Style.MiniGridButtonStyle))
+                        {
+                            //window._file.RecordObject($"Changed neighbor position checking at position: {x}, {y}");
+                            cell.NeighborPositions.Remove(new Vector3Int(x, y, 0));
+                        }
                         continue;
                     }
-                    //has no rule
+                    // has no rule
                     else
                     {
-                        if (GUI.Button(cellRect, "", _miniGridButtonStyle)) cell.NeighborPositions.Add(new Vector3Int(x, y, 0));
+                        if (GUI.Button(cellRect, "", Style.MiniGridButtonStyle))
+                        {
+                            //window._file.RecordObject($"Changed neighbor position checking at position: {x}, {y}");
+                            cell.NeighborPositions.Add(new Vector3Int(x, y, 0));
+                        }
                         continue;
                     }
                 }
@@ -638,13 +518,13 @@ namespace VinToolsEditor.BetterRuleTiles
         public void DrawMiniGridBackground(Rect rect, BetterRuleTileContainer.GridCell cell)
         {
             //draw background
-            GUI.DrawTexture(rect, t_windowBorderTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 5);
-            GUI.DrawTexture(rect, t_backgroundTexture, ScaleMode.StretchToFill, true, 0, Color.white, 1, 5);
-            GUI.DrawTexture(new Rect(rect.position, new Vector2(rect.width, 20)), t_fieldBoxTexture, ScaleMode.StretchToFill, true, 0, Color.white, 0, 5);
-            GUI.DrawTexture(new Rect(rect.position, new Vector2(rect.width, 20)), t_backgroundTexture, ScaleMode.StretchToFill, true, 0, Color.white, 1, 5);
+            GUI.DrawTexture(rect, Tex.Get(Tex.T_ID.t_windowBorderTexture), ScaleMode.StretchToFill, true, 0, Color.white, 0, 5);
+            GUI.DrawTexture(rect, Tex.Get(Tex.T_ID.t_backgroundTexture), ScaleMode.StretchToFill, true, 0, Color.white, 1, 5);
+            GUI.DrawTexture(new Rect(rect.position, new Vector2(rect.width, 20)), Tex.Get(Tex.T_ID.t_fieldBoxTexture), ScaleMode.StretchToFill, true, 0, Color.white, 0, 5);
+            GUI.DrawTexture(new Rect(rect.position, new Vector2(rect.width, 20)), Tex.Get(Tex.T_ID.t_backgroundTexture), ScaleMode.StretchToFill, true, 0, Color.white, 1, 5);
             
             if (EditorGUIUtility.isProSkin) GUI.Label(new Rect(rect.position + new Vector2(5, 0), new Vector2(rect.width, 20)), "Neighbor positions", "boldlabel");
-            else GUI.Label(new Rect(rect.position + new Vector2(5, 0), new Vector2(rect.width, 20)), "Neighbor positions", _whiteTextStyle);
+            else GUI.Label(new Rect(rect.position + new Vector2(5, 0), new Vector2(rect.width, 20)), "Neighbor positions", Style.GridWhiteTextStyle);
 
             //bottom buttons
             if (!window._hasSelection) GUI.Box(new Rect(rect.position + new Vector2(5, rect.height - 25), new Vector2(rect.width / 2 - 7, 20)), "Select an area to add it");

@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace VinTools.Utilities
+namespace VinTools.BetterRuleTiles.Runtime.Utilities
 {
     public static class MathUtils
     {

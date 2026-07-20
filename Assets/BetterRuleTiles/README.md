@@ -8,4 +8,5 @@ Most unity developers know that dealing with rule tiles is a long and tedious pr
 
 ## Development
 Get updates on the projects itch.io page: https://vinarkgames.itch.io/better-rule-tiles
-Report bugs or suggest features in the project's community page: https://vinarkgames.itch.io/better-rule-tiles/community or on my discord server: https://discord.gg/DKpbVKk
+Report bugs or suggest features on github: https://github.com/Vinark117/BetterRuleTiles-Support/issues 
+Get updates, report bugs, suggest features or talk with other developers on my discord server: https://discord.gg/DKpbVKk

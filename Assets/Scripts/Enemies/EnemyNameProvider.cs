@@ -44,7 +44,7 @@ namespace TimelessEchoes.Enemies
         ///     Chance (0-1) that an enemy will use a special name.
         ///     Defaults to 1 in 100.
         /// </summary>
-        public static float SpecialNameChance = 0.02f;
+        public const float SpecialNameChance = 0.02f;
 
         /// <summary>
         ///     Returns either the provided default name or a special name.

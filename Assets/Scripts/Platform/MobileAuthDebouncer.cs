@@ -116,6 +116,19 @@ namespace TimelessEchoes.Platform
         public static bool RequestSilentAuth(string reason = null) => false;
         public static bool EnableDebugLogs { get; set; } = false;
 #endif
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+#if UNITY_ANDROID || UNITY_IOS
+            GameServices.OnAuthStatusChange -= HandleAuthStatusChange;
+            _subscribed = false;
+            _inFlight = false;
+            _lastAttemptTime = -9999f;
+            _inFlightStartTime = -9999f;
+#endif
+            EnableDebugLogs = false;
+        }
     }
 }
 

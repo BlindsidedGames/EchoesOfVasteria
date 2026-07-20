@@ -117,7 +117,7 @@ namespace TimelessEchoes.Hero
             taskCtrl = TimelessEchoes.Tasks.TaskController.Instance
                        ?? GetComponent<TimelessEchoes.Tasks.TaskController>()
                        ?? GetComponentInParent<TimelessEchoes.Tasks.TaskController>()
-                       ?? FindFirstObjectByType<TimelessEchoes.Tasks.TaskController>();
+                       ?? FindAnyObjectByType<TimelessEchoes.Tasks.TaskController>();
             remaining = lifetime;
             spawnTime = Time.time;
             if (!AllEchoes.Contains(this))
@@ -214,7 +214,7 @@ namespace TimelessEchoes.Hero
                 taskCtrl = TaskController.Instance
                            ?? GetComponent<TaskController>()
                            ?? GetComponentInParent<TaskController>()
-                           ?? FindFirstObjectByType<TaskController>();
+                           ?? FindAnyObjectByType<TaskController>();
             }
 
             UpdateIndicators();

@@ -75,7 +75,6 @@ namespace TimelessEchoes.Upgrades
 
         // Card batching for performance (Phase 2B.1)
         private readonly List<(string id, int delta)> _pendingCardGains = new();
-        private bool _isBatchingCards = false;
 
         // Config hot-reload sync (once per second)
         private float _nextConfigSyncTime;
@@ -1152,7 +1151,6 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         private void BeginCardBatch()
         {
-            _isBatchingCards = true;
             _pendingCardGains.Clear();
         }
 
@@ -1161,7 +1159,6 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         private void EndCardBatch()
         {
-            _isBatchingCards = false;
             FlushPendingCards();
         }
 

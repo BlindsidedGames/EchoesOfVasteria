@@ -83,7 +83,7 @@ namespace TimelessEchoes.Enemies
             if (heroHp != null)
                 heroHp.Immortal = false; // ensure OnDeath fires
             var tracker = GameplayStatTracker.Instance ??
-                          FindFirstObjectByType<GameplayStatTracker>();
+                          FindAnyObjectByType<GameplayStatTracker>();
 
             if (hp != null && hp.CurrentHealth > 0f)
             {

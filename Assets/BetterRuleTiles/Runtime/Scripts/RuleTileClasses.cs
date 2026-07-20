@@ -13,6 +13,9 @@ namespace VinTools.BetterRuleTiles.Internal
     {
         public ExtendedOutputSprite m_ExtendedOutputSprite;
         public Vector2Int m_PatternSize = Vector2Int.one;
+        [NonSerialized] public BetterRuleTileContainer.GridCell brtCell;
+        [NonSerialized] public int priorityGroup = 0;
+        [NonSerialized] public int priorityModifier = 0;
 
         public RuleTile.TilingRule.OutputSprite ConvertOutputSprite() => ConvertOutputSprite(m_ExtendedOutputSprite);
         public static RuleTile.TilingRule.OutputSprite ConvertOutputSprite(ExtendedOutputSprite outputSprite)
@@ -83,14 +86,14 @@ namespace VinTools.BetterRuleTiles.Internal
         public Vector2Int m_Patternsize = Vector2Int.one;
     }
 
-    public class Neighbor : RuleTile.TilingRule.Neighbor
+    /*public class Neighbor : RuleTile.TilingRule.Neighbor
     {
         new public const int This = 0;
         public const int Ignore = -1;
         public const int Empty = -2;
         new public const int NotThis = -3;
         public const int Any = -4;
-    }
+    }*/
 
     public static class BetterRuleTileMethods
     {

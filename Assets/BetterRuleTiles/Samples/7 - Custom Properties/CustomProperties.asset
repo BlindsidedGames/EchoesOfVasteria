@@ -320,6 +320,7 @@ MonoBehaviour:
     m_Patternsize: {x: 1, y: 1}
   HasVariations: 0
   HasExtraTilingRules: 0
+  TreatSimilarTilesAsSame: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,10 +335,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     _gridShape: 0
-    _zoomAmount: 1.3983475
+    _zoomAmount: 0.33159384
     _gridCellSize: {x: 32, y: 32}
     _tileRenderOffset: {x: 0, y: 0}
-    _gridOffset: {x: 157.6814, y: -567.1881}
+    _gridOffset: {x: 723.8217, y: 271.76276}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -356,6 +357,7 @@ MonoBehaviour:
     _lockedOutlineColor: {r: 1, g: 0, b: 0, a: 1}
     _collapseSimilarRules: 0
     _useUniversalSpriteSettings: 0
+    _treatSimilarTilesAsSame: 0
     _presetBlockColor: {r: 1, g: 0.5764706, b: 0.05882353, a: 1}
   _imageObjects: []
   _tileObjects:
@@ -13356,6 +13358,9 @@ MonoBehaviour:
       EdgeRight: 1
       EdgeLeft: 0
     BlockTransform: 0
+  UseTileSet: 0
+  _spriteSheets: []
+  _spriteSheetCurrentOffset: {x: 0, y: 0}
 --- !u!114 &502698257561488442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15450,6 +15455,7 @@ MonoBehaviour:
     m_Patternsize: {x: 1, y: 1}
   HasVariations: 0
   HasExtraTilingRules: 0
+  TreatSimilarTilesAsSame: 0
 --- !u!114 &1422357396726750172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17012,3 +17018,4 @@ MonoBehaviour:
     m_Patternsize: {x: 1, y: 1}
   HasVariations: 0
   HasExtraTilingRules: 0
+  TreatSimilarTilesAsSame: 0

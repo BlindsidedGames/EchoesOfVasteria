@@ -113,7 +113,7 @@ namespace TimelessEchoes
 				if (fromHero && combatSkill != null)
 				{
 					var controller = TimelessEchoes.Skills.SkillController.Instance ??
-									   FindFirstObjectByType<TimelessEchoes.Skills.SkillController>();
+									   FindAnyObjectByType<TimelessEchoes.Skills.SkillController>();
 					if (controller != null && controller.RollForProc(combatSkill, MilestoneProcType.InstantKill))
 					{
 						var prefab = TimelessEchoes.GameManager.Instance != null ?
@@ -142,7 +142,7 @@ namespace TimelessEchoes
 						}
 						// Apply hero stats updates in this fallback
 						var tracker2 = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-										   FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+										   FindAnyObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
 						tracker2?.AddDamageDealt(preHp);
 						var sfx2b = GetComponent<ProjectileHitSfx>();
 						sfx2b?.PlayHit();
@@ -184,7 +184,7 @@ namespace TimelessEchoes
 				if (fromHero)
 				{
 					var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance ??
-										 FindFirstObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
+										 FindAnyObjectByType<TimelessEchoes.Stats.GameplayStatTracker>();
 					tracker?.AddDamageDealt(dmgAmount);
 				}
 				var sfx = GetComponent<ProjectileHitSfx>();

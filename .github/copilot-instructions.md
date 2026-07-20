@@ -3,15 +3,15 @@
 ALWAYS reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
 ## Project Overview
-Timeless Echoes is an incremental hero management Unity 2D game built with **Unity 6000.1.6f1**. The hero automatically runs through procedurally generated maps, completing tasks while managing resources, combat, and progression systems.
+Timeless Echoes is an incremental hero management Unity 2D game built with **Unity 6000.5.1f1**. The hero automatically runs through procedurally generated maps, completing tasks while managing resources, combat, and progression systems.
 
 ## Working Effectively
 
 ### Initial Setup
-- **REQUIRED UNITY VERSION**: Unity 6000.1.6f1 exactly. Do not use other versions.
+- **REQUIRED UNITY VERSION**: Unity 6000.5.1f1 exactly. Do not use other versions.
 - Clone the repository to your local machine
 - Open Unity Hub and add the project folder
-- When prompted, select Unity 6000.1.6f1 or install it if not available
+- When prompted, select Unity 6000.5.1f1 or install it if not available
 - The main scene is located at `Assets/Scenes/Main.unity`
 
 ### Keystore Credentials Setup (Required for Builds)
@@ -29,10 +29,10 @@ source Tools/load_keystore_credentials.sh
 - **NEVER modify `Assets/Scenes/Main.unity`** unless explicitly instructed
 - **NEVER create or commit `.meta` files** unless absolutely required
 - Replace obsolete Unity API calls:
-  - Use `Object.FindFirstObjectByType` or `Object.FindAnyObjectByType` instead of `Object.FindObjectOfType`
+  - Prefer explicit references; when a scene query is unavoidable, use `Object.FindAnyObjectByType` or the current `Object.FindObjectsByType` overload
   - Use `CinemachineCamera` instead of deprecated `CinemachineVirtualCamera` (CS0618 warning)
 - Consult Unity documentation at https://docs.unity3d.com for APIs and best practices
-- Ensure all changes work with Unity 6000.1.6f1
+- Ensure all changes work with Unity 6000.5.1f1
 
 ### Testing and Validation
 - **CRITICAL LIMITATION**: Unity tests cannot be run in sandboxed environments
@@ -214,16 +214,16 @@ After making changes, always test these core workflows:
 ## Common Issues and Solutions
 
 ### Build Failures
-- Ensure Unity 6000.1.6f1 is installed and activated
+- Ensure Unity 6000.5.1f1 is installed and activated
 - Check that all required build modules are installed (Linux, Windows, Mac)
 - Verify scenes are enabled in Build Settings
 - Build paths must be writable directories
 - **Missing keystore**: Run `Tools > Create Keystore Credentials` in Unity
 
 ### API Warnings and Errors
-- Replace `FindObjectOfType` with `FindFirstObjectByType`
+- Replace obsolete object-finding APIs with explicit references or `FindAnyObjectByType` when a scene query is unavoidable
 - Use `CinemachineCamera` instead of `CinemachineVirtualCamera`
-- Check Unity 6000.1.6f1 compatibility for any new APIs
+- Check Unity 6000.5.1f1 compatibility for any new APIs
 - CS0618 warnings indicate obsolete APIs - check AGENTS.md for replacements
 
 ### Performance Issues

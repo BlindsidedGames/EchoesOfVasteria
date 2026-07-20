@@ -20,6 +20,24 @@ namespace Blindsided
         // Global run lifecycle events for cross-system coordination
         public static event Action OnRunStarted;
         public static event Action OnRunEnded;
+
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            _lastSaveFrame = -1;
+            UpdateUiEvent = null;
+            AwayFor = null;
+            OnUnlockNexusEvent = null;
+            UpdateTextsForTimeScaleEvent = null;
+            ApplicationBackgrounded = null;
+            ApplicationForegrounded = null;
+            OnSaveData = null;
+            OnLoadData = null;
+            OnResetData = null;
+            OnQuestHandin = null;
+            OnRunStarted = null;
+            OnRunEnded = null;
+        }
         
         public static void SaveData()
         {

@@ -3,9 +3,9 @@ title: Custom Properties
 ---
 # Custom properties
 
-Custom properties are a way to store information in your [[Tile]]s, that you can later access at runtime using a script.
+Custom properties are a way to store information in your tiles, that you can later access at runtime using a script.
 
-To add properties to your tiles, select a tile, and in the [[Tile inspector]], scroll down to the `Custom properties` category. Here you can store different types of data in your tile. These datatypes are the following:
+To add properties to your tiles, select a tile, and in the [[Tile inspector|tile inspector]], scroll down to the `Custom properties` category. Here you can store different types of data in your tile. These datatypes are the following:
 - **Int**
 - **Float**
 - **Double**
@@ -13,16 +13,17 @@ To add properties to your tiles, select a tile, and in the [[Tile inspector]], s
 - **String**
 - **Bool**
 
-![[Features/images/tile-custom-properties.png]]
+![[images/tile-custom-properties.png]]
 
 You can set a name for the property and a value. You'll use this `property name` to access the value of that property.
+
 # Scripting
 
 To read the properties of the tile, you'll need a reference to the tilemap that the tiles are placed on. If you have this reference to the tilemap, you can use the `tilemap.WorldToCell(Vector2 worldPosition)` method to get the tile coordinate at your desired world position. 
 
 After you got the tile coordinate, you can use the `tilemap.GetTile(Vector3Int position)` function to get the tile at that position. This function returns a `TileBase` class, so we first have to check if it's a `BetterRuleTile`, than cast it to such. 
 
-After we've converted the `TileBase` into a `BetterRuleTile` object, we can use the various `Get` functions to get the type of property we want. Each type of property has it's own `Get` function, so use the one you need. You can find all methods on the [[BetterRuleTile.cs]] documentation page.
+After we've converted the `TileBase` into a `BetterRuleTile` object, we can use the various `Get` functions to get the type of property we want. Each type of property has it's own `Get` function, so use the one you need. You can find all methods [[#BetterRuleTile.cs|below]].
 
 ```cs
 //This script finds the tile of the specified tilemap where your mouse cursor is
@@ -71,4 +72,25 @@ namespace VinTools.BetterRuleTiles.Sample
         }
     }
 }
+```
+
+# BetterRuleTile.cs
+
+If using hexagonal tiles, you'll need to use `BetterHexagonalRuleTile.cs` instead. The methods inside the two scripts are the same.
+
+### Namespace
+
+```cs 
+using VinTools.BetterRuleTiles; 
+```
+
+### Methods
+
+```cs
+public int GetInt(string key, int defaultValue = default);
+public float GetFloat(string key, float defaultValue = default);
+public double GetDouble(string key, double defaultValue = default);
+public char GetChar(string key, char defaultValue = default);
+public string GetString(string key, string defaultValue = default);
+public bool GetBool(string key, bool defaultValue = default);
 ```

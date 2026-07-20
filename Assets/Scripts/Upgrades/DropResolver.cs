@@ -18,8 +18,10 @@ namespace TimelessEchoes.Upgrades
         }
 
         // Scratch lists to avoid allocations in hot path
+#pragma warning disable UDR0001 // Thread-local scratch buffers are cleared before every use.
         [ThreadStatic] private static List<DropResult> _scratchResults;
         [ThreadStatic] private static List<ResourceDrop> _scratchAvailable;
+#pragma warning restore UDR0001
 
         /// <summary>
         /// Rolls from the provided drops, returning results with amounts calculated
