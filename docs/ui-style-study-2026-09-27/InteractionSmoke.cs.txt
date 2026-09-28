@@ -1,0 +1,41 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor;
+using Vasteria.StyleLab;
+public class StyleStudySmoke
+{
+ public static string Main()
+ {
+  var results = new List<string>();
+  VasteriaStyleLab.OpenCauldron();
+  var window = Resources.FindObjectsOfTypeAll<VasteriaStyleLab>().Single();
+  var root = window.rootVisualElement;
+  Action<string> click = text => { var b = root.Query<Button>().ToList().Single(x=>x.text==text); typeof(Clickable).GetMethod("Invoke", BindingFlags.Instance|BindingFlags.NonPublic).Invoke(b.clickable, new object[]{null}); };
+  Action<bool,string> check = (condition, description) => { results.Add((condition?"PASS ":"FAIL ")+description); if(!condition) throw new Exception(description); };
+  click("Pause tasting"); check(root.Query<Button>().ToList().Any(x=>x.text=="Resume tasting"), "Pause/resume changes local preview state.");
+  click("Resume tasting");
+  click("Fishing"); check(root.Query<Button>(className:"ingredient").ToList().Count==8,"Fishing filter uses eight existing fish assets.");
+  var fish=root.Query<Button>(className:"ingredient").ToList().First();
+  typeof(Clickable).GetMethod("Invoke", BindingFlags.Instance|BindingFlags.NonPublic).Invoke(fish.clickable,new object[]{null});
+  check(root.Query<Label>().ToList().Any(x=>x.text=="Wigglelittle"),"Ingredient selection updates selected pair.");
+  click("+ Taste"); check(root.Query<Label>().ToList().Any(x=>x.text=="1,249 tastes"),"Taste demo updates local session count.");
+  click("Eternal"); check(root.Query<Label>().ToList().Any(x=>x.text=="Eternal collection"),"Collection tab swaps preview content.");
+  click("Adventure"); check(root.Q(className:"hero")!=null,"Navigation switches to native HUD.");
+  var avatar=root.Q(className:"avatar");
+  using(var e=ClickEvent.GetPooled()){e.target=avatar;avatar.SendEvent(e);}
+  check(root.Query<Label>().ToList().Any(x=>x.text=="2,383 / 3,724"),"Portrait demo updates health text to 64 percent.");
+  using(var e=ClickEvent.GetPooled()){e.target=avatar;avatar.SendEvent(e);}
+  check(root.Query<Label>().ToList().Any(x=>x.text=="931 / 3,724"),"Low health demo updates text and fill to 25 percent.");
+  check(root.Query(className:"radial").ToList().Count==5,"Five custom radial cooldown controls are present.");
+  check(!EditorApplication.isPlaying,"Editor stayed out of Play mode.");
+  check(Resources.FindObjectsOfTypeAll<GameObject>().All(x=>x.name!="Style study capture"),"Capture preview objects have been cleaned up.");
+  File.WriteAllLines("docs/ui-style-study-2026-09-27/interaction-checks.txt",results);
+  VasteriaStyleLab.OpenCauldron();
+  return string.Join("\n",results);
+ }
+}

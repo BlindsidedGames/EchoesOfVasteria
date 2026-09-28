@@ -48,6 +48,9 @@ namespace TimelessEchoes.Quests
         private double cachedCompletionSeconds;
         private long cachedCompletionTicks;
 
+        public event Action NoticeboardChanged;
+        public event Action<QuestData, float> QuestProgressChanged;
+
         private class QuestInstance
         {
             public QuestData data;
@@ -56,6 +59,7 @@ namespace TimelessEchoes.Quests
             public readonly Dictionary<BuffRecipe, int> buffCastCounts = new();
             public double anyKillCount;
             public bool ReadyForTurnIn;
+            public float Progress;
         }
 
         protected override void Awake()
@@ -73,8 +77,7 @@ namespace TimelessEchoes.Quests
             if (generationManager == null)
                 Log("AlterEchoGenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
-            if (uiManager == null)
-                Log("QuestUIManager missing", TELogCategory.Quest, this);
+
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.General, this);
@@ -498,6 +501,8 @@ namespace TimelessEchoes.Quests
             inst.ui?.UpdateRequirementIcons();
             inst.ui?.UpdateGoalText(inst.data);
 
+            inst.Progress = progress;
+            QuestProgressChanged?.Invoke(inst.data, progress);
             var wasReady = inst.ReadyForTurnIn;
             inst.ReadyForTurnIn = progress >= 1f;
             if (wasReady != inst.ReadyForTurnIn)
@@ -821,121 +826,75 @@ namespace TimelessEchoes.Quests
             PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
-        public void RefreshNoticeboard()
+        /// <summary>Ordered view-independent snapshot of the current quest board.</summary>
+        public IReadOnlyList<QuestNoticeboardEntry> GetNoticeboardEntries()
         {
-            if (uiManager == null)
-                return;
-            // Guard against re-entrant rebuilds from progress updates during a refresh cycle
-            if (_isRefreshingNoticeboard)
-            {
-                _pendingRefresh = true;
-                return;
-            }
-            _isRefreshingNoticeboard = true;
-
-            uiManager.Clear();
-            foreach (var inst in active.Values)
-                UpdateProgress(inst);
-
+            var entries = new List<QuestNoticeboardEntry>();
             var pins = oracle != null ? oracle.saveData?.PinnedQuests : null;
-
-            // Ready category (pinned first in pin order, then unpinned by name)
-            var readyCount = 0;
-            var pinnedCount = 0;
-            var activeCount = 0;
-            var completedCount = 0;
             if (pins != null)
-            {
-                foreach (var pid in pins)
-                {
-                    if (string.IsNullOrEmpty(pid)) continue;
-                    if (!active.TryGetValue(pid, out var pinnedInst) || pinnedInst == null) continue;
-                    if (!pinnedInst.ReadyForTurnIn) continue;
-                    readyCount++;
-                    pinnedInst.ui = uiManager.CreateEntry(
-                        pinnedInst.data,
-                        () => CompleteQuest(pinnedInst),
-                        showRequirements: true,
-                        completed: false,
-                        QuestUIManager.QuestCategory.Ready);
-                    UpdateProgress(pinnedInst);
-                }
-            }
-
-            var readyUnpinned = active.Values
-                .Where(i => i != null && i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
-                .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty);
-            foreach (var inst in readyUnpinned)
-            {
-                readyCount++;
-                inst.ui = uiManager.CreateEntry(
-                    inst.data,
-                    () => CompleteQuest(inst),
-                    showRequirements: true,
-                    completed: false,
-                    QuestUIManager.QuestCategory.Ready);
-                UpdateProgress(inst);
-            }
-
-            // Pinned (not ready), in saved order
+                foreach (var id in pins)
+                    if (!string.IsNullOrEmpty(id) && active.TryGetValue(id, out var inst) && inst != null && inst.ReadyForTurnIn)
+                        entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Ready, inst.Progress));
+            foreach (var inst in active.Values.Where(i => i != null && i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
+                         .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty))
+                entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Ready, inst.Progress));
             if (pins != null)
-            {
-                foreach (var pid in pins)
-                {
-                    if (string.IsNullOrEmpty(pid)) continue;
-                    if (!active.TryGetValue(pid, out var pinnedInst) || pinnedInst == null) continue;
-                    if (pinnedInst.ReadyForTurnIn) continue; // already shown in Ready
-                    pinnedCount++;
-                    pinnedInst.ui = uiManager.CreateEntry(
-                        pinnedInst.data,
-                        () => CompleteQuest(pinnedInst),
-                        showRequirements: true,
-                        completed: false,
-                        QuestUIManager.QuestCategory.Pinned);
-                    UpdateProgress(pinnedInst);
-                }
-            }
-
-            // Active (unpinned and not ready), order by name
-            var orderedUnpinned = active.Values
-                .Where(i => i != null && !i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
-                .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty);
-            foreach (var inst in orderedUnpinned)
-            {
-                activeCount++;
-                inst.ui = uiManager.CreateEntry(
-                    inst.data,
-                    () => CompleteQuest(inst),
-                    showRequirements: true,
-                    completed: false,
-                    QuestUIManager.QuestCategory.Active);
-                UpdateProgress(inst);
-            }
-
-            // Completed (most recent first)
-            var orderedCompleted = quests
-                .Where(q => q != null && !active.ContainsKey(q.questId))
-                .Select(q => new { data = q, rec = oracle.saveData.Quests.TryGetValue(q.questId, out var r) ? r : null })
-                .Where(x => x.rec != null && x.rec.Completed)
-                .OrderByDescending(x => x.rec.CompletedTimestamp)
-                .Select(x => x.data);
-            foreach (var q in orderedCompleted)
-            {
-                completedCount++;
-                uiManager.CreateEntry(q, null, false, true);
-            }
-
-            uiManager.UpdateCategoryVisibility(readyCount, pinnedCount, activeCount, completedCount);
-
-            // End of guarded section
-            _isRefreshingNoticeboard = false;
-            if (_pendingRefresh)
-            {
-                _pendingRefresh = false;
-                RefreshNoticeboard();
-            }
+                foreach (var id in pins)
+                    if (!string.IsNullOrEmpty(id) && active.TryGetValue(id, out var inst) && inst != null && !inst.ReadyForTurnIn)
+                        entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Pinned, inst.Progress));
+            foreach (var inst in active.Values.Where(i => i != null && !i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
+                         .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty))
+                entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Active, inst.Progress));
+            if (oracle?.saveData?.Quests != null)
+                foreach (var quest in quests.Where(q => q != null && !active.ContainsKey(q.questId))
+                             .Select(q => new { data = q, record = oracle.saveData.Quests.TryGetValue(q.questId, out var r) ? r : null })
+                             .Where(q => q.record != null && q.record.Completed).OrderByDescending(q => q.record.CompletedTimestamp))
+                    entries.Add(new QuestNoticeboardEntry(quest.data, QuestNoticeboardCategory.Completed, 1));
+            return entries;
         }
 
+        public bool TryTurnInQuest(string questId)
+        {
+            if (string.IsNullOrEmpty(questId) || !active.TryGetValue(questId, out var inst)) return false;
+            UpdateProgress(inst);
+            if (!inst.ReadyForTurnIn) return false;
+            CompleteQuest(inst);
+            return true;
+        }
+
+        public void RefreshNoticeboard()
+        {
+            if (_isRefreshingNoticeboard) { _pendingRefresh = true; return; }
+            _isRefreshingNoticeboard = true;
+            try
+            {
+                if (uiManager != null && uiManager.enabled) uiManager.Clear();
+                foreach (var inst in active.Values) UpdateProgress(inst);
+                var entries = GetNoticeboardEntries();
+                if (uiManager != null && uiManager.enabled)
+                {
+                    var counts = new int[4];
+                    foreach (var entry in entries)
+                    {
+                        counts[(int)entry.Category]++;
+                        if (entry.Completed) { uiManager.CreateEntry(entry.Quest, null, false, true); continue; }
+                        var inst = active[entry.Quest.questId];
+                        var category = entry.Category switch
+                        {
+                            QuestNoticeboardCategory.Ready => QuestUIManager.QuestCategory.Ready,
+                            QuestNoticeboardCategory.Pinned => QuestUIManager.QuestCategory.Pinned,
+                            _ => QuestUIManager.QuestCategory.Active
+                        };
+                        inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst), true, false, category);
+                        UpdateProgress(inst);
+                    }
+                    uiManager.UpdateCategoryVisibility(counts[0], counts[1], counts[2], counts[3]);
+                }
+                NoticeboardChanged?.Invoke();
+            }
+            finally { _isRefreshingNoticeboard = false; }
+            if (_pendingRefresh) { _pendingRefresh = false; RefreshNoticeboard(); }
+        }
 
         private void OnLoadDataHandler()
         {

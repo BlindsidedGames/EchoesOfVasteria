@@ -11,10 +11,6 @@ namespace TimelessEchoes.Upgrades
         [FormerlySerializedAs("dropChance")]
         [Tooltip("Relative weight used when selecting this drop." )]
         [Min(0f)] public float weight = 1f;
-        // Minimum world X position required for this drop to occur
-        public float minX;
-        // Maximum world X position allowed for this drop to occur
-        public float maxX = float.PositiveInfinity;
         [Tooltip("Skill level required for this drop (0 = no requirement)")]
         public int requiredSkillLevel;
     }

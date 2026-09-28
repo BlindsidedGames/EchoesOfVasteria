@@ -1,0 +1,12 @@
+PASS Failed checkpoint leaves exit uncalled and permits retry
+PASS Successful retry checkpoints before one exit
+PASS Duplicate confirmed exit cannot save or exit twice
+PASS Quit icon retains 16-unit size
+PASS Confirmation buttons are 47 units with one-unit gap
+PASS Confirmation aligns with original safe-area top-right bounds
+PASS Submit opens confirmation
+PASS Cancel returns to closed icon
+PASS Quit hides behind open game panels
+PASS Quit returns after panels close
+PASS 25 enable cycles retain one visual tree
+PASS Fixture remained offline

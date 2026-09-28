@@ -200,7 +200,11 @@ namespace TimelessEchoes.Stats
         {
             if (oracle == null) return;
 
-            var t = new Dictionary<int, GameData.TaskRecord>();
+            // Keep records for task assets that are not present in this build. Known runtime
+            // tasks overwrite their own entries without erasing temporarily unavailable content.
+            var t = oracle.saveData.TaskRecords != null
+                ? new Dictionary<int, GameData.TaskRecord>(oracle.saveData.TaskRecords)
+                : new Dictionary<int, GameData.TaskRecord>();
             foreach (var pair in taskRecords)
                 if (pair.Key != null)
                     t[pair.Key.taskID] = pair.Value;

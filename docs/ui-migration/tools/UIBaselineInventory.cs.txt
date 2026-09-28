@@ -1,0 +1,29 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEditor;
+using TMPro;
+
+public static class UIBaselineInventory {
+ static string J(object value){var t=AppDomain.CurrentDomain.GetAssemblies().First(a=>a.GetName().Name=="Newtonsoft.Json").GetType("Newtonsoft.Json.JsonConvert");return (string)t.GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new[]{value});}
+ static string SpriteName(Image image){return image && image.sprite ? image.sprite.name : null;}
+ static string PathOf(Transform t){var names=new List<string>();for(;t!=null;t=t.parent)names.Add(t.name);names.Reverse();return string.Join("/",names);}
+ public static string Main(){
+  string output="docs/ui-migration/baseline-2026-09-27";Directory.CreateDirectory(output);
+  var all=Resources.FindObjectsOfTypeAll<RectTransform>().Where(t=>t.gameObject.scene.IsValid()&&!EditorUtility.IsPersistent(t)).ToArray();
+  var nodes=all.Select(t=>new{path=PathOf(t),scene=t.gameObject.scene.path,active=t.gameObject.activeSelf,components=t.GetComponents<Component>().Where(c=>c).Select(c=>c.GetType().FullName).ToArray(),prefab=PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(t.gameObject),text=t.GetComponent<TMP_Text>()?.text,anchorMin=t.anchorMin.ToString(),anchorMax=t.anchorMax.ToString(),offsetMin=t.offsetMin.ToString(),offsetMax=t.offsetMax.ToString(),sprite=SpriteName(t.GetComponent<Image>())}).ToArray();
+  File.WriteAllText(output+"/scene-ui-inventory.json",J(nodes));
+  var buttons=all.Select(t=>t.GetComponent<Button>()).Where(b=>b).Select(b=>new{path=PathOf(b.transform),label=b.GetComponentInChildren<TMP_Text>(true)?.text,events=Enumerable.Range(0,b.onClick.GetPersistentEventCount()).Select(i=>new{target=(b.onClick.GetPersistentTarget(i) ? b.onClick.GetPersistentTarget(i).name : null),method=b.onClick.GetPersistentMethodName(i)}).ToArray()}).ToArray();
+  File.WriteAllText(output+"/buttons.json",J(buttons));
+  var windows=nodes.Where(n=>n.path.Contains("TownWIndows/")&&n.path.Split('/').Length==5).Select(n=>n.path).ToArray();
+  File.WriteAllText(output+"/windows.json",J(windows));
+  File.WriteAllText(output+"/prefabs.json",J(AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/Prefabs/UI"}).Select(AssetDatabase.GUIDToAssetPath).ToArray()));
+  return "Inventoried "+nodes.Length+" UI transforms, "+buttons.Length+" buttons, "+windows.Length+" town window roots.";
+ }
+}
+
+
+

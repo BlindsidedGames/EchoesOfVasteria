@@ -22,6 +22,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (references == null)
                 references = GetComponent<GeneralStatsUIReferences>();
             statTracker = GameplayStatTracker.Instance;

@@ -1,0 +1,27 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.UI;
+using TimelessEchoes.UI;
+using TimelessEchoes.MapGeneration;
+public static class CaptureExtraSurfaces {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;static object s;static List<GameObject> overlays=new List<GameObject>();
+ static void Call(string name,params object[] args){s.GetType().GetMethod(name,F).Invoke(s,args);}
+ static void Add(string name,Action action,string state="synthetic-presentation"){Call("Add",name,action,state);}
+ static void Close(){foreach(var g in overlays)if(g)g.SetActive(false);Call("Close");}
+ static string PathOf(Transform t){var p=new List<string>();for(;t;t=t.parent)p.Add(t.name);p.Reverse();return string.Join("/",p);}
+ public static string Main(){s=AppDomain.CurrentDomain.GetData("UITK_BASELINE");if(s==null)throw new Exception("No capture session");
+  foreach(var name in new[]{"Import","Export","Language Selector","Russian Partial Translation warning","Notification","Demo"}){var g=Resources.FindObjectsOfTypeAll<Transform>().First(t=>t.gameObject.scene.IsValid()&&PathOf(t)=="Canvas/SafeArea/"+name).gameObject;overlays.Add(g);var obj=g;Add("80-dialog-"+name,()=>{Close();obj.SetActive(true);});}
+  Add("81-quit-confirmation",()=>{Close();var q=UnityEngine.Object.FindAnyObjectByType<QuitGameButton>(FindObjectsInactive.Include);var window=(GameObject)q.GetType().GetField("confirmWindow",F).GetValue(q);overlays.Add(window);window.SetActive(true);});
+  Add("82-forge-core-tooltip",()=>{Close();Call("Open","OpenForge");var ui=UnityEngine.Object.FindAnyObjectByType<TimelessEchoes.Gear.UI.ForgeWindowUI>(FindObjectsInactive.Include);ui.GetType().GetMethod("ShowCoreWeightTooltip",F).Invoke(ui,null);});
+  Add("83-resource-tier-notification",()=>{Close();var ui=UnityEngine.Object.FindAnyObjectByType<ResourceTierUpPopupUI>(FindObjectsInactive.Include);var resource=Resources.LoadAll<TimelessEchoes.Upgrades.Resource>("Resource").FirstOrDefault()??Resources.FindObjectsOfTypeAll<TimelessEchoes.Upgrades.Resource>().First();ui.GetType().GetMethod("OnResourceTierUpgraded",F).Invoke(ui,new object[]{resource,2});});
+  Add("90-run-hud",()=>{Close();Time.timeScale=1;var gm=TimelessEchoes.GameManager.Instance;var maps=(List<MapGenerationButton>)gm.GetType().GetField("generationButtons",F).GetValue(gm);maps.First(x=>x.Config!=null).Button.onClick.Invoke();},"synthetic-unlocked-run");
+  Add("91-run-hud-settled",()=>{},"synthetic-unlocked-run");
+  Add("92-run-skills",()=>{RunCalebUIManager.Instance.GetType().GetMethod("ToggleSkills",F).Invoke(RunCalebUIManager.Instance,null);},"synthetic-unlocked-run");
+  Add("93-run-death",()=>{var ui=RunCalebUIManager.Instance;if(ui.IsSkillsWindowOpen)ui.GetType().GetMethod("ToggleSkills",F).Invoke(ui,null);TimelessEchoes.GameManager.Instance.ForceHandleHeroDeath();Time.timeScale=0;},"forced-death-presentation");
+  Add("94-return-to-town",()=>{Time.timeScale=1;TimelessEchoes.GameManager.Instance.AbandonRun();},"synthetic-run-return");
+  return "Queued dialog, tooltip, notification, run HUD and death captures";
+ }
+}

@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4917f1e63e91d2249bd78b6f43df382e, type: 3}
+  m_Name: Intro
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitIntroDefinition
+  title:
+    key: intro.title
+    bold: 1
+    smallCaps: 1
+    fallback: Welcome to Echoes of Vasteria
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  body:
+    key: intro.body
+    bold: 0
+    smallCaps: 0
+    fallback: "I am aware that this game is a little confusing when you first start playing. While a proper tutorial is in the works this message serves as a quick placeholder.\n\nFirst and foremost this is an idle game, progress happens automatically and in the background while you do other things!\n\nYou can find information on various systems by clicking the Library button at the top.\n\nQuests are your starting point and will help guide you as you progress. \n\nYour hero will self navigate and complete tasks while you are in a run.\n\nI hope you have fun, if you get stuck I can always be reached on discord!"
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  close:
+    key: intro.close
+    bold: 0
+    smallCaps: 0
+    fallback: Click to close this forever!
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  frame: {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  progressTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  progressFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  width: 166.734
+  countdownSeconds: 10
+  references:
+    version: 2
+    RefIds: []

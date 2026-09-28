@@ -26,6 +26,7 @@ namespace TimelessEchoes.Skills
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (controller == null)
                 controller = FindAnyObjectByType<SkillController>();
         }

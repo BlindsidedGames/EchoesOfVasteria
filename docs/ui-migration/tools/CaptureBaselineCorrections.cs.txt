@@ -1,0 +1,34 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEditor;
+using TimelessEchoes.UI;
+public static class CaptureBaselineCorrections {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
+ static object s; static GameObject meeting; static GameObject joke;
+ static void Call(string n,params object[] a){s.GetType().GetMethod(n,F).Invoke(s,a);}
+ static void Add(string n,Action a,string state="synthetic-presentation"){Call("Add",n,a,state);}
+ static void Close(){Call("Close");if(meeting)UnityEngine.Object.Destroy(meeting);if(joke)joke.SetActive(false);foreach(var t in Resources.FindObjectsOfTypeAll<Transform>())if(t.gameObject.scene.IsValid()&&t.name=="On your Travells...")t.gameObject.SetActive(false);}
+ public static string Main(){
+  s=AppDomain.CurrentDomain.GetData("UITK_BASELINE");if(s==null)throw new Exception("Missing capture session");
+  foreach(var tab in new[]{"Items_Button","Tasks_Button","Enemies_Button"}){var n=tab;Add("95-inventory-"+n,()=>{Close();Call("Open","OpenForge");typeof(TownWindowManager).GetMethod("ToggleForgeInfo",F).Invoke(TownWindowManager.Instance,null);Call("Click","Canvas/SafeArea/UnifiedWindow/TownWIndows/Inventory/Image/Buttons/"+n);});}
+  Add("96-dad-joke",()=>{Close();var d=UnityEngine.Object.FindAnyObjectByType<TimelessEchoes.DadJokeManager>(FindObjectsInactive.Include);d.GetType().GetMethod("ShowJoke",F).Invoke(d,null);joke=(GameObject)d.GetType().GetField("textBox",F).GetValue(d);});
+  foreach(var path in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/Prefabs/Tasks/NPC"}).Select(AssetDatabase.GUIDToAssetPath)){
+   var task=AssetDatabase.LoadAssetAtPath<GameObject>(path).GetComponent<TimelessEchoes.Tasks.TalkToNpcTask>();if(!task)continue;
+   var prefab=(GameObject)task.GetType().GetField("meetingPrefab",F).GetValue(task);if(!prefab)continue;
+   var name=System.IO.Path.GetFileNameWithoutExtension(path);
+   Add("97-meeting-"+name,()=>{Close();var parent=TimelessEchoes.GameManager.Instance.MeetingParent;parent.gameObject.SetActive(true);parent.parent.gameObject.SetActive(true);meeting=UnityEngine.Object.Instantiate(prefab,parent,false);meeting.GetComponent<MeetingController>().Init((Sprite)task.GetType().GetField("npcSprite",F).GetValue(task),(List<string>)task.GetType().GetField("lines",F).GetValue(task),()=>{});});
+   Add("98-dialogue-"+name,()=>{typeof(MeetingController).GetMethod("StartConversation",F).Invoke(meeting.GetComponent<MeetingController>(),null);});
+  }
+  Add("99-fresh-quests",()=>{Close();Blindsided.Oracle.oracle.saveData=new Blindsided.SaveData.GameData();Blindsided.Oracle.oracle.saveData.SavedPreferences.OfflineTimeActive=false;Blindsided.EventHandler.LoadData();Call("Open","OpenQuests");},"fresh-in-memory");
+  Add("99-fresh-upgrades",()=>Call("Open","OpenUpgrades"),"fresh-in-memory");
+  Add("99-fresh-buffs",()=>Call("Open","OpenBuffs"),"fresh-in-memory");
+  var count=((System.Collections.ICollection)s.GetType().GetField("results",F).GetValue(s)).Count;
+  s.GetType().GetField("index",F).SetValue(s,count-1);
+  var cb=(EditorApplication.CallbackFunction)Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction),s,s.GetType().GetMethod("Tick",F));EditorApplication.update-=cb;EditorApplication.update+=cb;
+  return "Additional baseline capture cases started";
+ }
+}

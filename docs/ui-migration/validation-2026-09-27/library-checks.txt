@@ -1,0 +1,10 @@
+PASS 13 native chapter buttons
+PASS Inline sprite character count preserved
+PASS Every inline sprite index/name maps to the original glyph
+PASS Native navigation submit expands Forge chapter
+PASS Localized Forge content populated asynchronously
+PASS Expanded content has a usable scroll range
+PASS Scrollbar stays inside six-unit track
+PASS Scroll changes content offset
+PASS 25 construct/dispose cycles leave no attached native view roots
+PASS Locale restored to English in disposable profile

@@ -54,6 +54,12 @@ namespace TimelessEchoes.Tasks
             if (meetingPrefab == null || meetingInstance != null) return;
             var parent = GameManager.Instance != null ? GameManager.Instance.MeetingParent : null;
             meetingInstance = Object.Instantiate(meetingPrefab, parent, false);
+            var toolkit = meetingInstance.GetComponent<TimelessEchoes.UI.Toolkit.ToolkitMeetingScreen>();
+            if (toolkit != null)
+            {
+                toolkit.Init(npcSprite, lines, OnMeetingFinished);
+                return;
+            }
             var controller = meetingInstance.GetComponent<MeetingController>();
             controller?.Init(npcSprite, lines, OnMeetingFinished);
         }

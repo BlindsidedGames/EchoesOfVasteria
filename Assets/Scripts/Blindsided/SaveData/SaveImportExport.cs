@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -7,138 +9,303 @@ using Blindsided.SaveData.Migrations;
 
 namespace Blindsided.SaveData
 {
-	public static class SaveImportExport
-	{
-		private const string ExportPrefix = "TE1:";
+    public static class SaveImportExport
+    {
+        private const string LegacyExportPrefix = "TE1:";
+        private const string ExportPrefix = "TE2:";
+        private const int MaxEncodedCharacters = 4 * 1024 * 1024;
+        private const int MaxSaveBytes = 64 * 1024 * 1024;
+        private static readonly byte[] EnvelopeMagic = { (byte)'T', (byte)'E', (byte)'2', 0 };
 
-		public static string ExportCurrentSlot(bool copyToClipboard = false)
-		{
-			var oracle = Blindsided.Oracle.oracle;
-			if (oracle == null || oracle.saveData == null)
-				return null;
+        public static string ExportCurrentSlot(bool copyToClipboard = false)
+        {
+            return ExportCurrentSlot(copyToClipboard, out _);
+        }
 
-			// Serialize current in-memory data using Odin Binary
-			byte[] binary = SerializationUtility.SerializeValue(oracle.saveData, DataFormat.Binary);
-			// Compress to reduce size
-			byte[] compressed = Deflate(binary);
-			// Encode URL-safe base64 without padding
-			string encoded = Base64UrlEncode(compressed);
-			string exportString = ExportPrefix + encoded;
+        public static string ExportCurrentSlot(bool copyToClipboard, out bool durableSaveSucceeded)
+        {
+            var oracle = Blindsided.Oracle.oracle;
+            if (oracle == null || !oracle.HasCurrentSlotData)
+            {
+                durableSaveSucceeded = false;
+                return null;
+            }
 
-			if (copyToClipboard)
-				GUIUtility.systemCopyBuffer = exportString;
+            string durableSaveError = null;
+            try
+            {
+                durableSaveSucceeded = oracle.SaveToSlot(oracle.CurrentSlot);
+            }
+            catch (Exception ex)
+            {
+                durableSaveSucceeded = false;
+                durableSaveError = ex.Message;
+            }
 
-			return exportString;
-		}
+            var binary = SerializationUtility.SerializeValue(oracle.saveData, DataFormat.Binary);
+            if (binary == null || binary.Length > MaxSaveBytes)
+                throw new InvalidDataException($"Save payload size is invalid ({binary?.Length ?? 0} bytes).");
 
-		public static bool TryImportToCurrentSlot(string input, out string error)
-		{
-			error = null;
-			if (string.IsNullOrWhiteSpace(input))
-			{
-				error = "Empty input";
-				return false;
-			}
-			if (!input.StartsWith(ExportPrefix, StringComparison.Ordinal))
-			{
-				error = "Invalid prefix";
-				return false;
-			}
-			if (input.Length > 1_000_000)
-			{
-				error = "Input too long";
-				return false;
-			}
+            var envelope = BuildEnvelope(binary);
+            var compressed = Deflate(envelope);
+            var encodedLength = ExportPrefix.Length + ((long)compressed.Length * 4 + 2) / 3;
+            if (encodedLength > MaxEncodedCharacters)
+            {
+                throw new InvalidDataException(
+                    $"Encoded export is too large to import ({encodedLength:N0} characters; " +
+                    $"maximum {MaxEncodedCharacters:N0}). Nothing was copied.");
+            }
 
-			try
-			{
-				string payload = input.Substring(ExportPrefix.Length);
-				byte[] compressed = Base64UrlDecode(payload);
-				byte[] binary = Inflate(compressed);
-				var data = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
-				if (data == null)
-				{
-					error = "Failed to decode save";
-					return false;
-				}
+            var exportString = ExportPrefix + Base64UrlEncode(compressed);
+            if (!durableSaveSucceeded)
+            {
+                Debug.LogWarning(
+                    "The durable pre-export save failed. A rescue export was created from the current " +
+                    "in-memory data instead; the disk save was not updated." +
+                    (string.IsNullOrEmpty(durableSaveError) ? string.Empty : $" {durableSaveError}"));
+            }
 
-				var oracle = Blindsided.Oracle.oracle;
-				if (oracle == null)
-				{
-					error = "Oracle missing";
-					return false;
-				}
+            if (copyToClipboard)
+                GUIUtility.systemCopyBuffer = exportString;
 
-				// Determine slot and ensure SaveManager is pointed at it
-				var index = Mathf.Clamp(oracle.CurrentSlot, 0, 2);
-				var slotName = oracle.GetSlotDirectoryName(index);
-				SaveManager.Instance.SetCurrentSlot(slotName);
+            return exportString;
+        }
 
-				// Run migrations if required (backs up previous snapshot and persists on success)
-				bool migrated = SaveMigrationRunner.Run(data, Application.version, slotName);
+        public static bool TryImportToCurrentSlot(string input, out string error)
+        {
+            return TryImportToCurrentSlot(input, out error, out _);
+        }
 
-				// Assign to runtime
-				oracle.saveData = data;
+        public static bool TryImportToCurrentSlot(
+            string input,
+            out string error,
+            out bool committedToDisk)
+        {
+            error = null;
+            committedToDisk = false;
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                error = "Empty input";
+                return false;
+            }
+            if (input.Length > MaxEncodedCharacters)
+            {
+                error = "Input is too long";
+                return false;
+            }
 
-				// If no migrations were applied (thus not persisted), save now
-				if (!migrated)
-				{
-					SaveManager.Instance.SaveAsync(oracle.saveData).GetAwaiter().GetResult();
-				}
+            var isCurrentFormat = input.StartsWith(ExportPrefix, StringComparison.Ordinal);
+            var isLegacyFormat = input.StartsWith(LegacyExportPrefix, StringComparison.Ordinal);
+            if (!isCurrentFormat && !isLegacyFormat)
+            {
+                error = "Invalid prefix";
+                return false;
+            }
 
-				oracle.PersistSlotMetadataToPlayerPrefs();
+            try
+            {
+                var prefix = isCurrentFormat ? ExportPrefix : LegacyExportPrefix;
+                var compressed = Base64UrlDecode(input.Substring(prefix.Length));
+                var inflated = InflateBounded(
+                    compressed,
+                    isCurrentFormat ? MaxSaveBytes + 64 : MaxSaveBytes);
+                var binary = isCurrentFormat ? ReadEnvelope(inflated) : inflated;
+                var decoded = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
+                if (decoded == null)
+                {
+                    error = "Failed to decode save";
+                    return false;
+                }
+                if (decoded.SchemaVersion > GameData.CurrentSchemaVersion)
+                {
+                    error =
+                        $"This save uses newer schema {decoded.SchemaVersion}; this build supports {GameData.CurrentSchemaVersion}.";
+                    return false;
+                }
 
-				// Refresh runtime state
-				Blindsided.EventHandler.ResetData();
-				Blindsided.EventHandler.LoadData();
-				return true;
-			}
-			catch (Exception ex)
-			{
-				error = ex.Message;
-				Blindsided.Utilities.FeedbackForm.SubmitException(
-					"SaveImportExport.Import",
-					ex,
-					$"inputLength: {input?.Length ?? 0}");
-				return false;
-			}
-		}
+                var migration = SaveMigrationRunner.TryMigrate(decoded, Application.version);
+                if (!migration.Succeeded || migration.Data == null)
+                {
+                    error = migration.Error ?? "Save migration failed";
+                    return false;
+                }
 
-		private static byte[] Deflate(byte[] input)
-		{
-			using (var output = new MemoryStream())
-			{
-				using (var ds = new System.IO.Compression.DeflateStream(output, System.IO.Compression.CompressionLevel.Optimal, true))
-				{
-					ds.Write(input, 0, input.Length);
-				}
-				return output.ToArray();
-			}
-		}
+                var oracle = Blindsided.Oracle.oracle;
+                if (oracle == null)
+                {
+                    error = "Oracle missing";
+                    return false;
+                }
 
-		private static byte[] Inflate(byte[] input)
-		{
-			using (var ms = new MemoryStream(input))
-			using (var ds = new System.IO.Compression.DeflateStream(ms, System.IO.Compression.CompressionMode.Decompress))
-			using (var output = new MemoryStream())
-			{
-				ds.CopyTo(output);
-				return output.ToArray();
-			}
-		}
+                if (!oracle.TryCommitImportedData(
+                        migration.Data,
+                        out var commitError,
+                        out committedToDisk))
+                {
+                    error = commitError ?? "The imported data could not be activated safely.";
+                    return false;
+                }
 
-		private static string Base64UrlEncode(byte[] bytes)
-		{
-			string s = Convert.ToBase64String(bytes);
-			s = s.Replace('+', '-').Replace('/', '_');
-			return s.TrimEnd('=');
-		}
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                Blindsided.Utilities.FeedbackForm.SubmitException(
+                    "SaveImportExport.Import",
+                    ex,
+                    $"inputLength: {input?.Length ?? 0}");
+                return false;
+            }
+        }
 
-		private static byte[] Base64UrlDecode(string s)
-		{
-			s = s.Replace('-', '+').Replace('_', '/');
-			s = s.PadRight((s.Length + 3) / 4 * 4, '=');
-			return Convert.FromBase64String(s);
-		}
-	}
+        internal static bool TryWriteRescuePayload(
+            byte[] binary,
+            string rootPath,
+            string slotName,
+            out string path,
+            out string error)
+        {
+            path = null;
+            error = null;
+            try
+            {
+                if (binary == null || binary.Length > MaxSaveBytes)
+                    throw new InvalidDataException($"Rescue payload size is invalid ({binary?.Length ?? 0} bytes).");
+
+                var compressed = Deflate(BuildEnvelope(binary));
+                var encodedLength = ExportPrefix.Length + ((long)compressed.Length * 4 + 2) / 3;
+                if (encodedLength > MaxEncodedCharacters)
+                    throw new InvalidDataException("Rescue export exceeds the supported import size.");
+                var exportString = ExportPrefix + Base64UrlEncode(compressed);
+
+                var directory = Path.Combine(rootPath, "SaveRecovery", "UncommittedExports");
+                Directory.CreateDirectory(directory);
+                var stem = $"{slotName}_{DateTime.UtcNow:yyyyMMdd_HHmmss_fff}_{Guid.NewGuid():N}.te2.txt";
+                var destination = Path.Combine(directory, stem);
+                var temporary = destination + ".tmp";
+                var bytes = new UTF8Encoding(false).GetBytes(exportString);
+                using (var stream = new FileStream(
+                           temporary,
+                           FileMode.CreateNew,
+                           FileAccess.Write,
+                           FileShare.None,
+                           64 * 1024,
+                           FileOptions.SequentialScan))
+                {
+                    stream.Write(bytes, 0, bytes.Length);
+                    stream.Flush(true);
+                }
+
+                File.Move(temporary, destination);
+                path = destination;
+                return true;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException ||
+                                       ex is InvalidDataException || ex is CryptographicException)
+            {
+                error = ex.Message;
+                return false;
+            }
+        }
+
+        private static byte[] BuildEnvelope(byte[] payload)
+        {
+            using var output = new MemoryStream(payload.Length + 64);
+            using var writer = new BinaryWriter(output);
+            writer.Write(EnvelopeMagic);
+            writer.Write(payload.Length);
+            writer.Write(ComputeSha256(payload));
+            writer.Write(payload);
+            writer.Flush();
+            return output.ToArray();
+        }
+
+        private static byte[] ReadEnvelope(byte[] envelope)
+        {
+            using var input = new MemoryStream(envelope, writable: false);
+            using var reader = new BinaryReader(input);
+            var magic = reader.ReadBytes(EnvelopeMagic.Length);
+            if (magic.Length != EnvelopeMagic.Length ||
+                magic[0] != EnvelopeMagic[0] || magic[1] != EnvelopeMagic[1] ||
+                magic[2] != EnvelopeMagic[2] || magic[3] != EnvelopeMagic[3])
+            {
+                throw new InvalidDataException("Export envelope magic is invalid.");
+            }
+
+            var payloadLength = reader.ReadInt32();
+            if (payloadLength < 0 || payloadLength > MaxSaveBytes)
+                throw new InvalidDataException($"Export payload length {payloadLength} is invalid.");
+            var expectedChecksum = reader.ReadBytes(32);
+            var payload = reader.ReadBytes(payloadLength);
+            if (expectedChecksum.Length != 32 || payload.Length != payloadLength || input.Position != input.Length)
+                throw new InvalidDataException("Export envelope is truncated or has trailing data.");
+            if (!ByteArraysEqual(expectedChecksum, ComputeSha256(payload)))
+                throw new InvalidDataException("Export checksum mismatch.");
+            return payload;
+        }
+
+        private static byte[] Deflate(byte[] input)
+        {
+            using var output = new MemoryStream();
+            using (var stream = new DeflateStream(
+                       output,
+                       System.IO.Compression.CompressionLevel.Optimal,
+                       leaveOpen: true))
+                stream.Write(input, 0, input.Length);
+            return output.ToArray();
+        }
+
+        private static byte[] InflateBounded(byte[] input, int maxOutputBytes)
+        {
+            using var compressed = new MemoryStream(input, writable: false);
+            using var stream = new DeflateStream(compressed, CompressionMode.Decompress);
+            using var output = new MemoryStream(Math.Min(input.Length * 4, maxOutputBytes));
+            var buffer = new byte[64 * 1024];
+
+            while (true)
+            {
+                var read = stream.Read(buffer, 0, buffer.Length);
+                if (read <= 0)
+                    break;
+                if (output.Length + read > maxOutputBytes)
+                    throw new InvalidDataException("Decompressed save exceeds the supported size limit.");
+                output.Write(buffer, 0, read);
+            }
+
+            return output.ToArray();
+        }
+
+        private static string Base64UrlEncode(byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes)
+                .Replace('+', '-')
+                .Replace('/', '_')
+                .TrimEnd('=');
+        }
+
+        private static byte[] Base64UrlDecode(string value)
+        {
+            var normalized = value.Replace('-', '+').Replace('_', '/');
+            normalized = normalized.PadRight((normalized.Length + 3) / 4 * 4, '=');
+            return Convert.FromBase64String(normalized);
+        }
+
+        private static byte[] ComputeSha256(byte[] bytes)
+        {
+            using var sha = SHA256.Create();
+            return sha.ComputeHash(bytes);
+        }
+
+        private static bool ByteArraysEqual(byte[] left, byte[] right)
+        {
+            if (left == null || right == null || left.Length != right.Length)
+                return false;
+
+            var difference = 0;
+            for (var i = 0; i < left.Length; i++)
+                difference |= left[i] ^ right[i];
+            return difference == 0;
+        }
+    }
 }

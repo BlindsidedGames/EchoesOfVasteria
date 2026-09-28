@@ -1,0 +1,93 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Upgrades;
+using References.UI;
+
+public class ValidateNativeCauldron
+{
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ readonly List<string> checks=new();
+ ToolkitCauldronScreen screen; TownWindowManager wm; CauldronManager cm; ResourceManager rm;
+ CauldronWindowUI legacy; CollectionsWindowUI oldCollections; GameObject oldWindow;
+ List<(Sprite icon,string count,bool enabled)> foods; Dictionary<string,string> counts;
+ string stats,level,xp,stew,backup,tooltipText; float oldScale,bonus; int phase; double due; int rollsBefore;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ static object Get(object o,string name)=>o.GetType().GetField(name,F).GetValue(o);
+ static object Call(object o,string name,params object[] args)=>o.GetType().GetMethod(name,F).Invoke(o,args);
+ static string Plain(string s)=>s.Replace("<b>","").Replace("</b>","");
+ void Check(bool value,string name)=>checks.Add((value?"PASS ":"FAIL ")+name);
+ public static string Main()
+ {
+  if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");
+  var t=new ValidateNativeCauldron {wm=TownWindowManager.Instance,cm=CauldronManager.Instance,rm=ResourceManager.Instance,legacy=UnityEngine.Object.FindAnyObjectByType<CauldronWindowUI>(FindObjectsInactive.Include),oldCollections=UnityEngine.Object.FindAnyObjectByType<CollectionsWindowUI>(FindObjectsInactive.Include)};
+  if(!t.wm||!t.cm)throw new Exception("Wait for Main startup");
+  t.cm.StopTasting();t.backup=(string)Type.GetType("Newtonsoft.Json.JsonConvert, Newtonsoft.Json").GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new object[]{Oracle.oracle.saveData});
+  t.oldScale=Time.timeScale;t.bonus=StaticReferences.DisciplePercentCollectionsBonus;Time.timeScale=0;
+  t.screen=UnityEngine.Object.FindAnyObjectByType<ToolkitCauldronScreen>();
+  t.wm.CloseAllWindows();var route=new SerializedObject(t.wm);route.FindProperty("toolkitCauldron").objectReferenceValue=null;route.ApplyModifiedPropertiesWithoutUndo();t.wm.OpenWindow(TownWindowManager.Window.Cauldron);
+  t.oldWindow=(GameObject)new SerializedObject(t.wm).FindProperty("cauldron").FindPropertyRelative("window").objectReferenceValue;
+  EditorApplication.update+=t.Tick;return "Cauldron parity and isolated gameplay checks started";
+ }
+ void Tick()
+ {
+  if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+.8;
+  try {switch(phase)
+  {
+   case 0:
+    Call(legacy,"OnSaveOrLoad");cm.StopTasting();phase++;break;
+   case 1:
+    var slots=(List<CauldronMixItemUIReferences>)Get(legacy,"mixSlots");foods=slots.Select(s=>(s.iconImage.sprite,s.countText.text,s.selectButton.interactable)).ToList();
+    var oldCards=(Dictionary<string,CollectionItemUIReferences>)Get(oldCollections,"itemById");counts=oldCards.ToDictionary(k=>k.Key,v=>v.Value.countText.text);
+    stats=((TMPro.TMP_Text)Get(legacy,"statsText")).text;level=((TMPro.TMP_Text)Get(legacy,"evaLevelText")).text;xp=((TMPro.TMP_Text)Get(legacy,"evaXpText")).text;stew=((CauldronDrinkingUIReferences)Get(legacy,"drinking")).stewRemainingText.text;
+    var args=new object[]{"RES:"+TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.BuildEligibleFoods(rm)[0].name,0,false};tooltipText=(string)Call(oldCollections,"BuildTooltipText",args);
+    ScreenCapture.CaptureScreenshot(Output+"/cauldron-reference-matched.png");phase++;break;
+   case 2:
+    wm.CloseAllWindows();if(!screen)screen=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Cauldron.prefab")).GetComponent<ToolkitCauldronScreen>();
+    var so=new SerializedObject(wm);so.FindProperty("toolkitCauldron").objectReferenceValue=screen;so.ApplyModifiedPropertiesWithoutUndo();wm.OpenWindow(TownWindowManager.Window.Cauldron);phase++;break;
+   case 3:
+    Check(screen.IsOpen&&TownWindowManager.IsCauldronOpen,"Town menu routes to native Cauldron");Check(!oldWindow.activeSelf,"Legacy Cauldron and collections hidden");Check(screen.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Length==0,"Native Cauldron has no Canvas graphics");
+    Check(Root.Q<Label>("eva-level").text==level&&Root.Q<Label>("eva-xp").text==xp,"Eva level and XP match reference");Check(Plain(Root.Q<Label>("stew-remaining").text)==stew,"Stew label matches reference");Check(Root.Q<Label>("tasting-stats").text==stats,"Persisted tasting totals match reference");
+    Check(Enumerable.Range(0,foods.Count).All(i=>Root.Q<Button>("food-"+i).Q<Image>().sprite==foods[i].icon),"All 30 food icons preserve eligible order");
+    Check(Enumerable.Range(0,foods.Count).All(i=>Root.Q<Button>("food-"+i).Q<Label>().text==foods[i].count),"All 30 food quantities match reference");
+    Check(Enumerable.Range(0,foods.Count).All(i=>Root.Q<Button>("food-"+i).enabledSelf==foods[i].enabled),"Food availability matches reference");
+    Check(counts.All(k=>Root.Q("card-"+k.Key)!=null&&Plain(Root.Q("card-"+k.Key).Q<Label>().text)==k.Value),"All "+counts.Count+" collection counts and maxed labels match");
+    Check(Root.Query<VisualElement>(className:"eov-collection-section").ToList().First().name=="section-Eternal Boons","Infinity section first");
+    Check(Root.Q<Button>("taste").resolvedStyle.display==DisplayStyle.None&&Root.Q<Button>("stop-tasting").resolvedStyle.display==DisplayStyle.None,"Authored hidden Taste and Stop buttons preserved");
+    Check(Math.Abs(Root.Q("cauldron").worldBound.width-508)<.01,"Cauldron width matches 508-unit reference");
+    Check(Math.Abs(Root.Q(className:"eov-collection-section").worldBound.height-89.54)<.1,"Two-row collection section matches reference height");
+    ScreenCapture.CaptureScreenshot(Output+"/cauldron-native.png");phase++;break;
+   case 4:
+    var col=Get(screen,"collections");col.GetType().GetMethod("ShowTooltip").Invoke(col,new object[]{"RES:"+TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.BuildEligibleFoods(rm)[0].name});phase++;break;
+   case 5:
+    Check(Root.Q<Label>("collection-tooltip-text").text==tooltipText,"Resource tooltip matches original text and effects");ScreenCapture.CaptureScreenshot(Output+"/cauldron-native-tooltip.png");phase++;break;
+   case 6:
+    Call(screen,"SelectFood",0);Check(!Root.Q<Button>("mix").enabledSelf,"One food cannot mix");Call(screen,"SelectFood",1);Check(Root.Q<Button>("mix").enabledSelf,"Two distinct stocked foods enable Mix");Call(screen,"SelectFood",2);Check(((Resource)Get(screen,"selectedA"))==TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.BuildEligibleFoods(rm)[2],"Third selection replaces oldest slot");
+    var a=(Resource)Get(screen,"selectedA");var b=(Resource)Get(screen,"selectedB");var expected=(rm.GetAmount(a)*a.baseValue*a.valueMultiplier+rm.GetAmount(b)*b.baseValue*b.valueMultiplier)/100;var before=cm.Stew;Call(screen,"Mix");Check(cm.IsTasting,"Mix automatically starts tasting");cm.StopTasting();Check(rm.GetAmount(a)==0&&rm.GetAmount(b)==0,"Mix consumes both full stacks");Check(Math.Abs(cm.Stew-before-expected)<Math.Max(.01,expected*1e-12),"Mixed stew equals existing value formula");Check(!Root.Q<Button>("mix").enabledSelf,"Mix clears selected slots");
+    Restore();phase++;break;
+   case 7:
+    Call(screen,"MixAll");cm.StopTasting();var remaining=TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.BuildEligibleFoods(rm).Count(r=>rm.GetAmount(r)>0);Check(remaining<=1,"Mix All consumes all eligible pairs");Restore();cm.StartTasting();rollsBefore=Oracle.oracle.saveData.CauldronTotals.TotalTastings;due=EditorApplication.timeSinceStartup+2;phase++;break;
+   case 8:
+    cm.StopTasting();Check(Oracle.oracle.saveData.CauldronTotals.TotalTastings>rollsBefore,"Actual tasting advances with native window open");Call(screen,"Refresh");Check(Root.Q<Label>("tasting-stats").text.Contains(Oracle.oracle.saveData.CauldronTotals.TotalTastings.ToString("N0")),"Tasting event updates visible totals");
+    var expectedBonus=Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r=>r&&!r.DisableAlterEcho&&rm.IsUnlocked(r)).GroupBy(cm.GetResourceGroup).Sum(g=>g.Min(r=>Mathf.Max(1,cm.GetResourceTier(r.name))))*.001f;Check(Math.Abs(StaticReferences.DisciplePercentCollectionsBonus-expectedBonus)<.00001,"Tasting stop preserves collections bonus");
+    wm.CloseAllWindows();Oracle.oracle.saveData.CauldronStew=3*(double)Call(cm,"GetStewCostPerRoll");cm.StartTasting();rollsBefore=Oracle.oracle.saveData.CauldronTotals.TotalTastings;due=EditorApplication.timeSinceStartup+2;phase++;break;
+   case 9:
+    Check(Oracle.oracle.saveData.CauldronTotals.TotalTastings>rollsBefore&&!cm.IsTasting,"Actual tasting consumes remaining stew while closed");Check(wm.CauldronNeedsAttention,"Closed completion raises town attention");wm.OpenWindow(TownWindowManager.Window.Cauldron);Check(!wm.CauldronNeedsAttention,"Reopening clears completion attention");Restore();
+    for(int i=0;i<25;i++){wm.CloseAllWindows();wm.OpenWindow(TownWindowManager.Window.Cauldron);}Check(Root.Query<VisualElement>("cauldron").ToList().Count==1,"25 cycles retain one native tree");foreach(var field in new[]{"OnStewChanged","OnWeightsChanged","OnCardGained","OnStatsChanged","OnTasteSessionStarted","OnTasteSessionStopped"}){var d=(Delegate)typeof(CauldronManager).GetField(field,F).GetValue(cm);Check(d.GetInvocationList().Count(x=>ReferenceEquals(x.Target,screen))==1,"One native "+field+" subscription after cycles");}
+    wm.CloseAllWindows();Check(((Delegate)typeof(CauldronManager).GetField("OnCardGained",F).GetValue(cm))?.GetInvocationList().All(x=>!ReferenceEquals(x.Target,screen))??true,"Closing removes native card subscription");
+    Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"All Cauldron tests remain offline");Finish();break;
+  }} catch(Exception e){checks.Add("FAIL "+e);Finish();}
+ }
+ void Restore(){cm.StopTasting();Oracle.oracle.saveData=(GameData)Type.GetType("Newtonsoft.Json.JsonConvert, Newtonsoft.Json").GetMethod("DeserializeObject",new[]{typeof(string),typeof(Type)}).Invoke(null,new object[]{backup,typeof(GameData)});Blindsided.EventHandler.LoadData();cm.StopTasting();}
+ void Finish(){EditorApplication.update-=Tick;try{Restore();Time.timeScale=oldScale;StaticReferences.DisciplePercentCollectionsBonus=bonus;wm.CloseAllWindows();}catch(Exception e){checks.Add("FAIL restore "+e.Message);}File.WriteAllLines(Output+"/cauldron-checks.txt",checks);Debug.Log("Cauldron checks: "+checks.Count+", failures "+checks.Count(s=>s.StartsWith("FAIL")));}
+}

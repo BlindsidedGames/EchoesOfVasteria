@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "command": "command run_script",
+  "data": {
+    "command": "run_script",
+    "parameters": {
+      "file": "Library/ForgeProbe/VerifyFinished.cs"
+    },
+    "result": {
+      "diagnostics": [],
+      "compileMs": 44,
+      "executeMs": 0,
+      "assemblyName": "PipelineRunScript_VerifyFinished_db71b376d9d645d284c04e89cd55292d",
+      "success": true,
+      "result": {
+        "playing": false,
+        "paused": false,
+        "auditSessionCleared": true,
+        "cleanupCallbackCleared": true,
+        "saveRecoveryGuard": null,
+        "saveRootOverride": null,
+        "steam": false,
+        "ugs": true,
+        "profiler": false,
+        "map": "River",
+        "inRun": false
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

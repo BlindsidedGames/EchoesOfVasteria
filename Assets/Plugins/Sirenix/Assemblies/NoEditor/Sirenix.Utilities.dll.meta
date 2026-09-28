@@ -1,12 +1,22 @@
 fileFormatVersion: 2
 guid: 5978f8f3dd274e848fbb7a123bde1fb9
-timeCreated: 1488828285
-PluginImporter:
+AssetOrigin:
   serializedVersion: 1
+  productId: 89041
+  packageName: Odin Inspector and Serializer
+  packageVersion: 4.0.2.1
+  assetPath: Assets/Plugins/Sirenix/Assemblies/NoEditor/Sirenix.Utilities.dll
+  uploadId: 935496
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 3
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
     Any:
       enabled: 0
@@ -28,7 +38,7 @@ PluginImporter:
         Exclude WebGL: 0
         Exclude WiiU: 0
         Exclude Win: 1
-        Exclude Win64: 1
+        Exclude Win64: 0
         Exclude WindowsStoreApps: 0
         Exclude XboxOne: 0
         Exclude iOS: 0
@@ -36,31 +46,31 @@ PluginImporter:
     Editor:
       enabled: 0
       settings:
+        CPU: AnyCPU
         DefaultValueInitialized: true
-    N3DS:
-      enabled: 1
-      settings: {}
+        OS: AnyOS
+    Linux64:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+    OSXUniversal:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
     PS4:
-      enabled: 1
-      settings: {}
-    PSM:
-      enabled: 1
-      settings: {}
-    PSP2:
-      enabled: 1
-      settings: {}
-    SamsungTV:
-      enabled: 1
-      settings: {}
-    Tizen:
       enabled: 1
       settings: {}
     WebGL:
       enabled: 1
       settings: {}
-    WiiU:
-      enabled: 1
-      settings: {}
+    Win:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+    Win64:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
     WindowsStoreApps:
       enabled: 1
       settings:
@@ -77,10 +87,3 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 89041
-  packageName: Odin Inspector and Serializer
-  packageVersion: 4.0.2.1
-  assetPath: Assets/Plugins/Sirenix/Assemblies/NoEditor/Sirenix.Utilities.dll
-  uploadId: 935496

@@ -1,0 +1,11 @@
+PASS Only lifetime fill (not track) consumes echo lifetime
+PASS Lifetime exposes staged 40 percent
+PASS All-skills echo exposes multiple skill icons
+PASS Visible echo skill icons have distinct native positions
+PASS World icons preserve proportions
+PASS Pooled echo unregisters native anchor
+PASS Pooled echo removes native visual nodes
+PASS Existing tier notification handler routes to native label with inline sprite
+PASS Native toast visible while timeScale is zero
+PASS Toast expires using unscaled time
+PASS No legacy Canvas enabled by notification or world activity

@@ -1,0 +1,99 @@
+--- original/Assets/Scripts/Gear/UI/ForgeWindowUI/ForgeWindowUI.cs
++++ disposable/Assets/Scripts/Gear/UI/ForgeWindowUI/ForgeWindowUI.cs
+@@ -358,7 +358,7 @@
+         }
+ 
+         private void LateUpdate()
+-        {
++        {long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             // Process deferred UI updates to coalesce multiple events
+             if (_gearSlotsNeedRefresh)
+             {
+@@ -376,7 +376,7 @@
+                 ProcessResourcesRefresh();
+                 _resourcesNeedRefresh = false;
+             }
+-        }
++        }finally{ForgeProbe.Record(5,probeStart);}}
+ 
+         /// <summary>
+         /// Combined handler for equipment changes to reduce event cascade.
+@@ -1717,7 +1717,7 @@
+         }
+ 
+         private void UpdateAllGearSlots()
+-        {
++        {if(ForgeProbe.Mode==2||ForgeProbe.Mode==3)return;long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             IReadOnlyList<string> slotNames = equipment != null
+                 ? equipment.Slots
+                 : SlotOrder;
+@@ -1776,10 +1776,10 @@
+                     }
+                 }
+             }
+-        }
++        }finally{ForgeProbe.Record(0,probeStart);}}
+ 
+         private void UpdateSelectedSlotStats()
+-        {
++        {if(ForgeProbe.Mode==2||ForgeProbe.Mode==3)return;long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             if (selectedSlotStatsText == null)
+                 return;
+ 
+@@ -1791,10 +1791,10 @@
+ 
+             var equipped = equipment != null ? equipment.GetEquipped(selectedSlot) : null;
+             selectedSlotStatsText.text = GearStatTextBuilder.BuildEquippedStatsText(equipped, selectedSlot);
+-        }
++        }finally{ForgeProbe.Record(1,probeStart);}}
+ 
+         private void UpdateAggregateStatsText()
+-        {
++        {if(ForgeProbe.Mode==2||ForgeProbe.Mode==3)return;long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             if (aggregateTotalsChestText == null && aggregateWeaponBootsText == null && aggregateHelmetText == null)
+                 return;
+ 
+@@ -1849,7 +1849,7 @@
+             ApplyText(aggregateTotalsChestText, sections.Totals);
+             ApplyText(aggregateWeaponBootsText, sections.WeaponAndChest);
+             ApplyText(aggregateHelmetText, sections.HelmetAndBoots);
+-        }
++        }finally{ForgeProbe.Record(2,probeStart);}}
+ 
+         private string BuildEquippedStatsText(GearItem item, string slotName)
+         {
+@@ -1916,14 +1916,14 @@
+             return Blindsided.Utilities.CalcUtils.FormatNumber(total, hideDecimal: true);
+         }
+         private void OnIvanXpChanged(int level, float current, float needed)
+-        {
++        {if(ForgeProbe.Mode==3)return;long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             if (!isActiveAndEnabled || !gameObject.activeInHierarchy) return;
+             SetIvanLevelLabel(level);
+             if (ivanXpText != null)
+                 ivanXpText.text = $"{current:0}/{needed:0}";
+             if (ivanXpBar != null)
+                 ivanXpBar.fillAmount = needed > 0f ? Mathf.Clamp01(current / needed) : 0f;
+-        }
++        }finally{ForgeProbe.Record(4,probeStart);}}
+ 
+         private void OnIvanLevelUp(int newLevel)
+         {
+@@ -1945,7 +1945,7 @@
+         }
+ 
+         private void ProcessResourcesRefresh()
+-        {
++        {if(ForgeProbe.Mode==1||ForgeProbe.Mode==3)return;long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{
+             var previewSlot = GetSlotForCore(selectedCore);
+             UpdateSelectedCorePreview(previewSlot);
+             UpdateIngotPreview(selectedCore);
+@@ -1957,7 +1957,7 @@
+             UpdateIvanXpUI();
+             RefreshActionButtons();
+             ThrottledRefreshOdds();
+-        }
++        }finally{ForgeProbe.Record(3,probeStart);}}
+ 
+         private void UpdateIvanXpUI()
+         {

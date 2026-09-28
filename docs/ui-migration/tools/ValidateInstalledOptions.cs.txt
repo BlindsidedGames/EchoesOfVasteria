@@ -1,0 +1,40 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateInstalledOptions {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic;
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ ToolkitOptionsScreen screen;ToolkitOptionsDialogs dialog;TownWindowManager manager;List<string> results=new();int phase,index;double due;
+ int[][] dimensions={new[]{1280,720},new[]{2340,1080},new[]{3840,2160}};
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>results.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(string id){var b=Root.Q<Button>(id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");var test=new ValidateInstalledOptions{manager=TownWindowManager.Instance,screen=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsScreen>()};if(!test.manager||!test.screen)throw new Exception("Wait for installed Main");foreach(var intro in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>())intro.Hide();EditorApplication.update+=test.Tick;return "Installed Options viewport checks started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase){
+ case 0:Check(UnityEngine.Object.FindObjectsByType<ToolkitOptionsScreen>(FindObjectsInactive.Include).Length==1,"Installed scene has one native Options host");Check(new SerializedObject(manager).FindProperty("toolkitOptions").objectReferenceValue==screen,"Saved navigation route references native Options");phase++;break;
+ case 1:manager.CloseAllWindows();Resize(dimensions[index][0],dimensions[index][1]);phase++;break;
+ case 2:manager.OpenWindow(TownWindowManager.Window.Options);dialog=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsDialogs>();phase++;break;
+ case 3:var safe=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,Blindsided.SaveData.StaticReferences.SafeAreaRatio);var rect=Root.Q("options").worldBound;Check(screen.IsOpen&&manager.IsWindowOpen(TownWindowManager.Window.Options),"Installed route opens native Options at "+Screen.width+"x"+Screen.height);Check(rect.xMin>=safe.xMin-.2f&&rect.xMax<=safe.xMax+.2f&&rect.yMax<=safe.yMax+.2f,"Options fits safe area at "+Screen.width);ScreenCapture.CaptureScreenshot(Output+"/options-installed-"+Screen.width+".png");phase++;break;
+ case 4:Submit("import");phase++;break;
+ case 5:var document=dialog.GetComponent<UIDocument>().rootVisualElement;Check(document.Q<TextField>("transfer-input")!=null&&document.Q("import-dialog").worldBound.width<=350.2f,"Native input dialog fits viewport at "+Screen.width);ScreenCapture.CaptureScreenshot(Output+"/options-import-installed-"+Screen.width+".png");phase++;break;
+ case 6:dialog.Hide();manager.CloseAllWindows();Check(!screen.IsOpen,"Global close removes native Options at "+Screen.width);index++;if(index<dimensions.Length){phase=1;break;}Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Installed scene remains offline");File.WriteAllLines(Output+"/installed-options-checks.txt",results);EditorApplication.update-=Tick;break;
+ }}catch(Exception ex){results.Add("FAIL "+ex);File.WriteAllLines(Output+"/installed-options-checks.txt",results);EditorApplication.update-=Tick;Resize(3840,2160);}}
+ static void Resize(int width,int height){
+  var asm=typeof(Editor).Assembly;var sizesType=asm.GetType("UnityEditor.GameViewSizes");
+  var singleton=typeof(ScriptableSingleton<>).MakeGenericType(sizesType);var sizes=singleton.GetProperty("instance",F).GetValue(null);
+  var group=sizesType.GetMethod("GetGroup",F).Invoke(sizes,new object[]{0});
+  var sizeType=asm.GetType("UnityEditor.GameViewSize");var enumType=asm.GetType("UnityEditor.GameViewSizeType");
+  var size=Activator.CreateInstance(sizeType,F,null,new object[]{Enum.ToObject(enumType,1),width,height,"UITK baseline "+width+"x"+height},null);
+  group.GetType().GetMethod("AddCustomSize",F).Invoke(group,new[]{size});
+  var count=(int)group.GetType().GetMethod("GetTotalCount",F).Invoke(group,null);
+  var viewType=asm.GetType("UnityEditor.GameView");var view=EditorWindow.GetWindow(viewType);
+  viewType.GetProperty("selectedSizeIndex",F).SetValue(view,count-1);view.Repaint();
+ }
+}

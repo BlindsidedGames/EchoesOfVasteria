@@ -106,7 +106,7 @@ namespace TimelessEchoes
 
         protected virtual void UpdateBar()
         {
-            if (healthBar == null) return;
+            if (healthBar == null || !healthBar.enabled) return;
 
             var percent = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
             healthBar.fillAmount = Mathf.Max(percent, minFillPercent);
@@ -128,6 +128,15 @@ namespace TimelessEchoes
                 if (chosen != null)
                     healthBar.sprite = chosen;
             }
+        }
+
+        public Sprite GetHealthBarSprite(Sprite fallback)
+        {
+            float percent = MaxHealth > 0 ? CurrentHealth / MaxHealth : 0, best = -1;
+            if (barSprites != null) foreach (var option in barSprites)
+                if (option.sprite && percent >= option.minPercent && option.minPercent > best)
+                { fallback = option.sprite; best = option.minPercent; }
+            return fallback;
         }
 
         protected void ShowFloatingText(float total, float bonusDamage)

@@ -1,4 +1,4 @@
-using QFSW.QC;
+using TimelessEchoes.UI.Toolkit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -15,7 +15,7 @@ namespace TimelessEchoes
     {
         [SerializeField] private float holdDuration = 2f;
         private float _touchTimer;
-        private QuantumConsole _console;
+        private ToolkitConsoleScreen _console;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -27,7 +27,7 @@ namespace TimelessEchoes
 
         private void Awake()
         {
-            _console = FindAnyObjectByType<QuantumConsole>(FindObjectsInactive.Include);
+            _console = FindAnyObjectByType<ToolkitConsoleScreen>(FindObjectsInactive.Include);
         }
 
         private void OnEnable()
@@ -49,7 +49,7 @@ namespace TimelessEchoes
 
             if (_console == null)
             {
-                _console = FindAnyObjectByType<QuantumConsole>(FindObjectsInactive.Include);
+                _console = FindAnyObjectByType<ToolkitConsoleScreen>(FindObjectsInactive.Include);
                 if (_console == null)
                 {
                     return;

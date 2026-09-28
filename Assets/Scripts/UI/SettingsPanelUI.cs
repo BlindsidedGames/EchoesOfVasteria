@@ -161,14 +161,12 @@ namespace TimelessEchoes.UI
 
         private static string SlotKey(int index, string field)
         {
-            var oracle = Oracle.oracle;
-            if (oracle == null)
-                return $"Slot{index}_{field}";
-            return oracle.GetSlotPlayerPrefsKey(index, field);
+            return SaveSlotActions.SlotKey(index, field);
         }
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             saveSlots = new[] { saveSlot1, saveSlot2, saveSlot3 };
 
             // Wire up Account/UGS username controls
@@ -708,8 +706,8 @@ namespace TimelessEchoes.UI
         {
             if (saveSlots == null || index >= saveSlots.Length)
                 return;
-            SaveSlot(index);
-            RefreshSlot(index);
+            if (SaveSlot(index))
+                RefreshSlot(index);
         }
 
         private void OnLoadOrDelete(int index)
@@ -722,9 +720,10 @@ namespace TimelessEchoes.UI
 
             if (slot.safetyEnabled)
             {
-                DeleteSlot(index);
+                if (!DeleteSlot(index))
+                    return;
                 if (index == Oracle.oracle.CurrentSlot)
-                    Oracle.oracle.WipeAllData();
+                    Oracle.oracle.WipeAllData(replacingDeletedSlot: true);
                 else
                     RefreshSlot(index);
             }
@@ -732,10 +731,7 @@ namespace TimelessEchoes.UI
             {
                 if (index == Oracle.oracle.CurrentSlot)
                     return;
-                SaveSlot(Oracle.oracle.CurrentSlot);
                 Oracle.oracle.SelectSlot(index);
-                EventHandler.ResetData();
-                EventHandler.LoadData();
                 RefreshAllSlots();
             }
         }
@@ -754,52 +750,14 @@ namespace TimelessEchoes.UI
             UpdateSlotInteractivity(index);
         }
 
-        private void SaveSlot(int index)
+        private bool SaveSlot(int index)
         {
-            try
-            {
-                var oracle = Oracle.oracle;
-                oracle.SaveToSlot(index);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to save slot {index}: {ex}");
-            }
+            return SaveSlotActions.SaveSlot(index);
         }
 
-        private void DeleteSlot(int index)
+        private bool DeleteSlot(int index)
         {
-            try
-            {
-                var oracle = Oracle.oracle;
-                // Mark this slot as intentionally deleted to suppress any migration prompts in legacy builds
-                try
-                {
-                    var deletedKey = oracle != null ? oracle.GetSlotDeletedKey(index) : $"Slot{index}_Deleted";
-                    PlayerPrefs.SetInt(deletedKey, 1);
-                    PlayerPrefs.Save();
-                }
-                catch { }
-
-                PlayerPrefs.DeleteKey(SlotKey(index, "Completion"));
-                PlayerPrefs.DeleteKey(SlotKey(index, "Playtime"));
-                PlayerPrefs.DeleteKey(SlotKey(index, "Date"));
-                PlayerPrefs.Save();
-
-                // Delete the new save system files for this slot (Saves/Save{N})
-                try
-                {
-                    var slotName = oracle != null ? oracle.GetSlotDirectoryName(index) : $"Save{index + 1}";
-                    var slotDir = Path.Combine(Application.persistentDataPath, "Saves", slotName);
-                    if (Directory.Exists(slotDir))
-                        Directory.Delete(slotDir, true);
-                }
-                catch { }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to delete slot {index}: {ex}");
-            }
+            return SaveSlotActions.DeleteSlot(index);
         }
 
         private static void OpenSaveLocation()
@@ -818,14 +776,15 @@ namespace TimelessEchoes.UI
 
             var isCurrent = index == Oracle.oracle.CurrentSlot;
             var safety = slot.safetyEnabled;
+            var canMutate = Oracle.oracle.CanBeginSaveMutation;
 
             if (slot.saveButton != null)
-                slot.saveButton.interactable = isCurrent || safety;
+                slot.saveButton.interactable = canMutate && (isCurrent || safety);
 
             if (slot.loadDeleteButton != null)
             {
                 var inTown = GameManager.Instance == null || GameManager.Instance.CurrentMap == null;
-                slot.loadDeleteButton.interactable = safety || (inTown && !isCurrent);
+                slot.loadDeleteButton.interactable = canMutate && (safety || (inTown && !isCurrent));
             }
         }
 
@@ -839,17 +798,23 @@ namespace TimelessEchoes.UI
 
         private void OnOpenExportWindow()
         {
+            if (exportPanel != null)
+                exportPanel.SetActive(true);
+            if (importPanel != null)
+                importPanel.SetActive(false);
+
             try
             {
-                EventHandler.SaveData();
-                var text = SaveImportExport.ExportCurrentSlot(copyToClipboard: true);
+                var text = SaveImportExport.ExportCurrentSlot(
+                    copyToClipboard: true,
+                    out var durableSaveSucceeded);
+                if (string.IsNullOrEmpty(text))
+                    throw new InvalidOperationException("No in-memory save data is available to export.");
                 if (exportInput != null)
-                    exportInput.text = text ?? string.Empty;
-                if (exportPanel != null)
-                    exportPanel.SetActive(true);
-                if (importPanel != null)
-                    importPanel.SetActive(false);
-                SetExportStatus("Exported to clipboard");
+                    exportInput.text = text;
+                SetExportStatus(durableSaveSucceeded
+                    ? "Exported to clipboard"
+                    : "Rescue export copied from memory; the disk save failed");
             }
             catch (Exception ex)
             {
@@ -869,12 +834,21 @@ namespace TimelessEchoes.UI
                     SetImportStatus("Nothing to import");
                     return;
                 }
-                if (SaveImportExport.TryImportToCurrentSlot(source, out var error))
+                if (SaveImportExport.TryImportToCurrentSlot(
+                        source,
+                        out var error,
+                        out var committedToDisk))
                 {
                     RefreshAllSlots();
                     if (importPanel != null)
                         importPanel.SetActive(false);
                     SetImportStatus("Imported successfully");
+                }
+                else if (committedToDisk)
+                {
+                    RefreshAllSlots();
+                    SetImportStatus(
+                        "Imported safely to disk; restart the game or use Retry to finish loading it");
                 }
                 else
                 {
@@ -953,15 +927,29 @@ namespace TimelessEchoes.UI
                 return;
 
             var oracle = Oracle.oracle;
+            if (oracle == null)
+                return;
 
             var completion = 0f;
+            var isMarkedDeleted = PlayerPrefs.GetInt(oracle.GetSlotDeletedKey(index), 0) == 1;
 
-            if (index == oracle.CurrentSlot)
+            if (isMarkedDeleted)
+            {
+                slot.lastPlayed = null;
+                createdVersionBySlot[index] = string.Empty;
+                if (slot.playtimeText != null)
+                    slot.playtimeText.text = "Playtime: None";
+            }
+            else if (index == oracle.CurrentSlot && oracle.HasCurrentSlotData)
             {
                 completion = oracle.saveData.CompletionPercentage;
-                slot.lastPlayed = string.IsNullOrEmpty(oracle.saveData.DateQuitString)
-                    ? null
-                    : DateTime.Parse(oracle.saveData.DateQuitString, CultureInfo.InvariantCulture);
+                slot.lastPlayed = DateTime.TryParse(
+                    PlayerPrefs.GetString(SlotKey(index, "Date"), string.Empty),
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
+                    out var lastPlayed)
+                    ? lastPlayed.ToUniversalTime()
+                    : null;
             }
             else
             {
@@ -975,26 +963,30 @@ namespace TimelessEchoes.UI
                     {
                         var json = File.ReadAllText(metaPath);
                         var meta = JsonUtility.FromJson<SlotMetaView>(json);
-                        completion = meta != null && meta.schemaVersion > 0 ? PlayerPrefs.GetFloat(SlotKey(index, "Completion"), 0f) : 0f;
+                        var hasVerifiedMeta = meta != null &&
+                                              string.Equals(meta.integrity, "sha256", StringComparison.Ordinal);
+                        completion = hasVerifiedMeta
+                            ? meta.completion
+                            : PlayerPrefs.GetFloat(SlotKey(index, "Completion"), 0f);
                         // For playtime and last played, prefer meta fields if present
                         if (slot.playtimeText != null)
                         {
-                            var playtime = PlayerPrefs.GetFloat(SlotKey(index, "Playtime"), 0f);
+                            var playtime = hasVerifiedMeta
+                                ? meta.playTime
+                                : PlayerPrefs.GetFloat(SlotKey(index, "Playtime"), 0f);
                             slot.playtimeText.text = playtime > 0
                                 ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
                                 : "Playtime: None";
                         }
                         // Cache created version for this slot if available
                         createdVersionBySlot[index] = meta != null ? (meta.createdVersion ?? string.Empty) : string.Empty;
-                        if (!string.IsNullOrEmpty(meta?.timestampUtc))
-                        {
-                            try { slot.lastPlayed = DateTime.Parse(meta.timestampUtc, null, DateTimeStyles.RoundtripKind); }
-                            catch { slot.lastPlayed = null; }
-                        }
-                        else
-                        {
-                            slot.lastPlayed = null;
-                        }
+                        slot.lastPlayed = DateTime.TryParse(
+                            meta?.timestampUtc,
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.RoundtripKind,
+                            out var metadataTimestamp)
+                            ? metadataTimestamp.ToUniversalTime()
+                            : null;
                     }
                     else
                     {
@@ -1043,6 +1035,9 @@ namespace TimelessEchoes.UI
             public string integrity = null;
             public string createdVersion = null;
             public string lastVersion = null;
+            public float completion = 0f;
+            public double playTime = 0d;
+            public string dateQuit = null;
         }
 
         private void UpdateSlotDynamic(int index)
@@ -1053,36 +1048,41 @@ namespace TimelessEchoes.UI
             if (slot == null)
                 return;
 
-            if (index == Oracle.oracle.CurrentSlot)
+            var oracle = Oracle.oracle;
+            if (oracle == null)
+                return;
+
+            if (index == oracle.CurrentSlot)
             {
-                slot.completionPercentage = Oracle.oracle.saveData.CompletionPercentage;
+                if (!oracle.HasCurrentSlotData)
+                {
+                    if (slot.fileNameText != null)
+                        slot.fileNameText.text = $"File {index + 1} - Recovery Required";
+                    if (slot.playtimeText != null)
+                        slot.playtimeText.text = "Playtime: Unavailable";
+                    return;
+                }
+
+                slot.completionPercentage = oracle.saveData.CompletionPercentage;
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
                         $"File {index + 1} | {slot.completionPercentage:0}% - Active";
 
-                var playtime = Oracle.oracle.saveData.PlayTime;
+                var playtime = oracle.saveData.PlayTime;
                 if (slot.playtimeText != null)
                     slot.playtimeText.text = playtime > 0
                         ? $"Playtime: {CalcUtils.FormatTime(playtime, shortForm: true)}"
                         : "Playtime: None";
 
-                // Re-evaluate last save time from live save data so autosaves are reflected
-                var lastSaveString = Oracle.oracle.saveData.DateQuitString;
-                if (!string.IsNullOrEmpty(lastSaveString))
-                {
-                    try
-                    {
-                        slot.lastPlayed = DateTime.Parse(lastSaveString, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        slot.lastPlayed = null;
-                    }
-                }
-                else
-                {
-                    slot.lastPlayed = null;
-                }
+                // This cache is updated only after a verified snapshot is durable.
+                var lastSaveString = PlayerPrefs.GetString(SlotKey(index, "Date"), string.Empty);
+                slot.lastPlayed = DateTime.TryParse(
+                    lastSaveString,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
+                    out var lastSaved)
+                    ? lastSaved.ToUniversalTime()
+                    : null;
 
                 if (slot.lastPlayed.HasValue)
                 {
@@ -1118,8 +1118,8 @@ namespace TimelessEchoes.UI
             if (slot.lastPlayedText != null)
             {
                 var createdInfo = index == Oracle.oracle.CurrentSlot
-                    ? (Oracle.oracle.saveData != null && !string.IsNullOrEmpty(Oracle.oracle.saveData.GameVersionCreated)
-                        ? Oracle.oracle.saveData.GameVersionCreated
+                    ? (oracle.HasCurrentSlotData && !string.IsNullOrEmpty(oracle.saveData.GameVersionCreated)
+                        ? oracle.saveData.GameVersionCreated
                         : "Unknown")
                     : (!string.IsNullOrEmpty(createdVersionBySlot[index]) ? createdVersionBySlot[index] : "Unknown");
                 slot.lastPlayedText.text = (slot.lastPlayedText.text ?? string.Empty) +
@@ -1128,4 +1128,3 @@ namespace TimelessEchoes.UI
         }
     }
 }
-

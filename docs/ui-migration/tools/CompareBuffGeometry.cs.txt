@@ -1,0 +1,16 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Buffs;
+using References.UI;
+public static class CompareBuffGeometry {
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK"))throw new Exception("Isolated Play required");var source=new SerializedObject(UnityEngine.Object.FindAnyObjectByType<BuffUIManager>(FindObjectsInactive.Include));var old=(GameObject)source.FindProperty("buffPurchaseWindow").objectReferenceValue;var was=old.activeSelf;old.SetActive(true);Canvas.ForceUpdateCanvases();var root=UnityEngine.Object.FindAnyObjectByType<ToolkitBuffsScreen>().GetComponent<UIDocument>().rootVisualElement;var results=new List<string>();void Compare(string name,RectTransform t,VisualElement n){var a=Bounds(t);var b=n.worldBound;var error=Mathf.Max(Mathf.Abs(a.x-b.x),Mathf.Abs(a.y-b.y),Mathf.Abs(a.width-b.width),Mathf.Abs(a.height-b.height));results.Add((error<.15f?"PASS ":"FAIL ")+name+" original="+a+" native="+b+" maxError="+error);}
+ Compare("window",(RectTransform)old.transform,root.Q("buffs"));for(int i=0;i<5;i++){var slot=(BuffSlotUIReferences)source.FindProperty("assignSlotButtons").GetArrayElementAtIndex(i).objectReferenceValue;Compare("slot "+i,(RectTransform)slot.transform,root.Q("assign-slot-"+i));}
+ var parent=(Transform)source.FindProperty("recipeParent").objectReferenceValue;var rows=parent.GetComponentsInChildren<BuffRecipeUIReferences>();var nativeRows=root.Query<VisualElement>(className:"eov-buff-row").ToList();for(int i=0;i<Math.Min(rows.Length,nativeRows.Count);i++){Compare("row "+i,(RectTransform)rows[i].transform,nativeRows[i]);Compare("assign "+i,(RectTransform)rows[i].purchaseButton.transform,nativeRows[i].Q<Button>(className:"eov-buff-assign"));}old.SetActive(was);File.WriteAllLines("C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27/buffs-geometry.txt",results);return string.Join("\n",results);}
+ static Rect Bounds(RectTransform t){var c=t.GetComponentInParent<Canvas>();var corners=new Vector3[4];t.GetWorldCorners(corners);var a=RectTransformUtility.WorldToScreenPoint(c.worldCamera,corners[0]);var b=RectTransformUtility.WorldToScreenPoint(c.worldCamera,corners[2]);var scale=432f/Screen.height;return new Rect(a.x*scale,(Screen.height-b.y)*scale,(b.x-a.x)*scale,(b.y-a.y)*scale);}
+}

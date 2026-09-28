@@ -1,0 +1,370 @@
+/* Semantic roles are shared by both routes. Rarity colours retain the original tier artwork. */
+.study { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; --body:16px; --small:13px; --heading:21px; --title:32px; --amount:38px; font-size:var(--body); color:var(--text); }
+.study.light { --surface:#e4a672; --text:#3f2832; --muted:#633c38; --control:#edb98e; --hover:#f2c49c; --line:#b86f50; --accent:#713e38; --on-accent:#fff1df; --selected:#f7d3a7; --field:#f1c49f; --health:#63c64d; }
+.study.dark { --surface:#292426; --text:#f5e4d6; --muted:#c8aea1; --control:#3c3032; --hover:#514042; --line:#74514a; --accent:#efb984; --on-accent:#302126; --selected:#674635; --field:#382e31; --health:#63c64d; }
+.study.large { --body:20.8px; --small:16.9px; --heading:27.3px; --title:41.6px; --amount:49.4px; }
+.study Label { white-space:normal; color:var(--text); margin:0; padding:0; flex-shrink:0; }
+.study .small { font-size:var(--small); }
+.study .muted { color:var(--muted); }
+.study .strong,.study .heading,.study .title,.study .amount { -unity-font-style:bold; }
+.study .heading { font-size:var(--heading); margin-bottom:8px; }
+.study .title { font-size:var(--title); }
+.study .amount { font-size:var(--amount); }
+.study .row { flex-direction:row; }
+.study .between { justify-content:space-between; align-items:center; }
+.study .grow { flex-grow:1; min-width:0; }
+.study .icon { flex-shrink:0; margin-right:8px; }
+.study .surface { background-color:var(--surface); border-radius:0; padding:8px; }
+.study .button { margin:0; padding:8px 12px; min-height:44px; flex-shrink:0; background-color:var(--control); background-image:none; color:var(--text); border-width:1px; border-color:transparent; border-radius:0; white-space:normal; -unity-font-style:bold; font-size:var(--body); }
+.study .button:hover { background-color:var(--hover); }
+.study .button:disabled { opacity:0.45; }
+.study .primary,.study .active { background-color:var(--accent); color:var(--on-accent); }
+.study .primary:hover,.study .active:hover { background-color:var(--accent); }
+.study .quiet { background-color:transparent; }
+.study .landscape,.study .shade { position:absolute; left:0;right:0;top:0;bottom:0; overflow:hidden; }
+.study .landscape-image {position:absolute; width:143%;height:143%;left:-21.5%;top:-11.5%;}
+.study .shade { background-color:rgba(25,18,20,0.56); }
+.study .navigation { position:absolute;left:24px;right:24px;top:24px; }
+.study .nav-links > .button { margin-right:8px; }
+.study .cauldron { position:absolute;left:24px;right:24px;top:92px;bottom:24px;padding:24px; }
+.study .page-heading {flex-shrink:0;margin-bottom:24px;}
+.study .eva {align-items:center;}
+.study .eva-info {width:205px;}
+.study .track { height:5px; background-color:var(--line); margin-top:4px; margin-bottom:4px; overflow:hidden; border-radius:0; flex-shrink:0; }
+.study .fill { height:100%;background-color:var(--accent); }
+.study .health { height:9px; }
+.study .health .fill {background-color:var(--health);}
+.study .workspace {flex-grow:1;flex-basis:0;min-height:0;}
+.study .column {min-height:0;min-width:0;}
+.study .ingredients {width:32%;margin-right:24px;}
+.study .brewing {width:24%;margin-right:24px;}
+.study .collection {flex-grow:1;flex-basis:0;}
+.study .filters {flex-shrink:0;margin-bottom:12px; flex-wrap:wrap;}
+.study .search {flex-grow:1;min-width:90px;margin:0 8px 4px 0;}
+.study TextField,.study DropdownField {font-size:var(--body);min-height:36px;}
+.study .unity-base-field__label {min-width:0;margin:0 8px 0 0;color:var(--text);}
+.study .unity-base-field__input {background-color:var(--field);color:var(--text);border-color:var(--line);border-radius:0;min-height:36px;}
+.study .unity-text-field__input {padding:4px 8px;}
+.study .scroll {flex-grow:1;flex-basis:0;min-height:0;flex-shrink:1;}
+.study .food-grid,.study .card-grid {flex-direction:row;flex-wrap:wrap;align-content:flex-start;}
+.study .food {width:25%;min-width:0;min-height:112px;align-items:center;justify-content:flex-start;padding:8px 3px;background-color:transparent;}
+.study .food .icon,.study .card .icon {margin:0 0 8px 0;}
+.study .food Label,.study .card Label {-unity-text-align:middle-center;}
+.study .selected {background-color:var(--selected);border-color:var(--accent);}
+.study .mix-footer {flex-shrink:0;padding-top:12px;}
+.study .mix-summary {align-items:center;margin-bottom:8px;}
+.study .selection {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:0;margin-right:8px;}
+.study .stew-gain {flex-shrink:0;white-space:nowrap;-unity-text-align:middle-right;}
+.study .mix-footer .button {margin-bottom:4px;}
+.study .brew-summary {align-items:center;margin-bottom:12px;}
+.study .brew-summary .icon {margin:0 0 8px 0;}
+.study .status {-unity-font-style:bold;margin-bottom:12px;}
+.study .readout {margin-bottom:8px;flex-wrap:wrap;}
+.study .odds {margin-top:20px;}
+.study Foldout {margin:8px 0;flex-shrink:0;}
+.study .unity-foldout__content {margin-left:0;padding-top:8px;}
+.study .unity-toggle__text {color:var(--text);font-size:var(--body);white-space:normal;}
+.study .odds-row {margin-bottom:8px;}
+.study .tabs {flex-shrink:0;flex-wrap:nowrap;align-items:stretch;margin-bottom:8px;}
+.study .tab {flex-grow:1;flex-shrink:1;flex-basis:0;padding:8px;min-width:0;}
+.study .legend {flex-shrink:0;margin-bottom:8px;}
+.study .tier-swatch {flex-grow:1; -unity-text-align:middle-center; font-size:var(--small);margin-right:4px;}
+.study .tier-1 {--tier-colour:#b86f50;}.study .tier-2 {--tier-colour:#6c7c9d;}.study .tier-3 {--tier-colour:#feae34;}.study .tier-4 {--tier-colour:#ed7614;}.study .tier-5 {--tier-colour:#0098dc;}.study .tier-6 {--tier-colour:#33984b;}.study .tier-7 {--tier-colour:#c42430;}.study .tier-8 {--tier-colour:#db3ffd;}
+.study .group-heading {margin-top:12px;margin-bottom:8px;flex-shrink:0;}
+.study .card {width:31%;margin:0 2% 10px 0;min-height:116px;padding:8px 3px;align-items:center;background-color:transparent;border-bottom-width:0;border-radius:0;}
+.study .boon {align-items:center;margin:12px 0;}
+.study .modal {position:absolute;left:0;right:0;top:0;bottom:0;align-items:center;justify-content:center;background-color:rgba(15,10,13,0.72);}
+.study .dialog {width:460px;max-width:92%;max-height:90%;padding:24px;}
+.study .dialog > Label {margin-bottom:12px;}
+.study .actions {justify-content:flex-end;margin-top:16px;}
+.study .actions .button {margin-left:8px;}
+.study .run-screen {position:absolute;left:24px;right:24px;top:92px;bottom:24px;}
+.study .location {align-self:flex-start;width:240px;}
+.study .hero-corner {position:absolute;left:0;bottom:0;width:440px;}
+.study .abilities {margin-bottom:8px;}
+.study .ability {align-items:center;padding:6px 8px;margin-right:8px;min-width:64px;}
+.study .circle {width:42px;height:42px;align-items:center;justify-content:center;}
+.study .circle .icon {margin:0;}
+.study .radial {position:absolute;left:0;right:0;top:0;bottom:0;}
+.study .auto {color:var(--muted);}
+.study .stats {flex-wrap:wrap;margin-top:8px;}
+.study .metric {flex-grow:1;margin-right:8px;margin-bottom:4px;}
+.study .journey {position:absolute;right:0;bottom:0;width:272px;}
+.study .journey .button {margin-top:4px;}
+.study.narrow .navigation {left:12px;right:12px;top:12px;}
+.study.narrow .nav-links > .button {margin-right:4px;padding:8px;}
+.study.narrow .nav-return {display:none;}
+.study.narrow .cauldron {left:12px;right:12px;top:72px;bottom:12px;padding:12px;}
+.study.narrow .page-heading {flex-direction:column;align-items:flex-start;margin-bottom:12px;}
+.study.narrow .title {font-size:var(--heading);margin-bottom:8px;}
+.study.narrow .eva {width:100%;}
+.study.narrow .eva-info {flex-grow:1;width:auto;}
+.study.narrow .workspace {flex-direction:column;}
+.study.narrow .column {width:100%;margin:0;flex-grow:1;flex-basis:0;}
+.study.narrow .food {width:33.333%;}
+.study.narrow .run-screen {left:12px;right:12px;top:72px;bottom:12px;}
+.study.narrow .hero-corner {width:100%;bottom:0;}
+.study.narrow .hero .heading {font-size:var(--body);}
+.study.narrow .abilities {justify-content:space-between;}
+.study.narrow .ability {min-width:0;padding:4px 3px;margin-right:0;flex-grow:1;}
+.study.narrow .ability .small {font-size:12px;}
+.study.narrow .hero .metric {width:29%;}
+.study.narrow .journey {bottom:292px;right:0;width:100%;}
+.study.narrow.large .journey {bottom:350px;}
+.study.narrow .location {width:210px;}
+/* Narrow inputs keep their own row; they must not collapse behind a translated label. */
+.study.narrow .filters {flex-direction:column;}
+.study.narrow .filters > .search {width:100%;margin-right:0;margin-bottom:8px;}
+.study.narrow .filters > DropdownField {width:100%;margin:0;}
+.study.narrow.large .food {width:50%;}
+.study .radial {--ring-color:var(--accent);--ring-track:var(--line);}
+.study .unity-foldout__toggle {background-color:transparent;min-height:44px;}
+.study.dark .unity-foldout__toggle > .unity-toggle__checkmark,.study.dark .unity-popup-field__arrow {-unity-background-image-tint-color:#efb984;}
+.study .return-death {position:absolute;right:0;top:0;background-color:var(--surface);padding:8px;min-height:44px;border-radius:0;}
+.study.narrow .return-death {display:none;}
+.study.narrow .journey {position:relative;bottom:auto;right:auto;width:100%;margin-bottom:8px;}
+.study.narrow.large .journey {bottom:auto;}
+.study.narrow .journey .stats {display:none;}
+.study.narrow .journey .heading {font-size:var(--body);margin-bottom:0;}
+.study.narrow .journey .button {min-height:44px;padding:4px;}
+.study.narrow .hero .between {flex-wrap:wrap;}
+.study.narrow .card {width:48%;}
+.study.narrow .ability .small {font-size:var(--small);}
+.study.narrow .ability {width:20%;flex-grow:0;}
+.study .hero .grow {flex-basis:0;flex-shrink:1;}
+.study.narrow .column > .heading {display:none;}
+.study.narrow .actions {flex-direction:column;align-items:stretch;}
+.study.narrow .actions .button {margin:4px 0 0 0;}
+.study .cauldron:disabled {opacity:1;}
+.study .tier-0 {--tier-colour:var(--line);}
+.study .nav-links > .button:disabled {background-color:var(--surface);opacity:0.65;}
+
+/* Autocast is a shape state, independent of translation length. */
+.study .ability {width:72px;flex-grow:0;}
+.study .autocast-mark {width:20px;height:20px;flex-shrink:0;margin-top:4px;--autocast-ink:var(--accent);}
+.study .autocast-mark.off {--autocast-ink:var(--muted);}
+
+
+/* Rarity is a labelled colour block; progress is independently readable below the count. */
+.study .rarity-badge {background-color:var(--tier-colour);color:#251b20;min-width:32px;padding:3px 5px;-unity-font-style:bold;-unity-text-align:middle-center;flex-shrink:0;}
+.study .rarity-badge.tier-0,.study .rarity-badge.tier-7 {color:#ffffff;}
+.study .card-identity {width:36px;height:36px;flex-shrink:0;align-items:center;justify-content:center;margin-bottom:4px;}
+.study .card-identity .icon {margin:0;}
+.study .card-name {margin-bottom:2px;}
+.study .card-progress-row {width:90%;align-items:center;margin-top:4px;margin-bottom:2px;}
+.study .rarity-star {width:12px;height:12px;flex-shrink:0;margin-right:4px;--star-colour:var(--tier-colour);}
+.study .collection-progress {flex-grow:1;flex-basis:0;height:7px;margin:0;background-color:var(--field);}
+.study .collection-progress .fill {background-color:var(--tier-colour);}
+
+.study .section-bonus {align-items:center;}
+
+.study.narrow .tab {padding:8px 4px;}
+/* Enlarged narrow layouts use equal full-width tabs rather than splitting words. */
+.study.narrow.large .tabs {flex-direction:column;}
+.study.narrow.large .tab {flex-basis:auto;width:100%;}
+
+.study .odds-heading {margin-bottom:8px;}
+.study .details-button {width:44px;min-width:44px;padding:4px;-unity-font-style:bold;font-size:var(--heading);}
+
+.study .tasting-eva {flex-shrink:0;margin-bottom:12px;}
+.study .tasting-eva .eva-info {width:auto;flex-grow:1;flex-shrink:1;min-width:0;}
+
+/* Shallow, square-edged controls. States change colour/depth, never their footprint. */
+.study.light {--button-edge:#98553f;--button-light:#f6d0aa;--button-pressed:#d69a69;--primary-hover:#845048;--primary-edge:#492b32;--primary-light:#ac7563;}
+.study.dark {--button-edge:#171316;--button-light:#695050;--button-pressed:#302628;--primary-hover:#ffd1a3;--primary-edge:#986344;--primary-light:#ffe0be;}
+.study .button {border-width:1px;border-bottom-width:3px;border-color:var(--button-edge);border-top-color:var(--button-light);}
+.study .button:hover {background-color:var(--hover);}
+.study .button:active {background-color:var(--button-pressed);}
+.study .button.primary,.study .button.active {border-color:var(--primary-edge);border-top-color:var(--primary-light);background-color:var(--accent);}
+.study .button.primary:hover,.study .button.active:hover {background-color:var(--primary-hover);}
+.study .button.primary:active,.study .button.active:active {background-color:var(--accent);}
+.study .button.quiet {background-color:var(--control);}
+.study .button.quiet:hover {background-color:var(--hover);}
+.study .button.quiet:active {background-color:var(--button-pressed);}
+/* Collection entries remain flat, without introducing framed cards inside the route. */
+.study .button.food,.study .button.card {border-width:1px;border-color:transparent;background-color:transparent;}
+.study .button.food:hover,.study .button.card:hover {background-color:var(--hover);}
+.study.keyboard .button.food:focus,.study.keyboard .button.card:focus {border-color:var(--text);}
+.study .button.food.selected {background-color:var(--selected);border-color:var(--accent);}
+.study .button.tab {margin-right:4px;}
+.study .button.tab.last-tab {margin-right:0;}
+.study.narrow.large .button.tab {margin-right:0;margin-bottom:4px;}
+.study.narrow.large .button.tab.last-tab {margin-bottom:0;}
+
+/* Pointer focus stays quiet; keyboard focus is a uniform outline, not a bevel. */
+.study.keyboard .button:focus {border-color:var(--text);}
+.study.light {--panel-edge:#955c49;--panel-light:#f4c99f;}
+.study.dark {--panel-edge:#674c45;--panel-light:#876657;}
+.study .surface {border-width:1px;border-color:var(--panel-edge);border-top-color:var(--panel-light);}
+.study .dialog {padding:20px;}
+.study .mix-dialog {width:500px;}
+.study .mix-dialog .confirmation-copy {margin-bottom:16px;}
+.study .mix-dialog .scroll {flex-grow:0;flex-basis:auto;}
+.study .confirmation-item {min-height:40px;align-items:center;padding:4px 0;flex-shrink:0;}
+.study .confirmation-name {flex-grow:1;flex-shrink:1;flex-basis:0;margin-right:12px;}
+.study .confirmation-count {white-space:nowrap;-unity-text-align:middle-right;}
+.study .confirmation-total {margin-top:16px;}
+.study .confirmation-total .heading {margin-bottom:0;}
+.study .mix-dialog .actions {margin-top:16px;}
+.study .mix-dialog .actions .button {flex-grow:1;flex-basis:0;margin-left:8px;}
+.study .mix-dialog .actions .button.cancel-action {margin-left:0;}
+.study.narrow .mix-dialog .actions .button {flex-basis:auto;margin-left:0;}
+
+/* Adventure HUD rhythm: 8px groups, 4px related lines; borders stay inside the footprint. */
+.study .run-screen {top:76px;}
+.study.narrow .run-screen {top:64px;}
+.study .abilities {width:100%;margin-bottom:8px;}
+.study .button.ability {width:auto;min-width:0;flex-grow:1;flex-shrink:1;flex-basis:0;margin-right:8px;padding:6px 4px;}
+.study .button.ability.last-ability {margin-right:0;}
+.study .hero .hero-name {margin-bottom:0;}
+.study .hero .stats,.study .journey .stats {margin-top:8px;}
+.study .hero .metric,.study .journey .metric {margin-bottom:0;margin-right:8px;}
+.study .hero .metric.last-metric,.study .journey .metric.last-metric {margin-right:0;}
+.study .journey > .heading {margin-bottom:0;}
+.study .journey .button {margin-top:8px;}
+.study .button.return-death {padding:8px 12px;min-height:44px;}
+.study .return-death .unity-toggle__input {background-color:transparent;border-width:0;align-items:center;}
+.study .return-death .unity-toggle__checkmark {width:18px;height:18px;margin:0 8px 0 0;border-width:1px;border-color:var(--line);border-radius:0;background-color:var(--field);-unity-background-image-tint-color:var(--on-accent);}
+.study .return-death:checked .unity-toggle__checkmark {background-color:var(--accent);border-color:var(--accent);}
+.study .return-death .unity-toggle__text {margin:0;padding:0;color:var(--text);}
+.study.narrow .button.ability {padding:4px 2px;margin-right:4px;}
+.study.narrow .button.ability.last-ability {margin-right:0;}
+.study.narrow .hero .metric {margin-bottom:4px;}
+.study .button.return-death {margin:0;}
+.study .return-death .unity-toggle__input {min-height:0;}
+
+/* Restore the original compact HUD information: icon stats and a two-line breakdown action. */
+.study .hero-content {align-items:center;}
+.study .hero-portrait-frame {width:72px;height:76px;flex-shrink:0;margin-right:8px;align-items:center;justify-content:center;border-width:1px;border-color:var(--panel-edge);border-top-color:var(--panel-light);background-color:var(--control);}
+.study .hero-portrait-frame .icon {margin:0;}
+.study .hero-icon-stats {flex-direction:row;flex-wrap:wrap;flex-grow:1;flex-shrink:1;flex-basis:0;}
+.study .hero-stat {width:33.333%;align-items:center;min-height:24px;}
+.study .hero-stat .icon {margin-right:4px;}
+.study .hero-stat Label {white-space:nowrap;}
+.study .hero > .health {margin-top:8px;margin-bottom:0;}
+.study .button.run-breakdown {position:absolute;right:0;bottom:0;align-items:center;min-width:184px;}
+.study .run-breakdown-dialog {width:520px;}
+.study .breakdown-summary {margin-bottom:12px;}
+.study .breakdown-resource {margin-bottom:16px;}
+.study .breakdown-resource > .row {align-items:center;margin-bottom:4px;}
+.study .breakdown-amounts {margin-left:32px;}
+.study.narrow .hero-content {flex-direction:column;align-items:flex-start;}
+.study.narrow .hero-portrait-frame {margin-right:0;margin-bottom:8px;}
+.study.narrow .hero-icon-stats {flex-basis:auto;width:100%;}
+.study.narrow .hero-stat {width:50%;min-height:26px;}
+.study.narrow .hero-corner {bottom:72px;}
+.study.narrow .button.run-breakdown {min-width:0;width:100%;}
+
+/* Compact perimeter cooldowns, with the game's existing echo automation marker. */
+.study .button.ability {width:58px;height:60px;flex-grow:0;flex-shrink:0;flex-basis:auto;padding:4px;border-width:0;}
+.study .ability > .icon {margin:0;}
+.study .border-progress {position:absolute;left:0;right:0;top:0;bottom:0;--ring-color:var(--accent);--ring-track:var(--line);}
+.study .ability > .ability-echo {position:absolute;right:3px;top:3px;margin:0;}
+.study .hero-corner {width:480px;}
+.study .hero-vitals {flex-grow:1;flex-shrink:1;min-width:0;}
+.study .hero-vital-row {justify-content:space-between;}
+.study .hero-vital-row .hero-stat {width:auto;}
+.study .hero-vitals .health {margin-top:6px;margin-bottom:0;}
+.study .hero-bottom-stats {justify-content:space-between;margin-top:8px;}
+.study .hero-bottom-stats .hero-stat {width:auto;}
+.study.narrow .hero-corner {width:100%;}
+.study.narrow .hero-content {flex-direction:row;align-items:center;}
+.study.narrow .hero-portrait-frame {width:56px;height:68px;margin-right:8px;margin-bottom:0;}
+.study.narrow .hero-portrait-frame .icon {width:48px;height:60px;}
+.study.narrow .hero-vital-row {flex-wrap:wrap;}
+.study.narrow .hero-vital-row .hero-stat {margin-right:6px;}
+.study.narrow .hero-bottom-stats {flex-wrap:wrap;justify-content:flex-start;}
+.study.narrow .hero-bottom-stats .hero-stat {margin-right:12px;margin-bottom:4px;}
+.study.narrow .button.ability {width:58px;height:60px;padding:4px;margin-right:4px;flex-grow:0;}
+
+/* Run HUD corrections: original compact route, external echo marker, compact resource ledger. */
+.study .location {width:190px;background-color:transparent;border-width:0;padding:0;}
+.study .route-progress {height:24px;justify-content:center;margin:0 12px 4px 0;}
+.study .route-progress .track {height:6px;margin:0 10px;}
+.study .route-progress .icon {position:absolute;top:0;margin:0;}
+.study .route-hero {left:0;}
+.study .route-reaper {right:-6px;}
+.study .location > Label {color:#fff1df;}
+.study .ability {overflow:visible;}
+.study .ability > .ability-echo {right:-10px;top:-12px;}
+.study .abilities {margin-top:12px;}
+.study .hero-below {margin-top:4px;}
+.study .run-breakdown-dialog {width:420px;padding:16px;}
+.study .breakdown-summary {margin-bottom:8px;}
+.study .breakdown-note {margin-bottom:12px;}
+.study .breakdown-resource {align-items:center;margin-bottom:12px;flex-shrink:0;}
+.study .breakdown-resource .grow > .strong {margin-bottom:2px;}
+.study .breakdown-resource .grow > .row {margin-bottom:0;}
+.study #run-breakdown-resources {margin-bottom:12px;}
+.study.narrow .location {width:190px;}
+.study.narrow .hero-vital-row {flex-wrap:nowrap;}
+.study.narrow .hero-vital-row .hero-stat {margin-right:0;}
+.study.narrow.large .hero-below {flex-wrap:wrap;}
+.study.narrow .run-breakdown-dialog {padding:12px;}
+.study.narrow .breakdown-resource > .icon {width:24px;height:24px;margin-right:6px;}
+
+.study .ability > .ability-echo {width:40px;height:40px;right:-14px;top:-16px;}
+
+/* Hero footprint follows text scale; narrow screens retain the available safe width. */
+.study .hero-corner {width:360px;max-width:100%;}
+.study.large .hero-corner {width:420px;}
+.study.narrow .hero-corner,.study.narrow.large .hero-corner {width:100%;}
+.study .hero-content {min-width:0;}
+.study .hero-vital-row .hero-stat {flex-shrink:0;}
+
+/* Original breakdown structure: broad three-column ledger with header and footer. */
+.study .breakdown-sheet {width:840px;height:400px;padding:12px;}
+.study.large .breakdown-sheet {width:1040px;height:470px;}
+.study .breakdown-header {align-items:center;flex-shrink:0;margin-bottom:12px;}
+.study .breakdown-rate {width:30%;}
+.study .breakdown-title {width:40%;margin:0;-unity-text-align:middle-center;}
+.study .breakdown-time {width:30%;-unity-text-align:middle-right;}
+.study #run-ledger {flex-grow:1;flex-shrink:1;min-height:0;}
+.study .run-ledger-grid {flex-direction:row;flex-wrap:wrap;}
+.study .ledger-entry {width:33.333%;min-width:0;min-height:66px;align-items:center;padding:8px 12px 8px 0;flex-shrink:0;}
+.study .ledger-entry .icon {margin-right:8px;}
+.study .ledger-values {flex-grow:1;flex-shrink:1;min-width:0;}
+.study .ledger-values Label {white-space:nowrap;}
+.study .breakdown-footer {flex-shrink:0;justify-content:space-between;align-items:flex-end;margin-top:12px;}
+.study .ledger-footer-left,.study .ledger-footer-right {flex-shrink:1;}
+.study .ledger-footer-right Label {-unity-text-align:middle-right;}
+.study.narrow .breakdown-sheet,.study.narrow.large .breakdown-sheet {width:94%;height:560px;max-height:90%;padding:12px;}
+.study.narrow .breakdown-header {flex-wrap:wrap;}
+.study.narrow .breakdown-rate {width:100%;margin-bottom:4px;}
+.study.narrow .breakdown-title {width:75%;-unity-text-align:middle-left;}
+.study.narrow .breakdown-time {width:25%;}
+.study.narrow .ledger-entry {width:100%;min-height:62px;padding-right:0;}
+.study.narrow .breakdown-footer {flex-direction:column;align-items:flex-start;}
+.study.narrow .ledger-footer-right {margin-top:4px;}
+.study.narrow .ledger-footer-right Label {-unity-text-align:middle-left;}
+
+/* Run progress sits beside Library, with larger aspect-preserved endpoint sprites. */
+.study .nav-links {align-items:center;}
+.study .nav-links .location {width:236px;margin-left:8px;flex-shrink:1;min-width:156px;align-self:center;}
+.study .route-progress {height:32px;margin:0 16px 2px 0;}
+.study .route-progress .track {height:8px;margin:0 14px;}
+.study .route-progress .icon {top:-2px;}
+.study .route-hero {left:-2px;}
+.study .route-reaper {right:-12px;}
+.study .location > Label {font-size:var(--body);}
+.study.narrow .location {width:236px;max-width:100%;}
+
+/* Original stacked retreat controls: primary-sized town action, smaller death action. */
+.study .navigation {align-items:flex-start;}
+.study .return-actions {align-items:flex-end;flex-shrink:0;margin-left:12px;}
+.study .button.retreat-action {min-height:44px;white-space:nowrap;}
+.study .button.death-return-action {min-height:28px;padding:3px 8px;margin-top:4px;font-size:var(--small);white-space:nowrap;}
+.study.narrow .return-actions {margin-left:4px;}
+.study.narrow .button.retreat-action {font-size:var(--small);padding:6px;white-space:normal;max-width:112px;}
+.study.narrow .button.death-return-action {font-size:12px;padding:3px 4px;white-space:normal;max-width:112px;}
+
+/* Match visible artwork rather than padded sprite rectangles (hero 20/32 high; reaper 33/64). */
+.study .route-progress {height:40px;}
+.study .route-progress .route-hero {width:64px;height:64px;left:-14px;top:-10px;}
+.study .route-progress .route-reaper {width:80px;height:80px;right:-22px;top:-23px;}
+
+/* Original reaper is mirrored; compensate its asymmetric transparent padding. */
+.study .route-progress .route-reaper {right:-33px;}
+
+/* Align the distance track with its numeric label; keep the endpoint unchanged. */
+.study .route-progress .track {margin-left:0;}

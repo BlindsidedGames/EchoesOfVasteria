@@ -21,6 +21,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             for (var i = 0; i < buttons.Count; i++)
             {
                 int index = i;

@@ -1,0 +1,44 @@
+--- original/Assets/Scripts/Steamworks.NET/SteamManager.cs
++++ disposable/Assets/Scripts/Steamworks.NET/SteamManager.cs
+@@ -60,7 +60,7 @@
+ 	}
+ #endif
+ 
+-	protected virtual void Awake() {
++	protected virtual void Awake() { if (true) { s_instance = this; DontDestroyOnLoad(gameObject); return; }
+ 		// Only one instance of SteamManager at a time!
+ 		if (s_instance != null) {
+ 			Destroy(gameObject);
+--- original/Assets/Scripts/Blindsided/UGS/UgsInitializer.cs
++++ disposable/Assets/Scripts/Blindsided/UGS/UgsInitializer.cs
+@@ -22,7 +22,7 @@
+         }
+ 
+         public static Task EnsureInitializedAsync()
+-        {
++        { if (true) return Task.CompletedTask;
+             // If already created and not faulted/canceled, reuse the task
+             if (_initTask == null || _initTask.IsCanceled || _initTask.IsFaulted)
+             {
+--- original/Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs
++++ disposable/Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs
+@@ -106,7 +106,7 @@
+         }
+ 
+         private async Task TryUploadAllAsync()
+-        {
++        { if (true) return;
+ #if UNITY_EDITOR
+             if (!UgsLeaderboardSettings.IsSubmissionEnabled)
+                 return;
+--- original/Assets/Scripts/Blindsided/UGS/UgsLeaderboardSettings.cs
++++ disposable/Assets/Scripts/Blindsided/UGS/UgsLeaderboardSettings.cs
+@@ -15,7 +15,7 @@
+         public static bool IsSubmissionEnabled
+         {
+             get
+-            {
++            { if (true) return false;
+ #if UNITY_EDITOR
+                 return EditorPrefs.GetBool(EditorPrefKey, false);
+ #else

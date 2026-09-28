@@ -44,6 +44,14 @@ namespace TimelessEchoes.Gear
                 return;
             }
             Instance = this;
+            // Analytics belongs to crafting, not to a particular window renderer.
+            // Keep it available in scenes whose legacy forge UI has been retired.
+            if (FindAnyObjectByType<ForgeAnalyticsService>() == null)
+            {
+                var analytics = new GameObject("Forge Analytics");
+                analytics.transform.SetParent(transform, false);
+                analytics.AddComponent<ForgeAnalyticsService>();
+            }
             if (equipment == null)
                 equipment = EquipmentController.Instance;
 

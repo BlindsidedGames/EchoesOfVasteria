@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
@@ -60,22 +61,25 @@ namespace Blindsided.SaveData.Migrations
                     return;
                 }
 
+                if (moveDef == null || atkDef == null)
+                {
+                    throw new InvalidOperationException(
+                        "Duck helmet sanitation cannot run until the Move Speed and Attack Rate stat definitions are available.");
+                }
+
                 // Remove Move Speed affix
-                if (moveDef != null)
-                    helm.affixes.RemoveAll(a => a != null && TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, moveDef));
+                helm.affixes.RemoveAll(a =>
+                    a != null && TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, moveDef));
 
                 // Reduce excessive Attack Rate
-                if (atkDef != null)
+                for (int i = 0; i < helm.affixes.Count; i++)
                 {
-                    for (int i = 0; i < helm.affixes.Count; i++)
+                    var a = helm.affixes[i];
+                    if (a == null) continue;
+                    if (TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, atkDef) && a.value > 1.5f)
                     {
-                        var a = helm.affixes[i];
-                        if (a == null) continue;
-                        if (TimelessEchoes.Gear.StatDefUtils.MatchesStatId(a.statId, atkDef) && a.value > 1.5f)
-                        {
-                            a.value = 1.2f;
-                            helm.affixes[i] = a;
-                        }
+                        a.value = 1.2f;
+                        helm.affixes[i] = a;
                     }
                 }
 

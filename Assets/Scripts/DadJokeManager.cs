@@ -52,22 +52,17 @@ namespace TimelessEchoes
             ShowJoke();
         }
 
+        public string NextJoke()
+        {
+            if (dadJokes.Count == 0) return "";
+            if (currentJokeIndex >= dadJokes.Count) { ShuffleJokes(); currentJokeIndex = 0; }
+            return dadJokes[currentJokeIndex++];
+        }
+
         private void ShowJoke()
         {
-            if (dadJokes.Count > 0 && jokeText != null)
-            {
-                if (currentJokeIndex >= dadJokes.Count)
-                {
-                    ShuffleJokes();
-                    currentJokeIndex = 0;
-                }
-
-                jokeText.text = dadJokes[currentJokeIndex];
-                currentJokeIndex++;
-            }
-
-            if (textBox != null)
-                textBox.SetActive(true);
+            if (jokeText != null) jokeText.text = NextJoke();
+            if (textBox != null) textBox.SetActive(true);
         }
 
         private void ShuffleJokes()

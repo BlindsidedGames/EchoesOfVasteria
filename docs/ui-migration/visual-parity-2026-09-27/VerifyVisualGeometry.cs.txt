@@ -1,0 +1,11 @@
+using System;using System.IO;using System.Linq;using System.Collections.Generic;using UnityEngine;using UnityEditor;using UnityEngine.UIElements;using TimelessEchoes.UI;using TimelessEchoes.UI.Toolkit;
+public static class VerifyVisualGeometry {
+ public static string Main(){if(!Application.isPlaying||Application.productName!="EOVUITKSpacingValidation")throw new Exception("Isolated play only");var lines=new List<string>();void Check(bool pass,string message){lines.Add((pass?"PASS ":"FAIL ")+message);}
+ foreach(var doc in UnityEngine.Object.FindObjectsByType<UIDocument>(FindObjectsInactive.Include)){
+ var root=doc.rootVisualElement;if(root==null)continue;
+ foreach(var grid in root.Query<ToolkitGrid>().ToList()) {var cells=grid.Children().ToArray();if(cells.Length==0)continue;int expected=Math.Min(6,cells.Length);Check(cells.Take(expected).All(c=>Mathf.Abs(c.layout.y-cells[0].layout.y)<.7f),doc.name+" "+grid.name+" first "+expected+" cells share a row");Check(cells.All(c=>c.layout.x>=-.7f&&c.layout.xMax<=grid.contentRect.width+.7f&&c.layout.yMax<=grid.contentRect.height+.7f),doc.name+" "+grid.name+" all "+cells.Length+" cells inside declared grid bounds");}
+ foreach(var e in root.Query<VisualElement>(className:"eov-forge-selection").ToList())Check(Mathf.Approximately(e.resolvedStyle.unitySliceScale,.5f),"Forge selector retains source PPU multiplier 2");
+ }
+ Check(!UnityEngine.Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include).Any(c=>c.enabled),"No legacy Canvas enabled");Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Steam and UGS remain offline");
+ string path="docs/ui-migration/visual-parity-2026-09-27/geometry-"+Screen.width+".txt";File.AppendAllLines(path,lines);return string.Join("\n",lines);
+ }}

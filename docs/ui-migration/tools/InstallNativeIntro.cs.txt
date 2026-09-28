@@ -1,0 +1,17 @@
+using System;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using TimelessEchoes.UI;
+public static class InstallNativeIntro {
+ public static string Main(){
+ if(Application.isPlaying||UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)throw new Exception("Clean Edit mode scene required");
+ var old=UnityEngine.Object.FindAnyObjectByType<IntroScreenController>(FindObjectsInactive.Include);if(!old)throw new Exception("Legacy intro controller missing");
+ var so=new SerializedObject(old);var root=(GameObject)so.FindProperty("introRoot").objectReferenceValue;var parent=old.transform;
+ var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Intro.prefab");if(!prefab)throw new Exception("Native intro prefab missing");
+ Undo.RecordObject(root,"Replace opening notice");root.SetActive(false);
+ var native=(GameObject)PrefabUtility.InstantiatePrefab(prefab,parent);Undo.RegisterCreatedObjectUndo(native,"Install native opening notice");
+ Undo.DestroyObjectImmediate(old);
+ EditorSceneManager.MarkSceneDirty(native.scene);if(!EditorSceneManager.SaveScene(native.scene))throw new Exception("Scene save failed");return "Native opening notice installed; existing completion preference retained";
+ }
+}

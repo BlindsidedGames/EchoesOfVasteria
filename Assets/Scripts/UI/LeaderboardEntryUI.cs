@@ -20,6 +20,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             // Ensure rich text is enabled for size tags on the name field.
             if (nameText != null)
             {

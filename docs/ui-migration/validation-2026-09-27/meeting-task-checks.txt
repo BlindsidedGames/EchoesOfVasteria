@@ -1,0 +1,35 @@
+PASS BarkleyMeetingTask: task spawns native presenter
+PASS BarkleyMeetingTask: arrival leaves conversation pending
+PASS BarkleyMeetingTask: dialogue line 0 retained
+PASS BarkleyMeetingTask: dialogue line 1 retained
+PASS BarkleyMeetingTask: dialogue line 2 retained
+PASS BarkleyMeetingTask: no completion before Close
+PASS BarkleyMeetingTask: Close runs existing task completion callback
+PASS FloraAndTillmanMeeting: task spawns native presenter
+PASS FloraAndTillmanMeeting: arrival leaves conversation pending
+PASS FloraAndTillmanMeeting: dialogue line 0 retained
+PASS FloraAndTillmanMeeting: dialogue line 1 retained
+PASS FloraAndTillmanMeeting: dialogue line 2 retained
+PASS FloraAndTillmanMeeting: dialogue line 3 retained
+PASS FloraAndTillmanMeeting: dialogue line 4 retained
+PASS FloraAndTillmanMeeting: no completion before Close
+PASS FloraAndTillmanMeeting: Close runs existing task completion callback
+PASS IvanMeetingTask: task spawns native presenter
+PASS IvanMeetingTask: arrival leaves conversation pending
+PASS IvanMeetingTask: dialogue line 0 retained
+PASS IvanMeetingTask: dialogue line 1 retained
+PASS IvanMeetingTask: dialogue line 2 retained
+PASS IvanMeetingTask: no completion before Close
+PASS IvanMeetingTask: Close runs existing task completion callback
+PASS OldTimerMeetingTask: task spawns native presenter
+PASS OldTimerMeetingTask: arrival leaves conversation pending
+PASS OldTimerMeetingTask: dialogue line 0 retained
+PASS OldTimerMeetingTask: dialogue line 1 retained
+PASS OldTimerMeetingTask: dialogue line 2 retained
+PASS OldTimerMeetingTask: no completion before Close
+PASS OldTimerMeetingTask: Close runs existing task completion callback
+PASS WitchMeetingTask: task spawns native presenter
+PASS WitchMeetingTask: arrival leaves conversation pending
+PASS WitchMeetingTask: dialogue line 0 retained
+PASS WitchMeetingTask: no completion before Close
+PASS WitchMeetingTask: Close runs existing task completion callback

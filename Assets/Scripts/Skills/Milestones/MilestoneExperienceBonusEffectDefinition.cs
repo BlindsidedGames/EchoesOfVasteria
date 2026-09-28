@@ -31,6 +31,8 @@ namespace TimelessEchoes.Skills
         [Tooltip("Label used when no skill name is available.")]
         private string fallbackSkillLabel = "this skill";
 
+        public Skill TargetSkill => overrideSkill;
+
         public override void Apply(MilestoneEffectContext context, float magnitude)
         {
             float clamped = Mathf.Max(0f, magnitude);

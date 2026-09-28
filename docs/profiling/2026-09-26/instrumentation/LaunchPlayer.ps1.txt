@@ -1,0 +1,10 @@
+$ErrorActionPreference='Stop'
+$playerAuditBase='C:/Users/mattr/AppData/Local/Temp/EOV-Profile-20260926'
+$env:EOV_AUDIT='1'
+$env:EOV_AUDIT_ROOT="$playerAuditBase/player-save"
+$env:EOV_AUDIT_OUTPUT='C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/profiling/2026-09-26/player'
+$env:EOV_AUDIT_BLOB='C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/Library/PerformanceAudit/original-live.bin'
+New-Item -ItemType Directory -Path $env:EOV_AUDIT_OUTPUT -Force | Out-Null
+$playerAuditProcess=Start-Process -FilePath "$playerAuditBase/Build/EovAudit.exe" -ArgumentList @('-screen-width','3840','-screen-height','2160','-screen-fullscreen','0','-logFile',"$playerAuditBase/player.log") -WindowStyle Hidden -PassThru
+[pscustomobject]@{Pid=$playerAuditProcess.Id;Started=(Get-Date).ToString('o');Executable="$playerAuditBase/Build/EovAudit.exe";RequestedWidth=3840;RequestedHeight=2160;Fullscreen=0;WindowStyle='Hidden';SaveRoot=$env:EOV_AUDIT_ROOT;Cloud='Steam bootstrap and UGS initialization/submission guarded in disposable copy'} | ConvertTo-Json | Set-Content "$env:EOV_AUDIT_OUTPUT/launch.json"
+Write-Output "Player started, PID $($playerAuditProcess.Id)"

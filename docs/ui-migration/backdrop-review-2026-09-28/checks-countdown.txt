@@ -1,0 +1,13 @@
+PASS countdown-start aspect-preserving images 15; mismatches 0
+PASS Countdown shrinks while timeScale is zero
+PASS countdown-middle aspect-preserving images 15; mismatches 0
+PASS wait aspect-preserving images 15; mismatches 0
+PASS wait-past-deadline aspect-preserving images 15; mismatches 0
+PASS Bubble is closed after the three-second deadline (checked on a subsequent frame)
+PASS expired aspect-preserving images 15; mismatches 0
+PASS Click on bubble dismisses early
+PASS click-close aspect-preserving images 15; mismatches 0
+PASS restart aspect-preserving images 15; mismatches 0
+PASS Next joke restarts countdown
+PASS restart-again aspect-preserving images 15; mismatches 0
+PASS close aspect-preserving images 15; mismatches 0

@@ -19,6 +19,7 @@ namespace TimelessEchoes.Tasks
         private bool isComplete;
 
         private float timer;
+        public float ProgressRemaining => TaskDuration > 0 ? Mathf.Clamp01((TaskDuration - timer) / TaskDuration) : 1;
 
         protected float TaskDuration => taskData != null ? taskData.taskDuration : 0f;
 
@@ -124,7 +125,7 @@ namespace TimelessEchoes.Tasks
 
         private void UpdateProgressBar()
         {
-            if (progressBar != null && TaskDuration > 0f)
+            if (progressBar != null && progressBar.enabled && TaskDuration > 0f)
                 progressBar.fillAmount = Mathf.Clamp01((TaskDuration - timer) / TaskDuration);
         }
 

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
+  m_Name: Prospector
+  m_EditorClassIdentifier: 
+  title: Prospector
+  description: 
+  buffIcon: {fileID: 21300000, guid: 6fd57534040cf974c9e014783e630ceb, type: 2}
+  durationType: 0
+  baseDuration: 120
+  baseCooldown: 60
+  baseEchoCount: 0
+  echoConfig:
+    capableSkills: []
+    echoType: 1
+  requiredQuest: {fileID: 11400000, guid: c6babf2197f857d4ba37644f409a1dd8, type: 2}
+  baseEffects:
+  - type: 15
+    value: 100
+  upgrades:
+  - quest: {fileID: 11400000, guid: 80c7f1f5474dc564593ce8896ebcd5b4, type: 2}
+    additionalEffects:
+    - type: 15
+      value: 25
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: c18fc0f89a18abf4db415e9d84e530d5, type: 2}
+    additionalEffects:
+    - type: 15
+      value: 25
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0
+  - quest: {fileID: 11400000, guid: 9759ec3c3efa315439100022e3ec1488, type: 2}
+    additionalEffects:
+    - type: 15
+      value: 25
+    durationDelta: 0
+    echoCountDelta: 0
+    cooldownDelta: 0

@@ -1,0 +1,32 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Vasteria.StyleLab;
+public class StyleTabGeometry {
+ public static string Main(string suffix) {
+  VasteriaStyleLab.OpenCauldron();
+  var root=Resources.FindObjectsOfTypeAll<VasteriaStyleLab>().Single().rootVisualElement;
+  int step=0; double due=EditorApplication.timeSinceStartup+0.6;
+  var lines=new List<string>();
+  EditorApplication.CallbackFunction tick=null;
+  tick=()=>{
+   if(EditorApplication.timeSinceStartup<due)return;
+   due=EditorApplication.timeSinceStartup+0.6;
+   try {
+    string tab=step%2==0?"Resources":"Eternal";
+    var selectors=new[]{"cauldron-heading","workspace","collection","collection-scroll","study-footer"};
+    lines.Add(tab+" "+string.Join("; ",selectors.Select(s=>s+"="+root.Q(className:s).layout.ToString())));
+    if(++step==4){EditorApplication.update-=tick;File.WriteAllLines("docs/ui-style-study-2026-09-27/tab-geometry-"+suffix+".txt",lines);return;}
+    var button=root.Query<Button>().ToList().Single(b=>b.text==(step%2==0?"Resources":"Eternal"));
+    typeof(Clickable).GetMethod("Invoke",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(button.clickable,new object[]{null});
+   }catch(Exception ex){EditorApplication.update-=tick;File.WriteAllText("docs/ui-style-study-2026-09-27/tab-geometry-"+suffix+".txt",ex.ToString());}
+  };
+  EditorApplication.update+=tick;
+  return "Measuring four settled collection tab layouts.";
+ }
+}

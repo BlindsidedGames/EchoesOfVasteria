@@ -1,0 +1,59 @@
+[
+  {
+    "name": "01-populated-run-graph",
+    "setup": "developed-copy",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "02-run-hover-breakdown",
+    "setup": "developed-copy",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "03-recovery-Corrupt",
+    "setup": "synthetic-dialog-only-no-recovery-action",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "03-recovery-Unavailable",
+    "setup": "synthetic-dialog-only-no-recovery-action",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "03-recovery-UnsupportedNewer",
+    "setup": "synthetic-dialog-only-no-recovery-action",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "04-cleanup",
+    "setup": "developed-copy",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1.0
+  },
+  {
+    "name": "05-recovery-loading-boundary",
+    "setup": "synthetic RequireRecovery(Corrupt) through actual Loading transition; no recovery action clicked; offline disposable copy",
+    "captured": true,
+    "width": 3840,
+    "height": 2160,
+    "timeScale": 1,
+    "finding": "Existing dialog extends beyond right edge even in Loading scene."
+  }
+]

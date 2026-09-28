@@ -36,11 +36,10 @@ namespace TimelessEchoes.Tasks
             if (resourceManager == null || taskData == null)
                 return;
 
-            var worldX = transform.position.x;
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
 
-            var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, worldX, associatedSkill);
+            var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, associatedSkill);
             // Batch ResourceManager notifications to coalesce UI refreshes into a single update
             resourceManager.BeginBatch();
             try
@@ -60,6 +59,9 @@ namespace TimelessEchoes.Tasks
                     if (buff != null)
                         final *= buff.ResourceGainMultiplier;
 
+                    // Gathering rewards share the existing batch and floating-text totals.
+                    double bonus = buff != null ? buff.GetResonanceBonus(taskData, ClaimedBy != null && ClaimedBy.IsEcho, final) : 0d;
+                    final += bonus;
                     resourceManager.Add(res.resource, final);
                     if (dropTotals.ContainsKey(res.resource))
                         dropTotals[res.resource] += final;
@@ -69,6 +71,8 @@ namespace TimelessEchoes.Tasks
                         dropOrder.Add(res.resource);
                     }
                 }
+                BuffManager.Instance?.RecordGatheringCompletion(taskData, ClaimedBy != null && ClaimedBy.IsEcho,
+                    dropTotals, dropOrder, resourceManager);
             }
             finally
             {

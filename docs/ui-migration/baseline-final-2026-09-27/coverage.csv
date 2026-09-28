@@ -1,0 +1,8 @@
+case,fixture,captured,review
+01-populated-run-graph,developed-copy,True,Reviewed contact sheet; presentation reference only.
+02-run-hover-breakdown,developed-copy,True,Recorded run hover visible; uses serialized runBars references.
+03-recovery-Corrupt,synthetic-dialog-only-no-recovery-action,True,"LIMITED: real recovery text/buttons visible, but forced in Main scene and extends off-screen. Loading-scene layout remains unvalidated."
+03-recovery-Unavailable,synthetic-dialog-only-no-recovery-action,True,"LIMITED: real recovery text/buttons visible, but forced in Main scene and extends off-screen. Loading-scene layout remains unvalidated."
+03-recovery-UnsupportedNewer,synthetic-dialog-only-no-recovery-action,True,"LIMITED: real recovery text/buttons visible, but forced in Main scene and extends off-screen. Loading-scene layout remains unvalidated."
+04-cleanup,developed-copy,True,Reviewed contact sheet; presentation reference only.
+05-recovery-loading-boundary,synthetic RequireRecovery(Corrupt) through actual Loading transition; no recovery action clicked; offline disposable copy,True,VALID existing defect: actual Loading transition still leaves recovery dialog outside right screen edge; no recovery action clicked.

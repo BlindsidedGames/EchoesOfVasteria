@@ -14,6 +14,7 @@ namespace TimelessEchoes.Upgrades
     /// </summary>
     public class RunResourceTrackerUI : MonoBehaviour
     {
+        [SerializeField] private TimelessEchoes.UI.Toolkit.ToolkitRunScreen nativeView;
         [SerializeField] private Transform slotParent;
         [SerializeField] private ResourceUIReferences slotPrefab;
         [SerializeField] private GameObject window;
@@ -53,6 +54,7 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public void BeginRun()
         {
+            nativeView?.HideDetails();
             amounts.Clear();
             bonusAmounts.Clear();
             ClearSlots();
@@ -69,7 +71,7 @@ namespace TimelessEchoes.Upgrades
 
         private void ClearSlots()
         {
-            UIUtils.ClearChildren(slotParent);
+            if (!nativeView) UIUtils.ClearChildren(slotParent);
         }
 
         private void OnResourceAdded(Resource resource, double amount, bool bonus)
@@ -114,6 +116,11 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public void ShowWindow()
         {
+            if (nativeView && nativeView.IsConfigured)
+            {
+                nativeView.ShowSummary(BuildSummaryText(), amounts, bonusAmounts);
+                return;
+            }
             if (slotParent == null || slotPrefab == null)
                 return;
             if (amounts.Count == 0)
@@ -166,11 +173,15 @@ namespace TimelessEchoes.Upgrades
 
         private void UpdateSummaryText()
         {
-            if (runSummaryText == null)
-                return;
+            if (runSummaryText == null) return;
+            runSummaryText.text = BuildSummaryText();
+            runSummaryText.gameObject.SetActive(true);
+        }
+
+        public string BuildSummaryText()
+        {
             var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            if (tracker == null)
-                return;
+            if (tracker == null) return string.Empty;
 
             var lines = new System.Collections.Generic.List<string>();
 
@@ -210,8 +221,7 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            runSummaryText.text = string.Join("\n", lines);
-            runSummaryText.gameObject.SetActive(true);
+            return string.Join("\n", lines);
         }
     }
 }

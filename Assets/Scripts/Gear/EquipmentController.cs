@@ -20,7 +20,8 @@ namespace TimelessEchoes.Gear
         [SerializeField] private List<string> slots = new() { "Weapon", "Helmet", "Chest", "Boots" };
 
         private readonly Dictionary<string, GearItem> equippedBySlot = new();
-		private bool equipmentLoaded;
+        private readonly HashSet<string> explicitlyReplacedSlots = new(StringComparer.Ordinal);
+        private bool equipmentLoaded;
 
         public event Action OnEquipmentChanged;
 
@@ -51,23 +52,46 @@ namespace TimelessEchoes.Gear
             return slot != null && equippedBySlot.TryGetValue(slot, out var item) ? item : null;
         }
 
-        public void Equip(GearItem item)
+        public bool Equip(GearItem item)
         {
+            if (item == null || string.IsNullOrWhiteSpace(item.slot))
+                return false;
+
+            var slot = item.slot;
+            var hadPrevious = equippedBySlot.TryGetValue(slot, out var previous);
+            equippedBySlot[slot] = item;
+            if (equipmentLoaded)
+                explicitlyReplacedSlots.Add(slot);
+
             try
             {
-                if (item == null || string.IsNullOrWhiteSpace(item.slot)) return;
-                equippedBySlot[item.slot] = item;
-                OnEquipmentChanged?.Invoke();
-                // Persist snapshot immediately (only after initial load) so save reflects latest equipment
+                // Stage the complete raw record before notifying listeners. If serialization fails,
+                // both the runtime item and the previously loaded record remain authoritative.
                 if (equipmentLoaded)
                     SaveState();
             }
             catch (Exception ex)
             {
-                var slotStr = item != null ? item.slot : "null";
-                var rarityStr = (item != null && item.rarity != null) ? item.rarity.name : "null";
-                Debug.LogError($"EquipmentController: Equip failed (slot='{slotStr}', rarity='{rarityStr}'). {ex}");
+                if (hadPrevious)
+                    equippedBySlot[slot] = previous;
+                else
+                    equippedBySlot.Remove(slot);
+                explicitlyReplacedSlots.Remove(slot);
+                var rarity = item.rarity != null ? item.rarity.name : "null";
+                Debug.LogError($"EquipmentController: Equip failed (slot='{slot}', rarity='{rarity}'). {ex}");
+                return false;
             }
+
+            try
+            {
+                OnEquipmentChanged?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"EquipmentController: Equipment-change notification failed for slot '{slot}'. {ex}");
+            }
+
+            return true;
         }
 
         public float GetTotalForStat(StatDefSO stat)
@@ -116,11 +140,16 @@ namespace TimelessEchoes.Gear
                 // Never overwrite existing saved gear with an empty/partial snapshot before we've loaded at least once
                 if (!equipmentLoaded)
                 {
-                    var existing = oracle.saveData?.EquipmentBySlot;
-                    if (existing != null && existing.Count > 0)
+                    var unloadedRecords = oracle.saveData?.EquipmentBySlot;
+                    if (unloadedRecords != null && unloadedRecords.Count > 0)
                         return;
                 }
-                var dict = new System.Collections.Generic.Dictionary<string, Blindsided.SaveData.GearItemRecord>();
+                var existingRecords = oracle.saveData?.EquipmentBySlot ??
+                                      new Dictionary<string, Blindsided.SaveData.GearItemRecord>();
+                // Unknown slots remain untouched. For known slots, resolved runtime values replace
+                // their matching fields below while unavailable rarity/affix records are merged back.
+                var dict = new Dictionary<string, Blindsided.SaveData.GearItemRecord>(existingRecords);
+                var committedReplacements = new List<string>();
                 foreach (var kv in equippedBySlot)
                 {
                     try
@@ -128,15 +157,35 @@ namespace TimelessEchoes.Gear
                         var slot = kv.Key;
                         var item = kv.Value;
                         if (item == null) continue;
+                        var matchingPairs = existingRecords
+                            .Where(pair => string.Equals(
+                                ResolveSlotName(pair.Value?.slot, pair.Key),
+                                slot,
+                                StringComparison.Ordinal))
+                            .ToList();
+                        var existingPair = matchingPairs.FirstOrDefault(pair =>
+                            string.Equals(pair.Key, slot, StringComparison.Ordinal));
+                        if (string.IsNullOrEmpty(existingPair.Key))
+                            existingPair = matchingPairs.FirstOrDefault();
+                        var explicitlyReplaced = explicitlyReplacedSlots.Contains(slot);
+                        var oldRecord = explicitlyReplaced ? null : existingPair.Value;
                         var rec = new Blindsided.SaveData.GearItemRecord
                         {
                             slot = slot,
-                            rarity = item.rarity != null ? item.rarity.name : null,
-                            affixes = new System.Collections.Generic.List<Blindsided.SaveData.GearAffixRecord>()
+                            rarity = item.rarity != null ? item.rarity.name : oldRecord?.rarity,
+                            affixes = new List<Blindsided.SaveData.GearAffixRecord>()
                         };
                         foreach (var a in item.affixes)
                         {
-                            if (a == null || a.stat == null) continue;
+                            if (a == null)
+                                continue;
+                            if (a.stat == null)
+                            {
+                                if (explicitlyReplaced)
+                                    throw new InvalidOperationException(
+                                        $"New equipment for slot '{slot}' contains an unresolved stat.");
+                                continue;
+                            }
                             // Compute quality (pre-floor normalized quantile t) from current saved value using linear normalization
                             double q = TimelessEchoes.Gear.StatRollMath.ToNormalizedQuantileLinear(a.stat, a.value, item.rarity);
                             rec.affixes.Add(new Blindsided.SaveData.GearAffixRecord
@@ -146,18 +195,58 @@ namespace TimelessEchoes.Gear
                                 // Intentionally omit legacy 'value' to stop writing it from 1.2.18+
                             });
                         }
+
+                        if (oldRecord?.affixes != null && item.rarity == null &&
+                            !string.IsNullOrWhiteSpace(oldRecord.rarity))
+                        {
+                            // Without the saved rarity definition, reconstructed values cannot apply
+                            // its floor correctly. Preserve the exact raw affix records until that
+                            // content is available again.
+                            rec.affixes = new List<Blindsided.SaveData.GearAffixRecord>(oldRecord.affixes);
+                        }
+                        else if (oldRecord?.affixes != null)
+                        {
+                            var resolvedIds = new HashSet<string>(
+                                item.affixes
+                                    .Where(affix => affix?.stat != null)
+                                    .Select(affix => GetCanonicalStatId(affix.stat))
+                                    .Where(statId => !string.IsNullOrWhiteSpace(statId)),
+                                StringComparer.OrdinalIgnoreCase);
+                            var allStats = AssetCache.GetAll<StatDefSO>(string.Empty);
+                            foreach (var oldAffix in oldRecord.affixes)
+                            {
+                                if (oldAffix == null)
+                                    continue;
+
+                                var oldStat = ResolveStat(allStats, oldAffix.statId);
+                                var canonicalOldId = GetCanonicalStatId(oldStat);
+                                if (!string.IsNullOrWhiteSpace(canonicalOldId) &&
+                                    resolvedIds.Contains(canonicalOldId))
+                                    continue;
+
+                                rec.affixes.Add(oldAffix);
+                            }
+                        }
+
+                        foreach (var matchingPair in matchingPairs)
+                            dict.Remove(matchingPair.Key);
                         dict[slot] = rec;
+                        if (explicitlyReplaced)
+                            committedReplacements.Add(slot);
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"EquipmentController: Failed to serialize equipment for slot '{kv.Key}'. {ex}");
+                        throw new InvalidOperationException(
+                            $"EquipmentController could not serialize slot '{kv.Key}'.",
+                            ex);
                     }
                 }
                 oracle.saveData.EquipmentBySlot = dict;
+                explicitlyReplacedSlots.ExceptWith(committedReplacements);
             }
             catch (Exception ex)
             {
-                Debug.LogError($"EquipmentController: SaveState failed. {ex}");
+                throw new InvalidOperationException("EquipmentController could not build a complete snapshot.", ex);
             }
         }
 
@@ -166,9 +255,17 @@ namespace TimelessEchoes.Gear
             if (oracle == null) return;
             try
             {
-                equippedBySlot.Clear();
+                equipmentLoaded = false;
+                var nextEquippedBySlot = new Dictionary<string, GearItem>();
                 var data = oracle.saveData.EquipmentBySlot;
-                if (data == null) return;
+                if (data == null)
+                {
+                    equippedBySlot.Clear();
+                    explicitlyReplacedSlots.Clear();
+                    OnEquipmentChanged?.Invoke();
+                    equipmentLoaded = true;
+                    return;
+                }
 
                 var allRarities = AssetCache.GetAll<RaritySO>("");
                 var allStats = AssetCache.GetAll<StatDefSO>("");
@@ -202,7 +299,7 @@ namespace TimelessEchoes.Gear
                             foreach (var ar in rec.affixes)
                             {
                                 if (ar == null) continue;
-                                var stat = allStats.FirstOrDefault(s => s != null && (s.id == ar.statId || s.name == ar.statId));
+                                var stat = ResolveStat(allStats, ar.statId);
                                 if (stat == null)
                                 {
                                     Debug.LogWarning($"EquipmentController: Stat '{ar.statId}' not found in Resources — affix skipped for slot '{resolvedSlot}'.");
@@ -229,19 +326,27 @@ namespace TimelessEchoes.Gear
                             }
                         }
                         if (!string.IsNullOrWhiteSpace(item.slot) && slots.Contains(item.slot))
-                            equippedBySlot[item.slot] = item;
+                            nextEquippedBySlot[item.slot] = item;
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"EquipmentController: Failed to reconstruct item for slot key '{kv.Key}'. {ex}");
+                        throw new InvalidOperationException(
+                            $"EquipmentController could not reconstruct slot key '{kv.Key}'.",
+                            ex);
                     }
                 }
+
+                equippedBySlot.Clear();
+                foreach (var pair in nextEquippedBySlot)
+                    equippedBySlot[pair.Key] = pair.Value;
+                explicitlyReplacedSlots.Clear();
                 OnEquipmentChanged?.Invoke();
                 equipmentLoaded = true;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"EquipmentController: LoadState failed. {ex}");
+                equipmentLoaded = false;
+                throw new InvalidOperationException("EquipmentController could not load a complete runtime state.", ex);
             }
         }
         #endregion
@@ -251,6 +356,23 @@ namespace TimelessEchoes.Gear
             if (string.IsNullOrWhiteSpace(slot)) return slot;
             if (slot == "Helm") return "Helmet";
             return slot;
+        }
+
+        private static StatDefSO ResolveStat(IEnumerable<StatDefSO> allStats, string idOrName)
+        {
+            if (allStats == null || string.IsNullOrWhiteSpace(idOrName))
+                return null;
+
+            return allStats.FirstOrDefault(stat =>
+                stat != null && (stat.id == idOrName || stat.name == idOrName));
+        }
+
+        private static string GetCanonicalStatId(StatDefSO stat)
+        {
+            if (stat == null)
+                return null;
+
+            return string.IsNullOrWhiteSpace(stat.id) ? stat.name : stat.id;
         }
 
         private string ResolveSlotName(string recordSlot, string dictKeySlot)
@@ -275,5 +397,3 @@ namespace TimelessEchoes.Gear
         }
     }
 }
-
-

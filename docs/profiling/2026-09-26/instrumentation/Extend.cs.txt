@@ -1,0 +1,39 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes;
+using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Skills;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.Gear;
+using TimelessEchoes.Gear.UI;
+using TimelessEchoes.UI;
+using TimelessEchoes.Upgrades;
+public static class ExtendAudit {
+ const BindingFlags F=BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static;
+ static object s;
+ static object Invoke(string n,params object[] args)=>s.GetType().GetMethod(n).Invoke(s,args);
+ static object Field(object o,string n)=>o.GetType().GetField(n,F).GetValue(o);
+ static object Call(object o,string n,params object[] args)=>o.GetType().GetMethods(F).First(m=>m.Name==n&&m.GetParameters().Length==args.Length).Invoke(o,args);
+ static void Add(string n,Action a,double sec=15,Action tick=null,double warm=5)=>Invoke("Add",n,a,sec,tick,warm);
+ static void Reset(string st,bool buffs=false)=>Invoke("Reset",st,buffs);
+ static void Panel(string n)=>Invoke("Panel",n);
+ static void Save(string name,object o){var t=AppDomain.CurrentDomain.GetAssemblies().First(a=>a.GetName().Name=="Newtonsoft.Json").GetType("Newtonsoft.Json.JsonConvert");File.WriteAllText("docs/profiling/2026-09-26/"+name+".json",(string)t.GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new[]{o}));}
+ public static object Main(){s=AppDomain.CurrentDomain.GetData("EOV_AUDIT");
+ Add("asset-catalog",()=>{Reset("developed");var d=Oracle.oracle.saveData;Save("progression-assets",new{skills=AssetDatabase.FindAssets("t:Skill").Select(g=>AssetDatabase.LoadAssetAtPath<Skill>(AssetDatabase.GUIDToAssetPath(g))).Where(x=>x!=null).Select(x=>new{x.name,x.skillName,path=AssetDatabase.GetAssetPath(x),unlocks=x.resourceUnlocks.Select(u=>new{task=u.task?.name,u.requiredLevel}).ToArray(),milestones=x.milestones.Where(m=>m!=null).Select(m=>new{m.name,m.UnlockLevel,mode=m.TierMode.ToString(),data=EditorJsonUtility.ToJson(m)}).ToArray()}).ToArray(),quests=Resources.LoadAll<TimelessEchoes.Quests.QuestData>("Quests").Select(q=>new{q.name,q.questId,q.npcId,path=AssetDatabase.GetAssetPath(q),requires=q.requiredQuests.Select(p=>p?.questId).ToArray(),q.unlockBuffSlots,q.unlockAutoBuffSlots,q.maxDistanceIncrease,requirements=q.requirements.Select(r=>new{type=r.type.ToString(),r.amount,r.meetNpcId,resource=r.resource?.name}).ToArray()}).ToArray(),d.SkillData,d.EquipmentBySlot,d.CauldronCardCounts,resourceAmounts=d.Resources,cauldron=EditorJsonUtility.ToJson(Resources.Load<CauldronConfig>("Cauldron/CauldronConfig")),forge=EditorJsonUtility.ToJson(CraftingService.Instance.Config),coreAssets=Resources.LoadAll<CoreSO>("Gear/Cores").Select(c=>new{c.name,data=EditorJsonUtility.ToJson(c)}).ToArray()});},2,null,1);
+ var maps=(System.Collections.Generic.List<MapGenerationButton>)Field(GameManager.Instance,"generationButtons");
+ foreach(var stage in new[]{"fresh","mid-proxy","developed","developed-loadout"})foreach(var map in maps){var st=stage;var m=map;string stem="map-"+m.Config.name+"-"+st;double began=0;bool logged=false;
+ Add(stem+"-creation",()=>{Reset(st=="fresh"?"fresh":"developed",st=="developed-loadout");if(st=="mid-proxy"){var d=Oracle.oracle.saveData;foreach(var p in d.SkillData.Values){p.Level=25;p.CurrentXP=0;p.Milestones.Clear();}d.CraftingMasteryLevel=25;d.CraftingMasteryXP=0;d.CauldronEvaLevel=25;d.CauldronEvaXp=0;d.CauldronCardCounts.Clear();d.EquipmentBySlot.Clear();d.General.MaxRunDistance=1000;Blindsided.EventHandler.LoadData();}began=Time.realtimeSinceStartupAsDouble;logged=false;m.Button.onClick.Invoke();Save(stem+"-profile",new{stage=st,naturalReachability=st=="mid-proxy"?"synthetic level-25 capability probe retaining developed quest flags; NOT a coherent natural save":st=="fresh"?"fresh stats; forced map selection may bypass unlock/season gates":"copied developed save; provenance not independently proven",snapshot=TimelessEchoes.Hero.HeroStatSystem.GetSnapshot(),Oracle.oracle.saveData.SkillData});},8,()=>{if(!logged&&!GameManager.Instance.RunLoadingActive){Save(stem+"-load",new{seconds=Time.realtimeSinceStartupAsDouble-began,GameManager.Instance.RunLoadingActive});logged=true;}},0);
+ Add(stem+"-early",()=>{},15,null,0);
+ Add(stem+"-later",()=>{},15,null,0);
+ Add(stem+"-return",()=>GameManager.Instance.AbandonRun(),5,null,0);
+ }
+ Add("post-map-town",()=>Reset("developed"),20);
+ return "Added catalog, 20 map configurations with creation/early/later/return captures, and post-cycle town";
+ }
+}

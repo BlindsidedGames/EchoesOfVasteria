@@ -21,6 +21,8 @@ namespace TimelessEchoes.Tasks
         private static readonly int[] CompletionThresholds = { 10, 100, 1_000, 10_000, 100_000 };
 
         public static event Action<TaskData, bool> ToggleChanged;
+        public static event Action WeightsChanged;
+        public static void NotifyWeightsChanged() => WeightsChanged?.Invoke();
 
         public static float GetEffectiveWeight(TaskData task, float worldX)
         {
@@ -40,6 +42,8 @@ namespace TimelessEchoes.Tasks
 
             var multiplier = GetProgressMultiplier(task);
             var weight = baseWeight * multiplier;
+            if (TimelessEchoes.Buffs.BuffManager.Instance != null)
+                weight *= TimelessEchoes.Buffs.BuffManager.Instance.GetGatheringWeightMultiplier(task);
 
             var effectiveMax = task.GetEffectiveMaxX();
             if (worldX > effectiveMax)

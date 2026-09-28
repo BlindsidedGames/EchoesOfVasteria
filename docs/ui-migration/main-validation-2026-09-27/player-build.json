@@ -1,0 +1,130 @@
+{
+  "status": "completed",
+  "buildId": "build_791dd1e993c2",
+  "result": "Succeeded",
+  "platform": "StandaloneWindows64",
+  "outputPath": "C:/Users/mattr/AppData/Local/Temp/EOV-UITK-PlayerValidation-20260927/EchoesUITK.exe",
+  "totalSizeBytes": 2217250004,
+  "buildTimeMs": 113843,
+  "totalWarnings": 31,
+  "totalErrors": 0,
+  "warnings": [
+    {
+      "message": "Pipeline: No RuntimePipelineConfig asset found (Project Settings > Pipeline > Runtime). Pipeline will be disabled in Player builds."
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Steamworks.NET\\SteamManager.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UniqueNameService.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\LocalProfile.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsInitializer.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsLeaderboardsReporter.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsLeaderboardSettings.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\Utilities\\FeedbackForm.cs"
+    },
+    {
+      "message": "warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used",
+      "file": "Assets\\Scripts\\UI\\UITicker.cs"
+    },
+    {
+      "message": "warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used",
+      "file": "Assets\\Scripts\\Blindsided\\Oracle.cs"
+    },
+    {
+      "message": "warning UDR0001: No method with RuntimeInitializeOnLoadMethod attribute",
+      "file": "Assets\\Scripts\\UI\\Toolkit\\ToolkitConsoleScreen.cs"
+    },
+    {
+      "message": "warning UDR0004: Non-static method subscribed to static event in Start is not deregistered. Deregister it in OnDisable.",
+      "file": "Assets\\TemporaryUITKPlayerValidation.cs"
+    },
+    {
+      "message": "warning UDR0004: Non-static method subscribed to static event in Initialize is not deregistered. Deregister it in OnDisable.",
+      "file": "Assets\\Scripts\\Gear\\ForgeSession.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Steamworks.NET\\SteamManager.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UniqueNameService.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\Utilities\\FeedbackForm.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\LocalProfile.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsLeaderboardsReporter.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsLeaderboardSettings.cs"
+    },
+    {
+      "message": "warning CS0162: Unreachable code detected",
+      "file": "Assets\\Scripts\\Blindsided\\UGS\\UgsInitializer.cs"
+    },
+    {
+      "message": "warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used",
+      "file": "Assets\\Scripts\\UI\\UITicker.cs"
+    },
+    {
+      "message": "warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used",
+      "file": "Assets\\Scripts\\Blindsided\\Oracle.cs"
+    },
+    {
+      "message": "warning UDR0001: No method with RuntimeInitializeOnLoadMethod attribute",
+      "file": "Assets\\Scripts\\UI\\Toolkit\\ToolkitConsoleScreen.cs"
+    },
+    {
+      "message": "warning UDR0004: Non-static method subscribed to static event in Start is not deregistered. Deregister it in OnDisable.",
+      "file": "Assets\\TemporaryUITKPlayerValidation.cs"
+    },
+    {
+      "message": "warning UDR0004: Non-static method subscribed to static event in Initialize is not deregistered. Deregister it in OnDisable.",
+      "file": "Assets\\Scripts\\Gear\\ForgeSession.cs"
+    },
+    {
+      "message": "Shader warning in 'MPUI/Basic Procedural Image': Output value 'vert' is not completely initialized at Assets/MPUIKit/Runtime/Resources/Shaders/MPImageBasic.shader(284) (on dx11)\n\nCompiling Subshader: 0, Pass: Default, Vertex program with CHAMFER_BOX STROKE\nPlatform defines: SHADER_API_DESKTOP UNITY_ENABLE_DETAIL_NORMALMAP UNITY_ENABLE_REFLECTION_BUFFERS UNITY_LIGHTMAP_FULL_HDR UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_PBS_USE_BRDF1 UNITY_PLATFORM_SUPPORTS_DEPTH_FETCH UNITY_SPECCUBE_BLENDING UNITY_SPECCUBE_BOX_PROJECTION UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS\nDisabled keywords: CIRCLE NSTAR_POLYGON OUTLINED OUTLINED_STROKE PARALLELOGRAM RECTANGLE SHADER_API_GLES30 SHADER_API_GLES31 SHADER_API_GLES32 TRIANGLE UNITY_ASTC_NORMALMAP_ENCODING UNITY_COLORSPACE_GAMMA UNITY_FRAMEBUFFER_FETCH_AVAILABLE UNITY_HARDWARE_TIER1 UNITY_HARDWARE_TIER2 UNITY_HARDWARE_TIER3 UNITY_LIGHTMAP_DLDR_ENCODING UNITY_LIGHTMAP_RGBM_ENCODING UNITY_METAL_SHADOWS_USE_POINT_FILTERING UNITY_NO_DXT5nm UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF2 UNITY_PBS_USE_BRDF3 UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION UNITY_UI_ALPHACLIP UNITY_UI_CLIP_RECT UNITY_UNIFIED_SHADER_PRECISION_MODEL UNITY_VIRTUAL_TEXTURING"
+    },
+    {
+      "message": "Shader warning in 'MPUI/Basic Procedural Image': Output value 'vert' is not completely initialized at Assets/MPUIKit/Runtime/Resources/Shaders/MPImageBasic.shader(284) (on dx12)\n\nCompiling Subshader: 0, Pass: Default, Vertex program with CIRCLE\nPlatform defines: SHADER_API_DESKTOP UNITY_ENABLE_DETAIL_NORMALMAP UNITY_ENABLE_REFLECTION_BUFFERS UNITY_LIGHTMAP_FULL_HDR UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_PBS_USE_BRDF1 UNITY_PLATFORM_SUPPORTS_DEPTH_FETCH UNITY_SPECCUBE_BLENDING UNITY_SPECCUBE_BOX_PROJECTION UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS\nDisabled keywords: CHAMFER_BOX NSTAR_POLYGON OUTLINED OUTLINED_STROKE PARALLELOGRAM RECTANGLE SHADER_API_GLES30 SHADER_API_GLES31 SHADER_API_GLES32 STROKE TRIANGLE UNITY_ASTC_NORMALMAP_ENCODING UNITY_COLORSPACE_GAMMA UNITY_FRAMEBUFFER_FETCH_AVAILABLE UNITY_HARDWARE_TIER1 UNITY_HARDWARE_TIER2 UNITY_HARDWARE_TIER3 UNITY_LIGHTMAP_DLDR_ENCODING UNITY_LIGHTMAP_RGBM_ENCODING UNITY_METAL_SHADOWS_USE_POINT_FILTERING UNITY_NO_DXT5nm UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF2 UNITY_PBS_USE_BRDF3 UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION UNITY_UI_ALPHACLIP UNITY_UI_CLIP_RECT UNITY_UNIFIED_SHADER_PRECISION_MODEL UNITY_VIRTUAL_TEXTURING"
+    },
+    {
+      "message": "Shader warning in 'TextMeshPro/Mobile/Distance Field': #pragma enable_d3d11_debug_symbols has been deprecated, instead please use #pragma enable_debug_symbols at line 84"
+    },
+    {
+      "message": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria\\Library\\Bee\\artifacts\\WinPlayerBuildProgram\\il2cppOutput\\cpp: [Unity.TextMeshPro] - System.Void TMPro.TMP_TextParsingUtilities::.cctor() - Method was given it's own cpp file because it is large and costly to compile"
+    },
+    {
+      "message": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria\\Library\\Bee\\artifacts\\WinPlayerBuildProgram\\il2cppOutput\\cpp: [Unity.TextMeshPro] - System.Void TMPro.TextMeshPro::GenerateTextMesh() - Method was given it's own cpp file because it is large and costly to compile"
+    },
+    {
+      "message": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria\\Library\\Bee\\artifacts\\WinPlayerBuildProgram\\il2cppOutput\\cpp: [Unity.TextMeshPro] - System.Void TMPro.TextMeshProUGUI::GenerateTextMesh() - Method was given it's own cpp file because it is large and costly to compile"
+    }
+  ]
+}

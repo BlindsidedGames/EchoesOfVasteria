@@ -1,0 +1,25 @@
+PASS Quest companion routes to native inventory
+PASS Legacy inventory stays hidden
+PASS Native inventory has no Canvas graphics
+PASS Reference and native resource counts match (69)
+PASS All resource quantities match existing formatting
+PASS All unlocked/unknown icons match
+PASS All tier borders match
+PASS All tier backgrounds match
+PASS Six columns retained
+PASS Original 26 by 32 slot geometry retained
+PASS Existing Alter Echo highlight route selects native resource
+PASS Native selection visible
+PASS Highlight scrolls to lower resource
+PASS Timed selection expires using scaled game time
+PASS Selection expiry keeps resource title like original
+PASS Inventory event refreshes formatted amount
+PASS Forge opens Info with inventory hidden
+PASS Forge Inventory toggle opens native companion
+PASS Forge Info toggle closes native companion
+PASS Standalone inventory route opens
+PASS 25 cycles retain one inventory tree
+PASS One inventory subscription after cycles
+PASS Inventory subscription removed when hidden
+PASS Temporary resource amount restored
+PASS Resource tests remain offline

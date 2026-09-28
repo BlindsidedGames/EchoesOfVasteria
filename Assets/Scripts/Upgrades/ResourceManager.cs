@@ -220,7 +220,9 @@ namespace TimelessEchoes.Upgrades
         {
             if (oracle == null) return;
             var existing = oracle.saveData.Resources ?? new Dictionary<string, GameData.ResourceEntry>();
-            var dict = new Dictionary<string, GameData.ResourceEntry>();
+            // Keep records for content that is temporarily unavailable or renamed. Known runtime
+            // resources overwrite their entries below; unknown keys remain recoverable.
+            var dict = new Dictionary<string, GameData.ResourceEntry>(existing);
             foreach (var pair in amounts)
             {
                 if (pair.Key == null) continue;
@@ -252,7 +254,9 @@ namespace TimelessEchoes.Upgrades
 
             oracle.saveData.Resources = dict;
 
-            var stats = new Dictionary<string, GameData.ResourceRecord>();
+            var stats = oracle.saveData.ResourceStats != null
+                ? new Dictionary<string, GameData.ResourceRecord>(oracle.saveData.ResourceStats)
+                : new Dictionary<string, GameData.ResourceRecord>();
             foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
             {
                 if (res == null) continue;
@@ -273,23 +277,12 @@ namespace TimelessEchoes.Upgrades
             oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
             EnsureLookup();
-            // purge legacy disciple keys that do not map to resources or are disabled
-            var toRemove = new List<string>();
-            foreach (var key in oracle.saveData.Disciples.Keys)
-            {
-                if (!oracle.saveData.Resources.ContainsKey(key))
-                {
-                    toRemove.Add(key);
-                    continue;
-                }
-
-                if (lookup.TryGetValue(key, out var res) && res != null && res.DisableAlterEcho)
-                    toRemove.Add(key);
-            }
-            foreach (var k in toRemove)
-                oracle.saveData.Disciples.Remove(k);
+            // Disciple records may belong to content that is temporarily disabled, renamed, or not
+            // installed in this build. Runtime systems ignore those records; retaining them prevents
+            // a later autosave from permanently erasing progression that can become valid again.
             amounts.Clear();
             unlocked.Clear();
+            tiers.Clear();
             foreach (var pair in oracle.saveData.Resources)
                 if (lookup.TryGetValue(pair.Key, out var res) && res != null)
                 {

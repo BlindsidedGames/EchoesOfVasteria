@@ -13,7 +13,6 @@ namespace TimelessEchoes.Gear.UI
     public class ConversionPipeline
     {
         public ConversionType Type { get; private set; }
-        public CraftSection2x1UIReferences UISection { get; private set; }
 
         // Cost formula delegates
         public Func<ResourceManager, CoreSO, bool> CanPerform { get; private set; }
@@ -28,13 +27,11 @@ namespace TimelessEchoes.Gear.UI
         /// </summary>
         public ConversionPipeline(
             ConversionType type,
-            CraftSection2x1UIReferences uiSection,
             Func<ResourceManager, CoreSO, bool> canPerform,
             Func<ResourceManager, CoreSO, double, double> getMaxAmount,
             Action<ResourceManager, CoreSO, double, Dictionary<Resource, double>> execute)
         {
             Type = type;
-            UISection = uiSection;
             CanPerform = canPerform;
             GetMaxAmount = getMaxAmount;
             Execute = execute;

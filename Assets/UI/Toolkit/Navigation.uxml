@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="navigation-bar" class="eov-navigation-bar">
+        <ui:VisualElement name="navigation-buttons" class="eov-navigation-buttons" />
+        <ui:VisualElement name="navigation-context" class="eov-navigation-context" />
+        <ui:VisualElement class="eov-navigation-spacer" picking-mode="Ignore" />
+        <ui:VisualElement name="navigation-close" class="eov-navigation-right" />
+    </ui:VisualElement>
+    <ui:VisualElement name="navigation-popup" class="eov-navigation-popup" />
+</ui:UXML>

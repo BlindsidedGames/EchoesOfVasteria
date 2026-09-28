@@ -2,159 +2,178 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blindsided.SaveData;
-using Blindsided.Utilities;
-using TimelessEchoes.Buffs;
-using TimelessEchoes.Quests;
-using TimelessEchoes.Upgrades;
 
 namespace Blindsided.SaveData.Migrations
 {
     /// <summary>
-    /// For versions >= 1.2.16: Sanitize Cauldron card counts by capping RES:/BUFF: cards at
-    /// their maximum tier thresholds, accumulating any overflow, and redistributing overflow
-    /// into available non-maxed cards. Any remainder is distributed into Infinity (INF:) cards
-    /// if present. Idempotent.
+    /// Caps legacy resource and buff cards at their historical maxima, then moves every excess
+    /// card into existing card capacity or canonical Infinity cards without consulting assets.
     /// </summary>
     internal sealed class Migration_CauldronOverflowRedistribution : ISaveMigration
     {
+        private const int ResourceCardMaximum = 500;
+        private const int BuffCardMaximum = 300;
+
+        private static readonly string[] CanonicalInfinityIds =
+        {
+            "INF:AttackRate",
+            "INF:CritChance",
+            "INF:CritDamage",
+            "INF:Damage",
+            "INF:Defense",
+            "INF:HealthRegen",
+            "INF:MaxHealth",
+            "INF:MoveSpeed"
+        };
+
         public int? TargetSchema => null;
         public string TargetVersion => "1.2.17";
         public string Id => "CauldronOverflowRedistribution";
 
         public void Apply(GameData data)
         {
-            if (data == null) return;
-            data.CauldronCardCounts ??= new Dictionary<string, int>();
-
-            // Load thresholds from configured CauldronConfig if available; otherwise fallback to defaults
-            var cfg = AssetCache.GetAll<CauldronConfig>(string.Empty)?.FirstOrDefault(c => c != null);
-            var resThresholds = cfg != null && cfg.resourceTierThresholds != null && cfg.resourceTierThresholds.Length > 0
-                ? cfg.resourceTierThresholds
-                : new int[8] { 1, 5, 20, 50, 100, 200, 350, 500 };
-            var buffThresholds = cfg != null && cfg.buffTierThresholds != null && cfg.buffTierThresholds.Length > 0
-                ? cfg.buffTierThresholds
-                : new int[8] { 1, 3, 10, 25, 50, 100, 200, 300 };
-
-            var counts = data.CauldronCardCounts;
-
-            // Step 1: Cap RES:/BUFF: at their max and accumulate overflow
-            long overflow = 0;
-            // Enumerate a copy of keys to allow in-place updates
-            var keys = counts.Keys.ToList();
-            foreach (var key in keys)
-            {
-                if (string.IsNullOrWhiteSpace(key)) continue;
-                if (!(key.StartsWith("RES:") || key.StartsWith("BUFF:"))) continue;
-
-                var value = counts.TryGetValue(key, out var v) ? v : 0;
-                if (value <= 0) continue;
-
-                int maxAllowed;
-                if (key.StartsWith("RES:"))
-                    maxAllowed = resThresholds.Length > 0 ? resThresholds[resThresholds.Length - 1] : value;
-                else
-                    maxAllowed = buffThresholds.Length > 0 ? buffThresholds[buffThresholds.Length - 1] : value;
-
-                if (value > maxAllowed)
-                {
-                    overflow += (value - maxAllowed);
-                    counts[key] = maxAllowed;
-                }
-            }
-
-            if (overflow <= 0)
-                return; // nothing to redistribute
-
-            // Step 2: Build available, non-maxed RES:/BUFF: ids and their capacity to receive
-            var capacities = new List<(string id, int room)>();
-
-            // Resources: unlocked (Earned) and not DisableAlterEcho
-            foreach (var res in AssetCache.GetAll<Resource>(string.Empty) ?? Array.Empty<Resource>())
-            {
-                if (res == null || res.DisableAlterEcho) continue;
-                var resName = res.name;
-                if (string.IsNullOrWhiteSpace(resName)) continue;
-                // Unlocked check via save data
-                var isUnlocked = data.Resources != null && data.Resources.TryGetValue(resName, out var rec) && rec != null && rec.Earned;
-                if (!isUnlocked) continue;
-
-                var id = $"RES:{resName}";
-                var current = counts.TryGetValue(id, out var c) ? c : 0;
-                var maxAllowed = resThresholds.Length > 0 ? resThresholds[resThresholds.Length - 1] : int.MaxValue;
-                var room = Math.Max(0, maxAllowed - current);
-                if (room > 0)
-                    capacities.Add((id, room));
-            }
-
-            // Buffs: requiredQuest must be completed (if any)
-            foreach (var buff in AssetCache.GetAll<BuffRecipe>(string.Empty) ?? Array.Empty<BuffRecipe>())
-            {
-                if (buff == null) continue;
-                var buffName = buff.name;
-                if (string.IsNullOrWhiteSpace(buffName)) continue;
-                var required = buff.requiredQuest;
-                bool unlocked = required == null;
-                if (!unlocked)
-                {
-                    var qid = required != null ? required.questId : null;
-                    if (string.IsNullOrEmpty(qid)) unlocked = true;
-                    else
-                    {
-                        data.Quests ??= new Dictionary<string, GameData.QuestRecord>();
-                        unlocked = data.Quests.TryGetValue(qid, out var qr) && qr != null && qr.Completed;
-                    }
-                }
-                if (!unlocked) continue;
-
-                var id = $"BUFF:{buffName}";
-                var current = counts.TryGetValue(id, out var c) ? c : 0;
-                var maxAllowed = buffThresholds.Length > 0 ? buffThresholds[buffThresholds.Length - 1] : int.MaxValue;
-                var room = Math.Max(0, maxAllowed - current);
-                if (room > 0)
-                    capacities.Add((id, room));
-            }
-
-            // Deterministic ordering: by id ascending
-            capacities.Sort((a, b) => string.CompareOrdinal(a.id, b.id));
-
-            // Step 3: Fill available capacities in order
-            for (int i = 0; i < capacities.Count && overflow > 0; i++)
-            {
-                var cap = capacities[i];
-                if (cap.room <= 0) continue;
-                var take = (int)Math.Min((long)cap.room, overflow);
-                if (take <= 0) continue;
-                var cur = counts.TryGetValue(cap.id, out var c) ? c : 0;
-                counts[cap.id] = cur + take;
-                overflow -= take;
-            }
-
-            if (overflow <= 0)
+            if (data == null)
                 return;
 
-            // Step 4: Distribute any remainder into Infinity cards (INF:<Stat>) if present
-            var infinityIds = new List<string>();
-            foreach (var inf in AssetCache.GetAll<InfinityCauldronStatSO>("Infinity") ?? Array.Empty<InfinityCauldronStatSO>())
+            data.CauldronCardCounts ??= new Dictionary<string, int>();
+            var counts = data.CauldronCardCounts;
+            var cappedCards = new List<CappedCard>();
+            long overflow = 0;
+
+            foreach (var id in counts.Keys.OrderBy(id => id, StringComparer.Ordinal).ToList())
             {
-                if (inf == null) continue;
-                infinityIds.Add($"INF:{inf.Stat}");
+                if (!TryGetMaximum(id, out var maximum) || counts[id] <= maximum)
+                    continue;
+
+                var excess = counts[id] - maximum;
+                counts[id] = maximum;
+                cappedCards.Add(new CappedCard(id, excess));
+                overflow += excess;
             }
 
-            if (infinityIds.Count == 0)
-                return; // No Infinity available; leave overflow discarded by design
+            if (overflow == 0)
+                return;
 
-            // Distribute evenly across Infinity ids to avoid hot loops
-            var n = infinityIds.Count;
-            var per = (int)(overflow / n);
-            var rem = (int)(overflow % n);
-            for (int i = 0; i < n; i++)
+            overflow = FillExistingCardCapacity(counts, overflow);
+            overflow = DistributeToInfinityCards(counts, overflow);
+            overflow = RestoreUndistributedCards(counts, cappedCards, overflow);
+
+            if (overflow != 0)
+                throw new InvalidOperationException("Cauldron overflow migration could not preserve every card.");
+        }
+
+        private static long FillExistingCardCapacity(Dictionary<string, int> counts, long overflow)
+        {
+            foreach (var id in counts.Keys.OrderBy(id => id, StringComparer.Ordinal).ToList())
             {
-                var add = per + (i < rem ? 1 : 0);
-                if (add <= 0) continue;
-                var id = infinityIds[i];
-                var cur = counts.TryGetValue(id, out var c) ? c : 0;
-                counts[id] = cur + add;
+                if (overflow == 0)
+                    break;
+                if (!TryGetMaximum(id, out var maximum))
+                    continue;
+
+                var current = counts[id];
+                if (current < 0 || current >= maximum)
+                    continue;
+
+                var added = (int)Math.Min((long)maximum - current, overflow);
+                counts[id] = current + added;
+                overflow -= added;
             }
+
+            return overflow;
+        }
+
+        private static long DistributeToInfinityCards(Dictionary<string, int> counts, long overflow)
+        {
+            var infinityIds = new SortedSet<string>(CanonicalInfinityIds, StringComparer.Ordinal);
+            foreach (var id in counts.Keys)
+            {
+                if (id != null && id.StartsWith("INF:", StringComparison.Ordinal) && id.Length > 4)
+                    infinityIds.Add(id);
+            }
+
+            var available = infinityIds
+                .Where(id => !counts.TryGetValue(id, out var count) || count < int.MaxValue)
+                .ToList();
+
+            while (overflow > 0 && available.Count > 0)
+            {
+                var share = Math.Max(1L, overflow / available.Count);
+                var madeProgress = false;
+
+                for (var index = available.Count - 1; index >= 0 && overflow > 0; index--)
+                {
+                    var id = available[index];
+                    var current = counts.TryGetValue(id, out var count) ? count : 0;
+                    var room = (long)int.MaxValue - current;
+                    if (room <= 0)
+                    {
+                        available.RemoveAt(index);
+                        continue;
+                    }
+
+                    var added = Math.Min(Math.Min(room, share), overflow);
+                    counts[id] = (int)(current + added);
+                    overflow -= added;
+                    madeProgress = true;
+
+                    if (added == room)
+                        available.RemoveAt(index);
+                }
+
+                if (!madeProgress)
+                    break;
+            }
+
+            return overflow;
+        }
+
+        private static long RestoreUndistributedCards(
+            Dictionary<string, int> counts,
+            IReadOnlyList<CappedCard> cappedCards,
+            long overflow)
+        {
+            foreach (var card in cappedCards)
+            {
+                if (overflow == 0)
+                    break;
+
+                var restored = (int)Math.Min(card.Excess, overflow);
+                counts[card.Id] += restored;
+                overflow -= restored;
+            }
+
+            return overflow;
+        }
+
+        private static bool TryGetMaximum(string id, out int maximum)
+        {
+            if (id != null && id.StartsWith("RES:", StringComparison.Ordinal))
+            {
+                maximum = ResourceCardMaximum;
+                return true;
+            }
+
+            if (id != null && id.StartsWith("BUFF:", StringComparison.Ordinal))
+            {
+                maximum = BuffCardMaximum;
+                return true;
+            }
+
+            maximum = 0;
+            return false;
+        }
+
+        private readonly struct CappedCard
+        {
+            public CappedCard(string id, int excess)
+            {
+                Id = id;
+                Excess = excess;
+            }
+
+            public string Id { get; }
+            public int Excess { get; }
         }
     }
 }

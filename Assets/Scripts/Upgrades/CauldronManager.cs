@@ -118,6 +118,8 @@ namespace TimelessEchoes.Upgrades
             public int aeCombat;
         }
 
+        public TastingStats CurrentStats => GetStatsSnapshot();
+
         private TastingStats GetStatsSnapshot()
         {
             // Report persisted totals, not per-session
@@ -477,7 +479,7 @@ namespace TimelessEchoes.Upgrades
             return stewGained;
         }
 
-        private double GetStewCostPerRoll()
+        public double GetStewCostPerRoll()
         {
             var baseCost = config != null ? (double)config.stewPerRoll : 1d;
             var extra = GetCauldronExtraStewPerTaste();

@@ -18,6 +18,8 @@ namespace TimelessEchoes.NpcGeneration
 
         private ResourceManager resourceManager;
         private bool setup;
+        private GameData boundSaveData;
+        private bool suppressDisableSave;
 
         private double stored;
         private double totalCollected;
@@ -41,7 +43,7 @@ namespace TimelessEchoes.NpcGeneration
         public void UpdateRate(double rate)
         {
             ratePerMinute = rate;
-            if (ratePerMinute <= 0)
+            if (!(ratePerMinute > 0d) || double.IsNaN(ratePerMinute) || double.IsInfinity(ratePerMinute))
             {
                 Interval = 0f;
                 CycleAmount = 0;
@@ -85,31 +87,35 @@ namespace TimelessEchoes.NpcGeneration
 
         private void OnDisable()
         {
+            if (!suppressDisableSave)
+                SaveState();
+        }
+
+        /// <summary>
+        /// Captures this generator when it still belongs to the active save tree, then prevents
+        /// Unity's deferred destruction callback from writing into a subsequently loaded slot.
+        /// </summary>
+        internal void PrepareForRebuild()
+        {
             SaveState();
+            suppressDisableSave = true;
+        }
+
+        internal bool IsOwnedBy(GameData data)
+        {
+            return setup && data != null && ReferenceEquals(boundSaveData, data);
         }
 
         public void Tick(float deltaTime)
         {
-            if (!setup || Interval <= 0f || resource == null) return;
-
-            Progress += deltaTime;
-            while (Progress >= Interval)
-            {
-                Progress -= Interval;
-                AddCycle();
-            }
+            if (!IsOwnedBy(oracle?.saveData) || resource == null) return;
+            AdvanceProgress(deltaTime);
         }
 
         public void ApplyOfflineProgress(double seconds)
         {
-            if (!setup || seconds <= 0 || Interval <= 0f || resource == null) return;
-
-            Progress += (float)seconds;
-            while (Progress >= Interval)
-            {
-                Progress -= Interval;
-                AddCycle();
-            }
+            if (!IsOwnedBy(oracle?.saveData) || resource == null) return;
+            AdvanceProgress(seconds);
         }
 
         public void CollectResources()
@@ -119,7 +125,7 @@ namespace TimelessEchoes.NpcGeneration
 
         public void CollectResources(bool triggerSave)
         {
-            if (!setup || stored <= 0) return;
+            if (!IsOwnedBy(oracle?.saveData) || stored <= 0) return;
             resourceManager ??= ResourceManager.Instance;
             if (resourceManager == null)
             {
@@ -128,7 +134,13 @@ namespace TimelessEchoes.NpcGeneration
             }
 
             resourceManager.Add(resource, stored, trackStats: false, eligibleForTierRoll: false);
-            totalCollected += stored;
+            var existingCollected = totalCollected >= 0d && !double.IsNaN(totalCollected) &&
+                                    !double.IsInfinity(totalCollected)
+                ? totalCollected
+                : 0d;
+            totalCollected = stored >= double.MaxValue - existingCollected
+                ? double.MaxValue
+                : existingCollected + stored;
             stored = 0;
             SaveState();
 
@@ -146,15 +158,48 @@ namespace TimelessEchoes.NpcGeneration
             }
         }
 
-        private void AddCycle()
+        private void AdvanceProgress(double seconds)
         {
-            stored += CycleAmount;
+            if (!(seconds > 0d) || double.IsNaN(seconds) || double.IsInfinity(seconds) ||
+                !(Interval > 0f) || float.IsNaN(Interval) || float.IsInfinity(Interval) ||
+                !(CycleAmount > 0d) || double.IsNaN(CycleAmount) || double.IsInfinity(CycleAmount))
+                return;
+
+            var existingProgress = Progress;
+            if (!(existingProgress >= 0f) || float.IsNaN(existingProgress) || float.IsInfinity(existingProgress))
+                existingProgress = 0f;
+
+            var accumulated = existingProgress + seconds;
+            if (double.IsNaN(accumulated) || double.IsInfinity(accumulated))
+                return;
+
+            var cycles = Math.Floor(accumulated / Interval);
+            if (cycles > 0d)
+            {
+                var gained = cycles * CycleAmount;
+                var existingStored = stored >= 0d && !double.IsNaN(stored) && !double.IsInfinity(stored)
+                    ? stored
+                    : 0d;
+                if (double.IsInfinity(gained) || gained >= double.MaxValue - existingStored)
+                    stored = double.MaxValue;
+                else if (!double.IsNaN(gained) && gained > 0d)
+                    stored = existingStored + gained;
+            }
+
+            var remainder = accumulated - cycles * Interval;
+            Progress = remainder >= 0d && remainder < Interval && !double.IsNaN(remainder)
+                ? (float)remainder
+                : 0f;
         }
 
         private void SaveState()
         {
-            if (!setup || oracle == null || resource == null) return;
-            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            var currentSaveData = oracle?.saveData;
+            if (!setup || resource == null || currentSaveData == null ||
+                !ReferenceEquals(boundSaveData, currentSaveData))
+                return;
+
+            currentSaveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
             var rec = new GameData.DiscipleGenerationRecord
             {
@@ -163,7 +208,7 @@ namespace TimelessEchoes.NpcGeneration
                 Progress = Progress,
                 LastGenerationTime = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
             };
-            oracle.saveData.Disciples[resource.name] = rec;
+            currentSaveData.Disciples[resource.name] = rec;
         }
 
         private void ResetState()
@@ -175,26 +220,37 @@ namespace TimelessEchoes.NpcGeneration
 
         private void LoadState()
         {
-            if (oracle == null || resource == null) return;
+            var currentSaveData = oracle?.saveData;
+            if (resource == null || currentSaveData == null)
+                return;
+
+            // A generator is owned by the save tree it was configured for. During a slot switch,
+            // old generators remain alive until Unity processes Destroy at the end of the frame;
+            // they must not bind themselves to the newly loaded tree in that window.
+            if (boundSaveData != null && !ReferenceEquals(boundSaveData, currentSaveData))
+                return;
+
+            boundSaveData = currentSaveData;
             setup = true;
-            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            currentSaveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
 
             stored = 0;
             totalCollected = 0;
             Progress = 0f;
 
-            if (oracle.saveData.Disciples.TryGetValue(resource.name, out var rec) && rec != null)
+            if (currentSaveData.Disciples.TryGetValue(resource.name, out var rec) && rec != null)
             {
-                if (rec.StoredResources != null)
-                    rec.StoredResources.TryGetValue(resource.name, out stored);
-                if (rec.TotalCollected != null)
-                    rec.TotalCollected.TryGetValue(resource.name, out totalCollected);
-                Progress = rec.Progress;
-
-                var now = DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
-                var seconds = now - rec.LastGenerationTime;
-                if (seconds > 0)
-                    ApplyOfflineProgress(seconds);
+                if (rec.StoredResources != null &&
+                    rec.StoredResources.TryGetValue(resource.name, out var savedStored) &&
+                    savedStored >= 0d && !double.IsNaN(savedStored) && !double.IsInfinity(savedStored))
+                    stored = savedStored;
+                if (rec.TotalCollected != null &&
+                    rec.TotalCollected.TryGetValue(resource.name, out var savedCollected) &&
+                    savedCollected >= 0d && !double.IsNaN(savedCollected) && !double.IsInfinity(savedCollected))
+                    totalCollected = savedCollected;
+                Progress = rec.Progress >= 0f && !float.IsNaN(rec.Progress) && !float.IsInfinity(rec.Progress)
+                    ? rec.Progress
+                    : 0f;
             }
         }
     }

@@ -1,0 +1,24 @@
+using System;using System.IO;using System.Linq;using System.Reflection;using System.Collections.Generic;using UnityEngine;using UnityEditor;using UnityEngine.UIElements;using TimelessEchoes.UI;using TimelessEchoes.UI.Toolkit;
+public class ValidateInstalledAlterEchoes {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic;const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";ToolkitAlterEchoesScreen screen;TownWindowManager manager;List<string> results=new();int phase,index;double due;int[][] dimensions={new[]{1280,720},new[]{2340,1080},new[]{3840,2160}};VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;void Check(bool b,string s)=>results.Add((b?"PASS ":"FAIL ")+s);
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");var t=new ValidateInstalledAlterEchoes{manager=TownWindowManager.Instance,screen=UnityEngine.Object.FindAnyObjectByType<ToolkitAlterEchoesScreen>()};if(!t.manager||!t.screen)throw new Exception("Wait for Main");EditorApplication.update+=t.Tick;return "Installed Alter Echoes viewport checks started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase){case 0:Check(UnityEngine.Object.FindObjectsByType<ToolkitAlterEchoesScreen>(FindObjectsInactive.Include).Length==1,"Main has one native Alter Echoes host");Check(new SerializedObject(manager).FindProperty("toolkitAlterEchoes").objectReferenceValue==screen,"Saved route references native Alter Echoes");phase++;break;
+ case 1:manager.CloseAllWindows();Resize(dimensions[index][0],dimensions[index][1]);phase++;break;
+ case 2:manager.OpenWindow(TownWindowManager.Window.AlterEchoes);phase++;break;
+ case 3:var safe=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,Blindsided.SaveData.StaticReferences.SafeAreaRatio);var bounds=Root.Q("alter-echoes").worldBound;Check(screen.IsOpen&&manager.IsWindowOpen(TownWindowManager.Window.AlterEchoes),"Native Alter Echoes route at "+Screen.width);Check(bounds.xMin>=safe.xMin-.1&&bounds.xMax<=safe.xMax+.1&&bounds.yMax<=safe.yMax+.1,"Alter Echoes fits safe area at "+Screen.width);Check(Math.Abs(bounds.width-(safe.width-178))<=432f/Screen.height+.01f,"Companion inventory width reserved at "+Screen.width);Check(!((GameObject)new SerializedObject(manager).FindProperty("alterEchoes").FindPropertyRelative("window").objectReferenceValue).activeSelf,"Legacy Alter Echoes hidden at "+Screen.width);ScreenCapture.CaptureScreenshot(Output+"/alterecho-installed-"+Screen.width+".png");phase++;break;
+ case 4:Root.Q<ScrollView>("generators").scrollOffset=new Vector2(0,10000);phase++;break;
+ case 5:var scroll=Root.Q<ScrollView>("generators");Check(scroll.scrollOffset.y>0,"Collections scroll at "+Screen.width);var clip=scroll.contentViewport.worldBound;Check(clip.yMin>=Root.Q("alter-echoes").worldBound.yMin&&clip.yMax<=Root.Q("alter-echoes").worldBound.yMax,"Collection viewport remains inside frame at "+Screen.width);manager.CloseAllWindows();Check(!screen.IsOpen,"Global close removes Alter Echoes at "+Screen.width);index++;if(index<dimensions.Length){phase=1;break;}Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Installed checks remain offline");Finish();break;
+ }}catch(Exception e){results.Add("FAIL "+e);Finish();}}
+ void Finish(){EditorApplication.update-=Tick;manager.CloseAllWindows();File.WriteAllLines(Output+"/installed-alterecho-checks.txt",results);}
+ static void Resize(int width,int height){
+  var asm=typeof(Editor).Assembly;var sizesType=asm.GetType("UnityEditor.GameViewSizes");
+  var singleton=typeof(ScriptableSingleton<>).MakeGenericType(sizesType);var sizes=singleton.GetProperty("instance",F).GetValue(null);
+  var group=sizesType.GetMethod("GetGroup",F).Invoke(sizes,new object[]{0});
+  var sizeType=asm.GetType("UnityEditor.GameViewSize");var enumType=asm.GetType("UnityEditor.GameViewSizeType");
+  var size=Activator.CreateInstance(sizeType,F,null,new object[]{Enum.ToObject(enumType,1),width,height,"UITK baseline "+width+"x"+height},null);
+  group.GetType().GetMethod("AddCustomSize",F).Invoke(group,new[]{size});
+  var count=(int)group.GetType().GetMethod("GetTotalCount",F).Invoke(group,null);
+  var viewType=asm.GetType("UnityEditor.GameView");var view=EditorWindow.GetWindow(viewType);
+  viewType.GetProperty("selectedSizeIndex",F).SetValue(view,count-1);view.Repaint();
+ }
+}

@@ -1,0 +1,15 @@
+PASS Manual craft exposes pending replacement
+PASS Replace equips exactly the pending item and clears it
+PASS Changing slot salvages one pending item
+PASS Automation continues with Forge closed
+PASS Closed Forge has no visible tree or session view subscription
+PASS Reopen preserves active automation
+PASS Changing core cancels running batch
+PASS Forced Vastium stops and retains result
+PASS Vastium stop counted once after one craft
+PASS Stat matching rejects upgrades with mismatched affix set until stock depleted
+PASS Full LoadData event cancels automation and clears pending result
+PASS No batch writes after LoadData event
+PASS 25 Forge cycles release session subscriptions
+PASS 25 Forge cycles retain bounded PanelSettings
+PASS Save/cloud isolation remains active

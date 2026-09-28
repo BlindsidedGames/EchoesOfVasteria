@@ -1,0 +1,9 @@
+PASS Hold has no early repeat; repeats=0 clicks=0
+PASS Short press invokes exactly one regular click; repeats=0 clicks=1
+FAIL Holding starts repeating after 500 ms; repeats=0 clicks=1
+PASS Release cancels repeat; repeats=0 clicks=2
+PASS Leaving control cancels delayed repeat; repeats=0 clicks=2
+PASS Disabled control cannot repeat; repeats=0 clicks=3
+PASS Pointer cancellation stops repeat; repeats=0 clicks=3
+PASS Detaching and reattaching cannot resume held repeat; repeats=0 clicks=3
+PASS Keyboard submit invokes once; repeats=0 clicks=5

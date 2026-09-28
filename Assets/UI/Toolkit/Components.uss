@@ -1,0 +1,53 @@
+/* Shared components. Screen styles own composition, not control appearance. */
+.eov-control {
+    margin: 0; padding: 0; border-width: 0; border-radius: 0;
+    background-color: transparent;
+    -unity-background-image-tint-color: var(--eov-tint-normal);
+    align-items: center; justify-content: center;
+}
+.eov-control:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-control:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-control:disabled { opacity: 1; -unity-background-image-tint-color: var(--eov-tint-disabled); }
+.eov-text { margin: 0; padding: 0; white-space: normal; }
+.eov-text--caption { font-size: var(--eov-font-caption); }
+.eov-text--body { font-size: var(--eov-font-body); }
+.eov-text--subheading { font-size: var(--eov-font-subheading); }
+.eov-text--heading { font-size: var(--eov-font-heading); }
+.eov-control--tab { flex-grow: 1; flex-basis: 0; min-width: 0; height: var(--eov-tab-height); font-size: var(--eov-font-heading); }
+.eov-recessed-scroll { flex-grow: 1; min-height: 0; padding: var(--eov-space-small) var(--eov-space-small) var(--eov-space-tight) var(--eov-space-small); }
+.eov-icon { width: var(--eov-icon-size); height: var(--eov-icon-size); flex-shrink: 0; }
+.eov-stat-entry { flex-direction: row; flex-shrink: 0; min-height: 32px; padding: var(--eov-space-panel); margin-bottom: var(--eov-space-tight); }
+.eov-stat-entry-icon { width: 26px; min-height: 26px; margin-right: var(--eov-space-small); flex-shrink: 0; align-items: center; justify-content: center; }
+.eov-stat-entry-art { width: 24px; height: 26px; }
+.eov-stat-entry-content { flex-grow: 1; min-width: 0; }
+.eov-stat-entry-header { flex-direction: row; }
+.eov-stat-entry-fields { flex-direction: row; }
+.eov-stat-entry-field { flex-grow: 1; flex-basis: 0; white-space: pre; }
+.eov-stat-entry-toggle { width: 32px; height: 16px; flex-shrink: 0; align-self: center; }
+.eov-stat-entry-progress { height: 4px; margin-top: var(--eov-space-tight); overflow: hidden; }
+
+.eov-slider { margin: 0; padding: 0; min-height: 0; }
+.eov-slider .unity-base-slider__input { margin: 0; padding: 0; }
+.eov-slider #unity-tracker { height: 50%; top: 25%; margin: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-slider-fill { position: absolute; left: 0; top: 0; bottom: 0; }
+.eov-slider #unity-dragger { width: 7px; top: 0; margin: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-slider #unity-dragger-border { display: none; }
+.eov-stat-distance { padding: var(--eov-space-panel); margin-bottom: var(--eov-space-tight); flex-shrink: 0; }
+.eov-rank-toggle { flex-direction: row; justify-content: space-around; margin-right: var(--eov-space-small); }
+.eov-rank-row { flex-direction: row; min-height: 24px; flex-shrink: 0; align-items: center; padding: var(--eov-space-panel); margin-bottom: var(--eov-space-tight); }
+.eov-rank-rank { width: 54px; flex-shrink: 0; }
+.eov-rank-name { flex-direction: row; align-items: center; flex-grow: 1; flex-basis: 0; min-width: 0; }
+.eov-rank-score { width: 96px; flex-shrink: 0; }
+.eov-rank-version { width: 120px; flex-shrink: 0; }
+.eov-disclosure { margin-bottom: var(--eov-space-small); }
+.eov-disclosure-header { flex-direction: row; min-height: var(--eov-tab-height); padding: var(--eov-space-small); }
+.eov-disclosure-content { padding: var(--eov-space-panel); }
+.eov-number-field { font-size: var(--eov-font-body); margin: 0; padding: 0; min-width: 0; height: var(--eov-control-height); }
+.eov-number-field #unity-text-input { font-size: var(--eov-font-body); border-width: 0; border-radius: 0; background-color: transparent; padding: var(--eov-space-small); color: rgb(62, 39, 49); }
+
+/* Match the existing Noto Sans ExtraBold TMP underlay (offset 1/-1,
+   softness 1, dilate 1), using the same treatment already used by the book. */
+.eov-text { text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline); -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-text--caption { text-shadow: 0.136px 0.136px 0.136px var(--eov-color-text-outline); -unity-text-outline-width: 0.068px; }
+.eov-text--subheading { text-shadow: 0.190px 0.190px 0.190px var(--eov-color-text-outline); -unity-text-outline-width: 0.095px; }
+.eov-text--heading { text-shadow: 0.217px 0.217px 0.217px var(--eov-color-text-outline); -unity-text-outline-width: 0.108px; }

@@ -1,0 +1,12 @@
+PASS Save root is Library-only; Steam/UGS are offline
+PASS Route Library documents=Toolkit Run HUD,Quit,Toolkit Library,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Credits documents=Toolkit Run HUD,Quit,Toolkit Credits,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Options documents=Options,Toolkit Run HUD,Quit,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Buffs documents=Toolkit Run HUD,Quit,Buffs,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Skills documents=Skills,Toolkit Run HUD,Quit,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Quests documents=Quests,Toolkit Run HUD,Quit,Toolkit Loading,ResourceInventory,Navigation,PinnedGoals
+PASS Route Cauldron documents=Toolkit Run HUD,Quit,Toolkit Loading,Cauldron,Navigation,PinnedGoals
+PASS Route AlterEchoes documents=Toolkit Run HUD,Quit,Toolkit Loading,AlterEchoes,ResourceInventory,Navigation,PinnedGoals
+PASS Route Stats documents=Statistics,Toolkit Run HUD,Quit,Toolkit Loading,Navigation,PinnedGoals
+PASS Route Forge documents=Toolkit Run HUD,Quit,Toolkit Loading,Forge,Navigation,PinnedGoals
+PASS Native HUD configured in main project

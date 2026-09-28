@@ -146,14 +146,14 @@ namespace TimelessEchoes
             ConsoleAuth.EnsureAuthenticated();
             if (xpAmount <= 0f)
             {
-                QuantumConsole.Instance?.LogToConsole("XP amount must be greater than zero.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole("XP amount must be greater than zero.");
                 return;
             }
 
             var controller = SkillController.Instance;
             if (controller == null)
             {
-                QuantumConsole.Instance?.LogToConsole("SkillController is not available.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole("SkillController is not available.");
                 return;
             }
 
@@ -166,34 +166,34 @@ namespace TimelessEchoes
                 affected++;
             }
 
-            QuantumConsole.Instance?.LogToConsole($"Granted {xpAmount:0.##} raw XP to {affected} skills.");
+            TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole($"Granted {xpAmount:0.##} raw XP to {affected} skills.");
         }
 
         private static void GrantSkillExperience(string skillIdentifier, float xpAmount)
         {
             if (xpAmount <= 0f)
             {
-                QuantumConsole.Instance?.LogToConsole("XP amount must be greater than zero.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole("XP amount must be greater than zero.");
                 return;
             }
 
             var controller = SkillController.Instance;
             if (controller == null)
             {
-                QuantumConsole.Instance?.LogToConsole("SkillController is not available.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole("SkillController is not available.");
                 return;
             }
 
             var skill = controller.FindSkillByIdentifier(skillIdentifier);
             if (skill == null)
             {
-                QuantumConsole.Instance?.LogToConsole($"Skill '{skillIdentifier}' was not found.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole($"Skill '{skillIdentifier}' was not found.");
                 return;
             }
 
             var appliedXp = controller.GrantQuestExperience(skill, xpAmount);
             var label = !string.IsNullOrWhiteSpace(skill.skillName) ? skill.skillName : skill.name;
-            QuantumConsole.Instance?.LogToConsole($"Granted {appliedXp:0.##} raw XP to {label}.");
+            TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance?.LogToConsole($"Granted {appliedXp:0.##} raw XP to {label}.");
         }
 
         [Command("unlock-witch", "Unlock the witch NPC")]
@@ -298,9 +298,9 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             if (!SteamManager.Initialized)
             {
-                if (QFSW.QC.QuantumConsole.Instance != null)
+                if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
                 {
-                    QFSW.QC.QuantumConsole.Instance.LogToConsole("Steam not initialized.");
+                    TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole("Steam not initialized.");
                 }
                 return;
             }
@@ -321,14 +321,14 @@ namespace TimelessEchoes
 
             SteamUserStats.StoreStats();
 
-            if (QFSW.QC.QuantumConsole.Instance != null)
+            if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
             {
-                QFSW.QC.QuantumConsole.Instance.LogToConsole($"Cleared {cleared}/{total} achievements.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole($"Cleared {cleared}/{total} achievements.");
             }
 #else
-            if (QFSW.QC.QuantumConsole.Instance != null)
+            if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
             {
-                QFSW.QC.QuantumConsole.Instance.LogToConsole("Steamworks is disabled on this platform.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole("Steamworks is disabled on this platform.");
             }
 #endif
         }
@@ -352,7 +352,7 @@ namespace TimelessEchoes
             }
 
             manager.SetBaseTimeScale(timeScale);
-            var console = QuantumConsole.Instance;
+            var console = TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance;
             if (console != null)
             {
                 console.LogToConsole(

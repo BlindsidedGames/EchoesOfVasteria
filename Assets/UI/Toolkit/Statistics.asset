@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0733fdd54e4f327468c986006d09ef94, type: 3}
+  m_Name: Statistics
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitStatisticsDefinition
+  selectedButton: {fileID: -694003258188327651, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  playerRow: {fileID: -1200994790, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  progressTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  progressFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  sliderTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  sliderFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  sliderHandle: {fileID: -417708947953042868, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  button: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  panel: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  inset: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  row: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  iconFrame: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  portraitFrame: {fileID: -5538786102408219600, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  portrait: {fileID: -3617026501487528266, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  graphFrame: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  graphFill: {fileID: 21300000, guid: 77c7049387f6eb44eb2e08b928a4cb07, type: 3}
+  averageLine: {fileID: 21300000, guid: 77c7049387f6eb44eb2e08b928a4cb07, type: 3}
+  tooltipLeft: {fileID: -6474153178337083997, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  tooltipRight: {fileID: -785442531, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  selectedTint: {r: 1, g: 1, b: 1, a: 1}
+  selectedText: {r: 0.9176471, g: 0.8313726, b: 0.6627451, a: 1}
+  averageColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
+  distanceColors:
+    death: {r: 0.24705884, g: 0.15686275, b: 0.19607845, a: 1}
+    retreat: {r: 0.42352945, g: 0.2392157, b: 0.21960786, a: 1}
+    abandoned: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    reaped: {r: 0, g: 0, b: 0, a: 1}
+    bonus: {r: 0, g: 0, b: 0, a: 0}
+  resourceColors:
+    death: {r: 0.24705884, g: 0.15686275, b: 0.19607845, a: 1}
+    retreat: {r: 0.09411766, g: 0.078431375, b: 0.14509805, a: 1}
+    abandoned: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    reaped: {r: 0, g: 0, b: 0, a: 1}
+    bonus: {r: 0.9176471, g: 0.8313726, b: 0.6627451, a: 1}
+  killColors:
+    death: {r: 0.61960787, g: 0.15686275, b: 0.20784315, a: 1}
+    retreat: {r: 0.24705884, g: 0.15686275, b: 0.19607845, a: 1}
+    abandoned: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    reaped: {r: 0, g: 0, b: 0, a: 1}
+    bonus: {r: 0, g: 0, b: 0, a: 0}
+  itemTiers:
+  - {fileID: -6793677539430908002, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1370181054, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -2033816560, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1263174726, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1802644530, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: 1479873531, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1078676658, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1462212559, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  maps:
+  - config: {fileID: 11400000, guid: f55e1d93d6f548440b91047ab11572be, type: 2}
+    label: Farmlands
+    labelSize: 3.7
+    killScaling: 0
+  - config: {fileID: 11400000, guid: 70ed6e565be72ad4cb97fbf161957534, type: 2}
+    label: 'Woods
+
+'
+    labelSize: 5
+    killScaling: 0
+  - config: {fileID: 11400000, guid: 6c2ad25e840f46a44b1a7ceb4ba7280a, type: 2}
+    label: Mines
+    labelSize: 5
+    killScaling: 0
+  - config: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
+    label: River
+    labelSize: 5
+    killScaling: 0
+  - config: {fileID: 11400000, guid: 1bea16f9e7eb61c43bcb22c706dae6dc, type: 2}
+    label: Spooky
+    labelSize: 5
+    killScaling: 1

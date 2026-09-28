@@ -97,6 +97,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (references == null)
                 references = GetComponent<StatPanelReferences>();
             statTracker = GameplayStatTracker.Instance;
@@ -123,6 +124,7 @@ namespace TimelessEchoes.UI
             
             // Subscribe to task toggle changes
             TaskWeightService.ToggleChanged += OnTaskWeightToggleChanged;
+            TaskWeightService.WeightsChanged += OnWeightsChanged;
             
             if (statTracker != null)
             {
@@ -137,6 +139,7 @@ namespace TimelessEchoes.UI
         protected override void UnsubscribeFromEvents()
         {
             TaskWeightService.ToggleChanged -= OnTaskWeightToggleChanged;
+            TaskWeightService.WeightsChanged -= OnWeightsChanged;
             
             if (statTracker != null)
             {
@@ -159,8 +162,11 @@ namespace TimelessEchoes.UI
             OnDataChanged();
         }
 
+        private void OnWeightsChanged() => OnTaskWeightToggleChanged(null, false);
+
         private void OnTaskCompleted()
         {
+            cachedWeightsWorldX = float.NaN;
             _sortDirty = true; // Completion may change known/unknown status
             OnDataChanged();
         }

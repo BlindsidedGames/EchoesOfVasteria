@@ -1,0 +1,9 @@
+Editor-only synchronous presentation microbenchmark; not frame times or Player measurements
+Label: after
+Resolution: 3840x2160; timeScale=1; targetFrameRate=60; vSync=0
+Generators: 61
+Warmup: 30 calls; capture: 3 repetitions of 1000 calls. No frames advance inside a repetition, so generator values stay constant. Includes immediate style/text operations; excludes deferred layout/render/GPU work.
+repeat=0 median_ms=0.044500 p95_ms=0.096500 p99_ms=0.122100 worst_ms=11.080600 total_managed_bytes=UNAVAILABLE bytes_per_call=UNAVAILABLE
+repeat=1 median_ms=0.043100 p95_ms=0.043800 p99_ms=0.047900 worst_ms=0.068900 total_managed_bytes=UNAVAILABLE bytes_per_call=UNAVAILABLE
+repeat=2 median_ms=0.043000 p95_ms=0.043600 p99_ms=0.048400 worst_ms=0.071700 total_managed_bytes=UNAVAILABLE bytes_per_call=UNAVAILABLE
+Steam initialized=False; UGS=Uninitialized

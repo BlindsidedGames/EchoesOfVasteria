@@ -1,0 +1,26 @@
+PASS: Native wheel event scrolls ingredients
+PASS: Editor stayed in Edit mode
+PASS: Ingredients have a real scroll range
+PASS: End reaches final ingredient row
+PASS: Eternal keeps workspace bounds
+PASS: Buffs keep workspace bounds
+PASS: Resources keep workspace bounds
+PASS: Theme and collection switches retain ingredient scroll
+PASS: Mix requires two distinct foods
+PASS: Mix shows exact-stack confirmation
+PASS: Cancel leaves stew unchanged
+PASS: Confirmed mix awards exact calculated stew
+PASS: Confirmed food stack consumed only in fixture
+PASS: Confirmed food stack consumed only in fixture
+PASS: Mix disabled until new pair selected
+PASS: Empty inventory disables unavailable actions
+PASS: Maxed normal collections unlock Eternal
+PASS: Final layout settled
+Editor-only sample; Play=False
+Theme=False; locale=en; large=False; narrow=False
+Foods=30; resources=69; buffs=13; boons=7
+Images=93; invalid aspect modes=0
+Root=(x:162.00, y:54.00, width:1251.20, height:782.00); workspace=(x:203.71, y:215.61, width:1167.79, height:578.68)
+Ingredients viewport=(x:203.71, y:288.60, width:373.62, height:373.62); scroll range=466
+Collection viewport=(x:899.40, y:317.56, width:472.10, height:476.73); scroll range=2451.333
+

@@ -8,6 +8,7 @@ using Blindsided;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Build;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace BuildTools
@@ -235,6 +236,59 @@ namespace BuildTools
                 return;
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
+        }
+    }
+
+    /// <summary>
+    /// Keeps Editor Play aligned with the player build's verified-save bootstrap scene.
+    /// </summary>
+    internal sealed class EditorPlayModeBootstrap : AssetPostprocessor
+    {
+        internal const string LoadingScenePath = "Assets/Scenes/Loading.unity";
+
+        private static void OnPostprocessAllAssets(
+            string[] importedAssets,
+            string[] deletedAssets,
+            string[] movedAssets,
+            string[] movedFromAssetPaths,
+            bool didDomainReload)
+        {
+            if (!didDomainReload &&
+                !importedAssets.Contains(LoadingScenePath) &&
+                !movedAssets.Contains(LoadingScenePath) &&
+                !deletedAssets.Contains(LoadingScenePath) &&
+                !movedFromAssetPaths.Contains(LoadingScenePath))
+                return;
+
+            var loadingScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(LoadingScenePath);
+            if (loadingScene == null)
+            {
+                Debug.LogError(
+                    $"Editor Play bootstrap could not find the Loading scene at '{LoadingScenePath}'.");
+                return;
+            }
+
+            if (EditorSceneManager.playModeStartScene != loadingScene)
+                EditorSceneManager.playModeStartScene = loadingScene;
+        }
+    }
+
+    /// <summary>
+    /// Rejects player builds that would initialize gameplay before save verification.
+    /// </summary>
+    internal sealed class LoadingSceneBuildValidator : IPreprocessBuildWithReport
+    {
+        public int callbackOrder => 0;
+
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            var firstEnabledScene = EditorBuildSettings.scenes.FirstOrDefault(scene => scene.enabled);
+            if (firstEnabledScene == null || firstEnabledScene.path != EditorPlayModeBootstrap.LoadingScenePath)
+            {
+                throw new BuildFailedException(
+                    $"The first enabled build scene must be '{EditorPlayModeBootstrap.LoadingScenePath}' " +
+                    "so gameplay cannot start before save verification.");
+            }
         }
     }
 }

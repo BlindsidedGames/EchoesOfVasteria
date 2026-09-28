@@ -1,28 +1,22 @@
-using System;
-using System.Globalization;
-using Blindsided;
 using UnityEngine;
 using UnityEngine.UI;
-using EventHandler = Blindsided.EventHandler;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace TimelessEchoes.UI
 {
     /// <summary>
     ///     Handles quitting the game with a confirmation window.
-    ///     First button saves progress and shows the confirm window.
-    ///     Second button exits the application.
+    ///     The final exit action commits the required verified checkpoint(s) before quitting.
     /// </summary>
     public class QuitGameButton : MonoBehaviour
     {
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject confirmWindow;
         [SerializeField] private Button exitButton;
+        private readonly GameQuitRequest request = new();
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (quitButton == null)
                 quitButton = GetComponent<Button>();
 
@@ -42,29 +36,17 @@ namespace TimelessEchoes.UI
 
         private void OnQuitClicked()
         {
-            SaveGame();
             if (confirmWindow != null)
                 confirmWindow.SetActive(true);
         }
 
         private void OnExitClicked()
         {
-            SaveGame();
-            Application.Quit();
-#if UNITY_EDITOR
-            if (EditorApplication.isPlaying)
-                EditorApplication.ExitPlaymode();
-#endif
+            if (request.InProgress) return;
+            if (exitButton != null) exitButton.interactable = false;
+            request.TryQuit(GameQuitRequest.Prepare, GameQuitRequest.Exit);
+            if (!request.InProgress && exitButton != null) exitButton.interactable = true;
         }
 
-        private static void SaveGame()
-        {
-            var oracle = Oracle.oracle;
-            if (oracle == null)
-                return;
-
-            // Save to the currently-selected slot using centralized logic
-            oracle.SaveToSlot(oracle.CurrentSlot);
-        }
     }
 }

@@ -1,0 +1,27 @@
+using System;using System.IO;using System.Collections.Generic;using UnityEngine;using UnityEngine.UIElements;using UnityEditor;using TimelessEchoes.UI;using TimelessEchoes.UI.Toolkit;
+public class ValidateRepeatControl {
+ const string Out="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27/shared-repeat-checks.txt";
+ Button button;VisualElement root;int repeats,clicks,phase,last;double due;List<string> results=new();
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK"))throw new Exception("Disposable Play required");var t=new ValidateRepeatControl();var wm=TownWindowManager.Instance;if(!wm)throw new Exception("Wait for Main");wm.CloseAllWindows();wm.OpenWindow(TownWindowManager.Window.Options);t.root=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsScreen>().GetComponent<UIDocument>().rootVisualElement;t.button=ToolkitControls.Button("repeat-check",()=>t.clicks++,null);t.button.style.position=Position.Absolute;t.button.style.left=100;t.button.style.top=100;t.button.style.width=100;t.button.style.height=30;t.root.Add(t.button);ToolkitControls.RepeatWhileHeld(t.button,()=>t.repeats++);t.Wait(.4);EditorApplication.update+=t.Tick;return "Shared repeat control timed pointer checks started";}
+ void Wait(double seconds){due=EditorApplication.timeSinceStartup+seconds;}void Check(bool value,string name)=>results.Add((value?"PASS ":"FAIL ")+name+"; repeats="+repeats+" clicks="+clicks);
+ void Down(){using(var e=PointerDownEvent.GetPooled(new Event{type=EventType.MouseDown,button=0,mousePosition=button.worldBound.center})){e.target=button;button.SendEvent(e);}}
+ void Up(){using(var e=PointerUpEvent.GetPooled(new Event{type=EventType.MouseUp,button=0,mousePosition=button.worldBound.center})){e.target=button;button.SendEvent(e);}}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;try{switch(phase++){
+ case 0:Down();Wait(.2);break;
+ case 1:Check(repeats==0,"Hold has no early repeat");Up();Wait(.2);break;
+ case 2:Check(repeats==0&&clicks==1,"Short press invokes exactly one regular click");Down();Wait(.8);break;
+ case 3:Check(repeats>=2&&repeats<=6,"Holding starts repeating after 500 ms");Up();last=repeats;Wait(.4);break;
+ case 4:Check(repeats==last,"Release cancels repeat");Down();Wait(.2);break;
+ case 5:using(var e=PointerLeaveEvent.GetPooled()){e.target=button;button.SendEvent(e);}last=repeats;Wait(.6);break;
+ case 6:Check(repeats==last,"Leaving control cancels delayed repeat");Up();Down();Wait(.2);break;
+ case 7:button.SetEnabled(false);last=repeats;Wait(.6);break;
+ case 8:Check(repeats==last,"Disabled control cannot repeat");Up();button.SetEnabled(true);Down();Wait(.2);break;
+ case 9:using(var e=PointerCancelEvent.GetPooled()){e.target=button;button.SendEvent(e);}last=repeats;Wait(.6);break;
+ case 10:Check(repeats==last,"Pointer cancellation stops repeat");Up();Down();Wait(.2);break;
+ case 11:button.RemoveFromHierarchy();last=repeats;Wait(.6);break;
+ case 12:root.Add(button);Wait(.3);break;
+ case 13:Check(repeats==last,"Detaching and reattaching cannot resume held repeat");Up();last=clicks;using(var e=NavigationSubmitEvent.GetPooled()){e.target=button;button.SendEvent(e);}Wait(.3);break;
+ case 14:Check(clicks==last+1,"Keyboard submit invokes once");Finish();break;
+ }}catch(Exception e){results.Add("FAIL "+e);Finish();}}
+ void Finish(){EditorApplication.update-=Tick;button.RemoveFromHierarchy();TownWindowManager.Instance.CloseAllWindows();File.WriteAllLines(Out,results);}
+}

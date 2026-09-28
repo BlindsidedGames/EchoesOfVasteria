@@ -76,8 +76,8 @@ public class MultiCellGridLayoutGroup : LayoutGroup
         var width = padding.horizontal + (CellSize.x + Spacing.x) * Columns - Spacing.x;
         var height = padding.vertical + (CellSize.y + Spacing.y) * maxRowUsed - Spacing.y;
 
-        SetLayoutInputForAxis(width, width, -1, 0);
-        SetLayoutInputForAxis(height, height, -1, 1);
+        SetLayoutInputForAxis(width, LayoutUtility.DefaultMaxSize, width, -1, 0);
+        SetLayoutInputForAxis(height, LayoutUtility.DefaultMaxSize, height, -1, 1);
     }
 
     #region grid-helpers ----------------------------------------------------------

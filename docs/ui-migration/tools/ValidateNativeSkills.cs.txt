@@ -1,0 +1,41 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Skills;
+using References.UI;
+using Blindsided;
+using Blindsided.SaveData;
+public class ValidateNativeSkills {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ ToolkitSkillsScreen screen;ToolkitSkillsDefinition definition;TownWindowManager manager;SkillUIManager legacy;GameObject legacyWindow;SkillController controller;Dictionary<string,GameData.SkillProgress> saved;bool showLevels;int phase,index;double due;List<string> checks=new();MilestoneDefinition toggle;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>checks.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(string id){var b=Root.Q<Button>(id);if(b==null)throw new Exception("Missing "+id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ static string Plain(string s)=>s.Replace("<b>","").Replace("</b>","").Replace("<smallcaps>","").Replace("</smallcaps>","");
+ void Call(string method)=>typeof(SkillController).GetMethod(method,F).Invoke(controller,null);
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");if(!TownWindowManager.Instance||!SkillController.Instance)throw new Exception("Wait for Main startup");var t=new ValidateNativeSkills{manager=TownWindowManager.Instance,controller=SkillController.Instance,legacy=UnityEngine.Object.FindAnyObjectByType<SkillUIManager>(FindObjectsInactive.Include),definition=AssetDatabase.LoadAssetAtPath<ToolkitSkillsDefinition>("Assets/UI/Toolkit/Skills.asset")};t.Call("SaveState");t.saved=Oracle.oracle.saveData.SkillData;t.showLevels=StaticReferences.ShowLevelText;foreach(var intro in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>())intro.Hide();t.manager.CloseAllWindows();t.screen=UnityEngine.Object.FindAnyObjectByType<ToolkitSkillsScreen>();if(!t.screen)t.screen=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Skills.prefab")).GetComponent<ToolkitSkillsScreen>();var so=new SerializedObject(t.manager);t.legacyWindow=(GameObject)so.FindProperty("skills").FindPropertyRelative("window").objectReferenceValue;so.FindProperty("toolkitSkills").objectReferenceValue=t.screen;so.ApplyModifiedPropertiesWithoutUndo();EditorApplication.update+=t.Tick;return "Native Skills validation started: six developed skill views plus isolated level-one fixture";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+.8;try{switch(phase){
+ case 0:manager.OpenWindow(TownWindowManager.Window.Skills);Check(screen.IsOpen&&manager.IsWindowOpen(TownWindowManager.Window.Skills),"Native Skills route opens");Check(screen.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Length==0,"Native Skills contains no Canvas graphics");phase++;break;
+ case 1:Submit("skill-"+definition.skills[index].name);legacyWindow.SetActive(true);typeof(SkillUIManager).GetMethod("SelectSkill",F).Invoke(legacy,new object[]{index});phase++;break;
+ case 2:Compare();legacyWindow.SetActive(false);phase++;break;
+ case 3:ScreenCapture.CaptureScreenshot(Output+"/skills-native-"+definition.skills[index].name+".png");index++;phase=index<definition.skills.Length?1:4;break;
+ case 4:Submit("skill-"+definition.skills[0].name);toggle=definition.skills[0].milestones.First(m=>m&&m.CanActivate&&controller.GetMilestoneState(definition.skills[0],m)?.TierIndex>=0);var state=controller.GetMilestoneState(definition.skills[0],toggle);controller.TrySetMilestoneActive(definition.skills[0],toggle,false);phase++;break;
+ case 5:Submit("toggle-"+toggle.name);phase++;break;
+ case 6:Check(controller.GetMilestoneState(definition.skills[0],toggle).IsActive,"Native milestone toggle activates through controller");Check(Plain(Root.Q<Label>("active-slots").text)==$"Active Slots: {controller.ActiveSlotsUsed}({controller.TotalActiveSlots})","Active slot count refreshes after toggle");Check(Root.Q<Label>("active-milestones").text.Contains(toggle.DisplayName),"Active milestone list refreshes after toggle");Submit("toggle-"+toggle.name);phase++;break;
+ case 7:Check(!controller.GetMilestoneState(definition.skills[0],toggle).IsActive,"Native milestone toggle deactivates through controller");StaticReferences.ShowLevelText=false;phase++;break;
+ case 8:Check(Root.Query<Label>(className:"eov-skill-selector-level").ToList().All(l=>l.text==""),"ShowLevelText preference hides selector labels");StaticReferences.ShowLevelText=showLevels;Oracle.oracle.saveData.SkillData=new Dictionary<string,GameData.SkillProgress>();Call("LoadState");index=0;Submit("skill-"+definition.skills[index].name);legacyWindow.SetActive(true);typeof(SkillUIManager).GetMethod("SelectSkill",F).Invoke(legacy,new object[]{index});phase++;break;
+ case 9:Compare();Check(controller.GetProgress(definition.skills[0]).Level==1,"Synthetic level-one fixture loaded");Check(Root.Q<ScrollView>("milestones").Query<Button>().ToList().Count==0,"Level-one locked milestones do not expose activation controls");legacyWindow.SetActive(false);phase++;break;
+ case 10:ScreenCapture.CaptureScreenshot(Output+"/skills-native-level-one.png");for(int i=0;i<25;i++){screen.Hide();screen.Show();}Check(Root.Query<VisualElement>("skills").ToList().Count==1,"25 repeated opens retain one Skills tree");manager.CloseAllWindows();Check(!screen.IsOpen,"Global close hides native Skills");Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Runtime remains offline");Finish();break;
+ }}catch(Exception e){checks.Add("FAIL "+e);Finish();}}
+ void Compare(){var source=new SerializedObject(legacy);var skill=definition.skills[index];string Old(string field)=>((TMPro.TMP_Text)source.FindProperty(field).objectReferenceValue).text;
+ Check(Plain(Root.Q<Label>("skill-level").text)==Old("levelText")&&Plain(Root.Q<Label>("skill-xp").text)==Old("experienceText"),skill.name+" level and XP match existing renderer");Check(Root.Q<Label>("skill-totals").text==Old("totalSkillIncreasesText"),skill.name+" totals match existing renderer");Check(Plain(Root.Q<Label>("active-slots").text)==Old("activeSlotsText")&&Root.Q<Label>("active-milestones").text==Old("activeSlotListText"),skill.name+" active-slot presentation matches");var bonus=new SerializedObject((MilestoneBonusUI)source.FindProperty("bonusUI").objectReferenceValue);var parent=(Transform)bonus.FindProperty("entryParent").objectReferenceValue;var rows=parent.GetComponentsInChildren<MilestoneEntryUIReferences>();var native=Root.Q<ScrollView>("milestones").contentContainer.Children().ToArray();Check(rows.Length==native.Length,skill.name+" milestone/resource row count matches");bool text=true,toggles=true;for(int i=0;i<Math.Min(rows.Length,native.Length);i++){var labels=native[i].Q(className:"eov-milestone-body").Query<Label>().ToList();text &= labels[0].text==rows[i].NameText.text&&labels[1].text==rows[i].PassiveText.text;text &= (labels.Count>2?labels[2].text:"")==(rows[i].ActiveText.gameObject.activeSelf?rows[i].ActiveText.text:"");toggles &= (native[i].Q<Button>()!=null)==rows[i].ToggleButton.gameObject.activeSelf;}Check(text,skill.name+" milestone/resource names, passive and active text match");Check(toggles,skill.name+" activation visibility matches");}
+ void Finish(){EditorApplication.update-=Tick;legacyWindow.SetActive(false);Oracle.oracle.saveData.SkillData=saved;Call("LoadState");StaticReferences.ShowLevelText=showLevels;screen.Hide();screen.Show();File.WriteAllLines(Output+"/skills-checks.txt",checks);}
+}

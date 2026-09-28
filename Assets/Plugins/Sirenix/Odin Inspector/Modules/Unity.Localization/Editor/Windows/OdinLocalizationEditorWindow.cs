@@ -321,6 +321,7 @@ namespace Sirenix.OdinInspector.Modules.Localization.Editor
 			wnd.MenuWidth = 300.0f;
 		}
 
+		[NonSerialized]
 		public WindowState State;
 
 		private object lastSelection;

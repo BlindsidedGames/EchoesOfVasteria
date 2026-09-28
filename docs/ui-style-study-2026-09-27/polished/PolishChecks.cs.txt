@@ -1,0 +1,36 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Vasteria.StyleLab;
+public class PolishChecks {
+ static BindingFlags flags=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
+ static object Field(object o,string n)=>o.GetType().GetField(n,flags).GetValue(o);
+ static object Call(object o,string n,params object[] args)=>o.GetType().GetMethod(n,flags).Invoke(o,args);
+ static void Click(Button b)=>typeof(Clickable).GetMethod("Invoke",flags).Invoke(b.clickable,new object[]{null});
+ public static string Main(){
+  VasteriaStyleLab.OpenCauldron();var window=Resources.FindObjectsOfTypeAll<VasteriaStyleLab>().Single();var root=window.rootVisualElement;
+  var view=Field(window,"view");var model=Field(window,"model");
+  var result=new List<string>();int step=-1;double due=EditorApplication.timeSinceStartup+.7;Rect baseline=default;float bottom=0;
+  void Check(bool condition,string name){if(!condition)throw new Exception("FAIL: "+name);result.Add("PASS: "+name);}
+  EditorApplication.CallbackFunction tick=null;
+  tick=()=>{if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+.35;try{
+   var food=root.Q<ScrollView>("ingredients-scroll");
+   if(step==-1){food.scrollOffset=Vector2.zero;using(var ev=WheelEvent.GetPooled(new Event{type=EventType.ScrollWheel,delta=new Vector2(0,3)})){ev.target=food.contentViewport;food.SendEvent(ev);}}
+   else if(step==0){Check(food.scrollOffset.y>0,"Native wheel event scrolls ingredients");Check(!EditorApplication.isPlaying,"Editor stayed in Edit mode");Check(food.verticalScroller.highValue>0,"Ingredients have a real scroll range");bottom=food.verticalScroller.highValue;using(var ev=KeyDownEvent.GetPooled('\0',KeyCode.End,EventModifiers.None)){ev.target=food;food.SendEvent(ev);}baseline=root.Q("workspace").layout;}
+   else if(step==1){Check(Math.Abs(food.scrollOffset.y-bottom)<1,"End reaches final ingredient row");Call(view,"SetTheme",true);Click(root.Query<Button>().ToList().Single(b=>b.text=="Eternal"));}
+   else if(step==2){Check(root.Q("workspace").layout==baseline,"Eternal keeps workspace bounds");Click(root.Query<Button>().ToList().Single(b=>b.text=="Buffs"));}
+   else if(step==3){Check(root.Q("workspace").layout==baseline,"Buffs keep workspace bounds");Click(root.Query<Button>().ToList().Single(b=>b.text=="Resources"));}
+   else if(step==4){Check(root.Q("workspace").layout==baseline,"Resources keep workspace bounds");Check(Math.Abs(food.scrollOffset.y-bottom)<1,"Theme and collection switches retain ingredient scroll");var targets=(Array)Call(model,"MixTargets",false);Check(targets.Length==2&&!ReferenceEquals(targets.GetValue(0),targets.GetValue(1)),"Mix requires two distinct foods");double before=(double)Field(model,"Stew");Click(root.Q<Button>("mix-selected"));Check(root.Q<Button>("confirm-mix")!=null,"Mix shows exact-stack confirmation");Click(root.Query<Button>().ToList().Single(b=>b.text=="Cancel"));Check((double)Field(model,"Stew")==before,"Cancel leaves stew unchanged");double gain=0;foreach(var t in targets)gain+=(double)Call(model,"Value",t);Click(root.Q<Button>("mix-selected"));Click(root.Q<Button>("confirm-mix"));Check(Math.Abs((double)Field(model,"Stew")-before-gain)<.001,"Confirmed mix awards exact calculated stew");var amounts=(IDictionary)Field(model,"Amounts");foreach(var t in targets)Check((double)amounts[t]==0,"Confirmed food stack consumed only in fixture");Check(!root.Q<Button>("mix-selected").enabledSelf,"Mix disabled until new pair selected");Call(model,"Reset","empty");Call(view,"Rebuild");}
+   else if(step==5){Check(!root.Q<Button>("mix-selected").enabledSelf&&!root.Q<Button>("mix-all").enabledSelf&&!root.Q<Button>("toggle-tasting").enabledSelf,"Empty inventory disables unavailable actions");Call(model,"Reset","maxed");Check((bool)model.GetType().GetProperty("InfinityActive").GetValue(model),"Maxed normal collections unlock Eternal");Call(model,"Reset","mixed");Call(view,"SetTheme",false);Call(view,"Rebuild");}
+   else if(step==6){Check(!float.IsNaN(root.Q("workspace").layout.height),"Final layout settled");result.Add((string)Call(view,"Validate"));EditorApplication.update-=tick;File.WriteAllLines("docs/ui-style-study-2026-09-27/polished/interaction-checks.txt",result);return;}
+   step++;
+  }catch(Exception ex){EditorApplication.update-=tick;result.Add(ex.ToString());File.WriteAllLines("docs/ui-style-study-2026-09-27/polished/interaction-checks.txt",result);}};
+  EditorApplication.update+=tick;return "Queued interaction checks against the isolated Editor preview.";
+ }
+}

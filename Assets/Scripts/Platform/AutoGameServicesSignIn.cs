@@ -11,6 +11,14 @@ namespace TimelessEchoes.Platform
     /// </summary>
     public class AutoGameServicesSignIn : MonoBehaviour
     {
+        private static AutoGameServicesSignIn instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            instance = null;
+        }
+
         // Only relevant when Game Services is available on mobile
 #if UNITY_ANDROID || UNITY_IOS
         [SerializeField] private bool interactiveFallback = false;
@@ -19,8 +27,21 @@ namespace TimelessEchoes.Platform
 
         private void Awake()
         {
+            if (instance != null && instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            instance = this;
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (instance == this)
+                instance = null;
         }
 
         private void Start()

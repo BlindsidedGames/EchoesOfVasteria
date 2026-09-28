@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 121a4153873ed8f47a33ca94fdc99182, type: 3}
+  m_Name: ForgeCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.Gear.ForgeCatalog
+  cores:
+  - core: {fileID: 11400000, guid: 3760bd2ba2861e748b4159c83554f17d, type: 2}
+    coreResource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
+    ingotResource: {fileID: 11400000, guid: fd9d01ece4e2c454dae0765c61a02e16, type: 2}
+  - core: {fileID: 11400000, guid: 0469095556b94f341af3e058a57b2ab1, type: 2}
+    coreResource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
+    ingotResource: {fileID: 11400000, guid: f96c4a57aabf68c42a298a2de063e3a8, type: 2}
+  - core: {fileID: 11400000, guid: 74bc01abfeff47048b0eb37f53e60a74, type: 2}
+    coreResource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
+    ingotResource: {fileID: 11400000, guid: 2f9539665c7da1c40a0d1e32ba15158e, type: 2}
+  - core: {fileID: 11400000, guid: d4468b2c16919604296bfc29476ae19e, type: 2}
+    coreResource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
+    ingotResource: {fileID: 11400000, guid: 9ae27bd7bddb22149894301ea8bbf9af, type: 2}
+  - core: {fileID: 11400000, guid: b0e9ceb640cb49740a4dea6d9ff58c15, type: 2}
+    coreResource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
+    ingotResource: {fileID: 11400000, guid: c2be3e74687deba4296ed40f93cb37bb, type: 2}
+  - core: {fileID: 11400000, guid: 1ec3ed1a149fdef43a712c8a720f1569, type: 2}
+    coreResource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
+    ingotResource: {fileID: 11400000, guid: 11f3334d8dea6d04a965c954f3ebac14, type: 2}
+  - core: {fileID: 11400000, guid: 77d6406fc5384cf4197fb41a40ce3bad, type: 2}
+    coreResource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
+    ingotResource: {fileID: 11400000, guid: 98bec1c46fc0c544bb51840ca1f918aa, type: 2}
+  - core: {fileID: 11400000, guid: 91eea6e725239bd4f85992115b7e7dd8, type: 2}
+    coreResource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
+    ingotResource: {fileID: 11400000, guid: 18bd6c715eea1f24fabc9f075129aa65, type: 2}
+  slime: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
+  stone: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}

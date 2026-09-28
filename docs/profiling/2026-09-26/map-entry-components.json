@@ -1,0 +1,410 @@
+{
+  "success": true,
+  "command": "command eval",
+  "data": {
+    "command": "eval",
+    "parameters": {
+      "code": "var f=typeof(TimelessEchoes.GameManager).GetField(\"generationButtons\",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance);var maps=(System.Collections.Generic.List<TimelessEchoes.MapGeneration.MapGenerationButton>)f.GetValue(TimelessEchoes.GameManager.Instance);return maps.Select(m=>new {m.Config.name,ancestors=m.Button.GetComponentsInParent<UnityEngine.MonoBehaviour>(true).Select(c=>new {type=c.GetType().FullName,objectName=c.gameObject.name}).ToArray()}).ToArray();"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": [
+        {
+          "name": "Farmlands",
+          "ancestors": [
+            {
+              "type": "UnityEngine.UI.Image",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.Button",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "TimelessEchoes.UI.ButtonClickSfx",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Start Farmlands"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Farmlands"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.ContentSizeFitter",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "WindowButtons"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "TopBar"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "UnifiedWindow"
+            },
+            {
+              "type": "Blindsided.Utilities.ScreenSafeArea",
+              "objectName": "SafeArea"
+            },
+            {
+              "type": "UnityEngine.UI.CanvasScaler",
+              "objectName": "Canvas"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Canvas"
+            }
+          ]
+        },
+        {
+          "name": "Woods",
+          "ancestors": [
+            {
+              "type": "UnityEngine.UI.Image",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.Button",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "TimelessEchoes.UI.ButtonClickSfx",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Start Woods"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Woods"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.ContentSizeFitter",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "WindowButtons"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "TopBar"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "UnifiedWindow"
+            },
+            {
+              "type": "Blindsided.Utilities.ScreenSafeArea",
+              "objectName": "SafeArea"
+            },
+            {
+              "type": "UnityEngine.UI.CanvasScaler",
+              "objectName": "Canvas"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Canvas"
+            }
+          ]
+        },
+        {
+          "name": "Mines",
+          "ancestors": [
+            {
+              "type": "UnityEngine.UI.Image",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.Button",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "TimelessEchoes.UI.ButtonClickSfx",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Start Mines"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Mines"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.ContentSizeFitter",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "WindowButtons"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "TopBar"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "UnifiedWindow"
+            },
+            {
+              "type": "Blindsided.Utilities.ScreenSafeArea",
+              "objectName": "SafeArea"
+            },
+            {
+              "type": "UnityEngine.UI.CanvasScaler",
+              "objectName": "Canvas"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Canvas"
+            }
+          ]
+        },
+        {
+          "name": "River",
+          "ancestors": [
+            {
+              "type": "UnityEngine.UI.Image",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.Button",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "TimelessEchoes.UI.ButtonClickSfx",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Start River"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start River"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.ContentSizeFitter",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "WindowButtons"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "TopBar"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "UnifiedWindow"
+            },
+            {
+              "type": "Blindsided.Utilities.ScreenSafeArea",
+              "objectName": "SafeArea"
+            },
+            {
+              "type": "UnityEngine.UI.CanvasScaler",
+              "objectName": "Canvas"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Canvas"
+            }
+          ]
+        },
+        {
+          "name": "Haloween",
+          "ancestors": [
+            {
+              "type": "UnityEngine.UI.Image",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.Button",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "TimelessEchoes.UI.ButtonClickSfx",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Trek_Button"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Start Spooky"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Start Spooky"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.ContentSizeFitter",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Dropdown"
+            },
+            {
+              "type": "UnityEngine.UI.LayoutElement",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "Begin Adventure"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "WindowButtons"
+            },
+            {
+              "type": "UnityEngine.UI.HorizontalLayoutGroup",
+              "objectName": "TopBar"
+            },
+            {
+              "type": "UnityEngine.UI.VerticalLayoutGroup",
+              "objectName": "UnifiedWindow"
+            },
+            {
+              "type": "Blindsided.Utilities.ScreenSafeArea",
+              "objectName": "SafeArea"
+            },
+            {
+              "type": "UnityEngine.UI.CanvasScaler",
+              "objectName": "Canvas"
+            },
+            {
+              "type": "UnityEngine.UI.GraphicRaycaster",
+              "objectName": "Canvas"
+            }
+          ]
+        }
+      ]
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

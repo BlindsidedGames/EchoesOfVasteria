@@ -1,0 +1,449 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4113c993c57d424ab10aaaca10df887, type: 3}
+  m_Name: Library
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitBookDefinition
+  presentation: 0
+  sections:
+  - id: chapter-0
+    title:
+      key: library.0.title
+      bold: 1
+      smallCaps: 1
+      fallback: Roadmap
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.0.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 9824133185945600
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-1
+    title:
+      key: library.1.title
+      bold: 1
+      smallCaps: 1
+      fallback: Quests
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.1.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 505754247643136
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-2
+    title:
+      key: library.2.title
+      bold: 1
+      smallCaps: 1
+      fallback: Forge
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.2.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 9824133160779776
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+      npcId: 
+  - id: chapter-3
+    title:
+      key: library.3.title
+      bold: 1
+      smallCaps: 1
+      fallback: Cauldron
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.3.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 12027031164698624
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
+      npcId: 
+  - id: chapter-4
+    title:
+      key: library.4.title
+      bold: 1
+      smallCaps: 1
+      fallback: Alter Echoes
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.4.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 188400156672
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-5
+    title:
+      key: library.5.title
+      bold: 1
+      smallCaps: 1
+      fallback: Buffs
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.5.body
+      bold: 0
+      smallCaps: 0
+      fallback: Buffs are short-term, timed powers that expire when they run out or if you return to town.  They cost resources to activate and give you powerful bonuses for your run.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 478381752320
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+      npcId: 
+  - id: chapter-6
+    title:
+      key: library.6.title
+      bold: 1
+      smallCaps: 1
+      fallback: 'Combat
+
+'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.6.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'Caleb will enter combat automatically, and only engage enemies who get in the way! Tasks first fun later.
+
+
+        You may notice floating damage numbers EG. <color=#C69B60>4.27<font-weight=400></font-weight><size=80%><color=#60C560> +1.45<font-weight=400></font-weight></color></size><size=70%> -0.10<font-weight=400></font-weight></color></size>
+
+        The first is your base damage, the second is your bonus damage and the last one is the reduction from enemy defense.
+
+
+        Reaching your 10th, 100th, 1,000th, and 10,000th kill against a specific enemy will grant you 25% bonus damage against that specific enemy. This is where the majority of the green damage you see comes from.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 492340396032
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-7
+    title:
+      key: library.7.title
+      bold: 1
+      smallCaps: 1
+      fallback: Reaping
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.7.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 3785742338113536
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-8
+    title:
+      key: library.8.title
+      bold: 1
+      smallCaps: 1
+      fallback: Echoes
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.8.body
+      bold: 0
+      smallCaps: 0
+      fallback: "Echoes are alternate versions of Caleb who will shift slightly into his reality to help out under various circumstances.\n\nEach echo can have a combination of Calebs skillset. But most Echoes won't have them all.\n\nThe main difference in Echo behaviour comes from whether or not they are combat enabled.\nCombat enabled Echoes have two different styles depending on whether or not they can also complete tasks. \n\nA combat enabled Echo that does NOT have the ability to do tasks will seek out enemies specifically.\nA combat enabled Echo that DOES have the ability to do tasks will prioritize tasks over combat and only engage enemies that see them.\n\nEchoes that do not have combat will not be targetted by or target enemies.\n\nDev Note | Right now there are no echoes in the game that can do both combat and tasks. Echoes from Milestones specifically seek out tasks for that skills milestone EG an echo spawned with woodcutting will only seek out woodcutting tasks."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 512217202688
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-9
+    title:
+      key: library.9.title
+      bold: 1
+      smallCaps: 1
+      fallback: Retreating
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.9.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'For each kill you get on a run your resource bonus goes up by 2% During combat this is temporarily set back to 0%
+
+
+        Aim to retreat just before combat gets too tough for you to handle so that you get as many bonus resources as possible!'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 532437942272
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-10
+    title:
+      key: library.10.title
+      bold: 1
+      smallCaps: 1
+      fallback: 'Tasks
+
+'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.10.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'Tasks are the primary purpose of Caleb''s journey. Gathering resources for the town is essential to growth.
+
+
+        These are completed automatically, and you will complete them faster as your skills level.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 698595295232
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-11
+    title:
+      key: library.11.title
+      bold: 1
+      smallCaps: 1
+      fallback: Item Tiers
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.11.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 18915029441462272
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: chapter-12
+    title:
+      key: library.12.title
+      bold: 1
+      smallCaps: 1
+      fallback: Patch Notes
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: library.12.body
+      bold: 0
+      smallCaps: 0
+      fallback: 1.1.1
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 6939642239008768
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  references:
+    version: 2
+    RefIds: []

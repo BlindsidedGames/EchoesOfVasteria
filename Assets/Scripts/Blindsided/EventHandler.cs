@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Blindsided
 {
@@ -11,12 +12,12 @@ namespace Blindsided
         public static event Action UpdateTextsForTimeScaleEvent;
         public static event Action ApplicationBackgrounded;
         public static event Action ApplicationForegrounded;
-        
+
         public static event Action OnSaveData;
         public static event Action OnLoadData;
         public static event Action OnResetData;
         public static event Action<string> OnQuestHandin;
-        
+
         // Global run lifecycle events for cross-system coordination
         public static event Action OnRunStarted;
         public static event Action OnRunEnded;
@@ -38,24 +39,65 @@ namespace Blindsided
             OnRunStarted = null;
             OnRunEnded = null;
         }
-        
-        public static void SaveData()
+
+        public static void SaveData(bool force = false)
         {
-            // Debounce: invoke at most once per frame
+            // Routine callers are debounced, while transactional saves can force every
+            // contributor to refresh the in-memory tree immediately before serialization.
             var frame = UnityEngine.Time.frameCount;
-            if (frame == _lastSaveFrame) return;
-            _lastSaveFrame = frame;
-            OnSaveData?.Invoke();
+            if (!force && frame == _lastSaveFrame)
+                return;
+
+            var previousSaveFrame = _lastSaveFrame;
+            _lastSaveFrame = frame; // also prevents a subscriber from recursively re-entering this frame
+            try
+            {
+                InvokeAll(OnSaveData, "contribute data to the save transaction");
+            }
+            catch
+            {
+                // A rejected transaction was not a debounced success. Allow a corrected caller to
+                // retry in the same frame without weakening the re-entrancy guard above.
+                _lastSaveFrame = previousSaveFrame;
+                throw;
+            }
         }
-        
+
         public static void LoadData()
         {
-            OnLoadData?.Invoke();
+            InvokeAll(OnLoadData, "load runtime data");
         }
-        
+
         public static void ResetData()
         {
-            OnResetData?.Invoke();
+            InvokeAll(OnResetData, "reset runtime data");
+        }
+
+        private static void InvokeAll(Action subscribers, string operation)
+        {
+            if (subscribers == null)
+                return;
+
+            List<Exception> failures = null;
+            foreach (Action subscriber in subscribers.GetInvocationList())
+            {
+                try
+                {
+                    subscriber();
+                }
+                catch (Exception exception)
+                {
+                    failures ??= new List<Exception>();
+                    failures.Add(exception);
+                }
+            }
+
+            if (failures != null)
+            {
+                throw new AggregateException(
+                    $"One or more systems failed to {operation}.",
+                    failures);
+            }
         }
 
         public static void QuestHandin(string questId)
@@ -83,12 +125,12 @@ namespace Blindsided
 
         public static void ApplicationBackground()
         {
-            ApplicationBackgrounded?.Invoke();
+            InvokeAll(ApplicationBackgrounded, "enter the application background");
         }
 
         public static void ApplicationForeground()
         {
-            ApplicationForegrounded?.Invoke();
+            InvokeAll(ApplicationForegrounded, "return to the application foreground");
         }
 
         public static void UpdateTextsForTimeScale()

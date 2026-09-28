@@ -1,0 +1,22 @@
+{
+  "baseline": "10-OpenWiki.png",
+  "native": "library-collapsed.png",
+  "results": [
+    {
+      "region": "Library",
+      "exact_pixel_fraction": 0.9420127306421723,
+      "mean_absolute_channel_difference": 1.9314189921127316
+    },
+    {
+      "region": "Row fill and borders",
+      "exact_pixel_fraction": 0.9228070175438596,
+      "mean_absolute_channel_difference": 1.9333333333333333
+    },
+    {
+      "region": "Labels",
+      "exact_pixel_fraction": 0.7711203007518797,
+      "mean_absolute_channel_difference": 7.6653375104427734
+    }
+  ],
+  "note": "Diagnostic pixel differences, not an acceptance score. Text rasterization and one-channel color rounding differ between renderers."
+}

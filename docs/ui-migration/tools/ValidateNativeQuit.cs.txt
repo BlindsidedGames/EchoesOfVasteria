@@ -1,0 +1,24 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateNativeQuit {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ ToolkitQuitScreen screen;TownWindowManager manager;List<string> checks=new();int phase;double due;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>checks.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(string id){var b=Root.Q<Button>(id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");var test=new ValidateNativeQuit{manager=TownWindowManager.Instance};if(!test.manager)throw new Exception("Wait for Main");foreach(var intro in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>())intro.Hide();test.manager.CloseAllWindows();var old=UnityEngine.Object.FindAnyObjectByType<QuitGameButton>(FindObjectsInactive.Include);old.transform.parent.gameObject.SetActive(false);var go=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quit.prefab"));test.screen=go.GetComponent<ToolkitQuitScreen>();var so=new SerializedObject(test.screen);so.FindProperty("windows").objectReferenceValue=test.manager;so.ApplyModifiedPropertiesWithoutUndo();EditorApplication.update+=test.Tick;return "Quit view and fake checkpoint validation started; actual quit never invoked";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase++){
+ case 0:var r=new GameQuitRequest();int saves=0,exits=0;Check(!r.TryQuit(()=>{saves++;return false;},()=>exits++)&&!r.InProgress&&saves==1&&exits==0,"Failed checkpoint leaves exit uncalled and permits retry");Check(r.TryQuit(()=>{saves++;return true;},()=>exits++)&&r.InProgress&&saves==2&&exits==1,"Successful retry checkpoints before one exit");Check(!r.TryQuit(()=>{saves++;return true;},()=>exits++)&&saves==2&&exits==1,"Duplicate confirmed exit cannot save or exit twice");Check(Root.Q<Button>("quit-open").worldBound.width==16,"Quit icon retains 16-unit size");ScreenCapture.CaptureScreenshot(Output+"/quit-native-closed.png");break;
+ case 1:Submit("quit-open");break;
+ case 2:var confirm=Root.Q<Button>("quit-confirm");var cancel=Root.Q<Button>("quit-cancel");var safe=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,Blindsided.SaveData.StaticReferences.SafeAreaRatio);Check(Mathf.Abs(confirm.worldBound.width-47)<.1f&&Mathf.Abs(cancel.worldBound.xMin-confirm.worldBound.xMax-1)<.1f,"Confirmation buttons are 47 units with one-unit gap");Check(Mathf.Abs(cancel.worldBound.xMax-safe.xMax)<.1f&&Mathf.Abs(confirm.worldBound.yMin-safe.y)<.1f,"Confirmation aligns with original safe-area top-right bounds");Check(Root.Q("quit-confirmation").resolvedStyle.display==DisplayStyle.Flex,"Submit opens confirmation");ScreenCapture.CaptureScreenshot(Output+"/quit-native-confirm.png");break;
+ case 3:Submit("quit-cancel");Check(Root.Q("quit-confirmation").style.display.value==DisplayStyle.None,"Cancel returns to closed icon");manager.OpenWindow(TownWindowManager.Window.Options);break;
+ case 4:Check(Root.Q("quit-controls").resolvedStyle.display==DisplayStyle.None,"Quit hides behind open game panels");manager.CloseAllWindows();break;
+ case 5:Check(Root.Q("quit-controls").resolvedStyle.display==DisplayStyle.Flex,"Quit returns after panels close");for(int i=0;i<25;i++){screen.enabled=false;screen.enabled=true;}Check(Root.Query<VisualElement>("quit-controls").ToList().Count==1,"25 enable cycles retain one visual tree");Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Fixture remained offline");File.WriteAllLines(Output+"/quit-checks.txt",checks);EditorApplication.update-=Tick;break;
+ }}catch(Exception ex){checks.Add("FAIL "+ex);File.WriteAllLines(Output+"/quit-checks.txt",checks);EditorApplication.update-=Tick;}}
+}

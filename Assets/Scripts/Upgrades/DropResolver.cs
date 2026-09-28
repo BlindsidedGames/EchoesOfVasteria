@@ -7,7 +7,7 @@ namespace TimelessEchoes.Upgrades
 {
     /// <summary>
     /// Utility for rolling weighted ResourceDrop tables with optional extra slots.
-    /// Handles world position and skill level requirements.
+    /// Handles skill level requirements. Drop eligibility is independent of distance.
     /// </summary>
     public static class DropResolver
     {
@@ -29,14 +29,12 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         /// <param name="drops">Potential drops to choose from.</param>
         /// <param name="additionalLootChances">Sequential extra slot chances after the first guaranteed roll (0-1 values).</param>
-        /// <param name="worldX">World position used for min/max filters.</param>
         /// <param name="associatedSkill">Skill used for unlock level checks.</param>
         /// <param name="ignoreSkillLevel">If true, required skill level checks are skipped.</param>
         /// <param name="rand">Optional random generator; defaults to UnityEngine.Random.value.</param>
         public static List<DropResult> RollDrops(
             IEnumerable<ResourceDrop> drops,
             IList<float> additionalLootChances,
-            float worldX,
             Skill associatedSkill = null,
             bool ignoreSkillLevel = false,
             Func<float> rand = null)
@@ -54,7 +52,6 @@ namespace TimelessEchoes.Upgrades
                 if (drop == null || drop.resource == null) continue;
                 if (drop.weight <= 0f) continue;
                 if (!ignoreSkillLevel && !IsDropUnlocked(drop, associatedSkill)) continue;
-                if (worldX < drop.minX || worldX > drop.maxX) continue;
                 _scratchAvailable.Add(drop);
             }
 

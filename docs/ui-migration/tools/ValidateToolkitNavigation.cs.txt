@@ -1,0 +1,79 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Quests;
+using Group=TimelessEchoes.UI.Toolkit.ToolkitNavigationDefinition.Group;
+public class ValidateToolkitNavigation {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ ToolkitNavigationScreen screen;ToolkitNavigationDefinition definition;TownWindowManager manager;GameObject top;
+ Dictionary<string,GameData.QuestRecord> savedQuests;readonly List<string> results=new();int phase,mapIndex;double due,deadline;bool savedPin;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string message)=>results.Add((b?"PASS ":"FAIL ")+message);
+ void Submit(string id){var button=Root.Q<Button>(id);if(button==null||button.panel==null)throw new Exception("Missing attached button "+id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=button;button.SendEvent(e);}}
+ bool Visible(string id)=>Root.Q(id+"-row").resolvedStyle.display!=DisplayStyle.None;
+ public static string Main(){
+ if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927")||SteamManager.Initialized||Unity.Services.Core.UnityServices.State!=Unity.Services.Core.ServicesInitializationState.Uninitialized)throw new Exception("Offline disposable Play mode required");
+ if(!TownWindowManager.Instance)throw new Exception("Wait for Main startup");
+ var test=new ValidateToolkitNavigation();test.manager=TownWindowManager.Instance;
+ test.savedQuests=Oracle.oracle.saveData.Quests;test.savedPin=StaticReferences.AutoPinActiveQuests;
+ test.definition=AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset");
+ test.top=Resources.FindObjectsOfTypeAll<Transform>().Single(t=>t.gameObject.scene.IsValid()&&t.name=="TopBar").gameObject;
+ test.top.SetActive(false);
+ if(!test.top.transform.parent.Find("Toolkit Toolbar Layout Space")){
+ var spacer=new GameObject("Toolkit Toolbar Layout Space",typeof(RectTransform),typeof(UnityEngine.UI.LayoutElement));spacer.transform.SetParent(test.top.transform.parent,false);spacer.transform.SetSiblingIndex(test.top.transform.GetSiblingIndex());var layout=spacer.GetComponent<UnityEngine.UI.LayoutElement>();layout.minHeight=22;layout.preferredHeight=22;layout.flexibleHeight=0;}
+ foreach(var intro in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>(FindObjectsInactive.Include))intro.Hide();
+ foreach(var nav in UnityEngine.Object.FindObjectsByType<ToolkitNavigationScreen>(FindObjectsInactive.Include))UnityEngine.Object.DestroyImmediate(nav.gameObject);
+ test.screen=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab")).GetComponent<ToolkitNavigationScreen>();
+ test.manager.CloseAllWindows();EditorApplication.update+=test.Tick;return "Native navigation checks started in isolated copy; synthetic quest gates, five map starts and returns";
+ }
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase){
+ case 0:
+ Check(definition.entries.Count(e=>e.action==ToolkitNavigationDefinition.Action.BeginMap)==5,"Imports all five map routes from GameManager assets");
+ Check(screen.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Length==0,"Native navigation prefab contains no Canvas graphics");
+ Oracle.oracle.saveData.Quests=new Dictionary<string,GameData.QuestRecord>();screen.Refresh();phase++;break;
+ case 1:Check(!Visible("townsfolk"),"Fresh fixture hides quest-locked Townsfolk menu");Submit("hub");phase++;break;
+ case 2:Check(!Visible("alterEchoes")&&!Visible("buffs")&&Visible("skills"),"Fresh Hub shows Skills and hides locked Alter Echoes and Buffs");ScreenCapture.CaptureScreenshot(Output+"/navigation-fresh-hub.png");phase++;break;
+ case 3:
+ foreach(var e in definition.entries)foreach(var rule in e.visibility)if(rule.quest)Oracle.oracle.saveData.Quests[rule.quest.questId]=new GameData.QuestRecord{Completed=true};screen.Refresh();phase++;break;
+ case 4:Check(Visible("townsfolk")&&Visible("alterEchoes")&&Visible("buffs"),"Completing imported quest gates reveals affected menus and entries");ScreenCapture.CaptureScreenshot(Output+"/navigation-hub.png");phase++;break;
+ case 5:Submit("adventure");Check(screen.OpenGroup==Group.Adventure,"Adventure replaces Hub dropdown");phase++;break;
+ case 6:Check(definition.entries.Where(e=>e.group==Group.Adventure).All(e=>Visible(e.id)),"All five unlocked maps appear in Adventure");ScreenCapture.CaptureScreenshot(Output+"/navigation-adventure.png");phase++;break;
+ case 7:Submit("townsfolk");Check(screen.OpenGroup==Group.Townsfolk,"Townsfolk replaces Adventure dropdown");phase++;break;
+ case 8:ScreenCapture.CaptureScreenshot(Output+"/navigation-townsfolk.png");phase++;break;
+ case 9:Submit("townsfolk");Check(screen.OpenGroup==Group.Toolbar,"Selecting current menu toggles it closed");Submit("wiki");Check(manager.IsWindowOpen(TownWindowManager.Window.Library),"Native Library button routes to native Library screen");Check(screen.OpenGroup==Group.Toolbar,"Opening a window closes dropdowns");phase++;break;
+ case 10:Check(Visible("close"),"Global close appears for an open native screen");Submit("close");Check(!manager.HasOpenWindow,"Native close closes all windows");
+ foreach(var e in definition.entries.Where(e=>e.action==ToolkitNavigationDefinition.Action.Window)){
+ if(e.group!=Group.Toolbar)Submit(e.group==Group.Hub?"hub":"townsfolk");Submit(e.id);Check(manager.IsWindowOpen(e.window),"Native route opens "+e.window);manager.CloseAllWindows();}
+ Submit("quests");phase++;break;
+ case 11:Check(Root.Q("auto-pin").resolvedStyle.display==DisplayStyle.Flex,"Quests exposes contextual Auto-Pin control");var toggle=Root.Q("auto-pin").Q<Button>();using(var e=NavigationSubmitEvent.GetPooled()){e.target=toggle;toggle.SendEvent(e);}Check(StaticReferences.AutoPinActiveQuests!=savedPin,"Native Auto-Pin changes existing preference");ScreenCapture.CaptureScreenshot(Output+"/navigation-quests.png");phase++;break;
+ case 12:manager.CloseAllWindows();Submit("options");phase++;break;
+ case 13:Check(Root.Q("discord").resolvedStyle.display==DisplayStyle.Flex,"Options exposes Discord control without opening external URL");ScreenCapture.CaptureScreenshot(Output+"/navigation-options.png");phase++;break;
+ case 14:manager.CloseAllWindows();TownWindowManager.ShowForgeAttention();TownWindowManager.ShowCauldronAttention();screen.Refresh();phase++;break;
+ case 15:Check(manager.ForgeNeedsAttention&&manager.CauldronNeedsAttention,"Automation attention state is available without legacy images");ScreenCapture.CaptureScreenshot(Output+"/navigation-attention.png");phase++;break;
+ case 16:Submit("townsfolk");Submit("forge");Check(!manager.ForgeNeedsAttention,"Opening Forge clears its attention state");manager.CloseAllWindows();Submit("townsfolk");Submit("cauldron");Check(!manager.CauldronNeedsAttention,"Opening Cauldron clears its attention state");manager.CloseAllWindows();
+ for(int i=0;i<25;i++){Submit("hub");manager.CloseAllWindows();screen.enabled=false;screen.enabled=true;}
+ Check(Root.childCount==1,"25 disable/re-enable cycles retain exactly one native tree");phase++;break;
+ case 17:Submit("hub");manager.CloseAllWindows();Check(screen.OpenGroup==Group.Toolbar,"Window manager close request closes native menus after repeated enable cycles");phase++;break;
+ case 18:Submit("adventure");Submit("map-"+mapIndex);deadline=EditorApplication.timeSinceStartup+45;phase++;break;
+ case 19:
+ if(GameManager.Instance.RunLoadingActive||TimelessEchoes.Hero.HeroController.Instance==null){if(EditorApplication.timeSinceStartup>deadline)throw new Exception("Map startup timeout "+mapIndex);break;}
+ var map=definition.entries.Single(e=>e.id=="map-"+mapIndex);Check(GameManager.CurrentGenerationConfig==map.map,"Native map route starts authored config "+map.map.name);
+ Check(Root.Q("run-progress").resolvedStyle.display==DisplayStyle.Flex,"Native progress visible in "+map.map.name);
+ ScreenCapture.CaptureScreenshot(Output+"/navigation-run-"+mapIndex+".png");phase++;break;
+ case 20:typeof(GameManager).GetMethod("ReturnToTavern",F).Invoke(GameManager.Instance,null);deadline=EditorApplication.timeSinceStartup+30;phase++;break;
+ case 21:if(GameManager.Instance.CurrentMap!=null){if(EditorApplication.timeSinceStartup>deadline)throw new Exception("Return timeout");break;}Check(true,"Returns to town from map "+mapIndex);mapIndex++;phase=mapIndex<5?18:22;break;
+ case 22:Finish();break;
+ }}catch(Exception ex){results.Add("FAIL "+ex);Finish();}}
+ void Finish(){EditorApplication.update-=Tick;Oracle.oracle.saveData.Quests=savedQuests;StaticReferences.AutoPinActiveQuests=savedPin;manager.CloseAllWindows();File.WriteAllLines(Output+"/native-navigation-checks.txt",results);}
+}

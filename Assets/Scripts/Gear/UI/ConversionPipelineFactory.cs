@@ -13,11 +13,10 @@ namespace TimelessEchoes.Gear.UI
         /// <summary>
         /// Creates an ingot conversion pipeline (chunks + crystals -> ingots).
         /// </summary>
-        public static ConversionPipeline CreateIngotPipeline(CraftSection2x1UIReferences section)
+        public static ConversionPipeline CreateIngotPipeline()
         {
             return new ConversionPipeline(
                 ConversionType.Ingot,
-                section,
                 canPerform: (rm, core) =>
                 {
                     if (rm == null || core == null) return false;
@@ -68,11 +67,10 @@ namespace TimelessEchoes.Gear.UI
         /// <summary>
         /// Creates a crystal conversion pipeline (chunks + slime -> crystals).
         /// </summary>
-        public static ConversionPipeline CreateCrystalPipeline(CraftSection2x1UIReferences section, Resource slimeResource)
+        public static ConversionPipeline CreateCrystalPipeline(Resource slimeResource)
         {
             return new ConversionPipeline(
                 ConversionType.Crystal,
-                section,
                 canPerform: (rm, core) =>
                 {
                     if (rm == null || core == null) return false;
@@ -123,11 +121,10 @@ namespace TimelessEchoes.Gear.UI
         /// <summary>
         /// Creates a chunk conversion pipeline (crystals + stone -> chunks).
         /// </summary>
-        public static ConversionPipeline CreateChunkPipeline(CraftSection2x1UIReferences section, Resource stoneResource)
+        public static ConversionPipeline CreateChunkPipeline(Resource stoneResource)
         {
             return new ConversionPipeline(
                 ConversionType.Chunk,
-                section,
                 canPerform: (rm, core) =>
                 {
                     if (rm == null || core == null) return false;
@@ -179,12 +176,10 @@ namespace TimelessEchoes.Gear.UI
         /// Creates a core conversion pipeline (5 current tier + 1 next tier -> 2 next tier).
         /// </summary>
         public static ConversionPipeline CreateCorePipeline(
-            CraftSection2x1UIReferences section,
             Func<CoreSO, (Resource currentCore, Resource nextCore, bool isFinalTier)> resolveResources)
         {
             return new ConversionPipeline(
                 ConversionType.Core,
-                section,
                 canPerform: (rm, core) =>
                 {
                     if (rm == null || core == null) return false;

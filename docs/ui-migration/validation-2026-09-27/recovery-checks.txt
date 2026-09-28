@@ -1,0 +1,13 @@
+PASS Recovery remains visible across actual Loading scene transition
+PASS Corrupt status preserves fresh-recovery action label
+PASS Entire recovery frame stays inside safe area
+PASS dialog-primary remains visible on screen
+PASS dialog-secondary remains visible on screen
+PASS Unavailable status offers folder action, not fresh recovery
+PASS Newer-version status retains protective message and folder action
+PASS Busy state disables both native actions
+PASS Diagnostics are displayed literally without markup interpretation
+PASS Status changes reuse one native view tree
+PASS Native actions invoke only the supplied fixture callbacks
+PASS Busy dialog rejects native submit
+PASS Hiding dialog removes content and callbacks

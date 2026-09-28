@@ -150,6 +150,7 @@ namespace TimelessEchoes.Gear.UI
         #region Unity Lifecycle
     private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             crafting = CraftingService.Instance;
             equipment = EquipmentController.Instance;
             rm = ResourceManager.Instance;
@@ -621,7 +622,12 @@ namespace TimelessEchoes.Gear.UI
             var eq = equipment != null ? equipment.GetEquipped(lastCrafted.slot) : null;
             if (eq == null && equipment != null)
             {
-                equipment.Equip(lastCrafted);
+                if (!equipment.Equip(lastCrafted))
+                {
+                    Debug.LogError("ForgeWindowUI: Crafted equipment could not be serialized; the result remains available.");
+                    RefreshActionButtons();
+                    return;
+                }
                 // Track immediate equip from craft
                 var o = Blindsided.Oracle.oracle;
                 if (o != null && o.saveData != null && o.saveData.Forge != null)
@@ -688,7 +694,12 @@ namespace TimelessEchoes.Gear.UI
         private void OnReplaceClicked()
         {
             if (lastCrafted == null || equipment == null) return;
-            equipment.Equip(lastCrafted);
+            if (!equipment.Equip(lastCrafted))
+            {
+                Debug.LogError("ForgeWindowUI: Replacement equipment could not be serialized; the result remains available.");
+                RefreshActionButtons();
+                return;
+            }
             // Track replace equip from craft
             var o = Blindsided.Oracle.oracle;
             if (o != null && o.saveData != null && o.saveData.Forge != null)
@@ -858,10 +869,10 @@ namespace TimelessEchoes.Gear.UI
         private void InitializeConversionPipelines()
         {
             // Create pipelines for each conversion type
-            ingotPipeline = ConversionPipelineFactory.CreateIngotPipeline(ingotConversionSection);
-            crystalPipeline = ConversionPipelineFactory.CreateCrystalPipeline(crystalConversionSection, slimeResource);
-            chunkPipeline = ConversionPipelineFactory.CreateChunkPipeline(chunkConversionSection, stoneResource);
-            corePipeline = ConversionPipelineFactory.CreateCorePipeline(coreConversionSection, ResolveCurrentAndNextCoreResources);
+            ingotPipeline = ConversionPipelineFactory.CreateIngotPipeline();
+            crystalPipeline = ConversionPipelineFactory.CreateCrystalPipeline(slimeResource);
+            chunkPipeline = ConversionPipelineFactory.CreateChunkPipeline(stoneResource);
+            corePipeline = ConversionPipelineFactory.CreateCorePipeline(ResolveCurrentAndNextCoreResources);
         }
 
         private void OnPipelineConversionCompleted(ConversionType type, ref double craftAmount, double persistedAmount)

@@ -1,0 +1,33 @@
+PASS Options route opens native host
+PASS Native dialog host created separately
+PASS Slot 0 title matches legacy
+PASS Slot 0 playtime matches legacy
+PASS Slot 0 last-played/version matches legacy
+PASS Slot 1 title matches legacy
+PASS Slot 1 playtime matches legacy
+PASS Slot 1 last-played/version matches legacy
+PASS Slot 2 title matches legacy
+PASS Slot 2 playtime matches legacy
+PASS Slot 2 last-played/version matches legacy
+PASS Native audio sliders update stored volumes
+PASS Duration sliders preserve original 10/2/2 multipliers
+PASS Native preference toggles update correct settings
+PASS Frame cap cycles 30 to 60
+PASS Frame cap cycles 60 to 120
+PASS Frame cap cycles 120 to 30
+PASS VSync preserves existing cap/interactivity behavior
+PASS Inactive slot initially allows load but not overwrite
+PASS Slot safety toggle enables overwrite/delete presentation
+PASS Import opens native multiline input
+PASS Native paste uses clipboard
+PASS Malformed import is rejected with status
+PASS Native transfer close removes dialog
+PASS Isolated export returns nonempty save text
+PASS Isolated export confirms durable save
+PASS Native copy uses current export field
+PASS Language popup retains original two choices
+PASS Selecting English closes language popup
+PASS Native Options routes to native Credits
+PASS 25 show/hide cycles leave one Options tree
+PASS 25 cycles reuse one independent dialog host
+PASS Runtime remains offline and isolated

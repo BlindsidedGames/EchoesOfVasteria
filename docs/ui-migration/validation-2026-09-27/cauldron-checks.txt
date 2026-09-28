@@ -1,0 +1,38 @@
+PASS Town menu routes to native Cauldron
+PASS Legacy Cauldron and collections hidden
+PASS Native Cauldron has no Canvas graphics
+PASS Eva level and XP match reference
+PASS Stew label matches reference
+PASS Persisted tasting totals match reference
+PASS All 30 food icons preserve eligible order
+PASS All 30 food quantities match reference
+PASS Food availability matches reference
+PASS All 81 collection counts and maxed labels match
+PASS Infinity section first
+PASS Authored hidden Taste and Stop buttons preserved
+PASS Cauldron width matches 508-unit reference
+PASS Two-row collection section matches reference height
+PASS Resource tooltip matches original text and effects
+PASS One food cannot mix
+PASS Two distinct stocked foods enable Mix
+PASS Third selection replaces oldest slot
+PASS Mix automatically starts tasting
+PASS Mix consumes both full stacks
+PASS Mixed stew equals existing value formula
+PASS Mix clears selected slots
+PASS Mix All consumes all eligible pairs
+PASS Actual tasting advances with native window open
+PASS Tasting event updates visible totals
+PASS Tasting stop preserves collections bonus
+PASS Actual tasting consumes remaining stew while closed
+PASS Closed completion raises town attention
+PASS Reopening clears completion attention
+PASS 25 cycles retain one native tree
+PASS One native OnStewChanged subscription after cycles
+PASS One native OnWeightsChanged subscription after cycles
+PASS One native OnCardGained subscription after cycles
+PASS One native OnStatsChanged subscription after cycles
+PASS One native OnTasteSessionStarted subscription after cycles
+PASS One native OnTasteSessionStopped subscription after cycles
+PASS Closing removes native card subscription
+PASS All Cauldron tests remain offline

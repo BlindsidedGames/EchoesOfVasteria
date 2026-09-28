@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7250c851376ff45a3ca09df0cce4a9, type: 3}
+  m_Name: Quit
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitQuitDefinition
+  quit: {fileID: 4133628245501162020, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  confirm: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  cancel: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  confirmText:
+    key: quit.confirm
+    bold: 1
+    smallCaps: 1
+    fallback: Quit?
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  cancelText:
+    key: quit.cancel
+    bold: 1
+    smallCaps: 1
+    fallback: No!
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  iconSize: 16
+  buttonWidth: 47
+  spacing: 1
+  fontSize: 8
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "command": "command get_build_settings",
+  "data": {
+    "command": "get_build_settings",
+    "parameters": {},
+    "result": {
+      "activeBuildTarget": "StandaloneWindows64",
+      "activeBuildTargetGroup": "Standalone",
+      "developmentBuild": false,
+      "allowDebugging": false,
+      "connectWithProfiler": false,
+      "buildScriptsOnly": false,
+      "symlinkSources": false,
+      "il2CppCodeGeneration": "OptimizeSpeed",
+      "scenes": [
+        {
+          "path": "Assets/Scenes/Loading.unity",
+          "guid": "c77eff40f1538f3478d850cfc801bcfd",
+          "enabled": true
+        },
+        {
+          "path": "Assets/Scenes/Main.unity",
+          "guid": "8c9cfa26abfee488c85f1582747f6a02",
+          "enabled": true
+        }
+      ]
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

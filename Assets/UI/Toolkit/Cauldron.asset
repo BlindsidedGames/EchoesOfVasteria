@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d44904861004f43b373ab66e00bed3, type: 3}
+  m_Name: Cauldron
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitCauldronDefinition
+  config: {fileID: 11400000, guid: 186138e47430c524ba2bca88b5d3da25, type: 2}
+  frame: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  inset: {fileID: -6793677539430908002, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  darkInset: {fileID: -521334471, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  slot: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  selectionGreen: {fileID: -3351714043623252698, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+  selectionWhite: {fileID: 3637014206408309489, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+  button: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  plus: {fileID: 5372670759901458928, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  arrowGreen: {fileID: -8659047476506390728, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  arrowRed: {fileID: -8181858823313546132, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  xpTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  xpFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  hover: {fileID: -6133907437499239528, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  collectionFill: {fileID: -5162992721624225379, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  tierBackgrounds:
+  - {fileID: -6793677539430908002, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1370181054, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -2033816560, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1263174726, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1802644530, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: 1479873531, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1078676658, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  - {fileID: -1462212559, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  tierBorders:
+  - {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: -1066570328, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: -2065190393, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: -341476406, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: 1179472661, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: 1523447477, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: -2011571184, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  - {fileID: -1200994790, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  portrait:
+    frames:
+    - {fileID: -8960004934634566726, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: -2584423454802028620, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: -5775053319250631124, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: -6904489422476366521, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: 3187816710134686907, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: -4146579550087022873, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    - {fileID: -4146579550087022873, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
+    times:
+    - 0
+    - 0.083333336
+    - 0.16666667
+    - 0.25
+    - 0.33333334
+    - 0.41666666
+    - 0.5
+    duration: 0.51666665
+  pot:
+    frames:
+    - {fileID: -6316128909204395339, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -4879045778416903039, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -7520368420929746588, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: 3339427329531671967, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -4746529682640127511, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -2601226311743725169, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -601169322801286814, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: 7030364784122536734, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: -8533676843455045213, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: 2341204956702099104, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: 7229468475605822579, guid: de898b1a9190842419c92214290725b9, type: 3}
+    - {fileID: 1485771021983057120, guid: de898b1a9190842419c92214290725b9, type: 3}
+    times:
+    - 0
+    - 0.083333336
+    - 0.18333334
+    - 0.26666668
+    - 0.36666667
+    - 0.45
+    - 0.55
+    - 0.6333333
+    - 0.73333335
+    - 0.81666666
+    - 0.9166667
+    - 1
+    duration: 1.0166667
+  mixingHelp: Pick two resources to throw into the cauldron. The entire stack will be consumed.
+  rewardHelp: 'Low Card<sprite=9>Gives your lowest card by count.
+
+    Eva''s blessing<sprite=9>Provides 2 random cards at equal chances.
+
+    The Vast One''s Surge<sprite=9>Provides 10 random cards at equal chances.'
+  showTaste: 0
+  showStop: 0
+  xpColor: {r: 1, g: 1, b: 1, a: 0.8}
+  countColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
+  collectionFillColor: {r: 1, g: 1, b: 1, a: 0.8}
+  collectionCountColor: {r: 0.8862746, g: 0.80392164, b: 0.64705884, a: 1}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}

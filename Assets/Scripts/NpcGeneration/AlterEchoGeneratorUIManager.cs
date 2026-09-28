@@ -26,6 +26,7 @@ namespace TimelessEchoes.NpcGeneration
 
         protected override void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             base.Awake();
             if (Instance != this) return;
             generationManager = AlterEchoGenerationManager.Instance;

@@ -19,7 +19,7 @@ namespace TimelessEchoes.Buffs
     ///     Manages active buffs and persists them across scenes.
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class BuffManager : TimelessEchoes.Utilities.Singleton<BuffManager>
+    public partial class BuffManager : TimelessEchoes.Utilities.Singleton<BuffManager>
     {
         
         public event Action<BuffRecipe, bool> OnBuffCast; // (recipe, isAuto)
@@ -257,6 +257,7 @@ namespace TimelessEchoes.Buffs
         public bool CanActivate(BuffRecipe recipe)
         {
             if (recipe == null) return false;
+            if (recipe.HasEffect(BuffEffectType.ProspectorWeightPercent) && !HasValidProspectorTarget) return false;
             if (GetRemaining(recipe) > 0f) return false;
             if (cooldowns.TryGetValue(recipe, out var cd) && cd > 0f) return false;
 
@@ -320,6 +321,7 @@ namespace TimelessEchoes.Buffs
                 expireAtDistance = expireDist
             };
             activeBuffs.Add(buff);
+            TimelessEchoes.Tasks.TaskWeightService.NotifyWeightsChanged();
             ApplyTimeScaleModifier();
 
             TimelessEchoes.Hero.HeroStatSystem.MarkDirty(
@@ -495,6 +497,7 @@ namespace TimelessEchoes.Buffs
         private void LoadSlots()
         {
             if (oracle == null) return;
+            ResetGatheringForProfileLoad();
             oracle.saveData.BuffSlots ??= new List<string>();
             while (oracle.saveData.BuffSlots.Count < slotAssignments.Count)
                 oracle.saveData.BuffSlots.Add(null);
@@ -680,6 +683,7 @@ namespace TimelessEchoes.Buffs
             var buff = activeBuffs[index];
             DestroyEchoes(buff);
             activeBuffs.RemoveAt(index);
+            TimelessEchoes.Tasks.TaskWeightService.NotifyWeightsChanged();
             if (buff.recipe != null)
             {
                 if (startCooldown)
@@ -743,6 +747,7 @@ namespace TimelessEchoes.Buffs
         [Serializable]
         public class ActiveBuff
         {
+            public readonly GatheringBuffState gathering = new();
             public BuffRecipe recipe;
             public List<BuffEffect> effects = new();
             public float remaining;

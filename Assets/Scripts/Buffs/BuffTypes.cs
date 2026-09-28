@@ -20,7 +20,11 @@ namespace TimelessEchoes.Buffs
         CritDamagePercent,
         TimeScalePercent,
         DistanceDurationPercent,
-        ExperienceBonusFraction
+        ExperienceBonusFraction,
+        ProspectorWeightPercent,
+        CollectorWeightPercent,
+        WindfallRewardPercent,
+        EchoResonanceRewardPercent
     }
 
     public enum BuffDurationType

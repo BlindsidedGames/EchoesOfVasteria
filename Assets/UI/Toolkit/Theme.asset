@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1129ee08691fe024e92f869bcabef286, type: 3}
+  m_Name: Theme
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitTheme
+  font: {fileID: 12800000, guid: 87960f47296eb7a4986346e3926a7235, type: 3}
+  gameplayFont: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  windowWidth: 508
+  windowTopInset: 24
+  windowBottomInset: 2
+  window: {fileID: -7374546139589807423, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  recessed: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  row: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  button: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  expand: {fileID: 1796717431827689584, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  collapse: {fileID: -5154177540249454087, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  scrollTrack: {fileID: -231585647770926556, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  scrollThumb: {fileID: -8481131361458630857, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  textColor: {r: 0.243, g: 0.153, b: 0.192, a: 1}
+  styles: {fileID: 7433441132597879392, guid: 858a012fbc828cd4d8ac42d091d80edb, type: 3}

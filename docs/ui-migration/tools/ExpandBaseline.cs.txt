@@ -1,0 +1,30 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TimelessEchoes.UI;
+public static class ExpandBaseline {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
+ static object session;
+ static string PathOf(Transform t){var p=new List<string>();for(;t;t=t.parent)p.Add(t.name);p.Reverse();return string.Join("/",p);}
+ static void Add(string name,Action action){session.GetType().GetMethod("Add",F).Invoke(session,new object[]{name,action,"synthetic-all-quest-flags"});}
+ static void Open(string method){session.GetType().GetMethod("Open",F).Invoke(session,new object[]{method});}
+ public static string Main(){session=AppDomain.CurrentDomain.GetData("UITK_BASELINE");if(session==null)throw new Exception("Start baseline first");int count=0;
+  foreach(var tabs in Resources.FindObjectsOfTypeAll<TabPanelController>()){
+   if(!tabs.gameObject.scene.IsValid())continue;var path=PathOf(tabs.transform);
+   var methods=new Dictionary<string,string>{{"Statistics_Window","OpenStats"},{"Inventory","OpenInventory"},{"ForgeStats","OpenForge"},{"Cauldron_Window","OpenCauldron"},{"AlterEchoes_Window","OpenAlterEchoes"},{"Milestones_Window","OpenSkills"}};
+   var match=methods.FirstOrDefault(kv=>path.Contains("/"+kv.Key+"/"));if(match.Key==null)continue;
+   foreach(var f in tabs.GetType().GetFields(F).Where(f=>f.FieldType==typeof(Button))){var button=f.GetValue(tabs) as Button;if(!button)continue;var groups=tabs.GetType().GetField(f.Name.Replace("Button","Objects"),F)?.GetValue(tabs) as List<GameObject>;if(groups==null||groups.Count==0)continue;var btn=button;var open=match.Value;var name=match.Key+"-"+tabs.name+"-"+f.Name;Add("40-tabs-"+count+"-"+name,()=>{Open(open);btn.onClick.Invoke();});count++;}
+  }
+  foreach(var method in new[]{"OpenOptions","OpenBuffs","OpenSkills","OpenUpgrades","OpenQuests","OpenCauldron","OpenAlterEchoes"}){
+   var open=method;
+   foreach(float value in new[]{.5f,0f}){float pos=value;Add("50-scroll-"+method+"-"+value,()=>{Open(open);foreach(var scroll in UnityEngine.Object.FindObjectsByType<ScrollRect>(FindObjectsInactive.Exclude))if(scroll.content&&scroll.content.rect.height>scroll.viewport.rect.height+1)scroll.verticalNormalizedPosition=pos;});count++;}
+  }
+  var wiki=Resources.FindObjectsOfTypeAll<WikiUIToggle>().Where(w=>w&&w.gameObject.scene.IsValid()&&PathOf(w.transform).Contains("Library_Window")).ToArray();
+  for(int i=0;i<wiki.Length;i++){var selected=wiki[i];Add("60-library-"+i,()=>{Open("OpenWiki");foreach(var item in wiki)item.SetExpanded(item==selected);Canvas.ForceUpdateCanvases();var scroll=selected.GetComponentInParent<ScrollRect>();if(scroll){var relative=scroll.content.InverseTransformPoint(selected.transform.position);var p=scroll.content.anchoredPosition;p.y=Mathf.Clamp(-relative.y,0,Mathf.Max(0,scroll.content.rect.height-scroll.viewport.rect.height));scroll.content.anchoredPosition=p;}});count++;}
+  Add("70-cauldron-weights-tooltip",()=>{Open("OpenCauldron");var c=UnityEngine.Object.FindAnyObjectByType<CauldronWindowUI>();c.GetType().GetMethod("ShowWeightsTooltip",F).Invoke(c,null);});count++;
+  return "Added "+count+" nested tabs, scroll positions and library states";
+ }
+}

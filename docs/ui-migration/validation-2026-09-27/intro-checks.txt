@@ -1,0 +1,6 @@
+PASS First-time notice starts visible with countdown
+PASS Countdown rejects closing and leaves seen preference unset
+PASS Ten-second countdown completes while timeScale is zero
+PASS Close persists existing seen key and removes native notice
+PASS Closed intro detaches all native content
+PASS Returning player does not see notice again

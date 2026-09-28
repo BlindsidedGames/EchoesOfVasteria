@@ -1,0 +1,32 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor;
+public static class CaptureViewportBaseline {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic;
+ static object session;
+ static void Call(string n,params object[] a)=>session.GetType().GetMethod(n,F).Invoke(session,a);
+ static void Resize(int width,int height){
+  var asm=typeof(Editor).Assembly;var sizesType=asm.GetType("UnityEditor.GameViewSizes");
+  var singleton=typeof(ScriptableSingleton<>).MakeGenericType(sizesType);var sizes=singleton.GetProperty("instance",F).GetValue(null);
+  var group=sizesType.GetMethod("GetGroup",F).Invoke(sizes,new object[]{0});
+  var sizeType=asm.GetType("UnityEditor.GameViewSize");var enumType=asm.GetType("UnityEditor.GameViewSizeType");
+  var size=Activator.CreateInstance(sizeType,F,null,new object[]{Enum.ToObject(enumType,1),width,height,"UITK baseline "+width+"x"+height},null);
+  group.GetType().GetMethod("AddCustomSize",F).Invoke(group,new[]{size});
+  var count=(int)group.GetType().GetMethod("GetTotalCount",F).Invoke(group,null);
+  var viewType=asm.GetType("UnityEditor.GameView");var view=EditorWindow.GetWindow(viewType);
+  viewType.GetProperty("selectedSizeIndex",F).SetValue(view,count-1);view.Repaint();
+ }
+ public static string Main(){session=AppDomain.CurrentDomain.GetData("UITK_BASELINE");if(session==null)throw new Exception("Missing session");
+  foreach(var wh in new[]{new[]{1280,720},new[]{2340,1080}}){var dims=wh;
+   Call("Add","100-viewport-"+dims[0]+"-town",(Action)(()=>{Call("Load",true);foreach(var t in Resources.FindObjectsOfTypeAll<Transform>())if(t.gameObject.scene.IsValid()&&t.name=="MapUI")t.gameObject.SetActive(false);Resize(dims[0],dims[1]);}),"synthetic-unlocked-desktop-viewport-only");
+   foreach(var method in new[]{"OpenOptions","OpenStats","OpenQuests","OpenWiki","OpenBuffs","OpenCauldron","OpenForge","OpenSkills","OpenAlterEchoes"}){var m=method;Call("Add","101-viewport-"+dims[0]+"-"+m,(Action)(()=>Call("Open",m)),"synthetic-unlocked-desktop-viewport-only");}
+  }
+  Call("Add","102-restored-desktop",(Action)(()=>{Resize(3840,2160);Call("Close");}),"synthetic-unlocked");
+  var count=((System.Collections.ICollection)session.GetType().GetField("results",F).GetValue(session)).Count;
+  session.GetType().GetField("index",F).SetValue(session,count-1);
+  var cb=(EditorApplication.CallbackFunction)Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction),session,session.GetType().GetMethod("Tick",F));EditorApplication.update-=cb;EditorApplication.update+=cb;
+  return "Viewport baseline queued; not a device/mobile build validation";
+ }
+}

@@ -14,6 +14,8 @@ namespace TimelessEchoes.Skills
         private string descriptionTemplate = "Increases {1} by {0}.";
         [SerializeField] private string amountFormat = "0.#";
 
+        public BaseStat Stat => baseStat;
+
         public override void Apply(MilestoneEffectContext context, float magnitude)
         {
             var targetSkill = context.Skill;

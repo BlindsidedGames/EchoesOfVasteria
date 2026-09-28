@@ -1,0 +1,32 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateToolkitMeeting {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ ToolkitMeetingScreen screen;ToolkitMeetingView view;int phase;double due;string firstLine;readonly List<string> results=new();
+ void Check(bool value,string name)=>results.Add((value?"PASS ":"FAIL ")+name);
+ public static string Main(){if(!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable project required");var test=new ValidateToolkitMeeting{screen=(ToolkitMeetingScreen)AppDomain.CurrentDomain.GetData("UITK_MEETING_SCREEN")};test.view=(ToolkitMeetingView)typeof(ToolkitMeetingScreen).GetField("view",F).GetValue(test.screen);EditorApplication.update+=test.Tick;return "Meeting validation started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase++){
+ case 0:Check(screen.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Length==0,"Native meeting prefab contains no Canvas graphics or TMP view");Check(view.Root.Q("dialogue-frame").resolvedStyle.display==DisplayStyle.None,"Dialogue starts hidden");Check(view.Root.Q<Label>("meet-label").resolvedStyle.display==DisplayStyle.Flex,"Meet action initially visible");ScreenCapture.CaptureScreenshot(Output+"/meeting-meet.png");break;
+ case 1:using(var evt=NavigationSubmitEvent.GetPooled()){evt.target=view.AdvanceButton;view.AdvanceButton.SendEvent(evt);}break;
+ case 2:firstLine=view.Root.Q<Label>("dialogue").text;Check(firstLine.Contains("Oh there you are bro!"),"Native submit opens actual Ivan dialogue");ScreenCapture.CaptureScreenshot(Output+"/meeting-dialogue.png");break;
+ case 3:screen.gameObject.SetActive(false);break;
+ case 4:screen.gameObject.SetActive(true);break;
+ case 5:Check(view.Root.panel!=null,"Meeting reattaches after parent visibility cycle");Check(view.Root.Q<Label>("dialogue").text==firstLine,"Visibility cycle preserves dialogue position");RunStateChecks();ScreenCapture.CaptureScreenshot(Output+"/meeting-reopened.png");File.WriteAllLines(Output+"/meeting-checks.txt",results);EditorApplication.update-=Tick;break;}}
+ catch(Exception ex){results.Add("FAIL "+ex);File.WriteAllLines(Output+"/meeting-checks.txt",results);EditorApplication.update-=Tick;}}
+ void RunStateChecks(){
+ var theme=AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset");var template=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Toolkit/Meeting.uxml");var definition=AssetDatabase.LoadAssetAtPath<ToolkitMeetingDefinition>("Assets/UI/Toolkit/Meeting.asset");
+ int completions=0;using(var test=new ToolkitMeetingView(theme,template,null,definition,new[]{"First","Second"},()=>completions++)){
+ test.Advance();Check(completions==0&&test.Root.Q<Label>("dialogue").text.Contains("First"),"Meet shows first line without granting completion");test.Advance();Check(completions==0&&test.Root.Q<Label>("dialogue").text.Contains("Second"),"Next shows last line without granting completion");test.Advance();test.Advance();Check(completions==1,"Close invokes completion exactly once despite repeated activation");}
+ completions=0;var empty=new ToolkitMeetingView(theme,template,null,definition,Array.Empty<string>(),()=>completions++);empty.Advance();Check(completions==0,"Empty dialogue still requires explicit Close");empty.Advance();empty.Dispose();empty.Advance();Check(completions==1,"Empty dialogue closes once and disposed view ignores activation");
+ var parent=view.Root.parent;var before=parent.childCount;for(int i=0;i<25;i++){var v=new ToolkitMeetingView(theme,template,null,definition,new[]{"Test"},()=>{});parent.Add(v.Root);v.Dispose();}Check(parent.childCount==before,"25 meeting view disposal cycles leave no attached roots");
+ }
+}
+

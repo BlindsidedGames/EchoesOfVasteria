@@ -1,0 +1,38 @@
+PASS Native Buffs route opens
+PASS Native Buffs prefab contains no Canvas graphics
+PASS Developed rows match legacy quest gates and asset order
+PASS Exact recipe text: Bonus Experience
+PASS Exact recipe text: Collectors Instinct
+PASS Exact recipe text: Combat Enhancer
+PASS Exact recipe text: Critical Roll
+PASS Exact recipe text: Echo Combat
+PASS Exact recipe text: Echo Resonance
+PASS Exact recipe text: Echo Tasks
+PASS Exact recipe text: MoveSpeed
+PASS Exact recipe text: Prospector
+PASS Exact recipe text: Resource Doubler
+PASS Exact recipe text: Task Speed
+PASS Exact recipe text: Vampiric
+PASS Exact recipe text: Windfall
+PASS Assign writes existing BuffManager slot
+PASS Reassignment preserves one-slot-per-recipe behavior
+PASS Slot click toggles autocast outside assignment
+PASS Native Prospector picker opens
+PASS Picker shows exactly unlocked positive-weight tasks in task-name order
+PASS Selecting a row does not change saved target before confirmation
+PASS Tall task icon preserves native aspect ratio
+PASS Task icon crops inside its frame
+PASS Cancel preserves original target
+PASS Confirm updates existing Prospector target service
+PASS Target label refreshes after confirmation
+PASS Skill filter matches legacy grouping
+PASS Run start disables assignment and target changes
+PASS Run end restores assignment
+PASS Fresh quest fixture hides every gated recipe
+PASS No auto-slot unlock means slots cannot toggle autocast
+PASS Locked slots retain Locked labels
+PASS Quest hand-in updates open native recipe list
+PASS 25 show/hide cycles retain one native tree
+PASS Repeated opens reuse one picker host
+PASS Runtime remains offline
+PASS Global close removes screen and picker

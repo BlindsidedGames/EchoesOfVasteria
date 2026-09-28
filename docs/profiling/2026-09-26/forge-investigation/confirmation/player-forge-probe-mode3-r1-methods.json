@@ -1,0 +1,37 @@
+{
+    "mode": 3,
+    "cycles": 181,
+    "selected_slot": "Weapon",
+    "selected_core": "Vastium",
+    "equipped": [
+        "Weapon:Idle:Damage=126.3771;Regen=30.30476;Defense=23.18565;Health=1152.681;Crit Chance=4.460973",
+        "Helmet:Copium:Health=823.7781;Attack Rate=0.6094513;Damage=84.03464;Crit Chance=4.198994",
+        "Chest:Lirium:Defense=12.60607;CritDamage=33.55721;Crit Chance=2.587286;Health=769.5782",
+        "Boots:Lirium:Move Speed=76.74998;Damage=63.50867;CritDamage=28.40375;Defense=12.84632"
+    ],
+    "operation_ms": 110.29719999999999,
+    "method_names": [
+        "GearSlots",
+        "SelectedStats",
+        "AggregateStats",
+        "Resources",
+        "IvanXP",
+        "LateUpdate"
+    ],
+    "method_total_ms": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.9799999999999764
+    ],
+    "method_calls": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        2159
+    ]
+}

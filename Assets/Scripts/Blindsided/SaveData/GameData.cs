@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 
 namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public int SchemaVersion = 1;
+        public const int CurrentSchemaVersion = 3;
+
+        public int SchemaVersion = CurrentSchemaVersion;
+        public HashSet<string> AppliedMigrationIds = new();
         [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]
         public Preferences SavedPreferences = new();
 
@@ -41,6 +45,8 @@ namespace Blindsided.SaveData
 
         // Start with the Echo Tasks buff assigned to the first slot by default
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Buffs")]
+        public int ProspectorTaskId = -1;
+
         public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
 
         [TabGroup("GameDataTabs", "Buffs")] public int UnlockedBuffSlots = 1;
@@ -209,8 +215,24 @@ namespace Blindsided.SaveData
         public class SkillProgress
         {
             public float CurrentXP;
-            public int Level;
-            public List<MilestoneProgressRecord> Milestones = new();
+            public int Level = 1;
+
+            // Preserve typed milestone records written under the original field name. String-era
+            // milestone values are derived from skill level and safely normalize to an empty list.
+            [PreviouslySerializedAs("Milestones")]
+            public List<MilestoneProgressRecord> MilestoneRecords = new();
+
+            public List<MilestoneProgressRecord> Milestones
+            {
+                get => MilestoneRecords ??= new List<MilestoneProgressRecord>();
+                set => MilestoneRecords = value ?? new List<MilestoneProgressRecord>();
+            }
+
+            internal void NormalizeMilestones()
+            {
+                MilestoneRecords ??= new List<MilestoneProgressRecord>();
+                MilestoneRecords.RemoveAll(record => record == null);
+            }
         }
 
         [HideReferenceObjectPicker]
@@ -218,7 +240,7 @@ namespace Blindsided.SaveData
         {
             public string Id;
             public bool IsActive;
-            public int TierIndex;
+            public int TierIndex = -1;
         }
 
         [HideReferenceObjectPicker]

@@ -1,0 +1,27 @@
+$ErrorActionPreference='Stop'
+$sourceAudit = 'C:\Users\mattr\Documents\Repositories\EchoesOfVasteria'
+$copyAudit = 'C:\Users\mattr\AppData\Local\Temp\EOV-Profile-20260926'
+if(Test-Path -LiteralPath $copyAudit){throw 'Disposable project already exists; inspect before reusing'}
+New-Item -ItemType Directory -Path $copyAudit | Out-Null
+foreach($partAudit in @('Assets','Packages','ProjectSettings','Library')) {
+ & robocopy (Join-Path $sourceAudit $partAudit) (Join-Path $copyAudit $partAudit) /E /R:1 /W:1 /NFL /NDL /NJH /NJS /NP /XD PerformanceAudit Pipeline /XF '*-lock' '*.pid' EditorInstance.json
+ if($LASTEXITCODE -gt 7){throw "Copy failed $partAudit $LASTEXITCODE"}
+}
+Copy-Item -LiteralPath "$sourceAudit\Library\PerformanceAudit\PlayerAudit.cs" -Destination "$copyAudit\Assets\EovPerformancePlayerAudit.cs"
+New-Item -ItemType Directory -Path "$copyAudit\Assets\Editor" -Force | Out-Null
+Copy-Item -LiteralPath "$sourceAudit\Library\PerformanceAudit\EovAuditBuilder.cs" -Destination "$copyAudit\Assets\Editor\EovAuditBuilder.cs"
+$steamAudit="$copyAudit\Assets\Scripts\Steamworks.NET\SteamManager.cs"
+$txtAudit=[IO.File]::ReadAllText($steamAudit)
+$txtAudit=$txtAudit.Replace('protected virtual void Awake() {','protected virtual void Awake() { if (System.Environment.GetEnvironmentVariable("EOV_AUDIT") == "1") { s_instance = this; DontDestroyOnLoad(gameObject); return; }')
+[IO.File]::WriteAllText($steamAudit,$txtAudit)
+$ugsAudit="$copyAudit\Assets\Scripts\Blindsided\UGS\UgsInitializer.cs"
+$txtAudit=[IO.File]::ReadAllText($ugsAudit)
+$txtAudit=$txtAudit.Replace('public static Task EnsureInitializedAsync()', 'public static Task EnsureInitializedAsync()') -replace '(public static Task EnsureInitializedAsync\(\)\s*\{)', '$1 if (System.Environment.GetEnvironmentVariable("EOV_AUDIT") == "1") return Task.CompletedTask;'
+[IO.File]::WriteAllText($ugsAudit,$txtAudit)
+$settingsAudit="$copyAudit\Assets\Scripts\Blindsided\UGS\UgsLeaderboardSettings.cs"
+$txtAudit=[IO.File]::ReadAllText($settingsAudit) -replace '(get\s*\{)', '$1 if (System.Environment.GetEnvironmentVariable("EOV_AUDIT") == "1") return false;'
+[IO.File]::WriteAllText($settingsAudit,$txtAudit)
+$reporterAudit="$copyAudit\Assets\Scripts\Blindsided\UGS\UgsLeaderboardsReporter.cs"
+$txtAudit=[IO.File]::ReadAllText($reporterAudit) -replace '(private async Task TryUploadAllAsync\(\)\s*\{)', '$1 if (System.Environment.GetEnvironmentVariable("EOV_AUDIT") == "1") return;'
+[IO.File]::WriteAllText($reporterAudit,$txtAudit)
+Write-Output "Prepared isolated project $copyAudit"

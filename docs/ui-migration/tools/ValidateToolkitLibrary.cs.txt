@@ -1,0 +1,65 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.Localization.Settings;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateToolkitLibrary {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ ToolkitBookView view; int phase; double due; readonly List<string> results=new List<string>();
+ void Check(bool passed,string description){results.Add((passed?"PASS ":"FAIL ")+description);}
+ public static string Main(){if(!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable project required");var test=new ValidateToolkitLibrary{view=(ToolkitBookView)AppDomain.CurrentDomain.GetData("UITK_LIBRARY_VIEW")};Directory.CreateDirectory(Output);EditorApplication.update+=test.Tick;return "Runtime Toolkit validation started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{
+  switch(phase++){
+   case 0:
+    for(int i=0;i<13;i++)view.SetExpanded("chapter-"+i,false);
+    LocalizationSettings.SelectedLocale=LocalizationSettings.AvailableLocales.GetLocale("en");
+    Check(view.Root.Query<Button>().ToList().Count==13,"13 native chapter buttons");
+    var sprites=AssetDatabase.LoadAssetAtPath<UnityEngine.TextCore.Text.SpriteAsset>("Assets/UI/Toolkit/InlineSprites.asset");
+    var original=TMPro.TMP_Settings.defaultSpriteAsset;
+    Check(sprites.spriteCharacterTable.Count==original.spriteCharacterTable.Count,"Inline sprite character count preserved");
+    Check(sprites.spriteCharacterTable.Select((c,i)=>c.name==original.spriteCharacterTable[i].name&&c.glyphIndex==original.spriteCharacterTable[i].glyphIndex).All(x=>x),"Every inline sprite index/name maps to the original glyph");
+    break;
+   case 1:
+    ScreenCapture.CaptureScreenshot(Output+"/library-collapsed.png");
+    break;
+   case 2:
+    var button=view.Root.Q<Button>("chapter-2");using(var evt=NavigationSubmitEvent.GetPooled()){evt.target=button;button.SendEvent(evt);}
+    break;
+   case 3:
+    Check(view.Root.Q<Button>("chapter-2").ClassListContains("expanded"),"Native navigation submit expands Forge chapter");
+    Check(view.Root.Query<Label>().ToList().Any(l=>l.text.Contains("Ivan's forge")),"Localized Forge content populated asynchronously");
+    Check(view.Scroll.verticalScroller.highValue>0,"Expanded content has a usable scroll range");
+    Check(view.Scroll.verticalScroller.slider.layout.width<=6.1f,"Scrollbar stays inside six-unit track");
+    ScreenCapture.CaptureScreenshot(Output+"/library-forge-expanded.png");
+    break;
+   case 4:
+    view.Scroll.verticalScroller.value=view.Scroll.verticalScroller.highValue;
+    break;
+   case 5:
+    Check(view.Scroll.scrollOffset.y>0,"Scroll changes content offset");
+    ScreenCapture.CaptureScreenshot(Output+"/library-scrolled-bottom.png");
+    break;
+   case 6:
+    LocalizationSettings.SelectedLocale=LocalizationSettings.AvailableLocales.GetLocale("ru");
+    for(int i=0;i<13;i++)view.SetExpanded("chapter-"+i,true);
+    view.Scroll.scrollOffset=Vector2.zero;
+    break;
+   case 7:
+    ScreenCapture.CaptureScreenshot(Output+"/library-ru-fallback.png");
+    break;
+   case 8:
+    var root=view.Root.parent;var definition=AssetDatabase.LoadAssetAtPath<ToolkitBookDefinition>("Assets/UI/Toolkit/Library.asset");var theme=AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset");var template=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Toolkit/Book.uxml");var before=root.childCount;
+    for(int i=0;i<25;i++){var temporary=new ToolkitBookView(definition,theme,template);root.Add(temporary.Root);temporary.SetExpanded("chapter-2",true);temporary.Dispose();}
+    Check(root.childCount==before,"25 construct/dispose cycles leave no attached native view roots");
+    LocalizationSettings.SelectedLocale=LocalizationSettings.AvailableLocales.GetLocale("en");
+    break;
+   default:
+    Check(LocalizationSettings.SelectedLocale.Identifier.Code=="en","Locale restored to English in disposable profile");
+    File.WriteAllLines(Output+"/library-checks.txt",results);EditorApplication.update-=Tick;break;
+  }
+ }catch(Exception ex){results.Add("FAIL "+ex);File.WriteAllLines(Output+"/library-checks.txt",results);EditorApplication.update-=Tick;}}
+}

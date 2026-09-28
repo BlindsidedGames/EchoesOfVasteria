@@ -65,6 +65,7 @@ namespace TimelessEchoes.NpcGeneration
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             EnsureInventoryUI();
             if (resourceManager == null)
             {
@@ -109,22 +110,7 @@ namespace TimelessEchoes.NpcGeneration
                 resourceUI.awaitingCollectionText.text = CalcUtils.FormatNumber(generator.GetStoredAmount(res), true);
 
             if (collectionRateText != null && res != null)
-            {
-                var cm = CauldronManager.Instance;
-                var mult = cm != null ? cm.GetResourceAlterEchoMultiplier(res.name) : 1f;
-                var cardPct = Mathf.Max(0f, (mult - 1f) * 100f);
-                if (generator.Interval > 0)
-                {
-                    var showDecimal = generator.Interval < 60f;
-                    var time = CalcUtils.FormatTime(generator.Interval, showDecimal: showDecimal, shortForm: true);
-                    collectionRateText.text =
-                        $"{CalcUtils.FormatNumber(generator.CycleAmount, true)} / {time} +{cardPct:0}% Card Power";
-                }
-                else
-                {
-                    collectionRateText.text = $"{CalcUtils.FormatNumber(0, true)} +{cardPct:0}% Card Power";
-                }
-            }
+                collectionRateText.text = AlterEchoPresentation.Rate(generator);
 
             if (collectButton != null && res != null)
             {

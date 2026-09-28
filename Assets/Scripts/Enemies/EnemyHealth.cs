@@ -110,7 +110,7 @@ namespace TimelessEchoes.Enemies
 
         private void HandleHealthChanged(float current, float max)
         {
-            if (healthText != null)
+            if (healthText != null && healthText.enabled)
             {
                 int shownCurrent = Mathf.FloorToInt(current);
                 if (shownCurrent == 0 && current > 0f)

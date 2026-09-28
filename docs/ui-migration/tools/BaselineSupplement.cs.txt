@@ -1,0 +1,85 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEditor;
+using TMPro;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes.UI;
+using TimelessEchoes.Quests;
+public class UIBaselineCapture {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/baseline-supplement-2026-09-27";
+ public class Case {public string name,setup;public Action action;}
+ readonly List<Case> queue=new List<Case>();readonly List<object> results=new List<object>();int index=-1,phase;double due;string currentFile;public string Status=>index+"/"+queue.Count+" "+(index>=0&&index<queue.Count?queue[index].name:"");
+ static string PathOf(Transform t){var parts=new List<string>();for(;t!=null;t=t.parent)parts.Add(t.name);parts.Reverse();return string.Join("/",parts);}
+ static string Json(object o){var t=AppDomain.CurrentDomain.GetAssemblies().First(a=>a.GetName().Name=="Newtonsoft.Json").GetType("Newtonsoft.Json.JsonConvert");return (string)t.GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new[]{o});}
+ public static string Main(){if(!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Isolation required");if(SteamManager.Initialized||Unity.Services.Core.UnityServices.State!=Unity.Services.Core.ServicesInitializationState.Uninitialized)throw new Exception("Online services enabled");var s=new UIBaselineCapture();AppDomain.CurrentDomain.SetData("UITK_BASELINE",s);s.Setup();EditorApplication.update+=s.Tick;return "Baseline capture queue started: "+s.queue.Count;}
+ void Add(string name,Action action,string setup="developed-copy"){queue.Add(new Case{name=name,action=action,setup=setup});}
+ void Close(){TownWindowManager.Instance.CloseAllWindows();foreach(var t in Resources.FindObjectsOfTypeAll<Transform>())if(t.gameObject.scene.IsValid()&&(t.name=="Welcome"||t.name=="Dev Note"||t.name=="Russian Partial Translation warning"))t.gameObject.SetActive(false);}
+ void Open(string method){Close();typeof(TownWindowManager).GetMethod(method,F).Invoke(TownWindowManager.Instance,null);}
+ void Click(string path){var b=Resources.FindObjectsOfTypeAll<Button>().FirstOrDefault(b=>b&&b.gameObject.scene.IsValid()&&PathOf(b.transform)==path);if(!b)throw new Exception("Button not found: "+path);b.onClick.Invoke();}
+ void Load(bool synthetic){
+  var original=Sirenix.Serialization.SerializationUtility.DeserializeValue<GameData>(File.ReadAllBytes("C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/Library/PerformanceAudit/original-live.bin"),Sirenix.Serialization.DataFormat.Binary);
+  var migrated=Blindsided.SaveData.Migrations.SaveMigrationRunner.TryMigrate(original,Application.version);if(!migrated.Succeeded)throw new Exception(migrated.Error);
+  var data=migrated.Data;data.SavedPreferences.OfflineTimeActive=false;data.SavedPreferences.Tutorial=true;data.AutoBuffSlots=new List<bool>{false,false,false,false,false};
+  if(synthetic)foreach(var q in Resources.LoadAll<QuestData>("Quests"))data.Quests[q.questId]=new GameData.QuestRecord{Completed=true};
+  Oracle.oracle.saveData=data;Blindsided.EventHandler.LoadData();TimelessEchoes.Buffs.BuffManager.Instance.ClearActiveBuffs();TimelessEchoes.Buffs.BuffManager.Instance.SetBaseTimeScale(1);Close();
+ }
+ void Setup(){Directory.CreateDirectory(Output+"/captures");
+  Add("01-fresh-town",Close,"fresh");
+  Add("02-fresh-options",()=>Open("OpenOptions"),"fresh");
+  Add("03-fresh-library",()=>Open("OpenWiki"),"fresh");
+  Add("04-developed-town",()=>Load(false));
+  var views=new[]{"OpenOptions","OpenStats","OpenQuests","OpenWiki","OpenUpgrades","OpenBuffs","OpenAlterEchoes","OpenCauldron","OpenForge","OpenSkills","OpenInventory","OpenCredits"};
+  for(int i=0;i<views.Length;i++){var method=views[i];Add("10-"+method,()=>Open(method));}
+  var statTabs=new[]{"General_Button","Items_Button","Tasks_Button","Enemies_Button","GraphButton","RankButton"};
+  foreach(var tab in statTabs){var name=tab;Add("20-statistics-"+name,()=>{Open("OpenStats");Click("Canvas/SafeArea/UnifiedWindow/TownWIndows/Statistics_Window/Image/Buttons/GameObject/"+name);});}
+  foreach(var tab in new[]{"Items_Button","Enemies_Button","Tasks_Button"}){var name=tab;Add("21-inventory-"+name,()=>{Open("OpenInventory");Click("Canvas/SafeArea/UnifiedWindow/TownWIndows/Inventory/Image/Buttons/"+name);});}
+  foreach(var method in new[]{"ToggleBeginAdventureDropdown","ToggleHubDropdown","ToggleTownsfolkDropdown"}){var name=method;Add("22-"+name,()=>{Close();typeof(TownWindowManager).GetMethod(name,F).Invoke(TownWindowManager.Instance,null);});}
+  Add("23-forge-inventory",()=>{Open("OpenForge");typeof(TownWindowManager).GetMethod("ToggleForgeInfo",F).Invoke(TownWindowManager.Instance,null);});
+  Add("30-synthetic-unlocked-town",()=>Load(true),"synthetic-all-quest-flags");
+  foreach(var method in new[]{"OpenBuffs","OpenUpgrades","OpenSkills","OpenCauldron","OpenAlterEchoes","OpenForge"}){var name=method;Add("31-synthetic-"+name,()=>Open(name),"synthetic-all-quest-flags");}
+ }
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;try{
+  if(phase==0){index++;if(index>=queue.Count){EditorApplication.update-=Tick;File.WriteAllText(Output+"/capture-manifest.json",Json(results));File.WriteAllText(Output+"/capture-status.txt","Completed "+queue.Count+" cases");return;}queue[index].action();Canvas.ForceUpdateCanvases();phase=1;due=EditorApplication.timeSinceStartup+1;}
+  else if(phase==1){currentFile=Output+"/captures/"+queue[index].name+".png";ScreenCapture.CaptureScreenshot(currentFile);var texts=Resources.FindObjectsOfTypeAll<TMP_Text>().Where(t=>t&&t.gameObject.scene.IsValid()&&t.gameObject.activeInHierarchy).Select(t=>new{path=PathOf(t.transform),text=t.text}).ToArray();File.WriteAllText(Output+"/captures/"+queue[index].name+"-text.json",Json(texts));phase=2;due=EditorApplication.timeSinceStartup+1;}
+  else {results.Add(new{name=queue[index].name,setup=queue[index].setup,captured=File.Exists(currentFile),width=Screen.width,height=Screen.height,timeScale=Time.timeScale});File.WriteAllText(Output+"/capture-manifest.json",Json(results));File.WriteAllText(Output+"/capture-status.txt",Status);phase=0;}}
+ catch(Exception ex){results.Add(new{name=index>=0?queue[index].name:"setup",error=ex.ToString()});phase=0;due=EditorApplication.timeSinceStartup+.1;}
+ }
+}
+
+public static class BaselineSupplement {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
+ static UIBaselineCapture s;
+ static void Call(string n,params object[] a)=>typeof(UIBaselineCapture).GetMethod(n,F).Invoke(s,a);
+ static void Add(string n,Action a,string fixture="synthetic-unlocked")=>Call("Add",n,a,fixture);
+ static void Open(string name)=>Call("Open",name);
+ public static string Main(){
+  if(!Application.dataPath.Contains("EOV-UITK-20260927")||SteamManager.Initialized||Unity.Services.Core.UnityServices.State!=Unity.Services.Core.ServicesInitializationState.Uninitialized)throw new Exception("Offline copy required");
+  foreach(var doc in UnityEngine.Object.FindObjectsByType<UnityEngine.UIElements.UIDocument>(FindObjectsInactive.Include))UnityEngine.Object.Destroy(doc.gameObject);
+  s=new UIBaselineCapture();Call("Load",true);
+  var skills=UnityEngine.Object.FindAnyObjectByType<TimelessEchoes.Skills.SkillUIManager>(FindObjectsInactive.Include);
+  int skillCount=((System.Collections.ICollection)skills.GetType().GetField("skills",F).GetValue(skills)).Count;
+  for(int i=0;i<skillCount;i++){int index=i;Add("01-skill-"+i,()=>{Open("OpenSkills");skills.GetType().GetMethod("SelectSkill",F).Invoke(skills,new object[]{index});});}
+  var forge=UnityEngine.Object.FindAnyObjectByType<TimelessEchoes.Gear.UI.ForgeWindowUI>(FindObjectsInactive.Include);
+  foreach(var slot in new[]{"Weapon","Helmet","Chest","Boots"}){var selected=slot;Add("02-forge-slot-"+slot,()=>{Open("OpenForge");forge.SelectSlot(selected);});}
+  Add("03-forge-manual-result",()=>{Open("OpenForge");forge.GetType().GetMethod("OnCraftClicked",F).Invoke(forge,null);if(forge.GetType().GetField("lastCrafted",F).GetValue(forge)==null)throw new Exception("No gear result: insufficient resources or core selection");});
+  Add("04-intro-countdown",()=>{Call("Close");var intro=UnityEngine.Object.FindAnyObjectByType<IntroScreenController>(FindObjectsInactive.Include);intro.GetType().GetMethod("BeginIntro",F).Invoke(intro,null);},"synthetic-intro-presentation");
+  Add("05-intro-ready",()=>{var intro=UnityEngine.Object.FindAnyObjectByType<IntroScreenController>(FindObjectsInactive.Include);intro.GetType().GetMethod("CompleteCountdown",F).Invoke(intro,null);},"synthetic-intro-presentation");
+  Add("06-run-transition",()=>{Call("Close");var gm=TimelessEchoes.GameManager.Instance;var maps=(List<TimelessEchoes.MapGeneration.MapGenerationButton>)gm.GetType().GetField("generationButtons",F).GetValue(gm);maps.First(x=>x.Config).Button.onClick.Invoke();});
+  Add("07-run-gathering",()=>{});
+  Add("08-run-breakdown",()=>{var manager=UnityEngine.Object.FindAnyObjectByType<TimelessEchoes.Upgrades.RunBreakdownManager>(FindObjectsInactive.Include);var window=(GameObject)manager.GetType().GetField("windowRoot",F).GetValue(manager);window.SetActive(true);});
+  Add("09-run-return",()=>TimelessEchoes.GameManager.Instance.AbandonRun());
+  Add("10-populated-run-graph",()=>{Open("OpenStats");Call("Click","Canvas/SafeArea/UnifiedWindow/TownWIndows/Statistics_Window/Image/Buttons/GameObject/GraphButton");});
+  Add("11-run-hover-breakdown",()=>{var ui=UnityEngine.Object.FindAnyObjectByType<RunStatsPanelUI>(FindObjectsInactive.Include);var bar=ui.GetComponentsInChildren<RunBarUI>(true).FirstOrDefault(b=>b.BarIndex==0);if(!bar)throw new Exception("No recorded run bar");var evt=new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current){position=new Vector2(Screen.width*.5f,Screen.height*.5f)};bar.OnPointerEnter(evt);});
+  foreach(var status in new[]{SaveLoadStatus.Corrupt,SaveLoadStatus.Unavailable,SaveLoadStatus.UnsupportedNewer}){var value=status;Add("12-recovery-"+value,()=>{Call("Close");var oracle=Oracle.oracle;oracle.GetType().GetField("_recoveryStatus",F).SetValue(oracle,value);oracle.GetType().GetField("_recoveryDiagnostic",F).SetValue(oracle,"Disposable UI presentation fixture. No real save was modified.");oracle.GetType().GetMethod("ShowRecoveryUi",F).Invoke(oracle,null);},"synthetic-dialog-only-no-recovery-action");}
+  Add("13-cleanup",()=>{Oracle.oracle.GetType().GetMethod("HideRecoveryUi",F).Invoke(Oracle.oracle,null);Call("Close");});
+  var cb=(EditorApplication.CallbackFunction)Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction),s,typeof(UIBaselineCapture).GetMethod("Tick",F));EditorApplication.update+=cb;
+  return "Supplement capture queue started";
+ }
+}

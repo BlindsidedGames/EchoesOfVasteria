@@ -52,7 +52,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851867646531781515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 2
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -114,7 +115,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -188,7 +189,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1079163884978794635}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb661562bd062654fb103dab597993fd, type: 3}
   m_Name: 
@@ -240,6 +241,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6777865665299753724
 SpriteRenderer:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -258,6 +260,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -279,9 +283,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -799831649384477707, guid: c0379aa4fd42660418cc76d22a3de2e1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -291,8 +297,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+  m_BlendShapeWeights: []
 --- !u!1 &2490411964500561272
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +352,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2490411964500561272}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -422,7 +428,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3679783370844897475}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -494,10 +500,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   taskData: {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
+  enableAutoRemovalWhenBehind: 1
+  autoRemovalDistanceX: 20
+  autoRemovalIntervalSeconds: 2
   progressBarObject: {fileID: 2490411964500561272}
   progressBar: {fileID: 4821827099416284749}
   spriteRenderer: {fileID: 6777865665299753724}
   stumpSprite: {fileID: -580788211008675207, guid: c0379aa4fd42660418cc76d22a3de2e1, type: 3}
+  stumpSpriteOptions: []
   cuttingPoint: {fileID: 3659531261967260217}
 --- !u!58 &8499905870028272416
 CircleCollider2D:
@@ -547,6 +557,7 @@ GameObject:
   - component: {fileID: 229016633527916783}
   - component: {fileID: 4684740912764619985}
   - component: {fileID: 8960994516245489484}
+  - component: {fileID: 6806005086045135382}
   m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
@@ -582,7 +593,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7827802749126930448}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -593,6 +604,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 27
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 20878111
@@ -605,7 +617,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7827802749126930448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
@@ -628,7 +640,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7827802749126930448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -638,3 +650,56 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 127
+--- !u!114 &6806005086045135382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7827802749126930448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 555de9b7a66f94642a05df6e241244e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitWorldAnchor
+  elements:
+  - anchor: {fileID: 738962969123366820}
+    rowGroup: {fileID: 0}
+    sprite: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    text: 
+    fontSize: 0
+    sliced: 1
+    value: 0
+    enabled: 1
+  - anchor: {fileID: 4302974782702743269}
+    rowGroup: {fileID: 0}
+    sprite: {fileID: -5162992721624225379, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    text: 
+    fontSize: 0
+    sliced: 1
+    value: 2
+    enabled: 1
+  - anchor: {fileID: 3131380844088178764}
+    rowGroup: {fileID: 0}
+    sprite: {fileID: 6066696059382277178, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    text: 
+    fontSize: 0
+    sliced: 0
+    value: 0
+    enabled: 1
+  - anchor: {fileID: 5817300510109421323}
+    rowGroup: {fileID: 0}
+    sprite: {fileID: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    text: 3
+    fontSize: 5
+    sliced: 0
+    value: 0
+    enabled: 1
+  health: {fileID: 0}
+  enemy: {fileID: 0}
+  task: {fileID: 5366876333383290996}
+  echo: {fileID: 0}

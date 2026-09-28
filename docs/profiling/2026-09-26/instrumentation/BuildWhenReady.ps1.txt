@@ -1,0 +1,7 @@
+$ErrorActionPreference='Stop'
+while (!(Test-Path -LiteralPath 'docs/profiling/2026-09-26/runner-status.txt')) { Start-Sleep -Seconds 5 }
+if(Test-Path -LiteralPath 'docs/profiling/2026-09-26/runner-error.txt'){throw 'Editor runner failed; inspect before building'}
+& ./Library/PerformanceAudit/PreparePlayer.ps1
+if($LASTEXITCODE -gt 7){throw 'Disposable preparation failed'}
+$env:EOV_AUDIT='1'
+& unity build 'C:/Users/mattr/AppData/Local/Temp/EOV-Profile-20260926' --target StandaloneWindows64 --execute-method EovAuditBuilder.Build --output-path 'C:/Users/mattr/AppData/Local/Temp/EOV-Profile-20260926/Build/EovAudit.exe' --editor-version 6000.6.0f1 --args '-nographics' --timeout 900 --no-tail --log-file 'C:/Users/mattr/AppData/Local/Temp/EOV-Profile-20260926/build.log' --json

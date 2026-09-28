@@ -57,6 +57,8 @@ namespace TimelessEchoes.Buffs
         [SerializeField] private BuffSlotUIReferences[] runSlotButtons = new BuffSlotUIReferences[5];
         private readonly System.Action<BuffSlotUIReferences>[] runSlotAutoCastHandlers = new System.Action<BuffSlotUIReferences>[5];
         [SerializeField] private GameObject buffPurchaseWindow;
+        [SerializeField] private ProspectorPicker prospectorPickerPrefab;
+        private ProspectorPicker prospectorPicker;
         private BuffRecipe selectedRecipe;
         private bool isAssigning;
         [Header("Run State UI")]
@@ -290,6 +292,7 @@ namespace TimelessEchoes.Buffs
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             buffManager = BuffManager.Instance;
             if (buffManager == null)
                 Log("BuffManager missing", TELogCategory.Buff, this);
@@ -332,6 +335,7 @@ namespace TimelessEchoes.Buffs
 
         private void OnDestroy()
         {
+            if (prospectorPicker != null) Destroy(prospectorPicker.gameObject);
             OnLoadData -= OnLoadDataHandler;
             OnQuestHandin -= OnQuestHandinHandler;
             OnRunStarted -= HandleRunStarted;
@@ -359,7 +363,7 @@ namespace TimelessEchoes.Buffs
         {
             var windowActive = gameObject.activeInHierarchy ||
                                (buffPurchaseWindow != null && buffPurchaseWindow.activeInHierarchy);
-            if (!windowActive) return;
+            if (!windowActive || ProspectorPicker.IsOpen || TimelessEchoes.UI.Toolkit.ToolkitProspectorPicker.IsOpen) return;
 
             // Throttle UI refresh to reduce UGUI rebuilds
             if (Time.unscaledTime >= nextUiRefresh)
@@ -420,12 +424,30 @@ namespace TimelessEchoes.Buffs
                     panel.purchaseButton.interactable = !inRun;
                 }
 
+                if (panel.targetButton != null)
+                {
+                    bool isProspector = recipe.HasEffect(BuffEffectType.ProspectorWeightPercent);
+                    panel.targetButton.gameObject.SetActive(isProspector);
+                    if (isProspector)
+                    {
+                        panel.targetButton.interactable = !inRun;
+                        if (panel.targetIcon != null)
+                        {
+                            panel.targetIcon.sprite = buffManager.ProspectorTarget != null ? buffManager.ProspectorTarget.taskIcon : null;
+                            panel.targetIcon.enabled = panel.targetIcon.sprite != null;
+                        }
+                        panel.targetText.text = buffManager.ProspectorTarget != null
+                            ? "Target: " + buffManager.ProspectorTarget.taskName + "  • Change" : "Choose target";
+                        panel.targetButton.onClick.AddListener(() => OpenProspectorPicker(panel));
+                    }
+                }
                 recipeEntries[recipe] = panel;
             }
         }
 
         private void OnLoadDataHandler()
         {
+            if (prospectorPicker != null) prospectorPicker.Close();
             CoroutineUtils.RunNextFrame(this, () =>
             {
                 BuildRecipeEntries();
@@ -438,6 +460,25 @@ namespace TimelessEchoes.Buffs
             CoroutineUtils.RunNextFrame(this, () =>
             {
                 BuildRecipeEntries();
+                RefreshSlots();
+            });
+        }
+
+        private void OpenProspectorPicker(BuffRecipeUIReferences entry)
+        {
+            if (inRun) return;
+            if (prospectorPickerPrefab == null) prospectorPickerPrefab = UnityEngine.Resources.Load<ProspectorPicker>("UI/ProspectorPicker");
+            if (prospectorPickerPrefab == null) return;
+            if (prospectorPicker == null)
+                prospectorPicker = Instantiate(prospectorPickerPrefab, buffPurchaseWindow.GetComponentInParent<Canvas>().rootCanvas.transform);
+            prospectorPicker.transform.SetAsLastSibling();
+            prospectorPicker.Open(buffPurchaseWindow, () => {
+                if (entry != null && entry.targetIcon != null)
+                {
+                    entry.targetIcon.sprite = buffManager.ProspectorTarget.taskIcon;
+                    entry.targetIcon.enabled = entry.targetIcon.sprite != null;
+                }
+                if (entry != null) entry.targetText.text = "Target: " + buffManager.ProspectorTarget.taskName + "  • Change";
                 RefreshSlots();
             });
         }
@@ -473,6 +514,7 @@ namespace TimelessEchoes.Buffs
 
         private void HandleRunStarted()
         {
+            if (prospectorPicker != null) prospectorPicker.Close();
             inRun = true;
             // Clear any pending assign state when a run starts
             selectedRecipe = null;
@@ -494,6 +536,7 @@ namespace TimelessEchoes.Buffs
             foreach (var kv in recipeEntries)
             {
                 var ui = kv.Value;
+                if (ui != null && ui.targetButton != null) ui.targetButton.interactable = !inRun;
                 if (ui != null && ui.purchaseButton != null)
                     ui.purchaseButton.interactable = !inRun;
             }

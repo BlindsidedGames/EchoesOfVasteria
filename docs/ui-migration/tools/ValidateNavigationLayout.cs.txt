@@ -1,0 +1,31 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateNavigationLayout {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ ToolkitNavigationScreen screen;TownWindowManager manager;GameObject top,spacer;Rect windowBefore;Dictionary<string,Rect> before=new();List<string> results=new();int phase;double due;
+ Rect Bounds(RectTransform rect){var c=new Vector3[4];rect.GetWorldCorners(c);var canvas=rect.GetComponentInParent<Canvas>(true);var camera=canvas.renderMode==RenderMode.ScreenSpaceOverlay?null:canvas.worldCamera;var p0=RectTransformUtility.WorldToScreenPoint(camera,c[0]);var p1=RectTransformUtility.WorldToScreenPoint(camera,c[1]);var p2=RectTransformUtility.WorldToScreenPoint(camera,c[2]);var scale=432f/Screen.height;return new Rect(p0.x*scale,(Screen.height-p1.y)*scale,(p2.x-p0.x)*scale,(p1.y-p0.y)*scale);}
+ TownWindowManager.WindowReference Window(string name)=>(TownWindowManager.WindowReference)typeof(TownWindowManager).GetField(name,F).GetValue(manager);
+ void Check(bool b,string s)=>results.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(string id){var b=screen.GetComponent<UIDocument>().rootVisualElement.Q<Button>(id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play mode required");var t=new ValidateNavigationLayout{manager=TownWindowManager.Instance};if(!t.manager)throw new Exception("Wait for Main startup");foreach(var v in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>(FindObjectsInactive.Include))v.Hide();t.top=Resources.FindObjectsOfTypeAll<Transform>().Single(x=>x.gameObject.scene.IsValid()&&x.name=="TopBar").gameObject;
+ t.screen=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab")).GetComponent<ToolkitNavigationScreen>();t.screen.enabled=false;t.top.SetActive(true);t.manager.CloseAllWindows();t.manager.OpenWindow(TownWindowManager.Window.Options);EditorApplication.update+=t.Tick;return "Navigation geometry and corrected frame checks queued";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase++){
+ case 0:Canvas.ForceUpdateCanvases();windowBefore=Bounds((RectTransform)Window("options").window.transform);foreach(var id in new[]{"options","stats","quests","wiki"})before[id]=Bounds((RectTransform)Window(id).button.transform);foreach(var pair in new[]{("adventure","beginAdventureButton"),("hub","hubButton"),("townsfolk","townsfolkButton"),("close","closeButton")})before[pair.Item1]=Bounds((RectTransform)((UnityEngine.UI.Button)typeof(TownWindowManager).GetField(pair.Item2,F).GetValue(manager)).transform);ScreenCapture.CaptureScreenshot(Output+"/navigation-options-reference.png");break;
+ case 1:spacer=new GameObject("Toolkit Toolbar Layout Space",typeof(RectTransform),typeof(UnityEngine.UI.LayoutElement));spacer.transform.SetParent(top.transform.parent,false);spacer.transform.SetSiblingIndex(top.transform.GetSiblingIndex());var layout=spacer.GetComponent<UnityEngine.UI.LayoutElement>();layout.minHeight=22;layout.preferredHeight=22;layout.flexibleHeight=0;top.SetActive(false);screen.enabled=true;break;
+ case 2:Canvas.ForceUpdateCanvases();var after=Bounds((RectTransform)Window("options").window.transform);Check(Vector2.Distance(after.position,windowBefore.position)<.01f&&Vector2.Distance(after.size,windowBefore.size)<.01f,"Native toolbar spacer preserves the exact existing Options window bounds");foreach(var p in before){var actual=screen.GetComponent<UIDocument>().rootVisualElement.Q<Button>(p.Key).worldBound;Check(Vector2.Distance(actual.position,p.Value.position)<.7f&&Vector2.Distance(actual.size,p.Value.size)<.7f,"Toolbar geometry within 0.7 reference units: "+p.Key+" original="+p.Value+" native="+actual);}ScreenCapture.CaptureScreenshot(Output+"/navigation-options.png");break;
+ case 3:manager.CloseAllWindows();Submit("hub");break;
+ case 4:ScreenCapture.CaptureScreenshot(Output+"/navigation-hub.png");Check(screen.GetComponent<UIDocument>().rootVisualElement.Q<Label>("echo-balance").parent.resolvedStyle.height==22,"Echo total uses the original 22-unit outer frame and inner inset");break;
+ case 5:manager.CloseAllWindows();Submit("quests");break;
+ case 6:ScreenCapture.CaptureScreenshot(Output+"/navigation-quests.png");break;
+ case 7:manager.CloseAllWindows();File.WriteAllLines(Output+"/navigation-layout-checks.txt",results);EditorApplication.update-=Tick;break;
+ }}catch(Exception e){results.Add("FAIL "+e);File.WriteAllLines(Output+"/navigation-layout-checks.txt",results);EditorApplication.update-=Tick;}}
+}

@@ -1,0 +1,305 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4113c993c57d424ab10aaaca10df887, type: 3}
+  m_Name: Credits
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitBookDefinition
+  presentation: 1
+  sections:
+  - id: credit-0
+    title:
+      key: credits.0.title
+      bold: 1
+      smallCaps: 1
+      fallback: Matthew Rushworth
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.0.body
+      bold: 0
+      smallCaps: 0
+      fallback: Lead Developer
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-1
+    title:
+      key: credits.1.title
+      bold: 1
+      smallCaps: 1
+      fallback: 'Technishift '
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.1.body
+      bold: 0
+      smallCaps: 0
+      fallback: Music & SFX
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-2
+    title:
+      key: credits.2.title
+      bold: 1
+      smallCaps: 1
+      fallback: dqssq
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.2.body
+      bold: 0
+      smallCaps: 0
+      fallback: SFX
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-3
+    title:
+      key: credits.3.title
+      bold: 1
+      smallCaps: 1
+      fallback: Kenmi
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.3.body
+      bold: 0
+      smallCaps: 0
+      fallback: Primary Artist | Check out their Itch.io!
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-4
+    title:
+      key: credits.4.title
+      bold: 1
+      smallCaps: 1
+      fallback: Invariel
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.4.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'An Ultimate Patreon, A long time friend and supporter of my work.
+
+        Without whom this project would never have happened.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-5
+    title:
+      key: credits.5.title
+      bold: 1
+      smallCaps: 1
+      fallback: 'BorgGrown '
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.5.body
+      bold: 0
+      smallCaps: 0
+      fallback: Without whom we would almost certainly still be losing save files.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-6
+    title:
+      key: credits.6.title
+      bold: 1
+      smallCaps: 1
+      fallback: A special thank you to my patreons
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.6.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'Latimer Cross
+
+        Patrick Kennedy
+
+        solocommand'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-7
+    title:
+      key: credits.7.title
+      bold: 1
+      smallCaps: 1
+      fallback: 'Champions of Development
+
+        Keeping me motivated every day of development!'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.7.body
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+        m_TableEntryReference:
+          m_KeyId: 7986628786536448
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  - id: credit-8
+    title:
+      key: credits.8.title
+      bold: 1
+      smallCaps: 1
+      fallback: And thank you to...
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key: credits.8.body
+      bold: 0
+      smallCaps: 0
+      fallback: 'Spaniel Family | For their Blacksmith Recolour.
+
+        MatHeadGetz | Enthusiastically cheering from the sidelines!
+
+        Dragonmaster100 | Hours upon hours of testing.
+
+        Quackers | Quacking away where necessary.
+
+        GLUTTONY | Encouraging my logging.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    expanded: 0
+  references:
+    version: 2
+    RefIds: []

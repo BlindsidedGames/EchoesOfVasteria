@@ -1,0 +1,83 @@
+{
+  "success": true,
+  "command": "command run_script",
+  "data": {
+    "command": "run_script",
+    "parameters": {
+      "file": "Library/PerformanceAudit/VerifyCleanup.cs"
+    },
+    "result": {
+      "diagnostics": [],
+      "compileMs": 49,
+      "executeMs": 11,
+      "assemblyName": "PipelineRunScript_VerifyCleanup_0d9c6477105241a4ad35237a53296020",
+      "success": true,
+      "result": {
+        "isPlaying": true,
+        "isPaused": false,
+        "keys": [
+          {
+            "key": "EOV_AUDIT",
+            "cleared": true
+          },
+          {
+            "key": "EOV_SUPPLEMENT_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_EVENT_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_MAP_CPU_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_CPU_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_THROUGHPUT_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_CRAFT_OBSERVER_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_MAP_OBSERVER_CLEANUP",
+            "cleared": true
+          },
+          {
+            "key": "EOV_CRAFT_CLONE",
+            "cleared": true
+          },
+          {
+            "key": "EOV_CRAFT_ORIGINAL",
+            "cleared": true
+          },
+          {
+            "key": "EOV_AUTOSAVE_WAS_RUNNING",
+            "cleared": true
+          }
+        ],
+        "saveGuard": false,
+        "root": null,
+        "steam": true,
+        "ugs": true,
+        "inRun": false,
+        "map": "River",
+        "profiler": false,
+        "guardObjects": 0
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

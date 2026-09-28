@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1d13882358b084469696acf984c7845, type: 3}
+  m_Name: Forge
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitForgeDefinition
+  catalog: {fileID: 11400000, guid: 6e5dcf09a1955e245954d64a38a5a10e, type: 2}
+  portraitAnimation:
+    frames:
+    - {fileID: -7143566624491334082, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    - {fileID: 2370998766806015147, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    - {fileID: -7116889898899827167, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    - {fileID: -8074242365789520253, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    - {fileID: 3297262693897438891, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    - {fileID: 7707398729994917355, guid: 5acca127fc16e1b499a8eac3364ef3de, type: 3}
+    times:
+    - 0
+    - 0.2
+    - 0.38333333
+    - 0.6166667
+    - 0.8
+    - 1
+    duration: 1.0166667
+  gear:
+  - slot: Weapon
+    frame: {fileID: 8916156736367152456, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+    unknown: {fileID: 1273016142, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    rarities:
+    - {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 3182157605790672652, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5779404786783910460, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -4340101518727308407, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 2618809324795502546, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -7974420769470967494, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 1722722202069083759, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -6817145471439577037, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+  - slot: Helmet
+    frame: {fileID: 6807654065617630088, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+    unknown: {fileID: 680111951, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    rarities:
+    - {fileID: -5938119891582100046, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -802506481838879291, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5768718099010315880, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5770306520225905145, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -4990813876206667089, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -23073801938179475, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 3946135191224089543, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 5293982925332407390, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+  - slot: Chest
+    frame: {fileID: -6268959639627834742, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+    unknown: {fileID: 1859840628, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    rarities:
+    - {fileID: 3631121382201776489, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 1131955289483526816, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -2203369763713522792, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -4941545902527902627, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5491419555465775874, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5204847387510555931, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 6885524337509646724, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -5043164583082140714, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+  - slot: Boots
+    frame: {fileID: -7294562437934596049, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+    unknown: {fileID: -911053159, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    rarities:
+    - {fileID: -4207116279972355936, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -3557647856851298121, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 7319879833592830747, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -8575127569184337522, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -4816647992327689159, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 1208512515283856700, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: -8206479425002192036, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+    - {fileID: 8321978350103849285, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+  coreIcons:
+  - {fileID: 791382025818577539, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: 4345019523797036672, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: 7006734884082772799, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: -8208811870163520559, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: -8348643138666405633, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: 199382809652085194, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: -7175150255372043901, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  - {fileID: -6682749376156755933, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  panel: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  inset: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  slot: {fileID: -4494089286520263261, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  selector: {fileID: -3351714043623252698, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+  button: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+  arrowValid: {fileID: -8659047476506390728, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  arrowInvalid: {fileID: -8181858823313546132, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  xpTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  xpFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  portrait: {fileID: -6072620987560022285, guid: 8f7f3cf5d6f378d4f956d40f652a4b2e, type: 3}
+  migratedHelmet: {fileID: 21300000, guid: d5ee478809b984f44b4e1c503fcc2e0c, type: 3}
+  toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}

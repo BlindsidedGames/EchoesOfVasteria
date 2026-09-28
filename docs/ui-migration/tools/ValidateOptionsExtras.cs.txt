@@ -1,0 +1,28 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using UnityEngine.Localization.Settings;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateOptionsExtras {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ ToolkitOptionsScreen screen;ToolkitOptionsDialogs dialog;TownWindowManager manager;List<string> checks=new();int phase;double due;float ratio;UnityEngine.Localization.Locale locale;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;VisualElement Dialog=>dialog.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>checks.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(VisualElement root,string id){var b=root.Q<Button>(id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Isolated Play required");var test=new ValidateOptionsExtras{manager=TownWindowManager.Instance,ratio=Blindsided.SaveData.StaticReferences.SafeAreaRatio,locale=LocalizationSettings.SelectedLocale};if(!test.manager)throw new Exception("Wait for Main");foreach(var intro in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>())intro.Hide();test.screen=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsScreen>();if(!test.screen){var go=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Options.prefab"));test.screen=go.GetComponent<ToolkitOptionsScreen>();var so=new SerializedObject(test.screen);so.FindProperty("windows").objectReferenceValue=test.manager;so.ApplyModifiedPropertiesWithoutUndo();so=new SerializedObject(test.manager);so.FindProperty("toolkitOptions").objectReferenceValue=test.screen;so.ApplyModifiedPropertiesWithoutUndo();}test.manager.CloseAllWindows();test.manager.OpenWindow(TownWindowManager.Window.Options);test.dialog=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsDialogs>();EditorApplication.update+=test.Tick;return "Width preview and Russian language validation started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase++){
+ case 0:var slider=Root.Q<Slider>("width");using(var e=PointerDownEvent.GetPooled()){e.target=slider;slider.SendEvent(e);}slider.value=.7f;Check(Mathf.Approximately(Blindsided.SaveData.StaticReferences.SafeAreaRatio,.7f),"Width slider writes ratio preference");break;
+ case 1:Check(Root.Q("width-preview").resolvedStyle.display==DisplayStyle.Flex,"Width preview is visible while pointer is held");ScreenCapture.CaptureScreenshot(Output+"/options-width-preview.png");break;
+ case 2:var width=Root.Q<Slider>("width");using(var e=PointerUpEvent.GetPooled()){e.target=width;width.SendEvent(e);}Check(Root.Q("width-preview").style.display.value==DisplayStyle.None,"Width preview hides on pointer release");width.value=ratio;Submit(Root,"language");Submit(Dialog,"locale-ru");break;
+ case 3:Check(LocalizationSettings.SelectedLocale.Identifier.Code=="ru","Russian choice changes selected locale");Check(Dialog.Q<Button>("translation-warning")!=null,"Russian choice opens translation warning");ScreenCapture.CaptureScreenshot(Output+"/options-native-russian-warning.png");break;
+ case 4:Submit(Dialog,"translation-warning");Check(!dialog.IsOpen,"Translation warning dismisses natively");UnityEngine.Object.FindAnyObjectByType<LocalizationManager>().SelectLocale(locale);break;
+ case 5:Check(LocalizationSettings.SelectedLocale==locale,"Original locale restored after test");screen.Hide();screen.Show();ScreenCapture.CaptureScreenshot(Output+"/options-native.png");break;
+ case 6:dialog.Open("import");break;
+ case 7:ScreenCapture.CaptureScreenshot(Output+"/options-native-import.png");break;
+ case 8:dialog.Hide();File.WriteAllLines(Output+"/options-extras-checks.txt",checks);EditorApplication.update-=Tick;break;
+ }}catch(Exception ex){checks.Add("FAIL "+ex);Blindsided.SaveData.StaticReferences.SafeAreaRatio=ratio;UnityEngine.Object.FindAnyObjectByType<LocalizationManager>()?.SelectLocale(locale);File.WriteAllLines(Output+"/options-extras-checks.txt",checks);EditorApplication.update-=Tick;}}
+}

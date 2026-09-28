@@ -77,7 +77,12 @@ namespace TimelessEchoes.Stats
         private void SaveState()
         {
             if (oracle == null) return;
-            var dict = new Dictionary<string, double>();
+            // Merge the runtime view into the loaded dictionary. Content can be temporarily
+            // absent in a demo, beta, or changed Addressables catalog; those unknown IDs must
+            // survive until their assets are available again.
+            var dict = oracle.saveData.EnemyKills != null
+                ? new Dictionary<string, double>(oracle.saveData.EnemyKills)
+                : new Dictionary<string, double>();
             foreach (var pair in kills)
             {
                 if (pair.Key != null)

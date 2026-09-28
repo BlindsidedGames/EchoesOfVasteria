@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "command": "command eval",
+  "data": {
+    "command": "eval",
+    "parameters": {
+      "code": "return new {os=UnityEngine.SystemInfo.operatingSystem,graphicsApi=UnityEngine.SystemInfo.graphicsDeviceType.ToString(),graphicsVersion=UnityEngine.SystemInfo.graphicsDeviceVersion,quality=UnityEngine.QualitySettings.names[UnityEngine.QualitySettings.GetQualityLevel()],pipeline=UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline?.name,frameTiming=UnityEngine.FrameTimingManager.IsFeatureEnabled(),editor=UnityEngine.Application.unityVersion};"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": {
+        "os": "Windows 11  (10.0.26200)",
+        "graphicsApi": "Direct3D12",
+        "graphicsVersion": "Direct3D 12 [level 12.2]",
+        "quality": "Ultra",
+        "pipeline": "UniversalRP",
+        "frameTiming": true,
+        "editor": "6000.6.0f1"
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

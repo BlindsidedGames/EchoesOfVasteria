@@ -1,0 +1,62 @@
+PASS Real navigation labels found
+PASS Real Library headings found
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b><smallcaps>Quit?</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b><smallcaps>No!</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Roadmap</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Quests</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Forge</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Cauldron</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Alter Echoes</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Buffs</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Combat
+</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Reaping</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Echoes</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Retreating</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Tasks
+</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Item Tiers</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-chapter-title text=<b><smallcaps>Patch Notes</smallcaps></b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text= before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Adventure</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Hub</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Townsfolk</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Quests</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Library</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Alter Echoes</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Skills</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Buffs</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Forge</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Cauldron</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Farmlands</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Woods</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Mines</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>River</b> before=8 after=12
+METRIC unity-label,unity-text-element,eov-navigation-label text=<b>Spooky</b> before=8 after=12
+PASS One token changes standard headings in navigation and Library
+PASS Removing override restores typography
+PASS Initial bounds applied
+PASS 600 unchanged layout calls cause no style writes
+PASS Changed bounds applied
+PASS New visual tree receives unchanged bounds
+PASS Native images found in Library
+PASS All sprite images preserve aspect in Library (20)
+PASS Native images found in Credits
+PASS All sprite images preserve aspect in Credits (7)
+PASS Native images found in Buffs
+PASS All sprite images preserve aspect in Buffs (26)
+PASS Native images found in Skills
+PASS All sprite images preserve aspect in Skills (13)
+PASS Native images found in Quests
+PASS All sprite images preserve aspect in Quests (77)
+PASS Native images found in Cauldron
+PASS All sprite images preserve aspect in Cauldron (123)
+PASS Native images found in AlterEchoes
+PASS All sprite images preserve aspect in AlterEchoes (137)
+PASS Native images found in Inventory
+PASS All sprite images preserve aspect in Inventory (76)
+PASS Native images found in Options
+PASS All sprite images preserve aspect in Options (7)
+PASS Tall tree artwork present in Prospector
+PASS Tall tree artwork preserves proportions
+PASS Validation remains offline

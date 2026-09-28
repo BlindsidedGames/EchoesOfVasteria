@@ -1,0 +1,32 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateToolkitRecovery {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ Oracle oracle;ToolkitDialogScreen prefab;int phase;double due;readonly List<string> results=new();
+ ToolkitDialogScreen View=>(ToolkitDialogScreen)typeof(Oracle).GetField("_nativeRecoveryView",F).GetValue(oracle);
+ VisualElement Root=>View.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>results.Add((b?"PASS ":"FAIL ")+s);
+ void Recovery(SaveLoadStatus status)=>typeof(Oracle).GetMethod("RequireRecovery",F).Invoke(oracle,new object[]{status,"Synthetic UI fixture only. No save recovery action is being executed."});
+ public static string Main(){if(!Application.dataPath.Contains("EOV-UITK-20260927")||SteamManager.Initialized||Unity.Services.Core.UnityServices.State!=Unity.Services.Core.ServicesInitializationState.Uninitialized)throw new Exception("Offline disposable profile required");var test=new ValidateToolkitRecovery{oracle=Oracle.oracle,prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Recovery.prefab").GetComponent<ToolkitDialogScreen>()};typeof(Oracle).GetField("recoveryViewPrefab",F).SetValue(test.oracle,test.prefab);EditorApplication.update+=test.Tick;return "Native recovery validation started; no real recovery buttons will be clicked";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase){
+ case 0:Recovery(SaveLoadStatus.Corrupt);phase++;break;
+ case 1:if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name!="Loading")break;Check(View.IsVisible,"Recovery remains visible across actual Loading scene transition");Check(Root.Q<Button>("dialog-secondary").text=="Keep Old Files & Start Fresh","Corrupt status preserves fresh-recovery action label");CheckBounds();ScreenCapture.CaptureScreenshot(Output+"/recovery-corrupt.png");phase++;break;
+ case 2:Recovery(SaveLoadStatus.Unavailable);phase++;break;
+ case 3:Check(Root.Q<Button>("dialog-secondary").text=="Open Save Folder","Unavailable status offers folder action, not fresh recovery");ScreenCapture.CaptureScreenshot(Output+"/recovery-unavailable.png");phase++;break;
+ case 4:Recovery(SaveLoadStatus.UnsupportedNewer);phase++;break;
+ case 5:Check(Root.Q<Button>("dialog-secondary").text=="Open Save Folder"&&Root.Q<Label>("dialog-body").text.Contains("Starting fresh is disabled"),"Newer-version status retains protective message and folder action");ScreenCapture.CaptureScreenshot(Output+"/recovery-newer-version.png");phase++;break;
+ case 6:View.SetInteractable(false);Check(!Root.Q<Button>("dialog-primary").enabledSelf&&!Root.Q<Button>("dialog-secondary").enabledSelf,"Busy state disables both native actions");View.SetInteractable(true);Check(!Root.Q<Label>("dialog-body").enableRichText,"Diagnostics are displayed literally without markup interpretation");Check(Root.childCount==1,"Status changes reuse one native view tree");TestCallbacks();File.WriteAllLines(Output+"/recovery-checks.txt",results);EditorApplication.update-=Tick;break;}}
+ catch(Exception ex){results.Add("FAIL "+ex);File.WriteAllLines(Output+"/recovery-checks.txt",results);EditorApplication.update-=Tick;}}
+ void CheckBounds(){var frame=Root.Q("dialog-frame").worldBound;var area=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,Blindsided.SaveData.StaticReferences.SafeAreaRatio);Check(frame.xMin>=area.xMin&&frame.xMax<=area.xMax&&frame.yMin>=area.yMin&&frame.yMax<=area.yMax,"Entire recovery frame stays inside safe area");foreach(var id in new[]{"dialog-primary","dialog-secondary"}){var b=Root.Q<Button>(id).worldBound;Check(b.width>0&&b.xMax<=area.xMax&&b.yMax<=area.yMax,id+" remains visible on screen");}}
+ void TestCallbacks(){int first=0,second=0;var mock=UnityEngine.Object.Instantiate(prefab);mock.Show("Test","Literal <diagnostic>","First","Second",()=>first++,()=>second++);var root=mock.GetComponent<UIDocument>().rootVisualElement;void Submit(Button b){using(var evt=NavigationSubmitEvent.GetPooled()){evt.target=b;b.SendEvent(evt);}}Submit(root.Q<Button>("dialog-primary"));Submit(root.Q<Button>("dialog-secondary"));Check(first==1&&second==1,"Native actions invoke only the supplied fixture callbacks");mock.SetInteractable(false);Submit(root.Q<Button>("dialog-primary"));Check(first==1,"Busy dialog rejects native submit");mock.Hide();Check(root.childCount==0,"Hiding dialog removes content and callbacks");UnityEngine.Object.Destroy(mock.gameObject);}
+}

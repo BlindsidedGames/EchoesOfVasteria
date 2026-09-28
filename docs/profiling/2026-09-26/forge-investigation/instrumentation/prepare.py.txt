@@ -1,0 +1,59 @@
+from pathlib import Path
+import hashlib,json,re
+src=Path.cwd();ext=Path('C:/Users/mattr/AppData/Local/Temp/EOV-Profile-20260926');scratch=src/'Library/ForgeProbe'
+rel='Assets/Scripts/Gear/UI/ForgeWindowUI/ForgeWindowUI.cs'
+assert (src/rel).read_bytes()==(ext/rel).read_bytes(),'Disposable forge drift'
+for n,p in [('ForgeWindowUI.cs',ext/rel),('EovPerformancePlayerAudit.cs',ext/'Assets/EovPerformancePlayerAudit.cs')]:
+ (scratch/(n+'.before')).write_bytes(p.read_bytes())
+s=(ext/rel).read_text(encoding='utf-8-sig')
+# Wrap entire method bodies with allocation-free stopwatch instrumentation; suppression only in disposable copy.
+methods=['UpdateAllGearSlots','UpdateSelectedSlotStats','UpdateAggregateStatsText','ProcessResourcesRefresh','OnIvanXpChanged','LateUpdate']
+for idx,name in enumerate(methods):
+ match=re.search(r'private void '+name+r'\([^)]*\)\s*\{',s);assert match,name
+ start=match.end();depth=1;i=start
+ # These methods have no brace characters inside literal strings except interpolation, whose pairs balance.
+ while depth:
+  if s[i]=='{':depth+=1
+  if s[i]=='}':depth-=1
+  i+=1
+ body=s[start:i-1];guard=''
+ if idx in [0,1,2]:guard='if(ForgeProbe.Mode==2||ForgeProbe.Mode==3)return;'
+ elif idx==3:guard='if(ForgeProbe.Mode==1||ForgeProbe.Mode==3)return;'
+ elif idx==4:guard='if(ForgeProbe.Mode==3)return;'
+ s=s[:start]+guard+f'long probeStart=System.Diagnostics.Stopwatch.GetTimestamp();try{{'+body+f'}}finally{{ForgeProbe.Record({idx},probeStart);}}'+s[i-1:]
+(ext/rel).write_text(s,encoding='utf-8')
+# Existing runner supplies the tested isolation/bootstrap, recorder output and metadata machinery.
+p=ext/'Assets/EovPerformancePlayerAudit.cs';s=(scratch/'EovPerformancePlayerAudit.cs.before').read_text(encoding='utf-8-sig')
+s=s.replace('using UnityEngine;','using UnityEngine;using UnityEngine.UI;using TMPro;')
+s=s.replace('/player-rendered"','/forge-investigation"').replace('/rendered-player-save"','/forge-probe-save"')
+s=s.replace('new double[30000,24]','new double[30000,80]')
+s=s.replace('"Batches Count","Draw Calls Count"','"Batches Count","Draw Calls Count","CanvasUpdate.Layout","Canvas.SendWillRenderCanvases","UI.Layout","TMP.GenerateTextMesh","TextMeshProUGUI.GenerateTextMesh"')
+s=s.replace('var before=Snapshot();count=0;', 'var before=Snapshot();ForgeProbe.Clear();cycles=0;opMs=0;nextCycle=Time.realtimeSinceStartupAsDouble;count=0;')
+s=s.replace('sampling=false;var after=Snapshot();','sampling=false;File.WriteAllText(Path.Combine(output,n+"-methods.json"),JsonUtility.ToJson(new MethodResults{mode=ForgeProbe.Mode,cycles=cycles,operation_ms=opMs,method_names=ForgeProbe.Names,method_total_ms=(double[])ForgeProbe.Times.Clone(),method_calls=(int[])ForgeProbe.Calls.Clone()},true));var after=Snapshot();')
+s=s.replace('count++;}', 'count++;if(Time.realtimeSinceStartupAsDouble>=nextCycle){RunCycle();nextCycle+=0.1;}}')
+start=s.index(' for(int r=1;r<=3;r++){Reset(true);');end=s.index(' File.WriteAllText(Path.Combine(output,"complete.txt")',start)
+s=s[:start]+''' var f=Forge;core=Resources.Load<CoreSO>("Gear/Cores/Vastium");coreResource=Resources.LoadAll<Resource>("Resource Items").First(r=>r.name=="Vastium Core");
+ for(int rep=1;rep<=3;rep++){
+ int[] order=rep==1?new[]{0,1,2,3,4,5,6}:rep==2?new[]{6,4,2,0,5,3,1}:new[]{3,5,1,6,0,2,4};
+ foreach(int mode in order){ForgeProbe.Mode=0;foreach(var b in frozen)if(b!=null)b.enabled=true;frozen.Clear();Reset();foreach(var resource in Resources.LoadAll<Resource>("Resource Items"))Oracle.oracle.saveData.Resources[resource.name]=new GameData.ResourceEntry{Amount=1e8,Earned=true,Tier=1};Blindsided.EventHandler.LoadData();CauldronManager.Instance.StopTasting();Call(f,"StopAutoCrafting");Call(f,"SelectCore",core);f.SelectSlot("Weapon");Panel(mode==6?null:"forge");QualitySettings.vSyncCount=0;Application.targetFrameRate=120;yield return new WaitForSecondsRealtime(3);Canvas.ForceUpdateCanvases();
+ var window=(GameObject)Get(Get(TownWindowManager.Instance,"forge"),"window");if(rep==1&&mode==0){File.WriteAllLines(Path.Combine(output,"forge-layout.txt"),window.GetComponentsInChildren<Transform>(true).Where(t=>t.GetComponent<ILayoutController>()!=null||t.GetComponent<TMP_Text>()!=null).Select(t=>PathOf(t)+" | "+string.Join(",",t.GetComponents<Component>().Select(c=>c.GetType().Name))+" | "+(t.GetComponent<TMP_Text>()!=null?"auto="+t.GetComponent<TMP_Text>().enableAutoSizing+" chars="+t.GetComponent<TMP_Text>().text.Length:"")));}
+ if(mode==4||mode==5){foreach(var b in window.GetComponentsInChildren<Behaviour>(true)){bool disable=mode==4?(b is LayoutGroup||b is ContentSizeFitter):(b is ContentSizeFitter);if(disable&&b.enabled){frozen.Add(b);b.enabled=false;}}}
+ ForgeProbe.Mode=mode;UnityEngine.Random.InitState(260926);yield return Capture("player-forge-probe-mode"+mode+"-r"+rep,18,3);
+ }
+ }
+ foreach(var b in frozen)if(b!=null)b.enabled=true;ForgeProbe.Mode=0;
+''' +s[end:]
+# Additional probe helpers are attached only to audit runner.
+pos=s.rfind('}')
+s=s[:pos]+'''
+ [Serializable]public class MethodResults{public int mode,cycles;public double operation_ms;public string[] method_names;public double[] method_total_ms;public int[] method_calls;}
+ int cycles;double nextCycle,opMs;CoreSO core;Resource coreResource;List<Behaviour> frozen=new List<Behaviour>();string[] gearSlots={"Weapon","Chest","Helmet","Boots"};
+ static string PathOf(Transform t)=>t.parent==null?t.name:PathOf(t.parent)+"/"+t.name;
+ void RunCycle(){long began=System.Diagnostics.Stopwatch.GetTimestamp();var slot=gearSlots[cycles%4];var item=CraftingService.Instance.Craft(core,slot,null,coreResource,1);if(item==null)throw new Exception("Probe craft failed");var previous=EquipmentController.Instance.GetEquipped(slot);if(!EquipmentController.Instance.Equip(item))throw new Exception("Probe equip failed");if(previous!=null)SalvageService.Instance.Salvage(previous,true);cycles++;opMs+=(System.Diagnostics.Stopwatch.GetTimestamp()-began)*1000.0/System.Diagnostics.Stopwatch.Frequency;}
+''' +s[pos:]
+s+='''
+public static class ForgeProbe {public static int Mode;public static readonly string[] Names={"GearSlots","SelectedStats","AggregateStats","Resources","IvanXP","LateUpdate"};public static double[] Times=new double[6];public static int[] Calls=new int[6];public static void Clear(){Array.Clear(Times,0,6);Array.Clear(Calls,0,6);}public static void Record(int i,long start){Times[i]+=(System.Diagnostics.Stopwatch.GetTimestamp()-start)*1000.0/System.Diagnostics.Stopwatch.Frequency;Calls[i]++;}}
+'''
+p.write_text(s,encoding='utf-8')
+manifest={rel:hashlib.sha256((src/rel).read_bytes()).hexdigest()};(scratch/'original-source-hashes.json').write_text(json.dumps(manifest));(scratch/'workspace-before.txt').write_bytes(__import__('subprocess').check_output(['git','status','--porcelain=v1']))
+print('Prepared disposable forge method timing and seven ablation modes; original source untouched.')

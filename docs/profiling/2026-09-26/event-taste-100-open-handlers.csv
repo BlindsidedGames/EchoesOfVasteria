@@ -1,0 +1,16 @@
+event,handler,calls,total_ms,max_ms,elapsed_s
+OnStewChanged,TimelessEchoes.UI.CauldronWindowUI.RefreshDrinkingTexts,232,10.6423,0.33590000000000003,25.109555299999556
+OnWeightsChanged,TimelessEchoes.UI.CauldronWindowUI.RefreshPieChart,1,0.0988,0.0988,25.109581400000025
+OnWeightsChanged,TimelessEchoes.UI.CauldronWindowUI.RefreshWeightsText,1,0.1976,0.1976,25.109587200000533
+OnCardGained,TimelessEchoes.UI.CollectionsWindowUI.OnCardGained,6934,58.289500000000004,0.2838,25.109591200000068
+OnCardGained,TimelessEchoes.UI.CauldronWindowUI.OnCardGained,6934,0.2621,0.0005,25.109595699999772
+OnSessionCardsChanged,TimelessEchoes.UI.CauldronWindowUI.OnSessionCardsChanged,116,0.2862,0.0066,25.109599999999773
+OnStatsChanged,TimelessEchoes.UI.CauldronWindowUI.OnStatsChanged,116,4.7452000000000005,0.0679,25.10960410000007
+OnInventoryChanged,TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.OnInventoryChanged,0,0,0,25.109608000000662
+OnInventoryChanged,TimelessEchoes.Upgrades.ResourceInventoryUI.UpdateSlots,0,0,0,25.109611899999436
+OnInventoryChanged,TimelessEchoes.UI.CollectionsWindowUI.OnInventoryChangedMark,0,0,0,25.109614900000452
+OnInventoryChanged,TimelessEchoes.Quests.QuestManager.OnInventoryChangedDebounced,0,0,0,25.109617899999648
+OnInventoryChanged,TimelessEchoes.Gear.UI.ForgeWindowUI.OnResourcesChanged,0,0,0,25.109620999999606
+OnInventoryChanged,TimelessEchoes.UI.CauldronWindowUI.OnInventoryChangedUi,0,0,0,25.109624500000791
+OnInventoryChanged,TimelessEchoes.UI.ItemStatsPanelUI.HandleInventoryChanged,0,0,0,25.109627300000284
+OnInventoryChanged,TimelessEchoes.Upgrades.CauldronManager.OnInventoryChangedHandler,0,0,0,25.109630599999946

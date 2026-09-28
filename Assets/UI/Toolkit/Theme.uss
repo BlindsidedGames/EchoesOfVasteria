@@ -1,0 +1,377 @@
+@import url("Tokens.uss");
+@import url("Components.uss");
+
+.eov-book { flex-grow: 1; min-height: 0; }
+.eov-book-frame { flex-grow: 1; min-height: 0; padding: 2px 2px 1px 2px; }
+.eov-scroll { flex-grow: 1; min-height: 0; }
+.eov-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
+.eov-scroll .unity-scroll-view__content-container { flex-grow: 1; padding-top: 1px; padding-bottom: 1px; }
+.eov-scroll .unity-scroller--vertical { width: 6px; margin: 0; }
+.eov-scroll .unity-scroller__low-button, .eov-scroll .unity-scroller__high-button { display: none; }
+.eov-scroll .unity-base-slider { margin: 0; padding: 0; min-width: 0; width: 6px; }
+.eov-scroll .unity-base-slider__input { min-width: 0; }
+.eov-scroll #unity-dragger { left: 0; right: 0; width: 6px; margin: 0; }
+.eov-scroll #unity-tracker, .eov-scroll #unity-dragger { border-width: 0; border-radius: 0; background-color: rgba(0,0,0,0); }
+.eov-chapter { flex-shrink: 0; margin-bottom: 1px; }
+.eov-chapter-header {
+    flex-direction: row; height: 16.9px; min-height: 16.9px;
+    padding: 3px 3px 3px 5px; margin: 0; border-width: 0; border-radius: 0;
+    background-color: rgba(0,0,0,0); -unity-background-image-tint-color: white;
+}
+.eov-chapter-header:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-chapter-header:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-chapter-title {
+    flex-grow: 1; margin: 0; padding: 0; font-size: var(--eov-font-heading);
+    -unity-text-align: upper-left; white-space: nowrap;
+    text-shadow: 0.217px 0.217px 0.217px var(--eov-color-text-outline);
+    -unity-text-outline-width: 0.108px; -unity-text-outline-color: var(--eov-color-text-outline);
+}
+.eov-chapter-icon { position: absolute; right: 0; top: -1px; width: 16px; height: 16px; }
+.eov-chapter-content { padding: 3px; flex-shrink: 0; }
+.eov-chapter-body {
+    font-size: var(--eov-font-body); margin: 0; padding: 0; white-space: normal; -unity-text-align: upper-left;
+    text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline);
+    -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline);
+}
+.eov-credit { flex-shrink: 0; padding: 2px 0 4px 0; margin-bottom: 1px; }
+.eov-credit .eov-chapter-title { -unity-text-align: upper-center; white-space: normal; }
+.eov-credit .eov-chapter-body { -unity-text-align: upper-center; }
+.eov-credits .unity-scroller--vertical { width: 8px; margin-left: 1px; margin-top: 1px; margin-bottom: 1px; }
+.eov-credits .unity-base-slider { width: 8px; }
+.eov-credits #unity-dragger { width: 8px; left: 0; right: 0; }
+.eov-meeting { position: absolute; width: 32px; height: 45px; }
+.eov-meeting-shadow { position: absolute; left: 2px; top: 5px; width: 32px; height: 45px; }
+.eov-meeting-portrait-frame { position: absolute; left: 0; top: 0; width: 32px; height: 45px; align-items: center; justify-content: center; }
+.eov-meeting-portrait { width: 32px; height: 32px; translate: 0.5px 0; }
+.eov-meeting-dialogue-frame { position: absolute; left: 33px; top: 0; width: 100px; padding: 3px; }
+.eov-meeting-dialogue-inset { padding: 1px 3px 2px 3px; }
+.eov-meeting-dialogue { margin: 0; padding: 0; font-size: var(--eov-font-subheading); white-space: normal; color: black; }
+.eov-meeting-button-shadow { position: absolute; left: 2px; top: 51.4px; width: 32px; height: 17px; }
+.eov-meeting-button {
+    position: absolute; left: 0; top: 46.4px; width: 32px; height: 17px;
+    margin: 0; padding: 0; border-width: 0; border-radius: 0;
+    background-color: rgba(0,0,0,0); -unity-background-image-tint-color: white;
+    align-items: center; justify-content: center;
+}
+.eov-meeting-button:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-meeting-button:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-meeting-button-label { margin: 0; padding: 0; font-size: var(--eov-font-body); -unity-text-align: middle-center; }
+.eov-intro { position: absolute; translate: -50% -50%; }
+.eov-intro-close {
+    margin: 0; padding: 3px; border-width: 0; border-radius: 0;
+    background-color: rgba(0,0,0,0); -unity-background-image-tint-color: white;
+    flex-shrink: 0;
+}
+.eov-intro-inset { padding: 2px; }
+.eov-intro-title { margin: 0; padding: 0; font-size: var(--eov-font-subheading); letter-spacing: 0.14px; white-space: normal; color: black; -unity-text-align: upper-center; }
+.eov-intro-body { margin: 0; padding: 0; font-size: var(--eov-font-caption); letter-spacing: 0.1px; white-space: normal; color: black; -unity-text-align: upper-left; -unity-font-style: normal; }
+.eov-intro-progress { height: 4px; margin-top: 1px; }
+.eov-intro-fill { height: 4px; }
+.eov-intro-close-label { margin: 1px 0 0 0; padding: 0; font-size: var(--eov-font-caption); -unity-text-align: middle-center; }
+.eov-intro-close:disabled { opacity: 1; -unity-background-image-tint-color: white; }
+.eov-dialog { position: absolute; translate: -50% -50%; }
+.eov-dialog-frame { padding: 3px; min-height: 0; }
+.eov-dialog-title { font-size: var(--eov-font-subheading); letter-spacing: 0.14px; color: var(--eov-color-light-text); margin: 0 0 2px 0; padding: 0; white-space: normal; -unity-text-align: upper-center; flex-shrink: 0; }
+.eov-dialog-scroll { flex-grow: 0; flex-shrink: 1; }
+.eov-dialog-scroll .unity-scroll-view__content-container { padding: 3px; }
+.eov-dialog-body { margin: 0; padding: 0; font-size: var(--eov-font-caption); letter-spacing: 0.1px; white-space: normal; -unity-text-align: upper-left; }
+.eov-dialog-actions { flex-direction: row; margin-top: 2px; flex-shrink: 0; }
+.eov-dialog-button { height: 20px; min-width: 0; flex-basis: 0; flex-grow: 1; margin: 0; padding: 2px 3px; border-width: 0; border-radius: 0; font-size: var(--eov-font-body); white-space: normal; background-color: rgba(0,0,0,0); -unity-background-image-tint-color: white; }
+.eov-dialog-primary { margin-right: 2px; color: var(--eov-color-light-text); }
+.eov-dialog-button:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-dialog-button:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+
+
+
+
+
+.eov-navigation { position: absolute; height: 22px; }
+.eov-navigation-bar, .eov-navigation-buttons, .eov-navigation-context { flex-direction: row; height: 22px; }
+.eov-navigation-bar { flex-grow: 1; }
+.eov-navigation-spacer { flex-grow: 1; }
+.eov-navigation-row { position: relative; flex-direction: row; flex-shrink: 0; margin-right: 2px; }
+.eov-navigation-shadow { position: absolute; left: 2px; right: -2px; top: 5px; height: 22px; }
+.eov-navigation-button { flex-direction: row; height: 22px; margin: 0; padding: 0 3px; border-width: 0; border-radius: 0; background-color: transparent; -unity-background-image-tint-color: white; align-items: center; justify-content: center; flex-shrink: 0; }
+.eov-navigation-button:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-navigation-button:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-navigation-label { margin: 0; padding: 0; font-size: var(--eov-font-heading); -unity-text-align: middle-center; white-space: nowrap; text-shadow: 0.217px 0.217px 0.217px var(--eov-color-text-outline); -unity-text-outline-width: 0.108px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-navigation-icon { position: absolute; width: 18px; height: 18px; }
+.eov-navigation-attention { width: 14px; height: 22px; margin-left: 2px; }
+.eov-navigation-quest-attention { position: absolute; right: -2px; top: -5px; width: 16px; height: 16px; margin: 0; }
+.eov-navigation-popup { position: absolute; top: 24px; }
+.eov-navigation-popup .eov-navigation-row { margin-bottom: 2px; margin-right: 0; }
+.eov-navigation-popup .eov-navigation-button { flex-grow: 1; }
+.eov-navigation-balance { position: absolute; left: 82px; height: 22px; padding: 3px; margin: 0; }
+.eov-navigation-balance-label { height: 16px; margin: 0; padding: 0 4px; font-size: var(--eov-font-heading); -unity-text-align: middle-center; white-space: nowrap; }
+.eov-navigation-auto-pin { flex-direction: row; height: 22px; padding: 3px 4px 3px 2px; margin-right: 2px; }
+.eov-navigation-toggle { width: 32px; height: 16px; margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-navigation-auto-pin-label { margin: 0; padding: 0; font-size: var(--eov-font-caption); -unity-text-align: middle-center; }
+.eov-navigation-progress { width: 100px; height: 22px; position: relative; margin-right: 2px; flex-shrink: 0; }
+.eov-navigation-progress-track { position: absolute; left: 3px; top: 2.5px; width: 94px; height: 5px; }
+.eov-navigation-progress-actor { position: absolute; width: 20px; height: 20px; top: -5px; }
+.eov-navigation-progress-text { position: absolute; top: 11px; left: 2px; margin: 0; padding: 0; font-size: var(--eov-font-heading); white-space: nowrap; }
+.eov-navigation-right { flex-direction: row; height: 22px; }
+.eov-quit { position: absolute; translate: -100% 0; flex-direction: row; height: 16px; }
+.eov-quit-button { margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; -unity-background-image-tint-color: white; flex-shrink: 0; align-items: center; justify-content: center; }
+.eov-quit-button:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-quit-button:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-options { position: absolute; translate: -50% 0; }
+.eov-options-scroll { flex-grow: 1; }
+.eov-options-scroll .unity-scroll-view__content-container { padding: 0 0 1px 0; }
+.eov-options-frame { padding: 3px; margin-bottom: 2px; flex-shrink: 0; }
+.eov-options-row { flex-direction: row; flex-shrink: 0; }
+.eov-options-spaced { margin-right: 2px; }
+.eov-options-label { margin: 0; padding: 0; white-space: nowrap; -unity-text-align: upper-left; flex-shrink: 0; }
+.eov-options-button { margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; -unity-background-image-tint-color: white; align-items: center; justify-content: center; flex-shrink: 0; }
+.eov-options-button-label { -unity-text-align: middle-center; }
+.eov-options-button:hover { -unity-background-image-tint-color: var(--eov-tint-hover); }
+.eov-options-button:active { -unity-background-image-tint-color: var(--eov-tint-pressed); }
+.eov-options-button:disabled { opacity: 0.5; }
+.eov-options-slot { padding: 2px; margin-top: 2px; }
+.eov-options-transfers { width: 57.14px; padding: 3px 2px 2px 2px; }
+.eov-options-label { text-shadow: 0.217px 0.217px 0.217px var(--eov-color-text-outline); -unity-text-outline-width: 0.108px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-options-dialog { position: absolute; translate: -50% -50%; margin: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-options-transfer-dialog { width: 350px; height: 150px; padding: 4px; }
+.eov-options-input-frame { height: 100px; padding: 2px; margin-top: 1px; flex-shrink: 0; }
+.eov-options-input { flex-grow: 1; margin: 0; padding: 0; font-size: var(--eov-font-body); }
+.eov-options-input > .unity-base-text-field__input { margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; color: rgb(62,39,49); white-space: normal; }
+.eov-options-input .unity-text-element { white-space: normal; }
+.eov-options-transfer-status { height: 5px; margin: 1px 0 1px 0; padding: 0; font-size: 4px; white-space: nowrap; }
+.eov-options-modal-dismiss { position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-options-button.eov-options-spaced { margin-right: 2px; }
+.eov-options-input > .unity-base-text-field__input { color: rgb(50,50,50); }
+.eov-options-input > .unity-base-text-field__input--placeholder { color: rgba(50,50,50,0.5); -unity-font-style: italic; }
+.eov-buffs { position: absolute; }
+.eov-buffs-header { flex-direction: row; height: 26px; flex-shrink: 0; }
+.eov-buffs-slots { flex-direction: row; width: 110px; padding: 3px; flex-shrink: 0; }
+.eov-buffs-slot { width: 20px; height: 20px; flex-shrink: 0; margin-right: 1px; }
+.eov-buffs-slot-icon { position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; }
+.eov-buffs-slot-locked { position: absolute; left: 1px; top: 11px; width: 18px; height: 8px; -unity-text-align: middle-center; }
+.eov-buffs-auto { position: absolute; left: 10px; top: -6.6px; width: 16px; height: 16px; }
+.eov-buffs-label { margin: 0; padding: 0; -unity-font-style: bold; white-space: nowrap; }
+.eov-buffs-instructions { width: 270px; margin-left: 1px; padding: 2px 4px 3px 4px; }
+.eov-buffs-inset { flex-grow: 1; min-height: 0; margin-top: 1px; padding: 2px 2px 1px 2px; }
+.eov-buffs-scroll { flex-grow: 1; min-height: 0; }
+.eov-buffs-scroll .unity-scroll-view__content-container { padding-top: 1px; }
+.eov-buffs-scroll .unity-scroll-view__content-viewport { overflow: hidden; }
+.eov-buffs-scroll .unity-scroller--vertical { width: 8px; margin: 1px 0 1px 1px; }
+.eov-buffs-scroll .unity-scroller__low-button, .eov-buffs-scroll .unity-scroller__high-button { display: none; }
+.eov-buffs-scroll .unity-base-slider { margin: 0; padding: 0; width: 8px; min-width: 0; }
+.eov-buffs-scroll .unity-base-slider__input { min-width: 0; }
+.eov-buffs-scroll #unity-tracker, .eov-buffs-scroll #unity-dragger { border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-buffs-scroll #unity-dragger { width: 8px; left: 0; right: 0; margin: 0; }
+.eov-buff-row { flex-shrink: 0; margin-bottom: 1px; padding: 3px; }
+.eov-buff-line { height: 20px; flex-direction: row; }
+.eov-buff-icon-frame { width: 20px; height: 20px; flex-shrink: 0; }
+.eov-buff-texts { flex-grow: 1; flex-basis: 0; min-width: 0; margin-left: 2px; margin-right: 4px; }
+.eov-buff-assign { width: 50px; height: 20px; flex-shrink: 0; }
+.eov-buff-target { height: 18px; margin-top: 2px; flex-shrink: 0; }
+.eov-buff-target-icon { position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; }
+.eov-buff-target-label { position: absolute; left: 20px; right: 4px; top: 0; bottom: 0; -unity-text-align: middle-center; }
+.eov-buffs-label { text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline); -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-prospector .eov-buffs-label { -unity-font-style: normal; }
+.eov-skills { position: absolute; translate: -50% 0; flex-direction: row; }
+.eov-skills-left { width: 168px; flex-shrink: 0; margin-right: 1px; }
+.eov-skill-frame { padding: 3px; }
+.eov-skills-header { flex-shrink: 0; }
+.eov-skills-selectors { height: 20px; flex-direction: row; justify-content: center; margin-bottom: 1px; }
+.eov-skills-selector { width: 20px; height: 20px; margin-right: 2px; flex-shrink: 0; }
+
+.eov-skill-selector-level { position: absolute; left: 0; top: 10px; width: 20px; height: 10px; -unity-text-align: middle-center; }
+.eov-skill-info { padding: 2px; }
+.eov-skill-info .eov-skill-text { height: 6.82px; -unity-text-align: upper-center; }
+.eov-skill-xp-track { height: 4px; margin-top: 1px; }
+.eov-skill-set { margin-top: 1px; flex-shrink: 0; }
+.eov-skill-text { margin: 0; padding: 0; white-space: normal; -unity-font-style: normal; flex-shrink: 0; text-shadow: 0.136px 0.136px 0.136px var(--eov-color-text-outline); -unity-text-outline-width: 0.068px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-skill-summary-content > .eov-skill-text { margin-bottom: 1px; }
+.eov-skills-right { flex-grow: 1; flex-basis: 0; min-width: 0; }
+.eov-skills-milestone-inset { padding: 2px 2px 1px 2px; flex-grow: 1; min-height: 0; }
+.eov-milestone-row { flex-direction: row; flex-shrink: 0; min-height: 27.82px; margin-bottom: 1px; }
+.eov-milestone-body { flex-grow: 1; flex-basis: 0; min-width: 0; margin-right: 2px; }
+.eov-milestone-right { min-width: 49px; }
+.eov-milestone-controls { flex-direction: row; height: 16px; justify-content: flex-end; }
+.eov-milestone-task-frame { width: 23px; height: 23px; flex-shrink: 0; margin-right: 2px; }
+.eov-milestone-task-crop { position: absolute; left: 1px; top: 2px; width: 21px; height: 20px; overflow: hidden; align-items: center; justify-content: center; }
+
+.eov-skill-selector-level { -unity-text-align: lower-center; }
+.eov-quests { position: absolute; padding: 2px 2px 1px 2px; }
+.eov-quest-instructions { height: 7px; padding: 1px 2px 0 2px; }
+.eov-quest-category { flex-shrink: 0; margin-bottom: 1px; }
+.eov-quest-category .eov-chapter-header { padding-left: 3px; }
+.eov-quest-entries { padding-right: 13px; padding-top: 1px; }
+.eov-quest-row { padding: 3px; margin-bottom: 2px; flex-shrink: 0; }
+.eov-quest-top { flex-direction: row; }
+.eov-quest-texts { flex-grow: 1; flex-basis: 0; min-width: 0; }
+.eov-quest-controls { width: 83.73px; margin-left: 2px; align-items: flex-end; }
+.eov-quest-turn-in { width: 80px; height: 25px; justify-content: center; align-items: center; }
+.eov-quest-text { margin: 0; padding: 0; white-space: normal; flex-shrink: 0; -unity-text-align: upper-left; }
+.eov-quest-turn-in .eov-quest-text { -unity-text-align: middle-center; }
+.eov-quest-turn-in:disabled { -unity-background-image-tint-color: rgba(200,200,200,0.502); }
+.eov-quest-category .eov-chapter-title { text-shadow: none; -unity-text-outline-width: 0; }
+.eov-resource-inventory { position: absolute; }
+.eov-resource-title { height: 10px; flex-shrink: 0; padding: 1px 0 1px 1px; }
+.eov-resource-name { margin: 0; padding: 0; height: 8px; font-size: 5.87px; -unity-text-align: middle-center; white-space: nowrap; }
+.eov-resource-frame { flex-grow: 1; min-height: 0; margin-top: 1px; padding: 2px 2px 1px 2px; }
+.eov-resource-scroll .unity-scroller--vertical { width: 8px; margin-left: 1px; }
+.eov-resource-scroll .unity-base-slider, .eov-resource-scroll #unity-dragger { width: 8px; }
+.eov-resource-grid { width: 161px; flex-direction: row; flex-wrap: wrap; flex-shrink: 0; }
+.eov-resource-slot { width: 26px; height: 32px; flex-shrink: 0; margin-right: 1px; margin-bottom: 1px; padding: 0; }
+.eov-resource-slot-background { position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; }
+.eov-resource-icon { position: absolute; left: 1px; top: 2px; width: 18px; height: 17px; }
+.eov-resource-selection { position: absolute; left: -1px; top: -1px; width: 22px; height: 22px; }
+.eov-resource-count { position: absolute; left: 3px; top: 23.5px; width: 20px; height: 6px; margin: 0; padding: 0; font-size: 4.4px; -unity-text-align: middle-center; white-space: nowrap; }
+.eov-pinned-goals { position: absolute; translate: -100% 0; }
+.eov-pinned-background { position: absolute; left: -3px; right: -3px; top: -2px; bottom: -2px; }
+.eov-pinned-row { flex-shrink: 0; }
+.eov-pinned-text { margin: 0; padding: 0; white-space: nowrap; -unity-text-align: upper-right; }
+.eov-pinned-ready { position: absolute; right: -5px; top: -5px; width: 10px; height: 10px; }
+.eov-pinned-toggle { position: absolute; right: 0; top: -20px; bottom: 0; width: 100px; margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; }
+.eov-pinned-state { position: absolute; right: 0; top: 10px; width: 10px; height: 10px; }
+.eov-pinned-background { border-radius: 2px; }
+
+/* Cauldron geometry is measured from the current Main scene at a 432-unit height. */
+.eov-cauldron { position: absolute; }
+.eov-cauldron-text { margin: 0; padding: 0; -unity-font-style: normal; white-space: pre; overflow: hidden; }
+.eov-cauldron-collection-scroll { position: absolute; left: 2px; top: 2px; right: 2px; bottom: 1px; }
+.eov-cauldron-collection-scroll .unity-scroll-view__content-container { padding-top: 1px; }
+.eov-collection-section { width: 171px; padding: 1px 3px 3px 3px; margin-bottom: 1px; flex-shrink: 0; }
+.eov-collection-title { height: 10.54px; margin: 0 0 1px 0; padding: 0; font-size: var(--eov-font-subheading); letter-spacing: .14px; -unity-font-style: normal; }
+.eov-collection-section-background { padding: 3px 2px 2px 2px; }
+.eov-collection-grid { width: 161px; flex-direction: row; flex-wrap: wrap; }
+.eov-collection-card { width: 26px; height: 34px; margin-right: 1px; margin-bottom: 1px; flex-shrink: 0; }
+.eov-collection-icon-frame { position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; }
+.eov-collection-track { position: absolute; left: 3px; top: 24px; width: 20px; height: 7px; }
+.eov-collection-count { position: absolute; left: 1.5px; top: .5px; width: 17px; height: 6px; margin: 0; padding: 0; font-size: 4.4px; -unity-font-style: normal; -unity-text-align: middle-center; }
+.eov-cauldron-card-tooltip { position: absolute; right: 190px; top: 0; padding: 3px; max-width: 310px; }
+.eov-cauldron-tooltip-text { padding: 2px; margin: 0; font-size: var(--eov-font-body); letter-spacing: .12px; -unity-font-style: normal; white-space: normal; }
+.eov-cauldron .eov-cauldron-action:disabled { color: rgb(62,39,49); opacity: 1; }
+.eov-collection-count { white-space: nowrap; }
+.eov-cauldron-collection-scroll .unity-scroller--vertical { width: 8px; margin-left: 1px; }
+.eov-cauldron-collection-scroll .unity-base-slider, .eov-cauldron-collection-scroll #unity-dragger { width: 8px; }
+
+.eov-alter-echoes { position: absolute; }
+.eov-alter-header { flex-direction: row; height: 16px; flex-shrink: 0; margin-bottom: 1px; }
+.eov-alter-power-frame { margin-left: 1px; padding: 0 2px; justify-content: center; }
+.eov-alter-inset { flex-grow: 1; min-height: 0; padding: 2px 2px 1px 2px; }
+.eov-alter-scroll { flex-grow: 1; min-height: 0; }
+.eov-alter-scroll .unity-scroller--vertical { width: 8px; margin-left: 1px; }
+.eov-alter-scroll .unity-base-slider, .eov-alter-scroll #unity-dragger { width: 8px; }
+.eov-alter-scroll .unity-scroll-view__content-container { padding-top: 1px; }
+.eov-alter-row { height: 32px; padding: 3px; margin-bottom: 1px; flex-shrink: 0; }
+.eov-alter-row-main { height: 20px; flex-direction: row; }
+.eov-alter-row-labels { flex-grow: 1; min-width: 0; margin-right: 2px; }
+.eov-alter-text { margin: 0; padding: 0; -unity-font-style: normal; white-space: nowrap; overflow: hidden; }
+.eov-alter-resource { width: 20px; height: 20px; margin-right: 2px; flex-shrink: 0; }
+.eov-alter-resource-icon { position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; }
+.eov-alter-pending { position: absolute; left: 1px; top: 11px; width: 18px; height: 8px; -unity-text-align: middle-center; }
+.eov-alter-track { margin-top: 2px; height: 4px; flex-shrink: 0; }
+.eov-alter-action { flex-shrink: 0; }
+.eov-alter-action:disabled { opacity: 1; color: rgb(62,39,49); }
+
+.eov-statistics { position: absolute; }
+.eov-stat-tabs { height: 16px; flex-shrink: 0; flex-direction: row; }
+.eov-stat-tab { flex-grow: 1; flex-basis: 0; min-width: 0; font-size: var(--eov-font-heading); margin-right: 2px; }
+.eov-stat-body { flex-grow: 1; min-height: 0; margin-top: 1px; margin-bottom: 1px; }
+.eov-stat-text { margin: 0; padding: 0; white-space: pre; flex-shrink: 0; }
+.eov-stat-summary { flex-shrink: 0; flex-direction: row; padding: 3px; margin-bottom: 1px; }
+.eov-stat-summary-icon { width: 26px; margin-right: 2px; flex-shrink: 0; }
+.eov-stat-portrait { position: absolute; left: 1px; right: 1px; top: 2px; bottom: 1px; overflow: hidden; }
+.eov-stat-bar { flex-grow: 1; flex-basis: 0; min-width: 0; margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; background-image: none; }
+.eov-stat-bar:hover, .eov-stat-bar:focus, .eov-stat-bar:active { background-color: transparent; border-width: 0; }
+.eov-stat-bar-fill { position: absolute; bottom: 0; left: .5px; right: .5px; }
+.eov-stat-average { position: absolute; height: .5px; left: 1px; right: 1px; }
+.eov-stat-tooltip { position: absolute; width: 160px; padding: 6px; }
+.eov-stat-item { flex-direction: row; height: 32px; padding: 3px; margin-bottom: 1px; flex-shrink: 0; }
+.eov-stat-item-icon-frame { width: 26px; height: 26px; margin-right: 2px; flex-shrink: 0; }
+.eov-stat-item-icon-mask { position: absolute; left: 1px; top: 2px; width: 24px; height: 23px; overflow: hidden; }
+
+/* Forge composition. Artwork fits; frames retain authored slicing. */
+/* Forge keeps the original gear / crafting / comparison columns and compact conversions. */
+.eov-forge { position: absolute; flex-direction: row; }
+.eov-forge-main { flex-grow: 1; min-width: 0; margin-right: 6px; }
+.eov-forge-sidebar { width: 164px; flex-shrink: 0; padding: 3px; }
+.eov-forge-panel { padding: 3px; margin-bottom: 3px; flex-shrink: 0; }
+.eov-forge-header { flex-direction: row; align-items: center; height: 30px; }
+.eov-forge-portrait { width: 24px; height: 24px; margin-right: 3px; flex-shrink: 0; }
+.eov-forge-xp { height: 8px; margin-top: 1px; overflow: hidden; }
+.eov-forge-row { flex-direction: row; min-width: 0; }
+.eov-forge-button { -unity-font-style: bold; flex-shrink: 0; min-width: 0; height: 18px; min-height: 18px; font-size: 7px; white-space: normal; margin-bottom: 2px; }
+.eov-forge-columns { height: 115px; }
+.eov-forge-selections { width: 75px; margin-right: 3px; flex-shrink: 0; }
+.eov-forge-slot-column { width: 25%; align-items: center; }
+.eov-forge-slot { width: 17px; height: 17px; flex-shrink: 0; }
+.eov-forge-slot .eov-icon { width: 16px; height: 16px; }
+.eov-forge-selection { position: absolute; top: -1px; right: -1px; bottom: -1px; left: -1px; }
+.eov-forge-core-grid { flex-direction: row; flex-wrap: wrap; margin-top: auto; }
+.eov-forge-core { width: 25%; height: 26px; }
+.eov-forge-core .eov-text { font-size: 4px; }
+.eov-forge-core-frame { width: 17px; height: 17px; align-items: center; justify-content: center; }
+.eov-forge-actions { flex-grow: 1; min-width: 0; margin-right: 3px; }
+.eov-forge-toggle { flex-direction: row; flex-grow: 1; flex-basis: 0; height: 22px; min-height: 22px; padding: 2px; }
+.eov-forge-toggle .eov-text { flex-grow: 1; flex-basis: 0; font-size: 4px; }
+.eov-forge-odds { width: 44px; height: 44px; margin: 2px; flex-shrink: 0; }
+.eov-forge-results { width: 100px; flex-shrink: 0; }
+.eov-forge-comparison { flex-grow: 1; min-height: 0; }
+.eov-forge-stat-column { min-width: 0; }
+.eov-forge-stat-title { -unity-text-align: upper-center; }
+.eov-forge-comparison-arrow { width: 12px; height: 12px; align-self: center; margin: 1px; }
+.eov-forge-conversions { flex-direction: row; flex-wrap: wrap; }
+.eov-forge-conversion { width: 33.3333%; flex-direction: row; height: 44px; padding: 2px; }
+.eov-forge-conversion-control { min-width: 0; }
+.eov-forge-conversion .eov-forge-row { align-items: center; }
+.eov-forge-conversion .eov-icon { width: 12px; height: 12px; }
+.eov-forge-conversion .eov-text { font-size: 4px; }
+.eov-forge-conversion .eov-forge-button { height: 18px; min-height: 18px; }
+.eov-forge-conversion .eov-number-field { height: 16px; }
+.eov-forge-information-title { height: 17px; padding: 2px 4px; flex-shrink: 0; }
+.eov-forge-sidebar .eov-recessed-scroll { padding: 2px; }
+.eov-forge-sidebar .eov-disclosure-header { height: 16px; min-height: 16px; padding-left: 3px; }
+.eov-forge-sidebar .eov-disclosure-content { padding: 3px; }
+
+.eov-run-hud { position: absolute; left: 0; bottom: 0; align-items: flex-start; }
+.eov-run-buffs { flex-direction: row; width: 116px; height: 28px; padding: 3px; margin-bottom: 3px; }
+.eov-run-buff { width: 20px; height: 20px; margin-right: 2px; padding: 2px; }
+.eov-run-buff > .eov-icon { width: 16px; height: 16px; }
+.eov-run-buff > .eov-text { position: absolute; bottom: 1px; left: 0; right: 0; -unity-text-align: middle-center; }
+.eov-run-auto { position: absolute; top: 1px; right: 1px; width: 6px; height: 6px; }
+.eov-run-buff-fill { position: absolute; bottom: 0; left: 0; height: 2px; background-color: #78b743; }
+.eov-run-stats { padding: 3px; min-width: 164px; }
+.eov-run-stat-columns { flex-direction: row; align-items: center; }
+.eov-run-stat-columns > .eov-text { margin-left: 3px; font-size: 7px; white-space: nowrap; -unity-font-style: bold; }
+.eov-run-progress { height: 6px; flex-shrink: 0; padding: 1px; }
+.eov-run-return { position: absolute; right: 0; top: 0; align-items: flex-end; }
+.eov-run-return > .eov-control { margin-bottom: 2px; padding-left: 7px; padding-right: 7px; }
+.eov-run-breakdown { position: absolute; right: 0; bottom: 0; height: 22px; padding-left: 5px; padding-right: 5px; white-space: normal; }
+.eov-run-death { position: absolute; width: 92px; left: 0; top: 50%; padding: 3px; translate: 0 -50%; }
+.eov-run-death > .eov-control { margin-top: 2px; }
+.eov-run-overlay { position: absolute; left: 0; top: 24px; right: 0; bottom: 0; align-items: center; justify-content: center; }
+.eov-run-detail { width: 380px; max-width: 96%; max-height: 98%; padding: 5px; }
+.eov-run-detail > .eov-recessed-scroll { height: 210px; flex-shrink: 1; }
+.eov-run-resource { flex-direction: row; align-items: center; min-height: 26px; }
+.eov-run-resource > .eov-icon { width: 24px; height: 24px; margin-right: 3px; }
+.eov-run-resource > .eov-text { flex-grow: 1; }
+.eov-run-tooltip { position: absolute; left: 0; bottom: 74px; max-width: 250px; padding: 4px; }
+
+.eov-toast { position: absolute; padding: 4px; }
+
+/* Keep toolbar shadows inside the toolbar when a menu occupies the area below. */
+.eov-navigation--window-open .eov-navigation-bar { overflow: hidden; }
+
+.eov-run-button { font-size: var(--eov-font-subheading); min-height: var(--eov-control-height); white-space: normal; }
+.eov-run-breakdown { height: 24px; font-size: var(--eov-font-body); }
+
+.eov-town-joke { position: absolute; right: 0; bottom: 0; padding: 3px 6px; font-size: var(--eov-font-heading); min-height: var(--eov-control-height); }
+.eov-joke-body { white-space: normal; padding: var(--eov-space-panel); }
+
+.eov-stat-text, .eov-cauldron-text, .eov-alter-text, .eov-collection-title { text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline); -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-forge-button { text-shadow: 0.190px 0.190px 0.190px var(--eov-color-text-outline); -unity-text-outline-width: 0.095px; -unity-text-outline-color: var(--eov-color-text-outline); }
+
+.eov-run-return #run-return { width: 80px; height: 22px; font-size: 8px; }
+.eov-run-return #run-return-on-death { width: 54px; height: 16px; min-height: 16px; padding: 0; font-size: 6px; }
+.eov-run-button { -unity-font-style: bold; text-shadow: 0.190px 0.190px 0.190px var(--eov-color-text-outline); -unity-text-outline-width: 0.095px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-run-death .eov-control { min-height: 18px; height: 18px; }
+.eov-run-death > .eov-text { -unity-text-align: middle-center; }
+.eov-run-breakdown { width: 70px; height: 22px; padding: 2px; }
+
+.eov-run-return #run-return, .eov-run-return #run-return-on-death { padding-left: 3px; padding-right: 3px; white-space: nowrap; }
+.eov-run-breakdown { font-size: 8px; }

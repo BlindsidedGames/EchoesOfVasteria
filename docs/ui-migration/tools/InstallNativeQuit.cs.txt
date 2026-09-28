@@ -1,0 +1,9 @@
+using System;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public static class InstallNativeQuit {
+ public static string Main(){var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();if(Application.isPlaying||scene.isDirty||scene.name!="Main")throw new Exception("Clean Main Edit mode required");if(UnityEngine.Object.FindAnyObjectByType<ToolkitQuitScreen>(FindObjectsInactive.Include))throw new Exception("Already installed");var manager=UnityEngine.Object.FindAnyObjectByType<TownWindowManager>(FindObjectsInactive.Include);var original=UnityEngine.Object.FindAnyObjectByType<QuitGameButton>(FindObjectsInactive.Include).transform.parent.gameObject;var oldId=GlobalObjectId.GetGlobalObjectIdSlow(original).targetObjectId;var parentId=GlobalObjectId.GetGlobalObjectIdSlow(manager.transform).targetObjectId;original.SetActive(false);var go=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quit.prefab"),manager.transform);var so=new SerializedObject(go.GetComponent<ToolkitQuitScreen>());so.FindProperty("windows").objectReferenceValue=manager;so.ApplyModifiedPropertiesWithoutUndo();EditorSceneManager.MarkSceneDirty(scene);if(!EditorSceneManager.SaveScene(scene))throw new Exception("Save failed");return "Changed existing IDs: "+oldId+", "+parentId;}
+}

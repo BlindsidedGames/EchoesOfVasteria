@@ -26,7 +26,7 @@ namespace TimelessEchoes
         private static readonly HashSet<TELogCategory> _enabledCategories = new();
 
         [Conditional("UNITY_EDITOR")]
-        [Conditional("DEVELOPMENT_BUILD")]
+        [Conditional("DEBUG")]
         public static void Log(string message, TELogCategory category = TELogCategory.General,
             Object context = null)
         {

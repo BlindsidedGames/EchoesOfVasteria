@@ -14,6 +14,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (questManager == null)
                 questManager = Object.FindAnyObjectByType<QuestManager>();
         }

@@ -1,0 +1,39 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Quests;
+using Blindsided;
+using Blindsided.SaveData;
+public class ValidateNativeQuests {
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ ToolkitQuestsScreen screen;TownWindowManager wm;QuestManager qm;GameObject legacy;string backup,instant,pin;int phase;double due;List<string> checks=new();
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>checks.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(VisualElement b){if(b==null)throw new Exception("Missing control");using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ static string Plain(string s)=>s.Replace("<b>","").Replace("</b>","").Replace("<smallcaps>","").Replace("</smallcaps>","");
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play required");if(!TownWindowManager.Instance||!QuestManager.Instance)throw new Exception("Wait for Main startup");var t=new ValidateNativeQuests{wm=TownWindowManager.Instance,qm=QuestManager.Instance,screen=UnityEngine.Object.FindAnyObjectByType<ToolkitQuestsScreen>()};if(!t.screen||!t.screen.IsOpen)throw new Exception("Open native preview first");t.legacy=(GameObject)new SerializedObject(t.wm).FindProperty("quests").FindPropertyRelative("window").objectReferenceValue;t.backup=(string)Type.GetType("Newtonsoft.Json.JsonConvert, Newtonsoft.Json").GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new object[]{Oracle.oracle.saveData});EditorApplication.update+=t.Tick;return "Quest functional checks started in disposable profile";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+.8;try{switch(phase){
+ case 0:Check(screen.IsOpen&&wm.IsWindowOpen(TownWindowManager.Window.Quests),"Native route opens");Check(!legacy.activeSelf,"Legacy quest window remains hidden");Check(screen.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Length==0,"Native quest host has no Canvas graphics");legacy.SetActive(true);qm.RefreshNoticeboard();phase++;break;
+ case 1:Compare();legacy.SetActive(false);phase++;break;
+ case 2:ScreenCapture.CaptureScreenshot(Output+"/quests-native-fresh.png");var entries=qm.GetNoticeboardEntries();instant=entries.First(e=>!e.Completed&&e.Quest.requirements.Any(r=>r.type==QuestData.RequirementType.Instant)).Quest.questId;pin=entries.First(e=>!e.Completed&&!e.Quest.requirements.Any(r=>r.type==QuestData.RequirementType.Instant)).Quest.questId;Check(!qm.TryTurnInQuest(pin),"Incomplete quest rejected by public turn-in path");Check(!qm.TryTurnInQuest("missing-quest"),"Unknown quest rejected");Oracle.oracle.saveData.PinnedQuests.Remove(pin);qm.RefreshNoticeboard();phase++;break;
+ case 3:Submit(Root.Q("quest-"+pin).Q(className:"eov-quest-texts"));phase++;break;
+ case 4:Check(Oracle.oracle.saveData.PinnedQuests.Contains(pin),"Native name/description pin action changes saved pins");Check(qm.GetNoticeboardEntries().First(e=>e.Quest.questId==pin).Category==QuestNoticeboardCategory.Pinned,"Pinned quest moves to pinned category");Submit(Root.Q("quest-"+pin).Q(className:"eov-quest-texts"));phase++;break;
+ case 5:Check(!Oracle.oracle.saveData.PinnedQuests.Contains(pin),"Native pin action toggles off");Submit(Root.Q<Button>("turn-in-"+instant));phase++;break;
+ case 6:Check(Oracle.oracle.saveData.Quests[instant].Completed,"Native Okay action completes real instant quest");Check(!qm.TryTurnInQuest(instant),"Completed quest cannot be rewarded twice");Check(Root.Q<Button>("turn-in-"+instant)==null,"History row has no turn-in action");var history=Root.Q<Button>("quest-category-Completed");Check(history!=null,"Completed quest appears in history category");Check(history.parent.Q(className:"eov-quest-entries").resolvedStyle.display==DisplayStyle.None,"History starts collapsed");Submit(history);phase++;break;
+ case 7:Check(Root.Q<Button>("quest-category-Completed").parent.Q(className:"eov-quest-entries").resolvedStyle.display==DisplayStyle.Flex,"History expands through native control");ScreenCapture.CaptureScreenshot(Output+"/quests-native-history.png");legacy.SetActive(true);qm.RefreshNoticeboard();phase++;break;
+ case 8:foreach(var c in legacy.GetComponentsInChildren<WikiUIToggle>(true))c.SetExpanded(true);phase++;break;
+ case 9:Compare();legacy.SetActive(false);for(int i=0;i<25;i++){screen.Hide();screen.Show();}Check(Root.Query<VisualElement>("quests").ToList().Count==1,"25 cycles retain one quest tree");foreach(var eventName in new[]{"NoticeboardChanged","QuestProgressChanged"}){var d=typeof(QuestManager).GetField(eventName,F).GetValue(qm) as Delegate;Check(d?.GetInvocationList().Count(x=>x.Target==screen)==1,eventName+" has one native subscription after cycles");}wm.CloseAllWindows();Check(!screen.IsOpen,"Global close hides native quest screen");foreach(var eventName in new[]{"NoticeboardChanged","QuestProgressChanged"}){var d=typeof(QuestManager).GetField(eventName,F).GetValue(qm) as Delegate;Check(d==null||d.GetInvocationList().All(x=>x.Target!=screen),eventName+" unsubscribes when hidden");}Check(!SteamManager.Initialized&&Unity.Services.Core.UnityServices.State==Unity.Services.Core.ServicesInitializationState.Uninitialized,"Runtime remains offline");Finish();break;
+ }}catch(Exception e){checks.Add("FAIL "+e);Finish();}}
+ void Compare(){var entries=qm.GetNoticeboardEntries();var old=legacy.GetComponentsInChildren<QuestEntryUI>(true).Where(o=>o.name.EndsWith("(Clone)")).ToArray();Check(entries.Count==old.Length,"Native snapshot count matches legacy entries");bool names=true,descriptions=true,rewards=true,buttons=true,requirements=true;for(int i=0;i<entries.Count;i++){var entry=entries[i];var row=Root.Q("quest-"+entry.Quest.questId);if(row==null){names=false;continue;}var match=old.Single(o=>o.nameText.text.StartsWith(entry.Quest.questName.GetLocalizedString()));var labels=row.Query<Label>().ToList();names &= Plain(labels[0].text)==Plain(match.nameText.text);descriptions &= Plain(labels[1].text)==Plain(match.descriptionText.text);rewards &= Plain(labels.Last().text)==Plain(match.rewardText.text);var button=row.Q<Button>();buttons &= (button!=null)==match.turnInButton.gameObject.activeSelf;if(button!=null)buttons &= button.enabledSelf==match.turnInButton.interactable;var oldReq=match.requirementParent.GetComponentsInChildren<QuestRequirementUIReferences>(true);var texts=labels.Skip(button!=null?3:2).Take(oldReq.Length).ToArray();requirements &= texts.Length==oldReq.Length;for(int j=0;j<texts.Length;j++)requirements &= Plain(texts[j].text)==oldReq[j].requirementText.text;}Check(names,"Quest names and pinned/completed suffixes match");Check(descriptions,"Quest descriptions match");Check(rewards,"Reward text matches");Check(buttons,"Turn-in visibility and readiness match");Check(requirements,"Requirement labels match legacy renderer");}
+ void Finish(){EditorApplication.update-=Tick;legacy.SetActive(false);var json=Type.GetType("Newtonsoft.Json.JsonConvert, Newtonsoft.Json");Oracle.oracle.saveData=(GameData)json.GetMethod("DeserializeObject",new[]{typeof(string),typeof(Type)}).Invoke(null,new object[]{backup,typeof(GameData)});Blindsided.EventHandler.LoadData();wm.CloseAllWindows();wm.OpenWindow(TownWindowManager.Window.Quests);File.WriteAllLines(Output+"/quests-checks.txt",checks);}
+}
+
+

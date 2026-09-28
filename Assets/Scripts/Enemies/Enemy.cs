@@ -82,6 +82,7 @@ namespace TimelessEchoes.Enemies
         public bool IsEngaged => setter != null && setter.target != null && setter.target != wanderTarget;
         public EnemyData Stats => stats;
         public int Level => level;
+        public string DisplayTitle { get; private set; }
 
         /// <summary>
         /// The cached EnemyHealth component on this enemy. Use instead of GetComponent for performance.
@@ -493,9 +494,8 @@ namespace TimelessEchoes.Enemies
 
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
-            var worldX = transform.position.x;
 
-            var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances, worldX);
+            var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances);
             foreach (var res in results)
             {
                 double final = res.count * mult * gainMult * milestoneMult;
@@ -768,7 +768,8 @@ namespace TimelessEchoes.Enemies
             if (!string.IsNullOrEmpty(displayName))
                 gameObject.name = displayName;
 
-            if (levelText != null)
+            DisplayTitle = !string.IsNullOrEmpty(displayName) ? $"{displayName} Lvl {level}" : $"Lvl {level}";
+            if (levelText != null && levelText.enabled)
             {
                 if (!string.IsNullOrEmpty(displayName))
                     levelText.text = $"{displayName} Lvl {level}";

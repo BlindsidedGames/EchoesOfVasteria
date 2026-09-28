@@ -22,12 +22,69 @@ namespace TimelessEchoes.UI
     {
         public static TownWindowManager Instance { get; private set; }
 
+        public enum Window { Upgrades, Buffs, Quests, Credits, AlterEchoes, Stats, Skills, Library, Cauldron, Forge, Inventory, Options }
+        public event Action CloseRequested;
+        public event Action WindowsChanged;
+        public bool HasOpenWindow => AnyWindowOpen();
+        public bool ForgeNeedsAttention { get; private set; }
+        public bool CauldronNeedsAttention { get; private set; }
+        private readonly System.Collections.Generic.HashSet<Window> tutorialLockedRoutes = new();
+        public bool CanOpenWindow(Window window) => !tutorialLockedRoutes.Contains(window);
+
+        /// <summary>UI-independent routes shared by native and legacy navigation during migration.</summary>
+        public void OpenWindow(Window window)
+        {
+            if (!CanOpenWindow(window)) return;
+            switch (window)
+            {
+                case Window.Upgrades: OpenUpgrades(); break;
+                case Window.Buffs: OpenBuffs(); break;
+                case Window.Quests:
+                    // This was a persistent event on the original Quests button.
+                    var scroll = quests.window != null ? quests.window.GetComponentInChildren<ScrollRect>(true) : null;
+                    if (scroll != null) scroll.verticalNormalizedPosition = 1;
+                    OpenQuests(); break;
+                case Window.Credits: OpenCredits(); break;
+                case Window.AlterEchoes: OpenAlterEchoes(); break;
+                case Window.Stats: OpenStats(); break;
+                case Window.Skills: OpenSkills(); break;
+                case Window.Library: OpenWiki(); break;
+                case Window.Cauldron: OpenCauldron(); break;
+                case Window.Forge: OpenForge(); break;
+                case Window.Inventory: OpenInventory(); break;
+                case Window.Options: OpenOptions(); break;
+            }
+        }
+
+        public bool IsWindowOpen(Window window)
+        {
+            if (window == Window.Forge && toolkitForge != null && toolkitForge.IsConfigured) return toolkitForge.IsOpen;
+            if (window == Window.Stats && toolkitStatistics != null && toolkitStatistics.IsConfigured) return toolkitStatistics.IsOpen;
+            if (window == Window.AlterEchoes && toolkitAlterEchoes != null && toolkitAlterEchoes.IsConfigured) return toolkitAlterEchoes.IsOpen;
+            if (window == Window.Cauldron && toolkitCauldron != null && toolkitCauldron.IsConfigured) return toolkitCauldron.IsOpen;
+            if (window == Window.Inventory && toolkitResources != null && toolkitResources.IsConfigured) return toolkitResources.IsOpen;
+            if (window == Window.Quests && toolkitQuests != null && toolkitQuests.IsConfigured) return toolkitQuests.IsOpen;
+            if (window == Window.Skills && toolkitSkills != null && toolkitSkills.IsConfigured) return toolkitSkills.IsOpen;
+            if (window == Window.Buffs && toolkitBuffs != null && toolkitBuffs.IsConfigured) return toolkitBuffs.IsOpen;
+            if (window == Window.Options && toolkitOptions != null && toolkitOptions.IsConfigured) return toolkitOptions.IsOpen;
+            if (window == Window.Library && toolkitLibrary != null && toolkitLibrary.IsConfigured) return toolkitLibrary.IsOpen;
+            if (window == Window.Credits && toolkitCredits != null && toolkitCredits.IsConfigured) return toolkitCredits.IsOpen;
+            var reference = window switch
+            {
+                Window.Upgrades => upgrades, Window.Buffs => buffs, Window.Quests => quests,
+                Window.Credits => credits, Window.AlterEchoes => alterEchoes, Window.Stats => stats,
+                Window.Skills => skills, Window.Library => wiki, Window.Cauldron => cauldron,
+                Window.Forge => forge, Window.Inventory => inventory, Window.Options => options, _ => null
+            };
+            return reference?.window != null && reference.window.activeSelf;
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Instance = null;
 
         // Expose simple open-state checks for other systems
-        public static bool IsForgeOpen => Instance != null && Instance.forge.window != null && Instance.forge.window.activeSelf;
-        public static bool IsCauldronOpen => Instance != null && Instance.cauldron.window != null && Instance.cauldron.window.activeSelf;
+        public static bool IsForgeOpen => Instance != null && Instance.IsWindowOpen(Window.Forge);
+        public static bool IsCauldronOpen => Instance != null && Instance.IsWindowOpen(Window.Cauldron);
 
         [Title("Attention Indicators")]
         [SerializeField] private GameObject cauldronAttentionObject;
@@ -38,6 +95,7 @@ namespace TimelessEchoes.UI
             var inst = Instance;
             if (inst == null) return;
             if (IsForgeOpen) return;
+            inst.ForgeNeedsAttention = true;
             if (inst.forgeAttentionObject != null)
                 inst.forgeAttentionObject.SetActive(true);
         }
@@ -47,6 +105,7 @@ namespace TimelessEchoes.UI
             var inst = Instance;
             if (inst == null) return;
             if (IsCauldronOpen) return;
+            inst.CauldronNeedsAttention = true;
             if (inst.cauldronAttentionObject != null)
                 inst.cauldronAttentionObject.SetActive(true);
         }
@@ -54,6 +113,7 @@ namespace TimelessEchoes.UI
         public static void ClearForgeAttention()
         {
             var inst = Instance;
+            if (inst != null) inst.ForgeNeedsAttention = false;
             if (inst?.forgeAttentionObject != null)
                 inst.forgeAttentionObject.SetActive(false);
         }
@@ -61,6 +121,7 @@ namespace TimelessEchoes.UI
         public static void ClearCauldronAttention()
         {
             var inst = Instance;
+            if (inst != null) inst.CauldronNeedsAttention = false;
             if (inst?.cauldronAttentionObject != null)
                 inst.cauldronAttentionObject.SetActive(false);
         }
@@ -133,6 +194,20 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference stats = new();
         [SerializeField] [Space] private WindowReference skills = new();
         [SerializeField] [Space] private WindowReference wiki = new();
+        [SerializeField] private Toolkit.ToolkitBookScreen toolkitLibrary;
+        [SerializeField] private Toolkit.ToolkitBookScreen toolkitCredits;
+        [SerializeField] private Toolkit.ToolkitOptionsScreen toolkitOptions;
+        [SerializeField] private Toolkit.ToolkitBuffsScreen toolkitBuffs;
+        [SerializeField] private Toolkit.ToolkitSkillsScreen toolkitSkills;
+        [SerializeField] private Toolkit.ToolkitQuestsScreen toolkitQuests;
+        [SerializeField] private Toolkit.ToolkitCauldronScreen toolkitCauldron;
+        [SerializeField] private Toolkit.ToolkitAlterEchoesScreen toolkitAlterEchoes;
+        [SerializeField] private Toolkit.ToolkitStatisticsScreen toolkitStatistics;
+        [SerializeField] private Toolkit.ToolkitForgeScreen toolkitForge;
+        [SerializeField] private GameObject toolkitQuestLayoutSpace;
+        [SerializeField] private Toolkit.ToolkitResourceInventoryScreen toolkitResources;
+        [SerializeField] private RectTransform toolkitResourceLayoutSpace;
+        private readonly Vector3[] resourceLayoutCorners = new Vector3[4];
         [SerializeField] [Space] private WindowReference cauldron = new();
         [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
@@ -141,10 +216,6 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private TMP_Text forgeInfoButtonText;
         [SerializeField] [Space] private WindowReference options = new();
 
-        [Title("Additional Buttons")]
-        [SerializeField] private Button forgeButton2;
-        [SerializeField] private Button cauldronButton2;
-        [SerializeField] private Button alterEchoesButton2;
 
         [SerializeField] [Space] private GameObject discord;
         [SerializeField] [Space] private GameObject autoPin;
@@ -203,13 +274,6 @@ namespace TimelessEchoes.UI
             if (beginAdventureButton != null)
                 beginAdventureButton.onClick.AddListener(ToggleBeginAdventureDropdown);
 
-            // Additional buttons
-            if (forgeButton2 != null)
-                forgeButton2.onClick.AddListener(OpenForge);
-            if (cauldronButton2 != null)
-                cauldronButton2.onClick.AddListener(OpenCauldron);
-            if (alterEchoesButton2 != null)
-                alterEchoesButton2.onClick.AddListener(OpenAlterEchoes);
         }
 
         private void OnEnable()
@@ -274,13 +338,6 @@ namespace TimelessEchoes.UI
             if (beginAdventureButton != null)
                 beginAdventureButton.onClick.RemoveListener(ToggleBeginAdventureDropdown);
 
-            // Additional buttons
-            if (forgeButton2 != null)
-                forgeButton2.onClick.RemoveListener(OpenForge);
-            if (cauldronButton2 != null)
-                cauldronButton2.onClick.RemoveListener(OpenCauldron);
-            if (alterEchoesButton2 != null)
-                alterEchoesButton2.onClick.RemoveListener(OpenAlterEchoes);
 
             if (Instance == this)
                 Instance = null;
@@ -288,6 +345,7 @@ namespace TimelessEchoes.UI
 
         private void PollCloseAllWindows()
         {
+            if (TimelessEchoes.Buffs.ProspectorPicker.IsOpen) return;
             var mouse = Mouse.current;
             if (mouse == null)
                 return;
@@ -317,18 +375,21 @@ namespace TimelessEchoes.UI
                 CloseAllWindows();
                 if (quests.window != null)
                 {
-                    quests.window.SetActive(true);
+                    if (toolkitQuests != null && toolkitQuests.IsConfigured) ShowNativeQuests(true);
+                    else Debug.LogError("Native Quests view is not configured.", this);
                     if (autoPin != null)
                         autoPin.SetActive(true);
                     if (quests.button != null)
                         quests.button.interactable = false;
+                    tutorialLockedRoutes.Add(Window.Quests);
                 }
 
                 if (inventory.window != null)
                 {
-                    inventory.window.SetActive(true);
+                    SetResourceInventoryVisible(true);
                     if (inventory.button != null)
                         inventory.button.interactable = false;
+                    tutorialLockedRoutes.Add(Window.Inventory);
                 }
 
                 UpdateTownButtonsVisibility();
@@ -337,98 +398,191 @@ namespace TimelessEchoes.UI
             }
         }
 
-        private void OpenUpgrades()
-        {
-            ToggleWindow(upgrades);
-        }
+        private void OpenUpgrades() => OpenForge();
 
         private void OpenBuffs()
         {
-            var wasActive = buffs.window != null && buffs.window.activeSelf;
-            ToggleWindow(buffs);
-            if (wasActive) buffs.window.SetActive(false);
+            if (toolkitBuffs != null && toolkitBuffs.IsConfigured)
+            {
+                var wasOpen = toolkitBuffs.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitBuffs.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Buffs view is not configured.", this);
         }
 
         private void OpenQuests()
         {
-            var wasActive = quests.window != null && quests.window.activeSelf;
-            ToggleWindow(quests);
-            if (autoPin != null)
-                autoPin.SetActive(!wasActive);
+            if (toolkitQuests != null && toolkitQuests.IsConfigured)
+            {
+                var wasOpen = toolkitQuests.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) ShowNativeQuests(quests.openInventory);
+                if (autoPin != null) autoPin.SetActive(!wasOpen);
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Quests view is not configured.", this);
+        }
+
+        private void ShowNativeQuests(bool withInventory)
+        {
+            
+            SetResourceInventoryVisible(withInventory);
+            toolkitQuests.CompanionWidth = withInventory ? 178 : 0;
+            toolkitQuests.Show();
         }
 
         private void OpenCredits()
         {
-            ToggleWindow(credits);
+            if (toolkitCredits != null && toolkitCredits.IsConfigured)
+            {
+                var wasOpen = toolkitCredits.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitCredits.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Credits view is not configured.", this);
         }
 
         private void OpenAlterEchoes()
         {
-            ToggleWindow(alterEchoes);
+            if (toolkitAlterEchoes != null && toolkitAlterEchoes.IsConfigured)
+            {
+                var wasOpen = toolkitAlterEchoes.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen)
+                {
+                    
+                    SetResourceInventoryVisible(alterEchoes.openInventory);
+                    toolkitAlterEchoes.CompanionWidth = alterEchoes.openInventory ? 178 : 0;
+                    toolkitAlterEchoes.Show();
+                }
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native AlterEchoes view is not configured.", this);
         }
 
         private void OpenStats()
         {
-            ToggleWindow(stats);
+            if (toolkitStatistics != null && toolkitStatistics.IsConfigured)
+            {
+                var wasOpen = toolkitStatistics.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitStatistics.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Stats view is not configured.", this);
         }
 
         private void OpenSkills()
         {
-            ToggleWindow(skills);
+            if (toolkitSkills != null && toolkitSkills.IsConfigured)
+            {
+                var wasOpen = toolkitSkills.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitSkills.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Skills view is not configured.", this);
         }
 
         private void OpenWiki()
         {
-            ToggleWindow(wiki);
+            if (toolkitLibrary != null && toolkitLibrary.IsConfigured)
+            {
+                var wasOpen = toolkitLibrary.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitLibrary.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Wiki view is not configured.", this);
         }
 
         private void OpenCauldron()
         {
-            ToggleWindow(cauldron);
-            var active = cauldron.window != null && cauldron.window.activeSelf;
-            if (active)
-                ClearCauldronAttention();
+            if (toolkitCauldron != null && toolkitCauldron.IsConfigured)
+            {
+                var wasOpen = toolkitCauldron.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitCauldron.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Cauldron view is not configured.", this);
         }
 
         private void OpenOptions()
         {
-            ToggleWindow(options);
-            var isOptionsOpen = options.window != null && options.window.activeSelf;
-            if (discord != null)
-                discord.SetActive(isOptionsOpen);
+            if (toolkitOptions != null && toolkitOptions.IsConfigured)
+            {
+                var wasOpen = toolkitOptions.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) toolkitOptions.Show();
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Options view is not configured.", this);
         }
 
         private void OpenForge()
         {
-            var wasActive = forge.window != null && forge.window.activeSelf;
-            ToggleWindow(forge);
-            var isActive = forge.window != null && forge.window.activeSelf;
-
-            if (isActive)
+            if (toolkitForge != null && toolkitForge.IsConfigured)
             {
-                ClearForgeAttention();
-                if (stopOnVastium != null)
-                    stopOnVastium.SetActive(true);
-                if (lockStats != null)
-                    lockStats.SetActive(true);
-                if (inventory.window != null) inventory.window.SetActive(false);
-                if (forgeInfo != null)
-                    forgeInfo.SetActive(true);
-                if (forgeInfoButtonText != null)
-                    forgeInfoButtonText.text = "Inventory";
+                var wasOpen = toolkitForge.IsOpen;
+                CloseAllWindows();
+                if (!wasOpen) { toolkitForge.Show(); ClearForgeAttention(); }
+                UpdateTownButtonsVisibility();
+                return;
             }
-            else if (wasActive)
-            {
-                if (forgeInfo != null)
-                    forgeInfo.SetActive(false);
-                if (forgeInfoButtonText != null)
-                    forgeInfoButtonText.text = "Info";
-            }
+            Debug.LogError("Native Forge view is not configured.", this);
         }
 
         private void OpenInventory()
         {
-            ToggleWindow(inventory);
+            if (toolkitResources != null && toolkitResources.IsConfigured)
+            {
+                var wasOpen = toolkitResources.IsOpen;
+                CloseAllWindows();
+                SetResourceInventoryVisible(!wasOpen);
+                UpdateTownButtonsVisibility();
+                return;
+            }
+            Debug.LogError("Native Inventory view is not configured.", this);
+        }
+
+        private void SetResourceInventoryVisible(bool visible)
+        {
+            if (toolkitResources != null && toolkitResources.IsConfigured)
+            {
+                if (inventory.window != null) inventory.window.SetActive(false);
+                if (toolkitResourceLayoutSpace != null) toolkitResourceLayoutSpace.gameObject.SetActive(false);
+                if (visible) toolkitResources.Show(); else toolkitResources.Hide();
+            }
+            else if (visible) Debug.LogError("Native inventory is not configured.", this);
+        }
+
+        public bool TryHighlightNativeResource(Upgrades.Resource resource, bool scrollToSlot)
+        {
+            if (toolkitResources == null || !toolkitResources.IsConfigured) return false;
+            SetResourceInventoryVisible(true);
+            toolkitResources.HighlightResource(resource, scrollToSlot);
+            UpdateTownButtonsVisibility();
+            return true;
+        }
+
+        private void LateUpdate()
+        {
+            if (toolkitResources == null || !toolkitResources.IsOpen || toolkitResources.ManualLayout) return;
+            var area = Toolkit.ToolkitWindowLayout.SafeArea;
+            toolkitResources.Bounds = new Rect(area.xMax - 190, area.y + 44, 178, Mathf.Max(0,area.height - 56));
         }
 
         private void ToggleForgeInfo()
@@ -436,10 +590,10 @@ namespace TimelessEchoes.UI
             if (forgeInfo == null || inventory.window == null)
                 return;
 
-            var inventoryActive = inventory.window.activeSelf;
+            var inventoryActive = IsWindowOpen(Window.Inventory);
             var showInventory = !inventoryActive;
 
-            inventory.window.SetActive(showInventory);
+            SetResourceInventoryVisible(showInventory);
 
             forgeInfo.SetActive(!showInventory);
 
@@ -530,7 +684,7 @@ namespace TimelessEchoes.UI
 
                 if (reference.openInventory)
                     if (inventory.window != null)
-                        inventory.window.SetActive(true);
+                        SetResourceInventoryVisible(true);
             }
 
             UpdateTownButtonsVisibility();
@@ -538,6 +692,19 @@ namespace TimelessEchoes.UI
 
         public void CloseAllWindows()
         {
+            CloseRequested?.Invoke();
+            if (toolkitLibrary != null) toolkitLibrary.Hide();
+            if (toolkitCredits != null) toolkitCredits.Hide();
+            if (toolkitOptions != null) toolkitOptions.Hide();
+            if (toolkitBuffs != null) toolkitBuffs.Hide();
+            if (toolkitSkills != null) toolkitSkills.Hide();
+            if (toolkitQuests != null) toolkitQuests.Hide();
+            if (toolkitCauldron != null) toolkitCauldron.Hide();
+            if (toolkitAlterEchoes != null) toolkitAlterEchoes.Hide();
+            if (toolkitStatistics != null) toolkitStatistics.Hide();
+            if (toolkitForge != null) toolkitForge.Hide();
+            if (toolkitQuestLayoutSpace != null) toolkitQuestLayoutSpace.SetActive(false);
+            SetResourceInventoryVisible(false);
             if (upgrades.window != null)
                 upgrades.window.SetActive(false);
             if (buffs.window != null)
@@ -582,6 +749,7 @@ namespace TimelessEchoes.UI
 
         private void EnableAllWindowButtons()
         {
+            tutorialLockedRoutes.Clear();
             if (upgrades.button != null)
                 upgrades.button.interactable = true;
             if (buffs.button != null)
@@ -610,7 +778,18 @@ namespace TimelessEchoes.UI
 
         private bool AnyWindowOpen()
         {
-            return (upgrades.window != null && upgrades.window.activeSelf)
+            return (toolkitForge != null && toolkitForge.IsOpen)
+                   || (toolkitStatistics != null && toolkitStatistics.IsOpen)
+                   || (toolkitAlterEchoes != null && toolkitAlterEchoes.IsOpen)
+                   || (toolkitCauldron != null && toolkitCauldron.IsOpen)
+                   || (toolkitResources != null && toolkitResources.IsOpen)
+                   || (toolkitQuests != null && toolkitQuests.IsOpen)
+                   || (toolkitSkills != null && toolkitSkills.IsOpen)
+                   || (toolkitBuffs != null && toolkitBuffs.IsOpen)
+                   || (toolkitOptions != null && toolkitOptions.IsOpen)
+                   || (toolkitLibrary != null && toolkitLibrary.IsOpen)
+                   || (toolkitCredits != null && toolkitCredits.IsOpen)
+                   || (upgrades.window != null && upgrades.window.activeSelf)
                    || (buffs.window != null && buffs.window.activeSelf)
                    || (quests.window != null && quests.window.activeSelf)
                    || (credits.window != null && credits.window.activeSelf)
@@ -632,6 +811,7 @@ namespace TimelessEchoes.UI
                 windowsOpenIndicator.SetActive(AnyWindowOpen());
             if (closeButton != null)
                 closeButton.gameObject.SetActive(ShouldShowGlobalCloseButton());
+            WindowsChanged?.Invoke();
         }
 
         /// <summary>

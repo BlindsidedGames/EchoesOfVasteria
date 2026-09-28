@@ -69,6 +69,8 @@ namespace TimelessEchoes.Buffs
 
         // Removed Extra Distance-specific fields
 
+        public bool HasEffect(BuffEffectType type) => baseEffects.Exists(e => e.type == type);
+
         public string GetDisplayName()
         {
             return string.IsNullOrEmpty(title) ? name : title;
@@ -303,6 +305,10 @@ namespace TimelessEchoes.Buffs
                 BuffEffectType.ExperienceBonusFraction => $"{eff.value * 100f:0.#}% Bonus Experience",
                 BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
                 BuffEffectType.CritDamagePercent => $"Crit Damage +{eff.value}%",
+                BuffEffectType.ProspectorWeightPercent => $"Target Spawn Weight +{Mathf.Min(200f, eff.value):0.#}%",
+                BuffEffectType.CollectorWeightPercent => $"Unfamiliar Task Weight up to +{Mathf.Min(200f, eff.value):0.#}%",
+                BuffEffectType.WindfallRewardPercent => $"Resource Bonus +{Mathf.Min(100f, eff.value):0.#}% every 10 tasks",
+                BuffEffectType.EchoResonanceRewardPercent => $"Echo Follow-up Resources +{Mathf.Min(100f, eff.value):0.#}% (10s)",
                 BuffEffectType.TimeScalePercent => $"Game Speed +{eff.value}",
                 BuffEffectType.DistanceDurationPercent => string.Empty,
                 _ => string.Empty

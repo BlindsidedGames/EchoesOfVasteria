@@ -1,0 +1,12 @@
+PASS Native meeting prefab contains no Canvas graphics or TMP view
+PASS Dialogue starts hidden
+PASS Meet action initially visible
+PASS Native submit opens actual Ivan dialogue
+PASS Meeting reattaches after parent visibility cycle
+PASS Visibility cycle preserves dialogue position
+PASS Meet shows first line without granting completion
+PASS Next shows last line without granting completion
+PASS Close invokes completion exactly once despite repeated activation
+PASS Empty dialogue still requires explicit Close
+PASS Empty dialogue closes once and disposed view ignores activation
+PASS 25 meeting view disposal cycles leave no attached roots

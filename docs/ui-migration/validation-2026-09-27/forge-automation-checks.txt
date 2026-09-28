@@ -1,0 +1,33 @@
+PASS Automation terminates scenario 0 renderer=0
+PASS Expected craft count scenario 0 renderer=0 count=3
+PASS Expected stop scenario 0 renderer=0 reason=OutOfResources:1
+PASS Automation terminates scenario 0 renderer=1
+PASS Expected craft count scenario 0 renderer=1 count=3
+PASS Expected stop scenario 0 renderer=1 reason=OutOfResources:1
+PASS Legacy/native stop parity scenario 0
+PASS Automation terminates scenario 1 renderer=0
+PASS Expected craft count scenario 1 renderer=0 count=17
+PASS Expected stop scenario 1 renderer=0 reason=OutOfResources:1
+PASS Automation terminates scenario 1 renderer=1
+PASS Expected craft count scenario 1 renderer=1 count=17
+PASS Expected stop scenario 1 renderer=1 reason=OutOfResources:1
+PASS Legacy/native stop parity scenario 1
+PASS Automation terminates scenario 2 renderer=0
+PASS Expected craft count scenario 2 renderer=0 count=1
+PASS Expected stop scenario 2 renderer=0 reason=Upgraded:1
+PASS Automation terminates scenario 2 renderer=1
+PASS Expected craft count scenario 2 renderer=1 count=1
+PASS Expected stop scenario 2 renderer=1 reason=Upgraded:1
+PASS Legacy/native stop parity scenario 2
+PASS Hiding Forge keeps session active
+PASS Closed Forge removes rendered tree
+PASS Autocrafting progresses while window closed
+PASS Closed Forge removes session presentation subscription
+PASS Reopening reconnects to active session
+PASS Changing core stops automation
+PASS Changing slot stops automation
+PASS Profile-load handler clears pending automation
+PASS Profile-load cancellation does not write stop telemetry into new profile
+PASS Profile-load handler stops scheduled batches
+PASS 25 cycles release visible tree and session subscription
+PASS Automation tests remain offline

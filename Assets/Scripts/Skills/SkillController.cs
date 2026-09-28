@@ -550,7 +550,11 @@ namespace TimelessEchoes.Skills
             if (oracle == null)
                 return;
 
-            var dict = new Dictionary<string, Blindsided.SaveData.GameData.SkillProgress>();
+            // Preserve unknown skill records so temporarily missing or renamed content does not erase
+            // player progress on the next autosave. Runtime-known skills replace their own records.
+            var dict = oracle.saveData.SkillData != null
+                ? new Dictionary<string, Blindsided.SaveData.GameData.SkillProgress>(oracle.saveData.SkillData)
+                : new Dictionary<string, Blindsided.SaveData.GameData.SkillProgress>();
             foreach (var skill in skills)
             {
                 if (skill == null)
@@ -558,11 +562,38 @@ namespace TimelessEchoes.Skills
                 if (!progress.TryGetValue(skill, out var prog))
                     continue;
 
+                var milestoneRecords = new List<Blindsided.SaveData.GameData.MilestoneProgressRecord>();
+                var milestoneIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
+
+                if (dict.TryGetValue(skill.name, out var existing) && existing?.Milestones != null)
+                {
+                    foreach (var saved in existing.Milestones)
+                    {
+                        if (saved == null || string.IsNullOrWhiteSpace(saved.Id))
+                            continue;
+
+                        var copy = new Blindsided.SaveData.GameData.MilestoneProgressRecord
+                        {
+                            Id = saved.Id,
+                            TierIndex = saved.TierIndex,
+                            IsActive = saved.IsActive
+                        };
+
+                        if (milestoneIndexes.TryGetValue(saved.Id, out var index))
+                            milestoneRecords[index] = copy;
+                        else
+                        {
+                            milestoneIndexes.Add(saved.Id, milestoneRecords.Count);
+                            milestoneRecords.Add(copy);
+                        }
+                    }
+                }
+
                 var record = new Blindsided.SaveData.GameData.SkillProgress
                 {
                     Level = prog.Level,
                     CurrentXP = prog.CurrentXP,
-                    Milestones = new List<Blindsided.SaveData.GameData.MilestoneProgressRecord>()
+                    Milestones = milestoneRecords
                 };
 
                 if (milestoneStates.TryGetValue(skill, out var stateDict))
@@ -571,15 +602,23 @@ namespace TimelessEchoes.Skills
                     {
                         var definition = entry.Key;
                         var state = entry.Value;
-                        if (definition == null || state == null)
+                        if (definition == null || state == null || string.IsNullOrWhiteSpace(definition.Id))
                             continue;
 
-                        record.Milestones.Add(new Blindsided.SaveData.GameData.MilestoneProgressRecord
+                        var saved = new Blindsided.SaveData.GameData.MilestoneProgressRecord
                         {
                             Id = definition.Id,
                             TierIndex = state.TierIndex,
                             IsActive = state.IsActive
-                        });
+                        };
+
+                        if (milestoneIndexes.TryGetValue(definition.Id, out var index))
+                            record.Milestones[index] = saved;
+                        else
+                        {
+                            milestoneIndexes.Add(definition.Id, record.Milestones.Count);
+                            record.Milestones.Add(saved);
+                        }
                     }
                 }
 

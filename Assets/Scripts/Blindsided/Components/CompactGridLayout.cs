@@ -32,7 +32,7 @@ public class CompactGridLayout : LayoutGroup
         var width = padding.horizontal +
                     cols * cellSize.x + (cols - 1) * spacing.x;
 
-        SetLayoutInputForAxis(width, width, -1, 0); // min & preferred width
+        SetLayoutInputForAxis(width, LayoutUtility.DefaultMaxSize, width, -1, 0); // min & preferred width
     }
 
     public override void CalculateLayoutInputVertical()
@@ -42,7 +42,7 @@ public class CompactGridLayout : LayoutGroup
         var height = padding.vertical +
                      rows * cellSize.y + (rows - 1) * spacing.y;
 
-        SetLayoutInputForAxis(height, height, -1, 1); // min & preferred height
+        SetLayoutInputForAxis(height, LayoutUtility.DefaultMaxSize, height, -1, 1); // min & preferred height
     }
 
     /* ---------- Child positioning --------------------------------------------------- */

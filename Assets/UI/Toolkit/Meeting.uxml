@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="portrait-shadow" class="eov-meeting-shadow" picking-mode="Ignore" />
+    <ui:VisualElement name="portrait-frame" class="eov-meeting-portrait-frame">
+        <ui:Image name="portrait" class="eov-meeting-portrait" picking-mode="Ignore" />
+    </ui:VisualElement>
+    <ui:VisualElement name="dialogue-frame" class="eov-meeting-dialogue-frame">
+        <ui:VisualElement name="dialogue-inset" class="eov-meeting-dialogue-inset">
+            <ui:Label name="dialogue" class="eov-meeting-dialogue" enable-rich-text="true" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="button-shadow" class="eov-meeting-button-shadow" picking-mode="Ignore" />
+    <ui:Button name="advance" class="eov-meeting-button">
+        <ui:Label name="meet-label" class="eov-meeting-button-label" picking-mode="Ignore" />
+        <ui:Label name="next-label" class="eov-meeting-button-label" picking-mode="Ignore" />
+        <ui:Label name="close-label" class="eov-meeting-button-label" picking-mode="Ignore" />
+    </ui:Button>
+</ui:UXML>

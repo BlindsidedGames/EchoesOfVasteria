@@ -1,0 +1,28 @@
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.UI;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public static class InstallNativeNavigation {
+ public static string Main(){
+ var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+ if(Application.isPlaying||scene.isDirty||scene.name!="Main")throw new Exception("Clean Main scene in Edit mode required");
+ if(UnityEngine.Object.FindAnyObjectByType<ToolkitNavigationScreen>(FindObjectsInactive.Include))throw new Exception("Native navigation already installed");
+ var manager=UnityEngine.Object.FindAnyObjectByType<TownWindowManager>(FindObjectsInactive.Include);
+ var top=Resources.FindObjectsOfTypeAll<Transform>().Single(t=>t.gameObject.scene==scene&&t.name=="TopBar");
+ Undo.RecordObject(top.gameObject,"Replace toolbar presentation");top.gameObject.SetActive(false);
+ // Keeps the established body offset while the remaining window bodies still use Canvas layout.
+ var spacer=new GameObject("Toolkit Toolbar Layout Space",typeof(RectTransform),typeof(LayoutElement));
+ spacer.transform.SetParent(top.parent,false);spacer.transform.SetSiblingIndex(top.GetSiblingIndex());
+ var layout=spacer.GetComponent<LayoutElement>();layout.minHeight=22;layout.preferredHeight=22;layout.flexibleHeight=0;
+ Undo.RegisterCreatedObjectUndo(spacer,"Preserve window content position");
+ var native=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"),manager.transform);
+ var so=new SerializedObject(native.GetComponent<ToolkitNavigationScreen>());so.FindProperty("windows").objectReferenceValue=manager;so.ApplyModifiedPropertiesWithoutUndo();
+ Undo.RegisterCreatedObjectUndo(native,"Install native navigation");
+ EditorSceneManager.MarkSceneDirty(scene);if(!EditorSceneManager.SaveScene(scene))throw new Exception("Save failed");
+ return "Native navigation installed; inactive legacy toolbar retained and 22-unit body spacing preserved";
+ }
+}

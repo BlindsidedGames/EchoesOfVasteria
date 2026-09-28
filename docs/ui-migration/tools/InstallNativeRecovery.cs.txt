@@ -1,0 +1,26 @@
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using Blindsided;
+using TimelessEchoes.UI.Toolkit;
+public static class InstallNativeRecovery {
+ public static string Main() {
+  if(Application.isPlaying) throw new Exception("Edit mode required");
+  var previous=SceneManager.GetActiveScene();
+  if(previous.isDirty) throw new Exception("Preserve current unsaved scene first");
+  var scene=EditorSceneManager.OpenScene("Assets/Scenes/Loading.unity",OpenSceneMode.Additive);
+  try {
+   var oracle=scene.GetRootGameObjects().SelectMany(x=>x.GetComponentsInChildren<Oracle>(true)).Single();
+   var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Recovery.prefab").GetComponent<ToolkitDialogScreen>();
+   if(!prefab)throw new Exception("Native recovery prefab missing");
+   var so=new SerializedObject(oracle);
+   so.FindProperty("recoveryViewPrefab").objectReferenceValue=prefab;
+   so.ApplyModifiedPropertiesWithoutUndo();
+   if(!EditorSceneManager.SaveScene(scene))throw new Exception("Loading scene save failed");
+  } finally { EditorSceneManager.CloseScene(scene,true); SceneManager.SetActiveScene(previous); }
+  return "Loading scene references native recovery; active scene preserved";
+ }
+}

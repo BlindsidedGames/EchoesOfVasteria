@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d0f90c9df6efa4ba852901b3100c95, type: 3}
+  m_Name: Skills
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitSkillsDefinition
+  skills:
+  - {fileID: 11400000, guid: 765069f6feb02ea40a63ff7afa0af216, type: 2}
+  - {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
+  - {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
+  - {fileID: 11400000, guid: 211bb19c6f906e141893064edf3e6f8b, type: 2}
+  - {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+  - {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
+  icons:
+  - {fileID: -9180514438392417110, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -6623575528231689321, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 3201700494366066137, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -5728692859750609351, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -263682996174179970, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -1161659511, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+  frame: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  inset: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  rightFrame: {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  slot: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  selection: {fileID: -3351714043623252698, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+  highlight: {fileID: -4309639648418735140, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+  xpTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  xpFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  taskFrame: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  taskInset: {fileID: -5538786102408219600, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  lockedColor: {r: 1, g: 1, b: 1, a: 0.35}
+  totalsTitle:
+    key: skill-totals-title
+    bold: 1
+    smallCaps: 1
+    fallback: Total skill increases
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

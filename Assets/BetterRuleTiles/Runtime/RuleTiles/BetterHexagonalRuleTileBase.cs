@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -14,11 +14,14 @@ namespace VinTools.BetterRuleTiles
         public int UniqueID;
         public int UniqueIdentifier { get => UniqueID; set => UniqueID = value; }
         
+        [field: SerializeField, FormerlySerializedAs("otherTiles")]
         public TileBase[] otherTiles { get; set; }
+        [field: SerializeField, FormerlySerializedAs("variations")]
         public List<TileBase> variations { get; set; } = new List<TileBase>();
 
         // Extended rule data
         public List<ExtendedTilingRule> TempTilingRules { get; set; } = new List<ExtendedTilingRule>();
+        [field: SerializeField, FormerlySerializedAs("m_ExtraTilingRules")]
         public List<ExtraTilingRule> m_ExtraTilingRules { get; set; } = new List<ExtraTilingRule>();
         public List<RuleTile.TilingRule> TilingRules { get => m_TilingRules; set  => m_TilingRules = value; }
         public List<CustomTileProperty> CustomTileProperties { get => customProperties; set => customProperties = value; }
@@ -27,8 +30,11 @@ namespace VinTools.BetterRuleTiles
         public GameObject DefaultGameObject { get => m_DefaultGameObject; set => m_DefaultGameObject = value; }
 
         //performance improvements
+        [field: SerializeField, FormerlySerializedAs("HasVariations")]
         public bool HasVariations { get; set; } = true;
+        [field: SerializeField, FormerlySerializedAs("HasExtraTilingRules")]
         public bool HasExtraTilingRules { get; set; } = true;
+        [field: SerializeField, FormerlySerializedAs("TreatSimilarTilesAsSame")]
         public bool TreatSimilarTilesAsSame { get; set; } = false;
 
         // Extra getters

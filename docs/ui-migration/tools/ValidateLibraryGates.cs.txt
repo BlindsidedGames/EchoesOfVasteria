@@ -1,0 +1,42 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Quests;
+public static class ValidateLibraryGates {
+ public static string Main(){
+ if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play mode required");
+ var output=new List<string>();var saved=Oracle.oracle.saveData.Quests;
+ var book=AssetDatabase.LoadAssetAtPath<ToolkitBookDefinition>("Assets/UI/Toolkit/Library.asset");
+ var theme=AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset");
+ var template=AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Toolkit/Book.uxml");
+ var parent=Resources.FindObjectsOfTypeAll<Transform>().Single(t=>t.gameObject.scene.IsValid()&&t.name=="Library_Window");
+ var legacy=parent.GetComponentsInChildren<WikiUIToggle>(true);
+ var screen=Resources.FindObjectsOfTypeAll<ToolkitBookScreen>().Single(s=>s.gameObject.scene.IsValid()&&((ToolkitBookDefinition)typeof(ToolkitBookScreen).GetField("definition",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(s))==book);
+ void Check(bool ok,string message)=>output.Add((ok?"PASS ":"FAIL ")+message);
+ try {
+ Oracle.oracle.saveData.Quests=new Dictionary<string,GameData.QuestRecord>();
+ using(var view=new ToolkitBookView(book,theme,template)){
+ var gated=book.sections.Where(s=>s.visibility.Length>0).ToArray();
+ Check(gated.Length==3,"Imports the three quest-gated Library chapters");
+ Compare("fresh fixture");
+ foreach(var section in gated){foreach(var rule in section.visibility)Oracle.oracle.saveData.Quests[rule.quest.questId]=new GameData.QuestRecord {Completed=true};view.RefreshVisibility();Compare("unlock "+section.title.fallback);}
+ view.SetExpanded(gated[0].id,true);Oracle.oracle.saveData.Quests.Clear();view.RefreshVisibility();Check(view.CaptureExpanded()[gated[0].id],"Hiding a locked chapter preserves its expansion state");
+ void Compare(string state){foreach(var gate in UnityEngine.Object.FindObjectsByType<QuestObjectStateController>(FindObjectsInactive.Include))gate.UpdateObjectStates();bool same=true;for(int i=0;i<book.sections.Length;i++)same &= (view.Root.Q<Button>(book.sections[i].id).parent.style.display.value!=DisplayStyle.None)==legacy[i].gameObject.activeSelf;Check(same,"Native chapter visibility matches original controllers: "+state);}
+ }
+ screen.Show();var current=(ToolkitBookView)typeof(ToolkitBookScreen).GetField("view",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(screen);var target=book.sections.First(s=>s.visibility.Length>0);Check(current.Root.Q<Button>(target.id).parent.style.display.value==DisplayStyle.None,"Open screen hides locked Forge chapter");
+ Oracle.oracle.saveData.Quests[target.visibility[0].quest.questId]=new GameData.QuestRecord{Completed=true};
+ Blindsided.EventHandler.QuestHandin(target.visibility[0].quest.questId);
+ Check(current.Root.Q<Button>(target.id).parent.style.display.value==DisplayStyle.Flex,"Quest event reveals chapter while native Library stays open");
+ } finally {screen.Hide();Oracle.oracle.saveData.Quests=saved;foreach(var gate in UnityEngine.Object.FindObjectsByType<QuestObjectStateController>(FindObjectsInactive.Include))gate.UpdateObjectStates();}
+ File.WriteAllLines("C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27/library-gates-checks.txt",output);return string.Join("\n",output);
+ }
+}

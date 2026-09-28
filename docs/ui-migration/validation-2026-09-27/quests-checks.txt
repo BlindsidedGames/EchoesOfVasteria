@@ -1,0 +1,33 @@
+PASS Native route opens
+PASS Legacy quest window remains hidden
+PASS Native quest host has no Canvas graphics
+PASS Native snapshot count matches legacy entries
+PASS Quest names and pinned/completed suffixes match
+PASS Quest descriptions match
+PASS Reward text matches
+PASS Turn-in visibility and readiness match
+PASS Requirement labels match legacy renderer
+PASS Incomplete quest rejected by public turn-in path
+PASS Unknown quest rejected
+PASS Native name/description pin action changes saved pins
+PASS Pinned quest moves to pinned category
+PASS Native pin action toggles off
+PASS Native Okay action completes real instant quest
+PASS Completed quest cannot be rewarded twice
+PASS History row has no turn-in action
+PASS Completed quest appears in history category
+PASS History starts collapsed
+PASS History expands through native control
+PASS Native snapshot count matches legacy entries
+PASS Quest names and pinned/completed suffixes match
+PASS Quest descriptions match
+PASS Reward text matches
+PASS Turn-in visibility and readiness match
+PASS Requirement labels match legacy renderer
+PASS 25 cycles retain one quest tree
+PASS NoticeboardChanged has one native subscription after cycles
+PASS QuestProgressChanged has one native subscription after cycles
+PASS Global close hides native quest screen
+PASS NoticeboardChanged unsubscribes when hidden
+PASS QuestProgressChanged unsubscribes when hidden
+PASS Runtime remains offline

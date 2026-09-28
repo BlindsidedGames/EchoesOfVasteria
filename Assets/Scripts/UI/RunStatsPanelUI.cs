@@ -83,6 +83,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             statTracker = GameplayStatTracker.Instance;
             if (statTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.General, this);

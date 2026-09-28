@@ -1,0 +1,27 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI.Toolkit;
+using TimelessEchoes.Skills;
+using Blindsided;
+public class ValidateSkillEvents {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ ToolkitSkillsScreen screen;ToolkitSkillsDefinition d;SkillController c;Dictionary<string,Blindsided.SaveData.GameData.SkillProgress> saved;List<string> checks=new();int phase;double due;Skill target;int oldLevel;MilestoneDefinition denied;
+ VisualElement Root=>screen.GetComponent<UIDocument>().rootVisualElement;
+ void Check(bool b,string s)=>checks.Add((b?"PASS ":"FAIL ")+s);
+ void Submit(string id){var b=Root.Q<Button>(id);using(var e=NavigationSubmitEvent.GetPooled()){e.target=b;b.SendEvent(e);}}
+ void Call(string name)=>typeof(SkillController).GetMethod(name,F).Invoke(c,null);
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK"))throw new Exception("Disposable Play required");var t=new ValidateSkillEvents{screen=UnityEngine.Object.FindAnyObjectByType<ToolkitSkillsScreen>(),c=SkillController.Instance,d=AssetDatabase.LoadAssetAtPath<ToolkitSkillsDefinition>("Assets/UI/Toolkit/Skills.asset")};t.Call("SaveState");t.saved=Oracle.oracle.saveData.SkillData;t.screen.Show();EditorApplication.update+=t.Tick;return "Skills event and slot-limit checks started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+.8;try{switch(phase++){
+ case 0:target=d.skills[0];Submit("skill-"+target.name);var p=c.GetProgress(target);var before=p.CurrentXP;c.GrantQuestExperience(target,1);Check(c.GetProgress(target).CurrentXP==before+1,"Controlled XP gain uses existing skill service");Check(Root.Q<Label>("skill-xp").text.Contains(c.GetProgress(target).CurrentXP.ToString("N0")),"Selected XP label refreshes on experience event");target=d.skills[1];oldLevel=c.GetProgress(target).Level;c.GrantQuestExperience(target,target.xpForFirstLevel*Mathf.Pow(oldLevel,target.xpLevelMultiplier));break;
+ case 1:Check(c.GetProgress(target).Level>oldLevel,"Controlled XP crosses a level boundary");var selector=Root.Q<Button>("skill-"+target.name);Check(selector.Q<Label>().text.Contains(c.GetProgress(target).Level.ToString()),"Unselected skill level label refreshes on level-up");var highlights=(List<VisualElement>)typeof(ToolkitSkillsScreen).GetField("highlights",F).GetValue(screen);Check(highlights[1].style.display.value==DisplayStyle.Flex,"Unselected level-up exposes original highlight");Submit("skill-"+target.name);Check(highlights[1].style.display.value==DisplayStyle.None,"Selecting skill clears its level-up highlight");var all=d.skills.SelectMany(s=>s.milestones.Where(m=>m&&m.CanActivate&&c.GetMilestoneState(s,m)?.TierIndex>=0).Select(m=>(skill:s,milestone:m))).ToArray();foreach(var pair in all)c.TrySetMilestoneActive(pair.skill,pair.milestone,false);foreach(var pair in all.Take(c.TotalActiveSlots))c.TrySetMilestoneActive(pair.skill,pair.milestone,true);var extra=all.Skip(c.TotalActiveSlots).First();target=extra.skill;denied=extra.milestone;Submit("skill-"+target.name);break;
+ case 2:var count=c.ActiveSlotsUsed;Submit("toggle-"+denied.name);Check(c.ActiveSlotsUsed==count&&!c.GetMilestoneState(target,denied).IsActive,"Full active slots reject another native toggle through controller");Check(c.EnumerateActiveSets().All(s=>s.Definition==null),"Developed fixture has no authored active set to render");for(int i=0;i<25;i++){screen.Hide();screen.Show();}foreach(var name in new[]{"OnExperienceGained","OnLevelUp","OnMilestoneDataChanged","OnActiveSlotsChanged"}){var handler=(Delegate)typeof(SkillController).GetField(name,F).GetValue(c);Check(handler.GetInvocationList().Count(h=>ReferenceEquals(h.Target,screen))==1,"Exactly one native subscription after 25 cycles: "+name);}Finish();break;
+ }}catch(Exception ex){checks.Add("FAIL "+ex);Finish();}}
+ void Finish(){EditorApplication.update-=Tick;Oracle.oracle.saveData.SkillData=saved;Call("LoadState");screen.Hide();screen.Show();File.WriteAllLines(Output+"/skills-events-checks.txt",checks);}
+}

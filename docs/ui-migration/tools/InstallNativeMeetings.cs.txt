@@ -1,0 +1,16 @@
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using TimelessEchoes.Tasks;
+public static class InstallNativeMeetings {
+ public static string Main(){
+ if(Application.isPlaying)throw new Exception("Edit mode required");
+ var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/CharacterMeeting.prefab");if(!prefab)throw new Exception("Native prefab missing");int count=0;
+ foreach(var path in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/Prefabs/Tasks/NPC"}).Select(AssetDatabase.GUIDToAssetPath)){
+ var asset=AssetDatabase.LoadAssetAtPath<GameObject>(path);var task=asset.GetComponent<TalkToNpcTask>();if(!task)continue;
+ var so=new SerializedObject(task);so.FindProperty("meetingPrefab").objectReferenceValue=prefab;so.ApplyModifiedProperties();EditorUtility.SetDirty(task);PrefabUtility.SavePrefabAsset(asset);count++;
+ }
+ AssetDatabase.SaveAssets();return "Connected native meeting prefab to "+count+" NPC tasks";
+ }
+}

@@ -1,0 +1,13 @@
+Disposable Library profile; Steam/UGS offline; real gameplay button callbacks
+PASS Mix cancellation preserves both ingredient stacks and stew
+PASS Confirmed Mix consumes the selected stacks
+PASS Mix reward matches actual resource values
+PASS Start tasting consumes stew at runtime
+PASS Pause tasting stops automation
+PASS Ingredients scroll reaches lower rows
+PASS Craft invokes gameplay and exposes the pending result
+PASS Replace equips the pending item
+PASS Forge automation progresses with its window closed
+PASS Assign then slot updates the real buff loadout
+PASS Prospector target selection confirms and closes
+PASS 15 repeated open/close cycles leave both windows closed

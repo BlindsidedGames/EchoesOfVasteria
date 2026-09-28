@@ -1,0 +1,15 @@
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityEditor;
+using TimelessEchoes.UI.Toolkit;
+public static class PreviewToolkitNavigation {
+ public static string Main(){
+ if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable Play mode required");
+ foreach(var screen in UnityEngine.Object.FindObjectsByType<ToolkitNavigationScreen>(FindObjectsInactive.Include))UnityEngine.Object.DestroyImmediate(screen.gameObject);
+ var top=Resources.FindObjectsOfTypeAll<Transform>().Single(t=>t.gameObject.scene.IsValid()&&t.name=="TopBar");top.gameObject.SetActive(false);
+ foreach(var screen in UnityEngine.Object.FindObjectsByType<ToolkitIntroScreen>(FindObjectsInactive.Include))screen.Hide();
+ var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab");UnityEngine.Object.Instantiate(prefab);
+ TimelessEchoes.UI.TownWindowManager.Instance.CloseAllWindows();return "Native navigation preview; legacy TopBar hidden only in disposable Play mode";
+ }
+}

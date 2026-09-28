@@ -40,6 +40,7 @@ namespace TimelessEchoes.Upgrades
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             Instance = this;
             resourceManager = ResourceManager.Instance;
             if (resourceManager == null)
@@ -244,6 +245,8 @@ namespace TimelessEchoes.Upgrades
 
         public void HighlightResource(Resource resource, bool scrollToSlot = true)
         {
+            if (TimelessEchoes.UI.TownWindowManager.Instance?.TryHighlightNativeResource(resource, scrollToSlot) == true)
+                return;
             var index = resources.IndexOf(resource);
             if (index < 0)
                 index = resources.FindIndex(r => r != null && resource != null && r.name == resource.name);

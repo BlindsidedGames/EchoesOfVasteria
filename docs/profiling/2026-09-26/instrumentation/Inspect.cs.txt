@@ -1,0 +1,24 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor;
+using Unity.Profiling;
+using Unity.Profiling.LowLevel.Unsafe;
+public static class InspectAudit {
+ public static object Main() {
+ var flags=BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static;
+ var gm=TimelessEchoes.GameManager.Instance;
+ var maps=(System.Collections.Generic.List<TimelessEchoes.MapGeneration.MapGenerationButton>)gm.GetType().GetField("generationButtons",flags).GetValue(gm);
+ var d=Blindsided.Oracle.oracle.saveData;
+ var handles=new System.Collections.Generic.List<ProfilerRecorderHandle>(); ProfilerRecorderHandle.GetAvailable(handles);
+ var result=new { playing=EditorApplication.isPlaying, paused=EditorApplication.isPaused, timeScale=Time.timeScale, fps=Application.targetFrameRate, vsync=QualitySettings.vSyncCount, width=Screen.width,height=Screen.height, cpu=SystemInfo.processorType,gpu=SystemInfo.graphicsDeviceName, memoryMB=SystemInfo.systemMemorySize, unity=Application.unityVersion, map=TimelessEchoes.GameManager.CurrentGenerationConfig?.name, inRun=gm.CurrentMap!=null,
+ steam=SteamManager.Initialized, ugs=Blindsided.UGS.UgsLeaderboardSettings.IsSubmissionEnabled,
+ progress=new { d.PlayTime,d.CompletionPercentage,d.CraftingMasteryLevel,d.CauldronEvaLevel,d.CauldronStew,d.General,d.BuffSlots,d.AutoBuffSlots,d.UnlockedBuffSlots,d.UnlockedAutoBuffSlots, resources=d.Resources.Count,quests=d.Quests.Count,taskRecords=d.TaskRecords.Count,cards=d.CauldronCardCounts.Count,gear=d.EquipmentBySlot.Count },
+ maps=maps.Select(m=>new { name=m.Config.name,path=AssetDatabase.GetAssetPath(m.Config),m.ScalingMode,m.KillsPerLevel,active=m.Button.gameObject.activeInHierarchy,interactable=m.Button.interactable,config=EditorJsonUtility.ToJson(m.Config)}).ToArray(),
+ counters=handles.Select(h=>ProfilerRecorderHandle.GetDescription(h)).Select(x=>new {x.Name,category=x.Category.Name,unit=x.UnitType.ToString()}).ToArray(),
+ behaviours=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None).Where(x=>x!=null && (x.GetType().Namespace??"").StartsWith("Blindsided.UGS")).Select(x=>new {type=x.GetType().FullName,x.enabled}).ToArray()
+ };
+ return result;
+ }
+}

@@ -1,0 +1,9 @@
+using System;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public static class InstallNativeOptions {
+ public static string Main(){var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();if(Application.isPlaying||scene.isDirty||scene.name!="Main")throw new Exception("Clean Main Edit mode required");var manager=UnityEngine.Object.FindAnyObjectByType<TownWindowManager>(FindObjectsInactive.Include);var existing=new SerializedObject(manager);if(existing.FindProperty("toolkitOptions").objectReferenceValue)throw new Exception("Already installed");var go=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Options.prefab"),manager.transform);var screen=go.GetComponent<ToolkitOptionsScreen>();var so=new SerializedObject(screen);so.FindProperty("windows").objectReferenceValue=manager;so.ApplyModifiedPropertiesWithoutUndo();existing.FindProperty("toolkitOptions").objectReferenceValue=screen;existing.ApplyModifiedPropertiesWithoutUndo();EditorSceneManager.MarkSceneDirty(scene);if(!EditorSceneManager.SaveScene(scene))throw new Exception("Save failed");return "Existing blocks changed: "+GlobalObjectId.GetGlobalObjectIdSlow(manager).targetObjectId+", "+GlobalObjectId.GetGlobalObjectIdSlow(manager.transform).targetObjectId;}
+}

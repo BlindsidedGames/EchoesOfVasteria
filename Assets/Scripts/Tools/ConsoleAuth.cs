@@ -27,16 +27,16 @@ namespace TimelessEchoes
             {
                 _isAuthenticated = true;
                 MarkConsoleUsed();
-                if (QuantumConsole.Instance != null)
+                if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
                 {
-                    QuantumConsole.Instance.LogToConsole("Developer commands unlocked.");
+                    TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole("Developer commands unlocked.");
                 }
             }
             else
             {
-                if (QuantumConsole.Instance != null)
+                if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
                 {
-                    QuantumConsole.Instance.LogToConsole("Invalid password.");
+                    TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole("Invalid password.");
                 }
                 throw new System.Exception("Invalid password for developer commands.");
             }
@@ -46,9 +46,9 @@ namespace TimelessEchoes
         public static void Logout()
         {
             _isAuthenticated = false;
-            if (QuantumConsole.Instance != null)
+            if (TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance != null)
             {
-                QuantumConsole.Instance.LogToConsole("Developer commands locked.");
+                TimelessEchoes.UI.Toolkit.ToolkitConsoleScreen.Instance.LogToConsole("Developer commands locked.");
             }
         }
 

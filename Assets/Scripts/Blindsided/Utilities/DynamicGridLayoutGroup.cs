@@ -34,7 +34,7 @@ namespace Blindsided.Utilities
             cardWidth = (inner - (columns - 1) * spacing.x) / columns;
             if (cardWidth > maxCardWidth) cardWidth = maxCardWidth;
 
-            SetLayoutInputForAxis(0, inner, -1, 0);
+            SetLayoutInputForAxis(0, LayoutUtility.DefaultMaxSize, inner, -1, 0);
         }
 
         public override void CalculateLayoutInputVertical()
@@ -43,7 +43,7 @@ namespace Blindsided.Utilities
             cardHeight = CardHeight(cardWidth);
 
             var total = rows * cardHeight + (rows - 1) * spacing.y + padding.vertical;
-            SetLayoutInputForAxis(total, total, -1, 1);
+            SetLayoutInputForAxis(total, LayoutUtility.DefaultMaxSize, total, -1, 1);
         }
 
         public override void SetLayoutHorizontal()

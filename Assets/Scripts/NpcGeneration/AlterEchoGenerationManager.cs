@@ -26,6 +26,9 @@ namespace TimelessEchoes.NpcGeneration
         private int lastUnlockedCount;
         private bool ratesDirty;
         private float nextRatesRefreshTime;
+        private int rebuildRequestVersion;
+        private GameData queuedRebuildData;
+        private bool queuedOfflineProgress;
         public IReadOnlyList<AlterEchoGenerator> Generators => generators;
         public event Action OnGeneratorsRebuilt;
         private static Dictionary<string, Resource> lookup;
@@ -47,7 +50,6 @@ namespace TimelessEchoes.NpcGeneration
             OnQuestHandin += OnQuestHandinHandler;
             AwayFor += HandleAwayForTime;
             ApplicationBackgrounded += HandleApplicationBackground;
-            ApplicationForegrounded += HandleApplicationForeground;
         }
         protected override void OnDestroy()
         {
@@ -60,7 +62,6 @@ namespace TimelessEchoes.NpcGeneration
             OnQuestHandin -= OnQuestHandinHandler;
             AwayFor -= HandleAwayForTime;
             ApplicationBackgrounded -= HandleApplicationBackground;
-            ApplicationForegrounded -= HandleApplicationForeground;
         }
         private void OnRunEnded(bool died)
         {
@@ -68,29 +69,63 @@ namespace TimelessEchoes.NpcGeneration
         }
         private void OnInventoryChanged()
         {
-            if (oracle == null) return;
-            oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
+            var data = oracle?.saveData;
+            if (data == null) return;
+            data.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             var count = 0;
-            foreach (var entry in oracle.saveData.Resources.Values)
-                if (entry.Earned)
+            foreach (var entry in data.Resources.Values)
+                if (entry?.Earned == true)
                     count++;
             if (count != lastUnlockedCount)
             {
                 lastUnlockedCount = count;
-                CoroutineUtils.RunNextFrame(this, BuildGenerators);
+                QueueGeneratorRebuild(data, applyOfflineProgress: false);
             }
         }
         private void OnLoadDataHandler()
         {
-            CoroutineUtils.RunNextFrame(this, () =>
-            {
-                BuildGenerators();
-                ApplyOfflineProgress();
-            });
+            var data = oracle?.saveData;
+            if (data != null)
+                QueueGeneratorRebuild(data, applyOfflineProgress: true);
         }
         private void OnQuestHandinHandler(string questId)
         {
-            CoroutineUtils.RunNextFrame(this, BuildGenerators);
+            var data = oracle?.saveData;
+            if (data != null)
+                QueueGeneratorRebuild(data, applyOfflineProgress: false);
+        }
+
+        private void QueueGeneratorRebuild(GameData expectedData, bool applyOfflineProgress)
+        {
+            if (!ReferenceEquals(queuedRebuildData, expectedData))
+            {
+                queuedRebuildData = expectedData;
+                queuedOfflineProgress = applyOfflineProgress;
+            }
+            else
+            {
+                queuedOfflineProgress |= applyOfflineProgress;
+            }
+
+            var requestVersion = ++rebuildRequestVersion;
+            CoroutineUtils.RunNextFrame(this, () =>
+            {
+                if (requestVersion != rebuildRequestVersion)
+                    return;
+                if (!ReferenceEquals(oracle?.saveData, expectedData))
+                {
+                    queuedRebuildData = null;
+                    queuedOfflineProgress = false;
+                    return;
+                }
+
+                var shouldApplyOfflineProgress = queuedOfflineProgress;
+                queuedRebuildData = null;
+                queuedOfflineProgress = false;
+                BuildGenerators(expectedData);
+                if (shouldApplyOfflineProgress)
+                    ApplyOfflineProgress(expectedData);
+            });
         }
 
         private static void EnsureLookup()
@@ -101,35 +136,27 @@ namespace TimelessEchoes.NpcGeneration
                 if (res != null && !lookup.ContainsKey(res.name))
                     lookup[res.name] = res;
         }
-        private void BuildGenerators()
+        private void BuildGenerators(GameData data)
         {
+            if (generatorPrefab == null || data == null || !ReferenceEquals(oracle?.saveData, data))
+                return;
+
             foreach (var gen in generators)
                 if (gen != null)
-                    Destroy(gen.gameObject);
-            generators.Clear();
-            if (generatorPrefab == null || oracle == null)
-                return;
-            EnsureLookup();
-            oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
-            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
-            // purge legacy entries that no longer map to resources
-            var toRemove = new List<string>();
-            foreach (var key in oracle.saveData.Disciples.Keys)
-            {
-                if (!oracle.saveData.Resources.ContainsKey(key))
                 {
-                    toRemove.Add(key);
-                    continue;
+                    gen.PrepareForRebuild();
+                    Destroy(gen.gameObject);
                 }
-                if (lookup.TryGetValue(key, out var res) && res != null && res.DisableAlterEcho)
-                    toRemove.Add(key);
-            }
-            foreach (var k in toRemove)
-                oracle.saveData.Disciples.Remove(k);
+            generators.Clear();
+            EnsureLookup();
+            data.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
+            data.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            // Records for missing, renamed, or temporarily disabled resources stay in the save.
+            // They cost almost nothing and may become usable again when content is restored.
             lastUnlockedCount = 0;
-            foreach (var pair in oracle.saveData.Resources)
+            foreach (var pair in data.Resources)
             {
-                if (!pair.Value.Earned) continue;
+                if (pair.Value?.Earned != true) continue;
                 lastUnlockedCount++;
                 if (!lookup.TryGetValue(pair.Key, out var res) || res == null || res.DisableAlterEcho)
                     continue;
@@ -147,11 +174,12 @@ namespace TimelessEchoes.NpcGeneration
         }
         public void RefreshRates()
         {
-            if (oracle == null) return;
+            var data = oracle?.saveData;
+            if (data?.Resources == null) return;
             foreach (var gen in generators)
             {
-                if (gen == null || gen.Resource == null) continue;
-                if (oracle.saveData.Resources.TryGetValue(gen.Resource.name, out var entry))
+                if (gen == null || gen.Resource == null || !gen.IsOwnedBy(data)) continue;
+                if (data.Resources.TryGetValue(gen.Resource.name, out var entry) && entry != null)
                 {
                     var baseRate = entry.BestPerMinute * DisciplePercent;
                     var bonusMult = Singleton<CauldronManager>.Instance != null
@@ -163,19 +191,20 @@ namespace TimelessEchoes.NpcGeneration
         }
         private void CaptureOfflineSnapshot(double timestamp)
         {
-            if (oracle == null) return;
-            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            var data = oracle?.saveData;
+            if (data == null) return;
+            data.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
             foreach (var gen in generators)
             {
-                if (gen == null || gen.Resource == null) continue;
-                if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
+                if (gen == null || gen.Resource == null || !gen.IsOwnedBy(data)) continue;
+                if (!data.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
                 {
                     rec = new GameData.DiscipleGenerationRecord
                     {
                         StoredResources = new Dictionary<string, double>(),
                         TotalCollected = new Dictionary<string, double>()
                     };
-                    oracle.saveData.Disciples[gen.Resource.name] = rec;
+                    data.Disciples[gen.Resource.name] = rec;
                 }
                 rec.StoredResources ??= new Dictionary<string, double>();
                 rec.TotalCollected ??= new Dictionary<string, double>();
@@ -191,21 +220,36 @@ namespace TimelessEchoes.NpcGeneration
             return DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
         }
 
-        private void ApplyOfflineProgress()
+        private void ApplyOfflineProgress(GameData expectedData = null)
         {
-            if (oracle == null) return;
-            oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
+            var data = oracle?.saveData;
+            if (data == null || (expectedData != null && !ReferenceEquals(data, expectedData)))
+                return;
+            data.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();
             var now = GetUtcTimestamp();
             foreach (var gen in generators)
             {
-                if (gen == null || gen.Resource == null) continue;
-                if (!oracle.saveData.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
+                if (gen == null || gen.Resource == null || !gen.IsOwnedBy(data)) continue;
+                if (!data.Disciples.TryGetValue(gen.Resource.name, out var rec) || rec == null)
                     continue;
-                var seconds = now - rec.LastGenerationTime;
-                if (seconds <= 0) continue;
-                gen.ApplyOfflineProgress(seconds);
                 rec.StoredResources ??= new Dictionary<string, double>();
                 rec.TotalCollected ??= new Dictionary<string, double>();
+                var lastGenerationTime = rec.LastGenerationTime;
+                if (!(lastGenerationTime > 0d) || double.IsNaN(lastGenerationTime) ||
+                    double.IsInfinity(lastGenerationTime) || lastGenerationTime > now)
+                {
+                    // Zero is the legacy/default "never captured" value. Treat invalid or future
+                    // timestamps as a new baseline instead of granting decades of progress.
+                    rec.LastGenerationTime = now;
+                    rec.Progress = gen.Progress;
+                    rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
+                    rec.TotalCollected[gen.Resource.name] = gen.GetTotalCollected(gen.Resource);
+                    continue;
+                }
+
+                var seconds = now - lastGenerationTime;
+                if (seconds > 0d && !double.IsNaN(seconds) && !double.IsInfinity(seconds))
+                    gen.ApplyOfflineProgress(seconds);
                 rec.LastGenerationTime = now;
                 rec.Progress = gen.Progress;
                 rec.StoredResources[gen.Resource.name] = gen.GetStoredAmount(gen.Resource);
@@ -216,11 +260,6 @@ namespace TimelessEchoes.NpcGeneration
         private void HandleApplicationBackground()
         {
             CaptureOfflineSnapshot(GetUtcTimestamp());
-        }
-
-        private void HandleApplicationForeground()
-        {
-            ApplyOfflineProgress();
         }
 
         private void HandleAwayForTime(float seconds)

@@ -1,0 +1,28 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public class ValidateInstalledBooks {
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ const string Output="C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27";
+ TownWindowManager manager;ToolkitBookScreen library,credits;TownWindowManager.WindowReference wiki,credit;int phase;double due;float offset;readonly List<string> results=new();
+ ToolkitBookView View(ToolkitBookScreen s)=>(ToolkitBookView)typeof(ToolkitBookScreen).GetField("view",F).GetValue(s);
+ void Check(bool b,string s)=>results.Add((b?"PASS ":"FAIL ")+s);
+ public static string Main(){if(!Application.dataPath.Contains("EOV-UITK-20260927"))throw new Exception("Disposable project required");var test=new ValidateInstalledBooks();test.manager=TownWindowManager.Instance;test.library=(ToolkitBookScreen)typeof(TownWindowManager).GetField("toolkitLibrary",F).GetValue(test.manager);test.credits=(ToolkitBookScreen)typeof(TownWindowManager).GetField("toolkitCredits",F).GetValue(test.manager);test.wiki=(TownWindowManager.WindowReference)typeof(TownWindowManager).GetField("wiki",F).GetValue(test.manager);test.credit=(TownWindowManager.WindowReference)typeof(TownWindowManager).GetField("credits",F).GetValue(test.manager);EditorApplication.update+=test.Tick;return "Installed books check started";}
+ void Tick(){if(EditorApplication.timeSinceStartup<due)return;due=EditorApplication.timeSinceStartup+1;try{switch(phase++){
+ case 0:foreach(var t in Resources.FindObjectsOfTypeAll<Transform>())if(t.gameObject.scene.IsValid()&&(t.name=="Welcome"||t.name=="Dev Note"))t.gameObject.SetActive(false);manager.CloseAllWindows();wiki.button.onClick.Invoke();Check(library.IsOpen&&!wiki.window.activeSelf,"Serialized scene Library route opens native view");View(library).SetExpanded("chapter-2",true);break;
+ case 1:View(library).Scroll.scrollOffset=new Vector2(0,30);break;
+ case 2:offset=View(library).Scroll.scrollOffset.y;Check(offset>0,"Expanded Library scrolls before closing");manager.CloseAllWindows();Check(library.GetComponent<UIDocument>().rootVisualElement.childCount==0,"Close detaches native Library tree");break;
+ case 3:wiki.button.onClick.Invoke();break;
+ case 4:Check(View(library).Root.Q<Button>("chapter-2").ClassListContains("expanded"),"Library retains chapter expansion after reopening");Check(Mathf.Abs(View(library).Scroll.scrollOffset.y-offset)<.1f,"Library retains scroll position after reopening");ScreenCapture.CaptureScreenshot(Output+"/library-installed-reopened.png");break;
+ case 5:credit.button.onClick.Invoke();Check(credits.IsOpen&&!library.IsOpen&&!credit.window.activeSelf,"Credits route replaces native Library without activating legacy Credits");break;
+ case 6:ScreenCapture.CaptureScreenshot(Output+"/credits-installed.png");break;
+ case 7:credit.button.onClick.Invoke();Check(!credits.IsOpen,"Credits button toggles closed");for(int i=0;i<25;i++){wiki.button.onClick.Invoke();credit.button.onClick.Invoke();manager.CloseAllWindows();}Check(!credits.IsOpen&&!library.IsOpen,"25 Library to Credits switching cycles complete");Check(library.GetComponent<UIDocument>().rootVisualElement.childCount==0&&credits.GetComponent<UIDocument>().rootVisualElement.childCount==0,"Switching leaves neither native content tree attached");File.WriteAllLines(Output+"/installed-books-checks.txt",results);EditorApplication.update-=Tick;break;}}
+ catch(Exception ex){results.Add("FAIL "+ex);File.WriteAllLines(Output+"/installed-books-checks.txt",results);EditorApplication.update-=Tick;}}
+}

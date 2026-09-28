@@ -27,6 +27,17 @@ namespace Blindsided.SaveData.Migrations
 
             var allStats = AssetCache.GetAll<StatDefSO>(string.Empty) ?? Array.Empty<StatDefSO>();
             var allRarities = AssetCache.GetAll<RaritySO>(string.Empty) ?? Array.Empty<RaritySO>();
+            var hasLegacyAffixes = equipment.Values.Any(item =>
+                item?.affixes != null && item.affixes.Any(affix => affix != null && Math.Abs(affix.value) > 1e-12));
+            if (hasLegacyAffixes && allStats.Length == 0)
+                throw new InvalidOperationException("Gear quality migration cannot run until stat definitions are available.");
+            if (hasLegacyAffixes &&
+                equipment.Values.Any(item => item != null && !string.IsNullOrWhiteSpace(item.rarity)) &&
+                allRarities.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Gear quality migration cannot run until rarity definitions are available.");
+            }
 
             // Pre-pass: legacy Boots movement speed max changed 5 -> 100. Multiply by 20 once before quality mapping.
             try
@@ -118,7 +129,17 @@ namespace Blindsided.SaveData.Migrations
 
                     var def = ResolveStat(a.statId);
                     if (def == null)
-                        continue; // stat not found; leave as-is
+                    {
+                        throw new InvalidOperationException(
+                            $"Gear quality migration cannot resolve legacy stat '{a.statId ?? "<null>"}' " +
+                            $"on equipped slot '{kv.Key}'. The original save remains unchanged.");
+                    }
+                    if (!string.IsNullOrWhiteSpace(rec.rarity) && rarity == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"Gear quality migration cannot resolve legacy rarity '{rec.rarity}' " +
+                            $"on equipped slot '{kv.Key}'. The original save remains unchanged.");
+                    }
 
                     // Safety net: if this affix is Movement Speed on legacy scale (<=5), scale before computing quality
                     try

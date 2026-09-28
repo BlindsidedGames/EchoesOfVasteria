@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ab141a3fbe82547a86ffa0892c2e5e, type: 3}
+  m_Name: Run
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitRunDefinition
+  panel: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  portrait: {fileID: -3617026501487528266, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  portraitFrame: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  portraitInset: {fileID: -5538786102408219600, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  detailFrame: {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  tooltipFrame: {fileID: -8791061684223605669, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  healthTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  healthFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  dadJokeBubble: {fileID: 3346837577694019691, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  dadJokeFont: {fileID: 12800000, guid: 87960f47296eb7a4986346e3926a7235, type: 3}
+  buffs: {fileID: 11400000, guid: 71162e274e1c203438fad1ef11a79bfe, type: 2}

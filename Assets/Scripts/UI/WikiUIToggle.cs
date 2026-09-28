@@ -21,6 +21,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (toggleButton == null)
                 toggleButton = GetComponent<Button>();
 

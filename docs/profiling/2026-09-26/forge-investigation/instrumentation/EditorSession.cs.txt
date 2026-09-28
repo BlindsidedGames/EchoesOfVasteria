@@ -1,0 +1,74 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor;
+using Unity.Profiling;
+using Unity.Profiling.LowLevel.Unsafe;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes;
+using TimelessEchoes.Upgrades;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.Gear;
+using TimelessEchoes.Gear.UI;
+using TimelessEchoes.UI;
+using TimelessEchoes.MapGeneration;
+using EH=Blindsided.EventHandler;
+public class ForgeTraceSession {
+ public static object Main(){var s=new ForgeTraceSession();AppDomain.CurrentDomain.SetData("EOV_AUDIT",s);s.Init();return "Isolated; invoke QueueBroad then Start";}
+ const BindingFlags F=BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.Static;
+ public object Get(object o,string n)=>o.GetType().GetField(n,F).GetValue(o);
+ public void Set(object o,string n,object v)=>o.GetType().GetField(n,F).SetValue(o,v);
+ public object Call(object o,string n,params object[] a)=>o.GetType().GetMethods(F).First(m=>m.Name==n&&m.GetParameters().Length==a.Length).Invoke(o,a);
+ static string J(object o){var t=AppDomain.CurrentDomain.GetAssemblies().First(a=>a.GetName().Name=="Newtonsoft.Json").GetType("Newtonsoft.Json.JsonConvert");return (string)t.GetMethod("SerializeObject",new[]{typeof(object)}).Invoke(null,new[]{o});}
+ readonly string dir="docs/profiling/2026-09-26/forge-investigation/editor/";
+ Oracle oracle; GameData original; byte[] baseline; bool recovery,ugs; object steam; bool steamOn; string root; int fps,vsync; float scale,fixedDelta; UnityEngine.Random.State random;
+ Dictionary<Behaviour,bool> online=new Dictionary<Behaviour,bool>(); Dictionary<GameObject,bool> windows=new Dictionary<GameObject,bool>();
+ CauldronConfig originalConfig,config; CauldronManager cauldron; ForgeWindowUI forge; List<MapGenerationButton> maps;
+ public List<Scenario> queue=new List<Scenario>(); int qi=-1; Scenario current; double start,last; int lastFrame=-1; bool running; string phase="";
+ List<ProfilerRecorder> rec=new List<ProfilerRecorder>(); List<string> names=new List<string>(); double[,] values=new double[30000,20]; int rows; object before; double warm=5,duration=15; double actionMs; double nextAction; public string Status=>phase+" "+qi+"/"+queue.Count+" "+current?.name;
+ public class Scenario {public string name;public Action setup;public Action tick;public double warm=5,seconds=15;}
+ public void Init(){
+ oracle=Oracle.oracle; Call(oracle,"CompleteActiveSaveBlocking"); EH.SaveData(true); original=oracle.saveData;
+ baseline=Sirenix.Serialization.SerializationUtility.SerializeValue(original,Sirenix.Serialization.DataFormat.Binary);
+ File.WriteAllBytes("Library/ForgeProbe/editor-original-live.bin",baseline);
+ recovery=(bool)Get(oracle,"_recoveryRequired");Set(oracle,"_recoveryRequired",true);
+ root=(string)typeof(SaveManager).GetField("rootPathOverride",F).GetValue(null);typeof(SaveManager).GetField("rootPathOverride",F).SetValue(null,Path.GetFullPath("Library/ForgeProbe/disposable"));
+ ugs=Blindsided.UGS.UgsLeaderboardSettings.IsSubmissionEnabled;Blindsided.UGS.UgsLeaderboardSettings.SetEditorSubmissionEnabled(false);
+ steam=typeof(SteamManager).GetField("s_instance",F).GetValue(null);steamOn=(bool)Get(steam,"m_bInitialized");Set(steam,"m_bInitialized",false);
+ foreach(var b in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include)){if(b==null)continue;var n=b.GetType().FullName;if(n.Contains("Steam")||n.Contains("UgsLeaderboardsReporter")){online[b]=b.enabled;b.enabled=false;}}
+ fps=Application.targetFrameRate;vsync=QualitySettings.vSyncCount;scale=Time.timeScale;fixedDelta=Time.fixedDeltaTime;random=UnityEngine.Random.state;
+ var tw=TownWindowManager.Instance;foreach(var f in tw.GetType().GetFields(F)){var v=f.GetValue(tw);if(v==null)continue;var wf=v.GetType().GetField("window",F);if(wf!=null&&wf.GetValue(v) is GameObject g)windows[g]=g.activeSelf;}
+ cauldron=CauldronManager.Instance;originalConfig=(CauldronConfig)Get(cauldron,"config");config=UnityEngine.Object.Instantiate(originalConfig);config.hideFlags=HideFlags.HideAndDontSave;Set(cauldron,"config",config);
+ forge=UnityEngine.Object.FindObjectsByType<ForgeWindowUI>(FindObjectsInactive.Include).First();maps=(List<MapGenerationButton>)Get(GameManager.Instance,"generationButtons");
+ File.WriteAllText("Library/ForgeProbe/editor-save-manifest.json",J(Directory.GetFiles(Application.persistentDataPath+"/Saves","*",SearchOption.AllDirectories).Select(p=>new{Path=p,Hash=BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(File.ReadAllBytes(p)))}).ToArray()));File.WriteAllText(dir+"isolation.json",J(new{ugsBefore=ugs,steamBefore=steamOn,saveSuppression="Oracle._recoveryRequired=true; SaveManager root redirected to Library; direct saves only to disposable root",originalSha=BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(baseline)),online=online.Keys.Select(b=>b.GetType().FullName).ToArray()}));
+ }
+ public void Reset(string stage="developed",bool buffs=false){
+ TownWindowManager.Instance.CloseAllWindows(); cauldron.StopTasting();BuffManager.Instance.ClearActiveBuffs();BuffManager.Instance.ResetCooldowns();
+ oracle.saveData=stage=="fresh"?new GameData():Sirenix.Serialization.SerializationUtility.DeserializeValue<GameData>(baseline,Sirenix.Serialization.DataFormat.Binary);
+ oracle.saveData.SavedPreferences.OfflineTimeActive=false;
+ if(!buffs)oracle.saveData.AutoBuffSlots=new List<bool>{false,false,false,false,false};
+ EH.LoadData();BuffManager.Instance.SetBaseTimeScale(1);config.rollsPerSecond=originalConfig.rollsPerSecond; UnityEngine.Random.InitState(260926); 
+ }
+ public void Panel(string field){TownWindowManager.Instance.CloseAllWindows();if(field==null)return;var v=Get(TownWindowManager.Instance,field);((GameObject)v.GetType().GetField("window",F).GetValue(v)).SetActive(true);}
+ public void Add(string name,Action setup, double seconds=15,Action tick=null,double warmup=5){queue.Add(new Scenario{name=name,setup=setup,seconds=seconds,tick=tick,warm=warmup});}
+ public void QueueBroad(){
+ for(int rep=1;rep<=3;rep++){Add("town-developed-r"+rep,()=>{Reset();QualitySettings.vSyncCount=0;Application.targetFrameRate=-1;});Add("town-fresh-r"+rep,()=>Reset("fresh"));}
+ foreach(var field in new[]{"forge","cauldron","quests","skills","wiki","inventory","stats","buffs","alterEchoes"}){var p=field;Add("panel-"+p,()=>{Reset();Panel(p);});}
+ foreach(var rate in new[]{10f,100f,1000f})foreach(var visible in new[]{false,true})for(int rep=1;rep<=3;rep++){var r=rate;var v=visible;Add("taste-"+rate+"-"+(v?"open":"closed")+"-r"+rep,()=>{Reset();oracle.saveData.CauldronStew=1e9;config.rollsPerSecond=r;if(v)Panel("cauldron");cauldron.StartTasting();});}
+ }
+ public object Snapshot(){var d=oracle.saveData;return new{time=Time.realtimeSinceStartupAsDouble,frame=Time.frameCount,Time.timeScale,Time.fixedDeltaTime,fps=Application.targetFrameRate,vsync=QualitySettings.vSyncCount,width=Screen.width,height=Screen.height,scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,map=GameManager.CurrentGenerationConfig?.name,inRun=GameManager.Instance.CurrentMap!=null,d.PlayTime,d.CompletionPercentage,d.CraftingMasteryLevel,d.CauldronEvaLevel,d.General.MaxRunDistance,d.General.TotalKills,d.General.TasksCompleted,d.General.TimesReaped,d.General.Deaths,crafts=d.Forge.TotalCrafts,tastes=d.CauldronTotals.TotalTastings,resources=d.Resources.Count,cards=d.CauldronCardCounts.Count,quests=d.Quests.Count,histories=d.General.RecentRuns.Count,d.BuffSlots,d.AutoBuffSlots,rate=config.rollsPerSecond,cauldron.IsTasting,forgeActive=forge.isActiveAndEnabled,forgeAuto=Get(forge,"isAutoCrafting"),selectedCore=(Get(forge,"selectedCore") as CoreSO)?.name,selectedSlot=Get(forge,"selectedSlot"),objects=Resources.FindObjectsOfTypeAll<UnityEngine.Object>().Length,gameObjects=UnityEngine.Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include).Length,mono=UnityEngine.Profiling.Profiler.GetMonoUsedSizeLong(),allocated=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong(),reserved=UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong(),gc0=GC.CollectionCount(0),gc1=GC.CollectionCount(1),gc2=GC.CollectionCount(2),subscriptions=typeof(EH).GetFields(F).Where(f=>typeof(Delegate).IsAssignableFrom(f.FieldType)).Select(f=>new{name=f.Name,count=((Delegate)f.GetValue(null))?.GetInvocationList().Length??0}).ToArray()};}
+ public void Start(){if(running)throw new Exception("Already running");running=true;EditorApplication.update+=Tick;Next();EditorApplication.isPaused=false;}
+ void Next(){qi++;if(qi>=queue.Count){Finish();return;}current=queue[qi];try{var sw=System.Diagnostics.Stopwatch.StartNew();current.setup();sw.Stop();actionMs=sw.Elapsed.TotalMilliseconds;File.WriteAllText(dir+current.name+"-setup.json",J(new{actionMs,state=Snapshot()}));start=EditorApplication.timeSinceStartup;warm=current.warm;duration=current.seconds;phase="warming";rows=0;lastFrame=-1;nextAction=0;}catch(Exception e){File.WriteAllText(dir+current.name+"-error.txt",e.ToString());Next();}}
+ void Begin(){names.Clear();rec.Clear();var handles=new List<ProfilerRecorderHandle>();ProfilerRecorderHandle.GetAvailable(handles);foreach(var n in new[]{"Main Thread","PlayerLoop","BehaviourUpdate","GC Allocated In Frame","GC Used Memory","Total Used Memory","GPU Frame Time","Canvas.BuildBatch","Render Thread"}){var h=handles.FirstOrDefault(hh=>ProfilerRecorderHandle.GetDescription(hh).Name==n);if(!h.Valid)continue;var desc=ProfilerRecorderHandle.GetDescription(h);var r=ProfilerRecorder.StartNew(desc.Category,n,1);names.Add(n);rec.Add(r);}before=Snapshot();start=EditorApplication.timeSinceStartup;last=start;phase="capturing";lastFrame=Time.frameCount;}
+ void Tick(){try{if(!running)return;if(phase=="warming"){if(EditorApplication.timeSinceStartup-start>=warm)Begin();return;}if(Time.frameCount==lastFrame)return;lastFrame=Time.frameCount;var now=EditorApplication.timeSinceStartup;if(rows<30000){values[rows,0]=now-start;values[rows,1]=(now-last)*1000;for(int i=0;i<rec.Count;i++)values[rows,i+2]=rec[i].Valid?rec[i].LastValue:-1;int k=rec.Count+2;values[rows,k]=UnityStats.dynamicBatches+UnityStats.staticBatches+UnityStats.instancedBatches;values[rows,k+1]=UnityStats.drawCalls;values[rows,k+2]=GC.CollectionCount(0);values[rows,k+3]=Time.timeScale;values[rows,k+4]=Time.unscaledDeltaTime*1000;rows++;}last=now;if(current.tick!=null&&now>=nextAction){current.tick();nextAction=now+0.1;}if(now-start>=duration){EndCapture();Next();}}catch(Exception e){File.WriteAllText(dir+"runner-error.txt",e.ToString());Finish();}}
+ void EndCapture(){var after=Snapshot();foreach(var r in rec)r.Dispose();rec.Clear();using(var w=new StreamWriter(dir+current.name+".csv")){w.WriteLine("elapsed_s,wall_ms,"+string.Join(",",names)+",legacyBatches,drawCalls,gc0,timeScale,unscaledDelta_ms");for(int r=0;r<rows;r++){for(int c=0;c<names.Count+7;c++){if(c>0)w.Write(',');w.Write(values[r,c].ToString("R",System.Globalization.CultureInfo.InvariantCulture));}w.WriteLine();}}File.WriteAllText(dir+current.name+"-meta.json",J(new{name=current.name,warmup_s=warm,capture_s=duration,frames=rows,before,after}));}
+ void Finish(){running=false;EditorApplication.update-=Tick;foreach(var r in rec)r.Dispose();rec.Clear();phase="finished";EditorApplication.isPaused=true;File.WriteAllText(dir+"runner-status.txt",Status);}
+ public void Stop(){Finish();}
+ public void Restore(){if(running)Finish();TownWindowManager.Instance.CloseAllWindows();cauldron.StopTasting();BuffManager.Instance.ClearActiveBuffs();Set(cauldron,"config",originalConfig);oracle.saveData=original;EH.LoadData();BuffManager.Instance.SetBaseTimeScale(scale);Time.timeScale=scale;Time.fixedDeltaTime=fixedDelta;Application.targetFrameRate=fps;QualitySettings.vSyncCount=vsync;UnityEngine.Random.state=random;foreach(var kv in windows)if(kv.Key!=null)kv.Key.SetActive(kv.Value);Set(oracle,"_recoveryRequired",recovery);typeof(SaveManager).GetField("rootPathOverride",F).SetValue(null,root);foreach(var kv in online)if(kv.Key!=null)kv.Key.enabled=kv.Value;Set(steam,"m_bInitialized",steamOn);Blindsided.UGS.UgsLeaderboardSettings.SetEditorSubmissionEnabled(ugs);UnityEngine.Object.DestroyImmediate(config);File.WriteAllText(dir+"restored.json",J(new{restored=true,saveReferenceRestored=object.ReferenceEquals(original,oracle.saveData),state=SnapshotSafe()}));}
+ object SnapshotSafe()=>new{fps=Application.targetFrameRate,vsync=QualitySettings.vSyncCount,Time.timeScale};
+}
+

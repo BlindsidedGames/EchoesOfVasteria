@@ -1,0 +1,36 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Blindsided.SaveData;
+using TimelessEchoes.Tasks;
+using TimelessEchoes.UI.Toolkit;
+public static class ValidateMeetingTaskIntegration {
+ public static string Main(){
+ if(!Application.dataPath.Contains("EOV-UITK-20260927")||SteamManager.Initialized||Unity.Services.Core.UnityServices.State!=Unity.Services.Core.ServicesInitializationState.Uninitialized)throw new Exception("Offline disposable profile required");
+ const BindingFlags F=BindingFlags.Instance|BindingFlags.NonPublic;
+ var results=new List<string>();void Check(bool b,string message){results.Add((b?"PASS ":"FAIL ")+message);}
+ var parent=TimelessEchoes.GameManager.Instance.MeetingParent;parent.gameObject.SetActive(true);parent.parent.gameObject.SetActive(true);
+ var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/CharacterMeeting.prefab");
+ foreach(var path in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/Prefabs/Tasks/NPC"}).Select(AssetDatabase.GUIDToAssetPath)){
+ var asset=AssetDatabase.LoadAssetAtPath<GameObject>(path);if(!asset.GetComponent<TalkToNpcTask>())continue;
+ var go=UnityEngine.Object.Instantiate(asset);var task=go.GetComponent<TalkToNpcTask>();var id=(string)typeof(TalkToNpcTask).GetField("npcId",F).GetValue(task);var lines=(List<string>)typeof(TalkToNpcTask).GetField("lines",F).GetValue(task);
+ var so=new SerializedObject(task);so.FindProperty("meetingPrefab").objectReferenceValue=prefab;so.ApplyModifiedPropertiesWithoutUndo();
+ StaticReferences.CompletedNpcTasks.Remove(id);task.StartTask();task.OnArrival(null);
+ var instance=(GameObject)typeof(TalkToNpcTask).GetField("meetingInstance",F).GetValue(task);var screen=instance.GetComponent<ToolkitMeetingScreen>();
+ Check(screen!=null&&instance.GetComponent<TimelessEchoes.UI.MeetingController>()==null,asset.name+": task spawns native presenter");
+ Check(StaticReferences.ActiveNpcMeetings.Contains(id)&&!StaticReferences.CompletedNpcTasks.Contains(id),asset.name+": arrival leaves conversation pending");
+ var view=(ToolkitMeetingView)typeof(ToolkitMeetingScreen).GetField("view",F).GetValue(screen);
+ for(int i=0;i<lines.Count;i++){view.Advance();Check(view.Root.Q<Label>("dialogue").text=="<b><smallcaps>"+lines[i]+"</smallcaps></b>",asset.name+": dialogue line "+i+" retained");}
+ if(lines.Count==0)view.Advance();
+ Check(!StaticReferences.CompletedNpcTasks.Contains(id),asset.name+": no completion before Close");view.Advance();view.Advance();
+ Check(StaticReferences.CompletedNpcTasks.Contains(id)&&!StaticReferences.ActiveNpcMeetings.Contains(id),asset.name+": Close runs existing task completion callback");
+ UnityEngine.Object.Destroy(go);
+ }
+ File.WriteAllLines("C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/docs/ui-migration/validation-2026-09-27/meeting-task-checks.txt",results);return string.Join("\n",results);
+ }
+}

@@ -56,6 +56,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (refreshButton != null) refreshButton.onClick.AddListener(RefreshNow);
             if (toggleButton != null) toggleButton.onClick.AddListener(OnToggleClicked);
             if (seasonalToggleButton != null) seasonalToggleButton.onClick.AddListener(OnSeasonalToggleClicked);

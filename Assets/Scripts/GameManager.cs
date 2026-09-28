@@ -82,6 +82,8 @@ namespace TimelessEchoes
 
         [TitleGroup("UI/General")] [SerializeField]
         private GameObject mapUI;
+        public bool IsInTown { get; private set; } = true;
+        public bool IsMapUIVisible => !IsInTown;
 
         [TitleGroup("UI/General")] public MapUI mapUIInstance;
 
@@ -262,6 +264,18 @@ namespace TimelessEchoes
         private Action<bool> runEndedAction;
         private bool returnOnDeathQueued;
 
+        // Presentation state is available independently of the legacy Canvas controls.
+        public bool RetreatQueued => retreatQueued;
+        public bool ReturnOnDeathQueued => returnOnDeathQueued;
+        public bool HeroIsDead => heroDead;
+        public bool RunEndedByReaper => runEndedByReaper;
+        public bool DeathPromptVisible { get; private set; }
+        public float DeathPromptProgress { get; private set; }
+        public void RequestRetreat() => OnReturnToTavernButton();
+        public void RequestReturnOnDeath() => QueueReturnOnDeath();
+        public void RequestRestartAfterDeath() => OnDeathRunButton();
+        public void RequestReturnAfterDeath() => OnDeathReturnButton();
+
         private bool retreatQueued;
 
         // Track whether the run resource tracker should reset on the next run
@@ -341,16 +355,7 @@ namespace TimelessEchoes
             {
                 if (entry?.Button == null) continue;
                 var cfg = entry.Config;
-                var track = entry.MusicTrack;
-                var scaling = entry.ScalingMode;
-                var killsPerLevel = Mathf.Max(1, entry.KillsPerLevel);
-                UnityAction action = () =>
-                {
-                    currentScalingMode = scaling;
-                    currentKillsPerLevel = killsPerLevel;
-                    AudioManager.Instance.PlayMusic(track, fadeDuration);
-                    StartRun(cfg);
-                };
+                UnityAction action = () => BeginAdventure(cfg);
                 entry.Button.onClick.AddListener(action);
                 _buttonActions.Add(entry.Button, action);
             }
@@ -405,6 +410,7 @@ namespace TimelessEchoes
 
         private void Start()
         {
+            IsInTown = true;
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             savesObject?.SetActive(true);
@@ -412,6 +418,7 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInTown();
 #endif
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
@@ -429,7 +436,7 @@ namespace TimelessEchoes
 
         private void OnEnable()
         {
-            runButtonsUICoroutine = StartCoroutine(RunButtonsUICoroutine());
+            // Run controls are refreshed by ToolkitRunScreen; no hidden uGUI polling.
         }
 
         private void OnDisable()
@@ -471,8 +478,8 @@ namespace TimelessEchoes
             // tavern UI is visible after a short delay, re-trigger the expected flow.
             if (heroDead && deathUiFailsafeCheckAt > 0f && Time.time >= deathUiFailsafeCheckAt)
             {
-                var deathWindowActive = deathWindow != null && deathWindow.activeInHierarchy;
-                var tavernActive = tavernUI != null && tavernUI.activeInHierarchy;
+                var deathWindowActive = DeathPromptVisible;
+                var tavernActive = IsInTown;
                 if (!deathWindowActive && !tavernActive)
                 {
                     if (returnOnDeathQueued || retreatQueued)
@@ -538,6 +545,22 @@ namespace TimelessEchoes
             StartCoroutine(ReturnToTavernRoutine(true));
         }
 
+        /// <summary>Starts an authored map with the same music and scaling used by its original button.</summary>
+        public bool BeginAdventure(MapGenerationConfig config)
+        {
+            if (config == null) return false;
+            foreach (var entry in generationButtons)
+            {
+                if (entry?.Config != config) continue;
+                currentScalingMode = entry.ScalingMode;
+                currentKillsPerLevel = Mathf.Max(1, entry.KillsPerLevel);
+                AudioManager.Instance.PlayMusic(entry.MusicTrack, fadeDuration);
+                StartRun(config);
+                return true;
+            }
+            return false;
+        }
+
         private void StartRun(MapGenerationConfig config)
         {
             CurrentGenerationConfig = config;
@@ -575,6 +598,7 @@ namespace TimelessEchoes
                 deathWindowCoroutine = null;
             }
 
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             // Starting a new run: no cooldowns from previous state
@@ -583,7 +607,7 @@ namespace TimelessEchoes
             // Delay buff ticking until the map fully initializes
             BuffManager.Instance?.Pause();
             // If this is the first run of a session (tavern was active), reset session aggregates
-            if (statTracker != null && tavernUI != null && tavernUI.activeSelf)
+            if (statTracker != null && IsInTown)
                 statTracker.BeginSession();
             StartCoroutine(StartRunRoutine());
         }
@@ -687,6 +711,7 @@ namespace TimelessEchoes
                 cloudSpawner?.ResetClouds(false);
             }
 
+            IsInTown = false;
             tavernUI?.SetActive(false);
             mapUI?.SetActive(true);
             if (runCalebUI == null)
@@ -804,8 +829,11 @@ namespace TimelessEchoes
                 runLoadingOverlay.SetActive(visible);
         }
 
+        public float RunLoadingFraction { get; private set; }
+
         private void UpdateRunLoadingProgress(float normalized)
         {
+            RunLoadingFraction = Mathf.Clamp01(normalized);
             if (runLoadingProgress != null)
                 runLoadingProgress.fillAmount = Mathf.Clamp01(normalized);
         }
@@ -890,6 +918,7 @@ namespace TimelessEchoes
         {
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (deathText != null)
@@ -902,6 +931,7 @@ namespace TimelessEchoes
         {
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (deathText != null)
@@ -933,6 +963,7 @@ namespace TimelessEchoes
                 deathWindowCoroutine = null;
             }
 
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
 
@@ -953,30 +984,28 @@ namespace TimelessEchoes
 
         private IEnumerator DeathWindowRoutine()
         {
-            if (deathWindow == null)
-            {
-                StartRun();
-                yield break;
-            }
-
-            deathWindow.SetActive(true);
+            if (deathWindow != null) deathWindow.SetActive(false);
+            DeathPromptVisible = true;
+            DeathPromptProgress = 0;
             var t = 0f;
             if (deathTimerImage != null)
                 deathTimerImage.fillAmount = 0f;
 
             while (t < deathWindowDuration)
             {
+                DeathPromptProgress = Mathf.Clamp01(t / deathWindowDuration);
                 if (deathTimerImage != null)
                     deathTimerImage.fillAmount = Mathf.Clamp01(t / deathWindowDuration);
                 t += Time.unscaledDeltaTime;
                 yield return null;
             }
 
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             // If we've already returned to the tavern or death state was cleared,
             // do not auto-start a new run from the death timer.
-            if (!heroDead || (tavernUI != null && tavernUI.activeInHierarchy))
+            if (!heroDead || IsInTown)
                 yield break;
             StartRun();
         }
@@ -996,6 +1025,7 @@ namespace TimelessEchoes
                 deathWindowCoroutine = null;
             }
 
+            DeathPromptVisible = false;
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             deathUiFailsafeCheckAt = -1f;
@@ -1086,6 +1116,7 @@ namespace TimelessEchoes
                 cloudSpawner?.ResetClouds(true);
             }
 
+            IsInTown = true;
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             savesObject?.SetActive(true);

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="dialog-frame" class="eov-dialog-frame">
+        <ui:Label name="dialog-title" class="eov-dialog-title" />
+        <ui:ScrollView name="dialog-scroll" mode="Vertical" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" class="eov-scroll eov-dialog-scroll">
+            <ui:Label name="dialog-body" class="eov-dialog-body" />
+        </ui:ScrollView>
+        <ui:VisualElement class="eov-dialog-actions">
+            <ui:Button name="dialog-primary" class="eov-dialog-button eov-dialog-primary" />
+            <ui:Button name="dialog-secondary" class="eov-dialog-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

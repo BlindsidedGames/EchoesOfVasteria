@@ -59,11 +59,6 @@ namespace Blindsided.Utilities
         // Whether this is being tracked for Atlas Binding
         private bool m_Tracked;
 
-        protected SlicedFilledImage()
-        {
-            useLegacyMeshGeneration = false;
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -171,6 +166,8 @@ namespace Blindsided.Utilities
         int ILayoutElement.layoutPriority => 0;
         float ILayoutElement.minWidth => 0;
         float ILayoutElement.minHeight => 0;
+        float ILayoutElement.maxWidth => LayoutUtility.DefaultMaxSize;
+        float ILayoutElement.maxHeight => LayoutUtility.DefaultMaxSize;
         float ILayoutElement.flexibleWidth => -1;
         float ILayoutElement.flexibleHeight => -1;
 

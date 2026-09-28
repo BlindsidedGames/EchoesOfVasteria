@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Button name="intro-close" class="eov-intro-close">
+        <ui:VisualElement name="intro-inset" class="eov-intro-inset">
+            <ui:Label name="intro-title" class="eov-intro-title" picking-mode="Ignore" />
+            <ui:Label name="intro-body" class="eov-intro-body" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="intro-progress" class="eov-intro-progress" picking-mode="Ignore">
+            <ui:VisualElement name="intro-fill" class="eov-intro-fill" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:Label name="intro-close-label" class="eov-intro-close-label" picking-mode="Ignore" />
+    </ui:Button>
+</ui:UXML>

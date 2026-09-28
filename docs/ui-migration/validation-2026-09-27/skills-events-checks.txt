@@ -1,0 +1,12 @@
+PASS Controlled XP gain uses existing skill service
+PASS Selected XP label refreshes on experience event
+PASS Controlled XP crosses a level boundary
+PASS Unselected skill level label refreshes on level-up
+PASS Unselected level-up exposes original highlight
+PASS Selecting skill clears its level-up highlight
+PASS Full active slots reject another native toggle through controller
+PASS Developed fixture has no authored active set to render
+PASS Exactly one native subscription after 25 cycles: OnExperienceGained
+PASS Exactly one native subscription after 25 cycles: OnLevelUp
+PASS Exactly one native subscription after 25 cycles: OnMilestoneDataChanged
+PASS Exactly one native subscription after 25 cycles: OnActiveSlotsChanged

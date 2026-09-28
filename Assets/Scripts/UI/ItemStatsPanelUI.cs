@@ -45,6 +45,7 @@ namespace TimelessEchoes.UI
 
         private void Awake()
         {
+            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (references == null)
                 references = GetComponent<StatPanelReferences>();
             resourceManager = ResourceManager.Instance;
@@ -132,7 +133,7 @@ namespace TimelessEchoes.UI
                 foreach (var drop in task.resourceDrops)
                 {
                     if (drop.resource == null) continue;
-                    var minDist = Mathf.Max(task.minX, drop.minX);
+                    var minDist = task.GetEffectiveMinX();
                     if (minDistanceLookup.TryGetValue(drop.resource, out var existing))
                         minDistanceLookup[drop.resource] = Mathf.Min(existing, minDist);
                     else
@@ -149,9 +150,7 @@ namespace TimelessEchoes.UI
                     if (drop.resource == null) continue;
 
                     // Enemy drops cannot occur before the enemy itself can spawn.
-                    var spawnMin = enemy.minX;
-                    var dropMin = drop.minX;
-                    var minDist = Mathf.Max(spawnMin, dropMin);
+                    var minDist = enemy.minX;
 
                     if (minDistanceLookup.TryGetValue(drop.resource, out var existing))
                         minDistanceLookup[drop.resource] = Mathf.Min(existing, minDist);

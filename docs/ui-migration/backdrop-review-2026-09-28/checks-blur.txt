@@ -1,0 +1,14 @@
+PASS blur-town-before aspect-preserving images 15; mismatches 0
+PASS blur-cauldron aspect-preserving images 128; mismatches 0
+PASS Full viewport backdrop blur enabled
+PASS Ordinary navigation blurred
+PASS Close button remains sharp
+PASS Blur covers viewport edges
+PASS blur-cauldron-check aspect-preserving images 128; mismatches 0
+PASS blur-skills aspect-preserving images 21; mismatches 0
+PASS blur-wide aspect-preserving images 21; mismatches 0
+PASS Close callback works over blur
+PASS blur-close aspect-preserving images 15; mismatches 0
+PASS Navigation returns to unblurred/full opacity
+PASS No backdrop when closed
+PASS blur-restored aspect-preserving images 15; mismatches 0

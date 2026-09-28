@@ -38,6 +38,8 @@ namespace TimelessEchoes.Hero
         ///     Desired lifetime in seconds for the echo. See <see cref="remaining" /> for the runtime countdown state.
         /// </summary>
         public float lifetime = 10f;
+        public float LifetimeRemainingFraction => expirationDeferred ? 0f : Mathf.Clamp01(remaining / lifetime);
+        public Sprite LifetimeSprite => LifetimeRemainingFraction <= .1f && durationRedSprite ? durationRedSprite : LifetimeRemainingFraction <= .5f && durationYellowSprite ? durationYellowSprite : durationBaseSprite;
 
         /// <summary>
         ///     When true the echo focuses exclusively on combat behaviour and will not request tasks from the
@@ -249,7 +251,7 @@ namespace TimelessEchoes.Hero
             }
 
             // Update duration UI
-            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null &&
+            if (durationBarParent != null && durationBarParent.activeSelf && durationFill != null && durationFill.enabled &&
                 !float.IsPositiveInfinity(lifetime))
             {
                 var pct = expirationDeferred ? 0f : Mathf.Clamp01(remaining / lifetime);

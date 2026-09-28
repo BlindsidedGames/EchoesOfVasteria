@@ -12,6 +12,7 @@ namespace TimelessEchoes.UI
 {
     public class ResourceTierUpPopupUI : MonoBehaviour
     {
+        [SerializeField] private Toolkit.ToolkitNotificationScreen nativeView;
         [Header("Popup Elements")]
         [SerializeField] private GameObject popupObject;
         [SerializeField] private Image resourceIconImage;
@@ -232,6 +233,11 @@ namespace TimelessEchoes.UI
 
         private void ShowNotification(NotificationData data)
         {
+            if (nativeView && nativeView.IsConfigured)
+            {
+                nativeView.Show(data.Icon, data.Text, data.Background, displaySeconds);
+                return;
+            }
             if (resourceIconImage != null)
             {
                 resourceIconImage.sprite = data.Icon;

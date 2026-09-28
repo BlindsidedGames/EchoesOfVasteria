@@ -1,0 +1,45 @@
+PASS Imports all five map routes from GameManager assets
+PASS Native navigation prefab contains no Canvas graphics
+PASS Fresh fixture hides quest-locked Townsfolk menu
+PASS Fresh Hub shows Skills and hides locked Alter Echoes and Buffs
+PASS Completing imported quest gates reveals affected menus and entries
+PASS Adventure replaces Hub dropdown
+PASS All five unlocked maps appear in Adventure
+PASS Townsfolk replaces Adventure dropdown
+PASS Selecting current menu toggles it closed
+PASS Native Library button routes to native Library screen
+PASS Opening a window closes dropdowns
+PASS Global close appears for an open native screen
+PASS Native close closes all windows
+PASS Native route opens Options
+PASS Native route opens Stats
+PASS Native route opens Quests
+PASS Native route opens Library
+PASS Native route opens AlterEchoes
+PASS Native route opens Skills
+PASS Native route opens Buffs
+PASS Native route opens Forge
+PASS Native route opens Cauldron
+PASS Quests exposes contextual Auto-Pin control
+PASS Native Auto-Pin changes existing preference
+PASS Options exposes Discord control without opening external URL
+PASS Automation attention state is available without legacy images
+PASS Opening Forge clears its attention state
+PASS Opening Cauldron clears its attention state
+PASS 25 disable/re-enable cycles retain exactly one native tree
+PASS Window manager close request closes native menus after repeated enable cycles
+PASS Native map route starts authored config Farmlands
+PASS Native progress visible in Farmlands
+PASS Returns to town from map 0
+PASS Native map route starts authored config Woods
+PASS Native progress visible in Woods
+PASS Returns to town from map 1
+PASS Native map route starts authored config Mines
+PASS Native progress visible in Mines
+PASS Returns to town from map 2
+PASS Native map route starts authored config River
+PASS Native progress visible in River
+PASS Returns to town from map 3
+PASS Native map route starts authored config Haloween
+PASS Native progress visible in Haloween
+PASS Returns to town from map 4

@@ -1,0 +1,13 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+public static class CompareOptionsGeometry {
+ public static string Main(){if(!Application.isPlaying||!Application.dataPath.Contains("EOV-UITK"))throw new Exception("Isolated Play required");var options=UnityEngine.Object.FindAnyObjectByType<ToolkitOptionsScreen>();var native=options.GetComponent<UIDocument>().rootVisualElement;var old=Resources.FindObjectsOfTypeAll<RectTransform>().Single(t=>t.gameObject.scene.IsValid()&&t.name=="Options_Window");var was=old.gameObject.activeSelf;old.gameObject.SetActive(true);Canvas.ForceUpdateCanvases();var settings=new SerializedObject(UnityEngine.Object.FindAnyObjectByType<SettingsPanelUI>(FindObjectsInactive.Include));var results=new List<string>();foreach(var pair in new[]{("fullscreenWindowButton","fullscreen"),("windowButton","windowed"),("fpsButton","fps"),("vSyncButton","vsync"),("muteWhenUnfocusedButton","mute"),("dropTextDurationSlider","drops"),("playerDamageDurationSlider","player-damage"),("enemyDamageDurationSlider","enemy-damage"),("openSaveFolderButton","folder"),("openImportWindowButton","import"),("openExportWindowButton","export")}){var t=(RectTransform)((Component)settings.FindProperty(pair.Item1).objectReferenceValue).transform;results.Add(pair.Item2+" original="+Bounds(t)+" native="+native.Q(pair.Item2).worldBound);}results.Add("source Options root="+Bounds(old));results.Add("native Options="+native.Q("options").worldBound);old.gameObject.SetActive(was);File.WriteAllLines("C:/Users/mattr/Documents/Repositories/EchoesOfVasteria/Library/Options-geometry.txt",results);return "Geometry comparison saved";}
+ static Rect Bounds(RectTransform t){var c=t.GetComponentInParent<Canvas>();var corners=new Vector3[4];t.GetWorldCorners(corners);var a=RectTransformUtility.WorldToScreenPoint(c.worldCamera,corners[0]);var b=RectTransformUtility.WorldToScreenPoint(c.worldCamera,corners[2]);var scale=432f/Screen.height;return new Rect(a.x*scale,(Screen.height-b.y)*scale,(b.x-a.x)*scale,(b.y-a.y)*scale);}
+}
