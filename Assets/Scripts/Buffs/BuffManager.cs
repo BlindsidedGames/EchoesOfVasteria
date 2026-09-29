@@ -125,7 +125,7 @@ namespace TimelessEchoes.Buffs
             get
             {
                 if (cachedRecipes == null || cachedRecipes.Length == 0)
-                    cachedRecipes = Blindsided.Utilities.AssetCache.GetAll<BuffRecipe>("Buffs");
+                    cachedRecipes = BuffRecipe.LoadAvailable("Buffs");
                 return cachedRecipes;
             }
         }
@@ -256,8 +256,7 @@ namespace TimelessEchoes.Buffs
 
         public bool CanActivate(BuffRecipe recipe)
         {
-            if (recipe == null) return false;
-            if (recipe.HasEffect(BuffEffectType.ProspectorWeightPercent) && !HasValidProspectorTarget) return false;
+            if (recipe == null || recipe.IsRetired) return false;
             if (GetRemaining(recipe) > 0f) return false;
             if (cooldowns.TryGetValue(recipe, out var cd) && cd > 0f) return false;
 
@@ -508,6 +507,13 @@ namespace TimelessEchoes.Buffs
             {
                 var name = oracle.saveData.BuffSlots[i];
                 slotAssignments[i] = null;
+                autoCastSlots[i] = false;
+                if (BuffRecipe.IsRetiredName(name))
+                {
+                    oracle.saveData.BuffSlots[i] = null;
+                    oracle.saveData.AutoBuffSlots[i] = false;
+                    continue;
+                }
                 if (string.IsNullOrEmpty(name)) continue;
                 foreach (var rec in Recipes)
                     if (rec != null && rec.name == name)
@@ -526,7 +532,7 @@ namespace TimelessEchoes.Buffs
 
         public void AssignBuff(int slot, BuffRecipe recipe)
         {
-            if (!IsSlotUnlocked(slot)) return;
+            if (!IsSlotUnlocked(slot) || (recipe && recipe.IsRetired)) return;
 
             if (recipe != null)
                 for (var i = 0; i < slotAssignments.Count; i++)

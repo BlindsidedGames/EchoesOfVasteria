@@ -148,7 +148,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void HandleBuffHotkeys()
         {
-            if (Application.isMobilePlatform || Keyboard.current == null || ToolkitProspectorPicker.IsOpen || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
+            if (Application.isMobilePlatform || Keyboard.current == null || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
             var manager = BuffManager.Instance;
             if (!manager) return;
             for (int i = 0; i < slots.Count; i++)

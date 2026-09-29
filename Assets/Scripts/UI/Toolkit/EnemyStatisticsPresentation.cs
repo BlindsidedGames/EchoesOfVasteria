@@ -25,7 +25,7 @@ namespace TimelessEchoes.UI.Toolkit
             EnemyStatsPanelUI.SortMode.Defense => e.defense, EnemyStatsPanelUI.SortMode.AttackRate => e.attackSpeed,
             EnemyStatsPanelUI.SortMode.MoveSpeed => e.moveSpeed, EnemyStatsPanelUI.SortMode.Vision => e.visionRange, _ => 0
         };
-        public (string title, string health, string defense, string movement, string kills, Sprite icon, bool showProgress, float progress) Describe(EnemyData enemy, EnemyKillTracker tracker, float distance)
+        public (string title, string health, string defense, string movement, string kills, Sprite icon, bool showProgress, float progress, string[] values) Describe(EnemyData enemy, EnemyKillTracker tracker, float distance)
         {
             var kills = tracker ? tracker.GetKills(enemy) : 0; var reveal = tracker ? tracker.GetRevealLevel(enemy) : 0;
             var bonus = (tracker ? tracker.GetDamageMultiplier(enemy) : 1) - 1;
@@ -40,7 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
             var showProgress = reveal < EnemyKillTracker.Thresholds.Length;
             var killsText = Number(kills); float progress = 0;
             if (showProgress) { var next = EnemyKillTracker.Thresholds[reveal]; killsText += " / " + Number(next); progress = Mathf.Clamp01((float)(kills / next)); }
-            return (kills > 0 ? enemy.enemyName + " | " + (spawnable ? level.ToString() : "-") : "???", health, defenseText, movement, $"Kills: {killsText}\nBonus Damage: {bonus * 100:0}%", kills > 0 ? enemy.icon : null, showProgress, progress);
+            return (kills > 0 ? enemy.enemyName + " | " + (spawnable ? "Lvl " + level : "Lvl -") : "???", health, defenseText, movement, $"Kills: {killsText}\nBonus Damage: {bonus * 100:0}%", kills > 0 ? enemy.icon : null, showProgress, progress, new[] { Stat(2, enemy.GetMaxHealthForLevel(level)), Stat(1, enemy.GetDamageForLevel(level)), defense, Stat(4, enemy.attackSpeed), Stat(5, enemy.moveSpeed), Stat(6, enemy.visionRange), killsText, $"{bonus * 100:0}%" });
         }
     }
 }

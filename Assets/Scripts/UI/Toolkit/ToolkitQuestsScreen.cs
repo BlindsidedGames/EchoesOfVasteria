@@ -24,6 +24,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<string, Action<float>> progress = new();
         private readonly HashSet<string> dirtyProgress = new();
         private bool dirty;
+        private readonly Dictionary<QuestNoticeboardCategory,bool> expandedCategories=new();
         public float CompanionWidth { get; set; } = 178;
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
@@ -36,7 +37,8 @@ namespace TimelessEchoes.UI.Toolkit
             var document = GetComponent<UIDocument>(); document.panelSettings = settings;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "quests" }; root.AddToClassList("eov-quests");
-            theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface");  document.rootVisualElement.Add(root);
+            theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface");root.AddToClassList("quests-reviewed");  document.rootVisualElement.Add(root);
+            Text(root,"Quests",12).AddToClassList("quests-heading");
             scroll = new ScrollView(ScrollViewMode.Vertical) { name = "quest-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, verticalScrollerVisibility = ScrollerVisibility.Auto };
             scroll.AddToClassList("eov-buffs-scroll"); theme.StyleScroll(scroll);ToolkitGameplay.StyleScroll(scroll); root.Add(scroll);
             manager.RefreshNoticeboard();
@@ -59,11 +61,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var group = new VisualElement(); group.AddToClassList("eov-quest-category"); scroll.Add(group);
                 var header = new Button { name = "quest-category-" + category }; header.AddToClassList("eov-chapter-header"); header.AddToClassList("button");
                 var title = new Label((category == QuestNoticeboardCategory.Ready ? "Complete" : category == QuestNoticeboardCategory.Completed ? "Quest History" : category.ToString()) + " | " + items.Length);
-                title.text = "<b><smallcaps>" + title.text + "</smallcaps></b>"; title.AddToClassList("eov-chapter-title"); title.pickingMode = PickingMode.Ignore; header.Add(title);
-                var icon = new Image { pickingMode = PickingMode.Ignore, scaleMode = ScaleMode.ScaleToFit }; icon.AddToClassList("eov-chapter-icon"); header.Add(icon);
+                title.text = "<b>" + title.text.Replace(" | "," · ") + "</b>"; title.AddToClassList("eov-chapter-title"); title.pickingMode = PickingMode.Ignore; header.Add(title);
+                var icon = new Label { pickingMode = PickingMode.Ignore }; icon.AddToClassList("book-disclosure"); header.Add(icon);
                 var content = new VisualElement(); content.AddToClassList("eov-quest-entries");
-                var expanded = category != QuestNoticeboardCategory.Completed;
-                void Expand(bool value) { expanded = value; content.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; icon.sprite = value ? theme.collapse : theme.expand; }
+                var expanded = expandedCategories.TryGetValue(category,out var saved)?saved:category != QuestNoticeboardCategory.Completed;
+                void Expand(bool value) { expanded = value; expandedCategories[category]=value; content.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; icon.text = value ? "−" : "+";header.EnableInClassList("expanded",value); }
                 header.clicked += () => { Expand(!expanded); Audio.AudioManager.Instance?.PlayUIButtonClick(); };
                 group.Add(header); group.Add(content); Expand(expanded);
                 foreach (var entry in items) AddQuest(content, entry);
@@ -75,12 +77,12 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var quest = entry.Quest;
             var row = new VisualElement { name = "quest-" + quest.questId }; row.AddToClassList("eov-quest-row"); 
-            row.style.unityBackgroundImageTintColor = new Color(1, 1, 1, entry.Completed ? .7f : 1); parent.Add(row);
+            row.EnableInClassList("quest-completed",entry.Completed); row.EnableInClassList("quest-ready",!entry.Completed&&entry.Progress>=1); parent.Add(row);
             var top = new VisualElement(); top.AddToClassList("eov-quest-top"); row.Add(top);
             var texts = new VisualElement(); texts.AddToClassList("eov-quest-texts"); top.Add(texts);
             var pinned = Blindsided.Oracle.oracle?.saveData?.PinnedQuests?.Contains(quest.questId) == true;
-            Text(texts, "<b>" + quest.questName.GetLocalizedString() + (entry.Completed ? " | Completed" : pinned ? " | Pinned" : "") + "</b>", 8);
-            var description = Text(texts, quest.description.GetLocalizedString(), 6); description.style.marginTop = 2;
+            Text(texts, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9).AddToClassList("quest-name");
+            var description = Text(texts, quest.description.GetLocalizedString(), 6); description.AddToClassList("quest-description");
             Button turnIn = null;
             if (!entry.Completed)
             {
@@ -96,30 +98,31 @@ namespace TimelessEchoes.UI.Toolkit
             if (!entry.Completed && quest.requirements != null)
                 foreach (var req in quest.requirements.Where(r => r != null && r.type != QuestData.RequirementType.Instant))
                 {
-                    var requirement = new VisualElement(); requirementGroup.Add(requirement);
+                    var requirement = new VisualElement();requirement.AddToClassList("quest-requirement"); requirementGroup.Add(requirement);
                     var label = Text(requirement, "", 8); label.userData = 6.4f;
-                    var track = new VisualElement(); track.style.height = 4; track.AddToClassList("track"); requirement.Add(track);
-                    var fill = new VisualElement(); fill.style.height = 4; fill.style.overflow = Overflow.Hidden; track.Add(fill);
-                    var sprite = new VisualElement { pickingMode = PickingMode.Ignore }; sprite.style.position = Position.Absolute; sprite.style.height = 4; sprite.AddToClassList("fill"); fill.Add(sprite);
+                    var track = new VisualElement(); track.style.height = 3; track.AddToClassList("track"); requirement.Add(track);
+                    var fill = new VisualElement(); fill.style.height = 3; fill.style.overflow = Overflow.Hidden; track.Add(fill);
+                    var sprite = new VisualElement { pickingMode = PickingMode.Ignore }; sprite.style.position = Position.Absolute; sprite.style.height = 3; sprite.AddToClassList("fill"); fill.Add(sprite);
                     track.RegisterCallback<GeometryChangedEvent>(_ => sprite.style.width = track.contentRect.width);
                     requirements.Add((req, label, fill));
                 }
-            var reward = Text(row, "<b>Reward: " + quest.rewardDescription.GetLocalizedString() + "</b>", 6); reward.style.marginTop = 2;
+            var reward = Text(row, "Reward: " + quest.rewardDescription.GetLocalizedString(), 7); reward.AddToClassList("quest-reward");
             var canPin = !entry.Completed && quest.requirements?.Any(r => r != null && r.type == QuestData.RequirementType.Instant) != true;
             if (canPin)
             {
                 void Pin() { manager.TogglePinned(quest.questId); Audio.AudioManager.Instance?.PlayUIButtonClick(); }
+                var pin=new Button(Pin){name="pin-"+quest.questId,text=pinned?"Pinned":"Pin"};pin.AddToClassList("button");pin.AddToClassList("quest-pin");pin.EnableInClassList("active",pinned);top.Q(className:"eov-quest-controls").Add(pin);
                 texts.pickingMode = PickingMode.Position; reward.pickingMode = PickingMode.Position;
                 texts.RegisterCallback<ClickEvent>(_ => Pin()); reward.RegisterCallback<ClickEvent>(_ => Pin());
                 texts.focusable = true; texts.tabIndex = 0; texts.RegisterCallback<NavigationSubmitEvent>(evt => { Pin(); evt.StopPropagation(); });
             }
             void UpdateProgress(float value)
             {
-                turnIn?.SetEnabled(value >= 1);
+                turnIn?.SetEnabled(value >= 1);row.EnableInClassList("quest-ready",!entry.Completed&&value>=1);
                 foreach (var item in requirements)
                 {
                     var presentation = QuestRequirementPresentation.Build(quest, item.req);
-                    item.text.text = "<b>" + presentation.text + "</b>"; item.fill.style.width = Length.Percent(presentation.progress * 100);
+                    item.text.text = presentation.text; item.fill.style.width = Length.Percent(presentation.progress * 100);
                 }
             }
             progress[quest.questId] = UpdateProgress; UpdateProgress(entry.Progress);

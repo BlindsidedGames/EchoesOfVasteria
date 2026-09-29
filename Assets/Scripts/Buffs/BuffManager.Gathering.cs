@@ -27,31 +27,6 @@ namespace TimelessEchoes.Buffs
 
     public partial class BuffManager
     {
-        private TaskData[] gatheringTasks;
-        public event System.Action ProspectorTargetChanged;
-        public int ProspectorTaskId => oracle?.saveData?.ProspectorTaskId ?? -1;
-        public TaskData ProspectorTarget
-        {
-            get
-            {
-                gatheringTasks ??= Resources.LoadAll<TaskData>("Tasks");
-                foreach (var task in gatheringTasks)
-                    if (task != null && task.taskID == ProspectorTaskId) return task;
-                return null;
-            }
-        }
-        public bool HasValidProspectorTarget => ProspectorTarget != null &&
-            TaskWeightService.IsTaskUnlocked(ProspectorTarget) && ProspectorTarget.weight > 0;
-
-        public bool SetProspectorTarget(TaskData task)
-        {
-            if (oracle?.saveData == null || task == null || task.weight <= 0 || !TaskWeightService.IsTaskUnlocked(task)) return false;
-            if (TimelessEchoes.Stats.GameplayStatTracker.Instance?.RunInProgress == true) return false;
-            oracle.saveData.ProspectorTaskId = task.taskID;
-            ProspectorTargetChanged?.Invoke();
-            return true;
-        }
-
         private void ResetGatheringForProfileLoad()
         {
             for (int i = activeBuffs.Count - 1; i >= 0; i--)
@@ -82,8 +57,6 @@ namespace TimelessEchoes.Buffs
             foreach (var buff in activeBuffs)
             {
                 if (buff.remaining <= 0) continue;
-                if (task.taskID == ProspectorTaskId)
-                    bonus += Mathf.Clamp(Effect(buff, BuffEffectType.ProspectorWeightPercent), 0f, 200f) / 100f;
                 float collector = Effect(buff, BuffEffectType.CollectorWeightPercent);
                 if (collector > 0) bonus += CollectorBonus(collector, TaskWeightService.GetTotalCompletions(task));
             }

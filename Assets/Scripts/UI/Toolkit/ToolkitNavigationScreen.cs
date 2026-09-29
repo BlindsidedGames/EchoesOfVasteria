@@ -36,7 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Group openGroup;
         private Button menuAnchor;
         private float nextRefresh;
-        private bool hooked;private Sprite statsGlyph;
+        private bool hooked;
         public Group OpenGroup => openGroup;
 
         private void OnEnable()
@@ -71,7 +71,7 @@ namespace TimelessEchoes.UI.Toolkit
                 button.AddToClassList("button");
                 button.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) Audio.AudioManager.Instance?.PlayUIButtonClick(); });
                 button.RegisterCallback<NavigationSubmitEvent>(_ => Audio.AudioManager.Instance?.PlayUIButtonClick());
-                if(entry.id=="stats"&&entry.background){var r=entry.background.rect;float inset=Mathf.Min(r.width,r.height)*.2f;statsGlyph=Sprite.Create(entry.background.texture,new Rect(r.x+inset,r.y+inset,r.width-2*inset,r.height-2*inset),new Vector2(.5f,.5f),entry.background.pixelsPerUnit);var glyph=ToolkitGameplay.Icon(button,statsGlyph,13);glyph.style.marginRight=0;}
+                if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); button.tooltip="Statistics"; }
                 else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");button.tooltip="Close window"; }
                 else if (entry.icon)
                 {
@@ -266,7 +266,6 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void OnDisable()
         {
-            if(statsGlyph)Destroy(statsGlyph);statsGlyph=null;
             if (hooked && windows) { windows.CloseRequested -= CloseMenu; windows.WindowsChanged -= Refresh; }
             hooked = false;
             foreach (var binding in bindings) binding.Dispose();
@@ -274,7 +273,7 @@ namespace TimelessEchoes.UI.Toolkit
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null;
             openGroup = Group.Toolbar;
         }
-        private void OnDestroy() { if(statsGlyph)Destroy(statsGlyph);if (panel) Destroy(panel); }
+        private void OnDestroy() { if (panel) Destroy(panel); }
     }
 }
 

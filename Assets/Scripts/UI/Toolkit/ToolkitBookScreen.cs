@@ -98,9 +98,10 @@ namespace TimelessEchoes.UI.Toolkit
             lastSafeArea = Screen.safeArea;
             lastRatio = Application.isMobilePlatform ? 1f : SafeAreaRatio;
             var area = CalculateSafeArea(lastSize, lastSafeArea, lastRatio);
-            view.Root.style.left = area.x+12;
+            var width=Mathf.Min(640,area.width-24);
+            view.Root.style.left = area.center.x-width/2;
             view.Root.style.top = area.y + 44;
-            view.Root.style.width = area.width-24;
+            view.Root.style.width = width;
             view.Root.style.height = Mathf.Max(0, area.height - 56);
         }
 

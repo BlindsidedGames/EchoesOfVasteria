@@ -18,6 +18,7 @@ namespace TimelessEchoes.UI.Toolkit
         [Serializable] public struct MapEntry
         {
             public MapGenerationConfig config;
+            public Sprite icon;
             public string label;
             public float labelSize;
             public bool killScaling;

@@ -44,6 +44,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   - id: credit-1
     title:
       key: credits.1.title
@@ -74,6 +75,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   - id: credit-2
     title:
       key: credits.2.title
@@ -104,6 +106,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   - id: credit-3
     title:
       key: credits.3.title
@@ -134,68 +137,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
-  - id: credit-4
-    title:
-      key: credits.4.title
-      bold: 1
-      smallCaps: 1
-      fallback: Invariel
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    body:
-      key: credits.4.body
-      bold: 0
-      smallCaps: 0
-      fallback: 'An Ultimate Patreon, A long time friend and supporter of my work.
-
-        Without whom this project would never have happened.'
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-  - id: credit-5
-    title:
-      key: credits.5.title
-      bold: 1
-      smallCaps: 1
-      fallback: 'BorgGrown '
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    body:
-      key: credits.5.body
-      bold: 0
-      smallCaps: 0
-      fallback: Without whom we would almost certainly still be losing save files.
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
+    visibility: []
   - id: credit-6
     title:
       key: credits.6.title
@@ -230,6 +172,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   - id: credit-7
     title:
       key: credits.7.title
@@ -262,6 +205,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   - id: credit-8
     title:
       key: credits.8.title
@@ -281,9 +225,7 @@ MonoBehaviour:
       key: credits.8.body
       bold: 0
       smallCaps: 0
-      fallback: 'Spaniel Family | For their Blacksmith Recolour.
-
-        MatHeadGetz | Enthusiastically cheering from the sidelines!
+      fallback: 'MatHeadGetz | Enthusiastically cheering from the sidelines!
 
         Dragonmaster100 | Hours upon hours of testing.
 
@@ -300,6 +242,7 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     expanded: 0
+    visibility: []
   references:
     version: 2
     RefIds: []

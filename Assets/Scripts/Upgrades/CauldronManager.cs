@@ -1183,7 +1183,7 @@ namespace TimelessEchoes.Upgrades
             }
             if (!onlyAlterEcho)
             {
-                foreach (var buff in AssetCache.GetAll<BuffRecipe>())
+                foreach (var buff in BuffRecipe.LoadAvailable())
                 {
                     if (buff == null) continue;
                     var required = buff.requiredQuest;
@@ -1225,7 +1225,7 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            foreach (var buff in AssetCache.GetAll<BuffRecipe>())
+            foreach (var buff in BuffRecipe.LoadAvailable())
             {
                 if (buff == null) continue;
                 var required = buff.requiredQuest;

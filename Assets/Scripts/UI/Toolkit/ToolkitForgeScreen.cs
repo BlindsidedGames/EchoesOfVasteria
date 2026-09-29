@@ -22,12 +22,11 @@ namespace TimelessEchoes.UI.Toolkit
         private ForgeSession session;
         private PanelSettings settings;
         private VisualElement root, main, sidebar, xpFill;
-        private Label ivan, xp, pendingStats, equippedStats, maxCrafts, resultTier, totals, weaponChest, helmetBoots, forgeStats, oddsText;
-        private Button craft, replace, autoCraft, infoButton;
+        private Label ivan, xp, maxCrafts, resultTier;
+        private Button craft, replace, autoCraft;
         private Image resultIcon, costCore, costIngot, craftArrow, stopIcon, lockIcon;
         private Label coreCost, ingotCost;
         private ToolkitForgeOdds odds;
-        private ToolkitDisclosure totalsFoldout, statsFoldout;
         private readonly Dictionary<string, (Image icon, VisualElement selected, Label tier)> gearSlots = new();
         private readonly List<(Image icon, VisualElement selected, Label cores, Label crafts)> coreSlots = new();
         private readonly Dictionary<ConversionType, ConversionRow> conversions = new();
@@ -39,6 +38,11 @@ namespace TimelessEchoes.UI.Toolkit
         private EquipmentController equipment;
         private readonly ToolkitWindowLayout layout = new();
         private Image ivanPortrait;
+        private VisualElement infoHost, inventoryHost, comparisonRows, equipmentRows, historyHost;
+        private Button inventoryTab, infoTab;
+        private readonly Dictionary<string, ToolkitDisclosure> historySections = new();
+        private string lastHistory;
+
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && definition.catalog && theme && runtimeTheme && textSettings;
         public bool Show()
@@ -58,7 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement { name = "forge" }; root.AddToClassList("eov-forge"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
             var mainScroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility=ScrollerVisibility.Hidden, verticalScrollerVisibility=ScrollerVisibility.Auto }; ToolkitGameplay.StyleScroll(mainScroll); main = mainScroll; main.AddToClassList("eov-forge-main"); root.Add(main);
             sidebar = new VisualElement(); sidebar.AddToClassList("eov-forge-sidebar"); root.Add(sidebar);
-            BuildHeader(); BuildWork(); BuildConversions(); BuildInfo();
+            BuildHeader(); BuildWork(); BuildConversions(); BuildInfo(); BuildOddsPopup();
             resources.OnInventoryChanged += MarkDirty; equipment.OnEquipmentChanged += MarkDirty; crafting.OnIvanXpChanged += XpChanged; session.Changed += MarkDirty;
             showInventory = false; statisticsDirty = true; nextRefresh = nextStatsRefresh = 0; Refresh(); Layout();
             return true;
@@ -78,24 +82,25 @@ namespace TimelessEchoes.UI.Toolkit
             var work = Panel(main, "eov-forge-work");
             var columns = Row(work); columns.AddToClassList("eov-forge-columns");
             var selections = new VisualElement(); selections.AddToClassList("eov-forge-selections"); columns.Add(selections);
-            infoButton = Button(selections, "forge-inventory", "Inventory", ToggleInventory);
+            Label(selections, "Equipment", ToolkitControls.TextRole.Heading);
             var gear = Row(selections);
             foreach (var entry in definition.gear)
             {
                 var column = new VisualElement(); column.AddToClassList("eov-forge-slot-column"); gear.Add(column);
                 var button = ToolkitControls.Button("gear-" + entry.slot, () => session.SelectSlot(entry.slot), entry.frame); button.AddToClassList("eov-forge-slot"); column.Add(button);
-                var icon = ToolkitControls.Icon(entry.unknown); button.Add(icon);
+                var icon = FramedIcon(button, entry.unknown);
                 var selected = Selection(button); var tier = Label(column, "", ToolkitControls.TextRole.Caption); gearSlots.Add(entry.slot, (icon, selected, tier));
             }
+            Label(selections, "Cores", ToolkitControls.TextRole.Heading);
             var coreGrid = new VisualElement(); coreGrid.AddToClassList("eov-forge-core-grid"); selections.Add(coreGrid);
             for (var i = 0; i < definition.catalog.cores.Length; i++)
             {
                 var binding = definition.catalog.cores[i];
                 var button = ToolkitControls.Button("core-" + binding.core.name, () => session.SelectCore(binding.core), null); button.AddToClassList("eov-forge-core"); coreGrid.Add(button);
-                var count = Label(button, "", ToolkitControls.TextRole.Caption);
+                var count = Label(button, "", ToolkitControls.TextRole.Caption); count.tooltip = "Available crafts"; count.style.display = DisplayStyle.None;
                 var frame = new VisualElement(); frame.AddToClassList("eov-forge-core-frame");  button.Add(frame);
-                var icon = ToolkitControls.Icon(definition.coreIcons[i]); frame.Add(icon); var selected = Selection(frame);
-                var crafts = Label(button, "", ToolkitControls.TextRole.Caption); coreSlots.Add((icon, selected, crafts, count));
+                var icon = FramedIcon(frame, definition.coreIcons[i]); var selected = Selection(frame);
+                var crafts = Label(button, "", ToolkitControls.TextRole.Caption); crafts.tooltip = "Owned cores"; coreSlots.Add((icon, selected, crafts, count));
             }
             var actions = new VisualElement(); actions.AddToClassList("eov-forge-actions"); columns.Add(actions);
             craft = Button(actions, "forge-craft", "Craft", session.Craft);
@@ -103,33 +108,30 @@ namespace TimelessEchoes.UI.Toolkit
             var toggles = Row(actions); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "Stop for Vastium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
             var recipe = Row(actions); recipe.style.alignItems = Align.Center;
             odds = new ToolkitForgeOdds { name = "forge-odds" }; recipe.Add(odds);
-            oddsText = Label(actions, "", ToolkitControls.TextRole.Caption); oddsText.style.display = DisplayStyle.None;
-            odds.RegisterCallback<PointerEnterEvent>(_ => oddsText.style.display = DisplayStyle.Flex); odds.RegisterCallback<PointerLeaveEvent>(_ => oddsText.style.display = DisplayStyle.None);
-            odds.RegisterCallback<ClickEvent>(_ => oddsText.style.display = oddsText.resolvedStyle.display == DisplayStyle.None ? DisplayStyle.Flex : DisplayStyle.None);
-            var costs = new VisualElement(); recipe.Add(costs); var first = Row(costs); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
+            var costs = new VisualElement(); recipe.Add(costs); var first = Row(costs); first.AddToClassList("forge-ingredient"); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); second.AddToClassList("forge-ingredient"); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
             craftArrow = ToolkitControls.Icon(null); recipe.Add(craftArrow);
             var result = new VisualElement(); recipe.Add(result); resultIcon = ToolkitControls.Icon(null); resultIcon.style.width = resultIcon.style.height = 24; result.Add(resultIcon); resultTier = Label(result, "", ToolkitControls.TextRole.Caption);
             maxCrafts = Label(actions, "", ToolkitControls.TextRole.Caption);
-            var results = new VisualElement(); results.AddToClassList("eov-forge-results"); columns.Add(results);
-            replace = Button(results, "forge-replace", "Replace", session.Replace);
-            var comparison = Row(results); comparison.AddToClassList("eov-forge-comparison");
-            pendingStats = StatColumn(comparison, "Pending");
-            var comparisonArrow = ToolkitControls.Icon(definition.arrowValid); comparisonArrow.AddToClassList("eov-forge-comparison-arrow"); comparison.Add(comparisonArrow);
-            equippedStats = StatColumn(comparison, "Equipped");
+            var results = new VisualElement(); results.AddToClassList("forge-comparison-section"); columns.Add(results);
+            var heading = Row(results); heading.AddToClassList("forge-comparison-heading");
+            var title = Label(heading, "Comparison", ToolkitControls.TextRole.Heading); title.style.flexGrow = 1;
+            replace = Button(heading, "forge-replace", "Replace", session.Replace);
+            comparisonRows = new VisualElement(); results.Add(comparisonRows);
         }
         private void BuildInfo()
         {
-            var heading = new VisualElement(); heading.AddToClassList("eov-forge-information-title");  Label(heading, "<b><smallcaps>Forge Information</smallcaps></b>", ToolkitControls.TextRole.Heading); sidebar.Add(heading);
-            var scroll = ToolkitControls.RecessedScroll(sidebar, "forge-info", theme, definition.inset);
-            totalsFoldout = new ToolkitDisclosure("Equipment Totals", theme); scroll.Add(totalsFoldout);
-            var line = Row(totalsFoldout.Content); totals = Label(line, ""); weaponChest = Label(line, ""); helmetBoots = Label(line, ""); foreach (var label in new[] { totals, weaponChest, helmetBoots }) { label.style.flexGrow = 1; label.style.flexBasis = 0; label.style.fontSize = 6; }
-            statsFoldout = new ToolkitDisclosure("Stats", theme); scroll.Add(statsFoldout); forgeStats = Label(statsFoldout.Content, "");
-            statsFoldout.Changed += _ => { nextStatsRefresh = 0; MarkDirty(); }; totalsFoldout.Changed += _ => MarkDirty();
-        }
-        private Label StatColumn(VisualElement parent, string title)
-        {
-            var column = new VisualElement(); column.AddToClassList("eov-forge-stat-column"); column.style.flexGrow = 1; column.style.flexBasis = 0; column.style.minWidth = 0; parent.Add(column);
-            Label(column, title, ToolkitControls.TextRole.Body).AddToClassList("eov-forge-stat-title"); var text = Label(column, "");  text.style.paddingTop = text.style.paddingBottom = text.style.paddingLeft = text.style.paddingRight = 3; text.style.flexGrow = 1; text.style.minHeight = 80; return text;
+            var tabs = Row(sidebar); tabs.AddToClassList("forge-sidebar-tabs");
+            inventoryTab = Button(tabs, "forge-inventory", "Inventory", () => SetInventory(true));
+            infoTab = Button(tabs, "forge-info-tab", "Info", () => SetInventory(false));
+            inventoryHost = new VisualElement(); inventoryHost.AddToClassList("forge-sidebar-body"); sidebar.Add(inventoryHost);
+            infoHost = new VisualElement(); infoHost.AddToClassList("forge-sidebar-body"); sidebar.Add(infoHost);
+            var scroll = ToolkitControls.RecessedScroll(infoHost, "forge-info", theme, definition.inset);
+            Label(scroll, "Equipment totals", ToolkitControls.TextRole.Heading);
+            equipmentRows = new VisualElement(); scroll.Add(equipmentRows);
+            historyHost = new VisualElement(); scroll.Add(historyHost);
+            inventoryHost.style.display = DisplayStyle.None;
+            infoTab.AddToClassList("selected");
+            lastHistory = comparisonSignature = equipmentSignature = null; historySections.Clear();
         }
         private VisualElement Panel(VisualElement parent, string className) { var panel = new VisualElement(); panel.AddToClassList(className); panel.AddToClassList("eov-forge-panel");  parent.Add(panel); return panel; }
         private static VisualElement Row(VisualElement parent) { var row = new VisualElement(); row.AddToClassList("eov-forge-row"); parent.Add(row); return row; }
@@ -143,16 +145,22 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update() { if (!IsOpen) return; var frame = definition.portraitAnimation?.At(Time.time); if (frame && ivanPortrait != null) ivanPortrait.sprite = frame; Layout(); if (dirty && Time.unscaledTime >= nextRefresh) Refresh(); RefreshStatistics(); }
         private void Layout()
         {
-            layout.Centered(root, theme);root.EnableInClassList("compact-width",ToolkitWindowLayout.SafeArea.width<650);
-            if (showInventory && inventory && sidebar != null) inventory.Bounds = sidebar.worldBound;
+            var area = ToolkitWindowLayout.SafeArea;
+            var width = Mathf.Min(744, area.width - 24);
+            layout.Apply(root, new Rect(area.center.x-width/2, area.y+44, width, Mathf.Max(0, area.height-56)));
+            root.EnableInClassList("forge-narrow", width < 620);
+            PositionOddsPopup();
         }
-        private void ToggleInventory()
+        private void SetInventory(bool value)
         {
-            if (!inventory) return;
-            showInventory = !showInventory; infoButton.text = showInventory ? "Info" : "Inventory";
-            sidebar.style.visibility = showInventory ? Visibility.Hidden : Visibility.Visible;
-            inventory.ManualLayout = showInventory;
-            if (showInventory) { inventory.Show(); inventory.Bounds = sidebar.worldBound; } else { inventory.Hide(); nextStatsRefresh = 0; MarkDirty(); }
+            if (value == showInventory) return;
+            if (value && (!inventory || !inventory.ShowIn(inventoryHost))) return;
+            showInventory = value;
+            inventoryHost.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
+            infoHost.style.display = value ? DisplayStyle.None : DisplayStyle.Flex;
+            inventoryTab.EnableInClassList("selected", value); infoTab.EnableInClassList("selected", !value);
+            if (value) inventory.ManualLayout = true;
+            else { inventory.Hide(); inventory.ManualLayout = false; nextStatsRefresh = 0; MarkDirty(); }
         }
         public void Hide()
         {
@@ -161,7 +169,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (crafting) crafting.OnIvanXpChanged -= XpChanged;
             if (session) session.Changed -= MarkDirty;
             if (showInventory && inventory) { inventory.Hide(); inventory.ManualLayout = false; }
-            showInventory = false; root?.RemoveFromHierarchy(); root = null; gearSlots.Clear(); coreSlots.Clear(); conversions.Clear();
+            showInventory = false; oddsPopup = null; oddsPinned = oddsHovered = popupHovered = false; root?.RemoveFromHierarchy(); root = null; gearSlots.Clear(); coreSlots.Clear(); conversions.Clear();
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (session) session.AutomationStopped -= AutomationStopped; if (settings) Destroy(settings); }

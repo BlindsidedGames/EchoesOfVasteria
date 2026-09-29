@@ -19,10 +19,11 @@ namespace TimelessEchoes.UI.Toolkit
         {
             Root = template.CloneTree();
             Root.AddToClassList("eov-book");
-            theme.Apply(Root);ToolkitGameplay.Apply(Root,theme);Root.AddToClassList("menu-surface");
+            theme.Apply(Root);ToolkitGameplay.Apply(Root,theme);Root.AddToClassList("menu-surface");Root.AddToClassList("book-reviewed");
             
             Scroll = Root.Q<ScrollView>("book-scroll");
             theme.StyleScroll(Scroll);ToolkitGameplay.StyleScroll(Scroll);
+            var heading=new Label(definition.presentation==ToolkitBookDefinition.Presentation.Credits?"Credits":"Library");heading.AddToClassList("book-heading");Root.Q("book-frame").Insert(0,heading);
             if (definition.presentation == ToolkitBookDefinition.Presentation.Credits)
             {
                 Root.AddToClassList("eov-credits");
@@ -39,8 +40,8 @@ namespace TimelessEchoes.UI.Toolkit
                 var title = new Label();
                 title.AddToClassList("eov-chapter-title");
                 header.Add(title);
-                var icon = new Image { scaleMode = UnityEngine.ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                icon.AddToClassList("eov-chapter-icon");
+                var icon = new Label { pickingMode = PickingMode.Ignore };
+                icon.AddToClassList("book-disclosure");
                 header.Add(icon);
                 var content = new VisualElement();
                 content.AddToClassList("eov-chapter-content");
@@ -48,7 +49,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var body = new Label { enableRichText = true };
                 body.AddToClassList("eov-chapter-body");
                 content.Add(body);
-                bindings.Add(new ToolkitTextBinding(title, section.title));
+                bindings.Add(new ToolkitTextBinding(title, Heading(section.title)));
                 bindings.Add(new ToolkitTextBinding(body, section.body));
                 bool expanded = section.expanded;
                 void SetExpanded(bool value)
@@ -56,7 +57,7 @@ namespace TimelessEchoes.UI.Toolkit
                     expanded = value;
                     expandedState[section.id] = value;
                     content.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
-                    icon.sprite = value ? theme.collapse : theme.expand;
+                    icon.text = value ? "−" : "+";
                     header.EnableInClassList("expanded", value);
                 }
                 header.clicked += () => SetExpanded(!expanded);
@@ -83,19 +84,22 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void AddCredit(ToolkitBookDefinition.Section credit, ToolkitTheme theme)
         {
-            var row = new VisualElement();
+            var row = new VisualElement { name=credit.id };
             row.AddToClassList("eov-credit");
             
             var title = new Label { enableRichText = true };
             title.AddToClassList("eov-chapter-title");
             var body = new Label { enableRichText = true };
             body.AddToClassList("eov-chapter-body");
-            bindings.Add(new ToolkitTextBinding(title, credit.title));
+            bindings.Add(new ToolkitTextBinding(title, Heading(credit.title)));
             bindings.Add(new ToolkitTextBinding(body, credit.body));
             row.Add(title);
             row.Add(body);
             Scroll.Add(row);
         }
+
+        private static ToolkitBookDefinition.Text Heading(ToolkitBookDefinition.Text source) => new()
+        { key=source.key, fallback=source.fallback, localized=source.localized, bold=true, smallCaps=false };
 
         public void SetExpanded(string id, bool expanded) => expanders[id](expanded);
 

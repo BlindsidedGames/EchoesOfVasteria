@@ -31,13 +31,12 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement { name = "options-dialog-root", pickingMode = PickingMode.Ignore };
             root.style.position = Position.Absolute; root.style.left = root.style.right = root.style.top = root.style.bottom = 0;
             theme.Apply(root);ToolkitGameplay.Apply(root,theme);
-            if (requested == "language")
             {
-                var outside = new Button(Hide) { name = "language-dismiss" }; outside.AddToClassList("eov-options-modal-dismiss"); root.Add(outside);
+                var outside = new Button(Hide) { name = "dialog-dismiss" }; outside.AddToClassList("eov-options-modal-dismiss"); root.Add(outside);
             }
             frame = new VisualElement { name = requested + "-dialog" }; frame.AddToClassList("eov-options-dialog"); frame.AddToClassList("surface"); root.Add(frame);
             if (requested == "language") BuildLanguages(); else BuildTransfer(requested == "import");
-            document.rootVisualElement.Add(root); Layout();
+            document.rootVisualElement.Add(root); root.focusable=true; root.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){Hide();e.StopPropagation();}});root.Focus(); Layout();
             if (requested == "export") Export();
         }
         private Label Text(VisualElement parent, string id, float size)
@@ -57,21 +56,21 @@ namespace TimelessEchoes.UI.Toolkit
         private void BuildTransfer(bool importing)
         {
             frame.AddToClassList("eov-options-transfer-dialog");
-            var header = new VisualElement(); header.AddToClassList("eov-options-row"); header.style.height = 16; frame.Add(header);
-            var title = Text(header, importing ? "import-title" : "export-title", 11.7f); title.style.flexGrow = 1; title.style.unityTextAlign = TextAnchor.MiddleCenter;
-            var close = Button(header, "transfer-close", Hide, 16, false); close.style.width = 16; close.text="×";
+            var header = new VisualElement(); header.AddToClassList("eov-options-row"); header.style.height = 26; frame.Add(header);
+            var title = Text(header, importing ? "import-title" : "export-title", 11.7f); title.style.flexGrow = 1; title.style.unityTextAlign = TextAnchor.MiddleLeft;
+            var close = Button(header, "transfer-close", Hide, 22, false); close.style.width = 22; close.text="×";
             var inset = new VisualElement(); inset.AddToClassList("eov-options-input-frame");  frame.Add(inset);
-            input = new TextField { name = "transfer-input", multiline = true, value = importing ? importText : exportText };
+            input = new TextField { name = "transfer-input", multiline = true, isReadOnly = !importing, value = importing ? importText : exportText };
             input.AddToClassList("eov-options-input"); input.textEdition.placeholder = definition.Text("input-placeholder").fallback;
             input.RegisterValueChangedCallback(e => { if (importing) importText = e.newValue; else exportText = e.newValue; }); inset.Add(input);
             status = new Label { name = "transfer-status", enableRichText = false }; status.AddToClassList("eov-options-transfer-status"); frame.Add(status);
             var actions = new VisualElement(); actions.AddToClassList("eov-options-row"); frame.Add(actions);
             if (importing)
             {
-                var paste = Button(actions, "paste", Paste, 18); paste.style.flexGrow = 1; paste.style.flexBasis = 0; paste.style.marginRight = 2;
-                var import = Button(actions, "import-confirm", Import, 18); import.style.flexGrow = 1; import.style.flexBasis = 0;
+                var paste = Button(actions, "paste", Paste, 22); paste.style.flexGrow = 1; paste.style.flexBasis = 0; paste.style.marginRight = 4;
+                var import = Button(actions, "import-confirm", Import, 22); import.style.flexGrow = 1; import.style.flexBasis = 0;
             }
-            else Button(actions, "copy", Copy, 18).style.flexGrow = 1;
+            else Button(actions, "copy", Copy, 22).style.flexGrow = 1;
         }
         private void Export()
         {
@@ -100,7 +99,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Paste() { try { input.value = GUIUtility.systemCopyBuffer ?? string.Empty; } catch (Exception ex) { status.text = $"Paste failed: {ex.Message}"; } }
         private void BuildLanguages()
         {
-            frame.style.width = 140.14f; frame.style.paddingLeft = frame.style.paddingRight = frame.style.paddingTop = frame.style.paddingBottom = 3;
+            frame.style.width = 160; frame.style.paddingLeft = frame.style.paddingRight = frame.style.paddingTop = frame.style.paddingBottom = 8;
             var inset = new VisualElement(); inset.style.paddingLeft = inset.style.paddingRight = inset.style.paddingTop = inset.style.paddingBottom = 2;
              frame.Add(inset);
             foreach (var code in new[] { "en", "ru" })
@@ -109,8 +108,8 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     Hide(); FindAnyObjectByType<LocalizationManager>()?.SelectLocale(code);
                     if (code == "ru") ShowTranslationWarning();
-                }, 16.54f);
-                button.Q<Label>().style.fontSize = 7; if (code == "en") button.style.marginBottom = 2;
+                }, 24);
+                button.Q<Label>().style.fontSize = 7; if (code == "en") button.style.marginBottom = 4;
             }
         }
         private void ShowTranslationWarning()

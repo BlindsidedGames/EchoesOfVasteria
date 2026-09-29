@@ -36,7 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
                     enemyRows.Add(data, row); statContent.Add(row.Root);
                 }
                 distanceControls = new VisualElement { name = "enemy-distance-controls" }; distanceControls.AddToClassList("eov-stat-distance");  root.Insert(root.IndexOf(footer), distanceControls);
-                enemyDistanceLabel = ToolkitControls.Text("", ToolkitControls.TextRole.Subheading); enemyDistanceLabel.style.unityTextAlign = TextAnchor.MiddleCenter; distanceControls.Add(enemyDistanceLabel);
+                enemyDistanceLabel = ToolkitControls.Text("", ToolkitControls.TextRole.Subheading); enemyDistanceLabel.style.unityTextAlign = TextAnchor.MiddleLeft; distanceControls.Add(enemyDistanceLabel);
                 enemyDistance = ToolkitControls.Slider("enemy-distance", 0, tracker.MaxRunDistance, _ => RefreshEnemies(), definition.sliderTrack, definition.sliderFill, definition.sliderHandle);
                 ToolkitGameplay.StyleSlider(enemyDistance);ToolkitControls.SetSliderValue(enemyDistance, tracker.MaxRunDistance); distanceControls.Add(enemyDistance);
                 foreach (EnemyStatsPanelUI.SortMode mode in Enum.GetValues(typeof(EnemyStatsPanelUI.SortMode)))
@@ -60,23 +60,32 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshTasks()
         {
             taskPresentation.Refresh(tracker);
-            foreach (var task in taskPresentation.Ordered(taskSort, tracker))
+            var ordered = taskPresentation.Ordered(taskSort, tracker);
+            for (var index = 0; index < ordered.Count; index++)
             {
-                var row = taskRows[task]; row.Root.BringToFront(); var data = taskPresentation.Describe(task, tracker);
-                row.Title.text = data.title; row.Fields[0].text = data.totals; row.Fields[1].text = data.detail; row.Icon.sprite = data.icon;
+                var task = ordered[index]; var row = taskRows[task];
+                if (statContent.IndexOf(row.Root) != index) statContent.Insert(index, row.Root);
+                var data = taskPresentation.Describe(task, tracker);
+                row.Title.text = data.title; row.Fields[0].text = data.totals; row.Fields[1].text = data.detail; row.SetEntryIcon(data.icon, data.toggleVisible, data.toggle);
                 row.Toggle.style.display = data.toggleVisible ? DisplayStyle.Flex : DisplayStyle.None;
                 ToolkitGameplay.SetToggle(row.ToggleIcon,data.toggle);
+                row.Toggle.tooltip = data.toggle ? "Spawn boost enabled. Click to remove the task weight bonus." : "Boost this task's spawn weight. Completion milestones increase the bonus.";
             }
             for (var i = 0; i < statSortButtons.Count; i++) StyleSelection(statSortButtons[i], i == (int)taskSort);
         }
         private void RefreshEnemies()
         {
             var distance = enemyDistance?.value ?? tracker.MaxRunDistance;
-            if (enemyDistanceLabel != null) enemyDistanceLabel.text = $"Distance | {distance:N0}";
-            foreach (var enemy in enemyPresentation.Ordered(enemySort, killTracker))
+            if (enemyDistanceLabel != null) enemyDistanceLabel.text = $"Preview distance: {distance:N0}";
+            var ordered = enemyPresentation.Ordered(enemySort, killTracker);
+            for (var index = 0; index < ordered.Count; index++)
             {
-                var row = enemyRows[enemy]; row.Root.BringToFront(); var data = enemyPresentation.Describe(enemy, killTracker, distance);
-                row.Title.text = data.title; row.Fields[0].text = data.health; row.Fields[1].text = data.defense; row.Fields[2].text = data.movement; row.Fields[3].text = data.kills; row.Icon.sprite = data.icon;
+                var enemy = ordered[index]; var row = enemyRows[enemy];
+                if (statContent.IndexOf(row.Root) != index) statContent.Insert(index, row.Root);
+                var data = enemyPresentation.Describe(enemy, killTracker, distance);
+                row.Title.text = data.title;
+                for (var i = 0; i < row.EnemyValues.Length; i++) row.EnemyValues[i].text = data.values[i];
+                row.SetEntryIcon(data.icon, killTracker && killTracker.GetKills(enemy) > 0);
                 row.SetProgress(data.showProgress, data.progress);
             }
             for (var i = 0; i < statSortButtons.Count; i++) StyleSelection(statSortButtons[i], i == (int)enemySort);

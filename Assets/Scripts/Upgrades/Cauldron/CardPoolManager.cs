@@ -260,7 +260,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
         public void CacheAssetLists()
         {
             _cachedResources = AssetCache.GetAll<Resource>();
-            _cachedBuffs = AssetCache.GetAll<BuffRecipe>();
+            _cachedBuffs = BuffRecipe.LoadAvailable();
             _cachedInfinity = AssetCache.GetAll<InfinityCauldronStatSO>("Infinity");
         }
 
@@ -336,7 +336,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
 
             // Use cached arrays if available, otherwise fetch fresh
             var resources = _cachedResources ?? AssetCache.GetAll<Resource>();
-            var buffs = _cachedBuffs ?? AssetCache.GetAll<BuffRecipe>();
+            var buffs = _cachedBuffs ?? BuffRecipe.LoadAvailable();
             var infinity = _cachedInfinity ?? AssetCache.GetAll<InfinityCauldronStatSO>("Infinity");
 
             // Build resource pools (using cached IDs to avoid string allocations)

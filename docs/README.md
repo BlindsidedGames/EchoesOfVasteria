@@ -19,3 +19,13 @@
 - [Full-screen dimming and Dad-o-cado restoration](ui-migration/backdrop-review-2026-09-28/README.md)
 
 - [Skills window grouping, icons and entry separation](ui-migration/skills-iteration-2026-09-28/README.md)
+
+- [Tasks visual iteration and captures](ui-migration/tasks-iteration-2026-09-28/README.md)
+
+- [Enemies visual iteration and captures](ui-migration/enemies-iteration-2026-09-28/README.md)
+
+- [Items visual iteration and captures](ui-migration/items-iteration-2026-09-28/README.md)
+
+- [Buffs window iteration and Prospector removal](ui-migration/buffs-iteration-2026-09-28/README.md)
+
+- [Quests, Settings, Library and Credits polish and QA](ui-migration/menus-iteration-2026-09-28/README.md)

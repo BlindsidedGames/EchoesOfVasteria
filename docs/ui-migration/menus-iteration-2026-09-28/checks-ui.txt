@@ -1,0 +1,87 @@
+PASS settings-preferences aspect-preserving images 14; mismatches 0
+PASS Music slider updates setting
+PASS Focus mute changes setting
+PASS VSync checkbox applies Unity VSync
+PASS Floating text duration callback
+PASS Floating text checkbox matches setting
+PASS settings-controls aspect-preserving images 14; mismatches 0
+PASS settings-saves aspect-preserving images 14; mismatches 0
+PASS Other save slots require unlock
+PASS Unlock exposes overwrite and delete
+PASS settings-unlocked aspect-preserving images 14; mismatches 0
+PASS Relocking prevents overwrite
+PASS import aspect-preserving images 14; mismatches 0
+PASS Invalid import reports failure
+PASS import-error aspect-preserving images 14; mismatches 0
+PASS export aspect-preserving images 14; mismatches 0
+PASS Export produced read-only save text
+PASS language aspect-preserving images 14; mismatches 0
+PASS library aspect-preserving images 14; mismatches 0
+PASS Chapter expands
+PASS library-expanded aspect-preserving images 14; mismatches 0
+PASS Library expansion persists after reopen
+PASS library-reopen aspect-preserving images 14; mismatches 0
+PASS credits aspect-preserving images 14; mismatches 0
+PASS Removed names absent from rendered credits
+PASS Seven remaining credit sections present
+PASS credits-bottom aspect-preserving images 14; mismatches 0
+PASS quests aspect-preserving images 84; mismatches 0
+PASS Pin updates pinned quests
+PASS quests-pin aspect-preserving images 84; mismatches 0
+PASS Unpin updates pinned quests
+PASS quests-unpin aspect-preserving images 84; mismatches 0
+PASS quests-history aspect-preserving images 84; mismatches 0
+PASS Ready quest exists
+PASS Turn-in completes actual quest
+PASS quests-turn-in aspect-preserving images 83; mismatches 0
+PASS settings-landscape aspect-preserving images 14; mismatches 0
+PASS saves-landscape aspect-preserving images 14; mismatches 0
+PASS library-landscape aspect-preserving images 14; mismatches 0
+PASS credits-landscape aspect-preserving images 14; mismatches 0
+PASS quests-landscape aspect-preserving images 83; mismatches 0
+PASS settings-desktop aspect-preserving images 14; mismatches 0
+PASS saves-desktop aspect-preserving images 14; mismatches 0
+PASS library-desktop aspect-preserving images 14; mismatches 0
+PASS credits-desktop aspect-preserving images 14; mismatches 0
+PASS quests-desktop aspect-preserving images 83; mismatches 0
+PASS Fresh progression chapter gate chapter-0
+PASS Fresh progression chapter gate chapter-1
+PASS Fresh progression chapter gate chapter-2
+PASS Fresh progression chapter gate chapter-3
+PASS Fresh progression chapter gate chapter-4
+PASS Fresh progression chapter gate chapter-5
+PASS Fresh progression chapter gate chapter-6
+PASS Fresh progression chapter gate chapter-7
+PASS Fresh progression chapter gate chapter-8
+PASS Fresh progression chapter gate chapter-9
+PASS Fresh progression chapter gate chapter-10
+PASS Fresh progression chapter gate chapter-11
+PASS Fresh progression chapter gate chapter-12
+PASS library-gates aspect-preserving images 14; mismatches 0
+PASS settings-language aspect-preserving images 14; mismatches 0
+PASS Selected language label follows selection
+PASS settings-russian aspect-preserving images 14; mismatches 0
+PASS settings-english aspect-preserving images 14; mismatches 0
+PASS settings-geometry aspect-preserving images 14; mismatches 0
+PASS All preference controls fit without clipping at desktop
+PASS Slider hit target master
+PASS Slider hit target music
+PASS Slider hit target sfx
+PASS Slider hit target width
+PASS Slider hit target drops
+PASS Slider hit target enemy-damage
+PASS Slider hit target player-damage
+PASS settings-fit aspect-preserving images 14; mismatches 0
+PASS saves-fit aspect-preserving images 14; mismatches 0
+PASS Autosave note fits below all file controls
+PASS Closing Settings disarms destructive save controls
+PASS save-note-fit aspect-preserving images 14; mismatches 0
+PASS library-all aspect-preserving images 14; mismatches 0
+FAIL Expanded Library scrolls through complete content
+PASS library-all-bottom aspect-preserving images 14; mismatches 0
+PASS settings-final aspect-preserving images 14; mismatches 0
+PASS saves-final aspect-preserving images 14; mismatches 0
+PASS library-final aspect-preserving images 14; mismatches 0
+PASS credits-final aspect-preserving images 14; mismatches 0
+PASS quests-final aspect-preserving images 83; mismatches 0
+PASS quests-4k aspect-preserving images 83; mismatches 0

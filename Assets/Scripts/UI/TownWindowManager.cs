@@ -345,7 +345,6 @@ namespace TimelessEchoes.UI
 
         private void PollCloseAllWindows()
         {
-            if (TimelessEchoes.Buffs.ProspectorPicker.IsOpen) return;
             var mouse = Mouse.current;
             if (mouse == null)
                 return;

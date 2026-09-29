@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Blindsided.Utilities;
 using Sirenix.OdinInspector;
@@ -12,6 +13,21 @@ namespace TimelessEchoes.Buffs
     [CreateAssetMenu(fileName = "BuffRecipe", menuName = "SO/Buff Recipe")]
     public class BuffRecipe : ScriptableObject
     {
+        // Keep serialized effect IDs and old card counts readable after retirement.
+        public static bool IsRetiredName(string value) => value == "Prospector" || value == "Slipstream";
+        public bool IsRetired => IsRetiredName(name) || HasEffect(BuffEffectType.ProspectorWeightPercent);
+        private static BuffRecipe[] availableSource, availableBuffs;
+        public static BuffRecipe[] LoadAvailable(string path = "")
+        {
+            var source = AssetCache.GetAll<BuffRecipe>(path);
+            if (!ReferenceEquals(source, availableSource))
+            {
+                availableSource = source;
+                availableBuffs = source.Where(buff => buff && !buff.IsRetired).ToArray();
+            }
+            return availableBuffs;
+        }
+
         [TitleGroup("General")]
         [Tooltip("Display name for this buff. If empty the asset name will be used.")]
         public string title;

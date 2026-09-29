@@ -86,3 +86,7 @@ Selected-skill summaries show bonuses contributed by that skill. Cross-skill XP 
 Skill-entry state borders: warm amber `#d0a166` for unlocked entries, muted purple `#b38ac9` while an activatable milestone is active. Active styling takes precedence; disabling restores amber. Locked entries retain the neutral border.
 
 Checkbox painter paths must include `contentRect.position`, not just its dimensions, so ticks remain centred with normal and focus borders. Skill summary lines use existing effect icons in aligned masked slots at the shared sprite PPU; select icons from structured bonus metadata, never by parsing translated descriptions.
+
+Task statistics retain the original two information columns and sorting controls. Frame task art at native PPU with a full-inner-border crop, use subtle row dividers, and keep task IDs secondary to names. The task-weight checkbox is labelled Boost: amber means known and purple means boosted; it does not enable or disable task spawning.
+
+Enemy statistics share the Tasks framed-art and row-spacing rules. Keep the four original combat/reveal columns and full-width kill-progress bar. Preserve unknown-stat masking and all sorting modes; the distance slider previews existing scaling without changing gameplay.
