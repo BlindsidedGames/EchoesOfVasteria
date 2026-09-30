@@ -632,12 +632,12 @@
 .gameplay .task-boost-label {font-size:7px;white-space:nowrap;}
 
 .gameplay .eov-enemy-entry .eov-stat-entry-field {min-width:104px;margin-right:var(--space-control);white-space:normal;}
-.gameplay .eov-enemy-entry .eov-stat-entry-field:last-child {margin-right:0;}
+.gameplay .eov-enemy-entry .eov-stat-entry-field.row-end {margin-right:0;}
 .gameplay .eov-enemy-entry .eov-stat-entry-progress {height:3px;margin-top:var(--space-control);}
 .gameplay .eov-stat-distance {padding:var(--space-control) 0;margin-top:var(--space-control);margin-bottom:var(--space-control);}
 
 .gameplay .enemy-stat-column {flex-grow:1;flex-basis:0;min-width:104px;margin-right:var(--space-control);}
-.gameplay .enemy-stat-column:last-child {margin-right:0;}
+.gameplay .enemy-stat-column.row-end {margin-right:0;}
 .gameplay .enemy-stat-metric {flex-direction:row;align-items:center;min-height:16px;}
 .gameplay .enemy-stat-symbol {width:16px;height:16px;flex-shrink:0;align-items:center;justify-content:center;overflow:hidden;margin-right:var(--space-control);}
 .gameplay .enemy-stat-name {font-size:7px;color:var(--muted);margin-right:var(--space-control);}
@@ -926,16 +926,16 @@
 .gameplay.settings-page .settings-heading,.gameplay .book-heading,.gameplay .quests-heading {font-size:12px;-unity-font-style:bold;margin:0 0 var(--space-section) 0;flex-shrink:0;}
 .gameplay.settings-page .settings-tabs {margin-bottom:var(--space-panel);}
 .gameplay.settings-page .settings-tabs > Button {margin-right:var(--space-control);}
-.gameplay.settings-page .settings-tabs > Button:last-child {margin-right:0;}
+.gameplay.settings-page .settings-tabs > Button.row-end {margin-right:0;}
 .gameplay.settings-page .eov-options-scroll {min-height:0;}
 .gameplay.settings-page .eov-options-frame {margin-bottom:var(--space-section);padding-bottom:var(--space-control);border-bottom-width:.5px;border-bottom-color:var(--line);}
 .gameplay.settings-page .settings-section-title {margin-bottom:var(--space-control);-unity-font-style:bold;}
 .gameplay.settings-page .eov-options-label {white-space:normal;}
 .gameplay.settings-page .settings-column {margin-right:var(--space-section);}
-.gameplay.settings-page .settings-column:last-child {margin-right:0;}
+.gameplay.settings-page .settings-column.row-end {margin-right:0;}
 .gameplay.settings-page .settings-actions {align-items:center;}
 .gameplay.settings-page .settings-actions > Button {margin-right:var(--space-control);}
-.gameplay.settings-page .settings-actions > Button:last-child {margin-right:0;}
+.gameplay.settings-page .settings-actions > Button.row-end {margin-right:0;}
 .gameplay.settings-page .settings-labelled-toggle {flex-direction:row;justify-content:flex-start;align-self:flex-start;height:22px;}
 .gameplay.settings-page .settings-labelled-toggle .eov-options-label {margin-left:var(--space-control);white-space:nowrap;}
 .gameplay.settings-page .settings-floating-row {align-items:center;margin-bottom:var(--space-control);}
