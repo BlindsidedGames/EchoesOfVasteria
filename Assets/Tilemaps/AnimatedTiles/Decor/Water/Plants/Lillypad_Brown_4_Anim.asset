@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Lillypad_Brown_4_Anim
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 2019510435548712516, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: -8113424158500292768, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: 966141960296322965, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: -1356867148873413616, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: 6981781483835557814, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: -2762972682773387390, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: -4308474876105649854, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  - {fileID: -3634526250338983175, guid: 7b31131cd668c0c4a87701b99485dbcc, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

@@ -1,0 +1,428 @@
+[
+  {
+    "group": "Fuller green ground cover",
+    "title": "Full bushes",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_83",
+      "Outdoor_Decor_84",
+      "Outdoor_Decor_139",
+      "Outdoor_Decor_141"
+    ],
+    "status": "Static artwork",
+    "note": "Best next addition: substantial low shapes around spruce groves. Leave gaps between clusters.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Tall grass and broad tufts",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_126",
+      "Outdoor_Decor_127",
+      "Outdoor_Decor_142"
+    ],
+    "status": "Static artwork",
+    "note": "Use at grove margins and the back of broad ledges; keep cliff lips legible.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Purple flower clumps",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_128",
+      "Outdoor_Decor_129",
+      "Outdoor_Decor_130"
+    ],
+    "status": "Static artwork",
+    "note": "Larger flower silhouettes than the tiny animated accents already placed.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Red flower clumps",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_135",
+      "Outdoor_Decor_136",
+      "Outdoor_Decor_137"
+    ],
+    "status": "Static artwork",
+    "note": "A restrained warm accent near the lower mountain; avoid a uniformly mixed flower carpet.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Brown woodland mushrooms",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_8_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "muschroom_8_Anim_0",
+      "muschroom_8_Anim_1",
+      "muschroom_8_Anim_2",
+      "muschroom_8_Anim_3",
+      "muschroom_8_Anim_4",
+      "muschroom_8_Anim_5"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "A softer alternative to the red mushrooms; use near fallen wood.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_8_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_8_Anim.png"
+        ],
+        "frames": 6
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_8_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Blue small mushrooms",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_3_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "muschroom_3_Anim_0",
+      "muschroom_3_Anim_1",
+      "muschroom_3_Anim_2",
+      "muschroom_3_Anim_3",
+      "muschroom_3_Anim_4",
+      "muschroom_3_Anim_5"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Occasional cool-colour accent approaching the snowline.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_3_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_3_Anim.png"
+        ],
+        "frames": 6
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_3_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "More meadow flowers",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_4_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Flower_Grass_4_Anim_0",
+      "Flower_Grass_4_Anim_1",
+      "Flower_Grass_4_Anim_2",
+      "Flower_Grass_4_Anim_3",
+      "Flower_Grass_4_Anim_4",
+      "Flower_Grass_4_Anim_5",
+      "Flower_Grass_4_Anim_6",
+      "Flower_Grass_4_Anim_7"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Add irregular little patches at the edge of a clearing.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_4_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_4_Anim.png"
+        ],
+        "frames": 8
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_4_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Fuller green ground cover",
+    "title": "Branch stubs and small stumps",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_102",
+      "Outdoor_Decor_140",
+      "Outdoor_Decor_144"
+    ],
+    "status": "Static artwork",
+    "note": "Small forest-floor detail among larger plants, not a second logging clearing.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snow and exposed mountain stone",
+    "title": "Broad boulder and stone slab",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_95",
+      "Outdoor_Decor_96"
+    ],
+    "status": "Static artwork",
+    "note": "Stronger rock silhouettes for exposed ground and summit focal groups. Existing art is bare stone, without snow caps.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snow and exposed mountain stone",
+    "title": "Dark stone spires",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Volcano/Volcano_Props/Volcano_Rocks.png",
+    "ppu": 100,
+    "filter": "Bilinear",
+    "sprites": [
+      "Volcano_Rocks_0",
+      "Volcano_Rocks_1",
+      "Volcano_Rocks_2",
+      "Volcano_Rocks_3"
+    ],
+    "status": "Import setup needed: 100 PPU / Bilinear",
+    "note": "Use a small dark outcrop against pale snow; selected variants have no lava.",
+    "extra": "Volcano import needs 16 PPU / Point before placement. Keep to one or two geological groups.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snow and exposed mountain stone",
+    "title": "Dark rounded outcrops",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Volcano/Volcano_Props/Volcano_Rocks.png",
+    "ppu": 100,
+    "filter": "Bilinear",
+    "sprites": [
+      "Volcano_Rocks_18",
+      "Volcano_Rocks_19",
+      "Volcano_Rocks_21"
+    ],
+    "status": "Import setup needed: 100 PPU / Bilinear",
+    "note": "Alternative silhouette for one rocky summit pocket; combine carefully with the existing grey stone.",
+    "extra": "Import setup needed; these are existing unsnowed rocks.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snow and exposed mountain stone",
+    "title": "Blue crystal clusters",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Volcano/Volcano_Props/Volcano_Plants.png",
+    "ppu": 100,
+    "filter": "Bilinear",
+    "sprites": [
+      "Volcano_Plants_7",
+      "Volcano_Plants_9"
+    ],
+    "status": "Import setup needed: 100 PPU / Bilinear",
+    "note": "Optional cold-colour mineral detail; much more distinct than ordinary pebbles.",
+    "extra": "Import setup needed. Use sparingly so the summit remains a mountain, not a crystal field.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted-bank additions",
+    "title": "Purple crystal clusters",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Volcano/Volcano_Props/Volcano_Plants.png",
+    "ppu": 100,
+    "filter": "Bilinear",
+    "sprites": [
+      "Volcano_Plants_8",
+      "Volcano_Plants_10"
+    ],
+    "status": "Import setup needed: 100 PPU / Bilinear",
+    "note": "Strong new shapes close to the purple pool, grouped into a few deposits.",
+    "extra": "Import setup needed; static artwork.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted-bank additions",
+    "title": "Upright purple mushroom",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_5_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "muschroom_5_Anim_0",
+      "muschroom_5_Anim_1",
+      "muschroom_5_Anim_2",
+      "muschroom_5_Anim_3",
+      "muschroom_5_Anim_4",
+      "muschroom_5_Anim_5"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Slender animated counterpart to the round purple mushrooms.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_5_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_5_Anim.png"
+        ],
+        "frames": 6
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_5_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Corrupted-bank additions",
+    "title": "Large brown mushrooms",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Mushrooms_Brown.png",
+    "ppu": 100,
+    "filter": "Bilinear",
+    "sprites": [
+      "Mushrooms_Brown_0"
+    ],
+    "status": "Import setup needed: 100 PPU / Bilinear",
+    "note": "One sheltered fungal landmark, optional. It would need import correction before use.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted-bank additions",
+    "title": "Purple flowers as a transition",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_128",
+      "Outdoor_Decor_130"
+    ],
+    "status": "Static artwork",
+    "note": "Use on the green side of corruption so the colour change starts before the dead vegetation.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Optional small landmarks",
+    "title": "Split-log seats",
+    "path": "Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Split_Log_Benches.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Split_Log_Benches_0",
+      "Split_Log_Benches_1"
+    ],
+    "status": "Static artwork",
+    "note": "My preferred camp furniture: plain, compact, and consistent with the working woodland.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Optional small landmarks",
+    "title": "Small canvas shelter",
+    "path": "Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Military_Tents.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Military_Tents_3"
+    ],
+    "status": "Static artwork",
+    "note": "One modest shelter on a wide green terrace; do not repeat it around the map.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Optional small landmarks",
+    "title": "Cooking-fire animation",
+    "path": "Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Campfire_Pot_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Campfire_Pot_Anim_0",
+      "Campfire_Pot_Anim_1",
+      "Campfire_Pot_Anim_2",
+      "Campfire_Pot_Anim_3",
+      "Campfire_Pot_Anim_4"
+    ],
+    "status": "Frames available; playback needs setup",
+    "note": "Optional centre of a small rest camp with log seating. Existing source frames shown; playback readiness is listed below.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Optional small landmarks",
+    "title": "Broken stone pillars",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Dungeons/Dungeon_1/Dungeon_1_Pillars.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Dungeon_1_Pillars_1",
+      "Dungeon_1_Pillars_2"
+    ],
+    "status": "Static artwork",
+    "note": "Alternative to the camp: a small ruined lookout on the broad plateau. Do not add every landmark option.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Optional small landmarks",
+    "title": "Short stone railing pieces",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Stone_Fence_Small.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Stone_Fence_Small_0",
+      "Stone_Fence_Small_1",
+      "Stone_Fence_Small_2"
+    ],
+    "status": "Static artwork",
+    "note": "Only around a deliberate lookout; avoid fencing every cliff.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  }
+]

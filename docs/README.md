@@ -1,5 +1,9 @@
 # Documentation
 
+- [Animated environment decor library and placement guide](AnimatedDecor.md)
+
+- [Hometown terrain layers, cliff corners and river rule investigation](TerrainAuthoring.md)
+
 - [Performance profiling audit — 26 September 2026](PerformanceProfile.md)
 
 - [Forge follow-up: measured optimisation opportunity](ForgePerformanceFollowup.md)

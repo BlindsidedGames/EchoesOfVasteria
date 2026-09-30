@@ -1,0 +1,107 @@
+{
+  "success": true,
+  "command": "command run_script",
+  "data": {
+    "command": "run_script",
+    "parameters": {
+      "file": "output/scene-review/InspectMines.cs",
+      "entry": "InspectMines.Main"
+    },
+    "result": {
+      "diagnostics": [],
+      "compileMs": 319,
+      "executeMs": 11,
+      "assemblyName": "PipelineRunScript_InspectMines_4101640639cf4a6d9fe90a133c1f4825",
+      "success": true,
+      "result": {
+        "sprites": [
+          {
+            "path": "Hometown/The Old Timer",
+            "sprite": "Stone_Cliff_3_Cave_Entrance_No_Rails",
+            "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/Cliff/Stone_Cliff_3_Cave_Entrance_No_Rails.png",
+            "x": -61.5,
+            "y": 13.5,
+            "components": [
+              "Transform",
+              "SpriteRenderer"
+            ],
+            "children": 1
+          }
+        ],
+        "maps": [
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks2Grass",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks2",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks3Grass",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks3",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks4Grass",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          },
+          {
+            "path": "Hometown/Tilemaps/-2 Tracks4",
+            "tiles": 0,
+            "components": [
+              "Transform",
+              "Tilemap",
+              "TilemapRenderer"
+            ]
+          }
+        ]
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

@@ -1,0 +1,569 @@
+[
+  {
+    "group": "Green terraces",
+    "title": "Small spruce",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Spruce_Tree.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Small_Spruce_Tree_1"
+    ],
+    "status": "Static artwork",
+    "note": "Uneven clusters; leave the terrace route and cliff corners readable.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Green terraces",
+    "title": "Medium spruce",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Spruce_Tree.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Medium_Spruce_Tree_1"
+    ],
+    "status": "Static artwork",
+    "note": "Uneven clusters; leave the terrace route and cliff corners readable.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Green terraces",
+    "title": "Big spruce",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Spruce_tree.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Big_Spruce_tree_1"
+    ],
+    "status": "Static artwork",
+    "note": "Uneven clusters; leave the terrace route and cliff corners readable.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Green terraces",
+    "title": "Dry rock family",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_60",
+      "Outdoor_Decor_61",
+      "Outdoor_Decor_63",
+      "Outdoor_Decor_64",
+      "Outdoor_Decor_65",
+      "Outdoor_Decor_82",
+      "Outdoor_Decor_88",
+      "Outdoor_Decor_89"
+    ],
+    "status": "Static artwork",
+    "note": "Grounded groups at cliff feet; no water-ripple variants.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Green terraces",
+    "title": "Fern and low cover",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Desert/Props/Desert_Fern.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Desert_Fern_0"
+    ],
+    "status": "Static artwork",
+    "note": "Static fern for sheltered ledge pockets.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Green terraces",
+    "title": "Fine grass",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_1_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Grass_1_Anim_0",
+      "Grass_1_Anim_1",
+      "Grass_1_Anim_2",
+      "Grass_1_Anim_3",
+      "Grass_1_Anim_4",
+      "Grass_1_Anim_5",
+      "Grass_1_Anim_6",
+      "Grass_1_Anim_7"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Sparse animated accent, mixed with clear ground.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Grasss/Grass_1_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_1_Anim.png"
+        ],
+        "frames": 8
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Grass_1_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Green terraces",
+    "title": "Fuller grass",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_3_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Grass_3_Anim_0",
+      "Grass_3_Anim_1",
+      "Grass_3_Anim_2",
+      "Grass_3_Anim_3",
+      "Grass_3_Anim_4",
+      "Grass_3_Anim_5",
+      "Grass_3_Anim_6",
+      "Grass_3_Anim_7"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Sparse animated accent, mixed with clear ground.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Grasss/Grass_3_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_3_Anim.png"
+        ],
+        "frames": 8
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Grass_3_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Green terraces",
+    "title": "Flower accent",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_9_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Flower_Grass_9_Anim_0",
+      "Flower_Grass_9_Anim_1",
+      "Flower_Grass_9_Anim_2",
+      "Flower_Grass_9_Anim_3",
+      "Flower_Grass_9_Anim_4",
+      "Flower_Grass_9_Anim_5",
+      "Flower_Grass_9_Anim_6",
+      "Flower_Grass_9_Anim_7"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Sparse animated accent, mixed with clear ground.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_9_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_9_Anim.png"
+        ],
+        "frames": 8
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_9_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Green terraces",
+    "title": "Small mushrooms",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_1_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "muschroom_1_Anim_0",
+      "muschroom_1_Anim_1",
+      "muschroom_1_Anim_2",
+      "muschroom_1_Anim_3",
+      "muschroom_1_Anim_4",
+      "muschroom_1_Anim_5"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Sparse animated accent, mixed with clear ground.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_1_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_1_Anim.png"
+        ],
+        "frames": 6
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_1_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Green terraces",
+    "title": "Fallen timber and stumps",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_58",
+      "Outdoor_Decor_66",
+      "Outdoor_Decor_67",
+      "Outdoor_Decor_72",
+      "Outdoor_Decor_79"
+    ],
+    "status": "Static artwork",
+    "note": "Occasional old timber at the forest-facing end.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snowline and summit",
+    "title": "Small snowy spruce",
+    "path": "Assets/Art/Environment/Snow/Small_Spruce_Tree_Snow.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Small_Spruce_Tree_Snow"
+    ],
+    "status": "Static artwork",
+    "note": "Approved faithful variant: original profile, trunk, shadow and 16 PPU. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snowline and summit",
+    "title": "Medium snowy spruce",
+    "path": "Assets/Art/Environment/Snow/Medium_Spruce_Tree_Snow.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Medium_Spruce_Tree_Snow"
+    ],
+    "status": "Static artwork",
+    "note": "Approved faithful variant: original profile, trunk, shadow and 16 PPU. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snowline and summit",
+    "title": "Big snowy spruce",
+    "path": "Assets/Art/Environment/Snow/Big_Spruce_tree_Snow.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Big_Spruce_tree_Snow"
+    ],
+    "status": "Static artwork",
+    "note": "Approved faithful variant: original profile, trunk, shadow and 16 PPU. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snowline and summit",
+    "title": "Exposed grey stone",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_60",
+      "Outdoor_Decor_63",
+      "Outdoor_Decor_82",
+      "Outdoor_Decor_88",
+      "Outdoor_Decor_89"
+    ],
+    "status": "Static artwork",
+    "note": "Use on bare patches near the snowline.",
+    "extra": "Snow-capped rock variants still need artwork; these are the existing dry rocks.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Snowline and summit",
+    "title": "Blue crystal stone \u2014 optional",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Shroomlands_Rocks.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Shroomlands_Rocks_5",
+      "Shroomlands_Rocks_20",
+      "Shroomlands_Rocks_35"
+    ],
+    "status": "Static artwork",
+    "note": "One restrained summit accent, if a magical mineral theme fits. Static.",
+    "extra": "Normalize import to 16 PPU / Point before placement.",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Dead and dying tree",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_tree.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Dead_tree_0"
+    ],
+    "status": "Static artwork",
+    "note": "Sparse silhouettes on the brown bank; retain open views of the pool.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Half-dead tree",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Desert/Props/HalfDead_tree.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "HalfDead_tree_0"
+    ],
+    "status": "Static artwork",
+    "note": "Transition from healthy growth to the corrupted bank.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Dead bush",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_bush.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Dead_bush_0",
+      "Dead_bush_1"
+    ],
+    "status": "Static artwork",
+    "note": "Small dry clusters where the brown terrain reaches into grass.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Dead fern",
+    "path": "Assets/Art/Packs/Cute_Fantasy_Desert/Props/Desert_Fern_Dead.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Desert_Fern_Dead_0"
+    ],
+    "status": "Static artwork",
+    "note": "Low silhouette around roots and rock groups.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Small purple mushrooms",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Mushrooms_Purple.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Mushrooms_Purple_4",
+      "Mushrooms_Purple_5",
+      "Mushrooms_Purple_6",
+      "Mushrooms_Purple_8",
+      "Mushrooms_Purple_9",
+      "Mushrooms_Purple_10",
+      "Mushrooms_Purple_12"
+    ],
+    "status": "Static artwork",
+    "note": "Primary colour accent in a few asymmetric colonies. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Large purple mushroom \u2014 optional",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Mushrooms_Purple.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Mushrooms_Purple_0"
+    ],
+    "status": "Static artwork",
+    "note": "At most one landmark-sized mushroom; avoid turning the whole bank into ShroomLands.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Purple mineral rocks",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Shroomlands_Rocks.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Shroomlands_Rocks_6",
+      "Shroomlands_Rocks_21",
+      "Shroomlands_Rocks_36"
+    ],
+    "status": "Static artwork",
+    "note": "A few purple mineral clusters beside the pool. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Mushroom-covered rocks",
+    "path": "Assets/Art/Packs/Cute_Fantasy_ShroomLands/Props/Shroomlands_Rocks.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Shroomlands_Rocks_1",
+      "Shroomlands_Rocks_10",
+      "Shroomlands_Rocks_16"
+    ],
+    "status": "Static artwork",
+    "note": "Use as a second rock family, mixed with plain stone. Static.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Purple fungi on timber",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Outdoor_Decor_71",
+      "Outdoor_Decor_80"
+    ],
+    "status": "Static artwork",
+    "note": "Already compatible at 16 PPU; useful beside dead vegetation.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Corrupted stream and pool",
+    "title": "Animated purple mushroom",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_2_Anim.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "muschroom_2_Anim_0",
+      "muschroom_2_Anim_1",
+      "muschroom_2_Anim_2",
+      "muschroom_2_Anim_3",
+      "muschroom_2_Anim_4",
+      "muschroom_2_Anim_5"
+    ],
+    "status": "Animated prefab + tile ready",
+    "note": "Small animated accent; preview the actual source cycle.",
+    "extra": "",
+    "tiles": [
+      {
+        "path": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_2_Anim.asset",
+        "sources": [
+          "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_2_Anim.png"
+        ],
+        "frames": 6
+      }
+    ],
+    "clips": [],
+    "prefabs": [
+      "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_2_Anim.prefab"
+    ]
+  },
+  {
+    "group": "Mine approaches and overlooks",
+    "title": "Plain signposts",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Signs.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Signs_0",
+      "Signs_1",
+      "Signs_2"
+    ],
+    "status": "Static artwork",
+    "note": "One junction marker near access stairs, not repeated on every ledge.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Mine approaches and overlooks",
+    "title": "Ore samples",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Ores.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Ores_1",
+      "Ores_2",
+      "Ores_3",
+      "Ores_4"
+    ],
+    "status": "Static artwork",
+    "note": "Small mining accents; choose colours that match the mine resource.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  },
+  {
+    "group": "Mine approaches and overlooks",
+    "title": "Camp supplies",
+    "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Camp_Decor.png",
+    "ppu": 16,
+    "filter": "Point",
+    "sprites": [
+      "Camp_Decor_0",
+      "Camp_Decor_1",
+      "Camp_Decor_2",
+      "Camp_Decor_3",
+      "Camp_Decor_4"
+    ],
+    "status": "Static artwork",
+    "note": "Optional small working spot; keep mine entrances and rails clear.",
+    "extra": "",
+    "tiles": [],
+    "clips": [],
+    "prefabs": []
+  }
+]

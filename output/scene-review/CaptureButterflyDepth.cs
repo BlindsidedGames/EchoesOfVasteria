@@ -1,0 +1,5 @@
+using System.IO;using UnityEngine;using UnityEngine.Rendering.Universal;public static class CaptureButterflyDepth{public static object Main(){var original=GameObject.Find("Main Camera").GetComponent<Camera>();var go=new GameObject("Review capture");var cam=go.AddComponent<Camera>();cam.CopyFrom(original);cam.enabled=false;cam.transform.position=new Vector3(-93,8,-10);cam.orthographicSize=3;cam.aspect=576f/320f;cam.cullingMask=original.cullingMask&~(1<<5);var data=go.AddComponent<UniversalAdditionalCameraData>();data.renderType=CameraRenderType.Base;data.SetRenderer(0);data.renderPostProcessing=false;var rt=new RenderTexture(576,320,24);var old=RenderTexture.active;cam.targetTexture=rt;cam.Render();RenderTexture.active=rt;var tex=new Texture2D(576,320,TextureFormat.RGB24,false);tex.ReadPixels(new Rect(0,0,576,320),0,0);tex.Apply();File.WriteAllBytes("output/scene-review/butterfly-depth-check.png",tex.EncodeToPNG());RenderTexture.active=old;cam.targetTexture=null;rt.Release();Object.DestroyImmediate(tex);Object.DestroyImmediate(rt);Object.DestroyImmediate(go);return "Captured final";}}
+
+
+
+

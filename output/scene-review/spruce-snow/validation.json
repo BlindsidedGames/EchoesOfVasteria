@@ -1,0 +1,58 @@
+{
+  "success": true,
+  "command": "command run_script",
+  "data": {
+    "command": "run_script",
+    "parameters": {
+      "file": "Temp/IntegrateSnowSpruces.cs",
+      "entry": "IntegrateSnowSpruces.Main"
+    },
+    "result": {
+      "diagnostics": [],
+      "compileMs": 118,
+      "executeMs": 1404,
+      "assemblyName": "PipelineRunScript_IntegrateSnowSpruces_d7f1bbeb96014197939814c77f36e382",
+      "success": true,
+      "result": [
+        {
+          "name": "Small_Spruce_Tree",
+          "width": 32,
+          "height": 64,
+          "changedFoliagePixels": 19,
+          "changedAlphaPixels": 0,
+          "changedProtectedPixels": 0,
+          "pivot": "(0.50, 0.35)",
+          "ppu": 16
+        },
+        {
+          "name": "Medium_Spruce_Tree",
+          "width": 32,
+          "height": 48,
+          "changedFoliagePixels": 56,
+          "changedAlphaPixels": 0,
+          "changedProtectedPixels": 0,
+          "pivot": "(0.50, 0.35)",
+          "ppu": 16
+        },
+        {
+          "name": "Big_Spruce_tree",
+          "width": 64,
+          "height": 80,
+          "changedFoliagePixels": 273,
+          "changedAlphaPixels": 0,
+          "changedProtectedPixels": 0,
+          "pivot": "(0.50, 0.25)",
+          "ppu": 16
+        }
+      ]
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

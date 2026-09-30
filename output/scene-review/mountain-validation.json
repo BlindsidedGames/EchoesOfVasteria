@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "command": "command run_script",
+  "data": {
+    "command": "run_script",
+    "parameters": {
+      "file": "Temp/FinishMountain.cs",
+      "entry": "FinishMountain.Main"
+    },
+    "result": {
+      "diagnostics": [],
+      "compileMs": 119,
+      "executeMs": 434,
+      "assemblyName": "PipelineRunScript_FinishMountain_d296b09a56e847e0a1f4eb58a0c12abd",
+      "success": true,
+      "result": {
+        "additionalPropsRemoved": 4,
+        "surfaceCells": 489,
+        "missingSprites": 0,
+        "badPixelSettings": 0,
+        "layers": [
+          {
+            "name": "BG -5",
+            "layer": "Background",
+            "order": -5
+          },
+          {
+            "name": "BG_Walkable -4",
+            "layer": "Background",
+            "order": -4
+          },
+          {
+            "name": "BG_Decor 0",
+            "layer": "Background",
+            "order": 0
+          },
+          {
+            "name": "Mountain Ground Transitions -3",
+            "layer": "Background",
+            "order": -3
+          }
+        ]
+      }
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "C:\\Users\\mattr\\Documents\\Repositories\\EchoesOfVasteria"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

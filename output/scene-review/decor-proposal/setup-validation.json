@@ -1,0 +1,672 @@
+{
+  "prefabs": 94,
+  "newAnimatedTiles": 67,
+  "reusedAnimatedTiles": 27,
+  "duplicateSheetsRemoved": 9,
+  "uniqueSourceSheets": 94,
+  "removedGuidReferences": 0,
+  "playbackValidated": true,
+  "allAdvanced": true,
+  "sampleIntervalSeconds": 8.2814236,
+  "scenePlacementChanged": false,
+  "assets": [
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Branch_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Timber/Branch_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Timber/Branch_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Cattail_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Cattail_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Cattail_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Cattail_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Cattail_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Cattail_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Cattail_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Cattail_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Cattail_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Cattail_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Cattail_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Cattail_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Cattail_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Cattail_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Cattail_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Brown_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Brown_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Brown_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Lillypad_Green_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Lillypad_Green_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Green_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Green_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Green_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Green_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Green_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Green_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Purple_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Purple_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Purple_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Lillypad_Red_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Plants/Lillypad_Red_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Lillypad_Red_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_1_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Timber/Log_1_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Timber/Log_1_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_2_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Timber/Log_2_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Timber/Log_2_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_3_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Timber/Log_3_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Timber/Log_3_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_10_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_10_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_10_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_15_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_15_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_15_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_16_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_16_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_16_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_3_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_3_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_3_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_4_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_4_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_4_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_5_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_5_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_5_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_6_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_6_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_6_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_7_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_7_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_7_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_8_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_8_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_8_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Rocks/Rock_9_Water_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Water/Rocks/Rock_9_Water_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Rocks/Rock_9_Water_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Water_Grass_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Water_Grass_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Water_Grass_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Water_Plants/Water_Grass_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Water/Plants/Water_Grass_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Water/Plants/Water_Grass_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Cave_Rock_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Cave_Rock_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Cave_Rock_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Cave_Rock_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Cave_Rock_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Cave_Rock_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Cave_Rock_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Cave_Rock_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Cave_Rock_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Cave_Rock_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Cave_Rock_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Cave_Rock_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_10_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_10_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_10_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_11_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_11_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_11_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_12_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_12_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_12_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_13_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_13_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_13_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_14_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_14_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_14_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_15_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_15_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_15_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_7_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_7_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_7_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_8_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_8_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_8_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_9_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Flowers/Flower_Grass_9_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Flower_Grass_9_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Flowers/Flowers_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Flowers/Flowers_1_Anim.prefab",
+      "frames": 60,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Flowers/Flowers_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Flowers/Flowers_2_Anim.prefab",
+      "frames": 60,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Flowers/Flowers_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Flowers/Flowers_3_Anim.prefab",
+      "frames": 60,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Flowers/Flowers_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Flowers/Flowers_4_Anim.prefab",
+      "frames": 60,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Flowers/Flowers_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Flowers/Flowers_5_Anim.prefab",
+      "frames": 60,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Grass_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Grass_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Grass_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Grass_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Grasss/Grass_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Grass/Grass_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": true
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_10_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_10_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_10_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_11_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_11_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_11_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_12_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_12_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_12_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_13_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_13_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_13_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_14_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_14_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_14_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_1_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_2_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_3_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_4_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_5_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_6_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_7_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_7_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_7_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_8_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_8_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_8_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Rock_Animations/Rock_9_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Rocks/Rock_9_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Rocks/Rock_9_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_1_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_1_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_1_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_2_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_2_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_2_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_3_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_3_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_3_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_4_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_4_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_4_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_5_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_5_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_5_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_6_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_6_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_6_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_7_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_7_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_7_Anim.prefab",
+      "frames": 8,
+      "reusedTile": false
+    },
+    {
+      "source": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_8_Anim.png",
+      "tile": "Assets/Tilemaps/AnimatedTiles/Decor/Bank/Mushrooms/muschroom_8_Anim.asset",
+      "prefab": "Assets/Prefabs/Environment/AnimatedDecor/Bank/Mushrooms/muschroom_8_Anim.prefab",
+      "frames": 6,
+      "reusedTile": false
+    }
+  ]
+}
