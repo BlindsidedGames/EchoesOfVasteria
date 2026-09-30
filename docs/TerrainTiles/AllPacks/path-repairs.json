@@ -1,0 +1,71 @@
+{
+  "changes": [
+    {
+      "map": "-1 Path",
+      "x": -24,
+      "y": -21,
+      "oldName": "GrassDirtJagged_DirtEdge_N_GrassNotch_SW",
+      "oldGuid": "fc06d24e2b869204088b7ee970de39e3",
+      "newName": "GrassDirtJagged_DirtOuterCorner_NW",
+      "newGuid": "0eec2e5cff046ee46b711c05937eb1f2"
+    },
+    {
+      "map": "-1 Path",
+      "x": -22,
+      "y": -21,
+      "oldName": "GrassDirtJagged_DirtOuterCorner_NE_GrassNotch_SW",
+      "oldGuid": "23f2add2f649ef242bacb43b6c1b38c1",
+      "newName": "GrassDirtJagged_DirtOuterCorner_NE",
+      "newGuid": "34290cde409e7064c8904399af3f73c7"
+    },
+    {
+      "map": "-1 Path",
+      "x": -45,
+      "y": -10,
+      "oldName": "GrassDirtJagged_DirtStrip_NS",
+      "oldGuid": "21f9d5f2c0f75e045b39a858b9aaca10",
+      "newName": "GrassDirtJagged_DirtCap_N",
+      "newGuid": "71f924e302f60bd4eacee06c3db4288c"
+    },
+    {
+      "map": "-2 Old Path",
+      "x": -45,
+      "y": -10,
+      "oldName": "Farmland_WetOverlay_SoilJoin_NS_AbsentCorners_NW_NE_SE_SW_Variant14",
+      "oldGuid": "77f4600b2b9194988922992c9abe2055",
+      "newName": "Farmland_WetOverlay_SoilJoin_S_AbsentCorners_NW_NE_SE_SW_Variant07",
+      "newGuid": "c73320a112ad14d929cedbb6806e85f0"
+    },
+    {
+      "map": "-2 Old Path",
+      "x": -37,
+      "y": 12,
+      "oldName": "Farmland_WetOverlay_SoilJoin_NS_AbsentCorners_NW_NE_SE_SW_Variant14",
+      "oldGuid": "77f4600b2b9194988922992c9abe2055",
+      "newName": "Farmland_WetOverlay_SoilJoin_S_AbsentCorners_NW_NE_SE_SW_Variant07",
+      "newGuid": "c73320a112ad14d929cedbb6806e85f0"
+    },
+    {
+      "map": "-1 Path",
+      "x": -24,
+      "y": -22,
+      "oldName": "GrassDirtJagged_DirtInterior",
+      "newName": "GrassDirtJagged_DirtInterior_GrassNotches_NW_SW",
+      "newGuid": "287d0546957bcd4468fcb1df4baa250e",
+      "oldGuid": "3f14a14660c1c5349abeb0885fa4e174"
+    }
+  ],
+  "footprintsPreserved": true,
+  "cellsPerLayer": 143,
+  "intentionalDoorwayJoins": [
+    "(-40,-2)",
+    "(-56,9)"
+  ],
+  "retainedRotatedSouthEdge": "(-23,-23): original DirtEdge_N rotated180 already renders grass S; retained tile and transform",
+  "sceneBlocksChanged": [
+    "846326004",
+    "1219163076"
+  ],
+  "allOtherSceneBytesPreserved": true,
+  "unusedTableEntriesRestored": 4
+}
