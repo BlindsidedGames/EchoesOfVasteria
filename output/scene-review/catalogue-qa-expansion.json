@@ -1,0 +1,1063 @@
+{
+  "status": "passed_final_correction_and_layout_rechecks",
+  "semanticCorrections": [
+    {
+      "identity": "4c3e8b7adff11fb43ad6c842e8fd16f7:-352839726",
+      "old_name": "Desert_Cliff_Tiles_1_18",
+      "prior_proposal": "Desert_Cliff_1_Sand_VoidNotch_NE_Src018",
+      "corrected_name": "Desert_Cliff_1_SandSide_W_Lower_Src018",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    },
+    {
+      "identity": "4c3e8b7adff11fb43ad6c842e8fd16f7:-1855513372",
+      "old_name": "Desert_Cliff_Tiles_1_19",
+      "prior_proposal": "Desert_Cliff_1_Sand_VoidNotch_NW_Src019",
+      "corrected_name": "Desert_Cliff_1_SandSide_E_Lower_Src019",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    },
+    {
+      "identity": "34982d4d33885584ea905322b5752dd2:-2027495066",
+      "old_name": "Desert_Cliff_Tiles_2_18",
+      "prior_proposal": "Desert_Cliff_2_Sand_VoidNotch_NE_Src018",
+      "corrected_name": "Desert_Cliff_2_SandSide_W_Lower_Src018",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    },
+    {
+      "identity": "34982d4d33885584ea905322b5752dd2:1715936069",
+      "old_name": "Desert_Cliff_Tiles_2_19",
+      "prior_proposal": "Desert_Cliff_2_Sand_VoidNotch_NW_Src019",
+      "corrected_name": "Desert_Cliff_2_SandSide_E_Lower_Src019",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    },
+    {
+      "identity": "91faabc8036bf1f4c80ad38b05330a37:366597207",
+      "old_name": "Desert_Cliff_Tiles_3_18",
+      "prior_proposal": "Desert_Cliff_3_Sand_VoidNotch_NE_Src018",
+      "corrected_name": "Desert_Cliff_3_SandSide_W_Lower_Src018",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    },
+    {
+      "identity": "91faabc8036bf1f4c80ad38b05330a37:-1453086708",
+      "old_name": "Desert_Cliff_Tiles_3_19",
+      "prior_proposal": "Desert_Cliff_3_Sand_VoidNotch_NW_Src019",
+      "corrected_name": "Desert_Cliff_3_SandSide_E_Lower_Src019",
+      "reason": "Lower side border: sand occupies named W/E side; sets 2/3 also have a short lower foot. Distinct from the larger dedicated concave notch variants.",
+      "resolved": true
+    }
+  ],
+  "failures": [
+    {
+      "type": "label_overflow",
+      "scope": "Small-card NEW/OLD first-line prefix exceeds fixed wrap width",
+      "recommendation": "Wrap complete label by measured pixel width before drawing.",
+      "status": "resolved_by_prefix_inclusive_wrapping_and_final_visual_recheck"
+    }
+  ],
+  "reviewedPages": [
+    {
+      "file": "Cute_Fantasy_Desert-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "f402644f57fbfb73008f075ce502f41a12ada4242876df67de80a40af9f9f301",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-002.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "ffe94407be78ec9c5d2daa88273f30081f97b26b1cd2432b6e70ac8d36082ebf",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-003.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "03bb5924b3cbd367dc5c8a321b925acf2bdd6791617e8116cb4028747aea763e",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-004.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "26c80fbbde3ca08a20472944d2188e93cb1463422db05150e1e2f8ff80f024a5",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-005.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "0f01ac8c0e259c667d41b7fda635874983c99d2887eeb409973485ae013788dc",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-006.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "909cfb7de94e2e29f5cedc8991a062c7e1f200bc451e5b8666f9855354bcd577",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-007.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "4b1856cd369a00d7e5d815a121e840b229cc1ae4e9c60d75e7a4101b8b7037ca",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-008.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "d7329332cb6e808ef44ad9a8f26c143456136f4199a71ee647b73e1c1fdda61c",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-009.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "ddc7bda7821d82de08257dd1f014a63d3b1c378f2246c5e46b0199c4c7197ab0",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-010.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "2f8a8bf1633b690f2fec06cc208b746abaaf093498f19bfedac9ef088bfbfc07",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-011.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "303006e1c4f213ad464b446269963d9640c3d7e3e920a25ec7a9c6df2b4eefb5",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-012.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e74270e7f5efb14507e830463987e095ab6a0e0deb6e5bbc1300dd21e8847b31",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-013.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "eb7567c9c55a08640bd9bcfc71a78cccc732d9dc541b237e1a9aaf370bb3f217",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-014.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "cb4dff94497b0026e4f0424f86f5185ef1260c1110a9a7087bb758a4cc2fc8d2",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-015.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "4d638075927932312cddb48d6d4df84c766c5223cd9e2cc0a25f3d2b4ad930f0",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-016.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "8af6518d3463e3915164119746b3daca6a7b15bf3f0fdca1239d7dd2c110e88e",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-017.png",
+      "kind": "variants",
+      "identityCount": 15,
+      "sha256": "da8a22bbcb14ca318c673f79d4903a85e840f299ebff55b06812d3f0fda0aeea",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "ad4a71cdeff8940099fa6935a8cb7237250f105ace58361138ca4710f52574df",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "22bec3b1b1938f8770c5ac7f884f23383abdd092acc188a0c21766f46014ac80",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "413a3099bd18aa41fb6513269bb336a91eee42e46c966bec4dc727f8a7984d6a",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "71be8bbc0d9c7beba0da5185c4326ead486c5940a5ea5fb44d0d882bd498ac14",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "031de298f191778d8f814d81cc58dd1a7711b8cdaea475aeeff8a585c9c7cc0b",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-002.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "c76b8c2b494173a6f4a5f8985a6b7c8d13dff84fbfcd7dd06eab8596c70d0b45",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-003.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "7f55cdc56835559ec2040e20e6c7be2cd6158247c3c5bbcd7d9b8ffc879d92bb",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-004.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "3fe171fa3fb1fe608ae9cc5c226cb44613dc6d1298ee0fc496ba4e694508716c",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-005.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "3366693267a7507345c158e60ac72fad5a0e020d30280636facb2fe44296b3b3",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-006.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e12c9458006224d99219fbc5512b2549bebd2f336c2c335e7e0b78888a2a5cb7",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-007.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "1e5182df7e84f65cbd1a26e2373a83788c2c752b09febe0d43d8697f34e9b15e",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-008.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "354a4af505be9069787f36d5bf0c2aed7f05f0b7a8b4de351518a62ff5768216",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-009.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e3d5477f795bd3408c987bb2ebc987d9746e68f4afadb8415be7d212e32a83b0",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-010.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e118a0f4c4383c6235ca730f54d4faa054dff37b76c50929c6871803eb81e55a",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-011.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "a1fdf3b1d3548e6618c7eb5f27a0e104f45a3717662fd2f88e96b6f04ec5cd74",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-012.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "ed69d25c213999eab77ce56dc1966115cc37fc9942a3e85d11a826cb047c5e38",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-013.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "9463a54f80d8e9fa3c42291960e798f3b828fd170f8ef6bee0bf17b4e88d415c",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-014.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "6f3e3cc9bbb210f63e7bbef5827c58e92e685f4213d2d734fa7fb5d3cd61ad31",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-015.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "6470f1195f7d0a8da097a86a8f87d220dcc0dc90fd75fc9426dc1ba347b555bb",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-016.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "75afc127ce0bd7bfaefcc092fedde823eb18e327578bd223c776dc50b7ca1764",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-017.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "86489d0ce90b6a31a5eeef60ce4029401178675627294de0c405c82c36c85615",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-018.png",
+      "kind": "variants",
+      "identityCount": 2,
+      "sha256": "0e4f78012d46b939afd271faed2d77acdaf5f7aa5487cf0dc17524b70a233322",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "b6b680037d7d307141feb7a8f10c3884ef9c00c30b133d9ddae5601c5d932408",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "5918b85d1ed75671f46936654747c2139002bbe9ce3f00eb2ee10ba6c7df00c2",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "89f50f4420630483a929a4f7a56299c0621f9860686d9c07d1bee4c3f3ef2da8",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "c23a798eadd7e2dde687a9eb3ab3163e8c56fa953d22093501dde7852903406b",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "1c1a57eae09c8d31dbbb75fe2862c72f239c121a0d24ef556fe7a03558620b83",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-006.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "b4ac9e580dd82431e2360a0ed2a537878415459db78b54d235a5416f6b3ac8bd",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-007.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "8d8ef1e4321fa60f76c1cb8a06c3cefbdc80b02e793318ba9a066a834f9ee72a",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-008.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "56b515a5f9af0499e6fd1c2311c0e6e88f6c5245dcf67302158b5ed9d388d6e6",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-009.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "d605185b531b41fae1a7a02978cad2600b3b2788b3048e3fa16dd86d2ebf5765",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-010.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "d11c0223701927d6003792d7911e9fed272e03e1ca1f73e975a0d1b4109d2a32",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-001.png",
+      "kind": "variants",
+      "identityCount": 23,
+      "sha256": "c8d1c8bbc69c3ddd0e8d5bc0098e2dde4941799473b0788198994208c2b3be32",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "8dbcd4dbef7ffa5f5ac2cf2bc5233917671495bb7d299041661487dfccaa70d0",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "5e96f20931db3f557891d8212d9239dd4df4859b23c7abe42d1cd72aa588d6f8",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "3000858bae9b53cf2fe2ed11214317e5bcfa61be93ee846766488930b50304f9",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "35d96e56bf8bca7cea28aa2ce713b65b5eddacefae16b12bee4b5dd6ff7df9b9",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "c98403e43d2d9bf10e21dec9ceaf7a43a502787cab0b1da615ffff585444473e",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "8adf882a3803d1f0f320b5bb9490276b9ae0ca57f0fa0ae43243375539bea80b",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-002.png",
+      "kind": "variants",
+      "identityCount": 11,
+      "sha256": "5263fcf1b4aeabf0deaa4cc607190762c05b25dbe85491633aa62aee964c25de",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "39dd453982a75e0c4fe894d276a220fe59cddf51be16727bf69cf95887d422d6",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "89441ec6da03ed9e49b230ce3f6c515b31891f54e24384d69e73b3973fdda651",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "d769cdcac5677be4340efa200e49cd339381c82f0ed834ee40cb74d529754ddb",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "570e46c70addb3d76f4567b8e3488e7c6a5559d1d4210436511c396c59040e76",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "8af605b941f5bd21128339e12e1f09537cedfe153eb605e5c721af996bc6e17f",
+      "initialArtworkVisuallyViewed": true,
+      "regeneratedLayoutVisuallyViewed": false
+    }
+  ],
+  "coverage": {
+    "pages": 62,
+    "identities": 891,
+    "uniqueIdentities": 891,
+    "expected": 891,
+    "missing": [],
+    "extra": []
+  },
+  "proposalComparisonMismatches": [],
+  "findings": [
+    "All 891 identities appear exactly once across 62 pages; all art variants were visually inspected in the initial render.",
+    "Six corrected Desert names match the machine mapping and are visually checked on regenerated pages 005/008/011.",
+    "Nine regenerated PNG pages rechecked for long OLD/NEW names, local IDs, header width and representative assemblies; no remaining defect observed.",
+    "Four representative final PDF pages actually rendered with Poppler and visually inspected, including small-card and assembly layouts."
+  ],
+  "limitations": [
+    "Every initial art page reviewed; regenerated layout rechecks are the exact nine PNGs listed, not a second full 62-page visual sweep.",
+    "Representative PDF pages reviewed, not every PDF page. Unity import/reference validation remains the parent task."
+  ],
+  "initialRenderReview": [
+    {
+      "file": "Cute_Fantasy_Desert-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "96282662e3635170e456cf10031105093beb27c32021d329976dd99e3feec93a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-002.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "1365709276b6d7f610115785664c4b3f9a8a27ccd92b52110d5333242cc48456",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-003.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "fe1fee5b9ea5eb771e5656727101d83c53eba5f2f3e9e77800edb5c308625f72",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-004.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "419852f83baca0b4e48723a94aa7adba2e22d483e5267d6e58b54bcd5002b47c",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-005.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "263d7e3b9d80733b035e869d4b401a606827e4da25b472c3fc24dc4ba91a7d5a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-006.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "65bbfc8378de5c9c55bce827bd0dd39153b32806f87748c0a269d1a8131117d6",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-007.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "22b5cb15bf75e72547ec2c25ee840c86a59efa67210c8581e3de69504d0b76e2",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-008.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "778aa1a97ea777fecc05fce929a66565e61709bbb5dcee1342f8b8a7409e5bfc",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-009.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "f830b70983e015bd3b44a750859a83eb821bacd70dac2571f63a0da77d615a20",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-010.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e274948e9a63c148859b9a5d528850d0aca3a456cb33d9c24ba818078bd20593",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-011.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "c1bb14492784e24c7e16cc3e675da36d5daa663421eb2c5e72384bdc8843c342",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-012.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "e04aebec2fa41e1487981cf926431ce302318047deb171a161fcb217691a7fd6",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-013.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "f6b2c5644a71000426ff2dc0aa204a35f590fef0890db1ae39201b10eeef20ce",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-014.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "fe3fe35d7c0f96e34d0e541ebab7bbf7e101611bd7a20a76b5efbfaf590380e3",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-015.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "ca5276238cf146336f69ca5744355f446301a8f308c18e1344c287c230537a6e",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-016.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "77cf41e84f6c66e373f20a1424de61f7f5674511348e04ef39a3170bd076166d",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-017.png",
+      "kind": "variants",
+      "identityCount": 15,
+      "sha256": "67065d303d715d57e530c606c84bd9d26f1a9bea9b3e59723374ddd37bb77ee8",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "830f50e91d1158cae03516bb13f53a44ff60de9190d6516b8fa657b18c34be4a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "7a70a4d2b44e8171c83c0b66a32c890d07f2e8c7da3ab39923416e37333ab73f",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "791ce63d4052dbfa638e5e8fbfb150c90b10af3cb73bc1870064729bdca76da9",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Desert-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "d18e0e785696b9d943df535c82a8b32f342ea0ff01da56fe8f02a84f89403d61",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "cd78c7dae5116fb6fcee6bb149bdba097113b0e30513c99438984a81e07ae3d7",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-002.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "980f6f301ae39bd7bf15da84fb9f8a7a93929451357487cf4da629786ee5aec5",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-003.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "64320dc88e7ed631222a301b273033b5e9c60390478ddc394abeeed4a14fcb5a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-004.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "58b724b8f8ba426b171a9acfb7e13a2c8b4ca23d788825ecc8db0990b04554f7",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-005.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "ddb11627bde5a17c527ef3439b4c2fa272ab8dc3fc92c59c1c657d43d1dfba8e",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-006.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "7e7be590450e0cc760fba850d6dcc5d77cd2bc9ea9e6aca12b8ccb998f68ad82",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-007.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "abcf73a90a9f7f9c29aac642781bf507753bb648ed3a8802e3e5239746cfa0e2",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-008.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "40d86ceb51009c3fcda143c19c1e6012182a5f7c2b8a8a70a284d35909da97eb",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-009.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "a2b31263cfa3bb20bd3215762052e2cb4d94d9240775fc0c20978de09f0b9205",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-010.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "617f42b6d7333efa8b41b633cf2044986b27c5d24fe5149c86c8593db95c7212",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-011.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "782450d4ea0d873b4c619589f63688d95108f95370c0c6c30c076cc248900832",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-012.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "f6a9da9b5aea66b10b8f81a7759e549aeb5d5f2154894d27f0a072308a64045f",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-013.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "7f211182310a5141cba8ed7be30ec17487a42faa757123d3219d2f82462e6ed7",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-014.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "5b2568b5ab2b98ce89dec8120b92e64659e387c5b8001ea296fa39ffdb49b330",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-015.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "d8a8ac7d6f50fa7fbf579989003514839e9a45879d91f3ea38f055c79248db47",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-016.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "de40f176e99568e4487619e3c8f269f3268c5df5ee58bf4def49911443c4b135",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-017.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "a8cf6a0b1747588274fcc3b022eb9219ac20567fe43e54d498dbdee7d64a0878",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-018.png",
+      "kind": "variants",
+      "identityCount": 2,
+      "sha256": "4ae7c05e60ce7ad884d2b5de1c4a653feee415099276b250a567a97ac371eefb",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "8c9cb726eb6f2acb51aca356b86e738960b1a67ddb4746fab1c96fbe07904ae1",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "5918b85d1ed75671f46936654747c2139002bbe9ce3f00eb2ee10ba6c7df00c2",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "a6242597efc916d3fb361e2f87fefaff740161a9577bfbba501ef4b80914614a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "8e510e5f5ac6dccc18a32ccbd67eb2c707fab41b34d21a26d64abb4c6465a5f6",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "1c1a57eae09c8d31dbbb75fe2862c72f239c121a0d24ef556fe7a03558620b83",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-006.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "b4ac9e580dd82431e2360a0ed2a537878415459db78b54d235a5416f6b3ac8bd",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-007.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "5ff3225c643372b727d2bb80bb2faa892cb5e3e961003e55febb83e068d5464d",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-008.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "106a4133cab5b0e999e143c68ae5dcc18218984d5ec978b665dbd56bce36234b",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-009.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "ef83cb1a1c9bcdd99418869189276bcc619378d8a6e692f3146c5bad7a1a303e",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-assembly-010.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "c6cadd408a73374c7051d685e222a2223c296cebee8427a170225dcbf0fd2b06",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-001.png",
+      "kind": "variants",
+      "identityCount": 23,
+      "sha256": "fbb0d11b1e333533f86edf937972b55a2a442bd1f6cc1b94e51399dd609be384",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "b06b38f744873efe7fa759da3250a820ff971bce129a1e84ac8e5ea20b5255be",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "74b454ad6d6a1c6bc097e5bf8f95c313f1ec3dd358ea1494d8d155c60a651081",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "ccfa71f7cf4731167a52465562c996ac3554c62faab3ca19079b47bd15c57b00",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "25f78264d25928472b7cf46949f13c474a60e3c654f546ed8b1e385354413729",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "4e20fee6885d7d5c5bcd58036b2a0f7a23d87c17e226a6c5218632fc3d88dffe",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-001.png",
+      "kind": "variants",
+      "identityCount": 24,
+      "sha256": "9a68f5f5622c04d7524f845345eafaa7b64458ec52429bdb8761826a93c1bc35",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-002.png",
+      "kind": "variants",
+      "identityCount": 11,
+      "sha256": "d073ef6f60db66ea7ae665a6dab119646636bb9d5d68fee684c98a69989c3ed8",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-001.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "39dd453982a75e0c4fe894d276a220fe59cddf51be16727bf69cf95887d422d6",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-002.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "ad39b4db14dd3d1c58de8ffc0e259fe982ab88f31ad819afb0591bf8a5b7db5a",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-003.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "692f7e042003a40fa947786bf92e96837b9c722b98af125a45b956d479eb7854",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-004.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "f16e01fb0a6dd8a276e823945188697d7cbb7b5d936b45df26dfba227cd515fd",
+      "visuallyViewed": true
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-assembly-005.png",
+      "kind": "assembly",
+      "identityCount": 1,
+      "sha256": "34c1a623b493ebe3f109c9698fab20ae522babd8ba3a3f0a77b12f07cb2c958f",
+      "visuallyViewed": true
+    }
+  ],
+  "finalLayoutPagesViewed": [
+    "Cute_Fantasy_Desert-005.png",
+    "Cute_Fantasy_Desert-008.png",
+    "Cute_Fantasy_Desert-011.png",
+    "Cute_Fantasy_Desert-012.png",
+    "Cute_Fantasy_Dungeons-004.png",
+    "Cute_Fantasy_Dungeons-005.png",
+    "Cute_Fantasy_ShroomLands-001.png",
+    "Cute_Fantasy_Volcano-001.png",
+    "Cute_Fantasy_Dungeons-assembly-001.png"
+  ],
+  "pdfRenderReview": [
+    {
+      "file": "Cute_Fantasy_Desert-catalogue.pdf",
+      "page": 6,
+      "renderer": "Poppler pdftoppm",
+      "scaleTo": 2660,
+      "sha256": "1ff9b98e994ae854bb21f950ad2bd7cb20cbd98d827b85a867cfb48f6cd478ef",
+      "visuallyViewed": true,
+      "findings": "No clipping, overlap, missing labels or artwork in reviewed render."
+    },
+    {
+      "file": "Cute_Fantasy_Dungeons-catalogue.pdf",
+      "page": 5,
+      "renderer": "Poppler pdftoppm",
+      "scaleTo": 2660,
+      "sha256": "3b0897c39b56b8e1b446af6ebd9ced0bfda21da9c334938746e7a12e0ef36b14",
+      "visuallyViewed": true,
+      "findings": "No clipping, overlap, missing labels or artwork in reviewed render."
+    },
+    {
+      "file": "Cute_Fantasy_ShroomLands-catalogue.pdf",
+      "page": 3,
+      "renderer": "Poppler pdftoppm",
+      "scaleTo": 1550,
+      "sha256": "c358e973fd875a92c7070ee976a43ac37bae3d3368d8744fe03e1230773ed813",
+      "visuallyViewed": true,
+      "findings": "No clipping, overlap, missing labels or artwork in reviewed render."
+    },
+    {
+      "file": "Cute_Fantasy_Volcano-catalogue.pdf",
+      "page": 4,
+      "renderer": "Poppler pdftoppm",
+      "scaleTo": 1550,
+      "sha256": "2f62aba7c3e1ed11ec1a3c84af73e01704c49bae14f89d318d90d933f01f34f9",
+      "visuallyViewed": true,
+      "findings": "No clipping, overlap, missing labels or artwork in reviewed render."
+    }
+  ]
+}

@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 514432695959288905
-    second: Cave_Walls_0
+    second: CaveWall_BrownFill_LightNotch_SE
   - first:
       213: 5979627134605336250
-    second: Cave_Walls_1
+    second: CaveWall_BrownFill_LightSide_S
   - first:
       213: -6070820848741957662
-    second: Cave_Walls_2
+    second: CaveWall_BrownFill_LightNotch_SW
   - first:
       213: -5330975481733919425
-    second: Cave_Walls_3
+    second: CaveWall_DeepFill_LightNotch_SE
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -135,7 +135,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cave_Walls_0
+      name: CaveWall_BrownFill_LightNotch_SE
       rect:
         serializedVersion: 2
         x: 0
@@ -157,7 +157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_1
+      name: CaveWall_BrownFill_LightSide_S
       rect:
         serializedVersion: 2
         x: 16
@@ -179,7 +179,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_2
+      name: CaveWall_BrownFill_LightNotch_SW
       rect:
         serializedVersion: 2
         x: 32
@@ -201,7 +201,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_3
+      name: CaveWall_DeepFill_LightNotch_SE
       rect:
         serializedVersion: 2
         x: 64
@@ -223,7 +223,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_4
+      name: CaveWall_DeepFill_LightSide_S
       rect:
         serializedVersion: 2
         x: 80
@@ -245,7 +245,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_5
+      name: CaveWall_DeepFill_LightNotch_SW
       rect:
         serializedVersion: 2
         x: 96
@@ -267,7 +267,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_6
+      name: CaveWall_DeepFill_LightCorner_SE
       rect:
         serializedVersion: 2
         x: 0
@@ -289,7 +289,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_7
+      name: CaveWall_DeepFill_LightSide_E
       rect:
         serializedVersion: 2
         x: 32
@@ -311,7 +311,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_8
+      name: CaveWall_DeepFill_LightSide_E_B
       rect:
         serializedVersion: 2
         x: 64
@@ -333,7 +333,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_9
+      name: CaveWall_DeepFill_LightSide_W
       rect:
         serializedVersion: 2
         x: 96
@@ -355,7 +355,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_10
+      name: CaveWall_BrownFill_LightNotch_NE
       rect:
         serializedVersion: 2
         x: 0
@@ -377,7 +377,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_11
+      name: CaveWall_LightSide_N_OverVoid
       rect:
         serializedVersion: 2
         x: 16
@@ -399,7 +399,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_12
+      name: CaveWall_BrownFill_LightNotch_NW
       rect:
         serializedVersion: 2
         x: 32
@@ -421,7 +421,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_13
+      name: CaveWall_LightCorner_NE_DeepFill_SW
       rect:
         serializedVersion: 2
         x: 64
@@ -443,7 +443,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_14
+      name: CaveWall_LightSide_N_DeepFill_S
       rect:
         serializedVersion: 2
         x: 80
@@ -465,7 +465,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_15
+      name: CaveWall_LightCorner_NW_DeepFill_SE
       rect:
         serializedVersion: 2
         x: 96
@@ -487,7 +487,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_16
+      name: CaveWall_LightCorner_SW_BrownFill_NE
       rect:
         serializedVersion: 2
         x: 0
@@ -509,7 +509,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_17
+      name: CaveWall_LightCorner_SE_BrownFill_NW
       rect:
         serializedVersion: 2
         x: 16
@@ -531,7 +531,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_18
+      name: CaveWall_LightSide_N_BrownFill_S
       rect:
         serializedVersion: 2
         x: 64
@@ -553,7 +553,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_19
+      name: CaveWall_LightSide_W_BrownFill_E
       rect:
         serializedVersion: 2
         x: 80
@@ -575,7 +575,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_20
+      name: CaveWall_LightSide_E_BrownFill_W
       rect:
         serializedVersion: 2
         x: 0
@@ -597,7 +597,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_21
+      name: CaveWall_LightCorner_NW_BrownFill_SE
       rect:
         serializedVersion: 2
         x: 16
@@ -619,7 +619,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_22
+      name: CaveWall_LightCorner_SW_DeepFill_NE
       rect:
         serializedVersion: 2
         x: 64
@@ -641,7 +641,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_23
+      name: CaveWall_LightCorner_SE_DeepFill_NW
       rect:
         serializedVersion: 2
         x: 80
@@ -663,7 +663,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_24
+      name: CaveWall_RockFrontFace_Left_A
       rect:
         serializedVersion: 2
         x: 0
@@ -685,7 +685,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_25
+      name: CaveWall_RockFrontFace_Center_A
       rect:
         serializedVersion: 2
         x: 16
@@ -707,7 +707,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_26
+      name: CaveWall_RockFrontFace_Right_A
       rect:
         serializedVersion: 2
         x: 32
@@ -729,7 +729,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_27
+      name: CaveWall_RockFrontFace_Left_B
       rect:
         serializedVersion: 2
         x: 64
@@ -751,7 +751,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_28
+      name: CaveWall_RockFrontFace_Center_B
       rect:
         serializedVersion: 2
         x: 80
@@ -773,7 +773,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_29
+      name: CaveWall_RockFrontFace_Right_B
       rect:
         serializedVersion: 2
         x: 0
@@ -795,7 +795,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_30
+      name: CaveWall_RockFrontFace_Left_C
       rect:
         serializedVersion: 2
         x: 16
@@ -817,7 +817,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_31
+      name: CaveWall_RockFrontFace_Center_C
       rect:
         serializedVersion: 2
         x: 32
@@ -839,7 +839,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_32
+      name: CaveWall_RockFrontFace_Center_D
       rect:
         serializedVersion: 2
         x: 64
@@ -861,7 +861,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_33
+      name: CaveWall_RockFrontFace_Right_C
       rect:
         serializedVersion: 2
         x: 80
@@ -883,7 +883,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Walls_34
+      name: CaveWall_BrownLayeredFrontFace
       rect:
         serializedVersion: 2
         x: 96
@@ -920,41 +920,41 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Cave_Walls_0: 514432695959288905
-      Cave_Walls_1: 5979627134605336250
-      Cave_Walls_10: -519644300
-      Cave_Walls_11: -207820168
-      Cave_Walls_12: 468287106
-      Cave_Walls_13: -925075390
-      Cave_Walls_14: -513565760
-      Cave_Walls_15: -1794760486
-      Cave_Walls_16: -297574553
-      Cave_Walls_17: 1639747897
-      Cave_Walls_18: -1991125629
-      Cave_Walls_19: 1643640088
-      Cave_Walls_2: -6070820848741957662
-      Cave_Walls_20: 1735368833
-      Cave_Walls_21: 383746743
-      Cave_Walls_22: -2064134593
-      Cave_Walls_23: -655943071
-      Cave_Walls_24: 115477679
-      Cave_Walls_25: 1937600011
-      Cave_Walls_26: -1326789609
-      Cave_Walls_27: 402642097
-      Cave_Walls_28: -399900885
-      Cave_Walls_29: -1878545148
-      Cave_Walls_3: -5330975481733919425
-      Cave_Walls_30: 274260895
-      Cave_Walls_31: 1813344387
-      Cave_Walls_32: -611116677
-      Cave_Walls_33: -806651751
-      Cave_Walls_34: -1473809227
-      Cave_Walls_4: 414496129
-      Cave_Walls_5: -465342180
-      Cave_Walls_6: 93609751
-      Cave_Walls_7: 1596357222
-      Cave_Walls_8: 1081661464
-      Cave_Walls_9: 1181483463
+      CaveWall_BrownFill_LightNotch_SE: 514432695959288905
+      CaveWall_BrownFill_LightSide_S: 5979627134605336250
+      CaveWall_BrownFill_LightNotch_NE: -519644300
+      CaveWall_LightSide_N_OverVoid: -207820168
+      CaveWall_BrownFill_LightNotch_NW: 468287106
+      CaveWall_LightCorner_NE_DeepFill_SW: -925075390
+      CaveWall_LightSide_N_DeepFill_S: -513565760
+      CaveWall_LightCorner_NW_DeepFill_SE: -1794760486
+      CaveWall_LightCorner_SW_BrownFill_NE: -297574553
+      CaveWall_LightCorner_SE_BrownFill_NW: 1639747897
+      CaveWall_LightSide_N_BrownFill_S: -1991125629
+      CaveWall_LightSide_W_BrownFill_E: 1643640088
+      CaveWall_BrownFill_LightNotch_SW: -6070820848741957662
+      CaveWall_LightSide_E_BrownFill_W: 1735368833
+      CaveWall_LightCorner_NW_BrownFill_SE: 383746743
+      CaveWall_LightCorner_SW_DeepFill_NE: -2064134593
+      CaveWall_LightCorner_SE_DeepFill_NW: -655943071
+      CaveWall_RockFrontFace_Left_A: 115477679
+      CaveWall_RockFrontFace_Center_A: 1937600011
+      CaveWall_RockFrontFace_Right_A: -1326789609
+      CaveWall_RockFrontFace_Left_B: 402642097
+      CaveWall_RockFrontFace_Center_B: -399900885
+      CaveWall_RockFrontFace_Right_B: -1878545148
+      CaveWall_DeepFill_LightNotch_SE: -5330975481733919425
+      CaveWall_RockFrontFace_Left_C: 274260895
+      CaveWall_RockFrontFace_Center_C: 1813344387
+      CaveWall_RockFrontFace_Center_D: -611116677
+      CaveWall_RockFrontFace_Right_C: -806651751
+      CaveWall_BrownLayeredFrontFace: -1473809227
+      CaveWall_DeepFill_LightSide_S: 414496129
+      CaveWall_DeepFill_LightNotch_SW: -465342180
+      CaveWall_DeepFill_LightCorner_SE: 93609751
+      CaveWall_DeepFill_LightSide_E: 1596357222
+      CaveWall_DeepFill_LightSide_E_B: 1081661464
+      CaveWall_DeepFill_LightSide_W: 1181483463
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

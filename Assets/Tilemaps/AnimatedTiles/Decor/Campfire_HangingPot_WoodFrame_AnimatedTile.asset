@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Campfire_HangingPot_WoodFrame_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 4131816744978116629, guid: 850032fd84b34bc4ebf3c6c398ded951, type: 3}
+  - {fileID: -552405625058273030, guid: 850032fd84b34bc4ebf3c6c398ded951, type: 3}
+  - {fileID: -1671446485809134250, guid: 850032fd84b34bc4ebf3c6c398ded951, type: 3}
+  - {fileID: -9218089837699174293, guid: 850032fd84b34bc4ebf3c6c398ded951, type: 3}
+  - {fileID: -7042234747370900369, guid: 850032fd84b34bc4ebf3c6c398ded951, type: 3}
+  m_MinSpeed: 4
+  m_MaxSpeed: 4
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

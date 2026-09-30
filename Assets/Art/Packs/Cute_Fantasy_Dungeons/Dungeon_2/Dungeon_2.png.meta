@@ -4,43 +4,43 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 6738004988284511361
-    second: Dungeon_2_0
+    second: Dungeon_2_OccupiedCorner_SE_Src000
   - first:
       213: 4873245772726062132
-    second: Dungeon_2_1
+    second: Dungeon_2_OccupiedStrip_S_Src001
   - first:
       213: 8970519636207858761
-    second: Dungeon_2_2
+    second: Dungeon_2_OccupiedCorner_SW_Src002
   - first:
       213: -2202586641450285120
-    second: Dungeon_2_3
+    second: Dungeon_2_FracturedBlocks_Src003
   - first:
       213: -4540923666148617575
-    second: Dungeon_2_4
+    second: Dungeon_2_FracturedBlocks_Src004
   - first:
       213: 32680001203251307
-    second: Dungeon_2_5
+    second: Dungeon_2_FracturedBlocks_Src005
   - first:
       213: 3485411104409964038
-    second: Dungeon_2_6
+    second: Dungeon_2_LargeBlocks_Src006
   - first:
       213: -6804652739141195700
-    second: Dungeon_2_7
+    second: Dungeon_2_BrickJoints_Src007
   - first:
       213: -4512069422332746179
-    second: Dungeon_2_8
+    second: Dungeon_2_BrickJoints_Src008
   - first:
       213: 4598478557652523627
-    second: Dungeon_2_9
+    second: Dungeon_2_BrickJoints_Src009
   - first:
       213: -9134696690798155715
-    second: Dungeon_2_10
+    second: Dungeon_2_OccupiedStrip_E_Src010
   - first:
       213: 5501238994496305346
-    second: Dungeon_2_11
+    second: Dungeon_2_OccupiedStrip_W_Src011
   - first:
       213: -3071844671334762154
-    second: Dungeon_2_12
+    second: Dungeon_2_LargeBlocks_Src012
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dungeon_2_0
+      name: Dungeon_2_OccupiedCorner_SE_Src000
       rect:
         serializedVersion: 2
         x: 0
@@ -158,7 +158,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_1
+      name: Dungeon_2_OccupiedStrip_S_Src001
       rect:
         serializedVersion: 2
         x: 16
@@ -180,7 +180,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_2
+      name: Dungeon_2_OccupiedCorner_SW_Src002
       rect:
         serializedVersion: 2
         x: 32
@@ -202,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_3
+      name: Dungeon_2_FracturedBlocks_Src003
       rect:
         serializedVersion: 2
         x: 64
@@ -224,7 +224,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_4
+      name: Dungeon_2_FracturedBlocks_Src004
       rect:
         serializedVersion: 2
         x: 80
@@ -246,7 +246,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_5
+      name: Dungeon_2_FracturedBlocks_Src005
       rect:
         serializedVersion: 2
         x: 96
@@ -268,7 +268,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_6
+      name: Dungeon_2_LargeBlocks_Src006
       rect:
         serializedVersion: 2
         x: 128
@@ -290,7 +290,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_7
+      name: Dungeon_2_BrickJoints_Src007
       rect:
         serializedVersion: 2
         x: 160
@@ -312,7 +312,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_8
+      name: Dungeon_2_BrickJoints_Src008
       rect:
         serializedVersion: 2
         x: 176
@@ -334,7 +334,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_9
+      name: Dungeon_2_BrickJoints_Src009
       rect:
         serializedVersion: 2
         x: 192
@@ -356,7 +356,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_10
+      name: Dungeon_2_OccupiedStrip_E_Src010
       rect:
         serializedVersion: 2
         x: 0
@@ -378,7 +378,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_11
+      name: Dungeon_2_OccupiedStrip_W_Src011
       rect:
         serializedVersion: 2
         x: 32
@@ -400,7 +400,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_12
+      name: Dungeon_2_LargeBlocks_Src012
       rect:
         serializedVersion: 2
         x: 64
@@ -422,7 +422,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_13
+      name: Dungeon_2_LargeBlocks_Src013
       rect:
         serializedVersion: 2
         x: 96
@@ -444,7 +444,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_14
+      name: Dungeon_2_FracturedBlocks_Src014
       rect:
         serializedVersion: 2
         x: 128
@@ -466,7 +466,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_15
+      name: Dungeon_2_BrickJoints_Src015
       rect:
         serializedVersion: 2
         x: 160
@@ -488,7 +488,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_16
+      name: Dungeon_2_PlainFill_Src016
       rect:
         serializedVersion: 2
         x: 176
@@ -510,7 +510,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_17
+      name: Dungeon_2_BrickJoints_Src017
       rect:
         serializedVersion: 2
         x: 192
@@ -532,7 +532,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_18
+      name: Dungeon_2_OccupiedCorner_NE_Src018
       rect:
         serializedVersion: 2
         x: 0
@@ -554,7 +554,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_19
+      name: Dungeon_2_OccupiedStrip_N_Src019
       rect:
         serializedVersion: 2
         x: 16
@@ -576,7 +576,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_20
+      name: Dungeon_2_OccupiedCorner_NW_Src020
       rect:
         serializedVersion: 2
         x: 32
@@ -598,7 +598,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_21
+      name: Dungeon_2_FracturedBlocks_Src021
       rect:
         serializedVersion: 2
         x: 64
@@ -620,7 +620,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_22
+      name: Dungeon_2_FracturedBlocks_Src022
       rect:
         serializedVersion: 2
         x: 80
@@ -642,7 +642,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_23
+      name: Dungeon_2_FracturedBlocks_Src023
       rect:
         serializedVersion: 2
         x: 96
@@ -664,7 +664,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_24
+      name: Dungeon_2_FracturedBlocks_Src024
       rect:
         serializedVersion: 2
         x: 128
@@ -686,7 +686,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_25
+      name: Dungeon_2_BrickJoints_Src025
       rect:
         serializedVersion: 2
         x: 160
@@ -708,7 +708,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_26
+      name: Dungeon_2_SparseJoints_Src026
       rect:
         serializedVersion: 2
         x: 176
@@ -730,7 +730,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_27
+      name: Dungeon_2_SparseJoints_Src027
       rect:
         serializedVersion: 2
         x: 192
@@ -752,7 +752,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_28
+      name: Dungeon_2_VoidNotch_SE_Src028
       rect:
         serializedVersion: 2
         x: 16
@@ -774,7 +774,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_29
+      name: Dungeon_2_VoidNotch_SW_Src029
       rect:
         serializedVersion: 2
         x: 32
@@ -796,7 +796,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_30
+      name: Dungeon_2_VoidNotch_NE_Src030
       rect:
         serializedVersion: 2
         x: 16
@@ -818,7 +818,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_31
+      name: Dungeon_2_VoidNotch_NW_Src031
       rect:
         serializedVersion: 2
         x: 32
@@ -840,7 +840,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_32
+      name: Dungeon_2_FracturedBlocks_Src032
       rect:
         serializedVersion: 2
         x: 64
@@ -862,7 +862,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_33
+      name: Dungeon_2_FracturedBlocks_Src033
       rect:
         serializedVersion: 2
         x: 80
@@ -884,7 +884,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_34
+      name: Dungeon_2_FracturedBlocks_Src034
       rect:
         serializedVersion: 2
         x: 96
@@ -906,7 +906,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_35
+      name: Dungeon_2_FracturedBlocks_Src035
       rect:
         serializedVersion: 2
         x: 128
@@ -928,7 +928,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_36
+      name: Dungeon_2_FadeToTransparent_S_Left_Src036
       rect:
         serializedVersion: 2
         x: 160
@@ -950,7 +950,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_37
+      name: Dungeon_2_FadeToTransparent_S_Center_Src037
       rect:
         serializedVersion: 2
         x: 176
@@ -972,7 +972,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_38
+      name: Dungeon_2_FadeToTransparent_S_Right_Src038
       rect:
         serializedVersion: 2
         x: 192
@@ -994,7 +994,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_39
+      name: Dungeon_2_SparseJoints_Src039
       rect:
         serializedVersion: 2
         x: 160
@@ -1016,7 +1016,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_40
+      name: Dungeon_2_SparseJoints_Src040
       rect:
         serializedVersion: 2
         x: 176
@@ -1038,7 +1038,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_41
+      name: Dungeon_2_SparseJoints_Src041
       rect:
         serializedVersion: 2
         x: 192
@@ -1060,7 +1060,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_42
+      name: Dungeon_2_RoughBrickJoints_Src042
       rect:
         serializedVersion: 2
         x: 64
@@ -1082,7 +1082,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_43
+      name: Dungeon_2_RoughBrickJoints_Src043
       rect:
         serializedVersion: 2
         x: 80
@@ -1104,7 +1104,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_44
+      name: Dungeon_2_RoughBrickJoints_Src044
       rect:
         serializedVersion: 2
         x: 96
@@ -1126,7 +1126,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_45
+      name: Dungeon_2_RoughBrickJoints_Src045
       rect:
         serializedVersion: 2
         x: 128
@@ -1148,7 +1148,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_46
+      name: Dungeon_2_BrickJoints_Src046
       rect:
         serializedVersion: 2
         x: 160
@@ -1170,7 +1170,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_47
+      name: Dungeon_2_BrickJoints_Src047
       rect:
         serializedVersion: 2
         x: 176
@@ -1192,7 +1192,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_48
+      name: Dungeon_2_BrickJoints_Src048
       rect:
         serializedVersion: 2
         x: 192
@@ -1214,7 +1214,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_49
+      name: Dungeon_2_RoughBrickJoints_Src049
       rect:
         serializedVersion: 2
         x: 64
@@ -1236,7 +1236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_50
+      name: Dungeon_2_RoughBrickJoints_Src050
       rect:
         serializedVersion: 2
         x: 80
@@ -1258,7 +1258,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_51
+      name: Dungeon_2_RoughBrickJoints_Src051
       rect:
         serializedVersion: 2
         x: 96
@@ -1280,7 +1280,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_52
+      name: Dungeon_2_RoughBrickJoints_Src052
       rect:
         serializedVersion: 2
         x: 128
@@ -1302,7 +1302,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_53
+      name: Dungeon_2_BrickJoints_Src053
       rect:
         serializedVersion: 2
         x: 160
@@ -1324,7 +1324,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_54
+      name: Dungeon_2_BrickJoints_Src054
       rect:
         serializedVersion: 2
         x: 176
@@ -1346,7 +1346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_55
+      name: Dungeon_2_BrickJoints_Src055
       rect:
         serializedVersion: 2
         x: 192
@@ -1368,7 +1368,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_56
+      name: Dungeon_2_StairTurn_Src056
       rect:
         serializedVersion: 2
         x: 64
@@ -1390,7 +1390,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_57
+      name: Dungeon_2_StairTreads_EW_Src057
       rect:
         serializedVersion: 2
         x: 80
@@ -1412,7 +1412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_58
+      name: Dungeon_2_StairTurn_Src058
       rect:
         serializedVersion: 2
         x: 96
@@ -1434,7 +1434,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_59
+      name: Dungeon_2_StairTurn_Src059
       rect:
         serializedVersion: 2
         x: 160
@@ -1456,7 +1456,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_60
+      name: Dungeon_2_StairTreads_EW_EndS_Src060
       rect:
         serializedVersion: 2
         x: 176
@@ -1478,7 +1478,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_61
+      name: Dungeon_2_StairTurn_Src061
       rect:
         serializedVersion: 2
         x: 192
@@ -1500,7 +1500,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_62
+      name: Dungeon_2_StairRail_NS_Src062
       rect:
         serializedVersion: 2
         x: 64
@@ -1522,7 +1522,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_63
+      name: Dungeon_2_StairRail_NS_Src063
       rect:
         serializedVersion: 2
         x: 96
@@ -1544,7 +1544,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_64
+      name: Dungeon_2_StairRail_NS_Src064
       rect:
         serializedVersion: 2
         x: 160
@@ -1566,7 +1566,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_65
+      name: Dungeon_2_PlainDarkFill_Src065
       rect:
         serializedVersion: 2
         x: 176
@@ -1588,7 +1588,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_66
+      name: Dungeon_2_StairRail_NS_Src066
       rect:
         serializedVersion: 2
         x: 192
@@ -1610,7 +1610,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_67
+      name: Dungeon_2_StairTurn_Src067
       rect:
         serializedVersion: 2
         x: 64
@@ -1632,7 +1632,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_68
+      name: Dungeon_2_StairTreads_EW_EndS_Src068
       rect:
         serializedVersion: 2
         x: 80
@@ -1654,7 +1654,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_69
+      name: Dungeon_2_StairTurn_Src069
       rect:
         serializedVersion: 2
         x: 96
@@ -1676,7 +1676,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_70
+      name: Dungeon_2_StairTurn_Src070
       rect:
         serializedVersion: 2
         x: 160
@@ -1698,7 +1698,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_71
+      name: Dungeon_2_StairTreads_EW_Src071
       rect:
         serializedVersion: 2
         x: 176
@@ -1720,7 +1720,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dungeon_2_72
+      name: Dungeon_2_StairTurn_Src072
       rect:
         serializedVersion: 2
         x: 192
@@ -1757,79 +1757,79 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Dungeon_2_0: 6738004988284511361
-      Dungeon_2_1: 4873245772726062132
-      Dungeon_2_10: -9134696690798155715
-      Dungeon_2_11: 5501238994496305346
-      Dungeon_2_12: -3071844671334762154
-      Dungeon_2_13: -952845739
-      Dungeon_2_14: -1396589524
-      Dungeon_2_15: -1980350735
-      Dungeon_2_16: 1995327202
-      Dungeon_2_17: 1644595338
-      Dungeon_2_18: -1427565027
-      Dungeon_2_19: 1845540277
-      Dungeon_2_2: 8970519636207858761
-      Dungeon_2_20: 1935759837
-      Dungeon_2_21: -67948533
-      Dungeon_2_22: 1511793086
-      Dungeon_2_23: -1125386406
-      Dungeon_2_24: -1050759435
-      Dungeon_2_25: -2019849841
-      Dungeon_2_26: -464391307
-      Dungeon_2_27: -1328742646
-      Dungeon_2_28: -37563438
-      Dungeon_2_29: 1281572555
-      Dungeon_2_3: -2202586641450285120
-      Dungeon_2_30: 760233100
-      Dungeon_2_31: 2026620712
-      Dungeon_2_32: -1090025289
-      Dungeon_2_33: -1746054095
-      Dungeon_2_34: -135203892
-      Dungeon_2_35: -606856052
-      Dungeon_2_36: 1043944066
-      Dungeon_2_37: -379553560
-      Dungeon_2_38: -1793574180
-      Dungeon_2_39: 722626866
-      Dungeon_2_4: -4540923666148617575
-      Dungeon_2_40: 771565879
-      Dungeon_2_41: 1756510078
-      Dungeon_2_42: 431364486
-      Dungeon_2_43: -1854085524
-      Dungeon_2_44: 968469213
-      Dungeon_2_45: -1070164497
-      Dungeon_2_46: -1668282554
-      Dungeon_2_47: 1475896881
-      Dungeon_2_48: -1951871819
-      Dungeon_2_49: -212750198
-      Dungeon_2_5: 32680001203251307
-      Dungeon_2_50: -668537063
-      Dungeon_2_51: 107935882
-      Dungeon_2_52: -1939543946
-      Dungeon_2_53: 1763569283
-      Dungeon_2_54: -962472128
-      Dungeon_2_55: 2003377507
-      Dungeon_2_56: -2071510567
-      Dungeon_2_57: 670735491
-      Dungeon_2_58: 867864469
-      Dungeon_2_59: 1334334075
-      Dungeon_2_6: 3485411104409964038
-      Dungeon_2_60: -1872939567
-      Dungeon_2_61: 608727548
-      Dungeon_2_62: -329369925
-      Dungeon_2_63: 1177739179
-      Dungeon_2_64: -1970249995
-      Dungeon_2_65: -395830601
-      Dungeon_2_66: -157722692
-      Dungeon_2_67: -143570620
-      Dungeon_2_68: -1692217069
-      Dungeon_2_69: -859946918
-      Dungeon_2_7: -6804652739141195700
-      Dungeon_2_70: -737010652
-      Dungeon_2_71: -2048919453
-      Dungeon_2_72: -1882764200
-      Dungeon_2_8: -4512069422332746179
-      Dungeon_2_9: 4598478557652523627
+      Dungeon_2_OccupiedCorner_SE_Src000: 6738004988284511361
+      Dungeon_2_OccupiedStrip_S_Src001: 4873245772726062132
+      Dungeon_2_OccupiedStrip_E_Src010: -9134696690798155715
+      Dungeon_2_OccupiedStrip_W_Src011: 5501238994496305346
+      Dungeon_2_LargeBlocks_Src012: -3071844671334762154
+      Dungeon_2_LargeBlocks_Src013: -952845739
+      Dungeon_2_FracturedBlocks_Src014: -1396589524
+      Dungeon_2_BrickJoints_Src015: -1980350735
+      Dungeon_2_PlainFill_Src016: 1995327202
+      Dungeon_2_BrickJoints_Src017: 1644595338
+      Dungeon_2_OccupiedCorner_NE_Src018: -1427565027
+      Dungeon_2_OccupiedStrip_N_Src019: 1845540277
+      Dungeon_2_OccupiedCorner_SW_Src002: 8970519636207858761
+      Dungeon_2_OccupiedCorner_NW_Src020: 1935759837
+      Dungeon_2_FracturedBlocks_Src021: -67948533
+      Dungeon_2_FracturedBlocks_Src022: 1511793086
+      Dungeon_2_FracturedBlocks_Src023: -1125386406
+      Dungeon_2_FracturedBlocks_Src024: -1050759435
+      Dungeon_2_BrickJoints_Src025: -2019849841
+      Dungeon_2_SparseJoints_Src026: -464391307
+      Dungeon_2_SparseJoints_Src027: -1328742646
+      Dungeon_2_VoidNotch_SE_Src028: -37563438
+      Dungeon_2_VoidNotch_SW_Src029: 1281572555
+      Dungeon_2_FracturedBlocks_Src003: -2202586641450285120
+      Dungeon_2_VoidNotch_NE_Src030: 760233100
+      Dungeon_2_VoidNotch_NW_Src031: 2026620712
+      Dungeon_2_FracturedBlocks_Src032: -1090025289
+      Dungeon_2_FracturedBlocks_Src033: -1746054095
+      Dungeon_2_FracturedBlocks_Src034: -135203892
+      Dungeon_2_FracturedBlocks_Src035: -606856052
+      Dungeon_2_FadeToTransparent_S_Left_Src036: 1043944066
+      Dungeon_2_FadeToTransparent_S_Center_Src037: -379553560
+      Dungeon_2_FadeToTransparent_S_Right_Src038: -1793574180
+      Dungeon_2_SparseJoints_Src039: 722626866
+      Dungeon_2_FracturedBlocks_Src004: -4540923666148617575
+      Dungeon_2_SparseJoints_Src040: 771565879
+      Dungeon_2_SparseJoints_Src041: 1756510078
+      Dungeon_2_RoughBrickJoints_Src042: 431364486
+      Dungeon_2_RoughBrickJoints_Src043: -1854085524
+      Dungeon_2_RoughBrickJoints_Src044: 968469213
+      Dungeon_2_RoughBrickJoints_Src045: -1070164497
+      Dungeon_2_BrickJoints_Src046: -1668282554
+      Dungeon_2_BrickJoints_Src047: 1475896881
+      Dungeon_2_BrickJoints_Src048: -1951871819
+      Dungeon_2_RoughBrickJoints_Src049: -212750198
+      Dungeon_2_FracturedBlocks_Src005: 32680001203251307
+      Dungeon_2_RoughBrickJoints_Src050: -668537063
+      Dungeon_2_RoughBrickJoints_Src051: 107935882
+      Dungeon_2_RoughBrickJoints_Src052: -1939543946
+      Dungeon_2_BrickJoints_Src053: 1763569283
+      Dungeon_2_BrickJoints_Src054: -962472128
+      Dungeon_2_BrickJoints_Src055: 2003377507
+      Dungeon_2_StairTurn_Src056: -2071510567
+      Dungeon_2_StairTreads_EW_Src057: 670735491
+      Dungeon_2_StairTurn_Src058: 867864469
+      Dungeon_2_StairTurn_Src059: 1334334075
+      Dungeon_2_LargeBlocks_Src006: 3485411104409964038
+      Dungeon_2_StairTreads_EW_EndS_Src060: -1872939567
+      Dungeon_2_StairTurn_Src061: 608727548
+      Dungeon_2_StairRail_NS_Src062: -329369925
+      Dungeon_2_StairRail_NS_Src063: 1177739179
+      Dungeon_2_StairRail_NS_Src064: -1970249995
+      Dungeon_2_PlainDarkFill_Src065: -395830601
+      Dungeon_2_StairRail_NS_Src066: -157722692
+      Dungeon_2_StairTurn_Src067: -143570620
+      Dungeon_2_StairTreads_EW_EndS_Src068: -1692217069
+      Dungeon_2_StairTurn_Src069: -859946918
+      Dungeon_2_BrickJoints_Src007: -6804652739141195700
+      Dungeon_2_StairTurn_Src070: -737010652
+      Dungeon_2_StairTreads_EW_Src071: -2048919453
+      Dungeon_2_StairTurn_Src072: -1882764200
+      Dungeon_2_BrickJoints_Src008: -4512069422332746179
+      Dungeon_2_BrickJoints_Src009: 4598478557652523627
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

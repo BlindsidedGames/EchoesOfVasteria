@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Rock_BlueGray_SmallTriangularSlab_NE_WaterRipple_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: -8021723486100445073, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: 1813906318844702867, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: 8004519871980152629, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: 1041288422212668993, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: -6126973149548843172, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: 6213265242776709568, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: 3833552019882855816, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  - {fileID: -6862910118145962, guid: 8175068b79c731443a2f4218147f8fad, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

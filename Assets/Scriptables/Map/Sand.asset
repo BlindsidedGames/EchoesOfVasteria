@@ -23,7 +23,7 @@ MonoBehaviour:
   decor:
     density: 0.07
     decor:
-    - Name: Beach_Decor_Tiles_0
+    - Name: Beach_SandPatch_TwoLarge
       tile: {fileID: 11400000, guid: a64f3964ea1534abd86301d93b79da78, type: 2}
       config:
         weight: 1
@@ -32,7 +32,7 @@ MonoBehaviour:
         topBuffer: 1
         bottomBuffer: 0
         sideBuffer: 1
-    - Name: Beach_Decor_Tiles_1
+    - Name: Beach_SandPatch_ThreeSmall_A
       tile: {fileID: 11400000, guid: 2622f97b5574f4b7aab90f8f92befb28, type: 2}
       config:
         weight: 1
@@ -41,7 +41,7 @@ MonoBehaviour:
         topBuffer: 1
         bottomBuffer: 0
         sideBuffer: 1
-    - Name: Beach_Decor_Tiles_2
+    - Name: Beach_SandPatch_ThreeSmall_B
       tile: {fileID: 11400000, guid: 8309e9390a71e47dd9ef52a80440e734, type: 2}
       config:
         weight: 1

@@ -4,13 +4,13 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 7659959530336151849
-    second: Big_Birch_Tree_0
+    second: Big_Birch_Tree_Stump
   - first:
       213: 2630977764869979562
-    second: Big_Birch_Tree_1
+    second: Big_Birch_Tree_Standing_GroundShadow
   - first:
       213: -1918745374472870481
-    second: Big_Birch_Tree_2
+    second: Big_Birch_Tree_Standing_NoGroundShadow
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Big_Birch_Tree_0
+      name: Big_Birch_Tree_Stump
       rect:
         serializedVersion: 2
         x: 0
@@ -128,7 +128,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Big_Birch_Tree_1
+      name: Big_Birch_Tree_Standing_GroundShadow
       rect:
         serializedVersion: 2
         x: 32
@@ -154,7 +154,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Big_Birch_Tree_2
+      name: Big_Birch_Tree_Standing_NoGroundShadow
       rect:
         serializedVersion: 2
         x: 64
@@ -191,9 +191,9 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":80.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.25},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Big_Birch_Tree_0: 7659959530336151849
-      Big_Birch_Tree_1: 2630977764869979562
-      Big_Birch_Tree_2: -1918745374472870481
+      Big_Birch_Tree_Stump: 7659959530336151849
+      Big_Birch_Tree_Standing_GroundShadow: 2630977764869979562
+      Big_Birch_Tree_Standing_NoGroundShadow: -1918745374472870481
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

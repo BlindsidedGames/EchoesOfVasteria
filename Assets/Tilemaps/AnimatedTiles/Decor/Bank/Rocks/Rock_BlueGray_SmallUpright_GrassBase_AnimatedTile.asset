@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Rock_BlueGray_SmallUpright_GrassBase_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 3648004932252348710, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: 4655206907162664773, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: -5984290882836783849, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: -2034525286125745144, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: -2507559155816360853, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: -647274073250601206, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: -8197190060051571063, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  - {fileID: 1579493189898559337, guid: 3c15cd9b38ccba6419b15b200a3e7056, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

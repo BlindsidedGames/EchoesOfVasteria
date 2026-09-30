@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Log_Floating_EW_Bare_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 6884982287003435855, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: 1323208608794440234, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: 862714137903346438, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: 7670132045734197900, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: -1400222749170868539, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: 6657888347883241452, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: -9101174339603171330, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  - {fileID: 4247771337186324715, guid: c78f22915c1678843bfc37a9da24134d, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0
