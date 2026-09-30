@@ -1,0 +1,56 @@
+name: Deploy Echoes website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/archive/website/**'
+      - '.github/scripts/validate-pages-site.py'
+      - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Manual runs from other branches must not publish unmerged content.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the website and validator
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            docs/archive/website
+            .github/scripts
+
+      - name: Validate the static website
+        run: python3 .github/scripts/validate-pages-site.py
+
+      - name: Set up Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      # Publish the website itself at /, never the developer documentation.
+      # These are already static files: do not run them through Jekyll.
+      - name: Upload the website artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: docs/archive/website
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
