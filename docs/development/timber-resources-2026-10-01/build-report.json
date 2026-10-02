@@ -1,0 +1,19 @@
+{
+  "result": "Succeeded",
+  "errors": 0,
+  "warnings": 2,
+  "seconds": 26.182225,
+  "messages": [
+    {
+      "step": "Preprocess Player",
+      "type": "Warning",
+      "message": "iOS App Info has not been configured. Please add and configure `iOS App Info` metadata to the Localization Settings in order to correctly support Localization on iOS."
+    },
+    {
+      "step": "Preprocess Player",
+      "type": "Warning",
+      "message": "Pipeline: No RuntimePipelineConfig asset found (Project Settings > Pipeline > Runtime). Pipeline will be disabled in Player builds."
+    }
+  ],
+  "path": "/Users/matthewrushworth/Projects/Echoes Farming Implementation Evidence/2026-10-01/timber-resources/EOVTimberValidation.app"
+}

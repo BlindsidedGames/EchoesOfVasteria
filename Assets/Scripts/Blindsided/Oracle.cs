@@ -23,7 +23,7 @@ namespace Blindsided
     ///     Single-instance save manager using the new save system.
     /// </summary>
     [DefaultExecutionOrder(0)]
-    public class Oracle : SerializedMonoBehaviour
+    public partial class Oracle : SerializedMonoBehaviour
     {
         public static Oracle oracle;
 
@@ -96,13 +96,14 @@ namespace Blindsided
         public bool HasCurrentSlotData => saveData != null && _saveDataSlot == CurrentSlot;
         public bool CanBeginSaveMutation =>
             !_slotTransitionInProgress && !_loadingSceneTransitionInProgress &&
-            !_recoveryActionInProgress && !wipeInProgress;
+            !_recoveryActionInProgress && !wipeInProgress && !_economicTransactionActive;
 
         [TabGroup("SaveData")] [NonSerialized, OdinSerialize] public GameData saveData = new();
 
         [Header("Seasonal Leaderboard")]
 
         private bool loaded;
+        public bool HasLoadedCurrentSlotData => loaded && !_recoveryRequired && HasCurrentSlotData;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
         private const int MinBetaIteration = 1;
@@ -502,6 +503,7 @@ namespace Blindsided
 
         private void RequestSave()
         {
+            if (_economicTransactionActive) { _savePending = true; return; }
             if (!CanSave())
                 return;
 
@@ -623,6 +625,7 @@ namespace Blindsided
 
         private bool SaveNowBlocking(int slotIndex, bool replaceLineage = false)
         {
+            if (_economicTransactionActive) { _savePending = true; return false; }
             if (!CanSave())
                 return false;
 
@@ -834,6 +837,7 @@ namespace Blindsided
             }
 
             var migration = SaveMigrationRunner.TryMigrate(loadResult.Data, Application.version);
+            foreach (var warning in migration.Warnings) Debug.LogWarning(warning);
             if (!migration.Succeeded || migration.Data == null)
             {
                 RequireRecovery(
@@ -1413,6 +1417,8 @@ namespace Blindsided
 
         private static void NormalizeLoadedData(GameData data)
         {
+            data.Farm ??= new TimelessEchoes.Farming.FarmState();
+            data.UpgradeLevels ??= new Dictionary<string, int>();
             data.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             data.SkillData ??= new Dictionary<string, GameData.SkillProgress>();
             data.EnemyKills ??= new Dictionary<string, double>();

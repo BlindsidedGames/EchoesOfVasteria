@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8c46105a822e04290ca4001c548df8, type: 3}
+  m_Name: Oak Log
+  m_EditorClassIdentifier: 
+  resourceID: 72
+  icon: {fileID: 596812685, guid: 7cfa32f7f30ac7e45930f7df88eba5ba, type: 3}
+  UnknownIcon: {fileID: 1056826793168131641, guid: b6263844b57b83e48afb7688d78f03df, type: 3}
+  baseValue: 1
+  valueMultiplier: 1.2
+  DisableAlterEcho: 0
+  cauldronCategory: 4
+  totalReceived: 0
+  totalSpent: 0

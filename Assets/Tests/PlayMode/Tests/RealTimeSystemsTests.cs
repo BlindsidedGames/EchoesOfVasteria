@@ -13,6 +13,8 @@ using UnityEngine;
 
 namespace TimelessEchoes.Tests.RealTime
 {
+    [UnityEngine.TestTools.PrebuildSetup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
+    [UnityEngine.TestTools.PostBuildCleanup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
     public class RealTimeSystemsTests
     {
         [Test]

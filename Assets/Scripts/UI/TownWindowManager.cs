@@ -22,7 +22,7 @@ namespace TimelessEchoes.UI
     {
         public static TownWindowManager Instance { get; private set; }
 
-        public enum Window { Upgrades, Buffs, Quests, Credits, AlterEchoes, Stats, Skills, Library, Cauldron, Forge, Inventory, Options }
+        public enum Window { Upgrades, Buffs, Quests, Credits, AlterEchoes, Stats, Skills, Library, Cauldron, Forge, Inventory, Options, Farm }
         public event Action CloseRequested;
         public event Action WindowsChanged;
         public bool HasOpenWindow => AnyWindowOpen();
@@ -53,11 +53,13 @@ namespace TimelessEchoes.UI
                 case Window.Forge: OpenForge(); break;
                 case Window.Inventory: OpenInventory(); break;
                 case Window.Options: OpenOptions(); break;
+                case Window.Farm: OpenFarm(); break;
             }
         }
 
         public bool IsWindowOpen(Window window)
         {
+            if (window == Window.Farm && toolkitFarm != null) return toolkitFarm.IsOpen;
             if (window == Window.Forge && toolkitForge != null && toolkitForge.IsConfigured) return toolkitForge.IsOpen;
             if (window == Window.Stats && toolkitStatistics != null && toolkitStatistics.IsConfigured) return toolkitStatistics.IsOpen;
             if (window == Window.AlterEchoes && toolkitAlterEchoes != null && toolkitAlterEchoes.IsConfigured) return toolkitAlterEchoes.IsOpen;
@@ -202,6 +204,16 @@ namespace TimelessEchoes.UI
         [SerializeField] private Toolkit.ToolkitQuestsScreen toolkitQuests;
         [SerializeField] private Toolkit.ToolkitCauldronScreen toolkitCauldron;
         [SerializeField] private Toolkit.ToolkitAlterEchoesScreen toolkitAlterEchoes;
+        [SerializeField] private Toolkit.ToolkitFarmScreen toolkitFarm;
+        public void ConfigureFarm(Toolkit.ToolkitFarmScreen screen) => toolkitFarm = screen;
+        private void OpenFarm()
+        {
+            if (toolkitFarm == null || !toolkitFarm.IsConfigured) return;
+            var wasOpen = toolkitFarm.IsOpen;
+            CloseAllWindows();
+            if (!wasOpen) toolkitFarm.Show();
+            UpdateTownButtonsVisibility();
+        }
         [SerializeField] private Toolkit.ToolkitStatisticsScreen toolkitStatistics;
         [SerializeField] private Toolkit.ToolkitForgeScreen toolkitForge;
         [SerializeField] private GameObject toolkitQuestLayoutSpace;
@@ -699,6 +711,7 @@ namespace TimelessEchoes.UI
             if (toolkitSkills != null) toolkitSkills.Hide();
             if (toolkitQuests != null) toolkitQuests.Hide();
             if (toolkitCauldron != null) toolkitCauldron.Hide();
+            if (toolkitFarm != null) toolkitFarm.Hide();
             if (toolkitAlterEchoes != null) toolkitAlterEchoes.Hide();
             if (toolkitStatistics != null) toolkitStatistics.Hide();
             if (toolkitForge != null) toolkitForge.Hide();
@@ -777,7 +790,8 @@ namespace TimelessEchoes.UI
 
         private bool AnyWindowOpen()
         {
-            return (toolkitForge != null && toolkitForge.IsOpen)
+            return (toolkitFarm != null && toolkitFarm.IsOpen)
+                   || (toolkitForge != null && toolkitForge.IsOpen)
                    || (toolkitStatistics != null && toolkitStatistics.IsOpen)
                    || (toolkitAlterEchoes != null && toolkitAlterEchoes.IsOpen)
                    || (toolkitCauldron != null && toolkitCauldron.IsOpen)

@@ -303,7 +303,7 @@ Shader "MPUI/Basic Procedural Image"
                 half outlineWidth = v.normal.x;
                 half4 outlineColor = v.tangent;
 
-                float4 shapeData;
+                float4 shapeData = 0;
                 #if CIRCLE || CHAMFER_BOX || PARALLELOGRAM
                     shapeData.xy = v.uv2.xy;
                 #else

@@ -42,7 +42,7 @@ namespace Blindsided.SaveData
                 durableSaveError = ex.Message;
             }
 
-            var binary = SerializationUtility.SerializeValue(oracle.saveData, DataFormat.Binary);
+            var binary = CurrentSaveCodec.Serialize(oracle.saveData);
             if (binary == null || binary.Length > MaxSaveBytes)
                 throw new InvalidDataException($"Save payload size is invalid ({binary?.Length ?? 0} bytes).");
 
@@ -96,7 +96,8 @@ namespace Blindsided.SaveData
 
             var isCurrentFormat = input.StartsWith(ExportPrefix, StringComparison.Ordinal);
             var isLegacyFormat = input.StartsWith(LegacyExportPrefix, StringComparison.Ordinal);
-            if (!isCurrentFormat && !isLegacyFormat)
+            var isEs3 = input.TrimStart().StartsWith("{", StringComparison.Ordinal);
+            if (!isCurrentFormat && !isLegacyFormat && !isEs3)
             {
                 error = "Invalid prefix";
                 return false;
@@ -104,13 +105,19 @@ namespace Blindsided.SaveData
 
             try
             {
-                var prefix = isCurrentFormat ? ExportPrefix : LegacyExportPrefix;
-                var compressed = Base64UrlDecode(input.Substring(prefix.Length));
-                var inflated = InflateBounded(
-                    compressed,
-                    isCurrentFormat ? MaxSaveBytes + 64 : MaxSaveBytes);
-                var binary = isCurrentFormat ? ReadEnvelope(inflated) : inflated;
-                var decoded = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
+                GameData decoded;
+                if (isEs3)
+                {
+                    if (!LegacyEs3Adapter.TryDecode(input, out decoded, out error)) return false;
+                }
+                else
+                {
+                    var prefix = isCurrentFormat ? ExportPrefix : LegacyExportPrefix;
+                    var compressed = Base64UrlDecode(input.Substring(prefix.Length));
+                    var inflated = InflateBounded(compressed, isCurrentFormat ? MaxSaveBytes + 64 : MaxSaveBytes);
+                    var binary = isCurrentFormat ? ReadEnvelope(inflated) : inflated;
+                    decoded = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
+                }
                 if (decoded == null)
                 {
                     error = "Failed to decode save";
@@ -124,6 +131,7 @@ namespace Blindsided.SaveData
                 }
 
                 var migration = SaveMigrationRunner.TryMigrate(decoded, Application.version);
+                foreach (var warning in migration.Warnings) Debug.LogWarning(warning);
                 if (!migration.Succeeded || migration.Data == null)
                 {
                     error = migration.Error ?? "Save migration failed";

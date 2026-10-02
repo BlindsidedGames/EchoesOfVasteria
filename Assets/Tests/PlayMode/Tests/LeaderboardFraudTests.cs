@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace Tests.EditMode
 {
+    [UnityEngine.TestTools.PrebuildSetup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
+    [UnityEngine.TestTools.PostBuildCleanup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
     public class LeaderboardFraudTests
     {
         [Test]
@@ -22,7 +24,7 @@ namespace Tests.EditMode
                     General = new Blindsided.SaveData.GameData.GeneralStats()
                 };
 
-                Assert.DoesNotThrow(() => ConsoleAuth.Login("MattsTheBest"));
+                Assert.DoesNotThrow(() => ConsoleAuth.Login("Matt"));
                 Assert.IsTrue(oracle.saveData.General.ConsoleUsed, "Console usage should mark the save as disqualified.");
             }
             finally

@@ -14,13 +14,15 @@ namespace Blindsided.SaveData.Migrations
             bool changed,
             GameData data,
             IReadOnlyList<string> appliedIds,
-            string error)
+            string error,
+            IReadOnlyList<string> warnings = null)
         {
             Succeeded = succeeded;
             Changed = changed;
             Data = data;
             AppliedIds = appliedIds ?? Array.Empty<string>();
             Error = error;
+            Warnings = warnings ?? Array.Empty<string>();
         }
 
         public bool Succeeded { get; }
@@ -28,6 +30,7 @@ namespace Blindsided.SaveData.Migrations
         public GameData Data { get; }
         public IReadOnlyList<string> AppliedIds { get; }
         public string Error { get; }
+        public IReadOnlyList<string> Warnings { get; }
     }
 
     /// <summary>
@@ -65,6 +68,9 @@ namespace Blindsided.SaveData.Migrations
                     source,
                     $"Save schema {source.SchemaVersion} is newer than supported schema {GameData.CurrentSchemaVersion}.");
             }
+            var invalidProgress = Migration_SchemaV4CurrentCollections.GetInvalidKnownProgressError(source);
+            if (invalidProgress != null)
+                return Failed(source, invalidProgress);
 
             EnsureDefaults();
             var targetVersion = string.IsNullOrWhiteSpace(toVersion) ? Application.version : toVersion;
@@ -73,12 +79,14 @@ namespace Blindsided.SaveData.Migrations
                 : (!string.IsNullOrWhiteSpace(source.GameVersionCreated) ? source.GameVersionCreated : "0.0.0");
             var alreadyApplied = source.AppliedMigrationIds ?? new HashSet<string>();
             var hasAppliedMigrationLedger = source.SchemaVersion >= AppliedMigrationLedgerSchemaVersion;
+            var warnings = GetCompatibilityWarnings(source);
 
             var schemaMigrations = Registered
                 .Where(migration => migration?.TargetSchema != null &&
                                     (source.SchemaVersion < migration.TargetSchema.Value ||
                                      (source.SchemaVersion == migration.TargetSchema.Value &&
-                                      !alreadyApplied.Contains(migration.Id))))
+                                      (!alreadyApplied.Contains(migration.Id) ||
+                                       (migration is IConditionalRepairSaveMigration repair && repair.NeedsRepair(source))))))
                 .OrderBy(migration => migration.TargetSchema.Value)
                 .ThenBy(migration => migration.Id, StringComparer.Ordinal)
                 .ToList();
@@ -112,7 +120,7 @@ namespace Blindsided.SaveData.Migrations
 
             if (schemaMigrations.Count == 0 && versionMigrations.Count == 0 &&
                 historicalVersionMigrations.Count == 0)
-                return new SaveMigrationResult(true, false, source, Array.Empty<string>(), null);
+                return new SaveMigrationResult(true, false, source, Array.Empty<string>(), null, warnings);
 
             GameData candidate;
             try
@@ -132,7 +140,7 @@ namespace Blindsided.SaveData.Migrations
 
             try
             {
-                foreach (var migration in schemaMigrations)
+                foreach (var migration in schemaMigrations.Where(item => !(item is IPostVersionSaveMigration)))
                 {
                     Apply(migration, candidate, appliedIds);
                     candidate.SchemaVersion = Math.Max(candidate.SchemaVersion, migration.TargetSchema.Value);
@@ -143,6 +151,12 @@ namespace Blindsided.SaveData.Migrations
 
                 foreach (var migration in versionMigrations)
                     Apply(migration, candidate, appliedIds);
+
+                foreach (var migration in schemaMigrations.Where(item => item is IPostVersionSaveMigration))
+                {
+                    Apply(migration, candidate, appliedIds);
+                    candidate.SchemaVersion = Math.Max(candidate.SchemaVersion, migration.TargetSchema.Value);
+                }
 
                 if (candidate.SchemaVersion > GameData.CurrentSchemaVersion)
                 {
@@ -155,7 +169,7 @@ namespace Blindsided.SaveData.Migrations
                     candidate.GameVersionCreated = targetVersion;
                 candidate.LastGameVersion = targetVersion;
 
-                return new SaveMigrationResult(true, true, candidate, appliedIds, null);
+                return new SaveMigrationResult(true, true, candidate, appliedIds, null, warnings);
             }
             catch (Exception ex)
             {
@@ -191,6 +205,28 @@ namespace Blindsided.SaveData.Migrations
             return new SaveMigrationResult(false, false, original, Array.Empty<string>(), error);
         }
 
+        private static IReadOnlyList<string> GetCompatibilityWarnings(GameData source)
+        {
+            var warnings = new List<string>();
+            var hasLimitedCards = source.CauldronCardCounts?.Any(pair => pair.Value > 0 &&
+                (pair.Key?.StartsWith("RES:", StringComparison.Ordinal) == true ||
+                 pair.Key?.StartsWith("BUFF:", StringComparison.Ordinal) == true)) == true;
+            if (hasLimitedCards && !LegacyCauldronProfile.TryResolve(source, out _))
+            {
+                warnings.Add("Cauldron redistribution deferred: the source producer has no verified " +
+                             "card-threshold profile. Existing card counts were preserved.");
+            }
+            if (hasLimitedCards && source.SchemaVersion >= 2 &&
+                source.AppliedMigrationIds?.Contains("SchemaV2ZZCauldronOverflowRepair") == true &&
+                source.AppliedMigrationIds.Contains("SchemaV4LegacyCompatibility") == false)
+            {
+                warnings.Add("A prior Cauldron repair receipt exists. Any earlier redistribution " +
+                             "under incorrect thresholds cannot be reconstructed from aggregate " +
+                             "Infinity balances; compare a premigration backup before recovery.");
+            }
+            return warnings;
+        }
+
         private static void EnsureDefaults()
         {
             if (defaultsRegistered)
@@ -203,6 +239,8 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_DuckHelmetSanitation());
             Register(new Migration_CauldronOverflowRedistribution());
             Register(new Migration_GearAffixQuality());
+            Register(new Migration_SchemaV4LegacyCompatibility());
+            Register(new Migration_SchemaV4CurrentCollections());
         }
     }
 
@@ -251,6 +289,7 @@ namespace Blindsided.SaveData.Migrations
             data.General ??= new GameData.GeneralStats();
             data.CauldronCardCounts ??= new Dictionary<string, int>();
             data.CauldronTotals ??= new GameData.CauldronTotalsRecord();
+            data.Farm ??= new TimelessEchoes.Farming.FarmState();
 
             NormalizePreferences(data.SavedPreferences);
             NormalizeSkills(data.SkillData);
@@ -294,6 +333,8 @@ namespace Blindsided.SaveData.Migrations
         {
             foreach (var key in skills.Keys.ToList())
             {
+                if (!Migration_SchemaV4CurrentCollections.IsKnownSkillKey(key))
+                    continue;
                 var progress = skills[key] ?? new GameData.SkillProgress();
                 if (progress.Level <= 0)
                     progress.Level = 1;

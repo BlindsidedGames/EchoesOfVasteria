@@ -915,12 +915,10 @@ namespace TimelessEchoes.Quests
             if (oracle == null || quests == null)
                 return;
 
-            var total = 0;
-            for (int i = 0; i < quests.Count; i++)
-            {
-                if (quests[i] != null)
-                    total++;
-            }
+            var cohort = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var quest in quests)
+                if (quest != null && !string.IsNullOrWhiteSpace(quest.questId)) cohort.Add(quest.questId);
+            var total = cohort.Count;
             cachedTotalQuestCount = total;
 
             var completed = 0;
@@ -930,7 +928,7 @@ namespace TimelessEchoes.Quests
                 foreach (var pair in oracle.saveData.Quests)
                 {
                     var record = pair.Value;
-                    if (record != null && record.Completed)
+                    if (cohort.Contains(pair.Key) && record != null && record.Completed)
                     {
                         completed++;
                         if (record.CompletedTimestamp > latestTicks)

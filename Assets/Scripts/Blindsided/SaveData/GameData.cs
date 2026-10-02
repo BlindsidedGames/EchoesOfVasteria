@@ -7,10 +7,11 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public const int CurrentSchemaVersion = 3;
+        public const int CurrentSchemaVersion = 4;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public HashSet<string> AppliedMigrationIds = new();
+        public TimelessEchoes.Farming.FarmState Farm = new();
         [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]
         public Preferences SavedPreferences = new();
 
@@ -219,7 +220,6 @@ namespace Blindsided.SaveData
 
             // Preserve typed milestone records written under the original field name. String-era
             // milestone values are derived from skill level and safely normalize to an empty list.
-            [PreviouslySerializedAs("Milestones")]
             public List<MilestoneProgressRecord> MilestoneRecords = new();
 
             public List<MilestoneProgressRecord> Milestones
@@ -687,4 +687,3 @@ namespace Blindsided.SaveData
         public List<GearAffixRecord> affixes = new();
     }
 }
-

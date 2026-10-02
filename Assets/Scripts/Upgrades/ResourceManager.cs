@@ -216,6 +216,21 @@ namespace TimelessEchoes.Upgrades
                 InvokeInventoryChanged();
         }
 
+        // Exact values from an already committed farm transaction. No resource multipliers,
+        // tier rolls, adventure credit or OnResourceAdded callbacks may run on this path.
+        public void PublishCommittedResource(string name, GameData.ResourceEntry entry, GameData.ResourceRecord stats)
+        {
+            EnsureLookup();
+            if (!lookup.TryGetValue(name, out var resource) || resource == null) return;
+            amounts[resource] = entry.Amount;
+            if (entry.Earned) unlocked.Add(resource);
+            tiers[resource] = entry.Tier > 0 ? entry.Tier : 1;
+            resource.totalReceived = stats.TotalReceived;
+            resource.totalSpent = stats.TotalSpent;
+            if (batchDepth > 0) pendingInventoryChanged = true;
+            else InvokeInventoryChanged();
+        }
+
         private void SaveState()
         {
             if (oracle == null) return;

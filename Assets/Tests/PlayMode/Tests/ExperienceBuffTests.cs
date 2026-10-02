@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace TimelessEchoes.Tests.Buffs
 {
+    [UnityEngine.TestTools.PrebuildSetup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
+    [UnityEngine.TestTools.PostBuildCleanup(typeof(global::Tests.PlayMode.IsolatedPlayModeScene))]
     public class ExperienceBuffTests
     {
         [Test]
@@ -78,6 +80,7 @@ namespace TimelessEchoes.Tests.Buffs
                 var controller = controllerObject.AddComponent<SkillController>();
 
                 skill.skillName = "Quest Skill";
+                skill.xpForFirstLevel = 100f; // Keep this reward below the level-up threshold.
 
                 var skillsField = typeof(SkillController).GetField("skills", BindingFlags.NonPublic | BindingFlags.Instance);
                 Assert.IsNotNull(skillsField, "Failed to access SkillController.skills field.");
