@@ -238,7 +238,12 @@ namespace TimelessEchoes.Quests
             }
         }
 
-        private void OnResourcesMixed(int amount)
+        public List<string> GetActiveCauldronQuestIds() => active.Values
+            .Where(inst => inst?.data?.requirements != null && inst.data.requirements.Any(
+                req => req != null && req.type == QuestData.RequirementType.CauldronMix))
+            .Select(inst => inst.data.questId).Distinct().ToList();
+
+        private void OnResourcesMixed(double amount)
         {
             if (amount <= 0) return;
             foreach (var inst in active.Values)
@@ -255,10 +260,7 @@ namespace TimelessEchoes.Quests
                 }
                 if (!has) continue;
 
-                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
-                {
-                    rec.CauldronMixProgress += amount;
-                }
+                // The conversion command already committed this progress with food/stew.
                 UpdateProgress(inst);
             }
         }

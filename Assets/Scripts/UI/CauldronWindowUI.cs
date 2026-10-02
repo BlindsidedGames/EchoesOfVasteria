@@ -27,9 +27,9 @@ namespace TimelessEchoes.UI
 		[SerializeField] private CauldronConfig config;
 
 		[Header("Mixing")]
-		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Drag up to 30 in Inspector
-		[SerializeField] private CauldronMixItemUIReferences slot1; // Selected A display (icon only)
-		[SerializeField] private CauldronMixItemUIReferences slot2; // Selected B display (icon only)
+		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Authored starting slots; the adapter adds food slots as content grows.
+		[SerializeField] private CauldronMixItemUIReferences slot1; // Retained serialized legacy display; hidden by direct conversion.
+		[SerializeField] private CauldronMixItemUIReferences slot2; // Retained serialized legacy display; hidden by direct conversion.
 		[SerializeField] private Button mixButton;
         [SerializeField] private TMP_Text predictedStewText;
         [SerializeField] private Image mixArrowImage;
@@ -89,9 +89,7 @@ namespace TimelessEchoes.UI
 
 
 
-		private Resource selectedA;
-		private Resource selectedB;
-		private bool nextGreen = true;
+		private LegacyCauldronConversion directConversion;
 		private bool _tastingOccurredThisSession;
 		[SerializeField] private ResourceManager rm;
 
@@ -101,22 +99,28 @@ namespace TimelessEchoes.UI
 		private bool _weightsNeedRefresh;
 
 		// Cached eligible foods list to avoid repeated LINQ allocations
-		private List<Resource> _cachedEligibleFoods;
 
-		private void Awake()
+
+		private bool initialized;
+        private void Awake()
+        {
+            if (enabled) Initialize();
+        }
+        private void Initialize()
 		{
-            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
+            if (initialized) return;
+            initialized = true;
 			cauldron ??= CauldronManager.Instance;
 			rm ??= ResourceManager.Instance;
 			if (mixSlots == null || mixSlots.Count == 0)
 				Log("Cauldron mix slot list is empty; assign up to 30 CauldronMixItemUIReferences in the Inspector.", TELogCategory.General, this);
-			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedUi;
-			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
+
+			directConversion = new LegacyCauldronConversion(mixSlots, slot1, slot2, mixButton, drinking ? drinking.mixAll : null, predictedStewText, mixArrowImage);
 			if (drinking != null)
 			{
 				if (drinking.tasteButton != null) drinking.tasteButton.onClick.AddListener(() => cauldron?.StartTasting());
 				if (drinking.stopButton != null) drinking.stopButton.onClick.AddListener(() => cauldron?.StopTasting());
-				if (drinking.mixAll != null) drinking.mixAll.onClick.AddListener(OnMixAllClicked);
+
 			}
 			// Weights tooltip wiring (mirror Forge behavior)
 			if (weightsHoverObject != null)
@@ -132,22 +136,15 @@ namespace TimelessEchoes.UI
 				exit.callback.AddListener(_ => HideWeightsTooltip());
 				trigger.triggers.Add(exit);
 			}
-			// Wire mix presenter if assigned (future use)
-			if (mixPresenter != null)
-			{
-				mixPresenter.Initialize();
-				mixPresenter.OnMixRequested += (a, b) =>
-				{
-					if (cauldron != null && a != null && b != null)
-						cauldron.MixMax(a, b);
-				};
-			}
+
 		}
 
 		private void OnEnable()
 		{
+            Initialize();
+            if (rm != null) { rm.OnInventoryChanged -= OnInventoryChangedUi; rm.OnInventoryChanged += OnInventoryChangedUi; }
 			// Invalidate cache on window open in case unlocks changed while closed
-			InvalidateEligibleFoodsCache();
+
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();
@@ -211,220 +208,9 @@ namespace TimelessEchoes.UI
 			_tastingOccurredThisSession = false;
 		}
 
-		private void RefreshMixSlots()
-		{
-			if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
-			var eligibleFoods = GetEligibleFoods();
-			UpdateMixAllButtonState(eligibleFoods);
+        private void RefreshMixSlots() => directConversion?.Refresh();
+        private void RefreshSelectedDisplaySlots() => directConversion?.Refresh();
 
-			// Clear any previous selections that are not foods or have zero amount
-			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
-			if (selectedB != null && !eligibleFoods.Contains(selectedB)) selectedB = null;
-			if (selectedA != null && rm != null && rm.GetAmount(selectedA) <= 0) selectedA = null;
-			if (selectedB != null && rm != null && rm.GetAmount(selectedB) <= 0) selectedB = null;
-
-			// Clamp to first 30 and to available UI slots, with warnings
-			var maxByDesign = 30;
-			var capacity = mixSlots.Count;
-			if (eligibleFoods.Count > maxByDesign)
-				Log($"Eligible foods ({eligibleFoods.Count}) exceed 30; clamping to first 30.", TELogCategory.General, this);
-			var clamped = eligibleFoods.Take(Mathf.Min(maxByDesign, eligibleFoods.Count)).ToList();
-			if (clamped.Count > capacity)
-			{
-				Log($"Eligible foods ({clamped.Count}) exceed available mix slots ({capacity}); clamping to {capacity}.", TELogCategory.General, this);
-				clamped = clamped.Take(capacity).ToList();
-			}
-			var all = clamped;
-			for (int i = 0; i < mixSlots.Count; i++)
-			{
-				var ui = mixSlots[i];
-				Resource r = i < all.Count ? all[i] : null;
-				if (ui == null) continue;
-				if (r == null)
-				{
-					if (ui.iconImage != null) { ui.iconImage.enabled = false; ui.iconImage.sprite = null; }
-					if (ui.countText != null) { ui.countText.text = ""; }
-					if (ui.selectButton != null) ui.selectButton.interactable = false;
-					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = false;
-					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = false;
-					continue;
-				}
-				if (ui.iconImage != null) { ui.iconImage.enabled = true; ui.iconImage.sprite = r.icon; }
-				var amount = rm != null ? rm.GetAmount(r) : 0;
-				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(amount, true);
-				if (ui.selectButton != null)
-				{
-					ui.selectButton.onClick.RemoveAllListeners();
-					var isSelA = selectedA == r;
-					var isSelB = selectedB == r;
-					var hasAny = amount > 0;
-					var canSelect = hasAny && !(isSelA || isSelB);
-					ui.selectButton.interactable = canSelect;
-					if (canSelect)
-						ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
-				}
-				{
-					var isSelA = selectedA == r;
-					var isSelB = selectedB == r;
-					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = (isSelA && !nextGreen) || (isSelB && nextGreen);
-					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = (isSelA && nextGreen) || (isSelB && !nextGreen);
-				}
-			}
-			RefreshMixButton();
-			RefreshSelectedDisplaySlots();
-		}
-
-		private List<Resource> GetEligibleFoods()
-		{
-			// Return cached list if available; only rebuild when invalidated
-			return _cachedEligibleFoods ??= BuildEligibleFoodsListInternal();
-		}
-
-		private void InvalidateEligibleFoodsCache()
-		{
-			_cachedEligibleFoods = null;
-		}
-
-		private List<Resource> BuildEligibleFoodsListInternal() => CauldronMixingPresentation.BuildEligibleFoods(rm);
-
-		private void UpdateMixAllButtonState(List<Resource> eligibleFoods)
-		{
-			if (drinking == null || drinking.mixAll == null || rm == null) return;
-			var stocked = 0;
-			foreach (var res in eligibleFoods)
-			{
-				if (res == null) continue;
-				if (rm.GetAmount(res) > 0)
-				{
-					stocked++;
-					if (stocked >= 2) break;
-				}
-			}
-			drinking.mixAll.interactable = stocked >= 2;
-		}
-
-		private void ToggleSelection(Resource r, CauldronMixItemUIReferences ui)
-		{
-			// Always distinct; selecting another replaces the oldest (alternating colors)
-			if (selectedA == null && selectedB == null)
-			{
-				selectedA = r; nextGreen = false;
-			}
-			else if (selectedA != null && selectedB == null)
-			{
-				selectedB = r; nextGreen = true;
-			}
-			else
-			{
-				if (nextGreen)
-				{
-					selectedA = r; nextGreen = false;
-				}
-				else
-				{
-					selectedB = r; nextGreen = true;
-				}
-			}
-			// Rebuild UI so zero-count items become non-selectable and visuals update consistently
-			RefreshMixSlots();
-		}
-
-		private void RefreshMixButton()
-		{
-			double amountA = 0, amountB = 0;
-			if (rm != null && selectedA != null) amountA = rm.GetAmount(selectedA);
-			if (rm != null && selectedB != null) amountB = rm.GetAmount(selectedB);
-			var canMix = selectedA != null && selectedB != null && selectedA != selectedB && amountA > 0 && amountB > 0;
-			if (mixButton != null) mixButton.interactable = canMix;
-
-			// Update predicted stew text
-			double predicted = 0;
-			if (selectedA != null && selectedB != null && selectedA != selectedB)
-			{
-				double points = amountA * selectedA.baseValue * selectedA.valueMultiplier + amountB * selectedB.baseValue * selectedB.valueMultiplier;
-				predicted = points / 100.0;
-			}
-			if (predictedStewText != null)
-				predictedStewText.text = CalcUtils.FormatNumber(predicted);
-
-			// Arrow color
-			if (mixArrowImage != null)
-			{
-				mixArrowImage.sprite = canMix ? mixArrowGreenSprite : mixArrowRedSprite;
-				mixArrowImage.enabled = mixArrowImage.sprite != null;
-			}
-		}
-
-		private void OnMixClicked()
-		{
-			if (cauldron == null || selectedA == null || selectedB == null) return;
-			cauldron.MixMax(selectedA, selectedB);
-			selectedA = selectedB = null;
-			nextGreen = true;
-			RefreshMixSlots();
-			RefreshDrinkingTexts();
-			RefreshSelectedDisplaySlots();
-		}
-
-		private void OnMixAllClicked()
-		{
-			if (cauldron == null || rm == null) return;
-			var eligibleFoods = GetEligibleFoods();
-			if (eligibleFoods.Count < 2) return;
-
-			var stocked = new List<Resource>();
-			foreach (var res in eligibleFoods)
-			{
-				if (res != null && rm.GetAmount(res) > 0)
-					stocked.Add(res);
-			}
-
-			if (stocked.Count < 2) return;
-
-			for (int i = 0; i + 1 < stocked.Count; i += 2)
-			{
-				var first = stocked[i];
-				var second = stocked[i + 1];
-				if (first == null || second == null) continue;
-				if (rm.GetAmount(first) <= 0 || rm.GetAmount(second) <= 0) continue;
-				cauldron.MixMax(first, second);
-			}
-
-			selectedA = null;
-			selectedB = null;
-			nextGreen = true;
-			RefreshMixSlots();
-			RefreshDrinkingTexts();
-			RefreshSelectedDisplaySlots();
-		}
-
-		private void RefreshSelectedDisplaySlots()
-		{
-			UpdateSelectedSlot(slot1, selectedA);
-			UpdateSelectedSlot(slot2, selectedB);
-		}
-
-		private void UpdateSelectedSlot(CauldronMixItemUIReferences slot, Resource r)
-		{
-			if (slot == null) return;
-			if (slot.iconImage != null)
-			{
-				if (r != null)
-				{
-					slot.iconImage.enabled = true;
-					slot.iconImage.sprite = r.icon;
-				}
-				else
-				{
-					slot.iconImage.sprite = null;
-					slot.iconImage.enabled = false;
-				}
-			}
-			if (slot.countText != null) slot.countText.text = string.Empty; // icon only
-			if (slot.selectionImageGreen != null) slot.selectionImageGreen.enabled = false;
-			if (slot.selectionImageWhite != null) slot.selectionImageWhite.enabled = false;
-			if (slot.selectButton != null) slot.selectButton.interactable = false;
-		}
 
 		private void RefreshDrinkingTexts()
 		{
@@ -452,8 +238,9 @@ namespace TimelessEchoes.UI
 
 		private void OnSaveOrLoad()
 		{
+            directConversion?.Clear();
 			// Invalidate cache when save data changes (unlocks may differ)
-			InvalidateEligibleFoodsCache();
+
 			RefreshMixSlots();
 			RefreshDrinkingTexts();
 			RefreshPieChart();

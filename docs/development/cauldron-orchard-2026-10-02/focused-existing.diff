@@ -1,0 +1,3292 @@
+diff --git a/Assets/Scripts/Upgrades/Resource.cs b/Assets/Scripts/Upgrades/Resource.cs
+index 2d21dc8a1..83d8b776d 100644
+--- a/Assets/Scripts/Upgrades/Resource.cs	
++++ b/Assets/Scripts/Upgrades/Resource.cs	
+@@ -10,6 +10,11 @@ namespace TimelessEchoes.Upgrades
+     [CreateAssetMenu(fileName = "Resource", menuName = "SO/Resource Item")]
+     public class Resource : ScriptableObject
+     {
++        public enum FoodEligibility { Automatic, Food, NotFood }
++
++        [Tooltip("Automatic retains existing Farming/Fishing food rules. Propagation items must use NotFood.")]
++        public FoodEligibility foodEligibility;
++
+         public enum CauldronCategory
+         {
+             Auto,
+@@ -58,4 +63,4 @@ namespace TimelessEchoes.Upgrades
+         [HideInInspector] public double totalReceived;
+         [HideInInspector] public double totalSpent;
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/Assets/Scripts/Upgrades/CauldronManager.cs b/Assets/Scripts/Upgrades/CauldronManager.cs
+index d893eb548..1bf0ef389 100644
+--- a/Assets/Scripts/Upgrades/CauldronManager.cs	
++++ b/Assets/Scripts/Upgrades/CauldronManager.cs	
+@@ -95,9 +95,9 @@ namespace TimelessEchoes.Upgrades
+         public event Action<int> OnSessionCardsChanged;
+         public event Action<TastingStats> OnStatsChanged;
+         /// <summary>
+-        ///     Fired when mixing occurs. Amount is the total number of resource units consumed across both inputs.
++        ///     Fired when mixing occurs. Amount is the committed number of food units consumed. Quest progress is already durable.
+         /// </summary>
+-        public event Action<int> OnResourcesMixed;
++        public event Action<double> OnResourcesMixed;
+ 
+         public struct TastingStats
+         {
+@@ -446,37 +446,30 @@ namespace TimelessEchoes.Upgrades
+         }
+ 
+         // -------- Mixing --------
+-        public bool CanMix(Resource a, Resource b)
+-        {
+-            // Lazy resolve ResourceManager in case Awake order caused null
+-            if (resourceManager == null) resourceManager = ResourceManager.Instance;
+-            if (resourceManager == null) return false;
+-            if (a == null || b == null || a == b) return false;
+-            return resourceManager.GetAmount(a) > 0 || resourceManager.GetAmount(b) > 0;
+-        }
+-
+-        public double MixMax(Resource a, Resource b)
+-        {
+-            // Lazy resolve ResourceManager in case Awake order caused null
+-            if (resourceManager == null) resourceManager = ResourceManager.Instance;
+-            if (!CanMix(a, b)) return 0;
+-            var amountA = resourceManager.GetAmount(a);
+-            var amountB = resourceManager.GetAmount(b);
+-            if (amountA > 0) resourceManager.Spend(a, amountA);
+-            if (amountB > 0) resourceManager.Spend(b, amountB);
+-            var points = amountA * a.baseValue * a.valueMultiplier + amountB * b.baseValue * b.valueMultiplier;
+-            var stewGained = points / 100.0;
+-            Stew += stewGained;
+-            var totalUnits = (int)Mathf.RoundToInt((float)(amountA + amountB));
+-            if (totalUnits > 0)
+-            {
+-                var handler = OnResourcesMixed;
+-                if (handler != null)
+-                    handler(totalUnits);
+-            }
+-            TrySave();
++        public bool CanAddToCauldron(Resource food, double quantity)
++        {
++            resourceManager ??= ResourceManager.Instance;
++            var unit = CauldronConversion.UnitValue(food);
++            return food != null && resourceManager != null && resourceManager.IsUnlocked(food) &&
++                TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.IsFood(food) &&
++                CauldronConversion.IsFinite(quantity) && quantity > 0 && quantity <= resourceManager.GetAmount(food) &&
++                CauldronConversion.IsFinite(unit) && unit > 0 && CauldronConversion.IsFinite(quantity * unit);
++        }
++
++        public bool TryAddToCauldron(Resource food, double quantity, long sequence, out double gained, out string error)
++        {
++            gained = 0; error = null;
++            if (oracle == null) { error = "Save is not loaded."; return false; }
++            return oracle.TryCommitCauldronConversion(food, quantity, CauldronConversion.UnitValue(food),
++                sequence, out gained, out error);
++        }
++
++        // Called only after the complete immutable conversion has committed.
++        public void PublishCommittedConversion(double quantity)
++        {
++            OnStewChanged?.Invoke();
++            OnResourcesMixed?.Invoke(quantity);
+             TryAutoStartTasting();
+-            return stewGained;
+         }
+ 
+         public double GetStewCostPerRoll()
+diff --git a/Assets/Scripts/Quests/QuestManager.cs b/Assets/Scripts/Quests/QuestManager.cs
+index 68cd05a7f..e8b6861ab 100644
+--- a/Assets/Scripts/Quests/QuestManager.cs	
++++ b/Assets/Scripts/Quests/QuestManager.cs	
+@@ -238,7 +238,12 @@ namespace TimelessEchoes.Quests
+             }
+         }
+ 
+-        private void OnResourcesMixed(int amount)
++        public List<string> GetActiveCauldronQuestIds() => active.Values
++            .Where(inst => inst?.data?.requirements != null && inst.data.requirements.Any(
++                req => req != null && req.type == QuestData.RequirementType.CauldronMix))
++            .Select(inst => inst.data.questId).Distinct().ToList();
++
++        private void OnResourcesMixed(double amount)
+         {
+             if (amount <= 0) return;
+             foreach (var inst in active.Values)
+@@ -255,10 +260,7 @@ namespace TimelessEchoes.Quests
+                 }
+                 if (!has) continue;
+ 
+-                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
+-                {
+-                    rec.CauldronMixProgress += amount;
+-                }
++                // The conversion command already committed this progress with food/stew.
+                 UpdateProgress(inst);
+             }
+         }
+diff --git a/Assets/Scripts/Blindsided/SaveData/GameData.cs b/Assets/Scripts/Blindsided/SaveData/GameData.cs
+index dab3ad8d1..bde6d5bd5 100644
+--- a/Assets/Scripts/Blindsided/SaveData/GameData.cs	
++++ b/Assets/Scripts/Blindsided/SaveData/GameData.cs	
+@@ -103,6 +103,17 @@ namespace Blindsided.SaveData
+ 
+         // --- Cauldron (Stew/Collections) ---
+         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronStew;
++        // Bounded last receipt: older sequence numbers cannot execute again after reload.
++        [TabGroup("GameDataTabs", "Cauldron")] public long CauldronConversionSequence;
++        [TabGroup("GameDataTabs", "Cauldron")] public CauldronConversionReceipt LastCauldronConversion;
++
++        public class CauldronConversionReceipt
++        {
++            public long Sequence;
++            public string ResourceName;
++            public double Quantity;
++            public double UnitValue;
++        }
+         [TabGroup("GameDataTabs", "Cauldron")] public int CauldronEvaLevel = 1;
+         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronEvaXp;
+         [ShowInInspector] [HideReferenceObjectPicker]
+diff --git a/Assets/Scripts/UI/Cauldron/CauldronMixingPresentation.cs b/Assets/Scripts/UI/Cauldron/CauldronMixingPresentation.cs
+index 4601020bb..298eb66f5 100644
+--- a/Assets/Scripts/UI/Cauldron/CauldronMixingPresentation.cs	
++++ b/Assets/Scripts/UI/Cauldron/CauldronMixingPresentation.cs	
+@@ -1,51 +1,41 @@
+ using System.Collections.Generic;
++using System.Linq;
+ using TimelessEchoes.Upgrades;
++using TimelessEchoes.Tasks;
++
+ namespace TimelessEchoes.UI.Cauldron
+ {
+     public static class CauldronMixingPresentation
+     {
+-		public static List<Resource> BuildEligibleFoods(ResourceManager rm)
+-		{
+-			// Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
+-			var eligibleFromTasks = new HashSet<Resource>();
+-			foreach (var t in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
+-			{
+-				if (t == null) continue;
+-				var skillName = t.associatedSkill != null ? t.associatedSkill.name : null;
+-				if (string.IsNullOrEmpty(skillName)) continue;
+-				var isFarming = skillName.IndexOf("farm", System.StringComparison.OrdinalIgnoreCase) >= 0;
+-				var isFishing = skillName.IndexOf("fish", System.StringComparison.OrdinalIgnoreCase) >= 0;
+-				if (!isFarming && !isFishing) continue;
+-				foreach (var drop in t.resourceDrops)
+-				{
+-					if (drop == null || drop.resource == null) continue;
+-					eligibleFromTasks.Add(drop.resource);
+-				}
+-			}
++        public static bool IsFood(Resource resource) => resource != null && BuildFoodDefinitions().Contains(resource);
++
++        public static List<Resource> BuildFoodDefinitions()
++        {
++            var taskFoods = new HashSet<Resource>();
++            foreach (var task in Blindsided.Utilities.AssetCache.GetAll<TaskData>("Tasks"))
++            {
++                var name = task?.associatedSkill?.name;
++                if (string.IsNullOrEmpty(name) ||
++                    (name.IndexOf("farm", System.StringComparison.OrdinalIgnoreCase) < 0 &&
++                     name.IndexOf("fish", System.StringComparison.OrdinalIgnoreCase) < 0)) continue;
++                foreach (var drop in task.resourceDrops)
++                    if (drop?.resource != null) taskFoods.Add(drop.resource);
++            }
++            return Blindsided.Utilities.AssetCache.GetAll<Resource>("")
++                .Where(r => r && r.foodEligibility != Resource.FoodEligibility.NotFood &&
++                    (r.foodEligibility == Resource.FoodEligibility.Food || taskFoods.Contains(r) ||
++                     r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing))
++                .Distinct().ToList();
++        }
+ 
+-			// Include manual overrides: any Resource categorized as Farming or Fishing
+-			var eligible = new HashSet<Resource>(eligibleFromTasks);
+-			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+-			{
+-				if (r == null) continue;
+-				if (r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing)
+-					eligible.Add(r);
+-			}
++        public static List<Resource> BuildEligibleFoods(ResourceManager resources) => SortFoods(
++            BuildFoodDefinitions().Where(r => resources != null && resources.IsUnlocked(r)), resources);
+ 
+-			// Build sorted list of unlocked eligible resources
+-			var result = new List<Resource>();
+-			foreach (var r in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
+-			{
+-				if (r != null && eligible.Contains(r) && rm != null && rm.IsUnlocked(r))
+-					result.Add(r);
+-			}
+-			result.Sort((a, b) =>
+-			{
+-				int cmp = a.resourceID.CompareTo(b.resourceID);
+-				return cmp != 0 ? cmp : string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+-			});
+-			return result;
+-		}
++        public static List<Resource> BuildDisplayFoods(ResourceManager resources) => SortFoods(BuildFoodDefinitions(), resources);
+ 
++        public static List<Resource> SortFoods(IEnumerable<Resource> foods, ResourceManager resources) => foods
++            .OrderBy(r => resources != null && resources.IsUnlocked(r) ? (resources.GetAmount(r) > 0 ? 0 : 1) : 2)
++            .ThenByDescending(r => resources != null && resources.IsUnlocked(r) ? CauldronConversion.UnitValue(r) : 0)
++            .ThenBy(r => r.resourceID).ThenBy(r => r.name).ToList();
+     }
+ }
+diff --git a/Assets/Scripts/UI/Cauldron/CauldronMixPresenter.cs b/Assets/Scripts/UI/Cauldron/CauldronMixPresenter.cs
+index e7faae8d3..f721ba7e1 100644
+--- a/Assets/Scripts/UI/Cauldron/CauldronMixPresenter.cs	
++++ b/Assets/Scripts/UI/Cauldron/CauldronMixPresenter.cs	
+@@ -1,7 +1,4 @@
+-using System;
+ using System.Collections.Generic;
+-using System.Linq;
+-using Blindsided.Utilities;
+ using References.UI;
+ using TMPro;
+ using TimelessEchoes.Upgrades;
+@@ -25,298 +22,19 @@ namespace TimelessEchoes.UI.Cauldron
+         [SerializeField] private Sprite mixArrowGreenSprite;
+         [SerializeField] private Sprite mixArrowRedSprite;
+ 
+-        private Resource _selectedA;
+-        private Resource _selectedB;
+-        private bool _nextGreen = true;
++        private LegacyCauldronConversion conversion;
+ 
+-        /// <summary>
+-        /// Currently selected first resource for mixing.
+-        /// </summary>
+-        public Resource SelectedA => _selectedA;
+-
+-        /// <summary>
+-        /// Currently selected second resource for mixing.
+-        /// </summary>
+-        public Resource SelectedB => _selectedB;
+-
+-        /// <summary>
+-        /// Event fired when the mix button is clicked with two valid selections.
+-        /// </summary>
+-        public event Action<Resource, Resource> OnMixRequested;
+-
+-        /// <summary>
+-        /// Event fired when the mix all button is clicked.
+-        /// </summary>
+-        public event Action OnMixAllRequested;
+-
+-        /// <summary>
+-        /// Event fired when the selected display slots need refreshing.
+-        /// </summary>
+-        public event Action OnSelectionChanged;
+-
+-        /// <summary>
+-        /// Initializes button listeners.
+-        /// </summary>
+         public void Initialize()
+         {
+-            if (mixButton != null)
+-                mixButton.onClick.AddListener(() => OnMixRequested?.Invoke(_selectedA, _selectedB));
+-            if (mixAllButton != null)
+-                mixAllButton.onClick.AddListener(() => OnMixAllRequested?.Invoke());
+-        }
+-
+-        /// <summary>
+-        /// Refreshes all mix slots with current eligible foods.
+-        /// </summary>
+-        /// <param name="eligibleFoods">List of resources eligible for mixing.</param>
+-        /// <param name="rm">ResourceManager for amounts.</param>
+-        public void RefreshSlots(List<Resource> eligibleFoods, ResourceManager rm)
+-        {
+-            if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
+-
+-            // Clear any previous selections that are not foods or have zero amount
+-            if (_selectedA != null && !eligibleFoods.Contains(_selectedA)) _selectedA = null;
+-            if (_selectedB != null && !eligibleFoods.Contains(_selectedB)) _selectedB = null;
+-            if (_selectedA != null && rm.GetAmount(_selectedA) <= 0) _selectedA = null;
+-            if (_selectedB != null && rm.GetAmount(_selectedB) <= 0) _selectedB = null;
+-
+-            // Clamp to first 30 and to available UI slots
+-            var maxByDesign = 30;
+-            var capacity = mixSlots.Count;
+-            var clamped = eligibleFoods.Take(Mathf.Min(maxByDesign, eligibleFoods.Count)).ToList();
+-            if (clamped.Count > capacity)
+-                clamped = clamped.Take(capacity).ToList();
+-
+-            var all = clamped;
+-            for (int i = 0; i < mixSlots.Count; i++)
+-            {
+-                var ui = mixSlots[i];
+-                Resource r = i < all.Count ? all[i] : null;
+-                if (ui == null) continue;
+-
+-                if (r == null)
+-                {
+-                    if (ui.iconImage != null)
+-                    {
+-                        ui.iconImage.enabled = false;
+-                        ui.iconImage.sprite = null;
+-                    }
+-                    if (ui.countText != null) ui.countText.text = "";
+-                    if (ui.selectButton != null) ui.selectButton.interactable = false;
+-                    if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = false;
+-                    if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = false;
+-                    continue;
+-                }
+-
+-                if (ui.iconImage != null)
+-                {
+-                    ui.iconImage.enabled = true;
+-                    ui.iconImage.sprite = r.icon;
+-                }
+-
+-                var amount = rm.GetAmount(r);
+-                if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(amount, true);
+-
+-                if (ui.selectButton != null)
+-                {
+-                    ui.selectButton.onClick.RemoveAllListeners();
+-                    var isSelA = _selectedA == r;
+-                    var isSelB = _selectedB == r;
+-                    var hasAny = amount > 0;
+-                    var canSelect = hasAny && !(isSelA || isSelB);
+-                    ui.selectButton.interactable = canSelect;
+-
+-                    if (canSelect)
+-                    {
+-                        // Capture resource for closure
+-                        var captured = r;
+-                        ui.selectButton.onClick.AddListener(() => ToggleSelection(captured));
+-                    }
+-                }
+-
+-                {
+-                    var isSelA = _selectedA == r;
+-                    var isSelB = _selectedB == r;
+-                    if (ui.selectionImageGreen != null)
+-                        ui.selectionImageGreen.enabled = (isSelA && !_nextGreen) || (isSelB && _nextGreen);
+-                    if (ui.selectionImageWhite != null)
+-                        ui.selectionImageWhite.enabled = (isSelA && _nextGreen) || (isSelB && !_nextGreen);
+-                }
+-            }
+-        }
+-
+-        /// <summary>
+-        /// Refreshes the selected display slots (slot1 and slot2).
+-        /// </summary>
+-        public void RefreshSelectedDisplaySlots()
+-        {
+-            // Update slot1 (selectedA display)
+-            if (slot1 != null)
+-            {
+-                if (slot1.iconImage != null)
+-                {
+-                    if (_selectedA != null)
+-                    {
+-                        slot1.iconImage.enabled = true;
+-                        slot1.iconImage.sprite = _selectedA.icon;
+-                    }
+-                    else
+-                    {
+-                        slot1.iconImage.enabled = false;
+-                        slot1.iconImage.sprite = null;
+-                    }
+-                }
+-            }
+-
+-            // Update slot2 (selectedB display)
+-            if (slot2 != null)
+-            {
+-                if (slot2.iconImage != null)
+-                {
+-                    if (_selectedB != null)
+-                    {
+-                        slot2.iconImage.enabled = true;
+-                        slot2.iconImage.sprite = _selectedB.icon;
+-                    }
+-                    else
+-                    {
+-                        slot2.iconImage.enabled = false;
+-                        slot2.iconImage.sprite = null;
+-                    }
+-                }
+-            }
+-        }
+-
+-        /// <summary>
+-        /// Refreshes the mix button state and predicted stew text.
+-        /// </summary>
+-        /// <param name="rm">ResourceManager for amounts.</param>
+-        public void RefreshMixButton(ResourceManager rm)
+-        {
+-            double amountA = 0, amountB = 0;
+-            if (rm != null && _selectedA != null) amountA = rm.GetAmount(_selectedA);
+-            if (rm != null && _selectedB != null) amountB = rm.GetAmount(_selectedB);
+-            var canMix = _selectedA != null && _selectedB != null && _selectedA != _selectedB && amountA > 0 && amountB > 0;
+-            if (mixButton != null) mixButton.interactable = canMix;
+-
+-            // Update predicted stew text
+-            double predicted = 0;
+-            if (_selectedA != null && _selectedB != null && _selectedA != _selectedB)
+-            {
+-                double points = amountA * _selectedA.baseValue * _selectedA.valueMultiplier
+-                                + amountB * _selectedB.baseValue * _selectedB.valueMultiplier;
+-                predicted = points / 100.0;
+-            }
+-            if (predictedStewText != null)
+-                predictedStewText.text = CalcUtils.FormatNumber(predicted);
+-
+-            // Arrow color
+-            if (mixArrowImage != null)
+-            {
+-                mixArrowImage.sprite = canMix ? mixArrowGreenSprite : mixArrowRedSprite;
+-                mixArrowImage.enabled = mixArrowImage.sprite != null;
+-            }
+-        }
+-
+-        /// <summary>
+-        /// Updates the mix all button state based on stocked foods.
+-        /// </summary>
+-        /// <param name="eligibleFoods">List of eligible foods.</param>
+-        /// <param name="rm">ResourceManager for amounts.</param>
+-        public void UpdateMixAllButtonState(List<Resource> eligibleFoods, ResourceManager rm)
+-        {
+-            if (mixAllButton == null || rm == null) return;
+-            var stocked = 0;
+-            foreach (var res in eligibleFoods)
+-            {
+-                if (res == null) continue;
+-                if (rm.GetAmount(res) > 0)
+-                {
+-                    stocked++;
+-                    if (stocked >= 2) break;
+-                }
+-            }
+-            mixAllButton.interactable = stocked >= 2;
+-        }
+-
+-        /// <summary>
+-        /// Clears the current selection state.
+-        /// </summary>
+-        public void ClearSelection()
+-        {
+-            _selectedA = _selectedB = null;
+-            _nextGreen = true;
+-        }
+-
+-        private void ToggleSelection(Resource r)
+-        {
+-            // Always distinct; selecting another replaces the oldest (alternating colors)
+-            if (_selectedA == null && _selectedB == null)
+-            {
+-                _selectedA = r;
+-                _nextGreen = false;
+-            }
+-            else if (_selectedA != null && _selectedB == null)
+-            {
+-                _selectedB = r;
+-                _nextGreen = true;
+-            }
+-            else
+-            {
+-                if (_nextGreen)
+-                {
+-                    _selectedA = r;
+-                    _nextGreen = false;
+-                }
+-                else
+-                {
+-                    _selectedB = r;
+-                    _nextGreen = true;
+-                }
+-            }
+-
+-            // Notify that selection changed
+-            OnSelectionChanged?.Invoke();
+-        }
+-
+-        /// <summary>
+-        /// Builds a list of resources eligible for mixing from task drop tables and category overrides.
+-        /// </summary>
+-        /// <param name="rm">ResourceManager for unlock state.</param>
+-        /// <returns>Sorted list of eligible, unlocked foods.</returns>
+-        public static List<Resource> BuildEligibleFoodsList(ResourceManager rm)
+-        {
+-            // Only allow mixing with foods: resources that appear in Farming or Fishing task drop tables
+-            var eligibleFromTasks = new HashSet<Resource>();
+-            foreach (var t in AssetCache.GetAll<TimelessEchoes.Tasks.TaskData>("Tasks"))
+-            {
+-                if (t == null) continue;
+-                var skillName = t.associatedSkill != null ? t.associatedSkill.name : null;
+-                if (string.IsNullOrEmpty(skillName)) continue;
+-                var isFarming = skillName.IndexOf("farm", StringComparison.OrdinalIgnoreCase) >= 0;
+-                var isFishing = skillName.IndexOf("fish", StringComparison.OrdinalIgnoreCase) >= 0;
+-                if (!isFarming && !isFishing) continue;
+-                foreach (var drop in t.resourceDrops)
+-                {
+-                    if (drop == null || drop.resource == null) continue;
+-                    eligibleFromTasks.Add(drop.resource);
+-                }
+-            }
+-
+-            // Include manual overrides: any Resource categorized as Farming or Fishing
+-            var eligible = new HashSet<Resource>(eligibleFromTasks);
+-            foreach (var r in AssetCache.GetAll<Resource>(""))
+-            {
+-                if (r == null) continue;
+-                if (r.cauldronCategory == Resource.CauldronCategory.Farming || r.cauldronCategory == Resource.CauldronCategory.Fishing)
+-                    eligible.Add(r);
+-            }
+-
+-            return AssetCache.GetAll<Resource>("")
+-                .Where(r => r != null && eligible.Contains(r) && (rm != null && rm.IsUnlocked(r)))
+-                .OrderBy(r => r.resourceID)
+-                .ThenBy(r => r.name)
+-                .ToList();
++            conversion ??= new LegacyCauldronConversion(mixSlots, slot1, slot2,
++                mixButton, mixAllButton, predictedStewText, mixArrowImage);
+         }
++        public void RefreshSlots(List<Resource> eligibleFoods, ResourceManager resources)
++        { Initialize(); conversion.Refresh(); }
++        public void RefreshSelectedDisplaySlots() => conversion?.Refresh();
++        public void RefreshMixButton(ResourceManager resources) => conversion?.Refresh();
++        public void UpdateMixAllButtonState(List<Resource> eligibleFoods, ResourceManager resources) => conversion?.Refresh();
++        public void ClearSelection() => conversion?.Clear();
++        public static List<Resource> BuildEligibleFoodsList(ResourceManager resources) => CauldronMixingPresentation.BuildEligibleFoods(resources);
+     }
+ }
+diff --git a/Assets/Scripts/UI/CauldronWindowUI.cs b/Assets/Scripts/UI/CauldronWindowUI.cs
+index 1e2d9ac40..831bb4932 100644
+--- a/Assets/Scripts/UI/CauldronWindowUI.cs	
++++ b/Assets/Scripts/UI/CauldronWindowUI.cs	
+@@ -27,9 +27,9 @@ namespace TimelessEchoes.UI
+ 		[SerializeField] private CauldronConfig config;
+ 
+ 		[Header("Mixing")]
+-		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Drag up to 30 in Inspector
+-		[SerializeField] private CauldronMixItemUIReferences slot1; // Selected A display (icon only)
+-		[SerializeField] private CauldronMixItemUIReferences slot2; // Selected B display (icon only)
++		[SerializeField] private System.Collections.Generic.List<CauldronMixItemUIReferences> mixSlots = new(); // Authored starting slots; the adapter adds food slots as content grows.
++		[SerializeField] private CauldronMixItemUIReferences slot1; // Retained serialized legacy display; hidden by direct conversion.
++		[SerializeField] private CauldronMixItemUIReferences slot2; // Retained serialized legacy display; hidden by direct conversion.
+ 		[SerializeField] private Button mixButton;
+         [SerializeField] private TMP_Text predictedStewText;
+         [SerializeField] private Image mixArrowImage;
+@@ -89,9 +89,7 @@ namespace TimelessEchoes.UI
+ 
+ 
+ 
+-		private Resource selectedA;
+-		private Resource selectedB;
+-		private bool nextGreen = true;
++		private LegacyCauldronConversion directConversion;
+ 		private bool _tastingOccurredThisSession;
+ 		[SerializeField] private ResourceManager rm;
+ 
+@@ -101,22 +99,28 @@ namespace TimelessEchoes.UI
+ 		private bool _weightsNeedRefresh;
+ 
+ 		// Cached eligible foods list to avoid repeated LINQ allocations
+-		private List<Resource> _cachedEligibleFoods;
+ 
+-		private void Awake()
++
++		private bool initialized;
++        private void Awake()
++        {
++            if (enabled) Initialize();
++        }
++        private void Initialize()
+ 		{
+-            if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
++            if (initialized) return;
++            initialized = true;
+ 			cauldron ??= CauldronManager.Instance;
+ 			rm ??= ResourceManager.Instance;
+ 			if (mixSlots == null || mixSlots.Count == 0)
+ 				Log("Cauldron mix slot list is empty; assign up to 30 CauldronMixItemUIReferences in the Inspector.", TELogCategory.General, this);
+-			if (rm != null) rm.OnInventoryChanged += OnInventoryChangedUi;
+-			if (mixButton != null) mixButton.onClick.AddListener(OnMixClicked);
++
++			directConversion = new LegacyCauldronConversion(mixSlots, slot1, slot2, mixButton, drinking ? drinking.mixAll : null, predictedStewText, mixArrowImage);
+ 			if (drinking != null)
+ 			{
+ 				if (drinking.tasteButton != null) drinking.tasteButton.onClick.AddListener(() => cauldron?.StartTasting());
+ 				if (drinking.stopButton != null) drinking.stopButton.onClick.AddListener(() => cauldron?.StopTasting());
+-				if (drinking.mixAll != null) drinking.mixAll.onClick.AddListener(OnMixAllClicked);
++
+ 			}
+ 			// Weights tooltip wiring (mirror Forge behavior)
+ 			if (weightsHoverObject != null)
+@@ -132,22 +136,15 @@ namespace TimelessEchoes.UI
+ 				exit.callback.AddListener(_ => HideWeightsTooltip());
+ 				trigger.triggers.Add(exit);
+ 			}
+-			// Wire mix presenter if assigned (future use)
+-			if (mixPresenter != null)
+-			{
+-				mixPresenter.Initialize();
+-				mixPresenter.OnMixRequested += (a, b) =>
+-				{
+-					if (cauldron != null && a != null && b != null)
+-						cauldron.MixMax(a, b);
+-				};
+-			}
++
+ 		}
+ 
+ 		private void OnEnable()
+ 		{
++            Initialize();
++            if (rm != null) { rm.OnInventoryChanged -= OnInventoryChangedUi; rm.OnInventoryChanged += OnInventoryChangedUi; }
+ 			// Invalidate cache on window open in case unlocks changed while closed
+-			InvalidateEligibleFoodsCache();
++
+ 			RefreshMixSlots();
+ 			RefreshDrinkingTexts();
+ 			RefreshPieChart();
+@@ -211,220 +208,9 @@ namespace TimelessEchoes.UI
+ 			_tastingOccurredThisSession = false;
+ 		}
+ 
+-		private void RefreshMixSlots()
+-		{
+-			if (rm == null || mixSlots == null || mixSlots.Count == 0) return;
+-			var eligibleFoods = GetEligibleFoods();
+-			UpdateMixAllButtonState(eligibleFoods);
+-
+-			// Clear any previous selections that are not foods or have zero amount
+-			if (selectedA != null && !eligibleFoods.Contains(selectedA)) selectedA = null;
+-			if (selectedB != null && !eligibleFoods.Contains(selectedB)) selectedB = null;
+-			if (selectedA != null && rm != null && rm.GetAmount(selectedA) <= 0) selectedA = null;
+-			if (selectedB != null && rm != null && rm.GetAmount(selectedB) <= 0) selectedB = null;
+-
+-			// Clamp to first 30 and to available UI slots, with warnings
+-			var maxByDesign = 30;
+-			var capacity = mixSlots.Count;
+-			if (eligibleFoods.Count > maxByDesign)
+-				Log($"Eligible foods ({eligibleFoods.Count}) exceed 30; clamping to first 30.", TELogCategory.General, this);
+-			var clamped = eligibleFoods.Take(Mathf.Min(maxByDesign, eligibleFoods.Count)).ToList();
+-			if (clamped.Count > capacity)
+-			{
+-				Log($"Eligible foods ({clamped.Count}) exceed available mix slots ({capacity}); clamping to {capacity}.", TELogCategory.General, this);
+-				clamped = clamped.Take(capacity).ToList();
+-			}
+-			var all = clamped;
+-			for (int i = 0; i < mixSlots.Count; i++)
+-			{
+-				var ui = mixSlots[i];
+-				Resource r = i < all.Count ? all[i] : null;
+-				if (ui == null) continue;
+-				if (r == null)
+-				{
+-					if (ui.iconImage != null) { ui.iconImage.enabled = false; ui.iconImage.sprite = null; }
+-					if (ui.countText != null) { ui.countText.text = ""; }
+-					if (ui.selectButton != null) ui.selectButton.interactable = false;
+-					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = false;
+-					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = false;
+-					continue;
+-				}
+-				if (ui.iconImage != null) { ui.iconImage.enabled = true; ui.iconImage.sprite = r.icon; }
+-				var amount = rm != null ? rm.GetAmount(r) : 0;
+-				if (ui.countText != null) ui.countText.text = CalcUtils.FormatNumber(amount, true);
+-				if (ui.selectButton != null)
+-				{
+-					ui.selectButton.onClick.RemoveAllListeners();
+-					var isSelA = selectedA == r;
+-					var isSelB = selectedB == r;
+-					var hasAny = amount > 0;
+-					var canSelect = hasAny && !(isSelA || isSelB);
+-					ui.selectButton.interactable = canSelect;
+-					if (canSelect)
+-						ui.selectButton.onClick.AddListener(() => ToggleSelection(r, ui));
+-				}
+-				{
+-					var isSelA = selectedA == r;
+-					var isSelB = selectedB == r;
+-					if (ui.selectionImageGreen != null) ui.selectionImageGreen.enabled = (isSelA && !nextGreen) || (isSelB && nextGreen);
+-					if (ui.selectionImageWhite != null) ui.selectionImageWhite.enabled = (isSelA && nextGreen) || (isSelB && !nextGreen);
+-				}
+-			}
+-			RefreshMixButton();
+-			RefreshSelectedDisplaySlots();
+-		}
+-
+-		private List<Resource> GetEligibleFoods()
+-		{
+-			// Return cached list if available; only rebuild when invalidated
+-			return _cachedEligibleFoods ??= BuildEligibleFoodsListInternal();
+-		}
+-
+-		private void InvalidateEligibleFoodsCache()
+-		{
+-			_cachedEligibleFoods = null;
+-		}
+-
+-		private List<Resource> BuildEligibleFoodsListInternal() => CauldronMixingPresentation.BuildEligibleFoods(rm);
+-
+-		private void UpdateMixAllButtonState(List<Resource> eligibleFoods)
+-		{
+-			if (drinking == null || drinking.mixAll == null || rm == null) return;
+-			var stocked = 0;
+-			foreach (var res in eligibleFoods)
+-			{
+-				if (res == null) continue;
+-				if (rm.GetAmount(res) > 0)
+-				{
+-					stocked++;
+-					if (stocked >= 2) break;
+-				}
+-			}
+-			drinking.mixAll.interactable = stocked >= 2;
+-		}
+-
+-		private void ToggleSelection(Resource r, CauldronMixItemUIReferences ui)
+-		{
+-			// Always distinct; selecting another replaces the oldest (alternating colors)
+-			if (selectedA == null && selectedB == null)
+-			{
+-				selectedA = r; nextGreen = false;
+-			}
+-			else if (selectedA != null && selectedB == null)
+-			{
+-				selectedB = r; nextGreen = true;
+-			}
+-			else
+-			{
+-				if (nextGreen)
+-				{
+-					selectedA = r; nextGreen = false;
+-				}
+-				else
+-				{
+-					selectedB = r; nextGreen = true;
+-				}
+-			}
+-			// Rebuild UI so zero-count items become non-selectable and visuals update consistently
+-			RefreshMixSlots();
+-		}
+-
+-		private void RefreshMixButton()
+-		{
+-			double amountA = 0, amountB = 0;
+-			if (rm != null && selectedA != null) amountA = rm.GetAmount(selectedA);
+-			if (rm != null && selectedB != null) amountB = rm.GetAmount(selectedB);
+-			var canMix = selectedA != null && selectedB != null && selectedA != selectedB && amountA > 0 && amountB > 0;
+-			if (mixButton != null) mixButton.interactable = canMix;
+-
+-			// Update predicted stew text
+-			double predicted = 0;
+-			if (selectedA != null && selectedB != null && selectedA != selectedB)
+-			{
+-				double points = amountA * selectedA.baseValue * selectedA.valueMultiplier + amountB * selectedB.baseValue * selectedB.valueMultiplier;
+-				predicted = points / 100.0;
+-			}
+-			if (predictedStewText != null)
+-				predictedStewText.text = CalcUtils.FormatNumber(predicted);
+-
+-			// Arrow color
+-			if (mixArrowImage != null)
+-			{
+-				mixArrowImage.sprite = canMix ? mixArrowGreenSprite : mixArrowRedSprite;
+-				mixArrowImage.enabled = mixArrowImage.sprite != null;
+-			}
+-		}
+-
+-		private void OnMixClicked()
+-		{
+-			if (cauldron == null || selectedA == null || selectedB == null) return;
+-			cauldron.MixMax(selectedA, selectedB);
+-			selectedA = selectedB = null;
+-			nextGreen = true;
+-			RefreshMixSlots();
+-			RefreshDrinkingTexts();
+-			RefreshSelectedDisplaySlots();
+-		}
+-
+-		private void OnMixAllClicked()
+-		{
+-			if (cauldron == null || rm == null) return;
+-			var eligibleFoods = GetEligibleFoods();
+-			if (eligibleFoods.Count < 2) return;
+-
+-			var stocked = new List<Resource>();
+-			foreach (var res in eligibleFoods)
+-			{
+-				if (res != null && rm.GetAmount(res) > 0)
+-					stocked.Add(res);
+-			}
+-
+-			if (stocked.Count < 2) return;
+-
+-			for (int i = 0; i + 1 < stocked.Count; i += 2)
+-			{
+-				var first = stocked[i];
+-				var second = stocked[i + 1];
+-				if (first == null || second == null) continue;
+-				if (rm.GetAmount(first) <= 0 || rm.GetAmount(second) <= 0) continue;
+-				cauldron.MixMax(first, second);
+-			}
+-
+-			selectedA = null;
+-			selectedB = null;
+-			nextGreen = true;
+-			RefreshMixSlots();
+-			RefreshDrinkingTexts();
+-			RefreshSelectedDisplaySlots();
+-		}
+-
+-		private void RefreshSelectedDisplaySlots()
+-		{
+-			UpdateSelectedSlot(slot1, selectedA);
+-			UpdateSelectedSlot(slot2, selectedB);
+-		}
++        private void RefreshMixSlots() => directConversion?.Refresh();
++        private void RefreshSelectedDisplaySlots() => directConversion?.Refresh();
+ 
+-		private void UpdateSelectedSlot(CauldronMixItemUIReferences slot, Resource r)
+-		{
+-			if (slot == null) return;
+-			if (slot.iconImage != null)
+-			{
+-				if (r != null)
+-				{
+-					slot.iconImage.enabled = true;
+-					slot.iconImage.sprite = r.icon;
+-				}
+-				else
+-				{
+-					slot.iconImage.sprite = null;
+-					slot.iconImage.enabled = false;
+-				}
+-			}
+-			if (slot.countText != null) slot.countText.text = string.Empty; // icon only
+-			if (slot.selectionImageGreen != null) slot.selectionImageGreen.enabled = false;
+-			if (slot.selectionImageWhite != null) slot.selectionImageWhite.enabled = false;
+-			if (slot.selectButton != null) slot.selectButton.interactable = false;
+-		}
+ 
+ 		private void RefreshDrinkingTexts()
+ 		{
+@@ -452,8 +238,9 @@ namespace TimelessEchoes.UI
+ 
+ 		private void OnSaveOrLoad()
+ 		{
++            directConversion?.Clear();
+ 			// Invalidate cache when save data changes (unlocks may differ)
+-			InvalidateEligibleFoodsCache();
++
+ 			RefreshMixSlots();
+ 			RefreshDrinkingTexts();
+ 			RefreshPieChart();
+diff --git a/Assets/Scripts/UI/Toolkit/ToolkitCauldronScreen.cs b/Assets/Scripts/UI/Toolkit/ToolkitCauldronScreen.cs
+index 8a4acbcc0..c883d770b 100644
+--- a/Assets/Scripts/UI/Toolkit/ToolkitCauldronScreen.cs	
++++ b/Assets/Scripts/UI/Toolkit/ToolkitCauldronScreen.cs	
+@@ -1,3 +1,6 @@
++using System;
++using System.Globalization;
++using static Blindsided.Oracle;
+ using System.Collections.Generic;
+ using static TimelessEchoes.UI.Toolkit.ToolkitGameplay;
+ using System.Linq;
+@@ -25,12 +28,17 @@ namespace TimelessEchoes.UI.Toolkit
+         private VisualElement root, xpFill, weightsTooltip, pie, ingredientsColumn, tastingColumn, collectionColumn, oddsList, modal;
+         private Label selection;private VisualElement mobileTabs;private string mobileTab="Ingredients";private bool wasNarrow;private readonly List<Label> oddsValues=new();
+         private Label level, xp, stew, stats, predicted, rollCost;
+-        private Image portrait, pot, selectedIconA, selectedIconB, arrow;
+-        private Button mix, mixAll, taste, stop;
++        private Image portrait, pot, selectedFoodIcon;
++        private Button addFood, minusAmount, plusAmount, maxAmount, taste, stop;
++        private TextField quantityInput;
++        private Label availableFood, conversionError;
++        private VisualElement foodGrid;
++        private long conversionSequence;
++        private bool addingFood;
+         private readonly List<FoodSlot> foodSlots = new();
+         private List<Resource> foods;
+-        private Resource selectedA, selectedB;
+-        private bool nextGreen = true, dirty, membershipDirty;
++        private Resource selectedFood;
++        private bool dirty, membershipDirty;
+         private float nextMembershipCheck;
+         private string membershipKey;
+         private ToolkitCauldronCollections collections;
+@@ -42,7 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
+             public Button button;
+             public Image icon;
+             public Label count;
+-            public VisualElement green, white;
++            public Resource resource;
+         }
+         public bool IsOpen => root != null;
+         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
+@@ -68,11 +76,89 @@ namespace TimelessEchoes.UI.Toolkit
+         }
+         private void BuildMixing()
+         {
+-            L(ingredientsColumn,"Ingredients","heading");var scroll=ToolkitGameplay.Scroll(ingredientsColumn,"ingredients-scroll");var grid=E(scroll,"food-grid");
+-            for(int i=0;i<30;i++){int index=i;var slot=new FoodSlot();slot.button=ToolkitGameplay.B(grid,"",()=>SelectFood(index),"food");slot.button.name="food-"+i;slot.icon=ToolkitGameplay.Icon(slot.button,null,20);L(slot.button,"","small strong").name="food-name";slot.count=L(slot.button,"","small muted");slot.green=new VisualElement();slot.white=new VisualElement();foodSlots.Add(slot);}
+-            var footer=E(ingredientsColumn,"mix-footer");var summary=E(footer,"row mix-summary");selection=L(summary,"Choose two ingredients","selection");predicted=L(summary,"","stew-gain");predicted.name="predicted-stew";
+-            mix=ToolkitGameplay.B(footer,"Mix",()=>ConfirmMix(false),"primary");mix.name="mix";mixAll=ToolkitGameplay.B(footer,"Mix all pairs",()=>ConfirmMix(true));mixAll.name="mix-all";
+-            selectedIconA=new Image();selectedIconB=new Image();arrow=new Image();
++            L(ingredientsColumn, "Ingredients", "heading");
++            var scroll = ToolkitGameplay.Scroll(ingredientsColumn, "ingredients-scroll");
++            foodGrid = E(scroll, "food-grid");
++            var footer = E(ingredientsColumn, "mix-footer conversion-footer");
++            var chosen = E(footer, "row conversion-selection");
++            selectedFoodIcon = ToolkitGameplay.Icon(chosen, null, 20);
++            var detail = E(chosen, "grow");
++            selection = L(detail, "Choose a food", "strong");
++            availableFood = L(detail, "", "small muted");
++            var amountRow = E(footer, "row conversion-quantity");
++            L(amountRow, "Amount", "amount-label");
++            minusAmount = ToolkitGameplay.B(amountRow, "−", () => StepAmount(-1), "amount-step");
++            minusAmount.tooltip = "Decrease amount";
++            quantityInput = new TextField { name = "conversion-amount", value = "0" };
++            quantityInput.AddToClassList("conversion-input"); amountRow.Add(quantityInput);
++            quantityInput.RegisterValueChangedCallback(_ => { conversionError.text = ""; RefreshConversion(); });
++            plusAmount = ToolkitGameplay.B(amountRow, "+", () => StepAmount(1), "amount-step");
++            plusAmount.tooltip = "Increase amount";
++            maxAmount = ToolkitGameplay.B(amountRow, "Max", () => SetAmount(selectedFood ? resources.GetAmount(selectedFood) : 0), "amount-max");
++            var gain = E(footer, "row between conversion-gain");
++            L(gain, "Stew gained"); predicted = L(gain, "+0", "strong stew-gain"); predicted.name = "predicted-stew";
++            conversionError = L(footer, "", "small muted conversion-error");
++            addFood = ToolkitGameplay.B(footer, "Add to Cauldron", AddSelectedFood, "primary");
++            addFood.name = "add-to-cauldron";
++        }
++        private void EnsureFoodSlots(int count)
++        {
++            while (foodSlots.Count < count)
++            {
++                var slot = new FoodSlot();
++                slot.button = ToolkitGameplay.B(foodGrid, "", () => SelectFood(slot.resource), "food");
++                slot.button.name = "food-" + foodSlots.Count;
++                slot.icon = ToolkitGameplay.Icon(slot.button, null, 20);
++                L(slot.button, "", "small strong").name = "food-name";
++                slot.count = L(slot.button, "", "small muted");
++                foodSlots.Add(slot);
++            }
++        }
++        private void SetAmount(double value) => quantityInput.value = value.ToString("R", CultureInfo.InvariantCulture);
++        private bool TryAmount(out double amount) => double.TryParse(quantityInput.value,
++            NumberStyles.Float, CultureInfo.InvariantCulture, out amount) && CauldronConversion.IsFinite(amount);
++        private void StepAmount(int step)
++        {
++            if (!selectedFood) return;
++            if (!TryAmount(out var value)) value = 0;
++            SetAmount(Math.Max(0, Math.Min(resources.GetAmount(selectedFood), value + step)));
++        }
++        private void RefreshConversion()
++        {
++            var selected = selectedFood != null && resources.IsUnlocked(selectedFood);
++            var stock = selected ? resources.GetAmount(selectedFood) : 0;
++            selection.text = selected ? selectedFood.name : "Choose a food";
++            selectedFoodIcon.sprite = selected ? selectedFood.icon : null;
++            selectedFoodIcon.style.display = selected ? DisplayStyle.Flex : DisplayStyle.None;
++            availableFood.text = selected ? "Available: " + CalcUtils.FormatNumber(stock, true) +
++                " · " + CauldronConversion.UnitValue(selectedFood).ToString("G15", CultureInfo.InvariantCulture) + " stew / unit" : "";
++            var valid = TryAmount(out var amount) && selected && manager.CanAddToCauldron(selectedFood, amount);
++            predicted.text = "+" + (valid ? (amount * CauldronConversion.UnitValue(selectedFood)).ToString("G15", CultureInfo.InvariantCulture) : "0");
++            addFood.SetEnabled(valid && !addingFood);
++            quantityInput.SetEnabled(selected && !addingFood);
++            minusAmount.SetEnabled(selected && amount > 0 && !addingFood);
++            plusAmount.SetEnabled(selected && amount < stock && !addingFood);
++            maxAmount.SetEnabled(selected && stock > 0 && !addingFood);
++        }
++        private void SelectFood(Resource food)
++        {
++            if (!food || !resources.IsUnlocked(food) || resources.GetAmount(food) <= 0 || addingFood) return;
++            selectedFood = food;
++            conversionSequence = oracle?.saveData != null && oracle.saveData.CauldronConversionSequence < long.MaxValue
++                ? oracle.saveData.CauldronConversionSequence + 1 : 0;
++            conversionError.text = ""; SetAmount(Math.Min(1, resources.GetAmount(food))); Refresh();
++        }
++        private void AddSelectedFood()
++        {
++            if (addingFood || !selectedFood || !TryAmount(out var amount)) return;
++            addingFood = true; RefreshConversion();
++            try
++            {
++                if (manager.TryAddToCauldron(selectedFood, amount, conversionSequence, out _, out var error))
++                { selectedFood = null; quantityInput.SetValueWithoutNotify("0"); conversionError.text = ""; }
++                else conversionError.text = error;
++            }
++            finally { addingFood = false; Refresh(); }
+         }
+         private void BuildDrinking()
+         {
+@@ -98,13 +184,6 @@ namespace TimelessEchoes.UI.Toolkit
+             L(scroll,"Tasting results","heading");L(scroll,stats.text,"small");L(scroll,definition.rewardHelp,"small muted");
+             ToolkitGameplay.B(d,"Close",CloseModal).Focus();
+         }
+-        private void ConfirmMix(bool all)
+-        {
+-            var targets=all?CauldronMixingPresentation.BuildEligibleFoods(resources).Where(r=>resources.GetAmount(r)>0).ToList():new List<Resource>{selectedA,selectedB};if(all&&targets.Count%2!=0)targets.RemoveAt(targets.Count-1);if(targets.Count<2||targets.Any(r=>!r))return;
+-            var d=Modal(all?$"Mix {targets.Count/2} pairs":"Mix ingredients");L(d,$"Consumes {targets.Count} ingredient stacks.","muted confirmation-copy");var list=ToolkitGameplay.Scroll(d,"confirmation-items");list.style.maxHeight=144;double total=0;
+-            foreach(var r in targets){var row=E(list,"row confirmation-item");ToolkitGameplay.Icon(row,r.icon,12);L(row,r.name,"small confirmation-name");double amount=resources.GetAmount(r);L(row,CalcUtils.FormatNumber(amount,true),"small confirmation-count");total+=amount*r.baseValue*r.valueMultiplier/100;}
+-            var reward=E(d,"row between confirmation-total");L(reward,"Stew","muted");L(reward,"+"+CalcUtils.FormatNumber(total,true),"heading");var actions=E(d,"row actions");ToolkitGameplay.B(actions,"Cancel",CloseModal,"cancel-action").Focus();ToolkitGameplay.B(actions,"Mix",()=>{CloseModal();for(int i=0;i+1<targets.Count;i+=2)if(resources.GetAmount(targets[i])>0&&resources.GetAmount(targets[i+1])>0)manager.MixMax(targets[i],targets[i+1]);selectedA=selectedB=null;nextGreen=true;Refresh();},"primary");
+-        }
+         private static void Place(VisualElement element, float x, float y, float width, float height)
+         {
+             element.style.position = Position.Absolute; element.style.left = x; element.style.top = y; element.style.width = width; element.style.height = height;
+@@ -130,49 +209,26 @@ namespace TimelessEchoes.UI.Toolkit
+             var clip = new VisualElement { pickingMode = PickingMode.Ignore }; clip.style.height = height; clip.style.overflow = Overflow.Hidden; parent.Add(clip);
+             var image = Frame(clip, definition.xpFill, 0, 0, width, height); image.style.unityBackgroundImageTintColor = definition.xpColor; return clip;
+         }
+-        private void SelectFood(int index)
+-        {
+-            if (index >= foods.Count) return; var food = foods[index];
+-            if (resources.GetAmount(food) <= 0 || food == selectedA || food == selectedB) return;
+-            if (!selectedA) { selectedA = food; nextGreen = false; }
+-            else if (!selectedB) { selectedB = food; nextGreen = true; }
+-            else if (nextGreen) { selectedA = food; nextGreen = false; }
+-            else { selectedB = food; nextGreen = true; }
+-            Refresh();
+-        }
+-        private void Mix()
+-        {
+-            if (!selectedA || !selectedB) return;
+-            manager.MixMax(selectedA, selectedB); selectedA = selectedB = null; nextGreen = true; Refresh();
+-        }
+-        private void MixAll()
+-        {
+-            var stocked = CauldronMixingPresentation.BuildEligibleFoods(resources).Where(r => resources.GetAmount(r) > 0).ToList();
+-            for (var i = 0; i + 1 < stocked.Count; i += 2)
+-                if (resources.GetAmount(stocked[i]) > 0 && resources.GetAmount(stocked[i + 1]) > 0) manager.MixMax(stocked[i], stocked[i + 1]);
+-            selectedA = selectedB = null; nextGreen = true; Refresh();
+-        }
+         private void Refresh()
+         {
+-            foods = CauldronMixingPresentation.BuildEligibleFoods(resources);
+-            if (selectedA && (!foods.Contains(selectedA) || resources.GetAmount(selectedA) <= 0)) selectedA = null;
+-            if (selectedB && (!foods.Contains(selectedB) || resources.GetAmount(selectedB) <= 0)) selectedB = null;
++            // Freeze the display while editing an amount; identity, not index, owns selection.
++            if (selectedFood && (!resources.IsUnlocked(selectedFood) || resources.GetAmount(selectedFood) <= 0)) selectedFood = null;
++            if (foods == null || !selectedFood) foods = CauldronMixingPresentation.BuildDisplayFoods(resources);
++            EnsureFoodSlots(foods.Count);
+             for (var i = 0; i < foodSlots.Count; i++)
+             {
+                 var slot = foodSlots[i]; var food = i < foods.Count ? foods[i] : null;
+-                slot.button.Q<Label>("food-name").text=food?food.name:"";slot.button.style.display=food?DisplayStyle.Flex:DisplayStyle.None;slot.button.EnableInClassList("selected",food&&(food==selectedA||food==selectedB));slot.icon.sprite = food ? food.icon : null; slot.count.text = food ? CalcUtils.FormatNumber(resources.GetAmount(food), true) : "";
+-                slot.button.SetEnabled(food && resources.GetAmount(food) > 0 && food != selectedA && food != selectedB);
+-                slot.green.style.display = food && ((food == selectedA && !nextGreen) || (food == selectedB && nextGreen)) ? DisplayStyle.Flex : DisplayStyle.None;
+-                slot.white.style.display = food && ((food == selectedA && nextGreen) || (food == selectedB && !nextGreen)) ? DisplayStyle.Flex : DisplayStyle.None;
++                var known = food && resources.IsUnlocked(food);
++                slot.resource = food;
++                slot.button.style.display = food ? DisplayStyle.Flex : DisplayStyle.None;
++                slot.button.Q<Label>("food-name").text = food ? (known ? food.name : "???") : "";
++                slot.icon.sprite = food ? (known ? food.icon : food.UnknownIcon) : null;
++                slot.count.text = food ? (known ? CalcUtils.FormatNumber(resources.GetAmount(food), true) : "Undiscovered") : "";
++                slot.button.tooltip = food ? (known ? food.name : "Undiscovered") : "";
++                slot.button.EnableInClassList("selected", food && food == selectedFood);
++                slot.button.SetEnabled(known && resources.GetAmount(food) > 0 && !addingFood);
+             }
+-            selectedIconA.sprite = selectedA ? selectedA.icon : null; selectedIconB.sprite = selectedB ? selectedB.icon : null;
+-            var canMix = selectedA && selectedB && selectedA != selectedB;
+-            mix.SetEnabled(canMix); mixAll.SetEnabled(foods.Count(r => resources.GetAmount(r) > 0) >= 2);
+-            mix.style.unityBackgroundImageTintColor = mix.enabledSelf ? Color.white : definition.disabledColor;
+-            mixAll.style.unityBackgroundImageTintColor = mixAll.enabledSelf ? Color.white : definition.disabledColor;
+-            selection.text=(selectedA?selectedA.name:"Choose first")+" + "+(selectedB?selectedB.name:"Choose second");
+-            predicted.text = "+"+CalcUtils.FormatNumber(canMix ? (resources.GetAmount(selectedA) * selectedA.baseValue * selectedA.valueMultiplier + resources.GetAmount(selectedB) * selectedB.baseValue * selectedB.valueMultiplier) / 100 : 0)+" stew";
+-            arrow.sprite = canMix ? definition.arrowGreen : definition.arrowRed;
++            RefreshConversion();
+             level.text = "Eva · Level " + manager.EvaLevel; var needed = 50 + 10 * Mathf.Max(0, manager.EvaLevel - 1);
+             xp.text = $"xp: {manager.EvaXp:N0} / {needed:N0}"; xpFill.style.width = Length.Percent(Mathf.Clamp01((float)(manager.EvaXp / needed)) * 100);
+             stew.text = CalcUtils.FormatNumber(manager.Stew);
+@@ -219,7 +275,7 @@ namespace TimelessEchoes.UI.Toolkit
+         private void StatsChanged(CauldronManager.TastingStats _) => dirty = true;
+         private void Started() { collections.ClearHighlights(); dirty = true; }
+         private void Stopped() { collections.Refresh(); collections.ApplyCollectionsBonus(); dirty = true; }
+-        private void Loaded() { selectedA = selectedB = null; nextGreen = true; collections.Rebuild(); collections.ApplyCollectionsBonus(); membershipKey = collections.MembershipKey(); dirty = true; }
++        private void Loaded() { selectedFood = null; quantityInput.SetValueWithoutNotify("0"); collections.Rebuild(); collections.ApplyCollectionsBonus(); membershipKey = collections.MembershipKey(); dirty = true; }
+         private void QuestChanged(string _) { collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
+         private void LocaleChanged(UnityEngine.Localization.Locale _) { collections.Rebuild(); dirty = true; }
+         private readonly ToolkitWindowLayout windowLayout = new();
+diff --git a/Assets/Resources/UI/Gameplay.uss b/Assets/Resources/UI/Gameplay.uss
+index db84e449e..d8caf2891 100644
+--- a/Assets/Resources/UI/Gameplay.uss	
++++ b/Assets/Resources/UI/Gameplay.uss	
+@@ -55,6 +55,17 @@
+ .gameplay .selection {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:0;margin-right:var(--space-control);}
+ .gameplay .stew-gain {flex-shrink:0;white-space:nowrap;-unity-text-align:middle-right;}
+ .gameplay .mix-footer .button {margin-bottom:var(--space-tight);}
++.gameplay .conversion-selection {align-items:center;margin-bottom:var(--space-section);}
++.gameplay .conversion-quantity {align-items:stretch;margin-bottom:var(--space-control);}
++.gameplay .conversion-quantity .amount-label {align-self:center;margin-right:var(--space-control);}
++.gameplay .conversion-quantity .button {min-height:27px;margin:0 0 0 var(--space-control);padding:var(--space-control);-unity-text-align:middle-center;}
++.gameplay .conversion-quantity .amount-step {width:27px;}
++.gameplay .conversion-quantity .amount-max {min-width:35px;}
++.gameplay .conversion-input {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:24px;margin:0 0 0 var(--space-control);}
++.gameplay .conversion-input .unity-base-field__input {min-height:27px;border-width:0.5px;border-color:var(--line);}
++.gameplay .conversion-input .unity-text-field__input {-unity-text-align:middle-center;}
++.gameplay .conversion-gain {margin:var(--space-control) 0;}
++.gameplay .conversion-error {margin-bottom:var(--space-control);}
+ .gameplay .brew-summary {align-items:center;margin-bottom:var(--space-control);}
+ .gameplay .brew-summary .icon {margin:0 0 var(--space-control) 0;}
+ .gameplay .status {-unity-font-style:bold;margin-bottom:var(--space-control);}
+diff --git a/Assets/Scripts/Tasks/TaskData.cs b/Assets/Scripts/Tasks/TaskData.cs
+index a92748110..5bcd45380 100644
+--- a/Assets/Scripts/Tasks/TaskData.cs	
++++ b/Assets/Scripts/Tasks/TaskData.cs	
+@@ -55,8 +55,42 @@ namespace TimelessEchoes.Tasks
+         // Terrains this task may spawn on.
+         [TitleGroup("General")]
+         public List<TerrainSettings> spawnTerrains = new();
++        [System.Serializable]
++        public class TerrainWeight
++        {
++            public TerrainSettings terrain;
++            [MinValue(0)] public float multiplier = 1;
++        }
++        [TitleGroup("General")]
++        [Tooltip("Optional relative weights by available terrain. Empty retains existing spawn weights.")]
++        public List<TerrainWeight> terrainWeights = new();
++
++        public float GetTerrainMultiplier(params TerrainSettings[] available)
++        {
++            if (terrainWeights == null || terrainWeights.Count == 0) return 1;
++            float result = 0;
++            foreach (var terrain in available)
++            {
++                if (terrain == null || (spawnTerrains.Count > 0 && !spawnTerrains.Contains(terrain))) continue;
++                var multiplier = 1f;
++                foreach (var entry in terrainWeights)
++                    if (entry != null && entry.terrain == terrain) { multiplier = Mathf.Max(0, entry.multiplier); break; }
++                result = Mathf.Max(result, multiplier);
++            }
++            return result;
++        }
+         [TitleGroup("General")]
+         public List<ResourceDrop> resourceDrops = new();
++        [System.Serializable]
++        public class BonusDrop
++        {
++            public Resource resource;
++            [MinValue(0f), MaxValue(1f)] public float chance;
++            public Vector2Int range = new(1, 1);
++        }
++        [TitleGroup("General")]
++        [Tooltip("Independent fixed-quantity propagation drops. No gathering/tier/buff multiplication.")]
++        public List<BonusDrop> bonusDrops = new();
+ 
+         [TitleGroup("General")]
+         [Tooltip("Chance (0-1) for each additional drop slot; evaluated sequentially after the first guaranteed slot.")]
+diff --git a/Assets/Scripts/Tasks/ProceduralTaskGenerator.cs b/Assets/Scripts/Tasks/ProceduralTaskGenerator.cs
+index af73d3b18..65ef6a90d 100644
+--- a/Assets/Scripts/Tasks/ProceduralTaskGenerator.cs	
++++ b/Assets/Scripts/Tasks/ProceduralTaskGenerator.cs	
+@@ -895,7 +895,7 @@ namespace TimelessEchoes.Tasks
+                 if (!IsTaskUnlocked(t))
+                     return false;
+                 return true;
+-            });
++            }, t => t.GetWeight(worldX) * t.GetTerrainMultiplier(bottomTerrain, middleTerrain, topTerrain));
+         }
+ 
+         private bool IsTaskUnlocked(TaskData task)
+@@ -919,12 +919,12 @@ namespace TimelessEchoes.Tasks
+             return PickTaskFromCategory(chosen, worldX);
+         }
+ 
+-        private T PickEntry<T>(List<T> entries, float worldX, Predicate<T> filter) where T : IWeighted
++        private T PickEntry<T>(List<T> entries, float worldX, Predicate<T> filter, Func<T, float> customWeight = null) where T : IWeighted
+         {
+             var totalWeight = 0f;
+             foreach (var e in entries)
+                 if (filter(e))
+-                    totalWeight += e.GetWeight(worldX);
++                    totalWeight += customWeight != null ? customWeight(e) : e.GetWeight(worldX);
+ 
+             if (totalWeight <= 0f)
+                 return default;
+@@ -934,7 +934,7 @@ namespace TimelessEchoes.Tasks
+             {
+                 if (!filter(e))
+                     continue;
+-                r -= e.GetWeight(worldX);
++                r -= customWeight != null ? customWeight(e) : e.GetWeight(worldX);
+                 if (r <= 0f)
+                     return e;
+             }
+diff --git a/Assets/Scripts/Tasks/ResourceGeneratingTask.cs b/Assets/Scripts/Tasks/ResourceGeneratingTask.cs
+index 504905483..3dbe0c2cb 100644
+--- a/Assets/Scripts/Tasks/ResourceGeneratingTask.cs	
++++ b/Assets/Scripts/Tasks/ResourceGeneratingTask.cs	
+@@ -73,6 +73,14 @@ namespace TimelessEchoes.Tasks
+                 }
+                 BuffManager.Instance?.RecordGatheringCompletion(taskData, ClaimedBy != null && ClaimedBy.IsEcho,
+                     dropTotals, dropOrder, resourceManager);
++                // Fixed propagation bonuses are awarded once by the completed task, after
++                // ordinary reward modifiers/windfall. They cannot feed those modifier pools.
++                foreach (var bonusDrop in DropResolver.RollBonusDrops(taskData.bonusDrops))
++                {
++                    resourceManager.Add(bonusDrop.resource, bonusDrop.count, eligibleForTierRoll: false);
++                    if (!dropTotals.ContainsKey(bonusDrop.resource)) { dropTotals[bonusDrop.resource] = 0; dropOrder.Add(bonusDrop.resource); }
++                    dropTotals[bonusDrop.resource] += bonusDrop.count;
++                }
+             }
+             finally
+             {
+diff --git a/Assets/Scripts/Upgrades/DropResolver.cs b/Assets/Scripts/Upgrades/DropResolver.cs
+index e9e8c4639..09dac7c65 100644
+--- a/Assets/Scripts/Upgrades/DropResolver.cs	
++++ b/Assets/Scripts/Upgrades/DropResolver.cs	
+@@ -110,6 +110,22 @@ namespace TimelessEchoes.Upgrades
+             return _scratchResults;
+         }
+ 
++        public static List<DropResult> RollBonusDrops(IEnumerable<TimelessEchoes.Tasks.TaskData.BonusDrop> drops, Func<float> rand = null)
++        {
++            var result = new List<DropResult>();
++            if (drops == null) return result;
++            float Rand() => rand != null ? rand() : UnityEngine.Random.value;
++            foreach (var drop in drops)
++            {
++                if (drop?.resource == null || drop.chance <= 0 || Rand() >= Mathf.Clamp01(drop.chance)) continue;
++                var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
++                var t = Rand(); t *= t;
++                var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
++                if (count > 0) result.Add(new DropResult { resource = drop.resource, count = count });
++            }
++            return result;
++        }
++
+         private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)
+         {
+             if (drop.requiredSkillLevel <= 0)
+diff --git a/Assets/Scriptables/Skills/Farming.asset b/Assets/Scriptables/Skills/Farming.asset
+index 9078ff4b1..524a55cf8 100644
+--- a/Assets/Scriptables/Skills/Farming.asset	
++++ b/Assets/Scriptables/Skills/Farming.asset	
+@@ -42,6 +42,11 @@ MonoBehaviour:
+     useOverrideIcon: 0
+     overrideIcon: {fileID: 0}
+     description: Unlocks Corn
++  - task: {fileID: 11400000, guid: 32bc36b4c40b94ef6aba887b77a88b82, type: 2}
++    requiredLevel: 10
++    useOverrideIcon: 0
++    overrideIcon: {fileID: 0}
++    description: Unlocks Apple Trees
+   - task: {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
+     requiredLevel: 13
+     useOverrideIcon: 0
+@@ -57,6 +62,11 @@ MonoBehaviour:
+     useOverrideIcon: 0
+     overrideIcon: {fileID: 0}
+     description: Unlocks Carrot
++  - task: {fileID: 11400000, guid: abad222a9919a44dfbd01e18cfd16f4a, type: 2}
++    requiredLevel: 27
++    useOverrideIcon: 0
++    overrideIcon: {fileID: 0}
++    description: Unlocks Pear Trees
+   - task: {fileID: 11400000, guid: 7ce5ada54f204022860133895160fdb0, type: 2}
+     requiredLevel: 29
+     useOverrideIcon: 0
+@@ -77,6 +87,11 @@ MonoBehaviour:
+     useOverrideIcon: 0
+     overrideIcon: {fileID: 0}
+     description: Unlocks Cucumber
++  - task: {fileID: 11400000, guid: 79f2cc3b85dbd40c5959f6a284b44491, type: 2}
++    requiredLevel: 49
++    useOverrideIcon: 0
++    overrideIcon: {fileID: 0}
++    description: Unlocks Peach Trees
+   - task: {fileID: 11400000, guid: 9f12af72c3d64cb7992be2c5a55e724d, type: 2}
+     requiredLevel: 52
+     useOverrideIcon: 0
+@@ -97,6 +112,11 @@ MonoBehaviour:
+     useOverrideIcon: 0
+     overrideIcon: {fileID: 0}
+     description: Unlocks Chillie
++  - task: {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
++    requiredLevel: 72
++    useOverrideIcon: 0
++    overrideIcon: {fileID: 0}
++    description: Unlocks Cherry Trees
+   - task: {fileID: 11400000, guid: 9bf4f670cbb2443baabc2867f46fe800, type: 2}
+     requiredLevel: 74
+     useOverrideIcon: 0
+diff --git a/Assets/Scriptables/MapSettings/Farmlands.asset b/Assets/Scriptables/MapSettings/Farmlands.asset
+index f28df7e1e..01a97af02 100644
+--- a/Assets/Scriptables/MapSettings/Farmlands.asset	
++++ b/Assets/Scriptables/MapSettings/Farmlands.asset	
+@@ -82,6 +82,10 @@ MonoBehaviour:
+       - {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+       - {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+       - {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
++      - {fileID: 11400000, guid: 32bc36b4c40b94ef6aba887b77a88b82, type: 2}
++      - {fileID: 11400000, guid: abad222a9919a44dfbd01e18cfd16f4a, type: 2}
++      - {fileID: 11400000, guid: 79f2cc3b85dbd40c5959f6a284b44491, type: 2}
++      - {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
+     fishing:
+       weight: 0.2
+       tasks:
+diff --git a/Assets/Scriptables/MapSettings/Woods.asset b/Assets/Scriptables/MapSettings/Woods.asset
+index 0b565eb78..70c90f2bc 100644
+--- a/Assets/Scriptables/MapSettings/Woods.asset	
++++ b/Assets/Scriptables/MapSettings/Woods.asset	
+@@ -93,6 +93,10 @@ MonoBehaviour:
+       - {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+       - {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+       - {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
++      - {fileID: 11400000, guid: 32bc36b4c40b94ef6aba887b77a88b82, type: 2}
++      - {fileID: 11400000, guid: abad222a9919a44dfbd01e18cfd16f4a, type: 2}
++      - {fileID: 11400000, guid: 79f2cc3b85dbd40c5959f6a284b44491, type: 2}
++      - {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
+     fishing:
+       weight: 0
+       tasks:
+diff --git a/Assets/Scriptables/MapSettings/River.asset b/Assets/Scriptables/MapSettings/River.asset
+index 0595623df..4289ac7ba 100644
+--- a/Assets/Scriptables/MapSettings/River.asset	
++++ b/Assets/Scriptables/MapSettings/River.asset	
+@@ -93,6 +93,10 @@ MonoBehaviour:
+       - {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+       - {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+       - {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
++      - {fileID: 11400000, guid: 32bc36b4c40b94ef6aba887b77a88b82, type: 2}
++      - {fileID: 11400000, guid: abad222a9919a44dfbd01e18cfd16f4a, type: 2}
++      - {fileID: 11400000, guid: 79f2cc3b85dbd40c5959f6a284b44491, type: 2}
++      - {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
+     fishing:
+       weight: 1
+       tasks:
+diff --git a/Assets/Scripts/Upgrades/ResourceIconLookup.cs b/Assets/Scripts/Upgrades/ResourceIconLookup.cs
+index fc20f861e..1f38578e0 100644
+--- a/Assets/Scripts/Upgrades/ResourceIconLookup.cs	
++++ b/Assets/Scripts/Upgrades/ResourceIconLookup.cs	
+@@ -33,7 +33,8 @@ namespace TimelessEchoes.Upgrades
+                 { 49, 146 }, { 50, 118 }, { 51, 128 }, { 52, 148 }, { 53, 130 }, { 54, 140 }, { 55, 124 }, { 56, 122 },
+                 { 57, 238 }, { 58, 172 }, { 59, 174 }, { 60, 176 }, { 61, 178 }, { 62, 180 }, { 63, 182 }, { 64, 184 },
+                 { 65, 186 }, { 66, 92 }, { 67, 106 }, { 68, 110 }, { 69, 114 }, { 70, 96 },
+-                { 71, 240 }, { 72, 242 }, { 73, 244 }, { 74, 246 }, { 75, 248 }, { 76, 250 }
++                { 71, 240 }, { 72, 242 }, { 73, 244 }, { 74, 246 }, { 75, 248 }, { 76, 250 },
++                { 77, 252 }, { 78, 254 }, { 79, 256 }, { 80, 258 }, { 81, 260 }, { 82, 262 }, { 83, 264 }, { 84, 266 }
+             };
+ 
+             // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
+diff --git a/Assets/Resources/Fonts/FloatingTextIcons.asset b/Assets/Resources/Fonts/FloatingTextIcons.asset
+index f6e260865..61845a609 100644
+--- a/Assets/Resources/Fonts/FloatingTextIcons.asset	
++++ b/Assets/Resources/Fonts/FloatingTextIcons.asset	
+@@ -1340,6 +1340,86 @@ MonoBehaviour:
+     m_GlyphIndex: 251
+     m_Scale: 1
+     m_Name: Timber_SpruceLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 252
++    m_Scale: 1
++    m_Name: Orchard_0
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 253
++    m_Scale: 1
++    m_Name: Orchard_1
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 254
++    m_Scale: 1
++    m_Name: Orchard_2
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 255
++    m_Scale: 1
++    m_Name: Orchard_3
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 256
++    m_Scale: 1
++    m_Name: Orchard_4
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 257
++    m_Scale: 1
++    m_Name: Orchard_5
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 258
++    m_Scale: 1
++    m_Name: Orchard_6
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 259
++    m_Scale: 1
++    m_Name: Orchard_7
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 260
++    m_Scale: 1
++    m_Name: Orchard_8
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 261
++    m_Scale: 1
++    m_Name: Orchard_9
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 262
++    m_Scale: 1
++    m_Name: Orchard_10
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 263
++    m_Scale: 1
++    m_Name: Orchard_11
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 264
++    m_Scale: 1
++    m_Name: Orchard_12
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 265
++    m_Scale: 1
++    m_Name: Orchard_13
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 266
++    m_Scale: 1
++    m_Name: Orchard_14
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 267
++    m_Scale: 1
++    m_Name: Orchard_15
+   m_GlyphTable:
+   - m_Index: 0
+     m_Metrics:
+@@ -5373,5 +5453,261 @@ MonoBehaviour:
+     m_AtlasIndex: 0
+     m_ClassDefinitionType: 0
+     sprite: {fileID: 41346664410591715, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 252
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 0
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1078185636, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 253
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 16
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 482123241, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 254
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 32
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1124318958, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 255
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 48
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1264961375, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 256
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 64
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 27747036, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 257
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 80
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 340045963, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 258
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 96
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1075394546, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 259
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 112
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1466075713, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 260
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 128
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 378429249, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 261
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 144
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -396602397, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 262
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 160
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1069427138, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 263
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 176
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 786504821, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 264
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 192
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1693002225, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 265
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 208
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -432937368, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 266
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 224
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -126438635, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 267
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 240
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1463776566, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+   spriteInfoList: []
+   fallbackSpriteAssets: []
+diff --git a/Assets/Resources/Fonts/FloatingTextIcons.png b/Assets/Resources/Fonts/FloatingTextIcons.png
+index 32ed88e910b34779cec4fccec3294adf96127bec..8ff12707322e273760c49210f8e6f2486efb8992 100644
+GIT binary patch
+literal 35569
+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
+X%b9E>YvGnW00000NkvXXu0mjftc7e$
+
+literal 24271
+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
+Tk>#A+00000NkvXXu0mjfT%-t0
+
+diff --git a/Assets/UI/Toolkit/InlineSprites.asset b/Assets/UI/Toolkit/InlineSprites.asset
+index 2ffc5e5fa..067eef089 100644
+--- a/Assets/UI/Toolkit/InlineSprites.asset	
++++ b/Assets/UI/Toolkit/InlineSprites.asset	
+@@ -1298,6 +1298,86 @@ MonoBehaviour:
+     m_GlyphIndex: 251
+     m_Scale: 1
+     m_Name: Timber_SpruceLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 252
++    m_Scale: 1
++    m_Name: Orchard_0
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 253
++    m_Scale: 1
++    m_Name: Orchard_1
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 254
++    m_Scale: 1
++    m_Name: Orchard_2
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 255
++    m_Scale: 1
++    m_Name: Orchard_3
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 256
++    m_Scale: 1
++    m_Name: Orchard_4
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 257
++    m_Scale: 1
++    m_Name: Orchard_5
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 258
++    m_Scale: 1
++    m_Name: Orchard_6
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 259
++    m_Scale: 1
++    m_Name: Orchard_7
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 260
++    m_Scale: 1
++    m_Name: Orchard_8
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 261
++    m_Scale: 1
++    m_Name: Orchard_9
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 262
++    m_Scale: 1
++    m_Name: Orchard_10
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 263
++    m_Scale: 1
++    m_Name: Orchard_11
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 264
++    m_Scale: 1
++    m_Name: Orchard_12
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 265
++    m_Scale: 1
++    m_Name: Orchard_13
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 266
++    m_Scale: 1
++    m_Name: Orchard_14
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 267
++    m_Scale: 1
++    m_Name: Orchard_15
+   m_SpriteGlyphTable:
+   - m_Index: 0
+     m_Metrics:
+@@ -5331,4 +5411,260 @@ MonoBehaviour:
+     m_AtlasIndex: 0
+     m_ClassDefinitionType: 0
+     sprite: {fileID: 41346664410591715, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 252
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 0
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1078185636, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 253
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 16
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 482123241, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 254
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 32
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1124318958, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 255
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 48
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1264961375, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 256
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 64
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 27747036, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 257
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 80
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 340045963, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 258
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 96
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1075394546, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 259
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 112
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1466075713, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 260
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 128
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 378429249, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 261
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 144
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -396602397, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 262
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 160
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 1069427138, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 263
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 176
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 786504821, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 264
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 192
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1693002225, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 265
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 208
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -432937368, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
++  - m_Index: 266
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 224
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -126438635, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
++  - m_Index: 267
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 240
++      m_Y: 240
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: -1463776566, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+   fallbackSpriteAssets: []
+diff --git a/Assets/UI/Toolkit/ResourceInventory.asset b/Assets/UI/Toolkit/ResourceInventory.asset
+index fc0243150..acd233f8d 100644
+--- a/Assets/UI/Toolkit/ResourceInventory.asset	
++++ b/Assets/UI/Toolkit/ResourceInventory.asset	
+@@ -88,6 +88,14 @@ MonoBehaviour:
+   - {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+   - {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+   - {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
++  - {fileID: 11400000, guid: 8d0b52ec3400e45ee82c1e3fee2f1557, type: 2}
++  - {fileID: 11400000, guid: 5c2ad61ef0dfc43beb589ce1c114bda3, type: 2}
++  - {fileID: 11400000, guid: cb5c0182aea64486aa517a4c4c9bb6b3, type: 2}
++  - {fileID: 11400000, guid: cb2591d15a0a842de8275a5d4c7453c9, type: 2}
++  - {fileID: 11400000, guid: c73e225f2293348658398193e3b57a5f, type: 2}
++  - {fileID: 11400000, guid: 441bdf1c9db5e4019a08802bfe74333c, type: 2}
++  - {fileID: 11400000, guid: 2a300b43027754474b19d88d47a555d7, type: 2}
++  - {fileID: 11400000, guid: cb8cb6fce4e5145b3811376ef37afb94, type: 2}
+   title: {fileID: -521334471, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+   inset: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+   selection: {fileID: -3351714043623252698, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
+diff --git a/Assets/Scripts/Tasks/TaskController.cs b/Assets/Scripts/Tasks/TaskController.cs
+index 6deb4b36b..155fc0752 100644
+--- a/Assets/Scripts/Tasks/TaskController.cs	
++++ b/Assets/Scripts/Tasks/TaskController.cs	
+@@ -653,6 +653,10 @@ namespace TimelessEchoes.Tasks
+                     {
+                         var c = obj.GetComponent<WoodcuttingTask>(); if (c != null) c.enabled = false;
+                     }
++                    else if (task is FruitHarvestTask)
++                    {
++                        var c = obj.GetComponent<FruitHarvestTask>(); if (c != null) c.enabled = false;
++                    }
+                     else if (task is MiningTask)
+                     {
+                         var c = obj.GetComponent<MiningTask>(); if (c != null) c.enabled = false;
+@@ -669,7 +673,7 @@ namespace TimelessEchoes.Tasks
+             }
+             else if (task is MonoBehaviour mb)
+             {
+-                if (task is OpenChestTask || task is WoodcuttingTask || task is MiningTask || task is FarmingTask)
++                if (task is OpenChestTask || task is WoodcuttingTask || task is FruitHarvestTask || task is MiningTask || task is FarmingTask)
+                 {
+                     // Disable the component and keep visuals
+                     var mbBehaviour = mb as Behaviour; if (mbBehaviour != null) mbBehaviour.enabled = false;
+diff --git a/Assets/Scripts/Tasks/BaseTask.cs b/Assets/Scripts/Tasks/BaseTask.cs
+index 11e150051..5fdf2808b 100644
+--- a/Assets/Scripts/Tasks/BaseTask.cs	
++++ b/Assets/Scripts/Tasks/BaseTask.cs	
+@@ -110,6 +110,9 @@ namespace TimelessEchoes.Tasks
+         {
+         }
+ 
++        // Opt-in reuse hook for tasks whose new spawn must emit its own completion event.
++        protected void ResetCompletionNotification() => completionNotified = false;
++
+         /// <summary>
+         ///     Notify listeners that this task has completed. Ensures
+         ///     the event is only invoked once.
+diff --git a/Assets/UI/Toolkit/Cauldron.asset b/Assets/UI/Toolkit/Cauldron.asset
+index 99fc65e41..caadcf6db 100644
+--- a/Assets/UI/Toolkit/Cauldron.asset	
++++ b/Assets/UI/Toolkit/Cauldron.asset	
+@@ -91,7 +91,7 @@ MonoBehaviour:
+     - 0.9166667
+     - 1
+     duration: 1.0166667
+-  mixingHelp: Pick two resources to throw into the cauldron. The entire stack will be consumed.
++  mixingHelp: Choose a food and amount. Add to Cauldron converts only that amount.
+   rewardHelp: 'Low Card<sprite=9>Gives your lowest card by count.
+ 
+     Eva''s blessing<sprite=9>Provides 2 random cards at equal chances.

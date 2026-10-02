@@ -73,6 +73,14 @@ namespace TimelessEchoes.Tasks
                 }
                 BuffManager.Instance?.RecordGatheringCompletion(taskData, ClaimedBy != null && ClaimedBy.IsEcho,
                     dropTotals, dropOrder, resourceManager);
+                // Fixed propagation bonuses are awarded once by the completed task, after
+                // ordinary reward modifiers/windfall. They cannot feed those modifier pools.
+                foreach (var bonusDrop in DropResolver.RollBonusDrops(taskData.bonusDrops))
+                {
+                    resourceManager.Add(bonusDrop.resource, bonusDrop.count, eligibleForTierRoll: false);
+                    if (!dropTotals.ContainsKey(bonusDrop.resource)) { dropTotals[bonusDrop.resource] = 0; dropOrder.Add(bonusDrop.resource); }
+                    dropTotals[bonusDrop.resource] += bonusDrop.count;
+                }
             }
             finally
             {

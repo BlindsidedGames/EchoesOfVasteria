@@ -55,6 +55,17 @@
 .gameplay .selection {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:0;margin-right:var(--space-control);}
 .gameplay .stew-gain {flex-shrink:0;white-space:nowrap;-unity-text-align:middle-right;}
 .gameplay .mix-footer .button {margin-bottom:var(--space-tight);}
+.gameplay .conversion-selection {align-items:center;margin-bottom:var(--space-section);}
+.gameplay .conversion-quantity {align-items:stretch;margin-bottom:var(--space-control);}
+.gameplay .conversion-quantity .amount-label {align-self:center;margin-right:var(--space-control);}
+.gameplay .conversion-quantity .button {min-height:27px;margin:0 0 0 var(--space-control);padding:var(--space-control);-unity-text-align:middle-center;}
+.gameplay .conversion-quantity .amount-step {width:27px;}
+.gameplay .conversion-quantity .amount-max {min-width:35px;}
+.gameplay .conversion-input {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:24px;margin:0 0 0 var(--space-control);}
+.gameplay .conversion-input .unity-base-field__input {min-height:27px;border-width:0.5px;border-color:var(--line);}
+.gameplay .conversion-input .unity-text-field__input {-unity-text-align:middle-center;}
+.gameplay .conversion-gain {margin:var(--space-control) 0;}
+.gameplay .conversion-error {margin-bottom:var(--space-control);}
 .gameplay .brew-summary {align-items:center;margin-bottom:var(--space-control);}
 .gameplay .brew-summary .icon {margin:0 0 var(--space-control) 0;}
 .gameplay .status {-unity-font-style:bold;margin-bottom:var(--space-control);}

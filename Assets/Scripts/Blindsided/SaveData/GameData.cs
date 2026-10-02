@@ -103,6 +103,17 @@ namespace Blindsided.SaveData
 
         // --- Cauldron (Stew/Collections) ---
         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronStew;
+        // Bounded last receipt: older sequence numbers cannot execute again after reload.
+        [TabGroup("GameDataTabs", "Cauldron")] public long CauldronConversionSequence;
+        [TabGroup("GameDataTabs", "Cauldron")] public CauldronConversionReceipt LastCauldronConversion;
+
+        public class CauldronConversionReceipt
+        {
+            public long Sequence;
+            public string ResourceName;
+            public double Quantity;
+            public double UnitValue;
+        }
         [TabGroup("GameDataTabs", "Cauldron")] public int CauldronEvaLevel = 1;
         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronEvaXp;
         [ShowInInspector] [HideReferenceObjectPicker]
