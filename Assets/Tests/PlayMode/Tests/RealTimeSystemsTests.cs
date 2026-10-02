@@ -97,6 +97,81 @@ namespace TimelessEchoes.Tests.RealTime
         }
 
         [Test]
+        public void LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload()
+        {
+            var originalOracle = Oracle.oracle;
+            var oracleGo = new GameObject("Discovery boundary oracle");
+            var inventoryGo = new GameObject("Discovery boundary inventory"); inventoryGo.SetActive(false);
+            var cauldronGo = new GameObject("Discovery boundary cauldron"); cauldronGo.SetActive(false);
+            var taskGo = new GameObject("Discovery boundary task"); taskGo.SetActive(false);
+            var taskData = ScriptableObject.CreateInstance<TimelessEchoes.Tasks.TaskData>();
+            var definition = ScriptableObject.CreateInstance<TimelessEchoes.UI.Toolkit.ToolkitCauldronDefinition>();
+            try
+            {
+                Oracle.oracle = null;
+                var owner = oracleGo.AddComponent<Oracle>();
+                var bank = owner.saveData;
+                var radish = AssetCache.GetAll<Resource>("").Single(r => r.name == "Radish");
+                var corn = AssetCache.GetAll<Resource>("").Single(r => r.name == "Corn");
+                bank.Resources[radish.name] = new GameData.ResourceEntry { Earned = true, Tier = 1 };
+                bank.Resources[corn.name] = new GameData.ResourceEntry { Earned = false, Tier = 3 };
+                bank.CauldronCardCounts[radish.CardId] = 10000;
+                var inventory = inventoryGo.AddComponent<ResourceManager>(); inventoryGo.SetActive(true);
+                var cauldron = cauldronGo.AddComponent<CauldronManager>();
+                typeof(CauldronManager).GetField("config", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(cauldron, CauldronResourceYield.Config);
+                cauldronGo.SetActive(true);
+                taskData.resourceDrops = new List<ResourceDrop> { new() { resource = radish, weight = 1, dropRange = new Vector2Int(100, 100) } };
+                var task = taskGo.AddComponent<TimelessEchoes.Tasks.FruitHarvestTask>(); task.taskData = taskData;
+                var drop = typeof(TimelessEchoes.Tasks.ResourceGeneratingTask).GetMethod("GenerateDrops", BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert.AreEqual(70, CauldronResourceYield.BonusPercent(bank, radish));
+                inventory.Add(corn, 1, trackStats: false, eligibleForTierRoll: false);
+                Assert.IsTrue(inventory.IsUnlocked(corn));
+                Assert.IsFalse(bank.Resources[corn.name].Earned, "Discovery must be live before the normal save capture.");
+                Assert.AreEqual(20, CauldronResourceYield.BonusPercent(bank, radish), "Unowned Corn must immediately block Farming category yield.");
+                drop.Invoke(task, new object[] { 0f });
+                Assert.AreEqual(120, inventory.GetAmount(radish), 1e-9);
+                Assert.AreEqual(3, inventory.GetTier(corn), "Membership must not change resource rarity.");
+
+                // Exercise the actual native collections presenter, including runtime membership and tooltip.
+                definition.config = CauldronResourceYield.Config;
+                var content = new UnityEngine.UIElements.VisualElement();
+                var tooltip = new UnityEngine.UIElements.VisualElement();
+                var tabParent = new UnityEngine.UIElements.VisualElement(); tabParent.Add(content);
+                var presenterType = typeof(TimelessEchoes.UI.Toolkit.ToolkitCauldronScreen).Assembly.GetType("TimelessEchoes.UI.Toolkit.ToolkitCauldronCollections");
+                var presenter = System.Activator.CreateInstance(presenterType, new object[] { definition, cauldron, inventory, content, tooltip, tabParent });
+                presenterType.GetMethod("Rebuild").Invoke(presenter, null);
+                presenterType.GetMethod("ShowTooltip").Invoke(presenter, new object[] { radish.CardId });
+                var labels = UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.Label>(tooltip).ToList();
+                Assert.That(labels.Single(l => l.name == "collection-tooltip-text").text, Does.Contain("Category Yield: +0% Farming"));
+
+                var otherBank = new GameData();
+                otherBank.Resources[radish.name] = new GameData.ResourceEntry { Earned = true };
+                otherBank.CauldronCardCounts[radish.CardId] = 10000;
+                Assert.AreEqual(70, CauldronResourceYield.BonusPercent(otherBank, radish), "An unrelated bank must not inherit live discoveries.");
+                typeof(ResourceManager).GetMethod("SaveState", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(inventory, null);
+                Assert.IsTrue(bank.Resources[corn.name].Earned);
+                var reloaded = CurrentSaveCodec.Clone(bank);
+                owner.saveData = otherBank;
+                Assert.AreEqual(70, CauldronResourceYield.BonusPercent(otherBank, radish), "Owner replacement before runtime load must use its own saved membership.");
+                typeof(ResourceManager).GetMethod("LoadState", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(inventory, null);
+                Assert.IsFalse(inventory.IsUnlocked(corn));
+                Assert.AreEqual(20, CauldronResourceYield.BonusPercent(reloaded, radish), "Detached save uses its own captured discoveries.");
+                owner.saveData = reloaded;
+                typeof(ResourceManager).GetMethod("LoadState", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(inventory, null);
+                Assert.AreEqual(20, CauldronResourceYield.BonusPercent(reloaded, radish));
+                Assert.AreEqual(3, inventory.GetTier(corn));
+                Assert.AreEqual(10000, reloaded.CauldronCardCounts[radish.CardId]);
+                Assert.IsFalse(reloaded.CauldronCardCounts.ContainsKey(corn.CardId));
+            }
+            finally
+            {
+                Object.DestroyImmediate(taskGo); Object.DestroyImmediate(cauldronGo); Object.DestroyImmediate(inventoryGo);
+                Object.DestroyImmediate(oracleGo); Object.DestroyImmediate(taskData); Object.DestroyImmediate(definition);
+                Oracle.oracle = originalOracle;
+            }
+        }
+
+        [Test]
         public void EquipmentRoundTripPreservesTemporarilyUnresolvedContent()
         {
             var oracleGo = new GameObject("Oracle_EquipmentTestHarness");

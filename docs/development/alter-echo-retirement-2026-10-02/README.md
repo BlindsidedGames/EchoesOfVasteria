@@ -27,7 +27,7 @@ Quest rewards, imports, refunds, conversions, compensation and generic inventory
 
 ## Verification
 
-Used the checked-in `tools/testing/run.py` isolation helpers and sandbox, a disposable project snapshot and fresh product identities. No real saves or production PlayerPrefs were used. Final results: **185 EditMode passed, 55 PlayMode passed; zero failures/skips**. Full XML results are included here.
+Used the checked-in `tools/testing/run.py` isolation helpers and sandbox, a disposable project snapshot and fresh product identities. No real saves or production PlayerPrefs were used. Final results: **185 EditMode passed, 56 PlayMode passed; zero failures/skips**. Full XML results are included here.
 
 Focused evidence covers authored curves/thresholds, unowned category blocking, excluded resources, schema 0/3/4 retirement round trips with pending funds and quest/card progress preserved, repeated migration, durable farm payout/replay, actual world-task acquisition, generic additions and absence of offline accrual. A seeded 50% double-resource regression first failed three of four cases when the supplement rolled independently; all four pass after reusing the original outcome.
 
@@ -38,3 +38,13 @@ The PNGs are rendered from the actual native prefabs against an in-memory fixtur
 ## Limits and release implications
 
 No merge or release was requested. Production cloud sync, devices and platform builds were not exercised. Existing generic transport remains unchanged; saved-schema compatibility and no-payout behavior are covered locally. Keeping schema 5 prevents an older schema-4 build from reopening the retired producer records, so a release must use the current build on each supported platform. Historical balances/investments remain recoverable data; deleting them would be a separate explicitly approved migration.
+
+## Live discovery boundary follow-up
+
+Independent review identified that category membership used saved `Resources.Earned`, while `ResourceManager.Add` publishes a live unlock before the next save capture. An isolated actual-path regression reproduced the bug: with max Radish cards and newly discovered unowned Corn, the Radish yield incorrectly remained 70% instead of dropping to 20% immediately.
+
+`ResourceManager` now remembers the bank loaded into its runtime inventory and exposes an owner-aware unlock query. For that active owner, gameplay and native collection membership use live unlocks. Detached banks, replacement owners not yet loaded, and calculations without an inventory use their own saved membership. Load/reset rebind the inventory owner. The fix does not call SaveState, write a save, roll rarity, change card tiers or alter production-retirement data.
+
+The single owner-boundary regression exercises actual Corn discovery, the next real Radish task drop, the actual native collections presenter/tooltip, ordinary SaveState capture, serialization round trip, owner replacement before load, and ResourceManager reload. It confirms category +0%, Radish-only +20%, preserved Corn rarity 3, unchanged Radish card count and no Corn card creation. The pre-fix failure is recorded in `DiscoveryBeforeFix.xml`.
+
+Final full-suite result after this fix: **185 EditMode and 56 PlayMode passed, zero failures/skips**. Source hashes for the follow-up snapshot are in `discovery-input-updates.json`; `summary.json` and existing final XML evidence now contain the latest runs.

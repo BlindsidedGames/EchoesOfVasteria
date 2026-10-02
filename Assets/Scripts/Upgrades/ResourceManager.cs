@@ -51,6 +51,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private double debugAmount = 1;
         private readonly Dictionary<Resource, double> amounts = new();
         private readonly HashSet<Resource> unlocked = new();
+        private GameData stateOwner;
 
         private void InvokeInventoryChanged()
         {
@@ -205,8 +206,18 @@ namespace TimelessEchoes.Upgrades
             return resource != null && unlocked.Contains(resource);
         }
 
+        /// <summary>Live discoveries belong only to the loaded active bank; detached banks use saved membership.</summary>
+        public bool IsUnlocked(Resource resource, GameData owner)
+        {
+            if (resource == null || owner == null) return false;
+            if (ReferenceEquals(owner, stateOwner) && ReferenceEquals(owner, oracle?.saveData))
+                return IsUnlocked(resource);
+            return owner.Resources != null && owner.Resources.TryGetValue(resource.name, out var entry) && entry?.Earned == true;
+        }
+
         private void ResetState()
         {
+            stateOwner = oracle?.saveData;
             amounts.Clear();
             unlocked.Clear();
             tiers.Clear();
@@ -287,7 +298,8 @@ namespace TimelessEchoes.Upgrades
 
         private void LoadState()
         {
-            if (oracle == null) return;
+            stateOwner = oracle?.saveData;
+            if (stateOwner == null) return;
             oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();

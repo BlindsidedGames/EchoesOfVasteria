@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
         public string MembershipKey()
         {
             var qm = TimelessEchoes.Quests.QuestManager.Instance;
-            return string.Join("|", Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r)).Select(r => r.name))
+            return string.Join("|", Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r, oracle?.saveData)).Select(r => r.name))
                 + string.Join("|", BuffRecipe.LoadAvailable("").Where(b => b && (!b.requiredQuest || qm && qm.IsQuestCompleted(b.requiredQuest))).Select(b => b.name)) + manager.IsInfinityActive();
         }
         public void Rebuild()
@@ -73,7 +73,7 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var buff in buffs) { var id = "BUFF:" + buff.name; buffById[id] = buff; AddCard(section, id, buff.buffIcon); }
             }
             var groups = new Dictionary<CauldronManager.AEResourceGroup, Section>();
-            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r)).OrderBy(r => r.resourceID).ThenBy(r => r.name))
+            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r, oracle?.saveData)).OrderBy(r => r.resourceID).ThenBy(r => r.name))
             {
                 var group = manager.GetResourceGroup(resource);
                 if (!groups.TryGetValue(group, out var section))

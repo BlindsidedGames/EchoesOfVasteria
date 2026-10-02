@@ -28,10 +28,12 @@ namespace TimelessEchoes.Upgrades
             if (data?.Resources == null || config == null) return 0;
             var calculator = new CardTierCalculator(config, () => data.CauldronCardCounts);
             var lowest = int.MaxValue;
+            var inventory = ResourceManager.Instance;
             foreach (var resource in AssetCache.GetAll<Resource>(string.Empty))
             {
                 if (!resource || resource.DisableAlterEcho || classifier.Classify(resource) != group ||
-                    !data.Resources.TryGetValue(resource.name, out var entry) || entry?.Earned != true) continue;
+                    !(inventory ? inventory.IsUnlocked(resource, data) :
+                      data.Resources.TryGetValue(resource.name, out var entry) && entry?.Earned == true)) continue;
                 lowest = Math.Min(lowest, calculator.GetResourceTier(resource.name));
             }
             return lowest == int.MaxValue ? 0 : lowest;
