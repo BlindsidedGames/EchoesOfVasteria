@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Peach Harvest
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Tasks.TaskData
+  taskName: Peach Tree
+  taskID: 56
+  taskIcon: {fileID: 378429249, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+  associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+  xpForCompletion: 29
+  minX: 10
+  enforceMinDistance: 0
+  maxX: Infinity
+  enforceMaxDistance: 0
+  requiredSkillLevel: 49
+  taskDuration: 7.5
+  sfxInterval: 0
+  taskPrefab: {fileID: 7172539408239575266, guid: 387d00c061f1044a8b14d2699f4615b6, type: 3}
+  weight: 200
+  spawnTerrains:
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+  - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+  - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+  terrainWeights:
+  - terrain: {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+    multiplier: 1
+  - terrain: {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+    multiplier: 0.1
+  - terrain: {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+    multiplier: 0.05
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: c73e225f2293348658398193e3b57a5f, type: 2}
+    dropRange: {x: 2, y: 6}
+    weight: 1
+    requiredSkillLevel: 0
+  bonusDrops:
+  - resource: {fileID: 11400000, guid: 441bdf1c9db5e4019a08802bfe74333c, type: 2}
+    chance: 0.1
+    range: {x: 1, y: 1}
+  additionalLootChances: []
+  resetProgressOnInterrupt: 0
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0

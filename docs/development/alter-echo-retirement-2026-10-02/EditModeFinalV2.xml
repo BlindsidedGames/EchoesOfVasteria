@@ -1,0 +1,1269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="185" result="Passed" total="185" passed="185" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:46Z" duration="1.2521395">
+  <test-suite type="TestSuite" id="1000" name="EOVTests_1021a33014a1e47a" fullname="EOVTests_1021a33014a1e47a" runstate="Runnable" testcasecount="2056" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:46Z" duration="1.252140" total="185" passed="185" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1227" name="EditMode.Tests.dll" fullname="/private/tmp/eov-ae-retirement-tests-v4/project/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="185" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:46Z" duration="1.242155" total="185" passed="185" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="84281" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1232" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="158" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:45Z" duration="1.171009" total="158" passed="158" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1233" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="158" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:45Z" duration="1.169913" total="158" passed="158" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1035" name="BootstrapConfigurationTests" fullname="Tests.EditMode.BootstrapConfigurationTests" classname="Tests.EditMode.BootstrapConfigurationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.014651" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1036" name="EditorPlayAndBuildBootstrapThroughLoadingScene" fullname="Tests.EditMode.BootstrapConfigurationTests.EditorPlayAndBuildBootstrapThroughLoadingScene" methodname="EditorPlayAndBuildBootstrapThroughLoadingScene" classname="Tests.EditMode.BootstrapConfigurationTests" runstate="Runnable" seed="1524289448" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.007487" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1037" name="CauldronConversionTests" fullname="Tests.EditMode.CauldronConversionTests" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.131015" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1051" name="CancelledDiskCommitDoesNotPublishAndDurableReceiptRecoversOnce" fullname="Tests.EditMode.CauldronConversionTests.CancelledDiskCommitDoesNotPublishAndDurableReceiptRecoversOnce" methodname="CancelledDiskCommitDoesNotPublishAndDurableReceiptRecoversOnce" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="459648926" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.122694" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1046" name="InvalidAmountsLeaveInputUntouched" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.001357" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1041" name="InvalidAmountsLeaveInputUntouched(0)" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched(0)" methodname="InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="2075394866" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000270" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1042" name="InvalidAmountsLeaveInputUntouched(-1)" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched(-1)" methodname="InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="435513965" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000056" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1043" name="InvalidAmountsLeaveInputUntouched(101)" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched(101)" methodname="InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="216319965" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000042" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1044" name="InvalidAmountsLeaveInputUntouched(double.NaN)" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched(double.NaN)" methodname="InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="2082245762" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000039" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1045" name="InvalidAmountsLeaveInputUntouched(double.PositiveInfinity)" fullname="Tests.EditMode.CauldronConversionTests.InvalidAmountsLeaveInputUntouched(double.PositiveInfinity)" methodname="InvalidAmountsLeaveInputUntouched" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1526545426" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000033" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1040" name="LastReceiptReloadIsReplayAndOlderReceiptCannotPayAgain" fullname="Tests.EditMode.CauldronConversionTests.LastReceiptReloadIsReplayAndOlderReceiptCannotPayAgain" methodname="LastReceiptReloadIsReplayAndOlderReceiptCannotPayAgain" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="984898784" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.001207" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1039" name="MaxBillionsAndFractionalRemainderDoNotUseIntOrFloat" fullname="Tests.EditMode.CauldronConversionTests.MaxBillionsAndFractionalRemainderDoNotUseIntOrFloat" methodname="MaxBillionsAndFractionalRemainderDoNotUseIntOrFloat" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1306292302" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000362" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="NonRepresentableDebitAndOverflowCannotCreateStew" fullname="Tests.EditMode.CauldronConversionTests.NonRepresentableDebitAndOverflowCannotCreateStew" methodname="NonRepresentableDebitAndOverflowCannotCreateStew" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1094565665" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000089" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="OldSaveStartsSequenceWithoutChangingEvaOrCards" fullname="Tests.EditMode.CauldronConversionTests.OldSaveStartsSequenceWithoutChangingEvaOrCards" methodname="OldSaveStartsSequenceWithoutChangingEvaOrCards" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1369784611" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000511" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="PartialConversionIsOneCandidateAndPreservesOriginal" fullname="Tests.EditMode.CauldronConversionTests.PartialConversionIsOneCandidateAndPreservesOriginal" methodname="PartialConversionIsOneCandidateAndPreservesOriginal" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="569830976" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000454" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="ReusedFruitSpawnEmitsOneFreshCompletionEvent" fullname="Tests.EditMode.CauldronConversionTests.ReusedFruitSpawnEmitsOneFreshCompletionEvent" methodname="ReusedFruitSpawnEmitsOneFreshCompletionEvent" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1481544925" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.001026" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="SaplingBonusNeverReplacesFruitAndIsAnIndependentBoundedRoll" fullname="Tests.EditMode.CauldronConversionTests.SaplingBonusNeverReplacesFruitAndIsAnIndependentBoundedRoll" methodname="SaplingBonusNeverReplacesFruitAndIsAnIndependentBoundedRoll" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="1295124201" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.001715" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="UnknownFoodCannotConvert" fullname="Tests.EditMode.CauldronConversionTests.UnknownFoodCannotConvert" methodname="UnknownFoodCannotConvert" classname="Tests.EditMode.CauldronConversionTests" runstate="Runnable" seed="421977189" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000092" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1053" name="CauldronResourceYieldTests" fullname="Tests.EditMode.CauldronResourceYieldTests" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:45Z" duration="0.395478" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1064" name="AuthoredCardProgressionAwardsApprovedCappedYield" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.018565" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1054" name="AuthoredCardProgressionAwardsApprovedCappedYield(0,0,0)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(0,0,0)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="1797334819" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.016811" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="AuthoredCardProgressionAwardsApprovedCappedYield(1,1,2)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(1,1,2)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="1012240395" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000091" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="AuthoredCardProgressionAwardsApprovedCappedYield(25,2,5)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(25,2,5)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="100819974" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="AuthoredCardProgressionAwardsApprovedCappedYield(75,3,10)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(75,3,10)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="130807942" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1058" name="AuthoredCardProgressionAwardsApprovedCappedYield(200,5,15)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(200,5,15)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="66973047" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000075" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1059" name="AuthoredCardProgressionAwardsApprovedCappedYield(750,7,20)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(750,7,20)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="1004382949" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000060" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1060" name="AuthoredCardProgressionAwardsApprovedCappedYield(1500,10,30)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(1500,10,30)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="596551953" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000046" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1061" name="AuthoredCardProgressionAwardsApprovedCappedYield(3500,15,40)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(3500,15,40)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="96470479" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1062" name="AuthoredCardProgressionAwardsApprovedCappedYield(10000,20,50)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(10000,20,50)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="314085672" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000057" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1063" name="AuthoredCardProgressionAwardsApprovedCappedYield(int.MaxValue,20,50)" fullname="Tests.EditMode.CauldronResourceYieldTests.AuthoredCardProgressionAwardsApprovedCappedYield(int.MaxValue,20,50)" methodname="AuthoredCardProgressionAwardsApprovedCappedYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="571901948" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000041" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1066" name="CraftedOrPropagationResourceCannotReceiveCardYield" fullname="Tests.EditMode.CauldronResourceYieldTests.CraftedOrPropagationResourceCannotReceiveCardYield" methodname="CraftedOrPropagationResourceCannotReceiveCardYield" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="144287100" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:44Z" duration="0.000364" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1065" name="UnownedUnlockedMatchingCardBlocksCategoryUntilItIsCollected" fullname="Tests.EditMode.CauldronResourceYieldTests.UnownedUnlockedMatchingCardBlocksCategoryUntilItIsCollected" methodname="UnownedUnlockedMatchingCardBlocksCategoryUntilItIsCollected" classname="Tests.EditMode.CauldronResourceYieldTests" runstate="Runnable" seed="1365543907" result="Passed" start-time="2026-10-02 12:01:44Z" end-time="2026-10-02 12:01:45Z" duration="0.375736" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1067" name="CurrentCompletionCohortTests" fullname="Tests.EditMode.CurrentCompletionCohortTests" classname="Tests.EditMode.CurrentCompletionCohortTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.006834" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1068" name="CurrentCohort_CountsAliasOnceAndExcludesPreservedRetiredHistory" fullname="Tests.EditMode.CurrentCompletionCohortTests.CurrentCohort_CountsAliasOnceAndExcludesPreservedRetiredHistory" methodname="CurrentCohort_CountsAliasOnceAndExcludesPreservedRetiredHistory" classname="Tests.EditMode.CurrentCompletionCohortTests" runstate="Runnable" seed="1126475185" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000571" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="DuplicateAndInvalidAuthoredIds_DoNotInflateEitherSideOfCohort" fullname="Tests.EditMode.CurrentCompletionCohortTests.DuplicateAndInvalidAuthoredIds_DoNotInflateEitherSideOfCohort" methodname="DuplicateAndInvalidAuthoredIds_DoNotInflateEitherSideOfCohort" classname="Tests.EditMode.CurrentCompletionCohortTests" runstate="Runnable" seed="1642893479" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000108" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="EmptyOrMissingCurrentCohort_DoesNotGrantCompletionFromOldRecords" fullname="Tests.EditMode.CurrentCompletionCohortTests.EmptyOrMissingCurrentCohort_DoesNotGrantCompletionFromOldRecords" methodname="EmptyOrMissingCurrentCohort_DoesNotGrantCompletionFromOldRecords" classname="Tests.EditMode.CurrentCompletionCohortTests" runstate="Runnable" seed="627873285" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000074" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1071" name="CurrentSaveCodecTests" fullname="Tests.EditMode.CurrentSaveCodecTests" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.044183" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1083" name="ActualStringEraWire_PreservesProgressWithoutTurningAutomaticUnlocksIntoChoices" fullname="Tests.EditMode.CurrentSaveCodecTests.ActualStringEraWire_PreservesProgressWithoutTurningAutomaticUnlocksIntoChoices" methodname="ActualStringEraWire_PreservesProgressWithoutTurningAutomaticUnlocksIntoChoices" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1839066604" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001841" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1082" name="ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection" fullname="Tests.EditMode.CurrentSaveCodecTests.ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001699" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1080" name="ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection(&quot;Milestones&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection(&quot;Milestones&quot;)" methodname="ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="841809313" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001385" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1081" name="ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection(&quot;MilestoneRecords&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection(&quot;MilestoneRecords&quot;)" methodname="ActualTypedLegacyWire_PreservesRecordsAndExactXpBeforeProjection" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1370125993" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000062" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1074" name="CompatibilityClone_RetainsPurchasesAndOneTimeGuardsForHistoricalConsumers" fullname="Tests.EditMode.CurrentSaveCodecTests.CompatibilityClone_RetainsPurchasesAndOneTimeGuardsForHistoricalConsumers" methodname="CompatibilityClone_RetainsPurchasesAndOneTimeGuardsForHistoricalConsumers" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1649778262" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000490" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1078" name="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress" fullname="Tests.EditMode.CurrentSaveCodecTests.DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002127" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1075" name="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.NaN)" fullname="Tests.EditMode.CurrentSaveCodecTests.DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.NaN)" methodname="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="321754876" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001717" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1076" name="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.PositiveInfinity)" fullname="Tests.EditMode.CurrentSaveCodecTests.DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.PositiveInfinity)" methodname="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1626730672" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000056" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1077" name="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.NegativeInfinity)" fullname="Tests.EditMode.CurrentSaveCodecTests.DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress(float.NegativeInfinity)" methodname="DirectCurrentWrite_NonfiniteKnownXpIsRejectedWithoutZeroingProgress" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="852109608" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000041" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1089" name="Es3AmbiguousBanks_FailWithoutSelectingOrFabricatingFreshData" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3AmbiguousBanks_FailWithoutSelectingOrFabricatingFreshData" methodname="Es3AmbiguousBanks_FailWithoutSelectingOrFabricatingFreshData" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="240799054" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005419" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1099" name="Es3ExplicitSchemaOne_RemainsSupported" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3ExplicitSchemaOne_RemainsSupported" methodname="Es3ExplicitSchemaOne_RemainsSupported" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="78174329" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.013074" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1100" name="Es3MalformedRecognizedLiveEntry_CannotSilentlySelectLaterValidBetaEntry" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3MalformedRecognizedLiveEntry_CannotSilentlySelectLaterValidBetaEntry" methodname="Es3MalformedRecognizedLiveEntry_CannotSilentlySelectLaterValidBetaEntry" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="2080571794" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000293" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1087" name="Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.006557" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1085" name="Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion(&quot;Blindsided.SaveData.GameData,Assembly-CSharp&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion(&quot;Blindsided.SaveData.GameData,Assembly-CSharp&quot;)" methodname="Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1050750827" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005778" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1086" name="Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion(&quot;GameData, Assembly-CSharp&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion(&quot;GameData, Assembly-CSharp&quot;)" methodname="Es3StringEraBank_UnquotedIntegerKeysPreserveExactProgressAndUnknownVersion" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="962305138" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000165" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1088" name="Es3TypedBank_KeepsMeaningfulSelectionsAtIngress" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3TypedBank_KeepsMeaningfulSelectionsAtIngress" methodname="Es3TypedBank_KeepsMeaningfulSelectionsAtIngress" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="580071462" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000696" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1098" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001078" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1090" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;5&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;5&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="189757331" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000134" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;4&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;4&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="663795968" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000039" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1092" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;2&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;2&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="525773580" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;0&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;0&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="956704193" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000039" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1094" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;-1&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;-1&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="258637004" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000037" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1095" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;null&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;null&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1575758353" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000041" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1096" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;\&quot;1\&quot;&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;\&quot;1\&quot;&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1815041891" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;1.0&quot;)" fullname="Tests.EditMode.CurrentSaveCodecTests.Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization(&quot;1.0&quot;)" methodname="Es3UnsupportedSchemaDeclaration_IsRejectedBeforeDowngradingOrMaterialization" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="545277623" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000041" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1073" name="NewSnapshot_KeepsMeaningfulQuestInventoryActualGearAndMigrationReceipts" fullname="Tests.EditMode.CurrentSaveCodecTests.NewSnapshot_KeepsMeaningfulQuestInventoryActualGearAndMigrationReceipts" methodname="NewSnapshot_KeepsMeaningfulQuestInventoryActualGearAndMigrationReceipts" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1917139762" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.003871" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="NewSnapshot_OmitsObsoleteFieldsAndKeepsExactProgressAndFiveActiveChoices" fullname="Tests.EditMode.CurrentSaveCodecTests.NewSnapshot_OmitsObsoleteFieldsAndKeepsExactProgressAndFiveActiveChoices" methodname="NewSnapshot_OmitsObsoleteFieldsAndKeepsExactProgressAndFiveActiveChoices" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="1891102241" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.004684" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="UnknownNonfiniteProgress_RemainsPreservedHistoryWithoutReinterpretingIt" fullname="Tests.EditMode.CurrentSaveCodecTests.UnknownNonfiniteProgress_RemainsPreservedHistoryWithoutReinterpretingIt" methodname="UnknownNonfiniteProgress_RemainsPreservedHistoryWithoutReinterpretingIt" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="520905797" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000403" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="UnknownWireEntries_AreSkippedWithoutLosingFollowingSkillFields" fullname="Tests.EditMode.CurrentSaveCodecTests.UnknownWireEntries_AreSkippedWithoutLosingFollowingSkillFields" methodname="UnknownWireEntries_AreSkippedWithoutLosingFollowingSkillFields" classname="Tests.EditMode.CurrentSaveCodecTests" runstate="Runnable" seed="582847535" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000306" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1101" name="FarmCommandsTests" fullname="Tests.EditMode.FarmCommandsTests" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008023" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1106" name="ActiveAndOfflineGrowthAreEqualAndMonthOnlyCompletesOneBatchPerBed" fullname="Tests.EditMode.FarmCommandsTests.ActiveAndOfflineGrowthAreEqualAndMonthOnlyCompletesOneBatchPerBed" methodname="ActiveAndOfflineGrowthAreEqualAndMonthOnlyCompletesOneBatchPerBed" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1174498792" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.004097" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1103" name="EligibleHitCreditsOnceAndDiscoverySurvivesQuantityZeroAndReload" fullname="Tests.EditMode.FarmCommandsTests.EligibleHitCreditsOnceAndDiscoverySurvivesQuantityZeroAndReload" methodname="EligibleHitCreditsOnceAndDiscoverySurvivesQuantityZeroAndReload" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="33372251" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000254" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1109" name="FailedSeedAndPlantWritesCanRetryWithoutDuplicatingCreditOrDebit" fullname="Tests.EditMode.FarmCommandsTests.FailedSeedAndPlantWritesCanRetryWithoutDuplicatingCreditOrDebit" methodname="FailedSeedAndPlantWritesCanRetryWithoutDuplicatingCreditOrDebit" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1824554045" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000181" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1107" name="FailedWriteDiscardsWholeHarvestProposalAndRetryHasSameYield" fullname="Tests.EditMode.FarmCommandsTests.FailedWriteDiscardsWholeHarvestProposalAndRetryHasSameYield" methodname="FailedWriteDiscardsWholeHarvestProposalAndRetryHasSameYield" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1292523469" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000287" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1102" name="FreshFarmHasNoSeedsOrDiscoveryAndBuildOnlyProposesPayment" fullname="Tests.EditMode.FarmCommandsTests.FreshFarmHasNoSeedsOrDiscoveryAndBuildOnlyProposesPayment" methodname="FreshFarmHasNoSeedsOrDiscoveryAndBuildOnlyProposesPayment" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="2073179348" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000133" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1113" name="InvalidClockInputsAndOperationReuseDoNotMutateSource" fullname="Tests.EditMode.FarmCommandsTests.InvalidClockInputsAndOperationReuseDoNotMutateSource" methodname="InvalidClockInputsAndOperationReuseDoNotMutateSource" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1654514063" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000101" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1108" name="InvalidSecondReadyBatchRejectsWholeHarvestWithoutPartialFirstBedPayout" fullname="Tests.EditMode.FarmCommandsTests.InvalidSecondReadyBatchRejectsWholeHarvestWithoutPartialFirstBedPayout" methodname="InvalidSecondReadyBatchRejectsWholeHarvestWithoutPartialFirstBedPayout" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1138820420" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000191" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1111" name="LaterPlantGetsNoCarriedTimeButAnotherForwardClockJumpCanAcceleratePaidBatch" fullname="Tests.EditMode.FarmCommandsTests.LaterPlantGetsNoCarriedTimeButAnotherForwardClockJumpCanAcceleratePaidBatch" methodname="LaterPlantGetsNoCarriedTimeButAnotherForwardClockJumpCanAcceleratePaidBatch" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1321590438" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000145" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1104" name="MissIsRecordedAndCannotBeRetriedAsHit" fullname="Tests.EditMode.FarmCommandsTests.MissIsRecordedAndCannotBeRetriedAsHit" methodname="MissIsRecordedAndCannotBeRetriedAsHit" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="378823672" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000087" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1114" name="PendingCreditCloneAndDifferentOwnersAreIndependent" fullname="Tests.EditMode.FarmCommandsTests.PendingCreditCloneAndDifferentOwnersAreIndependent" methodname="PendingCreditCloneAndDifferentOwnersAreIndependent" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1818117949" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000279" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1115" name="PendingMissConsumesOnlyMatchingIntentAndConflictPreservesSelectedResult" fullname="Tests.EditMode.FarmCommandsTests.PendingMissConsumesOnlyMatchingIntentAndConflictPreservesSelectedResult" methodname="PendingMissConsumesOnlyMatchingIntentAndConflictPreservesSelectedResult" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1842857242" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000160" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1105" name="PlantingRequiresPaidBedsAndOneSeedAndCannotDebitTwice" fullname="Tests.EditMode.FarmCommandsTests.PlantingRequiresPaidBedsAndOneSeedAndCannotDebitTwice" methodname="PlantingRequiresPaidBedsAndOneSeedAndCannotDebitTwice" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="1563399343" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000111" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1110" name="RollbackKeepsEarnedGrowthAndRebasesFutureProgress" fullname="Tests.EditMode.FarmCommandsTests.RollbackKeepsEarnedGrowthAndRebasesFutureProgress" methodname="RollbackKeepsEarnedGrowthAndRebasesFutureProgress" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="549747963" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000125" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1112" name="UnknownRecordsArePreservedAndNeverGrownOrHarvested" fullname="Tests.EditMode.FarmCommandsTests.UnknownRecordsArePreservedAndNeverGrownOrHarvested" methodname="UnknownRecordsArePreservedAndNeverGrownOrHarvested" classname="Tests.EditMode.FarmCommandsTests" runstate="Runnable" seed="862318181" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000254" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1116" name="FarmJournalTests" fullname="Tests.EditMode.FarmJournalTests" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.100719" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1137" name="ClockCaptureTouchesOnlyGrowingOriginalBedsAndReadyBedsStopWork" fullname="Tests.EditMode.FarmJournalTests.ClockCaptureTouchesOnlyGrowingOriginalBedsAndReadyBedsStopWork" methodname="ClockCaptureTouchesOnlyGrowingOriginalBedsAndReadyBedsStopWork" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1034163988" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001952" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1126" name="ConflictingLegacyPendingAndUnknownHistoryAreNotDiscardedOrPaid" fullname="Tests.EditMode.FarmJournalTests.ConflictingLegacyPendingAndUnknownHistoryAreNotDiscardedOrPaid" methodname="ConflictingLegacyPendingAndUnknownHistoryAreNotDiscardedOrPaid" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1422682288" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000818" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1120" name="FailedCandidateAndRoutineReloadRetainAllFixedPendingAndGap" fullname="Tests.EditMode.FarmJournalTests.FailedCandidateAndRoutineReloadRetainAllFixedPendingAndGap" methodname="FailedCandidateAndRoutineReloadRetainAllFixedPendingAndGap" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1579004675" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000928" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1119" name="FixedCreditCompactsButCannotReplayOrChangeRollAfterReload" fullname="Tests.EditMode.FarmJournalTests.FixedCreditCompactsButCannotReplayOrChangeRollAfterReload" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000541" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1117" name="FixedCreditCompactsButCannotReplayOrChangeRollAfterReload(False)" fullname="Tests.EditMode.FarmJournalTests.FixedCreditCompactsButCannotReplayOrChangeRollAfterReload(False)" methodname="FixedCreditCompactsButCannotReplayOrChangeRollAfterReload" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="542283440" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000249" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1118" name="FixedCreditCompactsButCannotReplayOrChangeRollAfterReload(True)" fullname="Tests.EditMode.FarmJournalTests.FixedCreditCompactsButCannotReplayOrChangeRollAfterReload(True)" methodname="FixedCreditCompactsButCannotReplayOrChangeRollAfterReload" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1452252767" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000077" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1132" name="ForeignOwnerFutureSequenceAndUnreservedAdventureCannotGrant" fullname="Tests.EditMode.FarmJournalTests.ForeignOwnerFutureSequenceAndUnreservedAdventureCannotGrant" methodname="ForeignOwnerFutureSequenceAndUnreservedAdventureCannotGrant" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="358550406" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000100" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1133" name="HarvestReplayAfterReplantCannotPayNewBatchAndKnownHistoryStaysConstant" fullname="Tests.EditMode.FarmJournalTests.HarvestReplayAfterReplantCannotPayNewBatchAndKnownHistoryStaysConstant" methodname="HarvestReplayAfterReplantCannotPayNewBatchAndKnownHistoryStaysConstant" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1696571497" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000340" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1142" name="InvalidBoundsFailClosedWithoutResettingLineage" fullname="Tests.EditMode.FarmJournalTests.InvalidBoundsFailClosedWithoutResettingLineage" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000476" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1139" name="InvalidBoundsFailClosedWithoutResettingLineage(-1,0)" fullname="Tests.EditMode.FarmJournalTests.InvalidBoundsFailClosedWithoutResettingLineage(-1,0)" methodname="InvalidBoundsFailClosedWithoutResettingLineage" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="683742421" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000172" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1140" name="InvalidBoundsFailClosedWithoutResettingLineage(0,1)" fullname="Tests.EditMode.FarmJournalTests.InvalidBoundsFailClosedWithoutResettingLineage(0,1)" methodname="InvalidBoundsFailClosedWithoutResettingLineage" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="239542311" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1141" name="InvalidBoundsFailClosedWithoutResettingLineage(-1,-1)" fullname="Tests.EditMode.FarmJournalTests.InvalidBoundsFailClosedWithoutResettingLineage(-1,-1)" methodname="InvalidBoundsFailClosedWithoutResettingLineage" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="652895712" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000029" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1130" name="InvalidUiActionsAndDiscardedWriteDoNotIssuePermanentHoles" fullname="Tests.EditMode.FarmJournalTests.InvalidUiActionsAndDiscardedWriteDoNotIssuePermanentHoles" methodname="InvalidUiActionsAndDiscardedWriteDoNotIssuePermanentHoles" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="2064644802" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000168" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1125" name="LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout" fullname="Tests.EditMode.FarmJournalTests.LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000444" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1123" name="LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout(False)" fullname="Tests.EditMode.FarmJournalTests.LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout(False)" methodname="LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1580802040" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000207" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1124" name="LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout(True)" fullname="Tests.EditMode.FarmJournalTests.LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout(True)" methodname="LegacyAlreadyPaidStalePendingIsRemovedWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="436095481" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000056" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1138" name="LegacyFiftyThousandSettledReceiptsCompactAndNewHistoryRemainsConstant" fullname="Tests.EditMode.FarmJournalTests.LegacyFiftyThousandSettledReceiptsCompactAndNewHistoryRemainsConstant" methodname="LegacyFiftyThousandSettledReceiptsCompactAndNewHistoryRemainsConstant" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1814747646" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.090112" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1136" name="LegacyLiveBatchPaysOnceThenItsWhitelistCloses" fullname="Tests.EditMode.FarmJournalTests.LegacyLiveBatchPaysOnceThenItsWhitelistCloses" methodname="LegacyLiveBatchPaysOnceThenItsWhitelistCloses" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1710647237" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000473" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1135" name="LegacyLivePaidMarkerAndUnknownMarkersSurviveMigration" fullname="Tests.EditMode.FarmJournalTests.LegacyLivePaidMarkerAndUnknownMarkersSurviveMigration" methodname="LegacyLivePaidMarkerAndUnknownMarkersSurviveMigration" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1820332736" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000337" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1122" name="LegacyPendingHitAndMissDrainOnceWhileKnownHistoryAndUnseenUuidStaySealed" fullname="Tests.EditMode.FarmJournalTests.LegacyPendingHitAndMissDrainOnceWhileKnownHistoryAndUnseenUuidStaySealed" methodname="LegacyPendingHitAndMissDrainOnceWhileKnownHistoryAndUnseenUuidStaySealed" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="162125700" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000478" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1134" name="ReintroducedAlreadyHarvestedOrUncommittedBatchIsRejectedAtomically" fullname="Tests.EditMode.FarmJournalTests.ReintroducedAlreadyHarvestedOrUncommittedBatchIsRejectedAtomically" methodname="ReintroducedAlreadyHarvestedOrUncommittedBatchIsRejectedAtomically" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="628466878" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000249" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1131" name="StaleCompactedMissWithConflictingHitIntentIsPreservedAndRejected" fullname="Tests.EditMode.FarmJournalTests.StaleCompactedMissWithConflictingHitIntentIsPreservedAndRejected" methodname="StaleCompactedMissWithConflictingHitIntentIsPreservedAndRejected" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="718487628" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000152" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1129" name="StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout" fullname="Tests.EditMode.FarmJournalTests.StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001197" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1127" name="StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout(False)" fullname="Tests.EditMode.FarmJournalTests.StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout(False)" methodname="StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="232482673" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000294" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout(True)" fullname="Tests.EditMode.FarmJournalTests.StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout(True)" methodname="StaleCurrentIntentAcknowledgesDurableProofWithoutAnotherPayout" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="1798832341" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000112" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1121" name="StoredPendingRollConflictCannotConsumeIntentOrAdvanceWatermark" fullname="Tests.EditMode.FarmJournalTests.StoredPendingRollConflictCannotConsumeIntentOrAdvanceWatermark" methodname="StoredPendingRollConflictCannotConsumeIntentOrAdvanceWatermark" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="223053899" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000095" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1143" name="UnknownFormatAndSequenceExhaustionFailClosed" fullname="Tests.EditMode.FarmJournalTests.UnknownFormatAndSequenceExhaustionFailClosed" methodname="UnknownFormatAndSequenceExhaustionFailClosed" classname="Tests.EditMode.FarmJournalTests" runstate="Runnable" seed="2085150097" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000160" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1144" name="FarmTransactionTests" fullname="Tests.EditMode.FarmTransactionTests" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.103335" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1158" name="ActualCancelledSaveLeavesLiveSeedCreditUnpublishedAndRetryCreditsOnce" fullname="Tests.EditMode.FarmTransactionTests.ActualCancelledSaveLeavesLiveSeedCreditUnpublishedAndRetryCreditsOnce" methodname="ActualCancelledSaveLeavesLiveSeedCreditUnpublishedAndRetryCreditsOnce" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="552490662" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008367" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1161" name="ActualDiskCommitReloadMakesPlantDebitsAndTwoBedHarvestExactlyOnce" fullname="Tests.EditMode.FarmTransactionTests.ActualDiskCommitReloadMakesPlantDebitsAndTwoBedHarvestExactlyOnce" methodname="ActualDiskCommitReloadMakesPlantDebitsAndTwoBedHarvestExactlyOnce" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1638023482" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.043599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1160" name="ActualIoFailureLeavesBuildUnpublishedAndMaterialsUnspent" fullname="Tests.EditMode.FarmTransactionTests.ActualIoFailureLeavesBuildUnpublishedAndMaterialsUnspent" methodname="ActualIoFailureLeavesBuildUnpublishedAndMaterialsUnspent" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1109295498" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.004288" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1156" name="CardYieldIsFinalizedOnceInHarvestAndDoesNotAddRarityOrOtherRewards" fullname="Tests.EditMode.FarmTransactionTests.CardYieldIsFinalizedOnceInHarvestAndDoesNotAddRarityOrOtherRewards" methodname="CardYieldIsFinalizedOnceInHarvestAndDoesNotAddRarityOrOtherRewards" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="545020284" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005932" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1157" name="CurrentWriteProjectionRoundTripsFarmAndMeaningfulProgressWithoutObsoletePurchases" fullname="Tests.EditMode.FarmTransactionTests.CurrentWriteProjectionRoundTripsFarmAndMeaningfulProgressWithoutObsoletePurchases" methodname="CurrentWriteProjectionRoundTripsFarmAndMeaningfulProgressWithoutObsoletePurchases" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="209163123" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002089" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1159" name="FailedCreditThenRoutineDiskSnapshotPreservesIntentForExactlyOnceRecovery" fullname="Tests.EditMode.FarmTransactionTests.FailedCreditThenRoutineDiskSnapshotPreservesIntentForExactlyOnceRecovery" methodname="FailedCreditThenRoutineDiskSnapshotPreservesIntentForExactlyOnceRecovery" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1035329429" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.009570" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1155" name="HarvestUsesCapturedResourceStatsWithoutMultipliersAdventureStatsOrSeedRecursion" fullname="Tests.EditMode.FarmTransactionTests.HarvestUsesCapturedResourceStatsWithoutMultipliersAdventureStatsOrSeedRecursion" methodname="HarvestUsesCapturedResourceStatsWithoutMultipliersAdventureStatsOrSeedRecursion" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="571837431" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002186" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1148" name="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched" fullname="Tests.EditMode.FarmTransactionTests.InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002468" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1145" name="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(9,20)" fullname="Tests.EditMode.FarmTransactionTests.InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(9,20)" methodname="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1572351020" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000793" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1146" name="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(10,19)" fullname="Tests.EditMode.FarmTransactionTests.InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(10,19)" methodname="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="334010536" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000516" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1147" name="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(0,0)" fullname="Tests.EditMode.FarmTransactionTests.InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched(0,0)" methodname="InsufficientMaterialsLeaveBothBalancesFarmAndQuestReceiptsUntouched" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="299119530" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000468" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1154" name="PositiveHarvestRejectsInvalidExistingBalance" fullname="Tests.EditMode.FarmTransactionTests.PositiveHarvestRejectsInvalidExistingBalance" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.007452" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1150" name="PositiveHarvestRejectsInvalidExistingBalance(double.NaN)" fullname="Tests.EditMode.FarmTransactionTests.PositiveHarvestRejectsInvalidExistingBalance(double.NaN)" methodname="PositiveHarvestRejectsInvalidExistingBalance" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1018875627" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001830" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1151" name="PositiveHarvestRejectsInvalidExistingBalance(double.PositiveInfinity)" fullname="Tests.EditMode.FarmTransactionTests.PositiveHarvestRejectsInvalidExistingBalance(double.PositiveInfinity)" methodname="PositiveHarvestRejectsInvalidExistingBalance" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="966902196" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001632" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1152" name="PositiveHarvestRejectsInvalidExistingBalance(double.NegativeInfinity)" fullname="Tests.EditMode.FarmTransactionTests.PositiveHarvestRejectsInvalidExistingBalance(double.NegativeInfinity)" methodname="PositiveHarvestRejectsInvalidExistingBalance" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="889958588" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001824" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1153" name="PositiveHarvestRejectsInvalidExistingBalance(-1)" fullname="Tests.EditMode.FarmTransactionTests.PositiveHarvestRejectsInvalidExistingBalance(-1)" methodname="PositiveHarvestRejectsInvalidExistingBalance" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="525502621" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001689" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1162" name="SequenceCancelledWriteRoutineSnapshotAndRecoveryRetainGapAndPayOnce" fullname="Tests.EditMode.FarmTransactionTests.SequenceCancelledWriteRoutineSnapshotAndRecoveryRetainGapAndPayOnce" methodname="SequenceCancelledWriteRoutineSnapshotAndRecoveryRetainGapAndPayOnce" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="167590960" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.013091" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1163" name="SequenceIoFailureDoesNotPublishBuildWatermarkOrMaterials" fullname="Tests.EditMode.FarmTransactionTests.SequenceIoFailureDoesNotPublishBuildWatermarkOrMaterials" methodname="SequenceIoFailureDoesNotPublishBuildWatermarkOrMaterials" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="1132539879" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001498" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1149" name="SuccessfulBuildProposesExactlyOnePaymentAndPreservesUnrelatedProgress" fullname="Tests.EditMode.FarmTransactionTests.SuccessfulBuildProposesExactlyOnePaymentAndPreservesUnrelatedProgress" methodname="SuccessfulBuildProposesExactlyOnePaymentAndPreservesUnrelatedProgress" classname="Tests.EditMode.FarmTransactionTests" runstate="Runnable" seed="593224060" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000672" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1164" name="LegacyMigrationCompatibilityTests" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" testcasecount="26" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.083545" total="26" passed="26" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1175" name="AliasOverPendingCanonical_PreservesObjectiveEvidenceWithoutCharging" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AliasOverPendingCanonical_PreservesObjectiveEvidenceWithoutCharging" methodname="AliasOverPendingCanonical_PreservesObjectiveEvidenceWithoutCharging" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1703389500" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.006993" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1178" name="AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001105" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1176" name="AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate(1,5)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate(1,5)" methodname="AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1664809193" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000500" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1177" name="AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate(100,5)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate(100,5)" methodname="AllFourUniqueReceipts_ReachFiveRegardlessOfAliasDuplicate" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="953549598" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000325" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1194" name="AlreadyRepairedFixture_DoesNotInventReconstructionAndReportsLimitation" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AlreadyRepairedFixture_DoesNotInventReconstructionAndReportsLimitation" methodname="AlreadyRepairedFixture_DoesNotInventReconstructionAndReportsLimitation" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="268852528" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001843" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1192" name="AlreadyStampedSchemaFour_NonfiniteKnownXpCannotBypassValidationThroughNoOpRoute" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AlreadyStampedSchemaFour_NonfiniteKnownXpCannotBypassValidationThroughNoOpRoute" methodname="AlreadyStampedSchemaFour_NonfiniteKnownXpCannotBypassValidationThroughNoOpRoute" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1930267105" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000412" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1184" name="AlreadyStampedSchemaFour_RepairsNewlyMissingKnownRecordsAndFarmWithoutRewardReplay" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.AlreadyStampedSchemaFour_RepairsNewlyMissingKnownRecordsAndFarmWithoutRewardReplay" methodname="AlreadyStampedSchemaFour_RepairsNewlyMissingKnownRecordsAndFarmWithoutRewardReplay" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="2102061692" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000756" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1174" name="BothCompletedNames_CountOnceAndKeepExistingCanonicalReceipt" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.BothCompletedNames_CountOnceAndKeepExistingCanonicalReceipt" methodname="BothCompletedNames_CountOnceAndKeepExistingCanonicalReceipt" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="900931057" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000372" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1173" name="IncompleteMildred_DoesNotBecomeAPaidReceipt" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.IncompleteMildred_DoesNotBecomeAPaidReceipt" methodname="IncompleteMildred_DoesNotBecomeAPaidReceipt" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="15418742" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000353" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1180" name="MissingFarm_InitializesEmptyWithoutLegacyOwnershipOrSeedGrants" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.MissingFarm_InitializesEmptyWithoutLegacyOwnershipOrSeedGrants" methodname="MissingFarm_InitializesEmptyWithoutLegacyOwnershipOrSeedGrants" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="2097282883" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000391" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1171" name="MissingLastProducer_UsesVerifiedCreatedVersion" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.MissingLastProducer_UsesVerifiedCreatedVersion" methodname="MissingLastProducer_UsesVerifiedCreatedVersion" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1219421624" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000364" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1191" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.060629" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1185" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.NaN)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.NaN)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="2120903209" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.011764" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1186" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.PositiveInfinity)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.PositiveInfinity)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="951337750" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.015180" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1187" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.NegativeInfinity)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(3,float.NegativeInfinity)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1038020727" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008219" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1188" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.NaN)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.NaN)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="110589441" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008053" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1189" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.PositiveInfinity)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.PositiveInfinity)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1951259218" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008335" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1190" name="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.NegativeInfinity)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph(4,float.NegativeInfinity)" methodname="NonfiniteKnownXp_IsRejectedWithoutChangingDecodedGraph" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="692943223" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008261" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1183" name="NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001858" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1181" name="NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory(1)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory(1)" methodname="NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1272462184" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000986" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1182" name="NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory(3)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory(3)" methodname="NullKnownSkillRecord_NormalizesBeforePublicationAndKeepsUnknownNullHistory" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1482312279" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1172" name="PaidMildredReceipt_MapsTimestampWithoutPaymentRewardOrCapacityReplay" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.PaidMildredReceipt_MapsTimestampWithoutPaymentRewardOrCapacityReplay" methodname="PaidMildredReceipt_MapsTimestampWithoutPaymentRewardOrCapacityReplay" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="2096233738" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000521" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1193" name="PurchaseOmission_OnlyAfterHistoricalConsumerWithoutGearCompensation" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.PurchaseOmission_OnlyAfterHistoricalConsumerWithoutGearCompensation" methodname="PurchaseOmission_OnlyAfterHistoricalConsumerWithoutGearCompensation" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1738738585" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000435" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1166" name="Released143_GenuineOverflowPreservesEveryCardAndRunsOnce" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.Released143_GenuineOverflowPreservesEveryCardAndRunsOnce" methodname="Released143_GenuineOverflowPreservesEveryCardAndRunsOnce" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1471153496" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002840" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1165" name="Released143_ValidInvestmentsRemainInTheirOriginalCards" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.Released143_ValidInvestmentsRemainInTheirOriginalCards" methodname="Released143_ValidInvestmentsRemainInTheirOriginalCards" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1958111281" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000502" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1179" name="UnmatchedEarnedCapacityAndMeaningfulHistory_AreRetained" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.UnmatchedEarnedCapacityAndMeaningfulHistory_AreRetained" methodname="UnmatchedEarnedCapacityAndMeaningfulHistory_AreRetained" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="969457539" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000438" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1170" name="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001617" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1167" name="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;1.2.16&quot;)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;1.2.16&quot;)" methodname="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="590452476" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000605" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1168" name="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;0.0.0&quot;)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;0.0.0&quot;)" methodname="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1925156844" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000344" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1169" name="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;1.4.4&quot;)" fullname="Tests.EditMode.LegacyMigrationCompatibilityTests.UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic(&quot;1.4.4&quot;)" methodname="UnverifiedProducer_DefersRedistributionAndReturnsDiagnostic" classname="Tests.EditMode.LegacyMigrationCompatibilityTests" runstate="Runnable" seed="1600328944" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000334" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1195" name="OracleBetaNamingTests" fullname="Tests.EditMode.OracleBetaNamingTests" classname="Tests.EditMode.OracleBetaNamingTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002477" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1196" name="BetaDirectoryNamesIncludeIteration" fullname="Tests.EditMode.OracleBetaNamingTests.BetaDirectoryNamesIncludeIteration" methodname="BetaDirectoryNamesIncludeIteration" classname="Tests.EditMode.OracleBetaNamingTests" runstate="Runnable" seed="2133279751" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001024" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1198" name="BetaIterationDefaultsToOneWhenUnset" fullname="Tests.EditMode.OracleBetaNamingTests.BetaIterationDefaultsToOneWhenUnset" methodname="BetaIterationDefaultsToOneWhenUnset" classname="Tests.EditMode.OracleBetaNamingTests" runstate="Runnable" seed="1440302245" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000619" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1197" name="PlayerPrefsKeysAreIsolatedForBeta" fullname="Tests.EditMode.OracleBetaNamingTests.PlayerPrefsKeysAreIsolatedForBeta" methodname="PlayerPrefsKeysAreIsolatedForBeta" classname="Tests.EditMode.OracleBetaNamingTests" runstate="Runnable" seed="1352385375" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000358" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1199" name="OrchardContentTests" fullname="Tests.EditMode.OrchardContentTests" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.036659" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1205" name="ExactlyThirtyFourFoodsAndNoPropagationItems" fullname="Tests.EditMode.OrchardContentTests.ExactlyThirtyFourFoodsAndNoPropagationItems" methodname="ExactlyThirtyFourFoodsAndNoPropagationItems" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="1265163134" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001749" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1204" name="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" fullname="Tests.EditMode.OrchardContentTests.HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.008554" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1200" name="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Apple&quot;,77,54,10,0.01d)" fullname="Tests.EditMode.OrchardContentTests.HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Apple&quot;,77,54,10,0.01d)" methodname="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="1816837534" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.006851" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1201" name="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Pear&quot;,79,55,27,0.012d)" fullname="Tests.EditMode.OrchardContentTests.HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Pear&quot;,79,55,27,0.012d)" methodname="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="966696589" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000486" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1202" name="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Peach&quot;,81,56,49,0.016d)" fullname="Tests.EditMode.OrchardContentTests.HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Peach&quot;,81,56,49,0.016d)" methodname="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="2103958753" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000434" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1203" name="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Cherry&quot;,83,57,72,0.025d)" fullname="Tests.EditMode.OrchardContentTests.HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences(&quot;Cherry&quot;,83,57,72,0.025d)" methodname="HarvestHasFoodSaplingSkillWorldArtAndStableIconReferences" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="1756492729" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000424" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1206" name="OrchardSpawnsOnlyInApprovedMapsAndSecondaryTerrainWeightsAreLower" fullname="Tests.EditMode.OrchardContentTests.OrchardSpawnsOnlyInApprovedMapsAndSecondaryTerrainWeightsAreLower" methodname="OrchardSpawnsOnlyInApprovedMapsAndSecondaryTerrainWeightsAreLower" classname="Tests.EditMode.OrchardContentTests" runstate="Runnable" seed="497158986" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.025709" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1207" name="SaveMigrationValidationTests" fullname="Tests.EditMode.SaveMigrationValidationTests" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.007273" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1208" name="HistoricalZeroSchemaRemainsReadableWithExactProgress" fullname="Tests.EditMode.SaveMigrationValidationTests.HistoricalZeroSchemaRemainsReadableWithExactProgress" methodname="HistoricalZeroSchemaRemainsReadableWithExactProgress" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="524602817" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000600" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1215" name="InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress" fullname="Tests.EditMode.SaveMigrationValidationTests.InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000473" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1213" name="InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress(-1)" fullname="Tests.EditMode.SaveMigrationValidationTests.InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress(-1)" methodname="InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="688760349" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000238" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1214" name="InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress(int.MinValue)" fullname="Tests.EditMode.SaveMigrationValidationTests.InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress(int.MinValue)" methodname="InvalidNegativeSchemaIsRejectedWithoutTransformingOriginalProgress" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="615371509" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000037" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1212" name="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload" fullname="Tests.EditMode.SaveMigrationValidationTests.ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005202" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1209" name="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(0)" fullname="Tests.EditMode.SaveMigrationValidationTests.ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(0)" methodname="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="213920707" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.003037" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1210" name="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(3)" fullname="Tests.EditMode.SaveMigrationValidationTests.ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(3)" methodname="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="625571650" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000930" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1211" name="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(4)" fullname="Tests.EditMode.SaveMigrationValidationTests.ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(4)" methodname="ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload" classname="Tests.EditMode.SaveMigrationValidationTests" runstate="Runnable" seed="256234813" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000903" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1216" name="SaveStorageFaultTests" fullname="Tests.EditMode.SaveStorageFaultTests" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.233036" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1223" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.147301" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1217" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(0)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(0)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="866894193" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.030115" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(4)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(4)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="1790766264" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.016102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1219" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(8)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(8)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="1245230898" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.015691" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1220" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(31)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(31)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="1080272180" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.027060" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1221" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(-2)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(-2)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="646846196" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.015822" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1222" name="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(-1)" fullname="Tests.EditMode.SaveStorageFaultTests.InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery(-1)" methodname="InterruptedTemporaryWritePreservesDurableProgressAndRepairStopsRepeatedRecovery" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="2121501902" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.041650" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1226" name="VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite" fullname="Tests.EditMode.SaveStorageFaultTests.VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.085314" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1224" name="VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite(False)" fullname="Tests.EditMode.SaveStorageFaultTests.VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite(False)" methodname="VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="683525584" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.041758" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1225" name="VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite(True)" fullname="Tests.EditMode.SaveStorageFaultTests.VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite(True)" methodname="VerifiedFutureSchemaOrFormatBlocksAutomaticFallbackAndRoutineOverwrite" classname="Tests.EditMode.SaveStorageFaultTests" runstate="Runnable" seed="1917281762" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.042790" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+      <test-suite type="TestSuite" id="1228" name="TimelessEchoes" fullname="TimelessEchoes" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:46Z" duration="0.069650" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1229" name="Tests" fullname="TimelessEchoes.Tests" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:46Z" duration="0.068910" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1230" name="Buffs" fullname="TimelessEchoes.Tests.Buffs" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005930" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1030" name="SlipstreamBuffTests" fullname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests" classname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005825" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1031" name="DistanceDurationEffectControlsDistancePercent" fullname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests.DistanceDurationEffectControlsDistancePercent" methodname="DistanceDurationEffectControlsDistancePercent" classname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests" runstate="Runnable" seed="493268761" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002349" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="TimeScaleEffectsAdjustGlobalTimeScale" fullname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests.TimeScaleEffectsAdjustGlobalTimeScale" methodname="TimeScaleEffectsAdjustGlobalTimeScale" classname="TimelessEchoes.Tests.Buffs.SlipstreamBuffTests" runstate="Runnable" seed="542874209" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.003097" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1001" name="ResourceDropTests" fullname="TimelessEchoes.Tests.ResourceDropTests" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.003755" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="ExistingWheatAssetPaysItsRewardWithoutADistanceInput" fullname="TimelessEchoes.Tests.ResourceDropTests.ExistingWheatAssetPaysItsRewardWithoutADistanceInput" methodname="ExistingWheatAssetPaysItsRewardWithoutADistanceInput" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="976872641" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.001344" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="ExtraSlotsStillDrawWithoutReplacement" fullname="TimelessEchoes.Tests.ResourceDropTests.ExtraSlotsStillDrawWithoutReplacement" methodname="ExtraSlotsStillDrawWithoutReplacement" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="1965553401" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000305" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="LegacySerializedDistanceLimitsDoNotRestrictRewards" fullname="TimelessEchoes.Tests.ResourceDropTests.LegacySerializedDistanceLimitsDoNotRestrictRewards" methodname="LegacySerializedDistanceLimitsDoNotRestrictRewards" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="2069446475" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000198" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1006" name="RelativeWeightsStillSelectTheExpectedReward" fullname="TimelessEchoes.Tests.ResourceDropTests.RelativeWeightsStillSelectTheExpectedReward" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000537" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1004" name="RelativeWeightsStillSelectTheExpectedReward(0.0f,1)" fullname="TimelessEchoes.Tests.ResourceDropTests.RelativeWeightsStillSelectTheExpectedReward(0.0f,1)" methodname="RelativeWeightsStillSelectTheExpectedReward" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="2067517737" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000262" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="RelativeWeightsStillSelectTheExpectedReward(0.99f,2)" fullname="TimelessEchoes.Tests.ResourceDropTests.RelativeWeightsStillSelectTheExpectedReward(0.99f,2)" methodname="RelativeWeightsStillSelectTheExpectedReward" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="278159765" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000062" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1003" name="SkillRequirementStillBlocksRewardWithoutMatchingSkill" fullname="TimelessEchoes.Tests.ResourceDropTests.SkillRequirementStillBlocksRewardWithoutMatchingSkill" methodname="SkillRequirementStillBlocksRewardWithoutMatchingSkill" classname="TimelessEchoes.Tests.ResourceDropTests" runstate="Runnable" seed="796715444" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000323" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1009" name="TimberResourceTests" fullname="TimelessEchoes.Tests.TimberResourceTests" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.014586" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1027" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005095" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1019" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Stick&quot;,2,&quot;902_Brown_Branch_Forked&quot;,236)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Stick&quot;,2,&quot;902_Brown_Branch_Forked&quot;,236)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="353063274" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.003249" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Log&quot;,57,&quot;905_Brown_Log_Plain&quot;,238)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Log&quot;,57,&quot;905_Brown_Log_Plain&quot;,238)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="469289090" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000218" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Oak Stick&quot;,71,&quot;932_GreyBark_Branch_Forked&quot;,240)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Oak Stick&quot;,71,&quot;932_GreyBark_Branch_Forked&quot;,240)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1474608963" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000199" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Oak Log&quot;,72,&quot;935_GreyBark_Log_Plain&quot;,242)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Oak Log&quot;,72,&quot;935_GreyBark_Log_Plain&quot;,242)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="2023637882" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000114" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Birch Stick&quot;,73,&quot;922_Pale_Branch_Forked&quot;,244)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Birch Stick&quot;,73,&quot;922_Pale_Branch_Forked&quot;,244)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1562755134" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000128" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Birch Log&quot;,74,&quot;925_Pale_Log_Plain&quot;,246)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Birch Log&quot;,74,&quot;925_Pale_Log_Plain&quot;,246)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="900395643" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000183" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Spruce Stick&quot;,75,&quot;912_DarkBrown_Branch_Forked&quot;,248)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Spruce Stick&quot;,75,&quot;912_DarkBrown_Branch_Forked&quot;,248)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="458089955" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000147" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Spruce Log&quot;,76,&quot;915_DarkBrown_Log_Plain&quot;,250)" fullname="TimelessEchoes.Tests.TimberResourceTests.ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences(&quot;Spruce Log&quot;,76,&quot;915_DarkBrown_Log_Plain&quot;,250)" methodname="ApprovedArtHasDistinctStableIdentityInventoryAndDropReferences" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="746119734" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000122" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1028" name="BaseGuidAndSaveKeysSurviveWithoutSpeciesConversion" fullname="TimelessEchoes.Tests.TimberResourceTests.BaseGuidAndSaveKeysSurviveWithoutSpeciesConversion" methodname="BaseGuidAndSaveKeysSurviveWithoutSpeciesConversion" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1340561184" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000999" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="RuntimeResourceCaptureKeepsOldAndNewBalancesAndUndiscoveredDefaultsSeparate" fullname="TimelessEchoes.Tests.TimberResourceTests.RuntimeResourceCaptureKeepsOldAndNewBalancesAndUndiscoveredDefaultsSeparate" methodname="RuntimeResourceCaptureKeepsOldAndNewBalancesAndUndiscoveredDefaultsSeparate" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="2144462662" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.005275" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1018" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.002547" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1010" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Tree&quot;,&quot;&quot;,1,3,1,2)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Tree&quot;,&quot;&quot;,1,3,1,2)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="493286422" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000757" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Tree&quot;,&quot;&quot;,2,8,1,5)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Tree&quot;,&quot;&quot;,2,8,1,5)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="801187081" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000068" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Oak Tree&quot;,&quot;Oak &quot;,1,5,1,3)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Oak Tree&quot;,&quot;Oak &quot;,1,5,1,3)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="862437679" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000058" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Oak Tree&quot;,&quot;Oak &quot;,3,9,3,8)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Oak Tree&quot;,&quot;Oak &quot;,3,9,3,8)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="945265574" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000055" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Birch Tree&quot;,&quot;Birch &quot;,1,6,2,4)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Birch Tree&quot;,&quot;Birch &quot;,1,6,2,4)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1994208457" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000056" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1015" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Birch Tree&quot;,&quot;Birch &quot;,4,10,5,12)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Birch Tree&quot;,&quot;Birch &quot;,4,10,5,12)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1503134051" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000057" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Spruce Tree&quot;,&quot;Spruce &quot;,1,7,4,8)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Medium Spruce Tree&quot;,&quot;Spruce &quot;,1,7,4,8)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="2076216714" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000162" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Spruce Tree&quot;,&quot;Spruce &quot;,4,15,7,22)" fullname="TimelessEchoes.Tests.TimberResourceTests.TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance(&quot;Large Spruce Tree&quot;,&quot;Spruce &quot;,4,15,7,22)" methodname="TreeRewardsUseTheirOwnPairWithOriginalRangesAndChance" classname="TimelessEchoes.Tests.TimberResourceTests" runstate="Runnable" seed="1067769827" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:45Z" duration="0.000111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1231" name="UI" fullname="TimelessEchoes.Tests.UI" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:46Z" duration="0.044200" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1033" name="ResourceTierUpPopupUITests" fullname="TimelessEchoes.Tests.UI.ResourceTierUpPopupUITests" classname="TimelessEchoes.Tests.UI.ResourceTierUpPopupUITests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:46Z" duration="0.044044" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1034" name="SkillLevelUpToast_ShowsFullLevelRangeWhenMultipleLevelsGained" fullname="TimelessEchoes.Tests.UI.ResourceTierUpPopupUITests.SkillLevelUpToast_ShowsFullLevelRangeWhenMultipleLevelsGained" methodname="SkillLevelUpToast_ShowsFullLevelRangeWhenMultipleLevelsGained" classname="TimelessEchoes.Tests.UI.ResourceTierUpPopupUITests" runstate="Runnable" seed="2027785015" result="Passed" start-time="2026-10-02 12:01:45Z" end-time="2026-10-02 12:01:46Z" duration="0.043758" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/EchoesTests/EOVTests_1021a33014a1e47a/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

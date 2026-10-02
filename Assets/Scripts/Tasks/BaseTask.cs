@@ -110,6 +110,9 @@ namespace TimelessEchoes.Tasks
         {
         }
 
+        // Opt-in reuse hook for tasks whose new spawn must emit its own completion event.
+        protected void ResetCompletionNotification() => completionNotified = false;
+
         /// <summary>
         ///     Notify listeners that this task has completed. Ensures
         ///     the event is only invoked once.

@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5131448834941734184
-    second: Desert_Fencewall_0
+    second: Desert_Fencewall_Wall_NS_EndN_Src000
   - first:
       213: 444023488756178163
-    second: Desert_Fencewall_1
+    second: Desert_Fencewall_Wall_EW_EndW_Src001
   - first:
       213: -3161979148635258517
-    second: Desert_Fencewall_2
+    second: Desert_Fencewall_Wall_EW_Middle_Src002
   - first:
       213: -1135604566550076346
-    second: Desert_Fencewall_3
+    second: Desert_Fencewall_Wall_EW_EndE_Src003
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,7 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Desert_Fencewall_0
+      name: Desert_Fencewall_Wall_NS_EndN_Src000
       rect:
         serializedVersion: 2
         x: 0
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_1
+      name: Desert_Fencewall_Wall_EW_EndW_Src001
       rect:
         serializedVersion: 2
         x: 16
@@ -153,7 +153,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_2
+      name: Desert_Fencewall_Wall_EW_Middle_Src002
       rect:
         serializedVersion: 2
         x: 32
@@ -175,7 +175,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_3
+      name: Desert_Fencewall_Wall_EW_EndE_Src003
       rect:
         serializedVersion: 2
         x: 48
@@ -197,7 +197,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_4
+      name: Desert_Fencewall_Wall_NS_Middle_Src004
       rect:
         serializedVersion: 2
         x: 0
@@ -219,7 +219,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_5
+      name: Desert_Fencewall_Wall_Turn_NE_Src005
       rect:
         serializedVersion: 2
         x: 16
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_6
+      name: Desert_Fencewall_Wall_TBranch_ESW_Src006
       rect:
         serializedVersion: 2
         x: 32
@@ -263,7 +263,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_7
+      name: Desert_Fencewall_Wall_Turn_SW_Src007
       rect:
         serializedVersion: 2
         x: 48
@@ -285,7 +285,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_8
+      name: Desert_Fencewall_Wall_NS_EndS_Src008
       rect:
         serializedVersion: 2
         x: 0
@@ -307,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_9
+      name: Desert_Fencewall_Wall_TBranch_NES_Src009
       rect:
         serializedVersion: 2
         x: 16
@@ -329,7 +329,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_10
+      name: Desert_Fencewall_Wall_TBranch_ESW_Offset_Src010
       rect:
         serializedVersion: 2
         x: 32
@@ -351,7 +351,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_11
+      name: Desert_Fencewall_Wall_TBranch_NSW_Src011
       rect:
         serializedVersion: 2
         x: 48
@@ -373,7 +373,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_12
+      name: Desert_Fencewall_Wall_Isolated_Src012
       rect:
         serializedVersion: 2
         x: 0
@@ -395,7 +395,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_13
+      name: Desert_Fencewall_Wall_Turn_NE_Offset_Src013
       rect:
         serializedVersion: 2
         x: 16
@@ -417,7 +417,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_14
+      name: Desert_Fencewall_Wall_TBranch_NEW_Src014
       rect:
         serializedVersion: 2
         x: 32
@@ -439,7 +439,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Fencewall_15
+      name: Desert_Fencewall_Wall_Turn_NW_Src015
       rect:
         serializedVersion: 2
         x: 48
@@ -476,22 +476,22 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Desert_Fencewall_0: 5131448834941734184
-      Desert_Fencewall_1: 444023488756178163
-      Desert_Fencewall_10: 970887089
-      Desert_Fencewall_11: 1651600151
-      Desert_Fencewall_12: -1374302954
-      Desert_Fencewall_13: -867416350
-      Desert_Fencewall_14: -1406557039
-      Desert_Fencewall_15: -974888969
-      Desert_Fencewall_2: -3161979148635258517
-      Desert_Fencewall_3: -1135604566550076346
-      Desert_Fencewall_4: -2108383221
-      Desert_Fencewall_5: 1608617064
-      Desert_Fencewall_6: -246957898
-      Desert_Fencewall_7: -1352484860
-      Desert_Fencewall_8: -1346235244
-      Desert_Fencewall_9: -992949997
+      Desert_Fencewall_Wall_NS_EndN_Src000: 5131448834941734184
+      Desert_Fencewall_Wall_EW_EndW_Src001: 444023488756178163
+      Desert_Fencewall_Wall_TBranch_ESW_Offset_Src010: 970887089
+      Desert_Fencewall_Wall_TBranch_NSW_Src011: 1651600151
+      Desert_Fencewall_Wall_Isolated_Src012: -1374302954
+      Desert_Fencewall_Wall_Turn_NE_Offset_Src013: -867416350
+      Desert_Fencewall_Wall_TBranch_NEW_Src014: -1406557039
+      Desert_Fencewall_Wall_Turn_NW_Src015: -974888969
+      Desert_Fencewall_Wall_EW_Middle_Src002: -3161979148635258517
+      Desert_Fencewall_Wall_EW_EndE_Src003: -1135604566550076346
+      Desert_Fencewall_Wall_NS_Middle_Src004: -2108383221
+      Desert_Fencewall_Wall_Turn_NE_Src005: 1608617064
+      Desert_Fencewall_Wall_TBranch_ESW_Src006: -246957898
+      Desert_Fencewall_Wall_Turn_SW_Src007: -1352484860
+      Desert_Fencewall_Wall_NS_EndS_Src008: -1346235244
+      Desert_Fencewall_Wall_TBranch_NES_Src009: -992949997
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

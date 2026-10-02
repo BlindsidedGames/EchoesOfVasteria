@@ -4,10 +4,10 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -807139737172803850
-    second: Desert_Grass_0
+    second: Desert_Grass_Grass_VoidNotch_SE_Src000
   - first:
       213: -96425542465280699
-    second: Desert_Grass_1
+    second: Desert_Grass_Grass_VoidBorder_S_Src001
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,7 +103,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Desert_Grass_0
+      name: Desert_Grass_Grass_VoidNotch_SE_Src000
       rect:
         serializedVersion: 2
         x: 0
@@ -125,7 +125,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_1
+      name: Desert_Grass_Grass_VoidBorder_S_Src001
       rect:
         serializedVersion: 2
         x: 16
@@ -147,7 +147,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_2
+      name: Desert_Grass_Grass_VoidNotch_SW_Src002
       rect:
         serializedVersion: 2
         x: 32
@@ -169,7 +169,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_3
+      name: Desert_Grass_Grass_VoidBorder_E_Src003
       rect:
         serializedVersion: 2
         x: 0
@@ -191,7 +191,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_4
+      name: Desert_Grass_Grass_VoidBorder_W_Src004
       rect:
         serializedVersion: 2
         x: 32
@@ -213,7 +213,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_5
+      name: Desert_Grass_Grass_VoidNotch_NE_Src005
       rect:
         serializedVersion: 2
         x: 0
@@ -235,7 +235,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_6
+      name: Desert_Grass_Grass_VoidBorder_N_Src006
       rect:
         serializedVersion: 2
         x: 16
@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_7
+      name: Desert_Grass_Grass_VoidNotch_NW_Src007
       rect:
         serializedVersion: 2
         x: 32
@@ -279,7 +279,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_8
+      name: Desert_Grass_GrassOuterCorner_SE_Src008
       rect:
         serializedVersion: 2
         x: 0
@@ -301,7 +301,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_9
+      name: Desert_Grass_GrassOuterCorner_SW_Src009
       rect:
         serializedVersion: 2
         x: 16
@@ -323,7 +323,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_10
+      name: Desert_Grass_GrassFill_Src010
       rect:
         serializedVersion: 2
         x: 32
@@ -345,7 +345,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_11
+      name: Desert_Grass_GrassOuterCorner_NE_Src011
       rect:
         serializedVersion: 2
         x: 0
@@ -367,7 +367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Desert_Grass_12
+      name: Desert_Grass_GrassOuterCorner_NW_Src012
       rect:
         serializedVersion: 2
         x: 16
@@ -404,19 +404,19 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Desert_Grass_0: -807139737172803850
-      Desert_Grass_1: -96425542465280699
-      Desert_Grass_10: 1414797931
-      Desert_Grass_11: 894611075
-      Desert_Grass_12: -2029705810
-      Desert_Grass_2: -2069701973
-      Desert_Grass_3: 2051985891
-      Desert_Grass_4: 965818807
-      Desert_Grass_5: -890883451
-      Desert_Grass_6: 1977535716
-      Desert_Grass_7: -656924886
-      Desert_Grass_8: 462202512
-      Desert_Grass_9: 128542261
+      Desert_Grass_Grass_VoidNotch_SE_Src000: -807139737172803850
+      Desert_Grass_Grass_VoidBorder_S_Src001: -96425542465280699
+      Desert_Grass_GrassFill_Src010: 1414797931
+      Desert_Grass_GrassOuterCorner_NE_Src011: 894611075
+      Desert_Grass_GrassOuterCorner_NW_Src012: -2029705810
+      Desert_Grass_Grass_VoidNotch_SW_Src002: -2069701973
+      Desert_Grass_Grass_VoidBorder_E_Src003: 2051985891
+      Desert_Grass_Grass_VoidBorder_W_Src004: 965818807
+      Desert_Grass_Grass_VoidNotch_NE_Src005: -890883451
+      Desert_Grass_Grass_VoidBorder_N_Src006: 1977535716
+      Desert_Grass_Grass_VoidNotch_NW_Src007: -656924886
+      Desert_Grass_GrassOuterCorner_SE_Src008: 462202512
+      Desert_Grass_GrassOuterCorner_SW_Src009: 128542261
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

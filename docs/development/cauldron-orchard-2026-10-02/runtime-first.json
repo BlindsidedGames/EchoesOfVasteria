@@ -1,0 +1,212 @@
+{
+  "loadedDisposableSlot": true,
+  "offlineServices": true,
+  "platform": "OSXPlayer",
+  "graphics": "Metal",
+  "product": "EOVCauldronOrchard20261002",
+  "actualToolkitRoute": true,
+  "dynamic34FoodSlots": true,
+  "zeroAndUnknownRemainVisibleDisabled": true,
+  "saplingsExcludedFromCauldron": true,
+  "propagationDebitRejected": true,
+  "plusExactStep": true,
+  "minusExactStep": true,
+  "exactPartialPreview": true,
+  "actualPartialAtomicDebitAndStew": true,
+  "actualAuthoredQuestProgressCommitted": true,
+  "directActionNoConfirmationOrSecondPayment": true,
+  "sameCommandIsReplay": true,
+  "maxKeepsBillionFraction": true,
+  "actualMaxHasNoIntOverflow": true,
+  "failedDiskSaveRejected": true,
+  "failedDiskSavePublishesNothing": true,
+  "existingEvaXpRewardLoopStillRuns": true,
+  "legacyRenderPanel": "Cauldron_Window",
+  "legacyDynamic34Slots": true,
+  "legacyMaxExactBalance": true,
+  "legacyMinusExactStep": true,
+  "legacyPlusExactStep": true,
+  "actualLegacyPartialConversion": true,
+  "legacyRepeatDoesNotPayAgain": true,
+  "actualFarmlandsAdventureStarted": true,
+  "farmingCategorySamplesPer10000": {
+    "Farmlands": 1225,
+    "Woods": 145,
+    "River": 67
+  },
+  "actualPickerSecondaryWeightsAreScarce": true,
+  "actualAppleHarvest": true,
+  "repeatAppleTickPaysOnce": true,
+  "actualAppleFarmingXp": true,
+  "actualAppleControllerRetainsTrunk": true,
+  "actualAppleDropIconRenders": true,
+  "actualPearHarvest": true,
+  "repeatPearTickPaysOnce": true,
+  "actualPearFarmingXp": true,
+  "actualPearControllerRetainsTrunk": true,
+  "actualPearDropIconRenders": true,
+  "actualPeachHarvest": true,
+  "repeatPeachTickPaysOnce": true,
+  "actualPeachFarmingXp": true,
+  "actualPeachControllerRetainsTrunk": true,
+  "actualPeachDropIconRenders": true,
+  "actualCherryHarvest": true,
+  "repeatCherryTickPaysOnce": true,
+  "actualCherryFarmingXp": true,
+  "actualCherryControllerRetainsTrunk": true,
+  "actualCherryDropIconRenders": true,
+  "harvests": [
+    {
+      "species": "Apple",
+      "fruit": 7.0699998128414165,
+      "saplings": 0.0,
+      "glyph": 252,
+      "floatingText": "<sprite=252>7 <size=7><sprite=211> +8 XP</size>",
+      "animation": "Loot",
+      "completionEvents": 1
+    },
+    {
+      "species": "Pear",
+      "fruit": 2.8279999251365666,
+      "saplings": 0.0,
+      "glyph": 256,
+      "floatingText": "<sprite=256>2 <size=7><sprite=211> +16 XP</size>",
+      "animation": "Loot",
+      "completionEvents": 1
+    },
+    {
+      "species": "Peach",
+      "fruit": 2.8279999251365666,
+      "saplings": 0.0,
+      "glyph": 260,
+      "floatingText": "<sprite=260>2 <size=7><sprite=211> +29 XP</size>",
+      "animation": "Loot",
+      "completionEvents": 1
+    },
+    {
+      "species": "Cherry",
+      "fruit": 5.6559998502731332,
+      "saplings": 0.0,
+      "glyph": 264,
+      "floatingText": "<sprite=264>5 <size=7><sprite=211> +44 XP</size>",
+      "animation": "Loot",
+      "completionEvents": 1
+    }
+  ],
+  "actualAppleSaplingFixedOne": true,
+  "actualAppleSaplingDropIcon": true,
+  "observedAppleSaplingDrop": true,
+  "actualPearSaplingFixedOne": true,
+  "actualPearSaplingDropIcon": true,
+  "observedPearSaplingDrop": true,
+  "actualPeachSaplingFixedOne": true,
+  "actualPeachSaplingDropIcon": true,
+  "observedPeachSaplingDrop": true,
+  "actualCherrySaplingFixedOne": true,
+  "actualCherrySaplingDropIcon": true,
+  "observedCherrySaplingDrop": true,
+  "saplingHits": [
+    {
+      "species": "Apple",
+      "controlledSeed": 13,
+      "actualQuantity": 1,
+      "glyph": 254,
+      "floatingText": "<sprite=252>2, <sprite=254>1 <size=7><sprite=211> +8 XP</size>"
+    },
+    {
+      "species": "Pear",
+      "controlledSeed": 13,
+      "actualQuantity": 1,
+      "glyph": 258,
+      "floatingText": "<sprite=256>2, <sprite=258>1 <size=7><sprite=211> +16 XP</size>"
+    },
+    {
+      "species": "Peach",
+      "controlledSeed": 13,
+      "actualQuantity": 1,
+      "glyph": 262,
+      "floatingText": "<sprite=260>2, <sprite=262>1 <size=7><sprite=211> +29 XP</size>"
+    },
+    {
+      "species": "Cherry",
+      "controlledSeed": 13,
+      "actualQuantity": 1,
+      "glyph": 266,
+      "floatingText": "<sprite=264>2, <sprite=266>1 <size=7><sprite=211> +44 XP</size>"
+    }
+  ],
+  "pooledApple HarvestCompletion0": true,
+  "pooledApple HarvestReward0": true,
+  "pooledApple HarvestNoDuplicate0": true,
+  "samePooledApple HarvestInstance": true,
+  "pooledApple HarvestCompletion1": true,
+  "pooledApple HarvestReward1": true,
+  "pooledApple HarvestNoDuplicate1": true,
+  "pooledPear HarvestCompletion0": true,
+  "pooledPear HarvestReward0": true,
+  "pooledPear HarvestNoDuplicate0": true,
+  "samePooledPear HarvestInstance": true,
+  "pooledPear HarvestCompletion1": true,
+  "pooledPear HarvestReward1": true,
+  "pooledPear HarvestNoDuplicate1": true,
+  "pooledPeach HarvestCompletion0": true,
+  "pooledPeach HarvestReward0": true,
+  "pooledPeach HarvestNoDuplicate0": true,
+  "samePooledPeach HarvestInstance": true,
+  "pooledPeach HarvestCompletion1": true,
+  "pooledPeach HarvestReward1": true,
+  "pooledPeach HarvestNoDuplicate1": true,
+  "pooledCherry HarvestCompletion0": true,
+  "pooledCherry HarvestReward0": true,
+  "pooledCherry HarvestNoDuplicate0": true,
+  "samePooledCherry HarvestInstance": true,
+  "pooledCherry HarvestCompletion1": true,
+  "pooledCherry HarvestReward1": true,
+  "pooledCherry HarvestNoDuplicate1": true,
+  "pooledReuse": [
+    {
+      "task": "Apple Harvest",
+      "sameInstance": true,
+      "completionEvents": 2,
+      "payments": [
+        7.0699998128414165,
+        7.0699998128414165
+      ]
+    },
+    {
+      "task": "Pear Harvest",
+      "sameInstance": true,
+      "completionEvents": 2,
+      "payments": [
+        7.0699998128414165,
+        7.0699998128414165
+      ]
+    },
+    {
+      "task": "Peach Harvest",
+      "sameInstance": true,
+      "completionEvents": 2,
+      "payments": [
+        7.0699998128414165,
+        7.0699998128414165
+      ]
+    },
+    {
+      "task": "Cherry Harvest",
+      "sameInstance": true,
+      "completionEvents": 2,
+      "payments": [
+        7.0699998128414165,
+        7.0699998128414165
+      ]
+    }
+  ],
+  "actualConversionAndHarvestCheckpoint": true,
+  "errors": [],
+  "expectedFaultDiagnostics": [
+    "Save failed for File 1: System.IO.IOException: The file '/tmp/eov-cauldron-orchard-player-20261002/blocked-root' already exists.\n  at System.IO.FileSystem.CreateDirectory (System.String fullPath) [0x00191] in <0e19fd8bd8e94908bba2ee4f803bc6a7>:0 \n  at System.IO.Directory.CreateDirectory (System.String path) [0x0002c] in <0e19fd8bd8e94908bba2ee4f803bc6a7>:0 \n  at Blindsided.SaveData.SaveManager.WriteSnapshot (Blindsided.SaveData.SaveManager+SaveWriteRequest request) [0x00343] in <a1e2742e8d3841c8aa49cffc606a7b8b>:0 \n  at Blindsided.SaveData.SaveManager+<>c__DisplayClass32_0.<WriteSnapshotAsync>b__0 () [0x00000] in <a1e2742e8d3841c8aa49cffc606a7b8b>:0 \n  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <0e19fd8bd8e94908bba2ee4f803bc6a7>:0 \n  at System.Threading.Tasks.Task.Execute () [0x00000] in <0e19fd8bd8e94908bba2ee4f803bc6a7>:0 \n--- End of stack trace from previous location where exception was thrown ---\n\n  at Blindsided.SaveData.SaveManager.WriteSnapshotAsync (Blindsided.SaveData.SaveManager+SaveWriteRequest request, System.Threading.CancellationToken ct) [0x00160] in <a1e2742e8d3841c8aa49cffc606a7b8b>:0 "
+  ],
+  "warnings": [],
+  "phase": "first",
+  "passed": true
+}

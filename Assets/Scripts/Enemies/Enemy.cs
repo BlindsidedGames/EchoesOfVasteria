@@ -502,6 +502,7 @@ namespace TimelessEchoes.Enemies
                 var buff = BuffManager.Instance;
                 if (buff != null)
                     final *= buff.ResourceGainMultiplier;
+                final += CauldronResourceYield.Supplement(Blindsided.Oracle.oracle?.saveData, res.resource, (double)res.count * mult);
                 resourceManager.Add(res.resource, final);
                 Log($"Dropped {final} {res.resource.name}", TELogCategory.Resource, this);
                 if (dropTotals.ContainsKey(res.resource))

@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 7783117930852802827
-    second: Rails_0
+    second: CaveRail_Horizontal_Ties_Sparse_A
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rails_0
+      name: CaveRail_Horizontal_Ties_Sparse_A
       rect:
         serializedVersion: 2
         x: 16
@@ -148,7 +148,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_1
+      name: CaveRail_Curve_Join_ES_A
       rect:
         serializedVersion: 2
         x: 32
@@ -170,7 +170,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_2
+      name: CaveRail_Horizontal_Ties_Dense_A
       rect:
         serializedVersion: 2
         x: 48
@@ -192,7 +192,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_3
+      name: CaveRail_Curve_Join_SW_A
       rect:
         serializedVersion: 2
         x: 64
@@ -214,7 +214,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_4
+      name: CaveRail_Horizontal_Ties_Dense_B
       rect:
         serializedVersion: 2
         x: 80
@@ -236,7 +236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_5
+      name: CaveRail_Horizontal_Ties_Dense_C
       rect:
         serializedVersion: 2
         x: 96
@@ -258,7 +258,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_6
+      name: CaveRail_Horizontal_Ties_Sparse_B
       rect:
         serializedVersion: 2
         x: 0
@@ -280,7 +280,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_7
+      name: CaveRail_Horizontal_Ties_Sparse_C
       rect:
         serializedVersion: 2
         x: 16
@@ -302,7 +302,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_8
+      name: CaveRail_Vertical_Ties_Wood_A
       rect:
         serializedVersion: 2
         x: 32
@@ -324,7 +324,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_9
+      name: CaveRail_Vertical_Ties_BlueGray
       rect:
         serializedVersion: 2
         x: 48
@@ -346,7 +346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_10
+      name: CaveRail_Vertical_Ties_Wood_B
       rect:
         serializedVersion: 2
         x: 64
@@ -368,7 +368,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_11
+      name: CaveRail_Vertical_Ties_Wood_C
       rect:
         serializedVersion: 2
         x: 80
@@ -390,7 +390,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_12
+      name: CaveRail_Vertical_Ties_Wood_D
       rect:
         serializedVersion: 2
         x: 96
@@ -412,7 +412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_13
+      name: CaveRail_Curve_Join_NE_A
       rect:
         serializedVersion: 2
         x: 32
@@ -434,7 +434,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_14
+      name: CaveRail_Horizontal_Ties_Dense_D
       rect:
         serializedVersion: 2
         x: 48
@@ -456,7 +456,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Rails_15
+      name: CaveRail_Curve_Join_NW_A
       rect:
         serializedVersion: 2
         x: 64
@@ -493,22 +493,22 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.4300000071525574},"autoSlicingMethod":1,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Rails_0: 7783117930852802827
-      Rails_1: -577236133
-      Rails_10: -1919654290
-      Rails_11: -666580313
-      Rails_12: 715476781
-      Rails_13: -1928032953
-      Rails_14: 849170408
-      Rails_15: 1180804920
-      Rails_2: -1941594091
-      Rails_3: 494878615
-      Rails_4: -427761540
-      Rails_5: 1508177195
-      Rails_6: 1134107914
-      Rails_7: 1002365707
-      Rails_8: -1392854055
-      Rails_9: 1652079834
+      CaveRail_Horizontal_Ties_Sparse_A: 7783117930852802827
+      CaveRail_Curve_Join_ES_A: -577236133
+      CaveRail_Vertical_Ties_Wood_B: -1919654290
+      CaveRail_Vertical_Ties_Wood_C: -666580313
+      CaveRail_Vertical_Ties_Wood_D: 715476781
+      CaveRail_Curve_Join_NE_A: -1928032953
+      CaveRail_Horizontal_Ties_Dense_D: 849170408
+      CaveRail_Curve_Join_NW_A: 1180804920
+      CaveRail_Horizontal_Ties_Dense_A: -1941594091
+      CaveRail_Curve_Join_SW_A: 494878615
+      CaveRail_Horizontal_Ties_Dense_B: -427761540
+      CaveRail_Horizontal_Ties_Dense_C: 1508177195
+      CaveRail_Horizontal_Ties_Sparse_B: 1134107914
+      CaveRail_Horizontal_Ties_Sparse_C: 1002365707
+      CaveRail_Vertical_Ties_Wood_A: -1392854055
+      CaveRail_Vertical_Ties_BlueGray: 1652079834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

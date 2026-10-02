@@ -653,6 +653,10 @@ namespace TimelessEchoes.Tasks
                     {
                         var c = obj.GetComponent<WoodcuttingTask>(); if (c != null) c.enabled = false;
                     }
+                    else if (task is FruitHarvestTask)
+                    {
+                        var c = obj.GetComponent<FruitHarvestTask>(); if (c != null) c.enabled = false;
+                    }
                     else if (task is MiningTask)
                     {
                         var c = obj.GetComponent<MiningTask>(); if (c != null) c.enabled = false;
@@ -669,7 +673,7 @@ namespace TimelessEchoes.Tasks
             }
             else if (task is MonoBehaviour mb)
             {
-                if (task is OpenChestTask || task is WoodcuttingTask || task is MiningTask || task is FarmingTask)
+                if (task is OpenChestTask || task is WoodcuttingTask || task is FruitHarvestTask || task is MiningTask || task is FarmingTask)
                 {
                     // Disable the component and keep visuals
                     var mbBehaviour = mb as Behaviour; if (mbBehaviour != null) mbBehaviour.enabled = false;

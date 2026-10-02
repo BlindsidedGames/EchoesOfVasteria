@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
             double best = 0;
             if (oracle != null && oracle.saveData.Resources != null && oracle.saveData.Resources.TryGetValue(resource.name, out var record)) best = record.BestPerMinute;
             var power = resource.DisableAlterEcho ? "N/A" : Number(best);
-            var detail = $"Alter Echo power: {power}";
+            var detail = $"Best gathered/min: {power}";
             if (earned)
             {
                 if (resource.DisableAlterEcho) detail = "Crafted\n" + detail;

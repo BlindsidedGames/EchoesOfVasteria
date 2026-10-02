@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 759789617570588484
-    second: Stone_Cliff_2_Tile_0
+    second: BrightGreenCliff_GrassCorner_SE_StoneLip_NW
   - first:
       213: -7097790959693112039
-    second: Stone_Cliff_2_Tile_1
+    second: BrightGreenCliff_GrassSide_S_StoneLipSide_N
   - first:
       213: -6012654350953090930
-    second: Stone_Cliff_2_Tile_2
+    second: BrightGreenCliff_GrassCorner_SW_StoneLip_NE
   - first:
       213: 7498762019189353099
-    second: Stone_Cliff_2_Tile_3
+    second: BrightGreenCliff_GrassSide_E_StoneLipSide_W
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,7 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_0
+      name: BrightGreenCliff_GrassCorner_SE_StoneLip_NW
       rect:
         serializedVersion: 2
         x: 16
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_1
+      name: BrightGreenCliff_GrassSide_S_StoneLipSide_N
       rect:
         serializedVersion: 2
         x: 32
@@ -153,7 +153,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_2
+      name: BrightGreenCliff_GrassCorner_SW_StoneLip_NE
       rect:
         serializedVersion: 2
         x: 48
@@ -175,7 +175,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_3
+      name: BrightGreenCliff_GrassSide_E_StoneLipSide_W
       rect:
         serializedVersion: 2
         x: 16
@@ -197,7 +197,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_4
+      name: BrightGreenCliff_GrassFill
       rect:
         serializedVersion: 2
         x: 32
@@ -219,7 +219,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_5
+      name: BrightGreenCliff_GrassSide_W_StoneLipSide_E
       rect:
         serializedVersion: 2
         x: 48
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_6
+      name: BrightGreenCliff_StoneNotch_SE_InGrass
       rect:
         serializedVersion: 2
         x: 80
@@ -263,7 +263,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_7
+      name: BrightGreenCliff_StoneNotch_SW_InGrass
       rect:
         serializedVersion: 2
         x: 96
@@ -285,7 +285,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_8
+      name: BrightGreenCliff_Stairs_Top_Left
       rect:
         serializedVersion: 2
         x: 128
@@ -307,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_9
+      name: BrightGreenCliff_Stairs_Top_Center
       rect:
         serializedVersion: 2
         x: 144
@@ -329,7 +329,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_10
+      name: BrightGreenCliff_Stairs_Top_Right
       rect:
         serializedVersion: 2
         x: 160
@@ -351,7 +351,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_11
+      name: BrightGreenCliff_Stairs_Top_Single
       rect:
         serializedVersion: 2
         x: 192
@@ -373,7 +373,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_12
+      name: BrightGreenCliff_GrassCorner_NE_FrontFace_SW
       rect:
         serializedVersion: 2
         x: 16
@@ -395,7 +395,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_13
+      name: BrightGreenCliff_GrassSide_N_FrontFace_S
       rect:
         serializedVersion: 2
         x: 32
@@ -417,7 +417,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_14
+      name: BrightGreenCliff_GrassCorner_NW_FrontFace_SE
       rect:
         serializedVersion: 2
         x: 48
@@ -439,7 +439,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_15
+      name: BrightGreenCliff_StoneNotch_NE_InGrass
       rect:
         serializedVersion: 2
         x: 80
@@ -461,7 +461,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_16
+      name: BrightGreenCliff_StoneNotch_NW_InGrass
       rect:
         serializedVersion: 2
         x: 96
@@ -483,7 +483,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_17
+      name: BrightGreenCliff_Stairs_Middle_Left
       rect:
         serializedVersion: 2
         x: 128
@@ -505,7 +505,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_18
+      name: BrightGreenCliff_Stairs_Middle_Center
       rect:
         serializedVersion: 2
         x: 144
@@ -527,7 +527,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_19
+      name: BrightGreenCliff_Stairs_Middle_Right
       rect:
         serializedVersion: 2
         x: 160
@@ -549,7 +549,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_20
+      name: BrightGreenCliff_Stairs_Middle_Single
       rect:
         serializedVersion: 2
         x: 192
@@ -571,7 +571,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_21
+      name: BrightGreenCliff_FrontFace_Left
       rect:
         serializedVersion: 2
         x: 16
@@ -593,7 +593,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_22
+      name: BrightGreenCliff_FrontFace_Center
       rect:
         serializedVersion: 2
         x: 32
@@ -615,7 +615,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_23
+      name: BrightGreenCliff_FrontFace_Right
       rect:
         serializedVersion: 2
         x: 48
@@ -637,7 +637,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_24
+      name: BrightGreenCliff_Stairs_Bottom_Left
       rect:
         serializedVersion: 2
         x: 128
@@ -659,7 +659,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_25
+      name: BrightGreenCliff_Stairs_Bottom_Center
       rect:
         serializedVersion: 2
         x: 144
@@ -681,7 +681,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_26
+      name: BrightGreenCliff_Stairs_Bottom_Right
       rect:
         serializedVersion: 2
         x: 160
@@ -703,7 +703,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_27
+      name: BrightGreenCliff_Stairs_Bottom_Single
       rect:
         serializedVersion: 2
         x: 192
@@ -725,7 +725,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_28
+      name: BrightGreenCliff_FrontFaceFoot_Left
       rect:
         serializedVersion: 2
         x: 16
@@ -747,7 +747,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_29
+      name: BrightGreenCliff_FrontFaceFoot_Center
       rect:
         serializedVersion: 2
         x: 32
@@ -769,7 +769,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_30
+      name: BrightGreenCliff_FrontFaceFoot_Right
       rect:
         serializedVersion: 2
         x: 48
@@ -791,7 +791,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_31
+      name: BrightGreenCliff_Shadow_StairsTop_Left
       rect:
         serializedVersion: 2
         x: 128
@@ -813,7 +813,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_32
+      name: BrightGreenCliff_Shadow_StairsTop_Center
       rect:
         serializedVersion: 2
         x: 144
@@ -835,7 +835,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_33
+      name: BrightGreenCliff_Shadow_StairsTop_Right
       rect:
         serializedVersion: 2
         x: 160
@@ -857,7 +857,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_34
+      name: BrightGreenCliff_Shadow_StairsTop_Single
       rect:
         serializedVersion: 2
         x: 192
@@ -879,7 +879,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_35
+      name: BrightGreenCliff_Shadow_CliffFoot_Left
       rect:
         serializedVersion: 2
         x: 16
@@ -901,7 +901,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_36
+      name: BrightGreenCliff_Shadow_CliffFoot_Center
       rect:
         serializedVersion: 2
         x: 32
@@ -923,7 +923,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Cliff_2_Tile_37
+      name: BrightGreenCliff_Shadow_CliffFoot_Right
       rect:
         serializedVersion: 2
         x: 48
@@ -960,44 +960,44 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Stone_Cliff_2_Tile_0: 759789617570588484
-      Stone_Cliff_2_Tile_1: -7097790959693112039
-      Stone_Cliff_2_Tile_10: 327837530
-      Stone_Cliff_2_Tile_11: 698975718
-      Stone_Cliff_2_Tile_12: 161436547
-      Stone_Cliff_2_Tile_13: -122536459
-      Stone_Cliff_2_Tile_14: 125977087
-      Stone_Cliff_2_Tile_15: 274129689
-      Stone_Cliff_2_Tile_16: -1119908851
-      Stone_Cliff_2_Tile_17: 644607206
-      Stone_Cliff_2_Tile_18: -1965622370
-      Stone_Cliff_2_Tile_19: 794782228
-      Stone_Cliff_2_Tile_2: -6012654350953090930
-      Stone_Cliff_2_Tile_20: -2035352741
-      Stone_Cliff_2_Tile_21: 1204621397
-      Stone_Cliff_2_Tile_22: -978273396
-      Stone_Cliff_2_Tile_23: 1830849204
-      Stone_Cliff_2_Tile_24: 132033087
-      Stone_Cliff_2_Tile_25: 1428633025
-      Stone_Cliff_2_Tile_26: -1390244208
-      Stone_Cliff_2_Tile_27: -1642210894
-      Stone_Cliff_2_Tile_28: -2004898379
-      Stone_Cliff_2_Tile_29: -419325598
-      Stone_Cliff_2_Tile_3: 7498762019189353099
-      Stone_Cliff_2_Tile_30: 1952737630
-      Stone_Cliff_2_Tile_31: -1735690151
-      Stone_Cliff_2_Tile_32: -1734937647
-      Stone_Cliff_2_Tile_33: -1870888373
-      Stone_Cliff_2_Tile_34: 1587986568
-      Stone_Cliff_2_Tile_35: -1236449431
-      Stone_Cliff_2_Tile_36: 133233034
-      Stone_Cliff_2_Tile_37: -306748329
-      Stone_Cliff_2_Tile_4: 1172963544
-      Stone_Cliff_2_Tile_5: 203712602
-      Stone_Cliff_2_Tile_6: -1204803223
-      Stone_Cliff_2_Tile_7: -213811710
-      Stone_Cliff_2_Tile_8: -595483170
-      Stone_Cliff_2_Tile_9: -987907807
+      BrightGreenCliff_GrassCorner_SE_StoneLip_NW: 759789617570588484
+      BrightGreenCliff_GrassSide_S_StoneLipSide_N: -7097790959693112039
+      BrightGreenCliff_Stairs_Top_Right: 327837530
+      BrightGreenCliff_Stairs_Top_Single: 698975718
+      BrightGreenCliff_GrassCorner_NE_FrontFace_SW: 161436547
+      BrightGreenCliff_GrassSide_N_FrontFace_S: -122536459
+      BrightGreenCliff_GrassCorner_NW_FrontFace_SE: 125977087
+      BrightGreenCliff_StoneNotch_NE_InGrass: 274129689
+      BrightGreenCliff_StoneNotch_NW_InGrass: -1119908851
+      BrightGreenCliff_Stairs_Middle_Left: 644607206
+      BrightGreenCliff_Stairs_Middle_Center: -1965622370
+      BrightGreenCliff_Stairs_Middle_Right: 794782228
+      BrightGreenCliff_GrassCorner_SW_StoneLip_NE: -6012654350953090930
+      BrightGreenCliff_Stairs_Middle_Single: -2035352741
+      BrightGreenCliff_FrontFace_Left: 1204621397
+      BrightGreenCliff_FrontFace_Center: -978273396
+      BrightGreenCliff_FrontFace_Right: 1830849204
+      BrightGreenCliff_Stairs_Bottom_Left: 132033087
+      BrightGreenCliff_Stairs_Bottom_Center: 1428633025
+      BrightGreenCliff_Stairs_Bottom_Right: -1390244208
+      BrightGreenCliff_Stairs_Bottom_Single: -1642210894
+      BrightGreenCliff_FrontFaceFoot_Left: -2004898379
+      BrightGreenCliff_FrontFaceFoot_Center: -419325598
+      BrightGreenCliff_GrassSide_E_StoneLipSide_W: 7498762019189353099
+      BrightGreenCliff_FrontFaceFoot_Right: 1952737630
+      BrightGreenCliff_Shadow_StairsTop_Left: -1735690151
+      BrightGreenCliff_Shadow_StairsTop_Center: -1734937647
+      BrightGreenCliff_Shadow_StairsTop_Right: -1870888373
+      BrightGreenCliff_Shadow_StairsTop_Single: 1587986568
+      BrightGreenCliff_Shadow_CliffFoot_Left: -1236449431
+      BrightGreenCliff_Shadow_CliffFoot_Center: 133233034
+      BrightGreenCliff_Shadow_CliffFoot_Right: -306748329
+      BrightGreenCliff_GrassFill: 1172963544
+      BrightGreenCliff_GrassSide_W_StoneLipSide_E: 203712602
+      BrightGreenCliff_StoneNotch_SE_InGrass: -1204803223
+      BrightGreenCliff_StoneNotch_SW_InGrass: -213811710
+      BrightGreenCliff_Stairs_Top_Left: -595483170
+      BrightGreenCliff_Stairs_Top_Center: -987907807
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

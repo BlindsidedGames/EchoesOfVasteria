@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Blindsided.Utilities;
-using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,7 +26,6 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, popup, autoPinGroup;
         private Button autoPin, discord;
         private Image forgeAttention, cauldronAttention, questAttention;
-        private Label echoBalance;
         private VisualElement progressRoot, progressFill;
         private Image progressHero;
         private Label progressText;
@@ -99,16 +97,6 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     questAttention = AddAttention(button, definition.questAttention);
                     questAttention.AddToClassList("eov-navigation-quest-attention");
-                }
-                if (entry.group == Group.Hub && entry.window == TownWindowManager.Window.AlterEchoes)
-                {
-                    echoBalance = new Label { name = "echo-balance", pickingMode = PickingMode.Ignore };
-                    echoBalance.AddToClassList("eov-navigation-balance-label");
-                    echoBalance.style.color = definition.balanceColor;
-                    var balanceFrame = new VisualElement { pickingMode = PickingMode.Ignore };
-                    balanceFrame.AddToClassList("eov-navigation-balance");
-                    balanceFrame.AddToClassList("surface");
-                    balanceFrame.Add(echoBalance); row.Add(balanceFrame);
                 }
                 if (entry.group == Group.Toolbar)
                 {
@@ -238,15 +226,6 @@ namespace TimelessEchoes.UI.Toolkit
                 lastProgress = current; hasProgress = true;
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
-            if (echoBalance != null && openGroup == Group.Hub)
-            {
-                double total = 0;
-                var manager = AlterEchoGenerationManager.Instance;
-                if (manager != null) foreach (var generator in manager.Generators)
-                    if (generator != null && generator.RequirementsMet && generator.Resource != null)
-                        total += generator.GetStoredAmount(generator.Resource);
-                echoBalance.text = "<b>" + CalcUtils.FormatNumber(total, true) + "</b>";
-            }
         }
 
         private static void SetVisible(VisualElement element, bool visible)

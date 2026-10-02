@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.4718791">
+  <test-suite type="TestSuite" id="2937" name="EOVTests_22f431fb3ba1436e" fullname="EOVTests_22f431fb3ba1436e" runstate="Runnable" testcasecount="1784" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.471879" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1062" name="Tests.dll" fullname="/private/tmp/eov-ae-retirement-tests-v4/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.433271" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="54721" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1066" name="TimelessEchoes" fullname="TimelessEchoes" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.432530" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1067" name="Tests" fullname="TimelessEchoes.Tests" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.432259" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1068" name="RealTime" fullname="TimelessEchoes.Tests.RealTime" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.431978" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1050" name="RealTimeSystemsTests" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.431491" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="ParameterizedMethod" id="1056" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.429934" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1052" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(0)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(0)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="638712679" result="Passed" start-time="2026-10-02 11:39:05Z" end-time="2026-10-02 11:39:06Z" duration="0.419738" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1053" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(1)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(1)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="1669369326" result="Failed" start-time="2026-10-02 11:39:06Z" end-time="2026-10-02 11:39:06Z" duration="0.003237" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: 280 +/- 1.0000000000000001E-09d or 550 +/- 1.0000000000000001E-09d
+  But was:  350.0d
+]]></message>
+                    <stack-trace><![CDATA[at TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted (System.Int32 seed) [0x002a1] in /private/tmp/eov-ae-retirement-tests-v4/project/Assets/Tests/PlayMode/Tests/RealTimeSystemsTests.cs:85
+]]></stack-trace>
+                  </failure>
+                </test-case>
+                <test-case id="1054" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(2)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(2)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="1763535596" result="Failed" start-time="2026-10-02 11:39:06Z" end-time="2026-10-02 11:39:06Z" duration="0.000823" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: 280 +/- 1.0000000000000001E-09d or 550 +/- 1.0000000000000001E-09d
+  But was:  350.0d
+]]></message>
+                    <stack-trace><![CDATA[at TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted (System.Int32 seed) [0x002a1] in /private/tmp/eov-ae-retirement-tests-v4/project/Assets/Tests/PlayMode/Tests/RealTimeSystemsTests.cs:85
+]]></stack-trace>
+                  </failure>
+                </test-case>
+                <test-case id="1055" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(3)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(3)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="1276556150" result="Failed" start-time="2026-10-02 11:39:06Z" end-time="2026-10-02 11:39:06Z" duration="0.000493" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: 280 +/- 1.0000000000000001E-09d or 550 +/- 1.0000000000000001E-09d
+  But was:  480.0d
+]]></message>
+                    <stack-trace><![CDATA[at TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted (System.Int32 seed) [0x002a1] in /private/tmp/eov-ae-retirement-tests-v4/project/Assets/Tests/PlayMode/Tests/RealTimeSystemsTests.cs:85
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/EchoesTests/EOVTests_22f431fb3ba1436e/TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

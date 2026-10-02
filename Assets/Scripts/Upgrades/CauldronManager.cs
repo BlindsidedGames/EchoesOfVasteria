@@ -95,9 +95,9 @@ namespace TimelessEchoes.Upgrades
         public event Action<int> OnSessionCardsChanged;
         public event Action<TastingStats> OnStatsChanged;
         /// <summary>
-        ///     Fired when mixing occurs. Amount is the total number of resource units consumed across both inputs.
+        ///     Fired when mixing occurs. Amount is the committed number of food units consumed. Quest progress is already durable.
         /// </summary>
-        public event Action<int> OnResourcesMixed;
+        public event Action<double> OnResourcesMixed;
 
         public struct TastingStats
         {
@@ -265,17 +265,6 @@ namespace TimelessEchoes.Upgrades
             return GetTierFromThresholds(count, config != null ? config.buffTierThresholds : null);
         }
 
-        public float GetResourceAlterEchoMultiplier(string resourceName)
-        {
-            // Multiplier applied to per-resource alter-echo generation rate
-            if (config == null) return 1f;
-            var tier = GetResourceTier(resourceName);
-            if (tier <= 0 || config.resourcePowerBonusPerTier == null || config.resourcePowerBonusPerTier.Length == 0)
-                return 1f;
-            var idx = Mathf.Clamp(tier - 1, 0, config.resourcePowerBonusPerTier.Length - 1);
-            var bonusPercent = config.resourcePowerBonusPerTier[idx];
-            return 1f + Mathf.Max(0f, bonusPercent) / 100f;
-        }
 
         public float GetBuffCooldownReductionPercent(string buffName)
         {
@@ -446,37 +435,30 @@ namespace TimelessEchoes.Upgrades
         }
 
         // -------- Mixing --------
-        public bool CanMix(Resource a, Resource b)
+        public bool CanAddToCauldron(Resource food, double quantity)
         {
-            // Lazy resolve ResourceManager in case Awake order caused null
-            if (resourceManager == null) resourceManager = ResourceManager.Instance;
-            if (resourceManager == null) return false;
-            if (a == null || b == null || a == b) return false;
-            return resourceManager.GetAmount(a) > 0 || resourceManager.GetAmount(b) > 0;
+            resourceManager ??= ResourceManager.Instance;
+            var unit = CauldronConversion.UnitValue(food);
+            return food != null && resourceManager != null && resourceManager.IsUnlocked(food) &&
+                TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.IsFood(food) &&
+                CauldronConversion.IsFinite(quantity) && quantity > 0 && quantity <= resourceManager.GetAmount(food) &&
+                CauldronConversion.IsFinite(unit) && unit > 0 && CauldronConversion.IsFinite(quantity * unit);
         }
 
-        public double MixMax(Resource a, Resource b)
+        public bool TryAddToCauldron(Resource food, double quantity, long sequence, out double gained, out string error)
         {
-            // Lazy resolve ResourceManager in case Awake order caused null
-            if (resourceManager == null) resourceManager = ResourceManager.Instance;
-            if (!CanMix(a, b)) return 0;
-            var amountA = resourceManager.GetAmount(a);
-            var amountB = resourceManager.GetAmount(b);
-            if (amountA > 0) resourceManager.Spend(a, amountA);
-            if (amountB > 0) resourceManager.Spend(b, amountB);
-            var points = amountA * a.baseValue * a.valueMultiplier + amountB * b.baseValue * b.valueMultiplier;
-            var stewGained = points / 100.0;
-            Stew += stewGained;
-            var totalUnits = (int)Mathf.RoundToInt((float)(amountA + amountB));
-            if (totalUnits > 0)
-            {
-                var handler = OnResourcesMixed;
-                if (handler != null)
-                    handler(totalUnits);
-            }
-            TrySave();
+            gained = 0; error = null;
+            if (oracle == null) { error = "Save is not loaded."; return false; }
+            return oracle.TryCommitCauldronConversion(food, quantity, CauldronConversion.UnitValue(food),
+                sequence, out gained, out error);
+        }
+
+        // Called only after the complete immutable conversion has committed.
+        public void PublishCommittedConversion(double quantity)
+        {
+            OnStewChanged?.Invoke();
+            OnResourcesMixed?.Invoke(quantity);
             TryAutoStartTasting();
-            return stewGained;
         }
 
         public double GetStewCostPerRoll()
@@ -985,16 +967,6 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            // Update alter-echo generation rates when card counts change
-            try
-            {
-                TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty();
-            }
-            catch (Exception)
-            {
-                // ignore: manager may not be available in some scenes
-            }
-
             // If a buff tier or the Buffs group min tier changed, refresh active buff effects immediately
             if (isBuff)
             {
@@ -1107,9 +1079,6 @@ namespace TimelessEchoes.Upgrades
             sessionCardsGained += totalCardsGained;
             if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += totalCardsGained;
 
-            // Cascade updates ONCE (not per card)
-            try { TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty(); }
-            catch { }
 
             if (anyBuffTierChanged)
             {

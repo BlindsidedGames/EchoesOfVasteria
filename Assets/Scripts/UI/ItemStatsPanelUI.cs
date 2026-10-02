@@ -244,18 +244,18 @@ namespace TimelessEchoes.UI
                     var minDist = minDistanceLookup.TryGetValue(res, out var d) ? d : 0f;
                     if (res.DisableAlterEcho)
                         ui.bestPerMinuteText.text =
-                            $"Crafted\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                            $"Crafted\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";
                     else if (tier > 1)
                         ui.bestPerMinuteText.text =
-                            $"Tier Bonus: {bonusPercent:0.#}%\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                            $"Tier Bonus: {bonusPercent:0.#}%\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";
                     else
                         ui.bestPerMinuteText.text =
-                            $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nAE Power: {aePower}";
+                            $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";
                 }
                 else
                 {
                     ui.bestPerMinuteText.text =
-                        $"Min Distance: ???\nAE Power: {aePower}";
+                        $"Min Distance: ???\nBest gathered/min: {aePower}";
                 }
             }
 

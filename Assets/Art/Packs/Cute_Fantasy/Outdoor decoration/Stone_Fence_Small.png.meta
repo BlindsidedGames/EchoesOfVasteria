@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -925739346870673544
-    second: Stone_Fence_Small_0
+    second: Fence_Stone_Small_VerticalStrip_Assembly
   - first:
       213: 964857265339971864
-    second: Stone_Fence_Small_1
+    second: Fence_Stone_Small_HorizontalSegment_Assembly
   - first:
       213: 404079666057099840
-    second: Stone_Fence_Small_2
+    second: Fence_Stone_Small_SinglePost
   - first:
       213: -5172094656229924001
-    second: Stone_Fence_Small_3
+    second: Fence_Stone_Small_Grid_Assembly
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,7 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone_Fence_Small_0
+      name: Fence_Stone_Small_VerticalStrip_Assembly
       rect:
         serializedVersion: 2
         x: 4
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Fence_Small_1
+      name: Fence_Stone_Small_HorizontalSegment_Assembly
       rect:
         serializedVersion: 2
         x: 20
@@ -153,7 +153,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Fence_Small_2
+      name: Fence_Stone_Small_SinglePost
       rect:
         serializedVersion: 2
         x: 4
@@ -175,7 +175,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone_Fence_Small_3
+      name: Fence_Stone_Small_Grid_Assembly
       rect:
         serializedVersion: 2
         x: 20
@@ -210,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stone_Fence_Small_0: -925739346870673544
-      Stone_Fence_Small_1: 964857265339971864
-      Stone_Fence_Small_2: 404079666057099840
-      Stone_Fence_Small_3: -5172094656229924001
+      Fence_Stone_Small_VerticalStrip_Assembly: -925739346870673544
+      Fence_Stone_Small_HorizontalSegment_Assembly: 964857265339971864
+      Fence_Stone_Small_SinglePost: 404079666057099840
+      Fence_Stone_Small_Grid_Assembly: -5172094656229924001
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -58,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
             preferences = new VisualElement { name="settings-preferences" }; scroll.Add(preferences); currentPage=preferences;
             BuildAudio(); BuildDisplay(); BuildFloating();
             savePage = new VisualElement { name="settings-saves" }; scroll.Add(savePage); currentPage=savePage; BuildSaves();
-            BuildFooter(); SelectPage(selectedPage);
+            BuildFooter(); MarkRowEnds(); SelectPage(selectedPage);
             widthPreview = new VisualElement { name = "width-preview", pickingMode = PickingMode.Ignore };
             widthPreview.style.position = Position.Absolute; widthPreview.style.display = DisplayStyle.None;
             ToolkitTheme.Background(widthPreview, definition.widthPreview);
@@ -71,6 +71,19 @@ namespace TimelessEchoes.UI.Toolkit
             RefreshLanguage(UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale);
             if (dialogs) dialogs.Imported += RefreshSlots;
             RefreshSlots(); RefreshValues(); Layout(); return true;
+        }
+
+        // These rows are rebuilt on each Show; mark every child after construction so
+        // empty/single rows and a changed number of actions cannot retain stale ends.
+        private void MarkRowEnds()
+        {
+            root.Query<VisualElement>().ForEach(row =>
+            {
+                if (!row.ClassListContains("settings-tabs") && !row.ClassListContains("settings-actions") &&
+                    (row.childCount == 0 || !row[0].ClassListContains("settings-column"))) return;
+                for (var i = 0; i < row.childCount; i++)
+                    row[i].EnableInClassList("row-end", i == row.childCount - 1);
+            });
         }
 
         private VisualElement Frame(string name)

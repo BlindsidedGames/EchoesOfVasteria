@@ -1,0 +1,61 @@
+{
+  "source": "Exact Git index; no current uncommitted source substituted",
+  "unityInvoked": false,
+  "assemblies": [
+    {
+      "assembly": "TimelessEchoes.Runtime",
+      "sourceFiles": 422,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'"
+      ]
+    },
+    {
+      "assembly": "TimelessEchoes.Editor",
+      "sourceFiles": 4,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'"
+      ]
+    },
+    {
+      "assembly": "EditMode.Tests",
+      "sourceFiles": 14,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'"
+      ]
+    },
+    {
+      "assembly": "Tests",
+      "sourceFiles": 5,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Tests/PlayMode/Tests/SaveSystemStressPlayModeTests.cs(47,33): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'."
+      ]
+    },
+    {
+      "assembly": "Assembly-CSharp",
+      "sourceFiles": 3,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'"
+      ]
+    },
+    {
+      "assembly": "Assembly-CSharp-Editor",
+      "sourceFiles": 39,
+      "exitCode": 0,
+      "diagnostics": [
+        "info USG0001: Only allowed to have one file passed in with extension '.AdditionalFile.txt'",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Editor/Validation/ToolkitNativeCutover.cs(31,118): warning CS0184: The given expression is never of the provided ('SlicedFilledImage') type",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Editor/Validation/GatheringBuffValidation.cs(20,16): warning UDR0001: No method with RuntimeInitializeOnLoadMethod attribute",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,4): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable.",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,55): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable.",
+        "/tmp/eov-publication-slice-compile-20261002/source/Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,91): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable."
+      ]
+    }
+  ],
+  "passed": true
+}

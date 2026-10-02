@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Rock_BlueGray_FlatOval_MossS_WaterRipple_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 7928752678406168531, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: -3754854902151533955, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: -4134888976574442099, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: 1507424053036894044, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: -8203046312418414259, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: 757380323775663843, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: 1578221195010689867, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  - {fileID: -4124687231738807849, guid: 4283b78d323ef274aa407990dcd49410, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

@@ -15,7 +15,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
         /// <param name="stats">The tasting stats to format.</param>
         /// <param name="showSubcategories">
         /// When true and AE subcategory data exists, shows individual AE categories (Farming, Fishing, etc.).
-        /// When false or no subcategory data exists, shows only the total Alter-Echo count.
+        /// When false or no subcategory data exists, shows only the total resource-card count.
         /// </param>
         public static void Format(StringBuilder sb, CauldronManager.TastingStats stats, bool showSubcategories = true)
         {
@@ -42,28 +42,28 @@ namespace TimelessEchoes.Upgrades.Cauldron
 
             if (showSubcategories && hasSubcategoryData)
             {
-                sb.Append("• AE - Farming: ");
+                sb.Append("• Resources - Farming: ");
                 sb.Append(stats.aeFarming.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Fishing: ");
+                sb.Append("• Resources - Fishing: ");
                 sb.Append(stats.aeFishing.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Mining: ");
+                sb.Append("• Resources - Mining: ");
                 sb.Append(stats.aeMining.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Logging: ");
+                sb.Append("• Resources - Logging: ");
                 sb.Append(stats.aeWoodcutting.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Looting: ");
+                sb.Append("• Resources - Looting: ");
                 sb.Append(stats.aeLooting.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Combat: ");
+                sb.Append("• Resources - Combat: ");
                 sb.Append(stats.aeCombat.ToString("N0"));
                 sb.Append('\n');
             }
             else
             {
-                sb.Append("• Alter-Echo: ");
+                sb.Append("• Resource cards: ");
                 sb.Append(stats.alterEcho.ToString("N0"));
                 sb.Append('\n');
             }
@@ -89,7 +89,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
         /// <param name="stats">The tasting stats to format.</param>
         /// <param name="showSubcategories">
         /// When true and AE subcategory data exists, shows individual AE categories.
-        /// When false or no subcategory data exists, shows only the total Alter-Echo count.
+        /// When false or no subcategory data exists, shows only the total resource-card count.
         /// </param>
         /// <returns>The formatted stats string.</returns>
         public static string FormatToString(CauldronManager.TastingStats stats, bool showSubcategories = true)

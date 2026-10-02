@@ -144,37 +144,6 @@ MonoBehaviour:
     - condition: 0
       quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
       npcId: 
-  - id: chapter-4
-    title:
-      key: library.4.title
-      bold: 1
-      smallCaps: 1
-      fallback: Alter Echoes
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    body:
-      key: library.4.body
-      bold: 0
-      smallCaps: 0
-      fallback: 
-      localized:
-        m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
-        m_TableEntryReference:
-          m_KeyId: 188400156672
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-    visibility: []
   - id: chapter-5
     title:
       key: library.5.title

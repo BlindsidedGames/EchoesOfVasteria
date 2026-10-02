@@ -51,6 +51,7 @@ namespace TimelessEchoes.Upgrades
         [SerializeField] private double debugAmount = 1;
         private readonly Dictionary<Resource, double> amounts = new();
         private readonly HashSet<Resource> unlocked = new();
+        private GameData stateOwner;
 
         private void InvokeInventoryChanged()
         {
@@ -205,8 +206,18 @@ namespace TimelessEchoes.Upgrades
             return resource != null && unlocked.Contains(resource);
         }
 
+        /// <summary>Live discoveries belong only to the loaded active bank; detached banks use saved membership.</summary>
+        public bool IsUnlocked(Resource resource, GameData owner)
+        {
+            if (resource == null || owner == null) return false;
+            if (ReferenceEquals(owner, stateOwner) && ReferenceEquals(owner, oracle?.saveData))
+                return IsUnlocked(resource);
+            return owner.Resources != null && owner.Resources.TryGetValue(resource.name, out var entry) && entry?.Earned == true;
+        }
+
         private void ResetState()
         {
+            stateOwner = oracle?.saveData;
             amounts.Clear();
             unlocked.Clear();
             tiers.Clear();
@@ -214,6 +225,21 @@ namespace TimelessEchoes.Upgrades
                 pendingInventoryChanged = true;
             else
                 InvokeInventoryChanged();
+        }
+
+        // Exact values from an already committed farm transaction. No resource multipliers,
+        // tier rolls, adventure credit or OnResourceAdded callbacks may run on this path.
+        public void PublishCommittedResource(string name, GameData.ResourceEntry entry, GameData.ResourceRecord stats)
+        {
+            EnsureLookup();
+            if (!lookup.TryGetValue(name, out var resource) || resource == null) return;
+            amounts[resource] = entry.Amount;
+            if (entry.Earned) unlocked.Add(resource);
+            tiers[resource] = entry.Tier > 0 ? entry.Tier : 1;
+            resource.totalReceived = stats.TotalReceived;
+            resource.totalSpent = stats.TotalSpent;
+            if (batchDepth > 0) pendingInventoryChanged = true;
+            else InvokeInventoryChanged();
         }
 
         private void SaveState()
@@ -272,7 +298,8 @@ namespace TimelessEchoes.Upgrades
 
         private void LoadState()
         {
-            if (oracle == null) return;
+            stateOwner = oracle?.saveData;
+            if (stateOwner == null) return;
             oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             oracle.saveData.Disciples ??= new Dictionary<string, GameData.DiscipleGenerationRecord>();

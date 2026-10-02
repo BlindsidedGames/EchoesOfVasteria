@@ -1,0 +1,55 @@
+{
+  "records": [
+    {
+      "version": "previous-feature",
+      "phase": "first",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    },
+    {
+      "version": "previous-feature",
+      "phase": "reload",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    },
+    {
+      "version": "previous-feature",
+      "phase": "publication",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 7
+    },
+    {
+      "version": "previous-feature",
+      "phase": "recovery",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    },
+    {
+      "version": "cleanup",
+      "phase": "first",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    },
+    {
+      "version": "cleanup",
+      "phase": "reload",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    },
+    {
+      "version": "cleanup",
+      "phase": "publication",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 6
+    },
+    {
+      "version": "cleanup",
+      "phase": "recovery",
+      "computeBufferDisposalNotices": 1,
+      "nativeThreadFinalizationNotices": 14
+    }
+  ],
+  "computeBufferExactMessage": "GarbageCollector disposing of ComputeBuffer. Please use ComputeBuffer.Release() or .Dispose() to manually release the buffer.",
+  "threadMessage": "Thread 0x... may have been prematurely finalized",
+  "scope": "Native shutdown diagnostics after harness completion, present in earlier feature Player as well. Workflow log subscriptions end during object teardown; zero captured workflow warnings does not mean entire native shutdown log is empty."
+}

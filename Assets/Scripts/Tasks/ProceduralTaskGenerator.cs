@@ -895,7 +895,7 @@ namespace TimelessEchoes.Tasks
                 if (!IsTaskUnlocked(t))
                     return false;
                 return true;
-            });
+            }, t => t.GetWeight(worldX) * t.GetTerrainMultiplier(bottomTerrain, middleTerrain, topTerrain));
         }
 
         private bool IsTaskUnlocked(TaskData task)
@@ -919,12 +919,12 @@ namespace TimelessEchoes.Tasks
             return PickTaskFromCategory(chosen, worldX);
         }
 
-        private T PickEntry<T>(List<T> entries, float worldX, Predicate<T> filter) where T : IWeighted
+        private T PickEntry<T>(List<T> entries, float worldX, Predicate<T> filter, Func<T, float> customWeight = null) where T : IWeighted
         {
             var totalWeight = 0f;
             foreach (var e in entries)
                 if (filter(e))
-                    totalWeight += e.GetWeight(worldX);
+                    totalWeight += customWeight != null ? customWeight(e) : e.GetWeight(worldX);
 
             if (totalWeight <= 0f)
                 return default;
@@ -934,7 +934,7 @@ namespace TimelessEchoes.Tasks
             {
                 if (!filter(e))
                     continue;
-                r -= e.GetWeight(worldX);
+                r -= customWeight != null ? customWeight(e) : e.GetWeight(worldX);
                 if (r <= 0f)
                     return e;
             }

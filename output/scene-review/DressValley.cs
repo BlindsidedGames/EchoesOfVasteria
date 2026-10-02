@@ -10,13 +10,13 @@ public static class DressValley {
  Func<float,float,float> random=(a,b)=>a+(float)rng.NextDouble()*(b-a);
  bool Valid(SpriteRenderer r){var b=r.bounds; var local=home.InverseTransformPoint(b.center);if(local.y> -18||local.y< -52||local.x < -52||local.x>10)return false;
   // Keep every sprite off cliff faces, water and shoreline transition tiles.
-  for(float x=b.min.x;x<=b.max.x+.2f;x+=.4f)for(float y=b.min.y;y<=b.max.y+.2f;y+=.4f){var p=new Vector3(x,y);var cell=bg.WorldToCell(p);if(bg.GetTile(cell)?.name!="Grass_3_Middle"||walk.HasTile(walk.WorldToCell(p)))return false;}
+  for(float x=b.min.x;x<=b.max.x+.2f;x+=.4f)for(float y=b.min.y;y<=b.max.y+.2f;y+=.4f){var p=new Vector3(x,y);var cell=bg.WorldToCell(p);if(bg.GetTile(cell)?.name!="Grass_LightGreen_Fill"||walk.HasTile(walk.WorldToCell(p)))return false;}
   var foot=new Bounds(new Vector3(b.center.x,b.min.y+.25f),new Vector3(Mathf.Max(.5f,b.size.x*.65f),Mathf.Min(1.3f,b.size.y),1));
   if(existing.Any(e=>e.bounds.Intersects(foot))||placed.Any(e=>e.Intersects(foot)))return false;placed.Add(foot);return true;}
  bool Add(string name,Vector2 p,string spriteName=null,string prefab=null){GameObject go;if(prefab!=null)go=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/AnimatedDecor/Bank/"+prefab+".prefab"));else{var template=existing.First(r=>r.sprite.name==spriteName);go=new GameObject(name);var sr=go.AddComponent<SpriteRenderer>();sr.sprite=template.sprite;sr.sharedMaterial=template.sharedMaterial;sr.sortingLayerID=template.sortingLayerID;}
   go.name=name;go.transform.SetParent(root.transform,false);go.transform.position=home.TransformPoint(new Vector3(Mathf.Round(p.x*16)/16,Mathf.Round(p.y*16)/16,0));var renderer=go.GetComponent<SpriteRenderer>();
   if(!Valid(renderer)){UnityEngine.Object.DestroyImmediate(go);return false;}renderer.sortingOrder=Mathf.RoundToInt(-renderer.bounds.min.y*16);count++;return true;}
- string[] trees={"Medium_Oak_Tree_1","Small_Oak_Tree_1","Medium_Birch_Tree_1","Big_Oak_Tree_1"};
+ string[] trees={"Medium_Oak_Tree_Standing_GroundShadow","Small_Oak_Tree_Standing_GroundShadow","Medium_Birch_Tree_Standing_GroundShadow","Big_Oak_Tree_Standing_GroundShadow"};
  Vector2[] groves={new(-41,-28),new(-45,-38),new(-48,-49),new(-31,-46),new(-30,-51),new(-7,-22),new(2,-30),new(5,-40),new(1,-49)};
  foreach(var c in groves){for(int i=0;i<5;i++)Add("Valley grove",c+new Vector2(random(-3,3),random(-2.5f,2.5f)),trees[rng.Next(trees.Length)]);}
  Vector2[] clusters={new(-42,-27),new(-42,-33),new(-47,-36),new(-50,-42),new(-51,-48),new(-43,-51),new(-35,-48),new(-30,-42),new(-30,-35),new(-35,-26),new(-9,-20),new(-3,-24),new(3,-29),new(3,-35),new(7,-39),new(7,-44),new(2,-48),new(-3,-52),new(-18,-23),new(-10,-32)};

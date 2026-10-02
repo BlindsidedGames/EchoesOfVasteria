@@ -27,11 +27,10 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public Entry[] entries = Array.Empty<Entry>();
         public Sprite forgeAttention, cauldronAttention, questAttention;
-        public Sprite echoFrame, echoInset, autoPinFrame, toggleOn, toggleOff, discord;
+        public Sprite autoPinFrame, toggleOn, toggleOff, discord;
         public Sprite progressTrack, progressFill, progressHero, progressReaper;
         public Color progressTextColor;
         public string discordUrl;
         public ToolkitBookDefinition.Text autoPinLabel = new();
-        public Color balanceColor;
     }
 }

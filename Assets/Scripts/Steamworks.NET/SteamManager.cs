@@ -22,6 +22,26 @@ using Steamworks;
 [DisallowMultipleComponent]
 public class SteamManager : MonoBehaviour {
 #if !DISABLESTEAMWORKS
+#if UNITY_EDITOR
+    private const string EditorEnabledKey = "Blindsided.Echoes.Steam.EnableInEditor";
+    private const string EditorMenu = "Tools/Steam/Enable Integration in Play Mode";
+    private static bool editorEnabled = UnityEditor.EditorPrefs.GetBool(EditorEnabledKey, false);
+
+    [UnityEditor.MenuItem(EditorMenu)]
+    private static void ToggleEditorIntegration()
+    {
+        editorEnabled = !UnityEditor.EditorPrefs.GetBool(EditorEnabledKey, false);
+        UnityEditor.EditorPrefs.SetBool(EditorEnabledKey, editorEnabled);
+    }
+
+    [UnityEditor.MenuItem(EditorMenu, true)]
+    private static bool ValidateEditorIntegration()
+    {
+        UnityEditor.Menu.SetChecked(EditorMenu, UnityEditor.EditorPrefs.GetBool(EditorEnabledKey, false));
+        return !UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode;
+    }
+#endif
+
 	protected static bool s_EverInitialized = false;
 
 	protected static SteamManager s_instance;
@@ -39,6 +59,9 @@ public class SteamManager : MonoBehaviour {
 	protected bool m_bInitialized = false;
 	public static bool Initialized {
 		get {
+#if UNITY_EDITOR
+            if (!editorEnabled) return false;
+#endif
 			return Instance.m_bInitialized;
 		}
 	}
@@ -57,10 +80,17 @@ public class SteamManager : MonoBehaviour {
 	{
 		s_EverInitialized = false;
 		s_instance = null;
+#if UNITY_EDITOR
+        editorEnabled = UnityEditor.EditorPrefs.GetBool(EditorEnabledKey, false);
+#endif
 	}
 #endif
 
 	protected virtual void Awake() {
+#if UNITY_EDITOR
+        // Also guard scene-authored managers, not just lazy access through Initialized.
+        if (!editorEnabled) return;
+#endif
 		// Only one instance of SteamManager at a time!
 		if (s_instance != null) {
 			Destroy(gameObject);
@@ -119,9 +149,10 @@ public class SteamManager : MonoBehaviour {
 		// [*] Your App ID is not completely set up, i.e. in Release State: Unavailable, or it's missing default packages.
 		// Valve's documentation for this is located here:
 		// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-		m_bInitialized = SteamAPI.Init();
+		var initResult = SteamAPI.InitEx(out var initError);
+        m_bInitialized = initResult == ESteamAPIInitResult.k_ESteamAPIInitResult_OK;
 		if (!m_bInitialized) {
-			Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
+			Debug.LogError($"[Steamworks.NET] SteamAPI_Init() failed ({initResult}): {initError}", this);
 
 			return;
 		}
@@ -131,6 +162,9 @@ public class SteamManager : MonoBehaviour {
 
 	// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
 	protected virtual void OnEnable() {
+#if UNITY_EDITOR
+        if (!editorEnabled) return;
+#endif
 		if (s_instance == null) {
 			s_instance = this;
 		}

@@ -39,7 +39,6 @@ namespace TimelessEchoes.EditorTools
             AddWindow("wiki", TownWindowManager.Window.Library, Group.Toolbar);
             var close = Read((Button)source.FindProperty("closeButton").objectReferenceValue, "close", Group.Toolbar, true);
             close.action = NavAction.Close; entries.Add(close);
-            AddWindow("alterEchoes", TownWindowManager.Window.AlterEchoes, Group.Hub);
             AddWindow("skills", TownWindowManager.Window.Skills, Group.Hub);
             AddWindow("buffs", TownWindowManager.Window.Buffs, Group.Hub);
             AddWindow("forge", TownWindowManager.Window.Forge, Group.Townsfolk);
@@ -72,12 +71,6 @@ namespace TimelessEchoes.EditorTools
             var urlComponent = discord.GetComponents<MonoBehaviour>().Single(c => c.GetType().Name == "OpenUrlButton");
             var urlProperties = new SerializedObject(urlComponent).GetIterator();
             while (urlProperties.Next(true)) if (urlProperties.propertyType == SerializedPropertyType.String && urlProperties.stringValue.StartsWith("https://")) definition.discordUrl = urlProperties.stringValue;
-            var balanceManager = UnityEngine.Object.FindAnyObjectByType<NpcGeneration.AlterEchoGeneratorUIManager>(FindObjectsInactive.Include);
-            var balanceText = (TMP_Text)new SerializedObject(balanceManager).FindProperty("availableResourcesText").objectReferenceValue;
-            var balanceInset = balanceText.GetComponentInParent<Image>(true);
-            definition.echoInset = balanceInset.sprite;
-            definition.echoFrame = balanceInset.transform.parent.GetComponent<Image>().sprite;
-            definition.balanceColor = balanceText.color;
             var progress = new SerializedObject(UnityEngine.Object.FindAnyObjectByType<MapUI>(FindObjectsInactive.Include));
             var slider = (Slider)progress.FindProperty("distanceSlider").objectReferenceValue;
             definition.progressTrack = slider.transform.Find("Background").GetComponent<Image>().sprite;

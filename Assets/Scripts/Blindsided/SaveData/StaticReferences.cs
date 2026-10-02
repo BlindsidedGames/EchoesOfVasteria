@@ -39,31 +39,14 @@ namespace Blindsided.SaveData
         /// </summary>
         public static HashSet<string> ActiveNpcMeetings { get; } = new();
 
-        // Runtime-only bonus contributed by AE section tiers; not persisted. Updated by Collections UI.
-        private static float disciplePercentCollectionsBonus;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
             ActiveNpcMeetings.Clear();
-            disciplePercentCollectionsBonus = 0f;
             ShowLevelTextChanged = null;
             AutoBuffChanged = null;
         }
-
-        public static float DisciplePercent
-        {
-            get => oracle.saveData.DisciplePercent + Mathf.Max(0f, disciplePercentCollectionsBonus);
-            set => oracle.saveData.DisciplePercent = value;
-        }
-
-        // Expose the runtime collections bonus for controlled updates
-        public static float DisciplePercentCollectionsBonus
-        {
-            get => Mathf.Max(0f, disciplePercentCollectionsBonus);
-            set => disciplePercentCollectionsBonus = Mathf.Max(0f, value);
-        }
-
 
         public static BuyMode PurchaseMode
         {
@@ -402,27 +385,47 @@ namespace Blindsided.SaveData
 
         public static void UpdateCompletionPercentage()
         {
-            if (oracle == null) return;
+            if (oracle?.saveData == null) return;
+            var quests = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Quests.QuestData>("Quests");
+            var resources = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.Resource>("");
+            var questIds = new HashSet<string>(StringComparer.Ordinal);
+            var resourceNames = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var quest in quests)
+                if (quest != null && !string.IsNullOrWhiteSpace(quest.questId)) questIds.Add(quest.questId);
+            foreach (var resource in resources)
+                if (resource != null && !string.IsNullOrWhiteSpace(resource.name)) resourceNames.Add(resource.name);
 
-            var completedQuests = 0;
-            if (oracle.saveData.Quests != null)
-                foreach (var q in oracle.saveData.Quests.Values)
-                    if (q.Completed)
-                        completedQuests++;
+            oracle.saveData.CompletionPercentage = CalculateCompletionPercentage(
+                oracle.saveData, questIds, resourceNames);
+        }
 
-            var unlockedResources = 0;
-            if (oracle.saveData.Resources != null)
-                foreach (var r in oracle.saveData.Resources.Values)
-                    if (r.Earned)
-                        unlockedResources++;
+        /// <summary>
+        /// Numerator and denominator use the same current authored cohort. Retired/unknown keys
+        /// remain in the save as history; an alias cannot count twice toward present completion.
+        /// </summary>
+        public static float CalculateCompletionPercentage(GameData data,
+            IEnumerable<string> authoredQuestIds, IEnumerable<string> authoredResourceNames)
+        {
+            if (data == null) return 0f;
+            var quests = new HashSet<string>(StringComparer.Ordinal);
+            var resources = new HashSet<string>(StringComparer.Ordinal);
+            if (authoredQuestIds != null)
+                foreach (var id in authoredQuestIds)
+                    if (!string.IsNullOrWhiteSpace(id)) quests.Add(id);
+            if (authoredResourceNames != null)
+                foreach (var name in authoredResourceNames)
+                    if (!string.IsNullOrWhiteSpace(name)) resources.Add(name);
 
-            var totalQuests = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Quests.QuestData>("Quests").Length;
-            var totalResources = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.Resource>("").Length;
+            var completed = 0;
+            foreach (var id in quests)
+                if (data.Quests != null && data.Quests.TryGetValue(id, out var quest) && quest?.Completed == true)
+                    completed++;
+            foreach (var name in resources)
+                if (data.Resources != null && data.Resources.TryGetValue(name, out var resource) && resource?.Earned == true)
+                    completed++;
 
-            var total = totalQuests + totalResources;
-            var completed = completedQuests + unlockedResources;
-
-            oracle.saveData.CompletionPercentage = total > 0 ? completed / (float)total * 100f : 0f;
+            var total = quests.Count + resources.Count;
+            return total > 0 ? completed / (float)total * 100f : 0f;
         }
 #pragma warning restore UDR0001, UDR0002
     }

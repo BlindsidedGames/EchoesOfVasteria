@@ -257,7 +257,7 @@ namespace Blindsided.SaveData
                 // complete graph here, before returning a Task, so background work sees immutable bytes.
                 lock (serializationLock)
                 {
-                    payload = SerializationUtility.SerializeValue(data, DataFormat.Binary);
+                    payload = CurrentSaveCodec.Serialize(data);
                 }
 
                 if (payload == null || payload.Length > MaxPayloadBytes)
